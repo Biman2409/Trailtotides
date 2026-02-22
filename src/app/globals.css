@@ -1,0 +1,136 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-dm-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Trail to Tides brand palette */
+  --color-forest: #1e3d2f;
+  --color-forest-light: #2d5a42;
+  --color-teal: #0f4c5c;
+  --color-teal-light: #1a6b80;
+  --color-sand: #f5f0e8;
+  --color-sand-dark: #e8dfc8;
+  --color-slate: #2c3e50;
+  --color-charcoal: #1a1f2e;
+  --color-rust: #c4622d;
+  --color-rust-light: #e07845;
+  --color-glacier: #5ba3c9;
+  --color-off-white: #fafaf8;
+  --color-warm-grey: #9a9590;
+  --color-dark-overlay: rgba(15, 20, 30, 0.55);
+}
+
+:root {
+  --radius: 0.5rem;
+  --background: #fafaf8;
+  --foreground: #1a1f2e;
+  --card: #ffffff;
+  --card-foreground: #1a1f2e;
+  --popover: #ffffff;
+  --popover-foreground: #1a1f2e;
+  --primary: #1e3d2f;
+  --primary-foreground: #fafaf8;
+  --secondary: #f5f0e8;
+  --secondary-foreground: #1a1f2e;
+  --muted: #f0ebe0;
+  --muted-foreground: #6b6560;
+  --accent: #c4622d;
+  --accent-foreground: #fafaf8;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: #e0d8cc;
+  --input: #e0d8cc;
+  --ring: #1e3d2f;
+  --sidebar: #1a1f2e;
+  --sidebar-foreground: #fafaf8;
+  --sidebar-primary: #c4622d;
+  --sidebar-primary-foreground: #fafaf8;
+  --sidebar-accent: #2c3e50;
+  --sidebar-accent-foreground: #fafaf8;
+  --sidebar-border: rgba(255,255,255,0.1);
+  --sidebar-ring: #5ba3c9;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'DM Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f0ebe0;
+}
+::-webkit-scrollbar-thumb {
+  background: #9a9590;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #1e3d2f;
+}
+
+/* Hide Next.js error overlay portal */
+nextjs-portal {
+  display: none !important;
+}
+
+/* Leaflet map overrides */
+.leaflet-container {
+  font-family: 'DM Sans', sans-serif !important;
+}
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15) !important;
+}
