@@ -120,7 +120,7 @@ export const adventures: Adventure[] = [
     altitude: "3,658m",
     terrain: "Alpine meadows, glacial streams",
     bestSeason: "Jul – Sep",
-      heroImage: "https://images.unsplash.com/photo-1530022821083-87f84bba0b5a?w=1600&q=90",
+        heroImage: "https://images.unsplash.com/photo-1740116887029-511f9113a782?w=1600&q=90",
     galleryImages: [
       "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80",
     ],
