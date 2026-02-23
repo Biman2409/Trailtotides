@@ -5,59 +5,61 @@ import Image from "next/image";
 
 const slides = [
   {
-    src: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2560&q=95",
-    alt: "Golden Himalayan peaks above the clouds",
-    label: "Himalayas",
-    region: "Uttarakhand",
-    panOrigin: "50% 60%",
-    panEnd: "50% 45%",
+    src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2560&q=95",
+    alt: "Majestic snow-capped Himalayan peaks at sunrise",
+    panFrom: "50% 60%",
+    panTo: "50% 40%",
+    scaleFrom: 1.08,
+    scaleTo: 1.18,
   },
   {
-    src: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=2560&q=95",
-    alt: "Turquoise ocean meeting dramatic coastal cliffs",
-    label: "Coastline",
-    region: "Andaman Islands",
-    panOrigin: "55% 50%",
-    panEnd: "45% 55%",
+    src: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=2560&q=95",
+    alt: "Turquoise tropical ocean with white sand shore",
+    panFrom: "55% 50%",
+    panTo: "45% 52%",
+    scaleFrom: 1.06,
+    scaleTo: 1.16,
   },
   {
     src: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=2560&q=95",
-    alt: "Ancient forest trail through misty Western Ghats",
-    label: "Western Ghats",
-    region: "Kerala",
-    panOrigin: "50% 45%",
-    panEnd: "50% 60%",
+    alt: "Sunbeams cutting through dense misty jungle canopy",
+    panFrom: "50% 40%",
+    panTo: "50% 58%",
+    scaleFrom: 1.07,
+    scaleTo: 1.17,
   },
   {
     src: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=2560&q=95",
-    alt: "Endless Thar desert dunes at golden hour",
-    label: "Thar Desert",
-    region: "Rajasthan",
-    panOrigin: "45% 55%",
-    panEnd: "55% 45%",
+    alt: "Golden Thar desert dunes at magic hour",
+    panFrom: "44% 55%",
+    panTo: "56% 44%",
+    scaleFrom: 1.06,
+    scaleTo: 1.16,
   },
   {
-    src: "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=2560&q=95",
-    alt: "Mountain biker on high altitude ridge trail",
-    label: "Spiti Valley",
-    region: "Himachal Pradesh",
-    panOrigin: "50% 50%",
-    panEnd: "50% 38%",
+    src: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2560&q=95",
+    alt: "Himalayan ridge bathed in alpenglow at dusk",
+    panFrom: "50% 52%",
+    panTo: "50% 38%",
+    scaleFrom: 1.08,
+    scaleTo: 1.18,
   },
 ];
+
+const SLIDE_DURATION = 6000;
+const TRANSITION_MS = 1600;
 
 export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
   const [prev, setPrev] = useState<number | null>(null);
   const [transitioning, setTransitioning] = useState(false);
-  const [activated, setActivated] = useState<Set<number>>(new Set());
+  const [fired, setFired] = useState<Set<number>>(new Set([0]));
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Kick off Ken Burns on slide 0 immediately
   useEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      setActivated(new Set([0]));
-    });
-    return () => cancelAnimationFrame(raf);
+    const id = requestAnimationFrame(() => setFired(new Set([0])));
+    return () => cancelAnimationFrame(id);
   }, []);
 
   function goTo(index: number) {
@@ -65,31 +67,29 @@ export default function HeroSlider() {
     setPrev(current);
     setTransitioning(true);
     setCurrent(index);
-    setActivated((a) => new Set(a).add(index));
+    setFired((f) => new Set(f).add(index));
     setTimeout(() => {
       setPrev(null);
       setTransitioning(false);
-    }, 1400);
+    }, TRANSITION_MS);
   }
 
   useEffect(() => {
-    timerRef.current = setTimeout(() => {
-      goTo((current + 1) % slides.length);
-    }, 6000);
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => goTo((current + 1) % slides.length), SLIDE_DURATION);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current, transitioning]);
 
   return (
     <div className="absolute inset-0 overflow-hidden">
-      {/* ── Slides ─────────────────────────────────────── */}
+
+      {/* ── SLIDES ─────────────────────────────────────────── */}
       {slides.map((slide, i) => {
         const isActive = i === current;
         const isPrev = i === prev;
-        const hasFired = activated.has(i);
         if (!isActive && !isPrev) return null;
+        const hasFired = fired.has(i);
 
         return (
           <div
@@ -98,7 +98,7 @@ export default function HeroSlider() {
             style={{
               zIndex: isActive ? 2 : 1,
               opacity: isActive ? 1 : 0,
-              transition: isActive ? "opacity 1.4s ease-in-out" : "none",
+              transition: `opacity ${TRANSITION_MS}ms cubic-bezier(0.4,0,0.2,1)`,
             }}
           >
             <Image
@@ -109,10 +109,10 @@ export default function HeroSlider() {
               sizes="100vw"
               className="object-cover"
               style={{
-                transformOrigin: hasFired ? slide.panEnd : slide.panOrigin,
-                transform: hasFired ? "scale(1.12)" : "scale(1.0)",
+                transformOrigin: hasFired ? slide.panTo : slide.panFrom,
+                transform: `scale(${hasFired ? slide.scaleTo : slide.scaleFrom})`,
                 transition: hasFired
-                  ? "transform 10s cubic-bezier(0.22, 0.61, 0.36, 1), transform-origin 10s ease"
+                  ? `transform ${SLIDE_DURATION + TRANSITION_MS}ms cubic-bezier(0.22,0.61,0.36,1), transform-origin ${SLIDE_DURATION + TRANSITION_MS}ms ease`
                   : "none",
               }}
             />
@@ -120,94 +120,76 @@ export default function HeroSlider() {
         );
       })}
 
-      {/* ── Layered gradients ───────────────────────────── */}
-      <div className="absolute inset-0" style={{ zIndex: 3, pointerEvents: "none" }}>
-          {/* solid dark base so text is always readable */}
-          <div className="absolute inset-0 bg-black/55" />
-          {/* bottom-up fade for extra depth */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/85" />
-          {/* centre spotlight — keeps the text area dark */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.6) 100%)",
-            }}
-          />
-        {/* subtle film-grain texture via SVG noise */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.035]" aria-hidden>
-          <filter id="noise">
-            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-            <feColorMatrix type="saturate" values="0" />
-          </filter>
-          <rect width="100%" height="100%" filter="url(#noise)" />
-        </svg>
+      {/* ── OVERLAY STACK ──────────────────────────────────── */}
+      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 3 }}>
+        {/* Heavy bottom-up gradient — text lives here */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/55 to-black/20" />
+        {/* Top darkening so navbar reads well */}
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/50 to-transparent" />
+        {/* Subtle vignette edges */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 110% 90% at 50% 50%, transparent 40%, rgba(0,0,0,0.5) 100%)",
+          }}
+        />
       </div>
 
-
-
-      {/* ── Progress bar + dot indicators ──────────────── */}
+      {/* ── PROGRESS DOTS ──────────────────────────────────── */}
       <div
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-4"
-        style={{ zIndex: 4 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3"
+        style={{ zIndex: 5 }}
       >
-        {slides.map((slide, i) => (
+        {slides.map((_, i) => (
           <button
-              key={i}
-              onClick={() => goTo(i)}
-              className="group flex flex-col items-center gap-2 cursor-pointer"
-              aria-label={`Go to slide ${i + 1}`}
-            >
-              {/* Animated fill bar */}
-              <span
-              className="block rounded-full overflow-hidden"
+            key={i}
+            onClick={() => goTo(i)}
+            aria-label={`Slide ${i + 1}`}
+            className="relative overflow-hidden rounded-full"
+            style={{
+              width: i === current ? 40 : 8,
+              height: 4,
+              background: "rgba(255,255,255,0.2)",
+              transition: "width 0.4s ease",
+            }}
+          >
+            <span
+              className="absolute inset-y-0 left-0 rounded-full"
               style={{
-                width: i === current ? "36px" : "6px",
-                height: "3px",
-                background: "rgba(255,255,255,0.15)",
-                transition: "width 0.5s ease",
+                background: "#f07a42",
+                width: i === current ? "100%" : "0%",
+                transition: i === current ? `width ${SLIDE_DURATION}ms linear` : "none",
               }}
-            >
-              <span
-                className="block h-full rounded-full"
-                style={{
-                  background: i === current ? "#c4622d" : "transparent",
-                  width: i === current ? "100%" : "0%",
-                  transition: i === current ? "width 6s linear" : "none",
-                }}
-              />
-            </span>
+            />
           </button>
         ))}
       </div>
 
-      {/* ── Animated scroll cue ────────────────────────── */}
+      {/* ── SCROLL CUE ─────────────────────────────────────── */}
       <div
-        className="absolute bottom-10 right-10 flex flex-col items-center gap-2"
-        style={{ zIndex: 4 }}
+        className="absolute bottom-8 right-10 flex flex-col items-center gap-2"
+        style={{ zIndex: 5 }}
       >
         <span
-          className="text-white/25 text-[9px] tracking-[0.25em] uppercase"
+          className="text-white/30 text-[9px] tracking-[0.3em] uppercase"
           style={{ writingMode: "vertical-rl" }}
         >
           Scroll
         </span>
-        <div className="w-px h-12 overflow-hidden rounded-full bg-white/10">
+        <div className="w-px h-10 overflow-hidden rounded-full bg-white/15">
           <div
-            className="w-full rounded-full bg-white/50"
-            style={{
-              height: "40%",
-              animation: "scrollCue 2s ease-in-out infinite",
-            }}
+            className="w-full rounded-full bg-white/60"
+            style={{ height: "38%", animation: "scrollCue 2s ease-in-out infinite" }}
           />
         </div>
       </div>
 
       <style>{`
         @keyframes scrollCue {
-          0%   { transform: translateY(-120%); opacity: 0; }
-          30%  { opacity: 1; }
-          100% { transform: translateY(280%); opacity: 0; }
+          0%   { transform: translateY(-130%); opacity: 0; }
+          25%  { opacity: 1; }
+          100% { transform: translateY(310%); opacity: 0; }
         }
       `}</style>
     </div>
