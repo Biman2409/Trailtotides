@@ -41,6 +41,15 @@ const slides = [
     scaleTo: 1.15,
   },
   {
+    // Mountain: mountain biker flying on a dusty singletrack trail
+    src: "https://images.unsplash.com/photo-1594942274846-a7f7db97cad8?w=2560&q=95",
+    alt: "Mountain biker launching off a trail ridge at speed",
+    panFrom: "48% 55%",
+    panTo: "52% 40%",
+    scaleFrom: 1.07,
+    scaleTo: 1.16,
+  },
+  {
     // Mountain: mountaineer on snowy summit
     src: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=2560&q=95",
     alt: "Mountaineer silhouetted against a vast snowy summit",
