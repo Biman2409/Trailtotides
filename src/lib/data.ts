@@ -1,12 +1,11 @@
 export type AdventureType =
-  | "Trek"
-  | "Bike Trip"
+  | "Trekking"
+  | "Biking"
   | "Cycling"
-  | "Scuba"
+  | "Diving"
   | "Kayaking"
   | "Skiing"
-  | "Mountaineering"
-  | "Desert Trail";
+  | "Mountaineering";
 
 export type Region =
   | "Himalayas"
