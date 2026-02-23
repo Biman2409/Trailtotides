@@ -14,14 +14,13 @@ const difficultyColor: Record<string, string> = {
 };
 
 const typeEmoji: Record<string, string> = {
-  "Trek": "🥾",
-  "Bike Trip": "🏍️",
+  "Trekking": "🥾",
+  "Biking": "🏍️",
   "Cycling": "🚴",
-  "Scuba": "🤿",
+  "Diving": "🤿",
   "Kayaking": "🛶",
   "Skiing": "⛷️",
   "Mountaineering": "🧗",
-  "Desert Trail": "🐪",
 };
 
 declare global {
