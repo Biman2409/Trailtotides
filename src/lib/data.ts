@@ -344,7 +344,7 @@ export const adventures: Adventure[] = [
     id: "12",
     slug: "zanskar-valley-bike",
     name: "Zanskar Valley Ride",
-    tagline: "Into the last great Himalayan wilderness on two wheels",
+      tagline: "Ride into the last great Himalayan wilderness",
     region: "Himalayas",
     state: "Ladakh",
     type: "Biking",
