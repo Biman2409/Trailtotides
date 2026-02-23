@@ -318,7 +318,7 @@ export const adventures: Adventure[] = [
     difficulty: "Expert",
     duration: "7+ days",
     durationDays: "14 days",
-    altitude: "5,883m (Umling La)",
+      altitude: "5,913m (Mig La)",
     terrain: "High-altitude passes, remote valleys, gravel & tarmac",
     bestSeason: "Jun – Sep",
       heroImage: "https://images.unsplash.com/photo-1768410318571-dc9f9546cf29?w=1600&q=90",
