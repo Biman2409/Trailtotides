@@ -351,7 +351,7 @@ export const adventures: Adventure[] = [
     difficulty: "Expert",
     duration: "7+ days",
     durationDays: "10 days",
-    altitude: "4,401m (Pensi La)",
+      altitude: "5,091m (Shinku La)",
     terrain: "Unmade tracks, river crossings, cliff-edge roads",
     bestSeason: "Jul – Sep",
       heroImage: "https://images.unsplash.com/photo-1706021220078-2051d17b1576?w=1600&q=90",
