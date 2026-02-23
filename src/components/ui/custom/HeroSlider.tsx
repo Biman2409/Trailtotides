@@ -59,9 +59,9 @@ const slides = [
     scaleTo: 1.15,
   },
   {
-    // Mountain: paraglider soaring above green valley
-    src: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=2560&q=95",
-    alt: "Paraglider soaring above a lush mountain valley",
+      // Mountain: paragliding with dramatic mountain backdrop
+      src: "https://images.unsplash.com/photo-1486915309851-b0cc1f8a0084?w=2560&q=95",
+      alt: "Paraglider soaring high above mountain peaks",
     panFrom: "48% 50%",
     panTo: "52% 38%",
     scaleFrom: 1.07,
