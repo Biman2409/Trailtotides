@@ -35,16 +35,22 @@ export default function MapComponent({ adventures }: Props) {
     if (mapInstanceRef.current) return;
 
     // Dynamically import leaflet to avoid SSR issues
-    import("leaflet").then((L) => {
-      // Fix default marker icon path issue with Next.js
-      delete (L.Icon.Default.prototype as any)._getIconUrl;
-      L.Icon.Default.mergeOptions({
-        iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-        iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-        shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-      });
+      import("leaflet").then((L) => {
+        // Fix default marker icon path issue with Next.js
+        delete (L.Icon.Default.prototype as any)._getIconUrl;
+        L.Icon.Default.mergeOptions({
+          iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+          iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+          shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+        });
 
-      const map = L.map(mapRef.current!, {
+        // Guard against StrictMode double-invoke leaving a stale _leaflet_id
+        const container = mapRef.current!;
+        if ((container as any)._leaflet_id) {
+          (container as any)._leaflet_id = undefined;
+        }
+
+        const map = L.map(container, {
         center: [22.5, 80.0],
         zoom: 5,
         zoomControl: true,
