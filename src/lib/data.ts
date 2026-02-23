@@ -321,7 +321,7 @@ export const adventures: Adventure[] = [
     altitude: "5,883m (Umling La)",
     terrain: "High-altitude passes, remote valleys, gravel & tarmac",
     bestSeason: "Jun – Sep",
-    heroImage: "https://images.unsplash.com/photo-1768410318136-1450256a8f3d?w=1600&q=90",
+    heroImage: "https://images.unsplash.com/photo-COs-HwxDNY0?w=1600&q=90",
     galleryImages: [],
     lat: 33.7782,
     lng: 78.6753,
