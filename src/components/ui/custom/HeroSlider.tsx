@@ -23,13 +23,13 @@ const slides = [
     scaleTo: 1.16,
   },
   {
-    // Mountain: rock climber scaling a sheer cliff face
-      src: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=2560&q=95",
-      alt: "Rock climber scaling a dramatic sheer cliff face",
-      panFrom: "52% 60%",
-      panTo: "48% 38%",
-    scaleFrom: 1.07,
-    scaleTo: 1.17,
+    // Mountain: mountaineer on snowy summit (was 6, now 3)
+    src: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=2560&q=95",
+    alt: "Mountaineer silhouetted against a vast snowy summit",
+    panFrom: "50% 52%",
+    panTo: "50% 38%",
+    scaleFrom: 1.08,
+    scaleTo: 1.18,
   },
   {
     // Ocean: surfer riding a wave at golden hour
@@ -50,13 +50,13 @@ const slides = [
     scaleTo: 1.16,
   },
   {
-    // Mountain: mountaineer on snowy summit
-    src: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=2560&q=95",
-    alt: "Mountaineer silhouetted against a vast snowy summit",
-    panFrom: "50% 52%",
-    panTo: "50% 38%",
-    scaleFrom: 1.08,
-    scaleTo: 1.18,
+    // Mountain: rock climber scaling a sheer cliff face (was 3, now 6)
+    src: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=2560&q=95",
+    alt: "Rock climber scaling a dramatic sheer cliff face",
+    panFrom: "52% 60%",
+    panTo: "48% 38%",
+    scaleFrom: 1.07,
+    scaleTo: 1.17,
   },
 ];
 
