@@ -78,8 +78,13 @@ export default function MapComponent({ adventures }: Props) {
 
     return () => {
       if (mapInstanceRef.current) {
+        markersLayerRef.current = null;
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
+      }
+      // Also clear any stale _leaflet_id left on the DOM node
+      if (mapRef.current) {
+        (mapRef.current as any)._leaflet_id = undefined;
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
