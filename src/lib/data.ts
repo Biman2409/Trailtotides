@@ -501,12 +501,11 @@ export const regions = [
 ];
 
 export const adventureTypes = [
-  { type: "Trek" as AdventureType, icon: "🥾", count: 94 },
-  { type: "Bike Trip" as AdventureType, icon: "🏍️", count: 38 },
+  { type: "Trekking" as AdventureType, icon: "🥾", count: 94 },
+  { type: "Biking" as AdventureType, icon: "🏍️", count: 38 },
   { type: "Cycling" as AdventureType, icon: "🚴", count: 27 },
-  { type: "Scuba" as AdventureType, icon: "🤿", count: 19 },
+  { type: "Diving" as AdventureType, icon: "🤿", count: 19 },
   { type: "Kayaking" as AdventureType, icon: "🛶", count: 24 },
   { type: "Skiing" as AdventureType, icon: "⛷️", count: 8 },
   { type: "Mountaineering" as AdventureType, icon: "🧗", count: 15 },
-  { type: "Desert Trail" as AdventureType, icon: "🐪", count: 11 },
 ];
