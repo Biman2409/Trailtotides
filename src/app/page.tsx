@@ -71,8 +71,8 @@ export default function HomePage() {
                 className="text-white text-lg md:text-xl max-w-xl mx-auto leading-relaxed mb-10 font-medium"
                 style={{ textShadow: "0 2px 12px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,1)" }}
               >
-                Discover treks, rides &amp; wild experiences across India —<br />
-                curated, verified, and beautifully mapped.
+Discover epic adventures across India — handpicked,<br />
+                  trusted and perfectly mapped.
               </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
