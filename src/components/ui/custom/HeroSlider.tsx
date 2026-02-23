@@ -151,21 +151,13 @@ export default function HeroSlider() {
       >
         {slides.map((slide, i) => (
           <button
-            key={i}
-            onClick={() => goTo(i)}
-            className="group flex flex-col items-center gap-2 cursor-pointer"
-            aria-label={`Go to ${slide.label}`}
-          >
-            <span
-              className="text-[9px] font-semibold tracking-[0.2em] uppercase transition-all duration-500"
-              style={{
-                color: i === current ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.25)",
-              }}
+              key={i}
+              onClick={() => goTo(i)}
+              className="group flex flex-col items-center gap-2 cursor-pointer"
+              aria-label={`Go to slide ${i + 1}`}
             >
-              {slide.label}
-            </span>
-            {/* Animated fill bar */}
-            <span
+              {/* Animated fill bar */}
+              <span
               className="block rounded-full overflow-hidden"
               style={{
                 width: i === current ? "36px" : "6px",
