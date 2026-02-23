@@ -308,38 +308,6 @@ export const adventures: Adventure[] = [
     featured: true,
   },
   {
-    id: "8",
-    slug: "rann-of-kutch-desert-trail",
-    name: "Rann of Kutch Desert Trail",
-    tagline: "The white horizon that never ends",
-    region: "Desert",
-    state: "Gujarat",
-    type: "Desert Trail",
-    difficulty: "Beginner",
-    duration: "Weekend",
-    durationDays: "3 days",
-    altitude: "Sea level",
-      terrain: "Salt flats, sand dunes, grasslands",
-      bestSeason: "Nov – Feb",
-      heroImage: "https://images.unsplash.com/photo-1502472584811-0a2f2feb8968?w=1600&q=90",
-    galleryImages: [],
-    lat: 23.7337,
-    lng: 70.1667,
-    description:
-      "The Great Rann of Kutch is the world's largest salt desert — a completely flat white plain stretching to the horizon under an infinite sky. During the Rann Utsav season, you can walk out into the salt flat at night and watch the Milky Way reflected in a thin layer of water. It's one of the most disorienting, beautiful experiences in India.",
-    whatMakesSpecial:
-      "The flatness and silence. You can literally see the curvature of the Earth. Night skies here are exceptional. Wild ass sanctuary nearby.",
-    whoFor: "Everyone. This is one of India's most accessible and visually stunning adventures. Night walkers, stargazers, photographers.",
-    whoNot: "Those expecting strenuous adventure. This is immersive, not physically demanding.",
-    safetyNotes:
-      "Carry water — dehydration is a serious risk even in winter. Wear full-sleeve sun protection. Don't venture deep into the flats alone.",
-    operators: [
-      { name: "Rann Riders", verified: true, priceFrom: "₹3,500", rating: 4.5 },
-    ],
-    tags: ["salt desert", "night sky", "Gujarat", "accessible", "stargazing"],
-    featured: false,
-  },
-  {
     id: "9",
     slug: "ski-auli",
     name: "Auli Ski & Snowboard",
