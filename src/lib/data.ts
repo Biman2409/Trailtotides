@@ -257,7 +257,7 @@ export const adventures: Adventure[] = [
     altitude: "900m",
     terrain: "River rapids (Grade I–III), forest canopy",
     bestSeason: "Oct – Mar",
-    heroImage: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=1600&q=90",
+      heroImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=90",
     galleryImages: [],
     lat: 12.3375,
     lng: 75.8069,
