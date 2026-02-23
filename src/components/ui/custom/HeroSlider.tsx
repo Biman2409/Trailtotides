@@ -50,9 +50,9 @@ const slides = [
     scaleTo: 1.16,
   },
   {
-    // Underwater: swimmer with fish, Havelock Island
-    src: "https://images.unsplash.com/photo-1698753935121-153a106616d5?w=2560&q=95",
-    alt: "Swimmer surrounded by fish in the clear waters of Havelock Island",
+    // Biking: man on motorcycle in the mountains
+      src: "https://images.unsplash.com/photo-1669255664788-61c668bd6fe8?w=2560&q=95",
+      alt: "Man on a motorcycle riding through mountain terrain",
     panFrom: "50% 55%",
     panTo: "50% 45%",
     scaleFrom: 1.06,
