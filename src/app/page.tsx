@@ -20,41 +20,77 @@ export default function HomePage() {
         <HeroSlider />
 
         {/* Content */}
-        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-            <p className="text-[#f07a42] text-sm font-semibold tracking-[0.2em] uppercase mb-6 drop-shadow-md">
-              India's First Adventure Discovery &amp; Aggregator Platform
-            </p>
+          <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
+            {/* eyebrow */}
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-5 py-2 mb-8">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#f07a42] animate-pulse" />
+              <p className="text-white text-xs font-semibold tracking-[0.18em] uppercase">
+                India's First Adventure Discovery &amp; Aggregator Platform
+              </p>
+            </div>
+
+            {/* headline */}
             <h1
-              className="text-white text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.0] tracking-tight mb-6"
-              style={{ textShadow: "0 2px 24px rgba(0,0,0,0.6), 0 1px 4px rgba(0,0,0,0.8)" }}
+              className="text-white font-bold leading-[1.0] tracking-tight mb-6"
+              style={{
+                fontSize: "clamp(3rem, 8vw, 6rem)",
+                textShadow: "0 4px 32px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.9)",
+              }}
             >
-              From mountain trails
+              From mountain{" "}
+              <span
+                className="italic"
+                style={{
+                  background: "linear-gradient(95deg, #fff 0%, #ffd0a8 60%, #f07a42 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                trails
+              </span>
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7ec8e3] to-[#f07a42]">
-                to ocean tides.
+              to ocean{" "}
+              <span
+                className="italic"
+                style={{
+                  background: "linear-gradient(95deg, #7ec8e3 0%, #a8dfef 60%, #fff 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                tides.
               </span>
             </h1>
-            <p className="text-white/90 text-base md:text-xl max-w-2xl mx-auto leading-relaxed mb-10" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.7)" }}>
-            Discover treks, rides, and wild experiences across India — curated,
-            verified, and beautifully mapped.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/explore"
-              className="bg-[#c4622d] hover:bg-[#e07845] text-white font-medium px-8 py-4 rounded-xl text-base transition-all duration-300 flex items-center gap-2 group"
+
+            {/* subheading */}
+            <p
+              className="text-white text-base md:text-xl max-w-2xl mx-auto leading-relaxed mb-10 font-medium"
+              style={{ textShadow: "0 2px 12px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,1)" }}
             >
-              Explore Adventures
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              href="/map"
-              className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-medium px-8 py-4 rounded-xl text-base border border-white/20 transition-all duration-300 flex items-center gap-2"
-            >
-              <Map className="w-4 h-4" />
-              View the Map
-            </Link>
+              Discover treks, rides &amp; wild experiences across India —
+              <br className="hidden sm:block" />
+              curated, verified, and beautifully mapped.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/explore"
+                className="bg-[#c4622d] hover:bg-[#e07845] text-white font-semibold px-8 py-4 rounded-xl text-base transition-all duration-300 flex items-center gap-2 group shadow-lg shadow-black/30"
+              >
+                Explore Adventures
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link
+                href="/map"
+                className="bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white font-semibold px-8 py-4 rounded-xl text-base border border-white/30 transition-all duration-300 flex items-center gap-2"
+              >
+                <Map className="w-4 h-4" />
+                View the Map
+              </Link>
+            </div>
           </div>
-        </div>
 
       </section>
 
