@@ -225,7 +225,7 @@ export const adventures: Adventure[] = [
     altitude: "4,551m (Kunzum Pass)",
     terrain: "High-altitude tarmac, gravel, river crossings",
     bestSeason: "Jun – Oct",
-    heroImage: "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1600&q=90",
+      heroImage: "https://images.unsplash.com/photo-1544198365-f5d60b6d8190?w=1600&q=90",
     galleryImages: [],
     lat: 32.2473,
     lng: 78.0350,
