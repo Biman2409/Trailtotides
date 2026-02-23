@@ -22,7 +22,7 @@ export default function HomePage() {
         {/* Content */}
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
             <p className="text-[#f07a42] text-sm font-semibold tracking-[0.2em] uppercase mb-6 drop-shadow-md">
-              India's Adventure Discovery Platform
+              India's First Adventure Discovery &amp; Aggregator Platform
             </p>
             <h1
               className="text-white text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.0] tracking-tight mb-6"
