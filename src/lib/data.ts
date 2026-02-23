@@ -326,9 +326,9 @@ export const adventures: Adventure[] = [
     lat: 33.7782,
     lng: 78.6753,
       description:
-        "The Ladakh Circuit is the ultimate Indian biking odyssey. Covering over 1,800km through Leh, Nubra Valley, Pangong Lake, Hanle and up to Umling La — the world's highest motorable road at 5,883m — this circuit pushes both rider and machine to their absolute limits. The landscapes are raw, alien, and unforgettable.",
-    whatMakesSpecial:
-      "Umling La at 5,883m is officially the world's highest motorable road, surpassing even Bolivia's Death Road. Standing on it on two wheels is a moment few humans will ever experience.",
+        "The Ladakh Circuit is the ultimate Indian biking odyssey. Covering over 1,800km through Leh, Nubra Valley, Pangong Lake, Hanle and up to Umling La — the world's 2nd highest motorable road at 5,883m — this circuit pushes both rider and machine to their absolute limits. The landscapes are raw, alien, and unforgettable.",
+      whatMakesSpecial:
+        "Umling La at 5,883m is the world's 2nd highest motorable road — only Mig La sits higher. Standing on it on two wheels is a moment few humans will ever experience.",
     whoFor: "Expert riders with Himalayan experience, those with 500cc+ bikes, altitude-acclimatised adventurers seeking the ultimate India ride.",
     whoNot: "Inexperienced riders, those without prior high-altitude riding, anyone without solid bike mechanics knowledge.",
     safetyNotes:
