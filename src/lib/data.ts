@@ -310,8 +310,8 @@ export const adventures: Adventure[] = [
   {
     id: "11",
     slug: "ladakh-circuit",
-    name: "Ladakh Circuit",
-    tagline: "Ride to the world's highest motorable road — Umling La",
+      name: "Ladakh Circuit",
+      tagline: "Ride to the world's 2nd highest motorable road — Umling La",
     region: "Himalayas",
     state: "Ladakh",
     type: "Biking",
