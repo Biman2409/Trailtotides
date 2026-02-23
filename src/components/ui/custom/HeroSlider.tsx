@@ -49,6 +49,15 @@ const slides = [
     scaleFrom: 1.07,
     scaleTo: 1.16,
   },
+  {
+    // Underwater: swimmer with fish, Havelock Island
+    src: "https://images.unsplash.com/photo-1698753935121-153a106616d5?w=2560&q=95",
+    alt: "Swimmer surrounded by fish in the clear waters of Havelock Island",
+    panFrom: "50% 55%",
+    panTo: "50% 45%",
+    scaleFrom: 1.06,
+    scaleTo: 1.15,
+  },
 ];
 
 const SLIDE_DURATION = 6000;
