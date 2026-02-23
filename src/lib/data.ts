@@ -377,7 +377,7 @@ export const adventures: Adventure[] = [
   {
     id: "13",
     slug: "spiti-valley-bike",
-    name: "Spiti Valley Ride",
+      name: "Spiti Valley Circuit",
     tagline: "Ride the cold desert loop between Manali and Shimla",
     region: "Himalayas",
     state: "Himachal Pradesh",
