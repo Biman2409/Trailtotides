@@ -142,27 +142,7 @@ export default function HeroSlider() {
         </svg>
       </div>
 
-      {/* ── Slide label (top-right) ──────────────────────── */}
-      <div className="absolute top-28 right-8 flex flex-col items-end gap-1" style={{ zIndex: 4 }}>
-        {slides.map((slide, i) => (
-          <div
-            key={i}
-            className="flex flex-col items-end gap-0.5 transition-all duration-700"
-            style={{ opacity: i === current ? 1 : 0, transform: i === current ? "translateX(0)" : "translateX(8px)" }}
-          >
-            {i === current && (
-              <>
-                <span className="text-white/90 text-xs font-semibold tracking-[0.25em] uppercase">
-                  {slide.label}
-                </span>
-                <span className="text-white/40 text-[10px] tracking-widest">
-                  {slide.region}
-                </span>
-              </>
-            )}
-          </div>
-        ))}
-      </div>
+
 
       {/* ── Progress bar + dot indicators ──────────────── */}
       <div
