@@ -38,32 +38,32 @@ export default function HomePage() {
                   textShadow: "0 2px 20px rgba(0,0,0,0.7)",
                 }}
               >
-                {/* Line 1 */}
-                <span style={{ display: "block" }}>
-                  From{" "}
-                  <em style={{ fontStyle: "italic", fontWeight: 700, color: "white" }}>
-                    Mountain Trail
-                  </em>
-                </span>
+                  {/* Line 1 */}
+                  <span style={{ display: "block" }}>
+                    From Mountain{" "}
+                    <em style={{ fontStyle: "italic", fontWeight: 700, color: "white" }}>
+                      Trail
+                    </em>
+                  </span>
 
-                {/* Thin divider line between the two rows */}
-                <span
-                  style={{
-                    display: "block",
-                    height: "2px",
-                    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.35) 30%, rgba(255,255,255,0.35) 70%, transparent)",
-                    margin: "0.35em auto",
-                    maxWidth: "520px",
-                  }}
-                />
+                  {/* Thin divider line between the two rows */}
+                  <span
+                    style={{
+                      display: "block",
+                      height: "2px",
+                      background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.35) 30%, rgba(255,255,255,0.35) 70%, transparent)",
+                      margin: "0.35em auto",
+                      maxWidth: "520px",
+                    }}
+                  />
 
-                {/* Line 2 */}
-                <span style={{ display: "block" }}>
+                  {/* Line 2 */}
+                  <span style={{ display: "block" }}>
                     To Ocean{" "}
                     <em style={{ fontStyle: "italic", fontWeight: 700, color: "white" }}>
                       Tides
                     </em>
-                </span>
+                  </span>
               </h1>
 
               {/* subheading — exactly 2 lines */}
