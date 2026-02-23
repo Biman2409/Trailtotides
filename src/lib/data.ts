@@ -395,7 +395,7 @@ export const adventures: Adventure[] = [
     lat: 30.5292,
     lng: 79.5665,
     description:
-      "Auli is India's premier ski destination — 16km of slopes with a cable car and chair lift, overlooking a panorama of Nanda Devi, Mana Parbat, and the Dunagiri peaks. The powder after a fresh snowfall rivals anything in the Alps.",
+      "Auli is India's premier ski destination — 16km of slopes with a cable car and chair lift, overlooking a panorama of Nanda Devi, Mana Parbat, Kamet, and the Dunagiri peaks. The powder after a fresh snowfall rivals anything in the Alps.",
     whatMakesSpecial:
       "The backdrop is world-class. Few ski resorts on Earth offer a view like Auli's — the entire Garhwal Himalaya spread behind you as you ride.",
     whoFor: "Beginner to advanced skiers. Snowboarders welcome. Great for families.",
