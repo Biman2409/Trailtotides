@@ -140,11 +140,11 @@ export default function HomePage() {
           {/* Cards grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredAdventures.map((adventure, i) => (
-              <AdventureCard
-                key={adventure.id}
-                adventure={adventure}
-                size={i === 0 ? "large" : "default"}
-              />
+                <AdventureCard
+                  key={adventure.id}
+                  adventure={adventure}
+                  size="default"
+                />
             ))}
           </div>
 
