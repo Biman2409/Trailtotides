@@ -112,8 +112,10 @@ export default function HeroSlider() {
     return () => cancelAnimationFrame(id);
   }, []);
 
-  function goTo(index: number) {
-    if (transitioning || index === current) return;
+  function goTo(index: number, userClick = false) {
+    if (index === current) return;
+    if (transitioning && !userClick) return;
+    if (timerRef.current) clearTimeout(timerRef.current);
     setPrev(current);
     setTransitioning(true);
     setCurrent(index);
