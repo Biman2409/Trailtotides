@@ -42,7 +42,7 @@ const slides = [
   },
     {
       // Mountain: motorbike rider on a Himalayan mountain road
-      src: "https://images.unsplash.com/photo-1609143139045-7a9f3c44cd41?w=2560&q=95",
+      src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2560&q=95",
       alt: "Motorbike rider on a sweeping Himalayan mountain road",
       panFrom: "48% 55%",
       panTo: "52% 40%",
