@@ -337,7 +337,7 @@ export const adventures: Adventure[] = [
       { name: "Himalayan Moto", verified: true, priceFrom: "₹65,000", rating: 4.9 },
       { name: "Leh Bikers", verified: true, priceFrom: "₹55,000", rating: 4.8 },
     ],
-    tags: ["Umling La", "world record", "Ladakh", "extreme altitude", "circuit"],
+      tags: ["Mig La", "world record", "Ladakh", "extreme altitude", "circuit"],
     featured: false,
   },
   {
