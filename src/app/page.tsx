@@ -16,7 +16,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
+        <section className="relative h-screen min-h-[700px] flex items-center justify-center" style={{overflow: "hidden"}}>
         <HeroSlider />
 
         {/* Content */}
