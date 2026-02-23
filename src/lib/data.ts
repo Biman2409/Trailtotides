@@ -147,7 +147,7 @@ export const adventures: Adventure[] = [
     tagline: "Ride across the highest motorable roads on earth",
     region: "Himalayas",
     state: "Himachal Pradesh / Ladakh",
-    type: "Bike Trip",
+      type: "Biking",
     difficulty: "Intermediate",
     duration: "7+ days",
     durationDays: "10 days",
