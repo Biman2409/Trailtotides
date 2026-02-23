@@ -29,46 +29,46 @@ export default function HomePage() {
               </div>
 
               {/* headline */}
-              <h1
-                className="text-white font-bold tracking-tight mb-6"
-                style={{
-                  fontSize: "clamp(2.4rem, 6.5vw, 5rem)",
-                  lineHeight: 1.15,
-                  textShadow: "0 4px 32px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.9)",
-                  paddingBottom: "0.15em",
-                  overflow: "visible",
-                }}
-              >
-                From mountain{" "}
-                <span
+                <h1
+                  className="text-white font-bold tracking-tight mb-6"
                   style={{
-                    background: "linear-gradient(95deg, #fff 0%, #ffd0a8 60%, #f07a42 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    fontStyle: "italic",
-                    display: "inline",
-                    paddingRight: "0.06em",
+                    fontSize: "clamp(2.6rem, 7vw, 5.5rem)",
+                    lineHeight: 1.12,
+                    textShadow: "0 4px 32px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.9)",
+                    overflow: "visible",
                   }}
                 >
-                  trails
-                </span>
-                <br />
-                to ocean{" "}
-                <span
-                  style={{
-                    background: "linear-gradient(95deg, #7ec8e3 0%, #a8dfef 60%, #fff 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                    fontStyle: "italic",
-                    display: "inline",
-                    paddingRight: "0.06em",
-                  }}
-                >
-                  tides.
-                </span>
-              </h1>
+                  <span style={{ display: "block" }}>
+                    From{" "}
+                    <em
+                      style={{
+                        background: "linear-gradient(95deg, #fff 0%, #ffd0a8 60%, #f07a42 100%)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                        fontStyle: "italic",
+                        paddingRight: "0.08em",
+                      }}
+                    >
+                      Mountain Trails
+                    </em>
+                  </span>
+                  <span style={{ display: "block" }}>
+                    to{" "}
+                    <em
+                      style={{
+                        background: "linear-gradient(95deg, #7ec8e3 0%, #a8dfef 60%, #fff 100%)",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                        fontStyle: "italic",
+                        paddingRight: "0.08em",
+                      }}
+                    >
+                      Ocean Tides.
+                    </em>
+                  </span>
+                </h1>
 
               {/* subheading — exactly 2 lines */}
               <p
