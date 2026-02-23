@@ -386,7 +386,7 @@ export const adventures: Adventure[] = [
     altitude: "6,153m",
       terrain: "Glaciers, scree, summit ridge",
       bestSeason: "Jul – Sep",
-        heroImage: "https://images.unsplash.com/photo-1770236597536-0f8d580e7a85?w=1600&q=90",
+        heroImage: "https://images.unsplash.com/photo-1549364472-0972cec89cd8?w=1600&q=90",
     galleryImages: [],
     lat: 34.0166,
     lng: 77.6088,
