@@ -242,38 +242,7 @@ export const adventures: Adventure[] = [
     tags: ["cycling", "remote", "cold desert", "monasteries", "extreme"],
     featured: false,
   },
-  {
-    id: "6",
-    slug: "coorg-kayaking",
-    name: "Coorg River Kayaking",
-    tagline: "Paddle through the coffee highlands of Karnataka",
-    region: "Western Ghats",
-    state: "Karnataka",
-    type: "Kayaking",
-    difficulty: "Beginner",
-    duration: "Weekend",
-    durationDays: "2 days",
-    altitude: "900m",
-    terrain: "River rapids (Grade I–III), forest canopy",
-    bestSeason: "Oct – Mar",
-      heroImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=90",
-    galleryImages: [],
-    lat: 12.3375,
-    lng: 75.8069,
-    description:
-      "The rivers of Coorg run cold and fast through one of India's most lush landscapes. Kayaking here means gliding beneath a canopy of teak, bamboo, and coffee plants, with occasional white-water surges keeping your heart rate up. Kingfishers, river otters, and crocodiles share these waters.",
-    whatMakesSpecial:
-      "The combination of accessibility (5 hours from Bangalore) and genuine wilderness makes this the ideal first-time kayaking experience.",
-    whoFor: "Beginners, families, weekend adventurers from South Indian cities.",
-    whoNot: "Those seeking extreme white-water. Coorg kayaking is scenic and gentle, not adrenaline-heavy.",
-    safetyNotes:
-      "Always wear a PFD (life jacket) and helmet on rapids. Don't paddle solo. Post-monsoon river levels can rise dramatically — check conditions.",
-    operators: [
-      { name: "Coorg Adventure", verified: true, priceFrom: "₹2,500", rating: 4.6 },
-    ],
-    tags: ["kayaking", "river", "weekend", "accessible", "wildlife"],
-    featured: false,
-  },
+
   {
     id: "7",
     slug: "dzukou-valley-trek",
