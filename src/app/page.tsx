@@ -17,16 +17,7 @@ export default function HomePage() {
 
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
-        {/* Background image */}
-        <Image
-          src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2000&q=90"
-          alt="Himalayan landscape"
-          fill
-          priority
-          className="object-cover"
-        />
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1a1f2e]/60 via-[#1a1f2e]/30 to-[#1a1f2e]/80" />
+        <HeroSlider />
 
         {/* Content */}
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
@@ -62,10 +53,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-          <div className="w-[1px] h-12 bg-gradient-to-b from-transparent to-white/40 animate-pulse" />
-        </div>
       </section>
 
       {/* ── STATS BAR ────────────────────────────────────── */}
