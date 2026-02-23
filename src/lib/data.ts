@@ -190,7 +190,7 @@ export const adventures: Adventure[] = [
     altitude: "Sea level",
     terrain: "Coral reefs, drop-offs, WWII wrecks",
     bestSeason: "Nov – May",
-      heroImage: "https://images.unsplash.com/photo-1587915598011-d85a5ee7b8f5?w=1600&q=90",
+        heroImage: "https://images.unsplash.com/photo-1695079513934-45c725827220?w=1600&q=90",
       galleryImages: [
         "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
       ],
