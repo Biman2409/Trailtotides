@@ -30,39 +30,55 @@ export default function HomePage() {
 
               {/* headline */}
                 <h1
-                  className="text-white font-bold tracking-tight mb-6"
+                  className="font-bold tracking-tight mb-6"
                   style={{
                     fontSize: "clamp(2.6rem, 7vw, 5.5rem)",
-                    lineHeight: 1.12,
-                    textShadow: "0 4px 32px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.9)",
+                    lineHeight: 1.15,
                     overflow: "visible",
+                    color: "white",
                   }}
                 >
-                  <span style={{ display: "block" }}>
+                  <span
+                    style={{
+                      display: "block",
+                      textShadow: "0 2px 16px rgba(0,0,0,0.8)",
+                    }}
+                  >
                     From{" "}
                     <em
                       style={{
-                        background: "linear-gradient(95deg, #fff 0%, #ffd0a8 60%, #f07a42 100%)",
+                        fontStyle: "italic",
+                        background: "linear-gradient(100deg, #ffcf9d 0%, #f07a42 100%)",
                         WebkitBackgroundClip: "text",
                         WebkitTextFillColor: "transparent",
                         backgroundClip: "text",
-                        fontStyle: "italic",
-                        paddingRight: "0.08em",
+                        display: "inline-block",
+                        paddingBottom: "0.05em",
+                        paddingRight: "0.1em",
+                        filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.7))",
                       }}
                     >
                       Mountain Trails
                     </em>
                   </span>
-                  <span style={{ display: "block" }}>
+                  <span
+                    style={{
+                      display: "block",
+                      textShadow: "0 2px 16px rgba(0,0,0,0.8)",
+                    }}
+                  >
                     to{" "}
                     <em
                       style={{
-                        background: "linear-gradient(95deg, #7ec8e3 0%, #a8dfef 60%, #fff 100%)",
+                        fontStyle: "italic",
+                        background: "linear-gradient(100deg, #93d4ee 0%, #d6f0f8 100%)",
                         WebkitBackgroundClip: "text",
                         WebkitTextFillColor: "transparent",
                         backgroundClip: "text",
-                        fontStyle: "italic",
-                        paddingRight: "0.08em",
+                        display: "inline-block",
+                        paddingBottom: "0.05em",
+                        paddingRight: "0.1em",
+                        filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.7))",
                       }}
                     >
                       Ocean Tides.
