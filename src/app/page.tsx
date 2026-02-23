@@ -59,11 +59,10 @@ export default function HomePage() {
 
                 {/* Line 2 */}
                 <span style={{ display: "block" }}>
-                  To Ocean{" "}
-                  <em style={{ fontStyle: "italic", fontWeight: 700, color: "white" }}>
-                    Tides
-                  </em>
-                  .
+                    To Ocean{" "}
+                    <em style={{ fontStyle: "italic", fontWeight: 700, color: "white" }}>
+                      Tides
+                    </em>
                 </span>
               </h1>
 
