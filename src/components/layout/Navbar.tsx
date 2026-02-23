@@ -45,9 +45,7 @@ export default function Navbar() {
               <span className="text-white font-semibold text-base tracking-tight leading-none block">
                 Trail to Tides
               </span>
-              <span className="text-white/40 text-[10px] tracking-widest uppercase leading-none block mt-0.5">
-                India's Adventure Map
-              </span>
+
             </div>
           </Link>
 
