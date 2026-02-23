@@ -5,40 +5,45 @@ import Image from "next/image";
 
 const slides = [
   {
-    src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2560&q=95",
-    alt: "Majestic snow-capped Himalayan peaks at sunrise",
+    // Mountain: solo trekker on high-altitude ridge
+    src: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=2560&q=95",
+    alt: "Trekker on a high-altitude Himalayan ridge",
     panFrom: "50% 60%",
-    panTo: "50% 40%",
+    panTo: "50% 42%",
     scaleFrom: 1.08,
     scaleTo: 1.18,
   },
   {
-    src: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=2560&q=95",
-    alt: "Turquoise tropical ocean with white sand shore",
-    panFrom: "55% 50%",
-    panTo: "45% 52%",
+    // Ocean: kayaking through sea caves / coastal water
+    src: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=2560&q=95",
+    alt: "Kayaker paddling through vivid turquoise coastal waters",
+    panFrom: "50% 45%",
+    panTo: "50% 58%",
     scaleFrom: 1.06,
     scaleTo: 1.16,
   },
   {
-    src: "https://images.unsplash.com/photo-1448375240586-882707db888b?w=2560&q=95",
-    alt: "Sunbeams cutting through dense misty jungle canopy",
-    panFrom: "50% 40%",
-    panTo: "50% 58%",
+    // Mountain: motorbike expedition on high-altitude pass
+    src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=2560&q=95",
+    alt: "Motorbike rider on a dramatic Himalayan mountain pass",
+    panFrom: "48% 55%",
+    panTo: "52% 44%",
     scaleFrom: 1.07,
     scaleTo: 1.17,
   },
   {
-    src: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=2560&q=95",
-    alt: "Golden Thar desert dunes at magic hour",
-    panFrom: "44% 55%",
-    panTo: "56% 44%",
+    // Ocean: surfer riding a wave at golden hour
+    src: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=2560&q=95",
+    alt: "Surfer carving a wave at golden hour",
+    panFrom: "55% 50%",
+    panTo: "45% 50%",
     scaleFrom: 1.06,
-    scaleTo: 1.16,
+    scaleTo: 1.15,
   },
   {
-    src: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2560&q=95",
-    alt: "Himalayan ridge bathed in alpenglow at dusk",
+    // Mountain: mountaineer on snowy summit
+    src: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=2560&q=95",
+    alt: "Mountaineer silhouetted against a vast snowy summit",
     panFrom: "50% 52%",
     panTo: "50% 38%",
     scaleFrom: 1.08,
