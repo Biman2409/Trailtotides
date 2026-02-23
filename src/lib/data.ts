@@ -178,9 +178,9 @@ export const adventures: Adventure[] = [
   },
   {
     id: "4",
-    slug: "andaman-scuba-diving",
-    name: "Andaman Islands Diving",
-    tagline: "Beneath the surface of India's most pristine waters",
+      slug: "andaman-scuba-diving",
+    name: "Havelock Island Diving",
+    tagline: "Dive the crystal-clear waters of Havelock Island",
     region: "Islands",
     state: "Andaman & Nicobar",
     type: "Scuba",
@@ -190,7 +190,7 @@ export const adventures: Adventure[] = [
     altitude: "Sea level",
     terrain: "Coral reefs, drop-offs, WWII wrecks",
     bestSeason: "Nov – May",
-        heroImage: "https://images.unsplash.com/photo-1695079513934-45c725827220?w=1600&q=90",
+        heroImage: "https://images.unsplash.com/photo-1759322936572-ec439f2e46bc?w=1600&q=90",
       galleryImages: [
         "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80",
       ],
