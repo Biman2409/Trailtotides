@@ -278,6 +278,7 @@ export const adventures: Adventure[] = [
   {
     id: "7",
     slug: "dzukou-valley-trek",
+
     name: "Dzükou Valley Trek",
     tagline: "The valley that the gods kept for themselves",
     region: "Northeast",
