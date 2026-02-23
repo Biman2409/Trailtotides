@@ -151,7 +151,7 @@ export const adventures: Adventure[] = [
     difficulty: "Intermediate",
     duration: "7+ days",
     durationDays: "10 days",
-    altitude: "5,328m (Khardung La)",
+      altitude: "5,359m (Tanglang La)",
     terrain: "Mountain highways, river crossings, high passes",
     bestSeason: "Jun – Sep",
         heroImage: "https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?w=1600&q=90",
