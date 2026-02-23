@@ -40,15 +40,15 @@ const slides = [
     scaleFrom: 1.06,
     scaleTo: 1.15,
   },
-  {
-      // Mountain: mountain biker on a rugged trail
-      src: "https://images.unsplash.com/photo-1571008887538-b36bb32f4571?w=2560&q=95",
-      alt: "Mountain biker on a rugged trail",
-    panFrom: "48% 55%",
-    panTo: "52% 40%",
-    scaleFrom: 1.07,
-    scaleTo: 1.16,
-  },
+    {
+      // Mountain: motorbike rider on a Himalayan mountain road
+      src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=2560&q=95",
+      alt: "Motorbike rider on a sweeping Himalayan mountain road",
+      panFrom: "48% 55%",
+      panTo: "52% 40%",
+      scaleFrom: 1.07,
+      scaleTo: 1.16,
+    },
   {
     // Mountain: rock climber scaling a sheer cliff face (was 3, now 6)
     src: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=2560&q=95",
