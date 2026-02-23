@@ -23,7 +23,7 @@ const slides = [
     scaleTo: 1.16,
   },
   {
-    // Mountain: mountaineer on snowy summit (was 6, now 3)
+    // Mountain: mountaineer on snowy summit
     src: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=2560&q=95",
     alt: "Mountaineer silhouetted against a vast snowy summit",
     panFrom: "50% 52%",
@@ -40,59 +40,14 @@ const slides = [
     scaleFrom: 1.06,
     scaleTo: 1.15,
   },
-    {
-      // Mountain: motorbike rider on a Himalayan mountain road
-      src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2560&q=95",
-      alt: "Motorbike rider on a sweeping Himalayan mountain road",
-      panFrom: "48% 55%",
-      panTo: "52% 40%",
-      scaleFrom: 1.07,
-      scaleTo: 1.16,
-    },
   {
-    // Ocean: scuba diver descending into vivid coral reef
-    src: "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=2560&q=95",
-    alt: "Scuba diver exploring a vivid coral reef",
-    panFrom: "50% 40%",
-    panTo: "50% 55%",
-    scaleFrom: 1.06,
-    scaleTo: 1.15,
-  },
-  {
-      // Mountain: paragliding with dramatic mountain backdrop
-      src: "https://images.unsplash.com/photo-1486915309851-b0cc1f8a0084?w=2560&q=95",
-      alt: "Paraglider soaring high above mountain peaks",
-    panFrom: "48% 50%",
-    panTo: "52% 38%",
+    // Mountain: motorbike rider on a Himalayan mountain road
+    src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2560&q=95",
+    alt: "Motorbike rider on a sweeping Himalayan mountain road",
+    panFrom: "48% 55%",
+    panTo: "52% 40%",
     scaleFrom: 1.07,
-    scaleTo: 1.17,
-  },
-  {
-    // Ocean: whitewater rafting through wild rapids
-    src: "https://images.unsplash.com/photo-1530866495561-507c9faab2ed?w=2560&q=95",
-    alt: "Rafters charging through powerful whitewater rapids",
-    panFrom: "55% 48%",
-    panTo: "45% 55%",
-    scaleFrom: 1.06,
-    scaleTo: 1.15,
-  },
-  {
-    // Mountain: rock climber on sheer cliff face
-    src: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=2560&q=95",
-    alt: "Rock climber scaling a dramatic sheer cliff face",
-    panFrom: "52% 60%",
-    panTo: "48% 38%",
-    scaleFrom: 1.07,
-    scaleTo: 1.17,
-  },
-  {
-    // Ocean: windsurfer slicing through ocean spray
-    src: "https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=2560&q=95",
-    alt: "Windsurfer slicing through sparkling ocean spray",
-    panFrom: "50% 55%",
-    panTo: "50% 42%",
-    scaleFrom: 1.06,
-    scaleTo: 1.15,
+    scaleTo: 1.16,
   },
 ];
 
