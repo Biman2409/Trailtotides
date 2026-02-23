@@ -30,6 +30,8 @@ export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
   const [prev, setPrev] = useState<number | null>(null);
   const [transitioning, setTransitioning] = useState(false);
+  // Track which slides have been "activated" so Ken Burns starts on mount
+  const [activated, setActivated] = useState<Set<number>>(new Set([0]));
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function goTo(index: number) {
@@ -37,6 +39,7 @@ export default function HeroSlider() {
     setPrev(current);
     setTransitioning(true);
     setCurrent(index);
+    setActivated((prev) => new Set(prev).add(index));
     setTimeout(() => {
       setPrev(null);
       setTransitioning(false);
@@ -60,6 +63,7 @@ export default function HeroSlider() {
       {slides.map((slide, i) => {
         const isActive = i === current;
         const isPrev = i === prev;
+        const hasBeenActivated = activated.has(i);
         if (!isActive && !isPrev) return null;
         return (
           <div
@@ -78,9 +82,9 @@ export default function HeroSlider() {
               priority={i === 0}
               className="object-cover"
               style={{
-                transform: isActive ? "scale(1.06)" : "scale(1.0)",
-                transition: isActive
-                  ? "transform 7s cubic-bezier(0.25, 0.46, 0.45, 0.94)"
+                transform: hasBeenActivated ? "scale(1.08)" : "scale(1.0)",
+                transition: hasBeenActivated
+                  ? "transform 8s cubic-bezier(0.25, 0.46, 0.45, 0.94)"
                   : "none",
               }}
             />
