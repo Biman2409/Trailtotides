@@ -122,16 +122,18 @@ export default function HeroSlider() {
 
       {/* ── Layered gradients ───────────────────────────── */}
       <div className="absolute inset-0" style={{ zIndex: 3, pointerEvents: "none" }}>
-        {/* bottom-up dark fade for legibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-black/80" />
-        {/* edge vignette */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0,0,0,0.45) 100%)",
-          }}
-        />
+          {/* solid dark base so text is always readable */}
+          <div className="absolute inset-0 bg-black/55" />
+          {/* bottom-up fade for extra depth */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/85" />
+          {/* centre spotlight — keeps the text area dark */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.6) 100%)",
+            }}
+          />
         {/* subtle film-grain texture via SVG noise */}
         <svg className="absolute inset-0 w-full h-full opacity-[0.035]" aria-hidden>
           <filter id="noise">
