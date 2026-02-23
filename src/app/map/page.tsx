@@ -14,14 +14,13 @@ const MapComponent = dynamic(() => import("./MapComponent"), { ssr: false, loadi
 )});
 
 const typeEmoji: Record<AdventureType, string> = {
-  "Trek": "🥾",
-  "Bike Trip": "🏍️",
+  "Trekking": "🥾",
+  "Biking": "🏍️",
   "Cycling": "🚴",
-  "Scuba": "🤿",
+  "Diving": "🤿",
   "Kayaking": "🛶",
   "Skiing": "⛷️",
   "Mountaineering": "🧗",
-  "Desert Trail": "🐪",
 };
 
 export default function MapPage() {
