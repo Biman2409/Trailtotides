@@ -23,11 +23,11 @@ const slides = [
     scaleTo: 1.16,
   },
   {
-    // Mountain: motorbike expedition on high-altitude pass
-    src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=2560&q=95",
-    alt: "Motorbike rider on a dramatic Himalayan mountain pass",
-    panFrom: "48% 55%",
-    panTo: "52% 44%",
+    // Mountain: rock climber scaling a sheer cliff face
+      src: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=2560&q=95",
+      alt: "Rock climber scaling a dramatic sheer cliff face",
+      panFrom: "52% 60%",
+      panTo: "48% 38%",
     scaleFrom: 1.07,
     scaleTo: 1.17,
   },
