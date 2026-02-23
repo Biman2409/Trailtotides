@@ -84,11 +84,11 @@ export const adventures: Adventure[] = [
     altitude: "3,450m",
     terrain: "Frozen river, ice sheets",
     bestSeason: "Jan – Feb",
-    heroImage: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=90",
-    galleryImages: [
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
-      "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=800&q=80",
-    ],
+      heroImage: "https://images.unsplash.com/photo-1548013146-72479768bada?w=1600&q=90",
+      galleryImages: [
+        "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
+        "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=800&q=80",
+      ],
     lat: 34.1526,
     lng: 76.8571,
     description:
