@@ -21,17 +21,20 @@ export default function HomePage() {
 
         {/* Content */}
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-          <p className="text-[#c4622d] text-sm font-medium tracking-[0.2em] uppercase mb-6">
-            India's Adventure Discovery Platform
-          </p>
-          <h1 className="text-white text-5xl md:text-7xl lg:text-8xl font-semibold leading-[1.0] tracking-tight mb-6">
-            From mountain trails
-            <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5ba3c9] to-[#c4622d]">
-              to ocean tides.
-            </span>
-          </h1>
-          <p className="text-white/65 text-base md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
+            <p className="text-[#f07a42] text-sm font-semibold tracking-[0.2em] uppercase mb-6 drop-shadow-md">
+              India's Adventure Discovery Platform
+            </p>
+            <h1
+              className="text-white text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.0] tracking-tight mb-6"
+              style={{ textShadow: "0 2px 24px rgba(0,0,0,0.6), 0 1px 4px rgba(0,0,0,0.8)" }}
+            >
+              From mountain trails
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7ec8e3] to-[#f07a42]">
+                to ocean tides.
+              </span>
+            </h1>
+            <p className="text-white/90 text-base md:text-xl max-w-2xl mx-auto leading-relaxed mb-10" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.7)" }}>
             Discover treks, rides, and wild experiences across India — curated,
             verified, and beautifully mapped.
           </p>
