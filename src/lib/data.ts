@@ -290,7 +290,7 @@ export const adventures: Adventure[] = [
     altitude: "2,452m",
       terrain: "Dense forest, alpine meadows, seasonal rivers",
       bestSeason: "Jun – Sep, Dec – Mar",
-        heroImage: "https://images.unsplash.com/photo-1501702580495-ec0f3a4517b5?w=1600&q=90",
+        heroImage: "https://images.unsplash.com/photo-1542709111240-e9df0dd813b4?w=1600&q=90",
     galleryImages: [],
     lat: 25.5330,
     lng: 94.1009,
