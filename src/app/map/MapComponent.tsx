@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Link from "next/link";
 import type { Adventure } from "@/lib/data";
 
 interface Props {
@@ -25,6 +24,37 @@ const typeEmoji: Record<string, string> = {
   "Desert Trail": "🐪",
 };
 
+declare global {
+  interface Window { L: any }
+}
+
+function loadLeaflet(): Promise<any> {
+  return new Promise((resolve) => {
+    if (window.L) { resolve(window.L); return; }
+
+    // CSS
+    if (!document.querySelector('link[href*="leaflet"]')) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      document.head.appendChild(link);
+    }
+
+    // JS
+    if (!document.querySelector('script[src*="leaflet"]')) {
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+      script.onload = () => resolve(window.L);
+      document.head.appendChild(script);
+    } else {
+      // script already inserted but may not be loaded yet — poll
+      const poll = setInterval(() => {
+        if (window.L) { clearInterval(poll); resolve(window.L); }
+      }, 50);
+    }
+  });
+}
+
 export default function MapComponent({ adventures }: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -32,38 +62,36 @@ export default function MapComponent({ adventures }: Props) {
 
   useEffect(() => {
     if (!mapRef.current) return;
-    if (mapInstanceRef.current) return;
 
-    // Dynamically import leaflet to avoid SSR issues
-      import("leaflet").then((L) => {
-        // Fix default marker icon path issue with Next.js
-        delete (L.Icon.Default.prototype as any)._getIconUrl;
-        L.Icon.Default.mergeOptions({
-          iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-          iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-          shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-        });
+    loadLeaflet().then((L) => {
+      if (!mapRef.current) return;
 
-        // Guard against StrictMode double-invoke leaving a stale _leaflet_id
-        const container = mapRef.current!;
-        if ((container as any)._leaflet_id) {
-          (container as any)._leaflet_id = undefined;
-        }
+      // Guard against StrictMode double-invoke
+      const container = mapRef.current;
+      if ((container as any)._leaflet_id) {
+        (container as any)._leaflet_id = undefined;
+      }
 
-        const map = L.map(container, {
+      // Fix default icons
+      delete (L.Icon.Default.prototype as any)._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+        iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+        shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+      });
+
+      const map = L.map(container, {
         center: [22.5, 80.0],
         zoom: 5,
         zoomControl: true,
         attributionControl: false,
       });
 
-      // Dark style tile layer (CartoDB Dark Matter)
       L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/dark_matter_no_labels/{z}/{x}/{y}{r}.png",
         { subdomains: "abcd", maxZoom: 19 }
       ).addTo(map);
 
-      // Place name labels layer on top
       L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png",
         { subdomains: "abcd", maxZoom: 19, opacity: 0.6 }
@@ -71,8 +99,6 @@ export default function MapComponent({ adventures }: Props) {
 
       mapInstanceRef.current = map;
       markersLayerRef.current = L.layerGroup().addTo(map);
-
-      // Add markers for current adventures
       addMarkers(L, adventures);
     });
 
@@ -82,7 +108,6 @@ export default function MapComponent({ adventures }: Props) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
-      // Also clear any stale _leaflet_id left on the DOM node
       if (mapRef.current) {
         (mapRef.current as any)._leaflet_id = undefined;
       }
@@ -90,10 +115,9 @@ export default function MapComponent({ adventures }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // When adventures prop changes, update markers
   useEffect(() => {
     if (!mapInstanceRef.current || !markersLayerRef.current) return;
-    import("leaflet").then((L) => {
+    loadLeaflet().then((L) => {
       markersLayerRef.current.clearLayers();
       addMarkers(L, adventures);
     });
@@ -101,7 +125,7 @@ export default function MapComponent({ adventures }: Props) {
 
   function addMarkers(L: any, advs: Adventure[]) {
     advs.forEach((adv) => {
-      const color = difficultyColor[adv.difficulty];
+      const color = difficultyColor[adv.difficulty] ?? "#6366f1";
       const emoji = typeEmoji[adv.type] || "📍";
 
       const icon = L.divIcon({
@@ -148,13 +172,5 @@ export default function MapComponent({ adventures }: Props) {
     });
   }
 
-  return (
-    <>
-      <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      />
-      <div ref={mapRef} className="w-full h-full" />
-    </>
-  );
+  return <div ref={mapRef} className="w-full h-full" />;
 }
