@@ -50,13 +50,49 @@ const slides = [
       scaleTo: 1.16,
     },
   {
-    // Mountain: rock climber scaling a sheer cliff face (was 3, now 6)
+    // Ocean: scuba diver descending into vivid coral reef
+    src: "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=2560&q=95",
+    alt: "Scuba diver exploring a vivid coral reef",
+    panFrom: "50% 40%",
+    panTo: "50% 55%",
+    scaleFrom: 1.06,
+    scaleTo: 1.15,
+  },
+  {
+    // Mountain: paraglider soaring above green valley
+    src: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=2560&q=95",
+    alt: "Paraglider soaring above a lush mountain valley",
+    panFrom: "48% 50%",
+    panTo: "52% 38%",
+    scaleFrom: 1.07,
+    scaleTo: 1.17,
+  },
+  {
+    // Ocean: whitewater rafting through wild rapids
+    src: "https://images.unsplash.com/photo-1530866495561-507c9faab2ed?w=2560&q=95",
+    alt: "Rafters charging through powerful whitewater rapids",
+    panFrom: "55% 48%",
+    panTo: "45% 55%",
+    scaleFrom: 1.06,
+    scaleTo: 1.15,
+  },
+  {
+    // Mountain: rock climber on sheer cliff face
     src: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=2560&q=95",
     alt: "Rock climber scaling a dramatic sheer cliff face",
     panFrom: "52% 60%",
     panTo: "48% 38%",
     scaleFrom: 1.07,
     scaleTo: 1.17,
+  },
+  {
+    // Ocean: windsurfer slicing through ocean spray
+    src: "https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=2560&q=95",
+    alt: "Windsurfer slicing through sparkling ocean spray",
+    panFrom: "50% 55%",
+    panTo: "50% 42%",
+    scaleFrom: 1.06,
+    scaleTo: 1.15,
   },
 ];
 
