@@ -390,7 +390,7 @@ export const adventures: Adventure[] = [
     altitude: "3,049m",
     terrain: "Groomed ski slopes, natural powder fields",
     bestSeason: "Jan – Mar",
-      heroImage: "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=1600&q=90",
+      heroImage: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1600&q=90",
     galleryImages: [],
     lat: 30.5292,
     lng: 79.5665,
