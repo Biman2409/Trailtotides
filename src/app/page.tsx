@@ -28,50 +28,53 @@ export default function HomePage() {
                 </p>
               </div>
 
-            {/* headline */}
-            <h1
-              className="text-white font-bold leading-[1.0] tracking-tight mb-6"
-              style={{
-                fontSize: "clamp(3rem, 8vw, 6rem)",
-                textShadow: "0 4px 32px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.9)",
-              }}
-            >
-              From mountain{" "}
-              <span
-                className="italic"
+              {/* headline */}
+              <h1
+                className="text-white font-bold tracking-tight mb-6"
                 style={{
-                  background: "linear-gradient(95deg, #fff 0%, #ffd0a8 60%, #f07a42 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
+                  fontSize: "clamp(2.6rem, 7vw, 5.5rem)",
+                  lineHeight: 1.12,
+                  textShadow: "0 4px 32px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.9)",
+                  paddingBottom: "0.1em",
                 }}
               >
-                trails
-              </span>
-              <br />
-              to ocean{" "}
-              <span
-                className="italic"
-                style={{
-                  background: "linear-gradient(95deg, #7ec8e3 0%, #a8dfef 60%, #fff 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
-                tides.
-              </span>
-            </h1>
+                From mountain{" "}
+                <span
+                  className="italic inline-block"
+                  style={{
+                    background: "linear-gradient(95deg, #fff 0%, #ffd0a8 60%, #f07a42 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    paddingBottom: "0.08em",
+                  }}
+                >
+                  trails
+                </span>
+                <br />
+                to ocean{" "}
+                <span
+                  className="italic inline-block"
+                  style={{
+                    background: "linear-gradient(95deg, #7ec8e3 0%, #a8dfef 60%, #fff 100%)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    paddingBottom: "0.08em",
+                  }}
+                >
+                  tides.
+                </span>
+              </h1>
 
-            {/* subheading */}
-            <p
-              className="text-white text-base md:text-xl max-w-2xl mx-auto leading-relaxed mb-10 font-medium"
-              style={{ textShadow: "0 2px 12px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,1)" }}
-            >
-              Discover treks, rides &amp; wild experiences across India —
-              <br className="hidden sm:block" />
-              curated, verified, and beautifully mapped.
-            </p>
+              {/* subheading — exactly 2 lines */}
+              <p
+                className="text-white text-lg md:text-xl max-w-xl mx-auto leading-relaxed mb-10 font-medium"
+                style={{ textShadow: "0 2px 12px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,1)" }}
+              >
+                Discover treks, rides &amp; wild experiences across India —<br />
+                curated, verified, and beautifully mapped.
+              </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
