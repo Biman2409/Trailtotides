@@ -280,7 +280,7 @@ export const adventures: Adventure[] = [
     id: "11",
     slug: "ladakh-circuit",
       name: "Ladakh Circuit",
-      tagline: "Ride to the world's highest motorable road — Mig La",
+        tagline: "Nubra, Pangong, Hanle — Ladakh's untamed heart on two wheels",
     region: "Himalayas",
     state: "Ladakh",
     type: "Biking",
