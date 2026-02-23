@@ -119,14 +119,12 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-12">
             <div>
-                <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
-                  Our Favourites
-                </p>
-                <h2 className="text-[#1a1f2e] text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">
-                  Adventures worth
-                  <br />
-                  a lifetime
-                </h2>
+                  <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+                    Our Favourites
+                  </p>
+                  <h2 className="text-[#1a1f2e] text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">
+                    Adventure of a Lifetime
+                  </h2>
             </div>
             <Link
               href="/explore"
