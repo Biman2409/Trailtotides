@@ -29,62 +29,43 @@ export default function HomePage() {
               </div>
 
               {/* headline */}
-                <h1
-                  className="font-bold tracking-tight mb-6"
+              <h1
+                className="font-bold tracking-tight mb-6"
+                style={{
+                  fontSize: "clamp(2.8rem, 7.5vw, 6rem)",
+                  lineHeight: 1.12,
+                  color: "white",
+                  textShadow: "0 2px 20px rgba(0,0,0,0.7)",
+                }}
+              >
+                {/* Line 1 */}
+                <span style={{ display: "block" }}>
+                  From{" "}
+                  <em style={{ fontStyle: "italic", fontWeight: 700, color: "white" }}>
+                    Mountain Trail
+                  </em>
+                </span>
+
+                {/* Thin divider line between the two rows */}
+                <span
                   style={{
-                    fontSize: "clamp(2.6rem, 7vw, 5.5rem)",
-                    lineHeight: 1.15,
-                    overflow: "visible",
-                    color: "white",
+                    display: "block",
+                    height: "2px",
+                    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.35) 30%, rgba(255,255,255,0.35) 70%, transparent)",
+                    margin: "0.35em auto",
+                    maxWidth: "520px",
                   }}
-                >
-                  <span
-                    style={{
-                      display: "block",
-                      textShadow: "0 2px 16px rgba(0,0,0,0.8)",
-                    }}
-                  >
-                    From{" "}
-                    <em
-                      style={{
-                        fontStyle: "italic",
-                        background: "linear-gradient(100deg, #ffcf9d 0%, #f07a42 100%)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                        display: "inline-block",
-                        paddingBottom: "0.05em",
-                        paddingRight: "0.1em",
-                        filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.7))",
-                      }}
-                    >
-                      Mountain Trails
-                    </em>
-                  </span>
-                  <span
-                    style={{
-                      display: "block",
-                      textShadow: "0 2px 16px rgba(0,0,0,0.8)",
-                    }}
-                  >
-                    to{" "}
-                    <em
-                      style={{
-                        fontStyle: "italic",
-                        background: "linear-gradient(100deg, #93d4ee 0%, #d6f0f8 100%)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                        display: "inline-block",
-                        paddingBottom: "0.05em",
-                        paddingRight: "0.1em",
-                        filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.7))",
-                      }}
-                    >
-                      Ocean Tides.
-                    </em>
-                  </span>
-                </h1>
+                />
+
+                {/* Line 2 */}
+                <span style={{ display: "block" }}>
+                  To Ocean{" "}
+                  <em style={{ fontStyle: "italic", fontWeight: 700, color: "white" }}>
+                    Tides
+                  </em>
+                  .
+                </span>
+              </h1>
 
               {/* subheading — exactly 2 lines */}
               <p
