@@ -196,7 +196,7 @@ export default function HeroSlider() {
         {slides.map((_, i) => (
           <button
             key={i}
-            onClick={() => goTo(i)}
+              onClick={() => goTo(i, true)}
             aria-label={`Slide ${i + 1}`}
             className="relative overflow-hidden rounded-full"
             style={{
