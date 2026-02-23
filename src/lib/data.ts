@@ -155,7 +155,7 @@ export const adventures: Adventure[] = [
     altitude: "5,328m (Khardung La)",
     terrain: "Mountain highways, river crossings, high passes",
     bestSeason: "Jun – Sep",
-        heroImage: "https://images.unsplash.com/photo-1768410318571-dc9f9546cf29?w=1600&q=90",
+        heroImage: "https://images.unsplash.com/photo-1663407978077-ca116e36abf0?w=1600&q=90",
       galleryImages: [
         "https://images.unsplash.com/photo-1491975474562-1f4e30bc9468?w=800&q=80",
       ],
