@@ -143,7 +143,7 @@ export const adventures: Adventure[] = [
   {
     id: "3",
     slug: "manali-leh-bike-expedition",
-    name: "Manali–Leh Highway",
+      name: "Manali–Leh Highway Ride",
     tagline: "Ride across the highest motorable roads on earth",
     region: "Himalayas",
     state: "Himachal Pradesh / Ladakh",
