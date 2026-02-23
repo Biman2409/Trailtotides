@@ -32,21 +32,23 @@ export default function HomePage() {
               <h1
                 className="text-white font-bold tracking-tight mb-6"
                 style={{
-                  fontSize: "clamp(2.6rem, 7vw, 5.5rem)",
-                  lineHeight: 1.12,
+                  fontSize: "clamp(2.4rem, 6.5vw, 5rem)",
+                  lineHeight: 1.15,
                   textShadow: "0 4px 32px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.9)",
-                  paddingBottom: "0.1em",
+                  paddingBottom: "0.15em",
+                  overflow: "visible",
                 }}
               >
                 From mountain{" "}
                 <span
-                  className="italic inline-block"
                   style={{
                     background: "linear-gradient(95deg, #fff 0%, #ffd0a8 60%, #f07a42 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
-                    paddingBottom: "0.08em",
+                    fontStyle: "italic",
+                    display: "inline",
+                    paddingRight: "0.06em",
                   }}
                 >
                   trails
@@ -54,13 +56,14 @@ export default function HomePage() {
                 <br />
                 to ocean{" "}
                 <span
-                  className="italic inline-block"
                   style={{
                     background: "linear-gradient(95deg, #7ec8e3 0%, #a8dfef 60%, #fff 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
-                    paddingBottom: "0.08em",
+                    fontStyle: "italic",
+                    display: "inline",
+                    paddingRight: "0.06em",
                   }}
                 >
                   tides.
