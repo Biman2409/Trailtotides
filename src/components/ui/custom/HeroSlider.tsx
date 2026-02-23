@@ -30,9 +30,17 @@ export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
   const [prev, setPrev] = useState<number | null>(null);
   const [transitioning, setTransitioning] = useState(false);
-  // Track which slides have been "activated" so Ken Burns starts on mount
-  const [activated, setActivated] = useState<Set<number>>(new Set([0]));
+  // Track which slides have Ken Burns zoom running
+  const [activated, setActivated] = useState<Set<number>>(new Set());
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Trigger Ken Burns on slide 0 after first paint so transition fires
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      setActivated(new Set([0]));
+    });
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   function goTo(index: number) {
     if (transitioning || index === current) return;
