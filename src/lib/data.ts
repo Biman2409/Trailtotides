@@ -182,7 +182,7 @@ export const adventures: Adventure[] = [
     tagline: "Dive the crystal-clear waters of Havelock Island",
     region: "Islands",
     state: "Andaman & Nicobar",
-    type: "Scuba",
+      type: "Diving",
     difficulty: "Beginner",
     duration: "3–5 days",
     durationDays: "4 days",
