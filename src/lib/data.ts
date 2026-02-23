@@ -321,7 +321,7 @@ export const adventures: Adventure[] = [
       altitude: "5,913m (Mig La)",
     terrain: "High-altitude passes, remote valleys, gravel & tarmac",
     bestSeason: "Jun – Sep",
-      heroImage: "https://images.unsplash.com/photo-1768410318571-dc9f9546cf29?w=1600&q=90",
+      heroImage: "https://images.unsplash.com/photo-1619103801164-1166263cb3b6?w=1600&q=90",
     galleryImages: [],
     lat: 33.7782,
     lng: 78.6753,
