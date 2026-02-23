@@ -355,6 +355,7 @@ export const adventures: Adventure[] = [
     terrain: "Unmade tracks, river crossings, cliff-edge roads",
     bestSeason: "Jul – Sep",
       heroImage: "https://images.unsplash.com/photo-1669255664788-61c668bd6fe8?w=1600&q=90",
+
     galleryImages: [],
     lat: 33.4427,
     lng: 76.8516,
