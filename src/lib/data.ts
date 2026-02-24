@@ -304,8 +304,8 @@ export const adventures: Adventure[] = [
     safetyNotes:
       "Spend minimum 3 days acclimatising in Leh before starting. Carry oxygen, full repair kit, and satellite communicator. Fuel up whenever possible — stations are 200km+ apart. File a route plan with local police.",
     operators: [
-      { name: "Himalayan Moto", verified: true, priceFrom: "₹65,000", rating: 4.9 },
-      { name: "Leh Bikers", verified: true, priceFrom: "₹55,000", rating: 4.8 },
+      { name: "Himalayan Moto", verified: true, priceFrom: "₹65,000", rating: 4.9, website: "https://www.himalayan-moto.com" },
+      { name: "Leh Bikers", verified: true, priceFrom: "₹55,000", rating: 4.8, website: "https://www.lehbikers.com" },
     ],
       tags: ["Mig La", "world record", "Ladakh", "extreme altitude", "circuit"],
     featured: false,
