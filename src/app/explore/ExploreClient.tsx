@@ -9,6 +9,7 @@ import AdventureCard from "@/components/ui/custom/AdventureCard";
 import { adventures, adventureTypes, regions } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize } from "@/lib/data";
 
+// filter constants
 const difficulties: Difficulty[] = ["Beginner", "Intermediate", "Expert"];
 const durations: Duration[] = ["Weekend", "3–5 days", "7+ days"];
 const groupSizes: GroupSize[] = ["Solo", "Small group (2–6)", "Large group (6+)"];
