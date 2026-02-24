@@ -205,8 +205,8 @@ export const adventures: Adventure[] = [
     safetyNotes:
       "Always dive with a certified dive centre. Currents can be strong at certain sites. Never touch coral. Keep buoyancy neutral at all times.",
     operators: [
-      { name: "Dive India", verified: true, priceFrom: "₹4,500/dive", rating: 4.9 },
-      { name: "Barefoot Scuba", verified: true, priceFrom: "₹3,800/dive", rating: 4.7 },
+      { name: "Dive India", verified: true, priceFrom: "₹4,500/dive", rating: 4.9, website: "https://www.diveindia.com" },
+      { name: "Barefoot Scuba", verified: true, priceFrom: "₹3,800/dive", rating: 4.7, website: "https://www.barefootscuba.com" },
     ],
     tags: ["diving", "coral reefs", "islands", "marine life", "WWII wreck"],
     featured: true,
