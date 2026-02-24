@@ -488,8 +488,8 @@ export const adventures: Adventure[] = [
         groupSize: "Small group (2–6)",
           heroImage: "https://images.unsplash.com/photo-1549364472-0972cec89cd8?w=1600&q=90",
     galleryImages: [],
-    lat: 34.0166,
-    lng: 77.6088,
+      lat: 33.9139,
+      lng: 77.6285,
     description:
       "Stok Kangri is one of the most accessible 6,000m peaks in the world — and one of the best introductory mountaineering expeditions in India. The summit ridge is a narrow blade of ice and rock with a 360° view of the entire Ladakh range. On a clear summit day, you can see K2.",
     whatMakesSpecial:
