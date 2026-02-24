@@ -23,7 +23,7 @@ export type Month =
   | "Jan" | "Feb" | "Mar" | "Apr" | "May" | "Jun"
   | "Jul" | "Aug" | "Sep" | "Oct" | "Nov" | "Dec";
 
-export type GroupSize = "Solo" | "Small group (2–8)" | "Large group (9+)";
+export type GroupSize = "Solo" | "Small group (2–6)" | "Large group (6+)";
 
 export interface Adventure {
   id: string;
