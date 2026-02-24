@@ -2,17 +2,31 @@
 
 import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search, SlidersHorizontal, X, MapPin, Clock, TrendingUp } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
+import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import { adventures, adventureTypes, regions } from "@/lib/data";
-import type { AdventureType, Region, Difficulty, Duration } from "@/lib/data";
+import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize } from "@/lib/data";
 
 const difficulties: Difficulty[] = ["Beginner", "Intermediate", "Expert"];
 const durations: Duration[] = ["Weekend", "3–5 days", "7+ days"];
+const groupSizes: GroupSize[] = ["Solo", "Small group (2–8)", "Large group (9+)"];
+
+const months: { label: string; value: Month }[] = [
+  { label: "Jan", value: "Jan" },
+  { label: "Feb", value: "Feb" },
+  { label: "Mar", value: "Mar" },
+  { label: "Apr", value: "Apr" },
+  { label: "May", value: "May" },
+  { label: "Jun", value: "Jun" },
+  { label: "Jul", value: "Jul" },
+  { label: "Aug", value: "Aug" },
+  { label: "Sep", value: "Sep" },
+  { label: "Oct", value: "Oct" },
+  { label: "Nov", value: "Nov" },
+  { label: "Dec", value: "Dec" },
+];
 
 const difficultyDot: Record<Difficulty, string> = {
   Beginner: "bg-emerald-400",
@@ -32,6 +46,8 @@ export default function ExploreClient() {
   );
   const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
   const [selectedDurations, setSelectedDurations] = useState<Duration[]>([]);
+  const [selectedMonths, setSelectedMonths] = useState<Month[]>([]);
+  const [selectedGroupSizes, setSelectedGroupSizes] = useState<GroupSize[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   function toggle<T>(arr: T[], val: T, setter: (v: T[]) => void) {
@@ -52,21 +68,29 @@ export default function ExploreClient() {
       if (selectedDifficulties.length && !selectedDifficulties.includes(a.difficulty))
         return false;
       if (selectedDurations.length && !selectedDurations.includes(a.duration)) return false;
+      if (selectedMonths.length && !selectedMonths.some((m) => a.bestMonths.includes(m)))
+        return false;
+      if (selectedGroupSizes.length && !selectedGroupSizes.includes(a.groupSize))
+        return false;
       return true;
     });
-  }, [search, selectedTypes, selectedRegions, selectedDifficulties, selectedDurations]);
+  }, [search, selectedTypes, selectedRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes]);
 
   const activeFilterCount =
     selectedTypes.length +
     selectedRegions.length +
     selectedDifficulties.length +
-    selectedDurations.length;
+    selectedDurations.length +
+    selectedMonths.length +
+    selectedGroupSizes.length;
 
   function clearAll() {
     setSelectedTypes([]);
     setSelectedRegions([]);
     setSelectedDifficulties([]);
     setSelectedDurations([]);
+    setSelectedMonths([]);
+    setSelectedGroupSizes([]);
     setSearch("");
   }
 
@@ -119,6 +143,7 @@ export default function ExploreClient() {
                 {activeFilterCount}
               </span>
             )}
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
           </button>
 
           {/* Result count */}
@@ -141,7 +166,8 @@ export default function ExploreClient() {
         {/* Filter panel */}
         {filtersOpen && (
           <div className="border-t border-[#e0d8cc] bg-white px-6 lg:px-8 py-6">
-            <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-8">
+
               {/* Adventure type */}
               <div>
                 <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
@@ -231,6 +257,51 @@ export default function ExploreClient() {
                   ))}
                 </div>
               </div>
+
+              {/* Season — month picker */}
+              <div>
+                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
+                  Best Season
+                </h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {months.map(({ label, value }) => (
+                    <button
+                      key={value}
+                      onClick={() => toggle(selectedMonths, value, setSelectedMonths)}
+                      className={`w-10 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                        selectedMonths.includes(value)
+                          ? "bg-sky-700 text-white"
+                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-sky-100 hover:text-sky-700"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Group Size */}
+              <div>
+                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
+                  Group Size
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {groupSizes.map((gs) => (
+                    <button
+                      key={gs}
+                      onClick={() => toggle(selectedGroupSizes, gs, setSelectedGroupSizes)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                        selectedGroupSizes.includes(gs)
+                          ? "bg-[#1e3d2f] text-white"
+                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
+                      }`}
+                    >
+                      {gs}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
             </div>
           </div>
         )}
@@ -273,6 +344,24 @@ export default function ExploreClient() {
               className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#c4622d]/15 hover:text-[#c4622d] transition-colors"
             >
               {d} <X className="w-3 h-3" />
+            </span>
+          ))}
+          {selectedMonths.map((m) => (
+            <span
+              key={m}
+              onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
+              className="flex items-center gap-1.5 bg-sky-100 text-sky-700 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-sky-200 transition-colors"
+            >
+              {m} <X className="w-3 h-3" />
+            </span>
+          ))}
+          {selectedGroupSizes.map((g) => (
+            <span
+              key={g}
+              onClick={() => toggle(selectedGroupSizes, g, setSelectedGroupSizes)}
+              className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#c4622d]/15 hover:text-[#c4622d] transition-colors"
+            >
+              {g} <X className="w-3 h-3" />
             </span>
           ))}
         </div>
