@@ -393,7 +393,7 @@ export default function MapPage() {
                         ["Biking", "Cycling", "Jeep Safari", "Camel Safari"],
                         ["Sandboarding", "Caving", "Urban Adventure"],
                       ].map((row, ri) => (
-                        <div key={ri} className="flex flex-wrap gap-1.5 mb-1.5 last:mb-0">
+                        <div key={ri} className="flex flex-wrap">
                           {adventureTypes
                             .filter(({ type }) => row.includes(type))
                             .sort((a, b) => row.indexOf(a.type) - row.indexOf(b.type))
