@@ -182,8 +182,8 @@ Discover epic adventures across India — handpicked,<br />
                   mapped.
                 </h2>
                 <p className="text-white/60 text-lg leading-relaxed mb-8 max-w-lg">
-                  Toggle adventure layers — treks, rides, water sports — across a live India map.
-                  Every pin opens a full experience card. Adventure density at a glance.
+                    Toggle adventure layers — treks, rides, water sports — across a live India map.
+                    Every pin opens a full experience card.
                 </p>
                 <Link
                   href="/map"
