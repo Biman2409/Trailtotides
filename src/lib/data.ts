@@ -176,6 +176,8 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "Himalayan Moto", verified: true, priceFrom: "₹35,000", rating: 4.9, website: "https://www.himalayan-moto.com" },
       { name: "Royal Brothers", verified: true, priceFrom: "₹28,000", rating: 4.5, website: "https://www.royalbrothers.com" },
+      { name: "Moto Nomads", verified: false, priceFrom: "₹24,000", rating: 4.2, website: "https://www.motonomads.in" },
+      { name: "Saddle Up India", verified: false, priceFrom: "₹26,500", rating: 4.0, website: "https://www.saddleupindia.com" },
     ],
     tags: ["motorcycle", "high passes", "Ladakh", "iconic", "long ride"],
     featured: true,
