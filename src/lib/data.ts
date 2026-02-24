@@ -102,6 +102,8 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "Zanskar Adventures", verified: true, priceFrom: "₹22,000", rating: 4.9, website: "https://www.zanskaradventures.com" },
       { name: "Leh Wild", verified: true, priceFrom: "₹18,500", rating: 4.7, website: "https://www.lehwild.com" },
+      { name: "Frozen Trail Expeditions", verified: false, priceFrom: "₹15,000", rating: 4.2, website: "https://www.frozentrail.in" },
+      { name: "Snow Leopard Adventures", verified: false, priceFrom: "₹17,500", rating: 4.1, website: "https://www.snowleopardadventures.com" },
     ],
     tags: ["frozen river", "winter", "Ladakh", "extreme cold", "iconic"],
     featured: true,
