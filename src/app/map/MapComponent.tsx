@@ -87,12 +87,12 @@ export default function MapComponent({ adventures }: Props) {
       });
 
       L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_matter_no_labels/{z}/{x}/{y}{r}.png",
+        "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
         { subdomains: "abcd", maxZoom: 19 }
       ).addTo(map);
 
       L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png",
+        "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png",
         { subdomains: "abcd", maxZoom: 19, opacity: 0.6 }
       ).addTo(map);
 
