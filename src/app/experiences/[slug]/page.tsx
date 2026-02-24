@@ -244,9 +244,20 @@ export default async function ExperiencePage({ params }: Props) {
                         <div className="text-[#1a1f2e] font-semibold text-base">{op.priceFrom}</div>
                       </div>
                     </div>
-                    <button className="w-full mt-3 bg-[#1e3d2f] hover:bg-[#2d5a42] text-white text-sm font-medium py-2.5 rounded-xl transition-colors">
-                      Get Details
-                    </button>
+                    {op.website ? (
+                      <a
+                        href={op.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block w-full mt-3 bg-[#1e3d2f] hover:bg-[#2d5a42] text-white text-sm font-medium py-2.5 rounded-xl transition-colors text-center"
+                      >
+                        Get Details
+                      </a>
+                    ) : (
+                      <button className="w-full mt-3 bg-[#1e3d2f] hover:bg-[#2d5a42] text-white text-sm font-medium py-2.5 rounded-xl transition-colors">
+                        Get Details
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
