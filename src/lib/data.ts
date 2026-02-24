@@ -287,12 +287,13 @@ export const adventures: Adventure[] = [
     whoNot: "Those expecting tourist infrastructure. Amenities are minimal. You carry your world.",
     safetyNotes:
       "Register at the Viswema check-post. Carry all your food and water. The trail can be slippery after rain. Download offline maps.",
-      operators: [
-        { name: "Wild Hill Adventure", verified: true, priceFrom: "₹5,800", rating: 4.7, website: "https://www.wildadventurenagaland.com" },
-        { name: "Treks and Trails India", verified: true, priceFrom: "₹5,900", rating: 4.6, website: "https://www.treksandtrailsindia.com" },
-        { name: "Soma's Camps Nagaland", verified: false, priceFrom: "₹15,300", rating: 4.3, website: "https://www.somascamps.com" },
-        { name: "Northeast Trails India", verified: false, priceFrom: "₹6,200", rating: 4.1, website: "https://www.northeasttrailsindia.com" },
-      ],
+        operators: [
+          { name: "Wild Hill Adventure", verified: true, priceFrom: "₹5,800", rating: 4.7, website: "https://wildhilladventure.com/dzukou-valley-tour-package" },
+          { name: "Wander Nagaland", verified: true, priceFrom: "₹6,500", rating: 4.6, website: "https://wandernagaland.com" },
+          { name: "Treks and Trails India", verified: true, priceFrom: "₹5,900", rating: 4.6, website: "https://www.treksandtrailsindia.com" },
+          { name: "Northeast Trails India", verified: false, priceFrom: "₹6,200", rating: 4.2, website: "https://www.northeasttrailsindia.com" },
+          { name: "Soma's Camps Nagaland", verified: false, priceFrom: "₹7,500", rating: 4.1, website: "https://www.somascamps.com" },
+        ],
     tags: ["offbeat", "endemic flora", "Northeast", "rare", "solitude"],
     featured: true,
   },
