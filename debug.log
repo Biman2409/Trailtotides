@@ -13,3 +13,12 @@
 2026-02-24T08:42:11.486Z [network][POST 0] /__nextjs_original-stack-frames
   request: {"frames":[],"isServer":false,"isEdgeServer":false,"isAppDirectory":true}
   response: Request failed: Load failed
+2026-02-24T10:27:52.199Z [console][warn] Detected `scroll-behavior: smooth` on the `<html>` element. In a future version, Next.js will no longer automatically disable smooth scrolling during route transitions. To prepare for this change, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+2026-02-24T10:28:04.970Z [console][warn] Detected `scroll-behavior: smooth` on the `<html>` element. In a future version, Next.js will no longer automatically disable smooth scrolling during route transitions. To prepare for this change, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+2026-02-24T10:28:08.679Z [console][warn] Detected `scroll-behavior: smooth` on the `<html>` element. In a future version, Next.js will no longer automatically disable smooth scrolling during route transitions. To prepare for this change, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+2026-02-24T10:27:52.524Z [network][POST 0] /__nextjs_original-stack-frames
+  request: {"frames":[{"file":"file:///home/user/app/.next/static/chunks/turbopack-user_app_c66dc016._.js","line1":622,"column1":28,"methodName":"<unknown>","arguments":[]}],"isServer":false,"isEdgeServer":false,"isAppDirectory":true}
+  response: Request failed: Load failed
+2026-02-24T10:28:09.025Z [network][POST 0] /__nextjs_original-stack-frames
+  request: {"frames":[{"file":"file:///home/user/app/.next/static/chunks/turbopack-user_app_c66dc016._.js","line1":622,"column1":28,"methodName":"<unknown>","arguments":[]}],"isServer":false,"isEdgeServer":false,"isAppDirectory":true}
+  response: Request failed: Load failed
