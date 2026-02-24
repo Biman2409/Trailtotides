@@ -132,13 +132,10 @@ function MapView({ adventures: advs }: { adventures: Adventure[] }) {
         attributionControl: false,
       });
 
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png", {
-        subdomains: "abcd", maxZoom: 19,
-      }).addTo(map);
-
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png", {
-        subdomains: "abcd", maxZoom: 19, opacity: 0.6,
-      }).addTo(map);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          subdomains: "abc", maxZoom: 19,
+          attribution: '&copy; OpenStreetMap contributors',
+        }).addTo(map);
 
       mapInstanceRef.current = map;
       markersLayerRef.current = L.layerGroup().addTo(map);
