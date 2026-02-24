@@ -321,16 +321,19 @@ export default function MapPage() {
       {/* Filter bar */}
       <div className="sticky z-[1001] bg-white/95 backdrop-blur-md border-b border-[#e0d8cc] shadow-sm mt-[64px] lg:mt-[80px]">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-3 flex items-center gap-3">
-          {/* Search */}
-          <div className="relative flex-1 max-w-xs">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9a9590]" />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search adventures..."
-              className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#f5f0e8] text-[#1a1f2e] text-sm placeholder-[#9a9590] border border-transparent focus:outline-none focus:border-[#1e3d2f] transition-colors"
-            />
-          </div>
+            {/* Adventure search */}
+            <div className="relative flex-1 max-w-xs">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9a9590]" />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search adventures..."
+                className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#f5f0e8] text-[#1a1f2e] text-sm placeholder-[#9a9590] border border-transparent focus:outline-none focus:border-[#1e3d2f] transition-colors"
+              />
+            </div>
+
+            {/* Place search */}
+            <PlaceSearch onSelect={(lat, lng) => flyToRef.current?.(lat, lng)} />
 
           {/* Filters toggle */}
           <button
