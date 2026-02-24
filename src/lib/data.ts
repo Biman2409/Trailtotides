@@ -134,7 +134,7 @@ export const adventures: Adventure[] = [
     terrain: "Alpine meadows, glacial streams",
     bestSeason: "Jul – Sep",
     bestMonths: ["Jul", "Aug", "Sep"],
-    groupSize: "Small group (2–8)",
+    groupSize: "Small group (2–6)",
         heroImage: "https://images.unsplash.com/photo-1740116887029-511f9113a782?w=1600&q=90",
     galleryImages: [
       "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80",
