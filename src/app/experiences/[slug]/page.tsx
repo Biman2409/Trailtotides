@@ -289,47 +289,6 @@ export default async function ExperiencePage({ params }: Props) {
           {/* Right — sidebar */}
           <div className="space-y-6">
 
-            {/* Operators */}
-            <div className="bg-white rounded-2xl border border-[#e0d8cc] overflow-hidden shadow-sm">
-              <div className="bg-[#1a1f2e] px-6 py-4">
-                <p className="text-[#c4622d] text-[10px] font-semibold tracking-[0.2em] uppercase mb-1">
-                  Verified Operators
-                </p>
-                <p className="text-white/50 text-xs">Book with confidence</p>
-              </div>
-              <div className="divide-y divide-[#e0d8cc]">
-                {adventure.operators.map((op) => (
-                  <div key={op.name} className="px-6 py-5">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[#1a1f2e] font-semibold text-sm">{op.name}</span>
-                          {op.verified && (
-                            <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                          )}
-                        </div>
-                        <div className="flex items-center gap-1 mt-1">
-                          <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                          <span className="text-[#6b6560] text-xs">{op.rating}</span>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-[#9a9590] text-[10px] uppercase tracking-wide">From</div>
-                        <div className="text-[#1a1f2e] font-semibold text-base">{op.priceFrom}</div>
-                      </div>
-                    </div>
-                    {op.website ? (
-                      <OperatorButton website={op.website} />
-                    ) : (
-                      <button className="w-full mt-3 bg-[#1e3d2f] hover:bg-[#2d5a42] text-white text-sm font-medium py-2.5 rounded-xl transition-colors">
-                        Get Details
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* Quick stats card */}
             <div className="bg-[#1a1f2e] rounded-2xl p-6 text-white">
               <p className="text-[#c4622d] text-[10px] font-semibold tracking-[0.2em] uppercase mb-4">
