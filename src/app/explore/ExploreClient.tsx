@@ -11,7 +11,7 @@ import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize } fr
 
 const difficulties: Difficulty[] = ["Beginner", "Intermediate", "Expert"];
 const durations: Duration[] = ["Weekend", "3–5 days", "7+ days"];
-const groupSizes: GroupSize[] = ["Solo", "Small group (2–8)", "Large group (9+)"];
+const groupSizes: GroupSize[] = ["Solo", "Small group (2–6)", "Large group (6+)"];
 
 const months: { label: string; value: Month }[] = [
   { label: "Jan", value: "Jan" },
