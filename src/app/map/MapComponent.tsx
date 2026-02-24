@@ -167,6 +167,16 @@ export default function MapComponent({ adventures }: Props) {
       const marker = L.marker([adv.lat, adv.lng], { icon })
         .bindPopup(popupHtml, { maxWidth: 280, minWidth: 280 });
 
+      marker.on("popupopen", () => {
+        const popupEl = marker.getPopup()?.getElement();
+        if (popupEl) {
+          popupEl.style.cursor = "pointer";
+          popupEl.addEventListener("click", () => {
+            window.location.href = `/experiences/${adv.slug}`;
+          });
+        }
+      });
+
       markersLayerRef.current.addLayer(marker);
     });
   }
