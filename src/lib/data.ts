@@ -172,8 +172,10 @@ export const adventures: Adventure[] = [
     durationDays: "10 days",
       altitude: "5,359m (Tanglang La)",
     terrain: "Mountain highways, river crossings, high passes",
-    bestSeason: "Jun – Sep",
-        heroImage: "https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?w=1600&q=90",
+      bestSeason: "Jun – Sep",
+      bestMonths: ["Jun", "Jul", "Aug", "Sep"],
+      groupSize: "Large group (9+)",
+          heroImage: "https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?w=1600&q=90",
       galleryImages: [
         "https://images.unsplash.com/photo-1491975474562-1f4e30bc9468?w=800&q=80",
       ],
