@@ -371,8 +371,8 @@ export const adventures: Adventure[] = [
     safetyNotes:
       "Kunzum La can be snowbound until late June — check pass status before departure. Carry chain lube, tyre plugs, and a basic toolkit. Fuel up at Kaza — it's the last pump for 130km.",
     operators: [
-      { name: "Spiti Riders", verified: true, priceFrom: "₹32,000", rating: 4.7 },
-      { name: "Himalayan Moto", verified: true, priceFrom: "₹38,000", rating: 4.9 },
+      { name: "Spiti Riders", verified: true, priceFrom: "₹32,000", rating: 4.7, website: "https://www.spitiriders.com" },
+      { name: "Himalayan Moto", verified: true, priceFrom: "₹38,000", rating: 4.9, website: "https://www.himalayan-moto.com" },
     ],
     tags: ["Spiti", "cold desert", "monasteries", "loop", "Kunzum La"],
     featured: false,
