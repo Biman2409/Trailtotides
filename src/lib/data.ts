@@ -468,13 +468,13 @@ export const adventures: Adventure[] = [
     whoNot: "Those without altitude exposure, weak lungs, or heart conditions. This is serious mountaineering.",
     safetyNotes:
       "Acclimatise in Leh for minimum 3 days. Carry crampons, ice axe, helmet. Go with a certified mountaineering guide — the summit ridge crevasses are real.",
-      operators: [
-        { name: "Rimo Expeditions", verified: true, priceFrom: "₹32,000", rating: 4.9, website: "https://www.rimoexpeditions.com" },
-        { name: "White Magic Adventure", verified: true, priceFrom: "₹28,500", rating: 4.8, website: "https://www.whitemagicadventure.com" },
-        { name: "Bikat Adventures", verified: true, priceFrom: "₹26,000", rating: 4.7, website: "https://www.bikatadventures.com" },
-        { name: "Shikhar Travels", verified: false, priceFrom: "₹24,000", rating: 4.3, website: "https://www.shikhartravels.com" },
-        { name: "Above 14000ft", verified: false, priceFrom: "₹29,000", rating: 4.2, website: "https://www.above14000ft.com" },
-      ],
+        operators: [
+          { name: "Rimo Expeditions", verified: true, priceFrom: "₹32,000", rating: 4.9, website: "https://www.rimoexpeditions.com" },
+          { name: "Bikat Adventures", verified: true, priceFrom: "₹26,000", rating: 4.8, website: "https://www.bikatadventures.com" },
+          { name: "White Magic Adventure", verified: true, priceFrom: "₹28,500", rating: 4.7, website: "https://whitemagicadventures.com" },
+          { name: "Shikhar Travels", verified: false, priceFrom: "₹24,000", rating: 4.3, website: "https://www.shikhartravels.com" },
+          { name: "Trek The Himalayas Mountaineering", verified: false, priceFrom: "₹29,000", rating: 4.2, website: "https://trekthehimalayas.com" },
+        ],
     tags: ["mountaineering", "6000m", "glaciers", "summit", "Ladakh"],
     featured: true,
   },
