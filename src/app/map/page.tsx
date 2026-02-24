@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Layers, Map as MapIcon, Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { Layers, Map as MapIcon, Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import { adventures, adventureTypes, regions } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
