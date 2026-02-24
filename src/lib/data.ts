@@ -19,6 +19,12 @@ export type Difficulty = "Beginner" | "Intermediate" | "Expert";
 
 export type Duration = "Weekend" | "3–5 days" | "7+ days";
 
+export type Month =
+  | "Jan" | "Feb" | "Mar" | "Apr" | "May" | "Jun"
+  | "Jul" | "Aug" | "Sep" | "Oct" | "Nov" | "Dec";
+
+export type GroupSize = "Solo" | "Small group (2–8)" | "Large group (9+)";
+
 export interface Adventure {
   id: string;
   slug: string;
