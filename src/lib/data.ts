@@ -404,8 +404,8 @@ export const adventures: Adventure[] = [
     safetyNotes:
       "Rent equipment from verified shops at the resort. Always check avalanche bulletins. Ski with a buddy or instructor if new to the slopes.",
     operators: [
-      { name: "GMVN Auli", verified: true, priceFrom: "₹6,000", rating: 4.4 },
-      { name: "Ski Himalaya", verified: true, priceFrom: "₹9,500", rating: 4.7 },
+      { name: "GMVN Auli", verified: true, priceFrom: "₹6,000", rating: 4.4, website: "https://www.gmvnl.in" },
+      { name: "Ski Himalaya", verified: true, priceFrom: "₹9,500", rating: 4.7, website: "https://www.skihimalaya.com" },
     ],
     tags: ["skiing", "snowboard", "winter", "powder", "Nanda Devi views"],
     featured: false,
