@@ -39,6 +39,8 @@ export interface Adventure {
   altitude?: string;
   terrain: string;
   bestSeason: string;
+  bestMonths: Month[];
+  groupSize: GroupSize;
   heroImage: string;
   galleryImages: string[];
   lat: number;
