@@ -432,12 +432,13 @@ export const adventures: Adventure[] = [
     whoNot: "Those wanting après-ski nightlife. Auli is simple and raw — but the skiing is real.",
     safetyNotes:
       "Rent equipment from verified shops at the resort. Always check avalanche bulletins. Ski with a buddy or instructor if new to the slopes.",
-      operators: [
-        { name: "GMVN Auli", verified: true, priceFrom: "₹8,900", rating: 4.6, website: "https://gmvnonline.com/skiing" },
-        { name: "Ski Himalaya", verified: true, priceFrom: "₹9,500", rating: 4.7, website: "https://www.skihimalaya.com" },
-        { name: "Cliff Top Club Auli", verified: false, priceFrom: "₹12,000", rating: 4.3, website: "https://www.clifftopclub.com" },
-        { name: "Indiahikes Auli", verified: false, priceFrom: "₹7,500", rating: 4.1, website: "https://indiahikes.com" },
-      ],
+        operators: [
+          { name: "GMVN Auli", verified: true, priceFrom: "₹8,900", rating: 4.7, website: "https://gmvnonline.com" },
+          { name: "Ski Himalaya", verified: true, priceFrom: "₹9,500", rating: 4.7, website: "https://www.skihimalaya.com" },
+          { name: "Bikat Adventures Skiing", verified: true, priceFrom: "₹12,500", rating: 4.6, website: "https://bikatadventures.com" },
+          { name: "Cliff Top Club Auli", verified: false, priceFrom: "₹12,000", rating: 4.3, website: "https://www.clifftopclub.com" },
+          { name: "Thrillophilia Auli", verified: false, priceFrom: "₹7,500", rating: 4.1, website: "https://www.thrillophilia.com/auli-ski-package" },
+        ],
     tags: ["skiing", "snowboard", "winter", "powder", "Nanda Devi views"],
     featured: false,
   },
