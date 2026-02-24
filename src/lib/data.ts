@@ -389,6 +389,8 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "Spiti Riders", verified: true, priceFrom: "₹32,000", rating: 4.7, website: "https://www.spitiriders.com" },
       { name: "Himalayan Moto", verified: true, priceFrom: "₹38,000", rating: 4.9, website: "https://www.himalayan-moto.com" },
+      { name: "Kaza Bikers", verified: false, priceFrom: "₹28,000", rating: 4.1, website: "https://www.kazabikers.in" },
+      { name: "Cold Desert Riders", verified: false, priceFrom: "₹30,000", rating: 4.0, website: "https://www.colddesertrides.com" },
     ],
     tags: ["Spiti", "cold desert", "monasteries", "loop", "Kunzum La"],
     featured: false,
