@@ -100,8 +100,8 @@ export const adventures: Adventure[] = [
     safetyNotes:
       "Carry emergency bivouac gear, layered thermals, and micro-spike crampons. River ice can crack unexpectedly. Always trek with a certified local guide.",
     operators: [
-      { name: "Zanskar Adventures", verified: true, priceFrom: "₹22,000", rating: 4.9 },
-      { name: "Leh Wild", verified: true, priceFrom: "₹18,500", rating: 4.7 },
+      { name: "Zanskar Adventures", verified: true, priceFrom: "₹22,000", rating: 4.9, website: "https://www.zanskaradventures.com" },
+      { name: "Leh Wild", verified: true, priceFrom: "₹18,500", rating: 4.7, website: "https://www.lehwild.com" },
     ],
     tags: ["frozen river", "winter", "Ladakh", "extreme cold", "iconic"],
     featured: true,
