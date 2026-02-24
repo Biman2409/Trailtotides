@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Layers, Map as MapIcon } from "lucide-react";
+import { Layers, Map as MapIcon, Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
-import { adventures, adventureTypes } from "@/lib/data";
-import type { AdventureType, Adventure } from "@/lib/data";
+import { adventures, adventureTypes, regions } from "@/lib/data";
+import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
 
 const typeEmoji: Record<AdventureType, string> = {
   "Trekking": "🥾",
@@ -22,22 +22,33 @@ const difficultyColor: Record<string, string> = {
   Expert: "#ef4444",
 };
 
-declare global {
-  interface Window { L: any }
-}
+const difficulties: Difficulty[] = ["Beginner", "Intermediate", "Expert"];
+const durations: Duration[] = ["Weekend", "3–5 days", "7+ days"];
+const groupSizes: GroupSize[] = ["Solo", "Small group (2–6)", "Large group (6+)"];
+const difficultyDot: Record<Difficulty, string> = {
+  Beginner: "bg-emerald-400",
+  Intermediate: "bg-amber-400",
+  Expert: "bg-red-400",
+};
+const months: { label: string; value: Month }[] = [
+  { label: "Jan", value: "Jan" }, { label: "Feb", value: "Feb" }, { label: "Mar", value: "Mar" },
+  { label: "Apr", value: "Apr" }, { label: "May", value: "May" }, { label: "Jun", value: "Jun" },
+  { label: "Jul", value: "Jul" }, { label: "Aug", value: "Aug" }, { label: "Sep", value: "Sep" },
+  { label: "Oct", value: "Oct" }, { label: "Nov", value: "Nov" }, { label: "Dec", value: "Dec" },
+];
+
+declare global { interface Window { L: any } }
 
 function loadLeaflet(): Promise<any> {
   return new Promise((resolve) => {
     if (typeof window === "undefined") return;
     if (window.L) { resolve(window.L); return; }
-
     if (!document.querySelector('link[href*="leaflet"]')) {
       const link = document.createElement("link");
       link.rel = "stylesheet";
       link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
       document.head.appendChild(link);
     }
-
     if (!document.querySelector('script[src*="leaflet"]')) {
       const script = document.createElement("script");
       script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
@@ -60,7 +71,6 @@ function MapView({ adventures: advs }: { adventures: Adventure[] }) {
     list.forEach((adv) => {
       const color = difficultyColor[adv.difficulty] ?? "#6366f1";
       const emoji = typeEmoji[adv.type] || "📍";
-
       const icon = L.divIcon({
         className: "",
         html: `<div style="width:40px;height:40px;border-radius:50% 50% 50% 0;background:${color};border:3px solid white;transform:rotate(-45deg);box-shadow:0 4px 12px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
@@ -71,26 +81,26 @@ function MapView({ adventures: advs }: { adventures: Adventure[] }) {
         popupAnchor: [0, -44],
       });
 
-        const popupHtml = `
-          <div style="width:260px;font-family:'DM Sans',sans-serif;padding:4px;">
-            <div style="position:relative;height:150px;border-radius:12px;overflow:hidden;margin-bottom:12px;">
-              <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;" />
-              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.1) 55%,transparent 100%);" />
-              <div style="position:absolute;bottom:10px;left:10px;right:10px;">
-                <div style="font-size:15px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:6px;text-shadow:0 1px 4px rgba(0,0,0,0.6);">${adv.name}</div>
-                <div style="display:flex;gap:6px;">
-                  <span style="background:rgba(26,31,46,0.85);color:rgba(255,255,255,0.8);font-size:10px;padding:3px 8px;border-radius:20px;">${adv.type}</span>
-                  <span style="background:${color}33;color:${color};font-size:10px;padding:3px 8px;border-radius:20px;border:1px solid ${color}55;">${adv.difficulty}</span>
-                </div>
+      const popupHtml = `
+        <div style="width:260px;font-family:'DM Sans',sans-serif;padding:4px;">
+          <div style="position:relative;height:150px;border-radius:12px;overflow:hidden;margin-bottom:12px;">
+            <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;" />
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.1) 55%,transparent 100%);" />
+            <div style="position:absolute;bottom:10px;left:10px;right:10px;">
+              <div style="font-size:15px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:6px;text-shadow:0 1px 4px rgba(0,0,0,0.6);">${adv.name}</div>
+              <div style="display:flex;gap:6px;">
+                <span style="background:rgba(26,31,46,0.85);color:rgba(255,255,255,0.8);font-size:10px;padding:3px 8px;border-radius:20px;">${adv.type}</span>
+                <span style="background:${color}33;color:${color};font-size:10px;padding:3px 8px;border-radius:20px;border:1px solid ${color}55;">${adv.difficulty}</span>
               </div>
             </div>
-            <p style="margin:0 0 10px;font-size:12px;color:#9a9590;">${adv.state} · ${adv.durationDays} · ${adv.bestSeason}</p>
-            <p style="margin:0 0 12px;font-size:12px;color:#6b6560;line-height:1.5;">${adv.tagline}</p>
-            <a href="/experiences/${adv.slug}" style="display:block;text-align:center;background:#1e3d2f;color:white;padding:9px;border-radius:10px;font-size:12px;font-weight:600;text-decoration:none;">
-              View Experience →
-            </a>
           </div>
-        `;
+          <p style="margin:0 0 10px;font-size:12px;color:#9a9590;">${adv.state} · ${adv.durationDays} · ${adv.bestSeason}</p>
+          <p style="margin:0 0 12px;font-size:12px;color:#6b6560;line-height:1.5;">${adv.tagline}</p>
+          <a href="/experiences/${adv.slug}" style="display:block;text-align:center;background:#1e3d2f;color:white;padding:9px;border-radius:10px;font-size:12px;font-weight:600;text-decoration:none;">
+            View Experience →
+          </a>
+        </div>
+      `;
 
       const marker = L.marker([adv.lat, adv.lng], { icon })
         .bindPopup(popupHtml, { maxWidth: 280, minWidth: 280 });
@@ -111,48 +121,31 @@ function MapView({ adventures: advs }: { adventures: Adventure[] }) {
 
   useEffect(() => {
     if (!mapRef.current) return;
-
     loadLeaflet().then((L) => {
       if (!mapRef.current) return;
-
       const container = mapRef.current;
-      if ((container as any)._leaflet_id) {
-        (container as any)._leaflet_id = undefined;
-      }
-
+      if ((container as any)._leaflet_id) (container as any)._leaflet_id = undefined;
       delete (L.Icon.Default.prototype as any)._getIconUrl;
       L.Icon.Default.mergeOptions({
         iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
         iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
       });
-
-      const map = L.map(container, {
-        center: [22.5, 80.0],
-        zoom: 5,
-        zoomControl: true,
-        attributionControl: false,
-      });
-
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          subdomains: "abc", maxZoom: 19,
-          attribution: '&copy; OpenStreetMap contributors',
-        }).addTo(map);
-
+      const map = L.map(container, { center: [22.5, 80.0], zoom: 5, zoomControl: true, attributionControl: false });
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        subdomains: "abc", maxZoom: 19, attribution: '&copy; OpenStreetMap contributors',
+      }).addTo(map);
       mapInstanceRef.current = map;
       markersLayerRef.current = L.layerGroup().addTo(map);
       addMarkers(L, advs);
     });
-
     return () => {
       if (mapInstanceRef.current) {
         markersLayerRef.current = null;
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
-      if (mapRef.current) {
-        (mapRef.current as any)._leaflet_id = undefined;
-      }
+      if (mapRef.current) (mapRef.current as any)._leaflet_id = undefined;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -170,26 +163,240 @@ function MapView({ adventures: advs }: { adventures: Adventure[] }) {
 
 export default function MapPage() {
   const [mounted, setMounted] = useState(false);
-  const [panelOpen, setPanelOpen] = useState(true);
-  const [activeTypes, setActiveTypes] = useState<AdventureType[]>(
-    adventureTypes.map((t) => t.type)
-  );
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const [search, setSearch] = useState("");
+  const [selectedTypes, setSelectedTypes] = useState<AdventureType[]>(adventureTypes.map((t) => t.type));
+  const [selectedRegions, setSelectedRegions] = useState<Region[]>([]);
+  const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
+  const [selectedDurations, setSelectedDurations] = useState<Duration[]>([]);
+  const [selectedMonths, setSelectedMonths] = useState<Month[]>([]);
+  const [selectedGroupSizes, setSelectedGroupSizes] = useState<GroupSize[]>([]);
 
   useEffect(() => { setMounted(true); }, []);
 
-  function toggleType(type: AdventureType) {
-    setActiveTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    );
+  function toggle<T>(arr: T[], val: T, setter: (v: T[]) => void) {
+    setter(arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val]);
   }
 
-  const visibleAdventures = adventures.filter((a) => activeTypes.includes(a.type));
+  function clearAll() {
+    setSearch("");
+    setSelectedTypes(adventureTypes.map((t) => t.type));
+    setSelectedRegions([]);
+    setSelectedDifficulties([]);
+    setSelectedDurations([]);
+    setSelectedMonths([]);
+    setSelectedGroupSizes([]);
+  }
+
+  const activeFilterCount =
+    selectedRegions.length +
+    selectedDifficulties.length +
+    selectedDurations.length +
+    selectedMonths.length +
+    selectedGroupSizes.length +
+    (selectedTypes.length < adventureTypes.length ? 1 : 0);
+
+  const visibleAdventures = adventures.filter((a) => {
+    if (
+      search &&
+      !a.name.toLowerCase().includes(search.toLowerCase()) &&
+      !a.state.toLowerCase().includes(search.toLowerCase()) &&
+      !a.tagline.toLowerCase().includes(search.toLowerCase())
+    ) return false;
+    if (!selectedTypes.includes(a.type)) return false;
+    if (selectedRegions.length && !selectedRegions.includes(a.region)) return false;
+    if (selectedDifficulties.length && !selectedDifficulties.includes(a.difficulty)) return false;
+    if (selectedDurations.length && !selectedDurations.includes(a.duration)) return false;
+    if (selectedMonths.length && !selectedMonths.some((m) => a.bestMonths.includes(m))) return false;
+    if (selectedGroupSizes.length && !selectedGroupSizes.includes(a.groupSize)) return false;
+    return true;
+  });
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       <Navbar />
 
-      <div className="flex-1 relative mt-[64px] lg:mt-[80px]">
+      {/* Filter bar */}
+      <div className="sticky z-[1001] bg-white/95 backdrop-blur-md border-b border-[#e0d8cc] shadow-sm mt-[64px] lg:mt-[80px]">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8 py-3 flex items-center gap-3">
+          {/* Search */}
+          <div className="relative flex-1 max-w-xs">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9a9590]" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search adventures..."
+              className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#f5f0e8] text-[#1a1f2e] text-sm placeholder-[#9a9590] border border-transparent focus:outline-none focus:border-[#1e3d2f] transition-colors"
+            />
+          </div>
+
+          {/* Filters toggle */}
+          <button
+            onClick={() => setFiltersOpen(!filtersOpen)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              filtersOpen || activeFilterCount > 0
+                ? "bg-[#1e3d2f] text-white"
+                : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
+            }`}
+          >
+            <SlidersHorizontal className="w-4 h-4" />
+            Filters
+            {activeFilterCount > 0 && (
+              <span className="bg-[#c4622d] text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
+                {activeFilterCount}
+              </span>
+            )}
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
+          </button>
+
+          <span className="hidden md:block text-sm text-[#9a9590] ml-auto">
+            {visibleAdventures.length} of {adventures.length} visible
+          </span>
+
+          {(activeFilterCount > 0 || search) && (
+            <button
+              onClick={clearAll}
+              className="flex items-center gap-1.5 text-sm text-[#c4622d] hover:text-[#e07845] font-medium"
+            >
+              <X className="w-3.5 h-3.5" />
+              Clear
+            </button>
+          )}
+        </div>
+
+        {/* Filter panel */}
+        {filtersOpen && (
+          <div className="border-t border-[#e0d8cc] bg-white px-4 lg:px-8 py-5">
+            <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-6">
+
+              {/* Adventure type */}
+              <div>
+                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Adventure Type</h3>
+                <div className="flex flex-wrap gap-2">
+                  {adventureTypes.map(({ type, icon }) => (
+                    <button
+                      key={type}
+                      onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                        selectedTypes.includes(type)
+                          ? "bg-[#1e3d2f] text-white"
+                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
+                      }`}
+                    >
+                      <span>{icon}</span>{type}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Region */}
+              <div>
+                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Region</h3>
+                <div className="flex flex-wrap gap-2">
+                  {regions.map(({ name }) => (
+                    <button
+                      key={name}
+                      onClick={() => toggle(selectedRegions, name, setSelectedRegions)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                        selectedRegions.includes(name)
+                          ? "bg-[#1e3d2f] text-white"
+                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
+                      }`}
+                    >
+                      {name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Difficulty */}
+              <div>
+                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Difficulty</h3>
+                <div className="flex flex-wrap gap-2">
+                  {difficulties.map((d) => (
+                    <button
+                      key={d}
+                      onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
+                      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                        selectedDifficulties.includes(d)
+                          ? "bg-[#1e3d2f] text-white"
+                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
+                      }`}
+                    >
+                      <span className={`w-2 h-2 rounded-full ${difficultyDot[d]}`} />{d}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Duration */}
+              <div>
+                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
+                <div className="flex flex-wrap gap-2">
+                  {durations.map((dur) => (
+                    <button
+                      key={dur}
+                      onClick={() => toggle(selectedDurations, dur, setSelectedDurations)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                        selectedDurations.includes(dur)
+                          ? "bg-[#1e3d2f] text-white"
+                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
+                      }`}
+                    >
+                      {dur}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Best Season */}
+              <div>
+                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Best Season</h3>
+                <div className="flex flex-wrap gap-1.5">
+                  {months.map(({ label, value }) => (
+                    <button
+                      key={value}
+                      onClick={() => toggle(selectedMonths, value, setSelectedMonths)}
+                      className={`w-10 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                        selectedMonths.includes(value)
+                          ? "bg-sky-700 text-white"
+                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-sky-100 hover:text-sky-700"
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Group Size */}
+              <div>
+                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
+                <div className="flex flex-wrap gap-2">
+                  {groupSizes.map((gs) => (
+                    <button
+                      key={gs}
+                      onClick={() => toggle(selectedGroupSizes, gs, setSelectedGroupSizes)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                        selectedGroupSizes.includes(gs)
+                          ? "bg-[#1e3d2f] text-white"
+                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
+                      }`}
+                    >
+                      {gs}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Map */}
+      <div className="flex-1 relative">
         {mounted ? (
           <MapView adventures={visibleAdventures} />
         ) : (
@@ -197,62 +404,6 @@ export default function MapPage() {
             <div className="text-white/40 text-sm">Loading map…</div>
           </div>
         )}
-
-          {/* Layer toggle panel */}
-          <div className="absolute top-4 left-4 z-[1000] w-72">
-            {/* Header — always visible */}
-            <div
-              className="flex items-center gap-2 bg-[#1a1f2e]/95 backdrop-blur-md rounded-2xl border border-white/10 px-4 py-3 shadow-2xl cursor-pointer select-none"
-              onClick={() => setPanelOpen((o) => !o)}
-            >
-              <Layers className="w-4 h-4 text-[#c4622d] shrink-0" />
-              <span className="text-white text-sm font-semibold">Adventure Layers</span>
-              <span className="ml-auto text-white/40 text-xs">{visibleAdventures.length} visible</span>
-              <svg
-                className={`w-4 h-4 text-white/40 shrink-0 transition-transform duration-200 ${panelOpen ? "rotate-180" : ""}`}
-                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-
-            {/* Collapsible body */}
-            {panelOpen && (
-              <div className="mt-1 bg-[#1a1f2e]/95 backdrop-blur-md rounded-2xl border border-white/10 p-4 shadow-2xl">
-                <div className="space-y-1.5">
-                  {adventureTypes.map(({ type, count }) => (
-                    <button
-                      key={type}
-                      onClick={() => toggleType(type)}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-all ${
-                        activeTypes.includes(type)
-                          ? "bg-white/10 text-white"
-                          : "text-white/30 hover:text-white/60"
-                      }`}
-                    >
-                      <span className="flex items-center gap-2">
-                        <span className="text-base">{typeEmoji[type]}</span>
-                        {type}
-                      </span>
-                      <span className={`text-xs ${activeTypes.includes(type) ? "text-white/50" : "text-white/20"}`}>
-                        {count}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-                <button
-                  onClick={() =>
-                    activeTypes.length === adventureTypes.length
-                      ? setActiveTypes([])
-                      : setActiveTypes(adventureTypes.map((t) => t.type))
-                  }
-                  className="mt-3 w-full text-xs text-[#c4622d] hover:text-[#e07845] transition-colors py-1.5 border-t border-white/10 font-medium"
-                >
-                  {activeTypes.length === adventureTypes.length ? "Hide all" : "Show all"}
-                </button>
-              </div>
-            )}
-          </div>
 
         {/* Legend */}
         <div className="absolute bottom-4 right-4 z-[1000] bg-[#1a1f2e]/90 backdrop-blur-md rounded-xl border border-white/10 px-4 py-3 shadow-xl">
