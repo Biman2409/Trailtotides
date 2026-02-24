@@ -647,7 +647,6 @@ export const adventureTypes = [
   { type: "Biking" as AdventureType, icon: "🏍️", count: 38 },
   { type: "Cycling" as AdventureType, icon: "🚴", count: 27 },
   { type: "Mountaineering" as AdventureType, icon: "🧗", count: 15 },
-  { type: "Trail Running" as AdventureType, icon: "🏃", count: 12 },
   { type: "Rock Climbing" as AdventureType, icon: "🧱", count: 18 },
   { type: "Jeep Safari" as AdventureType, icon: "🚙", count: 22 },
   { type: "Camel Safari" as AdventureType, icon: "🐪", count: 9 },
