@@ -5,7 +5,14 @@ export type AdventureType =
   | "Diving"
   | "Kayaking"
   | "Skiing"
-  | "Mountaineering";
+  | "Mountaineering"
+  | "Trail Running"
+  | "Rock Climbing"
+  | "Jeep Safari"
+  | "Camel Safari"
+  | "Caving"
+  | "Sandboarding"
+  | "Urban Adventure";
 
 export type Region =
   | "Himalayas"
