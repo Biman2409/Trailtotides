@@ -408,8 +408,6 @@ export default function MapPage() {
                         })}
                       </div>
                     </div>
-                      ))}
-                    </div>
 
                     {/* Water / Snow / Air */}
                     {[
