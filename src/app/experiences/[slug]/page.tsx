@@ -401,8 +401,9 @@ export default async function ExperiencePage({ params }: Props) {
                 return (
                   <Link key={a.id} href={`/experiences/${a.slug}`} className="group block bg-white rounded-2xl overflow-hidden border border-[#e0d8cc] hover:shadow-lg transition-all hover:-translate-y-1 duration-300">
                     <div className="relative h-48 overflow-hidden">
-                      <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                        <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                        <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-orange-900/30 via-transparent to-sky-900/20 pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                       <div className="absolute top-3 left-3 flex gap-2">
                         <span className="bg-[#1a1f2e]/80 text-white/80 text-[10px] font-medium px-2.5 py-1 rounded-full">{a.type}</span>
                       </div>
