@@ -283,6 +283,8 @@ export const adventures: Adventure[] = [
       "Register at the Viswema check-post. Carry all your food and water. The trail can be slippery after rain. Download offline maps.",
     operators: [
       { name: "Northeast Trails", verified: true, priceFrom: "₹5,500", rating: 4.7, website: "https://www.northeasttrails.in" },
+      { name: "Nagaland Explorers", verified: false, priceFrom: "₹4,800", rating: 4.1, website: "https://www.nagalandexplorers.com" },
+      { name: "Wild Northeast Treks", verified: false, priceFrom: "₹5,000", rating: 4.2, website: "https://www.wildnortheasttreks.in" },
     ],
     tags: ["offbeat", "endemic flora", "Northeast", "rare", "solitude"],
     featured: true,
