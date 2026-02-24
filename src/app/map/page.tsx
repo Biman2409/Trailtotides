@@ -274,7 +274,7 @@ export default function MapPage() {
   const flyToRef = useRef<((lat: number, lng: number) => void) | null>(null);
 
   const [search, setSearch] = useState("");
-  const [selectedTypes, setSelectedTypes] = useState<AdventureType[]>(adventureTypes.map((t) => t.type));
+    const [selectedTypes, setSelectedTypes] = useState<AdventureType[]>([]);
   const [selectedRegions, setSelectedRegions] = useState<Region[]>([]);
   const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
   const [selectedDurations, setSelectedDurations] = useState<Duration[]>([]);
