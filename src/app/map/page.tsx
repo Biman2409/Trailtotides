@@ -264,6 +264,7 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
 export default function MapPage() {
   const [mounted, setMounted] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const flyToRef = useRef<((lat: number, lng: number) => void) | null>(null);
 
   const [search, setSearch] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<AdventureType[]>(adventureTypes.map((t) => t.type));
