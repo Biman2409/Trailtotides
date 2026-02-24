@@ -249,13 +249,13 @@ export const adventures: Adventure[] = [
     whoNot: "Casual cyclists. Those who need reliable resupply or hospitalisation access nearby.",
     safetyNotes:
       "Carry CO2 cartridges, a multi-tool, and spare brake cables. First aid kit essential. Download offline maps — Google Maps fails here.",
-      operators: [
-        { name: "Cycle Safari India", verified: true, priceFrom: "₹67,000", rating: 4.9, website: "https://www.cyclesafari.com" },
-        { name: "GoMissing MTB Spiti", verified: true, priceFrom: "₹32,000", rating: 4.7, website: "https://gomissing.in" },
-        { name: "Spiti Ecosphere", verified: true, priceFrom: "₹45,000", rating: 4.8, website: "https://www.spitiecosphere.com" },
-        { name: "JustWravel Spiti Cycling", verified: false, priceFrom: "₹27,500", rating: 4.2, website: "https://justwravel.com" },
-        { name: "The DP Tours", verified: false, priceFrom: "₹26,999", rating: 4.0, website: "https://www.thedptours.com" },
-      ],
+        operators: [
+          { name: "Cycle Safari India", verified: true, priceFrom: "₹67,000", rating: 4.9, website: "https://cyclesafari.in/spiti" },
+          { name: "Spiti Ecosphere", verified: true, priceFrom: "₹45,000", rating: 4.8, website: "https://www.spitiecosphere.com" },
+          { name: "GoMissing Adventures", verified: true, priceFrom: "₹32,000", rating: 4.7, website: "https://gomissing.in" },
+          { name: "JustWravel Spiti Cycling", verified: false, priceFrom: "₹27,500", rating: 4.2, website: "https://justwravel.com" },
+          { name: "Spiti Holiday Adventure", verified: false, priceFrom: "₹26,999", rating: 4.0, website: "https://spitiholidayadventure.com" },
+        ],
     tags: ["cycling", "remote", "cold desert", "monasteries", "extreme"],
     featured: false,
   },
