@@ -139,6 +139,8 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "Himalayan High", verified: true, priceFrom: "₹8,500", rating: 4.8, website: "https://www.himalayanhigh.in" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹7,200", rating: 4.6, website: "https://www.trekhimalayas.com" },
+      { name: "Roaming Peaks", verified: false, priceFrom: "₹6,500", rating: 4.3, website: "https://www.roamingpeaks.in" },
+      { name: "Wildcraft Trails", verified: false, priceFrom: "₹7,800", rating: 4.0, website: "https://www.wildcrafttrails.com" },
     ],
     tags: ["wildflowers", "UNESCO", "monsoon", "gentle", "photography"],
     featured: true,
