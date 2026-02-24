@@ -118,50 +118,86 @@ Discover epic adventures across India — handpicked,<br />
         </div>
       </section>
 
-      {/* ── FEATURED ADVENTURES ─────────────────────────── */}
-      <section className="py-20 lg:py-28 px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-12">
-            <div>
-                  <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
-                    Our Favourites
-                  </p>
-                  <h2 className="text-[#1a1f2e] text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">
-                    Adventure of a Lifetime
-                  </h2>
+        {/* ── MAP CTA ───────────────────────────────────────── */}
+        <section className="py-20 lg:py-28 bg-[#1e3d2f] px-6 lg:px-8 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <Image
+              src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=2000&q=60"
+              alt="India map texture"
+              fill
+              className="object-cover"
+            />
+          </div>
+          <div className="max-w-7xl mx-auto relative z-10">
+            <div className="max-w-2xl">
+              <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+                Signature Feature
+              </p>
+              <h2 className="text-white text-4xl lg:text-6xl font-semibold tracking-tight leading-tight mb-6">
+                India's adventures,
+                <br />
+                mapped.
+              </h2>
+              <p className="text-white/60 text-lg leading-relaxed mb-8 max-w-lg">
+                Toggle adventure layers — treks, rides, water sports — across a live India map.
+                Every pin opens a full experience card. Adventure density at a glance.
+              </p>
+              <Link
+                href="/map"
+                className="inline-flex items-center gap-2 bg-white text-[#1e3d2f] font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#f5f0e8] transition-colors group"
+              >
+                <Map className="w-5 h-5" />
+                Open the Map
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </div>
-            <Link
-              href="/explore"
-              className="hidden md:flex items-center gap-2 text-[#1e3d2f] font-medium hover:text-[#c4622d] transition-colors group"
-            >
-              View all
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
           </div>
+        </section>
 
-          {/* Cards grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredAdventures.map((adventure, i) => (
-                <AdventureCard
-                  key={adventure.id}
-                  adventure={adventure}
-                  size="default"
-                />
-            ))}
+        {/* ── FEATURED ADVENTURES ─────────────────────────── */}
+        <section className="py-20 lg:py-28 px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-end justify-between mb-12">
+              <div>
+                    <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+                      Our Favourites
+                    </p>
+                    <h2 className="text-[#1a1f2e] text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">
+                      Adventure of a Lifetime
+                    </h2>
+              </div>
+              <Link
+                href="/explore"
+                className="hidden md:flex items-center gap-2 text-[#1e3d2f] font-medium hover:text-[#c4622d] transition-colors group"
+              >
+                View all
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Cards grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredAdventures.map((adventure, i) => (
+                  <AdventureCard
+                    key={adventure.id}
+                    adventure={adventure}
+                    size="default"
+                  />
+              ))}
+            </div>
+
+            <div className="mt-8 text-center md:hidden">
+              <Link
+                href="/explore"
+                className="inline-flex items-center gap-2 text-[#1e3d2f] font-medium"
+              >
+                View all adventures <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
+        </section>
 
-          <div className="mt-8 text-center md:hidden">
-            <Link
-              href="/explore"
-              className="inline-flex items-center gap-2 text-[#1e3d2f] font-medium"
-            >
-              View all adventures <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── REGIONS ──────────────────────────────────────── */}
+        {/* ── REGIONS ──────────────────────────────────────── */}
       <section className="py-20 lg:py-28 bg-[#1a1f2e] px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12">
