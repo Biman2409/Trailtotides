@@ -135,8 +135,8 @@ export const adventures: Adventure[] = [
     safetyNotes:
       "The trail can be slippery during monsoon. Carry rain gear, watch for leeches on lower sections. Camp only at designated sites — it's a protected area.",
     operators: [
-      { name: "Himalayan High", verified: true, priceFrom: "₹8,500", rating: 4.8 },
-      { name: "Trek The Himalayas", verified: true, priceFrom: "₹7,200", rating: 4.6 },
+      { name: "Himalayan High", verified: true, priceFrom: "₹8,500", rating: 4.8, website: "https://www.himalayanhigh.in" },
+      { name: "Trek The Himalayas", verified: true, priceFrom: "₹7,200", rating: 4.6, website: "https://www.trekhimalayas.com" },
     ],
     tags: ["wildflowers", "UNESCO", "monsoon", "gentle", "photography"],
     featured: true,
