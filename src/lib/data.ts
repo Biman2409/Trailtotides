@@ -368,8 +368,10 @@ export const adventures: Adventure[] = [
     durationDays: "10 days",
       altitude: "5,091m (Shinku La)",
     terrain: "Unmade tracks, river crossings, cliff-edge roads",
-    bestSeason: "Jul – Sep",
-      heroImage: "https://images.unsplash.com/photo-1706021220078-2051d17b1576?w=1600&q=90",
+      bestSeason: "Jul – Sep",
+      bestMonths: ["Jul", "Aug", "Sep"],
+      groupSize: "Small group (2–8)",
+        heroImage: "https://images.unsplash.com/photo-1706021220078-2051d17b1576?w=1600&q=90",
 
     galleryImages: [],
     lat: 33.4427,
