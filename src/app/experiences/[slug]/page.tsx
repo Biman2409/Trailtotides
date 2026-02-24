@@ -6,7 +6,6 @@ import {
   MapPin,
   Clock,
   TrendingUp,
-  Calendar,
   Sun,
   ShieldCheck,
   ChevronLeft,
@@ -15,6 +14,8 @@ import {
   XCircle,
   AlertTriangle,
   ArrowRight,
+  BadgeCheck,
+  ExternalLink,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
