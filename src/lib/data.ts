@@ -322,12 +322,13 @@ export const adventures: Adventure[] = [
     whoNot: "Inexperienced riders, those without prior high-altitude riding, anyone without solid bike mechanics knowledge.",
     safetyNotes:
       "Spend minimum 3 days acclimatising in Leh before starting. Carry oxygen, full repair kit, and satellite communicator. Fuel up whenever possible — stations are 200km+ apart. File a route plan with local police.",
-    operators: [
-      { name: "Himalayan Moto", verified: true, priceFrom: "₹65,000", rating: 4.9, website: "https://www.himalayan-moto.com" },
-      { name: "Leh Bikers", verified: true, priceFrom: "₹55,000", rating: 4.8, website: "https://www.lehbikers.com" },
-      { name: "High Altitude Rides", verified: false, priceFrom: "₹48,000", rating: 4.1, website: "https://www.highaltituderides.in" },
-      { name: "Ladakh Moto Club", verified: false, priceFrom: "₹52,000", rating: 4.0, website: "https://www.ladakhmotoclub.com" },
-    ],
+      operators: [
+        { name: "Rimo Expeditions", verified: true, priceFrom: "₹65,000", rating: 4.9, website: "https://www.rimoexpeditions.com" },
+        { name: "Himalayan Rider", verified: true, priceFrom: "₹55,000", rating: 4.8, website: "https://himalayanrider.com" },
+        { name: "Endeavour Ladakh", verified: true, priceFrom: "₹50,000", rating: 4.7, website: "https://endeavorladakh.com" },
+        { name: "Twisted Trails Adventures", verified: false, priceFrom: "₹48,000", rating: 4.2, website: "https://www.twistedtrailsadv.com" },
+        { name: "Dream Riders Group", verified: false, priceFrom: "₹44,000", rating: 4.1, website: "https://thedreamridersgroup.com" },
+      ],
       tags: ["Mig La", "world record", "Ladakh", "extreme altitude", "circuit"],
     featured: false,
   },
