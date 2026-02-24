@@ -253,20 +253,43 @@ export default async function ExperiencePage({ params }: Props) {
                   </div>
                 )}
 
-                {/* Other Operators */}
-                {adventure.operators.some((op) => !op.verified) && (
-                  <div>
-                    <div className="flex items-center gap-3 mb-6">
-                      <AlertTriangle className="w-5 h-5 text-amber-500" />
-                      <div>
-                        <p className="text-[#1a1f2e] text-xs font-semibold tracking-[0.2em] uppercase">
-                          Other Operators
-                        </p>
-                        <p className="text-[#9a9590] text-sm mt-0.5">
-                          Listed by the community — not yet independently verified by us
-                        </p>
-                      </div>
+                  {/* Verification Criteria Box */}
+                  <div className="mb-10 bg-emerald-50 border border-emerald-100 rounded-2xl p-5">
+                    <div className="flex items-center gap-2 mb-3">
+                      <BadgeCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <p className="text-emerald-800 text-xs font-bold tracking-[0.15em] uppercase">How We Verify Operators</p>
                     </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {[
+                        { icon: CheckCircle2, text: "Valid government permits & licenses" },
+                        { icon: CheckCircle2, text: "ATOAI / IMF / PADI certification confirmed" },
+                        { icon: CheckCircle2, text: "Certified & trained local guides on staff" },
+                        { icon: CheckCircle2, text: "Safety gear & evacuation protocols in place" },
+                        { icon: CheckCircle2, text: "Independently reviewed by our team on-ground" },
+                        { icon: CheckCircle2, text: "Consistent track record over 2+ seasons" },
+                      ].map(({ icon: Icon, text }) => (
+                        <div key={text} className="flex items-center gap-2">
+                          <Icon className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <span className="text-emerald-900 text-xs">{text}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Other Operators */}
+                  {adventure.operators.some((op) => !op.verified) && (
+                    <div>
+                      <div className="flex items-center gap-3 mb-6">
+                        <AlertTriangle className="w-5 h-5 text-amber-500" />
+                        <div>
+                          <p className="text-[#1a1f2e] text-xs font-semibold tracking-[0.2em] uppercase">
+                            Other Operators
+                          </p>
+                          <p className="text-[#9a9590] text-sm mt-0.5">
+                            Listed by the community — not yet independently verified by us
+                          </p>
+                        </div>
+                      </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {adventure.operators.filter((op) => !op.verified).map((op) => (
                         <div
