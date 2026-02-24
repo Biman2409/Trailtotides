@@ -247,6 +247,8 @@ export const adventures: Adventure[] = [
       "Carry CO2 cartridges, a multi-tool, and spare brake cables. First aid kit essential. Download offline maps — Google Maps fails here.",
     operators: [
       { name: "Spiti Ecosphere", verified: true, priceFrom: "₹45,000", rating: 4.8, website: "https://www.spitiecosphere.com" },
+      { name: "Pedal Himalayas", verified: false, priceFrom: "₹38,000", rating: 4.2, website: "https://www.pedalhimalayas.com" },
+      { name: "Cycle to Spiti", verified: false, priceFrom: "₹41,000", rating: 4.0, website: "https://www.cycletospiti.in" },
     ],
     tags: ["cycling", "remote", "cold desert", "monasteries", "extreme"],
     featured: false,
