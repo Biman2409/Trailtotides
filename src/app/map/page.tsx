@@ -385,32 +385,29 @@ export default function MapPage() {
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Adventure Type</h3>
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
 
-                    {/* Land Based — fixed row order */}
+                    {/* Land Based */}
                     <div className="rounded-xl border p-3 bg-amber-50 border-amber-200">
                       <p className="text-[10px] font-semibold tracking-widest uppercase text-[#9a9590] mb-2">Land Based</p>
-                      {[
-                        ["Trekking", "Mountaineering", "Rock Climbing"],
-                        ["Biking", "Cycling", "Jeep Safari", "Camel Safari"],
-                        ["Sandboarding", "Caving", "Urban Adventure"],
-                      ].map((row, ri) => (
-                        <div key={ri} className="flex flex-wrap gap-1.5 mb-1.5 last:mb-0">
-                          {adventureTypes
-                            .filter(({ type }) => row.includes(type))
-                            .sort((a, b) => row.indexOf(a.type) - row.indexOf(b.type))
-                            .map(({ type, icon }) => (
-                              <button
-                                key={type}
-                                onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
-                                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all border ${
-                                  selectedTypes.includes(type as AdventureType)
-                                    ? "bg-amber-700 text-white border-transparent"
-                                    : "bg-white text-[#1a1f2e] border-transparent hover:border-current"
-                                }`}
-                              >
-                                <span>{icon}</span>{type}
-                              </button>
-                            ))}
-                        </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {(["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"] as AdventureType[]).map((type) => {
+                          const icon = adventureTypes.find(a => a.type === type)?.icon ?? "";
+                          return (
+                            <button
+                              key={type}
+                              onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
+                              className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all border ${
+                                selectedTypes.includes(type)
+                                  ? "bg-amber-700 text-white border-transparent"
+                                  : "bg-white text-[#1a1f2e] border-transparent hover:border-current"
+                              }`}
+                            >
+                              <span>{icon}</span>
+                              {type}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
                       ))}
                     </div>
 
