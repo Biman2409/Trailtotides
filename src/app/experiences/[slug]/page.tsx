@@ -59,9 +59,11 @@ export default async function ExperiencePage({ params }: Props) {
           priority
           className="object-cover"
         />
-        {/* Multi-layer gradient for readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-[#0d1117]/40 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0d1117]/50 to-transparent" />
+          {/* Vibrancy filter */}
+          <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-orange-900/30 via-transparent to-sky-900/20 pointer-events-none" />
+          {/* Multi-layer gradient for readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-[#0d1117]/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0d1117]/50 to-transparent" />
 
         {/* Back button */}
         <Link
