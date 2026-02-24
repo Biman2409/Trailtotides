@@ -368,6 +368,7 @@ export default async function ExperiencePage({ params }: Props) {
                 ))}
               </div>
             </div>
+            </div>
           </div>
         </div>
 
