@@ -213,12 +213,13 @@ export const adventures: Adventure[] = [
     whoNot: "Those with severe ear issues or heart conditions without clearance. Not ideal mid-monsoon (Jun–Sep).",
     safetyNotes:
       "Always dive with a certified dive centre. Currents can be strong at certain sites. Never touch coral. Keep buoyancy neutral at all times.",
-    operators: [
-      { name: "Dive India", verified: true, priceFrom: "₹4,500/dive", rating: 4.9, website: "https://www.diveindia.com" },
-      { name: "Barefoot Scuba", verified: true, priceFrom: "₹3,800/dive", rating: 4.7, website: "https://www.barefootscuba.com" },
-      { name: "Ocean Tribe Andaman", verified: false, priceFrom: "₹3,200/dive", rating: 4.1, website: "https://www.oceantribeandaman.com" },
-      { name: "Havelock Divers", verified: false, priceFrom: "₹4,000/dive", rating: 4.3, website: "https://www.havelockdivers.com" },
-    ],
+      operators: [
+        { name: "Lacadives", verified: true, priceFrom: "₹4,500/dive", rating: 4.9, website: "https://www.lacadives.com" },
+        { name: "Planet Scuba India", verified: true, priceFrom: "₹5,000/dive", rating: 4.8, website: "https://planetscubaindia.com" },
+        { name: "Dive Andaman", verified: true, priceFrom: "₹4,800/dive", rating: 4.7, website: "https://www.diveandaman.com" },
+        { name: "Dive Oceano", verified: false, priceFrom: "₹3,500/dive", rating: 4.2, website: "https://diveoceano.com" },
+        { name: "Infinity Scuba Andamans", verified: false, priceFrom: "₹3,800/dive", rating: 4.1, website: "https://infinityscubandamans.wordpress.com" },
+      ],
     tags: ["diving", "coral reefs", "islands", "marine life", "WWII wreck"],
     featured: true,
   },
