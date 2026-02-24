@@ -398,7 +398,7 @@ export const adventures: Adventure[] = [
     id: "13",
     slug: "spiti-valley-bike",
       name: "Spiti Valley Circuit",
-    tagline: "Where the mountains swallow the road and silence does the talking",
+    tagline: "Mud monasteries, cold deserts, and roads that test everything you've got",
     region: "Himalayas",
     state: "Himachal Pradesh",
     type: "Biking",
