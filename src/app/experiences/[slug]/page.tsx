@@ -368,17 +368,7 @@ export default async function ExperiencePage({ params }: Props) {
                 ))}
               </div>
             </div>
-
-            {/* CTA */}
-            <Link
-              href="/plan"
-              className="block bg-[#c4622d] hover:bg-[#e07845] text-white text-center font-semibold py-4 rounded-2xl transition-colors"
-            >
-              Add to Your Plan
-            </Link>
           </div>
-        </div>
-      </div>
 
       {/* ── RELATED ADVENTURES ───────────────────────────── */}
       {related.length > 0 && (
