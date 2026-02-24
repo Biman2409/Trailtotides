@@ -246,14 +246,7 @@ export default async function ExperiencePage({ params }: Props) {
                       </div>
                     </div>
                     {op.website ? (
-                      <a
-                        href={op.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block w-full mt-3 bg-[#1e3d2f] hover:bg-[#2d5a42] text-white text-sm font-medium py-2.5 rounded-xl transition-colors text-center"
-                      >
-                        Get Details
-                      </a>
+                      <OperatorButton website={op.website} />
                     ) : (
                       <button className="w-full mt-3 bg-[#1e3d2f] hover:bg-[#2d5a42] text-white text-sm font-medium py-2.5 rounded-xl transition-colors">
                         Get Details
