@@ -354,6 +354,8 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "Zanskar Moto Expeditions", verified: true, priceFrom: "₹48,000", rating: 4.8, website: "https://www.zanskarmoto.com" },
       { name: "Himalayan Moto", verified: true, priceFrom: "₹52,000", rating: 4.9, website: "https://www.himalayan-moto.com" },
+      { name: "Valley Riders India", verified: false, priceFrom: "₹42,000", rating: 4.2, website: "https://www.valleyridersindia.com" },
+      { name: "Off Road Zanskar", verified: false, priceFrom: "₹44,000", rating: 3.9, website: "https://www.offroadzanskar.in" },
     ],
     tags: ["Zanskar", "remote", "off-road", "river crossings", "expedition"],
     featured: false,
