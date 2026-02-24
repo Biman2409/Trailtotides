@@ -91,8 +91,10 @@ export const adventures: Adventure[] = [
       durationDays: "9 days",
     altitude: "3,450m",
     terrain: "Frozen river, ice sheets",
-    bestSeason: "Jan – Feb",
-      heroImage: "https://images.unsplash.com/photo-1702704944450-0f3a575491a2?w=1600&q=90",
+      bestSeason: "Jan – Feb",
+      bestMonths: ["Jan", "Feb"],
+      groupSize: "Small group (2–8)",
+        heroImage: "https://images.unsplash.com/photo-1702704944450-0f3a575491a2?w=1600&q=90",
       galleryImages: [
         "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
         "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=800&q=80",
