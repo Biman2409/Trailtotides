@@ -170,8 +170,8 @@ export const adventures: Adventure[] = [
     safetyNotes:
       "Carry a basic repair kit, spare clutch cable, and fuel for 150km stretches. Altitude sickness is real — acclimatise in Manali for 2 days minimum. Ride before noon to avoid afternoon weather.",
     operators: [
-      { name: "Himalayan Moto", verified: true, priceFrom: "₹35,000", rating: 4.9 },
-      { name: "Royal Brothers", verified: true, priceFrom: "₹28,000", rating: 4.5 },
+      { name: "Himalayan Moto", verified: true, priceFrom: "₹35,000", rating: 4.9, website: "https://www.himalayan-moto.com" },
+      { name: "Royal Brothers", verified: true, priceFrom: "₹28,000", rating: 4.5, website: "https://www.royalbrothers.com" },
     ],
     tags: ["motorcycle", "high passes", "Ladakh", "iconic", "long ride"],
     featured: true,
