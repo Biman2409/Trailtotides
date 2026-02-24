@@ -14,6 +14,13 @@ const typeEmoji: Record<AdventureType, string> = {
   "Kayaking": "🛶",
   "Skiing": "⛷️",
   "Mountaineering": "🧗",
+  "Trail Running": "🏃",
+  "Rock Climbing": "🧱",
+  "Jeep Safari": "🚙",
+  "Camel Safari": "🐪",
+  "Caving": "🕳️",
+  "Sandboarding": "🏄",
+  "Urban Adventure": "🏙️",
 };
 
 const difficultyColor: Record<string, string> = {
