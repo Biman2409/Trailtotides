@@ -166,6 +166,8 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
       }
     };
   });
+
+  function addMarkers(L: any, list: Adventure[]) {
     list.forEach((adv) => {
       const color = difficultyColor[adv.difficulty] ?? "#6366f1";
       const emoji = typeEmoji[adv.type] || "📍";
