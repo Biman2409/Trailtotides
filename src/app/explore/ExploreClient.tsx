@@ -176,7 +176,7 @@ export default function ExploreClient() {
                   </h3>
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     {[
-                      { label: "Land Based", color: "bg-amber-50 border-amber-200", activeColor: "bg-amber-700 text-white", types: ["Trekking", "Biking", "Cycling", "Mountaineering"] },
+                        { label: "Land Based", color: "bg-amber-50 border-amber-200", activeColor: "bg-amber-700 text-white", types: ["Trekking", "Biking", "Cycling", "Mountaineering", "Trail Running", "Rock Climbing", "Jeep Safari", "Camel Safari", "Caving", "Sandboarding", "Urban Adventure"] },
                       { label: "Water Based", color: "bg-sky-50 border-sky-200", activeColor: "bg-sky-700 text-white", types: ["Diving", "Kayaking"] },
                       { label: "Snow Based", color: "bg-blue-50 border-blue-200", activeColor: "bg-blue-700 text-white", types: ["Skiing"] },
                       { label: "Air Based", color: "bg-purple-50 border-purple-200", activeColor: "bg-purple-700 text-white", types: [] },
