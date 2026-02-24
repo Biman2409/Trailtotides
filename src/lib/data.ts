@@ -458,6 +458,8 @@ export const adventures: Adventure[] = [
       "Acclimatise in Leh for minimum 3 days. Carry crampons, ice axe, helmet. Go with a certified mountaineering guide — the summit ridge crevasses are real.",
     operators: [
       { name: "Leh Adventures", verified: true, priceFrom: "₹28,000", rating: 4.9, website: "https://www.lehadventures.com" },
+      { name: "Summit Ladakh", verified: false, priceFrom: "₹24,000", rating: 4.2, website: "https://www.summitladakh.com" },
+      { name: "Peak Pursuit India", verified: false, priceFrom: "₹26,000", rating: 4.0, website: "https://www.peakpursuitindia.in" },
     ],
     tags: ["mountaineering", "6000m", "glaciers", "summit", "Ladakh"],
     featured: true,
