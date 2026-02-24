@@ -175,12 +175,13 @@ export const adventures: Adventure[] = [
     whoNot: "First-time riders, those without altitude acclimatisation, anyone on unreliable bikes.",
     safetyNotes:
       "Carry a basic repair kit, spare clutch cable, and fuel for 150km stretches. Altitude sickness is real — acclimatise in Manali for 2 days minimum. Ride before noon to avoid afternoon weather.",
-    operators: [
-      { name: "Himalayan Moto", verified: true, priceFrom: "₹35,000", rating: 4.9, website: "https://www.himalayan-moto.com" },
-      { name: "Royal Brothers", verified: true, priceFrom: "₹28,000", rating: 4.5, website: "https://www.royalbrothers.com" },
-      { name: "Moto Nomads", verified: false, priceFrom: "₹24,000", rating: 4.2, website: "https://www.motonomads.in" },
-      { name: "Saddle Up India", verified: false, priceFrom: "₹26,500", rating: 4.0, website: "https://www.saddleupindia.com" },
-    ],
+      operators: [
+        { name: "Himalayan Rider", verified: true, priceFrom: "₹29,999", rating: 4.8, website: "https://himalayanrider.com" },
+        { name: "Endeavour Ladakh", verified: true, priceFrom: "₹29,999", rating: 4.7, website: "https://endeavorladakh.com" },
+        { name: "Royal Enfield Marquee Rides", verified: true, priceFrom: "₹80,000", rating: 4.9, website: "https://www.royalenfield.com/in/en/rides/marquee-rides" },
+        { name: "International Youth Club", verified: false, priceFrom: "₹22,000", rating: 4.2, website: "https://internationalyouthclub.org" },
+        { name: "Extreme Tours India", verified: false, priceFrom: "₹35,000", rating: 4.1, website: "https://extremetoursindia.com" },
+      ],
     tags: ["motorcycle", "high passes", "Ladakh", "iconic", "long ride"],
     featured: true,
   },
