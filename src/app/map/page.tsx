@@ -381,22 +381,40 @@ export default function MapPage() {
           <div className="border-t border-[#e0d8cc] bg-white px-4 lg:px-8 py-5">
             <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-6">
 
-              {/* Adventure type */}
-              <div>
+              {/* Adventure type — categorised */}
+              <div className="col-span-2 lg:col-span-3">
                 <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Adventure Type</h3>
-                <div className="flex flex-wrap gap-2">
-                  {adventureTypes.map(({ type, icon }) => (
-                    <button
-                      key={type}
-                      onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                        selectedTypes.includes(type)
-                          ? "bg-[#1e3d2f] text-white"
-                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
-                      }`}
-                    >
-                      <span>{icon}</span>{type}
-                    </button>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  {[
+                    { label: "Land Based", color: "bg-amber-50 border-amber-200", activeColor: "bg-amber-700 text-white", types: ["Trekking", "Biking", "Cycling", "Mountaineering", "Trail Running", "Rock Climbing", "Jeep Safari", "Camel Safari", "Caving", "Sandboarding", "Urban Adventure"] },
+                    { label: "Water Based", color: "bg-sky-50 border-sky-200", activeColor: "bg-sky-700 text-white", types: ["Diving", "Kayaking"] },
+                    { label: "Snow Based", color: "bg-blue-50 border-blue-200", activeColor: "bg-blue-700 text-white", types: ["Skiing"] },
+                    { label: "Air Based", color: "bg-purple-50 border-purple-200", activeColor: "bg-purple-700 text-white", types: [] },
+                  ].map(({ label, color, activeColor, types: catTypes }) => (
+                    <div key={label} className={`rounded-xl border p-3 ${color}`}>
+                      <p className="text-[10px] font-semibold tracking-widest uppercase text-[#9a9590] mb-2">{label}</p>
+                      {catTypes.length === 0 ? (
+                        <p className="text-xs text-[#c4b99a] italic">Coming soon</p>
+                      ) : (
+                        <div className="flex flex-wrap gap-1.5">
+                          {adventureTypes
+                            .filter(({ type }) => catTypes.includes(type))
+                            .map(({ type, icon }) => (
+                              <button
+                                key={type}
+                                onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
+                                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all border ${
+                                  selectedTypes.includes(type as AdventureType)
+                                    ? activeColor + " border-transparent"
+                                    : "bg-white text-[#1a1f2e] border-transparent hover:border-current"
+                                }`}
+                              >
+                                <span>{icon}</span>{type}
+                              </button>
+                            ))}
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
