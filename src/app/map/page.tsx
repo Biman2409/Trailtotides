@@ -158,7 +158,14 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
   const mapInstanceRef = useRef<any>(null);
   const markersLayerRef = useRef<any>(null);
 
-  function addMarkers(L: any, list: Adventure[]) {
+  // Expose flyTo via ref
+  useEffect(() => {
+    flyToRef.current = (lat: number, lng: number) => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.flyTo([lat, lng], 10, { duration: 1.4 });
+      }
+    };
+  });
     list.forEach((adv) => {
       const color = difficultyColor[adv.difficulty] ?? "#6366f1";
       const emoji = typeEmoji[adv.type] || "📍";
