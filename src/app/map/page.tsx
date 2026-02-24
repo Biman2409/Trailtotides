@@ -37,6 +37,15 @@ const months: { label: string; value: Month }[] = [
   { label: "Oct", value: "Oct" }, { label: "Nov", value: "Nov" }, { label: "Dec", value: "Dec" },
 ];
 
+type NominatimResult = {
+  place_id: number;
+  display_name: string;
+  lat: string;
+  lon: string;
+  type: string;
+  class: string;
+};
+
 declare global { interface Window { L: any } }
 
 function loadLeaflet(): Promise<any> {
