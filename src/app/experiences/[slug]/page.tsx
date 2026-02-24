@@ -210,9 +210,9 @@ export default async function ExperiencePage({ params }: Props) {
                         <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase">
                           Verified Operators
                         </p>
-                        <p className="text-[#9a9590] text-sm mt-0.5">
-                          Handpicked operators vetted for safety, experience &amp; value
-                        </p>
+                          <p className="text-[#9a9590] text-sm mt-0.5">
+                            ALTOA/PADI/IMF registered or established operators with a verifiable track record
+                          </p>
                       </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
