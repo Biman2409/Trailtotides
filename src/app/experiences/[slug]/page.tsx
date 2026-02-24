@@ -369,7 +369,9 @@ export default async function ExperiencePage({ params }: Props) {
               </div>
             </div>
           </div>
-        </div> ───────────────────────────── */}
+        </div>
+
+      {/* ── RELATED ADVENTURES ───────────────────────────── */}
       {related.length > 0 && (
         <section className="bg-[#f5f0e8] py-16 lg:py-24 px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
