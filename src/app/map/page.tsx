@@ -71,7 +71,89 @@ function loadLeaflet(): Promise<any> {
   });
 }
 
-function MapView({ adventures: advs }: { adventures: Adventure[] }) {
+function PlaceSearch({ onSelect }: { onSelect: (lat: number, lng: number, name: string) => void }) {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<NominatimResult[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const search = useCallback((q: string) => {
+    if (!q.trim() || q.length < 2) { setResults([]); setOpen(false); return; }
+    setLoading(true);
+    fetch(
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=6&countrycodes=in&addressdetails=0`,
+      { headers: { "Accept-Language": "en" } }
+    )
+      .then((r) => r.json())
+      .then((data: NominatimResult[]) => {
+        setResults(data);
+        setOpen(data.length > 0);
+      })
+      .catch(() => setResults([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => search(query), 400);
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+  }, [query, search]);
+
+  // Close on outside click
+  useEffect(() => {
+    function handle(e: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handle);
+    return () => document.removeEventListener("mousedown", handle);
+  }, []);
+
+  function handleSelect(r: NominatimResult) {
+    onSelect(parseFloat(r.lat), parseFloat(r.lon), r.display_name.split(",")[0]);
+    setQuery(r.display_name.split(",")[0]);
+    setOpen(false);
+  }
+
+  return (
+    <div ref={wrapperRef} className="relative w-full max-w-xs">
+      <div className="relative">
+        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#c4622d]" />
+        {loading && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#9a9590] animate-spin" />}
+        {!loading && query && (
+          <button onClick={() => { setQuery(""); setResults([]); setOpen(false); }} className="absolute right-3 top-1/2 -translate-y-1/2">
+            <X className="w-3.5 h-3.5 text-[#9a9590] hover:text-[#1a1f2e]" />
+          </button>
+        )}
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => results.length > 0 && setOpen(true)}
+          placeholder="Go to a place…"
+          className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#f5f0e8] text-[#1a1f2e] text-sm placeholder-[#9a9590] border border-transparent focus:outline-none focus:border-[#c4622d] transition-colors"
+        />
+      </div>
+      {open && (
+        <ul className="absolute z-[2000] top-full mt-1 w-full bg-white rounded-xl shadow-xl border border-[#e0d8cc] overflow-hidden text-sm">
+          {results.map((r) => (
+            <li key={r.place_id}>
+              <button
+                onMouseDown={() => handleSelect(r)}
+                className="w-full text-left px-3 py-2.5 hover:bg-[#f5f0e8] flex items-start gap-2"
+              >
+                <MapPin className="w-3.5 h-3.5 text-[#c4622d] mt-0.5 shrink-0" />
+                <span className="text-[#1a1f2e] leading-snug line-clamp-2">{r.display_name}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyToRef: React.MutableRefObject<((lat: number, lng: number) => void) | null> }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersLayerRef = useRef<any>(null);
