@@ -318,6 +318,8 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "Himalayan Moto", verified: true, priceFrom: "₹65,000", rating: 4.9, website: "https://www.himalayan-moto.com" },
       { name: "Leh Bikers", verified: true, priceFrom: "₹55,000", rating: 4.8, website: "https://www.lehbikers.com" },
+      { name: "High Altitude Rides", verified: false, priceFrom: "₹48,000", rating: 4.1, website: "https://www.highaltituderides.in" },
+      { name: "Ladakh Moto Club", verified: false, priceFrom: "₹52,000", rating: 4.0, website: "https://www.ladakhmotoclub.com" },
     ],
       tags: ["Mig La", "world record", "Ladakh", "extreme altitude", "circuit"],
     featured: false,
