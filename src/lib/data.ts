@@ -338,8 +338,8 @@ export const adventures: Adventure[] = [
     safetyNotes:
       "Carry a satellite phone — there is no mobile signal in Zanskar. River crossings should only be attempted in the morning before glacial melt raises water levels. Always ride in pairs minimum.",
     operators: [
-      { name: "Zanskar Moto Expeditions", verified: true, priceFrom: "₹48,000", rating: 4.8 },
-      { name: "Himalayan Moto", verified: true, priceFrom: "₹52,000", rating: 4.9 },
+      { name: "Zanskar Moto Expeditions", verified: true, priceFrom: "₹48,000", rating: 4.8, website: "https://www.zanskarmoto.com" },
+      { name: "Himalayan Moto", verified: true, priceFrom: "₹52,000", rating: 4.9, website: "https://www.himalayan-moto.com" },
     ],
     tags: ["Zanskar", "remote", "off-road", "river crossings", "expedition"],
     featured: false,
