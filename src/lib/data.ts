@@ -213,6 +213,8 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "Dive India", verified: true, priceFrom: "₹4,500/dive", rating: 4.9, website: "https://www.diveindia.com" },
       { name: "Barefoot Scuba", verified: true, priceFrom: "₹3,800/dive", rating: 4.7, website: "https://www.barefootscuba.com" },
+      { name: "Ocean Tribe Andaman", verified: false, priceFrom: "₹3,200/dive", rating: 4.1, website: "https://www.oceantribeandaman.com" },
+      { name: "Havelock Divers", verified: false, priceFrom: "₹4,000/dive", rating: 4.3, website: "https://www.havelockdivers.com" },
     ],
     tags: ["diving", "coral reefs", "islands", "marine life", "WWII wreck"],
     featured: true,
