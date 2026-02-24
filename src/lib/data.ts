@@ -424,6 +424,8 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "GMVN Auli", verified: true, priceFrom: "₹6,000", rating: 4.4, website: "https://www.gmvnl.in" },
       { name: "Ski Himalaya", verified: true, priceFrom: "₹9,500", rating: 4.7, website: "https://www.skihimalaya.com" },
+      { name: "Snow Sports Auli", verified: false, priceFrom: "₹5,500", rating: 4.0, website: "https://www.snowsportsauli.com" },
+      { name: "Uttarakhand Ski Club", verified: false, priceFrom: "₹7,000", rating: 4.1, website: "https://www.uttarakhandardskiclub.in" },
     ],
     tags: ["skiing", "snowboard", "winter", "powder", "Nanda Devi views"],
     featured: false,
