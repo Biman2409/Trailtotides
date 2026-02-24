@@ -396,13 +396,13 @@ export const adventures: Adventure[] = [
     whoNot: "Beginners on 150cc bikes. The passes require engine power and rider confidence.",
     safetyNotes:
       "Kunzum La can be snowbound until late June — check pass status before departure. Carry chain lube, tyre plugs, and a basic toolkit. Fuel up at Kaza — it's the last pump for 130km.",
-      operators: [
-        { name: "Royal Enfield Marquee Rides", verified: true, priceFrom: "₹80,000", rating: 4.9, website: "https://www.royalenfield.com/in/en/rides/marquee-rides" },
-        { name: "JustWravel", verified: true, priceFrom: "₹27,500", rating: 4.7, website: "https://justwravel.com" },
-        { name: "Himalayan Rider", verified: true, priceFrom: "₹32,000", rating: 4.8, website: "https://himalayanrider.com" },
-        { name: "Journey Basket", verified: false, priceFrom: "₹28,499", rating: 4.2, website: "https://www.journeybasket.com" },
-        { name: "The DP Tours", verified: false, priceFrom: "₹26,999", rating: 4.0, website: "https://www.thedptours.com" },
-      ],
+        operators: [
+          { name: "Royal Enfield Marquee Rides", verified: true, priceFrom: "₹80,000", rating: 4.9, website: "https://www.royalenfield.com/in/en/rides/marquee-rides" },
+          { name: "Himalayan Rider", verified: true, priceFrom: "₹32,000", rating: 4.8, website: "https://himalayanrider.com" },
+          { name: "Spiti Riders Group", verified: true, priceFrom: "₹35,000", rating: 4.7, website: "https://spitiriders.com" },
+          { name: "JustWravel", verified: false, priceFrom: "₹27,500", rating: 4.2, website: "https://justwravel.com" },
+          { name: "Spiti Holiday Adventure", verified: false, priceFrom: "₹26,999", rating: 4.0, website: "https://spitiholidayadventure.com" },
+        ],
     tags: ["Spiti", "cold desert", "monasteries", "loop", "Kunzum La"],
     featured: false,
   },
