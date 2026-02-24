@@ -6,7 +6,6 @@ export type AdventureType =
   | "Kayaking"
   | "Skiing"
   | "Mountaineering"
-  | "Trail Running"
   | "Rock Climbing"
   | "Jeep Safari"
   | "Camel Safari"
