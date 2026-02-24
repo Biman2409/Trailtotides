@@ -199,20 +199,92 @@ export default async function ExperiencePage({ params }: Props) {
               </div>
             </section>
 
-            {/* Tags */}
-            <section>
-              <div className="flex flex-wrap gap-2">
-                {adventure.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="bg-[#1a1f2e]/8 text-[#1a1f2e]/60 text-xs px-3 py-1.5 rounded-full"
-                  >
-                    #{tag}
-                  </span>
-                ))}
-              </div>
-            </section>
-          </div>
+              {/* Verified Operators */}
+              <section>
+                <div className="flex items-center gap-3 mb-6">
+                  <BadgeCheck className="w-5 h-5 text-emerald-600" />
+                  <div>
+                    <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase">
+                      Verified Operators
+                    </p>
+                    <p className="text-[#9a9590] text-sm mt-0.5">
+                      Handpicked operators vetted for safety, experience & value
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {adventure.operators.map((op) => (
+                    <div
+                      key={op.name}
+                      className="bg-white border border-[#e0d8cc] rounded-2xl p-5 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      {/* Name + verified badge */}
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-[#1a1f2e] font-semibold text-sm leading-snug">
+                              {op.name}
+                            </span>
+                            {op.verified && (
+                              <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-200">
+                                <ShieldCheck className="w-3 h-3" />
+                                Verified
+                              </span>
+                            )}
+                          </div>
+                          {/* Stars */}
+                          <div className="flex items-center gap-1 mt-1.5">
+                            {[1, 2, 3, 4, 5].map((s) => (
+                              <Star
+                                key={s}
+                                className={`w-3 h-3 ${
+                                  s <= Math.round(op.rating)
+                                    ? "text-amber-400 fill-amber-400"
+                                    : "text-gray-200 fill-gray-200"
+                                }`}
+                              />
+                            ))}
+                            <span className="text-[#9a9590] text-xs ml-1">{op.rating}</span>
+                          </div>
+                        </div>
+                        {/* Price */}
+                        <div className="text-right shrink-0">
+                          <div className="text-[#9a9590] text-[10px] uppercase tracking-wide">From</div>
+                          <div className="text-[#1a1f2e] font-bold text-base">{op.priceFrom}</div>
+                        </div>
+                      </div>
+                      {/* CTA */}
+                      {op.website ? (
+                        <OperatorButton website={op.website} />
+                      ) : (
+                        <button className="w-full bg-[#1e3d2f] hover:bg-[#2d5a42] text-white text-sm font-medium py-2.5 rounded-xl transition-colors">
+                          Get Details
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                {/* Trust note */}
+                <p className="mt-4 text-[#9a9590] text-xs flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                  All operators are independently verified for valid permits, safety certifications and guide credentials.
+                </p>
+              </section>
+
+              {/* Tags */}
+              <section>
+                <div className="flex flex-wrap gap-2">
+                  {adventure.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="bg-[#1a1f2e]/8 text-[#1a1f2e]/60 text-xs px-3 py-1.5 rounded-full"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            </div>
 
           {/* Right — sidebar */}
           <div className="space-y-6">
