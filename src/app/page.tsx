@@ -91,6 +91,10 @@ Discover epic adventures across India — handpicked,<br />
                 View the Map
               </Link>
             </div>
+
+            <p className="mt-6 text-white/50 text-sm tracking-wide">
+              Built by people who've been out there.
+            </p>
           </div>
 
       </section>
