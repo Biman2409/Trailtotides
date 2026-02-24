@@ -238,7 +238,7 @@ export const adventures: Adventure[] = [
     safetyNotes:
       "Carry CO2 cartridges, a multi-tool, and spare brake cables. First aid kit essential. Download offline maps — Google Maps fails here.",
     operators: [
-      { name: "Spiti Ecosphere", verified: true, priceFrom: "₹45,000", rating: 4.8 },
+      { name: "Spiti Ecosphere", verified: true, priceFrom: "₹45,000", rating: 4.8, website: "https://www.spitiecosphere.com" },
     ],
     tags: ["cycling", "remote", "cold desert", "monasteries", "extreme"],
     featured: false,
