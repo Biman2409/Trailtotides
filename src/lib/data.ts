@@ -52,6 +52,7 @@ export interface Operator {
   verified: boolean;
   priceFrom: string;
   rating: number;
+  website?: string;
 }
 
 export interface Story {
