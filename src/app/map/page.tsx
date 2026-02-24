@@ -289,7 +289,7 @@ export default function MapPage() {
 
   function clearAll() {
     setSearch("");
-    setSelectedTypes(adventureTypes.map((t) => t.type));
+    setSelectedTypes([]);
     setSelectedRegions([]);
     setSelectedDifficulties([]);
     setSelectedDurations([]);
@@ -298,12 +298,12 @@ export default function MapPage() {
   }
 
   const activeFilterCount =
+    selectedTypes.length +
     selectedRegions.length +
     selectedDifficulties.length +
     selectedDurations.length +
     selectedMonths.length +
-    selectedGroupSizes.length +
-    (selectedTypes.length < adventureTypes.length ? 1 : 0);
+    selectedGroupSizes.length;
 
   const visibleAdventures = adventures.filter((a) => {
     if (
@@ -312,7 +312,7 @@ export default function MapPage() {
       !a.state.toLowerCase().includes(search.toLowerCase()) &&
       !a.tagline.toLowerCase().includes(search.toLowerCase())
     ) return false;
-    if (!selectedTypes.includes(a.type)) return false;
+    if (selectedTypes.length && !selectedTypes.includes(a.type)) return false;
     if (selectedRegions.length && !selectedRegions.includes(a.region)) return false;
     if (selectedDifficulties.length && !selectedDifficulties.includes(a.difficulty)) return false;
     if (selectedDurations.length && !selectedDurations.includes(a.duration)) return false;
