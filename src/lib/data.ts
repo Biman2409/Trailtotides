@@ -137,13 +137,13 @@ export const adventures: Adventure[] = [
     whoNot: "Those wanting adrenaline or summit glory. This trek rewards patience.",
     safetyNotes:
       "The trail can be slippery during monsoon. Carry rain gear, watch for leeches on lower sections. Camp only at designated sites — it's a protected area.",
-      operators: [
-        { name: "Indiahikes", verified: true, priceFrom: "₹8,750", rating: 4.9, website: "https://indiahikes.com/valley-of-flowers-trek" },
-        { name: "Trek The Himalayas", verified: true, priceFrom: "₹7,500", rating: 4.7, website: "https://trekthehimalayas.com" },
-        { name: "The Himalayan Outfitters", verified: true, priceFrom: "₹9,200", rating: 4.6, website: "https://www.thehimalayanoutfitters.com" },
-        { name: "Thrillophilia", verified: false, priceFrom: "₹6,200", rating: 4.2, website: "https://www.thrillophilia.com/valley-of-flowers-trek" },
-        { name: "Make My Trip Adventures", verified: false, priceFrom: "₹7,000", rating: 4.0, website: "https://www.makemytrip.com/holidays-india/valley-of-flowers-trek" },
-      ],
+        operators: [
+          { name: "Indiahikes", verified: true, priceFrom: "₹8,750", rating: 4.9, website: "https://indiahikes.com/valley-of-flowers-trek" },
+          { name: "Trek The Himalayas", verified: true, priceFrom: "₹7,500", rating: 4.7, website: "https://trekthehimalayas.com" },
+          { name: "Bikat Adventures", verified: true, priceFrom: "₹9,200", rating: 4.8, website: "https://bikatadventures.com" },
+          { name: "Thrillophilia", verified: false, priceFrom: "₹6,200", rating: 4.2, website: "https://www.thrillophilia.com/valley-of-flowers-trek" },
+          { name: "Himalayan Hikers", verified: false, priceFrom: "₹7,000", rating: 4.1, website: "https://himalayanhikers.in" },
+        ],
     tags: ["wildflowers", "UNESCO", "monsoon", "gentle", "photography"],
     featured: true,
   },
