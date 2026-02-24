@@ -92,7 +92,7 @@ Discover epic adventures across India — handpicked,<br />
               </Link>
             </div>
 
-            <p className="mt-6 text-white/50 text-sm tracking-wide">
+            <p className="mt-6 text-white/50 text-sm tracking-wide italic">
               Built by people who've been out there.
             </p>
           </div>
