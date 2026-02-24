@@ -502,7 +502,7 @@ export default function MapPage() {
       {/* Map */}
       <div className="flex-1 relative">
         {mounted ? (
-          <MapView adventures={visibleAdventures} />
+            <MapView adventures={visibleAdventures} flyToRef={flyToRef} />
         ) : (
           <div className="w-full h-full bg-[#1a1f2e] flex items-center justify-center">
             <div className="text-white/40 text-sm">Loading map…</div>
