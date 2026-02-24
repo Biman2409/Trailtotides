@@ -168,6 +168,7 @@ function MapView({ adventures: advs }: { adventures: Adventure[] }) {
 
 export default function MapPage() {
   const [mounted, setMounted] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(true);
   const [activeTypes, setActiveTypes] = useState<AdventureType[]>(
     adventureTypes.map((t) => t.type)
   );
