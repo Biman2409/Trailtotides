@@ -100,11 +100,12 @@ export const adventures: Adventure[] = [
     safetyNotes:
       "Carry emergency bivouac gear, layered thermals, and micro-spike crampons. River ice can crack unexpectedly. Always trek with a certified local guide.",
     operators: [
-      { name: "Zanskar Adventures", verified: true, priceFrom: "₹22,000", rating: 4.9, website: "https://www.zanskaradventures.com" },
-      { name: "Leh Wild", verified: true, priceFrom: "₹18,500", rating: 4.7, website: "https://www.lehwild.com" },
-      { name: "Frozen Trail Expeditions", verified: false, priceFrom: "₹15,000", rating: 4.2, website: "https://www.frozentrail.in" },
-      { name: "Snow Leopard Adventures", verified: false, priceFrom: "₹17,500", rating: 4.1, website: "https://www.snowleopardadventures.com" },
-    ],
+        { name: "Rimo Expeditions", verified: true, priceFrom: "₹28,000", rating: 4.9, website: "https://www.rimoexpeditions.com" },
+        { name: "Dreamland Trek & Tour", verified: true, priceFrom: "₹22,000", rating: 4.8, website: "https://www.dreamladakh.com" },
+        { name: "Trek The Himalayas", verified: true, priceFrom: "₹19,500", rating: 4.7, website: "https://trekthehimalayas.com" },
+        { name: "Tsarap Adventures Zanskar", verified: false, priceFrom: "₹17,000", rating: 4.3, website: "https://tsarapadventureszanskar.com" },
+        { name: "Ibex Expeditions", verified: false, priceFrom: "₹24,000", rating: 4.2, website: "https://www.ibexexpeditions.com" },
+      ],
     tags: ["frozen river", "winter", "Ladakh", "extreme cold", "iconic"],
     featured: true,
   },
