@@ -83,7 +83,9 @@ export interface Story {
   tags: string[];
   region: Region;
   date: string;
-  views?: number;
+  // views are stored in Supabase story_views table (slug is the key).
+  // Use StoryViewPill component to display live counts.
+  // To add a new story: insert a row into story_views with { slug, views: <seed> }.
 }
 
 export const adventures: Adventure[] = [
