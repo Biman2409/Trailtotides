@@ -92,8 +92,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── STATS BAR ────────────────────────────────────── */}
-      <section className="bg-[#141920] border-b border-white/6">
+        {/* ── AI ADVENTURE FINDER ─────────────────────────── */}
+        <InlineChat />
+
+        {/* ── STATS BAR ────────────────────────────────────── */}
+        <section className="bg-[#141920] border-b border-white/6">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/8">
             {[
