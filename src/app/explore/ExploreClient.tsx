@@ -515,53 +515,8 @@ export default function ExploreClient() {
                   })()}
                 </div>
 
-              {/* Difficulty */}
-              <div>
-                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
-                  Difficulty
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {difficulties.map((d) => (
-                    <button
-                      key={d}
-                      onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
-                      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                        selectedDifficulties.includes(d)
-                          ? "bg-[#1e3d2f] text-white"
-                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
-                      }`}
-                    >
-                      <span className={`w-2 h-2 rounded-full ${difficultyDot[d]}`} />
-                      {d}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Duration */}
-              <div>
-                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
-                  Duration
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {durations.map((dur) => (
-                    <button
-                      key={dur}
-                      onClick={() => toggle(selectedDurations, dur, setSelectedDurations)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                        selectedDurations.includes(dur)
-                          ? "bg-[#1e3d2f] text-white"
-                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
-                      }`}
-                    >
-                      {dur}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* Best Season */}
-                <div className="col-span-2 lg:col-span-1">
+                <div className="col-span-2 lg:col-span-3">
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
                     Best Season
                   </h3>
@@ -615,6 +570,51 @@ export default function ExploreClient() {
                     })()}
                   </div>
                 </div>
+
+              {/* Difficulty */}
+              <div>
+                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
+                  Difficulty
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {difficulties.map((d) => (
+                    <button
+                      key={d}
+                      onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
+                      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                        selectedDifficulties.includes(d)
+                          ? "bg-[#1e3d2f] text-white"
+                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
+                      }`}
+                    >
+                      <span className={`w-2 h-2 rounded-full ${difficultyDot[d]}`} />
+                      {d}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Duration */}
+              <div>
+                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
+                  Duration
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {durations.map((dur) => (
+                    <button
+                      key={dur}
+                      onClick={() => toggle(selectedDurations, dur, setSelectedDurations)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                        selectedDurations.includes(dur)
+                          ? "bg-[#1e3d2f] text-white"
+                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
+                      }`}
+                    >
+                      {dur}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
               {/* Group Size */}
               <div>
