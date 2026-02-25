@@ -497,12 +497,7 @@ export default function HomePage() {
         </div>
       </section>
 
-        {/* ── AI FINDER ────────────────────────────────────── */}
-        <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#fafaf8] border-t border-[#f0ebe3]">
-          <InlineChat />
-        </section>
-
-        {/* ── FINAL CTA ─────────────────────────────────────── */}
+          {/* ── FINAL CTA ─────────────────────────────────────── */}
       <section className="relative py-24 lg:py-32 bg-[#f5f0e8] px-6 lg:px-8 overflow-hidden">
         <div
           className="absolute inset-0 opacity-40"
