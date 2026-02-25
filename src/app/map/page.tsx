@@ -302,6 +302,16 @@ export default function MapPage() {
     setter(arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val]);
   }
 
+  function toggleSeason(seasonMonths: Month[]) {
+    const allSelected = seasonMonths.every((m) => selectedMonths.includes(m));
+    if (allSelected) {
+      setSelectedMonths(selectedMonths.filter((m) => !seasonMonths.includes(m)));
+    } else {
+      const merged = Array.from(new Set([...selectedMonths, ...seasonMonths])) as Month[];
+      setSelectedMonths(merged);
+    }
+  }
+
   function clearAll() {
     setSearch("");
     setSelectedTypes([]);
