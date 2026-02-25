@@ -213,15 +213,14 @@ export default function FindYourFormat() {
                       {cat.comingSoon ? (
                         <>
                           <div className="flex flex-col gap-1 mb-4 opacity-40 pointer-events-none select-none">
-                            {cat.previewItems?.map(({ type, icon }) => (
-                              <div
-                                key={type}
-                                className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl"
-                              >
-                                <span className="text-base">{icon}</span>
-                                <span className="text-white/70 text-sm font-medium">{type}</span>
-                              </div>
-                            ))}
+                              {cat.previewItems?.map(({ type }) => (
+                                <div
+                                  key={type}
+                                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl"
+                                >
+                                  <span className="text-white/70 text-sm font-medium">{type}</span>
+                                </div>
+                              ))}
                           </div>
                           <div
                             className="rounded-xl px-4 py-3 text-center"
