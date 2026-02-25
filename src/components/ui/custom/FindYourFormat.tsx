@@ -30,9 +30,8 @@ const categories = [
   },
   {
     id: "water",
-    icon: "🌊",
     label: "Water",
-    subtitle: "Rivers, reefs & open sea",
+    subtitle: "Dive reefs, ride rapids, and paddle open water at your own pace",
     image: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&q=80",
     accent: "#2a7cc7",
     accentLight: "rgba(42,124,199,0.15)",
