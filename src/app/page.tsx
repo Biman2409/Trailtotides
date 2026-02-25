@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import HeroSlider from "@/components/ui/custom/HeroSlider";
+import FindYourFormat from "@/components/ui/custom/FindYourFormat";
 import ChatBubble from "@/components/ChatBubble";
 import InlineChat from "@/components/InlineChat";
 import StatsBar from "@/components/StatsBar";
