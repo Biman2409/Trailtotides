@@ -273,23 +273,38 @@ export default function ExploreClient() {
           </div>
 
           {/* Filter toggle */}
-          <button
-            onClick={() => setFiltersOpen(!filtersOpen)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
-              filtersOpen || activeFilterCount > 0
-                ? "bg-[#1e3d2f] text-white"
-                : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
-            }`}
-          >
-            <SlidersHorizontal className="w-4 h-4" />
-            Filters
-            {activeFilterCount > 0 && (
-              <span className="bg-[#c4622d] text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
-                {activeFilterCount}
-              </span>
-            )}
-            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
-          </button>
+            <button
+              onClick={() => { setFiltersOpen(!filtersOpen); setAiOpen(false); }}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                filtersOpen || activeFilterCount > 0
+                  ? "bg-[#1e3d2f] text-white"
+                  : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
+              }`}
+            >
+              <SlidersHorizontal className="w-4 h-4" />
+              Filters
+              {activeFilterCount > 0 && (
+                <span className="bg-[#c4622d] text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
+                  {activeFilterCount}
+                </span>
+              )}
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            {/* AI Adventure Finder toggle */}
+            <button
+              onClick={() => { setAiOpen(!aiOpen); setFiltersOpen(false); }}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                aiOpen
+                  ? "text-white"
+                  : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
+              }`}
+              style={aiOpen ? { background: "#c4622d" } : {}}
+            >
+              <Sparkles className="w-4 h-4" />
+              <span className="hidden sm:inline">AI Finder</span>
+              <span className="sm:hidden">AI</span>
+            </button>
 
           {/* Result count */}
           <span className="hidden md:block text-sm text-[#9a9590] ml-auto">
