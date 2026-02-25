@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Clock, TrendingUp, ArrowRight } from "lucide-react";
 import type { Adventure } from "@/lib/data";
-import { adventureTypes } from "@/lib/data";
 
 const typePillColors: Record<string, string> = {
   // Land — amber
