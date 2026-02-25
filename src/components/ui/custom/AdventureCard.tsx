@@ -3,6 +3,28 @@ import Image from "next/image";
 import { MapPin, Clock, TrendingUp, ArrowRight } from "lucide-react";
 import type { Adventure } from "@/lib/data";
 
+const typeStyle: Record<string, string> = {
+  // Land — orange
+  Trekking:        "bg-[#c4622d] text-white",
+  Biking:          "bg-[#c4622d] text-white",
+  Cycling:         "bg-[#c4622d] text-white",
+  "Rock Climbing": "bg-[#c4622d] text-white",
+  Mountaineering:  "bg-[#c4622d] text-white",
+  "Camel Safari":  "bg-[#c4622d] text-white",
+  "Jeep Safari":   "bg-[#c4622d] text-white",
+  Sandboarding:    "bg-[#c4622d] text-white",
+  "Urban Adventure": "bg-[#c4622d] text-white",
+  Caving:          "bg-[#c4622d] text-white",
+  // Water — blue
+  Diving:          "bg-blue-500 text-white",
+  Kayaking:        "bg-blue-500 text-white",
+  // Snow — white
+  Skiing:          "bg-white text-gray-900",
+  // Air — purple
+  Paragliding:     "bg-purple-500 text-white",
+  "Hot Air Balloon": "bg-purple-500 text-white",
+};
+
 const difficultyStyle: Record<string, { bg: string; text: string; dot: string }> = {
   Beginner:     { bg: "bg-emerald-500", text: "text-white", dot: "bg-white" },
   Intermediate: { bg: "bg-teal-500",    text: "text-white", dot: "bg-white" },
