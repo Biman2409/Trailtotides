@@ -121,43 +121,37 @@ Discover epic adventures across India — handpicked,<br />
         {/* ── FEATURED ADVENTURES ─────────────────────────── */}
           <section className="py-20 lg:py-28 px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-end justify-between mb-12">
-              <div>
-                    <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
-                      Our Favourites
-                    </p>
-                    <h2 className="text-[#1a1f2e] text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">
-                      Adventure of a Lifetime
-                    </h2>
+            <div className="mb-12">
+                <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+                  Our Favourites
+                </p>
+                <h2 className="text-[#1a1f2e] text-4xl lg:text-5xl font-semibold tracking-tight leading-tight">
+                  Adventure of a Lifetime
+                </h2>
               </div>
-              <Link
-                href="/explore"
-                className="hidden md:flex items-center gap-2 text-[#1e3d2f] font-medium hover:text-[#c4622d] transition-colors group"
-              >
-                View all
-                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
 
-            {/* Cards grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredAdventures.map((adventure, i) => (
+              {/* Cards grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {featuredAdventures.map((adventure) => (
                   <AdventureCard
                     key={adventure.id}
                     adventure={adventure}
                     size="default"
                   />
-              ))}
-            </div>
+                ))}
+              </div>
 
-            <div className="mt-8 text-center md:hidden">
-              <Link
-                href="/explore"
-                className="inline-flex items-center gap-2 text-[#1e3d2f] font-medium"
-              >
-                View all adventures <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
+              {/* View all — centered at bottom */}
+              <div className="mt-14 flex flex-col items-center gap-4">
+                <div className="w-px h-8 bg-gradient-to-b from-transparent to-[#c4622d]/40" />
+                <Link
+                  href="/explore"
+                  className="inline-flex items-center gap-2.5 border border-[#1e3d2f]/25 hover:border-[#c4622d] text-[#1e3d2f] hover:text-[#c4622d] font-medium px-8 py-3.5 rounded-full text-sm tracking-wide transition-all duration-300 group"
+                >
+                  View all adventures
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
           </div>
         </section>
 
