@@ -3,7 +3,17 @@
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 
-const slides = [
+type Slide = {
+  src: string;
+  alt: string;
+  panFrom: string;
+  panTo: string;
+  scaleFrom: number;
+  scaleTo: number;
+  filter?: string;
+};
+
+const slides: Slide[] = [
   {
     // Mountain: solo trekker on high-altitude ridge
     src: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=2560&q=95",
