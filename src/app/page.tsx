@@ -269,20 +269,18 @@ export default function HomePage() {
           </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
-              {featuredStories.map((story) => (
-                <Link key={story.id} href={`/stories/${story.slug}`} className="group block">
-                  <div
-                    className="relative rounded-2xl overflow-hidden mb-5"
-                    style={{ height: "240px" }}
-                  >
-                    <Image
-                      src={story.heroImage}
-                      alt={story.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105 brightness-105 saturate-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                {featuredStories.map((story) => (
+                  <Link key={story.id} href={`/stories/${story.slug}`} className="group block">
+                    <div className="relative rounded-2xl overflow-hidden" style={{ height: "380px" }}>
+                      <Image
+                        src={story.heroImage}
+                        alt={story.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105 brightness-105 saturate-110"
+                      />
+                      {/* Strong gradient from bottom for text legibility */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
 
                       {/* Top-left: icon-only badges that expand on hover */}
                       <div className="absolute top-3 left-3 flex flex-col gap-1.5">
@@ -308,56 +306,63 @@ export default function HomePage() {
                         )}
                       </div>
 
-                          {/* Top-right: Read time + Views */}
-                            <div className="absolute top-3 right-3 flex flex-col items-end gap-1.5">
-                              {story.readTime && (
-                                <span className="flex items-center gap-1 bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-                                  <Clock className="w-3 h-3" />
-                                  15 min
-                                </span>
-                              )}
-                              {story.views !== undefined && (
-                                <span className="flex items-center gap-1 bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-                                  <Eye className="w-3 h-3" />
-                                  2.4k
-                                </span>
-                              )}
-                            </div>
-
-                      {/* Bottom-left: Himalayas + Biking tags (same colour) */}
-                      <div className="absolute bottom-4 left-4 flex flex-wrap gap-1.5">
-                        {story.tags.includes("Himalayas") && (
-                          <span className="bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-                            Himalayas
+                      {/* Top-right: Read time + Views */}
+                      <div className="absolute top-3 right-3 flex flex-col items-end gap-1.5">
+                        {story.readTime && (
+                          <span className="flex items-center gap-1 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs font-semibold px-3 py-1.5 rounded-full">
+                            <Clock className="w-3 h-3" />
+                            15 min
                           </span>
                         )}
-                        {story.tags.includes("Biking") && (
-                          <span className="bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-                            Biking
+                        {story.views !== undefined && (
+                          <span className="flex items-center gap-1 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs font-semibold px-3 py-1.5 rounded-full">
+                            <Eye className="w-3 h-3" />
+                            2.4k
                           </span>
                         )}
                       </div>
-                  </div>
-                <div className="space-y-2">
-                  <h3 className="text-white font-semibold text-xl leading-snug group-hover:text-[#c4622d] transition-colors">
-                    {story.title}
-                  </h3>
-                  <p className="text-white/45 text-sm leading-relaxed line-clamp-2">
-                    {story.excerpt}
-                  </p>
-                  <div className="flex items-center gap-3 pt-2">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#c4622d] to-[#e8924d] flex items-center justify-center text-xs font-bold text-white shadow-sm">
-                      {story.author[0]}
+
+                      {/* Bottom overlay: tags + title + author */}
+                      <div className="absolute bottom-0 left-0 right-0 p-5">
+                        {/* Himalayas + Biking tags */}
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          {story.tags.includes("Himalayas") && (
+                            <span className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs font-semibold px-3 py-1 rounded-full">
+                              Himalayas
+                            </span>
+                          )}
+                          {story.tags.includes("Biking") && (
+                            <span className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs font-semibold px-3 py-1 rounded-full">
+                              Biking
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Title */}
+                        <h3 className="text-white font-bold text-xl leading-snug mb-1.5 group-hover:text-[#f09060] transition-colors drop-shadow-lg">
+                          {story.title}
+                        </h3>
+
+                        {/* Excerpt */}
+                        <p className="text-white/55 text-xs leading-relaxed line-clamp-2 mb-3">
+                          {story.excerpt}
+                        </p>
+
+                        {/* Author row */}
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#c4622d] to-[#e8924d] flex items-center justify-center text-xs font-bold text-white shadow-sm flex-shrink-0">
+                            {story.author[0]}
+                          </div>
+                          <div>
+                            <p className="text-white/80 text-xs font-semibold leading-none mb-0.5">{story.author}</p>
+                            <p className="text-white/40 text-xs">{story.date}</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-white/80 text-xs font-semibold">{story.author}</p>
-                      <p className="text-white/35 text-xs">{story.date}</p>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                  </Link>
+                ))}
+            </div>
 
           <div className="mt-12 flex justify-center md:hidden">
             <Link
