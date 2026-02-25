@@ -330,8 +330,8 @@ export default function MapPage() {
       {/* Spacer to push content below fixed navbar */}
       <div className="h-16 lg:h-20 shrink-0" />
 
-      {/* Filter bar — sits directly below the fixed navbar (h-16 mobile / h-20 desktop) */}
-      <div className="sticky top-16 lg:top-20 z-[1001] bg-white/95 backdrop-blur-md border-b border-[#e0d8cc] shadow-sm">
+      {/* Filter bar */}
+      <div className="z-[1001] bg-white/95 backdrop-blur-md border-b border-[#e0d8cc] shadow-sm shrink-0">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-3 flex items-center gap-3">
             {/* Adventure search */}
             <div className="relative flex-1 max-w-xs">
