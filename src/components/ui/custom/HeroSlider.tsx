@@ -64,6 +64,13 @@ const slides: Slide[] = [
     scaleFrom: 1.06, scaleTo: 1.16,
     filter: "brightness(1.08) contrast(1.1) saturate(1.35) hue-rotate(5deg)",
   },
+  {
+    src: "https://images.unsplash.com/photo-1668936132313-2c3105eef631?q=80&w=2070&auto=format&fit=crop",
+    alt: "Mountain biker descending a rugged trail through dense forest",
+    panFrom: "60% 50%", panTo: "40% 50%",
+    scaleFrom: 1.07, scaleTo: 1.17,
+    filter: "brightness(1.05) contrast(1.12) saturate(1.25) sepia(0.08)",
+  },
 ];
 
 const SLIDE_DURATION = 6000;
