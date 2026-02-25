@@ -298,17 +298,22 @@ export default function HomePage() {
                         )}
                       </div>
 
-                      {/* Top-right: Views */}
-                      {story.views !== undefined && (
-                        <div className="absolute top-3 right-3">
+                      {/* Top-right: Read time + Views */}
+                      <div className="absolute top-3 right-3 flex flex-col items-end gap-1.5">
+                        {story.readTime && (
+                          <span className="flex items-center gap-1 bg-black/50 backdrop-blur-sm text-white/80 text-xs px-2.5 py-1 rounded-full">
+                            {story.readTime}
+                          </span>
+                        )}
+                        {story.views !== undefined && (
                           <span className="flex items-center gap-1 bg-black/50 backdrop-blur-sm text-white/80 text-xs px-2.5 py-1 rounded-full">
                             <Eye className="w-3 h-3" />
                             {story.views >= 1000
                               ? `${(story.views / 1000).toFixed(1)}k`
                               : story.views}
                           </span>
-                        </div>
-                      )}
+                        )}
+                      </div>
 
                       {/* Bottom-left: Himalayas + Biking tags (same colour) */}
                       <div className="absolute bottom-4 left-4 flex flex-wrap gap-1.5">
