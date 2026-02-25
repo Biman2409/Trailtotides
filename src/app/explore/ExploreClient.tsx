@@ -43,7 +43,7 @@ const difficultyColor: Record<string, string> = {
 const typeEmoji: Partial<Record<AdventureType, string>> = {
   Trekking: "🥾", Biking: "🏍️", Cycling: "🚴", Diving: "🤿",
   Kayaking: "🛶", Skiing: "⛷️", Mountaineering: "🧗", "Rock Climbing": "🧱",
-  "Jeep Safari": "🚙", "Camel Safari": "🐪", Caving: "🕳️",
+  "Jeep Safari": "🚙", "Camel Safari": "🐪", Caving: "🪨",
   Sandboarding: "🏄", "Urban Adventure": "🏙️",
 };
 
