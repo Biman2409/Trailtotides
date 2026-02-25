@@ -45,7 +45,7 @@ export default function Footer() {
                 <li key={label}>
                   <Link
                     href={href}
-                    className="text-sm text-white/50 hover:text-white transition-colors"
+                    className="text-sm text-white/45 hover:text-white hover:translate-x-0.5 transition-all duration-200 inline-block"
                   >
                     {label}
                   </Link>
@@ -71,7 +71,7 @@ export default function Footer() {
                 <li key={label}>
                   <Link
                     href={href}
-                    className="text-sm text-white/50 hover:text-white transition-colors"
+                    className="text-sm text-white/45 hover:text-white hover:translate-x-0.5 transition-all duration-200 inline-block"
                   >
                     {label}
                   </Link>
@@ -97,7 +97,7 @@ export default function Footer() {
                 <li key={label}>
                   <Link
                     href={href}
-                    className="text-sm text-white/50 hover:text-white transition-colors"
+                    className="text-sm text-white/45 hover:text-white hover:translate-x-0.5 transition-all duration-200 inline-block"
                   >
                     {label}
                   </Link>
