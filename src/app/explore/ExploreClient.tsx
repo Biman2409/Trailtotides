@@ -572,71 +572,153 @@ export default function ExploreClient() {
                 </div>
 
               {/* Difficulty */}
-              <div>
-                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
-                  Difficulty
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {difficulties.map((d) => (
-                    <button
-                      key={d}
-                      onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
-                      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                        selectedDifficulties.includes(d)
-                          ? "bg-[#1e3d2f] text-white"
-                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
-                      }`}
-                    >
-                      <span className={`w-2 h-2 rounded-full ${difficultyDot[d]}`} />
-                      {d}
-                    </button>
-                  ))}
+                <div className="col-span-2 lg:col-span-3">
+                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
+                    Difficulty
+                  </h3>
+                  {(() => {
+                    const diffGroups = [
+                      { label: "Easy",     icon: "🟢", btn: "bg-green-50 border-green-200 text-green-800 hover:bg-green-100",   btnActive: "bg-green-600 text-white border-green-600",   chip: "bg-green-100 text-green-900 hover:bg-green-200",   chipActive: "bg-green-600 text-white",   items: ["Beginner"] as Difficulty[] },
+                      { label: "Moderate", icon: "🔵", btn: "bg-blue-50 border-blue-200 text-blue-800 hover:bg-blue-100",       btnActive: "bg-blue-600 text-white border-blue-600",     chip: "bg-blue-100 text-blue-900 hover:bg-blue-200",     chipActive: "bg-blue-600 text-white",   items: ["Intermediate"] as Difficulty[] },
+                      { label: "Hard",     icon: "🟠", btn: "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100",   btnActive: "bg-amber-500 text-white border-amber-500",   chip: "bg-amber-100 text-amber-900 hover:bg-amber-200",  chipActive: "bg-amber-500 text-white",  items: ["Advanced", "Expert"] as Difficulty[] },
+                      { label: "Extreme",  icon: "🔴", btn: "bg-red-50 border-red-200 text-red-800 hover:bg-red-100",           btnActive: "bg-red-600 text-white border-red-600",       chip: "bg-red-100 text-red-900 hover:bg-red-200",        chipActive: "bg-red-600 text-white",    items: ["Extreme"] as Difficulty[] },
+                    ];
+                    return (
+                      <div className="flex flex-col gap-2">
+                        <div className="flex flex-wrap gap-2">
+                          {diffGroups.map((g) => {
+                            const isExpanded = expandedDiff === g.label;
+                            const selCount = g.items.filter(i => selectedDifficulties.includes(i)).length;
+                            const hasSelected = selCount > 0;
+                            return (
+                              <button key={g.label} onClick={() => setExpandedDiff(isExpanded ? null : g.label)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? g.btnActive : g.btn}`}>
+                                <span>{g.icon}</span>
+                                {g.label}
+                                {hasSelected && <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">{selCount}</span>}
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {expandedDiff && (() => {
+                          const g = diffGroups.find(x => x.label === expandedDiff)!;
+                          return (
+                            <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                              <div className="flex flex-wrap gap-2">
+                                {g.items.map((d) => (
+                                  <button key={d} onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
+                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedDifficulties.includes(d) ? g.chipActive : g.chip}`}>
+                                    <span className={`w-2 h-2 rounded-full ${difficultyDot[d]}`} />
+                                    {d}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    );
+                  })()}
                 </div>
-              </div>
 
-              {/* Duration */}
-              <div>
-                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
-                  Duration
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {durations.map((dur) => (
-                    <button
-                      key={dur}
-                      onClick={() => toggle(selectedDurations, dur, setSelectedDurations)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                        selectedDurations.includes(dur)
-                          ? "bg-[#1e3d2f] text-white"
-                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
-                      }`}
-                    >
-                      {dur}
-                    </button>
-                  ))}
+                {/* Duration */}
+                <div className="col-span-2 lg:col-span-3">
+                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
+                    Duration
+                  </h3>
+                  {(() => {
+                    const durGroups = [
+                      { label: "Short",    icon: "⚡", btn: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100", btnActive: "bg-yellow-500 text-white border-yellow-500", chip: "bg-yellow-100 text-yellow-900 hover:bg-yellow-200", chipActive: "bg-yellow-500 text-white", items: ["Weekend"] as Duration[] },
+                      { label: "Medium",   icon: "🗓️", btn: "bg-indigo-50 border-indigo-200 text-indigo-800 hover:bg-indigo-100", btnActive: "bg-indigo-600 text-white border-indigo-600", chip: "bg-indigo-100 text-indigo-900 hover:bg-indigo-200", chipActive: "bg-indigo-600 text-white", items: ["3–5 days"] as Duration[] },
+                      { label: "Extended", icon: "🏕️", btn: "bg-rose-50 border-rose-200 text-rose-800 hover:bg-rose-100",         btnActive: "bg-rose-600 text-white border-rose-600",     chip: "bg-rose-100 text-rose-900 hover:bg-rose-200",     chipActive: "bg-rose-600 text-white",   items: ["7+ days"] as Duration[] },
+                    ];
+                    return (
+                      <div className="flex flex-col gap-2">
+                        <div className="flex flex-wrap gap-2">
+                          {durGroups.map((g) => {
+                            const isExpanded = expandedDur === g.label;
+                            const selCount = g.items.filter(i => selectedDurations.includes(i)).length;
+                            const hasSelected = selCount > 0;
+                            return (
+                              <button key={g.label} onClick={() => setExpandedDur(isExpanded ? null : g.label)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? g.btnActive : g.btn}`}>
+                                <span>{g.icon}</span>
+                                {g.label}
+                                {hasSelected && <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">{selCount}</span>}
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {expandedDur && (() => {
+                          const g = durGroups.find(x => x.label === expandedDur)!;
+                          return (
+                            <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                              <div className="flex flex-wrap gap-2">
+                                {g.items.map((d) => (
+                                  <button key={d} onClick={() => toggle(selectedDurations, d, setSelectedDurations)}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedDurations.includes(d) ? g.chipActive : g.chip}`}>
+                                    {d}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    );
+                  })()}
                 </div>
-              </div>
 
-              {/* Group Size */}
-              <div>
-                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
-                  Group Size
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {groupSizes.map((gs) => (
-                    <button
-                      key={gs}
-                      onClick={() => toggle(selectedGroupSizes, gs, setSelectedGroupSizes)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                        selectedGroupSizes.includes(gs)
-                          ? "bg-[#1e3d2f] text-white"
-                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
-                      }`}
-                    >
-                      {gs}
-                    </button>
-                  ))}
+                {/* Group Size */}
+                <div className="col-span-2 lg:col-span-3">
+                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
+                    Group Size
+                  </h3>
+                  {(() => {
+                    const gsGroups = [
+                      { label: "Solo",  icon: "🧍", btn: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100", btnActive: "bg-violet-600 text-white border-violet-600", chip: "bg-violet-100 text-violet-900 hover:bg-violet-200", chipActive: "bg-violet-600 text-white", items: ["Solo"] as GroupSize[] },
+                      { label: "Small", icon: "👥", btn: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100",         btnActive: "bg-teal-600 text-white border-teal-600",     chip: "bg-teal-100 text-teal-900 hover:bg-teal-200",     chipActive: "bg-teal-600 text-white",   items: ["Small group (2–6)"] as GroupSize[] },
+                      { label: "Large", icon: "🫂", btn: "bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 hover:bg-fuchsia-100", btnActive: "bg-fuchsia-600 text-white border-fuchsia-600", chip: "bg-fuchsia-100 text-fuchsia-900 hover:bg-fuchsia-200", chipActive: "bg-fuchsia-600 text-white", items: ["Large group (6+)"] as GroupSize[] },
+                    ];
+                    return (
+                      <div className="flex flex-col gap-2">
+                        <div className="flex flex-wrap gap-2">
+                          {gsGroups.map((g) => {
+                            const isExpanded = expandedGs === g.label;
+                            const selCount = g.items.filter(i => selectedGroupSizes.includes(i)).length;
+                            const hasSelected = selCount > 0;
+                            return (
+                              <button key={g.label} onClick={() => setExpandedGs(isExpanded ? null : g.label)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? g.btnActive : g.btn}`}>
+                                <span>{g.icon}</span>
+                                {g.label}
+                                {hasSelected && <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">{selCount}</span>}
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {expandedGs && (() => {
+                          const g = gsGroups.find(x => x.label === expandedGs)!;
+                          return (
+                            <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                              <div className="flex flex-wrap gap-2">
+                                {g.items.map((gs) => (
+                                  <button key={gs} onClick={() => toggle(selectedGroupSizes, gs, setSelectedGroupSizes)}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedGroupSizes.includes(gs) ? g.chipActive : g.chip}`}>
+                                    {gs}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    );
+                  })()}
                 </div>
-              </div>
 
             </div>
           </div>
