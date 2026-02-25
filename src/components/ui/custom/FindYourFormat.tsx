@@ -102,9 +102,9 @@ export default function FindYourFormat() {
                 </h2>
               <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
             </div>
-            <p className="hidden md:block text-white/40 text-sm max-w-xs text-right leading-relaxed">
-              Pick a category, explore the sub-types that match your style.
-            </p>
+              <p className="hidden md:block text-white/40 text-sm max-w-xs text-right leading-relaxed">
+                Pick a category that matches your style.
+              </p>
           </div>
         </div>
 
