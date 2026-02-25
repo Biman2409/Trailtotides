@@ -162,7 +162,7 @@ export default async function StoryPage({ params }: Props) {
                 <Clock className="w-3 h-3" />
                 {story.readTime}
               </span>
-                <StoryViewPill slug={story.slug} initialViews={story.views} incrementOnMount />
+                <StoryViewPill slug={story.slug} incrementOnMount />
             </div>
           </div>
         </div>
