@@ -209,7 +209,7 @@ export default function HeroSlider() {
         className="absolute bottom-8 left-8 text-white/30 text-[10px] tracking-[0.25em] font-medium tabular-nums select-none"
         style={{ zIndex: 5 }}
       >
-        {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+          {String(current + 1).padStart(2, "0")} / {String(shuffled.length).padStart(2, "0")}
       </div>
 
       {/* Scroll cue */}
