@@ -529,8 +529,8 @@ export const stories: Story[] = [
     authorRole: "Rider & TTT Original",
     heroImage: "https://images.unsplash.com/photo-1619103801164-1166263cb3b6?w=1600&q=90",
     readTime: "15 min read",
-    tags: ["Ladakh", "motorcycle", "Umling La", "TTT Original", "night ride"],
-    region: "Himalayas",
+      tags: ["Ladakh", "Himalayas", "Biking", "Umling La", "TTT Original", "night ride"],
+      region: "Himalayas",
       date: "July 2022",
   },
 ];
