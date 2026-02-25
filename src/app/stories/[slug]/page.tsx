@@ -147,13 +147,25 @@ export default async function StoryPage({ params }: Props) {
           <h1 className="text-white text-4xl md:text-6xl font-bold tracking-tight leading-tight mb-4 max-w-3xl">
             {story.title}
           </h1>
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#c4622d]/50 flex items-center justify-center text-sm font-bold text-white">
-              {story.author[0]}
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-[#c4622d]/50 flex items-center justify-center text-sm font-bold text-white">
+                {story.author[0]}
+              </div>
+              <div>
+                <p className="text-white font-medium text-sm">{story.author}</p>
+                <p className="text-white/45 text-xs">{story.authorRole} · {story.date}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-white font-medium text-sm">{story.author}</p>
-              <p className="text-white/45 text-xs">{story.authorRole} · {story.date}</p>
+            <div className="flex items-center gap-3 ml-2">
+              <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full">
+                <Clock className="w-3 h-3" />
+                {story.readTime}
+              </span>
+              <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full">
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                2.4k views
+              </span>
             </div>
           </div>
         </div>
