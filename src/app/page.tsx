@@ -195,24 +195,18 @@ export default function HomePage() {
       {/* ── REGIONS ──────────────────────────────────────── */}
       <section className="py-24 lg:py-32 bg-[#1a1f2e] px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-12">
-            <div>
-              <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
-                Discover by Region
-              </p>
-              <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
-                One map of Indian adventure
-              </h2>
-              <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
+            <div className="mb-12">
+                <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+                  Discover by Region
+                </p>
+                <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
+                  One map of Indian adventure
+                </h2>
+                <p className="mt-4 text-white/50 text-base max-w-xl">
+                  From the frozen passes of Ladakh to the backwaters of Kerala — every terrain, every season, every thrill.
+                </p>
+                <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
             </div>
-            <Link
-              href="/explore"
-              className="hidden md:flex items-center gap-1.5 text-white/40 hover:text-white text-sm transition-colors group"
-            >
-              All regions
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 lg:gap-4">
             {regions.map((region) => (
