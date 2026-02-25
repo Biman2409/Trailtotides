@@ -30,16 +30,6 @@ const difficultyColor: Record<string, string> = {
   Extreme:      "#ef4444",  // red
 };
 
-const difficulties: Difficulty[] = ["Beginner", "Intermediate", "Advanced", "Expert", "Extreme"];
-const durations: Duration[] = ["Weekend", "3–5 days", "7+ days"];
-const groupSizes: GroupSize[] = ["Solo", "Small group (2–6)", "Large group (6+)"];
-const difficultyDot: Record<Difficulty, string> = {
-  Beginner:     "bg-green-500",
-  Intermediate: "bg-blue-500",
-  Advanced:     "bg-amber-400",
-  Expert:       "bg-orange-500",
-  Extreme:      "bg-red-500",
-};
 const months: { label: string; value: Month }[] = [
   { label: "Jan", value: "Jan" }, { label: "Feb", value: "Feb" }, { label: "Mar", value: "Mar" },
   { label: "Apr", value: "Apr" }, { label: "May", value: "May" }, { label: "Jun", value: "Jun" },
