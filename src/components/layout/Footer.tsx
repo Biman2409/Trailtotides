@@ -36,13 +36,12 @@ export default function Footer() {
               Explore
             </h4>
             <ul className="space-y-3">
-                {[
-                  ["All Adventures", "/explore"],
-                  ["Trekking", "/explore?type=Trekking"],
-                  ["Biking", "/explore?type=Biking"],
-                  ["Diving", "/explore?type=Diving"],
-                  ["Interactive Map", "/map"],
-                ].map(([label, href]) => (
+                  {[
+                    ["All Adventures", "/explore"],
+                    ["Trekking", "/explore?type=Trekking"],
+                    ["Biking", "/explore?type=Biking"],
+                    ["Diving", "/explore?type=Diving"],
+                  ].map(([label, href]) => (
                 <li key={label}>
                   <Link
                     href={href}
