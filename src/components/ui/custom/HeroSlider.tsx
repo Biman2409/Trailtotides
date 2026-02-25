@@ -145,15 +145,13 @@ export default function HeroSlider() {
           <div
             key={slide.src}
             className="absolute inset-0"
-            style={{
-              zIndex: isActive ? 2 : isPrev ? 1 : 0,
-              opacity: isVisible ? 1 : isPrev ? 1 : 0,
-              transition: isVisible || isPrev
-                ? `opacity ${TRANSITION_MS}ms cubic-bezier(0.4,0,0.2,1)`
-                : "none",
-              visibility: shouldRender ? "visible" : "hidden",
-              pointerEvents: "none",
-            }}
+              style={{
+                zIndex: isActive ? 2 : isPrev ? 1 : 0,
+                opacity: isActive ? 1 : isPrev ? 1 : 0,
+                transition: `opacity ${TRANSITION_MS}ms cubic-bezier(0.4,0,0.2,1)`,
+                visibility: shouldRender ? "visible" : "hidden",
+                pointerEvents: "none",
+              }}
           >
             <Image
               src={slide.src}
