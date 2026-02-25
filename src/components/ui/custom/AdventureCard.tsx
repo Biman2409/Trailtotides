@@ -3,31 +3,12 @@ import Image from "next/image";
 import { MapPin, Clock, TrendingUp, ArrowRight } from "lucide-react";
 import type { Adventure } from "@/lib/data";
 
-const typePillColors: Record<string, string> = {
-  // Land — amber
-  Trekking:        "bg-amber-500/20 text-amber-300",
-  Mountaineering:  "bg-amber-500/20 text-amber-300",
-  "Rock Climbing": "bg-amber-500/20 text-amber-300",
-  Biking:          "bg-amber-500/20 text-amber-300",
-  Cycling:         "bg-amber-500/20 text-amber-300",
-  "Jeep Safari":   "bg-amber-500/20 text-amber-300",
-  "Camel Safari":  "bg-amber-500/20 text-amber-300",
-  Sandboarding:    "bg-amber-500/20 text-amber-300",
-  Caving:          "bg-amber-500/20 text-amber-300",
-  "Urban Adventure": "bg-amber-500/20 text-amber-300",
-  // Water — sky
-  Diving:          "bg-sky-500/20 text-sky-300",
-  Kayaking:        "bg-sky-500/20 text-sky-300",
-  // Snow — slate/white
-  Skiing:          "bg-slate-400/20 text-slate-200",
-};
-
-const difficultyColors: Record<string, string> = {
-  Beginner:     "bg-green-500/20 text-green-300",
-  Intermediate: "bg-blue-500/20 text-blue-300",
-  Advanced:     "bg-amber-500/20 text-amber-300",
-  Expert:       "bg-orange-500/20 text-orange-300",
-  Extreme:      "bg-red-500/20 text-red-300",
+const difficultyStyle: Record<string, { bg: string; text: string; dot: string }> = {
+  Beginner:     { bg: "bg-emerald-500", text: "text-white", dot: "bg-white" },
+  Intermediate: { bg: "bg-teal-500",    text: "text-white", dot: "bg-white" },
+  Advanced:     { bg: "bg-amber-500",   text: "text-white", dot: "bg-white" },
+  Expert:       { bg: "bg-orange-500",  text: "text-white", dot: "bg-white" },
+  Extreme:      { bg: "bg-red-500",     text: "text-white", dot: "bg-white" },
 };
 
 interface AdventureCardProps {
