@@ -111,7 +111,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── FEATURED ADVENTURES ─────────────────────────── */}
+        {/* ── AI ADVENTURE FINDER ─────────────────────────── */}
+        <InlineChat />
+
+        {/* ── FEATURED ADVENTURES ─────────────────────────── */}
       <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#fafaf8]">
         <div className="max-w-7xl mx-auto">
           <div className="mb-14">
