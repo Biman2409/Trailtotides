@@ -633,7 +633,7 @@ export const regions = [
   {
     name: "Coast" as Region,
     tagline: "Surf, sea kayaking & coastal hikes",
-    image: "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1X3YSIuqYeM?w=800&q=80",
     adventureCount: 36,
   },
   {
