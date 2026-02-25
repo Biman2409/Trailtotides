@@ -531,7 +531,7 @@ export const stories: Story[] = [
     readTime: "15 min read",
     tags: ["Ladakh", "motorcycle", "Umling La", "TTT Original", "night ride"],
     region: "Himalayas",
-    date: "2022",
+      date: "July 2022",
   },
 ];
 
