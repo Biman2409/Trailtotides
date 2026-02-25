@@ -164,14 +164,14 @@ export default function HomePage() {
             <p className="text-[#7ec88a] text-xs font-semibold tracking-[0.22em] uppercase mb-4">
               Signature Feature
             </p>
-            <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-5">
-              India's adventures,
-              <br />
-              <span className="text-[#7ec88a]">mapped.</span>
-            </h2>
-            <p className="text-white/55 text-lg leading-relaxed mb-9 max-w-md">
-              Toggle adventure layers — treks, rides, water sports — across a live India map. Every pin opens a full experience card.
-            </p>
+              <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-5">
+                India's adventures,
+                <br />
+                <span className="text-[#7ec88a]">mapped.</span>
+              </h2>
+              <p className="text-white/75 text-lg md:text-xl leading-relaxed mb-9 max-w-lg" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.6)" }}>
+                Discover epic adventures across India — from frozen Himalayan rivers to coral reefs in the Andamans — handpicked, trusted and perfectly mapped.
+              </p>
             <Link
               href="/map"
               className="inline-flex items-center gap-2.5 bg-white text-[#1a2e20] font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#f0f7f1] transition-colors group shadow-xl shadow-black/20"
