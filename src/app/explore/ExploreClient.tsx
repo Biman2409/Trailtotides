@@ -439,7 +439,7 @@ export default function ExploreClient() {
                         btnActive: "bg-cyan-600 text-white border-cyan-600",
                         chip: "bg-cyan-100 text-cyan-900 hover:bg-cyan-200",
                         chipActive: "bg-cyan-600 text-white",
-                        subRegions: ["Konkan", "Goa", "Odisha", "Tamil Nadu"],
+                        subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"],
                       },
                       {
                         name: "Islands",
