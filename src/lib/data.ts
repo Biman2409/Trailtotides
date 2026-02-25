@@ -83,6 +83,7 @@ export interface Story {
   tags: string[];
   region: Region;
   date: string;
+  views?: number;
 }
 
 export const adventures: Adventure[] = [
