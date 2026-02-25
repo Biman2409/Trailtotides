@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { signUp } from "@/app/auth/actions";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Mountain, ArrowLeft } from "lucide-react";
 
 export default function SignUpPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
@@ -16,13 +18,19 @@ export default function SignUpPage() {
     setMessage(null);
     const formData = new FormData(e.currentTarget);
     const result = await signUp(formData);
-    setLoading(false);
+    
     if (result?.error) {
+      setLoading(false);
       setMessage({ type: "error", text: result.error });
     } else if (result?.success) {
       setMessage({ type: "success", text: result.success });
       // Clear form on success
       (e.target as HTMLFormElement).reset();
+      
+      // Redirect to login after a short delay
+      setTimeout(() => {
+        router.push("/auth/login?message=Check your email to confirm your account");
+      }, 2000);
     }
   }
 
