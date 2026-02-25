@@ -18,7 +18,7 @@ export default function ChatBubble() {
     {
       role: "assistant",
       content:
-        "Hey! Tell me what kind of adventure you're looking for — region, vibe, difficulty, time of year — and I'll find the best match for you.",
+          "Hey! I'm Trailwise — tell me what kind of adventure you're after and I'll find the perfect trip for you.",
     },
   ]);
   const [input, setInput] = useState("");
