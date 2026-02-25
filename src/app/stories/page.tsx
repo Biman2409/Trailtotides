@@ -9,7 +9,7 @@ export default function StoriesPage() {
   const [featured, ...rest] = stories;
 
   return (
-    <div className="min-h-screen bg-[#fafaf8]">
+      <div className="min-h-screen bg-[#111820]">
       <Navbar />
 
       {/* Hero */}
