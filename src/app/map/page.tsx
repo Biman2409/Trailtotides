@@ -17,7 +17,7 @@ const typeEmoji: Record<AdventureType, string> = {
     "Rock Climbing": "🧱",
   "Jeep Safari": "🚙",
   "Camel Safari": "🐪",
-  "Caving": "🕳️",
+  "Caving": "🪨",
   "Sandboarding": "🏄",
   "Urban Adventure": "🏙️",
 };
