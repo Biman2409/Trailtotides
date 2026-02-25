@@ -132,18 +132,14 @@ export default async function StoryPage({ params }: Props) {
                 </span>
               )}
           </div>
-            {/* Row 2: content tags + read time */}
-            <div className="flex items-center gap-3 mb-4 flex-wrap">
-              {story.tags.filter(t => ["Himalayas", "Biking"].includes(t)).map(tag => (
-                <span key={tag} className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs px-3 py-1.5 rounded-full">
-                  {tag}
-                </span>
-              ))}
-              <span className="flex items-center gap-1.5 text-white/55 text-xs">
-                <Clock className="w-3.5 h-3.5" />
-                {story.readTime}
-              </span>
-            </div>
+            {/* Row 2: content tags */}
+              <div className="flex items-center gap-3 mb-4 flex-wrap">
+                {story.tags.filter(t => ["Himalayas", "Biking"].includes(t)).map(tag => (
+                  <span key={tag} className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs px-3 py-1.5 rounded-full">
+                    {tag}
+                  </span>
+                ))}
+              </div>
           <h1 className="text-white text-4xl md:text-6xl font-bold tracking-tight leading-tight mb-4 max-w-3xl">
             {story.title}
           </h1>
