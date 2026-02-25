@@ -229,7 +229,7 @@ export default function HomePage() {
       {/* ── ADVENTURE TYPES ──────────────────────────────── */}
       <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#fafaf8]">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-12">
+          <div className="mb-14">
             <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
               Find your format
             </p>
@@ -239,18 +239,118 @@ export default function HomePage() {
             <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 lg:gap-4">
-            {adventureTypes.map(({ type, icon, count }) => (
-              <Link
-                key={type}
-                href={`/explore?type=${encodeURIComponent(type)}`}
-                className="group bg-white border border-[#e8e2d9] hover:border-[#c4622d] rounded-2xl p-5 text-center transition-all duration-250 hover:shadow-lg hover:shadow-[#c4622d]/10 hover:-translate-y-1"
-              >
-                <div className="text-3xl mb-3 transition-transform duration-250 group-hover:scale-110">{icon}</div>
-                <div className="text-[#1a1f2e] text-sm font-medium leading-tight group-hover:text-[#c4622d] transition-colors">{type}</div>
-                <div className="text-[#b0a898] text-xs mt-1">{count}</div>
-              </Link>
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+            {/* LAND */}
+            <div className="rounded-2xl bg-[#fdf6ee] border border-[#e8ddd0] overflow-hidden">
+              <div className="px-6 pt-6 pb-4 flex items-center gap-3 border-b border-[#e8ddd0]">
+                <span className="text-2xl">🏔️</span>
+                <div>
+                  <h3 className="text-[#1a1f2e] font-bold text-base">Land</h3>
+                  <p className="text-[#b0a898] text-xs">Mountains, trails &amp; terrain</p>
+                </div>
+              </div>
+              <div className="p-3 flex flex-col gap-1.5">
+                {[
+                  { type: "Trekking", icon: "🥾", count: 94 },
+                  { type: "Biking", icon: "🏍️", count: 38 },
+                  { type: "Cycling", icon: "🚴", count: 27 },
+                  { type: "Mountaineering", icon: "🏔️", count: 15 },
+                  { type: "Rock Climbing", icon: "🧗", count: 18 },
+                  { type: "Jeep Safari", icon: "🚙", count: 22 },
+                  { type: "Camel Safari", icon: "🐪", count: 9 },
+                  { type: "Caving", icon: "🕳️", count: 7 },
+                  { type: "Sandboarding", icon: "🏄", count: 5 },
+                  { type: "Urban Adventure", icon: "🏙️", count: 11 },
+                ].map(({ type, icon, count }) => (
+                  <Link
+                    key={type}
+                    href={`/explore?type=${encodeURIComponent(type)}`}
+                    className="group flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-[#c4622d]/8 transition-colors duration-200"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-lg">{icon}</span>
+                      <span className="text-[#1a1f2e] text-sm font-medium group-hover:text-[#c4622d] transition-colors">{type}</span>
+                    </div>
+                    <span className="text-[#c4622d] text-xs font-semibold bg-[#c4622d]/10 px-2 py-0.5 rounded-full">{count}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* WATER */}
+            <div className="rounded-2xl bg-[#eef5fd] border border-[#cde0f5] overflow-hidden">
+              <div className="px-6 pt-6 pb-4 flex items-center gap-3 border-b border-[#cde0f5]">
+                <span className="text-2xl">🌊</span>
+                <div>
+                  <h3 className="text-[#1a1f2e] font-bold text-base">Water</h3>
+                  <p className="text-[#7a9ab8] text-xs">Rivers, reefs &amp; open sea</p>
+                </div>
+              </div>
+              <div className="p-3 flex flex-col gap-1.5">
+                {[
+                  { type: "Diving", icon: "🤿", count: 19 },
+                  { type: "Kayaking", icon: "🛶", count: 24 },
+                ].map(({ type, icon, count }) => (
+                  <Link
+                    key={type}
+                    href={`/explore?type=${encodeURIComponent(type)}`}
+                    className="group flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-[#2a7cc7]/8 transition-colors duration-200"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-lg">{icon}</span>
+                      <span className="text-[#1a1f2e] text-sm font-medium group-hover:text-[#2a7cc7] transition-colors">{type}</span>
+                    </div>
+                    <span className="text-[#2a7cc7] text-xs font-semibold bg-[#2a7cc7]/10 px-2 py-0.5 rounded-full">{count}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* SNOW */}
+            <div className="rounded-2xl bg-[#f4f8fb] border border-[#d5e5f0] overflow-hidden">
+              <div className="px-6 pt-6 pb-4 flex items-center gap-3 border-b border-[#d5e5f0]">
+                <span className="text-2xl">❄️</span>
+                <div>
+                  <h3 className="text-[#1a1f2e] font-bold text-base">Snow</h3>
+                  <p className="text-[#7a9aaa] text-xs">Glaciers, slopes &amp; ice</p>
+                </div>
+              </div>
+              <div className="p-3 flex flex-col gap-1.5">
+                {[
+                  { type: "Skiing", icon: "⛷️", count: 8 },
+                ].map(({ type, icon, count }) => (
+                  <Link
+                    key={type}
+                    href={`/explore?type=${encodeURIComponent(type)}`}
+                    className="group flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-[#6aaabf]/8 transition-colors duration-200"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-lg">{icon}</span>
+                      <span className="text-[#1a1f2e] text-sm font-medium group-hover:text-[#4a8a9f] transition-colors">{type}</span>
+                    </div>
+                    <span className="text-[#4a8a9f] text-xs font-semibold bg-[#4a8a9f]/10 px-2 py-0.5 rounded-full">{count}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* AIR */}
+            <div className="rounded-2xl bg-[#f5f0fd] border border-[#ddd0f5] overflow-hidden">
+              <div className="px-6 pt-6 pb-4 flex items-center gap-3 border-b border-[#ddd0f5]">
+                <span className="text-2xl">🪂</span>
+                <div>
+                  <h3 className="text-[#1a1f2e] font-bold text-base">Air</h3>
+                  <p className="text-[#9a7ab8] text-xs">Sky, altitude &amp; free flight</p>
+                </div>
+              </div>
+              <div className="p-3 flex flex-col gap-1.5">
+                <div className="flex flex-col items-center justify-center py-10 text-center gap-2">
+                  <span className="text-3xl">🪂</span>
+                  <p className="text-[#9a7ab8] text-sm font-medium">Coming Soon</p>
+                  <p className="text-[#b8a8cc] text-xs">Paragliding, skydiving &amp; more</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
