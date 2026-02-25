@@ -249,7 +249,7 @@ export const adventures: Adventure[] = [
     id: "5",
     slug: "spiti-valley-cycling",
     name: "Spiti Valley Cycling",
-    tagline: "Cycle through high-altitude monasteries, cold desert passes, and roads few dare to ride",
+      tagline: "Pedal to the edge of the world — where ancient monasteries meet roads few dare to ride",
     region: "Himalayas",
     state: "Himachal Pradesh",
     type: "Cycling",
