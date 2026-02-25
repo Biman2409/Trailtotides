@@ -71,6 +71,13 @@ const slides: Slide[] = [
     scaleFrom: 1.07, scaleTo: 1.17,
     filter: "brightness(1.05) contrast(1.12) saturate(1.25) sepia(0.08)",
   },
+  {
+    src: "https://images.unsplash.com/photo-1590898428406-7b9f44b33c22?q=80&w=1712&auto=format&fit=crop",
+    alt: "Rock climber scaling a dramatic cliff face",
+    panFrom: "50% 70%", panTo: "50% 30%",
+    scaleFrom: 1.07, scaleTo: 1.17,
+    filter: "brightness(1.06) contrast(1.14) saturate(1.2) sepia(0.06) hue-rotate(5deg)",
+  },
 ];
 
 const SLIDE_DURATION = 6000;
