@@ -170,18 +170,18 @@ export default async function StoryPage({ params }: Props) {
         </div>
 
         {/* Author card */}
-        <div className="mt-10 bg-[#f5f0e8] rounded-2xl p-6 flex items-start gap-5">
-          <div className="w-14 h-14 rounded-full bg-[#c4622d]/20 flex items-center justify-center text-xl font-bold text-[#c4622d] shrink-0">
-            {story.author[0]}
+          <div className="mt-10 bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-5">
+            <div className="w-14 h-14 rounded-full bg-[#c4622d]/20 flex items-center justify-center text-xl font-bold text-[#c4622d] shrink-0">
+              {story.author[0]}
+            </div>
+            <div>
+              <p className="text-white font-semibold text-base">{story.author}</p>
+              <p className="text-white/40 text-sm mt-0.5">{story.authorRole}</p>
+              <p className="text-white/50 text-sm mt-2 leading-relaxed">
+                Writing about adventure since {story.date.split(" ")[1] ?? "2022"}. Based out of India, usually somewhere between a trailhead and a deadline.
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-[#1a1f2e] font-semibold text-base">{story.author}</p>
-            <p className="text-[#9a9590] text-sm mt-0.5">{story.authorRole}</p>
-            <p className="text-[#6b6560] text-sm mt-2 leading-relaxed">
-              Writing about adventure since {story.date.split(" ")[1] ?? "2025"}. Based out of India, usually somewhere between a trailhead and a deadline.
-            </p>
-          </div>
-        </div>
       </article>
 
       {/* More stories */}
