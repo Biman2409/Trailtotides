@@ -85,9 +85,7 @@ export default function InlineChat() {
             </h2>
             <div className="mt-4 w-10 h-0.5 bg-[#c4622d] rounded-full" />
           </div>
-          <p className="text-white/40 text-sm max-w-xs text-right hidden sm:block">
-            Describe what you&apos;re looking for — we&apos;ll match you with the right trip
-          </p>
+
         </div>
 
         {/* Chat container */}
