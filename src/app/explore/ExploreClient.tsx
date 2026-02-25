@@ -412,7 +412,7 @@ export default function ExploreClient() {
                         btnActive: "bg-lime-600 text-white border-lime-600",
                         chip: "bg-lime-100 text-lime-900 hover:bg-lime-200",
                         chipActive: "bg-lime-600 text-white",
-                        subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra"],
+                          subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"],
                       },
                       {
                         name: "Desert",
