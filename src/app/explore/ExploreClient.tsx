@@ -295,11 +295,10 @@ export default function ExploreClient() {
             <button
               onClick={() => { setAiOpen(!aiOpen); setFiltersOpen(false); }}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                aiOpen
-                  ? "text-white"
-                  : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
-              }`}
-              style={aiOpen ? { background: "#c4622d" } : {}}
+                  aiOpen
+                    ? "bg-[#c4622d] text-white"
+                    : "bg-[#c4622d] text-white hover:bg-[#b5571f]"
+                }`}
             >
               <Sparkles className="w-4 h-4" />
               <span className="hidden sm:inline">AI Finder</span>
