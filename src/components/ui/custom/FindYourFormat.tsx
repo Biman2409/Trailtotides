@@ -9,7 +9,7 @@ const categories = [
     id: "land",
     label: "Land",
         subtitle: "Push your limits and own every inch of wild terrain",
-    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
+      image: "https://images.unsplash.com/photo-1601642910940-ae43dc8cf421?w=800&q=80",
     accent: "#c4622d",
     accentLight: "rgba(196,98,45,0.15)",
     accentBorder: "rgba(196,98,45,0.35)",
