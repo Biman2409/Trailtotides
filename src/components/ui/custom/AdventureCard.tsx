@@ -52,7 +52,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           src={adventure.heroImage}
           alt={adventure.name}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          className="object-cover transition-transform duration-700 group-hover:scale-105 brightness-110 contrast-105 saturate-125"
           sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
         />
 
