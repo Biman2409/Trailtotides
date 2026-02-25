@@ -203,7 +203,7 @@ export default function HomePage() {
                   One map of Indian adventure
                 </h2>
                 <p className="mt-4 text-white/50 text-base max-w-xl">
-                  From the frozen passes of Ladakh to the backwaters of Kerala — every terrain, every season, every thrill.
+                  India holds more wild than you'll ever tame — pick a region and let the journey begin.
                 </p>
                 <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
             </div>
