@@ -537,8 +537,8 @@ export default function ExploreClient() {
                   {(() => {
                     const regionGroups: { name: Region; icon: string; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
                       {
-                        name: "Himalayas",
-                        icon: "🏔️",
+          name: "Himalayas",
+          icon: "🏕️",
                         btn: "bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100",
                         btnActive: "bg-emerald-700 text-white border-emerald-700",
                         chip: "bg-emerald-100 text-emerald-900 hover:bg-emerald-200",
