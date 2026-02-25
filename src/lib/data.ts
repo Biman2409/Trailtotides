@@ -16,6 +16,7 @@ export type AdventureType =
 export type Region =
   | "Himalayas"
   | "Western Ghats"
+  | "Eastern Ghats"
   | "Desert"
   | "Coast"
   | "Islands"
