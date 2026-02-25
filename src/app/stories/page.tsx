@@ -18,9 +18,9 @@ export default function StoriesPage() {
           <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
             From the Field
           </p>
-          <h1 className="text-white text-5xl lg:text-7xl font-semibold tracking-tight leading-none mb-4">
-            Stories
-          </h1>
+            <h1 className="text-white text-5xl lg:text-7xl font-semibold tracking-tight leading-none mb-4">
+              Voices from the Edge
+            </h1>
           <p className="text-white/50 text-lg max-w-xl mt-4">
             Written by mountaineers, riders, divers, and wanderers who've actually been out there.
           </p>
