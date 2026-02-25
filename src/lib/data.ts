@@ -404,7 +404,7 @@ export const adventures: Adventure[] = [
     id: "13",
     slug: "spiti-valley-bike",
       name: "Spiti Valley Circuit",
-      tagline: "Ride the ancient Tibet highway through cold deserts, mud monasteries, and forgotten valleys",
+        tagline: "Ride the old Tibet highway — where the tarmac ends and the adventure begins",
     region: "Himalayas",
     state: "Himachal Pradesh",
     type: "Biking",
