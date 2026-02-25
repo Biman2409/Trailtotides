@@ -87,12 +87,13 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3">
               {[
-                ["Stories", "/stories"],
-                ["Plan Your Adventure", "/plan"],
-                ["List Your Adventure", "/list"],
-                ["About", "/about"],
-                ["Contact", "/contact"],
-              ].map(([label, href]) => (
+                  ["Interactive Map", "/map"],
+                  ["Stories", "/stories"],
+                  ["Plan Your Adventure", "/plan"],
+                  ["List Your Adventure", "/list"],
+                  ["About", "/about"],
+                  ["Contact", "/contact"],
+                ].map(([label, href]) => (
                 <li key={label}>
                   <Link
                     href={href}
