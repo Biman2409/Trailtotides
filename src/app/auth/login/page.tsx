@@ -3,9 +3,12 @@
 import { useState } from "react";
 import { login } from "@/app/auth/actions";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Mountain, ArrowLeft } from "lucide-react";
 
 export default function LoginPage() {
+  const searchParams = useSearchParams();
+  const message = searchParams.get("message");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -60,6 +63,12 @@ export default function LoginPage() {
 
           <h1 className="text-3xl font-bold text-white mb-2">Log in</h1>
           <p className="text-white/50 mb-8">Continue your adventure journey.</p>
+
+          {message && !error && (
+            <div className="mb-6 px-4 py-3 rounded-xl text-sm font-medium bg-green-500/10 border border-green-500/30 text-green-400">
+              {message}
+            </div>
+          )}
 
           {error && (
             <div className="mb-6 px-4 py-3 rounded-xl text-sm font-medium bg-red-500/10 border border-red-500/30 text-red-400">
