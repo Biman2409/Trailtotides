@@ -403,7 +403,7 @@ export default function ExploreClient() {
                         btnActive: "bg-emerald-700 text-white border-emerald-700",
                         chip: "bg-emerald-100 text-emerald-900 hover:bg-emerald-200",
                         chipActive: "bg-emerald-700 text-white",
-                        subRegions: ["Ladakh", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh"],
+                          subRegions: ["Ladakh", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
                       },
                       {
                         name: "Western Ghats",
