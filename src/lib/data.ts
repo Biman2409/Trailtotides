@@ -535,7 +535,6 @@ export const stories: Story[] = [
         tags: ["Featured", "TTT Original", "Ladakh", "Himalayas", "Biking", "Umling La", "night ride"],
         region: "Himalayas",
         date: "July 2022",
-        views: 24800,
     },
 ];
 
