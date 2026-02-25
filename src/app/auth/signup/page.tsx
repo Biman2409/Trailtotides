@@ -97,15 +97,16 @@ export default function SignUpPage() {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-white/70 mb-2">Phone (optional)</label>
-              <input
-                name="phone"
-                type="tel"
-                placeholder="+91 98765 43210"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-orange-400/60 focus:bg-white/8 transition-all"
-              />
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-2">Phone</label>
+                <input
+                  name="phone"
+                  type="tel"
+                  required
+                  placeholder="+91 98765 43210"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-orange-400/60 focus:bg-white/8 transition-all"
+                />
+              </div>
 
             <div>
               <label className="block text-sm font-medium text-white/70 mb-2">Password</label>
