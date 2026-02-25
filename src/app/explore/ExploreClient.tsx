@@ -457,34 +457,44 @@ export default function ExploreClient() {
                     Best Season
                   </h3>
                   <div className="flex flex-col gap-2">
-                    {seasons.map(({ label, icon, months: sMonths, activeColor, idleColor, color }) => {
-                      const allSelected = sMonths.every((m) => selectedMonths.includes(m));
-                      const someSelected = sMonths.some((m) => selectedMonths.includes(m));
+                    {/* Season buttons row */}
+                    <div className="flex flex-wrap gap-2">
+                      {seasons.map(({ label, icon, months: sMonths, activeColor, idleColor }) => {
+                        const isExpanded = expandedSeason === label;
+                        const hasSelected = sMonths.some((m) => selectedMonths.includes(m));
+                        const selectedCount = sMonths.filter((m) => selectedMonths.includes(m)).length;
+                        return (
+                          <button
+                            key={label}
+                            onClick={() => setExpandedSeason(isExpanded ? null : label)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                              isExpanded || hasSelected ? activeColor : idleColor
+                            }`}
+                          >
+                            <span>{icon}</span>
+                            {label}
+                            {hasSelected && (
+                              <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
+                                {selectedCount}
+                              </span>
+                            )}
+                            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {/* Expanded month chips */}
+                    {expandedSeason && (() => {
+                      const season = seasons.find((s) => s.label === expandedSeason)!;
                       return (
-                        <div key={label} className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
-                          {/* Season header — click to toggle all */}
-                          <div className="flex items-center gap-2 mb-2">
-                            <button
-                              onClick={() => toggleSeason(sMonths)}
-                              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
-                                allSelected ? activeColor : someSelected ? activeColor + " opacity-70" : idleColor
-                              }`}
-                            >
-                              <span>{icon}</span>
-                              {label}
-                            </button>
-                            <span className={`text-[10px] font-medium opacity-50 ${color}`}>
-                              {allSelected ? "all selected" : someSelected ? `${sMonths.filter(m => selectedMonths.includes(m)).length}/${sMonths.length}` : "tap to select all"}
-                            </span>
-                          </div>
-                          {/* Individual month chips */}
-                          <div className="flex flex-wrap gap-1.5">
-                            {sMonths.map((m) => (
+                        <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                          <div className="flex flex-wrap gap-2">
+                            {season.months.map((m) => (
                               <button
                                 key={m}
                                 onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                                className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
-                                  selectedMonths.includes(m) ? activeColor : idleColor
+                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                  selectedMonths.includes(m) ? season.activeColor : season.idleColor
                                 }`}
                               >
                                 {m}
@@ -493,7 +503,7 @@ export default function ExploreClient() {
                           </div>
                         </div>
                       );
-                    })}
+                    })()}
                   </div>
                 </div>
 
