@@ -519,19 +519,19 @@ export default function ExploreClient() {
       {/* Grid */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
         {filtered.length === 0 ? (
-          <div className="text-center py-24">
-            <div className="text-5xl mb-4">🗺️</div>
-            <h3 className="text-[#1a1f2e] text-xl font-semibold mb-2">No adventures found</h3>
-            <p className="text-[#9a9590] mb-6">
-              Try adjusting your filters or search term
-            </p>
-            <button
-              onClick={clearAll}
-              className="bg-[#1e3d2f] text-white px-6 py-3 rounded-xl text-sm font-medium hover:bg-[#2d5a42] transition-colors"
-            >
-              Clear all filters
-            </button>
-          </div>
+          <div className="text-center py-28">
+              <div className="text-6xl mb-5">🗺️</div>
+              <h3 className="text-[#1a1f2e] text-2xl font-bold mb-2">No adventures found</h3>
+              <p className="text-[#9a9590] mb-7 max-w-xs mx-auto leading-relaxed">
+                Try adjusting your filters or search term
+              </p>
+              <button
+                onClick={clearAll}
+                className="bg-[#1e3d2f] text-white px-7 py-3 rounded-xl text-sm font-semibold hover:bg-[#2d5a42] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200"
+              >
+                Clear all filters
+              </button>
+            </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((adventure) => (
