@@ -16,6 +16,7 @@ export async function signUp(formData: FormData) {
     password,
     options: {
       data: { full_name, phone },
+      emailRedirectTo: undefined, // use OTP flow, not magic link
     },
   });
 
@@ -23,7 +24,42 @@ export async function signUp(formData: FormData) {
     return { error: error.message };
   }
 
-  return { success: "Account created! Please check your email to verify your account." };
+  // Redirect to OTP verify page with email as query param
+  redirect(`/auth/verify?email=${encodeURIComponent(email)}`);
+}
+
+export async function verifyOtp(formData: FormData) {
+  const supabase = await createClient();
+
+  const email = formData.get("email") as string;
+  const token = formData.get("token") as string;
+
+  const { error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "signup",
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  redirect("/");
+}
+
+export async function resendOtp(email: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: "A new code has been sent to your email." };
 }
 
 export async function login(formData: FormData) {
