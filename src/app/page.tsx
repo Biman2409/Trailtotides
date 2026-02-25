@@ -513,6 +513,9 @@ export default function HomePage() {
             backgroundSize: "20px 20px",
           }}
         />
+        <div className="relative z-10 mb-16">
+          <InlineChat />
+        </div>
         <div className="max-w-2xl mx-auto text-center relative z-10">
           <div className="flex items-center justify-center gap-1 mb-6">
             {[...Array(5)].map((_, i) => (
