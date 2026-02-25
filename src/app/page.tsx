@@ -99,10 +99,15 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── STATS BAR ────────────────────────────────────── */}
-      <StatsBar />
+        {/* ── STATS BAR ────────────────────────────────────── */}
+        <StatsBar />
 
-      {/* ── FEATURED ADVENTURES ─────────────────────────── */}
+        {/* ── AI FINDER ────────────────────────────────────── */}
+        <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#fafaf8] border-t border-[#f0ebe3]">
+          <InlineChat />
+        </section>
+
+        {/* ── FEATURED ADVENTURES ─────────────────────────── */}
       <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#fafaf8]">
         <div className="max-w-7xl mx-auto">
           <div className="mb-14">
