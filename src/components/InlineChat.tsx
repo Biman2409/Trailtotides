@@ -155,8 +155,12 @@ export default function InlineChat() {
           )}
 
           {/* Suggestion chips — only before first message */}
-          {messages.length === 0 && (
-            <div className="px-4 pt-4 pb-3 flex flex-wrap gap-2 bg-white/2">
+            {messages.length === 0 && (
+              <div className="px-4 pt-4 pb-3 bg-white/2">
+                <p className="text-white/40 text-xs mb-3 tracking-wide">
+                  Describe what you&apos;re looking for — we&apos;ll match you with the right trip
+                </p>
+                <div className="flex flex-wrap gap-2">
               {SUGGESTIONS.map((s) => (
                 <button
                   key={s}
