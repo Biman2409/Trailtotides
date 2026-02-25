@@ -17,7 +17,7 @@ const featuredStories = stories.slice(0, 3);
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#fafaf8]">
+    <div className="min-h-screen bg-[#111820]">
       <Navbar />
 
       {/* ── HERO ─────────────────────────────────────────── */}
