@@ -209,7 +209,7 @@ export const adventures: Adventure[] = [
     id: "4",
       slug: "andaman-scuba-diving",
     name: "Havelock Island Diving",
-    tagline: "Dive the crystal-clear waters of Havelock Island",
+      tagline: "30m visibility, intact WWII wrecks, reef sharks — India's finest dive waters",
     region: "Islands",
     state: "Andaman & Nicobar",
       type: "Diving",
