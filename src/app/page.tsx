@@ -271,7 +271,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
                 {featuredStories.map((story) => (
                   <Link key={story.id} href={`/stories/${story.slug}`} className="group block">
-                    <div className="relative rounded-2xl overflow-hidden" style={{ height: "380px" }}>
+                    <div className="relative rounded-2xl overflow-hidden h-[360px] shadow-md hover:shadow-xl hover:shadow-black/20 transition-shadow duration-300 bg-[#1a1f2e]">
                       <Image
                         src={story.heroImage}
                         alt={story.title}
