@@ -322,6 +322,7 @@ export default function MapPage() {
     ) return false;
     if (selectedTypes.length && !selectedTypes.includes(a.type)) return false;
     if (selectedRegions.length && !selectedRegions.includes(a.region)) return false;
+    if (selectedSubRegions.length && !selectedSubRegions.some(sr => a.state.includes(sr))) return false;
     if (selectedDifficulties.length && !selectedDifficulties.includes(a.difficulty)) return false;
     if (selectedDurations.length && !selectedDurations.includes(a.duration)) return false;
     if (selectedMonths.length && !selectedMonths.some((m) => a.bestMonths.includes(m))) return false;
