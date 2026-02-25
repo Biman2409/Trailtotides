@@ -86,7 +86,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           <h3 className="text-white font-semibold text-xl leading-snug mb-1">
             {adventure.name}
           </h3>
-          <p className="text-white/60 text-sm line-clamp-2 mb-3 leading-relaxed">
+            <p className="text-white/75 text-sm line-clamp-2 mb-3 leading-relaxed">
             {adventure.tagline}
           </p>
           <div className="flex items-center justify-between">
