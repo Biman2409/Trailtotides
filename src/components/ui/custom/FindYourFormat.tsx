@@ -93,7 +93,7 @@ export default function FindYourFormat() {
         {/* Header */}
         <div className="mb-14">
           <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
-              Discover your style
+              Pick your element
           </p>
           <div className="flex items-end justify-between gap-4">
             <div>
