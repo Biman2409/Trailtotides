@@ -175,6 +175,8 @@ export const adventures: Adventure[] = [
       type: "Biking",
     difficulty: "Challenging",
     duration: "7+ days",
+    durationDays: "10 days",
+      altitude: "5,359m (Tanglang La)",
     terrain: "Mountain highways, river crossings, high passes",
       bestSeason: "Jun – Sep",
       bestMonths: ["Jun", "Jul", "Aug", "Sep"],
