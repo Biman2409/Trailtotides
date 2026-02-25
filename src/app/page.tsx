@@ -329,17 +329,16 @@ export default function HomePage() {
       </section>
 
           {/* ── FINAL CTA ─────────────────────────────────────── */}
-      <section className="relative py-24 lg:py-32 bg-[#f5f0e8] px-6 lg:px-8 overflow-hidden">
+      <section className="relative py-24 lg:py-32 bg-[#141920] border-t border-white/6 px-6 lg:px-8 overflow-hidden">
         <div
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0 opacity-30"
           style={{
             backgroundImage:
               "radial-gradient(circle at 15% 50%, #c4622d22 0%, transparent 55%), radial-gradient(circle at 85% 50%, #1a2e2018 0%, transparent 55%)",
           }}
         />
-        {/* Subtle pattern */}
         <div
-          className="absolute inset-0 opacity-5"
+          className="absolute inset-0 opacity-4"
           style={{
             backgroundImage:
               "repeating-linear-gradient(45deg, #c4622d 0, #c4622d 1px, transparent 0, transparent 50%)",
@@ -352,24 +351,24 @@ export default function HomePage() {
               <Star key={i} className="w-4 h-4 fill-[#c4622d] text-[#c4622d]" />
             ))}
           </div>
-          <h2 className="text-[#1a1f2e] text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-5">
+          <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-5">
             Find your next edge.
           </h2>
-          <p className="text-[#7a7268] text-lg leading-relaxed mb-10 max-w-lg mx-auto">
+          <p className="text-white/50 text-lg leading-relaxed mb-10 max-w-lg mx-auto">
             287 adventures across India. Verified operators, real terrain data, and stories from
             people who've actually been there.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/explore"
-              className="bg-[#1a2e20] hover:bg-[#243d29] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-black/15 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 transition-all duration-200"
+              className="bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#c4622d]/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#c4622d]/30 transition-all duration-200"
             >
               Start Exploring
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               href="/list"
-              className="border border-[#1a2e20]/25 hover:border-[#1a2e20]/60 text-[#1a2e20] font-semibold px-9 py-4 rounded-xl text-base hover:bg-white/70 hover:-translate-y-0.5 transition-all duration-200"
+              className="border border-white/20 hover:border-white/40 text-white/70 font-semibold px-9 py-4 rounded-xl text-base hover:text-white hover:bg-white/5 hover:-translate-y-0.5 transition-all duration-200"
             >
               List Your Adventure
             </Link>
