@@ -14,11 +14,8 @@ interface Message {
 
 const SUGGESTIONS = [
   { label: "Easy Himalayan trek for beginners", icon: "🥾" },
-  { label: "Scuba diving near islands in winter", icon: "🤿" },
   { label: "Solo adventure in Northeast India", icon: "🎒" },
-  { label: "Extreme cycling in summer", icon: "🚴" },
   { label: "Wildlife safari under ₹5k", icon: "🐘" },
-  { label: "Skiing in Himachal Pradesh", icon: "⛷️" },
 ];
 
 export default function InlineChat() {
