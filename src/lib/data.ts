@@ -614,8 +614,8 @@ export const regions = [
   },
   {
     name: "Western Ghats" as Region,
-    tagline: "Rainforests, rivers & ancient trails",
-    image: "https://images.unsplash.com/photo-1586348943529-beaae6c28db9?w=800&q=80",
+      tagline: "Rainforests, rivers & ancient trails",
+      image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800&q=80",
     adventureCount: 43,
   },
   {
