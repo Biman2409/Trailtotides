@@ -1,12 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Map, ChevronRight, Star } from "lucide-react";
+import { ArrowRight, Map, ChevronRight, Star, ChevronDown } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import HeroSlider from "@/components/ui/custom/HeroSlider";
 import ChatBubble from "@/components/ChatBubble";
 import InlineChat from "@/components/InlineChat";
+import StatsBar from "@/components/StatsBar";
 import { adventures, stories, regions } from "@/lib/data";
 
 const featuredAdventures = adventures.filter((a) => a.featured).slice(0, 6);
@@ -48,7 +49,8 @@ export default function HomePage() {
               style={{
                 display: "block",
                 height: "2px",
-                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.28) 30%, rgba(255,255,255,0.28) 70%, transparent)",
+                background:
+                  "linear-gradient(90deg, transparent, rgba(255,255,255,0.28) 30%, rgba(255,255,255,0.28) 70%, transparent)",
                 margin: "0.32em auto",
                 maxWidth: "460px",
               }}
@@ -72,7 +74,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/explore"
-              className="bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold px-8 py-4 rounded-xl text-base flex items-center gap-2 group shadow-xl shadow-black/30 min-w-[200px] justify-center hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-black/40 transition-all duration-200"
+              className="bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold px-8 py-4 rounded-xl text-base flex items-center gap-2 group shadow-xl shadow-black/30 min-w-[200px] justify-center hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#c4622d]/40 transition-all duration-200"
             >
               Explore Adventures
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -90,31 +92,20 @@ export default function HomePage() {
             Crafted by people who've been out there
           </p>
         </div>
-      </section>
 
-        {/* ── STATS BAR ────────────────────────────────────── */}
-        <section className="bg-[#141920] border-b border-white/6">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/8">
-            {[
-              { value: "287", label: "Adventures" },
-              { value: "6",   label: "Regions" },
-              { value: "8",   label: "Adventure Types" },
-              { value: "48+", label: "Verified Operators" },
-            ].map(({ value, label }) => (
-              <div key={label} className="text-center py-8 px-6">
-                <div className="text-white text-3xl font-bold tracking-tight tabular-nums">{value}</div>
-                <div className="text-white/32 text-xs mt-1.5 tracking-widest uppercase">{label}</div>
-              </div>
-            ))}
-          </div>
+        {/* Scroll cue arrow */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 animate-bounce">
+          <ChevronDown className="w-5 h-5 text-white/40" />
         </div>
       </section>
 
-        {/* ── AI ADVENTURE FINDER ─────────────────────────── */}
-        <InlineChat />
+      {/* ── STATS BAR ────────────────────────────────────── */}
+      <StatsBar />
 
-        {/* ── FEATURED ADVENTURES ─────────────────────────── */}
+      {/* ── AI ADVENTURE FINDER ─────────────────────────── */}
+      <InlineChat />
+
+      {/* ── FEATURED ADVENTURES ─────────────────────────── */}
       <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#fafaf8]">
         <div className="max-w-7xl mx-auto">
           <div className="mb-14">
@@ -122,12 +113,16 @@ export default function HomePage() {
               Our Favourites
             </p>
             <div className="flex items-end justify-between gap-4">
-              <h2 className="text-[#1a1f2e] text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
-                Adventures of a Lifetime
-              </h2>
-
+              <div>
+                <h2 className="text-[#1a1f2e] text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
+                  Adventures of a Lifetime
+                </h2>
+                <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
+              </div>
+              <span className="hidden sm:flex items-center gap-1.5 text-[#c4622d] text-sm font-semibold bg-[#c4622d]/8 border border-[#c4622d]/20 px-3 py-1.5 rounded-full mb-1">
+                {featuredAdventures.length} picks
+              </span>
             </div>
-            <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
@@ -152,16 +147,25 @@ export default function HomePage() {
       <section className="relative py-24 lg:py-32 bg-[#1a2e20] px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=2000&q=60"
+            src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=2000&q=80"
             alt="India map texture"
             fill
-            className="object-cover opacity-10"
+            className="object-cover opacity-12"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1a2e20]/95 via-[#1a2e20]/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1a2e20]/98 via-[#1a2e20]/80 to-[#1a2e20]/40" />
+          {/* Subtle dot grid overlay */}
+          <div
+            className="absolute inset-0 opacity-10"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle, rgba(255,255,255,0.55) 1px, transparent 1px)",
+              backgroundSize: "28px 28px",
+            }}
+          />
         </div>
 
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="max-w-2xl">
+        <div className="max-w-7xl mx-auto relative z-10 flex flex-col lg:flex-row items-center gap-16">
+          <div className="max-w-2xl flex-1">
             <p className="text-[#7ec88a] text-xs font-semibold tracking-[0.22em] uppercase mb-4">
               Signature Feature
             </p>
@@ -171,7 +175,8 @@ export default function HomePage() {
               <span className="text-[#7ec88a]">mapped.</span>
             </h2>
             <p className="text-white/72 text-lg md:text-xl leading-relaxed mb-9 max-w-lg">
-              Every adventure across India — trekking, diving, cycling, skiing — on one interactive map. Filter by region, difficulty, or type.
+              Every adventure across India — trekking, diving, cycling, skiing — on one
+              interactive map. Filter by region, difficulty, or type.
             </p>
             <Link
               href="/map"
@@ -182,20 +187,50 @@ export default function HomePage() {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
+
+          {/* Map stats panel */}
+          <div className="flex-shrink-0 grid grid-cols-2 gap-3 w-full max-w-xs lg:max-w-sm">
+            {[
+              { value: "287", label: "Mapped Adventures", icon: "📍" },
+              { value: "6", label: "Major Regions", icon: "🗺️" },
+              { value: "18", label: "Adventure Types", icon: "⚡" },
+              { value: "48+", label: "Verified Operators", icon: "✅" },
+            ].map(({ value, label, icon }) => (
+              <div
+                key={label}
+                className="bg-white/6 border border-white/10 rounded-2xl p-4 text-center hover:bg-white/10 transition-colors"
+              >
+                <div className="text-2xl mb-1">{icon}</div>
+                <div className="text-white text-2xl font-bold tracking-tight tabular-nums">
+                  {value}
+                </div>
+                <div className="text-white/40 text-xs mt-1 leading-snug">{label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ── REGIONS ──────────────────────────────────────── */}
       <section className="py-24 lg:py-32 bg-[#1a1f2e] px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-12">
-            <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
-              Discover by Region
-            </p>
-            <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
-              One map of Indian adventure
-            </h2>
-            <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+                Discover by Region
+              </p>
+              <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
+                One map of Indian adventure
+              </h2>
+              <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
+            </div>
+            <Link
+              href="/explore"
+              className="hidden md:flex items-center gap-1.5 text-white/40 hover:text-white text-sm transition-colors group"
+            >
+              All regions
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 lg:gap-4">
@@ -203,21 +238,30 @@ export default function HomePage() {
               <Link
                 key={region.name}
                 href={`/explore?region=${encodeURIComponent(region.name)}`}
-                className="group relative overflow-hidden rounded-2xl h-[190px] lg:h-[250px]"
+                className="group relative overflow-hidden rounded-2xl h-[190px] lg:h-[260px]"
               >
                 <Image
                   src={region.image}
                   alt={region.name}
                   fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110 brightness-105 saturate-110"
+                  className="object-cover transition-transform duration-700 group-hover:scale-110 brightness-105 saturate-115"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300" />
+                {/* Base gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
+                {/* Hover tint */}
+                <div className="absolute inset-0 bg-[#c4622d]/0 group-hover:bg-[#c4622d]/12 transition-colors duration-300" />
+
                 <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className="text-white font-semibold text-sm leading-tight">{region.name}</h3>
-                  <p className="text-white/42 text-xs mt-0.5">{region.adventureCount} adventures</p>
+                  {/* Adventure count pill */}
+                  <span className="inline-block text-[10px] font-semibold tracking-widest uppercase text-white/50 bg-white/8 border border-white/10 px-2 py-0.5 rounded-full mb-1.5">
+                    {region.adventureCount} adventures
+                  </span>
+                  <h3 className="text-white font-bold text-sm leading-tight group-hover:text-[#f09060] transition-colors duration-200">
+                    {region.name}
+                  </h3>
                 </div>
-                {/* Hover accent line */}
+
+                {/* Bottom accent line */}
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#c4622d] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
               </Link>
             ))}
@@ -248,7 +292,7 @@ export default function HomePage() {
                   <p className="text-[#b0a898] text-xs">Mountains, trails &amp; terrain</p>
                 </div>
               </div>
-              <div className="p-3 flex flex-col gap-1.5">
+              <div className="p-3 flex flex-col gap-1">
                 {[
                   { type: "Trekking", icon: "🥾", count: 94 },
                   { type: "Biking", icon: "🏍️", count: 38 },
@@ -264,13 +308,17 @@ export default function HomePage() {
                   <Link
                     key={type}
                     href={`/explore?type=${encodeURIComponent(type)}`}
-                    className="group flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-[#c4622d]/8 transition-colors duration-200"
+                    className="group flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-[#c4622d]/10 active:bg-[#c4622d]/15 transition-colors duration-150"
                   >
                     <div className="flex items-center gap-2.5">
                       <span className="text-lg">{icon}</span>
-                      <span className="text-[#1a1f2e] text-sm font-medium group-hover:text-[#c4622d] transition-colors">{type}</span>
+                      <span className="text-[#1a1f2e] text-sm font-medium group-hover:text-[#c4622d] transition-colors">
+                        {type}
+                      </span>
                     </div>
-                    <span className="text-[#c4622d] text-xs font-semibold bg-[#c4622d]/10 px-2 py-0.5 rounded-full">{count}</span>
+                    <span className="text-[#c4622d] text-xs font-semibold bg-[#c4622d]/10 px-2 py-0.5 rounded-full">
+                      {count}
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -285,21 +333,28 @@ export default function HomePage() {
                   <p className="text-[#7a9ab8] text-xs">Rivers, reefs &amp; open sea</p>
                 </div>
               </div>
-              <div className="p-3 flex flex-col gap-1.5">
+              <div className="p-3 flex flex-col gap-1">
                 {[
                   { type: "Diving", icon: "🤿", count: 19 },
                   { type: "Kayaking", icon: "🛶", count: 24 },
+                  { type: "Surfing", icon: "🏄", count: 12 },
+                  { type: "River Rafting", icon: "🌊", count: 16 },
+                  { type: "Snorkelling", icon: "🐠", count: 8 },
                 ].map(({ type, icon, count }) => (
                   <Link
                     key={type}
                     href={`/explore?type=${encodeURIComponent(type)}`}
-                    className="group flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-[#2a7cc7]/8 transition-colors duration-200"
+                    className="group flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-[#2a7cc7]/10 active:bg-[#2a7cc7]/15 transition-colors duration-150"
                   >
                     <div className="flex items-center gap-2.5">
                       <span className="text-lg">{icon}</span>
-                      <span className="text-[#1a1f2e] text-sm font-medium group-hover:text-[#2a7cc7] transition-colors">{type}</span>
+                      <span className="text-[#1a1f2e] text-sm font-medium group-hover:text-[#2a7cc7] transition-colors">
+                        {type}
+                      </span>
                     </div>
-                    <span className="text-[#2a7cc7] text-xs font-semibold bg-[#2a7cc7]/10 px-2 py-0.5 rounded-full">{count}</span>
+                    <span className="text-[#2a7cc7] text-xs font-semibold bg-[#2a7cc7]/10 px-2 py-0.5 rounded-full">
+                      {count}
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -314,20 +369,27 @@ export default function HomePage() {
                   <p className="text-[#7a9aaa] text-xs">Glaciers, slopes &amp; ice</p>
                 </div>
               </div>
-              <div className="p-3 flex flex-col gap-1.5">
+              <div className="p-3 flex flex-col gap-1">
                 {[
                   { type: "Skiing", icon: "⛷️", count: 8 },
+                  { type: "Snowboarding", icon: "🏂", count: 5 },
+                  { type: "Ice Climbing", icon: "🧊", count: 4 },
+                  { type: "Snow Trekking", icon: "🥾", count: 22 },
                 ].map(({ type, icon, count }) => (
                   <Link
                     key={type}
                     href={`/explore?type=${encodeURIComponent(type)}`}
-                    className="group flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-[#6aaabf]/8 transition-colors duration-200"
+                    className="group flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-[#6aaabf]/10 active:bg-[#6aaabf]/15 transition-colors duration-150"
                   >
                     <div className="flex items-center gap-2.5">
                       <span className="text-lg">{icon}</span>
-                      <span className="text-[#1a1f2e] text-sm font-medium group-hover:text-[#4a8a9f] transition-colors">{type}</span>
+                      <span className="text-[#1a1f2e] text-sm font-medium group-hover:text-[#4a8a9f] transition-colors">
+                        {type}
+                      </span>
                     </div>
-                    <span className="text-[#4a8a9f] text-xs font-semibold bg-[#4a8a9f]/10 px-2 py-0.5 rounded-full">{count}</span>
+                    <span className="text-[#4a8a9f] text-xs font-semibold bg-[#4a8a9f]/10 px-2 py-0.5 rounded-full">
+                      {count}
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -342,11 +404,29 @@ export default function HomePage() {
                   <p className="text-[#9a7ab8] text-xs">Sky, altitude &amp; free flight</p>
                 </div>
               </div>
-              <div className="p-3 flex flex-col gap-1.5">
-                <div className="flex flex-col items-center justify-center py-10 text-center gap-2">
-                  <span className="text-3xl">🪂</span>
-                  <p className="text-[#9a7ab8] text-sm font-medium">Coming Soon</p>
-                  <p className="text-[#b8a8cc] text-xs">Paragliding, skydiving &amp; more</p>
+              <div className="p-3">
+                {/* Coming soon items — greyed out preview */}
+                <div className="flex flex-col gap-1 mb-4 opacity-40 pointer-events-none select-none">
+                  {[
+                    { type: "Paragliding", icon: "🪂" },
+                    { type: "Skydiving", icon: "🤸" },
+                    { type: "Hot Air Balloon", icon: "🎈" },
+                    { type: "Hang Gliding", icon: "🌬️" },
+                  ].map(({ type, icon }) => (
+                    <div
+                      key={type}
+                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl"
+                    >
+                      <span className="text-lg">{icon}</span>
+                      <span className="text-[#1a1f2e] text-sm font-medium">{type}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mx-2 rounded-xl bg-[#9a7ab8]/10 border border-[#9a7ab8]/20 px-3 py-3 text-center">
+                  <p className="text-[#7a5a98] text-xs font-semibold">Coming Soon</p>
+                  <p className="text-[#b8a8cc] text-xs mt-0.5 leading-snug">
+                    Air adventures launching soon
+                  </p>
                 </div>
               </div>
             </div>
@@ -381,22 +461,25 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
             {featuredStories.map((story) => (
               <Link key={story.id} href={`/stories/${story.slug}`} className="group block">
-                <div className="relative rounded-2xl overflow-hidden mb-5" style={{ height: "230px" }}>
+                <div
+                  className="relative rounded-2xl overflow-hidden mb-5"
+                  style={{ height: "240px" }}
+                >
                   <Image
                     src={story.heroImage}
                     alt={story.title}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105 brightness-105 saturate-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                   <div className="absolute bottom-4 left-4">
-                    <span className="bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                    <span className="bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
                       {story.region}
                     </span>
                   </div>
                   <div className="absolute top-4 right-4">
-                    <span className="bg-black/45 backdrop-blur-sm text-white/80 text-xs px-2.5 py-1 rounded-full">
+                    <span className="bg-black/50 backdrop-blur-sm text-white/80 text-xs px-2.5 py-1 rounded-full">
                       {story.readTime}
                     </span>
                   </div>
@@ -409,7 +492,7 @@ export default function HomePage() {
                     {story.excerpt}
                   </p>
                   <div className="flex items-center gap-3 pt-2">
-                    <div className="w-8 h-8 rounded-full bg-[#e8e2d9] flex items-center justify-center text-xs font-bold text-[#6b6560]">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#c4622d] to-[#e8924d] flex items-center justify-center text-xs font-bold text-white shadow-sm">
                       {story.author[0]}
                     </div>
                     <div>
@@ -421,16 +504,34 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
+
+          <div className="mt-12 flex justify-center md:hidden">
+            <Link
+              href="/stories"
+              className="flex items-center gap-1.5 text-[#c4622d] font-semibold text-sm"
+            >
+              All stories <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
       </section>
 
-        {/* ── FINAL CTA ─────────────────────────────────────── */}
+      {/* ── FINAL CTA ─────────────────────────────────────── */}
       <section className="relative py-24 lg:py-32 bg-[#f5f0e8] px-6 lg:px-8 overflow-hidden">
-        {/* Subtle texture */}
         <div
-          className="absolute inset-0 opacity-30"
+          className="absolute inset-0 opacity-40"
           style={{
-            backgroundImage: "radial-gradient(circle at 20% 50%, #c4622d18 0%, transparent 50%), radial-gradient(circle at 80% 50%, #1a2e2018 0%, transparent 50%)",
+            backgroundImage:
+              "radial-gradient(circle at 15% 50%, #c4622d22 0%, transparent 55%), radial-gradient(circle at 85% 50%, #1a2e2018 0%, transparent 55%)",
+          }}
+        />
+        {/* Subtle pattern */}
+        <div
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(45deg, #c4622d 0, #c4622d 1px, transparent 0, transparent 50%)",
+            backgroundSize: "20px 20px",
           }}
         />
         <div className="max-w-2xl mx-auto text-center relative z-10">
@@ -443,7 +544,8 @@ export default function HomePage() {
             Find your next edge.
           </h2>
           <p className="text-[#7a7268] text-lg leading-relaxed mb-10 max-w-lg mx-auto">
-            287 adventures across India. Verified operators, real terrain data, and stories from people who've actually been there.
+            287 adventures across India. Verified operators, real terrain data, and stories from
+            people who've actually been there.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
@@ -455,7 +557,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="/list"
-              className="border border-[#1a2e20]/22 hover:border-[#1a2e20]/55 text-[#1a2e20] font-semibold px-9 py-4 rounded-xl text-base hover:bg-white/70 hover:-translate-y-0.5 transition-all duration-200"
+              className="border border-[#1a2e20]/25 hover:border-[#1a2e20]/60 text-[#1a2e20] font-semibold px-9 py-4 rounded-xl text-base hover:bg-white/70 hover:-translate-y-0.5 transition-all duration-200"
             >
               List Your Adventure
             </Link>
@@ -463,8 +565,8 @@ export default function HomePage() {
         </div>
       </section>
 
-        <Footer />
-        <ChatBubble />
-      </div>
-    );
+      <Footer />
+      <ChatBubble />
+    </div>
+  );
 }
