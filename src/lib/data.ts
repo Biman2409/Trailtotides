@@ -88,7 +88,7 @@ export const adventures: Adventure[] = [
     id: "1",
     slug: "chadar-trek",
     name: "Chadar Trek",
-    tagline: "Walk the frozen river of Zanskar",
+      tagline: "Walk a frozen river at -30°C — if it cracks, there's no trail back",
     region: "Himalayas",
     state: "Ladakh",
       type: "Trekking",
