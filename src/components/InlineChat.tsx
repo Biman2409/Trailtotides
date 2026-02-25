@@ -154,33 +154,30 @@ export default function InlineChat() {
             </div>
           )}
 
-          {/* Suggestion chips — only before first message */}
-            {messages.length === 0 && (
-              <div className="px-4 pt-4 pb-3 bg-white/2">
-                <p className="text-white/40 text-xs mb-3 tracking-wide">
-                  Describe what you&apos;re looking for — we&apos;ll match you with the right trip
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {SUGGESTIONS.map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => send(s)}
-                      className="text-xs border border-white/10 text-white/50 hover:text-white hover:border-white/24 px-3 py-1.5 rounded-full transition-all tracking-wide"
-                    >
-                      {s}
-                    </button>
-                  ))}
+            {/* Suggestion chips — only before first message */}
+              {messages.length === 0 && (
+                <div className="px-4 pt-4 pb-3 bg-white/2">
+                  <div className="flex flex-wrap gap-2">
+                    {SUGGESTIONS.map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => send(s)}
+                        className="text-xs border border-white/10 text-white/50 hover:text-white hover:border-white/24 px-3 py-1.5 rounded-full transition-all tracking-wide"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-          {/* Input bar */}
-          <div className="border-t border-white/8 p-3 flex gap-3 bg-white/3">
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && send()}
-              placeholder="Describe your ideal adventure…"
+            {/* Input bar */}
+            <div className="border-t border-white/8 p-3 flex gap-3 bg-white/3">
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && send()}
+                placeholder="Describe what you're looking for — we'll match you with the right trip"
               className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#c4622d]/50 focus:ring-1 focus:ring-[#c4622d]/30 transition-all"
             />
             <button
