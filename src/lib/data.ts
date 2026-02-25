@@ -293,7 +293,7 @@ export const adventures: Adventure[] = [
     region: "Northeast",
     state: "Nagaland / Manipur",
       type: "Trekking",
-      difficulty: "Intermediate",
+      difficulty: "Moderate",
       duration: "3–5 days",
       durationDays: "3 days",
     altitude: "2,452m",
