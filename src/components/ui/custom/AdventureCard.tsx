@@ -44,7 +44,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
   return (
     <Link href={`/experiences/${adventure.slug}`} className="group block">
       <div
-        className={`relative overflow-hidden rounded-2xl bg-[#1a1f2e] ${
+        className={`relative overflow-hidden rounded-2xl bg-[#1a1f2e] shadow-md hover:shadow-xl hover:shadow-black/20 transition-shadow duration-300 ${
           isLarge ? "h-[500px]" : "h-[360px]"
         }`}
       >
@@ -53,7 +53,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           src={adventure.heroImage}
           alt={adventure.name}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105 brightness-110 contrast-105 saturate-125"
+          className="object-cover transition-transform duration-700 group-hover:scale-106 brightness-110 contrast-105 saturate-125"
           sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
         />
 
