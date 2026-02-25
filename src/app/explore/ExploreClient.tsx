@@ -590,16 +590,25 @@ export default function ExploreClient() {
                         chipActive: "bg-teal-600 text-white",
                         subRegions: ["Andaman & Nicobar", "Lakshadweep"],
                       },
-                      {
-                        name: "Northeast",
-                        icon: "🌄",
-                        btn: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100",
-                        btnActive: "bg-violet-600 text-white border-violet-600",
-                        chip: "bg-violet-100 text-violet-900 hover:bg-violet-200",
-                        chipActive: "bg-violet-600 text-white",
-                        subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"],
-                      },
-                    ];
+                        {
+                          name: "Northeast",
+                          icon: "🌄",
+                          btn: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100",
+                          btnActive: "bg-violet-600 text-white border-violet-600",
+                          chip: "bg-violet-100 text-violet-900 hover:bg-violet-200",
+                          chipActive: "bg-violet-600 text-white",
+                          subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"],
+                        },
+                        {
+                          name: "Urban",
+                          icon: "🏙️",
+                          btn: "bg-zinc-50 border-zinc-200 text-zinc-800 hover:bg-zinc-100",
+                          btnActive: "bg-zinc-700 text-white border-zinc-700",
+                          chip: "bg-zinc-100 text-zinc-900 hover:bg-zinc-200",
+                          chipActive: "bg-zinc-700 text-white",
+                          subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"],
+                        },
+                      ];
                     return (
                       <div className="flex flex-col gap-2">
                         <div className="flex flex-wrap gap-2">
