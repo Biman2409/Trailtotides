@@ -199,9 +199,9 @@ export default function HomePage() {
                 <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
                   Discover by Region
                 </p>
-                <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
-                  Every corner of India holds a wild side
-                </h2>
+                  <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
+                    India's wild is everywhere.
+                  </h2>
                 <p className="mt-4 text-white/50 text-base max-w-xl">
                   Pick a region, and let the journey begin.
                 </p>
