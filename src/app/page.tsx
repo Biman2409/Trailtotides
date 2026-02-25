@@ -92,9 +92,6 @@ export default function HomePage() {
         </div>
       </section>
 
-        {/* ── AI ADVENTURE FINDER ─────────────────────────── */}
-        <InlineChat />
-
         {/* ── STATS BAR ────────────────────────────────────── */}
         <section className="bg-[#141920] border-b border-white/6">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
