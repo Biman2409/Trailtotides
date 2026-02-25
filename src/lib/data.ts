@@ -442,7 +442,7 @@ export const adventures: Adventure[] = [
     id: "9",
     slug: "ski-auli",
     name: "Auli Ski & Snowboard",
-    tagline: "India's best powder, backed by a Himalayan wall",
+      tagline: "India's best powder with the entire Garhwal Himalaya as your backdrop",
     region: "Himalayas",
     state: "Uttarakhand",
     type: "Skiing",
