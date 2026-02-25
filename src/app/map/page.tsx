@@ -30,13 +30,6 @@ const difficultyColor: Record<string, string> = {
   Extreme:      "#ef4444",  // red
 };
 
-const months: { label: string; value: Month }[] = [
-  { label: "Jan", value: "Jan" }, { label: "Feb", value: "Feb" }, { label: "Mar", value: "Mar" },
-  { label: "Apr", value: "Apr" }, { label: "May", value: "May" }, { label: "Jun", value: "Jun" },
-  { label: "Jul", value: "Jul" }, { label: "Aug", value: "Aug" }, { label: "Sep", value: "Sep" },
-  { label: "Oct", value: "Oct" }, { label: "Nov", value: "Nov" }, { label: "Dec", value: "Dec" },
-];
-
 const seasons: { label: string; icon: string; months: Month[]; activeColor: string; idleColor: string }[] = [
   { label: "Winter",  icon: "❄️", months: ["Dec", "Jan", "Feb"],         activeColor: "bg-sky-600 text-white",    idleColor: "bg-sky-50 text-sky-800 hover:bg-sky-100 border border-sky-200" },
   { label: "Spring",  icon: "🌸", months: ["Mar", "Apr", "May"],         activeColor: "bg-pink-500 text-white",   idleColor: "bg-pink-50 text-pink-800 hover:bg-pink-100 border border-pink-200" },
