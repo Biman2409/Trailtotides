@@ -321,7 +321,105 @@ export default function ExploreClient() {
               Clear
             </button>
           )}
-        </div>
+
+          {/* AI Adventure Finder panel */}
+          {aiOpen && (
+            <div className="border-t border-[#e0d8cc] bg-[#141920] px-6 lg:px-8 py-5">
+              <div className="max-w-7xl mx-auto">
+                <div className="border border-white/8 rounded-2xl overflow-hidden">
+                  {aiMessages.length > 0 && (
+                    <div className="max-h-[280px] overflow-y-auto p-4 space-y-3 bg-white/2">
+                      {aiMessages.map((msg, i) => (
+                        <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                          <div className="max-w-[85%] space-y-2">
+                            {msg.content && (
+                              <div
+                                className={`px-4 py-2.5 rounded-xl text-sm leading-relaxed ${
+                                  msg.role === "user"
+                                    ? "text-white rounded-br-sm"
+                                    : "bg-white/6 border border-white/8 text-white/80 rounded-bl-sm"
+                                }`}
+                                style={msg.role === "user" ? { background: "#c4622d" } : {}}
+                              >
+                                {msg.content}
+                              </div>
+                            )}
+                            {msg.cards && msg.cards.length > 0 && (
+                              <div className="grid gap-2">
+                                {msg.cards.map((card: any, ci: number) => {
+                                  const rec = msg.recommendations?.find((r) => r.slug === card.slug);
+                                  return (
+                                    <Link
+                                      key={ci}
+                                      href={`/adventure/${card.slug}`}
+                                      className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-white/16 rounded-xl overflow-hidden transition-all group"
+                                    >
+                                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                                      <img src={card.heroImage} alt={card.name} className="w-16 h-16 object-cover flex-shrink-0" />
+                                      <div className="p-3 flex-1 min-w-0">
+                                        <p className="text-white text-xs font-semibold tracking-tight">{card.name}</p>
+                                        <p className="text-white/40 text-xs mt-0.5 uppercase tracking-wide">{card.state} · {card.type} · {card.difficulty}</p>
+                                        {rec?.reason && <p className="text-[#c4622d] text-xs mt-1 line-clamp-1">{rec.reason}</p>}
+                                      </div>
+                                      <div className="flex items-center pr-3">
+                                        <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#c4622d] transition-colors" />
+                                      </div>
+                                    </Link>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                      {aiLoading && (
+                        <div className="flex justify-start">
+                          <div className="bg-white/6 border border-white/8 px-4 py-2.5 rounded-xl rounded-bl-sm flex items-center gap-2">
+                            <Loader2 className="w-3.5 h-3.5 text-[#c4622d] animate-spin" />
+                            <span className="text-white/50 text-sm">Finding adventures…</span>
+                          </div>
+                        </div>
+                      )}
+                      <div ref={aiBottomRef} />
+                    </div>
+                  )}
+                  {aiMessages.length === 0 && (
+                    <div className="px-4 pt-4 pb-3 bg-white/2">
+                      <div className="flex flex-wrap gap-2">
+                        {AI_SUGGESTIONS.map((s) => (
+                          <button
+                            key={s}
+                            onClick={() => sendAi(s)}
+                            className="text-xs border border-white/10 text-white/50 hover:text-white hover:border-white/24 px-3 py-1.5 rounded-full transition-all"
+                          >
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div className="border-t border-white/8 p-3 flex gap-3 bg-white/3">
+                    <input
+                      value={aiInput}
+                      onChange={(e) => setAiInput(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && sendAi()}
+                      placeholder="Describe what you're looking for — we'll match you with the right trip"
+                      className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#c4622d]/50 transition-all"
+                    />
+                    <button
+                      onClick={() => sendAi()}
+                      disabled={!aiInput.trim() || aiLoading}
+                      className="disabled:opacity-30 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all hover:-translate-y-0.5"
+                      style={{ background: "#c4622d" }}
+                    >
+                      <Send className="w-4 h-4" />
+                      <span className="hidden sm:inline">Search</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
         {/* Filter panel */}
           {filtersOpen && (
