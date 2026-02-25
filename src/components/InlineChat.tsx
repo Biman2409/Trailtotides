@@ -69,21 +69,21 @@ export default function InlineChat() {
   }
 
   return (
-    <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#0f1419]">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 rounded-full px-4 py-2 mb-5">
-            <Sparkles className="w-4 h-4 text-orange-400" />
-            <span className="text-orange-400 text-xs font-semibold tracking-widest uppercase">AI Adventure Finder</span>
+    <section className="py-12 px-6 lg:px-8 bg-[#0f1419]">
+        <div className="max-w-3xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-500/20 rounded-full px-3 py-1.5 mb-3">
+              <Sparkles className="w-3.5 h-3.5 text-orange-400" />
+              <span className="text-orange-400 text-xs font-semibold tracking-widest uppercase">AI Adventure Finder</span>
+            </div>
+            <h2 className="text-white text-2xl lg:text-3xl font-bold tracking-tight leading-tight mb-2">
+              Tell us what you&apos;re after
+            </h2>
+            <p className="text-zinc-400 text-sm max-w-md mx-auto">
+              Describe your dream adventure — region, difficulty, season, vibe — and we&apos;ll find the best match from our curated list.
+            </p>
           </div>
-          <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-4">
-            Tell us what you&apos;re after
-          </h2>
-          <p className="text-zinc-400 text-lg max-w-xl mx-auto">
-            Describe your dream adventure — region, difficulty, season, vibe — and GPT-4o will find the best match from our curated list.
-          </p>
-        </div>
 
         {/* Chat window */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl">
