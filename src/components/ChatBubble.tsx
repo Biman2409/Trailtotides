@@ -13,6 +13,7 @@ interface Message {
 }
 
 export default function ChatBubble() {
+  const [visible, setVisible] = useState(false);
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
