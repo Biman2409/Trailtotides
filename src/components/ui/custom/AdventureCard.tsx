@@ -2,29 +2,28 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Clock, TrendingUp, ArrowRight, GitCompare } from "lucide-react";
+import { MapPin, Clock, TrendingUp, ArrowRight } from "lucide-react";
 import type { Adventure } from "@/lib/data";
-import { useCompare } from "@/context/CompareContext";
 
 const typeStyle: Record<string, string> = {
   // Land — orange
-  Trekking:        "bg-[#c4622d] text-white",
-  Biking:          "bg-[#c4622d] text-white",
-  Cycling:         "bg-[#c4622d] text-white",
-  "Rock Climbing": "bg-[#c4622d] text-white",
-  Mountaineering:  "bg-[#c4622d] text-white",
-  "Camel Safari":  "bg-[#c4622d] text-white",
-  "Jeep Safari":   "bg-[#c4622d] text-white",
-  Sandboarding:    "bg-[#c4622d] text-white",
+  Trekking:          "bg-[#c4622d] text-white",
+  Biking:            "bg-[#c4622d] text-white",
+  Cycling:           "bg-[#c4622d] text-white",
+  "Rock Climbing":   "bg-[#c4622d] text-white",
+  Mountaineering:    "bg-[#c4622d] text-white",
+  "Camel Safari":    "bg-[#c4622d] text-white",
+  "Jeep Safari":     "bg-[#c4622d] text-white",
+  Sandboarding:      "bg-[#c4622d] text-white",
   "Urban Adventure": "bg-[#c4622d] text-white",
-  Caving:          "bg-[#c4622d] text-white",
+  Caving:            "bg-[#c4622d] text-white",
   // Water — blue
-  Diving:          "bg-blue-500 text-white",
-  Kayaking:        "bg-blue-500 text-white",
+  Diving:            "bg-blue-500 text-white",
+  Kayaking:          "bg-blue-500 text-white",
   // Snow — slate/white
-  Skiing:          "bg-white text-gray-900",
+  Skiing:            "bg-white text-gray-900",
   // Air — purple
-  Paragliding:     "bg-purple-500 text-white",
+  Paragliding:       "bg-purple-500 text-white",
   "Hot Air Balloon": "bg-purple-500 text-white",
 };
 
@@ -43,20 +42,6 @@ interface AdventureCardProps {
 
 export default function AdventureCard({ adventure, size = "default" }: AdventureCardProps) {
   const isLarge = size === "large";
-  const { add, remove, has, items, open } = useCompare();
-  const isAdded = has(adventure.id);
-  const isFull = items.length >= 3 && !isAdded;
-
-  function handleCompare(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (isAdded) {
-      remove(adventure.id);
-    } else if (!isFull) {
-      add(adventure);
-      open();
-    }
-  }
 
   return (
     <Link href={`/experiences/${adventure.slug}`} className="group block">
@@ -94,22 +79,6 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
             ) : null;
           })()}
         </div>
-
-        {/* Compare button — appears on hover */}
-        <button
-          onClick={handleCompare}
-          title={isAdded ? "Remove from compare" : isFull ? "Compare limit reached (max 3)" : "Add to compare"}
-          className={`absolute top-14 right-4 z-10 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200
-            ${isAdded
-              ? "bg-[#c4622d] text-white opacity-100 scale-100"
-              : isFull
-              ? "bg-white/10 text-white/40 opacity-0 group-hover:opacity-100 cursor-not-allowed"
-              : "bg-white/15 text-white opacity-0 group-hover:opacity-100 hover:bg-[#c4622d] hover:scale-105 backdrop-blur-sm"
-            }`}
-        >
-          <GitCompare className="w-3 h-3" />
-          <span>{isAdded ? "Added" : "Compare"}</span>
-        </button>
 
         {/* Content */}
         <div className="absolute bottom-0 left-0 right-0 p-5">

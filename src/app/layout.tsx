@@ -30,10 +30,7 @@ export default function RootLayout({
           strategy="afterInteractive"
           data-orchids-project-id="71778e38-df00-4ed2-869a-028f1f2862c1"
         />
-          <CompareProvider>
-            {children}
-            <CompareDrawer />
-          </CompareProvider>
+          {children}
           <VisualEditsMessenger />
       </body>
     </html>
