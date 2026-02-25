@@ -121,6 +121,16 @@ export default async function StoryPage({ params }: Props) {
             <span className="bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full">
               {story.region}
             </span>
+            {story.tags.includes("Featured") && (
+              <span className="bg-white/15 backdrop-blur-sm border border-white/25 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                Featured
+              </span>
+            )}
+            {story.tags.includes("TTT Original") && (
+              <span className="bg-[#c4622d]/20 border border-[#c4622d]/50 text-[#c4622d] text-xs font-semibold px-3 py-1.5 rounded-full">
+                TTT Original
+              </span>
+            )}
             <span className="flex items-center gap-1.5 text-white/55 text-xs">
               <Clock className="w-3.5 h-3.5" />
               {story.readTime}
