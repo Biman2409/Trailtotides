@@ -127,12 +127,14 @@ export default async function StoryPage({ params }: Props) {
                 Featured
               </span>
             )}
-            {story.tags.includes("TTT Original") && (
-              <span className="flex items-center gap-1.5 bg-gradient-to-r from-[#7c3aed] to-[#a855f7] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-purple-500/30">
-                <Sparkles className="w-3 h-3" />
-                TTT Original
-              </span>
-            )}
+              {story.tags.includes("TTT Original") && (
+                <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/40 ring-1 ring-white/20">
+                  <span className="w-4 h-4 rounded-sm bg-white/20 flex items-center justify-center shrink-0">
+                    <Mountain className="w-2.5 h-2.5 text-white" strokeWidth={2.2} />
+                  </span>
+                  TTT Original
+                </span>
+              )}
             <span className="flex items-center gap-1.5 text-white/55 text-xs">
               <Clock className="w-3.5 h-3.5" />
               {story.readTime}
