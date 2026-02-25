@@ -8,7 +8,109 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import { adventures, adventureTypes, regions } from "@/lib/data";
-import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize } from "@/lib/data";
+import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
+
+// ── Map helpers ────────────────────────────────────────────────────────────
+
+declare global { interface Window { L: any } }
+
+function loadLeaflet(): Promise<any> {
+  return new Promise((resolve) => {
+    if (typeof window === "undefined") return;
+    if (window.L) { resolve(window.L); return; }
+    if (!document.querySelector('link[href*="leaflet"]')) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[src*="leaflet"]')) {
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+      script.onload = () => resolve(window.L);
+      document.head.appendChild(script);
+    } else {
+      const poll = setInterval(() => { if (window.L) { clearInterval(poll); resolve(window.L); } }, 50);
+    }
+  });
+}
+
+const difficultyColor: Record<string, string> = {
+  Beginner: "#22c55e", Intermediate: "#3b82f6", Advanced: "#f59e0b",
+  Expert: "#f97316", Extreme: "#ef4444",
+};
+
+const typeEmoji: Partial<Record<AdventureType, string>> = {
+  Trekking: "🥾", Biking: "🏍️", Cycling: "🚴", Diving: "🤿",
+  Kayaking: "🛶", Skiing: "⛷️", Mountaineering: "🧗", "Rock Climbing": "🧱",
+  "Jeep Safari": "🚙", "Camel Safari": "🐪", Caving: "🕳️",
+  Sandboarding: "🏄", "Urban Adventure": "🏙️",
+};
+
+function ExploreMapView({ advs }: { advs: Adventure[] }) {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null);
+  const markersLayerRef = useRef<any>(null);
+
+  function addMarkers(L: any, list: Adventure[]) {
+    list.forEach((adv) => {
+      const color = difficultyColor[adv.difficulty] ?? "#6366f1";
+      const emoji = typeEmoji[adv.type] || "📍";
+      const icon = L.divIcon({
+        className: "",
+        html: `<div style="width:36px;height:36px;border-radius:50% 50% 50% 0;background:${color};border:3px solid white;transform:rotate(-45deg);box-shadow:0 4px 12px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
+          <span style="transform:rotate(45deg);font-size:13px;line-height:1;">${emoji}</span>
+        </div>`,
+        iconSize: [36, 36], iconAnchor: [18, 36], popupAnchor: [0, -40],
+      });
+      const popupHtml = `
+        <div style="width:240px;font-family:'DM Sans',sans-serif;padding:4px;">
+          <div style="position:relative;height:130px;border-radius:10px;overflow:hidden;margin-bottom:10px;">
+            <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;" />
+            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.75) 0%,transparent 60%);" />
+            <div style="position:absolute;bottom:8px;left:8px;right:8px;">
+              <div style="font-size:14px;font-weight:700;color:#fff;line-height:1.2;text-shadow:0 1px 4px rgba(0,0,0,0.6);">${adv.name}</div>
+            </div>
+          </div>
+          <p style="margin:0 0 8px;font-size:11px;color:#9a9590;">${adv.state} · ${adv.durationDays}</p>
+          <a href="/experiences/${adv.slug}" style="display:block;text-align:center;background:#1e3d2f;color:white;padding:8px;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;">View Experience →</a>
+        </div>`;
+      markersLayerRef.current.addLayer(L.marker([adv.lat, adv.lng], { icon }).bindPopup(popupHtml, { maxWidth: 260, minWidth: 260 }));
+    });
+  }
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+    loadLeaflet().then((L) => {
+      if (!mapRef.current) return;
+      const container = mapRef.current;
+      if ((container as any)._leaflet_id) (container as any)._leaflet_id = undefined;
+      delete (L.Icon.Default.prototype as any)._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+        iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+        shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+      });
+      const map = L.map(container, { center: [22.5, 80.0], zoom: 5, zoomControl: true, attributionControl: false });
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { subdomains: "abc", maxZoom: 19 }).addTo(map);
+      mapInstanceRef.current = map;
+      markersLayerRef.current = L.layerGroup().addTo(map);
+      addMarkers(L, advs);
+    });
+    return () => {
+      if (mapInstanceRef.current) { markersLayerRef.current = null; mapInstanceRef.current.remove(); mapInstanceRef.current = null; }
+      if (mapRef.current) (mapRef.current as any)._leaflet_id = undefined;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!mapInstanceRef.current || !markersLayerRef.current) return;
+    loadLeaflet().then((L) => { markersLayerRef.current.clearLayers(); addMarkers(L, advs); });
+  }, [advs]);
+
+  return <div ref={mapRef} className="w-full h-full" />;
+}
 
 // filter constants
 const difficulties: Difficulty[] = ["Beginner", "Intermediate", "Advanced", "Expert", "Extreme"];
