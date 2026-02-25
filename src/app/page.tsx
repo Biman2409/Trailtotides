@@ -268,32 +268,62 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
-            {featuredStories.map((story) => (
-              <Link key={story.id} href={`/stories/${story.slug}`} className="group block">
-                <div
-                  className="relative rounded-2xl overflow-hidden mb-5"
-                  style={{ height: "240px" }}
-                >
-                  <Image
-                    src={story.heroImage}
-                    alt={story.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105 brightness-105 saturate-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                  <div className="absolute bottom-4 left-4">
-                    <span className="bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
-                      {story.region}
-                    </span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
+              {featuredStories.map((story) => (
+                <Link key={story.id} href={`/stories/${story.slug}`} className="group block">
+                  <div
+                    className="relative rounded-2xl overflow-hidden mb-5"
+                    style={{ height: "240px" }}
+                  >
+                    <Image
+                      src={story.heroImage}
+                      alt={story.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105 brightness-105 saturate-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+
+                    {/* Top-left: Featured & TTT Original badges */}
+                    <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+                      {story.tags.includes("Featured") && (
+                        <span className="flex items-center gap-1 bg-[#c4622d] text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg shadow-[#c4622d]/40 tracking-wide uppercase">
+                          <Star className="w-2.5 h-2.5 fill-white" />
+                          Featured
+                        </span>
+                      )}
+                      {story.tags.includes("TTT Original") && (
+                        <span className="flex items-center gap-1 bg-[#111820] border border-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg tracking-wide uppercase backdrop-blur-sm">
+                          <span className="text-[#c4622d] font-black">TTT</span>
+                          <span>Original</span>
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Top-right: Views */}
+                    {story.views !== undefined && (
+                      <div className="absolute top-3 right-3">
+                        <span className="flex items-center gap-1 bg-black/50 backdrop-blur-sm text-white/80 text-xs px-2.5 py-1 rounded-full">
+                          <Eye className="w-3 h-3" />
+                          {story.views >= 1000
+                            ? `${(story.views / 1000).toFixed(1)}k`
+                            : story.views}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Bottom-left: Region tag + Biking tag */}
+                    <div className="absolute bottom-4 left-4 flex flex-wrap gap-1.5">
+                      <span className="bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
+                        {story.region}
+                      </span>
+                      {story.tags.includes("Biking") && (
+                        <span className="bg-black/55 backdrop-blur-sm border border-white/20 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                          Biking
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-black/50 backdrop-blur-sm text-white/80 text-xs px-2.5 py-1 rounded-full">
-                      {story.readTime}
-                    </span>
-                  </div>
-                </div>
                 <div className="space-y-2">
                   <h3 className="text-white font-semibold text-xl leading-snug group-hover:text-[#c4622d] transition-colors">
                     {story.title}
