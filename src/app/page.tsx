@@ -258,7 +258,7 @@ export default function HomePage() {
                   { type: "Rock Climbing", icon: "🧗", count: 18 },
                   { type: "Jeep Safari", icon: "🚙", count: 22 },
                   { type: "Camel Safari", icon: "🐪", count: 9 },
-                  { type: "Caving", icon: "🕳️", count: 7 },
+                  { type: "Caving", icon: "🪨", count: 7 },
                   { type: "Sandboarding", icon: "🏄", count: 5 },
                   { type: "Urban Adventure", icon: "🏙️", count: 11 },
                 ].map(({ type, icon, count }) => (
