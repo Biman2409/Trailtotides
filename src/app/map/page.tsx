@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Map as MapIcon, Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
-import { adventures, adventureTypes, regions } from "@/lib/data";
+import { adventures, adventureTypes } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
 
 const typeEmoji: Record<AdventureType, string> = {
