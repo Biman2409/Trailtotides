@@ -646,15 +646,24 @@ export default function ExploreClient() {
               {t} <X className="w-3 h-3" />
             </span>
           ))}
-          {selectedRegions.map((r) => (
-            <span
-              key={r}
-              onClick={() => toggle(selectedRegions, r, setSelectedRegions)}
-              className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#c4622d]/15 hover:text-[#c4622d] transition-colors"
-            >
-              {r} <X className="w-3 h-3" />
-            </span>
-          ))}
+           {selectedRegions.map((r) => (
+              <span
+                key={r}
+                onClick={() => toggle(selectedRegions, r, setSelectedRegions)}
+                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#c4622d]/15 hover:text-[#c4622d] transition-colors"
+              >
+                {r} <X className="w-3 h-3" />
+              </span>
+            ))}
+            {selectedSubRegions.map((sr) => (
+              <span
+                key={sr}
+                onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
+                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#c4622d]/15 hover:text-[#c4622d] transition-colors"
+              >
+                {sr} <X className="w-3 h-3" />
+              </span>
+            ))}
           {selectedDifficulties.map((d) => (
             <span
               key={d}
