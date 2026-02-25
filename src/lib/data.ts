@@ -639,7 +639,7 @@ export const regions = [
   {
     name: "Islands" as Region,
     tagline: "Diving, reefs & untouched beaches",
-    image: "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=800&q=80",
+      image: "https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=800&q=80",
     adventureCount: 22,
   },
   {
