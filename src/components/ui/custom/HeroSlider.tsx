@@ -58,6 +58,16 @@ const slides = [
     scaleFrom: 1.06,
     scaleTo: 1.15,
   },
+  {
+    // Skiing: man ice skiing down a snowy hill
+    src: "https://images.unsplash.com/photo-1551698618520-1f68d4d56912?w=2560&q=95",
+    alt: "Skier carving down a steep snowy mountain slope",
+    panFrom: "50% 35%",
+    panTo: "50% 55%",
+    scaleFrom: 1.08,
+    scaleTo: 1.18,
+    filter: "brightness(1.12) contrast(1.08) saturate(1.2) hue-rotate(-10deg)",
+  },
 ];
 
 const SLIDE_DURATION = 6000;
