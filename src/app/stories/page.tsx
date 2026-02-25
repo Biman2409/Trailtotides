@@ -1,10 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, Eye, Crown, Mountain } from "lucide-react";
+import { ArrowRight, Clock, Crown, Eye, Mountain } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { stories } from "@/lib/data";
-import { ArrowRight, Clock, Crown, Eye, Mountain } from "lucide-react";
 
 export default function StoriesPage() {
   const [featured, ...rest] = stories;
