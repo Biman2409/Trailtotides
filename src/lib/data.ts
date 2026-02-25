@@ -620,7 +620,7 @@ export const regions = [
   },
   {
     name: "Eastern Ghats" as Region,
-    image: "https://images.unsplash.com/photo-1566438480900-0609be27a4be?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1663597675745-96a3f784369e?w=800&q=80",
     tagline: "Tribal trails, gorges & hidden waterfalls",
     adventureCount: 19,
   },
