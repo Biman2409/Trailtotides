@@ -144,7 +144,7 @@ export default async function StoryPage({ params }: Props) {
       {/* Article */}
       <article className="max-w-2xl mx-auto px-6 py-16 lg:py-24">
         {/* Lede */}
-        <p className="text-[#1a1f2e] text-xl lg:text-2xl font-light leading-relaxed mb-10 border-l-4 border-[#c4622d] pl-6">
+          <p className="text-white/80 text-xl lg:text-2xl font-light leading-relaxed mb-10 border-l-4 border-[#c4622d] pl-6">
           {story.excerpt}
         </p>
 
