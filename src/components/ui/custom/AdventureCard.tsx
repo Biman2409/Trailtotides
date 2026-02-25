@@ -4,6 +4,25 @@ import { MapPin, Clock, TrendingUp, ArrowRight } from "lucide-react";
 import type { Adventure } from "@/lib/data";
 import { adventureTypes } from "@/lib/data";
 
+const typePillColors: Record<string, string> = {
+  // Land — amber
+  Trekking:        "bg-amber-500/20 text-amber-300",
+  Mountaineering:  "bg-amber-500/20 text-amber-300",
+  "Rock Climbing": "bg-amber-500/20 text-amber-300",
+  Biking:          "bg-amber-500/20 text-amber-300",
+  Cycling:         "bg-amber-500/20 text-amber-300",
+  "Jeep Safari":   "bg-amber-500/20 text-amber-300",
+  "Camel Safari":  "bg-amber-500/20 text-amber-300",
+  Sandboarding:    "bg-amber-500/20 text-amber-300",
+  Caving:          "bg-amber-500/20 text-amber-300",
+  "Urban Adventure": "bg-amber-500/20 text-amber-300",
+  // Water — sky
+  Diving:          "bg-sky-500/20 text-sky-300",
+  Kayaking:        "bg-sky-500/20 text-sky-300",
+  // Snow — slate/white
+  Skiing:          "bg-slate-400/20 text-slate-200",
+};
+
 const difficultyColors: Record<string, string> = {
   Beginner:     "bg-green-500/20 text-green-300",
   Intermediate: "bg-blue-500/20 text-blue-300",
