@@ -138,9 +138,6 @@ export default function HeroSlider() {
         const next = (current + 1) % shuffled.length;
         const shouldRender = isActive || isPrev || i === next;
 
-        // Show active slide immediately; only gate subsequent slides on load
-        const isVisible = isActive && (loaded[i] || i === current);
-
         return (
           <div
             key={slide.src}
