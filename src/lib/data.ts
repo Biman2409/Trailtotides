@@ -484,7 +484,7 @@ export const adventures: Adventure[] = [
     region: "Himalayas",
     state: "Ladakh",
     type: "Mountaineering",
-    difficulty: "Expert",
+    difficulty: "Strenuous",
     duration: "7+ days",
     durationDays: "8 days",
     altitude: "6,153m",
