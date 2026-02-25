@@ -41,12 +41,27 @@ export default function StoriesPage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-12">
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="bg-[#c4622d] text-white text-xs font-semibold px-3 py-1 rounded-full">
-                    Featured
-                  </span>
-                  <span className="text-white/60 text-xs">{featured.region}</span>
-                </div>
+                <div className="flex flex-col gap-2 mb-4">
+                    <div className="flex items-center gap-2">
+                      {featured.tags.includes("Featured") && (
+                        <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
+                          <Crown className="w-3 h-3" /> Featured
+                        </span>
+                      )}
+                      {featured.tags.includes("TTT Original") && (
+                        <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
+                          <Mountain className="w-3 h-3" /> TTT Original
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {featured.tags.filter(t => ["Himalayas","Biking"].includes(t)).map(tag => (
+                        <span key={tag} className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs px-3 py-1.5 rounded-full">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 <h2 className="text-white text-3xl lg:text-5xl font-semibold tracking-tight leading-tight mb-3 max-w-2xl group-hover:text-white/90 transition-colors">
                   {featured.title}
                 </h2>
