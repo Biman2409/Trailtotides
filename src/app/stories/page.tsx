@@ -77,14 +77,10 @@ export default function StoriesPage() {
                     <p className="text-white text-sm font-medium">{featured.author}</p>
                     <p className="text-white/40 text-xs">{featured.authorRole}</p>
                   </div>
-                      <span className="ml-2 flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full">
-                        <Clock className="w-3 h-3" /> {featured.readTime}
-                      </span>
-                      {featured.views && (
-                        <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full">
-                          <Eye className="w-3 h-3" /> {(featured.views / 1000).toFixed(1)}k views
-                        </span>
-                      )}
+                    <span className="ml-2 flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full">
+                      <Clock className="w-3 h-3" /> {featured.readTime}
+                    </span>
+                    <StoryViewPill slug={featured.slug} initialViews={featured.views} />
                 </div>
               </div>
             </div>
