@@ -247,14 +247,14 @@ export default function HomePage() {
         <FindYourFormat />
 
       {/* ── STORIES ──────────────────────────────────────── */}
-      <section className="py-24 lg:py-32 px-6 lg:px-8 bg-white border-t border-[#f0ebe3]">
+      <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#0e1420] border-t border-white/6">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-12">
             <div>
               <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
                 From the Field
               </p>
-              <h2 className="text-[#1a1f2e] text-4xl lg:text-5xl font-bold tracking-tight">
+              <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
                 Stories from people
                 <br />
                 who've been there
@@ -263,7 +263,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/stories"
-              className="hidden md:flex items-center gap-1.5 text-[#1e3d2f] font-semibold hover:text-[#c4622d] transition-colors group text-sm"
+              className="hidden md:flex items-center gap-1.5 text-white/50 font-semibold hover:text-[#c4622d] transition-colors group text-sm"
             >
               All stories
               <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -297,10 +297,10 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-[#1a1f2e] font-semibold text-xl leading-snug group-hover:text-[#c4622d] transition-colors">
+                  <h3 className="text-white font-semibold text-xl leading-snug group-hover:text-[#c4622d] transition-colors">
                     {story.title}
                   </h3>
-                  <p className="text-[#7a7268] text-sm leading-relaxed line-clamp-2">
+                  <p className="text-white/45 text-sm leading-relaxed line-clamp-2">
                     {story.excerpt}
                   </p>
                   <div className="flex items-center gap-3 pt-2">
@@ -308,8 +308,8 @@ export default function HomePage() {
                       {story.author[0]}
                     </div>
                     <div>
-                      <p className="text-[#1a1f2e] text-xs font-semibold">{story.author}</p>
-                      <p className="text-[#b0a898] text-xs">{story.date}</p>
+                      <p className="text-white/80 text-xs font-semibold">{story.author}</p>
+                      <p className="text-white/35 text-xs">{story.date}</p>
                     </div>
                   </div>
                 </div>
