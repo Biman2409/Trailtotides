@@ -111,14 +111,14 @@ html {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f0ebe0;
+  background: #111820;
 }
 ::-webkit-scrollbar-thumb {
-  background: #9a9590;
+  background: #2c3e50;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #1e3d2f;
+  background: #c4622d;
 }
 
 /* Hide Next.js error overlay portal */
