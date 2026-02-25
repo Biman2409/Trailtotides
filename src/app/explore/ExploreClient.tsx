@@ -410,7 +410,7 @@ export default function ExploreClient() {
                         },
                         {
                           name: "Eastern Ghats",
-                          icon: "🌾",
+                            icon: "🌲",
                           btn: "bg-orange-50 border-orange-200 text-orange-800 hover:bg-orange-100",
                           btnActive: "bg-orange-600 text-white border-orange-600",
                           chip: "bg-orange-100 text-orange-900 hover:bg-orange-200",
