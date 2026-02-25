@@ -58,14 +58,14 @@ export default function HomePage() {
             </span>
           </h1>
 
-          {/* subheading */}
-            <p
-              className="text-white/85 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
-              style={{ textShadow: "0 1px 8px rgba(0,0,0,0.9)" }}
-            >
-              Discover epic adventures across India —<br />
-              from frozen Himalayan rivers to coral reefs in the Andamans.
-            </p>
+            {/* subheading */}
+              <p
+                className="text-white/85 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
+                style={{ textShadow: "0 1px 8px rgba(0,0,0,0.9)" }}
+              >
+                Discover epic adventures across India — from frozen Himalayan rivers<br />
+                to coral reefs in the Andamans — handpicked, trusted and perfectly mapped.
+              </p>
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
