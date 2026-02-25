@@ -299,21 +299,22 @@ export default function HomePage() {
                       </div>
 
                         {/* Top-right: Read time + Views */}
-                        <div className="absolute top-3 right-3 flex flex-col items-end gap-1.5">
-                          {story.readTime && (
-                            <span className="flex items-center gap-1 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-2.5 py-1.5 rounded-full">
-                              {story.readTime}
-                            </span>
-                          )}
-                          {story.views !== undefined && (
-                            <span className="flex items-center gap-1 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-2.5 py-1.5 rounded-full">
-                              <Eye className="w-3 h-3" />
-                              {story.views >= 1000
-                                ? `${(story.views / 1000).toFixed(1)}k`
-                                : story.views}
-                            </span>
-                          )}
-                        </div>
+                          <div className="absolute top-3 right-3 flex flex-col items-end gap-1.5">
+                            {story.readTime && (
+                              <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full">
+                                <Clock className="w-3 h-3" />
+                                {story.readTime}
+                              </span>
+                            )}
+                            {story.views !== undefined && (
+                              <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full">
+                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                {story.views >= 1000
+                                  ? `${(story.views / 1000).toFixed(1)}k views`
+                                  : `${story.views} views`}
+                              </span>
+                            )}
+                          </div>
 
                       {/* Bottom-left: Himalayas + Biking tags (same colour) */}
                       <div className="absolute bottom-4 left-4 flex flex-wrap gap-1.5">
