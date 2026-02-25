@@ -411,31 +411,50 @@ export default function ExploreClient() {
               </div>
 
               {/* Best Season */}
-              <div>
-                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
-                  Best Season
-                </h3>
-                <div className="flex flex-col gap-2">
-                  {seasons.map(({ label, icon, months: sMonths, activeColor, idleColor }) => {
-                    const allSelected = sMonths.every((m) => selectedMonths.includes(m));
-                    const someSelected = sMonths.some((m) => selectedMonths.includes(m));
-                    return (
-                      <div key={label}>
-                        <button
-                          onClick={() => toggleSeason(sMonths)}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                            allSelected ? activeColor : someSelected ? activeColor + " opacity-70" : idleColor
-                          }`}
-                        >
-                          <span>{icon}</span>
-                          {label}
-                          <span className="opacity-60 font-normal">({sMonths.join(", ")})</span>
-                        </button>
-                      </div>
-                    );
-                  })}
+                <div className="col-span-2 lg:col-span-1">
+                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
+                    Best Season
+                  </h3>
+                  <div className="flex flex-col gap-2">
+                    {seasons.map(({ label, icon, months: sMonths, activeColor, idleColor, color }) => {
+                      const allSelected = sMonths.every((m) => selectedMonths.includes(m));
+                      const someSelected = sMonths.some((m) => selectedMonths.includes(m));
+                      return (
+                        <div key={label} className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                          {/* Season header — click to toggle all */}
+                          <div className="flex items-center gap-2 mb-2">
+                            <button
+                              onClick={() => toggleSeason(sMonths)}
+                              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
+                                allSelected ? activeColor : someSelected ? activeColor + " opacity-70" : idleColor
+                              }`}
+                            >
+                              <span>{icon}</span>
+                              {label}
+                            </button>
+                            <span className={`text-[10px] font-medium opacity-50 ${color}`}>
+                              {allSelected ? "all selected" : someSelected ? `${sMonths.filter(m => selectedMonths.includes(m)).length}/${sMonths.length}` : "tap to select all"}
+                            </span>
+                          </div>
+                          {/* Individual month chips */}
+                          <div className="flex flex-wrap gap-1.5">
+                            {sMonths.map((m) => (
+                              <button
+                                key={m}
+                                onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
+                                className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
+                                  selectedMonths.includes(m) ? activeColor : idleColor
+                                }`}
+                              >
+                                {m}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
 
               {/* Group Size */}
               <div>
