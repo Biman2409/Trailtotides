@@ -648,6 +648,12 @@ export const regions = [
     image: "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=800&q=80",
     adventureCount: 31,
   },
+  {
+    name: "Urban" as Region,
+    tagline: "City trails, rooftops & street culture",
+    image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=80",
+    adventureCount: 14,
+  },
 ];
 
 export const adventureTypes = [
