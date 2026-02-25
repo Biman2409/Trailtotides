@@ -26,9 +26,11 @@ interface Props {
 }
 
 const difficultyStyle: Record<string, { bg: string; text: string; dot: string }> = {
-  Beginner: { bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-emerald-500" },
-  Intermediate: { bg: "bg-amber-50", text: "text-amber-700", dot: "bg-amber-500" },
-  Expert: { bg: "bg-red-50", text: "text-red-700", dot: "bg-red-500" },
+  Beginner:     { bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-emerald-500" },
+  Intermediate: { bg: "bg-teal-50",    text: "text-teal-700",    dot: "bg-teal-500" },
+  Advanced:     { bg: "bg-amber-50",   text: "text-amber-700",   dot: "bg-amber-500" },
+  Expert:       { bg: "bg-orange-50",  text: "text-orange-700",  dot: "bg-orange-500" },
+  Extreme:      { bg: "bg-red-50",     text: "text-red-700",     dot: "bg-red-500" },
 };
 
 export async function generateStaticParams() {
