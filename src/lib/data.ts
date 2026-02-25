@@ -627,7 +627,7 @@ export const regions = [
   {
     name: "Desert" as Region,
     tagline: "Salt flats, sand dunes & night skies",
-      image: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80",
+      image: "https://images.unsplash.com/photo-1547234935-80c7145ec969?w=800&q=80",
     adventureCount: 28,
   },
   {
