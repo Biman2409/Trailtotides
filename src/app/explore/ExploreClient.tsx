@@ -222,7 +222,7 @@ export default function ExploreClient() {
       </div>
 
       {/* Search + filter bar */}
-      <div className="sticky top-[64px] lg:top-[80px] z-40 bg-white/95 backdrop-blur-md border-b border-[#e0d8cc] shadow-sm">
+      <div className="sticky top-16 lg:top-20 z-40 bg-white/96 backdrop-blur-lg border-b border-[#e0d8cc] shadow-sm">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex items-center gap-4">
           {/* Search */}
           <div className="relative flex-1 max-w-md">
