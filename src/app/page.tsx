@@ -424,10 +424,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── AI ADVENTURE FINDER ─────────────────────────── */}
-      <InlineChat />
-
-      {/* ── FINAL CTA ─────────────────────────────────────── */}
+        {/* ── FINAL CTA ─────────────────────────────────────── */}
       <section className="relative py-24 lg:py-32 bg-[#f5f0e8] px-6 lg:px-8 overflow-hidden">
         {/* Subtle texture */}
         <div
