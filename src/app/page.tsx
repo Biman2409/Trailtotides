@@ -284,16 +284,26 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
 
-                      {/* Top-left: icon-only badges */}
-                      <div className="absolute top-3 left-3 flex gap-1.5">
+                      {/* Top-left: icon-only badges that expand on hover */}
+                      <div className="absolute top-3 left-3 flex flex-col gap-1.5">
                         {story.tags.includes("Featured") && (
-                          <span className="flex items-center justify-center w-7 h-7 bg-[#c4622d] rounded-full shadow-lg shadow-[#c4622d]/50">
-                            <Crown className="w-3.5 h-3.5 text-white" />
+                          <span className="group/badge flex items-center gap-1.5 bg-[#c4622d] rounded-full shadow-lg shadow-[#c4622d]/50 overflow-hidden w-7 hover:w-[105px] transition-all duration-300 ease-in-out h-7 cursor-default">
+                            <span className="flex-shrink-0 flex items-center justify-center w-7 h-7">
+                              <Crown className="w-3.5 h-3.5 text-white" />
+                            </span>
+                            <span className="text-white text-xs font-semibold whitespace-nowrap pr-2 opacity-0 group-hover/badge:opacity-100 transition-opacity duration-200 delay-100">
+                              Featured
+                            </span>
                           </span>
                         )}
                         {story.tags.includes("TTT Original") && (
-                          <span className="flex items-center justify-center w-7 h-7 bg-[#c4622d] rounded-full shadow-lg shadow-[#c4622d]/50">
-                            <Mountain className="w-3.5 h-3.5 text-white" />
+                          <span className="group/badge2 flex items-center gap-1.5 bg-[#c4622d] rounded-full shadow-lg shadow-[#c4622d]/50 overflow-hidden w-7 hover:w-[120px] transition-all duration-300 ease-in-out h-7 cursor-default">
+                            <span className="flex-shrink-0 flex items-center justify-center w-7 h-7">
+                              <Mountain className="w-3.5 h-3.5 text-white" />
+                            </span>
+                            <span className="text-white text-xs font-semibold whitespace-nowrap pr-2 opacity-0 group-hover/badge2:opacity-100 transition-opacity duration-200 delay-100">
+                              TTT Original
+                            </span>
                           </span>
                         )}
                       </div>
