@@ -99,7 +99,7 @@ export default function HeroSlider() {
   const [animating,   setAnimating]   = useState(false);
   const [progressKey, setProgressKey] = useState(0);
   // track which indices have their image fully loaded
-  const [loaded,      setLoaded]      = useState<Record<number, boolean>>({ 0: false });
+  const [loaded,      setLoaded]      = useState<Record<number, boolean>>({});
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const goTo = useCallback((index: number, byUser = false) => {
