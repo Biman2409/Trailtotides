@@ -56,11 +56,11 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
         />
 
-          {/* Vibrancy filter */}
-          <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-orange-900/30 via-transparent to-sky-900/20 pointer-events-none" />
+          {/* Vibrancy boost — multiply layer to deepen shadows and enrich colour */}
+          <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-black/20 via-transparent to-black/10 pointer-events-none" />
 
-          {/* Dark gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          {/* Bottom read gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
         {/* Top badges */}
         <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
