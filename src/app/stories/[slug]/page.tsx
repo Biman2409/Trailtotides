@@ -117,24 +117,33 @@ export default async function StoryPage({ params }: Props) {
         </Link>
 
         <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 pb-14 w-full">
-          <div className="flex items-center gap-3 mb-4 flex-wrap">
-            <span className="bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-              {story.region}
-            </span>
+          {/* Row 1: special badges */}
+          <div className="flex items-center gap-3 mb-2 flex-wrap">
             {story.tags.includes("Featured") && (
               <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
                 <Crown className="w-3 h-3" />
                 Featured
               </span>
             )}
-              {story.tags.includes("TTT Original") && (
-                <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/40 ring-1 ring-white/20">
-                  <span className="w-4 h-4 rounded-sm bg-white/20 flex items-center justify-center shrink-0">
-                    <Mountain className="w-2.5 h-2.5 text-white" strokeWidth={2.2} />
-                  </span>
-                  TTT Original
+            {story.tags.includes("TTT Original") && (
+              <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/40 ring-1 ring-white/20">
+                <span className="w-4 h-4 rounded-sm bg-white/20 flex items-center justify-center shrink-0">
+                  <Mountain className="w-2.5 h-2.5 text-white" strokeWidth={2.2} />
                 </span>
-              )}
+                TTT Original
+              </span>
+            )}
+          </div>
+          {/* Row 2: content tags + read time */}
+          <div className="flex items-center gap-3 mb-4 flex-wrap">
+            <span className="bg-white/10 backdrop-blur-sm border border-white/15 text-white text-xs font-medium px-3 py-1.5 rounded-full">
+              {story.region}
+            </span>
+            {story.tags.filter(t => !["Featured", "TTT Original"].includes(t)).map(tag => (
+              <span key={tag} className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs px-3 py-1.5 rounded-full">
+                {tag}
+              </span>
+            ))}
             <span className="flex items-center gap-1.5 text-white/55 text-xs">
               <Clock className="w-3.5 h-3.5" />
               {story.readTime}
