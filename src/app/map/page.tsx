@@ -409,63 +409,114 @@ export default function MapPage() {
 
           {/* Filter panel */}
           {filtersOpen && (
-            <div className="border-t border-[#e0d8cc] bg-white px-4 lg:px-8 py-5">
-              <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="border-t border-[#e0d8cc] bg-white px-4 lg:px-8 py-6 max-h-[60vh] overflow-y-auto">
+              <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-8">
 
-                {/* Adventure Type — categorised */}
+                {/* Adventure Type */}
                 <div className="col-span-2 lg:col-span-3">
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Adventure Type</h3>
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="rounded-xl border p-3 bg-amber-50 border-amber-200">
-                      <p className="text-[10px] font-semibold tracking-widest uppercase text-amber-600 mb-2">Land Based</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {(["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"] as AdventureType[]).map((type) => {
-                          const icon = adventureTypes.find(a => a.type === type)?.icon ?? "";
-                          return (
-                            <button key={type} onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
-                              className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all ${selectedTypes.includes(type) ? "bg-amber-500 text-white" : "bg-amber-100 text-amber-900 hover:bg-amber-200"}`}>
-                              <span>{icon}</span>{type}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    {[
-                      { label: "Water Based", box: "bg-sky-50 border-sky-200", labelColor: "text-sky-600", activeColor: "bg-sky-500 text-white", idleColor: "bg-sky-100 text-sky-900 hover:bg-sky-200", types: ["Diving", "Kayaking"] },
-                      { label: "Snow Based", box: "bg-slate-50 border-slate-200", labelColor: "text-slate-500", activeColor: "bg-white text-slate-800 ring-1 ring-slate-400 shadow", idleColor: "bg-slate-100 text-slate-700 hover:bg-slate-200", types: ["Skiing"] },
-                      { label: "Air Based", box: "bg-purple-50 border-purple-200", labelColor: "text-purple-600", activeColor: "bg-purple-500 text-white", idleColor: "bg-purple-100 text-purple-900 hover:bg-purple-200", types: [] },
-                    ].map(({ label, box, labelColor, activeColor, idleColor, types: catTypes }) => (
-                      <div key={label} className={`rounded-xl border p-3 ${box}`}>
-                        <p className={`text-[10px] font-semibold tracking-widest uppercase mb-2 ${labelColor}`}>{label}</p>
-                        {catTypes.length === 0 ? (
-                          <p className="text-xs text-[#c4b99a] italic">Coming soon</p>
-                        ) : (
-                          <div className="flex flex-wrap gap-1.5">
-                            {adventureTypes.filter(({ type }) => catTypes.includes(type)).map(({ type, icon }) => (
-                              <button key={type} onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
-                                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all ${selectedTypes.includes(type as AdventureType) ? activeColor : idleColor}`}>
-                                <span>{icon}</span>{type}
+                  {(() => {
+                    const categories = [
+                      {
+                        label: "Land Based", icon: "🏔️",
+                        btn: "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100",
+                        btnActive: "bg-amber-500 text-white border-amber-500",
+                        chip: "bg-amber-100 text-amber-900 hover:bg-amber-200",
+                        chipActive: "bg-amber-500 text-white",
+                        types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
+                      },
+                      {
+                        label: "Water Based", icon: "🌊",
+                        btn: "bg-sky-50 border-sky-200 text-sky-800 hover:bg-sky-100",
+                        btnActive: "bg-sky-500 text-white border-sky-500",
+                        chip: "bg-sky-100 text-sky-900 hover:bg-sky-200",
+                        chipActive: "bg-sky-500 text-white",
+                        types: ["Diving", "Kayaking"],
+                      },
+                      {
+                        label: "Snow Based", icon: "❄️",
+                        btn: "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100",
+                        btnActive: "bg-slate-600 text-white border-slate-600",
+                        chip: "bg-slate-100 text-slate-700 hover:bg-slate-200",
+                        chipActive: "bg-slate-600 text-white",
+                        types: ["Skiing"],
+                      },
+                      {
+                        label: "Air Based", icon: "🪂",
+                        btn: "bg-purple-50 border-purple-200 text-purple-800 hover:bg-purple-100",
+                        btnActive: "bg-purple-500 text-white border-purple-500",
+                        chip: "bg-purple-100 text-purple-900 hover:bg-purple-200",
+                        chipActive: "bg-purple-500 text-white",
+                        types: [] as string[],
+                      },
+                    ];
+                    return (
+                      <div className="flex flex-col gap-2">
+                        <div className="flex flex-wrap gap-2">
+                          {categories.map((cat) => {
+                            const isExpanded = expandedCategory === cat.label;
+                            const hasSelected = cat.types.some(t => selectedTypes.includes(t as AdventureType));
+                            return (
+                              <button
+                                key={cat.label}
+                                onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? cat.btnActive : cat.btn}`}
+                              >
+                                <span>{cat.icon}</span>
+                                {cat.label}
+                                {hasSelected && (
+                                  <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
+                                    {cat.types.filter(t => selectedTypes.includes(t as AdventureType)).length}
+                                  </span>
+                                )}
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                               </button>
-                            ))}
-                          </div>
-                        )}
+                            );
+                          })}
+                        </div>
+                        {expandedCategory && (() => {
+                          const cat = categories.find(c => c.label === expandedCategory)!;
+                          return (
+                            <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                              {cat.types.length === 0 ? (
+                                <p className="text-xs text-[#c4b99a] italic">Coming soon</p>
+                              ) : (
+                                <div className="flex flex-wrap gap-2">
+                                  {cat.types.map((type) => {
+                                    const icon = adventureTypes.find(a => a.type === type)?.icon ?? "";
+                                    const isSelected = selectedTypes.includes(type as AdventureType);
+                                    return (
+                                      <button
+                                        key={type}
+                                        onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
+                                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${isSelected ? cat.chipActive : cat.chip}`}
+                                      >
+                                        <span>{icon}</span>{type}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })()}
                       </div>
-                    ))}
-                  </div>
+                    );
+                  })()}
                 </div>
 
-                {/* Region — grouped with sub-regions */}
+                {/* Region */}
                 <div className="col-span-2 lg:col-span-3">
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Region</h3>
                   {(() => {
                     const regionGroups: { name: Region; icon: string; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
-                      { name: "Himalayas", icon: "🏔️", btn: "bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100", btnActive: "bg-emerald-700 text-white border-emerald-700", chip: "bg-emerald-100 text-emerald-900 hover:bg-emerald-200", chipActive: "bg-emerald-700 text-white", subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
-                      { name: "Western Ghats", icon: "⛰️", btn: "bg-lime-50 border-lime-200 text-lime-800 hover:bg-lime-100", btnActive: "bg-lime-600 text-white border-lime-600", chip: "bg-lime-100 text-lime-900 hover:bg-lime-200", chipActive: "bg-lime-600 text-white", subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"] },
-                      { name: "Eastern Ghats", icon: "⛰️", btn: "bg-orange-50 border-orange-200 text-orange-800 hover:bg-orange-100", btnActive: "bg-orange-600 text-white border-orange-600", chip: "bg-orange-100 text-orange-900 hover:bg-orange-200", chipActive: "bg-orange-600 text-white", subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"] },
-                      { name: "Desert", icon: "🏜️", btn: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100", btnActive: "bg-yellow-500 text-white border-yellow-500", chip: "bg-yellow-100 text-yellow-900 hover:bg-yellow-200", chipActive: "bg-yellow-500 text-white", subRegions: ["Rajasthan", "Gujarat"] },
-                      { name: "Coast", icon: "🌊", btn: "bg-cyan-50 border-cyan-200 text-cyan-800 hover:bg-cyan-100", btnActive: "bg-cyan-600 text-white border-cyan-600", chip: "bg-cyan-100 text-cyan-900 hover:bg-cyan-200", chipActive: "bg-cyan-600 text-white", subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
-                      { name: "Islands", icon: "🏝️", btn: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100", btnActive: "bg-teal-600 text-white border-teal-600", chip: "bg-teal-100 text-teal-900 hover:bg-teal-200", chipActive: "bg-teal-600 text-white", subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
-                      { name: "Northeast", icon: "🌄", btn: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100", btnActive: "bg-violet-600 text-white border-violet-600", chip: "bg-violet-100 text-violet-900 hover:bg-violet-200", chipActive: "bg-violet-600 text-white", subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"] },
+                      { name: "Himalayas",     icon: "🏔️", btn: "bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100", btnActive: "bg-emerald-700 text-white border-emerald-700", chip: "bg-emerald-100 text-emerald-900 hover:bg-emerald-200", chipActive: "bg-emerald-700 text-white", subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
+                      { name: "Western Ghats", icon: "⛰️", btn: "bg-lime-50 border-lime-200 text-lime-800 hover:bg-lime-100",             btnActive: "bg-lime-600 text-white border-lime-600",     chip: "bg-lime-100 text-lime-900 hover:bg-lime-200",         chipActive: "bg-lime-600 text-white",     subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"] },
+                      { name: "Eastern Ghats", icon: "⛰️", btn: "bg-orange-50 border-orange-200 text-orange-800 hover:bg-orange-100",     btnActive: "bg-orange-600 text-white border-orange-600", chip: "bg-orange-100 text-orange-900 hover:bg-orange-200",   chipActive: "bg-orange-600 text-white",   subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"] },
+                      { name: "Desert",        icon: "🏜️", btn: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100",     btnActive: "bg-yellow-500 text-white border-yellow-500", chip: "bg-yellow-100 text-yellow-900 hover:bg-yellow-200",   chipActive: "bg-yellow-500 text-white",   subRegions: ["Rajasthan", "Gujarat"] },
+                      { name: "Coast",         icon: "🌊", btn: "bg-cyan-50 border-cyan-200 text-cyan-800 hover:bg-cyan-100",             btnActive: "bg-cyan-600 text-white border-cyan-600",     chip: "bg-cyan-100 text-cyan-900 hover:bg-cyan-200",         chipActive: "bg-cyan-600 text-white",     subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
+                      { name: "Islands",       icon: "🏝️", btn: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100",             btnActive: "bg-teal-600 text-white border-teal-600",     chip: "bg-teal-100 text-teal-900 hover:bg-teal-200",         chipActive: "bg-teal-600 text-white",     subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
+                      { name: "Northeast",     icon: "🌄", btn: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100",     btnActive: "bg-violet-600 text-white border-violet-600", chip: "bg-violet-100 text-violet-900 hover:bg-violet-200",   chipActive: "bg-violet-600 text-white",   subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"] },
                     ];
                     return (
                       <div className="flex flex-col gap-2">
@@ -505,53 +556,92 @@ export default function MapPage() {
                   })()}
                 </div>
 
+                {/* Best Season */}
+                <div className="col-span-2 lg:col-span-3">
+                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Best Season</h3>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-wrap gap-2">
+                      {seasons.map(({ label, icon, months: sMonths, activeColor, idleColor }) => {
+                        const isExpanded = expandedSeason === label;
+                        const hasSelected = sMonths.some((m) => selectedMonths.includes(m));
+                        const selectedCount = sMonths.filter((m) => selectedMonths.includes(m)).length;
+                        return (
+                          <button key={label} onClick={() => setExpandedSeason(isExpanded ? null : label)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? activeColor : idleColor}`}>
+                            <span>{icon}</span>
+                            {label}
+                            {hasSelected && <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">{selectedCount}</span>}
+                            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                          </button>
+                        );
+                      })}
+                    </div>
+                    {expandedSeason && (() => {
+                      const season = seasons.find((s) => s.label === expandedSeason)!;
+                      return (
+                        <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                          <div className="flex flex-wrap gap-2">
+                            {season.months.map((m) => (
+                              <button key={m} onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
+                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedMonths.includes(m) ? season.activeColor : season.idleColor}`}>
+                                {m}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </div>
+
                 {/* Difficulty */}
-                <div>
+                <div className="col-span-2 lg:col-span-3">
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Difficulty</h3>
                   <div className="flex flex-wrap gap-2">
-                    {difficulties.map((d) => (
-                      <button key={d} onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedDifficulties.includes(d) ? "bg-[#1e3d2f] text-white" : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"}`}>
-                        <span className={`w-2 h-2 rounded-full ${difficultyDot[d]}`} />{d}
+                    {([
+                      { val: "Beginner",     icon: "🟢", idle: "bg-green-50 border-green-200 text-green-800 hover:bg-green-100 border",     active: "bg-green-600 text-white border border-green-600" },
+                      { val: "Intermediate", icon: "🔵", idle: "bg-blue-50 border-blue-200 text-blue-800 hover:bg-blue-100 border",         active: "bg-blue-600 text-white border border-blue-600" },
+                      { val: "Advanced",     icon: "🟠", idle: "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100 border",     active: "bg-amber-500 text-white border border-amber-500" },
+                      { val: "Expert",       icon: "🟠", idle: "bg-orange-50 border-orange-200 text-orange-800 hover:bg-orange-100 border", active: "bg-orange-500 text-white border border-orange-500" },
+                      { val: "Extreme",      icon: "🔴", idle: "bg-red-50 border-red-200 text-red-800 hover:bg-red-100 border",             active: "bg-red-600 text-white border border-red-600" },
+                    ] as { val: Difficulty; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
+                      <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDifficulties.includes(val) ? active : idle}`}>
+                        <span>{icon}</span>{val}
                       </button>
                     ))}
                   </div>
                 </div>
 
                 {/* Duration */}
-                <div>
+                <div className="col-span-2 lg:col-span-3">
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
                   <div className="flex flex-wrap gap-2">
-                    {durations.map((dur) => (
-                      <button key={dur} onClick={() => toggle(selectedDurations, dur, setSelectedDurations)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedDurations.includes(dur) ? "bg-[#1e3d2f] text-white" : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"}`}>
-                        {dur}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Best Season */}
-                <div>
-                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Best Season</h3>
-                  <div className="flex flex-wrap gap-1.5">
-                    {months.map(({ label, value }) => (
-                      <button key={value} onClick={() => toggle(selectedMonths, value, setSelectedMonths)}
-                        className={`w-10 py-1.5 rounded-lg text-xs font-medium transition-all ${selectedMonths.includes(value) ? "bg-sky-700 text-white" : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-sky-100 hover:text-sky-700"}`}>
-                        {label}
+                    {([
+                      { val: "Weekend",  label: "Weekend",  icon: "⚡", idle: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100 border", active: "bg-yellow-500 text-white border border-yellow-500" },
+                      { val: "3–5 days", label: "3–5 days", icon: "🗓️", idle: "bg-indigo-50 border-indigo-200 text-indigo-800 hover:bg-indigo-100 border", active: "bg-indigo-600 text-white border border-indigo-600" },
+                      { val: "7+ days",  label: "7+ days",  icon: "🏕️", idle: "bg-rose-50 border-rose-200 text-rose-800 hover:bg-rose-100 border",         active: "bg-rose-600 text-white border border-rose-600" },
+                    ] as { val: Duration; label: string; icon: string; idle: string; active: string }[]).map(({ val, label, icon, idle, active }) => (
+                      <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
+                        <span>{icon}</span>{label}
                       </button>
                     ))}
                   </div>
                 </div>
 
                 {/* Group Size */}
-                <div>
+                <div className="col-span-2 lg:col-span-3">
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
                   <div className="flex flex-wrap gap-2">
-                    {groupSizes.map((gs) => (
-                      <button key={gs} onClick={() => toggle(selectedGroupSizes, gs, setSelectedGroupSizes)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedGroupSizes.includes(gs) ? "bg-[#1e3d2f] text-white" : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"}`}>
-                        {gs}
+                    {([
+                      { val: "Solo",              icon: "🧍", idle: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100 border",     active: "bg-violet-600 text-white border border-violet-600" },
+                      { val: "Small group (2–6)",  icon: "👥", idle: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100 border",             active: "bg-teal-600 text-white border border-teal-600" },
+                      { val: "Large group (6+)",   icon: "🫂", idle: "bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 hover:bg-fuchsia-100 border", active: "bg-fuchsia-600 text-white border border-fuchsia-600" },
+                    ] as { val: GroupSize; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
+                      <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
+                        <span>{icon}</span>{val}
                       </button>
                     ))}
                   </div>
