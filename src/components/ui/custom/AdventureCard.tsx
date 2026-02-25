@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Clock, TrendingUp, ArrowRight } from "lucide-react";
+import { MapPin, Clock, TrendingUp, ArrowRight, GitCompare } from "lucide-react";
 import type { Adventure } from "@/lib/data";
+import { useCompare } from "@/context/CompareContext";
 
 const typeStyle: Record<string, string> = {
   // Land — orange
@@ -18,19 +21,19 @@ const typeStyle: Record<string, string> = {
   // Water — blue
   Diving:          "bg-blue-500 text-white",
   Kayaking:        "bg-blue-500 text-white",
-  // Snow — white
+  // Snow — slate/white
   Skiing:          "bg-white text-gray-900",
   // Air — purple
   Paragliding:     "bg-purple-500 text-white",
   "Hot Air Balloon": "bg-purple-500 text-white",
 };
 
-const difficultyStyle: Record<string, { bg: string; text: string; dot: string }> = {
-  Beginner:     { bg: "bg-emerald-500", text: "text-white", dot: "bg-white" },
-  Intermediate: { bg: "bg-teal-500",    text: "text-white", dot: "bg-white" },
-  Advanced:     { bg: "bg-amber-500",   text: "text-white", dot: "bg-white" },
-  Expert:       { bg: "bg-orange-500",  text: "text-white", dot: "bg-white" },
-  Extreme:      { bg: "bg-red-500",     text: "text-white", dot: "bg-white" },
+const difficultyStyle: Record<string, { bg: string; text: string }> = {
+  Beginner:     { bg: "bg-emerald-500", text: "text-white" },
+  Intermediate: { bg: "bg-teal-500",    text: "text-white" },
+  Advanced:     { bg: "bg-amber-500",   text: "text-white" },
+  Expert:       { bg: "bg-orange-500",  text: "text-white" },
+  Extreme:      { bg: "bg-red-500",     text: "text-white" },
 };
 
 interface AdventureCardProps {
@@ -40,6 +43,20 @@ interface AdventureCardProps {
 
 export default function AdventureCard({ adventure, size = "default" }: AdventureCardProps) {
   const isLarge = size === "large";
+  const { add, remove, has, items, open } = useCompare();
+  const isAdded = has(adventure.id);
+  const isFull = items.length >= 3 && !isAdded;
+
+  function handleCompare(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isAdded) {
+      remove(adventure.id);
+    } else if (!isFull) {
+      add(adventure);
+      open();
+    }
+  }
 
   return (
     <Link href={`/experiences/${adventure.slug}`} className="group block">
@@ -57,26 +74,42 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
         />
 
-          {/* Vibrancy boost — multiply layer to deepen shadows and enrich colour */}
-          <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-black/20 via-transparent to-black/10 pointer-events-none" />
+        {/* Vibrancy boost */}
+        <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-black/20 via-transparent to-black/10 pointer-events-none" />
 
-          {/* Bottom read gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+        {/* Bottom read gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
         {/* Top badges */}
         <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
           <span className={`text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide ${typeStyle[adventure.type] ?? "bg-[#c4622d] text-white"}`}>
-              {adventure.type}
-            </span>
+            {adventure.type}
+          </span>
           {(() => {
             const d = difficultyStyle[adventure.difficulty];
             return d ? (
-                <span className={`text-xs font-semibold px-3 py-1.5 rounded-full ${d.bg} ${d.text}`}>
-                  {adventure.difficulty}
-                </span>
+              <span className={`text-xs font-semibold px-3 py-1.5 rounded-full ${d.bg} ${d.text}`}>
+                {adventure.difficulty}
+              </span>
             ) : null;
           })()}
         </div>
+
+        {/* Compare button — appears on hover */}
+        <button
+          onClick={handleCompare}
+          title={isAdded ? "Remove from compare" : isFull ? "Compare limit reached (max 3)" : "Add to compare"}
+          className={`absolute top-14 right-4 z-10 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200
+            ${isAdded
+              ? "bg-[#c4622d] text-white opacity-100 scale-100"
+              : isFull
+              ? "bg-white/10 text-white/40 opacity-0 group-hover:opacity-100 cursor-not-allowed"
+              : "bg-white/15 text-white opacity-0 group-hover:opacity-100 hover:bg-[#c4622d] hover:scale-105 backdrop-blur-sm"
+            }`}
+        >
+          <GitCompare className="w-3 h-3" />
+          <span>{isAdded ? "Added" : "Compare"}</span>
+        </button>
 
         {/* Content */}
         <div className="absolute bottom-0 left-0 right-0 p-5">
@@ -87,7 +120,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           <h3 className="text-white font-semibold text-xl leading-snug mb-1">
             {adventure.name}
           </h3>
-            <p className="text-white/75 text-sm line-clamp-2 mb-3 leading-relaxed">
+          <p className="text-white/75 text-sm line-clamp-2 mb-3 leading-relaxed">
             {adventure.tagline}
           </p>
           <div className="flex items-center justify-between">
@@ -104,7 +137,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
               )}
             </div>
             <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#c4622d] group-hover:scale-110 transition-all duration-300">
-                <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
             </div>
           </div>
         </div>
