@@ -46,7 +46,7 @@ export default async function ExperiencePage({ params }: Props) {
     .filter((a) => a.id !== adventure.id && (a.region === adventure.region || a.type === adventure.type))
     .slice(0, 3);
 
-  const diff = difficultyStyle[adventure.difficulty];
+  const diff = difficultyStyle[adventure.difficulty] ?? difficultyStyle["Intermediate"];
 
   return (
     <div className="min-h-screen bg-[#fafaf8]">
