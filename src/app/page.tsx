@@ -16,11 +16,11 @@ export default function HomePage() {
       <Navbar />
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative h-screen min-h-[700px] flex items-center justify-center" style={{ overflow: "hidden" }}>
+      <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
         <HeroSlider />
 
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-          {/* eyebrow */}
+          {/* Eyebrow */}
           <div className="inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-5 py-2 mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-[#f07a42] mr-2.5 animate-pulse" />
             <p className="text-white text-xs font-semibold tracking-[0.18em] uppercase">
@@ -28,82 +28,81 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* headline */}
+          {/* Headline */}
           <h1
             className="font-bold tracking-tight mb-6"
             style={{
               fontSize: "clamp(2.8rem, 7.5vw, 6rem)",
-              lineHeight: 1.1,
+              lineHeight: 1.08,
               color: "white",
-              textShadow: "0 2px 20px rgba(0,0,0,0.7)",
+              textShadow: "0 2px 24px rgba(0,0,0,0.65)",
             }}
           >
             <span style={{ display: "block" }}>
               From Mountain{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 700, color: "white" }}>Trail</em>
+              <em style={{ fontStyle: "italic", fontWeight: 700 }}>Trail</em>
             </span>
             <span
               style={{
                 display: "block",
                 height: "2px",
-                background:
-                  "linear-gradient(90deg, transparent, rgba(255,255,255,0.3) 30%, rgba(255,255,255,0.3) 70%, transparent)",
-                margin: "0.3em auto",
+                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.28) 30%, rgba(255,255,255,0.28) 70%, transparent)",
+                margin: "0.32em auto",
                 maxWidth: "460px",
               }}
             />
             <span style={{ display: "block" }}>
               To Ocean{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 700, color: "white" }}>Tides</em>
+              <em style={{ fontStyle: "italic", fontWeight: 700 }}>Tides</em>
             </span>
           </h1>
 
-            {/* subheading */}
-              <p
-                className="text-white/85 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
-                style={{ textShadow: "0 1px 8px rgba(0,0,0,0.9)" }}
-              >
-                  Discover Epic Adventures Across India —<br />
-                  Handpicked by Explorers, Precisely Mapped for You.
-              </p>
+          {/* Subheading */}
+          <p
+            className="text-white/82 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
+            style={{ textShadow: "0 1px 10px rgba(0,0,0,0.85)" }}
+          >
+            Discover Epic Adventures Across India —<br />
+            Handpicked by Explorers, Precisely Mapped for You.
+          </p>
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/explore"
-              className="bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold px-8 py-4 rounded-xl text-base transition-all duration-300 flex items-center gap-2 group shadow-xl shadow-black/30 min-w-[200px] justify-center"
+              className="bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold px-8 py-4 rounded-xl text-base flex items-center gap-2 group shadow-xl shadow-black/30 min-w-[200px] justify-center hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-black/40 transition-all duration-250"
             >
               Explore Adventures
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               href="/map"
-              className="bg-white/12 hover:bg-white/22 backdrop-blur-md text-white font-semibold px-8 py-4 rounded-xl text-base border border-white/25 transition-all duration-300 flex items-center gap-2 min-w-[200px] justify-center"
+              className="bg-white/12 hover:bg-white/22 backdrop-blur-md text-white font-semibold px-8 py-4 rounded-xl text-base border border-white/25 hover:border-white/40 flex items-center gap-2 min-w-[200px] justify-center hover:-translate-y-0.5 transition-all duration-250"
             >
               <Map className="w-4 h-4" />
               View the Map
             </Link>
           </div>
 
-          <p className="mt-7 text-white/40 text-xs tracking-[0.15em] uppercase">
+          <p className="mt-7 text-white/38 text-xs tracking-[0.15em] uppercase">
             Crafted by people who've been out there
           </p>
         </div>
       </section>
 
       {/* ── STATS BAR ────────────────────────────────────── */}
-      <section className="bg-[#141920] border-b border-white/5">
+      <section className="bg-[#141920] border-b border-white/6">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/8">
             {[
               { value: "287", label: "Adventures" },
-              { value: "6", label: "Regions" },
-              { value: "8", label: "Adventure Types" },
+              { value: "6",   label: "Regions" },
+              { value: "8",   label: "Adventure Types" },
               { value: "48+", label: "Verified Operators" },
             ].map(({ value, label }) => (
-              <div key={label} className="text-center py-7 px-6">
-                <div className="text-white text-3xl font-bold tracking-tight">{value}</div>
-                <div className="text-white/35 text-xs mt-1.5 tracking-wide uppercase">{label}</div>
+              <div key={label} className="text-center py-8 px-6">
+                <div className="text-white text-3xl font-bold tracking-tight tabular-nums">{value}</div>
+                <div className="text-white/32 text-xs mt-1.5 tracking-widest uppercase">{label}</div>
               </div>
             ))}
           </div>
@@ -113,32 +112,35 @@ export default function HomePage() {
       {/* ── FEATURED ADVENTURES ─────────────────────────── */}
       <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#fafaf8]">
         <div className="max-w-7xl mx-auto">
-          {/* Section header */}
           <div className="mb-14">
             <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
               Our Favourites
             </p>
-            <div className="flex items-end justify-between">
+            <div className="flex items-end justify-between gap-4">
               <h2 className="text-[#1a1f2e] text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
                 Adventures of a Lifetime
               </h2>
+              <Link
+                href="/explore"
+                className="hidden md:flex items-center gap-1.5 text-[#c4622d] text-sm font-semibold hover:text-[#1a1f2e] transition-colors shrink-0"
+              >
+                View all
+                <ChevronRight className="w-4 h-4" />
+              </Link>
             </div>
-            {/* thin accent line */}
             <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
           </div>
 
-          {/* Cards grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
             {featuredAdventures.map((adventure) => (
               <AdventureCard key={adventure.id} adventure={adventure} size="default" />
             ))}
           </div>
 
-          {/* View all — centered */}
           <div className="mt-14 flex justify-center">
             <Link
               href="/explore"
-              className="bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold px-9 py-4 rounded-xl text-base transition-all duration-300 flex items-center gap-2 group shadow-lg shadow-[#c4622d]/25"
+              className="bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#c4622d]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#c4622d]/30 transition-all duration-250"
             >
               View all adventures
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -149,7 +151,6 @@ export default function HomePage() {
 
       {/* ── MAP CTA ───────────────────────────────────────── */}
       <section className="relative py-24 lg:py-32 bg-[#1a2e20] px-6 lg:px-8 overflow-hidden">
-        {/* background texture */}
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=2000&q=60"
@@ -165,17 +166,17 @@ export default function HomePage() {
             <p className="text-[#7ec88a] text-xs font-semibold tracking-[0.22em] uppercase mb-4">
               Signature Feature
             </p>
-              <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-5">
-                India's adventures,
-                <br />
-                <span className="text-[#7ec88a]">mapped.</span>
-              </h2>
-              <p className="text-white/75 text-lg md:text-xl leading-relaxed mb-9 max-w-lg" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.6)" }}>
-                Every adventure across India — trekking, diving, cycling, skiing — on one interactive map. Filter by region, difficulty, or type.
-              </p>
+            <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-5">
+              India's adventures,
+              <br />
+              <span className="text-[#7ec88a]">mapped.</span>
+            </h2>
+            <p className="text-white/72 text-lg md:text-xl leading-relaxed mb-9 max-w-lg">
+              Every adventure across India — trekking, diving, cycling, skiing — on one interactive map. Filter by region, difficulty, or type.
+            </p>
             <Link
               href="/map"
-              className="inline-flex items-center gap-2.5 bg-white text-[#1a2e20] font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#f0f7f1] transition-colors group shadow-xl shadow-black/20"
+              className="inline-flex items-center gap-2.5 bg-white text-[#1a2e20] font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#f0f7f1] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 group transition-all duration-250 shadow-lg shadow-black/15"
             >
               <Map className="w-5 h-5" />
               Open the Map
@@ -212,11 +213,13 @@ export default function HomePage() {
                   className="object-cover transition-transform duration-700 group-hover:scale-110 brightness-105 saturate-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <h3 className="text-white font-semibold text-sm leading-tight">{region.name}</h3>
-                  <p className="text-white/45 text-xs mt-1">{region.adventureCount} adventures</p>
+                  <p className="text-white/42 text-xs mt-0.5">{region.adventureCount} adventures</p>
                 </div>
+                {/* Hover accent line */}
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#c4622d] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
               </Link>
             ))}
           </div>
@@ -241,9 +244,9 @@ export default function HomePage() {
               <Link
                 key={type}
                 href={`/explore?type=${encodeURIComponent(type)}`}
-                className="group bg-white border border-[#e8e2d9] hover:border-[#c4622d] rounded-2xl p-5 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                className="group bg-white border border-[#e8e2d9] hover:border-[#c4622d] rounded-2xl p-5 text-center transition-all duration-250 hover:shadow-lg hover:shadow-[#c4622d]/10 hover:-translate-y-1"
               >
-                <div className="text-3xl mb-3">{icon}</div>
+                <div className="text-3xl mb-3 transition-transform duration-250 group-hover:scale-110">{icon}</div>
                 <div className="text-[#1a1f2e] text-sm font-medium leading-tight group-hover:text-[#c4622d] transition-colors">{type}</div>
                 <div className="text-[#b0a898] text-xs mt-1">{count}</div>
               </Link>
@@ -269,7 +272,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/stories"
-              className="hidden md:flex items-center gap-2 text-[#1e3d2f] font-medium hover:text-[#c4622d] transition-colors group text-sm"
+              className="hidden md:flex items-center gap-1.5 text-[#1e3d2f] font-semibold hover:text-[#c4622d] transition-colors group text-sm"
             >
               All stories
               <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -279,22 +282,22 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
             {featuredStories.map((story) => (
               <Link key={story.id} href={`/stories/${story.slug}`} className="group block">
-                <div className="relative h-58 rounded-2xl overflow-hidden mb-5" style={{ height: "230px" }}>
+                <div className="relative rounded-2xl overflow-hidden mb-5" style={{ height: "230px" }}>
                   <Image
                     src={story.heroImage}
                     alt={story.title}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105 brightness-105 saturate-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 to-transparent" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                   <div className="absolute bottom-4 left-4">
-                    <span className="bg-[#c4622d] text-white text-xs font-medium px-3 py-1.5 rounded-full">
+                    <span className="bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full">
                       {story.region}
                     </span>
                   </div>
-                  {/* read time chip */}
                   <div className="absolute top-4 right-4">
-                    <span className="bg-black/40 backdrop-blur-sm text-white/80 text-xs px-2.5 py-1 rounded-full">
+                    <span className="bg-black/45 backdrop-blur-sm text-white/80 text-xs px-2.5 py-1 rounded-full">
                       {story.readTime}
                     </span>
                   </div>
@@ -323,9 +326,15 @@ export default function HomePage() {
       </section>
 
       {/* ── FINAL CTA ─────────────────────────────────────── */}
-      <section className="py-24 lg:py-32 bg-[#f5f0e8] px-6 lg:px-8">
-        <div className="max-w-2xl mx-auto text-center">
-          {/* stars */}
+      <section className="relative py-24 lg:py-32 bg-[#f5f0e8] px-6 lg:px-8 overflow-hidden">
+        {/* Subtle texture */}
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: "radial-gradient(circle at 20% 50%, #c4622d18 0%, transparent 50%), radial-gradient(circle at 80% 50%, #1a2e2018 0%, transparent 50%)",
+          }}
+        />
+        <div className="max-w-2xl mx-auto text-center relative z-10">
           <div className="flex items-center justify-center gap-1 mb-6">
             {[...Array(5)].map((_, i) => (
               <Star key={i} className="w-4 h-4 fill-[#c4622d] text-[#c4622d]" />
@@ -340,14 +349,14 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/explore"
-              className="bg-[#1a2e20] hover:bg-[#243d29] text-white font-semibold px-9 py-4 rounded-xl text-base transition-all duration-300 flex items-center gap-2 group shadow-lg shadow-black/15"
+              className="bg-[#1a2e20] hover:bg-[#243d29] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-black/15 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 transition-all duration-250"
             >
               Start Exploring
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               href="/list"
-              className="border border-[#1a2e20]/25 hover:border-[#1a2e20]/60 text-[#1a2e20] font-semibold px-9 py-4 rounded-xl text-base transition-all duration-300 hover:bg-white/60"
+              className="border border-[#1a2e20]/22 hover:border-[#1a2e20]/55 text-[#1a2e20] font-semibold px-9 py-4 rounded-xl text-base hover:bg-white/70 hover:-translate-y-0.5 transition-all duration-250"
             >
               List Your Adventure
             </Link>
