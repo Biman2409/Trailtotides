@@ -283,6 +283,8 @@ export default function MapPage() {
   const [selectedDurations, setSelectedDurations] = useState<Duration[]>([]);
   const [selectedMonths, setSelectedMonths] = useState<Month[]>([]);
   const [selectedGroupSizes, setSelectedGroupSizes] = useState<GroupSize[]>([]);
+  const [selectedSubRegions, setSelectedSubRegions] = useState<string[]>([]);
+  const [expandedRegion, setExpandedRegion] = useState<Region | null>(null);
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -298,6 +300,8 @@ export default function MapPage() {
     setSelectedDurations([]);
     setSelectedMonths([]);
     setSelectedGroupSizes([]);
+    setSelectedSubRegions([]);
+    setExpandedRegion(null);
   }
 
   const activeFilterCount =
