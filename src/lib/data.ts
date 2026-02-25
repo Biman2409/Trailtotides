@@ -651,7 +651,7 @@ export const regions = [
   {
     name: "Urban" as Region,
     tagline: "City trails, rooftops & street culture",
-      image: "https://images.unsplash.com/photo-1529253355930-ddbe423a2ac7?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=80",
     adventureCount: 14,
   },
 ];
