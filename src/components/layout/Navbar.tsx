@@ -140,20 +140,20 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link
-            href="/list"
-            className="flex items-center py-3 px-3 text-base text-white/55 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
-          >
-            List Your Adventure
-          </Link>
-          <div className="pt-2">
-            <Link
-              href="/explore"
-              className="block w-full text-center bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold py-3 rounded-xl transition-colors text-sm"
-            >
-              Explore Adventures
-            </Link>
-          </div>
+            <div className="pt-2 flex flex-col gap-2">
+              <Link
+                href="/login"
+                className="block w-full text-center border border-white/20 text-white font-semibold py-3 rounded-xl transition-colors text-sm hover:bg-white/10"
+              >
+                Log In
+              </Link>
+              <Link
+                href="/signup"
+                className="block w-full text-center bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold py-3 rounded-xl transition-colors text-sm"
+              >
+                Sign Up
+              </Link>
+            </div>
         </div>
       </div>
     </nav>
