@@ -30,11 +30,11 @@ const months: { label: string; value: Month }[] = [
 ];
 
 const difficultyDot: Record<Difficulty, string> = {
-  Beginner: "bg-emerald-400",
-  Intermediate: "bg-teal-400",
-  Advanced: "bg-amber-400",
-  Expert: "bg-orange-500",
-  Extreme: "bg-red-500",
+  Beginner:     "bg-green-500",
+  Intermediate: "bg-blue-500",
+  Advanced:     "bg-amber-400",
+  Expert:       "bg-orange-500",
+  Extreme:      "bg-red-500",
 };
 
 export default function ExploreClient() {
