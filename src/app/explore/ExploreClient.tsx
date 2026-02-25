@@ -10,7 +10,7 @@ import { adventures, adventureTypes, regions } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize } from "@/lib/data";
 
 // filter constants
-const difficulties: Difficulty[] = ["Easy", "Moderate", "Challenging", "Strenuous", "Extreme"];
+const difficulties: Difficulty[] = ["Beginner", "Intermediate", "Advanced", "Expert", "Extreme"];
 const durations: Duration[] = ["Weekend", "3–5 days", "7+ days"];
 const groupSizes: GroupSize[] = ["Solo", "Small group (2–6)", "Large group (6+)"];
 
