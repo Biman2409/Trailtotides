@@ -129,14 +129,10 @@ export default function StoriesPage() {
                           <p className="text-[#9a9590] text-xs">{story.date}</p>
                         </div>
                       </div>
-                          <span className="flex items-center gap-1.5 bg-black/8 backdrop-blur-sm border border-black/10 text-[#6b6560] text-xs px-3 py-1.5 rounded-full">
-                            <Clock className="w-3 h-3" /> {story.readTime}
-                          </span>
-                          {story.views && (
-                            <span className="flex items-center gap-1.5 bg-black/8 backdrop-blur-sm border border-black/10 text-[#6b6560] text-xs px-3 py-1.5 rounded-full">
-                              <Eye className="w-3 h-3" /> {(story.views / 1000).toFixed(1)}k views
+                        <span className="flex items-center gap-1.5 bg-black/8 backdrop-blur-sm border border-black/10 text-[#6b6560] text-xs px-3 py-1.5 rounded-full">
+                              <Clock className="w-3 h-3" /> {story.readTime}
                             </span>
-                          )}
+                            <StoryViewPill slug={story.slug} initialViews={story.views} className="!bg-black/8 !border-black/10 !text-[#6b6560]" />
                     </div>
                   </div>
                 </Link>
