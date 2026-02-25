@@ -307,6 +307,7 @@ export default function MapPage() {
   const activeFilterCount =
     selectedTypes.length +
     selectedRegions.length +
+    selectedSubRegions.length +
     selectedDifficulties.length +
     selectedDurations.length +
     selectedMonths.length +
