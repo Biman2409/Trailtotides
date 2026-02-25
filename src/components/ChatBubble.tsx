@@ -76,7 +76,7 @@ export default function ChatBubble() {
         aria-label="Open adventure finder chat"
       >
         {open ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
-        {!open && <span className="text-sm font-semibold">Find my adventure</span>}
+          {!open && <span className="text-sm font-semibold">Need help?</span>}
       </button>
 
       {/* Chat panel */}
