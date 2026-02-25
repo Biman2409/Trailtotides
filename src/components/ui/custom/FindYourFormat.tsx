@@ -95,17 +95,17 @@ export default function FindYourFormat() {
           <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
               Discover by style
           </p>
-          <div className="flex items-end justify-between gap-4">
-            <div>
-          <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-none whitespace-nowrap">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-none whitespace-nowrap">
                   Adventure lives in every element
                 </h2>
-              <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
+                <p className="text-white/40 text-sm mt-3 leading-relaxed">
+                  Pick a category that matches your style.
+                </p>
+                <div className="mt-4 w-14 h-0.5 bg-[#c4622d] rounded-full" />
+              </div>
             </div>
-              <p className="hidden md:block text-white/40 text-sm max-w-xs text-right leading-relaxed">
-                Pick a category that matches your style.
-              </p>
-          </div>
         </div>
 
         {/* Cards grid */}
