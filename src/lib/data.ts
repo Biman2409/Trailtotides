@@ -618,6 +618,12 @@ export const regions = [
     adventureCount: 43,
   },
   {
+    name: "Eastern Ghats" as Region,
+    tagline: "Tribal trails, gorges & hidden waterfalls",
+    image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800&q=80",
+    adventureCount: 19,
+  },
+  {
     name: "Desert" as Region,
     tagline: "Salt flats, sand dunes & night skies",
     image: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&q=80",
