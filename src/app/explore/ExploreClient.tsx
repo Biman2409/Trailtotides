@@ -143,6 +143,7 @@ export default function ExploreClient() {
   const [selectedRegions, setSelectedRegions] = useState<Region[]>(
     searchParams.get("region") ? [searchParams.get("region") as Region] : []
   );
+  const [selectedSubRegions, setSelectedSubRegions] = useState<string[]>([]);
   const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
   const [selectedDurations, setSelectedDurations] = useState<Duration[]>([]);
   const [selectedMonths, setSelectedMonths] = useState<Month[]>([]);
