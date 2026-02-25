@@ -349,7 +349,7 @@ export default async function ExperiencePage({ params }: Props) {
             </div>
 
           {/* Right — sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-6 lg:sticky lg:top-28 lg:self-start">
 
             {/* Quick stats card */}
             <div className="bg-[#1a1f2e] rounded-2xl p-6 text-white">
