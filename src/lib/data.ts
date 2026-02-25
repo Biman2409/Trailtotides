@@ -369,7 +369,7 @@ export const adventures: Adventure[] = [
     region: "Himalayas",
     state: "Ladakh",
     type: "Biking",
-    difficulty: "Expert",
+    difficulty: "Extreme",
     duration: "7+ days",
     durationDays: "10 days",
       altitude: "5,091m (Shinku La)",
