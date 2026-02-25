@@ -43,16 +43,18 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
 
         {/* Top badges */}
         <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
-            <span className={`backdrop-blur-sm text-xs font-medium px-2.5 py-1.5 rounded-full ${typePillColors[adventure.type] ?? "bg-white/10 text-white/80"}`}>
-              {adventure.type}
-            </span>
-          <span
-            className={`text-xs font-medium px-3 py-1.5 rounded-full backdrop-blur-sm ${
-              difficultyColors[adventure.difficulty]
-            }`}
-          >
-            {adventure.difficulty}
+          <span className="bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">
+            {adventure.type}
           </span>
+          {(() => {
+            const d = difficultyStyle[adventure.difficulty];
+            return d ? (
+              <span className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full ${d.bg} ${d.text}`}>
+                <span className={`w-2 h-2 rounded-full ${d.dot} opacity-80`} />
+                {adventure.difficulty}
+              </span>
+            ) : null;
+          })()}
         </div>
 
         {/* Content */}
