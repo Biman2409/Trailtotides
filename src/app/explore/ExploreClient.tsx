@@ -390,26 +390,121 @@ export default function ExploreClient() {
                 </div>
 
               {/* Region */}
-              <div>
-                <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
-                  Region
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {regions.map(({ name }) => (
-                    <button
-                      key={name}
-                      onClick={() => toggle(selectedRegions, name, setSelectedRegions)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                        selectedRegions.includes(name)
-                          ? "bg-[#1e3d2f] text-white"
-                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
-                      }`}
-                    >
-                      {name}
-                    </button>
-                  ))}
+                <div className="col-span-2 lg:col-span-3">
+                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
+                    Region
+                  </h3>
+                  {(() => {
+                    const regionGroups: { name: Region; icon: string; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
+                      {
+                        name: "Himalayas",
+                        icon: "🏔️",
+                        btn: "bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100",
+                        btnActive: "bg-emerald-700 text-white border-emerald-700",
+                        chip: "bg-emerald-100 text-emerald-900 hover:bg-emerald-200",
+                        chipActive: "bg-emerald-700 text-white",
+                        subRegions: ["Ladakh", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh"],
+                      },
+                      {
+                        name: "Western Ghats",
+                        icon: "🌿",
+                        btn: "bg-lime-50 border-lime-200 text-lime-800 hover:bg-lime-100",
+                        btnActive: "bg-lime-600 text-white border-lime-600",
+                        chip: "bg-lime-100 text-lime-900 hover:bg-lime-200",
+                        chipActive: "bg-lime-600 text-white",
+                        subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra"],
+                      },
+                      {
+                        name: "Desert",
+                        icon: "🏜️",
+                        btn: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100",
+                        btnActive: "bg-yellow-500 text-white border-yellow-500",
+                        chip: "bg-yellow-100 text-yellow-900 hover:bg-yellow-200",
+                        chipActive: "bg-yellow-500 text-white",
+                        subRegions: ["Rajasthan", "Gujarat", "Rann of Kutch"],
+                      },
+                      {
+                        name: "Coast",
+                        icon: "🌊",
+                        btn: "bg-cyan-50 border-cyan-200 text-cyan-800 hover:bg-cyan-100",
+                        btnActive: "bg-cyan-600 text-white border-cyan-600",
+                        chip: "bg-cyan-100 text-cyan-900 hover:bg-cyan-200",
+                        chipActive: "bg-cyan-600 text-white",
+                        subRegions: ["Konkan", "Goa", "Odisha", "Tamil Nadu"],
+                      },
+                      {
+                        name: "Islands",
+                        icon: "🏝️",
+                        btn: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100",
+                        btnActive: "bg-teal-600 text-white border-teal-600",
+                        chip: "bg-teal-100 text-teal-900 hover:bg-teal-200",
+                        chipActive: "bg-teal-600 text-white",
+                        subRegions: ["Andaman & Nicobar", "Lakshadweep"],
+                      },
+                      {
+                        name: "Northeast",
+                        icon: "🌄",
+                        btn: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100",
+                        btnActive: "bg-violet-600 text-white border-violet-600",
+                        chip: "bg-violet-100 text-violet-900 hover:bg-violet-200",
+                        chipActive: "bg-violet-600 text-white",
+                        subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"],
+                      },
+                    ];
+                    return (
+                      <div className="flex flex-col gap-2">
+                        <div className="flex flex-wrap gap-2">
+                          {regionGroups.map((rg) => {
+                            const isExpanded = expandedRegion === rg.name;
+                            const hasSelected = selectedRegions.includes(rg.name) || rg.subRegions.some(sr => selectedSubRegions.includes(sr));
+                            const subCount = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
+                            return (
+                              <button
+                                key={rg.name}
+                                onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                                  isExpanded || hasSelected ? rg.btnActive : rg.btn
+                                }`}
+                              >
+                                <span>{rg.icon}</span>
+                                {rg.name}
+                                {subCount > 0 && (
+                                  <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
+                                    {subCount}
+                                  </span>
+                                )}
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {expandedRegion && (() => {
+                          const rg = regionGroups.find(r => r.name === expandedRegion)!;
+                          return (
+                            <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                              <div className="flex flex-wrap gap-2">
+                                {rg.subRegions.map((sr) => {
+                                  const isSelected = selectedSubRegions.includes(sr);
+                                  return (
+                                    <button
+                                      key={sr}
+                                      onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
+                                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                        isSelected ? rg.chipActive : rg.chip
+                                      }`}
+                                    >
+                                      {sr}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    );
+                  })()}
                 </div>
-              </div>
 
               {/* Difficulty */}
               <div>
