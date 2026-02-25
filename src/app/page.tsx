@@ -103,9 +103,7 @@ export default function HomePage() {
         <StatsBar />
 
         {/* ── AI FINDER ────────────────────────────────────── */}
-        <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#fafaf8] border-t border-[#f0ebe3]">
-          <InlineChat />
-        </section>
+        <InlineChat />
 
         {/* ── FEATURED ADVENTURES ─────────────────────────── */}
       <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#fafaf8]">
