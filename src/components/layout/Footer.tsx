@@ -18,13 +18,13 @@ export default function Footer() {
               Every adventure across India, mapped and verified. Handpicked by explorers who've actually been there.
             </p>
             <div className="flex items-center gap-4 mt-6">
-              <a href="#" className="text-white/40 hover:text-white transition-colors">
+              <a href="#" className="text-white/38 hover:text-white hover:scale-110 transition-all duration-200">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="text-white/40 hover:text-white transition-colors">
+              <a href="#" className="text-white/38 hover:text-white hover:scale-110 transition-all duration-200">
                 <Youtube className="w-5 h-5" />
               </a>
-              <a href="#" className="text-white/40 hover:text-white transition-colors">
+              <a href="#" className="text-white/38 hover:text-white hover:scale-110 transition-all duration-200">
                 <Twitter className="w-5 h-5" />
               </a>
             </div>
