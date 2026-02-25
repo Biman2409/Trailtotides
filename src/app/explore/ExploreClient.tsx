@@ -401,7 +401,7 @@ export default function ExploreClient() {
                       },
                       {
                         name: "Western Ghats",
-                        icon: "🌿",
+                          icon: "🌳",
                         btn: "bg-lime-50 border-lime-200 text-lime-800 hover:bg-lime-100",
                         btnActive: "bg-lime-600 text-white border-lime-600",
                         chip: "bg-lime-100 text-lime-900 hover:bg-lime-200",
