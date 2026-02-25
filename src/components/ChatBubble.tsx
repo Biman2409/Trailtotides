@@ -86,8 +86,7 @@ export default function ChatBubble() {
           <div className="bg-orange-500 px-4 py-3 flex items-center gap-2">
             <MessageCircle className="w-5 h-5 text-white" />
             <div>
-              <p className="text-white font-semibold text-sm">AU</p>
-                <p className="text-orange-100 text-xs">Adventure Unlocked AI</p>
+              <p className="text-white font-semibold text-sm">AI Adventure Finder</p>
             </div>
           </div>
 
