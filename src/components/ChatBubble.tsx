@@ -30,6 +30,17 @@ export default function ChatBubble() {
     if (open) bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, open]);
 
+  useEffect(() => {
+    const target = document.getElementById("featured-adventures");
+    if (!target) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      { threshold: 0.1 }
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
+
   async function send() {
     const text = input.trim();
     if (!text || loading) return;
