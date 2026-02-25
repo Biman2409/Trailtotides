@@ -421,7 +421,7 @@ export default function ExploreClient() {
                         btnActive: "bg-yellow-500 text-white border-yellow-500",
                         chip: "bg-yellow-100 text-yellow-900 hover:bg-yellow-200",
                         chipActive: "bg-yellow-500 text-white",
-                        subRegions: ["Rajasthan", "Gujarat", "Rann of Kutch"],
+                          subRegions: ["Rajasthan", "Gujarat"],
                       },
                       {
                         name: "Coast",
