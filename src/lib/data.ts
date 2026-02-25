@@ -480,7 +480,7 @@ export const adventures: Adventure[] = [
     id: "10",
     slug: "stok-kangri",
     name: "Stok Kangri Summit",
-    tagline: "The 6,000m classroom for Himalayan mountaineers",
+      tagline: "Stand on a 6,153m summit with all of Ladakh spread below you",
     region: "Himalayas",
     state: "Ladakh",
     type: "Mountaineering",
