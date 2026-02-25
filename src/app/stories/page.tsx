@@ -132,9 +132,14 @@ export default function StoriesPage() {
                           <p className="text-[#9a9590] text-xs">{story.date}</p>
                         </div>
                       </div>
-                      <span className="flex items-center gap-1 text-[#9a9590] text-xs">
-                        <Clock className="w-3.5 h-3.5" /> {story.readTime}
-                      </span>
+                        <span className="flex items-center gap-1 text-[#9a9590] text-xs">
+                          <Clock className="w-3.5 h-3.5" /> {story.readTime}
+                        </span>
+                        {story.views && (
+                          <span className="flex items-center gap-1 text-[#9a9590] text-xs">
+                            <Eye className="w-3.5 h-3.5" /> {(story.views / 1000).toFixed(1)}k
+                          </span>
+                        )}
                     </div>
                   </div>
                 </Link>
