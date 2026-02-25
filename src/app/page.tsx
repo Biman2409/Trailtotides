@@ -63,8 +63,8 @@ export default function HomePage() {
                 className="text-white/85 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
                 style={{ textShadow: "0 1px 8px rgba(0,0,0,0.9)" }}
               >
-                Discover epic adventures across India — from frozen Himalayan rivers<br />
-                to coral reefs in the Andamans — handpicked, trusted and perfectly mapped.
+                Discover epic adventures across India —<br />
+                from frozen Himalayan rivers to coral reefs in the Andamans.
               </p>
 
           {/* CTAs */}
