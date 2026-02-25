@@ -107,7 +107,7 @@ export default function HomePage() {
         <InlineChat />
 
         {/* ── FEATURED ADVENTURES ─────────────────────────── */}
-      <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#111820]">
+      <section id="featured-adventures" className="py-24 lg:py-32 px-6 lg:px-8 bg-[#111820]">
         <div className="max-w-7xl mx-auto">
           <div className="mb-14">
             <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
