@@ -78,6 +78,16 @@ const slides: Slide[] = [
     scaleTo: 1.18,
     filter: "brightness(1.12) contrast(1.08) saturate(1.2) hue-rotate(-10deg)",
   },
+  {
+    // Scuba diving / underwater coral reef
+    src: "https://images.unsplash.com/photo-1592208128295-5aaa34f1d72b?q=80&w=2070&auto=format&fit=crop",
+    alt: "Scuba diver exploring vibrant coral reefs in the Andamans",
+    panFrom: "50% 60%",
+    panTo: "50% 40%",
+    scaleFrom: 1.06,
+    scaleTo: 1.16,
+    filter: "brightness(1.08) contrast(1.1) saturate(1.35) hue-rotate(5deg)",
+  },
 ];
 
 const SLIDE_DURATION = 6000;
