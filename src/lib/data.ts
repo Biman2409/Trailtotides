@@ -253,7 +253,7 @@ export const adventures: Adventure[] = [
     region: "Himalayas",
     state: "Himachal Pradesh",
     type: "Cycling",
-    difficulty: "Expert",
+    difficulty: "Extreme",
     duration: "7+ days",
     durationDays: "12 days",
     altitude: "4,551m (Kunzum Pass)",
