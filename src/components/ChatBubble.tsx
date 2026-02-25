@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2, ChevronRight } from "lucide-react";
+import { X, Send, Loader2, ChevronRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import type { Adventure } from "@/lib/data";
 
@@ -18,7 +18,7 @@ export default function ChatBubble() {
     {
       role: "assistant",
       content:
-          "Hey! I'm Trailwise — tell me what kind of adventure you're after and I'll find the perfect trip for you.",
+        "Hey! I'm Compass — tell me what kind of adventure you're after and I'll find the perfect trip for you.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -72,70 +72,90 @@ export default function ChatBubble() {
       {/* Floating button */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-full shadow-lg transition-all"
-        aria-label="Open adventure finder chat"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 text-white px-4 py-3 rounded-full shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl active:translate-y-0"
+        style={{ background: open ? "#9e4e24" : "#c4622d", boxShadow: "0 4px 20px rgba(196,98,45,0.45)" }}
+        aria-label="Open Compass AI"
       >
-        {open ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
-          {!open && <span className="text-sm font-semibold">Need help?</span>}
+        {open ? <X className="w-5 h-5" /> : <Sparkles className="w-4 h-4" />}
+        {!open && <span className="text-sm font-semibold">Need help?</span>}
       </button>
 
       {/* Chat panel */}
       {open && (
-        <div className="fixed bottom-20 right-6 z-50 w-[370px] max-w-[calc(100vw-1.5rem)] bg-zinc-900 border border-zinc-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        <div className="fixed bottom-20 right-6 z-50 w-[370px] max-w-[calc(100vw-1.5rem)] bg-[#141920] border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+          style={{ boxShadow: "0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06)" }}
+        >
           {/* Header */}
-          <div className="bg-orange-500 px-4 py-3 flex items-center gap-2">
-            <MessageCircle className="w-5 h-5 text-white" />
-            <div>
-                <p className="text-white font-semibold text-sm">Trailwise AI</p>
-        <p className="text-orange-100 text-xs opacity-80">Your personal adventure guide</p>
+          <div
+            className="px-4 py-3.5 flex items-center gap-3"
+            style={{ background: "#c4622d" }}
+          >
+            <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center flex-shrink-0">
+              <Sparkles className="w-4 h-4 text-white" />
             </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-white font-bold text-sm tracking-tight">Compass AI</p>
+              <p className="text-white/65 text-xs">Your personal adventure guide</p>
+            </div>
+            <button
+              onClick={() => setOpen(false)}
+              className="text-white/60 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[420px]">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[400px]">
             {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                key={i}
+                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+              >
                 <div className="max-w-[90%] space-y-2">
-                  {/* Bubble */}
                   {msg.content && (
                     <div
-                      className={`px-3 py-2 rounded-xl text-sm leading-relaxed ${
+                      className={`px-3.5 py-2.5 rounded-xl text-sm leading-relaxed ${
                         msg.role === "user"
-                          ? "bg-orange-500 text-white rounded-br-sm"
-                          : "bg-zinc-800 text-zinc-100 rounded-bl-sm"
+                          ? "text-white rounded-br-sm"
+                          : "bg-white/6 border border-white/8 text-white/85 rounded-bl-sm"
                       }`}
+                      style={msg.role === "user" ? { background: "#c4622d" } : {}}
                     >
                       {msg.content}
                     </div>
                   )}
 
-                  {/* Adventure cards */}
                   {msg.cards && msg.cards.length > 0 && (
-                    <div className="space-y-2">
+                    <div className="space-y-1.5">
                       {msg.cards.map((card, ci) => {
                         const rec = msg.recommendations?.find((r) => r.slug === card.slug);
                         return (
                           <Link
                             key={ci}
-                            href={`/adventure/${card.slug}`}
-                            className="block bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-xl overflow-hidden transition-colors"
+                            href={`/experiences/${card.slug}`}
+                            className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-[#c4622d]/30 rounded-xl overflow-hidden transition-all group"
                           >
-                            <div className="flex items-stretch">
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src={card.heroImage}
-                                alt={card.name}
-                                className="w-16 h-16 object-cover flex-shrink-0"
-                              />
-                              <div className="p-2 flex-1 min-w-0">
-                                <p className="text-white text-xs font-semibold truncate">{card.name}</p>
-                                <p className="text-zinc-400 text-xs truncate">{card.state} · {card.type}</p>
-                                {rec?.reason && (
-                                  <p className="text-orange-400 text-xs mt-1 line-clamp-2">{rec.reason}</p>
-                                )}
-                              </div>
-                              <ChevronRight className="w-4 h-4 text-zinc-500 self-center mr-2 flex-shrink-0" />
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={card.heroImage}
+                              alt={card.name}
+                              className="w-14 h-14 object-cover flex-shrink-0"
+                            />
+                            <div className="p-2.5 flex-1 min-w-0">
+                              <p className="text-white text-xs font-semibold truncate">
+                                {card.name}
+                              </p>
+                              <p className="text-white/40 text-xs truncate">
+                                {card.state} · {card.type}
+                              </p>
+                              {rec?.reason && (
+                                <p className="text-[#f09060] text-xs mt-0.5 line-clamp-2 leading-snug">
+                                  {rec.reason}
+                                </p>
+                              )}
                             </div>
+                            <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#c4622d] self-center mr-2 flex-shrink-0 transition-colors" />
                           </Link>
                         );
                       })}
@@ -147,8 +167,9 @@ export default function ChatBubble() {
 
             {loading && (
               <div className="flex justify-start">
-                <div className="bg-zinc-800 px-3 py-2 rounded-xl rounded-bl-sm">
-                  <Loader2 className="w-4 h-4 text-orange-400 animate-spin" />
+                <div className="bg-white/6 border border-white/8 px-3.5 py-2.5 rounded-xl rounded-bl-sm flex items-center gap-2">
+                  <Loader2 className="w-3.5 h-3.5 text-[#c4622d] animate-spin" />
+                  <span className="text-white/50 text-sm">Finding adventures…</span>
                 </div>
               </div>
             )}
@@ -156,20 +177,25 @@ export default function ChatBubble() {
           </div>
 
           {/* Input */}
-          <div className="border-t border-zinc-700 p-3 flex gap-2">
+          <div className="border-t border-white/8 p-3 flex gap-2 bg-white/[0.02]">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
-              placeholder="e.g. easy trek in Himalayas in winter..."
-              className="flex-1 bg-zinc-800 text-zinc-100 placeholder-zinc-500 text-sm px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-orange-500"
+              placeholder="Ask me anything about adventures…"
+              className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/25 text-sm px-3.5 py-2.5 rounded-xl outline-none focus:border-[#c4622d]/60 focus:ring-1 focus:ring-[#c4622d]/25 transition-all"
             />
             <button
               onClick={send}
               disabled={!input.trim() || loading}
-              className="bg-orange-500 hover:bg-orange-600 disabled:opacity-40 text-white p-2 rounded-lg transition-colors"
+              className="disabled:opacity-30 disabled:cursor-not-allowed text-white p-2.5 rounded-xl transition-all hover:brightness-110 active:scale-95"
+              style={{ background: "#c4622d" }}
             >
-              <Send className="w-4 h-4" />
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Send className="w-4 h-4" />
+              )}
             </button>
           </div>
         </div>
