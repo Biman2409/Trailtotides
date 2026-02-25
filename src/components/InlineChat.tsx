@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Loader2, Sparkles, ChevronRight } from "lucide-react";
+import { Send, Loader2, Sparkles, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { Adventure } from "@/lib/data";
 
@@ -13,10 +13,12 @@ interface Message {
 }
 
 const SUGGESTIONS = [
-  "Easy Himalayan trek for beginners",
-  "Scuba diving near islands in winter",
-  "Solo adventure in Northeast India",
-  "Extreme cycling in summer",
+  { label: "Easy Himalayan trek for beginners", icon: "🥾" },
+  { label: "Scuba diving near islands in winter", icon: "🤿" },
+  { label: "Solo adventure in Northeast India", icon: "🎒" },
+  { label: "Extreme cycling in summer", icon: "🚴" },
+  { label: "Wildlife safari under ₹5k", icon: "🐘" },
+  { label: "Skiing in Himachal Pradesh", icon: "⛷️" },
 ];
 
 export default function InlineChat() {
@@ -24,6 +26,7 @@ export default function InlineChat() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -70,11 +73,12 @@ export default function InlineChat() {
 
   return (
     <section style={{ background: "#141920" }} className="border-b border-white/6">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 lg:py-14">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 lg:py-16">
+
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
           <div>
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-2.5">
               <Sparkles className="w-3.5 h-3.5 text-[#c4622d]" />
               <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase">
                 AI Adventure Finder
@@ -85,16 +89,43 @@ export default function InlineChat() {
             </h2>
             <div className="mt-4 w-10 h-0.5 bg-[#c4622d] rounded-full" />
           </div>
-
+          <p className="text-white/30 text-sm max-w-xs text-right hidden sm:block">
+            Describe what you're after — our AI will match you with the right trip
+          </p>
         </div>
 
         {/* Chat container */}
-        <div className="border border-white/8 rounded-2xl overflow-hidden">
+        <div className="border border-white/8 rounded-2xl overflow-hidden bg-white/[0.02]">
+
+          {/* Empty state — suggestion chips */}
+          {messages.length === 0 && (
+            <div className="px-5 pt-6 pb-5">
+              <p className="text-white/25 text-xs tracking-widest uppercase mb-4 font-medium">
+                Try asking
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {SUGGESTIONS.map((s) => (
+                  <button
+                    key={s.label}
+                    onClick={() => { send(s.label); inputRef.current?.focus(); }}
+                    className="flex items-center gap-2 text-xs border border-white/10 text-white/55 hover:text-white hover:border-[#c4622d]/50 hover:bg-[#c4622d]/8 px-3.5 py-2 rounded-full transition-all duration-200 tracking-wide"
+                  >
+                    <span>{s.icon}</span>
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Messages */}
           {messages.length > 0 && (
-            <div className="max-h-[300px] overflow-y-auto p-5 space-y-4 bg-white/2">
+            <div className="max-h-[340px] overflow-y-auto p-5 space-y-4">
               {messages.map((msg, i) => (
-                <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div
+                  key={i}
+                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                >
                   <div className="max-w-[85%] space-y-3">
                     {msg.content && (
                       <div
@@ -108,6 +139,7 @@ export default function InlineChat() {
                         {msg.content}
                       </div>
                     )}
+
                     {msg.cards && msg.cards.length > 0 && (
                       <div className="grid gap-2">
                         {msg.cards.map((card, ci) => {
@@ -115,8 +147,8 @@ export default function InlineChat() {
                           return (
                             <Link
                               key={ci}
-                              href={`/adventure/${card.slug}`}
-                              className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-white/16 rounded-xl overflow-hidden transition-all group"
+                              href={`/experiences/${card.slug}`}
+                              className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-[#c4622d]/30 rounded-xl overflow-hidden transition-all group"
                             >
                               {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
@@ -125,10 +157,16 @@ export default function InlineChat() {
                                 className="w-16 h-16 object-cover flex-shrink-0"
                               />
                               <div className="p-3 flex-1 min-w-0">
-                                <p className="text-white text-xs font-semibold tracking-tight">{card.name}</p>
-                                <p className="text-white/40 text-xs mt-0.5 tracking-wide uppercase">{card.state} · {card.type} · {card.difficulty}</p>
+                                <p className="text-white text-xs font-semibold tracking-tight">
+                                  {card.name}
+                                </p>
+                                <p className="text-white/40 text-xs mt-0.5 tracking-wide uppercase">
+                                  {card.state} · {card.type} · {card.difficulty}
+                                </p>
                                 {rec?.reason && (
-                                  <p className="text-[#c4622d] text-xs mt-1 line-clamp-1">{rec.reason}</p>
+                                  <p className="text-[#c4622d] text-xs mt-1 line-clamp-1">
+                                    {rec.reason}
+                                  </p>
                                 )}
                               </div>
                               <div className="flex items-center pr-3">
@@ -142,6 +180,7 @@ export default function InlineChat() {
                   </div>
                 </div>
               ))}
+
               {loading && (
                 <div className="flex justify-start">
                   <div className="bg-white/6 border border-white/8 px-4 py-2.5 rounded-xl rounded-bl-sm flex items-center gap-2">
@@ -154,39 +193,27 @@ export default function InlineChat() {
             </div>
           )}
 
-            {/* Suggestion chips — only before first message */}
-              {messages.length === 0 && (
-                <div className="px-4 pt-4 pb-3 bg-white/2">
-                  <div className="flex flex-wrap gap-2">
-                    {SUGGESTIONS.map((s) => (
-                      <button
-                        key={s}
-                        onClick={() => send(s)}
-                        className="text-xs border border-white/10 text-white/50 hover:text-white hover:border-white/24 px-3 py-1.5 rounded-full transition-all tracking-wide"
-                      >
-                        {s}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-            {/* Input bar */}
-            <div className="border-t border-white/8 p-3 flex gap-3 bg-white/3">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && send()}
-                placeholder="Describe what you're looking for — we'll match you with the right trip"
-              className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#c4622d]/50 focus:ring-1 focus:ring-[#c4622d]/30 transition-all"
+          {/* Input bar */}
+          <div className="border-t border-white/8 p-3 flex gap-3 bg-white/[0.02]">
+            <input
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && send()}
+              placeholder="Describe what you're looking for — we'll match you with the right trip"
+              className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/25 text-sm px-4 py-3 rounded-xl outline-none focus:border-[#c4622d]/60 focus:ring-1 focus:ring-[#c4622d]/25 transition-all"
             />
             <button
               onClick={() => send()}
               disabled={!input.trim() || loading}
-              className="disabled:opacity-30 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all hover:-translate-y-0.5"
+              className="disabled:opacity-30 disabled:cursor-not-allowed text-white px-5 py-3 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-lg shadow-[#c4622d]/20"
               style={{ background: "#c4622d" }}
             >
-              <Send className="w-4 h-4" />
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <ArrowRight className="w-4 h-4" />
+              )}
               <span className="hidden sm:inline tracking-wide">Search</span>
             </button>
           </div>
