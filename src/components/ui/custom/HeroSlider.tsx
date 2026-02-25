@@ -176,7 +176,7 @@ export default function HeroSlider() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2.5"
         style={{ zIndex: 5 }}
       >
-        {slides.map((_, i) => (
+          {shuffled.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i, true)}
