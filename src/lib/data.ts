@@ -609,8 +609,8 @@ export const regions = [
   {
     name: "Himalayas" as Region,
     tagline: "Peaks, passes & frozen rivers",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-    adventureCount: 127,
+    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
+      adventureCount: 127,
   },
   {
     name: "Western Ghats" as Region,
