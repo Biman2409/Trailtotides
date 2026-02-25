@@ -541,7 +541,40 @@ export default function ExploreClient() {
         )}
       </div>
 
-      <Footer />
-    </div>
-  );
+        {/* Interactive Map Section */}
+        <div className="bg-[#1a1f2e] mt-16">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-10">
+            <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+              Explore the map
+            </p>
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+              <h2 className="text-white text-4xl lg:text-5xl font-semibold tracking-tight">
+                Adventures across India
+              </h2>
+              <Link
+                href="/map"
+                className="inline-flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white transition-colors"
+              >
+                Open full map <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Map embed */}
+          <div className="relative h-[520px] w-full">
+            {mounted ? (
+              <ExploreMapView advs={filtered.length > 0 ? filtered : adventures} />
+            ) : (
+              <div className="w-full h-full bg-[#111827] flex items-center justify-center">
+                <div className="text-white/30 text-sm">Loading map…</div>
+              </div>
+            )}
+            {/* Bottom fade into footer */}
+            <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-[#1a1f2e] to-transparent pointer-events-none z-[1000]" />
+          </div>
+        </div>
+
+        <Footer />
+      </div>
+    );
 }
