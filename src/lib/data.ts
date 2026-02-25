@@ -530,10 +530,11 @@ export const stories: Story[] = [
       authorRole: "Rider",
     heroImage: "https://images.unsplash.com/photo-1619103801164-1166263cb3b6?w=1600&q=90",
     readTime: "15 min read",
-      tags: ["Featured", "TTT Original", "Ladakh", "Himalayas", "Biking", "Umling La", "night ride"],
-      region: "Himalayas",
-      date: "July 2022",
-  },
+        tags: ["Featured", "TTT Original", "Ladakh", "Himalayas", "Biking", "Umling La", "night ride"],
+        region: "Himalayas",
+        date: "July 2022",
+        views: 24800,
+    },
 ];
 
 export const regions = [
