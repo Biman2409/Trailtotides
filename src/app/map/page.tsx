@@ -285,6 +285,8 @@ export default function MapPage() {
   const [selectedGroupSizes, setSelectedGroupSizes] = useState<GroupSize[]>([]);
   const [selectedSubRegions, setSelectedSubRegions] = useState<string[]>([]);
   const [expandedRegion, setExpandedRegion] = useState<Region | null>(null);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
 
   useEffect(() => { setMounted(true); }, []);
 
