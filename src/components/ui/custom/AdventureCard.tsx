@@ -4,9 +4,11 @@ import { MapPin, Clock, TrendingUp, ArrowRight } from "lucide-react";
 import type { Adventure } from "@/lib/data";
 
 const difficultyColors: Record<string, string> = {
-  Beginner: "bg-emerald-500/20 text-emerald-300",
-  Intermediate: "bg-amber-500/20 text-amber-300",
-  Expert: "bg-red-500/20 text-red-300",
+  Beginner:     "bg-emerald-500/20 text-emerald-300",
+  Intermediate: "bg-teal-500/20 text-teal-300",
+  Advanced:     "bg-amber-500/20 text-amber-300",
+  Expert:       "bg-orange-500/20 text-orange-300",
+  Extreme:      "bg-red-500/20 text-red-300",
 };
 
 interface AdventureCardProps {
