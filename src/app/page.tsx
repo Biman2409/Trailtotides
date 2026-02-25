@@ -71,8 +71,7 @@ export default function HomePage() {
                 className="text-white text-lg md:text-xl max-w-xl mx-auto leading-relaxed mb-10 font-medium"
                 style={{ textShadow: "0 2px 12px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,1)" }}
               >
-Discover epic adventures across India — handpicked,<br />
-                  trusted and perfectly mapped.
+Discover epic adventures across India — from frozen Himalayan rivers<br />to coral reefs in the Andamans — curated by people who've actually been there.
               </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
