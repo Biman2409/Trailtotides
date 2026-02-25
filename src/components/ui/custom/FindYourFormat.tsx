@@ -49,7 +49,7 @@ const categories = [
   {
     id: "snow",
     label: "Snow",
-      subtitle: "Carve slopes, cross glaciers, and brave the cold",
+        subtitle: "Conquer frozen peaks and carve your own path below",
     image: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&q=80",
     accent: "#4a8a9f",
     accentLight: "rgba(74,138,159,0.15)",
