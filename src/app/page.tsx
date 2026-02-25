@@ -107,7 +107,7 @@ export default function HomePage() {
         <InlineChat />
 
         {/* ── FEATURED ADVENTURES ─────────────────────────── */}
-      <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#fafaf8]">
+      <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#111820]">
         <div className="max-w-7xl mx-auto">
           <div className="mb-14">
             <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
@@ -115,7 +115,7 @@ export default function HomePage() {
             </p>
             <div className="flex items-end justify-between gap-4">
               <div>
-                <h2 className="text-[#1a1f2e] text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
+                <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
                   Adventures of a Lifetime
                 </h2>
                 <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
