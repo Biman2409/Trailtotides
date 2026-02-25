@@ -276,9 +276,9 @@ export default function ExploreClient() {
         </div>
 
         {/* Filter panel */}
-        {filtersOpen && (
-          <div className="border-t border-[#e0d8cc] bg-white px-6 lg:px-8 py-6">
-            <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-8">
+          {filtersOpen && (
+            <div className="border-t border-[#e0d8cc] bg-white px-6 lg:px-8 py-6 max-h-[60vh] overflow-y-auto">
+              <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-8">
 
                 {/* Adventure type */}
                 <div className="col-span-2 lg:col-span-3">
