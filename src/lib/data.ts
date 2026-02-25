@@ -327,7 +327,7 @@ export const adventures: Adventure[] = [
     id: "11",
     slug: "ladakh-circuit",
       name: "Ladakh Circuit",
-        tagline: "Nubra, Pangong, Hanle — Ladakh's untamed heart on two wheels",
+      tagline: "Nubra dunes, Pangong blue, Mig La at 5,913m — Ladakh's full fury on two wheels",
     region: "Himalayas",
     state: "Ladakh",
     type: "Biking",
