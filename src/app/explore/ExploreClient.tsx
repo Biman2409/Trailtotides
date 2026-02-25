@@ -565,16 +565,16 @@ export default function ExploreClient() {
                   </div>
                 </div>
 
-              {/* Difficulty */}
-                <div className="col-span-2 lg:col-span-3">
+              {/* Difficulty + Duration + Group Size — one row each, side by side on lg */}
+                <div className="col-span-2 lg:col-span-1">
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Difficulty</h3>
                   <div className="flex flex-wrap gap-2">
                     {([ 
-                      { val: "Beginner",     icon: "🟢", idle: "bg-green-50 border-green-200 text-green-800 hover:bg-green-100 border",  active: "bg-green-600 text-white border border-green-600" },
-                      { val: "Intermediate", icon: "🔵", idle: "bg-blue-50 border-blue-200 text-blue-800 hover:bg-blue-100 border",      active: "bg-blue-600 text-white border border-blue-600" },
-                      { val: "Advanced",     icon: "🟠", idle: "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100 border",  active: "bg-amber-500 text-white border border-amber-500" },
+                      { val: "Beginner",     icon: "🟢", idle: "bg-green-50 border-green-200 text-green-800 hover:bg-green-100 border",     active: "bg-green-600 text-white border border-green-600" },
+                      { val: "Intermediate", icon: "🔵", idle: "bg-blue-50 border-blue-200 text-blue-800 hover:bg-blue-100 border",         active: "bg-blue-600 text-white border border-blue-600" },
+                      { val: "Advanced",     icon: "🟠", idle: "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100 border",     active: "bg-amber-500 text-white border border-amber-500" },
                       { val: "Expert",       icon: "🟠", idle: "bg-orange-50 border-orange-200 text-orange-800 hover:bg-orange-100 border", active: "bg-orange-500 text-white border border-orange-500" },
-                      { val: "Extreme",      icon: "🔴", idle: "bg-red-50 border-red-200 text-red-800 hover:bg-red-100 border",          active: "bg-red-600 text-white border border-red-600" },
+                      { val: "Extreme",      icon: "🔴", idle: "bg-red-50 border-red-200 text-red-800 hover:bg-red-100 border",             active: "bg-red-600 text-white border border-red-600" },
                     ] as { val: Difficulty; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
                       <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
                         className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDifficulties.includes(val) ? active : idle}`}>
@@ -584,8 +584,7 @@ export default function ExploreClient() {
                   </div>
                 </div>
 
-                {/* Duration */}
-                <div className="col-span-2 lg:col-span-3">
+                <div className="col-span-1">
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
                   <div className="flex flex-wrap gap-2">
                     {([
@@ -601,8 +600,7 @@ export default function ExploreClient() {
                   </div>
                 </div>
 
-                {/* Group Size */}
-                <div className="col-span-2 lg:col-span-3">
+                <div className="col-span-1">
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
                   <div className="flex flex-wrap gap-2">
                     {([
