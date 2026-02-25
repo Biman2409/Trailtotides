@@ -47,6 +47,14 @@ const months: { label: string; value: Month }[] = [
   { label: "Oct", value: "Oct" }, { label: "Nov", value: "Nov" }, { label: "Dec", value: "Dec" },
 ];
 
+const seasons: { label: string; icon: string; months: Month[]; activeColor: string; idleColor: string }[] = [
+  { label: "Winter",  icon: "❄️", months: ["Dec", "Jan", "Feb"],         activeColor: "bg-sky-600 text-white",    idleColor: "bg-sky-50 text-sky-800 hover:bg-sky-100 border border-sky-200" },
+  { label: "Spring",  icon: "🌸", months: ["Mar", "Apr", "May"],         activeColor: "bg-pink-500 text-white",   idleColor: "bg-pink-50 text-pink-800 hover:bg-pink-100 border border-pink-200" },
+  { label: "Summer",  icon: "☀️", months: ["Apr", "May", "Jun"],         activeColor: "bg-amber-500 text-white",  idleColor: "bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200" },
+  { label: "Monsoon", icon: "🌧️", months: ["Jun", "Jul", "Aug", "Sep"],  activeColor: "bg-teal-600 text-white",   idleColor: "bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-200" },
+  { label: "Autumn",  icon: "🍂", months: ["Oct", "Nov", "Dec"],         activeColor: "bg-orange-500 text-white", idleColor: "bg-orange-50 text-orange-800 hover:bg-orange-100 border border-orange-200" },
+];
+
 type NominatimResult = {
   place_id: number;
   display_name: string;
