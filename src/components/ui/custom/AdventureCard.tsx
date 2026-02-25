@@ -103,8 +103,8 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
                 </div>
               )}
             </div>
-            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#c4622d] transition-colors duration-300">
-              <ArrowRight className="w-4 h-4 text-white" />
+            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#c4622d] group-hover:scale-110 transition-all duration-300">
+                <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
             </div>
           </div>
         </div>
