@@ -66,7 +66,7 @@ const categories = [
   {
     id: "air",
     label: "Air",
-    subtitle: "Soar above the clouds and experience the world from a new altitude",
+      subtitle: "Soar above the clouds and see the world differently",
     image: "https://images.unsplash.com/photo-1601024445121-e5b82f020549?w=800&q=80",
     accent: "#7a5a98",
     accentLight: "rgba(122,90,152,0.15)",
