@@ -399,7 +399,7 @@ export default async function ExperiencePage({ params }: Props) {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {related.map((a) => {
-                const d = difficultyStyle[a.difficulty];
+                  const d = difficultyStyle[a.difficulty] ?? difficultyStyle["Intermediate"];
                 return (
                   <Link key={a.id} href={`/experiences/${a.slug}`} className="group block bg-white rounded-2xl overflow-hidden border border-[#e0d8cc] hover:shadow-lg transition-all hover:-translate-y-1 duration-300">
                     <div className="relative h-48 overflow-hidden">
