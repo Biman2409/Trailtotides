@@ -565,8 +565,8 @@ export default function ExploreClient() {
                   </div>
                 </div>
 
-              {/* Difficulty + Duration + Group Size — one row each, side by side on lg */}
-                <div className="col-span-2 lg:col-span-1">
+              {/* Difficulty, Duration, Group Size — each on its own row */}
+                <div className="col-span-2 lg:col-span-3">
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Difficulty</h3>
                   <div className="flex flex-wrap gap-2">
                     {([ 
@@ -584,7 +584,7 @@ export default function ExploreClient() {
                   </div>
                 </div>
 
-                <div className="col-span-1">
+                <div className="col-span-2 lg:col-span-3">
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
                   <div className="flex flex-wrap gap-2">
                     {([
@@ -600,7 +600,7 @@ export default function ExploreClient() {
                   </div>
                 </div>
 
-                <div className="col-span-1">
+                <div className="col-span-2 lg:col-span-3">
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
                   <div className="flex flex-wrap gap-2">
                     {([
