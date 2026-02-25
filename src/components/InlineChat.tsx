@@ -88,7 +88,7 @@ export default function InlineChat() {
         {/* Chat window */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl">
           {/* Messages */}
-          <div className="min-h-[200px] max-h-[480px] overflow-y-auto p-6 space-y-5">
+          <div className="min-h-[120px] max-h-[320px] overflow-y-auto p-4 space-y-4">
             {messages.length === 0 && (
               <div className="text-zinc-500 text-sm text-center py-8">
                 Ask anything — e.g. &quot;best winter trek for a beginner&quot;
