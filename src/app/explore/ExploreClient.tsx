@@ -204,6 +204,7 @@ export default function ExploreClient() {
   function clearAll() {
     setSelectedTypes([]);
     setSelectedRegions([]);
+    setSelectedSubRegions([]);
     setSelectedDifficulties([]);
     setSelectedDurations([]);
     setSelectedMonths([]);
