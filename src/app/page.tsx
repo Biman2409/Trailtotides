@@ -5,7 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import HeroSlider from "@/components/ui/custom/HeroSlider";
-import { adventures, stories, regions, adventureTypes } from "@/lib/data";
+import { adventures, stories, regions } from "@/lib/data";
 
 const featuredAdventures = adventures.filter((a) => a.featured).slice(0, 6);
 const featuredStories = stories.slice(0, 3);
