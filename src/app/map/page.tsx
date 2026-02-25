@@ -325,8 +325,10 @@ export default function MapPage() {
   });
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
+    <div className="flex flex-col" style={{ height: "100dvh" }}>
       <Navbar />
+      {/* Spacer to push content below fixed navbar */}
+      <div className="h-16 lg:h-20 shrink-0" />
 
       {/* Filter bar — sits directly below the fixed navbar (h-16 mobile / h-20 desktop) */}
       <div className="sticky top-16 lg:top-20 z-[1001] bg-white/95 backdrop-blur-md border-b border-[#e0d8cc] shadow-sm">
