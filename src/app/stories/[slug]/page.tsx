@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { stories } from "@/lib/data";
 import { ChevronLeft, Clock, ArrowRight, Crown, Mountain } from "lucide-react";
+import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 
 interface Props {
   params: Promise<{ slug: string }>;
