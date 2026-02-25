@@ -102,11 +102,13 @@ export default function StoriesPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                    <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                      <span className="bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-medium px-2.5 py-1 rounded-full">
-                        {story.region}
-                      </span>
-                    </div>
+                      <div className="absolute bottom-4 left-4 flex items-center gap-2 flex-wrap">
+                        {story.tags.filter(t => ["Himalayas","Biking"].includes(t)).map(tag => (
+                          <span key={tag} className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs px-3 py-1.5 rounded-full">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
                   </div>
                   <div>
                     <h3 className="text-[#1a1f2e] text-xl font-semibold leading-snug mb-2 group-hover:text-[#c4622d] transition-colors">
