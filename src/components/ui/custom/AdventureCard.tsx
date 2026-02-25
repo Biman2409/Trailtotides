@@ -19,6 +19,7 @@ interface AdventureCardProps {
 
 export default function AdventureCard({ adventure, size = "default" }: AdventureCardProps) {
   const isLarge = size === "large";
+  const typeIcon = adventureTypes.find((a) => a.type === adventure.type)?.icon ?? "";
 
   return (
     <Link href={`/experiences/${adventure.slug}`} className="group block">
