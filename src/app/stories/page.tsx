@@ -74,7 +74,7 @@ export default function StoriesPage() {
       {/* All stories grid */}
       <section className="py-20 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-[#1a1f2e] text-2xl font-semibold mb-10">All Stories</h2>
+            <h2 className="text-[#1a1f2e] text-2xl font-semibold mb-10">All Voices from the Edge</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {rest.map((story) => (
                 <Link key={story.id} href={`/stories/${story.slug}`} className="group block">
