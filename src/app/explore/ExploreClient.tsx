@@ -125,13 +125,6 @@ const seasons: { label: string; icon: string; months: Month[]; color: string; ac
   { label: "Autumn",  icon: "🍂", months: ["Oct", "Nov", "Dec"],      color: "text-orange-600", activeColor: "bg-orange-500 text-white", idleColor: "bg-orange-50 text-orange-800 hover:bg-orange-100 border border-orange-200" },
 ];
 
-const difficultyDot: Record<Difficulty, string> = {
-  Beginner:     "bg-green-500",
-  Intermediate: "bg-blue-500",
-  Advanced:     "bg-amber-400",
-  Expert:       "bg-orange-500",
-  Extreme:      "bg-red-500",
-};
 
 export default function ExploreClient() {
   const searchParams = useSearchParams();
