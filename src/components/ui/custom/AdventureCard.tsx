@@ -64,7 +64,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
 
         {/* Top badges */}
         <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
-            <span className="flex items-center gap-1 bg-[#1a1f2e]/80 backdrop-blur-sm text-white/80 text-xs font-medium px-2.5 py-1.5 rounded-full">
+            <span className={`flex items-center gap-1 backdrop-blur-sm text-xs font-medium px-2.5 py-1.5 rounded-full ${typePillColors[adventure.type] ?? "bg-white/10 text-white/80"}`}>
               <span>{typeIcon}</span>
               {adventure.type}
             </span>
