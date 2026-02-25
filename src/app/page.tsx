@@ -186,6 +186,120 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── HILLS ────────────────────────────────────────── */}
+      <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#f4f6f0]">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-14">
+            <p className="text-[#4a7c3f] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+              Highlands &amp; Hill Stations
+            </p>
+            <div className="flex items-end justify-between gap-4">
+              <h2 className="text-[#1a1f2e] text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
+                Up in the hills
+              </h2>
+              <Link
+                href="/explore?type=Trekking"
+                className="hidden md:flex items-center gap-1.5 text-[#4a7c3f] text-sm font-semibold hover:text-[#1a1f2e] transition-colors shrink-0"
+              >
+                All hill adventures
+                <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="mt-5 w-14 h-0.5 bg-[#4a7c3f] rounded-full" />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            {/* Hero card */}
+            <Link
+              href="/explore?region=Himalayas"
+              className="group relative overflow-hidden rounded-3xl h-[340px] lg:h-[440px]"
+            >
+              <Image
+                src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=70"
+                alt="Himalayan peaks"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105 brightness-90 saturate-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-7">
+                <span className="inline-block bg-[#4a7c3f]/90 text-white text-xs font-semibold px-3 py-1 rounded-full mb-3 tracking-wide uppercase">
+                  The Himalayas
+                </span>
+                <h3 className="text-white text-2xl lg:text-3xl font-bold leading-tight mb-2">
+                  Rooftop of the world
+                </h3>
+                <p className="text-white/65 text-sm leading-relaxed max-w-sm">
+                  From Ladakh's high-altitude passes to Uttarakhand's sacred trails — India's greatest mountains await.
+                </p>
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4a7c3f] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+            </Link>
+
+            {/* Stacked smaller cards */}
+            <div className="flex flex-col gap-5">
+              {[
+                {
+                  href: "/explore?region=Western+Ghats",
+                  img: "https://images.unsplash.com/photo-1601921004897-b7d582836990?w=900&q=70",
+                  label: "Western Ghats",
+                  title: "Mist, monsoon & ancient forests",
+                  desc: "Coorg, Munnar, Wayanad — lush ridgelines draped in cloud.",
+                },
+                {
+                  href: "/explore?region=Northeast",
+                  img: "https://images.unsplash.com/photo-1585136917228-c78a4fc2e6e0?w=900&q=70",
+                  label: "Northeast Highlands",
+                  title: "India's last wild frontier",
+                  desc: "Meghalaya, Nagaland, Arunachal — untouched hill country.",
+                },
+              ].map(({ href, img, label, title, desc }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  className="group relative overflow-hidden rounded-2xl h-[190px]"
+                >
+                  <Image
+                    src={img}
+                    alt={label}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105 brightness-90 saturate-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-transparent" />
+                  <div className="absolute inset-0 flex flex-col justify-center px-7">
+                    <span className="inline-block bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full mb-2 w-fit tracking-wide uppercase">
+                      {label}
+                    </span>
+                    <h3 className="text-white text-lg font-bold leading-tight mb-1">{title}</h3>
+                    <p className="text-white/60 text-xs leading-relaxed max-w-xs">{desc}</p>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4a7c3f] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom stat strip */}
+          <div className="mt-10 grid grid-cols-3 gap-4">
+            {[
+              { icon: "🏔️", value: "94+", label: "Trekking routes" },
+              { icon: "🌿", value: "12", label: "Hill regions" },
+              { icon: "⛺", value: "3,200m+", label: "Avg. altitude" },
+            ].map(({ icon, value, label }) => (
+              <div
+                key={label}
+                className="bg-white rounded-2xl border border-[#dde5d8] px-5 py-5 flex items-center gap-4"
+              >
+                <span className="text-3xl">{icon}</span>
+                <div>
+                  <div className="text-[#1a1f2e] font-bold text-xl tabular-nums">{value}</div>
+                  <div className="text-[#8a9e84] text-xs mt-0.5 uppercase tracking-wider">{label}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── REGIONS ──────────────────────────────────────── */}
       <section className="py-24 lg:py-32 bg-[#1a1f2e] px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
