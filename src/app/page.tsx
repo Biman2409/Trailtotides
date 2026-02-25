@@ -70,14 +70,14 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/explore"
-              className="bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold px-8 py-4 rounded-xl text-base flex items-center gap-2 group shadow-xl shadow-black/30 min-w-[200px] justify-center hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-black/40 transition-all duration-250"
+              className="bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold px-8 py-4 rounded-xl text-base flex items-center gap-2 group shadow-xl shadow-black/30 min-w-[200px] justify-center hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-black/40 transition-all duration-200"
             >
               Explore Adventures
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               href="/map"
-              className="bg-white/12 hover:bg-white/22 backdrop-blur-md text-white font-semibold px-8 py-4 rounded-xl text-base border border-white/25 hover:border-white/40 flex items-center gap-2 min-w-[200px] justify-center hover:-translate-y-0.5 transition-all duration-250"
+              className="bg-white/12 hover:bg-white/22 backdrop-blur-md text-white font-semibold px-8 py-4 rounded-xl text-base border border-white/25 hover:border-white/40 flex items-center gap-2 min-w-[200px] justify-center hover:-translate-y-0.5 transition-all duration-200"
             >
               <Map className="w-4 h-4" />
               View the Map
@@ -140,7 +140,7 @@ export default function HomePage() {
           <div className="mt-14 flex justify-center">
             <Link
               href="/explore"
-              className="bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#c4622d]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#c4622d]/30 transition-all duration-250"
+              className="bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#c4622d]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#c4622d]/30 transition-all duration-200"
             >
               View all adventures
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -176,7 +176,7 @@ export default function HomePage() {
             </p>
             <Link
               href="/map"
-              className="inline-flex items-center gap-2.5 bg-white text-[#1a2e20] font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#f0f7f1] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 group transition-all duration-250 shadow-lg shadow-black/15"
+              className="inline-flex items-center gap-2.5 bg-white text-[#1a2e20] font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#f0f7f1] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 group transition-all duration-200 shadow-lg shadow-black/15"
             >
               <Map className="w-5 h-5" />
               Open the Map
@@ -449,14 +449,14 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/explore"
-              className="bg-[#1a2e20] hover:bg-[#243d29] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-black/15 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 transition-all duration-250"
+              className="bg-[#1a2e20] hover:bg-[#243d29] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-black/15 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 transition-all duration-200"
             >
               Start Exploring
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               href="/list"
-              className="border border-[#1a2e20]/22 hover:border-[#1a2e20]/55 text-[#1a2e20] font-semibold px-9 py-4 rounded-xl text-base hover:bg-white/70 hover:-translate-y-0.5 transition-all duration-250"
+              className="border border-[#1a2e20]/22 hover:border-[#1a2e20]/55 text-[#1a2e20] font-semibold px-9 py-4 rounded-xl text-base hover:bg-white/70 hover:-translate-y-0.5 transition-all duration-200"
             >
               List Your Adventure
             </Link>
