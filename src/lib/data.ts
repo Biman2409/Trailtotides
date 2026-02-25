@@ -21,7 +21,7 @@ export type Region =
   | "Islands"
   | "Northeast";
 
-export type Difficulty = "Easy" | "Moderate" | "Challenging" | "Strenuous" | "Extreme";
+export type Difficulty = "Beginner" | "Intermediate" | "Advanced" | "Expert" | "Extreme";
 
 export type Duration = "Weekend" | "3–5 days" | "7+ days";
 
