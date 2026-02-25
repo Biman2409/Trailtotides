@@ -3,6 +3,8 @@ import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { VisualEditsMessenger } from "orchids-visual-edits";
 import Script from "next/script";
+import { CompareProvider } from "@/context/CompareContext";
+import CompareDrawer from "@/components/ui/custom/CompareDrawer";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
