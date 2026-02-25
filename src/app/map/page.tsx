@@ -23,21 +23,21 @@ const typeEmoji: Record<AdventureType, string> = {
 };
 
 const difficultyColor: Record<string, string> = {
-  Easy: "#10b981",
-  Moderate: "#14b8a6",
-  Challenging: "#f59e0b",
-  Strenuous: "#f97316",
+  Beginner: "#10b981",
+  Intermediate: "#14b8a6",
+  Advanced: "#f59e0b",
+  Expert: "#f97316",
   Extreme: "#ef4444",
 };
 
-const difficulties: Difficulty[] = ["Easy", "Moderate", "Challenging", "Strenuous", "Extreme"];
+const difficulties: Difficulty[] = ["Beginner", "Intermediate", "Advanced", "Expert", "Extreme"];
 const durations: Duration[] = ["Weekend", "3–5 days", "7+ days"];
 const groupSizes: GroupSize[] = ["Solo", "Small group (2–6)", "Large group (6+)"];
 const difficultyDot: Record<Difficulty, string> = {
-  Easy: "bg-emerald-400",
-  Moderate: "bg-teal-400",
-  Challenging: "bg-amber-400",
-  Strenuous: "bg-orange-500",
+  Beginner: "bg-emerald-400",
+  Intermediate: "bg-teal-400",
+  Advanced: "bg-amber-400",
+  Expert: "bg-orange-500",
   Extreme: "bg-red-500",
 };
 const months: { label: string; value: Month }[] = [
