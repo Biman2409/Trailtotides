@@ -17,7 +17,13 @@ export default function SignUpPage() {
     const formData = new FormData(e.currentTarget);
     const result = await signUp(formData);
     setLoading(false);
-    if (result?.error) setMessage({ type: "error", text: result.error });
+    if (result?.error) {
+      setMessage({ type: "error", text: result.error });
+    } else if (result?.success) {
+      setMessage({ type: "success", text: result.success });
+      // Clear form on success
+      (e.target as HTMLFormElement).reset();
+    }
   }
 
   return (
