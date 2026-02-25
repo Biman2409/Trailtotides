@@ -20,7 +20,8 @@ export type Region =
   | "Desert"
   | "Coast"
   | "Islands"
-  | "Northeast";
+  | "Northeast"
+  | "Urban";
 
 export type Difficulty = "Beginner" | "Intermediate" | "Advanced" | "Expert" | "Extreme";
 
