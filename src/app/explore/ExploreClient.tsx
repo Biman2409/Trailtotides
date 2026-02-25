@@ -142,10 +142,43 @@ export default function ExploreClient() {
   const [selectedMonths, setSelectedMonths] = useState<Month[]>([]);
   const [selectedGroupSizes, setSelectedGroupSizes] = useState<GroupSize[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [aiOpen, setAiOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
   const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
+
+  // AI chat state
+  type AiMessage = { role: "user" | "assistant"; content: string; cards?: any[]; recommendations?: { slug: string; name: string; reason: string }[] };
+  const [aiMessages, setAiMessages] = useState<AiMessage[]>([]);
+  const [aiInput, setAiInput] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const aiBottomRef = useRef<HTMLDivElement>(null);
+  const AI_SUGGESTIONS = ["Easy Himalayan trek for beginners", "Scuba diving near islands", "Solo adventure in Northeast", "Extreme cycling in summer"];
+
+  useEffect(() => { aiBottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [aiMessages]);
+
+  async function sendAi(text?: string) {
+    const msg = (text ?? aiInput).trim();
+    if (!msg || aiLoading) return;
+    setAiInput("");
+    const userMsg: AiMessage = { role: "user", content: msg };
+    setAiMessages((prev) => [...prev, userMsg]);
+    setAiLoading(true);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: [...aiMessages, userMsg].map((m) => ({ role: m.role, content: m.content })) }),
+      });
+      const data = await res.json();
+      setAiMessages((prev) => [...prev, { role: "assistant", content: data.text || data.error || "Sorry, something went wrong.", cards: data.cards, recommendations: data.recommendations }]);
+    } catch {
+      setAiMessages((prev) => [...prev, { role: "assistant", content: "Network error. Please try again." }]);
+    } finally {
+      setAiLoading(false);
+    }
+  }
 
   useEffect(() => { setMounted(true); }, []);
 
