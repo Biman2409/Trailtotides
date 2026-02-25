@@ -195,6 +195,7 @@ export default function ExploreClient() {
   const activeFilterCount =
     selectedTypes.length +
     selectedRegions.length +
+    selectedSubRegions.length +
     selectedDifficulties.length +
     selectedDurations.length +
     selectedMonths.length +
