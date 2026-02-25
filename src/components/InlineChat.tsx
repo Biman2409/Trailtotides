@@ -69,34 +69,43 @@ export default function InlineChat() {
   }
 
   return (
-    <section className="py-6 px-6 lg:px-8 bg-[#0f1419]">
-      <div className="max-w-3xl mx-auto">
-        {/* Header row */}
-        <div className="flex items-center gap-2 mb-3">
-          <div className="flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/20 rounded-full px-2.5 py-1">
-            <Sparkles className="w-3 h-3 text-orange-400" />
-            <span className="text-orange-400 text-xs font-semibold tracking-widest uppercase">AI Adventure Finder</span>
+    <section style={{ background: "#141920" }} className="border-b border-white/6">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 lg:py-14">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-[#c4622d]" />
+              <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase">
+                AI Adventure Finder
+              </p>
+            </div>
+            <h2 className="text-white text-3xl lg:text-4xl font-bold tracking-tight leading-tight">
+              Find your perfect adventure
+            </h2>
+            <div className="mt-4 w-10 h-0.5 bg-[#c4622d] rounded-full" />
           </div>
-          <p className="text-zinc-500 text-xs hidden sm:block">
-            Describe your dream adventure and we&apos;ll find the best match
+          <p className="text-white/40 text-sm max-w-xs text-right hidden sm:block">
+            Describe what you&apos;re looking for — we&apos;ll match you with the right trip
           </p>
         </div>
 
-        {/* Chat window */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden shadow-xl">
+        {/* Chat container */}
+        <div className="border border-white/8 rounded-2xl overflow-hidden">
           {/* Messages */}
           {messages.length > 0 && (
-            <div className="max-h-[280px] overflow-y-auto p-3 space-y-3">
+            <div className="max-h-[300px] overflow-y-auto p-5 space-y-4 bg-white/2">
               {messages.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className="max-w-[85%] space-y-2">
+                  <div className="max-w-[85%] space-y-3">
                     {msg.content && (
                       <div
-                        className={`px-3 py-2 rounded-xl text-xs leading-relaxed ${
+                        className={`px-4 py-2.5 rounded-xl text-sm leading-relaxed ${
                           msg.role === "user"
-                            ? "bg-orange-500 text-white rounded-br-sm"
-                            : "bg-zinc-800 text-zinc-100 rounded-bl-sm"
+                            ? "text-white rounded-br-sm"
+                            : "bg-white/6 border border-white/8 text-white/80 rounded-bl-sm"
                         }`}
+                        style={msg.role === "user" ? { background: "#c4622d" } : {}}
                       >
                         {msg.content}
                       </div>
@@ -109,7 +118,7 @@ export default function InlineChat() {
                             <Link
                               key={ci}
                               href={`/adventure/${card.slug}`}
-                              className="flex items-stretch bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg overflow-hidden transition-colors group"
+                              className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-white/16 rounded-xl overflow-hidden transition-all group"
                             >
                               {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
@@ -117,15 +126,15 @@ export default function InlineChat() {
                                 alt={card.name}
                                 className="w-16 h-16 object-cover flex-shrink-0"
                               />
-                              <div className="p-2 flex-1 min-w-0">
-                                <p className="text-white text-xs font-semibold">{card.name}</p>
-                                <p className="text-zinc-400 text-xs mt-0.5">{card.state} · {card.type} · {card.difficulty}</p>
+                              <div className="p-3 flex-1 min-w-0">
+                                <p className="text-white text-xs font-semibold tracking-tight">{card.name}</p>
+                                <p className="text-white/40 text-xs mt-0.5 tracking-wide uppercase">{card.state} · {card.type} · {card.difficulty}</p>
                                 {rec?.reason && (
-                                  <p className="text-orange-400 text-xs mt-1 line-clamp-1">{rec.reason}</p>
+                                  <p className="text-[#c4622d] text-xs mt-1 line-clamp-1">{rec.reason}</p>
                                 )}
                               </div>
-                              <div className="flex items-center pr-2">
-                                <ChevronRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-orange-400 transition-colors" />
+                              <div className="flex items-center pr-3">
+                                <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#c4622d] transition-colors" />
                               </div>
                             </Link>
                           );
@@ -137,9 +146,9 @@ export default function InlineChat() {
               ))}
               {loading && (
                 <div className="flex justify-start">
-                  <div className="bg-zinc-800 px-3 py-2 rounded-xl rounded-bl-sm flex items-center gap-2">
-                    <Loader2 className="w-3.5 h-3.5 text-orange-400 animate-spin" />
-                    <span className="text-zinc-400 text-xs">Finding adventures…</span>
+                  <div className="bg-white/6 border border-white/8 px-4 py-2.5 rounded-xl rounded-bl-sm flex items-center gap-2">
+                    <Loader2 className="w-3.5 h-3.5 text-[#c4622d] animate-spin" />
+                    <span className="text-white/50 text-sm">Finding adventures…</span>
                   </div>
                 </div>
               )}
@@ -147,14 +156,14 @@ export default function InlineChat() {
             </div>
           )}
 
-          {/* Suggestion chips — only shown before first message */}
+          {/* Suggestion chips — only before first message */}
           {messages.length === 0 && (
-            <div className="px-3 pt-3 pb-2 flex flex-wrap gap-1.5">
+            <div className="px-4 pt-4 pb-3 flex flex-wrap gap-2 bg-white/2">
               {SUGGESTIONS.map((s) => (
                 <button
                   key={s}
                   onClick={() => send(s)}
-                  className="text-xs bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-300 hover:text-white px-2.5 py-1 rounded-full transition-colors"
+                  className="text-xs border border-white/10 text-white/50 hover:text-white hover:border-white/24 px-3 py-1.5 rounded-full transition-all tracking-wide"
                 >
                   {s}
                 </button>
@@ -163,21 +172,22 @@ export default function InlineChat() {
           )}
 
           {/* Input bar */}
-          <div className="border-t border-zinc-800 p-2 flex gap-2">
+          <div className="border-t border-white/8 p-3 flex gap-3 bg-white/3">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
               placeholder="Describe your ideal adventure…"
-              className="flex-1 bg-zinc-800 text-zinc-100 placeholder-zinc-500 text-xs px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-orange-500"
+              className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#c4622d]/50 focus:ring-1 focus:ring-[#c4622d]/30 transition-all"
             />
             <button
               onClick={() => send()}
               disabled={!input.trim() || loading}
-              className="bg-orange-500 hover:bg-orange-600 disabled:opacity-40 disabled:cursor-not-allowed text-white px-3 py-2 rounded-lg font-semibold text-xs flex items-center gap-1.5 transition-colors"
+              className="disabled:opacity-30 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all hover:-translate-y-0.5"
+              style={{ background: "#c4622d" }}
             >
-              <Send className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Ask</span>
+              <Send className="w-4 h-4" />
+              <span className="hidden sm:inline tracking-wide">Search</span>
             </button>
           </div>
         </div>
