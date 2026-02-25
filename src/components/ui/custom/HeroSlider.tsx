@@ -70,7 +70,7 @@ const slides: Slide[] = [
   },
   {
     // Skiing: man ice skiing down a snowy hill
-    src: "https://images.unsplash.com/photo-1551698618520-1f68d4d56912?w=2560&q=95",
+      src: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=2560&q=95",
     alt: "Skier carving down a steep snowy mountain slope",
     panFrom: "50% 35%",
     panTo: "50% 55%",
