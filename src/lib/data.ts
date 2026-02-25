@@ -213,7 +213,7 @@ export const adventures: Adventure[] = [
     region: "Islands",
     state: "Andaman & Nicobar",
       type: "Diving",
-    difficulty: "Beginner",
+    difficulty: "Easy",
     duration: "3–5 days",
     durationDays: "4 days",
     altitude: "Sea level",
