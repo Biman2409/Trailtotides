@@ -504,14 +504,14 @@ export default function ExploreClient() {
             </span>
           ))}
           {selectedMonths.map((m) => (
-            <span
-              key={m}
-              onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-              className="flex items-center gap-1.5 bg-sky-100 text-sky-700 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-sky-200 transition-colors"
-            >
-              {m} <X className="w-3 h-3" />
-            </span>
-          ))}
+              <span
+                key={m}
+                onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
+                className="flex items-center gap-1.5 bg-teal-100 text-teal-800 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-teal-200 transition-colors"
+              >
+                {m} <X className="w-3 h-3" />
+              </span>
+            ))}
           {selectedGroupSizes.map((g) => (
             <span
               key={g}
