@@ -520,76 +520,6 @@ export const adventures: Adventure[] = [
 
 export const stories: Story[] = [
   {
-    id: "1",
-    slug: "what-5000m-feels-like",
-    title: "What 5,000m Actually Feels Like",
-    excerpt:
-      "No one warns you about the way sound changes at altitude — the way your own breathing becomes the loudest thing in the world, and the sky turns a blue so dark it's almost violent.",
-    author: "Rohan Mehta",
-    authorRole: "Mountaineer & Expedition Leader",
-    heroImage: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1600&q=90",
-    readTime: "8 min read",
-    tags: ["altitude", "Himalayas", "personal"],
-    region: "Himalayas",
-    date: "Feb 2026",
-  },
-  {
-    id: "2",
-    slug: "1000km-ride-what-no-one-tells-you",
-    title: "1,000km Ride: What No One Tells You",
-    excerpt:
-      "Day three, somewhere between Sarchu and Pang, my throttle hand locked. Not from cold — from grip. I'd been white-knuckling gravel at altitude for six hours.",
-    author: "Priya Nair",
-    authorRole: "Long-Distance Rider & Expedition Cyclist",
-    heroImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=90",
-    readTime: "12 min read",
-    tags: ["motorcycle", "Manali-Leh", "endurance"],
-    region: "Himalayas",
-    date: "Jan 2026",
-  },
-  {
-    id: "3",
-    slug: "andaman-below-the-surface",
-    title: "Andaman: Below the Surface",
-    excerpt:
-      "The Japanese freighter had been sitting on the seafloor since 1945. Inside its hold, lionfish hover in perfect stillness. Outside, a reef shark circles once, decides we're uninteresting, and disappears.",
-    author: "Kabir Sharma",
-    authorRole: "Dive Master & Marine Photographer",
-    heroImage: "https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=1600&q=90",
-    readTime: "10 min read",
-    tags: ["diving", "Andaman", "underwater"],
-    region: "Islands",
-    date: "Dec 2025",
-  },
-  {
-    id: "4",
-    slug: "dzukou-the-valley-nobody-knows",
-    title: "Dzükou: The Valley Nobody Knows",
-    excerpt:
-      "We arrived in Nagaland expecting infrastructure. We found a valley so untouched that the only path markers were cairns left by previous trekkers, and the only other humans we saw were a family of Naga farmers moving their cattle.",
-    author: "Ananya Das",
-    authorRole: "Trek Guide & Northeast Specialist",
-    heroImage: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1600&q=90",
-    readTime: "7 min read",
-    tags: ["Northeast", "offbeat", "trek"],
-    region: "Northeast",
-    date: "Nov 2025",
-  },
-  {
-    id: "5",
-    slug: "first-timer-on-the-rann",
-    title: "First-Timer on the Rann",
-    excerpt:
-      "I grew up in Mumbai. I had never seen complete darkness, never heard complete silence, never been somewhere where the sky felt bigger than the land. The Rann fixed all three in one night.",
-    author: "Isha Kulkarni",
-    authorRole: "Travel Writer & First-Time Adventurer",
-    heroImage: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1600&q=90",
-    readTime: "6 min read",
-    tags: ["desert", "Gujarat", "first-timer"],
-    region: "Desert",
-    date: "Jan 2026",
-  },
-  {
     id: "7",
     slug: "the-night-photi-la-tested-us",
     title: "The Night Photi La Tested Us",
@@ -602,20 +532,6 @@ export const stories: Story[] = [
     tags: ["Ladakh", "motorcycle", "Umling La", "TTT Original", "night ride"],
     region: "Himalayas",
     date: "2022",
-  },
-  {
-    id: "6",
-    slug: "chadar-the-frozen-river",
-    title: "Chadar: On the Frozen River",
-    excerpt:
-      "You don't walk on Chadar. You negotiate with it. Every step is a conversation with the ice — a question asked and answered in fractions of a second, with the river 4m below.",
-    author: "Arjun Thakur",
-    authorRole: "Expedition Mountaineer & Wilderness Guide",
-    heroImage: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=90",
-    readTime: "11 min read",
-    tags: ["Ladakh", "winter trek", "extreme"],
-    region: "Himalayas",
-    date: "Feb 2026",
   },
 ];
 
