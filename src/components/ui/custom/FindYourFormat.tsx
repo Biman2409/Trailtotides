@@ -32,7 +32,7 @@ const categories = [
     id: "water",
     label: "Water",
         subtitle: "Ride the currents and dive into the deep unknown",
-    image: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1459745930869-b3d0d72c3cbb?w=800&q=80",
     accent: "#2a7cc7",
     accentLight: "rgba(42,124,199,0.15)",
     accentBorder: "rgba(42,124,199,0.35)",
