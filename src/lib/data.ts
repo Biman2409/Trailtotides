@@ -129,7 +129,7 @@ export const adventures: Adventure[] = [
     id: "2",
     slug: "valley-of-flowers",
     name: "Valley of Flowers",
-    tagline: "Walk where the Himalayas bloom in colour",
+      tagline: "300 species of wildflowers carpet a Himalayan valley that hides all summer",
     region: "Himalayas",
     state: "Uttarakhand",
       type: "Trekking",
