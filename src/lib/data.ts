@@ -523,20 +523,6 @@ export const adventures: Adventure[] = [
 
 export const stories: Story[] = [
   {
-    id: "1",
-    slug: "blah-blah-dummy-story",
-    title: "Blah Blah — A Story About Absolutely Nothing",
-    excerpt:
-      "We packed too much, planned too little, got lost twice, and somehow ended up at the best chai stall in the universe. Some trips are legendary. This was just random.",
-    author: "Rahul Mehta",
-    authorRole: "Wanderer",
-    heroImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=90",
-    readTime: "5 min read",
-    tags: ["Featured", "TTT Original", "Random", "Mountains", "Trekking"],
-    region: "Himalayas",
-    date: "March 2024",
-  },
-  {
     id: "7",
     slug: "the-night-photi-la-tested-us",
     title: "The Night Photi La Tested Us",
