@@ -22,7 +22,7 @@ export default function StoriesPage() {
               Voices from the Edge
             </h1>
           <p className="text-white/50 text-lg max-w-xl mt-4">
-            Written by mountaineers, riders, divers, and wanderers who've actually been out there.
+              Raw. Unfiltered. From people who left the map behind and came back changed.
           </p>
         </div>
       </section>
