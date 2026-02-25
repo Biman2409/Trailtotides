@@ -170,7 +170,7 @@ export default function HomePage() {
                 <span className="text-[#7ec88a]">mapped.</span>
               </h2>
               <p className="text-white/75 text-lg md:text-xl leading-relaxed mb-9 max-w-lg" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.6)" }}>
-                Discover epic adventures across India — from frozen Himalayan rivers to coral reefs in the Andamans — handpicked, trusted and perfectly mapped.
+                Every adventure across India — trekking, diving, cycling, skiing — on one interactive map. Filter by region, difficulty, or type.
               </p>
             <Link
               href="/map"
