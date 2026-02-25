@@ -5,6 +5,8 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import HeroSlider from "@/components/ui/custom/HeroSlider";
+import ChatBubble from "@/components/ChatBubble";
+import InlineChat from "@/components/InlineChat";
 import { adventures, stories, regions } from "@/lib/data";
 
 const featuredAdventures = adventures.filter((a) => a.featured).slice(0, 6);
