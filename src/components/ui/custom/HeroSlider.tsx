@@ -144,13 +144,14 @@ export default function HeroSlider() {
               priority={i === 0}
               sizes="100vw"
               className="object-cover"
-              style={{
-                transformOrigin: hasFired ? slide.panTo : slide.panFrom,
-                transform: `scale(${hasFired ? slide.scaleTo : slide.scaleFrom})`,
-                transition: hasFired
-                  ? `transform ${SLIDE_DURATION + TRANSITION_MS}ms cubic-bezier(0.22,0.61,0.36,1), transform-origin ${SLIDE_DURATION + TRANSITION_MS}ms ease`
-                  : "none",
-              }}
+                style={{
+                  transformOrigin: hasFired ? slide.panTo : slide.panFrom,
+                  transform: `scale(${hasFired ? slide.scaleTo : slide.scaleFrom})`,
+                  transition: hasFired
+                    ? `transform ${SLIDE_DURATION + TRANSITION_MS}ms cubic-bezier(0.22,0.61,0.36,1), transform-origin ${SLIDE_DURATION + TRANSITION_MS}ms ease`
+                    : "none",
+                  filter: slide.filter,
+                }}
             />
           </div>
         );
