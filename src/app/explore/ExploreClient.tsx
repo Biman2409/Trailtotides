@@ -282,67 +282,106 @@ export default function ExploreClient() {
 
                 {/* Adventure type */}
                 <div className="col-span-2 lg:col-span-3">
-                    <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
-                      Adventure Type
-                    </h3>
-                      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
+                    Adventure Type
+                  </h3>
+                  {(() => {
+                    const categories = [
+                      {
+                        label: "Land Based", icon: "🏔️",
+                        btn: "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100",
+                        btnActive: "bg-amber-500 text-white border-amber-500",
+                        chip: "bg-amber-100 text-amber-900 hover:bg-amber-200",
+                        chipActive: "bg-amber-500 text-white",
+                        types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
+                      },
+                      {
+                        label: "Water Based", icon: "🌊",
+                        btn: "bg-sky-50 border-sky-200 text-sky-800 hover:bg-sky-100",
+                        btnActive: "bg-sky-500 text-white border-sky-500",
+                        chip: "bg-sky-100 text-sky-900 hover:bg-sky-200",
+                        chipActive: "bg-sky-500 text-white",
+                        types: ["Diving", "Kayaking"],
+                      },
+                      {
+                        label: "Snow Based", icon: "❄️",
+                        btn: "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100",
+                        btnActive: "bg-slate-600 text-white border-slate-600",
+                        chip: "bg-slate-100 text-slate-700 hover:bg-slate-200",
+                        chipActive: "bg-slate-600 text-white",
+                        types: ["Skiing"],
+                      },
+                      {
+                        label: "Air Based", icon: "🪂",
+                        btn: "bg-purple-50 border-purple-200 text-purple-800 hover:bg-purple-100",
+                        btnActive: "bg-purple-500 text-white border-purple-500",
+                        chip: "bg-purple-100 text-purple-900 hover:bg-purple-200",
+                        chipActive: "bg-purple-500 text-white",
+                        types: [] as string[],
+                      },
+                    ];
+                    return (
+                      <div className="flex flex-col gap-2">
+                        {/* Category buttons row */}
+                        <div className="flex flex-wrap gap-2">
+                          {categories.map((cat) => {
+                            const isExpanded = expandedCategory === cat.label;
+                            const hasSelected = cat.types.some(t => selectedTypes.includes(t as AdventureType));
+                            return (
+                              <button
+                                key={cat.label}
+                                onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                                  isExpanded || hasSelected ? cat.btnActive : cat.btn
+                                }`}
+                              >
+                                <span>{cat.icon}</span>
+                                {cat.label}
+                                {hasSelected && (
+                                  <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
+                                    {cat.types.filter(t => selectedTypes.includes(t as AdventureType)).length}
+                                  </span>
+                                )}
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                              </button>
+                            );
+                          })}
+                        </div>
 
-                          {/* Land Based */}
-                          <div className="rounded-xl border p-3 bg-amber-50 border-amber-200">
-                            <p className="text-[10px] font-semibold tracking-widest uppercase text-amber-600 mb-2">Land Based</p>
-                            <div className="flex flex-wrap gap-1.5">
-                              {(["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"] as AdventureType[]).map((type) => {
-                                const icon = adventureTypes.find(a => a.type === type)?.icon ?? "";
-                                return (
-                                  <button
-                                    key={type}
-                                    onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
-                                    className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
-                                      selectedTypes.includes(type)
-                                        ? "bg-amber-500 text-white"
-                                        : "bg-amber-100 text-amber-900 hover:bg-amber-200"
-                                    }`}
-                                  >
-                                    <span>{icon}</span>
-                                    {type}
-                                  </button>
-                                );
-                              })}
+                        {/* Expanded type chips */}
+                        {expandedCategory && (() => {
+                          const cat = categories.find(c => c.label === expandedCategory)!;
+                          return (
+                            <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                              {cat.types.length === 0 ? (
+                                <p className="text-xs text-[#c4b99a] italic">Coming soon</p>
+                              ) : (
+                                <div className="flex flex-wrap gap-2">
+                                  {cat.types.map((type) => {
+                                    const icon = adventureTypes.find(a => a.type === type)?.icon ?? "";
+                                    const isSelected = selectedTypes.includes(type as AdventureType);
+                                    return (
+                                      <button
+                                        key={type}
+                                        onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
+                                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                          isSelected ? cat.chipActive : cat.chip
+                                        }`}
+                                      >
+                                        <span>{icon}</span>
+                                        {type}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              )}
                             </div>
-                          </div>
-
-                        {/* Water / Snow / Air */}
-                        {[
-                          { label: "Water Based", box: "bg-sky-50 border-sky-200", labelColor: "text-sky-600", activeColor: "bg-sky-500 text-white", idleColor: "bg-sky-100 text-sky-900 hover:bg-sky-200", types: ["Diving", "Kayaking"] },
-                          { label: "Snow Based",  box: "bg-slate-50 border-slate-200", labelColor: "text-slate-500", activeColor: "bg-white text-slate-800 ring-1 ring-slate-400 shadow", idleColor: "bg-slate-100 text-slate-700 hover:bg-slate-200", types: ["Skiing"] },
-                          { label: "Air Based",   box: "bg-purple-50 border-purple-200", labelColor: "text-purple-600", activeColor: "bg-purple-500 text-white", idleColor: "bg-purple-100 text-purple-900 hover:bg-purple-200", types: [] },
-                        ].map(({ label, box, labelColor, activeColor, idleColor, types: catTypes }) => (
-                          <div key={label} className={`rounded-xl border p-3 ${box}`}>
-                            <p className={`text-[10px] font-semibold tracking-widest uppercase mb-2 ${labelColor}`}>{label}</p>
-                            {catTypes.length === 0 ? (
-                              <p className="text-xs text-[#c4b99a] italic">Coming soon</p>
-                            ) : (
-                              <div className="flex flex-wrap gap-1.5">
-                                {adventureTypes
-                                  .filter(({ type }) => catTypes.includes(type))
-                                  .map(({ type, icon }) => (
-                                    <button
-                                      key={type}
-                                      onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
-                                      className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
-                                        selectedTypes.includes(type as AdventureType) ? activeColor : idleColor
-                                      }`}
-                                    >
-                                      <span>{icon}</span>
-                                      {type}
-                                    </button>
-                                  ))}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                    </div>
-                  </div>
+                          );
+                        })()}
+                      </div>
+                    );
+                  })()}
+                </div>
 
               {/* Region */}
               <div>
