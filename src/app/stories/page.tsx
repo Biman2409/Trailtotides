@@ -21,9 +21,9 @@ export default function StoriesPage() {
             <h1 className="text-white text-5xl lg:text-7xl font-semibold tracking-tight leading-none mb-4">
               Voices from the Edge
             </h1>
-          <p className="text-white/50 text-lg max-w-xl mt-4">
-              Raw. Unfiltered. From people who left the map behind and came back changed.
-          </p>
+            <p className="text-white/50 text-lg max-w-xl mt-4">
+                Not travel bloggers. Not influencers. Real people who pushed past the edge and had the guts to write it down.
+            </p>
         </div>
       </section>
 
