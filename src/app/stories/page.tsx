@@ -118,34 +118,8 @@ export default function StoriesPage() {
                 </Link>
               ))}
             </div>
-                </div>
-                <div>
-                  <h3 className="text-[#1a1f2e] text-xl font-semibold leading-snug mb-2 group-hover:text-[#c4622d] transition-colors">
-                    {story.title}
-                  </h3>
-                  <p className="text-[#6b6560] text-sm leading-relaxed line-clamp-2 mb-4">
-                    {story.excerpt}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full bg-[#e0d8cc] flex items-center justify-center text-xs font-bold text-[#6b6560]">
-                        {story.author[0]}
-                      </div>
-                      <div>
-                        <p className="text-[#1a1f2e] text-xs font-medium">{story.author}</p>
-                        <p className="text-[#9a9590] text-xs">{story.date}</p>
-                      </div>
-                    </div>
-                    <span className="flex items-center gap-1 text-[#9a9590] text-xs">
-                      <Clock className="w-3.5 h-3.5" /> {story.readTime}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
           </div>
-        </div>
-      </section>
+        </section>
 
       {/* CTA */}
       <section className="py-20 px-6 lg:px-8 bg-[#f5f0e8]">
