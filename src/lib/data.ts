@@ -644,8 +644,8 @@ export const regions = [
   },
   {
     name: "Northeast" as Region,
-    tagline: "Offbeat valleys & living root bridges",
-      image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=800&q=80",
+      tagline: "Offbeat valleys & living root bridges",
+        image: "https://images.unsplash.com/photo-1615729947596-a598e5de0ab3?w=800&q=80",
     adventureCount: 31,
   },
   {
