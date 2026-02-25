@@ -1,14 +1,33 @@
 "use client";
 
 /**
- * StoryViewPill — single reusable component for showing live story views.
+ * ─────────────────────────────────────────────────────────────────────────────
+ * STORY VIEW COUNT SYSTEM
+ * ─────────────────────────────────────────────────────────────────────────────
  *
- * Usage:
- *   - Listing pages / cards:  <StoryViewPill slug={story.slug} />
- *   - Story detail page:      <StoryViewPill slug={story.slug} incrementOnMount />
+ * Source of truth:  Supabase table `story_views`  (slug TEXT PK, views INT)
+ * API:              GET  /api/stories/views?slug=<slug>   → { views: number }
+ *                   POST /api/stories/views  body: { slug } → { views: number } (increments)
  *
- * The view count is stored in Supabase (story_views table, keyed by slug).
- * When adding a new story, INSERT a row: { slug: "your-slug", views: <seed> }
+ * ── HOW TO ADD A NEW STORY ───────────────────────────────────────────────────
+ *  1. Add story to src/lib/data.ts with a unique `slug` field.
+ *  2. Seed its initial view count in Supabase:
+ *       INSERT INTO story_views (slug, views) VALUES ('your-story-slug', 0);
+ *  3. Place <StoryViewPill> in the UI as described below — no other wiring needed.
+ *
+ * ── WHERE TO USE THIS COMPONENT ─────────────────────────────────────────────
+ *  • Story card (homepage / listing)  →  <StoryViewPill slug={story.slug} />
+ *    - Fetches live count on mount. No increment.
+ *    - StoryCard already handles click-increment via POST on link click.
+ *
+ *  • Story detail page (/stories/[slug])  →  <StoryViewPill slug={story.slug} incrementOnMount />
+ *    - Increments once on mount, then shows the updated count.
+ *
+ * ── RULES ────────────────────────────────────────────────────────────────────
+ *  ✗ Never hardcode view counts anywhere in JSX.
+ *  ✗ Never fetch /api/stories/views directly outside this component or StoryCard.
+ *  ✓ Always use this component for any view pill — keeps formatting consistent.
+ * ─────────────────────────────────────────────────────────────────────────────
  */
 
 import { useEffect, useRef, useState } from "react";
