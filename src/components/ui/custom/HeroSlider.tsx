@@ -93,11 +93,13 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 export default function HeroSlider() {
-  const [shuffled] = useState<Slide[]>(() => shuffle(slides));
+  const [shuffled]    = useState<Slide[]>(() => shuffle(slides));
   const [current,     setCurrent]     = useState(0);
   const [prev,        setPrev]        = useState<number | null>(null);
   const [animating,   setAnimating]   = useState(false);
   const [progressKey, setProgressKey] = useState(0);
+  // track which indices have their image fully loaded
+  const [loaded,      setLoaded]      = useState<Record<number, boolean>>({ 0: false });
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const goTo = useCallback((index: number, byUser = false) => {
@@ -118,24 +120,38 @@ export default function HeroSlider() {
       SLIDE_DURATION
     );
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-  }, [current, goTo]);
+  }, [current, goTo, shuffled.length]);
+
+  // Preload next slide's image into state so it's ready before transition
+  useEffect(() => {
+    const next = (current + 1) % shuffled.length;
+    setLoaded(prev => ({ ...prev, [next]: prev[next] ?? false }));
+  }, [current, shuffled.length]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="absolute inset-0 overflow-hidden bg-[#0d1117]">
 
-        {shuffled.map((slide, i) => {
+      {shuffled.map((slide, i) => {
         const isActive = i === current;
         const isPrev   = i === prev;
-        if (!isActive && !isPrev) return null;
+        // Keep prev + current + next in DOM; hide the rest (no display:none, keeps images cached)
+        const next = (current + 1) % shuffled.length;
+        const shouldRender = isActive || isPrev || i === next;
+
+        const isVisible = isActive && loaded[i];
 
         return (
           <div
             key={slide.src}
             className="absolute inset-0"
             style={{
-              zIndex: isActive ? 2 : 1,
-              opacity: isActive ? 1 : 0,
-              transition: `opacity ${TRANSITION_MS}ms cubic-bezier(0.4,0,0.2,1)`,
+              zIndex: isActive ? 2 : isPrev ? 1 : 0,
+              opacity: isVisible ? 1 : isPrev ? 1 : 0,
+              transition: isVisible || isPrev
+                ? `opacity ${TRANSITION_MS}ms cubic-bezier(0.4,0,0.2,1)`
+                : "none",
+              visibility: shouldRender ? "visible" : "hidden",
+              pointerEvents: "none",
             }}
           >
             <Image
@@ -145,9 +161,12 @@ export default function HeroSlider() {
               priority={i === 0}
               sizes="100vw"
               className="object-cover"
+              onLoad={() => setLoaded(p => ({ ...p, [i]: true }))}
               style={{
                 transformOrigin: slide.panTo,
-                transform: `scale(${slide.scaleTo})`,
+                transform: isActive
+                  ? `scale(${slide.scaleTo})`
+                  : `scale(${slide.scaleFrom})`,
                 transition: isActive
                   ? `transform ${SLIDE_DURATION + TRANSITION_MS}ms cubic-bezier(0.22,0.61,0.36,1)`
                   : "none",
@@ -176,7 +195,7 @@ export default function HeroSlider() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2.5"
         style={{ zIndex: 5 }}
       >
-          {shuffled.map((_, i) => (
+        {shuffled.map((_, i) => (
           <button
             key={i}
             onClick={() => goTo(i, true)}
@@ -209,7 +228,7 @@ export default function HeroSlider() {
         className="absolute bottom-8 left-8 text-white/30 text-[10px] tracking-[0.25em] font-medium tabular-nums select-none"
         style={{ zIndex: 5 }}
       >
-          {String(current + 1).padStart(2, "0")} / {String(shuffled.length).padStart(2, "0")}
+        {String(current + 1).padStart(2, "0")} / {String(shuffled.length).padStart(2, "0")}
       </div>
 
       {/* Scroll cue */}
