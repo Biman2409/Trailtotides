@@ -463,7 +463,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <Footer />
-    </div>
-  );
+        <Footer />
+        <ChatBubble />
+      </div>
+    );
 }
