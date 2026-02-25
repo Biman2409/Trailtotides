@@ -141,17 +141,16 @@ Discover epic adventures across India — handpicked,<br />
                 ))}
               </div>
 
-              {/* View all — centered at bottom */}
-              <div className="mt-14 flex flex-col items-center gap-4">
-                <div className="w-px h-8 bg-gradient-to-b from-transparent to-[#c4622d]/40" />
-                <Link
-                  href="/explore"
-                  className="inline-flex items-center gap-2.5 border border-[#1e3d2f]/25 hover:border-[#c4622d] text-[#1e3d2f] hover:text-[#c4622d] font-medium px-8 py-3.5 rounded-full text-sm tracking-wide transition-all duration-300 group"
-                >
-                  View all adventures
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
+                {/* View all — centered at bottom */}
+                <div className="mt-14 flex justify-center">
+                  <Link
+                    href="/explore"
+                    className="bg-[#c4622d] hover:bg-[#e07845] text-white font-semibold px-8 py-4 rounded-xl text-base transition-all duration-300 flex items-center gap-2 group shadow-lg shadow-[#c4622d]/20"
+                  >
+                    View all adventures
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
           </div>
         </section>
 
