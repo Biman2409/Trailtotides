@@ -410,25 +410,30 @@ export default function ExploreClient() {
                 </div>
               </div>
 
-              {/* Season — month picker */}
+              {/* Best Season */}
               <div>
                 <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
                   Best Season
                 </h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {months.map(({ label, value }) => (
-                    <button
-                      key={value}
-                      onClick={() => toggle(selectedMonths, value, setSelectedMonths)}
-                      className={`w-10 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                        selectedMonths.includes(value)
-                          ? "bg-sky-700 text-white"
-                          : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-sky-100 hover:text-sky-700"
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  ))}
+                <div className="flex flex-col gap-2">
+                  {seasons.map(({ label, icon, months: sMonths, activeColor, idleColor }) => {
+                    const allSelected = sMonths.every((m) => selectedMonths.includes(m));
+                    const someSelected = sMonths.some((m) => selectedMonths.includes(m));
+                    return (
+                      <div key={label}>
+                        <button
+                          onClick={() => toggleSeason(sMonths)}
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                            allSelected ? activeColor : someSelected ? activeColor + " opacity-70" : idleColor
+                          }`}
+                        >
+                          <span>{icon}</span>
+                          {label}
+                          <span className="opacity-60 font-normal">({sMonths.join(", ")})</span>
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
