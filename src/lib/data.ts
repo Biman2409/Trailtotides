@@ -454,7 +454,7 @@ export const adventures: Adventure[] = [
       bestSeason: "Jan – Mar",
       bestMonths: ["Jan", "Feb", "Mar"],
       groupSize: "Large group (6+)",
-        heroImage: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1600&q=90",
+        heroImage: "https://images.unsplash.com/photo-UoBE_wJ-suk?w=1600&q=90",
     galleryImages: [],
     lat: 30.5292,
     lng: 79.5665,
