@@ -552,8 +552,8 @@ export default function MapPage() {
         )}
       </div>
 
-      {/* Map */}
-      <div className="flex-1 relative">
+      {/* Map — fills remaining height */}
+      <div className="flex-1 relative overflow-hidden">
         {mounted ? (
             <MapView adventures={visibleAdventures} flyToRef={flyToRef} />
         ) : (
