@@ -8,7 +8,7 @@ const categories = [
   {
     id: "land",
     label: "Land",
-      subtitle: "Trek peaks, ride trails, and conquer terrain",
+        subtitle: "Trek peaks, ride trails, own every trail",
     image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
     accent: "#c4622d",
     accentLight: "rgba(196,98,45,0.15)",
