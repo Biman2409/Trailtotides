@@ -173,7 +173,7 @@ export const adventures: Adventure[] = [
     region: "Himalayas",
     state: "Himachal Pradesh / Ladakh",
       type: "Biking",
-    difficulty: "Challenging",
+      difficulty: "Advanced",
     duration: "7+ days",
     durationDays: "10 days",
       altitude: "5,359m (Tanglang La)",
