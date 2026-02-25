@@ -546,8 +546,8 @@ export default function ExploreClient() {
                           subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
                       },
                       {
-                        name: "Western Ghats",
-                          icon: "🌳",
+                          name: "Western Ghats",
+                            icon: "⛰️",
                         btn: "bg-lime-50 border-lime-200 text-lime-800 hover:bg-lime-100",
                         btnActive: "bg-lime-600 text-white border-lime-600",
                         chip: "bg-lime-100 text-lime-900 hover:bg-lime-200",
