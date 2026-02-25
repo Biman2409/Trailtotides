@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Clock, TrendingUp, ArrowRight } from "lucide-react";
 import type { Adventure } from "@/lib/data";
+import { adventureTypes } from "@/lib/data";
 
 const difficultyColors: Record<string, string> = {
   Beginner:     "bg-green-500/20 text-green-300",
