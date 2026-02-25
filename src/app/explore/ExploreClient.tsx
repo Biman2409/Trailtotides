@@ -151,6 +151,16 @@ export default function ExploreClient() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
+  function toggleSeason(seasonMonths: Month[]) {
+    const allSelected = seasonMonths.every((m) => selectedMonths.includes(m));
+    if (allSelected) {
+      setSelectedMonths(selectedMonths.filter((m) => !seasonMonths.includes(m)));
+    } else {
+      const merged = Array.from(new Set([...selectedMonths, ...seasonMonths])) as Month[];
+      setSelectedMonths(merged);
+    }
+  }
+
   function toggle<T>(arr: T[], val: T, setter: (v: T[]) => void) {
     setter(arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val]);
   }
