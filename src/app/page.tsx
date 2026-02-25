@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Map, ChevronRight, Star, ChevronDown, Eye, Crown, Mountain } from "lucide-react";
+import { ArrowRight, Map, ChevronRight, Star, ChevronDown, Clock, Crown, Mountain } from "lucide-react";
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
