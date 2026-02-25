@@ -254,11 +254,9 @@ export default function HomePage() {
               <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
                 From the Field
               </p>
-              <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
-                Stories from people
-                <br />
-                who've been there
-              </h2>
+                <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
+                  Voices from the edge
+                </h2>
               <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
             </div>
             <Link
