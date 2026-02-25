@@ -148,36 +148,29 @@ export default function FindYourFormat() {
                     style={{ background: `${cat.accent}22` }}
                   />
 
-                  {/* Content over image */}
-                  <div className="absolute inset-0 p-5 flex flex-col justify-between">
-                    {/* Top row */}
-                    <div className="flex items-start justify-between">
-                      <span
-                        className="text-2xl w-10 h-10 flex items-center justify-center rounded-xl"
-                        style={{ background: "rgba(0,0,0,0.35)", backdropFilter: "blur(6px)" }}
-                      >
-                        {cat.icon}
-                      </span>
-                      {/* Tap cue */}
-                      <span
-                        className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                        style={{
-                          background: isOpen ? cat.accent : "rgba(255,255,255,0.12)",
-                          color: "white",
-                          backdropFilter: "blur(6px)",
-                          transition: "background 0.25s",
-                        }}
-                      >
-                        {isOpen ? "Close" : "Explore"}
-                      </span>
-                    </div>
+                    {/* Content over image */}
+                    <div className="absolute inset-0 p-5 flex flex-col justify-between">
+                      {/* Top row — tap cue only */}
+                      <div className="flex items-start justify-end">
+                        <span
+                          className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                          style={{
+                            background: isOpen ? cat.accent : "rgba(255,255,255,0.12)",
+                            color: "white",
+                            backdropFilter: "blur(6px)",
+                            transition: "background 0.25s",
+                          }}
+                        >
+                          {isOpen ? "Close" : "Explore"}
+                        </span>
+                      </div>
 
-                    {/* Bottom row */}
-                    <div>
-                      <h3 className="text-white font-bold text-xl leading-tight">{cat.label}</h3>
-                      <p className="text-white/55 text-xs mt-0.5">{cat.subtitle}</p>
+                      {/* Bottom row */}
+                      <div>
+                        <h3 className="text-white font-bold text-2xl leading-tight tracking-tight">{cat.label}</h3>
+                        <p className="text-white/60 text-xs mt-1.5 leading-relaxed line-clamp-2">{cat.subtitle}</p>
+                      </div>
                     </div>
-                  </div>
                 </button>
 
                 {/* Body — collapsed state: show count pill */}
