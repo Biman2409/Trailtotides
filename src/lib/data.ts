@@ -590,6 +590,20 @@ export const stories: Story[] = [
     date: "Jan 2026",
   },
   {
+    id: "7",
+    slug: "the-night-photi-la-tested-us",
+    title: "The Night Photi La Tested Us",
+    excerpt:
+      "A ride to Umling La, a detour to Demchok, and the mountain that watched over us. Some trips are planned. Some trips are reckless. And some trips stay with you forever.",
+    author: "Nishant Jayprakash Ingle",
+    authorRole: "Rider & TTT Original",
+    heroImage: "https://images.unsplash.com/photo-1619103801164-1166263cb3b6?w=1600&q=90",
+    readTime: "15 min read",
+    tags: ["Ladakh", "motorcycle", "Umling La", "TTT Original", "night ride"],
+    region: "Himalayas",
+    date: "2022",
+  },
+  {
     id: "6",
     slug: "chadar-the-frozen-river",
     title: "Chadar: On the Frozen River",
