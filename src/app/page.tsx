@@ -120,13 +120,7 @@ export default function HomePage() {
               <h2 className="text-[#1a1f2e] text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
                 Adventures of a Lifetime
               </h2>
-              <Link
-                href="/explore"
-                className="hidden md:flex items-center gap-1.5 text-[#c4622d] text-sm font-semibold hover:text-[#1a1f2e] transition-colors shrink-0"
-              >
-                View all
-                <ChevronRight className="w-4 h-4" />
-              </Link>
+
             </div>
             <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
           </div>
