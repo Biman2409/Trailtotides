@@ -71,10 +71,9 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           {(() => {
             const d = difficultyStyle[adventure.difficulty];
             return d ? (
-              <span className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full ${d.bg} ${d.text}`}>
-                <span className={`w-2 h-2 rounded-full ${d.dot} opacity-80`} />
-                {adventure.difficulty}
-              </span>
+                <span className={`text-xs font-semibold px-3 py-1.5 rounded-full ${d.bg} ${d.text}`}>
+                  {adventure.difficulty}
+                </span>
             ) : null;
           })()}
         </div>
