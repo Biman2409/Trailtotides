@@ -98,7 +98,7 @@ export default function FindYourFormat() {
           <div className="flex items-end justify-between gap-4">
             <div>
               <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
-                Every way to go
+                Adventure lives in every element
               </h2>
               <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
             </div>
