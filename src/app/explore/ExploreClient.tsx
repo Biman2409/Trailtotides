@@ -152,6 +152,7 @@ export default function ExploreClient() {
   const [mounted, setMounted] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
+  const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
   useEffect(() => { setMounted(true); }, []);
 
   function toggleSeason(seasonMonths: Month[]) {
