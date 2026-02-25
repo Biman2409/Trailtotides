@@ -92,7 +92,7 @@ export default async function StoryPage({ params }: Props) {
   const others = stories.filter((s) => s.id !== story.id).slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-[#fafaf8]">
+    <div className="min-h-screen bg-[#111820]">
       <Navbar />
 
       {/* Hero */}
