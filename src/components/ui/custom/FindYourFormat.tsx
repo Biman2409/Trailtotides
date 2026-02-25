@@ -240,26 +240,23 @@ export default function FindYourFormat() {
                       ) : (
                         <>
                           <div className="flex flex-col gap-0.5">
-                            {cat.items.map(({ type, icon, count }) => (
-                              <Link
-                                key={type}
-                                href={`/explore?type=${encodeURIComponent(type)}`}
-                                className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150"
-                                style={{}}
-                                onMouseEnter={(e) => {
-                                  (e.currentTarget as HTMLElement).style.background =
-                                    cat.accentLight;
-                                }}
-                                onMouseLeave={(e) => {
-                                  (e.currentTarget as HTMLElement).style.background = "transparent";
-                                }}
-                              >
-                                <div className="flex items-center gap-2.5">
-                                  <span className="text-base">{icon}</span>
+                              {cat.items.map(({ type, count }) => (
+                                <Link
+                                  key={type}
+                                  href={`/explore?type=${encodeURIComponent(type)}`}
+                                  className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150"
+                                  style={{}}
+                                  onMouseEnter={(e) => {
+                                    (e.currentTarget as HTMLElement).style.background =
+                                      cat.accentLight;
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    (e.currentTarget as HTMLElement).style.background = "transparent";
+                                  }}
+                                >
                                   <span className="text-white/70 group-hover/row:text-white text-sm font-medium transition-colors duration-150">
                                     {type}
                                   </span>
-                                </div>
                                 <div className="flex items-center gap-2">
                                   <span
                                     className="text-xs font-semibold px-2 py-0.5 rounded-full"
