@@ -22,3 +22,4 @@
 2026-02-24T10:28:09.025Z [network][POST 0] /__nextjs_original-stack-frames
   request: {"frames":[{"file":"file:///home/user/app/.next/static/chunks/turbopack-user_app_c66dc016._.js","line1":622,"column1":28,"methodName":"<unknown>","arguments":[]}],"isServer":false,"isEdgeServer":false,"isAppDirectory":true}
   response: Request failed: Load failed
+2026-02-25T13:08:49.501Z [console][error] Failed to fetch RSC payload for https://3000-152fab09-2064-469b-8116-45c45bdb67a6.orchids.cloud/. Falling back to browser navigation. {}
