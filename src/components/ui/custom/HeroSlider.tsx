@@ -123,7 +123,7 @@ export default function HeroSlider() {
   return (
     <div className="absolute inset-0 overflow-hidden">
 
-      {slides.map((slide, i) => {
+        {shuffled.map((slide, i) => {
         const isActive = i === current;
         const isPrev   = i === prev;
         if (!isActive && !isPrev) return null;
