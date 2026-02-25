@@ -31,7 +31,7 @@ const categories = [
   {
     id: "water",
     label: "Water",
-      subtitle: "Dive reefs, ride rapids, and paddle open water",
+        subtitle: "Ride the currents and dive into the deep unknown",
     image: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&q=80",
     accent: "#2a7cc7",
     accentLight: "rgba(42,124,199,0.15)",
