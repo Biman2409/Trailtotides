@@ -6,11 +6,14 @@ import Footer from "@/components/layout/Footer";
 import { stories } from "@/lib/data";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 
+// Tags that are rendered as orange badge pills (not content pills)
+const BADGE_TAGS = ["Featured", "TTT Original"];
+
 export default function StoriesPage() {
   const [featured, ...rest] = stories;
 
   return (
-      <div className="min-h-screen bg-[#111820]">
+    <div className="min-h-screen bg-[#111820]">
       <Navbar />
 
       {/* Hero */}
@@ -19,12 +22,12 @@ export default function StoriesPage() {
           <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
             From the Field
           </p>
-            <h1 className="text-white text-5xl lg:text-7xl font-semibold tracking-tight leading-none mb-4">
-              Voices from the Edge
-            </h1>
-            <p className="text-white/50 text-lg max-w-xl mt-4">
-                Not travel bloggers. Not influencers. Real people who pushed past the edge and had the guts to write it down.
-            </p>
+          <h1 className="text-white text-5xl lg:text-7xl font-semibold tracking-tight leading-none mb-4">
+            Voices from the Edge
+          </h1>
+          <p className="text-white/50 text-lg max-w-xl mt-4">
+            Not travel bloggers. Not influencers. Real people who pushed past the edge and had the guts to write it down.
+          </p>
         </div>
       </section>
 
@@ -42,45 +45,46 @@ export default function StoriesPage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-12">
-                <div className="flex flex-col gap-2 mb-4">
-                    <div className="flex items-center gap-2">
-                      {featured.tags.includes("Featured") && (
-                        <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
-                          <Crown className="w-3 h-3" /> Featured
-                        </span>
-                      )}
-                      {featured.tags.includes("TTT Original") && (
-                        <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
-                          <Mountain className="w-3 h-3" /> TTT Original
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {featured.tags.filter(t => ["Himalayas","Biking"].includes(t)).map(tag => (
-                        <span key={tag} className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs px-3 py-1.5 rounded-full">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                {/* Badge pills (Featured, TTT Original) */}
+                <div className="flex items-center gap-2 mb-2">
+                  {featured.tags.includes("Featured") && (
+                    <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
+                      <Crown className="w-3 h-3" /> Featured
+                    </span>
+                  )}
+                  {featured.tags.includes("TTT Original") && (
+                    <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
+                      <Mountain className="w-3 h-3" /> TTT Original
+                    </span>
+                  )}
+                </div>
+                {/* Content tags — all non-badge tags */}
+                <div className="flex items-center gap-2 mb-4 flex-wrap">
+                  {featured.tags.filter((t) => !BADGE_TAGS.includes(t)).map((tag) => (
+                    <span key={tag} className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs px-3 py-1.5 rounded-full">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
                 <h2 className="text-white text-3xl lg:text-5xl font-semibold tracking-tight leading-tight mb-3 max-w-2xl group-hover:text-white/90 transition-colors">
                   {featured.title}
                 </h2>
                 <p className="text-white/60 text-base max-w-2xl leading-relaxed mb-5 hidden lg:block">
                   {featured.excerpt}
                 </p>
-                <div className="flex items-center gap-4">
-                  <div className="w-8 h-8 rounded-full bg-[#c4622d]/40 flex items-center justify-center text-xs font-bold text-white">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <div className="w-8 h-8 rounded-full bg-[#c4622d]/40 flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
                     {featured.author[0]}
                   </div>
-                  <div>
+                  <div className="mr-2">
                     <p className="text-white text-sm font-medium">{featured.author}</p>
                     <p className="text-white/40 text-xs">{featured.authorRole}</p>
                   </div>
-                    <span className="ml-2 flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full">
-                      <Clock className="w-3 h-3" /> {featured.readTime}
-                    </span>
-                    <StoryViewPill slug={featured.slug} initialViews={featured.views} />
+                  <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full">
+                    <Clock className="w-3 h-3" /> {featured.readTime}
+                  </span>
+                  {/* StoryViewPill — fetches live count, no initialViews needed */}
+                  <StoryViewPill slug={featured.slug} />
                 </div>
               </div>
             </div>
@@ -91,55 +95,57 @@ export default function StoriesPage() {
       {/* All stories grid */}
       <section className="py-20 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-            <h2 className="text-[#1a1f2e] text-2xl font-semibold mb-10">All Voices from the Edge</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {rest.map((story) => (
-                <Link key={story.id} href={`/stories/${story.slug}`} className="group block">
-                  <div className="relative h-52 rounded-2xl overflow-hidden mb-5 shadow-md group-hover:shadow-xl group-hover:shadow-black/15 transition-shadow duration-300">
-                    <Image
-                      src={story.heroImage}
-                      alt={story.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                      <div className="absolute bottom-4 left-4 flex items-center gap-2 flex-wrap">
-                        {story.tags.filter(t => ["Himalayas","Biking"].includes(t)).map(tag => (
-                          <span key={tag} className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs px-3 py-1.5 rounded-full">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
+          <h2 className="text-[#1a1f2e] text-2xl font-semibold mb-10">All Voices from the Edge</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {rest.map((story) => (
+              <Link key={story.id} href={`/stories/${story.slug}`} className="group block">
+                <div className="relative h-52 rounded-2xl overflow-hidden mb-5 shadow-md group-hover:shadow-xl group-hover:shadow-black/15 transition-shadow duration-300">
+                  <Image
+                    src={story.heroImage}
+                    alt={story.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                  {/* Content tags on image — all non-badge tags */}
+                  <div className="absolute bottom-4 left-4 flex items-center gap-2 flex-wrap">
+                    {story.tags.filter((t) => !BADGE_TAGS.includes(t)).map((tag) => (
+                      <span key={tag} className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs px-3 py-1.5 rounded-full">
+                        {tag}
+                      </span>
+                    ))}
                   </div>
-                  <div>
-                    <h3 className="text-[#1a1f2e] text-xl font-semibold leading-snug mb-2 group-hover:text-[#c4622d] transition-colors">
-                      {story.title}
-                    </h3>
-                    <p className="text-[#6b6560] text-sm leading-relaxed line-clamp-2 mb-4">
-                      {story.excerpt}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-full bg-[#e0d8cc] flex items-center justify-center text-xs font-bold text-[#6b6560]">
-                          {story.author[0]}
-                        </div>
-                        <div>
-                          <p className="text-[#1a1f2e] text-xs font-semibold">{story.author}</p>
-                          <p className="text-[#9a9590] text-xs">{story.date}</p>
-                        </div>
+                </div>
+                <div>
+                  <h3 className="text-[#1a1f2e] text-xl font-semibold leading-snug mb-2 group-hover:text-[#c4622d] transition-colors">
+                    {story.title}
+                  </h3>
+                  <p className="text-[#6b6560] text-sm leading-relaxed line-clamp-2 mb-4">
+                    {story.excerpt}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-full bg-[#e0d8cc] flex items-center justify-center text-xs font-bold text-[#6b6560]">
+                        {story.author[0]}
                       </div>
-                        <span className="flex items-center gap-1.5 bg-black/8 backdrop-blur-sm border border-black/10 text-[#6b6560] text-xs px-3 py-1.5 rounded-full">
-                              <Clock className="w-3 h-3" /> {story.readTime}
-                            </span>
-                            <StoryViewPill slug={story.slug} initialViews={story.views} className="!bg-black/8 !border-black/10 !text-[#6b6560]" />
+                      <div>
+                        <p className="text-[#1a1f2e] text-xs font-semibold">{story.author}</p>
+                        <p className="text-[#9a9590] text-xs">{story.date}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="flex items-center gap-1.5 bg-black/5 border border-black/10 text-[#6b6560] text-xs px-3 py-1.5 rounded-full">
+                        <Clock className="w-3 h-3" /> {story.readTime}
+                      </span>
+                      <StoryViewPill slug={story.slug} className="!bg-black/5 !border-black/10 !text-[#6b6560]" />
                     </div>
                   </div>
-                </Link>
-              ))}
-            </div>
+                </div>
+              </Link>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
       {/* CTA */}
       <section className="py-20 px-6 lg:px-8 bg-[#f5f0e8]">
