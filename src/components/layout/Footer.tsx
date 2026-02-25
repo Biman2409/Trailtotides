@@ -90,7 +90,6 @@ export default function Footer() {
                   ["Interactive Map", "/map"],
                   ["Stories", "/stories"],
                   ["Plan Your Adventure", "/plan"],
-                    
                   ["About", "/about"],
                   ["Contact", "/contact"],
                 ].map(([label, href]) => (
