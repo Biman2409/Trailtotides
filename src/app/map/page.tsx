@@ -328,8 +328,8 @@ export default function MapPage() {
     <div className="h-screen flex flex-col overflow-hidden">
       <Navbar />
 
-      {/* Filter bar */}
-      <div className="sticky z-[1001] bg-white/95 backdrop-blur-md border-b border-[#e0d8cc] shadow-sm mt-[64px] lg:mt-[80px]">
+      {/* Filter bar — sits directly below the fixed navbar (h-16 mobile / h-20 desktop) */}
+      <div className="sticky top-16 lg:top-20 z-[1001] bg-white/95 backdrop-blur-md border-b border-[#e0d8cc] shadow-sm">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-3 flex items-center gap-3">
             {/* Adventure search */}
             <div className="relative flex-1 max-w-xs">
