@@ -7,6 +7,9 @@ import { stories } from "@/lib/data";
 import { ChevronLeft, Clock, ArrowRight, Crown, Mountain } from "lucide-react";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 
+// Tags rendered as orange badges — everything else is a content pill
+const BADGE_TAGS = ["Featured", "TTT Original"];
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
