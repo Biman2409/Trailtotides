@@ -120,19 +120,17 @@ export default async function StoryPage({ params }: Props) {
           {/* Row 1: special badges */}
           <div className="flex items-center gap-3 mb-2 flex-wrap">
             {story.tags.includes("Featured") && (
-              <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
-                <Crown className="w-3 h-3" />
-                Featured
-              </span>
-            )}
-            {story.tags.includes("TTT Original") && (
-              <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/40 ring-1 ring-white/20">
-                <span className="w-4 h-4 rounded-sm bg-white/20 flex items-center justify-center shrink-0">
-                  <Mountain className="w-2.5 h-2.5 text-white" strokeWidth={2.2} />
+                <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
+                  <Crown className="w-3 h-3" />
+                  Featured
                 </span>
-                TTT Original
-              </span>
-            )}
+              )}
+              {story.tags.includes("TTT Original") && (
+                <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
+                  <Mountain className="w-3 h-3" />
+                  TTT Original
+                </span>
+              )}
           </div>
           {/* Row 2: content tags + read time */}
           <div className="flex items-center gap-3 mb-4 flex-wrap">
