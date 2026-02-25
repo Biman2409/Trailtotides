@@ -158,12 +158,12 @@ export default async function StoryPage({ params }: Props) {
         </div>
 
         {/* Tags */}
-        <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-[#e0d8cc]">
-          {story.tags.map((tag) => (
-            <span
-              key={tag}
-              className="bg-[#1a1f2e]/7 text-[#1a1f2e]/55 text-xs px-3 py-1.5 rounded-full"
-            >
+          <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-white/10">
+            {story.tags.map((tag) => (
+              <span
+                key={tag}
+                className="bg-white/8 text-white/40 text-xs px-3 py-1.5 rounded-full"
+              >
               #{tag}
             </span>
           ))}
