@@ -151,7 +151,7 @@ export default async function StoryPage({ params }: Props) {
         {/* Body paragraphs */}
         <div className="space-y-7">
           {body.map((para, idx) => (
-            <p key={idx} className="text-[#3a3630] text-lg leading-[1.85] font-light">
+              <p key={idx} className="text-white/65 text-lg leading-[1.85] font-light">
               {para}
             </p>
           ))}
