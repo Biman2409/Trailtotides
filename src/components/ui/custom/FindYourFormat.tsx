@@ -91,22 +91,18 @@ export default function FindYourFormat() {
     <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#111820]">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-14">
-          <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+          <div className="mb-12">
+            <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
               Discover by style
-          </p>
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-none whitespace-nowrap">
-                  Adventure lives in every element
-                </h2>
-                <p className="text-white/40 text-sm mt-3 leading-relaxed">
-                  Pick a category that matches your style.
-                </p>
-                <div className="mt-4 w-14 h-0.5 bg-[#c4622d] rounded-full" />
-              </div>
-            </div>
-        </div>
+            </p>
+            <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
+              Adventure lives in every element
+            </h2>
+            <p className="mt-4 text-white/50 text-base max-w-xl">
+              Pick a category that matches your style.
+            </p>
+            <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
+          </div>
 
         {/* Cards grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
