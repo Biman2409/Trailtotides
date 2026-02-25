@@ -190,7 +190,7 @@ export default function ExploreClient() {
         return false;
       return true;
     });
-  }, [search, selectedTypes, selectedRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes]);
+  }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes]);
 
   const activeFilterCount =
     selectedTypes.length +
