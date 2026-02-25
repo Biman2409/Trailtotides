@@ -3,7 +3,7 @@ import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { stories } from "@/lib/data";
-import { ArrowRight, Clock } from "lucide-react";
+import { ArrowRight, Clock, Crown, Mountain } from "lucide-react";
 
 export default function StoriesPage() {
   const [featured, ...rest] = stories;
