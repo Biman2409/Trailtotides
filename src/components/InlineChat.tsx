@@ -161,17 +161,18 @@ export default function InlineChat() {
                   Describe what you&apos;re looking for — we&apos;ll match you with the right trip
                 </p>
                 <div className="flex flex-wrap gap-2">
-              {SUGGESTIONS.map((s) => (
-                <button
-                  key={s}
-                  onClick={() => send(s)}
-                  className="text-xs border border-white/10 text-white/50 hover:text-white hover:border-white/24 px-3 py-1.5 rounded-full transition-all tracking-wide"
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-          )}
+                  {SUGGESTIONS.map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => send(s)}
+                      className="text-xs border border-white/10 text-white/50 hover:text-white hover:border-white/24 px-3 py-1.5 rounded-full transition-all tracking-wide"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
           {/* Input bar */}
           <div className="border-t border-white/8 p-3 flex gap-3 bg-white/3">
