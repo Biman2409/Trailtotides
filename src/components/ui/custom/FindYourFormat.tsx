@@ -48,9 +48,8 @@ const categories = [
   },
   {
     id: "snow",
-    icon: "❄️",
     label: "Snow",
-    subtitle: "Glaciers, slopes & ice",
+    subtitle: "Carve slopes, cross glaciers, and push limits in frozen wilderness",
     image: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=800&q=80",
     accent: "#4a8a9f",
     accentLight: "rgba(74,138,159,0.15)",
