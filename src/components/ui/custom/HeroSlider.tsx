@@ -114,7 +114,7 @@ export default function HeroSlider() {
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(
-      () => goTo((current + 1) % slides.length),
+      () => goTo((current + 1) % shuffled.length),
       SLIDE_DURATION
     );
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
