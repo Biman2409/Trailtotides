@@ -15,7 +15,7 @@ export default function Footer() {
               <span className="font-semibold text-lg tracking-tight">Trail to Tides</span>
             </Link>
             <p className="text-white/50 text-sm leading-relaxed mt-3 max-w-xs">
-              India's adventures, mapped. From frozen Himalayan rivers to coral reefs in the Andamans — curated by people who've actually been there.
+              Every adventure across India, mapped and verified. Handpicked by explorers who've actually been there.
             </p>
             <div className="flex items-center gap-4 mt-6">
               <a href="#" className="text-white/40 hover:text-white transition-colors">
