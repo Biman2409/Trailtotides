@@ -47,15 +47,15 @@ export default function SignUpPage() {
             <span>Trail to Tides</span>
           </Link>
           
-            <div className="max-w-md">
-              <h2 className="text-6xl font-black text-white leading-[1.05] mb-6 tracking-tight">
-                Wild is calling , <br />
-                <span className="text-orange-500">answer it.</span>
-              </h2>
-              <p className="text-white/70 text-lg font-medium leading-relaxed max-w-sm">
-                Join our community of explorers and get access to exclusive trails, expert advice, and gear deals.
-              </p>
-            </div>
+              <div className="max-w-md">
+                <h2 className="text-6xl font-black text-white leading-[1.05] mb-6 tracking-tight">
+                  Wild is calling, <br />
+                  <span className="text-orange-500">answer it.</span>
+                </h2>
+                <p className="text-white/70 text-lg font-medium leading-relaxed max-w-sm">
+                  Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
+                </p>
+              </div>
 
           <div className="flex items-center gap-6 text-white/30 text-[11px] font-bold uppercase tracking-[0.15em]">
             <span>© 2026 Trail to Tides</span>
