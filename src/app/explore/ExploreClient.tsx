@@ -330,22 +330,22 @@ export default function ExploreClient() {
                     {(() => {
                             const categories = [
                                 {
-                                  label: "Land Based", 
+                                  label: "Land", 
                                   icon: <Mountain className="w-3.5 h-3.5" />,
                                   types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
                                 },
                                 {
-                                  label: "Water Based", 
+                                  label: "Water", 
                                   icon: <Waves className="w-3.5 h-3.5" />,
                                   types: ["Diving", "Kayaking"],
                                 },
                                 {
-                                  label: "Snow Based", 
+                                  label: "Snow", 
                                   icon: <Snowflake className="w-3.5 h-3.5" />,
                                   types: ["Skiing"],
                                 },
                                 {
-                                  label: "Air Based", 
+                                  label: "Air", 
                                   icon: <Wind className="w-3.5 h-3.5" />,
                                   types: [] as string[],
                                 },
