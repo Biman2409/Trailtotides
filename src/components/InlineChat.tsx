@@ -188,7 +188,7 @@ export default function InlineChat() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
-              placeholder="Ask Compass AI what you're looking for — we'll match you with the right trip"
+              placeholder="Ask Compass AI what you’re looking for"
               className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/25 text-sm px-4 py-3 rounded-xl outline-none focus:border-[#ff5100]/60 focus:ring-1 focus:ring-[#ff5100]/25 transition-all"
             />
             <button
