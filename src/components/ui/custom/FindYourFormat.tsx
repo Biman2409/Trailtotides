@@ -171,6 +171,7 @@ export default function FindYourFormat() {
                           {cat.icon}
                           {cat.label}
                         </h3>
+                        <p className="text-white/60 text-xs mt-1.5 leading-relaxed line-clamp-2">{cat.subtitle}</p>
                       </div>
                     </div>
                 </button>
