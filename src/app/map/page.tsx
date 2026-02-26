@@ -509,14 +509,14 @@ export default function MapPage() {
                                 const hasSelected = selectedRegions.includes(rg.name) || rg.subRegions.some(sr => selectedSubRegions.includes(sr));
                                 const subCount = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
                                 return (
-                                  <button key={rg.name} onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
-                                      isExpanded || hasSelected 
-                                        ? "bg-[#ff5100] text-white border-[#ff5100]" 
-                                        : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
-                                    }`}>
-                                    {rg.icon}
-                                    {rg.name}
+                                    <button key={rg.name} onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
+                                      className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                                        isExpanded || hasSelected 
+                                          ? "bg-[#ff5100] text-white border-[#ff5100]" 
+                                          : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                                      }`}>
+                                      {rg.name}
+
                                 {subCount > 0 && <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">{subCount}</span>}
                                 <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                               </button>
