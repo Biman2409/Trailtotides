@@ -752,7 +752,7 @@ export default function ExploreClient() {
                     {([ 
                       { val: "Beginner",     icon: "🟢", idle: "bg-green-50 border-green-200 text-green-800 hover:bg-green-100 border",     active: "bg-green-600 text-white border border-green-600" },
                       { val: "Intermediate", icon: "🔵", idle: "bg-blue-50 border-blue-200 text-blue-800 hover:bg-blue-100 border",         active: "bg-blue-600 text-white border border-blue-600" },
-                      { val: "Advanced",     icon: "🟠", idle: "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100 border",     active: "bg-amber-500 text-white border border-amber-500" },
+                      { val: "Advanced",     icon: "🟠", idle: "bg-[#f69d7c]/5 border-[#f69d7c]/20 text-[#9c4a2f] hover:bg-[#f69d7c]/10 border",     active: "bg-[#f69d7c] text-white border border-[#f69d7c]" },
                       { val: "Expert",       icon: "🟠", idle: "bg-[#f4845f]/5 border-[#f4845f]/20 text-[#9c4a2f] hover:bg-[#f4845f]/10 border", active: "bg-[#f4845f] text-white border border-[#f4845f]" },
                       { val: "Extreme",      icon: "🔴", idle: "bg-red-50 border-red-200 text-red-800 hover:bg-red-100 border",             active: "bg-red-600 text-white border border-red-600" },
                       ] as { val: Difficulty; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
