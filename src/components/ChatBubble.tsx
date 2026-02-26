@@ -89,7 +89,7 @@ export default function ChatBubble() {
         aria-label="Open Compass AI"
       >
         {open ? <X className="w-5 h-5" /> : <Compass className="w-5 h-5" />}
-        {!open && <span className="text-sm font-semibold">Need help?</span>}
+        {!open && <span className="text-sm font-semibold">Help?</span>}
       </button>
 
       {/* Chat panel */}
