@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Map as MapIcon } from "lucide-react";
+import { ArrowRight, Map as MapIcon, Sun } from "lucide-react";
 import Image from "next/image";
 import { regions, adventures, Region } from "@/lib/data";
 
@@ -17,6 +17,17 @@ const regionSubRegions: Record<string, string[]> = {
   "Urban": ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"]
 };
 
+const regionIcons: Record<string, string> = {
+  "Himalayas": "🏔️",
+  "Western Ghats": "⛰️",
+  "Eastern Ghats": "⛰️",
+  "Desert": "🏜️",
+  "Coast": "🌊",
+  "Islands": "🏝️",
+  "Northeast": "🌄",
+  "Urban": "🏙️"
+};
+
 export default function FindByRegion() {
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -29,7 +40,7 @@ export default function FindByRegion() {
       return {
         label: sr,
         count,
-        icon: "📍"
+        icon: regionIcons[region.name] || "📍"
       };
     });
 
