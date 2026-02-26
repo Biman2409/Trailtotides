@@ -63,12 +63,12 @@ const categories = [
       { type: "Snow Trekking", icon: "🥾", count: 22 },
     ],
   },
-    {
-      id: "air",
-      label: "Air",
-        subtitle: "Soar above the clouds and see the world differently",
-      image: "https://images.unsplash.com/photo-1541613569553-332a2574a508?w=800&q=80",
-      accent: "#7a5a98",
+      {
+        id: "air",
+        label: "Air",
+          subtitle: "Soar above the clouds and see the world differently",
+        image: "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?w=800&q=80",
+        accent: "#7a5a98",
     accentLight: "rgba(122,90,152,0.15)",
     accentBorder: "rgba(122,90,152,0.35)",
     tagBg: "rgba(122,90,152,0.18)",
