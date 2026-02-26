@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Loader2, Sparkles, ChevronRight, ArrowRight } from "lucide-react";
+import { Send, Loader2, Compass, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { Adventure } from "@/lib/data";
 
@@ -76,7 +76,7 @@ export default function InlineChat() {
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-2.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#c4622d]" />
+              <Compass className="w-3.5 h-3.5 text-[#c4622d]" />
               <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase">
                 AI Adventure Finder
               </p>
