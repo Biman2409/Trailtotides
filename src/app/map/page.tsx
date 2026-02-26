@@ -401,40 +401,40 @@ export default function MapPage() {
                 <div className="col-span-2 lg:col-span-3">
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Adventure Type</h3>
                   {(() => {
-                    const categories = [
-                      {
-                        label: "Land Based", 
-                        btn: "bg-[#ff6b35]/5 border-[#ff6b35]/20 text-[#9c4a2f] hover:bg-[#ff6b35]/10",
-                        btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
-                        chip: "bg-[#ff6b35]/10 text-orange-900 hover:bg-[#ff6b35]/20",
-                        chipActive: "bg-[#ff6b35] text-white",
-                        types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
-                      },
-                      {
-                        label: "Water Based", 
-                        btn: "bg-sky-50 border-sky-200 text-sky-800 hover:bg-sky-100",
-                        btnActive: "bg-sky-500 text-white border-sky-500",
-                        chip: "bg-sky-100 text-sky-900 hover:bg-sky-200",
-                        chipActive: "bg-sky-500 text-white",
-                        types: ["Diving", "Kayaking"],
-                      },
-                      {
-                        label: "Snow Based", 
-                        btn: "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100",
-                        btnActive: "bg-slate-600 text-white border-slate-600",
-                        chip: "bg-slate-100 text-slate-700 hover:bg-slate-200",
-                        chipActive: "bg-slate-600 text-white",
-                        types: ["Skiing"],
-                      },
+                      const categories = [
                         {
-                          label: "Air Based", 
-                          btn: "bg-purple-50 border-purple-200 text-purple-800 hover:bg-purple-100",
-                          btnActive: "bg-purple-500 text-white border-purple-500",
-                          chip: "bg-purple-100 text-purple-900 hover:bg-purple-200",
-                          chipActive: "bg-purple-500 text-white",
-                          types: [] as string[],
+                          label: "Land Based", 
+                          btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
+                          btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                          chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                          chipActive: "bg-[#ff6b35] text-white",
+                          types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
                         },
-                    ];
+                        {
+                          label: "Water Based", 
+                          btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
+                          btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                          chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                          chipActive: "bg-[#ff6b35] text-white",
+                          types: ["Diving", "Kayaking"],
+                        },
+                        {
+                          label: "Snow Based", 
+                          btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
+                          btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                          chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                          chipActive: "bg-[#ff6b35] text-white",
+                          types: ["Skiing"],
+                        },
+                          {
+                            label: "Air Based", 
+                            btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
+                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                            chipActive: "bg-[#ff6b35] text-white",
+                            types: [] as string[],
+                          },
+                      ];
                     return (
                       <div className="flex flex-col gap-2">
                         <div className="flex flex-wrap gap-2">
