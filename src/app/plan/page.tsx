@@ -171,13 +171,14 @@ export default function PlanPage() {
                   <h2 className="text-[#1a1f2e] text-xl font-bold">How hard?</h2>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {([
-                    { val: "Beginner" as Difficulty,     color: "bg-emerald-500 text-white border-emerald-500",   idle: "bg-emerald-50 text-emerald-800 border-emerald-200" },
-                    { val: "Intermediate" as Difficulty, color: "bg-teal-500 text-white border-teal-500",          idle: "bg-teal-50 text-teal-800 border-teal-200" },
-                    { val: "Advanced" as Difficulty,     color: "bg-amber-500 text-white border-amber-500",        idle: "bg-amber-50 text-amber-800 border-amber-200" },
-                    { val: "Expert" as Difficulty,       color: "bg-[#f4845f] text-white border-[#f4845f]",      idle: "bg-[#f4845f]/5 text-[#9c4a2f] border-[#f4845f]/20" },
-                    { val: "Extreme" as Difficulty,      color: "bg-red-500 text-white border-red-500",            idle: "bg-red-50 text-red-800 border-red-200" },
-                  ]).map(({ val, color, idle }) => (
+                    {([
+                      { val: "Beginner" as Difficulty,     color: "bg-emerald-500 text-white border-emerald-500",   idle: "bg-emerald-50 text-emerald-800 border-emerald-200" },
+                      { val: "Intermediate" as Difficulty, color: "bg-teal-500 text-white border-teal-500",          idle: "bg-teal-50 text-teal-800 border-teal-200" },
+                      { val: "Advanced" as Difficulty,     color: "bg-[#f69d7c] text-white border-[#f69d7c]",        idle: "bg-[#f69d7c]/5 text-[#9c4a2f] border-[#f69d7c]/20" },
+                      { val: "Expert" as Difficulty,       color: "bg-[#f4845f] text-white border-[#f4845f]",      idle: "bg-[#f4845f]/5 text-[#9c4a2f] border-[#f4845f]/20" },
+                      { val: "Extreme" as Difficulty,      color: "bg-red-500 text-white border-red-500",            idle: "bg-red-50 text-red-800 border-red-200" },
+                    ]).map(({ val, color, idle }) => (
+
                     <button
                       key={val}
                       onClick={() => setSelectedDifficulties(toggle(selectedDifficulties, val))}
