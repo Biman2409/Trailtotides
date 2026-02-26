@@ -100,29 +100,32 @@ export default function InlineChat() {
             
             <div className="relative bg-[#11161d]/90 backdrop-blur-2xl border border-white/[0.08] rounded-[2rem] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] overflow-hidden">
               
-                {/* Operational Header */}
-                <div className="px-6 py-4 border-b border-white/[0.05] flex items-center justify-center bg-white/[0.01]">
-                  <div className="flex items-center gap-3">
-                    <Compass className="w-4 h-4 text-[#ff5100]" />
-                    <span className="text-[10px] text-white/40 font-black uppercase tracking-[0.2em]">Recommended Starting Vectors</span>
-                  </div>
+              {/* Operational Header */}
+              <div className="px-6 py-4 border-b border-white/[0.05] flex items-center justify-between bg-white/[0.01]">
+                <div className="flex items-center gap-3">
+                  <Compass className="w-4 h-4 text-[#ff5100]" />
                 </div>
+                <div className="absolute left-1/2 -translate-x-1/2">
+                  <span className="text-[10px] text-white/40 font-black uppercase tracking-[0.2em]">Recommended Starting Vectors</span>
+                </div>
+                <div className="w-4" /> {/* Spacer to balance the logo */}
+              </div>
 
-                {/* Interaction Terminal */}
-                <div className={`min-h-[60px] ${messages.length > 0 ? 'max-h-[450px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
-                  {messages.length === 0 && (
-                    <div className="px-8 pt-8 pb-4 flex flex-wrap gap-3 justify-center">
-                      {['Coastal Trek', 'Mountain Peak', 'Hidden Lagoon'].map((v) => (
-                        <button 
-                          key={v}
-                          onClick={() => send(v)}
-                          className="px-4 py-2 rounded-full bg-white/[0.03] border border-white/[0.08] text-[11px] text-white/60 font-bold uppercase tracking-widest hover:bg-[#ff5100]/10 hover:text-[#ff5100] hover:border-[#ff5100]/30 transition-all duration-300"
-                        >
-                          {v}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+              {/* Interaction Terminal */}
+              <div className={`min-h-[60px] ${messages.length > 0 ? 'max-h-[450px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
+                {messages.length === 0 && (
+                  <div className="px-8 pt-8 pb-4 flex flex-wrap gap-3 justify-center">
+                    {['Coastal Trek', 'Mountain Peak', 'Hidden Lagoon'].map((v) => (
+                      <button 
+                        key={v}
+                        onClick={() => send(v)}
+                        className="px-4 py-2 rounded-full bg-white/[0.03] border border-white/[0.08] text-[11px] text-white/60 font-bold uppercase tracking-widest hover:bg-[#ff5100]/10 hover:text-[#ff5100] hover:border-[#ff5100]/30 transition-all duration-300"
+                      >
+                        {v}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 
                 {messages.length > 0 && (
                   <div className="p-6 lg:p-8 space-y-6">
@@ -156,6 +159,7 @@ export default function InlineChat() {
                                     className="flex flex-col bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.05] hover:border-[#ff5100]/50 rounded-[1.5rem] overflow-hidden transition-all duration-700 group shadow-2xl relative"
                                   >
                                     <div className="relative h-36 w-full overflow-hidden">
+                                      {/* eslint-disable-next-line @next/next/no-img-element */}
                                       <img
                                         src={card.heroImage}
                                         alt={card.name}
@@ -206,7 +210,7 @@ export default function InlineChat() {
                       <div className="flex justify-start animate-in fade-in duration-500">
                         <div className="bg-white/[0.03] border border-white/[0.08] px-6 py-4 rounded-[1.5rem] rounded-tl-none flex items-center gap-3 backdrop-blur-sm">
                           <Loader2 className="w-4 h-4 text-[#ff5100] animate-spin" />
-                          <span className="text-white/30 text-sm font-light tracking-wide italic">Calculating trajectories…</span>
+                          <span className="text-white/30 text-sm font-light tracking-wide italic">Thinking…</span>
                         </div>
                       </div>
                     )}
