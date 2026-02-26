@@ -136,7 +136,7 @@ export default function Navbar() {
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/8 transition-colors"
                 >
-                  <div className="w-7 h-7 rounded-full bg-orange-500/30 flex items-center justify-center text-orange-400 font-semibold text-xs">
+                  <div className="w-7 h-7 rounded-full bg-[#f4845f]/30 flex items-center justify-center text-[#f69d7c] font-semibold text-xs">
                     {user.name[0].toUpperCase()}
                   </div>
                   <span className="text-white/80 text-sm font-medium max-w-[120px] truncate">{user.name}</span>
@@ -233,7 +233,7 @@ export default function Navbar() {
             {user ? (
               <div className="pt-2 space-y-1">
                 <div className="flex items-center gap-3 px-3 py-3 border-b border-white/5">
-                  <div className="w-8 h-8 rounded-full bg-orange-500/30 flex items-center justify-center text-orange-400 font-semibold text-sm">
+                  <div className="w-8 h-8 rounded-full bg-[#f4845f]/30 flex items-center justify-center text-[#f69d7c] font-semibold text-sm">
                     {user.name[0].toUpperCase()}
                   </div>
                   <div>

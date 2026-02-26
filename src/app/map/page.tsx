@@ -37,7 +37,7 @@ const seasons: { label: string; icon: string; months: Month[]; activeColor: stri
   { label: "Spring",  icon: "🌸", months: ["Mar", "Apr", "May"],         activeColor: "bg-pink-500 text-white",   idleColor: "bg-pink-50 text-pink-800 hover:bg-pink-100 border border-pink-200" },
   { label: "Summer",  icon: "☀️", months: ["Apr", "May", "Jun"],         activeColor: "bg-amber-500 text-white",  idleColor: "bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200" },
   { label: "Monsoon", icon: "🌧️", months: ["Jun", "Jul", "Aug", "Sep"],  activeColor: "bg-teal-600 text-white",   idleColor: "bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-200" },
-  { label: "Autumn",  icon: "🍂", months: ["Oct", "Nov", "Dec"],         activeColor: "bg-[#f4845f] text-white", idleColor: "bg-orange-50 text-orange-800 hover:bg-orange-100 border border-orange-200" },
+  { label: "Autumn",  icon: "🍂", months: ["Oct", "Nov", "Dec"],         activeColor: "bg-[#f4845f] text-white", idleColor: "bg-[#f4845f]/5 text-[#9c4a2f] hover:bg-[#f4845f]/10 border border-[#f4845f]/20" },
 ];
 
 type NominatimResult = {
@@ -404,9 +404,9 @@ export default function MapPage() {
                     const categories = [
                       {
                         label: "Land Based", icon: <Mountain className="w-4 h-4" />,
-                        btn: "bg-orange-50 border-orange-200 text-orange-800 hover:bg-orange-100",
+                        btn: "bg-[#f4845f]/5 border-[#f4845f]/20 text-[#9c4a2f] hover:bg-[#f4845f]/10",
                         btnActive: "bg-[#f4845f] text-white border-[#f4845f]",
-                        chip: "bg-orange-100 text-orange-900 hover:bg-orange-200",
+                        chip: "bg-[#f4845f]/10 text-orange-900 hover:bg-[#f4845f]/20",
                         chipActive: "bg-[#f4845f] text-white",
                         types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
                       },
@@ -497,7 +497,7 @@ export default function MapPage() {
                     const regionGroups: { name: Region; icon: React.ReactNode; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
                       { name: "Himalayas",     icon: <Mountain className="w-4 h-4" />, btn: "bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100", btnActive: "bg-emerald-700 text-white border-emerald-700", chip: "bg-emerald-100 text-emerald-900 hover:bg-emerald-200", chipActive: "bg-emerald-700 text-white", subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
                       { name: "Western Ghats", icon: <Trees className="w-4 h-4" />, btn: "bg-lime-50 border-lime-200 text-lime-800 hover:bg-lime-100",             btnActive: "bg-lime-600 text-white border-lime-600",     chip: "bg-lime-100 text-lime-900 hover:bg-lime-200",         chipActive: "bg-lime-600 text-white",     subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"] },
-                      { name: "Eastern Ghats", icon: <Mountain className="w-4 h-4" />, btn: "bg-orange-50 border-orange-200 text-orange-800 hover:bg-orange-100",     btnActive: "bg-[#f4845f] text-white border-[#f4845f]", chip: "bg-orange-100 text-orange-900 hover:bg-orange-200",   chipActive: "bg-[#f4845f] text-white",   subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"] },
+                      { name: "Eastern Ghats", icon: <Mountain className="w-4 h-4" />, btn: "bg-[#f4845f]/5 border-[#f4845f]/20 text-[#9c4a2f] hover:bg-[#f4845f]/10",     btnActive: "bg-[#f4845f] text-white border-[#f4845f]", chip: "bg-[#f4845f]/10 text-orange-900 hover:bg-[#f4845f]/20",   chipActive: "bg-[#f4845f] text-white",   subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"] },
                       { name: "Desert",        icon: <Sun className="w-4 h-4" />, btn: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100",     btnActive: "bg-yellow-500 text-white border-yellow-500", chip: "bg-yellow-100 text-yellow-900 hover:bg-yellow-200",   chipActive: "bg-yellow-500 text-white",   subRegions: ["Rajasthan", "Gujarat"] },
                       { name: "Coast",         icon: <Waves className="w-4 h-4" />, btn: "bg-cyan-50 border-cyan-200 text-cyan-800 hover:bg-cyan-100",             btnActive: "bg-cyan-600 text-white border-cyan-600",     chip: "bg-cyan-100 text-cyan-900 hover:bg-cyan-200",         chipActive: "bg-cyan-600 text-white",     subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
                       { name: "Islands",       icon: <Palmtree className="w-4 h-4" />, btn: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100",             btnActive: "bg-teal-600 text-white border-teal-600",     chip: "bg-teal-100 text-teal-900 hover:bg-teal-200",         chipActive: "bg-teal-600 text-white",     subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
@@ -588,7 +588,7 @@ export default function MapPage() {
                       { val: "Beginner",     icon: "🟢", idle: "bg-green-50 border-green-200 text-green-800 hover:bg-green-100 border",     active: "bg-green-600 text-white border border-green-600" },
                       { val: "Intermediate", icon: "🔵", idle: "bg-blue-50 border-blue-200 text-blue-800 hover:bg-blue-100 border",         active: "bg-blue-600 text-white border border-blue-600" },
                       { val: "Advanced",     icon: "🟠", idle: "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100 border",     active: "bg-amber-500 text-white border border-amber-500" },
-                      { val: "Expert",       icon: "🟠", idle: "bg-orange-50 border-orange-200 text-orange-800 hover:bg-orange-100 border", active: "bg-[#f4845f] text-white border border-[#f4845f]" },
+                      { val: "Expert",       icon: "🟠", idle: "bg-[#f4845f]/5 border-[#f4845f]/20 text-[#9c4a2f] hover:bg-[#f4845f]/10 border", active: "bg-[#f4845f] text-white border border-[#f4845f]" },
                       { val: "Extreme",      icon: "🔴", idle: "bg-red-50 border-red-200 text-red-800 hover:bg-red-100 border",             active: "bg-red-600 text-white border border-red-600" },
                     ] as { val: Difficulty; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
                       <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}

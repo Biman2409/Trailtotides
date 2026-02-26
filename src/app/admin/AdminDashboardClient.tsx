@@ -162,8 +162,8 @@ export default function AdminDashboardClient({
       <header className="border-b border-white/10 px-6 py-4 flex items-center justify-between sticky top-0 bg-[#0a0a0a]/80 backdrop-blur-md z-10">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center group-hover:bg-orange-500/20 transition-colors">
-              <Mountain className="w-5 h-5 text-orange-400" />
+            <div className="w-8 h-8 rounded-lg bg-[#f4845f]/10 flex items-center justify-center group-hover:bg-[#f4845f]/20 transition-colors">
+              <Mountain className="w-5 h-5 text-[#f69d7c]" />
             </div>
             <span className="font-semibold text-lg tracking-tight">Trail to Tides</span>
           </Link>
@@ -194,7 +194,7 @@ export default function AdminDashboardClient({
           <Tabs.Root value={activeTab} onValueChange={setActiveTab} className="bg-white/5 p-1 rounded-xl flex gap-1 self-start md:self-auto">
             <Tabs.Trigger 
               value="users" 
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'users' ? 'bg-orange-500 text-white' : 'text-white/60 hover:text-white'}`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'users' ? 'bg-[#f4845f] text-white' : 'text-white/60 hover:text-white'}`}
             >
               <div className="flex items-center gap-2">
                 <Users className="w-4 h-4" />
@@ -203,7 +203,7 @@ export default function AdminDashboardClient({
             </Tabs.Trigger>
             <Tabs.Trigger 
               value="analytics" 
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'analytics' ? 'bg-orange-500 text-white' : 'text-white/60 hover:text-white'}`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'analytics' ? 'bg-[#f4845f] text-white' : 'text-white/60 hover:text-white'}`}
             >
               <div className="flex items-center gap-2">
                 <BarChart3 className="w-4 h-4" />
@@ -216,10 +216,10 @@ export default function AdminDashboardClient({
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6 relative overflow-hidden group">
-            <div className="absolute -right-4 -top-4 w-24 h-24 bg-orange-500/5 rounded-full blur-2xl group-hover:bg-orange-500/10 transition-all" />
+            <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#f4845f]/5 rounded-full blur-2xl group-hover:bg-[#f4845f]/10 transition-all" />
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
-                <Users className="w-5 h-5 text-orange-400" />
+              <div className="w-10 h-10 rounded-xl bg-[#f4845f]/20 flex items-center justify-center">
+                <Users className="w-5 h-5 text-[#f69d7c]" />
               </div>
               <div>
                 <p className="text-white/40 text-xs font-medium uppercase tracking-wider">Total Users</p>
@@ -292,7 +292,7 @@ export default function AdminDashboardClient({
                   placeholder="Search name, email..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder-white/30 focus:outline-none focus:border-orange-400/50 text-sm transition-all shadow-sm"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-white placeholder-white/30 focus:outline-none focus:border-[#f69d7c]/50 text-sm transition-all shadow-sm"
                 />
               </div>
               
@@ -301,7 +301,7 @@ export default function AdminDashboardClient({
                 <select
                   value={roleFilter}
                   onChange={(e) => setRoleFilter(e.target.value)}
-                  className="appearance-none bg-white/5 border border-white/10 rounded-xl pl-10 pr-10 py-2.5 text-white text-sm focus:outline-none focus:border-orange-400/50 cursor-pointer shadow-sm"
+                  className="appearance-none bg-white/5 border border-white/10 rounded-xl pl-10 pr-10 py-2.5 text-white text-sm focus:outline-none focus:border-[#f69d7c]/50 cursor-pointer shadow-sm"
                 >
                   <option value="all">All Roles</option>
                   <option value="user">Users</option>
@@ -315,7 +315,7 @@ export default function AdminDashboardClient({
                 <select
                   value={dateRange}
                   onChange={(e) => setDateRange(e.target.value)}
-                  className="appearance-none bg-white/5 border border-white/10 rounded-xl pl-10 pr-10 py-2.5 text-white text-sm focus:outline-none focus:border-orange-400/50 cursor-pointer shadow-sm"
+                  className="appearance-none bg-white/5 border border-white/10 rounded-xl pl-10 pr-10 py-2.5 text-white text-sm focus:outline-none focus:border-[#f69d7c]/50 cursor-pointer shadow-sm"
                 >
                   <option value="all">Joined (All Time)</option>
                   <option value="7d">Last 7 Days</option>
@@ -366,14 +366,14 @@ export default function AdminDashboardClient({
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-400 font-bold text-sm flex-shrink-0 group-hover/row:scale-110 transition-transform">
+                          <div className="w-10 h-10 rounded-xl bg-[#f4845f]/10 flex items-center justify-center text-[#f69d7c] font-bold text-sm flex-shrink-0 group-hover/row:scale-110 transition-transform">
                             {(profile.full_name?.[0] ?? profile.email?.[0] ?? "?").toUpperCase()}
                           </div>
                           <div>
-                            <p className="font-semibold text-white group-hover/row:text-orange-400 transition-colors">
+                            <p className="font-semibold text-white group-hover/row:text-[#f69d7c] transition-colors">
                               {profile.full_name || "Guest User"}
                               {profile.id === currentUserId && (
-                                <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded bg-orange-500/10 text-[10px] text-orange-400 font-bold uppercase tracking-wider">you</span>
+                                <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded bg-[#f4845f]/10 text-[10px] text-[#f69d7c] font-bold uppercase tracking-wider">you</span>
                               )}
                             </p>
                             <p className="text-white/40 text-xs font-mono">{profile.email}</p>
@@ -453,8 +453,8 @@ export default function AdminDashboardClient({
                   <h3 className="text-lg font-bold">User Growth</h3>
                   <p className="text-white/40 text-xs">New user registrations over the last 30 days.</p>
                 </div>
-                <div className="bg-orange-500/20 px-3 py-1 rounded-full">
-                  <span className="text-orange-400 text-[10px] font-bold uppercase tracking-wider">Live View</span>
+                <div className="bg-[#f4845f]/20 px-3 py-1 rounded-full">
+                  <span className="text-[#f69d7c] text-[10px] font-bold uppercase tracking-wider">Live View</span>
                 </div>
               </div>
               <div className="h-[300px] w-full">

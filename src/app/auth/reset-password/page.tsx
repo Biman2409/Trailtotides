@@ -36,7 +36,7 @@ export default function ResetPasswordPage() {
         <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/20 to-transparent" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
           <Link href="/" className="flex items-center gap-2 text-white font-bold text-xl tracking-tight hover:scale-[1.02] transition-transform origin-left">
-            <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/20">
+            <div className="w-10 h-10 bg-[#f4845f] rounded-xl flex items-center justify-center shadow-lg shadow-[#f4845f]/20">
               <Mountain className="w-6 h-6 text-white" />
             </div>
             <span>Trail to Tides</span>
@@ -45,7 +45,7 @@ export default function ResetPasswordPage() {
                 <div className="max-w-md">
                   <h2 className="text-6xl font-black text-white leading-[1.1] mb-6 tracking-tight">
                     Wild is calling, <br />
-                    <span className="text-orange-500 font-black">answer it.</span>
+                    <span className="text-[#f4845f] font-black">answer it.</span>
                   </h2>
                   <p className="text-white/70 text-lg font-medium leading-relaxed max-w-sm">
                     Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
@@ -64,13 +64,13 @@ export default function ResetPasswordPage() {
 
       {/* Right panel — form */}
       <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-20 xl:px-32 bg-[#0a0a0a] relative">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-500/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#f4845f]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#f4845f]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
         
         <div className="max-w-md w-full mx-auto relative z-10">
           {/* Mobile logo */}
           <Link href="/" className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[#f4845f] rounded-lg flex items-center justify-center">
               <Mountain className="w-5 h-5 text-white" />
             </div>
             <span className="text-white font-bold text-xl tracking-tight">Trail to Tides</span>
@@ -109,7 +109,7 @@ export default function ResetPasswordPage() {
                   required
                   minLength={6}
                   placeholder="••••••••"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 pr-14 text-white placeholder-white/20 focus:outline-none focus:border-orange-500/50 focus:bg-white/[0.06] transition-all"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 pr-14 text-white placeholder-white/20 focus:outline-none focus:border-[#f4845f]/50 focus:bg-white/[0.06] transition-all"
                 />
                 <button
                   type="button"
@@ -124,7 +124,7 @@ export default function ResetPasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-orange-500/20 mt-2"
+              className="w-full bg-[#f4845f] hover:bg-[#d84315] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#f4845f]/20 mt-2"
             >
               {loading ? "Updating..." : "Update Password"}
             </button>
@@ -132,7 +132,7 @@ export default function ResetPasswordPage() {
 
           <p className="mt-8 text-center text-white/30 text-sm font-medium">
             Remembered your password?{" "}
-            <Link href="/auth/login" className="text-orange-500 hover:text-orange-400 font-bold transition-colors">
+            <Link href="/auth/login" className="text-[#f4845f] hover:text-[#f69d7c] font-bold transition-colors">
               Log in
             </Link>
           </p>
