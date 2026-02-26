@@ -8,11 +8,13 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
       allowedOrigins: [
-        "localhost:3000",
+        "3000-152fab09-2064-469b-8116-45c45bdb67a6.orchids.cloud",
+        "3000-152fab09-2064-469b-8116-45c45bdb67a6.proxy.daytona.works",
         "*.orchids.cloud",
         "*.orchids.app",
         "*.proxy.daytona.works",
-        "*.daytona.works"
+        "*.daytona.works",
+        "localhost:3000"
       ]
     }
   },
