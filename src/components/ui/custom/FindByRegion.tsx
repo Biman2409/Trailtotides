@@ -7,13 +7,13 @@ import Image from "next/image";
 import { regions, adventures, Region } from "@/lib/data";
 
 const regionSubRegions: Record<string, string[]> = {
-  "Himalayas": ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
-  "Western Ghats": ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"],
-  "Eastern Ghats": ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"],
+  "Himalayas": ["Ladakh", "Uttarakhand", "Himachal Pradesh", "Jammu & Kashmir", "Sikkim", "Arunachal Pradesh"],
+  "Western Ghats": ["Maharashtra", "Karnataka", "Kerala", "Goa", "Gujarat"],
+  "Eastern Ghats": ["Andhra Pradesh", "Telangana", "Odisha", "Tamil Nadu"],
   "Desert": ["Rajasthan", "Gujarat"],
-  "Coast": ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"],
+  "Coast": ["Maharashtra", "Goa", "Karnataka", "Kerala", "Tamil Nadu", "Andhra Pradesh", "Odisha"],
   "Islands": ["Andaman & Nicobar", "Lakshadweep"],
-  "Northeast": ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"],
+  "Northeast": ["Meghalaya", "Nagaland", "Arunachal Pradesh", "Sikkim", "Assam", "Manipur", "Mizoram", "Tripura"],
   "Urban": ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"]
 };
 
