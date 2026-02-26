@@ -136,7 +136,7 @@ export default async function ExperiencePage({ params }: Props) {
 
             {/* About */}
             <section>
-              <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+              <p className="text-[#ff5722] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
                 The Adventure
               </p>
               <p className="text-[#1a1f2e] text-xl leading-relaxed font-light">
@@ -146,10 +146,10 @@ export default async function ExperiencePage({ params }: Props) {
 
             {/* What makes it special */}
             <section>
-              <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+              <p className="text-[#ff5722] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
                 What Makes It Special
               </p>
-              <div className="bg-[#f5f0e8] rounded-2xl p-8 border-l-4 border-[#c4622d]">
+              <div className="bg-[#f5f0e8] rounded-2xl p-8 border-l-4 border-[#ff5722]">
                 <p className="text-[#1a1f2e] text-lg leading-relaxed">
                   {adventure.whatMakesSpecial}
                 </p>
@@ -158,7 +158,7 @@ export default async function ExperiencePage({ params }: Props) {
 
             {/* Who it's for / not for */}
             <section>
-              <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-6">
+              <p className="text-[#ff5722] text-xs font-semibold tracking-[0.2em] uppercase mb-6">
                 Is This For You?
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
