@@ -149,108 +149,29 @@ export default async function StoryPage({ params }: Props) {
           </h1>
           <div className="flex items-center gap-4 flex-wrap">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-[#c4622d]/50 flex items-center justify-center text-sm font-bold text-white">
+              <div className="w-9 h-9 rounded-full bg-[#ff5722]/50 flex items-center justify-center text-sm font-bold text-white shadow-md shadow-[#ff5722]/20">
                 {story.author[0]}
               </div>
-              <div>
-                <p className="text-white font-medium text-sm">{story.author}</p>
-                <p className="text-white/45 text-xs">{story.authorRole} · {story.date}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 ml-2">
-              <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full">
-                <Clock className="w-3 h-3" />
-                {story.readTime}
-              </span>
-                <StoryViewPill slug={story.slug} incrementOnMount />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Article */}
+...
       <article className="max-w-2xl mx-auto px-6 py-16 lg:py-24">
         {/* Lede */}
-          <p className="text-white/80 text-xl lg:text-2xl font-light leading-relaxed mb-10 border-l-4 border-[#c4622d] pl-6">
+          <p className="text-white/80 text-xl lg:text-2xl font-light leading-relaxed mb-10 border-l-4 border-[#ff5722] pl-6">
           {story.excerpt}
         </p>
-
-        {/* Body paragraphs */}
-        <div className="space-y-7">
-          {body.map((para, idx) => (
-              <p key={idx} className="text-white/65 text-lg leading-[1.85] font-light">
-              {para}
-            </p>
-          ))}
-        </div>
-
-        {/* Author card */}
+...
           <div className="mt-10 bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-5">
-            <div className="w-14 h-14 rounded-full bg-[#c4622d]/20 flex items-center justify-center text-xl font-bold text-[#c4622d] shrink-0">
+            <div className="w-14 h-14 rounded-full bg-[#ff5722]/20 flex items-center justify-center text-xl font-bold text-[#ff5722] shrink-0 shadow-inner">
               {story.author[0]}
             </div>
-            <div>
-              <p className="text-white font-semibold text-base">{story.author}</p>
-              <p className="text-white/40 text-sm mt-0.5">{story.authorRole}</p>
-              <p className="text-white/50 text-sm mt-2 leading-relaxed">
-                Writing about adventure since {story.date.split(" ")[1] ?? "2022"}. Based out of India, usually somewhere between a trailhead and a deadline.
-              </p>
-            </div>
-          </div>
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-white/10">
-            {story.tags.filter(t => !BADGE_TAGS.includes(t)).map((tag) => (
-              <span
-                key={tag}
-                className="bg-white/8 text-white/40 text-xs px-3 py-1.5 rounded-full"
-              >
-                #{tag}
-              </span>
-            ))}
-          </div>
-      </article>
-
-      {/* More stories */}
-      <section className="bg-[#1a1f2e] py-16 lg:py-24 px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-10">
-            <div>
-              <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+...
+              <p className="text-[#ff5722] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
                 Keep Reading
               </p>
-              <h2 className="text-white text-3xl font-semibold tracking-tight">
-                More from the field
-              </h2>
-            </div>
-            <Link
-              href="/stories"
-              className="hidden md:flex items-center gap-1.5 text-white/50 hover:text-white text-sm font-medium transition-colors group"
-            >
-              All stories
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {others.map((s) => (
-              <Link key={s.id} href={`/stories/${s.slug}`} className="group block">
-                <div className="relative h-48 rounded-2xl overflow-hidden mb-4">
-                  <Image
-                    src={s.heroImage}
-                    alt={s.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-                  <div className="absolute bottom-3 left-3">
-                    <span className="bg-white/10 backdrop-blur-sm border border-white/15 text-white text-xs px-2.5 py-1 rounded-full">
-                      {s.region}
-                    </span>
-                  </div>
-                </div>
-                <h3 className="text-white font-semibold text-base leading-snug group-hover:text-[#c4622d] transition-colors mb-1">
+...
+                <h3 className="text-white font-semibold text-base leading-snug group-hover:text-[#ff5722] transition-colors mb-1">
                   {s.title}
                 </h3>
+
                 <p className="text-white/40 text-xs flex items-center gap-1.5">
                   <Clock className="w-3 h-3" /> {s.readTime}
                 </p>
