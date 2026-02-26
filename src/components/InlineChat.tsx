@@ -76,12 +76,11 @@ export default function InlineChat() {
         
         {/* Architectural Header Section */}
         <div className="flex flex-col items-center text-center mb-12 space-y-6">
-          <div className="flex flex-col items-center gap-3">
-            <div className="px-3 py-1 rounded-full bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center gap-2 mb-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
-              <span className="text-[9px] text-[#ff5100] font-black uppercase tracking-[0.3em]">AI Adventure Discovery Engine</span>
-            </div>
-            <div className="flex items-center gap-4 justify-center">
+            <div className="flex flex-col items-center gap-3">
+              <div className="px-3 py-1 rounded-full bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center gap-2 mb-1">
+                <span className="text-[9px] text-[#ff5100] font-black uppercase tracking-[0.3em]">AI Adventure Discovery Engine</span>
+              </div>
+              <div className="flex items-center gap-4 justify-center">
               <Compass className="w-10 h-10 lg:w-14 lg:h-14 text-[#ff5100] drop-shadow-[0_0_30px_rgba(255,81,0,0.3)]" strokeWidth={1.2} />
               <h2 className="text-white text-5xl lg:text-7xl font-black tracking-tighter uppercase leading-none">
                 Compass AI
