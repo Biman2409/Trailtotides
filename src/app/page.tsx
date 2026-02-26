@@ -140,7 +140,7 @@ export default function HomePage() {
           <div className="mt-14 flex justify-center">
             <Link
               href="/explore"
-              className="bg-[#ff5722] hover:bg-[#d97040] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#ff5722]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5722]/30 transition-all duration-200"
+              className="bg-[#ff5722] hover:bg-[#ff7043] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#ff5722]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5722]/30 transition-all duration-200"
             >
               View all adventures
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
