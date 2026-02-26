@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Map as MapIcon, Sun } from "lucide-react";
+import { ArrowRight, Map as MapIcon, Sun, Mountain, Trees, Waves, Palmtree, Sunrise, Building2 } from "lucide-react";
 import Image from "next/image";
 import { regions, adventures, Region } from "@/lib/data";
 
@@ -15,6 +15,28 @@ const regionSubRegions: Record<string, string[]> = {
   "Islands": ["Andaman & Nicobar", "Lakshadweep"],
   "Northeast": ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"],
   "Urban": ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"]
+};
+
+const regionIcons: Record<string, React.ReactNode> = {
+  "Himalayas": <Mountain className="w-4 h-4" />,
+  "Western Ghats": <Trees className="w-4 h-4" />,
+  "Eastern Ghats": <Mountain className="w-4 h-4" />,
+  "Desert": <Sun className="w-4 h-4" />,
+  "Coast": <Waves className="w-4 h-4" />,
+  "Islands": <Palmtree className="w-4 h-4" />,
+  "Northeast": <Sunrise className="w-4 h-4" />,
+  "Urban": <Building2 className="w-4 h-4" />
+};
+
+const regionTitleIcons: Record<string, React.ReactNode> = {
+  "Himalayas": <Mountain className="w-6 h-6 text-white/90" />,
+  "Western Ghats": <Trees className="w-6 h-6 text-emerald-400" />,
+  "Eastern Ghats": <Mountain className="w-6 h-6 text-orange-400" />,
+  "Desert": <Sun className="w-6 h-6 text-[#f4956a]" />,
+  "Coast": <Waves className="w-6 h-6 text-cyan-400" />,
+  "Islands": <Palmtree className="w-6 h-6 text-teal-400" />,
+  "Northeast": <Sunrise className="w-6 h-6 text-violet-400" />,
+  "Urban": <Building2 className="w-6 h-6 text-zinc-400" />
 };
 
 const regionIcons: Record<string, string> = {
