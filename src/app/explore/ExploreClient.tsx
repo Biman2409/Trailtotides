@@ -519,13 +519,14 @@ export default function ExploreClient() {
                         </div>
 
                         {/* Expanded type chips */}
-                        {expandedCategory && (() => {
-                          const cat = categories.find(c => c.label === expandedCategory)!;
-                          return (
-                            <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
-                              {cat.types.length === 0 ? (
-                                <p className="text-xs text-[#c4b99a] italic">Coming soon</p>
-                              ) : (
+                          {expandedCategory && (() => {
+                            const cat = categories.find(c => c.label === expandedCategory)!;
+                            return (
+                              <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                                {cat.types.length === 0 ? (
+                                  <p className="text-xs text-[#ff5722] italic">Coming soon</p>
+                                ) : (
+
                                 <div className="flex flex-wrap gap-2">
                                   {cat.types.map((type) => {
                                     const icon = adventureTypes.find(a => a.type === type)?.icon ?? "";
