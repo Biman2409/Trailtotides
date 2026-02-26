@@ -252,7 +252,6 @@ export const adventures: Adventure[] = [
         ],
     tags: ["diving", "coral reefs", "islands", "marine life", "WWII wreck"],
     featured: true,
-    isEditorsChoice: true,
   },
   {
     id: "5",
