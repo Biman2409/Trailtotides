@@ -44,35 +44,35 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
   const isLarge = size === "large";
 
   return (
-    <div
-      className="rounded-2xl overflow-hidden flex flex-col group transition-all duration-300 shadow-lg shadow-black/20"
+    <Link
+      href={`/experiences/${adventure.slug}`}
+      className="rounded-2xl overflow-hidden flex flex-col group transition-all duration-300 shadow-lg shadow-black/20 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-1"
       style={{
         background: "rgba(255,255,255,0.04)",
         border: "1px solid rgba(255,255,255,0.08)",
       }}
     >
       {/* Header / Image Area */}
-      <Link
-        href={`/experiences/${adventure.slug}`}
-        className="relative w-full overflow-hidden cursor-pointer group/header text-left block"
+      <div
+        className="relative w-full overflow-hidden text-left block"
         style={{ height: isLarge ? "320px" : "220px" }}
       >
         <Image
           src={adventure.heroImage}
           alt={adventure.name}
           fill
-          className="object-cover transition-transform duration-700 group-hover/header:scale-105"
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
           sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
         />
         
         {/* Gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
-        <div className="absolute inset-0 opacity-0 group-hover/header:opacity-100 transition-opacity duration-300 bg-[#c4622d]/10" />
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#c4622d]/10" />
 
-        {/* Top Badge (Optional, but let's keep location) */}
+        {/* Top Badge */}
         <div className="absolute top-4 left-4 right-4 flex items-start justify-end z-10">
           <span
-            className="text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase backdrop-blur-md bg-white/10 text-white border border-white/20 transition-all duration-200 group-hover/header:bg-[#c4622d] group-hover/header:border-[#c4622d]"
+            className="text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase backdrop-blur-md bg-white/10 text-white border border-white/20 transition-all duration-200 group-hover:bg-[#c4622d] group-hover:border-[#c4622d]"
           >
             Explore
           </span>
@@ -84,20 +84,20 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
             <MapPin className="w-3 h-3 text-[#c4622d]" />
             <span className="text-white text-[10px] font-medium tracking-wide uppercase">{adventure.state}</span>
           </div>
-          <h3 className="text-white font-bold text-xl leading-tight tracking-tight mb-1 group-hover/header:text-[#f4956a] transition-colors">
+          <h3 className="text-white font-bold text-xl leading-tight tracking-tight mb-1 group-hover:text-[#f4956a] transition-colors">
             {adventure.name}
           </h3>
           <p className="text-white/60 text-xs leading-relaxed line-clamp-1">
             {adventure.tagline}
           </p>
         </div>
-      </Link>
+      </div>
 
       {/* Dashboard / Body */}
-      <div className="px-5 bg-white/[0.02] border-t border-white/5">
+      <div className="px-5 bg-white/[0.02] border-t border-white/5 transition-colors group-hover:bg-white/[0.04]">
         <div className="py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase ${typeStyle[adventure.type] ?? "bg-[#c4622d] text-white"}`}>
+            <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase shadow-sm ${typeStyle[adventure.type] ?? "bg-[#c4622d] text-white"}`}>
               {adventure.type}
             </span>
           </div>
@@ -108,6 +108,6 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
