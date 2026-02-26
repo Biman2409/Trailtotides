@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { 
   Map as MapIcon, Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
-  Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users 
+  Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users,
+  Mountain, Waves, Snowflake, Wind, Trees, Palmtree, Sunrise, Building2, CloudRain, Sun
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import { adventures } from "@/lib/data";
