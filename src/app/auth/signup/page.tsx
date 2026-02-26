@@ -86,10 +86,16 @@ export default function SignUpPage() {
             Back to home
           </Link>
 
-          <div className="mb-8">
-            <h1 className="text-4xl font-black text-white mb-2 tracking-tight">Join adventure</h1>
-            <p className="text-white/40 font-medium">Create an account to start exploring.</p>
-          </div>
+            <div className="mb-8">
+              <h1 className="text-4xl font-black text-white mb-4 tracking-tight leading-tight">
+                Wild is calling, <br />
+                <span className="text-orange-500">answer it.</span>
+              </h1>
+              <p className="text-white/40 font-medium leading-relaxed">
+                Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
+              </p>
+            </div>
+
 
           {message && (
             <div
