@@ -37,21 +37,13 @@ const difficultyColor: Record<string, string> = {
   Extreme:      "#ef4444",  // red
 };
 
-const seasons: { label: string; months: Month[]; iconName: string }[] = [
-  { label: "Winter",  months: ["Dec", "Jan", "Feb"], iconName: "Snowflake" },
-  { label: "Spring",  months: ["Mar", "Apr", "May"], iconName: "Sunrise" },
-  { label: "Summer",  months: ["Apr", "May", "Jun"], iconName: "Sun" },
-  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"], iconName: "CloudRain" },
-  { label: "Autumn",  months: ["Oct", "Nov", "Dec"], iconName: "Wind" },
+const seasons: { label: string; months: Month[] }[] = [
+  { label: "Winter",  months: ["Dec", "Jan", "Feb"] },
+  { label: "Spring",  months: ["Mar", "Apr", "May"] },
+  { label: "Summer",  months: ["Apr", "May", "Jun"] },
+  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"] },
+  { label: "Autumn",  months: ["Oct", "Nov", "Dec"] },
 ];
-
-const SEASON_ICONS: Record<string, React.ReactNode> = {
-  Snowflake: <Snowflake className="w-3.5 h-3.5" />,
-  Sunrise: <Sunrise className="w-3.5 h-3.5" />,
-  Sun: <Sun className="w-3.5 h-3.5" />,
-  CloudRain: <CloudRain className="w-3.5 h-3.5" />,
-  Wind: <Wind className="w-3.5 h-3.5" />,
-};
 
 type NominatimResult = {
   place_id: number;
