@@ -110,16 +110,40 @@ export default function SignUpPage() {
               />
             </div>
 
-              <div>
-                <label className="block text-sm font-medium text-white/70 mb-2">Phone</label>
-                <input
-                  name="phone"
-                  type="tel"
-                  required
-                  placeholder="+91 98765 43210"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-orange-400/60 focus:bg-white/8 transition-all"
-                />
-              </div>
+                <div>
+                  <label className="block text-sm font-medium text-white/70 mb-2">Phone</label>
+                  <div className="flex gap-2">
+                    <div className="relative">
+                      <select
+                        name="country_code"
+                        defaultValue="+91"
+                        className="h-full bg-white/5 border border-white/10 rounded-xl pl-4 pr-8 py-3 text-white focus:outline-none focus:border-orange-400/60 focus:bg-white/8 transition-all appearance-none cursor-pointer min-w-[100px]"
+                      >
+                        <option value="+91" className="bg-[#0a0a0a] text-white">+91</option>
+                        <option value="+1" className="bg-[#0a0a0a] text-white">+1</option>
+                        <option value="+44" className="bg-[#0a0a0a] text-white">+44</option>
+                        <option value="+971" className="bg-[#0a0a0a] text-white">+971</option>
+                        <option value="+61" className="bg-[#0a0a0a] text-white">+61</option>
+                        <option value="+65" className="bg-[#0a0a0a] text-white">+65</option>
+                        <option value="+1" className="bg-[#0a0a0a] text-white">+1 (CA)</option>
+                        <option value="+49" className="bg-[#0a0a0a] text-white">+49</option>
+                        <option value="+33" className="bg-[#0a0a0a] text-white">+33</option>
+                      </select>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">
+                        <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                          <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                        </svg>
+                      </div>
+                    </div>
+                    <input
+                      name="phone"
+                      type="tel"
+                      required
+                      placeholder="98765 43210"
+                      className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-orange-400/60 focus:bg-white/8 transition-all"
+                    />
+                  </div>
+                </div>
 
             <div>
               <label className="block text-sm font-medium text-white/70 mb-2">Password</label>
