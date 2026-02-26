@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Loader2, ChevronRight, HelpCircle } from "lucide-react";
+import { X, Send, Loader2, ChevronRight, Compass } from "lucide-react";
 import Link from "next/link";
 import type { Adventure } from "@/lib/data";
 
