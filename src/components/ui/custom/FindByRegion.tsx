@@ -29,14 +29,14 @@ const regionIcons: Record<string, React.ReactNode> = {
 };
 
 const regionSubtitles: Record<string, string> = {
-  "Himalayas": "scale the highest peaks and find stillness in deep valleys",
-  "Western Ghats": "trace emerald trails through misty rainforests and hills",
-  "Eastern Ghats": "discover ancient ranges and hidden waterfall sanctuaries",
-  "Desert": "conquer golden dunes and embrace the vibrant desert spirit",
-  "Coast": "ride rhythmic tides and find peace on sun-soaked shores",
-  "Islands": "dive into turquoise depths and explore pristine wild wonders",
-  "Northeast": "venture into untouched forests and living mountain legends",
-  "Urban": "uncover secret adrenaline spots hidden in the city's pulse"
+  "Himalayas": "Scale the highest peaks and find stillness in deep valleys",
+  "Western Ghats": "Trace emerald trails through misty rainforests and hills",
+  "Eastern Ghats": "Discover ancient ranges and hidden waterfall sanctuaries",
+  "Desert": "Conquer golden dunes and embrace the vibrant desert spirit",
+  "Coast": "Ride rhythmic tides and find peace on sun-soaked shores",
+  "Islands": "Dive into turquoise depths and explore pristine wild wonders",
+  "Northeast": "Venture into untouched forests and living mountain legends",
+  "Urban": "Uncover secret adrenaline spots hidden in the city's pulse"
 };
 
 const regionTitleIcons: Record<string, React.ReactNode> = {
