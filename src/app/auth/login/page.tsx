@@ -26,59 +26,68 @@ function LoginForm() {
   return (
     <div className="max-w-md w-full mx-auto">
       {/* Mobile logo */}
-      <Link href="/" className="flex items-center gap-2 mb-8 lg:hidden">
-        <Mountain className="w-6 h-6 text-orange-400" />
-        <span className="text-white font-semibold text-lg">Trail to Tides</span>
+      <Link href="/" className="flex items-center gap-2 mb-6 lg:hidden">
+        <Mountain className="w-8 h-8 text-orange-500" />
+        <span className="text-white font-bold text-xl tracking-tight">Trail to Tides</span>
       </Link>
 
-      <Link href="/" className="hidden lg:inline-flex items-center gap-1 text-white/50 hover:text-white/80 text-sm mb-8 transition-colors">
-        <ArrowLeft className="w-4 h-4" />
+      <Link href="/" className="hidden lg:inline-flex items-center gap-1 text-white/40 hover:text-white/80 text-sm mb-6 transition-colors group">
+        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
         Back to home
       </Link>
 
-      <h1 className="text-3xl font-bold text-white mb-2">Log in</h1>
-      <p className="text-white/50 mb-8">Continue your adventure journey.</p>
+      <div className="mb-8">
+        <h1 className="text-4xl font-black text-white mb-2 tracking-tight">Welcome back</h1>
+        <p className="text-white/40 font-medium">Please enter your details to sign in.</p>
+      </div>
 
       {message && !error && (
-        <div className="mb-6 px-4 py-3 rounded-xl text-sm font-medium bg-green-500/10 border border-green-500/30 text-green-400">
+        <div className="mb-6 px-4 py-3 rounded-2xl text-sm font-semibold bg-green-500/10 border border-green-500/20 text-green-400 flex items-center gap-2">
+          <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
           {message}
         </div>
       )}
 
       {error && (
-        <div className="mb-6 px-4 py-3 rounded-xl text-sm font-medium bg-red-500/10 border border-red-500/30 text-red-400">
+        <div className="mb-6 px-4 py-3 rounded-2xl text-sm font-semibold bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-2">
+          <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-white/70 mb-2">Email</label>
+          <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 ml-1">Email Address</label>
           <input
             name="email"
             type="email"
             required
-            placeholder="rahul@example.com"
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-orange-400/60 focus:bg-white/8 transition-all"
+            placeholder="name@example.com"
+            className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-orange-500/50 focus:bg-white/[0.06] transition-all"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-white/70 mb-2">Password</label>
+          <div className="flex justify-between items-center mb-2 ml-1">
+            <label className="block text-xs font-bold text-white/50 uppercase tracking-widest">Password</label>
+            <Link href="/auth/forgot-password" title="Feature coming soon" className="text-xs font-bold text-orange-500/60 hover:text-orange-500 transition-colors">
+              Forgot?
+            </Link>
+          </div>
           <div className="relative">
             <input
               name="password"
               type={showPassword ? "text" : "password"}
               required
-              placeholder="Your password"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white placeholder-white/30 focus:outline-none focus:border-orange-400/60 focus:bg-white/8 transition-all"
+              placeholder="••••••••"
+              className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 pr-14 text-white placeholder-white/20 focus:outline-none focus:border-orange-500/50 focus:bg-white/[0.06] transition-all"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
+              className="absolute right-5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors"
             >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
           </div>
         </div>
@@ -86,16 +95,16 @@ function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl py-3.5 transition-colors"
+          className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-orange-500/20"
         >
-          {loading ? "Logging in..." : "Log In"}
+          {loading ? "Verifying..." : "Sign In"}
         </button>
       </form>
 
-      <p className="mt-6 text-center text-white/50 text-sm">
-        Don&apos;t have an account?{" "}
-        <Link href="/auth/signup" className="text-orange-400 hover:text-orange-300 font-medium transition-colors">
-          Sign up
+      <p className="mt-8 text-center text-white/30 text-sm font-medium">
+        New to Trail to Tides?{" "}
+        <Link href="/auth/signup" className="text-orange-500 hover:text-orange-400 font-bold transition-colors">
+          Create account
         </Link>
       </p>
     </div>
