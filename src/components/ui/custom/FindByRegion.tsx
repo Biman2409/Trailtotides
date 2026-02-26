@@ -131,7 +131,7 @@ export default function FindByRegion() {
 
                   <div>
                     <h3 className="text-white font-bold text-2xl leading-tight tracking-tight flex items-center gap-2">
-                      {region.name === "Desert" && <Sun className="w-6 h-6 text-[#f4956a]" />}
+                      {regionTitleIcons[region.name]}
                       {region.name}
                     </h3>
                     <p className="text-white/60 text-xs mt-1 leading-relaxed line-clamp-1">
