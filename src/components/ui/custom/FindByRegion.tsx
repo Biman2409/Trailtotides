@@ -126,19 +126,19 @@ export default function FindByRegion() {
                   
                   {/* Content over image */}
                   <div className="absolute inset-0 p-5 flex flex-col justify-between">
-                    <div className="flex items-start justify-end">
-                      <span
-                        className="text-[10px] font-bold px-2 py-0.5 rounded-full tracking-wider uppercase"
-                        style={{
-                          background: isOpen ? "#c4622d" : "rgba(255,255,255,0.12)",
-                          color: "white",
-                          backdropFilter: "blur(6px)",
-                          transition: "background 0.25s",
-                        }}
-                      >
-                        {isOpen ? "Close" : "Explore"}
-                      </span>
-                    </div>
+                      <div className="flex items-start justify-end">
+                        <span
+                          className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                          style={{
+                            background: isOpen ? "#c4622d" : "rgba(255,255,255,0.12)",
+                            color: "white",
+                            backdropFilter: "blur(6px)",
+                            transition: "background 0.25s",
+                          }}
+                        >
+                          {isOpen ? "Close" : "Explore"}
+                        </span>
+                      </div>
 
                       <div>
                         <h3 className="text-white font-bold text-2xl leading-tight tracking-tight flex items-center gap-2">
