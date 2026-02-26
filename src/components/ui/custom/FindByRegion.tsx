@@ -28,6 +28,17 @@ const regionIcons: Record<string, React.ReactNode> = {
   "Urban": <Building2 className="w-4 h-4" />
 };
 
+const regionSubtitles: Record<string, string> = {
+  "Himalayas": "The Roof of the World",
+  "Western Ghats": "Green Heart of India",
+  "Eastern Ghats": "Ancient Hills & Vales",
+  "Desert": "The Golden Sands",
+  "Coast": "Sun, Sand & Surf",
+  "Islands": "Tropical Paradises",
+  "Northeast": "Untouched Wilderness",
+  "Urban": "Concrete Jungles & Beyond"
+};
+
 const regionTitleIcons: Record<string, React.ReactNode> = {
   "Himalayas": <Mountain className="w-6 h-6 text-white/90" />,
   "Western Ghats": <Trees className="w-6 h-6 text-emerald-400" />,
