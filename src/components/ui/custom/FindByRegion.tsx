@@ -29,21 +29,21 @@ const regionIcons: Record<string, React.ReactNode> = {
 };
 
 const regionSubtitles: Record<string, string> = {
-  "Himalayas": "majestic high-altitude peaks and deep valleys",
-  "Western Ghats": "misty rainforests and emerald coffee trails",
-  "Eastern Ghats": "ancient hill ranges and hidden waterfall treks",
-  "Desert": "golden sand dunes and vibrant desert life",
-  "Coast": "sun-soaked shores and rhythmic ocean tides",
-  "Islands": "turquoise waters and pristine tropical wild",
-  "Northeast": "untouched forests and tribal mountain legends",
-  "Urban": "secret adventure spots hidden within the city"
+  "Himalayas": "scale the highest peaks and find stillness in deep valleys",
+  "Western Ghats": "trace emerald trails through misty rainforests and hills",
+  "Eastern Ghats": "discover ancient ranges and hidden waterfall sanctuaries",
+  "Desert": "conquer golden dunes and embrace the vibrant desert spirit",
+  "Coast": "ride rhythmic tides and find peace on sun-soaked shores",
+  "Islands": "dive into turquoise depths and explore pristine wild wonders",
+  "Northeast": "venture into untouched forests and living mountain legends",
+  "Urban": "uncover secret adrenaline spots hidden in the city's pulse"
 };
 
 const regionTitleIcons: Record<string, React.ReactNode> = {
   "Himalayas": <Mountain className="w-6 h-6 text-white/90" />,
   "Western Ghats": <Trees className="w-6 h-6 text-emerald-400" />,
-  "Eastern Ghats": <Mountain className="w-6 h-6 text-orange-400" />,
-  "Desert": <Sun className="w-6 h-6 text-[#f4956a]" />,
+  "Eastern Ghats": <Mountain className="w-6 h-6 text-[#ff5722]" />,
+  "Desert": <Sun className="w-6 h-6 text-[#ff5722]" />,
   "Coast": <Waves className="w-6 h-6 text-cyan-400" />,
   "Islands": <Palmtree className="w-6 h-6 text-teal-400" />,
   "Northeast": <Mountain className="w-6 h-6 text-violet-400" />,
@@ -75,20 +75,21 @@ export default function FindByRegion() {
 
   return (
     <section className="py-24 lg:py-32 bg-[#1a1f2e] px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-12">
-          <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
-            Discover by Region
-          </p>
-          <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
-            Adventure lives in every corner.
-          </h2>
-          <p className="mt-4 text-white/50 text-base max-w-xl">
-            Pick a region, and let the journey begin.
-          </p>
-          <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
-        </div>
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="mb-12">
+            <p className="text-[#ff5722] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+              Discover by Region
+            </p>
+            <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
+              Adventure lives in every corner.
+            </h2>
+            <p className="mt-4 text-white/50 text-base max-w-xl">
+              Pick a region, and let the journey begin.
+            </p>
+            <div className="mt-5 w-14 h-0.5 bg-[#ff5722] rounded-full" />
+          </div>
+
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
