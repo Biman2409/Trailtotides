@@ -421,24 +421,25 @@ export default function ExploreClient() {
                       </div>
                     </div>
                   )}
-                  <div className="border-t border-white/8 p-3 flex gap-3 bg-white/3">
-                    <input
-                      value={aiInput}
-                      onChange={(e) => setAiInput(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && sendAi()}
-                      placeholder="Describe what you're looking for — we'll match you with the right trip"
-                      className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#c4622d]/50 transition-all"
-                    />
-                    <button
-                      onClick={() => sendAi()}
-                      disabled={!aiInput.trim() || aiLoading}
-                      className="disabled:opacity-30 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all hover:-translate-y-0.5"
-                      style={{ background: "#c4622d" }}
-                    >
-                      <Send className="w-4 h-4" />
-                      <span className="hidden sm:inline">Search</span>
-                    </button>
-                  </div>
+                    <div className="border-t border-white/8 p-3 flex gap-3 bg-white/3">
+                      <input
+                        value={aiInput}
+                        onChange={(e) => setAiInput(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && sendAi()}
+                        placeholder="Describe what you're looking for — we'll match you with the right trip"
+                        className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#ff5722]/50 transition-all"
+                      />
+                      <button
+                        onClick={() => sendAi()}
+                        disabled={!aiInput.trim() || aiLoading}
+                        className="disabled:opacity-30 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all hover:-translate-y-0.5"
+                        style={{ background: "#ff5722" }}
+                      >
+                        <Send className="w-4 h-4" />
+                        <span className="hidden sm:inline">Search</span>
+                      </button>
+                    </div>
+
                 </div>
               </div>
             </div>
