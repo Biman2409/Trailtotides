@@ -42,12 +42,8 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
 
         {/* Pills at the Top */}
         <div className="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
-          <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase shadow-sm ${typeStyle[adventure.type] ?? "bg-[#f4845f] text-white"}`}>
-            {adventure.type}
-          </span>
-          <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-tight shadow-sm ${difficultyStyle[adventure.difficulty] ?? "bg-gray-500 text-white"}`}>
-            {adventure.difficulty}
-          </span>
+          <Pill type="type" value={adventure.type} />
+          <Pill type="difficulty" value={adventure.difficulty} />
         </div>
 
         {/* Title Content */}
