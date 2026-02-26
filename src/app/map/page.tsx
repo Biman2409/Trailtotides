@@ -585,12 +585,11 @@ export default function MapPage() {
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Difficulty</h3>
                   <div className="flex flex-wrap gap-2">
                     {([
-                      { val: "Beginner",     idle: "bg-green-50 border-green-200 text-green-800 hover:bg-green-100 border",     active: "bg-green-600 text-white border border-green-600" },
-                      { val: "Intermediate", idle: "bg-blue-50 border-blue-200 text-blue-800 hover:bg-blue-100 border",         active: "bg-blue-600 text-white border border-blue-600" },
-                        { val: "Advanced",     idle: "bg-[#ff8e64]/5 border-[#ff8e64]/20 text-[#9c4a2f] hover:bg-[#ff8e64]/10 border",     active: "bg-[#ff8e64] text-white border border-[#ff8e64]" },
-
-                      { val: "Expert",       idle: "bg-[#ff6b35]/5 border-[#ff6b35]/20 text-[#9c4a2f] hover:bg-[#ff6b35]/10 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                      { val: "Extreme",      idle: "bg-red-50 border-red-200 text-red-800 hover:bg-red-100 border",             active: "bg-red-600 text-white border border-red-600" },
+                      { val: "Beginner",     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                      { val: "Intermediate", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                      { val: "Advanced",     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                      { val: "Expert",       idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                      { val: "Extreme",      idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
                       ] as { val: Difficulty; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
                         <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
                           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDifficulties.includes(val) ? active : idle}`}>
@@ -605,9 +604,9 @@ export default function MapPage() {
                     <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
                     <div className="flex flex-wrap gap-2">
                       {([
-                        { val: "Weekend",  label: "Weekend",  idle: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100 border", active: "bg-yellow-500 text-white border border-yellow-500" },
-                        { val: "3–5 days", label: "3–5 days", idle: "bg-indigo-50 border-indigo-200 text-indigo-800 hover:bg-indigo-100 border", active: "bg-indigo-600 text-white border border-indigo-600" },
-                        { val: "7+ days",  label: "7+ days",  idle: "bg-rose-50 border-rose-200 text-rose-800 hover:bg-rose-100 border",         active: "bg-rose-600 text-white border border-rose-600" },
+                        { val: "Weekend",  label: "Weekend",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        { val: "3–5 days", label: "3–5 days", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        { val: "7+ days",  label: "7+ days",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
                       ] as { val: Duration; label: string; icon: string; idle: string; active: string }[]).map(({ val, label, icon, idle, active }) => (
                         <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
                           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
@@ -622,9 +621,9 @@ export default function MapPage() {
                     <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
                     <div className="flex flex-wrap gap-2">
                       {([
-                        { val: "Solo",              idle: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100 border",     active: "bg-violet-600 text-white border border-violet-600" },
-                        { val: "Small group (2–6)",  idle: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100 border",             active: "bg-teal-600 text-white border border-teal-600" },
-                        { val: "Large group (6+)",   idle: "bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 hover:bg-fuchsia-100 border", active: "bg-fuchsia-600 text-white border border-fuchsia-600" },
+                        { val: "Solo",              idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        { val: "Small group (2–6)",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        { val: "Large group (6+)",   idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
                       ] as { val: GroupSize; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
                         <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
                           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
