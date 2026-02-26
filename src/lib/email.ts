@@ -45,8 +45,9 @@ export async function sendVerificationEmail(email: string, link: string, name: s
     }
 
     return { success: true, data };
-  } catch (err: any) {
-    return { error: err.message };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'An unknown error occurred';
+    return { error: message };
   }
 }
 
@@ -85,7 +86,8 @@ export async function sendPasswordResetEmail(email: string, link: string) {
     }
 
     return { success: true, data };
-  } catch (err: any) {
-    return { error: err.message };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'An unknown error occurred';
+    return { error: message };
   }
 }
