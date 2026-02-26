@@ -49,11 +49,11 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
             {/* Editors Choice Badge */}
             {adventure.isEditorsChoice && (
               <div className="absolute top-4 right-4 z-10 group/award">
-                <div className="flex items-center bg-black backdrop-blur-md border border-white/10 p-1.5 rounded-full shadow-2xl transition-all duration-500 hover:pr-4">
-                  <div className="bg-[#f4845f] p-1.5 rounded-full flex items-center justify-center">
-                    <Award className="w-3.5 h-3.5 text-black" />
+                <div className="flex items-center bg-black/80 backdrop-blur-md border border-white/15 p-1 rounded-full shadow-2xl transition-all duration-500 hover:pr-4">
+                  <div className="bg-black p-2 rounded-full flex items-center justify-center border border-[#f4845f]/20">
+                    <Award className="w-3.5 h-3.5 text-[#f4845f]" />
                   </div>
-                  <span className="text-white text-[10px] font-bold tracking-[0.2em] max-w-0 overflow-hidden transition-all duration-500 group-hover/award:max-w-[100px] group-hover/award:ml-2 whitespace-nowrap opacity-0 group-hover/award:opacity-100">
+                  <span className="text-white text-[10px] font-bold tracking-[0.2em] max-w-0 overflow-hidden transition-all duration-500 group-hover/award:max-w-[100px] group-hover/award:ml-2.5 whitespace-nowrap opacity-0 group-hover/award:opacity-100 pr-0.5">
                     EDITORS
                   </span>
                 </div>
