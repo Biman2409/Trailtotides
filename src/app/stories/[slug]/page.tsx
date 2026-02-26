@@ -184,18 +184,6 @@ export default async function StoryPage({ params }: Props) {
           ))}
         </div>
 
-          {/* Tags */}
-            <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-white/10">
-              {story.tags.filter(t => !BADGE_TAGS.includes(t)).map((tag) => (
-                <span
-                  key={tag}
-                  className="bg-white/8 text-white/40 text-xs px-3 py-1.5 rounded-full"
-                >
-                #{tag}
-              </span>
-            ))}
-          </div>
-
         {/* Author card */}
           <div className="mt-10 bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-5">
             <div className="w-14 h-14 rounded-full bg-[#c4622d]/20 flex items-center justify-center text-xl font-bold text-[#c4622d] shrink-0">
@@ -208,6 +196,18 @@ export default async function StoryPage({ params }: Props) {
                 Writing about adventure since {story.date.split(" ")[1] ?? "2022"}. Based out of India, usually somewhere between a trailhead and a deadline.
               </p>
             </div>
+          </div>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-white/10">
+            {story.tags.filter(t => !BADGE_TAGS.includes(t)).map((tag) => (
+              <span
+                key={tag}
+                className="bg-white/8 text-white/40 text-xs px-3 py-1.5 rounded-full"
+              >
+                #{tag}
+              </span>
+            ))}
           </div>
       </article>
 
