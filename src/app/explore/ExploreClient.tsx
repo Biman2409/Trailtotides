@@ -176,18 +176,19 @@ export default function ExploreClient() {
               </button>
   
               {/* AI Adventure Finder toggle */}
-              <button
-                onClick={() => { setAiOpen(!aiOpen); setFiltersOpen(false); }}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                    aiOpen
-                      ? "bg-[#ff5100] text-white"
-                      : "bg-[#ff5100] text-white hover:bg-[#ff7d47]"
-                  }`}
-              >
-                <Compass className="w-4 h-4" />
-                <span className="hidden sm:inline">Compass AI</span>
-                <span className="sm:hidden">AI</span>
-              </button>
+                <button
+                  onClick={() => { setAiOpen(!aiOpen); setFiltersOpen(false); }}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                      aiOpen
+                        ? "bg-[#ff5100] text-white"
+                        : "bg-[#ff5100] text-white hover:bg-[#ff7d47]"
+                    }`}
+                >
+                  <Compass className="w-4 h-4" />
+                  <span className="hidden sm:inline">compass.ai</span>
+                  <span className="sm:hidden">ai</span>
+                </button>
+
 
 
           {/* Result count */}
