@@ -136,11 +136,11 @@ const durations: Duration[] = ["Weekend", "3–5 days", "7+ days"];
 const groupSizes: GroupSize[] = ["Solo", "Small group (2–6)", "Large group (6+)"];
 
 const seasons: { label: string; icon: React.ReactNode; months: Month[]; color: string; activeColor: string; idleColor: string }[] = [
-  { label: "Winter",  icon: <Snowflake className="w-4 h-4" />, months: ["Dec", "Jan", "Feb"],      color: "text-sky-600",    activeColor: "bg-sky-600 text-white",    idleColor: "bg-sky-50 text-sky-800 hover:bg-sky-100 border border-sky-200" },
-  { label: "Spring",  icon: <Flower2 className="w-4 h-4" />, months: ["Mar", "Apr", "May"],      color: "text-pink-600",   activeColor: "bg-pink-500 text-white",   idleColor: "bg-pink-50 text-pink-800 hover:bg-pink-100 border border-pink-200" },
-  { label: "Summer",  icon: <Sun className="w-4 h-4" />, months: ["Apr", "May", "Jun"],      color: "text-amber-600",  activeColor: "bg-amber-500 text-white",  idleColor: "bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200" },
-  { label: "Monsoon", icon: <CloudRain className="w-4 h-4" />, months: ["Jun", "Jul", "Aug", "Sep"], color: "text-teal-600", activeColor: "bg-teal-600 text-white",   idleColor: "bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-200" },
-    { label: "Autumn",  icon: <Leaf className="w-4 h-4" />, months: ["Oct", "Nov", "Dec"],      color: "text-[#f67345]", activeColor: "bg-[#f67345] text-white", idleColor: "bg-[#f67345]/5 text-[#f67345] hover:bg-[#f67345]/10 border border-[#f67345]/20" },
+  { label: "Winter",  months: ["Dec", "Jan", "Feb"],      color: "text-sky-600",    activeColor: "bg-sky-600 text-white",    idleColor: "bg-sky-50 text-sky-800 hover:bg-sky-100 border border-sky-200" },
+  { label: "Spring",  months: ["Mar", "Apr", "May"],      color: "text-pink-600",   activeColor: "bg-pink-500 text-white",   idleColor: "bg-pink-50 text-pink-800 hover:bg-pink-100 border border-pink-200" },
+  { label: "Summer",  months: ["Apr", "May", "Jun"],      color: "text-amber-600",  activeColor: "bg-amber-500 text-white",  idleColor: "bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200" },
+  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"], color: "text-teal-600", activeColor: "bg-teal-600 text-white",   idleColor: "bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-200" },
+    { label: "Autumn",  months: ["Oct", "Nov", "Dec"],      color: "text-[#f67345]", activeColor: "bg-[#f67345] text-white", idleColor: "bg-[#f67345]/5 text-[#f67345] hover:bg-[#f67345]/10 border border-[#f67345]/20" },
 ];
 
 
@@ -458,7 +458,7 @@ export default function ExploreClient() {
                   {(() => {
                       const categories = [
                           {
-                            label: "Land Based", icon: <Mountain className="w-4 h-4" />,
+                            label: "Land Based", 
                             btn: "bg-[#f67345]/5 border-[#f67345]/20 text-[#9c4a2f] hover:bg-[#f67345]/10",
                             btnActive: "bg-[#f67345] text-white border-[#f67345]",
                             chip: "bg-[#f67345]/10 text-orange-900 hover:bg-[#f67345]/20",
@@ -467,7 +467,7 @@ export default function ExploreClient() {
                           },
 
                         {
-                          label: "Water Based", icon: <Waves className="w-4 h-4" />,
+                          label: "Water Based", 
                           btn: "bg-sky-50 border-sky-200 text-sky-800 hover:bg-sky-100",
                           btnActive: "bg-sky-500 text-white border-sky-500",
                           chip: "bg-sky-100 text-sky-900 hover:bg-sky-200",
@@ -475,7 +475,7 @@ export default function ExploreClient() {
                           types: ["Diving", "Kayaking"],
                         },
                         {
-                          label: "Snow Based", icon: <Snowflake className="w-4 h-4" />,
+                          label: "Snow Based", 
                           btn: "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100",
                           btnActive: "bg-slate-600 text-white border-slate-600",
                           chip: "bg-slate-100 text-slate-700 hover:bg-slate-200",
@@ -483,7 +483,7 @@ export default function ExploreClient() {
                           types: ["Skiing"],
                         },
                         {
-                          label: "Air Based", icon: <Wind className="w-4 h-4" />,
+                          label: "Air Based", 
                           btn: "bg-purple-50 border-purple-200 text-purple-800 hover:bg-purple-100",
                           btnActive: "bg-purple-500 text-white border-purple-500",
                           chip: "bg-purple-100 text-purple-900 hover:bg-purple-200",
@@ -563,7 +563,7 @@ export default function ExploreClient() {
                     const regionGroups: { name: Region; icon: React.ReactNode; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
                       {
           name: "Himalayas",
-          icon: <Mountain className="w-4 h-4" />,
+          
                         btn: "bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100",
                         btnActive: "bg-emerald-700 text-white border-emerald-700",
                         chip: "bg-emerald-100 text-emerald-900 hover:bg-emerald-200",
@@ -572,7 +572,7 @@ export default function ExploreClient() {
                       },
                       {
                           name: "Western Ghats",
-                            icon: <Trees className="w-4 h-4" />,
+                            
                         btn: "bg-lime-50 border-lime-200 text-lime-800 hover:bg-lime-100",
                         btnActive: "bg-lime-600 text-white border-lime-600",
                         chip: "bg-lime-100 text-lime-900 hover:bg-lime-200",
@@ -581,7 +581,7 @@ export default function ExploreClient() {
                         },
                         {
                               name: "Eastern Ghats",
-                                icon: <Mountain className="w-4 h-4" />,
+                                
                           btn: "bg-[#f67345]/5 border-[#f67345]/20 text-[#9c4a2f] hover:bg-[#f67345]/10",
                           btnActive: "bg-[#d84315] text-white border-[#d84315]",
                           chip: "bg-[#f67345]/10 text-orange-900 hover:bg-[#f67345]/20",
@@ -590,7 +590,7 @@ export default function ExploreClient() {
                         },
                         {
                           name: "Desert",
-                          icon: <Sun className="w-4 h-4" />,
+                          
                           btn: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100",
                           btnActive: "bg-yellow-500 text-white border-yellow-500",
                           chip: "bg-yellow-100 text-yellow-900 hover:bg-yellow-200",
@@ -599,7 +599,7 @@ export default function ExploreClient() {
                         },
                       {
                         name: "Coast",
-                        icon: <Waves className="w-4 h-4" />,
+                        
                         btn: "bg-cyan-50 border-cyan-200 text-cyan-800 hover:bg-cyan-100",
                         btnActive: "bg-cyan-600 text-white border-cyan-600",
                         chip: "bg-cyan-100 text-cyan-900 hover:bg-cyan-200",
@@ -608,7 +608,7 @@ export default function ExploreClient() {
                       },
                       {
                         name: "Islands",
-                        icon: <Palmtree className="w-4 h-4" />,
+                        
                         btn: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100",
                         btnActive: "bg-teal-600 text-white border-teal-600",
                         chip: "bg-teal-100 text-teal-900 hover:bg-teal-200",
@@ -617,7 +617,7 @@ export default function ExploreClient() {
                       },
                           {
                             name: "Northeast",
-                            icon: <Mountain className="w-4 h-4" />,
+                            
                             btn: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100",
                           btnActive: "bg-violet-600 text-white border-violet-600",
                           chip: "bg-violet-100 text-violet-900 hover:bg-violet-200",
@@ -626,7 +626,7 @@ export default function ExploreClient() {
                         },
                         {
                           name: "Urban",
-                          icon: <Building2 className="w-4 h-4" />,
+                          
                           btn: "bg-zinc-50 border-zinc-200 text-zinc-800 hover:bg-zinc-100",
                           btnActive: "bg-zinc-700 text-white border-zinc-700",
                           chip: "bg-zinc-100 text-zinc-900 hover:bg-zinc-200",
@@ -697,7 +697,7 @@ export default function ExploreClient() {
                   <div className="flex flex-col gap-2">
                     {/* Season buttons row */}
                     <div className="flex flex-wrap gap-2">
-                      {seasons.map(({ label, icon, months: sMonths, activeColor, idleColor }) => {
+                      {seasons.map(({ label, months: sMonths, activeColor, idleColor }) => {
                         const isExpanded = expandedSeason === label;
                         const hasSelected = sMonths.some((m) => selectedMonths.includes(m));
                         const selectedCount = sMonths.filter((m) => selectedMonths.includes(m)).length;
@@ -750,11 +750,11 @@ export default function ExploreClient() {
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Difficulty</h3>
                   <div className="flex flex-wrap gap-2">
                     {([ 
-                      { val: "Beginner",     icon: "🟢", idle: "bg-green-50 border-green-200 text-green-800 hover:bg-green-100 border",     active: "bg-green-600 text-white border border-green-600" },
-                      { val: "Intermediate", icon: "🔵", idle: "bg-blue-50 border-blue-200 text-blue-800 hover:bg-blue-100 border",         active: "bg-blue-600 text-white border border-blue-600" },
-                      { val: "Advanced",     icon: "🟠", idle: "bg-[#f88c64]/5 border-[#f88c64]/20 text-[#9c4a2f] hover:bg-[#f88c64]/10 border",     active: "bg-[#f88c64] text-white border border-[#f88c64]" },
-                      { val: "Expert",       icon: "🟠", idle: "bg-[#f67345]/5 border-[#f67345]/20 text-[#9c4a2f] hover:bg-[#f67345]/10 border", active: "bg-[#f67345] text-white border border-[#f67345]" },
-                      { val: "Extreme",      icon: "🔴", idle: "bg-red-50 border-red-200 text-red-800 hover:bg-red-100 border",             active: "bg-red-600 text-white border border-red-600" },
+                      { val: "Beginner",     idle: "bg-green-50 border-green-200 text-green-800 hover:bg-green-100 border",     active: "bg-green-600 text-white border border-green-600" },
+                      { val: "Intermediate", idle: "bg-blue-50 border-blue-200 text-blue-800 hover:bg-blue-100 border",         active: "bg-blue-600 text-white border border-blue-600" },
+                      { val: "Advanced",     idle: "bg-[#f88c64]/5 border-[#f88c64]/20 text-[#9c4a2f] hover:bg-[#f88c64]/10 border",     active: "bg-[#f88c64] text-white border border-[#f88c64]" },
+                      { val: "Expert",       idle: "bg-[#f67345]/5 border-[#f67345]/20 text-[#9c4a2f] hover:bg-[#f67345]/10 border", active: "bg-[#f67345] text-white border border-[#f67345]" },
+                      { val: "Extreme",      idle: "bg-red-50 border-red-200 text-red-800 hover:bg-red-100 border",             active: "bg-red-600 text-white border border-red-600" },
                       ] as { val: Difficulty; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
                         <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
                           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDifficulties.includes(val) ? active : idle}`}>
@@ -768,9 +768,9 @@ export default function ExploreClient() {
                     <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
                     <div className="flex flex-wrap gap-2">
                       {([
-                        { val: "Weekend",  label: "Weekend",  icon: "⚡", idle: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100 border", active: "bg-yellow-500 text-white border border-yellow-500" },
-                        { val: "3–5 days", label: "3–5 days", icon: "🗓️", idle: "bg-indigo-50 border-indigo-200 text-indigo-800 hover:bg-indigo-100 border", active: "bg-indigo-600 text-white border border-indigo-600" },
-                        { val: "7+ days",  label: "7+ days",  icon: "🏕️", idle: "bg-rose-50 border-rose-200 text-rose-800 hover:bg-rose-100 border",         active: "bg-rose-600 text-white border border-rose-600" },
+                        { val: "Weekend",  label: "Weekend",  idle: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100 border", active: "bg-yellow-500 text-white border border-yellow-500" },
+                        { val: "3–5 days", label: "3–5 days", idle: "bg-indigo-50 border-indigo-200 text-indigo-800 hover:bg-indigo-100 border", active: "bg-indigo-600 text-white border border-indigo-600" },
+                        { val: "7+ days",  label: "7+ days",  idle: "bg-rose-50 border-rose-200 text-rose-800 hover:bg-rose-100 border",         active: "bg-rose-600 text-white border border-rose-600" },
                       ] as { val: Duration; label: string; icon: string; idle: string; active: string }[]).map(({ val, label, icon, idle, active }) => (
                         <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
                           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
@@ -784,9 +784,9 @@ export default function ExploreClient() {
                     <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
                     <div className="flex flex-wrap gap-2">
                       {([
-                        { val: "Solo",             icon: "🧍", idle: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100 border",     active: "bg-violet-600 text-white border border-violet-600" },
-                        { val: "Small group (2–6)", icon: "👥", idle: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100 border",             active: "bg-teal-600 text-white border border-teal-600" },
-                        { val: "Large group (6+)",  icon: "🫂", idle: "bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 hover:bg-fuchsia-100 border", active: "bg-fuchsia-600 text-white border border-fuchsia-600" },
+                        { val: "Solo",             idle: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100 border",     active: "bg-violet-600 text-white border border-violet-600" },
+                        { val: "Small group (2–6)", idle: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100 border",             active: "bg-teal-600 text-white border border-teal-600" },
+                        { val: "Large group (6+)",  idle: "bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 hover:bg-fuchsia-100 border", active: "bg-fuchsia-600 text-white border border-fuchsia-600" },
                       ] as { val: GroupSize; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
                         <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
                           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
