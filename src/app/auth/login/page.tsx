@@ -68,12 +68,12 @@ function LoginForm() {
         </div>
 
         <div>
-          <div className="flex justify-between items-center mb-2 ml-1">
-            <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Password</label>
-            <Link href="/auth/forgot-password" title="Feature coming soon" className="text-[10px] font-bold text-orange-500/60 hover:text-orange-500 transition-colors uppercase tracking-widest">
-              Forgot?
-            </Link>
-          </div>
+            <div className="flex justify-between items-center mb-2 ml-1">
+              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Password</label>
+              <Link href="/auth/forgot-password" className="text-[10px] font-bold text-orange-500/60 hover:text-orange-500 transition-colors uppercase tracking-widest">
+                Forgot?
+              </Link>
+            </div>
           <div className="relative">
             <input
               name="password"
