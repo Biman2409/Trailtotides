@@ -117,12 +117,12 @@ const difficulties: Difficulty[] = ["Beginner", "Intermediate", "Advanced", "Exp
 const durations: Duration[] = ["Weekend", "3–5 days", "7+ days"];
 const groupSizes: GroupSize[] = ["Solo", "Small group (2–6)", "Large group (6+)"];
 
-const seasons: { label: string; icon: string; months: Month[]; color: string; activeColor: string; idleColor: string }[] = [
-  { label: "Winter",  icon: "❄️", months: ["Dec", "Jan", "Feb"],      color: "text-sky-600",    activeColor: "bg-sky-600 text-white",    idleColor: "bg-sky-50 text-sky-800 hover:bg-sky-100 border border-sky-200" },
-  { label: "Spring",  icon: "🌸", months: ["Mar", "Apr", "May"],      color: "text-pink-600",   activeColor: "bg-pink-500 text-white",   idleColor: "bg-pink-50 text-pink-800 hover:bg-pink-100 border border-pink-200" },
-  { label: "Summer",  icon: "☀️", months: ["Apr", "May", "Jun"],      color: "text-amber-600",  activeColor: "bg-amber-500 text-white",  idleColor: "bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200" },
-  { label: "Monsoon", icon: "🌧️", months: ["Jun", "Jul", "Aug", "Sep"], color: "text-teal-600", activeColor: "bg-teal-600 text-white",   idleColor: "bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-200" },
-  { label: "Autumn",  icon: "🍂", months: ["Oct", "Nov", "Dec"],      color: "text-orange-600", activeColor: "bg-orange-500 text-white", idleColor: "bg-orange-50 text-orange-800 hover:bg-orange-100 border border-orange-200" },
+const seasons: { label: string; icon: React.ReactNode; months: Month[]; color: string; activeColor: string; idleColor: string }[] = [
+  { label: "Winter",  icon: <Snowflake className="w-4 h-4" />, months: ["Dec", "Jan", "Feb"],      color: "text-sky-600",    activeColor: "bg-sky-600 text-white",    idleColor: "bg-sky-50 text-sky-800 hover:bg-sky-100 border border-sky-200" },
+  { label: "Spring",  icon: <Flower2 className="w-4 h-4" />, months: ["Mar", "Apr", "May"],      color: "text-pink-600",   activeColor: "bg-pink-500 text-white",   idleColor: "bg-pink-50 text-pink-800 hover:bg-pink-100 border border-pink-200" },
+  { label: "Summer",  icon: <Sun className="w-4 h-4" />, months: ["Apr", "May", "Jun"],      color: "text-amber-600",  activeColor: "bg-amber-500 text-white",  idleColor: "bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200" },
+  { label: "Monsoon", icon: <CloudRain className="w-4 h-4" />, months: ["Jun", "Jul", "Aug", "Sep"], color: "text-teal-600", activeColor: "bg-teal-600 text-white",   idleColor: "bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-200" },
+  { label: "Autumn",  icon: <Leaf className="w-4 h-4" />, months: ["Oct", "Nov", "Dec"],      color: "text-orange-600", activeColor: "bg-orange-500 text-white", idleColor: "bg-orange-50 text-orange-800 hover:bg-orange-100 border border-orange-200" },
 ];
 
 
