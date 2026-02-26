@@ -49,7 +49,7 @@ export default function Navbar() {
   useEffect(() => { setMenuOpen(false); setUserMenuOpen(false); }, [pathname]);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 60);
+    const handleScroll = () => setScrolled(window.scrollY > 0);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
