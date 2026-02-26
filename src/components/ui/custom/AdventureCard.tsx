@@ -38,7 +38,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         
         {/* Gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#ff5722]/10" />
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#f4845f]/10" />
 
         {/* Pills at the Top */}
         <div className="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
@@ -49,10 +49,10 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         {/* Title Content */}
         <div className="absolute inset-0 p-5 flex flex-col justify-end">
           <div className="flex items-center gap-1.5 mb-1.5 opacity-80">
-            <MapPin className="w-3 h-3 text-[#ff5722]" />
+            <MapPin className="w-3 h-3 text-[#f4845f]" />
             <span className="text-white text-[10px] font-medium tracking-wide uppercase">{adventure.state}</span>
           </div>
-          <h3 className="text-white font-bold text-xl leading-tight tracking-tight mb-1 group-hover:text-[#ff5722] transition-colors">
+          <h3 className="text-white font-bold text-xl leading-tight tracking-tight mb-1 group-hover:text-[#f4845f] transition-colors">
             {adventure.name}
           </h3>
           <p className="text-white/60 text-xs leading-relaxed line-clamp-1">

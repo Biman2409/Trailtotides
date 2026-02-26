@@ -8,14 +8,14 @@ const categories = [
     {
       id: "land",
       label: "Land",
-      icon: <Mountain className="w-6 h-6 text-[#ff5722]" />,
+      icon: <Mountain className="w-6 h-6 text-[#f4845f]" />,
       subtitle: "Push your limits and own every inch of wild terrain",
       image: "https://images.unsplash.com/photo-1605548109944-9040d0972bf5?w=800&q=80",
-      accent: "#ff5722",
+      accent: "#f4845f",
       accentLight: "rgba(255,87,34,0.15)",
       accentBorder: "rgba(255,87,34,0.35)",
       tagBg: "rgba(255,87,34,0.18)",
-      tagText: "#ff5722",
+      tagText: "#f4845f",
 
     items: [
       { type: "Trekking", icon: <Footprints className="w-4 h-4" />, count: 94 },
@@ -97,7 +97,7 @@ export default function FindYourFormat() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
           <div className="mb-12">
-            <p className="text-[#ff5722] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+            <p className="text-[#f4845f] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
               Discover by style
             </p>
             <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
@@ -106,7 +106,7 @@ export default function FindYourFormat() {
             <p className="mt-4 text-white/50 text-base max-w-xl">
               Pick a category that matches your style.
             </p>
-            <div className="mt-5 w-14 h-0.5 bg-[#ff5722] rounded-full" />
+            <div className="mt-5 w-14 h-0.5 bg-[#f4845f] rounded-full" />
           </div>
 
         {/* Cards grid */}

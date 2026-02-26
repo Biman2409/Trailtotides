@@ -76,15 +76,15 @@ export default function InlineChat() {
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-2.5">
-              <Compass className="w-3.5 h-3.5 text-[#ff5722]" />
-              <p className="text-[#ff5722] text-xs font-semibold tracking-[0.22em] uppercase">
+              <Compass className="w-3.5 h-3.5 text-[#f4845f]" />
+              <p className="text-[#f4845f] text-xs font-semibold tracking-[0.22em] uppercase">
                 AI Adventure Finder
               </p>
             </div>
             <h2 className="text-white text-3xl lg:text-4xl font-bold tracking-tight leading-tight">
               Find your perfect adventure
             </h2>
-            <div className="mt-4 w-10 h-0.5 bg-[#ff5722] rounded-full" />
+            <div className="mt-4 w-10 h-0.5 bg-[#f4845f] rounded-full" />
           </div>
 
         </div>
@@ -103,7 +103,7 @@ export default function InlineChat() {
                   <button
                     key={s.label}
                     onClick={() => { send(s.label); inputRef.current?.focus(); }}
-                    className="flex items-center gap-2 text-xs border border-white/10 text-white/55 hover:text-white hover:border-[#ff5722]/50 hover:bg-[#ff5722]/8 px-3.5 py-2 rounded-full transition-all duration-200 tracking-wide"
+                    className="flex items-center gap-2 text-xs border border-white/10 text-white/55 hover:text-white hover:border-[#f4845f]/50 hover:bg-[#f4845f]/8 px-3.5 py-2 rounded-full transition-all duration-200 tracking-wide"
                   >
                     <span>{s.icon}</span>
                     {s.label}
@@ -129,7 +129,7 @@ export default function InlineChat() {
                             ? "text-white rounded-br-sm"
                             : "bg-white/6 border border-white/8 text-white/80 rounded-bl-sm"
                         }`}
-                        style={msg.role === "user" ? { background: "#ff5722" } : {}}
+                        style={msg.role === "user" ? { background: "#f4845f" } : {}}
                       >
                         {msg.content}
                       </div>
@@ -143,7 +143,7 @@ export default function InlineChat() {
                             <Link
                               key={ci}
                               href={`/experiences/${card.slug}`}
-                              className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-[#ff5722]/30 rounded-xl overflow-hidden transition-all group"
+                              className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-[#f4845f]/30 rounded-xl overflow-hidden transition-all group"
                             >
                               {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
@@ -159,13 +159,13 @@ export default function InlineChat() {
                                   {card.state} · {card.type} · {card.difficulty}
                                 </p>
                                 {rec?.reason && (
-                                  <p className="text-[#ff5722] text-xs mt-1 line-clamp-1">
+                                  <p className="text-[#f4845f] text-xs mt-1 line-clamp-1">
                                     {rec.reason}
                                   </p>
                                 )}
                               </div>
                               <div className="flex items-center pr-3">
-                                <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#ff5722] transition-colors" />
+                                <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#f4845f] transition-colors" />
                               </div>
                             </Link>
                           );
@@ -179,7 +179,7 @@ export default function InlineChat() {
               {loading && (
                 <div className="flex justify-start">
                   <div className="bg-white/6 border border-white/8 px-4 py-2.5 rounded-xl rounded-bl-sm flex items-center gap-2">
-                    <Loader2 className="w-3.5 h-3.5 text-[#ff5722] animate-spin" />
+                    <Loader2 className="w-3.5 h-3.5 text-[#f4845f] animate-spin" />
                     <span className="text-white/50 text-sm">Finding adventures…</span>
                   </div>
                 </div>
@@ -196,13 +196,13 @@ export default function InlineChat() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
               placeholder="Describe what you're looking for — we'll match you with the right trip"
-              className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/25 text-sm px-4 py-3 rounded-xl outline-none focus:border-[#ff5722]/60 focus:ring-1 focus:ring-[#ff5722]/25 transition-all"
+              className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/25 text-sm px-4 py-3 rounded-xl outline-none focus:border-[#f4845f]/60 focus:ring-1 focus:ring-[#f4845f]/25 transition-all"
             />
             <button
               onClick={() => send()}
               disabled={!input.trim() || loading}
-              className="disabled:opacity-30 disabled:cursor-not-allowed text-white px-5 py-3 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-lg shadow-[#ff5722]/20"
-              style={{ background: "#ff5722" }}
+              className="disabled:opacity-30 disabled:cursor-not-allowed text-white px-5 py-3 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-lg shadow-[#f4845f]/20"
+              style={{ background: "#f4845f" }}
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />

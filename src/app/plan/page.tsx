@@ -66,7 +66,7 @@ export default function PlanPage() {
       {/* Header */}
       <div className="bg-[#1a1f2e] pt-28 pb-14 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <p className="text-[#ff5722] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+          <p className="text-[#f4845f] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
             Adventure Planner
           </p>
           <h1 className="text-white text-5xl lg:text-6xl font-bold tracking-tight mb-4">
@@ -87,7 +87,7 @@ export default function PlanPage() {
               {/* When */}
               <section>
                 <div className="flex items-center gap-2 mb-5">
-                  <Calendar className="w-5 h-5 text-[#ff5722]" />
+                  <Calendar className="w-5 h-5 text-[#f4845f]" />
                   <h2 className="text-[#1a1f2e] text-xl font-bold">When are you going?</h2>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -110,7 +110,7 @@ export default function PlanPage() {
               {/* Where */}
               <section>
                 <div className="flex items-center gap-2 mb-5">
-                  <MapPin className="w-5 h-5 text-[#ff5722]" />
+                  <MapPin className="w-5 h-5 text-[#f4845f]" />
                   <h2 className="text-[#1a1f2e] text-xl font-bold">Where in India?</h2>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -120,7 +120,7 @@ export default function PlanPage() {
                       onClick={() => setSelectedRegions(toggle(selectedRegions, r.name as Region))}
                       className={`relative overflow-hidden rounded-xl h-20 border-2 transition-all ${
                         selectedRegions.includes(r.name as Region)
-                          ? "border-[#ff5722] shadow-lg shadow-[#ff5722]/20"
+                          ? "border-[#f4845f] shadow-lg shadow-[#f4845f]/20"
                           : "border-transparent"
                       }`}
                     >
@@ -128,12 +128,12 @@ export default function PlanPage() {
                       <img src={r.image} alt={r.name} className="absolute inset-0 w-full h-full object-cover" />
                       <div className="absolute inset-0 bg-black/55" />
                       {selectedRegions.includes(r.name as Region) && (
-                        <div className="absolute inset-0 bg-[#ff5722]/30" />
+                        <div className="absolute inset-0 bg-[#f4845f]/30" />
                       )}
                       <div className="relative z-10 h-full flex flex-col items-center justify-center gap-0.5">
                         <span className="text-white font-semibold text-xs leading-tight text-center px-1">{r.name}</span>
                         {selectedRegions.includes(r.name as Region) && (
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#ff7043]" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#f69d7c]" />
                         )}
                       </div>
                     </button>
@@ -144,7 +144,7 @@ export default function PlanPage() {
               {/* What kind */}
               <section>
                 <div className="flex items-center gap-2 mb-5">
-                  <Sparkles className="w-5 h-5 text-[#ff5722]" />
+                  <Sparkles className="w-5 h-5 text-[#f4845f]" />
                   <h2 className="text-[#1a1f2e] text-xl font-bold">What kind of adventure?</h2>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -154,8 +154,8 @@ export default function PlanPage() {
                       onClick={() => setSelectedTypes(toggle(selectedTypes, t))}
                       className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${
                         selectedTypes.includes(t)
-                          ? "bg-[#ff5722] text-white border-[#ff5722]"
-                          : "bg-white border-[#e0d8cc] text-[#1a1f2e] hover:border-[#ff5722]/40"
+                          ? "bg-[#f4845f] text-white border-[#f4845f]"
+                          : "bg-white border-[#e0d8cc] text-[#1a1f2e] hover:border-[#f4845f]/40"
                       }`}
                     >
                       {t}
@@ -167,7 +167,7 @@ export default function PlanPage() {
               {/* How hard */}
               <section>
                 <div className="flex items-center gap-2 mb-5">
-                  <TrendingUp className="w-5 h-5 text-[#ff5722]" />
+                  <TrendingUp className="w-5 h-5 text-[#f4845f]" />
                   <h2 className="text-[#1a1f2e] text-xl font-bold">How hard?</h2>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -175,7 +175,7 @@ export default function PlanPage() {
                     { val: "Beginner" as Difficulty,     color: "bg-emerald-500 text-white border-emerald-500",   idle: "bg-emerald-50 text-emerald-800 border-emerald-200" },
                     { val: "Intermediate" as Difficulty, color: "bg-teal-500 text-white border-teal-500",          idle: "bg-teal-50 text-teal-800 border-teal-200" },
                     { val: "Advanced" as Difficulty,     color: "bg-amber-500 text-white border-amber-500",        idle: "bg-amber-50 text-amber-800 border-amber-200" },
-                    { val: "Expert" as Difficulty,       color: "bg-[#ff5722] text-white border-[#ff5722]",      idle: "bg-orange-50 text-orange-800 border-orange-200" },
+                    { val: "Expert" as Difficulty,       color: "bg-[#f4845f] text-white border-[#f4845f]",      idle: "bg-orange-50 text-orange-800 border-orange-200" },
                     { val: "Extreme" as Difficulty,      color: "bg-red-500 text-white border-red-500",            idle: "bg-red-50 text-red-800 border-red-200" },
                   ]).map(({ val, color, idle }) => (
                     <button
@@ -192,7 +192,7 @@ export default function PlanPage() {
               {/* Group size */}
               <section>
                 <div className="flex items-center gap-2 mb-5">
-                  <Users className="w-5 h-5 text-[#ff5722]" />
+                  <Users className="w-5 h-5 text-[#f4845f]" />
                   <h2 className="text-[#1a1f2e] text-xl font-bold">Group size</h2>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -234,7 +234,7 @@ export default function PlanPage() {
 
               <button
                 onClick={handlePlan}
-                className="w-full bg-[#ff5722] hover:bg-[#ff7043] text-white font-semibold py-4 rounded-xl text-base flex items-center justify-center gap-2 group transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5722]/25"
+                className="w-full bg-[#f4845f] hover:bg-[#f69d7c] text-white font-semibold py-4 rounded-xl text-base flex items-center justify-center gap-2 group transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#f4845f]/25"
               >
                 {activeCount > 0 ? `Find Matching Adventures` : "Show All Adventures"}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -245,7 +245,7 @@ export default function PlanPage() {
             <div className="hidden lg:block">
               <div className="sticky top-28 space-y-5">
                 <div className="bg-[#1a1f2e] rounded-2xl p-6">
-                  <p className="text-[#ff5722] text-xs font-semibold tracking-widest uppercase mb-4">Tips</p>
+                  <p className="text-[#f4845f] text-xs font-semibold tracking-widest uppercase mb-4">Tips</p>
                   <ul className="space-y-4">
                     {[
                       "Select only what matters most — fewer filters often yield better results.",
@@ -254,22 +254,22 @@ export default function PlanPage() {
                       "If you're a first-timer, pick Beginner or Intermediate difficulty.",
                     ].map((tip, i) => (
                       <li key={i} className="flex items-start gap-2.5">
-                        <ChevronRight className="w-4 h-4 text-[#ff5722] shrink-0 mt-0.5" />
+                        <ChevronRight className="w-4 h-4 text-[#f4845f] shrink-0 mt-0.5" />
                         <span className="text-white/55 text-sm leading-relaxed">{tip}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="bg-[#ff5722]/10 border border-[#ff5722]/20 rounded-2xl p-5">
+                <div className="bg-[#f4845f]/10 border border-[#f4845f]/20 rounded-2xl p-5">
                   <div className="flex items-center gap-2 mb-2">
-                    <Sparkles className="w-4 h-4 text-[#ff5722]" />
-                    <span className="text-[#ff5722] text-xs font-semibold uppercase tracking-wider">AI Finder</span>
+                    <Sparkles className="w-4 h-4 text-[#f4845f]" />
+                    <span className="text-[#f4845f] text-xs font-semibold uppercase tracking-wider">AI Finder</span>
                   </div>
                   <p className="text-white/55 text-sm leading-relaxed mb-3">
                     Prefer to just describe what you want? Use Compass AI on the home page.
                   </p>
-                  <Link href="/#ai-finder" className="text-[#ff5722] text-xs font-semibold hover:text-[#ff7043] transition-colors flex items-center gap-1">
+                  <Link href="/#ai-finder" className="text-[#f4845f] text-xs font-semibold hover:text-[#f69d7c] transition-colors flex items-center gap-1">
                     Try Compass AI <ArrowRight className="w-3 h-3" />
                   </Link>
                 </div>
@@ -332,25 +332,25 @@ export default function PlanPage() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/30 to-transparent" />
                       <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
-                        <span className="bg-[#ff5722] text-white text-xs font-semibold px-3 py-1.5 rounded-full">{a.type}</span>
+                        <span className="bg-[#f4845f] text-white text-xs font-semibold px-3 py-1.5 rounded-full">{a.type}</span>
                         <span className={`text-xs font-semibold px-3 py-1.5 rounded-full ${
                           a.difficulty === "Beginner" ? "bg-emerald-500 text-white" :
                           a.difficulty === "Intermediate" ? "bg-teal-500 text-white" :
                           a.difficulty === "Advanced" ? "bg-amber-500 text-white" :
-                          a.difficulty === "Expert" ? "bg-[#ff5722] text-white" :
+                          a.difficulty === "Expert" ? "bg-[#f4845f] text-white" :
                           "bg-red-500 text-white"
                         }`}>{a.difficulty}</span>
                       </div>
                       <div className="absolute bottom-0 left-0 right-0 p-5">
                         <div className="flex items-center gap-1.5 mb-1.5">
-                          <MapPin className="w-3.5 h-3.5 text-[#ff5722]" />
+                          <MapPin className="w-3.5 h-3.5 text-[#f4845f]" />
                           <span className="text-white/55 text-xs">{a.state}</span>
                         </div>
                         <h3 className="text-white font-semibold text-lg leading-snug mb-1">{a.name}</h3>
                         <p className="text-white/65 text-sm line-clamp-2 mb-3">{a.tagline}</p>
                         <div className="flex items-center justify-between">
                           <span className="text-white/45 text-xs">{a.durationDays} · {a.bestSeason}</span>
-                          <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#ff5722] transition-colors">
+                          <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#f4845f] transition-colors">
                             <ArrowRight className="w-3.5 h-3.5 text-white" />
                           </div>
                         </div>
@@ -365,7 +365,7 @@ export default function PlanPage() {
               <div className="mt-12 text-center">
                 <Link
                   href="/explore"
-                  className="inline-flex items-center gap-2 text-[#ff5722] font-semibold text-sm hover:text-[#ff7043] transition-colors group"
+                  className="inline-flex items-center gap-2 text-[#f4845f] font-semibold text-sm hover:text-[#f69d7c] transition-colors group"
                 >
                   Browse all {adventures.length} adventures
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

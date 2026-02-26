@@ -96,7 +96,7 @@ export default function Navbar() {
 
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-lg bg-[#ff5722] flex items-center justify-center group-hover:bg-[#ff7043] transition-colors duration-200 shadow-md shadow-[#ff5722]/30">
+              <div className="w-8 h-8 rounded-lg bg-[#f4845f] flex items-center justify-center group-hover:bg-[#f69d7c] transition-colors duration-200 shadow-md shadow-[#f4845f]/30">
                 <Mountain className="w-4 h-4 text-white" strokeWidth={2.2} />
               </div>
               <span className="text-white font-semibold text-base tracking-tight leading-none">
@@ -121,7 +121,7 @@ export default function Navbar() {
                 >
                   {link.label}
                   {isActive && (
-                    <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#ff5722]" />
+                    <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#f4845f]" />
                   )}
                 </Link>
               );
@@ -184,7 +184,7 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/auth/signup"
-                  className="bg-[#ff5722] hover:bg-[#ff7043] text-white text-sm font-semibold px-5 py-2.5 rounded-lg shadow-md shadow-[#ff5722]/25 hover:shadow-lg hover:shadow-[#ff5722]/30 hover:-translate-y-0.5 transition-all duration-200"
+                  className="bg-[#f4845f] hover:bg-[#f69d7c] text-white text-sm font-semibold px-5 py-2.5 rounded-lg shadow-md shadow-[#f4845f]/25 hover:shadow-lg hover:shadow-[#f4845f]/30 hover:-translate-y-0.5 transition-all duration-200"
                 >
                   Sign Up
                 </Link>
@@ -275,7 +275,7 @@ export default function Navbar() {
               </Link>
                 <Link
                   href="/auth/signup"
-                  className="block w-full text-center bg-[#ff5722] hover:bg-[#ff7043] text-white font-semibold py-3 rounded-xl transition-colors text-sm"
+                  className="block w-full text-center bg-[#f4845f] hover:bg-[#f69d7c] text-white font-semibold py-3 rounded-xl transition-colors text-sm"
                 >
                   Sign Up
                 </Link>

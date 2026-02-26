@@ -9,7 +9,7 @@ export default function Footer() {
             {/* Brand */}
             <div className="lg:col-span-1">
               <Link href="/" className="flex items-center gap-2.5 mb-4">
-                <div className="w-9 h-9 rounded-lg bg-[#ff5722] flex items-center justify-center shadow-md shadow-[#ff5722]/30">
+                <div className="w-9 h-9 rounded-lg bg-[#f4845f] flex items-center justify-center shadow-md shadow-[#f4845f]/30">
                   <Mountain className="w-5 h-5 text-white" strokeWidth={2} />
                 </div>
                 <span className="font-semibold text-lg tracking-tight">Trail to Tides</span>
