@@ -475,18 +475,18 @@ export default function AdminDashboardClient({
                       tickLine={false} 
                       axisLine={false} 
                     />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "12px" }}
-                        itemStyle={{ color: "#f4845f" }}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="count" 
-                        stroke="#f4845f" 
-                        strokeWidth={3} 
-                        dot={{ r: 4, fill: "#f4845f", strokeWidth: 0 }} 
-                        activeDot={{ r: 6, fill: "#fff" }}
-                      />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "12px" }}
+                      itemStyle={{ color: "#f97316" }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="count" 
+                      stroke="#f97316" 
+                      strokeWidth={3} 
+                      dot={{ r: 4, fill: "#f97316", strokeWidth: 0 }} 
+                      activeDot={{ r: 6, fill: "#fff" }}
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
