@@ -94,15 +94,16 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-[#c4622d] flex items-center justify-center group-hover:bg-[#d97040] transition-colors duration-200 shadow-md shadow-[#c4622d]/30">
-              <Mountain className="w-4 h-4 text-white" strokeWidth={2.2} />
-            </div>
-            <span className="text-white font-semibold text-base tracking-tight leading-none">
-              Trail to Tides
-            </span>
-          </Link>
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="w-8 h-8 rounded-lg bg-[#ff5722] flex items-center justify-center group-hover:bg-[#ff7043] transition-colors duration-200 shadow-md shadow-[#ff5722]/30">
+                <Mountain className="w-4 h-4 text-white" strokeWidth={2.2} />
+              </div>
+              <span className="text-white font-semibold text-base tracking-tight leading-none">
+                Trail to Tides
+              </span>
+            </Link>
+
 
           {/* Desktop nav */}
           <div className="hidden lg:flex items-center gap-1">
