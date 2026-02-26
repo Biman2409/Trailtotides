@@ -78,7 +78,7 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href="/explore"
-                className="bg-[#f4845f] hover:bg-[#ff7043] text-white font-semibold px-8 py-4 rounded-xl text-base flex items-center gap-2 group shadow-xl shadow-black/30 min-w-[200px] justify-center hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#f4845f]/40 transition-all duration-200"
+                className="bg-[#f4845f] hover:bg-[#f69d7c] text-white font-semibold px-8 py-4 rounded-xl text-base flex items-center gap-2 group shadow-xl shadow-black/30 min-w-[200px] justify-center hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#f4845f]/40 transition-all duration-200"
               >
                 Explore Adventures
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -114,7 +114,7 @@ export default function HomePage() {
       <section id="featured-adventures" className="py-24 lg:py-32 px-6 lg:px-8 bg-[#111820]">
           <div className="max-w-7xl mx-auto">
             <div className="mb-14">
-              <p className="text-[#f4845f] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+              <p className="text-[#f4845f] text-xs font-semibold tracking-[0.22em] mb-3">
                 Our Favourites
               </p>
               <div className="flex items-end justify-between gap-4">
@@ -140,7 +140,7 @@ export default function HomePage() {
           <div className="mt-14 flex justify-center">
             <Link
               href="/explore"
-              className="bg-[#f4845f] hover:bg-[#ff7043] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#f4845f]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#f4845f]/30 transition-all duration-200"
+              className="bg-[#f4845f] hover:bg-[#f69d7c] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#f4845f]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#f4845f]/30 transition-all duration-200"
             >
               View all adventures
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -274,7 +274,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/explore"
-              className="bg-[#f4845f] hover:bg-[#ff7043] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#f4845f]/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#f4845f]/30 transition-all duration-200"
+              className="bg-[#f4845f] hover:bg-[#f69d7c] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#f4845f]/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#f4845f]/30 transition-all duration-200"
             >
               Start Exploring
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
