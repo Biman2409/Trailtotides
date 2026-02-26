@@ -11,14 +11,13 @@ export async function signUp(formData: FormData) {
   const password = formData.get("password") as string;
   const phone = formData.get("phone") as string;
 
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { full_name, phone },
-      emailRedirectTo: undefined, // use OTP flow, not magic link
-    },
-  });
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name, phone },
+      },
+    });
 
   if (error) {
     return { error: error.message };
