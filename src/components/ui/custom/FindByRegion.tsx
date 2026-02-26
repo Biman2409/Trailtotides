@@ -162,16 +162,16 @@ export default function FindByRegion() {
                   >
                     {/* Collapsed summary */}
                     {!isOpen && (
-                      <div className="py-3.5 flex items-center justify-between">
-                        <span className="text-white/40 text-xs">
-                          {region.items.length} categories
-                        </span>
-                        <span
-                          className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#f4845f]/15 text-[#f4845f]"
-                        >
-                          {region.adventureCount} adventures
-                        </span>
-                      </div>
+                        <div className="py-3.5 flex items-center justify-between">
+                          <span className="text-white/40 text-xs">
+                            {region.items.length} Categories
+                          </span>
+                          <span
+                            className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#f4845f]/15 text-[#f4845f]"
+                          >
+                            {region.adventureCount} Adventures
+                          </span>
+                        </div>
                     )}
 
 
