@@ -92,34 +92,38 @@ export default function InlineChat() {
           </p>
         </div>
 
-        {/* Command Center Interface */}
-        <div className="max-w-5xl mx-auto">
-          <div className="relative group">
-            {/* Structural glow */}
-            <div className="absolute -inset-2 bg-gradient-to-r from-[#ff5100]/30 to-[#ff5100]/0 rounded-[3rem] blur-2xl opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-            
-            <div className="relative bg-[#11161d]/90 backdrop-blur-2xl border border-white/[0.08] rounded-[2rem] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] overflow-hidden">
+          {/* Command Center Interface */}
+          <div className="max-w-5xl mx-auto">
+            <div className="relative group">
+              {/* Structural glow */}
+              <div className="absolute -inset-2 bg-gradient-to-r from-[#ff5100]/30 to-[#ff5100]/0 rounded-[3rem] blur-2xl opacity-20 group-hover:opacity-40 transition duration-1000"></div>
               
+              <div className="relative bg-[#11161d]/90 backdrop-blur-2xl border border-white/[0.08] rounded-[2rem] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] overflow-hidden">
+                
                 {/* Operational Header */}
                 <div className="px-6 py-4 border-b border-white/[0.05] flex items-center justify-center bg-white/[0.01]">
-                  <span className="text-[10px] text-white/40 font-black uppercase tracking-[0.2em]">Recommended Starting Vectors</span>
+                  <span className="text-[10px] text-white/40 font-black uppercase tracking-[0.2em] text-center w-full">Recommended Starting Vectors</span>
                 </div>
 
-              {/* Interaction Terminal */}
-              <div className={`min-h-[60px] ${messages.length > 0 ? 'max-h-[450px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
-                {messages.length === 0 && (
-                  <div className="px-8 pt-8 pb-4 flex flex-wrap gap-3 justify-center">
-                    {['Coastal Trek', 'Mountain Peak', 'Hidden Lagoon'].map((v) => (
-                      <button 
-                        key={v}
-                        onClick={() => send(v)}
-                        className="px-4 py-2 rounded-full bg-white/[0.03] border border-white/[0.08] text-[11px] text-white/60 font-bold uppercase tracking-widest hover:bg-[#ff5100]/10 hover:text-[#ff5100] hover:border-[#ff5100]/30 transition-all duration-300"
-                      >
-                        {v}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                {/* Interaction Terminal */}
+                <div className={`min-h-[60px] ${messages.length > 0 ? 'max-h-[450px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
+                  {messages.length === 0 && (
+                    <div className="px-8 pt-10 pb-6 flex flex-wrap gap-4 justify-center">
+                      {[
+                        "Ladakh bike trip under 20k",
+                        "Solo trek to Valley of Flowers",
+                        "Scuba in Andaman islands"
+                      ].map((v) => (
+                        <button 
+                          key={v}
+                          onClick={() => send(v)}
+                          className="px-6 py-3 rounded-full bg-white/[0.03] border border-white/[0.08] text-[12px] text-white/70 font-bold uppercase tracking-widest hover:bg-[#ff5100]/10 hover:text-[#ff5100] hover:border-[#ff5100]/30 transition-all duration-300 shadow-lg"
+                        >
+                          {v}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 
                 {messages.length > 0 && (
                   <div className="p-6 lg:p-8 space-y-6">
