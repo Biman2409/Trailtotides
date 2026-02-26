@@ -46,18 +46,18 @@ export default function StoriesPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-12">
                 {/* Badge pills (Featured, TTT Original) */}
-                <div className="flex items-center gap-2 mb-2">
-                  {featured.tags.includes("Featured") && (
-                    <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
-                      <Crown className="w-3 h-3" /> Featured
-                    </span>
-                  )}
-                  {featured.tags.includes("TTT Original") && (
-                    <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
-                      <Mountain className="w-3 h-3" /> TTT Original
-                    </span>
-                  )}
-                </div>
+                  <div className="flex items-center gap-2 mb-2">
+                    {featured.tags.includes("Featured") && (
+                      <span className="flex items-center gap-1.5 bg-black text-[#f4845f] text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#f4845f]/20">
+                        <Crown className="w-3 h-3" /> Featured
+                      </span>
+                    )}
+                    {featured.tags.includes("TTT Original") && (
+                      <span className="flex items-center gap-1.5 bg-black text-[#f4845f] text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#f4845f]/20">
+                        <Mountain className="w-3 h-3" /> TTT Original
+                      </span>
+                    )}
+                  </div>
                 {/* Content tags — all non-badge tags */}
                 <div className="flex items-center gap-2 mb-4 flex-wrap">
                   {featured.tags.filter((t) => !BADGE_TAGS.includes(t)).map((tag) => (
