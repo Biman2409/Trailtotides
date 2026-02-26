@@ -592,10 +592,10 @@ export default function ExploreClient() {
                         chipActive: "bg-teal-600 text-white",
                         subRegions: ["Andaman & Nicobar", "Lakshadweep"],
                       },
-                        {
-                          name: "Northeast",
-                          icon: <Sunrise className="w-4 h-4" />,
-                          btn: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100",
+                          {
+                            name: "Northeast",
+                            icon: <Mountain className="w-4 h-4" />,
+                            btn: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100",
                           btnActive: "bg-violet-600 text-white border-violet-600",
                           chip: "bg-violet-100 text-violet-900 hover:bg-violet-200",
                           chipActive: "bg-violet-600 text-white",
