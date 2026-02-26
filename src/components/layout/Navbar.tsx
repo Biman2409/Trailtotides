@@ -229,17 +229,17 @@ export default function Navbar() {
             </Link>
           ))}
 
-          {user ? (
-            <div className="pt-2 space-y-1">
-              <div className="flex items-center gap-3 px-3 py-3 border-b border-white/5">
-                <div className="w-8 h-8 rounded-full bg-orange-500/30 flex items-center justify-center text-orange-400 font-semibold text-sm">
-                  {user.name[0].toUpperCase()}
+            {user ? (
+              <div className="pt-2 space-y-1">
+                <div className="flex items-center gap-3 px-3 py-3 border-b border-white/5">
+                  <div className="w-8 h-8 rounded-full bg-orange-500/30 flex items-center justify-center text-orange-400 font-semibold text-sm">
+                    {user.name[0].toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-medium">{user.name}</p>
+                    <p className="text-white/40 text-xs">{user.email}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-white text-sm font-medium">{user.name}</p>
-                  <p className="text-white/40 text-xs">{user.email}</p>
-                </div>
-              </div>
                 {user.role === "admin" && (
                   <Link
                     href="/admin"
@@ -258,13 +258,13 @@ export default function Navbar() {
                 </Link>
                 <button
                   onClick={handleLogout}
-                className="w-full flex items-center gap-2 py-3 px-3 text-sm font-medium text-white/50 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-                Log out
-              </button>
-            </div>
-          ) : (
+                  className="w-full flex items-center gap-2 py-3 px-3 text-sm font-medium text-white/50 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Log out
+                </button>
+              </div>
+            ) : (
             <div className="pt-2 flex flex-col gap-2">
               <Link
                 href="/auth/login"
