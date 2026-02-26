@@ -73,20 +73,14 @@ export default function InlineChat() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 lg:py-16">
 
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
-          <div>
-            <div className="flex items-center gap-2 mb-2.5">
-              <Compass className="w-3.5 h-3.5 text-[#ff5100]" />
-              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase">
-                Compass AI · Adventure Finder
-              </p>
-            </div>
-            <h2 className="text-white text-3xl lg:text-4xl font-bold tracking-tight leading-tight">
-              Find your perfect adventure
+        <div className="mb-8">
+          <div className="flex items-center gap-3">
+            <Compass className="w-8 h-8 lg:w-10 lg:h-10 text-[#ff5100]" />
+            <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+              Compass AI
             </h2>
-            <div className="mt-4 w-10 h-0.5 bg-[#ff5100] rounded-full" />
           </div>
-
+          <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
         </div>
 
         {/* Chat container */}
