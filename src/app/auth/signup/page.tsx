@@ -168,10 +168,32 @@ export default function SignUpPage() {
               </div>
             </div>
 
+            <div className="flex items-start gap-3 mt-4 mb-2">
+              <div className="flex items-center h-5">
+                <input
+                  id="terms"
+                  name="terms"
+                  type="checkbox"
+                  required
+                  className="w-4 h-4 rounded border-white/10 bg-white/5 text-orange-500 focus:ring-orange-500/20 transition-all cursor-pointer"
+                />
+              </div>
+              <label htmlFor="terms" className="text-sm text-white/50 leading-tight cursor-pointer">
+                I agree to the{" "}
+                <Link href="/terms" className="text-orange-400 hover:text-orange-300 font-medium transition-colors">
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy" className="text-orange-400 hover:text-orange-300 font-medium transition-colors">
+                  Privacy Policy
+                </Link>
+              </label>
+            </div>
+
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl py-3.5 transition-colors mt-2"
+              className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl py-3.5 transition-colors"
             >
               {loading ? "Creating account..." : "Create Account"}
             </button>
