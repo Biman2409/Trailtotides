@@ -64,13 +64,11 @@ export default async function ExperiencePage({ params }: Props) {
   const adventure = adventures.find((a) => a.slug === slug);
   if (!adventure) notFound();
 
-  const related = adventures
-    .filter((a) => a.id !== adventure.id && (a.region === adventure.region || a.type === adventure.type))
-    .slice(0, 3);
+    const related = adventures
+      .filter((a) => a.id !== adventure.id && (a.region === adventure.region || a.type === adventure.type))
+      .slice(0, 3);
 
-  const diff = difficultyStyle[adventure.difficulty] ?? difficultyStyle["Intermediate"];
-
-  return (
+    return (
     <div className="min-h-screen bg-[#fafaf8]">
       <Navbar />
 
