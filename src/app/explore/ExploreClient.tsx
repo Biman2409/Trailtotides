@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Sparkles, Send, ChevronRight, Loader2 } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -302,7 +302,7 @@ export default function ExploreClient() {
                     : "bg-[#c4622d] text-white hover:bg-[#b5571f]"
                 }`}
             >
-              <Sparkles className="w-4 h-4" />
+              <Compass className="w-4 h-4" />
               <span className="hidden sm:inline">AI Finder</span>
               <span className="sm:hidden">AI</span>
             </button>
