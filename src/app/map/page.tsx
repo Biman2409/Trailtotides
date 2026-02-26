@@ -492,7 +492,7 @@ export default function MapPage() {
                 <div className="col-span-2 lg:col-span-3">
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Region</h3>
                   {(() => {
-                    const regionGroups: { name: Region; icon: string; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
+                    const regionGroups: { name: Region; icon: React.ReactNode; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
                       { name: "Himalayas",     icon: "🏔️", btn: "bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100", btnActive: "bg-emerald-700 text-white border-emerald-700", chip: "bg-emerald-100 text-emerald-900 hover:bg-emerald-200", chipActive: "bg-emerald-700 text-white", subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
                       { name: "Western Ghats", icon: "⛰️", btn: "bg-lime-50 border-lime-200 text-lime-800 hover:bg-lime-100",             btnActive: "bg-lime-600 text-white border-lime-600",     chip: "bg-lime-100 text-lime-900 hover:bg-lime-200",         chipActive: "bg-lime-600 text-white",     subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"] },
                       { name: "Eastern Ghats", icon: "⛰️", btn: "bg-orange-50 border-orange-200 text-orange-800 hover:bg-orange-100",     btnActive: "bg-orange-600 text-white border-orange-600", chip: "bg-orange-100 text-orange-900 hover:bg-orange-200",   chipActive: "bg-orange-600 text-white",   subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"] },
