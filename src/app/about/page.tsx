@@ -15,11 +15,11 @@ const VALUES = [
     title: "Data-led, story-told",
     description: "Real terrain data, verified operator credentials, and firsthand stories from people who've actually done the adventure.",
   },
-  {
-    icon: Sparkles,
-    title: "Discovery-first",
-    description: "Built to help you find the adventure that fits you — not to push the most commercially popular one. compass.ai is our commitment to personalised discovery.",
-  },
+    {
+      icon: Sparkles,
+      title: "Discovery-first",
+      description: "Built to help you find the adventure that fits you — not to push the most commercially popular one. COMPASS.AI is our commitment to personalised discovery.",
+    },
   {
     icon: Users,
     title: "Community-built",
