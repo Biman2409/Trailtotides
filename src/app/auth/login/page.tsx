@@ -97,11 +97,12 @@ function LoginForm() {
           </div>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-[#f4845f] hover:bg-[#d84315] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#f4845f]/20 mt-2"
-        >
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#f4845f] hover:bg-[#f69d7c] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#f4845f]/20 mt-2"
+          >
+
           {loading ? "Verifying..." : "Sign In"}
         </button>
       </form>
