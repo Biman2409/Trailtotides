@@ -95,7 +95,7 @@ export default function InlineChat() {
             </div>
           </div>
           <p className="text-white/40 text-lg lg:text-xl font-medium tracking-tight max-w-2xl leading-relaxed">
-            Describe your ideal escape. <span className="text-white">We&apos;ll map the path.</span>
+            Describe your escape. <span className="text-white">We&apos;ll map the adventure.</span>
           </p>
         </div>
 
