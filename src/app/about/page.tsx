@@ -18,7 +18,7 @@ const VALUES = [
   {
     icon: Sparkles,
     title: "Discovery-first",
-    description: "Built to help you find the adventure that fits you — not to push the most commercially popular one. Compass AI is our commitment to personalised discovery.",
+    description: "Built to help you find the adventure that fits you — not to push the most commercially popular one. compass.ai is our commitment to personalised discovery.",
   },
   {
     icon: Users,
