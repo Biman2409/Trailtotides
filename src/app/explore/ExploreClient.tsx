@@ -455,60 +455,66 @@ export default function ExploreClient() {
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
                     Adventure Type
                   </h3>
-                  {(() => {
-                        const categories = [
+                    {(() => {
+                          const categories = [
+                              {
+                                label: "Land Based", 
+                                icon: <Mountain className="w-3.5 h-3.5" />,
+                                btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
+                                btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                                chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                                chipActive: "bg-[#ff6b35] text-white",
+                                types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
+                              },
+
                             {
-                              label: "Land Based", 
+                              label: "Water Based", 
+                              icon: <Waves className="w-3.5 h-3.5" />,
                               btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
                               btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
                               chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
                               chipActive: "bg-[#ff6b35] text-white",
-                              types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
+                              types: ["Diving", "Kayaking"],
                             },
+                            {
+                              label: "Snow Based", 
+                              icon: <Snowflake className="w-3.5 h-3.5" />,
+                              btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
+                              btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                              chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                              chipActive: "bg-[#ff6b35] text-white",
+                              types: ["Skiing"],
+                            },
+                            {
+                              label: "Air Based", 
+                              icon: <Wind className="w-3.5 h-3.5" />,
+                              btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
+                              btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                              chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                              chipActive: "bg-[#ff6b35] text-white",
+                              types: [] as string[],
+                            },
+                          ];
+                      return (
+                        <div className="flex flex-col gap-2">
+                            {/* Category buttons row */}
+                            <div className="flex flex-wrap gap-2">
+                              {categories.map((cat) => {
+                                const isExpanded = expandedCategory === cat.label;
+                                const hasSelected = cat.types.some(t => selectedTypes.includes(t as AdventureType));
+                                return (
+                                  <button
+                                    key={cat.label}
+                                    onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                                      isExpanded || hasSelected 
+                                        ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
+                                        : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                                    }`}
+                                  >
+                                    {cat.icon}
+                                    {cat.label}
 
-                          {
-                            label: "Water Based", 
-                            btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
-                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                            chipActive: "bg-[#ff6b35] text-white",
-                            types: ["Diving", "Kayaking"],
-                          },
-                          {
-                            label: "Snow Based", 
-                            btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
-                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                            chipActive: "bg-[#ff6b35] text-white",
-                            types: ["Skiing"],
-                          },
-                          {
-                            label: "Air Based", 
-                            btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
-                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                            chipActive: "bg-[#ff6b35] text-white",
-                            types: [] as string[],
-                          },
-                        ];
-                    return (
-                      <div className="flex flex-col gap-2">
-                          {/* Category buttons row */}
-                          <div className="flex flex-wrap gap-2">
-                            {categories.map((cat) => {
-                              const isExpanded = expandedCategory === cat.label;
-                              const hasSelected = cat.types.some(t => selectedTypes.includes(t as AdventureType));
-                              return (
-                                <button
-                                  key={cat.label}
-                                  onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
-                                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
-                                    isExpanded || hasSelected 
-                                      ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
-                                      : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
-                                  }`}
-                                >
-                                  {cat.label}
 
                                   {hasSelected && (
                                     <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
