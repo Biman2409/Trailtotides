@@ -29,14 +29,14 @@ const regionIcons: Record<string, React.ReactNode> = {
 };
 
 const regionSubtitles: Record<string, string> = {
-  "Himalayas": "The Roof of the World",
-  "Western Ghats": "Green Heart of India",
-  "Eastern Ghats": "Ancient Hills & Vales",
-  "Desert": "The Golden Sands",
-  "Coast": "Sun, Sand & Surf",
-  "Islands": "Tropical Paradises",
-  "Northeast": "Untouched Wilderness",
-  "Urban": "Concrete Jungles & Beyond"
+  "Himalayas": "Explore the majestic peaks and high-altitude valleys",
+  "Western Ghats": "Trek through lush rainforests and misty coffee trails",
+  "Eastern Ghats": "Discover ancient hills and hidden waterfall trails",
+  "Desert": "Experience the golden dunes and vibrant desert life",
+  "Coast": "Surf the waves and explore the sun-soaked shores",
+  "Islands": "Dive into turquoise waters and tropical wilderness",
+  "Northeast": "Venture into untouched forests and tribal heartlands",
+  "Urban": "Find hidden adventure spots within the city limits"
 };
 
 const regionTitleIcons: Record<string, React.ReactNode> = {
