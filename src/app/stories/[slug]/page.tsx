@@ -184,17 +184,17 @@ export default async function StoryPage({ params }: Props) {
           ))}
         </div>
 
-        {/* Tags */}
-          <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-white/10">
-            {story.tags.map((tag) => (
-              <span
-                key={tag}
-                className="bg-white/8 text-white/40 text-xs px-3 py-1.5 rounded-full"
-              >
-              #{tag}
-            </span>
-          ))}
-        </div>
+          {/* Tags */}
+            <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-white/10">
+              {story.tags.filter(t => !BADGE_TAGS.includes(t)).map((tag) => (
+                <span
+                  key={tag}
+                  className="bg-white/8 text-white/40 text-xs px-3 py-1.5 rounded-full"
+                >
+                #{tag}
+              </span>
+            ))}
+          </div>
 
         {/* Author card */}
           <div className="mt-10 bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-5">
