@@ -592,59 +592,57 @@ export default function MapPage() {
                   </div>
                 </div>
 
-                {/* Difficulty */}
-                <div className="col-span-2 lg:col-span-3">
-                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Difficulty</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {([
-                      { val: "Beginner",     icon: <Zap className="w-3.5 h-3.5" />,     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                      { val: "Intermediate", icon: <Activity className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                      { val: "Advanced",     icon: <ShieldAlert className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                      { val: "Expert",       icon: <Trophy className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                      { val: "Extreme",      icon: <Flame className="w-3.5 h-3.5" />,   idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                      ] as { val: Difficulty; icon: React.ReactNode; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
-                        <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
-                          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDifficulties.includes(val) ? active : idle}`}>
-                          {icon}
-                          {val}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Duration */}
+                  {/* Difficulty */}
                   <div className="col-span-2 lg:col-span-3">
-                    <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
+                    <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Difficulty</h3>
                     <div className="flex flex-wrap gap-2">
                       {([
-                        { val: "Weekend",  label: "Weekend",  icon: <Calendar className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                        { val: "3–5 days", label: "3–5 days", icon: <CalendarRange className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                        { val: "7+ days",  label: "7+ days",  icon: <History className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                      ] as { val: Duration; label: string; icon: React.ReactNode; idle: string; active: string }[]).map(({ val, label, icon, idle, active }) => (
-                        <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
-                          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
-                          {icon}
-                          {label}
-                        </button>
-                      ))}
+                        { val: "Beginner",     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "Intermediate", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "Advanced",     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "Expert",       idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "Extreme",      idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        ] as { val: Difficulty; idle: string; active: string }[]).map(({ val, idle, active }) => (
+                          <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDifficulties.includes(val) ? active : idle}`}>
+                            {val}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Group Size */}
-                  <div className="col-span-2 lg:col-span-3">
-                    <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {([
-                        { val: "Solo",             icon: <User className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                        { val: "Small group (2–6)", icon: <Users className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                        { val: "Large group (6+)",  icon: <Users className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                      ] as { val: GroupSize; icon: React.ReactNode; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
-                        <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
-                          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
-                          {icon}
-                          {val}
-                        </button>
-                      ))}
+                    {/* Duration */}
+                    <div className="col-span-2 lg:col-span-3">
+                      <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {([
+                          { val: "Weekend",  label: "Weekend",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                          { val: "3–5 days", label: "3–5 days", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                          { val: "7+ days",  label: "7+ days",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        ] as { val: Duration; label: string; idle: string; active: string }[]).map(({ val, label, idle, active }) => (
+                          <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Group Size */}
+                    <div className="col-span-2 lg:col-span-3">
+                      <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {([
+                          { val: "Solo",             idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                          { val: "Small group (2–6)", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                          { val: "Large group (6+)",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        ] as { val: GroupSize; idle: string; active: string }[]).map(({ val, idle, active }) => (
+                          <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
+                            {val}
+                          </button>
+                        ))}
+
 
                   </div>
                 </div>
