@@ -168,7 +168,7 @@ export default function FindYourFormat() {
                       {/* Bottom row */}
                       <div>
                         <h3 className="text-white font-bold text-2xl leading-tight tracking-tight flex items-center gap-2">
-                          {cat.id === "air" && <Wind className="w-6 h-6 text-[#c4a8e8]" />}
+                          {cat.icon}
                           {cat.label}
                         </h3>
                         <p className="text-white/60 text-xs mt-1.5 leading-relaxed line-clamp-2">{cat.subtitle}</p>
