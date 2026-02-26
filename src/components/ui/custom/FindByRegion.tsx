@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Map as MapIcon, Sun, Mountain, Trees, Waves, Palmtree, Sunrise, Building2 } from "lucide-react";
+import { ArrowRight, Sun, Mountain, Trees, Waves, Palmtree, Building2 } from "lucide-react";
 import Image from "next/image";
-import { regions, adventures, Region } from "@/lib/data";
+import { regions, adventures } from "@/lib/data";
 
 const regionSubRegions: Record<string, string[]> = {
   "Himalayas": ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
