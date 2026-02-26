@@ -23,16 +23,12 @@ export default function SignUpPage() {
     if (result?.error) {
       setLoading(false);
       setMessage({ type: "error", text: result.error });
-    } else if (result?.success) {
-      setMessage({ type: "success", text: result.success });
-      // Clear form on success
-      (e.target as HTMLFormElement).reset();
-      
-      // Redirect to login after a short delay
-      setTimeout(() => {
-        router.push("/auth/login?message=Account created! You can now log in.");
-      }, 2000);
-    }
+      } else if (result?.success) {
+        setMessage({ type: "success", text: result.success });
+        // Clear form on success
+        (e.target as HTMLFormElement).reset();
+        setLoading(false);
+      }
   }
 
   return (
