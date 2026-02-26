@@ -457,14 +457,15 @@ export default function ExploreClient() {
                   </h3>
                   {(() => {
                       const categories = [
-                        {
-                          label: "Land Based", icon: <Mountain className="w-4 h-4" />,
-                          btn: "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100",
-                          btnActive: "bg-amber-500 text-white border-amber-500",
-                          chip: "bg-amber-100 text-amber-900 hover:bg-amber-200",
-                          chipActive: "bg-amber-500 text-white",
-                          types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
-                        },
+                          {
+                            label: "Land Based", icon: <Mountain className="w-4 h-4" />,
+                            btn: "bg-[#f4845f]/5 border-[#f4845f]/20 text-[#9c4a2f] hover:bg-[#f4845f]/10",
+                            btnActive: "bg-[#f4845f] text-white border-[#f4845f]",
+                            chip: "bg-[#f4845f]/10 text-orange-900 hover:bg-[#f4845f]/20",
+                            chipActive: "bg-[#f4845f] text-white",
+                            types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
+                          },
+
                         {
                           label: "Water Based", icon: <Waves className="w-4 h-4" />,
                           btn: "bg-sky-50 border-sky-200 text-sky-800 hover:bg-sky-100",
