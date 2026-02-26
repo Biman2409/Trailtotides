@@ -36,7 +36,7 @@ function loadLeaflet(): Promise<any> {
 }
 
 const difficultyColor: Record<string, string> = {
-  Beginner: "#22c55e", Intermediate: "#3b82f6", Advanced: "#f59e0b",
+  Beginner: "#22c55e", Intermediate: "#3b82f6", Advanced: "#f69d7c",
   Expert: "#f4845f", Extreme: "#ef4444",
 };
 
