@@ -10,14 +10,15 @@ export async function signUp(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const phone = formData.get("phone") as string;
-  const origin = (await import("next/headers")).headers().then(h => h.get("origin"));
+  const headerList = await (await import("next/headers")).headers();
+  const origin = headerList.get("origin");
 
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: { full_name, phone },
-        emailRedirectTo: `${await origin}/auth/callback`,
+        emailRedirectTo: `${origin}/auth/callback`,
       },
     });
 
