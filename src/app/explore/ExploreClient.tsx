@@ -265,10 +265,11 @@ export default function ExploreClient() {
 
       {/* Page header */}
       <div className="bg-[#1a1f2e] pt-28 pb-14 px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
-            Discover
-          </p>
+      <div className="max-w-7xl mx-auto">
+        <p className="text-[#ff5722] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+          Discover
+        </p>
+
           <h1 className="text-white text-5xl lg:text-6xl font-semibold tracking-tight mb-4">
             All Adventures
           </h1>
