@@ -63,7 +63,6 @@ export interface Adventure {
   operators: Operator[];
   tags: string[];
   featured: boolean;
-  isEditorsChoice?: boolean;
 }
 
 export interface Operator {
