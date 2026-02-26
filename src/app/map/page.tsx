@@ -466,21 +466,20 @@ export default function MapPage() {
                               {cat.types.length === 0 ? (
                                 <p className="text-xs text-[#ff6b35] italic">Coming soon</p>
                               ) : (
-                                <div className="flex flex-wrap gap-2">
-                                  {cat.types.map((type) => {
-                                    const icon = adventureTypes.find(a => a.type === type)?.icon ?? "";
-                                    const isSelected = selectedTypes.includes(type as AdventureType);
-                                    return (
-                                        <button
-                                          key={type}
-                                          onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
-                                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${isSelected ? cat.chipActive : cat.chip}`}
-                                        >
-                                          {type}
-                                        </button>
-                                    );
-                                  })}
-                                </div>
+                                  <div className="flex flex-wrap gap-2">
+                                    {cat.types.map((type) => {
+                                      const isSelected = selectedTypes.includes(type as AdventureType);
+                                      return (
+                                          <button
+                                            key={type}
+                                            onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
+                                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${isSelected ? cat.chipActive : cat.chip}`}
+                                          >
+                                            {type}
+                                          </button>
+                                      );
+                                    })}
+                                  </div>
                               )}
                             </div>
                           );
