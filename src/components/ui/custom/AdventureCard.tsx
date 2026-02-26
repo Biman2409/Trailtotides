@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin } from "lucide-react";
 import type { Adventure } from "@/lib/data";
-import { typeStyle, difficultyStyle } from "@/lib/styles";
+import Pill from "./Pill";
 
 interface AdventureCardProps {
   adventure: Adventure;
