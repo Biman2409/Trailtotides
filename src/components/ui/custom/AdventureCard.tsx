@@ -53,9 +53,9 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
                 <div className="bg-black p-1.5 rounded-full border border-[#f4845f]/30 flex items-center justify-center">
                   <Award className="w-4 h-4 text-[#f4845f]" />
                 </div>
-                <span className="text-white text-[10px] font-black tracking-[0.2em] max-w-0 overflow-hidden transition-all duration-500 group-hover/award:max-w-[100px] whitespace-nowrap opacity-0 group-hover/award:opacity-100 pr-1">
-                  EDITORS CHOICE
-                </span>
+                  <span className="text-white text-[10px] font-black tracking-[0.2em] max-w-0 overflow-hidden transition-all duration-500 group-hover/award:max-w-[100px] whitespace-nowrap opacity-0 group-hover/award:opacity-100 pr-1">
+                    EDITORS
+                  </span>
               </div>
             </div>
           )}
