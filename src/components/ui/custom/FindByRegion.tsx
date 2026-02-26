@@ -78,7 +78,7 @@ export default function FindByRegion() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-12">
-          <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+          <p className="text-[#ff5722] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
             Discover by Region
           </p>
           <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
@@ -87,7 +87,7 @@ export default function FindByRegion() {
           <p className="mt-4 text-white/50 text-base max-w-xl">
             Pick a region, and let the journey begin.
           </p>
-          <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
+          <div className="mt-5 w-14 h-0.5 bg-[#ff5722] rounded-full" />
         </div>
 
         {/* Grid */}
