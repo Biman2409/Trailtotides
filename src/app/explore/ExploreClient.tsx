@@ -47,6 +47,24 @@ const typeEmoji: Partial<Record<AdventureType, string>> = {
   Sandboarding: "🏄", "Urban Adventure": "🏙️",
 };
 
+const typeIcons: Record<string, React.ReactNode> = {
+  Trekking: <Footprints className="w-3.5 h-3.5 shrink-0" />,
+  Biking: <Bike className="w-3.5 h-3.5 shrink-0" />,
+  Cycling: <Bike className="w-3.5 h-3.5 shrink-0" />,
+  Diving: <Waves className="w-3.5 h-3.5 shrink-0" />,
+  Kayaking: <Ship className="w-3.5 h-3.5 shrink-0" />,
+  Skiing: <Snowflake className="w-3.5 h-3.5 shrink-0" />,
+  Mountaineering: <Mountain className="w-3.5 h-3.5 shrink-0" />,
+  "Rock Climbing": <Mountain className="w-3.5 h-3.5 shrink-0" />,
+  "Jeep Safari": <Car className="w-3.5 h-3.5 shrink-0" />,
+  "Camel Safari": <Sun className="w-3.5 h-3.5 shrink-0" />,
+  Caving: <HardHat className="w-3.5 h-3.5 shrink-0" />,
+  Sandboarding: <Sun className="w-3.5 h-3.5 shrink-0" />,
+  "Urban Adventure": <Building2 className="w-3.5 h-3.5 shrink-0" />,
+  Paragliding: <Wind className="w-3.5 h-3.5 shrink-0" />,
+  "Hot Air Balloon": <Wind className="w-3.5 h-3.5 shrink-0" />,
+};
+
 function ExploreMapView({ advs }: { advs: Adventure[] }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
