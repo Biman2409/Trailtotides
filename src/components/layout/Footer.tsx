@@ -16,7 +16,7 @@ export default function Footer() {
               </Link>
 
             <p className="text-white/50 text-sm leading-relaxed mt-3 max-w-xs">
-              Every adventure across India, mapped and verified. Handpicked by explorers who've actually been there.
+              Every adventure across India, mapped and verified. Handpicked by explorers who&apos;ve actually been there.
             </p>
             <div className="flex items-center gap-4 mt-6">
               <a href="#" className="text-white/38 hover:text-white hover:scale-110 transition-all duration-200">
@@ -110,7 +110,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-white/30 text-sm">
-            © 2026 Trail to Tides. Built by people who've been out there.
+            © 2026 Trail to Tides. Built by people who&apos;ve been out there.
           </p>
           <div className="flex items-center gap-6">
             <Link href="/privacy" className="text-white/30 hover:text-white/60 text-sm transition-colors">
