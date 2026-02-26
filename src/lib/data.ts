@@ -528,7 +528,7 @@ export const stories: Story[] = [
     title: "The Night Photi La Tested Us",
     excerpt:
       "A ride to Umling La, a detour to Demchok, and the mountain that watched over us. Some trips are planned. Some trips are reckless. And some trips stay with you forever.",
-    author: "Nishant Jayprakash Ingle",
+      author: "Nishant Ingle",
       authorRole: "Rider",
     heroImage: "https://images.unsplash.com/photo-1619103801164-1166263cb3b6?w=1600&q=90",
     readTime: "15 min read",
