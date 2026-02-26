@@ -336,7 +336,7 @@ export default function ExploreClient() {
             {(activeFilterCount > 0 || search) && (
               <button
                 onClick={clearAll}
-                className="flex items-center gap-1.5 text-sm text-[#c4622d] hover:text-[#e07845] font-medium"
+                className="flex items-center gap-1.5 text-sm text-[#ff5722] hover:text-[#ff7043] font-medium"
               >
                 <X className="w-3.5 h-3.5" />
                 Clear
