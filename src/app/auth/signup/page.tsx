@@ -30,7 +30,7 @@ export default function SignUpPage() {
       
       // Redirect to login after a short delay
       setTimeout(() => {
-        router.push("/auth/login?message=Check your email to confirm your account");
+        router.push("/auth/login?message=Account created! You can now log in.");
       }, 2000);
     }
   }
