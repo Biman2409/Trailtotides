@@ -135,12 +135,12 @@ const difficulties: Difficulty[] = ["Beginner", "Intermediate", "Advanced", "Exp
 const durations: Duration[] = ["Weekend", "3–5 days", "7+ days"];
 const groupSizes: GroupSize[] = ["Solo", "Small group (2–6)", "Large group (6+)"];
 
-const seasons: { label: string; icon: React.ReactNode; months: Month[]; color: string; activeColor: string; idleColor: string }[] = [
-  { label: "Winter",  months: ["Dec", "Jan", "Feb"],      color: "text-sky-600",    activeColor: "bg-sky-600 text-white",    idleColor: "bg-sky-50 text-sky-800 hover:bg-sky-100 border border-sky-200" },
-  { label: "Spring",  months: ["Mar", "Apr", "May"],      color: "text-pink-600",   activeColor: "bg-pink-500 text-white",   idleColor: "bg-pink-50 text-pink-800 hover:bg-pink-100 border border-pink-200" },
-  { label: "Summer",  months: ["Apr", "May", "Jun"],      color: "text-amber-600",  activeColor: "bg-amber-500 text-white",  idleColor: "bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200" },
-  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"], color: "text-teal-600", activeColor: "bg-teal-600 text-white",   idleColor: "bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-200" },
-    { label: "Autumn",  months: ["Oct", "Nov", "Dec"],      color: "text-[#ff6b35]", activeColor: "bg-[#ff6b35] text-white", idleColor: "bg-[#ff6b35]/5 text-[#ff6b35] hover:bg-[#ff6b35]/10 border border-[#ff6b35]/20" },
+const seasons: { label: string; months: Month[]; idleColor: string; activeColor: string }[] = [
+  { label: "Winter",  months: ["Dec", "Jan", "Feb"],      idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+  { label: "Spring",  months: ["Mar", "Apr", "May"],      idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+  { label: "Summer",  months: ["Apr", "May", "Jun"],      idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"], idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+  { label: "Autumn",  months: ["Oct", "Nov", "Dec"],      idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
 ];
 
 
