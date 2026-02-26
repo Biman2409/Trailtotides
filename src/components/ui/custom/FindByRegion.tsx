@@ -179,14 +179,13 @@ export default function FindByRegion() {
                     {isOpen && (
                       <div className="py-4">
                         <div className="flex flex-col gap-0.5">
-                            {region.items.map(({ label, count, icon }) => (
+                            {region.items.map(({ label, count }) => (
                               <Link
                                 key={label}
                                 href={`/explore?region=${encodeURIComponent(region.name)}&subRegion=${encodeURIComponent(label)}`}
                                 className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150 hover:bg-[#f4845f]/10"
                               >
                                 <div className="flex items-center gap-2.5">
-                                  <span className="text-[#f4845f] group-hover/row:scale-110 transition-transform duration-300">{icon}</span>
                                   <span className="text-white/70 group-hover/row:text-white text-sm font-medium transition-colors duration-150">
                                     {label}
                                   </span>
