@@ -167,14 +167,14 @@ export default function FindYourFormat() {
                         </span>
                       </div>
 
-                      {/* Bottom row */}
-                      <div>
-                        <h3 className="text-white font-bold text-2xl leading-tight tracking-tight flex items-center gap-2">
-                          {cat.icon}
-                          {cat.label}
-                        </h3>
-                        <p className="text-white/60 text-xs mt-1.5 leading-relaxed line-clamp-2">{cat.subtitle}</p>
-                      </div>
+                        {/* Bottom row */}
+                        <div>
+                          <h3 className="text-white font-bold text-2xl leading-tight tracking-tight">
+                            {cat.label}
+                          </h3>
+                          <p className="text-white/60 text-xs mt-1.5 leading-relaxed line-clamp-2">{cat.subtitle}</p>
+                        </div>
+
                     </div>
                 </button>
 
