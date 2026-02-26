@@ -112,23 +112,24 @@ export default function HomePage() {
 
         {/* ── FEATURED ADVENTURES ─────────────────────────── */}
       <section id="featured-adventures" className="py-24 lg:py-32 px-6 lg:px-8 bg-[#111820]">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-14">
-            <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
-              Our Favourites
-            </p>
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
-                  Adventures of a Lifetime
-                </h2>
-                <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-14">
+              <p className="text-[#ff5722] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+                Our Favourites
+              </p>
+              <div className="flex items-end justify-between gap-4">
+                <div>
+                  <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
+                    Adventures of a Lifetime
+                  </h2>
+                  <div className="mt-5 w-14 h-0.5 bg-[#ff5722] rounded-full" />
+                </div>
+                <span className="hidden sm:flex items-center gap-1.5 text-[#ff5722] text-sm font-semibold bg-[#ff5722]/8 border border-[#ff5722]/20 px-3 py-1.5 rounded-full mb-1">
+                  {featuredAdventures.length} picks
+                </span>
               </div>
-              <span className="hidden sm:flex items-center gap-1.5 text-[#c4622d] text-sm font-semibold bg-[#c4622d]/8 border border-[#c4622d]/20 px-3 py-1.5 rounded-full mb-1">
-                {featuredAdventures.length} picks
-              </span>
             </div>
-          </div>
+
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
             {featuredAdventures.map((adventure) => (
