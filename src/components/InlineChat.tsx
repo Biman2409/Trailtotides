@@ -111,28 +111,8 @@ export default function InlineChat() {
                 </div>
 
                 {/* Interaction Terminal */}
-                <div className={`min-h-[160px] ${messages.length > 0 ? 'max-h-[450px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
-                  {messages.length === 0 ? (
-                    <div className="p-8 lg:p-12 flex flex-col items-center justify-center text-center space-y-6">
-                      <div className="space-y-4 w-full">
-                        <p className="text-white/20 text-[9px] font-bold uppercase tracking-[0.4em]">
-                          Starting Vectors
-                        </p>
-                        <div className="flex flex-nowrap overflow-x-auto no-scrollbar gap-2 pb-2 w-full justify-start md:justify-center px-4">
-                          {SUGGESTIONS.map((s) => (
-                            <button
-                              key={s.label}
-                              onClick={() => { send(s.label); inputRef.current?.focus(); }}
-                              className="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/[0.02] border border-white/[0.05] text-white/50 text-[11px] hover:text-[#ff5100] hover:bg-[#ff5100]/5 hover:border-[#ff5100]/30 transition-all duration-300 group shadow-lg whitespace-nowrap"
-                            >
-                              <div className="w-1 h-1 rounded-full bg-[#ff5100]/40 group-hover:bg-[#ff5100]" />
-                              <span className="font-bold tracking-tight">{s.label}</span>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
+                <div className={`min-h-[60px] ${messages.length > 0 ? 'max-h-[450px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
+                  {messages.length > 0 && (
                     <div className="p-6 lg:p-8 space-y-6">
                       {messages.map((msg, i) => (
                         <div
