@@ -92,7 +92,7 @@ export default function HomePage() {
           </div>
 
           <p className="mt-7 text-white/38 text-xs tracking-[0.15em] uppercase">
-            Crafted by people who've been out there
+            Crafted by people who&apos;ve been out there
           </p>
         </div>
 
@@ -266,7 +266,7 @@ export default function HomePage() {
           </h2>
           <p className="text-white/50 text-lg leading-relaxed mb-10 max-w-lg mx-auto">
             287 adventures across India. Verified operators, real terrain data, and stories from
-            people who've actually been there.
+            people who&apos;ve actually been there.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
