@@ -532,16 +532,15 @@ export default function ExploreClient() {
                                     const icon = adventureTypes.find(a => a.type === type)?.icon ?? "";
                                     const isSelected = selectedTypes.includes(type as AdventureType);
                                     return (
-                                      <button
-                                        key={type}
-                                        onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
-                                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                                          isSelected ? cat.chipActive : cat.chip
-                                        }`}
-                                      >
-                                        <span>{icon}</span>
-                                        {type}
-                                      </button>
+                                        <button
+                                          key={type}
+                                          onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
+                                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                            isSelected ? cat.chipActive : cat.chip
+                                          }`}
+                                        >
+                                          {type}
+                                        </button>
                                     );
                                   })}
                                 </div>
