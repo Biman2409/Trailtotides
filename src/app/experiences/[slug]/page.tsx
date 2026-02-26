@@ -279,9 +279,10 @@ export default async function ExperiencePage({ params }: Props) {
                           <p className="text-[#1a1f2e] text-xs font-semibold tracking-[0.2em] uppercase">
                             Other Operators
                           </p>
-                          <p className="text-[#9a9590] text-sm mt-0.5">
-                            Listed by the community — not yet independently verified by us
-                          </p>
+                            <p className="text-[#9a9590] text-sm mt-0.5">
+                              Listed by the community — not verified by us
+                            </p>
+
                         </div>
                       </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
