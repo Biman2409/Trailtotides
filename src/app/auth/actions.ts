@@ -16,7 +16,7 @@ export async function signUp(formData: FormData) {
   // Get origin for verification link
   const headersList = await (await import("next/headers")).headers();
   const host = headersList.get("host");
-  const protocol = host?.includes("localhost") ? "http" : "https";
+  const protocol = headersList.get("x-forwarded-proto") || (host?.includes("localhost") ? "http" : "https");
   const origin = `${protocol}://${host}`;
 
   const { error } = await supabase.auth.signUp({
@@ -35,7 +35,7 @@ export async function signUp(formData: FormData) {
     return { error: error.message };
   }
 
-  return { success: "Please check your email to verify your account." };
+  return { success: "Registration successful! Please check your email to verify your account before logging in." };
 }
 
 
