@@ -124,12 +124,12 @@ export default function InlineChat() {
                         <p className="text-white/20 text-[9px] font-bold uppercase tracking-[0.4em]">
                           Recommended Starting Vectors
                         </p>
-                        <div className="flex flex-nowrap overflow-x-auto no-scrollbar gap-3 pb-2 w-full">
+                        <div className="flex flex-nowrap overflow-x-auto no-scrollbar gap-3 pb-2 w-full justify-start md:justify-center">
                           {SUGGESTIONS.map((s) => (
                             <button
                               key={s.label}
                               onClick={() => { send(s.label); inputRef.current?.focus(); }}
-                              className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white/[0.02] border border-white/[0.05] text-white/50 text-xs hover:text-white hover:bg-[#ff5100]/10 hover:border-[#ff5100]/40 transition-all duration-500 group shadow-lg whitespace-nowrap"
+                              className="flex-shrink-0 flex items-center gap-3 px-5 py-3 rounded-xl bg-white/[0.02] border border-white/[0.05] text-white/50 text-xs hover:text-white hover:bg-[#ff5100]/10 hover:border-[#ff5100]/40 transition-all duration-500 group shadow-lg whitespace-nowrap"
                             >
                               <span className="text-lg group-hover:scale-125 transition-transform duration-500">{s.icon}</span>
                               <span className="font-semibold tracking-wide">{s.label}</span>
