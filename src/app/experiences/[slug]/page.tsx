@@ -20,6 +20,7 @@ import {
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { adventures } from "@/lib/data";
+import { typeStyle, difficultyStyle } from "@/lib/styles";
 
 interface Props {
   params: Promise<{ slug: string }>;
