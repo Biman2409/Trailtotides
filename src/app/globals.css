@@ -118,7 +118,7 @@ html {
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #ff6b35;
+  background: #ff5100;
 }
 
 /* Hide Next.js error overlay portal */
@@ -137,13 +137,13 @@ main, .page-enter {
 
 /* ── Text selection ──────────────────────────────────────── */
 ::selection {
-  background: #ff6b3533;
+  background: #ff510033;
   color: #1a1f2e;
 }
 
 /* ── Focus ring ──────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid #ff6b35;
+  outline: 2px solid #ff5100;
   outline-offset: 3px;
   border-radius: 4px;
 }
