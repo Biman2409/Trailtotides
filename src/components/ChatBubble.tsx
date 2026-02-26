@@ -88,22 +88,22 @@ export default function ChatBubble() {
           style={{ background: open ? "#d84315" : "#ff5100", boxShadow: "0 4px 20px rgba(255,81,0,0.45)", transition: "opacity 0.4s ease, transform 0.4s ease, background 0.2s" }}
           aria-label="Open Compass AI"
         >
-          {open ? <X className="w-6 h-6" /> : <HelpCircle className="w-6 h-6" />}
-        </button>
+            {open ? <X className="w-6 h-6" /> : <Compass className="w-6 h-6" />}
+          </button>
 
-      {/* Chat panel */}
-      {open && (
-        <div className="fixed bottom-20 right-6 z-50 w-[370px] max-w-[calc(100vw-1.5rem)] bg-[#141920] border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
-          style={{ boxShadow: "0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06)" }}
-        >
-          {/* Header */}
-            <div
-              className="px-4 py-3.5 flex items-center gap-3"
-              style={{ background: "#ff5100" }}
-            >
-              <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center flex-shrink-0">
-                <HelpCircle className="w-5 h-5 text-white" />
-              </div>
+        {/* Chat panel */}
+        {open && (
+          <div className="fixed bottom-20 right-6 z-50 w-[370px] max-w-[calc(100vw-1.5rem)] bg-[#141920] border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            style={{ boxShadow: "0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06)" }}
+          >
+            {/* Header */}
+              <div
+                className="px-4 py-3.5 flex items-center gap-3"
+                style={{ background: "#ff5100" }}
+              >
+                <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center flex-shrink-0">
+                  <Compass className="w-5 h-5 text-white" />
+                </div>
             <div className="flex-1 min-w-0">
               <p className="text-white font-bold text-sm tracking-tight">Compass AI</p>
               <p className="text-white/65 text-xs">Your personal adventure guide</p>
