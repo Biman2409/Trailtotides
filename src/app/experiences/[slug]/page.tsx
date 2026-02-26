@@ -73,11 +73,10 @@ export default async function ExperiencePage({ params }: Props) {
             <div className="flex flex-wrap items-center gap-3 mb-5">
               <Pill type="type" value={adventure.type} />
               <Pill type="difficulty" value={adventure.difficulty} />
-                <span className="flex items-center gap-1.5 text-white/60 text-xs uppercase tracking-tight font-bold">
-                  <MapPin className="w-3.5 h-3.5 text-[#ff5722]" />
-                  {adventure.state}
-                </span>
-
+              <span className="flex items-center gap-1.5 text-white/60 text-xs uppercase tracking-tight font-bold">
+                <MapPin className="w-3.5 h-3.5 text-[#ff5722]" />
+                {adventure.state}
+              </span>
             </div>
             <h1 className="text-white text-5xl md:text-7xl font-semibold tracking-tight leading-[1.0] mb-4">
               {adventure.name}
@@ -189,19 +188,6 @@ export default async function ExperiencePage({ params }: Props) {
                 <p className="text-[#6b5a20] text-sm leading-relaxed">{adventure.safetyNotes}</p>
               </div>
             </section>
-...
-                    <div className="flex items-center gap-3 mb-6">
-                      <BadgeCheck className="w-5 h-5 text-emerald-600" />
-                      <div>
-                        <p className="text-[#ff5722] text-xs font-semibold tracking-[0.2em] uppercase">
-                          Verified Operators
-                        </p>
-
-              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 flex gap-4">
-                <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                <p className="text-[#6b5a20] text-sm leading-relaxed">{adventure.safetyNotes}</p>
-              </div>
-            </section>
 
               {/* Operators Section */}
               <section>
@@ -211,7 +197,7 @@ export default async function ExperiencePage({ params }: Props) {
                     <div className="flex items-center gap-3 mb-6">
                       <BadgeCheck className="w-5 h-5 text-emerald-600" />
                       <div>
-                        <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase">
+                        <p className="text-[#ff5722] text-xs font-semibold tracking-[0.2em] uppercase">
                           Verified Operators
                         </p>
                           <p className="text-[#9a9590] text-sm mt-0.5">
@@ -354,7 +340,7 @@ export default async function ExperiencePage({ params }: Props) {
 
               {/* Quick stats card */}
               <div className="bg-[#1a1f2e] rounded-2xl p-6 text-white">
-                <p className="text-[#c4622d] text-[10px] font-semibold tracking-[0.2em] uppercase mb-4">
+                <p className="text-[#ff5722] text-[10px] font-semibold tracking-[0.2em] uppercase mb-4">
                   At a Glance
                 </p>
                 <div className="space-y-3.5">
@@ -378,7 +364,7 @@ export default async function ExperiencePage({ params }: Props) {
               {/* CTA */}
               <Link
                 href="/plan"
-                className="flex items-center justify-center gap-2 w-full bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold py-3.5 rounded-2xl text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#c4622d]/30 group"
+                className="flex items-center justify-center gap-2 w-full bg-[#ff5722] hover:bg-[#ff7043] text-white font-semibold py-3.5 rounded-2xl text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5722]/30 group"
               >
                 Plan this Adventure
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -401,7 +387,7 @@ export default async function ExperiencePage({ params }: Props) {
           <div className="max-w-7xl mx-auto">
             <div className="flex items-end justify-between mb-10">
               <div>
-                <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+                <p className="text-[#ff5722] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
                   You Might Also Like
                 </p>
                 <h2 className="text-[#1a1f2e] text-3xl font-semibold tracking-tight">
@@ -410,7 +396,7 @@ export default async function ExperiencePage({ params }: Props) {
               </div>
               <Link
                 href="/explore"
-                className="hidden md:flex items-center gap-1.5 text-[#1e3d2f] text-sm font-medium hover:text-[#c4622d] transition-colors group"
+                className="hidden md:flex items-center gap-1.5 text-[#1e3d2f] text-sm font-medium hover:text-[#ff5722] transition-colors group"
               >
                 Explore all
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -432,7 +418,7 @@ export default async function ExperiencePage({ params }: Props) {
                       </div>
                     <div className="p-5">
                       <div className="flex items-center gap-1.5 mb-1">
-                        <MapPin className="w-3 h-3 text-[#c4622d]" />
+                        <MapPin className="w-3 h-3 text-[#ff5722]" />
                         <span className="text-[#9a9590] text-xs">{a.state}</span>
                       </div>
                       <h3 className="text-[#1a1f2e] font-semibold text-base leading-snug mb-1 group-hover:text-[#1e3d2f]">{a.name}</h3>
