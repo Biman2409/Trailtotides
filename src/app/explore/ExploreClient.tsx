@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users, Map, Mountain, Sun, Waves, Snowflake, Wind, Trees, Palmtree, Sunrise, Building2, CloudRain } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
