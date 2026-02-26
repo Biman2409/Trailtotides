@@ -120,7 +120,11 @@ export default function SignUpPage() {
                           defaultValue="+91"
                           className="h-full bg-white/5 border border-white/10 rounded-xl pl-4 pr-8 py-3 text-white focus:outline-none focus:border-orange-400/60 focus:bg-white/8 transition-all appearance-none cursor-pointer min-w-[100px] max-w-[150px]"
                         >
-                          {countries.map((country) => (
+                          {/* Put India at the top */}
+                          {[
+                            ...countries.filter(c => c.code === "IN"),
+                            ...countries.filter(c => c.code !== "IN").sort((a, b) => a.name.localeCompare(b.name))
+                          ].map((country) => (
                             <option key={`${country.code}-${country.dial_code}`} value={country.dial_code} className="bg-[#0a0a0a] text-white">
                               {country.flag} {country.name} ({country.dial_code})
                             </option>
