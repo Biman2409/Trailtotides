@@ -754,44 +754,45 @@ export default function ExploreClient() {
                       { val: "Advanced",     icon: "🟠", idle: "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100 border",     active: "bg-amber-500 text-white border border-amber-500" },
                       { val: "Expert",       icon: "🟠", idle: "bg-[#f4845f]/5 border-[#f4845f]/20 text-[#9c4a2f] hover:bg-[#f4845f]/10 border", active: "bg-[#f4845f] text-white border border-[#f4845f]" },
                       { val: "Extreme",      icon: "🔴", idle: "bg-red-50 border-red-200 text-red-800 hover:bg-red-100 border",             active: "bg-red-600 text-white border border-red-600" },
-                    ] as { val: Difficulty; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
-                      <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDifficulties.includes(val) ? active : idle}`}>
-                        <span>{icon}</span>{val}
-                      </button>
-                    ))}
+                      ] as { val: Difficulty; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
+                        <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
+                          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDifficulties.includes(val) ? active : idle}`}>
+                          {val}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                <div className="col-span-2 lg:col-span-3">
-                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {([
-                      { val: "Weekend",  label: "Weekend",  icon: "⚡", idle: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100 border", active: "bg-yellow-500 text-white border border-yellow-500" },
-                      { val: "3–5 days", label: "3–5 days", icon: "🗓️", idle: "bg-indigo-50 border-indigo-200 text-indigo-800 hover:bg-indigo-100 border", active: "bg-indigo-600 text-white border border-indigo-600" },
-                      { val: "7+ days",  label: "7+ days",  icon: "🏕️", idle: "bg-rose-50 border-rose-200 text-rose-800 hover:bg-rose-100 border",         active: "bg-rose-600 text-white border border-rose-600" },
-                    ] as { val: Duration; label: string; icon: string; idle: string; active: string }[]).map(({ val, label, icon, idle, active }) => (
-                      <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
-                        <span>{icon}</span>{label}
-                      </button>
-                    ))}
+                  <div className="col-span-2 lg:col-span-3">
+                    <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {([
+                        { val: "Weekend",  label: "Weekend",  icon: "⚡", idle: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100 border", active: "bg-yellow-500 text-white border border-yellow-500" },
+                        { val: "3–5 days", label: "3–5 days", icon: "🗓️", idle: "bg-indigo-50 border-indigo-200 text-indigo-800 hover:bg-indigo-100 border", active: "bg-indigo-600 text-white border border-indigo-600" },
+                        { val: "7+ days",  label: "7+ days",  icon: "🏕️", idle: "bg-rose-50 border-rose-200 text-rose-800 hover:bg-rose-100 border",         active: "bg-rose-600 text-white border border-rose-600" },
+                      ] as { val: Duration; label: string; icon: string; idle: string; active: string }[]).map(({ val, label, icon, idle, active }) => (
+                        <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
+                          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
+                          {label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                <div className="col-span-2 lg:col-span-3">
-                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {([
-                      { val: "Solo",             icon: "🧍", idle: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100 border",     active: "bg-violet-600 text-white border border-violet-600" },
-                      { val: "Small group (2–6)", icon: "👥", idle: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100 border",             active: "bg-teal-600 text-white border border-teal-600" },
-                      { val: "Large group (6+)",  icon: "🫂", idle: "bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 hover:bg-fuchsia-100 border", active: "bg-fuchsia-600 text-white border border-fuchsia-600" },
-                    ] as { val: GroupSize; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
-                      <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
-                        <span>{icon}</span>{val}
-                      </button>
-                    ))}
+                  <div className="col-span-2 lg:col-span-3">
+                    <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {([
+                        { val: "Solo",             icon: "🧍", idle: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100 border",     active: "bg-violet-600 text-white border border-violet-600" },
+                        { val: "Small group (2–6)", icon: "👥", idle: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100 border",             active: "bg-teal-600 text-white border border-teal-600" },
+                        { val: "Large group (6+)",  icon: "🫂", idle: "bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 hover:bg-fuchsia-100 border", active: "bg-fuchsia-600 text-white border border-fuchsia-600" },
+                      ] as { val: GroupSize; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
+                        <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
+                          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
+                          {val}
+                        </button>
+                      ))}
+
                   </div>
                 </div>
 
