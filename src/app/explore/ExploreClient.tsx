@@ -262,17 +262,18 @@ export default function ExploreClient() {
                             <div className="flex justify-start">
                               <div className="bg-white/6 border border-white/8 px-4 py-2.5 rounded-xl rounded-bl-sm flex items-center gap-2">
                                 <Loader2 className="w-3.5 h-3.5 text-[#ff5100] animate-spin" />
-                                <span className="text-white/50 text-sm">Compass AI is finding adventures…</span>
+                                  <span className="text-white/50 text-sm">compass.ai is finding adventures…</span>
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
+  
+                          <div ref={aiBottomRef} />
+                        </div>
+                      )}
+                      {aiMessages.length === 0 && (
+                        <div className="px-4 pt-4 pb-3 bg-white/2">
+                          <p className="text-white/20 text-[10px] uppercase tracking-widest mb-3 font-semibold">Try asking compass.ai</p>
 
-                        <div ref={aiBottomRef} />
-                      </div>
-                    )}
-                    {aiMessages.length === 0 && (
-                      <div className="px-4 pt-4 pb-3 bg-white/2">
-                        <p className="text-white/20 text-[10px] uppercase tracking-widest mb-3 font-semibold">Try asking Compass AI</p>
                         <div className="flex flex-wrap gap-2">
                           {AI_SUGGESTIONS.map((s) => (
                             <button
