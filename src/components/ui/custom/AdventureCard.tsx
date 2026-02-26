@@ -46,19 +46,19 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
             <Pill type="difficulty" value={adventure.difficulty} />
           </div>
 
-          {/* Editors Choice Badge */}
-          {adventure.isEditorsChoice && (
-            <div className="absolute top-4 right-4 z-10 group/award">
-              <div className="flex items-center gap-2 bg-black/90 backdrop-blur-md border border-white/10 px-2 py-2 rounded-full shadow-2xl transition-all duration-300 hover:pr-4">
-                <div className="bg-black p-1.5 rounded-full border border-[#f4845f]/30 flex items-center justify-center">
-                  <Award className="w-4 h-4 text-[#f4845f]" />
-                </div>
-                  <span className="text-white text-[10px] font-black tracking-[0.2em] max-w-0 overflow-hidden transition-all duration-500 group-hover/award:max-w-[100px] whitespace-nowrap opacity-0 group-hover/award:opacity-100 pr-1">
+            {/* Editors Choice Badge */}
+            {adventure.isEditorsChoice && (
+              <div className="absolute top-4 right-4 z-10 group/award">
+                <div className="flex items-center bg-black backdrop-blur-md border border-white/10 p-1.5 rounded-full shadow-2xl transition-all duration-500 hover:pr-4">
+                  <div className="bg-[#f4845f] p-1.5 rounded-full flex items-center justify-center">
+                    <Award className="w-3.5 h-3.5 text-black" />
+                  </div>
+                  <span className="text-white text-[10px] font-bold tracking-[0.2em] max-w-0 overflow-hidden transition-all duration-500 group-hover/award:max-w-[100px] group-hover/award:ml-2 whitespace-nowrap opacity-0 group-hover/award:opacity-100">
                     EDITORS
                   </span>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
 
         {/* Title Content */}
