@@ -145,9 +145,9 @@ export default function FindByRegion() {
                           {regionTitleIcons[region.name]}
                           {region.name}
                         </h3>
-                        <p className="text-white/60 text-[11px] mt-1 font-medium tracking-wide uppercase italic">
-                          {regionSubtitles[region.name]}
-                        </p>
+                          <p className="text-white/60 text-xs mt-1.5 leading-relaxed line-clamp-2">
+                            {regionSubtitles[region.name]}
+                          </p>
                       </div>
                   </div>
                 </button>
