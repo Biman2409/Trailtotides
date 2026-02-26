@@ -66,41 +66,135 @@ export default function PlanPage() {
       {/* Header */}
       <div className="bg-[#1a1f2e] pt-28 pb-14 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+          <p className="text-[#ff5722] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
             Adventure Planner
           </p>
-          <h1 className="text-white text-5xl lg:text-6xl font-bold tracking-tight mb-4">
-            Plan Your Adventure
-          </h1>
-          <p className="text-white/45 text-lg max-w-xl">
-            Tell us when you want to go, what you like, and how hard you want it — we&apos;ll match you with the right adventures.
-          </p>
-        </div>
-      </div>
+...
+                <section>
+                  <div className="flex items-center gap-2 mb-5">
+                    <Calendar className="w-5 h-5 text-[#ff5722]" />
+                    <h2 className="text-[#1a1f2e] text-xl font-bold">When are you going?</h2>
+                  </div>
+...
+                <section>
+                  <div className="flex items-center gap-2 mb-5">
+                    <MapPin className="w-5 h-5 text-[#ff5722]" />
+                    <h2 className="text-[#1a1f2e] text-xl font-bold">Where in India?</h2>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {regions.map((r) => (
+                      <button
+                        key={r.name}
+                        onClick={() => setSelectedRegions(toggle(selectedRegions, r.name as Region))}
+                        className={`relative overflow-hidden rounded-xl h-20 border-2 transition-all ${
+                          selectedRegions.includes(r.name as Region)
+                            ? "border-[#ff5722] shadow-lg shadow-[#ff5722]/20"
+                            : "border-transparent"
+                        }`}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={r.image} alt={r.name} className="absolute inset-0 w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/55" />
+                        {selectedRegions.includes(r.name as Region) && (
+                          <div className="absolute inset-0 bg-[#ff5722]/30" />
+                        )}
+                        <div className="relative z-10 h-full flex flex-col items-center justify-center gap-0.5">
+                          <span className="text-white font-semibold text-xs leading-tight text-center px-1">{r.name}</span>
+                          {selectedRegions.includes(r.name as Region) && (
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#ff7043]" />
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </section>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-14">
-        {step === "preferences" && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Filters */}
-            <div className="lg:col-span-2 space-y-10">
+                {/* What kind */}
+                <section>
+                  <div className="flex items-center gap-2 mb-5">
+                    <Sparkles className="w-5 h-5 text-[#ff5722]" />
+                    <h2 className="text-[#1a1f2e] text-xl font-bold">What kind of adventure?</h2>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {TYPES.map((t) => (
+                      <button
+                        key={t}
+                        onClick={() => setSelectedTypes(toggle(selectedTypes, t))}
+                        className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${
+                          selectedTypes.includes(t)
+                            ? "bg-[#ff5722] text-white border-[#ff5722]"
+                            : "bg-white border-[#e0d8cc] text-[#1a1f2e] hover:border-[#ff5722]/40"
+                        }`}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                </section>
 
-              {/* When */}
-              <section>
-                <div className="flex items-center gap-2 mb-5">
-                  <Calendar className="w-5 h-5 text-[#c4622d]" />
-                  <h2 className="text-[#1a1f2e] text-xl font-bold">When are you going?</h2>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {MONTHS.map((m) => (
-                    <button
-                      key={m}
-                      onClick={() => setSelectedMonths(toggle(selectedMonths, m))}
-                      className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${
-                        selectedMonths.includes(m)
-                          ? "bg-[#1e3d2f] text-white border-[#1e3d2f]"
-                          : "bg-white border-[#e0d8cc] text-[#1a1f2e] hover:border-[#1e3d2f]/40"
-                      }`}
-                    >
+                {/* How hard */}
+                <section>
+                  <div className="flex items-center gap-2 mb-5">
+                    <TrendingUp className="w-5 h-5 text-[#ff5722]" />
+                    <h2 className="text-[#1a1f2e] text-xl font-bold">How hard?</h2>
+                  </div>
+...
+                <section>
+                  <div className="flex items-center gap-2 mb-5">
+                    <Users className="w-5 h-5 text-[#ff5722]" />
+                    <h2 className="text-[#1a1f2e] text-xl font-bold">Group size</h2>
+                  </div>
+...
+                <button
+                  onClick={handlePlan}
+                  className="w-full bg-[#ff5722] hover:bg-[#ff7043] text-white font-semibold py-4 rounded-xl text-base flex items-center justify-center gap-2 group transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5722]/25"
+                >
+...
+                  <div className="bg-[#1a1f2e] rounded-2xl p-6">
+                    <p className="text-[#ff5722] text-xs font-semibold tracking-widest uppercase mb-4">Tips</p>
+                    <ul className="space-y-4">
+                      {[
+                        "Select only what matters most — fewer filters often yield better results.",
+                        "March–June and Sep–Nov are the best all-round adventure windows in India.",
+                        "Himalayan passes are typically closed Nov–May. Check before planning.",
+                        "If you're a first-timer, pick Beginner or Intermediate difficulty.",
+                      ].map((tip, i) => (
+                        <li key={i} className="flex items-start gap-2.5">
+                          <ChevronRight className="w-4 h-4 text-[#ff5722] shrink-0 mt-0.5" />
+                          <span className="text-white/55 text-sm leading-relaxed">{tip}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-[#ff5722]/10 border border-[#ff5722]/20 rounded-2xl p-5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sparkles className="w-4 h-4 text-[#ff5722]" />
+                      <span className="text-[#ff5722] text-xs font-semibold uppercase tracking-wider">AI Finder</span>
+                    </div>
+                    <p className="text-white/55 text-sm leading-relaxed mb-3">
+                      Prefer to just describe what you want? Use Compass AI on the home page.
+                    </p>
+                    <Link href="/#ai-finder" className="text-[#ff5722] text-xs font-semibold hover:text-[#ff7043] transition-colors flex items-center gap-1">
+                      Try Compass AI <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  </div>
+...
+                        <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
+                          <span className="bg-[#ff5722] text-white text-xs font-semibold px-3 py-1.5 rounded-full">{a.type}</span>
+...
+                        <div className="absolute bottom-0 left-0 right-0 p-5">
+                          <div className="flex items-center gap-1.5 mb-1.5">
+                            <MapPin className="w-3.5 h-3.5 text-[#ff5722]" />
+...
+                            <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-[#ff5722] transition-colors">
+...
+                <div className="mt-12 text-center">
+                  <Link
+                    href="/explore"
+                    className="inline-flex items-center gap-2 text-[#ff5722] font-semibold text-sm hover:text-[#ff7043] transition-colors group"
+                  >
+
                       {m}
                     </button>
                   ))}
