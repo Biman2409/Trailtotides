@@ -133,7 +133,7 @@ export default function ListPage() {
             List Your Adventure
           </h1>
           <p className="text-white/55 text-xl max-w-2xl leading-relaxed">
-            Join India&apos;s most trusted adventure discovery platform. Get your experiences in front of serious adventurers — verified, mapped, and compass.ai-recommended.
+            Join India&apos;s most trusted adventure discovery platform. Get your experiences in front of serious adventurers — verified, mapped, and COMPASS.AI-recommended.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <a
