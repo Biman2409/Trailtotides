@@ -8,6 +8,7 @@ import {
 import Navbar from "@/components/layout/Navbar";
 import { adventures } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
+import type L from "leaflet";
 
 const typeEmoji: Record<AdventureType, string> = {
   "Trekking": "🥾",
@@ -52,9 +53,9 @@ type NominatimResult = {
   class: string;
 };
 
-declare global { interface Window { L: any } }
+declare global { interface Window { L: typeof L } }
 
-function loadLeaflet(): Promise<any> {
+function loadLeaflet(): Promise<typeof L> {
   return new Promise((resolve) => {
     if (typeof window === "undefined") return;
     if (window.L) { resolve(window.L); return; }
@@ -161,8 +162,8 @@ function PlaceSearch({ onSelect }: { onSelect: (lat: number, lng: number, name: 
 
 function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyToRef: React.MutableRefObject<((lat: number, lng: number) => void) | null> }) {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
-  const markersLayerRef = useRef<any>(null);
+  const mapInstanceRef = useRef<L.Map | null>(null);
+  const markersLayerRef = useRef<L.LayerGroup | null>(null);
 
   // Expose flyTo via ref
   useEffect(() => {
@@ -173,11 +174,11 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
     };
   });
 
-  function addMarkers(L: any, list: Adventure[]) {
+  function addMarkers(leaflet: typeof L, list: Adventure[]) {
     list.forEach((adv) => {
       const color = difficultyColor[adv.difficulty] ?? "#6366f1";
       const emoji = typeEmoji[adv.type] || "📍";
-      const icon = L.divIcon({
+      const icon = leaflet.divIcon({
         className: "",
         html: `<div style="width:40px;height:40px;border-radius:50% 50% 50% 0;background:${color};border:3px solid white;transform:rotate(-45deg);box-shadow:0 4px 12px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
           <span style="transform:rotate(45deg);font-size:14px;line-height:1;">${emoji}</span>
@@ -208,7 +209,7 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
         </div>
       `;
 
-      const marker = L.marker([adv.lat, adv.lng], { icon })
+      const marker = leaflet.marker([adv.lat, adv.lng], { icon })
         .bindPopup(popupHtml, { maxWidth: 280, minWidth: 280 });
 
       marker.on("popupopen", () => {
@@ -221,29 +222,33 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
         }
       });
 
-      markersLayerRef.current.addLayer(marker);
+      if (markersLayerRef.current) {
+        markersLayerRef.current.addLayer(marker);
+      }
     });
   }
 
   useEffect(() => {
     if (!mapRef.current) return;
     const container = mapRef.current;
-    loadLeaflet().then((L) => {
+    loadLeaflet().then((leaflet) => {
       if (!container) return;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((container as any)._leaflet_id) (container as any)._leaflet_id = undefined;
-      delete (L.Icon.Default.prototype as any)._getIconUrl;
-      L.Icon.Default.mergeOptions({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (leaflet.Icon.Default.prototype as any)._getIconUrl;
+      leaflet.Icon.Default.mergeOptions({
         iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
         iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
       });
-      const map = L.map(container, { center: [22.5, 80.0], zoom: 5, zoomControl: true, attributionControl: false });
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        subdomains: "abc", maxZoom: 19, attribution: '&copy; OpenStreetMap contributors',
+      const map = leaflet.map(container, { center: [22.5, 80.0], zoom: 5, zoomControl: true, attributionControl: false });
+      leaflet.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19, attribution: '&copy; OpenStreetMap contributors',
       }).addTo(map);
       mapInstanceRef.current = map;
-      markersLayerRef.current = L.layerGroup().addTo(map);
-      addMarkers(L, advs);
+      markersLayerRef.current = leaflet.layerGroup().addTo(map);
+      addMarkers(leaflet, advs);
     });
     return () => {
       if (mapInstanceRef.current) {
@@ -251,6 +256,7 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (container) (container as any)._leaflet_id = undefined;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -258,9 +264,11 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
 
   useEffect(() => {
     if (!mapInstanceRef.current || !markersLayerRef.current) return;
-    loadLeaflet().then((L) => {
-      markersLayerRef.current.clearLayers();
-      addMarkers(L, advs);
+    loadLeaflet().then((leaflet) => {
+      if (markersLayerRef.current) {
+        markersLayerRef.current.clearLayers();
+        addMarkers(leaflet, advs);
+      }
     });
   }, [advs]);
 
