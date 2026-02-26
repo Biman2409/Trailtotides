@@ -94,7 +94,7 @@ export default async function ExperiencePage({ params }: Props) {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:divide-x divide-white/10">
             <div className="flex items-center gap-3 md:px-6 first:pl-0">
-              <Clock className="w-5 h-5 text-[#c4622d] shrink-0" />
+              <Clock className="w-5 h-5 text-[#ff5722] shrink-0" />
               <div>
                 <div className="text-white/40 text-[10px] uppercase tracking-widest">Duration</div>
                 <div className="text-white font-semibold text-base">{adventure.durationDays}</div>
