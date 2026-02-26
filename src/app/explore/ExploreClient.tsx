@@ -36,8 +36,8 @@ function loadLeaflet(): Promise<any> {
 }
 
 const difficultyColor: Record<string, string> = {
-  Beginner: "#22c55e", Intermediate: "#3b82f6", Advanced: "#ff6b35",
-  Expert: "#ff6b35", Extreme: "#ef4444",
+  Beginner: "#22c55e", Intermediate: "#3b82f6", Advanced: "#ff5100",
+  Expert: "#ff5100", Extreme: "#ef4444",
 };
 
 const typeEmoji: Partial<Record<AdventureType, string>> = {
@@ -53,11 +53,11 @@ const durations: Duration[] = ["Weekend", "3–5 days", "7+ days"];
 const groupSizes: GroupSize[] = ["Solo", "Small group (2–6)", "Large group (6+)"];
 
 const seasons: { label: string; months: Month[]; icon: React.ReactNode; idleColor: string; activeColor: string }[] = [
-  { label: "Winter",  months: ["Dec", "Jan", "Feb"],      icon: <Snowflake className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-  { label: "Spring",  months: ["Mar", "Apr", "May"],      icon: <Flower2 className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-  { label: "Summer",  months: ["Apr", "May", "Jun"],      icon: <Sun className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"], icon: <CloudRain className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-  { label: "Autumn",  months: ["Oct", "Nov", "Dec"],      icon: <Leaf className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+  { label: "Winter",  months: ["Dec", "Jan", "Feb"],      icon: <Snowflake className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff5100] text-white border border-[#ff5100]" },
+  { label: "Spring",  months: ["Mar", "Apr", "May"],      icon: <Flower2 className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff5100] text-white border border-[#ff5100]" },
+  { label: "Summer",  months: ["Apr", "May", "Jun"],      icon: <Sun className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff5100] text-white border border-[#ff5100]" },
+  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"], icon: <CloudRain className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff5100] text-white border border-[#ff5100]" },
+  { label: "Autumn",  months: ["Oct", "Nov", "Dec"],      icon: <Leaf className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff5100] text-white border border-[#ff5100]" },
 ];
 
 
@@ -183,7 +183,7 @@ export default function ExploreClient() {
       {/* Page header */}
       <div className="bg-[#1a1f2e] pt-28 pb-14 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <p className="text-[#ff6b35] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
           Discover
         </p>
 
@@ -222,7 +222,7 @@ export default function ExploreClient() {
                 <SlidersHorizontal className="w-4 h-4" />
                 Filters
                 {activeFilterCount > 0 && (
-                  <span className="bg-[#ff6b35] text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
+                  <span className="bg-[#ff5100] text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
                     {activeFilterCount}
                   </span>
                 )}
@@ -234,8 +234,8 @@ export default function ExploreClient() {
                 onClick={() => { setAiOpen(!aiOpen); setFiltersOpen(false); }}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     aiOpen
-                      ? "bg-[#ff6b35] text-white"
-                      : "bg-[#ff6b35] text-white hover:bg-[#ff8e64]"
+                      ? "bg-[#ff5100] text-white"
+                      : "bg-[#ff5100] text-white hover:bg-[#ff7d47]"
                   }`}
               >
                 <Compass className="w-4 h-4" />
@@ -253,7 +253,7 @@ export default function ExploreClient() {
             {(activeFilterCount > 0 || search) && (
               <button
                 onClick={clearAll}
-                className="flex items-center gap-1.5 text-sm text-[#ff6b35] hover:text-[#ff8e64] font-medium"
+                className="flex items-center gap-1.5 text-sm text-[#ff5100] hover:text-[#ff7d47] font-medium"
               >
                 <X className="w-3.5 h-3.5" />
                 Clear
@@ -278,7 +278,7 @@ export default function ExploreClient() {
                                       ? "text-white rounded-br-sm"
                                       : "bg-white/6 border border-white/8 text-white/80 rounded-bl-sm"
                                   }`}
-                                  style={msg.role === "user" ? { background: "#ff6b35" } : {}}
+                                  style={msg.role === "user" ? { background: "#ff5100" } : {}}
                                 >
                                   {msg.content}
                                 </div>
@@ -298,10 +298,10 @@ export default function ExploreClient() {
                                         <div className="p-3 flex-1 min-w-0">
                                           <p className="text-white text-xs font-semibold tracking-tight">{card.name}</p>
                                           <p className="text-white/40 text-xs mt-0.5 uppercase tracking-wide">{card.state} · {card.type} · {card.difficulty}</p>
-                                          {rec?.reason && <p className="text-[#ff6b35] text-xs mt-1 line-clamp-1">{rec.reason}</p>}
+                                          {rec?.reason && <p className="text-[#ff5100] text-xs mt-1 line-clamp-1">{rec.reason}</p>}
                                         </div>
                                         <div className="flex items-center pr-3">
-                                          <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#ff6b35] transition-colors" />
+                                          <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#ff5100] transition-colors" />
                                         </div>
                                       </Link>
                                     );
@@ -314,7 +314,7 @@ export default function ExploreClient() {
                         {aiLoading && (
                           <div className="flex justify-start">
                             <div className="bg-white/6 border border-white/8 px-4 py-2.5 rounded-xl rounded-bl-sm flex items-center gap-2">
-                              <Loader2 className="w-3.5 h-3.5 text-[#ff6b35] animate-spin" />
+                              <Loader2 className="w-3.5 h-3.5 text-[#ff5100] animate-spin" />
                               <span className="text-white/50 text-sm">Finding adventures…</span>
                             </div>
                           </div>
@@ -344,13 +344,13 @@ export default function ExploreClient() {
                         onChange={(e) => setAiInput(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && sendAi()}
                         placeholder="Describe what you're looking for — we'll match you with the right trip"
-                        className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#ff6b35]/50 transition-all"
+                        className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#ff5100]/50 transition-all"
                       />
                       <button
                         onClick={() => sendAi()}
                         disabled={!aiInput.trim() || aiLoading}
                         className="disabled:opacity-30 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all hover:-translate-y-0.5"
-                        style={{ background: "#ff6b35" }}
+                        style={{ background: "#ff5100" }}
                       >
                         <Send className="w-4 h-4" />
                         <span className="hidden sm:inline">Search</span>
@@ -378,9 +378,9 @@ export default function ExploreClient() {
                                 label: "Land Based", 
                                 icon: <Mountain className="w-3.5 h-3.5" />,
                                 btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                                btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                                btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
                                 chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                                chipActive: "bg-[#ff6b35] text-white",
+                                chipActive: "bg-[#ff5100] text-white",
                                 types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
                               },
 
@@ -388,27 +388,27 @@ export default function ExploreClient() {
                               label: "Water Based", 
                               icon: <Waves className="w-3.5 h-3.5" />,
                               btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                              btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                              btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
                               chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                              chipActive: "bg-[#ff6b35] text-white",
+                              chipActive: "bg-[#ff5100] text-white",
                               types: ["Diving", "Kayaking"],
                             },
                             {
                               label: "Snow Based", 
                               icon: <Snowflake className="w-3.5 h-3.5" />,
                               btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                              btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                              btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
                               chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                              chipActive: "bg-[#ff6b35] text-white",
+                              chipActive: "bg-[#ff5100] text-white",
                               types: ["Skiing"],
                             },
                             {
                               label: "Air Based", 
                               icon: <Wind className="w-3.5 h-3.5" />,
                               btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                              btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                              btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
                               chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                              chipActive: "bg-[#ff6b35] text-white",
+                              chipActive: "bg-[#ff5100] text-white",
                               types: [] as string[],
                             },
                           ];
@@ -425,7 +425,7 @@ export default function ExploreClient() {
                                     onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
                                       isExpanded || hasSelected 
-                                        ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
+                                        ? "bg-[#ff5100] text-white border-[#ff5100]" 
                                         : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                     }`}
                                   >
@@ -450,7 +450,7 @@ export default function ExploreClient() {
                               return (
                                 <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
                                   {cat.types.length === 0 ? (
-                                    <p className="text-xs text-[#ff6b35] italic">Coming soon</p>
+                                    <p className="text-xs text-[#ff5100] italic">Coming soon</p>
                                   ) : (
 
                                   <div className="flex flex-wrap gap-2">
@@ -462,7 +462,7 @@ export default function ExploreClient() {
                                             onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
                                             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                                               isSelected 
-                                                ? "bg-[#ff6b35] text-white" 
+                                                ? "bg-[#ff5100] text-white" 
                                                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
                                             }`}
                                           >
@@ -491,72 +491,72 @@ export default function ExploreClient() {
                           name: "Himalayas",
                           icon: <Mountain className="w-3.5 h-3.5" />,
                           btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                          btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                          btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
                           chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                          chipActive: "bg-[#ff6b35] text-white",
+                          chipActive: "bg-[#ff5100] text-white",
                             subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
                         },
                         {
                             name: "Western Ghats",
                             icon: <Trees className="w-3.5 h-3.5" />,
                           btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                          btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                          btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
                           chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                          chipActive: "bg-[#ff6b35] text-white",
+                          chipActive: "bg-[#ff5100] text-white",
                           subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"],
                           },
                           {
                                 name: "Eastern Ghats",
                                 icon: <Mountain className="w-3.5 h-3.5" />,
                             btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                            btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
                             chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                            chipActive: "bg-[#ff6b35] text-white",
+                            chipActive: "bg-[#ff5100] text-white",
                             subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"],
                           },
                           {
                             name: "Desert",
                             icon: <Sun className="w-3.5 h-3.5" />,
                             btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                            btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
                             chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                            chipActive: "bg-[#ff6b35] text-white",
+                            chipActive: "bg-[#ff5100] text-white",
                               subRegions: ["Rajasthan", "Gujarat"],
                           },
                         {
                           name: "Coast",
                           icon: <Waves className="w-3.5 h-3.5" />,
                           btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                          btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                          btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
                           chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                          chipActive: "bg-[#ff6b35] text-white",
+                          chipActive: "bg-[#ff5100] text-white",
                           subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"],
                         },
                         {
                           name: "Islands",
                           icon: <Palmtree className="w-3.5 h-3.5" />,
                           btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                          btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                          btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
                           chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                          chipActive: "bg-[#ff6b35] text-white",
+                          chipActive: "bg-[#ff5100] text-white",
                           subRegions: ["Andaman & Nicobar", "Lakshadweep"],
                         },
                             {
                               name: "Northeast",
                               icon: <Sunrise className="w-3.5 h-3.5" />,
                               btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                            btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
                             chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                            chipActive: "bg-[#ff6b35] text-white",
+                            chipActive: "bg-[#ff5100] text-white",
                             subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"],
                           },
                           {
                             name: "Urban",
                             icon: <Building2 className="w-3.5 h-3.5" />,
                             btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                            btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
                             chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                            chipActive: "bg-[#ff6b35] text-white",
+                            chipActive: "bg-[#ff5100] text-white",
                             subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"],
                           },
                         ];
@@ -573,7 +573,7 @@ export default function ExploreClient() {
                                 onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
                                 className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
                                   isExpanded || hasSelected 
-                                    ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
+                                    ? "bg-[#ff5100] text-white border-[#ff5100]" 
                                     : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                 }`}
                               >
@@ -604,7 +604,7 @@ export default function ExploreClient() {
                                     onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
                                     className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                                       isSelected 
-                                        ? "bg-[#ff6b35] text-white" 
+                                        ? "bg-[#ff5100] text-white" 
                                         : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
                                     }`}
                                   >
@@ -639,7 +639,7 @@ export default function ExploreClient() {
                                   onClick={() => setExpandedSeason(isExpanded ? null : label)}
                                   className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
                                     isExpanded || hasSelected 
-                                      ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
+                                      ? "bg-[#ff5100] text-white border-[#ff5100]" 
                                       : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                   }`}
                                 >
@@ -668,7 +668,7 @@ export default function ExploreClient() {
                                   onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
                                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                                     selectedMonths.includes(m) 
-                                      ? "bg-[#ff6b35] text-white" 
+                                      ? "bg-[#ff5100] text-white" 
                                       : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
                                   }`}
                                 >
@@ -687,11 +687,11 @@ export default function ExploreClient() {
                     <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Difficulty</h3>
                     <div className="flex flex-wrap gap-2">
                       {([ 
-                        { val: "Beginner",     icon: <Zap className="w-3.5 h-3.5" />,     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                        { val: "Intermediate", icon: <Activity className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                        { val: "Advanced",     icon: <ShieldAlert className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                        { val: "Expert",       icon: <Trophy className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                        { val: "Extreme",      icon: <Flame className="w-3.5 h-3.5" />,   idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        { val: "Beginner",     icon: <Zap className="w-3.5 h-3.5" />,     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "Intermediate", icon: <Activity className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "Advanced",     icon: <ShieldAlert className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "Expert",       icon: <Trophy className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "Extreme",      icon: <Flame className="w-3.5 h-3.5" />,   idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
                         ] as { val: Difficulty; icon: React.ReactNode; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
                           <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
                             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDifficulties.includes(val) ? active : idle}`}>
@@ -706,9 +706,9 @@ export default function ExploreClient() {
                       <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
                       <div className="flex flex-wrap gap-2">
                         {([
-                          { val: "Weekend",  label: "Weekend",  icon: <Calendar className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                          { val: "3–5 days", label: "3–5 days", icon: <CalendarRange className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                          { val: "7+ days",  label: "7+ days",  icon: <History className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                          { val: "Weekend",  label: "Weekend",  icon: <Calendar className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                          { val: "3–5 days", label: "3–5 days", icon: <CalendarRange className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                          { val: "7+ days",  label: "7+ days",  icon: <History className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
                         ] as { val: Duration; label: string; icon: React.ReactNode; idle: string; active: string }[]).map(({ val, label, icon, idle, active }) => (
                           <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
                             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
@@ -723,9 +723,9 @@ export default function ExploreClient() {
                       <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
                       <div className="flex flex-wrap gap-2">
                         {([
-                          { val: "Solo",             icon: <User className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                          { val: "Small group (2–6)", icon: <Users className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                          { val: "Large group (6+)",  icon: <Users className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                          { val: "Solo",             icon: <User className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                          { val: "Small group (2–6)", icon: <Users className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                          { val: "Large group (6+)",  icon: <Users className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
                         ] as { val: GroupSize; icon: React.ReactNode; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
                           <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
                             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
@@ -749,7 +749,7 @@ export default function ExploreClient() {
               <span
                 key={t}
                 onClick={() => toggle(selectedTypes, t, setSelectedTypes)}
-                className="flex items-center gap-1.5 bg-[#ff6b35]/15 text-[#ff6b35] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/25 transition-colors"
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
               >
                 {t} <X className="w-3 h-3" />
               </span>
@@ -758,7 +758,7 @@ export default function ExploreClient() {
                 <span
                   key={r}
                   onClick={() => toggle(selectedRegions, r, setSelectedRegions)}
-                  className="flex items-center gap-1.5 bg-[#ff6b35]/15 text-[#ff6b35] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/25 transition-colors"
+                  className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
                 >
                   {r} <X className="w-3 h-3" />
                 </span>
@@ -767,7 +767,7 @@ export default function ExploreClient() {
                 <span
                   key={sr}
                   onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
-                  className="flex items-center gap-1.5 bg-[#ff6b35]/15 text-[#ff6b35] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/25 transition-colors"
+                  className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
                 >
                   {sr} <X className="w-3 h-3" />
                 </span>
@@ -776,7 +776,7 @@ export default function ExploreClient() {
               <span
                 key={d}
                 onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
-                className="flex items-center gap-1.5 bg-[#ff6b35]/15 text-[#ff6b35] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/25 transition-colors"
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
               >
                 {d} <X className="w-3 h-3" />
               </span>
@@ -785,7 +785,7 @@ export default function ExploreClient() {
               <span
                 key={d}
                 onClick={() => toggle(selectedDurations, d, setSelectedDurations)}
-                className="flex items-center gap-1.5 bg-[#ff6b35]/15 text-[#ff6b35] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/25 transition-colors"
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
               >
                 {d} <X className="w-3 h-3" />
               </span>
@@ -794,7 +794,7 @@ export default function ExploreClient() {
                 <span
                   key={m}
                   onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                  className="flex items-center gap-1.5 bg-[#ff6b35]/15 text-[#ff6b35] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/25 transition-colors"
+                  className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
                 >
                   {m} <X className="w-3 h-3" />
                 </span>
@@ -803,7 +803,7 @@ export default function ExploreClient() {
               <span
                 key={g}
                 onClick={() => toggle(selectedGroupSizes, g, setSelectedGroupSizes)}
-                className="flex items-center gap-1.5 bg-[#ff6b35]/15 text-[#ff6b35] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/25 transition-colors"
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
               >
                 {g} <X className="w-3 h-3" />
               </span>
@@ -841,7 +841,7 @@ export default function ExploreClient() {
           <div className="bg-[#1a1f2e] mt-16">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
-                <p className="text-[#ff6b35] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
                   Explore the map
                 </p>
                 <h2 className="text-white text-4xl lg:text-5xl font-semibold tracking-tight">
@@ -853,7 +853,7 @@ export default function ExploreClient() {
               </div>
               <Link
                 href="/map"
-                className="inline-flex items-center gap-2.5 bg-[#ff6b35] hover:bg-[#ff8e64] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap"
+                className="inline-flex items-center gap-2.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap"
               >
                 <MapIcon className="w-4 h-4" />
                 Open full map
