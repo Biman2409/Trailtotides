@@ -507,15 +507,15 @@ export default function MapPage() {
                     return (
                       <div className="flex flex-col gap-2">
                         <div className="flex flex-wrap gap-2">
-                          {regionGroups.map((rg) => {
-                            const isExpanded = expandedRegion === rg.name;
-                            const hasSelected = selectedRegions.includes(rg.name) || rg.subRegions.some(sr => selectedSubRegions.includes(sr));
-                            const subCount = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
-                            return (
-                              <button key={rg.name} onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? rg.btnActive : rg.btn}`}>
-                                <span>{rg.icon}</span>
-                                {rg.name}
+                            {regionGroups.map((rg) => {
+                              const isExpanded = expandedRegion === rg.name;
+                              const hasSelected = selectedRegions.includes(rg.name) || rg.subRegions.some(sr => selectedSubRegions.includes(sr));
+                              const subCount = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
+                              return (
+                                <button key={rg.name} onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
+                                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? rg.btnActive : rg.btn}`}>
+                                  {rg.name}
+
                                 {subCount > 0 && <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">{subCount}</span>}
                                 <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                               </button>
