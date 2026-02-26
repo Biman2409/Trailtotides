@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Map as MapIcon } from "lucide-react";
 import Image from "next/image";
-import { regions, adventures } from "@/lib/data";
+import { regions, adventures, adventureTypes } from "@/lib/data";
 
 export default function FindByRegion() {
   const [openId, setOpenId] = useState<string | null>(null);
@@ -15,10 +15,14 @@ export default function FindByRegion() {
     regionAdventures.forEach((a) => {
       typesMap.set(a.type, (typesMap.get(a.type) || 0) + 1);
     });
-    const items = Array.from(typesMap.entries()).map(([type, count]) => ({
-      type,
-      count,
-    })).sort((a, b) => b.count - a.count);
+    const items = Array.from(typesMap.entries()).map(([type, count]) => {
+      const typeInfo = adventureTypes.find(t => t.type === type);
+      return {
+        type,
+        count,
+        icon: typeInfo?.icon || "📍"
+      };
+    }).sort((a, b) => b.count - a.count);
 
     return {
       ...region,
