@@ -231,7 +231,7 @@ export default function ExploreClient() {
                                 )}
                                 {msg.cards && msg.cards.length > 0 && (
                                   <div className="grid gap-2">
-                                    {msg.cards.map((card: any, ci: number) => {
+                                    {msg.cards.map((card: Adventure, ci: number) => {
                                       const rec = msg.recommendations?.find((r) => r.slug === card.slug);
                                       return (
                                         <Link
