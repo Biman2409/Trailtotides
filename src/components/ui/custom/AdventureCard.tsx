@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Clock, TrendingUp, ArrowRight, Calendar, Users, Activity } from "lucide-react";
+import { MapPin } from "lucide-react";
 import type { Adventure } from "@/lib/data";
 
 const typeStyle: Record<string, string> = {
