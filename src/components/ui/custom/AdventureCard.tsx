@@ -38,7 +38,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         
         {/* Gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#f67345]/10" />
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#ff6b35]/10" />
 
           {/* Pills at the Top */}
           <div className="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
@@ -50,8 +50,9 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
             {adventure.isEditorsChoice && (
               <div className="absolute top-3 right-3 z-10 group/award">
                 <div className="flex items-center bg-black/95 backdrop-blur-md border border-white/15 p-0.5 rounded-full shadow-2xl transition-all duration-500 hover:pr-4 group-hover:scale-110">
-                  <div className="bg-black p-2 rounded-full flex items-center justify-center border border-[#f67345]/40">
-                    <Award className="w-4 h-4 text-[#f67345] fill-[#f67345]/10" />
+                  <div className="bg-black p-2 rounded-full flex items-center justify-center border border-white/10 relative">
+                    <Award className="w-4 h-4 text-white/40" />
+                    <Mountain className="w-2.5 h-2.5 text-[#ff6b35] absolute -top-0.5 -right-0.5" />
                   </div>
                   <span className="text-white text-[10px] font-bold tracking-[0.25em] max-w-0 overflow-hidden transition-all duration-500 group-hover/award:max-w-[100px] group-hover/award:ml-3 whitespace-nowrap opacity-0 group-hover/award:opacity-100 pr-1">
                     EDITORS
@@ -64,10 +65,10 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         {/* Title Content */}
         <div className="absolute inset-0 p-5 flex flex-col justify-end">
           <div className="flex items-center gap-1.5 mb-1.5 opacity-80">
-            <MapPin className="w-3 h-3 text-[#f67345]" />
+            <MapPin className="w-3 h-3 text-[#ff6b35]" />
             <span className="text-white text-[10px] font-medium tracking-wide uppercase">{adventure.state}</span>
           </div>
-          <h3 className="text-white font-bold text-xl leading-tight tracking-tight mb-1 group-hover:text-[#f67345] transition-colors">
+          <h3 className="text-white font-bold text-xl leading-tight tracking-tight mb-1 group-hover:text-[#ff6b35] transition-colors">
             {adventure.name}
           </h3>
           <p className="text-white/60 text-xs leading-relaxed line-clamp-1">
