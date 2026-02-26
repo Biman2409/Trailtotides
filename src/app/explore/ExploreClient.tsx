@@ -493,62 +493,65 @@ export default function ExploreClient() {
                       ];
                     return (
                       <div className="flex flex-col gap-2">
-                        {/* Category buttons row */}
-                        <div className="flex flex-wrap gap-2">
-                          {categories.map((cat) => {
-                            const isExpanded = expandedCategory === cat.label;
-                            const hasSelected = cat.types.some(t => selectedTypes.includes(t as AdventureType));
-                            return (
-                              <button
-                                key={cat.label}
-                                onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
-                                  isExpanded || hasSelected ? cat.btnActive : cat.btn
-                                }`}
-                              >
-                                {cat.label}
+                          {/* Category buttons row */}
+                          <div className="flex flex-wrap gap-2">
+                            {categories.map((cat) => {
+                              const isExpanded = expandedCategory === cat.label;
+                              const hasSelected = cat.types.some(t => selectedTypes.includes(t as AdventureType));
+                              return (
+                                <button
+                                  key={cat.label}
+                                  onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
+                                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                                    isExpanded || hasSelected 
+                                      ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
+                                      : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                                  }`}
+                                >
+                                  {cat.label}
 
-                                {hasSelected && (
-                                  <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
-                                    {cat.types.filter(t => selectedTypes.includes(t as AdventureType)).length}
-                                  </span>
+                                  {hasSelected && (
+                                    <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
+                                      {cat.types.filter(t => selectedTypes.includes(t as AdventureType)).length}
+                                    </span>
+                                  )}
+                                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                                </button>
+                              );
+                            })}
+                          </div>
+
+                          {/* Expanded type chips */}
+                            {expandedCategory && (() => {
+                              const cat = categories.find(c => c.label === expandedCategory)!;
+                              return (
+                                <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                                  {cat.types.length === 0 ? (
+                                    <p className="text-xs text-[#ff6b35] italic">Coming soon</p>
+                                  ) : (
+
+                                  <div className="flex flex-wrap gap-2">
+                                    {cat.types.map((type) => {
+                                      const isSelected = selectedTypes.includes(type as AdventureType);
+                                      return (
+                                          <button
+                                            key={type}
+                                            onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
+                                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                              isSelected 
+                                                ? "bg-[#ff6b35] text-white" 
+                                                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                                            }`}
+                                          >
+                                            {type}
+                                          </button>
+                                      );
+                                    })}
+                                  </div>
                                 )}
-                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                              </button>
+                              </div>
                             );
-                          })}
-                        </div>
-
-                        {/* Expanded type chips */}
-                          {expandedCategory && (() => {
-                            const cat = categories.find(c => c.label === expandedCategory)!;
-                            return (
-                              <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
-                                {cat.types.length === 0 ? (
-                                  <p className="text-xs text-[#f67345] italic">Coming soon</p>
-                                ) : (
-
-                                <div className="flex flex-wrap gap-2">
-                                  {cat.types.map((type) => {
-                                    const icon = adventureTypes.find(a => a.type === type)?.icon ?? "";
-                                    const isSelected = selectedTypes.includes(type as AdventureType);
-                                    return (
-                                        <button
-                                          key={type}
-                                          onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
-                                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                                            isSelected ? cat.chipActive : cat.chip
-                                          }`}
-                                        >
-                                          {type}
-                                        </button>
-                                    );
-                                  })}
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })()}
+                          })()}
                       </div>
                     );
                   })()}
