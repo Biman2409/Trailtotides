@@ -19,7 +19,7 @@ export default function ChatBubble() {
     {
       role: "assistant",
         content:
-          "Hey! I'm Compass — tell me what kind of adventure you're after and I'll point you towards it.",
+          "Hey! I'm Compass AI — tell me what kind of adventure you're after and I'll point you towards it.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -85,7 +85,7 @@ export default function ChatBubble() {
         <button
           onClick={() => setOpen((v) => !v)}
           className={`fixed bottom-6 right-6 z-50 flex items-center justify-center text-white w-14 h-14 rounded-full shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl active:translate-y-0 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
-          style={{ background: open ? "#d84315" : "#ff6b35", boxShadow: "0 4px 20px rgba(244,132,95,0.45)", transition: "opacity 0.4s ease, transform 0.4s ease, background 0.2s" }}
+          style={{ background: open ? "#d84315" : "#ff5100", boxShadow: "0 4px 20px rgba(255,81,0,0.45)", transition: "opacity 0.4s ease, transform 0.4s ease, background 0.2s" }}
           aria-label="Open Compass AI"
         >
           {open ? <X className="w-6 h-6" /> : <HelpCircle className="w-6 h-6" />}
@@ -99,7 +99,7 @@ export default function ChatBubble() {
           {/* Header */}
             <div
               className="px-4 py-3.5 flex items-center gap-3"
-              style={{ background: "#ff6b35" }}
+              style={{ background: "#ff5100" }}
             >
               <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center flex-shrink-0">
                 <HelpCircle className="w-5 h-5 text-white" />
@@ -131,7 +131,7 @@ export default function ChatBubble() {
                           ? "text-white rounded-br-sm"
                           : "bg-white/6 border border-white/8 text-white/85 rounded-bl-sm"
                       }`}
-                      style={msg.role === "user" ? { background: "#ff6b35" } : {}}
+                      style={msg.role === "user" ? { background: "#ff5100" } : {}}
                     >
                       {msg.content}
                     </div>
@@ -145,7 +145,7 @@ export default function ChatBubble() {
                           <Link
                             key={ci}
                             href={`/experiences/${card.slug}`}
-                            className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-[#ff6b35]/30 rounded-xl overflow-hidden transition-all group"
+                            className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-[#ff5100]/30 rounded-xl overflow-hidden transition-all group"
                           >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -161,12 +161,12 @@ export default function ChatBubble() {
                                 {card.state} · {card.type}
                               </p>
                               {rec?.reason && (
-                                <p className="text-[#f09060] text-xs mt-0.5 line-clamp-2 leading-snug">
+                                <p className="text-[#ff5100] text-xs mt-0.5 line-clamp-2 leading-snug">
                                   {rec.reason}
                                 </p>
                               )}
                             </div>
-                            <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#ff6b35] self-center mr-2 flex-shrink-0 transition-colors" />
+                            <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#ff5100] self-center mr-2 flex-shrink-0 transition-colors" />
                           </Link>
                         );
                       })}
@@ -179,8 +179,8 @@ export default function ChatBubble() {
             {loading && (
               <div className="flex justify-start">
                 <div className="bg-white/6 border border-white/8 px-3.5 py-2.5 rounded-xl rounded-bl-sm flex items-center gap-2">
-                  <Loader2 className="w-3.5 h-3.5 text-[#ff6b35] animate-spin" />
-                  <span className="text-white/50 text-sm">Finding adventures…</span>
+                  <Loader2 className="w-3.5 h-3.5 text-[#ff5100] animate-spin" />
+                  <span className="text-white/50 text-sm">Compass AI is finding adventures…</span>
                 </div>
               </div>
             )}
@@ -193,14 +193,14 @@ export default function ChatBubble() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
-              placeholder="Ask me anything about adventures…"
-              className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/25 text-sm px-3.5 py-2.5 rounded-xl outline-none focus:border-[#ff6b35]/60 focus:ring-1 focus:ring-[#ff6b35]/25 transition-all"
+              placeholder="Ask Compass AI anything about adventures…"
+              className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/25 text-sm px-3.5 py-2.5 rounded-xl outline-none focus:border-[#ff5100]/60 focus:ring-1 focus:ring-[#ff5100]/25 transition-all"
             />
             <button
               onClick={send}
               disabled={!input.trim() || loading}
               className="disabled:opacity-30 disabled:cursor-not-allowed text-white p-2.5 rounded-xl transition-all hover:brightness-110 active:scale-95"
-              style={{ background: "#ff6b35" }}
+              style={{ background: "#ff5100" }}
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -212,5 +212,6 @@ export default function ChatBubble() {
         </div>
       )}
     </>
+
   );
 }
