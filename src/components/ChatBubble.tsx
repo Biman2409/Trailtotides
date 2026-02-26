@@ -109,9 +109,10 @@ export default function ChatBubble() {
               <div className="w-10 h-10 rounded-2xl bg-[#ff5100] flex items-center justify-center shadow-lg shadow-[#ff5100]/20">
                 <Compass className="w-6 h-6 text-white" strokeWidth={2.5} />
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-white font-black text-sm uppercase tracking-widest">Compass AI</p>
-                    <div className="flex items-center gap-1.5 mt-0.5">
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-black text-sm lowercase tracking-widest">compass.ai</p>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+
                       <p className="text-white/40 text-[10px] font-bold uppercase tracking-wider">Discovery Mode</p>
                     </div>
               </div>
