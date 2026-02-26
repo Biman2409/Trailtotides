@@ -103,12 +103,26 @@ export default function InlineChat() {
               
                 {/* Operational Header */}
                 <div className="px-6 py-4 border-b border-white/[0.05] flex items-center justify-between bg-white/[0.01]">
-                  <div className="flex gap-1">
-                    <div className="w-1 h-1 rounded-full bg-white/10" />
-                    <div className="w-1 h-1 rounded-full bg-white/10" />
-                    <div className="w-1 h-1 rounded-full bg-white/10" />
+                  <div className="flex items-center gap-6">
+                    <div className="flex gap-1">
+                      <div className="w-1 h-1 rounded-full bg-white/20" />
+                      <div className="w-1 h-1 rounded-full bg-white/20" />
+                      <div className="w-1 h-1 rounded-full bg-white/20" />
+                    </div>
+                    <div className="hidden sm:flex items-center gap-2 border-l border-white/[0.05] pl-6">
+                      {['Coastal Trek', 'Mountain Peak', 'Hidden Lagoon'].map((v) => (
+                        <button 
+                          key={v}
+                          onClick={() => send(v)}
+                          className="px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.05] text-[9px] text-white/40 font-bold uppercase tracking-widest hover:bg-[#ff5100]/10 hover:text-[#ff5100] hover:border-[#ff5100]/30 transition-all duration-300"
+                        >
+                          {v}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
+
 
                 {/* Interaction Terminal */}
                 <div className={`min-h-[60px] ${messages.length > 0 ? 'max-h-[450px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
