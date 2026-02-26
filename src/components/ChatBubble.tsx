@@ -85,7 +85,7 @@ export default function ChatBubble() {
         <button
           onClick={() => setOpen((v) => !v)}
           className={`fixed bottom-6 right-6 z-50 flex items-center justify-center text-white w-14 h-14 rounded-full shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl active:translate-y-0 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
-          style={{ background: open ? "#d84315" : "#f4845f", boxShadow: "0 4px 20px rgba(255,87,34,0.45)", transition: "opacity 0.4s ease, transform 0.4s ease, background 0.2s" }}
+          style={{ background: open ? "#d84315" : "#f4845f", boxShadow: "0 4px 20px rgba(244,132,95,0.45)", transition: "opacity 0.4s ease, transform 0.4s ease, background 0.2s" }}
           aria-label="Open Compass AI"
         >
           {open ? <X className="w-6 h-6" /> : <HelpCircle className="w-6 h-6" />}
