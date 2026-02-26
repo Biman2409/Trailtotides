@@ -408,22 +408,18 @@ export default function MapPage() {
                           const categories = [
                             {
                               label: "Land", 
-                              icon: <Mountain className="w-3.5 h-3.5" />,
                               types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
                             },
                             {
                               label: "Water", 
-                              icon: <Waves className="w-3.5 h-3.5" />,
                               types: ["Diving", "Kayaking"],
                             },
                             {
                               label: "Snow", 
-                              icon: <Snowflake className="w-3.5 h-3.5" />,
                               types: ["Skiing"],
                             },
                             {
                               label: "Air", 
-                              icon: <Wind className="w-3.5 h-3.5" />,
                               types: [] as string[],
                             },
                           ];
