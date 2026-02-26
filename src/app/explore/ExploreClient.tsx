@@ -745,40 +745,42 @@ export default function ExploreClient() {
                   </div>
                 </div>
 
-              {/* Difficulty, Duration, Group Size — each on its own row */}
-                <div className="col-span-2 lg:col-span-3">
-                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Difficulty</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {([ 
-                      { val: "Beginner",     idle: "bg-green-50 border-green-200 text-green-800 hover:bg-green-100 border",     active: "bg-green-600 text-white border border-green-600" },
-                      { val: "Intermediate", idle: "bg-blue-50 border-blue-200 text-blue-800 hover:bg-blue-100 border",         active: "bg-blue-600 text-white border border-blue-600" },
-                      { val: "Advanced",     idle: "bg-[#f88c64]/5 border-[#f88c64]/20 text-[#9c4a2f] hover:bg-[#f88c64]/10 border",     active: "bg-[#f88c64] text-white border border-[#f88c64]" },
-                      { val: "Expert",       idle: "bg-[#f67345]/5 border-[#f67345]/20 text-[#9c4a2f] hover:bg-[#f67345]/10 border", active: "bg-[#f67345] text-white border border-[#f67345]" },
-                      { val: "Extreme",      idle: "bg-red-50 border-red-200 text-red-800 hover:bg-red-100 border",             active: "bg-red-600 text-white border border-red-600" },
-                      ] as { val: Difficulty; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
-                        <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
-                          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDifficulties.includes(val) ? active : idle}`}>
-                          {val}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
+                {/* Difficulty, Duration, Group Size — each on its own row */}
                   <div className="col-span-2 lg:col-span-3">
-                    <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
+                    <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Difficulty</h3>
                     <div className="flex flex-wrap gap-2">
-                      {([
-                        { val: "Weekend",  label: "Weekend",  idle: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100 border", active: "bg-yellow-500 text-white border border-yellow-500" },
-                        { val: "3–5 days", label: "3–5 days", idle: "bg-indigo-50 border-indigo-200 text-indigo-800 hover:bg-indigo-100 border", active: "bg-indigo-600 text-white border border-indigo-600" },
-                        { val: "7+ days",  label: "7+ days",  idle: "bg-rose-50 border-rose-200 text-rose-800 hover:bg-rose-100 border",         active: "bg-rose-600 text-white border border-rose-600" },
-                      ] as { val: Duration; label: string; icon: string; idle: string; active: string }[]).map(({ val, label, icon, idle, active }) => (
-                        <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
-                          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
-                          {label}
-                        </button>
-                      ))}
+                      {([ 
+                        { val: "Beginner",     icon: <Zap className="w-3.5 h-3.5" />,     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        { val: "Intermediate", icon: <Activity className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        { val: "Advanced",     icon: <ShieldAlert className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        { val: "Expert",       icon: <Trophy className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        { val: "Extreme",      icon: <Flame className="w-3.5 h-3.5" />,   idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        ] as { val: Difficulty; icon: React.ReactNode; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
+                          <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDifficulties.includes(val) ? active : idle}`}>
+                            {icon}
+                            {val}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+
+                    <div className="col-span-2 lg:col-span-3">
+                      <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {([
+                          { val: "Weekend",  label: "Weekend",  icon: <Calendar className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                          { val: "3–5 days", label: "3–5 days", icon: <CalendarRange className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                          { val: "7+ days",  label: "7+ days",  icon: <History className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        ] as { val: Duration; label: string; icon: React.ReactNode; idle: string; active: string }[]).map(({ val, label, icon, idle, active }) => (
+                          <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
+                            {icon}
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
 
                   <div className="col-span-2 lg:col-span-3">
                     <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
