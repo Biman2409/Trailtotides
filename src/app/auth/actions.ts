@@ -2,9 +2,11 @@
 
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { sendVerificationEmail, sendPasswordResetEmail } from "@/lib/email";
 
 export async function signUp(formData: FormData) {
   const supabase = await createClient();
+  const adminClient = await createAdminClient();
 
   const full_name = formData.get("full_name") as string;
   const email = formData.get("email") as string;
@@ -19,7 +21,9 @@ export async function signUp(formData: FormData) {
   const protocol = headersList.get("x-forwarded-proto") || (host?.includes("localhost") ? "http" : "https");
   const origin = `${protocol}://${host}`;
 
-  const { error } = await supabase.auth.signUp({
+  // Sign up using normal client first
+  // This might trigger a Supabase email if SMTP is configured, but we'll also send our own
+  const { data, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -31,8 +35,27 @@ export async function signUp(formData: FormData) {
     },
   });
 
-  if (error) {
-    return { error: error.message };
+  if (signUpError) {
+    return { error: signUpError.message };
+  }
+
+  // If we have a Resend key, generate a link and send it manually
+  if (process.env.RESEND_API_KEY) {
+    const { data: linkData, error: linkError } = await adminClient.auth.admin.generateLink({
+      type: 'signup',
+      email: email,
+      options: {
+        redirectTo: `${origin}/auth/callback`,
+      }
+    });
+
+    if (!linkError && linkData?.properties?.action_link) {
+      await sendVerificationEmail(
+        email, 
+        linkData.properties.action_link, 
+        full_name
+      );
+    }
   }
 
   return { success: "Registration successful! Please check your email to verify your account before logging in." };
@@ -56,6 +79,7 @@ export async function login(formData: FormData) {
 
 export async function resetPassword(formData: FormData) {
   const supabase = await createClient();
+  const adminClient = await createAdminClient();
   const email = formData.get("email") as string;
 
   // Get origin for verification link
@@ -64,6 +88,23 @@ export async function resetPassword(formData: FormData) {
   const protocol = headersList.get("x-forwarded-proto") || (host?.includes("localhost") ? "http" : "https");
   const origin = `${protocol}://${host}`;
 
+  // If we have Resend, use it for more reliable delivery
+  if (process.env.RESEND_API_KEY) {
+    const { data: linkData, error: linkError } = await adminClient.auth.admin.generateLink({
+      type: 'recovery',
+      email: email,
+      options: {
+        redirectTo: `${origin}/auth/callback?next=/auth/reset-password`,
+      }
+    });
+
+    if (!linkError && linkData?.properties?.action_link) {
+      await sendPasswordResetEmail(email, linkData.properties.action_link);
+      return { success: "Password reset link sent! Please check your email." };
+    }
+  }
+
+  // Fallback to Supabase built-in
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${origin}/auth/callback?next=/auth/reset-password`,
   });
