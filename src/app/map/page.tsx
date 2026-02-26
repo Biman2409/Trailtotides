@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Map as MapIcon, Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2, Wind, Sun } from "lucide-react";
+import { Map as MapIcon, Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2, Wind, Sun, Mountain, Waves, Snowflake, Trees, Palmtree, Sunrise, Building2 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import { adventures, adventureTypes } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
@@ -20,6 +20,8 @@ const typeEmoji: Record<AdventureType, string> = {
   "Caving": "🪨",
   "Sandboarding": "🏄",
   "Urban Adventure": "🏙️",
+  "Paragliding": "🪂",
+  "Hot Air Balloon": "🎈"
 };
 
 const difficultyColor: Record<string, string> = {
@@ -401,7 +403,7 @@ export default function MapPage() {
                   {(() => {
                     const categories = [
                       {
-                        label: "Land Based", icon: "🏔️",
+                        label: "Land Based", icon: <Mountain className="w-4 h-4" />,
                         btn: "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100",
                         btnActive: "bg-amber-500 text-white border-amber-500",
                         chip: "bg-amber-100 text-amber-900 hover:bg-amber-200",
@@ -409,7 +411,7 @@ export default function MapPage() {
                         types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
                       },
                       {
-                        label: "Water Based", icon: "🌊",
+                        label: "Water Based", icon: <Waves className="w-4 h-4" />,
                         btn: "bg-sky-50 border-sky-200 text-sky-800 hover:bg-sky-100",
                         btnActive: "bg-sky-500 text-white border-sky-500",
                         chip: "bg-sky-100 text-sky-900 hover:bg-sky-200",
@@ -417,7 +419,7 @@ export default function MapPage() {
                         types: ["Diving", "Kayaking"],
                       },
                       {
-                        label: "Snow Based", icon: "❄️",
+                        label: "Snow Based", icon: <Snowflake className="w-4 h-4" />,
                         btn: "bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100",
                         btnActive: "bg-slate-600 text-white border-slate-600",
                         chip: "bg-slate-100 text-slate-700 hover:bg-slate-200",
@@ -493,14 +495,14 @@ export default function MapPage() {
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Region</h3>
                   {(() => {
                     const regionGroups: { name: Region; icon: React.ReactNode; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
-                      { name: "Himalayas",     icon: "🏔️", btn: "bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100", btnActive: "bg-emerald-700 text-white border-emerald-700", chip: "bg-emerald-100 text-emerald-900 hover:bg-emerald-200", chipActive: "bg-emerald-700 text-white", subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
-                      { name: "Western Ghats", icon: "⛰️", btn: "bg-lime-50 border-lime-200 text-lime-800 hover:bg-lime-100",             btnActive: "bg-lime-600 text-white border-lime-600",     chip: "bg-lime-100 text-lime-900 hover:bg-lime-200",         chipActive: "bg-lime-600 text-white",     subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"] },
-                      { name: "Eastern Ghats", icon: "⛰️", btn: "bg-orange-50 border-orange-200 text-orange-800 hover:bg-orange-100",     btnActive: "bg-orange-600 text-white border-orange-600", chip: "bg-orange-100 text-orange-900 hover:bg-orange-200",   chipActive: "bg-orange-600 text-white",   subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"] },
+                      { name: "Himalayas",     icon: <Mountain className="w-4 h-4" />, btn: "bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100", btnActive: "bg-emerald-700 text-white border-emerald-700", chip: "bg-emerald-100 text-emerald-900 hover:bg-emerald-200", chipActive: "bg-emerald-700 text-white", subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
+                      { name: "Western Ghats", icon: <Trees className="w-4 h-4" />, btn: "bg-lime-50 border-lime-200 text-lime-800 hover:bg-lime-100",             btnActive: "bg-lime-600 text-white border-lime-600",     chip: "bg-lime-100 text-lime-900 hover:bg-lime-200",         chipActive: "bg-lime-600 text-white",     subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"] },
+                      { name: "Eastern Ghats", icon: <Mountain className="w-4 h-4" />, btn: "bg-orange-50 border-orange-200 text-orange-800 hover:bg-orange-100",     btnActive: "bg-orange-600 text-white border-orange-600", chip: "bg-orange-100 text-orange-900 hover:bg-orange-200",   chipActive: "bg-orange-600 text-white",   subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"] },
                       { name: "Desert",        icon: <Sun className="w-4 h-4" />, btn: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100",     btnActive: "bg-yellow-500 text-white border-yellow-500", chip: "bg-yellow-100 text-yellow-900 hover:bg-yellow-200",   chipActive: "bg-yellow-500 text-white",   subRegions: ["Rajasthan", "Gujarat"] },
-                      { name: "Coast",         icon: "🌊", btn: "bg-cyan-50 border-cyan-200 text-cyan-800 hover:bg-cyan-100",             btnActive: "bg-cyan-600 text-white border-cyan-600",     chip: "bg-cyan-100 text-cyan-900 hover:bg-cyan-200",         chipActive: "bg-cyan-600 text-white",     subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
-                      { name: "Islands",       icon: "🏝️", btn: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100",             btnActive: "bg-teal-600 text-white border-teal-600",     chip: "bg-teal-100 text-teal-900 hover:bg-teal-200",         chipActive: "bg-teal-600 text-white",     subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
-                        { name: "Northeast",     icon: "🌄", btn: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100",     btnActive: "bg-violet-600 text-white border-violet-600", chip: "bg-violet-100 text-violet-900 hover:bg-violet-200",   chipActive: "bg-violet-600 text-white",   subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"] },
-                        { name: "Urban",         icon: "🏙️", btn: "bg-zinc-50 border-zinc-200 text-zinc-800 hover:bg-zinc-100",               btnActive: "bg-zinc-700 text-white border-zinc-700",     chip: "bg-zinc-100 text-zinc-900 hover:bg-zinc-200",         chipActive: "bg-zinc-700 text-white",     subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"] },
+                      { name: "Coast",         icon: <Waves className="w-4 h-4" />, btn: "bg-cyan-50 border-cyan-200 text-cyan-800 hover:bg-cyan-100",             btnActive: "bg-cyan-600 text-white border-cyan-600",     chip: "bg-cyan-100 text-cyan-900 hover:bg-cyan-200",         chipActive: "bg-cyan-600 text-white",     subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
+                      { name: "Islands",       icon: <Palmtree className="w-4 h-4" />, btn: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100",             btnActive: "bg-teal-600 text-white border-teal-600",     chip: "bg-teal-100 text-teal-900 hover:bg-teal-200",         chipActive: "bg-teal-600 text-white",     subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
+                        { name: "Northeast",     icon: <Sunrise className="w-4 h-4" />, btn: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100",     btnActive: "bg-violet-600 text-white border-violet-600", chip: "bg-violet-100 text-violet-900 hover:bg-violet-200",   chipActive: "bg-violet-600 text-white",   subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"] },
+                        { name: "Urban",         icon: <Building2 className="w-4 h-4" />, btn: "bg-zinc-50 border-zinc-200 text-zinc-800 hover:bg-zinc-100",               btnActive: "bg-zinc-700 text-white border-zinc-700",     chip: "bg-zinc-100 text-zinc-900 hover:bg-zinc-200",         chipActive: "bg-zinc-700 text-white",     subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"] },
                       ];
                     return (
                       <div className="flex flex-col gap-2">
