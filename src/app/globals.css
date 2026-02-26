@@ -46,7 +46,7 @@
   --color-sand-dark: #e8dfc8;
   --color-slate: #2c3e50;
   --color-charcoal: #1a1f2e;
-  --color-rust: #c4622d;
+  --color-rust: #ff5722;
   --color-rust-light: #e07845;
   --color-glacier: #5ba3c9;
   --color-off-white: #fafaf8;
@@ -68,7 +68,7 @@
   --secondary-foreground: #1a1f2e;
   --muted: #f0ebe0;
   --muted-foreground: #6b6560;
-  --accent: #c4622d;
+  --accent: #ff5722;
   --accent-foreground: #fafaf8;
   --destructive: oklch(0.577 0.245 27.325);
   --border: #e0d8cc;
@@ -76,7 +76,7 @@
   --ring: #1e3d2f;
   --sidebar: #1a1f2e;
   --sidebar-foreground: #fafaf8;
-  --sidebar-primary: #c4622d;
+  --sidebar-primary: #ff5722;
   --sidebar-primary-foreground: #fafaf8;
   --sidebar-accent: #2c3e50;
   --sidebar-accent-foreground: #fafaf8;
@@ -118,7 +118,7 @@ html {
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c4622d;
+  background: #ff5722;
 }
 
 /* Hide Next.js error overlay portal */
@@ -137,13 +137,13 @@ main, .page-enter {
 
 /* ── Text selection ──────────────────────────────────────── */
 ::selection {
-  background: #c4622d33;
+  background: #ff572233;
   color: #1a1f2e;
 }
 
 /* ── Focus ring ──────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid #c4622d;
+  outline: 2px solid #ff5722;
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -189,5 +189,5 @@ button:not([class*="transition"]) {
   transition: background 0.2s !important;
 }
 .leaflet-control-zoom a:hover {
-  background: #c4622d !important;
+  background: #ff5722 !important;
 }
