@@ -31,8 +31,8 @@ const typeEmoji: Record<AdventureType, string> = {
 const difficultyColor: Record<string, string> = {
   Beginner:     "#22c55e",  // green
   Intermediate: "#3b82f6",  // blue
-  Advanced:     "#ff6b35",  // brand orange
-  Expert:       "#ff6b35",  // brand orange
+  Advanced:     "#ff5100",  // brand orange
+  Expert:       "#ff5100",  // brand orange
   Extreme:      "#ef4444",  // red
 };
 
@@ -126,7 +126,7 @@ function PlaceSearch({ onSelect }: { onSelect: (lat: number, lng: number, name: 
   return (
     <div ref={wrapperRef} className="relative w-full max-w-xs">
       <div className="relative">
-        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#ff6b35]" />
+        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#ff5100]" />
         {loading && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#9a9590] animate-spin" />}
         {!loading && query && (
           <button onClick={() => { setQuery(""); setResults([]); setOpen(false); }} className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -138,7 +138,7 @@ function PlaceSearch({ onSelect }: { onSelect: (lat: number, lng: number, name: 
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => results.length > 0 && setOpen(true)}
           placeholder="Go to a place…"
-          className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#f5f0e8] text-[#1a1f2e] text-sm placeholder-[#9a9590] border border-transparent focus:outline-none focus:border-[#ff6b35] transition-colors"
+          className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#f5f0e8] text-[#1a1f2e] text-sm placeholder-[#9a9590] border border-transparent focus:outline-none focus:border-[#ff5100] transition-colors"
         />
       </div>
       {open && (
@@ -149,7 +149,7 @@ function PlaceSearch({ onSelect }: { onSelect: (lat: number, lng: number, name: 
                 onMouseDown={() => handleSelect(r)}
                 className="w-full text-left px-3 py-2.5 hover:bg-[#f5f0e8] flex items-start gap-2"
               >
-                <MapPin className="w-3.5 h-3.5 text-[#ff6b35] mt-0.5 shrink-0" />
+                <MapPin className="w-3.5 h-3.5 text-[#ff5100] mt-0.5 shrink-0" />
                 <span className="text-[#1a1f2e] leading-snug line-clamp-2">{r.display_name}</span>
               </button>
             </li>
@@ -366,7 +366,7 @@ export default function MapPage() {
             <SlidersHorizontal className="w-4 h-4" />
             Filters
             {activeFilterCount > 0 && (
-              <span className="bg-[#ff6b35] text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
+              <span className="bg-[#ff5100] text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
                 {activeFilterCount}
               </span>
             )}
@@ -380,7 +380,7 @@ export default function MapPage() {
           {(activeFilterCount > 0 || search) && (
             <button
               onClick={clearAll}
-              className="flex items-center gap-1.5 text-sm text-[#ff6b35] hover:text-[#ff8e64] font-medium"
+              className="flex items-center gap-1.5 text-sm text-[#ff5100] hover:text-[#ff7d47] font-medium"
             >
               <X className="w-3.5 h-3.5" />
               Clear
@@ -431,7 +431,7 @@ export default function MapPage() {
                                     onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
                                       isExpanded || hasSelected 
-                                        ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
+                                        ? "bg-[#ff5100] text-white border-[#ff5100]" 
                                         : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                     }`}
                                   >
@@ -452,7 +452,7 @@ export default function MapPage() {
                           return (
                             <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
                               {cat.types.length === 0 ? (
-                                <p className="text-xs text-[#ff6b35] italic">Coming soon</p>
+                                <p className="text-xs text-[#ff5100] italic">Coming soon</p>
                               ) : (
                                   <div className="flex flex-wrap gap-2">
                                     {cat.types.map((type) => {
@@ -463,7 +463,7 @@ export default function MapPage() {
                                             onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
                                             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                                               isSelected 
-                                                ? "bg-[#ff6b35] text-white" 
+                                                ? "bg-[#ff5100] text-white" 
                                                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
                                             }`}
                                           >
@@ -506,7 +506,7 @@ export default function MapPage() {
                                   <button key={rg.name} onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
                                       isExpanded || hasSelected 
-                                        ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
+                                        ? "bg-[#ff5100] text-white border-[#ff5100]" 
                                         : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                     }`}>
                                     {rg.icon}
@@ -526,7 +526,7 @@ export default function MapPage() {
                                   <button key={sr} onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
                                     className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                                       selectedSubRegions.includes(sr) 
-                                        ? "bg-[#ff6b35] text-white" 
+                                        ? "bg-[#ff5100] text-white" 
                                         : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
                                     }`}>
                                     {sr}
@@ -554,7 +554,7 @@ export default function MapPage() {
                             <button key={label} onClick={() => setExpandedSeason(isExpanded ? null : label)}
                               className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
                                 isExpanded || hasSelected 
-                                  ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
+                                  ? "bg-[#ff5100] text-white border-[#ff5100]" 
                                   : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                               }`}>
                               {icon}
@@ -574,7 +574,7 @@ export default function MapPage() {
                               <button key={m} onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
                                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                                   selectedMonths.includes(m) 
-                                    ? "bg-[#ff6b35] text-white" 
+                                    ? "bg-[#ff5100] text-white" 
                                     : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
                                 }`}>
                                 {m}
@@ -592,11 +592,11 @@ export default function MapPage() {
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Difficulty</h3>
                   <div className="flex flex-wrap gap-2">
                     {([
-                      { val: "Beginner",     icon: <Zap className="w-3.5 h-3.5" />,     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                      { val: "Intermediate", icon: <Activity className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                      { val: "Advanced",     icon: <ShieldAlert className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                      { val: "Expert",       icon: <Trophy className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                      { val: "Extreme",      icon: <Flame className="w-3.5 h-3.5" />,   idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                      { val: "Beginner",     icon: <Zap className="w-3.5 h-3.5" />,     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                      { val: "Intermediate", icon: <Activity className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                      { val: "Advanced",     icon: <ShieldAlert className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                      { val: "Expert",       icon: <Trophy className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                      { val: "Extreme",      icon: <Flame className="w-3.5 h-3.5" />,   idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
                       ] as { val: Difficulty; icon: React.ReactNode; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
                         <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
                           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDifficulties.includes(val) ? active : idle}`}>
@@ -612,9 +612,9 @@ export default function MapPage() {
                     <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
                     <div className="flex flex-wrap gap-2">
                       {([
-                        { val: "Weekend",  label: "Weekend",  icon: <Calendar className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                        { val: "3–5 days", label: "3–5 days", icon: <CalendarRange className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                        { val: "7+ days",  label: "7+ days",  icon: <History className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        { val: "Weekend",  label: "Weekend",  icon: <Calendar className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "3–5 days", label: "3–5 days", icon: <CalendarRange className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "7+ days",  label: "7+ days",  icon: <History className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
                       ] as { val: Duration; label: string; icon: React.ReactNode; idle: string; active: string }[]).map(({ val, label, icon, idle, active }) => (
                         <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
                           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
@@ -630,9 +630,9 @@ export default function MapPage() {
                     <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
                     <div className="flex flex-wrap gap-2">
                       {([
-                        { val: "Solo",             icon: <User className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                        { val: "Small group (2–6)", icon: <Users className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                        { val: "Large group (6+)",  icon: <Users className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        { val: "Solo",             icon: <User className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "Small group (2–6)", icon: <Users className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "Large group (6+)",  icon: <Users className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
                       ] as { val: GroupSize; icon: React.ReactNode; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
                         <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
                           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
