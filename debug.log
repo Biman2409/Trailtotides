@@ -186,3 +186,41 @@ It can also happen if the client has a browser extension installed which messes 
                             data-orchids-name="img"
 +                           alt="Trekker on a high-altitude Himalayan ridge"
 -         ...
+2026-02-26T09:50:16.919Z [console][error] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/" tree={[...]} cacheNode={{lazyData:null, ...}} segmentPath={[...]}>
+            <SegmentViewNode type="page" pagePath="/user/app/...">
+              <SegmentTrieNode>
+              <HomePage>
+                <div data-orchids-id="src/app/pa..." data-orchids-name="div" className="min-h-scre...">
+                  <Navbar>
+                  <section data-orchids-id="src/app/pa..." data-orchids-name="section" className="relative h...">
+                    <HeroSlider data-orchids-id="src/app/pa..." data-orchids-name="HeroSlider">
+                      <div data-orchids-id="src/compon..." data-orchids-name="div" className="absolute i...">
+                        <style>
+                        <div data-map-index={0} data-orchids-id="src/compon..." data-orchids-name="div" ...>
+                          <img
+                            data-map-index={0}
+                            data-orchids-id="src/components/ui/custom/HeroSlider.tsx:151:12@shuffled"
+                            data-orchids-name="img"
++                           alt="Surfer carving a wave at golden hour"
+-               ...
+2026-02-26T09:50:18.294Z [network][POST 200] /__nextjs_original-stack-frames
+  request: {"frames":[{"file":"file:///home/user/app/.next/static/chunks/135e9_next_dist_a5ceb642._.js","line1":1605,"column1":80,"methodName":"createConsoleError","arguments":[]},{"file":"file:///home/user/app/.next/static/chunks/135e9_next_dist_a5ceb642._.js","line1":2203,"column1":54,"methodName":"handleConsoleError","arguments":[]},{"file":"file:///home/user/app/.next/static/chunks/135e9_next_dist_a5ceb642._.js","line1":2354,"column1":57,"methodName":"error","arguments":[]},{"file":"file:///home/user/app/.next/static/chunks/135e9_next_dist_compiled_react-dom_93fbc42d._.js","line1":3013,"column1":30,"methodName":"<unknown>","arguments":[]},{"file":"file:///home/user/app/.next/static/chunks/135e9_next_dist_compiled_react-dom_93fbc42d._.js","line1":886,"column1":139,"methodName":"runWithFiberInDEV","arguments":[]},{"file":"file:///home/user/app/.next/static/chunks/135e9_next_dist_compiled_react-dom_93fbc42d._.js","line1":3012,"column1":30,"methodName":"emitPendingHydrationWarnings","arguments":[]},{"file":"file:///home/user/app/.next/static/chunks/135e9_next_dist_compiled_react-dom_93fbc42d._.js","line1":6296,"column1":130,"methodName":"completeWork","arguments":[]},{"file":"file:///home/user/app/.next/static/chunks/135e9_next_dist_compiled_react-dom_93fbc42d._.js","line1":886,"column1":139,"methodName":"runWithFiberInDEV","arguments":[]},{"file":"file:///home/user/app/.next/static/chunks/135e9_next_dist_compiled_react-dom_93fbc42d._.js","line1":8363,"column1":40,"methodName":"completeUnitOfWork","arguments":[]},{"file":"file:///home/user/app/.next/static/chunks/135e9_next_dist_compiled_react-dom_93fbc42d._.js","line1":8300,"column1":46,"methodName":"performUnitOfWork","arguments":[]},{"file":"file:///home/user/app/.next/static/chunks/135e9_next_dist_compiled_react-dom_93fbc42d._.js","line1":8294,"column1":75,"methodName":"workLoopConcurrentByScheduler","arguments":[]},{"file":"file:///home/user/app/.next/static/chunks/135e9_next_dist_compiled_react-dom_93fbc42d._.js","line1"... [truncated]
+  response: [{"status":"fulfilled","value":{"originalStackFrame":{"arguments":[],"file":"node_modules/next/src/next-devtools/shared/console-error.ts","line1":16,"column1":39,"ignored":true,"methodName":"createConsoleError"},"originalCodeFrame":null}},{"status":"fulfilled","value":{"originalStackFrame":{"arguments":[],"file":"node_modules/next/src/next-devtools/userspace/app/errors/use-error-handler.ts","line1":35,"column1":31,"ignored":true,"methodName":"handleConsoleError"},"originalCodeFrame":null}},{"status":"fulfilled","value":{"originalStackFrame":{"arguments":[],"file":"node_modules/next/src/next-devtools/userspace/app/errors/intercept-console-error.ts","line1":33,"column1":27,"ignored":true,"methodName":"error"},"originalCodeFrame":null}},{"status":"fulfilled","value":{"originalStackFrame":{"arguments":[],"file":"node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js","line1":4706,"column1":24,"ignored":true,"methodName":"<unknown>"},"originalCodeFrame":null}},{"status":"fulfilled","value":{"originalStackFrame":{"arguments":[],"file":"node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js","line1":874,"column1":13,"ignored":true,"methodName":"runWithFiberInDEV"},"originalCodeFrame":null}},{"status":"fulfilled","value":{"originalStackFrame":{"arguments":[],"file":"node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js","line1":4705,"column1":9,"ignored":true,"methodName":"emitPendingHydrationWarnings"},"originalCodeFrame":null}},{"status":"fulfilled","value":{"originalStackFrame":{"arguments":[],"file":"node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js","line1":11540,"column1":18,"ignored":true,"methodName":"completeWork"},"originalCodeFrame":null}},{"status":"fulfilled","value":{"originalStackFrame":{"arguments":[],"file":"node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js","line1":874,"column1":13,"ignored":true,"methodName":"runWithFiberInDEV"},"o... [truncated]
+2026-02-26T09:50:18.295Z [network][GET 200] /api/stories/views?slug=the-night-photi-la-tested-us
+  response: {"views":2402}
