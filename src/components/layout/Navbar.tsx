@@ -240,17 +240,24 @@ export default function Navbar() {
                   <p className="text-white/40 text-xs">{user.email}</p>
                 </div>
               </div>
-              {user.role === "admin" && (
+                {user.role === "admin" && (
+                  <Link
+                    href="/admin"
+                    className="flex items-center gap-2 py-3 px-3 text-sm font-medium text-purple-300 hover:bg-white/5 rounded-xl transition-colors"
+                  >
+                    <Shield className="w-4 h-4" />
+                    Admin Dashboard
+                  </Link>
+                )}
                 <Link
-                  href="/admin"
-                  className="flex items-center gap-2 py-3 px-3 text-sm font-medium text-purple-300 hover:bg-white/5 rounded-xl transition-colors"
+                  href="/profile"
+                  className="flex items-center gap-2 py-3 px-3 text-sm font-medium text-white/70 hover:bg-white/5 rounded-xl transition-colors"
                 >
-                  <Shield className="w-4 h-4" />
-                  Admin Dashboard
+                  <User className="w-4 h-4" />
+                  Profile
                 </Link>
-              )}
-              <button
-                onClick={handleLogout}
+                <button
+                  onClick={handleLogout}
                 className="w-full flex items-center gap-2 py-3 px-3 text-sm font-medium text-white/50 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
               >
                 <LogOut className="w-4 h-4" />
