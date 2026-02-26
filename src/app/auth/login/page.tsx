@@ -130,8 +130,8 @@ export default function LoginPage() {
           
             <div className="max-w-md">
               <h2 className="text-6xl font-black text-white leading-[1.05] mb-6 tracking-tight">
-                The wild is <br />
-                calling, <span className="text-orange-500">answer.</span>
+                Wild is calling , <br />
+                <span className="text-orange-500">answer it.</span>
               </h2>
               <p className="text-white/70 text-lg font-medium leading-relaxed max-w-sm">
                 Log in to your dashboard to manage your itineraries and track your next peak.
