@@ -67,50 +67,51 @@ export default function SignUpPage() {
         </div>
       </div>
 
-      {/* Right panel — form */}
-      <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-20 xl:px-32 bg-[#0a0a0a] relative overflow-y-auto lg:overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-500/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
-        
-        <div className="max-w-md w-full mx-auto relative z-10">
-          {/* Mobile logo */}
-          <Link href="/" className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-              <Mountain className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-white font-bold text-xl tracking-tight">Trail to Tides</span>
-          </Link>
+        {/* Right panel — form */}
+        <div className="flex-1 flex flex-col justify-center px-6 py-8 lg:px-20 xl:px-32 bg-[#0a0a0a] relative overflow-y-auto lg:overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-500/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
+          
+          <div className="max-w-md w-full mx-auto relative z-10">
+            {/* Mobile logo */}
+            <Link href="/" className="flex items-center gap-2 mb-6 lg:hidden">
+              <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                <Mountain className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-white font-bold text-xl tracking-tight">Trail to Tides</span>
+            </Link>
+  
+            <Link href="/" className="hidden lg:inline-flex items-center gap-1 text-white/40 hover:text-white/80 text-sm mb-6 transition-colors group">
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              Back to home
+            </Link>
+  
+              <div className="mb-6">
+                <h1 className="text-4xl font-black text-white mb-3 tracking-tight leading-tight">
+                  Wild is calling, <br />
+                  <span className="text-orange-500">answer it.</span>
+                </h1>
+                <p className="text-white/40 text-xs font-medium leading-relaxed">
+                  Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
+                </p>
+              </div>
+  
+  
+            {message && (
+              <div
+                className={`mb-6 px-5 py-3 rounded-2xl text-sm font-semibold flex items-center gap-3 ${
+                  message.type === "error"
+                    ? "bg-red-500/10 border border-red-500/20 text-red-400"
+                    : "bg-green-500/10 border border-green-500/20 text-green-400"
+                }`}
+              >
+                <div className={`w-2 h-2 rounded-full ${message.type === "error" ? "bg-red-500" : "bg-green-500 animate-pulse"}`} />
+                {message.text}
+              </div>
+            )}
+  
+              <form onSubmit={handleSubmit} className="space-y-3.5">
 
-          <Link href="/" className="hidden lg:inline-flex items-center gap-1 text-white/40 hover:text-white/80 text-sm mb-8 transition-colors group">
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Back to home
-          </Link>
-
-            <div className="mb-8">
-              <h1 className="text-4xl font-black text-white mb-4 tracking-tight leading-tight">
-                Wild is calling, <br />
-                <span className="text-orange-500">answer it.</span>
-              </h1>
-              <p className="text-white/40 font-medium leading-relaxed">
-                Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
-              </p>
-            </div>
-
-
-          {message && (
-            <div
-              className={`mb-8 px-5 py-4 rounded-2xl text-sm font-semibold flex items-center gap-3 ${
-                message.type === "error"
-                  ? "bg-red-500/10 border border-red-500/20 text-red-400"
-                  : "bg-green-500/10 border border-green-500/20 text-green-400"
-              }`}
-            >
-              <div className={`w-2 h-2 rounded-full ${message.type === "error" ? "bg-red-500" : "bg-green-500 animate-pulse"}`} />
-              {message.text}
-            </div>
-          )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Full Name</label>
                 <input
