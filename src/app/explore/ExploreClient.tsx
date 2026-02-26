@@ -517,7 +517,7 @@ export default function ExploreClient() {
                   <div className="flex flex-col gap-2">
                       {/* Season buttons row */}
                         <div className="flex flex-wrap gap-2">
-                          {seasons.map(({ label, months: sMonths, iconName }) => {
+                          {seasons.map(({ label, months: sMonths }) => {
                             const isExpanded = expandedSeason === label;
                             const hasSelected = sMonths.some((m) => selectedMonths.includes(m));
                             const selectedCount = sMonths.filter((m) => selectedMonths.includes(m)).length;
@@ -531,7 +531,6 @@ export default function ExploreClient() {
                                       : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                   }`}
                                 >
-                                  {SEASON_ICONS[iconName]}
                                   {label}
 
 
