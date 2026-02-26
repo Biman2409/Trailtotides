@@ -413,45 +413,37 @@ export default function ExploreClient() {
                       Region
                     </h3>
                     {(() => {
-                        const regionGroups: { name: Region; icon: React.ReactNode; subRegions: string[] }[] = [
+                        const regionGroups: { name: Region; subRegions: string[] }[] = [
                           {
                             name: "Himalayas",
-                            icon: <Mountain className="w-3.5 h-3.5" />,
                             subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
                           },
                           {
                               name: "Western Ghats",
-                              icon: <Trees className="w-3.5 h-3.5" />,
                             subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"],
                             },
                             {
                                   name: "Eastern Ghats",
-                                  icon: <Mountain className="w-3.5 h-3.5" />,
                               subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"],
                             },
                             {
                               name: "Desert",
-                                icon: <Sun className="w-3.5 h-3.5" />,
                                 subRegions: ["Rajasthan", "Gujarat"],
                             },
                           {
                             name: "Coast",
-                            icon: <Waves className="w-3.5 h-3.5" />,
                             subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"],
                           },
                           {
                             name: "Islands",
-                            icon: <Palmtree className="w-3.5 h-3.5" />,
                             subRegions: ["Andaman & Nicobar", "Lakshadweep"],
                           },
                               {
                                 name: "Northeast",
-                                icon: <Sunrise className="w-3.5 h-3.5" />,
                               subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"],
                             },
                             {
                               name: "Urban",
-                              icon: <Building2 className="w-3.5 h-3.5" />,
                               subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"],
                             },
                           ];
