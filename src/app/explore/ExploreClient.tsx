@@ -703,52 +703,55 @@ export default function ExploreClient() {
                   </h3>
                   <div className="flex flex-col gap-2">
                     {/* Season buttons row */}
-                    <div className="flex flex-wrap gap-2">
-                      {seasons.map(({ label, months: sMonths, activeColor, idleColor }) => {
-                        const isExpanded = expandedSeason === label;
-                        const hasSelected = sMonths.some((m) => selectedMonths.includes(m));
-                        const selectedCount = sMonths.filter((m) => selectedMonths.includes(m)).length;
-                        return (
-                            <button
-                              key={label}
-                              onClick={() => setExpandedSeason(isExpanded ? null : label)}
-                              className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
-                                isExpanded || hasSelected ? activeColor : idleColor
-                              }`}
-                            >
-                              {label}
-
-                            {hasSelected && (
-                              <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
-                                {selectedCount}
-                              </span>
-                            )}
-                            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                          </button>
-                        );
-                      })}
-                    </div>
-                    {/* Expanded month chips */}
-                    {expandedSeason && (() => {
-                      const season = seasons.find((s) => s.label === expandedSeason)!;
-                      return (
-                        <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
-                          <div className="flex flex-wrap gap-2">
-                            {season.months.map((m) => (
+                      <div className="flex flex-wrap gap-2">
+                        {seasons.map(({ label, months: sMonths }) => {
+                          const isExpanded = expandedSeason === label;
+                          const hasSelected = sMonths.some((m) => selectedMonths.includes(m));
+                          const selectedCount = sMonths.filter((m) => selectedMonths.includes(m)).length;
+                          return (
                               <button
-                                key={m}
-                                onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                                  selectedMonths.includes(m) ? season.activeColor : season.idleColor
+                                key={label}
+                                onClick={() => setExpandedSeason(isExpanded ? null : label)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                                  isExpanded || hasSelected 
+                                    ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
+                                    : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                 }`}
                               >
-                                {m}
-                              </button>
-                            ))}
+                                {label}
+
+                              {hasSelected && (
+                                <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
+                                  {selectedCount}
+                                </span>
+                              )}
+                              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                            </button>
+                          );
+                        })}
+                      </div>
+                      {/* Expanded month chips */}
+                      {expandedSeason && (() => {
+                        return (
+                          <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                            <div className="flex flex-wrap gap-2">
+                              {seasons.find((s) => s.label === expandedSeason)!.months.map((m) => (
+                                <button
+                                  key={m}
+                                  onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
+                                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                    selectedMonths.includes(m) 
+                                      ? "bg-[#ff6b35] text-white" 
+                                      : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                                  }`}
+                                >
+                                  {m}
+                                </button>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })()}
+                        );
+                      })()}
                   </div>
                 </div>
 
