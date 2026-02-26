@@ -69,8 +69,8 @@ export default function AboutPage() {
         </div>
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="flex items-center gap-2 mb-6">
-            <Mountain className="w-5 h-5 text-[#f67345]" />
-            <p className="text-[#f67345] text-xs font-semibold tracking-[0.22em] uppercase">
+            <Mountain className="w-5 h-5 text-[#ff6b35]" />
+            <p className="text-[#ff6b35] text-xs font-semibold tracking-[0.22em] uppercase">
               About Trail to Tides
             </p>
           </div>
@@ -86,7 +86,7 @@ export default function AboutPage() {
       {/* Origin */}
       <section className="py-20 px-6 lg:px-8 bg-[#1a1f2e] border-t border-white/6">
         <div className="max-w-4xl mx-auto">
-          <p className="text-[#f67345] text-xs font-semibold tracking-[0.22em] uppercase mb-4">
+          <p className="text-[#ff6b35] text-xs font-semibold tracking-[0.22em] uppercase mb-4">
             The Origin
           </p>
           <div className="space-y-6 text-white/65 text-lg leading-relaxed font-light">
@@ -106,7 +106,7 @@ export default function AboutPage() {
       {/* Values */}
       <section className="py-20 lg:py-28 px-6 lg:px-8 bg-[#111820] border-t border-white/6">
         <div className="max-w-7xl mx-auto">
-          <p className="text-[#f67345] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+          <p className="text-[#ff6b35] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
             What We Stand For
           </p>
           <h2 className="text-white text-4xl font-bold tracking-tight mb-14">Our values</h2>
@@ -114,10 +114,10 @@ export default function AboutPage() {
             {VALUES.map((v) => (
               <div
                 key={v.title}
-                className="bg-white/4 border border-white/8 rounded-2xl p-6 hover:border-[#f67345]/30 hover:bg-white/6 transition-all duration-300"
+                className="bg-white/4 border border-white/8 rounded-2xl p-6 hover:border-[#ff6b35]/30 hover:bg-white/6 transition-all duration-300"
               >
-                <div className="w-10 h-10 rounded-xl bg-[#f67345]/15 flex items-center justify-center mb-4">
-                  <v.icon className="w-5 h-5 text-[#f67345]" />
+                <div className="w-10 h-10 rounded-xl bg-[#ff6b35]/15 flex items-center justify-center mb-4">
+                  <v.icon className="w-5 h-5 text-[#ff6b35]" />
                 </div>
                 <h3 className="text-white font-semibold text-base mb-2">{v.title}</h3>
                 <p className="text-white/45 text-sm leading-relaxed">{v.description}</p>
@@ -130,7 +130,7 @@ export default function AboutPage() {
       {/* Team */}
       <section className="py-20 lg:py-28 px-6 lg:px-8 bg-[#1a1f2e] border-t border-white/6">
         <div className="max-w-7xl mx-auto">
-          <p className="text-[#f67345] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+          <p className="text-[#ff6b35] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
             The Team
           </p>
           <h2 className="text-white text-4xl font-bold tracking-tight mb-3">
@@ -142,11 +142,11 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TEAM.map((member) => (
               <div key={member.name} className="bg-white/4 border border-white/8 rounded-2xl p-7">
-                <div className="w-14 h-14 rounded-2xl bg-[#f67345]/20 flex items-center justify-center text-2xl font-bold text-[#f67345] mb-5">
+                <div className="w-14 h-14 rounded-2xl bg-[#ff6b35]/20 flex items-center justify-center text-2xl font-bold text-[#ff6b35] mb-5">
                   {member.initial}
                 </div>
                 <h3 className="text-white font-semibold text-lg mb-1">{member.name}</h3>
-                <p className="text-[#f67345] text-xs font-medium mb-4">{member.role}</p>
+                <p className="text-[#ff6b35] text-xs font-medium mb-4">{member.role}</p>
                 <p className="text-white/50 text-sm leading-relaxed mb-4">{member.bio}</p>
                 <p className="text-white/25 text-xs border-t border-white/8 pt-4">{member.adventures}</p>
               </div>
@@ -166,7 +166,7 @@ export default function AboutPage() {
               { value: "2026", label: "Year founded" },
             ].map(({ value, label }) => (
               <div key={label} className="text-center">
-                <div className="text-[#f67345] text-5xl font-bold mb-2">{value}</div>
+                <div className="text-[#ff6b35] text-5xl font-bold mb-2">{value}</div>
                 <div className="text-white/40 text-sm">{label}</div>
               </div>
             ))}
@@ -186,7 +186,7 @@ export default function AboutPage() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/explore"
-              className="inline-flex items-center gap-2 bg-[#f67345] hover:bg-[#f88c64] text-white font-semibold px-8 py-4 rounded-xl text-base group transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#f67345]/25"
+              className="inline-flex items-center gap-2 bg-[#ff6b35] hover:bg-[#ff8e64] text-white font-semibold px-8 py-4 rounded-xl text-base group transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff6b35]/25"
             >
               Explore Adventures
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

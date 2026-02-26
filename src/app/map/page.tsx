@@ -27,8 +27,8 @@ const typeEmoji: Record<AdventureType, string> = {
 const difficultyColor: Record<string, string> = {
   Beginner:     "#22c55e",  // green
   Intermediate: "#3b82f6",  // blue
-  Advanced:     "#f88c64",  // soothing orange light
-  Expert:       "#f67345",  // soothing orange
+  Advanced:     "#ff8e64",  // soothing orange light
+  Expert:       "#ff6b35",  // soothing orange
   Extreme:      "#ef4444",  // red
 };
 
@@ -37,7 +37,7 @@ const seasons: { label: string; icon: string; months: Month[]; activeColor: stri
   { label: "Spring",  months: ["Mar", "Apr", "May"],         activeColor: "bg-pink-500 text-white",   idleColor: "bg-pink-50 text-pink-800 hover:bg-pink-100 border border-pink-200" },
   { label: "Summer",  months: ["Apr", "May", "Jun"],         activeColor: "bg-amber-500 text-white",  idleColor: "bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200" },
   { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"],  activeColor: "bg-teal-600 text-white",   idleColor: "bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-200" },
-  { label: "Autumn",  months: ["Oct", "Nov", "Dec"],         activeColor: "bg-[#f67345] text-white", idleColor: "bg-[#f67345]/5 text-[#9c4a2f] hover:bg-[#f67345]/10 border border-[#f67345]/20" },
+  { label: "Autumn",  months: ["Oct", "Nov", "Dec"],         activeColor: "bg-[#ff6b35] text-white", idleColor: "bg-[#ff6b35]/5 text-[#9c4a2f] hover:bg-[#ff6b35]/10 border border-[#ff6b35]/20" },
 ];
 
 type NominatimResult = {
@@ -122,7 +122,7 @@ function PlaceSearch({ onSelect }: { onSelect: (lat: number, lng: number, name: 
   return (
     <div ref={wrapperRef} className="relative w-full max-w-xs">
       <div className="relative">
-        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#f67345]" />
+        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#ff6b35]" />
         {loading && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#9a9590] animate-spin" />}
         {!loading && query && (
           <button onClick={() => { setQuery(""); setResults([]); setOpen(false); }} className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -134,7 +134,7 @@ function PlaceSearch({ onSelect }: { onSelect: (lat: number, lng: number, name: 
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => results.length > 0 && setOpen(true)}
           placeholder="Go to a place…"
-          className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#f5f0e8] text-[#1a1f2e] text-sm placeholder-[#9a9590] border border-transparent focus:outline-none focus:border-[#f67345] transition-colors"
+          className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#f5f0e8] text-[#1a1f2e] text-sm placeholder-[#9a9590] border border-transparent focus:outline-none focus:border-[#ff6b35] transition-colors"
         />
       </div>
       {open && (
@@ -145,7 +145,7 @@ function PlaceSearch({ onSelect }: { onSelect: (lat: number, lng: number, name: 
                 onMouseDown={() => handleSelect(r)}
                 className="w-full text-left px-3 py-2.5 hover:bg-[#f5f0e8] flex items-start gap-2"
               >
-                <MapPin className="w-3.5 h-3.5 text-[#f67345] mt-0.5 shrink-0" />
+                <MapPin className="w-3.5 h-3.5 text-[#ff6b35] mt-0.5 shrink-0" />
                 <span className="text-[#1a1f2e] leading-snug line-clamp-2">{r.display_name}</span>
               </button>
             </li>
@@ -370,7 +370,7 @@ export default function MapPage() {
             <SlidersHorizontal className="w-4 h-4" />
             Filters
             {activeFilterCount > 0 && (
-              <span className="bg-[#f67345] text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
+              <span className="bg-[#ff6b35] text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
                 {activeFilterCount}
               </span>
             )}
@@ -384,7 +384,7 @@ export default function MapPage() {
           {(activeFilterCount > 0 || search) && (
             <button
               onClick={clearAll}
-              className="flex items-center gap-1.5 text-sm text-[#f67345] hover:text-[#f88c64] font-medium"
+              className="flex items-center gap-1.5 text-sm text-[#ff6b35] hover:text-[#ff8e64] font-medium"
             >
               <X className="w-3.5 h-3.5" />
               Clear
@@ -404,10 +404,10 @@ export default function MapPage() {
                     const categories = [
                       {
                         label: "Land Based", 
-                        btn: "bg-[#f67345]/5 border-[#f67345]/20 text-[#9c4a2f] hover:bg-[#f67345]/10",
-                        btnActive: "bg-[#f67345] text-white border-[#f67345]",
-                        chip: "bg-[#f67345]/10 text-orange-900 hover:bg-[#f67345]/20",
-                        chipActive: "bg-[#f67345] text-white",
+                        btn: "bg-[#ff6b35]/5 border-[#ff6b35]/20 text-[#9c4a2f] hover:bg-[#ff6b35]/10",
+                        btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                        chip: "bg-[#ff6b35]/10 text-orange-900 hover:bg-[#ff6b35]/20",
+                        chipActive: "bg-[#ff6b35] text-white",
                         types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
                       },
                       {
@@ -464,7 +464,7 @@ export default function MapPage() {
                           return (
                             <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
                               {cat.types.length === 0 ? (
-                                <p className="text-xs text-[#f67345] italic">Coming soon</p>
+                                <p className="text-xs text-[#ff6b35] italic">Coming soon</p>
                               ) : (
                                 <div className="flex flex-wrap gap-2">
                                   {cat.types.map((type) => {
@@ -497,7 +497,7 @@ export default function MapPage() {
                     const regionGroups: { name: Region; icon: React.ReactNode; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
                       { name: "Himalayas",     btn: "bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100", btnActive: "bg-emerald-700 text-white border-emerald-700", chip: "bg-emerald-100 text-emerald-900 hover:bg-emerald-200", chipActive: "bg-emerald-700 text-white", subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
                       { name: "Western Ghats", btn: "bg-lime-50 border-lime-200 text-lime-800 hover:bg-lime-100",             btnActive: "bg-lime-600 text-white border-lime-600",     chip: "bg-lime-100 text-lime-900 hover:bg-lime-200",         chipActive: "bg-lime-600 text-white",     subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"] },
-                      { name: "Eastern Ghats", btn: "bg-[#f67345]/5 border-[#f67345]/20 text-[#9c4a2f] hover:bg-[#f67345]/10",     btnActive: "bg-[#f67345] text-white border-[#f67345]", chip: "bg-[#f67345]/10 text-orange-900 hover:bg-[#f67345]/20",   chipActive: "bg-[#f67345] text-white",   subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"] },
+                      { name: "Eastern Ghats", btn: "bg-[#ff6b35]/5 border-[#ff6b35]/20 text-[#9c4a2f] hover:bg-[#ff6b35]/10",     btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]", chip: "bg-[#ff6b35]/10 text-orange-900 hover:bg-[#ff6b35]/20",   chipActive: "bg-[#ff6b35] text-white",   subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"] },
                       { name: "Desert",        btn: "bg-yellow-50 border-yellow-200 text-yellow-800 hover:bg-yellow-100",     btnActive: "bg-yellow-500 text-white border-yellow-500", chip: "bg-yellow-100 text-yellow-900 hover:bg-yellow-200",   chipActive: "bg-yellow-500 text-white",   subRegions: ["Rajasthan", "Gujarat"] },
                       { name: "Coast",         btn: "bg-cyan-50 border-cyan-200 text-cyan-800 hover:bg-cyan-100",             btnActive: "bg-cyan-600 text-white border-cyan-600",     chip: "bg-cyan-100 text-cyan-900 hover:bg-cyan-200",         chipActive: "bg-cyan-600 text-white",     subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
                       { name: "Islands",       btn: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100",             btnActive: "bg-teal-600 text-white border-teal-600",     chip: "bg-teal-100 text-teal-900 hover:bg-teal-200",         chipActive: "bg-teal-600 text-white",     subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
@@ -587,9 +587,9 @@ export default function MapPage() {
                     {([
                       { val: "Beginner",     idle: "bg-green-50 border-green-200 text-green-800 hover:bg-green-100 border",     active: "bg-green-600 text-white border border-green-600" },
                       { val: "Intermediate", idle: "bg-blue-50 border-blue-200 text-blue-800 hover:bg-blue-100 border",         active: "bg-blue-600 text-white border border-blue-600" },
-                        { val: "Advanced",     idle: "bg-[#f88c64]/5 border-[#f88c64]/20 text-[#9c4a2f] hover:bg-[#f88c64]/10 border",     active: "bg-[#f88c64] text-white border border-[#f88c64]" },
+                        { val: "Advanced",     idle: "bg-[#ff8e64]/5 border-[#ff8e64]/20 text-[#9c4a2f] hover:bg-[#ff8e64]/10 border",     active: "bg-[#ff8e64] text-white border border-[#ff8e64]" },
 
-                      { val: "Expert",       idle: "bg-[#f67345]/5 border-[#f67345]/20 text-[#9c4a2f] hover:bg-[#f67345]/10 border", active: "bg-[#f67345] text-white border border-[#f67345]" },
+                      { val: "Expert",       idle: "bg-[#ff6b35]/5 border-[#ff6b35]/20 text-[#9c4a2f] hover:bg-[#ff6b35]/10 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
                       { val: "Extreme",      idle: "bg-red-50 border-red-200 text-red-800 hover:bg-red-100 border",             active: "bg-red-600 text-white border border-red-600" },
                       ] as { val: Difficulty; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
                         <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}

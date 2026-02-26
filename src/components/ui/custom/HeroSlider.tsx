@@ -205,7 +205,7 @@ export default function HeroSlider() {
             {i === current && (
               <span
                 key={progressKey}
-                className="absolute inset-y-0 left-0 w-full rounded-full bg-[#f67345]"
+                className="absolute inset-y-0 left-0 w-full rounded-full bg-[#ff6b35]"
                 style={{
                   transform:       "scaleX(0)",
                   transformOrigin: "left",

@@ -118,7 +118,7 @@ html {
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #f67345;
+  background: #ff6b35;
 }
 
 /* Hide Next.js error overlay portal */
@@ -137,13 +137,13 @@ main, .page-enter {
 
 /* ── Text selection ──────────────────────────────────────── */
 ::selection {
-  background: #f6734533;
+  background: #ff6b3533;
   color: #1a1f2e;
 }
 
 /* ── Focus ring ──────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid #f67345;
+  outline: 2px solid #ff6b35;
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -189,5 +189,5 @@ button:not([class*="transition"]) {
   transition: background 0.2s !important;
 }
 .leaflet-control-zoom a:hover {
-  background: #f67345 !important;
+  background: #ff6b35 !important;
 }

@@ -19,7 +19,7 @@ export default function StoriesPage() {
       {/* Hero */}
       <section className="pt-32 pb-16 px-6 lg:px-8 bg-[#1a1f2e]">
         <div className="max-w-7xl mx-auto">
-          <p className="text-[#f67345] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+          <p className="text-[#ff6b35] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
             From the Field
           </p>
           <h1 className="text-white text-5xl lg:text-7xl font-semibold tracking-tight leading-none mb-4">
@@ -48,12 +48,12 @@ export default function StoriesPage() {
                 {/* Badge pills (Featured, TTT Original) */}
                   <div className="flex items-center gap-2 mb-2">
                     {featured.tags.includes("Featured") && (
-                      <span className="flex items-center gap-1.5 bg-black text-[#f67345] text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#f67345]/20">
+                      <span className="flex items-center gap-1.5 bg-black text-[#ff6b35] text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#ff6b35]/20">
                         <Crown className="w-3 h-3" /> Featured
                       </span>
                     )}
                       {featured.tags.includes("TTT Original") && (
-                        <span className="flex items-center gap-1.5 bg-[#f67345] text-black text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#f67345]/20">
+                        <span className="flex items-center gap-1.5 bg-[#ff6b35] text-black text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#ff6b35]/20">
                           <Mountain className="w-3 h-3" /> TTT Original
                         </span>
                       )}
@@ -73,7 +73,7 @@ export default function StoriesPage() {
                   {featured.excerpt}
                 </p>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <div className="w-8 h-8 rounded-full bg-[#f67345]/40 flex items-center justify-center text-xs font-bold text-white flex-shrink-0 shadow-md shadow-[#f67345]/20">
+                  <div className="w-8 h-8 rounded-full bg-[#ff6b35]/40 flex items-center justify-center text-xs font-bold text-white flex-shrink-0 shadow-md shadow-[#ff6b35]/20">
                     {featured.author[0]}
                   </div>
                   <div className="mr-2">
@@ -117,7 +117,7 @@ export default function StoriesPage() {
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-[#1a1f2e] text-xl font-semibold leading-snug mb-2 group-hover:text-[#f67345] transition-colors">
+                  <h3 className="text-[#1a1f2e] text-xl font-semibold leading-snug mb-2 group-hover:text-[#ff6b35] transition-colors">
                     {story.title}
                   </h3>
                   <p className="text-[#6b6560] text-sm leading-relaxed line-clamp-2 mb-4">

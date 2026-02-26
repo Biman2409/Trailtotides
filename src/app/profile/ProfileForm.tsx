@@ -41,13 +41,13 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
           Full Name
         </label>
         <div className="relative group">
-          <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#f88c64] transition-colors" />
+          <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff8e64] transition-colors" />
           <input
             name="fullName"
             type="text"
             defaultValue={profile.full_name || ""}
             placeholder="e.g. John Doe"
-            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-white placeholder-white/20 focus:outline-none focus:border-[#f67345]/50 focus:ring-4 focus:ring-[#f67345]/5 transition-all"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-white placeholder-white/20 focus:outline-none focus:border-[#ff6b35]/50 focus:ring-4 focus:ring-[#ff6b35]/5 transition-all"
             required
           />
         </div>
@@ -77,13 +77,13 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
           Phone Number
         </label>
         <div className="relative group">
-          <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#f88c64] transition-colors" />
+          <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff8e64] transition-colors" />
           <input
             name="phone"
             type="tel"
             defaultValue={profile.phone || ""}
             placeholder="e.g. +91 9876543210"
-            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-white placeholder-white/20 focus:outline-none focus:border-[#f67345]/50 focus:ring-4 focus:ring-[#f67345]/5 transition-all"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-white placeholder-white/20 focus:outline-none focus:border-[#ff6b35]/50 focus:ring-4 focus:ring-[#ff6b35]/5 transition-all"
           />
         </div>
       </div>
@@ -102,7 +102,7 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
         <button
           type="submit"
           disabled={loading}
-          className="flex items-center gap-2 bg-[#d84315] hover:bg-[#f67345] text-white px-8 py-3 rounded-2xl text-sm font-bold tracking-tight shadow-xl shadow-[#d84315]/20 transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100"
+          className="flex items-center gap-2 bg-[#d84315] hover:bg-[#ff6b35] text-white px-8 py-3 rounded-2xl text-sm font-bold tracking-tight shadow-xl shadow-[#d84315]/20 transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100"
         >
           {loading ? (
             <>

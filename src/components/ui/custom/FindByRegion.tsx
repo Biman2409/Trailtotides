@@ -42,8 +42,8 @@ const regionSubtitles: Record<string, string> = {
 const regionTitleIcons: Record<string, React.ReactNode> = {
   "Himalayas": <Mountain className="w-6 h-6 text-white/90" />,
   "Western Ghats": <Trees className="w-6 h-6 text-emerald-400" />,
-  "Eastern Ghats": <Mountain className="w-6 h-6 text-[#f67345]" />,
-  "Desert": <Sun className="w-6 h-6 text-[#f67345]" />,
+  "Eastern Ghats": <Mountain className="w-6 h-6 text-[#ff6b35]" />,
+  "Desert": <Sun className="w-6 h-6 text-[#ff6b35]" />,
   "Coast": <Waves className="w-6 h-6 text-cyan-400" />,
   "Islands": <Palmtree className="w-6 h-6 text-teal-400" />,
   "Northeast": <Mountain className="w-6 h-6 text-violet-400" />,
@@ -78,7 +78,7 @@ export default function FindByRegion() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
           <div className="mb-12">
-            <p className="text-[#f67345] text-xs font-semibold tracking-[0.22em] mb-3">
+            <p className="text-[#ff6b35] text-xs font-semibold tracking-[0.22em] mb-3">
               Discover by Region
             </p>
           <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
@@ -87,7 +87,7 @@ export default function FindByRegion() {
           <p className="mt-4 text-white/50 text-base max-w-xl">
             Pick a region, and let the journey begin.
           </p>
-          <div className="mt-5 w-14 h-0.5 bg-[#f67345] rounded-full" />
+          <div className="mt-5 w-14 h-0.5 bg-[#ff6b35] rounded-full" />
         </div>
 
         {/* Grid */}
@@ -130,7 +130,7 @@ export default function FindByRegion() {
                           <span
                             className="text-xs font-semibold px-2.5 py-1 rounded-full"
                             style={{
-                              background: isOpen ? "#f67345" : "rgba(255,255,255,0.12)",
+                              background: isOpen ? "#ff6b35" : "rgba(255,255,255,0.12)",
                               color: "white",
                               backdropFilter: "blur(6px)",
                               transition: "background 0.25s",
@@ -167,7 +167,7 @@ export default function FindByRegion() {
                             {region.items.length} Categories
                           </span>
                           <span
-                            className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#f67345]/15 text-[#f67345]"
+                            className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#ff6b35]/15 text-[#ff6b35]"
                           >
                             {region.adventureCount} Adventures
                           </span>
@@ -183,7 +183,7 @@ export default function FindByRegion() {
                               <Link
                                 key={label}
                                 href={`/explore?region=${encodeURIComponent(region.name)}&subRegion=${encodeURIComponent(label)}`}
-                                className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150 hover:bg-[#f67345]/10"
+                                className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150 hover:bg-[#ff6b35]/10"
                               >
                                 <div className="flex items-center gap-2.5">
                                   <span className="text-white/70 group-hover/row:text-white text-sm font-medium transition-colors duration-150">
@@ -191,11 +191,11 @@ export default function FindByRegion() {
                                   </span>
                                 </div>
                               <div className="flex items-center gap-2">
-                                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#f67345]/15 text-[#f67345]">
+                                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#ff6b35]/15 text-[#ff6b35]">
                                   {count}
                                 </span>
                                 <ArrowRight
-                                  className="w-3 h-3 opacity-0 group-hover/row:opacity-100 -translate-x-1 group-hover/row:translate-x-0 transition-all duration-150 text-[#f67345]"
+                                  className="w-3 h-3 opacity-0 group-hover/row:opacity-100 -translate-x-1 group-hover/row:translate-x-0 transition-all duration-150 text-[#ff6b35]"
                                 />
                               </div>
                             </Link>
@@ -205,7 +205,7 @@ export default function FindByRegion() {
                       <div className="mt-4 pt-4 border-t border-white/5">
                         <Link
                           href={`/explore?region=${encodeURIComponent(region.name)}`}
-                          className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 hover:-translate-y-0.5 bg-[#f67345] text-white shadow-lg shadow-[#f67345]/20"
+                          className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 hover:-translate-y-0.5 bg-[#ff6b35] text-white shadow-lg shadow-[#ff6b35]/20"
                         >
                           View all in {region.name}
                           <ArrowRight className="w-3.5 h-3.5" />

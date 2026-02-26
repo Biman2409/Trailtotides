@@ -85,7 +85,7 @@ export default function ChatBubble() {
         <button
           onClick={() => setOpen((v) => !v)}
           className={`fixed bottom-6 right-6 z-50 flex items-center justify-center text-white w-14 h-14 rounded-full shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl active:translate-y-0 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
-          style={{ background: open ? "#d84315" : "#f67345", boxShadow: "0 4px 20px rgba(244,132,95,0.45)", transition: "opacity 0.4s ease, transform 0.4s ease, background 0.2s" }}
+          style={{ background: open ? "#d84315" : "#ff6b35", boxShadow: "0 4px 20px rgba(244,132,95,0.45)", transition: "opacity 0.4s ease, transform 0.4s ease, background 0.2s" }}
           aria-label="Open Compass AI"
         >
           {open ? <X className="w-6 h-6" /> : <HelpCircle className="w-6 h-6" />}
@@ -99,7 +99,7 @@ export default function ChatBubble() {
           {/* Header */}
             <div
               className="px-4 py-3.5 flex items-center gap-3"
-              style={{ background: "#f67345" }}
+              style={{ background: "#ff6b35" }}
             >
               <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center flex-shrink-0">
                 <HelpCircle className="w-5 h-5 text-white" />
@@ -131,7 +131,7 @@ export default function ChatBubble() {
                           ? "text-white rounded-br-sm"
                           : "bg-white/6 border border-white/8 text-white/85 rounded-bl-sm"
                       }`}
-                      style={msg.role === "user" ? { background: "#f67345" } : {}}
+                      style={msg.role === "user" ? { background: "#ff6b35" } : {}}
                     >
                       {msg.content}
                     </div>
@@ -145,7 +145,7 @@ export default function ChatBubble() {
                           <Link
                             key={ci}
                             href={`/experiences/${card.slug}`}
-                            className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-[#f67345]/30 rounded-xl overflow-hidden transition-all group"
+                            className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-[#ff6b35]/30 rounded-xl overflow-hidden transition-all group"
                           >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -166,7 +166,7 @@ export default function ChatBubble() {
                                 </p>
                               )}
                             </div>
-                            <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#f67345] self-center mr-2 flex-shrink-0 transition-colors" />
+                            <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#ff6b35] self-center mr-2 flex-shrink-0 transition-colors" />
                           </Link>
                         );
                       })}
@@ -179,7 +179,7 @@ export default function ChatBubble() {
             {loading && (
               <div className="flex justify-start">
                 <div className="bg-white/6 border border-white/8 px-3.5 py-2.5 rounded-xl rounded-bl-sm flex items-center gap-2">
-                  <Loader2 className="w-3.5 h-3.5 text-[#f67345] animate-spin" />
+                  <Loader2 className="w-3.5 h-3.5 text-[#ff6b35] animate-spin" />
                   <span className="text-white/50 text-sm">Finding adventures…</span>
                 </div>
               </div>
@@ -194,13 +194,13 @@ export default function ChatBubble() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
               placeholder="Ask me anything about adventures…"
-              className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/25 text-sm px-3.5 py-2.5 rounded-xl outline-none focus:border-[#f67345]/60 focus:ring-1 focus:ring-[#f67345]/25 transition-all"
+              className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/25 text-sm px-3.5 py-2.5 rounded-xl outline-none focus:border-[#ff6b35]/60 focus:ring-1 focus:ring-[#ff6b35]/25 transition-all"
             />
             <button
               onClick={send}
               disabled={!input.trim() || loading}
               className="disabled:opacity-30 disabled:cursor-not-allowed text-white p-2.5 rounded-xl transition-all hover:brightness-110 active:scale-95"
-              style={{ background: "#f67345" }}
+              style={{ background: "#ff6b35" }}
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />

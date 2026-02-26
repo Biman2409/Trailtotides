@@ -36,8 +36,8 @@ function loadLeaflet(): Promise<any> {
 }
 
 const difficultyColor: Record<string, string> = {
-  Beginner: "#22c55e", Intermediate: "#3b82f6", Advanced: "#f88c64",
-  Expert: "#f67345", Extreme: "#ef4444",
+  Beginner: "#22c55e", Intermediate: "#3b82f6", Advanced: "#ff8e64",
+  Expert: "#ff6b35", Extreme: "#ef4444",
 };
 
 const typeEmoji: Partial<Record<AdventureType, string>> = {
@@ -140,7 +140,7 @@ const seasons: { label: string; icon: React.ReactNode; months: Month[]; color: s
   { label: "Spring",  months: ["Mar", "Apr", "May"],      color: "text-pink-600",   activeColor: "bg-pink-500 text-white",   idleColor: "bg-pink-50 text-pink-800 hover:bg-pink-100 border border-pink-200" },
   { label: "Summer",  months: ["Apr", "May", "Jun"],      color: "text-amber-600",  activeColor: "bg-amber-500 text-white",  idleColor: "bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200" },
   { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"], color: "text-teal-600", activeColor: "bg-teal-600 text-white",   idleColor: "bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-200" },
-    { label: "Autumn",  months: ["Oct", "Nov", "Dec"],      color: "text-[#f67345]", activeColor: "bg-[#f67345] text-white", idleColor: "bg-[#f67345]/5 text-[#f67345] hover:bg-[#f67345]/10 border border-[#f67345]/20" },
+    { label: "Autumn",  months: ["Oct", "Nov", "Dec"],      color: "text-[#ff6b35]", activeColor: "bg-[#ff6b35] text-white", idleColor: "bg-[#ff6b35]/5 text-[#ff6b35] hover:bg-[#ff6b35]/10 border border-[#ff6b35]/20" },
 ];
 
 
@@ -266,7 +266,7 @@ export default function ExploreClient() {
       {/* Page header */}
       <div className="bg-[#1a1f2e] pt-28 pb-14 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <p className="text-[#f67345] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+        <p className="text-[#ff6b35] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
           Discover
         </p>
 
@@ -305,7 +305,7 @@ export default function ExploreClient() {
                 <SlidersHorizontal className="w-4 h-4" />
                 Filters
                 {activeFilterCount > 0 && (
-                  <span className="bg-[#f67345] text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
+                  <span className="bg-[#ff6b35] text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
                     {activeFilterCount}
                   </span>
                 )}
@@ -317,8 +317,8 @@ export default function ExploreClient() {
                 onClick={() => { setAiOpen(!aiOpen); setFiltersOpen(false); }}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     aiOpen
-                      ? "bg-[#f67345] text-white"
-                      : "bg-[#f67345] text-white hover:bg-[#f88c64]"
+                      ? "bg-[#ff6b35] text-white"
+                      : "bg-[#ff6b35] text-white hover:bg-[#ff8e64]"
                   }`}
               >
                 <Compass className="w-4 h-4" />
@@ -336,7 +336,7 @@ export default function ExploreClient() {
             {(activeFilterCount > 0 || search) && (
               <button
                 onClick={clearAll}
-                className="flex items-center gap-1.5 text-sm text-[#f67345] hover:text-[#f88c64] font-medium"
+                className="flex items-center gap-1.5 text-sm text-[#ff6b35] hover:text-[#ff8e64] font-medium"
               >
                 <X className="w-3.5 h-3.5" />
                 Clear
@@ -361,7 +361,7 @@ export default function ExploreClient() {
                                       ? "text-white rounded-br-sm"
                                       : "bg-white/6 border border-white/8 text-white/80 rounded-bl-sm"
                                   }`}
-                                  style={msg.role === "user" ? { background: "#f67345" } : {}}
+                                  style={msg.role === "user" ? { background: "#ff6b35" } : {}}
                                 >
                                   {msg.content}
                                 </div>
@@ -381,10 +381,10 @@ export default function ExploreClient() {
                                         <div className="p-3 flex-1 min-w-0">
                                           <p className="text-white text-xs font-semibold tracking-tight">{card.name}</p>
                                           <p className="text-white/40 text-xs mt-0.5 uppercase tracking-wide">{card.state} · {card.type} · {card.difficulty}</p>
-                                          {rec?.reason && <p className="text-[#f67345] text-xs mt-1 line-clamp-1">{rec.reason}</p>}
+                                          {rec?.reason && <p className="text-[#ff6b35] text-xs mt-1 line-clamp-1">{rec.reason}</p>}
                                         </div>
                                         <div className="flex items-center pr-3">
-                                          <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#f67345] transition-colors" />
+                                          <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#ff6b35] transition-colors" />
                                         </div>
                                       </Link>
                                     );
@@ -397,7 +397,7 @@ export default function ExploreClient() {
                         {aiLoading && (
                           <div className="flex justify-start">
                             <div className="bg-white/6 border border-white/8 px-4 py-2.5 rounded-xl rounded-bl-sm flex items-center gap-2">
-                              <Loader2 className="w-3.5 h-3.5 text-[#f67345] animate-spin" />
+                              <Loader2 className="w-3.5 h-3.5 text-[#ff6b35] animate-spin" />
                               <span className="text-white/50 text-sm">Finding adventures…</span>
                             </div>
                           </div>
@@ -427,13 +427,13 @@ export default function ExploreClient() {
                         onChange={(e) => setAiInput(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && sendAi()}
                         placeholder="Describe what you're looking for — we'll match you with the right trip"
-                        className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#f67345]/50 transition-all"
+                        className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#ff6b35]/50 transition-all"
                       />
                       <button
                         onClick={() => sendAi()}
                         disabled={!aiInput.trim() || aiLoading}
                         className="disabled:opacity-30 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all hover:-translate-y-0.5"
-                        style={{ background: "#f67345" }}
+                        style={{ background: "#ff6b35" }}
                       >
                         <Send className="w-4 h-4" />
                         <span className="hidden sm:inline">Search</span>
@@ -459,10 +459,10 @@ export default function ExploreClient() {
                       const categories = [
                           {
                             label: "Land Based", 
-                            btn: "bg-[#f67345]/5 border-[#f67345]/20 text-[#9c4a2f] hover:bg-[#f67345]/10",
-                            btnActive: "bg-[#f67345] text-white border-[#f67345]",
-                            chip: "bg-[#f67345]/10 text-orange-900 hover:bg-[#f67345]/20",
-                            chipActive: "bg-[#f67345] text-white",
+                            btn: "bg-[#ff6b35]/5 border-[#ff6b35]/20 text-[#9c4a2f] hover:bg-[#ff6b35]/10",
+                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                            chip: "bg-[#ff6b35]/10 text-orange-900 hover:bg-[#ff6b35]/20",
+                            chipActive: "bg-[#ff6b35] text-white",
                             types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
                           },
 
@@ -585,9 +585,9 @@ export default function ExploreClient() {
                         {
                               name: "Eastern Ghats",
                                 
-                          btn: "bg-[#f67345]/5 border-[#f67345]/20 text-[#9c4a2f] hover:bg-[#f67345]/10",
+                          btn: "bg-[#ff6b35]/5 border-[#ff6b35]/20 text-[#9c4a2f] hover:bg-[#ff6b35]/10",
                           btnActive: "bg-[#d84315] text-white border-[#d84315]",
-                          chip: "bg-[#f67345]/10 text-orange-900 hover:bg-[#f67345]/20",
+                          chip: "bg-[#ff6b35]/10 text-orange-900 hover:bg-[#ff6b35]/20",
                           chipActive: "bg-[#d84315] text-white",
                           subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"],
                         },
@@ -821,7 +821,7 @@ export default function ExploreClient() {
               <span
                 key={t}
                 onClick={() => toggle(selectedTypes, t, setSelectedTypes)}
-                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#f67345]/15 hover:text-[#f67345] transition-colors"
+                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/15 hover:text-[#ff6b35] transition-colors"
               >
                 {t} <X className="w-3 h-3" />
               </span>
@@ -830,7 +830,7 @@ export default function ExploreClient() {
                 <span
                   key={r}
                   onClick={() => toggle(selectedRegions, r, setSelectedRegions)}
-                  className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#f67345]/15 hover:text-[#f67345] transition-colors"
+                  className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/15 hover:text-[#ff6b35] transition-colors"
                 >
                   {r} <X className="w-3 h-3" />
                 </span>
@@ -839,7 +839,7 @@ export default function ExploreClient() {
                 <span
                   key={sr}
                   onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
-                  className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#f67345]/15 hover:text-[#f67345] transition-colors"
+                  className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/15 hover:text-[#ff6b35] transition-colors"
                 >
                   {sr} <X className="w-3 h-3" />
                 </span>
@@ -848,7 +848,7 @@ export default function ExploreClient() {
               <span
                 key={d}
                 onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
-                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#f67345]/15 hover:text-[#f67345] transition-colors"
+                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/15 hover:text-[#ff6b35] transition-colors"
               >
                 {d} <X className="w-3 h-3" />
               </span>
@@ -857,7 +857,7 @@ export default function ExploreClient() {
               <span
                 key={d}
                 onClick={() => toggle(selectedDurations, d, setSelectedDurations)}
-                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#f67345]/15 hover:text-[#f67345] transition-colors"
+                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/15 hover:text-[#ff6b35] transition-colors"
               >
                 {d} <X className="w-3 h-3" />
               </span>
@@ -875,7 +875,7 @@ export default function ExploreClient() {
               <span
                 key={g}
                 onClick={() => toggle(selectedGroupSizes, g, setSelectedGroupSizes)}
-                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#f67345]/15 hover:text-[#f67345] transition-colors"
+                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/15 hover:text-[#ff6b35] transition-colors"
               >
                 {g} <X className="w-3 h-3" />
               </span>
@@ -913,7 +913,7 @@ export default function ExploreClient() {
           <div className="bg-[#1a1f2e] mt-16">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
-                <p className="text-[#f67345] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+                <p className="text-[#ff6b35] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
                   Explore the map
                 </p>
                 <h2 className="text-white text-4xl lg:text-5xl font-semibold tracking-tight">
@@ -925,7 +925,7 @@ export default function ExploreClient() {
               </div>
               <Link
                 href="/map"
-                className="inline-flex items-center gap-2.5 bg-[#f67345] hover:bg-[#f88c64] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap"
+                className="inline-flex items-center gap-2.5 bg-[#ff6b35] hover:bg-[#ff8e64] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap"
               >
                 <MapIcon className="w-4 h-4" />
                 Open full map

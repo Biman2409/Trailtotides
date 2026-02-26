@@ -39,7 +39,7 @@ export default function ContactPage() {
       {/* Header */}
       <section className="pt-32 pb-16 px-6 lg:px-8 bg-[#1a1f2e]">
         <div className="max-w-7xl mx-auto">
-          <p className="text-[#f67345] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+          <p className="text-[#ff6b35] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
             Get in Touch
           </p>
           <h1 className="text-white text-5xl lg:text-6xl font-bold tracking-tight mb-4">
@@ -63,8 +63,8 @@ export default function ContactPage() {
                   href="mailto:hello@trailtotides.com"
                   className="flex items-center gap-3 text-white/60 hover:text-white transition-colors group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center group-hover:border-[#f67345]/40 transition-colors">
-                    <Mail className="w-4 h-4 text-[#f67345]" />
+                  <div className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center group-hover:border-[#ff6b35]/40 transition-colors">
+                    <Mail className="w-4 h-4 text-[#ff6b35]" />
                   </div>
                   <div>
                     <p className="text-white/40 text-xs">General</p>
@@ -75,8 +75,8 @@ export default function ContactPage() {
                   href="mailto:list@trailtotides.com"
                   className="flex items-center gap-3 text-white/60 hover:text-white transition-colors group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center group-hover:border-[#f67345]/40 transition-colors">
-                    <Mail className="w-4 h-4 text-[#f67345]" />
+                  <div className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center group-hover:border-[#ff6b35]/40 transition-colors">
+                    <Mail className="w-4 h-4 text-[#ff6b35]" />
                   </div>
                   <div>
                     <p className="text-white/40 text-xs">Operators</p>
@@ -85,7 +85,7 @@ export default function ContactPage() {
                 </a>
                 <div className="flex items-center gap-3 text-white/60">
                   <div className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center">
-                    <MapPin className="w-4 h-4 text-[#f67345]" />
+                    <MapPin className="w-4 h-4 text-[#ff6b35]" />
                   </div>
                   <div>
                     <p className="text-white/40 text-xs">Based in</p>
@@ -110,14 +110,14 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div className="bg-[#f67345]/10 border border-[#f67345]/20 rounded-2xl p-5">
-              <p className="text-[#f67345] text-xs font-semibold uppercase tracking-wider mb-2">For operators</p>
+            <div className="bg-[#ff6b35]/10 border border-[#ff6b35]/20 rounded-2xl p-5">
+              <p className="text-[#ff6b35] text-xs font-semibold uppercase tracking-wider mb-2">For operators</p>
               <p className="text-white/55 text-sm leading-relaxed mb-3">
                 Want to list your adventure on Trail to Tides?
               </p>
               <Link
                 href="/list"
-                className="flex items-center gap-1.5 text-[#f67345] text-xs font-semibold hover:text-[#e07845] transition-colors"
+                className="flex items-center gap-1.5 text-[#ff6b35] text-xs font-semibold hover:text-[#e07845] transition-colors"
               >
                 Apply to list <ArrowRight className="w-3.5 h-3.5" />
               </Link>
@@ -147,7 +147,7 @@ export default function ContactPage() {
                       value={form.name}
                       onChange={handleChange}
                       placeholder="Rahul Sharma"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#ff6b35]/60 transition-colors"
                     />
                   </div>
                   <div>
@@ -159,7 +159,7 @@ export default function ContactPage() {
                       value={form.email}
                       onChange={handleChange}
                       placeholder="you@example.com"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#ff6b35]/60 transition-colors"
                     />
                   </div>
                 </div>
@@ -169,7 +169,7 @@ export default function ContactPage() {
                     name="topic"
                     value={form.topic}
                     onChange={handleChange}
-                    className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
+                    className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff6b35]/60 transition-colors"
                   >
                     <option value="">Select a topic</option>
                     {TOPICS.map((t) => <option key={t} value={t}>{t}</option>)}
@@ -184,13 +184,13 @@ export default function ContactPage() {
                     value={form.message}
                     onChange={handleChange}
                     placeholder="Tell us what's on your mind…"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors resize-none"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#ff6b35]/60 transition-colors resize-none"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#f67345] hover:bg-[#f88c64] disabled:opacity-60 text-white font-semibold py-4 rounded-xl text-base flex items-center justify-center gap-2 group transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#f67345]/25"
+                  className="w-full bg-[#ff6b35] hover:bg-[#ff8e64] disabled:opacity-60 text-white font-semibold py-4 rounded-xl text-base flex items-center justify-center gap-2 group transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff6b35]/25"
                 >
                   {loading ? "Sending…" : (
                     <>Send Message <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></>
