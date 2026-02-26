@@ -547,15 +547,15 @@ export default function MapPage() {
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Best Season</h3>
                   <div className="flex flex-col gap-2">
                     <div className="flex flex-wrap gap-2">
-                      {seasons.map(({ label, icon, months: sMonths, activeColor, idleColor }) => {
-                        const isExpanded = expandedSeason === label;
-                        const hasSelected = sMonths.some((m) => selectedMonths.includes(m));
-                        const selectedCount = sMonths.filter((m) => selectedMonths.includes(m)).length;
-                        return (
-                          <button key={label} onClick={() => setExpandedSeason(isExpanded ? null : label)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? activeColor : idleColor}`}>
-                            <span>{icon}</span>
-                            {label}
+                        {seasons.map(({ label, icon, months: sMonths, activeColor, idleColor }) => {
+                          const isExpanded = expandedSeason === label;
+                          const hasSelected = sMonths.some((m) => selectedMonths.includes(m));
+                          const selectedCount = sMonths.filter((m) => selectedMonths.includes(m)).length;
+                          return (
+                            <button key={label} onClick={() => setExpandedSeason(isExpanded ? null : label)}
+                              className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? activeColor : idleColor}`}>
+                              {label}
+
                             {hasSelected && <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">{selectedCount}</span>}
                             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                           </button>
