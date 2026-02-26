@@ -181,9 +181,22 @@ export default async function ExperiencePage({ params }: Props) {
 
             {/* Safety notes */}
             <section>
-              <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+              <p className="text-[#ff5722] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
                 Safety & Prep
               </p>
+              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 flex gap-4">
+                <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                <p className="text-[#6b5a20] text-sm leading-relaxed">{adventure.safetyNotes}</p>
+              </div>
+            </section>
+...
+                    <div className="flex items-center gap-3 mb-6">
+                      <BadgeCheck className="w-5 h-5 text-emerald-600" />
+                      <div>
+                        <p className="text-[#ff5722] text-xs font-semibold tracking-[0.2em] uppercase">
+                          Verified Operators
+                        </p>
+
               <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 flex gap-4">
                 <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                 <p className="text-[#6b5a20] text-sm leading-relaxed">{adventure.safetyNotes}</p>
