@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Loader2, ChevronRight, Sparkles } from "lucide-react";
+import { X, Send, Loader2, ChevronRight, Compass } from "lucide-react";
 import Link from "next/link";
 import type { Adventure } from "@/lib/data";
 
@@ -88,7 +88,7 @@ export default function ChatBubble() {
         style={{ background: open ? "#9e4e24" : "#c4622d", boxShadow: "0 4px 20px rgba(196,98,45,0.45)", transition: "opacity 0.4s ease, transform 0.4s ease, background 0.2s" }}
         aria-label="Open Compass AI"
       >
-        {open ? <X className="w-5 h-5" /> : <Sparkles className="w-4 h-4" />}
+        {open ? <X className="w-5 h-5" /> : <Compass className="w-5 h-5" />}
         {!open && <span className="text-sm font-semibold">Need help?</span>}
       </button>
 
@@ -103,7 +103,7 @@ export default function ChatBubble() {
             style={{ background: "#c4622d" }}
           >
             <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center flex-shrink-0">
-              <Sparkles className="w-4 h-4 text-white" />
+              <Compass className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-white font-bold text-sm tracking-tight">Compass AI</p>
