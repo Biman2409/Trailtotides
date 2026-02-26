@@ -506,7 +506,7 @@ export default function ExploreClient() {
                                   isExpanded || hasSelected ? cat.btnActive : cat.btn
                                 }`}
                               >
-                                  {cat.label}
+                                {cat.label}
 
                                 {hasSelected && (
                                   <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
