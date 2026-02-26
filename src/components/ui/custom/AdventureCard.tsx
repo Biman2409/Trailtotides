@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Award, Mountain, Star } from "lucide-react";
+import { MapPin, Mountain, Star } from "lucide-react";
 import type { Adventure } from "@/lib/data";
 import Pill from "./Pill";
 
@@ -13,7 +13,6 @@ interface AdventureCardProps {
 
 export default function AdventureCard({ adventure, size = "default" }: AdventureCardProps) {
   const isLarge = size === "large";
-  const isEditorsChoice = ["Chadar Trek", "Havelock Island Diving"].includes(adventure.name);
 
   return (
     <Link
