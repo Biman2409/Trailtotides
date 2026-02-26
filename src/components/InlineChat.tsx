@@ -12,14 +12,6 @@ interface Message {
   recommendations?: { slug: string; name: string; reason: string }[];
 }
 
-const SUGGESTIONS = [
-  { label: "Beginner-friendly Himalayan treks" },
-  { label: "Surfing spots in South India" },
-  { label: "Biking expeditions under ₹10k" },
-  { label: "Luxury camping in Rajasthan" },
-  { label: "Scuba diving for beginners" },
-];
-
 export default function InlineChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
