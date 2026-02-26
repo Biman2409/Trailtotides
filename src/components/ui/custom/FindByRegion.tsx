@@ -166,18 +166,18 @@ export default function FindByRegion() {
                     {isOpen && (
                       <div className="py-4">
                         <div className="flex flex-col gap-0.5">
-                          {region.items.map(({ label, count, icon }) => (
-                            <Link
-                              key={label}
-                              href={`/explore?region=${encodeURIComponent(region.name)}&subRegion=${encodeURIComponent(label)}`}
-                              className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150 hover:bg-[#c4622d]/10"
-                            >
-                              <div className="flex items-center gap-2.5">
-                                <span className="text-sm grayscale group-hover/row:grayscale-0 transition-all duration-300">{icon}</span>
-                                <span className="text-white/70 group-hover/row:text-white text-sm font-medium transition-colors duration-150">
-                                  {label}
-                                </span>
-                              </div>
+                            {region.items.map(({ label, count, icon }) => (
+                              <Link
+                                key={label}
+                                href={`/explore?region=${encodeURIComponent(region.name)}&subRegion=${encodeURIComponent(label)}`}
+                                className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150 hover:bg-[#c4622d]/10"
+                              >
+                                <div className="flex items-center gap-2.5">
+                                  <span className="text-[#f4956a] group-hover/row:scale-110 transition-transform duration-300">{icon}</span>
+                                  <span className="text-white/70 group-hover/row:text-white text-sm font-medium transition-colors duration-150">
+                                    {label}
+                                  </span>
+                                </div>
                               <div className="flex items-center gap-2">
                                 <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#c4622d]/15 text-[#f4956a]">
                                   {count}
