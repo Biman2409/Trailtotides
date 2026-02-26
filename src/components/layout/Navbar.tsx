@@ -85,7 +85,7 @@ export default function Navbar() {
   return (
     <nav
     ref={menuRef}
-    className={`fixed top-0 left-0 right-0 z-[1002] transition-all duration-200 ease-in-out ${
+    className={`fixed top-0 left-0 right-0 z-[1002] transition-all duration-75 ease-out ${
       isTransparent
         ? "bg-transparent"
         : "bg-[#1a1f2e]/96 backdrop-blur-lg border-b border-white/8 shadow-xl shadow-black/10"
