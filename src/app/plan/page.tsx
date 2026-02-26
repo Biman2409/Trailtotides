@@ -267,12 +267,12 @@ export default function PlanPage() {
                     <Sparkles className="w-4 h-4 text-[#ff5100]" />
                     <span className="text-[#ff5100] text-xs font-semibold uppercase tracking-wider">AI Finder</span>
                   </div>
-                    <p className="text-white/55 text-sm leading-relaxed mb-3">
-                      Prefer to just describe what you want? Use compass.ai on the home page.
-                    </p>
-                    <Link href="/#ai-finder" className="text-[#ff5100] text-xs font-semibold hover:text-[#ff7d47] transition-colors flex items-center gap-1">
-                      Try compass.ai <ArrowRight className="w-3 h-3" />
-                    </Link>
+                      <p className="text-white/55 text-sm leading-relaxed mb-3">
+                        Prefer to just describe what you want? Use COMPASS.AI on the home page.
+                      </p>
+                      <Link href="/#ai-finder" className="text-[#ff5100] text-xs font-semibold hover:text-[#ff7d47] transition-colors flex items-center gap-1">
+                        Try COMPASS.AI <ArrowRight className="w-3 h-3" />
+                      </Link>
 
                 </div>
               </div>
