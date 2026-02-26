@@ -39,17 +39,6 @@ const regionTitleIcons: Record<string, React.ReactNode> = {
   "Urban": <Building2 className="w-6 h-6 text-zinc-400" />
 };
 
-const regionIcons: Record<string, string> = {
-  "Himalayas": "🏔️",
-  "Western Ghats": "⛰️",
-  "Eastern Ghats": "⛰️",
-  "Desert": "🏜️",
-  "Coast": "🌊",
-  "Islands": "🏝️",
-  "Northeast": "🌄",
-  "Urban": "🏙️"
-};
-
 export default function FindByRegion() {
   const [openId, setOpenId] = useState<string | null>(null);
 
