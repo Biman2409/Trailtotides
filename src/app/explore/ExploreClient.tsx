@@ -44,7 +44,7 @@ export default function ExploreClient() {
   const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
 
   // AI chat state
-  type AiMessage = { role: "user" | "assistant"; content: string; cards?: any[]; recommendations?: { slug: string; name: string; reason: string }[] };
+  type AiMessage = { role: "user" | "assistant"; content: string; cards?: Adventure[]; recommendations?: { slug: string; name: string; reason: string }[] };
   const [aiMessages, setAiMessages] = useState<AiMessage[]>([]);
   const [aiInput, setAiInput] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
