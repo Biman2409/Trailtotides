@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Award, Mountain } from "lucide-react";
+import { MapPin, Award, Mountain, Star } from "lucide-react";
 import type { Adventure } from "@/lib/data";
 import Pill from "./Pill";
 
@@ -13,6 +13,7 @@ interface AdventureCardProps {
 
 export default function AdventureCard({ adventure, size = "default" }: AdventureCardProps) {
   const isLarge = size === "large";
+  const isEditorsChoice = ["Chadar Trek", "Havelock Island Diving"].includes(adventure.name);
 
   return (
     <Link
@@ -39,6 +40,22 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         {/* Gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#ff6b35]/10" />
+
+            {/* Editor's Choice Badge */}
+            {isEditorsChoice && (
+              <div className="absolute top-4 right-4 z-20 group/badge">
+                <div className="relative flex items-center justify-end">
+                  <div className="absolute right-0 bg-black/90 backdrop-blur-md border border-white/10 rounded-full h-8 w-8 group-hover/badge:w-24 flex items-center justify-end pr-1.5 overflow-hidden transition-all duration-300 ease-out shadow-lg">
+                    <span className="text-[10px] font-bold text-white tracking-widest uppercase opacity-0 group-hover/badge:opacity-100 mr-2 transition-opacity duration-300">
+                      Editors
+                    </span>
+                    <div className="w-5 h-5 rounded-full bg-[#ff6b35] flex items-center justify-center shrink-0">
+                      <Award className="w-3 h-3 text-black fill-black" strokeWidth={3} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Pills at the Top */}
             <div className="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
