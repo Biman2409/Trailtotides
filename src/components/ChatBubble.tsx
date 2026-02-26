@@ -219,12 +219,9 @@ export default function ChatBubble() {
                 )}
               </button>
             </div>
-            <p className="mt-4 text-[9px] text-center text-white/10 font-black uppercase tracking-[0.3em]">
-              Intelligence Architecture v4.0.2
-            </p>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar {
