@@ -36,15 +36,15 @@ function LoginForm() {
         Back to home
       </Link>
 
-      <div className="mb-6">
-        <h1 className="text-4xl font-black text-white mb-3 tracking-tight leading-tight">
-          Wild is calling, <br />
-          <span className="text-orange-500">answer it.</span>
-        </h1>
-        <p className="text-white/40 text-xs font-medium leading-relaxed">
-          Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
-        </p>
-      </div>
+        <div className="mb-6">
+          <h1 className="text-4xl font-black text-white mb-3 tracking-tight leading-tight">
+            Wild is calling,<br />
+            <span className="text-orange-500">answer it.</span>
+          </h1>
+          <p className="text-white/40 text-xs font-medium leading-relaxed">
+            Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
+          </p>
+        </div>
 
       {message && !error && (
         <div className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold bg-green-500/10 border border-green-500/20 text-green-400 flex items-center gap-2">
