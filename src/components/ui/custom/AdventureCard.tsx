@@ -40,11 +40,26 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#f4845f]/10" />
 
-        {/* Pills at the Top */}
-        <div className="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
-          <Pill type="type" value={adventure.type} />
-          <Pill type="difficulty" value={adventure.difficulty} />
-        </div>
+          {/* Pills at the Top */}
+          <div className="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
+            <Pill type="type" value={adventure.type} />
+            <Pill type="difficulty" value={adventure.difficulty} />
+          </div>
+
+          {/* Editors Choice Badge */}
+          {adventure.isEditorsChoice && (
+            <div className="absolute top-4 right-4 z-10 group/award">
+              <div className="flex items-center gap-2 bg-black/80 backdrop-blur-md border border-white/10 px-2.5 py-1.5 rounded-full transition-all duration-300 hover:pr-4">
+                <div className="bg-black p-1 rounded-full border border-[#f4845f]/20">
+                  <Award className="w-3.5 h-3.5 text-[#f4845f]" />
+                </div>
+                <span className="text-white text-[10px] font-bold tracking-wider max-w-0 overflow-hidden transition-all duration-500 group-hover/award:max-w-[80px] whitespace-nowrap">
+                  EDITORS
+                </span>
+              </div>
+            </div>
+          )}
+
 
         {/* Title Content */}
         <div className="absolute inset-0 p-5 flex flex-col justify-end">
