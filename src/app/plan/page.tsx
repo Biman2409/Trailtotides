@@ -174,7 +174,7 @@ export default function PlanPage() {
                     {([
                       { val: "Beginner" as Difficulty,     color: "bg-emerald-500 text-white border-emerald-500",   idle: "bg-emerald-50 text-emerald-800 border-emerald-200" },
                       { val: "Intermediate" as Difficulty, color: "bg-teal-500 text-white border-teal-500",          idle: "bg-teal-50 text-teal-800 border-teal-200" },
-                      { val: "Advanced" as Difficulty,     color: "bg-[#ff8e64] text-white border-[#ff8e64]",        idle: "bg-[#ff8e64]/5 text-[#9c4a2f] border-[#ff8e64]/20" },
+                      { val: "Advanced" as Difficulty,     color: "bg-[#ff6b35] text-white border-[#ff6b35]",        idle: "bg-[#ff6b35]/5 text-[#9c4a2f] border-[#ff6b35]/20" },
                       { val: "Expert" as Difficulty,       color: "bg-[#ff6b35] text-white border-[#ff6b35]",      idle: "bg-[#ff6b35]/5 text-[#9c4a2f] border-[#ff6b35]/20" },
                       { val: "Extreme" as Difficulty,      color: "bg-red-500 text-white border-red-500",            idle: "bg-red-50 text-red-800 border-red-200" },
                     ]).map(({ val, color, idle }) => (
