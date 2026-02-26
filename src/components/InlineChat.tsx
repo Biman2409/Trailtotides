@@ -63,7 +63,7 @@ export default function InlineChat() {
   }
 
   return (
-    <section id="compass-ai" className="relative overflow-hidden bg-[#0a0e14] border-y border-white/[0.03] py-16 lg:py-24">
+    <section id="compass-ai" className="relative overflow-hidden bg-[#0a0e14] border-y border-white/[0.03] py-12 lg:py-16">
       {/* Deep atmospheric backgrounds */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#ff5100]/10 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#ff5100]/10 blur-[150px] rounded-full translate-y-1/2 -translate-x-1/2" />
@@ -75,15 +75,15 @@ export default function InlineChat() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         
         {/* Architectural Header Section */}
-        <div className="flex flex-col items-center text-center mb-12 space-y-6">
-          <div className="flex flex-col items-center gap-3">
-            <div className="px-3 py-1 rounded-full bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center gap-2 mb-1">
+        <div className="flex flex-col items-center text-center mb-8 space-y-4">
+          <div className="flex flex-col items-center gap-2">
+            <div className="px-3 py-1 rounded-full bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center gap-2 mb-0.5">
               <span className="text-[9px] text-[#ff5100] font-black uppercase tracking-[0.3em]">AI Adventure Discovery Engine</span>
             </div>
             <div className="flex items-center gap-4 justify-center">
-              <Compass className="w-10 h-10 lg:w-14 lg:h-14 text-[#ff5100] drop-shadow-[0_0_30px_rgba(255,81,0,0.3)]" strokeWidth={1.2} />
+              <Compass className="w-10 h-10 lg:w-12 lg:h-12 text-[#ff5100] drop-shadow-[0_0_30px_rgba(255,81,0,0.3)]" strokeWidth={1.2} />
               <h2 className="text-white text-5xl lg:text-7xl font-black tracking-tighter uppercase leading-none">
-                Compass AI
+                compass.ai
               </h2>
             </div>
           </div>
@@ -101,14 +101,14 @@ export default function InlineChat() {
               <div className="relative bg-[#11161d]/90 backdrop-blur-2xl border border-white/[0.08] rounded-[2rem] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] overflow-hidden">
                 
                   {/* Operational Header */}
-                  <div className="px-6 py-4 border-b border-white/[0.05] flex items-center justify-center bg-white/[0.01]">
+                  <div className="px-6 py-3 border-b border-white/[0.05] flex items-center justify-center bg-white/[0.01]">
                     <span className="text-[10px] text-white/40 font-black uppercase tracking-[0.2em] text-center w-full">Recommended Starting Vectors</span>
                   </div>
 
                   {/* Interaction Terminal */}
                   <div className={`min-h-[60px] ${messages.length > 0 ? 'max-h-[450px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
                     {messages.length === 0 && (
-                      <div className="px-8 pt-10 pb-6 flex flex-nowrap gap-4 justify-center overflow-x-auto no-scrollbar">
+                      <div className="px-8 py-6 flex flex-nowrap gap-4 justify-center overflow-x-auto no-scrollbar">
                         {[
                           "Ladakh bike trip under 20k",
                           "Solo trek to Valley of Flowers",
@@ -126,7 +126,7 @@ export default function InlineChat() {
                     )}
                 
                 {messages.length > 0 && (
-                  <div className="p-6 lg:p-8 space-y-6">
+                  <div className="p-5 lg:p-6 space-y-5">
                     {messages.map((msg, i) => (
                       <div
                         key={i}
@@ -218,7 +218,7 @@ export default function InlineChat() {
               </div>
 
               {/* Command Input Area */}
-              <div className="p-6 bg-white/[0.02] border-t border-white/[0.06] relative">
+              <div className="p-5 bg-white/[0.02] border-t border-white/[0.06] relative">
                 <div className="relative flex items-center gap-3">
                   <div className="absolute left-5 text-[#ff5100]/40">
                     <Search className="w-5 h-5" />
@@ -228,7 +228,7 @@ export default function InlineChat() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && send()}
-                    placeholder="Ask Compass AI what you’re looking for"
+                    placeholder="Ask compass.ai what you’re looking for"
                     className="w-full bg-white/[0.03] border border-white/[0.07] text-white placeholder-white/10 text-base py-4 pl-12 pr-20 rounded-2xl outline-none focus:bg-white/[0.05] focus:border-[#ff5100]/50 focus:ring-4 focus:ring-[#ff5100]/5 transition-all duration-500 font-light"
                   />
                   <button
@@ -248,6 +248,7 @@ export default function InlineChat() {
             </div>
           </div>
         </div>
+
 
       </div>
     </section>
