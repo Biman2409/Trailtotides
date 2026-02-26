@@ -6,14 +6,15 @@ export default function Footer() {
     <footer className="bg-[#1a1f2e] text-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
-          {/* Brand */}
-          <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2.5 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-[#c4622d] flex items-center justify-center">
-                <Mountain className="w-5 h-5 text-white" strokeWidth={2} />
-              </div>
-              <span className="font-semibold text-lg tracking-tight">Trail to Tides</span>
-            </Link>
+            {/* Brand */}
+            <div className="lg:col-span-1">
+              <Link href="/" className="flex items-center gap-2.5 mb-4">
+                <div className="w-9 h-9 rounded-lg bg-[#ff5722] flex items-center justify-center shadow-md shadow-[#ff5722]/30">
+                  <Mountain className="w-5 h-5 text-white" strokeWidth={2} />
+                </div>
+                <span className="font-semibold text-lg tracking-tight">Trail to Tides</span>
+              </Link>
+
             <p className="text-white/50 text-sm leading-relaxed mt-3 max-w-xs">
               Every adventure across India, mapped and verified. Handpicked by explorers who've actually been there.
             </p>
