@@ -11,11 +11,11 @@ const categories = [
       icon: <Mountain className="w-6 h-6 text-[#ff6b35]" />,
       subtitle: "Push your limits and own every inch of wild terrain",
       image: "https://images.unsplash.com/photo-1605548109944-9040d0972bf5?w=800&q=80",
-      accent: "#ff6b35",
-      accentLight: "rgba(244,132,95,0.15)",
-      accentBorder: "rgba(244,132,95,0.35)",
-      tagBg: "rgba(244,132,95,0.18)",
-      tagText: "#ff6b35",
+        accent: "#ff6b35",
+        accentLight: "rgba(255,107,53,0.15)",
+        accentBorder: "rgba(255,107,53,0.35)",
+        tagBg: "rgba(255,107,53,0.18)",
+        tagText: "#ff6b35",
 
     items: [
       { type: "Trekking", count: 94 },

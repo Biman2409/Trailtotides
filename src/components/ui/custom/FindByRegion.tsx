@@ -101,11 +101,11 @@ export default function FindByRegion() {
                   className="rounded-2xl overflow-hidden flex flex-col"
                     style={{
                       background: "rgba(255,255,255,0.04)",
-                      border: `1px solid ${isOpen ? "rgba(244,132,95,0.35)" : "rgba(255,255,255,0.08)"}`,
-                      transition: "border-color 0.3s ease",
-                      boxShadow: isOpen
-                        ? `0 0 0 1px rgba(244,132,95,0.35), 0 20px 48px rgba(0,0,0,0.35)`
-                        : "0 4px 16px rgba(0,0,0,0.2)",
+                        border: `1px solid ${isOpen ? "rgba(255,107,53,0.35)" : "rgba(255,255,255,0.08)"}`,
+                        transition: "border-color 0.3s ease",
+                        boxShadow: isOpen
+                          ? `0 0 0 1px rgba(255,107,53,0.35), 0 20px 48px rgba(0,0,0,0.35)`
+                          : "0 4px 16px rgba(0,0,0,0.2)",
                     }}
                 >
                   {/* Image header */}
