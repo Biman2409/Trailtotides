@@ -5,10 +5,15 @@ import path from "node:path";
 const loaderPath = require.resolve('orchids-visual-edits/loader.js');
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ["*.orchids.cloud", "*.orchids.app", "*.proxy.daytona.works", "*.daytona.works"],
   experimental: {
     serverActions: {
-      allowedOrigins: ["*.orchids.cloud", "*.orchids.app", "*.proxy.daytona.works", "*.daytona.works"]
+      allowedOrigins: [
+        "localhost:3000",
+        "*.orchids.cloud",
+        "*.orchids.app",
+        "*.proxy.daytona.works",
+        "*.daytona.works"
+      ]
     }
   },
   images: {
