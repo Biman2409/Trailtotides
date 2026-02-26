@@ -19,6 +19,14 @@ const seasons: { label: string; months: Month[]; iconName: string }[] = [
   { label: "Autumn",  months: ["Oct", "Nov", "Dec"], iconName: "Wind" },
 ];
 
+const SEASON_ICONS: Record<string, React.ReactNode> = {
+  Snowflake: <Snowflake className="w-3.5 h-3.5" />,
+  Sunrise: <Sunrise className="w-3.5 h-3.5" />,
+  Sun: <Sun className="w-3.5 h-3.5" />,
+  CloudRain: <CloudRain className="w-3.5 h-3.5" />,
+  Wind: <Wind className="w-3.5 h-3.5" />,
+};
+
 
 export default function ExploreClient() {
   const searchParams = useSearchParams();
