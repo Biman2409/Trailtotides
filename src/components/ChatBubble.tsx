@@ -84,7 +84,7 @@ export default function ChatBubble() {
       {/* Floating button */}
         <button
           onClick={() => setOpen((v) => !v)}
-          className={`fixed bottom-6 right-6 z-50 flex items-center justify-center text-white w-14 h-14 rounded-full shadow-xl transition-all hover:scale-110 hover:shadow-2xl active:scale-95 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
+          className={`fixed bottom-6 right-6 z-50 flex items-center justify-center text-white w-14 h-14 rounded-full shadow-xl transition-all duration-300 ease-out hover:scale-110 hover:shadow-2xl active:scale-95 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}
           style={{ background: open ? "#d84315" : "#ff5100", boxShadow: "0 4px 20px rgba(255,81,0,0.45)", transition: "opacity 0.4s ease, transform 0.4s ease, background 0.2s" }}
           aria-label="Open Compass AI"
         >
