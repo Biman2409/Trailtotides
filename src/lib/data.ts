@@ -11,7 +11,9 @@ export type AdventureType =
   | "Camel Safari"
   | "Caving"
   | "Sandboarding"
-  | "Urban Adventure";
+  | "Urban Adventure"
+  | "Paragliding"
+  | "Hot Air Balloon";
 
 export type Region =
   | "Himalayas"
