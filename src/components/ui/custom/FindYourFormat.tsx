@@ -245,7 +245,7 @@ export default function FindYourFormat() {
                       ) : (
                           <>
                             <div className="flex flex-col gap-0.5">
-                                {cat.items.map(({ type, count, icon }) => (
+                                {cat.items.map(({ type, count }) => (
                                   <Link
                                     key={type}
                                     href={`/explore?type=${encodeURIComponent(type)}`}
@@ -259,9 +259,6 @@ export default function FindYourFormat() {
                                     }}
                                   >
                                     <div className="flex items-center gap-2.5">
-                                      <span style={{ color: cat.tagText }} className="transition-transform duration-300 group-hover/row:scale-110">
-                                        {icon}
-                                      </span>
                                       <span className="text-white/70 group-hover/row:text-white text-sm font-medium transition-colors duration-150">
                                         {type}
                                       </span>
