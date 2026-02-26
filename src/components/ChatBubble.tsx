@@ -88,12 +88,7 @@ export default function ChatBubble() {
           style={{ background: open ? "#9e4e24" : "#c4622d", boxShadow: "0 4px 20px rgba(196,98,45,0.45)", transition: "opacity 0.4s ease, transform 0.4s ease, background 0.2s" }}
           aria-label="Open Compass AI"
         >
-          {open ? <X className="w-6 h-6" /> : (
-            <div className="flex flex-col items-center justify-center">
-              <HelpCircle className="w-5 h-5" />
-              <span className="text-[10px] font-bold mt-0.5">Help?</span>
-            </div>
-          )}
+          {open ? <X className="w-6 h-6" /> : <HelpCircle className="w-6 h-6" />}
         </button>
 
       {/* Chat panel */}
