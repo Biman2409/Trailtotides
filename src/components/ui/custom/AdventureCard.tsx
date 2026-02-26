@@ -38,28 +38,13 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         
         {/* Gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#ff6b35]/10" />
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#ff6b35]/10" />
 
-          {/* Pills at the Top */}
-          <div className="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
-            <Pill type="type" value={adventure.type} />
-            <Pill type="difficulty" value={adventure.difficulty} />
-          </div>
-
-            {/* Editors Choice Badge */}
-            {adventure.isEditorsChoice && (
-              <div className="absolute top-3 right-3 z-10 group/award">
-                <div className="flex items-center bg-black backdrop-blur-md border border-white/10 p-0.5 rounded-full shadow-2xl transition-all duration-500 hover:pr-4 group-hover:scale-110">
-                  <div className="bg-black w-8 h-8 rounded-full flex items-center justify-center relative">
-                    <Mountain className="w-4 h-4 text-[#ff6b35]" strokeWidth={2.5} />
-                  </div>
-                  <span className="text-white text-[10px] font-bold tracking-[0.25em] max-w-0 overflow-hidden transition-all duration-500 group-hover/award:max-w-[100px] group-hover/award:ml-3 whitespace-nowrap opacity-0 group-hover/award:opacity-100 pr-1">
-                    EDITORS
-                  </span>
-                </div>
-              </div>
-            )}
-
+            {/* Pills at the Top */}
+            <div className="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
+              <Pill type="type" value={adventure.type} />
+              <Pill type="difficulty" value={adventure.difficulty} />
+            </div>
 
         {/* Title Content */}
         <div className="absolute inset-0 p-5 flex flex-col justify-end">
