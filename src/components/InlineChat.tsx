@@ -81,13 +81,22 @@ export default function InlineChat() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         
         {/* Architectural Header Section */}
-        <div className="flex flex-col items-center text-center mb-20 space-y-6">
-          <div className="flex items-center gap-6 justify-center">
-            <Compass className="w-14 h-14 lg:w-20 lg:h-20 text-[#ff5100] drop-shadow-[0_0_30px_rgba(255,81,0,0.3)]" strokeWidth={1.2} />
-            <h2 className="text-white text-6xl lg:text-8xl font-black tracking-tighter uppercase leading-none">
-              Compass AI
-            </h2>
+        <div className="flex flex-col items-center text-center mb-20 space-y-8">
+          <div className="flex flex-col items-center gap-4">
+            <div className="px-4 py-1.5 rounded-full bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center gap-2 mb-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
+              <span className="text-[10px] text-[#ff5100] font-black uppercase tracking-[0.3em]">AI Adventure Discovery Engine</span>
+            </div>
+            <div className="flex items-center gap-6 justify-center">
+              <Compass className="w-14 h-14 lg:w-20 lg:h-20 text-[#ff5100] drop-shadow-[0_0_30px_rgba(255,81,0,0.3)]" strokeWidth={1.2} />
+              <h2 className="text-white text-6xl lg:text-8xl font-black tracking-tighter uppercase leading-none">
+                Compass AI
+              </h2>
+            </div>
           </div>
+          <p className="text-white/40 text-lg lg:text-xl font-medium tracking-tight max-w-2xl leading-relaxed">
+            Describe your ideal escape. <span className="text-white">We&apos;ll map the path.</span>
+          </p>
         </div>
 
         {/* Command Center Interface */}
