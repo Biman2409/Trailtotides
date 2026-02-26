@@ -184,7 +184,7 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/auth/signup"
-                  className="bg-[#c4622d] hover:bg-[#d97040] text-white text-sm font-semibold px-5 py-2.5 rounded-lg shadow-md shadow-[#c4622d]/25 hover:shadow-lg hover:shadow-[#c4622d]/30 hover:-translate-y-0.5 transition-all duration-200"
+                  className="bg-[#ff5722] hover:bg-[#ff7043] text-white text-sm font-semibold px-5 py-2.5 rounded-lg shadow-md shadow-[#ff5722]/25 hover:shadow-lg hover:shadow-[#ff5722]/30 hover:-translate-y-0.5 transition-all duration-200"
                 >
                   Sign Up
                 </Link>
