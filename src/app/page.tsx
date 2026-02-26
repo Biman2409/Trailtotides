@@ -207,17 +207,17 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-12">
             <div>
-              <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+              <p className="text-[#ff5722] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
                 From the Field
               </p>
                 <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
                   Voices from the edge
                 </h2>
-              <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
+              <div className="mt-5 w-14 h-0.5 bg-[#ff5722] rounded-full" />
             </div>
             <Link
               href="/stories"
-              className="hidden md:flex items-center gap-1.5 text-white/50 font-semibold hover:text-[#c4622d] transition-colors group text-sm"
+              className="hidden md:flex items-center gap-1.5 text-white/50 font-semibold hover:text-[#ff5722] transition-colors group text-sm"
             >
               All stories
               <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
