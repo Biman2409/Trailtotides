@@ -24,7 +24,7 @@ const regionIcons: Record<string, React.ReactNode> = {
   "Desert": <Sun className="w-4 h-4" />,
   "Coast": <Waves className="w-4 h-4" />,
   "Islands": <Palmtree className="w-4 h-4" />,
-  "Northeast": <Sunrise className="w-4 h-4" />,
+  "Northeast": <Mountain className="w-4 h-4" />,
   "Urban": <Building2 className="w-4 h-4" />
 };
 
@@ -35,7 +35,7 @@ const regionTitleIcons: Record<string, React.ReactNode> = {
   "Desert": <Sun className="w-6 h-6 text-[#f4956a]" />,
   "Coast": <Waves className="w-6 h-6 text-cyan-400" />,
   "Islands": <Palmtree className="w-6 h-6 text-teal-400" />,
-  "Northeast": <Sunrise className="w-6 h-6 text-violet-400" />,
+  "Northeast": <Mountain className="w-6 h-6 text-violet-400" />,
   "Urban": <Building2 className="w-6 h-6 text-zinc-400" />
 };
 
