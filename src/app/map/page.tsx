@@ -495,7 +495,7 @@ export default function MapPage() {
                         { name: "Coast",         subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
                         { name: "Islands",       subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
                         { name: "Northeast",     subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"] },
-                        { name: "Urban",         subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"] },
+                        { name: "Urban",         subRegions: ["Mumbai", "Delta", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"] },
                       ];
                       return (
                         <div className="flex flex-col gap-2">
