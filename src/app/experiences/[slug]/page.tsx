@@ -73,10 +73,11 @@ export default async function ExperiencePage({ params }: Props) {
             <div className="flex flex-wrap items-center gap-3 mb-5">
               <Pill type="type" value={adventure.type} />
               <Pill type="difficulty" value={adventure.difficulty} />
-              <span className="flex items-center gap-1.5 text-white/60 text-xs uppercase tracking-tight font-bold">
-                <MapPin className="w-3.5 h-3.5 text-[#f4845f]" />
-                {adventure.state}
-              </span>
+                <span className="flex items-center gap-1.5 text-white/60 text-xs uppercase tracking-tight font-bold">
+                  <MapPin className="w-3.5 h-3.5 text-[#ff5722]" />
+                  {adventure.state}
+                </span>
+
             </div>
             <h1 className="text-white text-5xl md:text-7xl font-semibold tracking-tight leading-[1.0] mb-4">
               {adventure.name}
