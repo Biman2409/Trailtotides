@@ -701,15 +701,15 @@ export default function ExploreClient() {
                         const hasSelected = sMonths.some((m) => selectedMonths.includes(m));
                         const selectedCount = sMonths.filter((m) => selectedMonths.includes(m)).length;
                         return (
-                          <button
-                            key={label}
-                            onClick={() => setExpandedSeason(isExpanded ? null : label)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
-                              isExpanded || hasSelected ? activeColor : idleColor
-                            }`}
-                          >
-                            <span>{icon}</span>
-                            {label}
+                            <button
+                              key={label}
+                              onClick={() => setExpandedSeason(isExpanded ? null : label)}
+                              className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                                isExpanded || hasSelected ? activeColor : idleColor
+                              }`}
+                            >
+                              {label}
+
                             {hasSelected && (
                               <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
                                 {selectedCount}
