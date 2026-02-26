@@ -55,9 +55,9 @@ function LoginForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 ml-1">Email Address</label>
+          <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Email Address</label>
           <input
             name="email"
             type="email"
@@ -69,8 +69,8 @@ function LoginForm() {
 
         <div>
           <div className="flex justify-between items-center mb-2 ml-1">
-            <label className="block text-xs font-bold text-white/50 uppercase tracking-widest">Password</label>
-            <Link href="/auth/forgot-password" title="Feature coming soon" className="text-xs font-bold text-orange-500/60 hover:text-orange-500 transition-colors">
+            <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Password</label>
+            <Link href="/auth/forgot-password" title="Feature coming soon" className="text-[10px] font-bold text-orange-500/60 hover:text-orange-500 transition-colors uppercase tracking-widest">
               Forgot?
             </Link>
           </div>
@@ -95,7 +95,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-orange-500/20"
+          className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-orange-500/20 mt-2"
         >
           {loading ? "Verifying..." : "Sign In"}
         </button>
