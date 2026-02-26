@@ -107,42 +107,38 @@ export default function InlineChat() {
             
             <div className="relative bg-[#11161d]/90 backdrop-blur-2xl border border-white/[0.08] rounded-[2rem] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] overflow-hidden">
               
-              {/* Operational Header */}
-              <div className="px-6 py-4 border-b border-white/[0.05] flex items-center justify-between bg-white/[0.01]">
-                <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
-                  <span className="text-[9px] text-white/40 font-bold uppercase tracking-[0.2em]">Neural Engine Active</span>
+                {/* Operational Header */}
+                <div className="px-6 py-4 border-b border-white/[0.05] flex items-center justify-between bg-white/[0.01]">
+                  <div className="flex gap-1">
+                    <div className="w-1 h-1 rounded-full bg-white/10" />
+                    <div className="w-1 h-1 rounded-full bg-white/10" />
+                    <div className="w-1 h-1 rounded-full bg-white/10" />
+                  </div>
                 </div>
-                <div className="flex gap-1">
-                  <div className="w-1 h-1 rounded-full bg-white/10" />
-                  <div className="w-1 h-1 rounded-full bg-white/10" />
-                  <div className="w-1 h-1 rounded-full bg-white/10" />
-                </div>
-              </div>
 
-              {/* Interaction Terminal */}
-              <div className={`min-h-[180px] ${messages.length > 0 ? 'max-h-[450px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
-                {messages.length === 0 ? (
-                  <div className="p-10 lg:p-14 flex flex-col items-center justify-center text-center space-y-8">
-                    <div className="space-y-4">
-                      <p className="text-white/20 text-[9px] font-bold uppercase tracking-[0.4em]">
-                        Recommended Starting Vectors
-                      </p>
-                      <div className="flex flex-wrap justify-center gap-3">
-                        {SUGGESTIONS.map((s) => (
-                          <button
-                            key={s.label}
-                            onClick={() => { send(s.label); inputRef.current?.focus(); }}
-                            className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white/[0.02] border border-white/[0.05] text-white/50 text-xs hover:text-white hover:bg-[#ff5100]/10 hover:border-[#ff5100]/40 transition-all duration-500 group shadow-lg"
-                          >
-                            <span className="text-lg group-hover:scale-125 transition-transform duration-500">{s.icon}</span>
-                            <span className="font-semibold tracking-wide">{s.label}</span>
-                          </button>
-                        ))}
+                {/* Interaction Terminal */}
+                <div className={`min-h-[180px] ${messages.length > 0 ? 'max-h-[450px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
+                  {messages.length === 0 ? (
+                    <div className="p-10 lg:p-14 flex flex-col items-center justify-center text-center space-y-8">
+                      <div className="space-y-4 w-full">
+                        <p className="text-white/20 text-[9px] font-bold uppercase tracking-[0.4em]">
+                          Recommended Starting Vectors
+                        </p>
+                        <div className="flex flex-nowrap overflow-x-auto no-scrollbar gap-3 pb-2 w-full">
+                          {SUGGESTIONS.map((s) => (
+                            <button
+                              key={s.label}
+                              onClick={() => { send(s.label); inputRef.current?.focus(); }}
+                              className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white/[0.02] border border-white/[0.05] text-white/50 text-xs hover:text-white hover:bg-[#ff5100]/10 hover:border-[#ff5100]/40 transition-all duration-500 group shadow-lg whitespace-nowrap"
+                            >
+                              <span className="text-lg group-hover:scale-125 transition-transform duration-500">{s.icon}</span>
+                              <span className="font-semibold tracking-wide">{s.label}</span>
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ) : (
+                  ) : (
                   <div className="p-6 lg:p-8 space-y-6">
                     {messages.map((msg, i) => (
                       <div
