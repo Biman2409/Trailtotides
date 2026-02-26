@@ -76,15 +76,15 @@ export default function InlineChat() {
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-2.5">
-              <Compass className="w-3.5 h-3.5 text-[#ff6b35]" />
-              <p className="text-[#ff6b35] text-xs font-semibold tracking-[0.22em] uppercase">
-                AI Adventure Finder
+              <Compass className="w-3.5 h-3.5 text-[#ff5100]" />
+              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase">
+                Compass AI · Adventure Finder
               </p>
             </div>
             <h2 className="text-white text-3xl lg:text-4xl font-bold tracking-tight leading-tight">
               Find your perfect adventure
             </h2>
-            <div className="mt-4 w-10 h-0.5 bg-[#ff6b35] rounded-full" />
+            <div className="mt-4 w-10 h-0.5 bg-[#ff5100] rounded-full" />
           </div>
 
         </div>
@@ -96,14 +96,14 @@ export default function InlineChat() {
           {messages.length === 0 && (
             <div className="px-5 pt-6 pb-5">
               <p className="text-white/25 text-xs tracking-widest uppercase mb-4 font-medium">
-                Try asking
+                Try asking Compass AI
               </p>
               <div className="flex flex-wrap gap-2">
                 {SUGGESTIONS.map((s) => (
                   <button
                     key={s.label}
                     onClick={() => { send(s.label); inputRef.current?.focus(); }}
-                    className="flex items-center gap-2 text-xs border border-white/10 text-white/55 hover:text-white hover:border-[#ff6b35]/50 hover:bg-[#ff6b35]/8 px-3.5 py-2 rounded-full transition-all duration-200 tracking-wide"
+                    className="flex items-center gap-2 text-xs border border-white/10 text-white/55 hover:text-white hover:border-[#ff5100]/50 hover:bg-[#ff5100]/8 px-3.5 py-2 rounded-full transition-all duration-200 tracking-wide"
                   >
                     <span>{s.icon}</span>
                     {s.label}
@@ -129,7 +129,7 @@ export default function InlineChat() {
                             ? "text-white rounded-br-sm"
                             : "bg-white/6 border border-white/8 text-white/80 rounded-bl-sm"
                         }`}
-                        style={msg.role === "user" ? { background: "#ff6b35" } : {}}
+                        style={msg.role === "user" ? { background: "#ff5100" } : {}}
                       >
                         {msg.content}
                       </div>
@@ -143,7 +143,7 @@ export default function InlineChat() {
                             <Link
                               key={ci}
                               href={`/experiences/${card.slug}`}
-                              className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-[#ff6b35]/30 rounded-xl overflow-hidden transition-all group"
+                              className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-[#ff5100]/30 rounded-xl overflow-hidden transition-all group"
                             >
                               {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
@@ -159,13 +159,13 @@ export default function InlineChat() {
                                   {card.state} · {card.type} · {card.difficulty}
                                 </p>
                                 {rec?.reason && (
-                                  <p className="text-[#ff6b35] text-xs mt-1 line-clamp-1">
+                                  <p className="text-[#ff5100] text-xs mt-1 line-clamp-1">
                                     {rec.reason}
                                   </p>
                                 )}
                               </div>
                               <div className="flex items-center pr-3">
-                                <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#ff6b35] transition-colors" />
+                                <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#ff5100] transition-colors" />
                               </div>
                             </Link>
                           );
@@ -179,7 +179,7 @@ export default function InlineChat() {
               {loading && (
                 <div className="flex justify-start">
                   <div className="bg-white/6 border border-white/8 px-4 py-2.5 rounded-xl rounded-bl-sm flex items-center gap-2">
-                    <Loader2 className="w-3.5 h-3.5 text-[#ff6b35] animate-spin" />
+                    <Loader2 className="w-3.5 h-3.5 text-[#ff5100] animate-spin" />
                     <span className="text-white/50 text-sm">Finding adventures…</span>
                   </div>
                 </div>
@@ -195,14 +195,14 @@ export default function InlineChat() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
-              placeholder="Describe what you're looking for — we'll match you with the right trip"
-              className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/25 text-sm px-4 py-3 rounded-xl outline-none focus:border-[#ff6b35]/60 focus:ring-1 focus:ring-[#ff6b35]/25 transition-all"
+              placeholder="Ask Compass AI what you're looking for — we'll match you with the right trip"
+              className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/25 text-sm px-4 py-3 rounded-xl outline-none focus:border-[#ff5100]/60 focus:ring-1 focus:ring-[#ff5100]/25 transition-all"
             />
             <button
               onClick={() => send()}
               disabled={!input.trim() || loading}
-              className="disabled:opacity-30 disabled:cursor-not-allowed text-white px-5 py-3 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-lg shadow-[#ff6b35]/20"
-              style={{ background: "#ff6b35" }}
+              className="disabled:opacity-30 disabled:cursor-not-allowed text-white px-5 py-3 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all hover:-translate-y-0.5 active:translate-y-0 shadow-lg shadow-[#ff5100]/20"
+              style={{ background: "#ff5100" }}
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
