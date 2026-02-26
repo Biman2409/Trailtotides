@@ -78,13 +78,17 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 export default function HeroSlider() {
-  const [shuffled]    = useState<Slide[]>(() => shuffle(slides));
+  const [shuffled, setShuffled] = useState<Slide[]>(slides);
   const [current,     setCurrent]     = useState(0);
   const [prev,        setPrev]        = useState<number | null>(null);
   const [animating,   setAnimating]   = useState(false);
   const [progressKey, setProgressKey] = useState(0);
   const [loaded,      setLoaded]      = useState<Record<number, boolean>>({ 0: false });
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setShuffled(shuffle(slides));
+  }, []);
 
   const goTo = useCallback((index: number, byUser = false) => {
     if (index === current) return;
