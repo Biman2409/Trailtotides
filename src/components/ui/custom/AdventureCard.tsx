@@ -69,15 +69,6 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#c4622d]/10" />
 
-        {/* Top Badge */}
-        <div className="absolute top-4 left-4 right-4 flex items-start justify-end z-10">
-          <span
-            className="text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase backdrop-blur-md bg-white/10 text-white border border-white/20 transition-all duration-200 group-hover:bg-[#c4622d] group-hover:border-[#c4622d]"
-          >
-            Explore
-          </span>
-        </div>
-
         {/* Title Content */}
         <div className="absolute inset-0 p-5 flex flex-col justify-end">
           <div className="flex items-center gap-1.5 mb-1.5 opacity-80">
