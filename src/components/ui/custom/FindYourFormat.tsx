@@ -97,8 +97,8 @@ export default function FindYourFormat() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
           <div className="mb-12">
-            <p className="text-[#f4845f] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
-              Discover by style
+            <p className="text-[#f4845f] text-xs font-semibold tracking-[0.22em] mb-3">
+              Discover by Style
             </p>
             <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
               Adventure lives in every element
