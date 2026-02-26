@@ -104,8 +104,7 @@ export default function SignUpPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Full Name</label>
                 <input
@@ -116,6 +115,7 @@ export default function SignUpPage() {
                   className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-3.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-orange-500/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
+
               <div>
                 <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Email</label>
                 <input
@@ -126,7 +126,7 @@ export default function SignUpPage() {
                   className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-3.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-orange-500/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
-            </div>
+
 
             <div>
               <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Phone Number</label>
