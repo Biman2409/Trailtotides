@@ -104,32 +104,45 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex">
+    <div className="h-screen bg-[#0a0a0a] flex overflow-hidden">
       {/* Left panel — image */}
       <div
         className="hidden lg:flex lg:w-1/2 relative bg-cover bg-center"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1617380613434-7495e9b45dfb?w=1200&q=80')" }}
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=100&w=2000')" }}
       >
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/20 to-transparent" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-          <Link href="/" className="flex items-center gap-2 text-white font-semibold text-lg">
-            <Mountain className="w-6 h-6 text-orange-400" />
-            Trail to Tides
+          <Link href="/" className="flex items-center gap-2 text-white font-bold text-xl tracking-tight">
+            <Mountain className="w-8 h-8 text-orange-500" />
+            <span>Trail to Tides</span>
           </Link>
-          <div>
-            <h2 className="text-4xl font-bold text-white leading-tight mb-4">
-              Welcome back,<br />adventurer.
+          
+          <div className="max-w-md">
+            <div className="inline-block px-3 py-1 rounded-full bg-orange-500/20 border border-orange-500/30 text-orange-400 text-xs font-bold uppercase tracking-widest mb-6">
+              Adventure Awaits
+            </div>
+            <h2 className="text-5xl font-black text-white leading-[1.1] mb-6">
+              The wild is calling,<br />
+              <span className="text-orange-500">answer it.</span>
             </h2>
-            <p className="text-white/70 text-lg">
-              Pick up where you left off and find your next great escape across India.
+            <p className="text-white/80 text-xl font-medium leading-relaxed">
+              Log in to access your custom itineraries and discover India&apos;s hidden gems.
             </p>
+          </div>
+
+          <div className="flex items-center gap-6 text-white/50 text-sm font-medium">
+            <span>© 2026 Trail to Tides</span>
+            <div className="w-1 h-1 rounded-full bg-white/20" />
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+            <div className="w-1 h-1 rounded-full bg-white/20" />
+            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
           </div>
         </div>
       </div>
 
       {/* Right panel — form */}
-      <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-16 xl:px-24">
-        <Suspense fallback={<div className="text-white/50 text-center">Loading...</div>}>
+      <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-16 xl:px-24 bg-[#0a0a0a]">
+        <Suspense fallback={<div className="text-white/50 text-center animate-pulse">Loading adventure...</div>}>
           <LoginForm />
         </Suspense>
       </div>
