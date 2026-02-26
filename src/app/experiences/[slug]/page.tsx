@@ -117,7 +117,7 @@ export default async function ExperiencePage({ params }: Props) {
               </div>
             </div>
             <div className="flex items-center gap-3 md:px-6">
-              <MapPin className="w-5 h-5 text-[#c4622d] shrink-0" />
+              <MapPin className="w-5 h-5 text-[#ff5722] shrink-0" />
               <div>
                 <div className="text-white/40 text-[10px] uppercase tracking-widest">Terrain</div>
                 <div className="text-white font-semibold text-sm leading-snug">{adventure.terrain}</div>
