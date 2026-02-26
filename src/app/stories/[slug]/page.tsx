@@ -124,13 +124,13 @@ export default async function StoryPage({ params }: Props) {
           {/* Row 1: special badges */}
             <div className="flex items-center gap-3 mb-2 flex-wrap">
               {story.tags.includes("Featured") && (
-                  <span className="flex items-center gap-1.5 bg-black text-[#f4845f] text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#f4845f]/20">
+                  <span className="flex items-center gap-1.5 bg-black text-[#ff5722] text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#ff5722]/20">
                     <Crown className="w-3 h-3" />
                     Featured
                   </span>
                 )}
                 {story.tags.includes("TTT Original") && (
-                  <span className="flex items-center gap-1.5 bg-[#f4845f] text-black text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#f4845f]/20">
+                  <span className="flex items-center gap-1.5 bg-[#ff5722] text-black text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#ff5722]/20">
                     <Mountain className="w-3 h-3" />
                     TTT Original
                   </span>
