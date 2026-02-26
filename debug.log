@@ -320,3 +320,9 @@ It can also happen if the client has a browser extension installed which messes 
 2026-02-26T19:19:48.308Z [network][POST 0] /__nextjs_original-stack-frames
   request: {"frames":[{"file":"file:///home/user/app/.next/static/chunks/turbopack-user_app_c66dc016._.js","line1":622,"column1":28,"methodName":"<unknown>","arguments":[]}],"isServer":false,"isEdgeServer":false,"isAppDirectory":true}
   response: Request failed: Load failed
+2026-02-26T19:34:52.516Z [console][warn] Detected `scroll-behavior: smooth` on the `<html>` element. In a future version, Next.js will no longer automatically disable smooth scrolling during route transitions. To prepare for this change, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+2026-02-26T19:34:10.992Z [network][GET 200] /api/stories/views?slug=the-night-photi-la-tested-us
+  response: {"views":2448}
+2026-02-26T19:34:52.834Z [network][POST 0] /__nextjs_original-stack-frames
+  request: {"frames":[{"file":"file:///home/user/app/.next/static/chunks/turbopack-user_app_c66dc016._.js","line1":622,"column1":28,"methodName":"<unknown>","arguments":[]}],"isServer":false,"isEdgeServer":false,"isAppDirectory":true}
+  response: Request failed: Load failed
