@@ -303,7 +303,7 @@ export default function ExploreClient() {
                 }`}
             >
               <Compass className="w-4 h-4" />
-              <span className="hidden sm:inline">AI Finder</span>
+              <span className="hidden sm:inline">Compass AI</span>
               <span className="sm:hidden">AI</span>
             </button>
 
