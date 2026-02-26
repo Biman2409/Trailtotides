@@ -153,26 +153,27 @@ export default function FindByRegion() {
                   </div>
                 </button>
 
-                {/* Body */}
-                <div
-                  className="px-5 transition-all duration-300 ease-in-out overflow-hidden"
-                  style={{
-                    maxHeight: isOpen ? "600px" : "56px",
-                  }}
-                >
-                  {/* Collapsed summary */}
-                  {!isOpen && (
-                    <div className="py-3.5 flex items-center justify-between">
-                      <span className="text-white/40 text-xs">
-                        {region.items.length} categories
-                      </span>
-                      <span
-                        className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#c4622d]/15 text-[#f4956a]"
-                      >
-                        {region.adventureCount} adventures
-                      </span>
-                    </div>
-                  )}
+                  {/* Body */}
+                  <div
+                    className="px-5 transition-all duration-300 ease-in-out overflow-hidden"
+                    style={{
+                      maxHeight: isOpen ? "600px" : "56px",
+                    }}
+                  >
+                    {/* Collapsed summary */}
+                    {!isOpen && (
+                      <div className="py-3.5 flex items-center justify-between">
+                        <span className="text-white/40 text-xs">
+                          {region.items.length} categories
+                        </span>
+                        <span
+                          className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#ff5722]/15 text-[#ff5722]"
+                        >
+                          {region.adventureCount} adventures
+                        </span>
+                      </div>
+                    )}
+
 
                     {/* Expanded items */}
                     {isOpen && (
