@@ -27,8 +27,8 @@ const typeEmoji: Record<AdventureType, string> = {
 const difficultyColor: Record<string, string> = {
   Beginner:     "#22c55e",  // green
   Intermediate: "#3b82f6",  // blue
-  Advanced:     "#f59e0b",  // amber
-  Expert:       "#f4845f",  // vibrant orange
+  Advanced:     "#f69d7c",  // soothing orange light
+  Expert:       "#f4845f",  // soothing orange
   Extreme:      "#ef4444",  // red
 };
 
