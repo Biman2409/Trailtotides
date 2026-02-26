@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Wind, Mountain, Waves, Snowflake, Footprints, Bike, Car, Sun, HardHat, Building2, Ship, Fan, Cloud, Tent } from "lucide-react";
+import { ArrowRight, Wind, Mountain, Waves, Snowflake, Footprints, Bike, Car, Sun, HardHat, Building2, Ship, Cloud } from "lucide-react";
 
 const categories = [
     {
@@ -72,7 +72,7 @@ const categories = [
       label: "Air",
       icon: <Wind className="w-6 h-6 text-[#c4a8e8]" />,
       subtitle: "Soar above the clouds and see the world differently",
-      image: "https://images.unsplash.com/photo-1619009515394-f85ca4fb9b9d?q=80&w=2155&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      image: "https://images.unsplash.com/photo-1619009515394-f85ca4fb9b9d?q=80&w=2155&auto=format&fit=crop",
       accent: "#7a5a98",
     accentLight: "rgba(122,90,152,0.15)",
     accentBorder: "rgba(122,90,152,0.35)",
@@ -136,6 +136,7 @@ export default function FindYourFormat() {
                   aria-expanded={isOpen}
                 >
                   {/* Background image */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={cat.image}
                     alt={cat.label}
@@ -250,7 +251,6 @@ export default function FindYourFormat() {
                                     key={type}
                                     href={`/explore?type=${encodeURIComponent(type)}`}
                                     className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150"
-                                    style={{}}
                                     onMouseEnter={(e) => {
                                       (e.currentTarget as HTMLElement).style.background =
                                         cat.accentLight;
