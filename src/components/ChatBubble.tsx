@@ -111,10 +111,10 @@ export default function ChatBubble() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-white font-black text-sm uppercase tracking-widest">Compass AI</p>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
-                  <p className="text-white/40 text-[10px] font-bold uppercase tracking-wider">Operational Engine</p>
-                </div>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
+                    <p className="text-white/40 text-[10px] font-bold uppercase tracking-wider">Discovery Mode</p>
+                  </div>
               </div>
             </div>
             <button
