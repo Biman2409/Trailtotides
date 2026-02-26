@@ -1,6 +1,6 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { User, Mail, Phone, Calendar, Shield, MapPin, Camera, Save, ArrowLeft } from "lucide-react";
+import { User, Mail, Phone, Calendar, Shield, Camera, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import ProfileForm from "./ProfileForm";
@@ -16,15 +16,41 @@ export default async function ProfilePage() {
     redirect("/auth/login");
   }
 
-  const { data: profile } = await supabase
+  // Fetch profile
+  let { data: profile } = await supabase
     .from("profiles")
     .select("*")
     .eq("id", user.id)
     .single();
 
+  // If profile is missing (should be rare due to trigger), create it on the fly
   if (!profile) {
-    // This shouldn't happen if the signup flow works correctly
-    redirect("/");
+    const adminClient = await createAdminClient();
+    const { data: newProfile, error: createError } = await adminClient
+      .from("profiles")
+      .insert({
+        id: user.id,
+        email: user.email,
+        full_name: user.user_metadata?.full_name || user.email?.split("@")[0] || "Adventurer",
+        role: "user",
+      })
+      .select()
+      .single();
+
+    if (createError) {
+      console.error("Error creating profile:", createError);
+      // Fallback object to allow page to render
+      profile = {
+        id: user.id,
+        email: user.email,
+        full_name: user.user_metadata?.full_name || "Adventurer",
+        role: "user",
+        created_at: new Date().toISOString(),
+        phone: null,
+      };
+    } else {
+      profile = newProfile;
+    }
   }
 
   return (
@@ -73,7 +99,7 @@ export default async function ProfilePage() {
                 </div>
                 <div className="flex flex-col">
                   <span className="text-[10px] uppercase tracking-wider font-bold text-white/30">Member Since</span>
-                  <span>{format(new Date(profile.created_at), "MMMM d, yyyy")}</span>
+                  <span>{profile.created_at ? format(new Date(profile.created_at), "MMMM d, yyyy") : "Recently Joined"}</span>
                 </div>
               </div>
             </div>
