@@ -30,9 +30,9 @@ export default function HomePage() {
           {/* Eyebrow */}
           <div className="inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-5 py-2 mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-[#f07a42] mr-2.5 animate-pulse" />
-            <p className="text-white text-xs font-semibold tracking-[0.18em] uppercase">
-              India's First Adventure Discovery &amp; Aggregator Platform
-            </p>
+              <p className="text-white text-xs font-semibold tracking-[0.18em] uppercase">
+                India&apos;s First Adventure Discovery &amp; Aggregator Platform
+              </p>
           </div>
 
           {/* Headline */}
