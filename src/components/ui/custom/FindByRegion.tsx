@@ -31,7 +31,7 @@ export default function FindByRegion() {
         count,
         icon: "📍"
       };
-    }).filter(item => item.count > 0);
+    });
 
     return {
       ...region,
