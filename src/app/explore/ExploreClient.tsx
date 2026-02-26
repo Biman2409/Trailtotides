@@ -900,7 +900,7 @@ export default function ExploreClient() {
           <div className="bg-[#1a1f2e] mt-16">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
-                <p className="text-[#c4622d] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+                <p className="text-[#ff5722] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
                   Explore the map
                 </p>
                 <h2 className="text-white text-4xl lg:text-5xl font-semibold tracking-tight">
@@ -912,7 +912,7 @@ export default function ExploreClient() {
               </div>
               <Link
                 href="/map"
-                className="inline-flex items-center gap-2.5 bg-[#c4622d] hover:bg-[#b5571f] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap"
+                className="inline-flex items-center gap-2.5 bg-[#ff5722] hover:bg-[#ff7043] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap"
               >
                 <MapIcon className="w-4 h-4" />
                 Open full map
