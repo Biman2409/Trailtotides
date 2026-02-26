@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin } from "lucide-react";
+import { MapPin, Award } from "lucide-react";
 import type { Adventure } from "@/lib/data";
 import Pill from "./Pill";
 
