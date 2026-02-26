@@ -5,6 +5,7 @@ import { signUp } from "@/app/auth/actions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Mountain, ArrowLeft } from "lucide-react";
+import countries from "@/lib/countries.json";
 
 export default function SignUpPage() {
   const router = useRouter();
