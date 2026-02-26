@@ -186,31 +186,31 @@ export default function FindYourFormat() {
                   }}
                 >
                   {/* Always-visible collapsed summary */}
-                  {!isOpen && (
-                    <div className="py-3.5 flex items-center justify-between">
-                      <span className="text-white/40 text-xs">
-                        {cat.comingSoon
-                          ? `${cat.previewItems?.length ?? 0} types`
-                          : `${cat.items.length} adventure types`}
-                      </span>
-                      {!cat.comingSoon && (
-                        <span
-                          className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                          style={{ background: cat.tagBg, color: cat.tagText }}
-                        >
-                          {totalCount} adventures
+                    {!isOpen && (
+                      <div className="py-3.5 flex items-center justify-between">
+                        <span className="text-white/40 text-xs">
+                          {cat.comingSoon
+                            ? `${cat.previewItems?.length ?? 0} Types`
+                            : `${cat.items.length} Adventure Types`}
                         </span>
-                      )}
-                      {cat.comingSoon && (
-                        <span
-                          className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                          style={{ background: cat.tagBg, color: cat.tagText }}
-                        >
-                          Coming soon
-                        </span>
-                      )}
-                    </div>
-                  )}
+                        {!cat.comingSoon && (
+                          <span
+                            className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                            style={{ background: cat.tagBg, color: cat.tagText }}
+                          >
+                            {totalCount} Adventures
+                          </span>
+                        )}
+                        {cat.comingSoon && (
+                          <span
+                            className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                            style={{ background: cat.tagBg, color: cat.tagText }}
+                          >
+                            Coming Soon
+                          </span>
+                        )}
+                      </div>
+                    )}
 
                   {/* Expanded items */}
                   {isOpen && (
