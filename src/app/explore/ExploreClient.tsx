@@ -320,43 +320,48 @@ export default function ExploreClient() {
                     Adventure Type
                   </h3>
                     {(() => {
-                          const categories = [
-                              {
-                                label: "Land Based", 
-                                types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
-                              },
+                            const categories = [
+                                {
+                                  label: "Land Based", 
+                                  icon: <Mountain className="w-3.5 h-3.5" />,
+                                  types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
+                                },
+                                {
+                                  label: "Water Based", 
+                                  icon: <Waves className="w-3.5 h-3.5" />,
+                                  types: ["Diving", "Kayaking"],
+                                },
+                                {
+                                  label: "Snow Based", 
+                                  icon: <Snowflake className="w-3.5 h-3.5" />,
+                                  types: ["Skiing"],
+                                },
+                                {
+                                  label: "Air Based", 
+                                  icon: <Wind className="w-3.5 h-3.5" />,
+                                  types: [] as string[],
+                                },
+                            ];
+                        return (
+                          <div className="flex flex-col gap-2">
+                              {/* Category buttons row */}
+                              <div className="flex flex-wrap gap-2">
+                                {categories.map((cat) => {
+                                  const isExpanded = expandedCategory === cat.label;
+                                  const hasSelected = cat.types.some(t => selectedTypes.includes(t as AdventureType));
+                                  return (
+                                    <button
+                                      key={cat.label}
+                                      onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
+                                      className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                                        isExpanded || hasSelected 
+                                          ? "bg-[#ff5100] text-white border-[#ff5100]" 
+                                          : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                                      }`}
+                                    >
+                                      {cat.icon}
+                                      {cat.label}
 
-                            {
-                              label: "Water Based", 
-                              types: ["Diving", "Kayaking"],
-                            },
-                            {
-                              label: "Snow Based", 
-                              types: ["Skiing"],
-                            },
-                            {
-                              label: "Air Based", 
-                              types: [] as string[],
-                            },
-                          ];
-                      return (
-                        <div className="flex flex-col gap-2">
-                            {/* Category buttons row */}
-                            <div className="flex flex-wrap gap-2">
-                              {categories.map((cat) => {
-                                const isExpanded = expandedCategory === cat.label;
-                                const hasSelected = cat.types.some(t => selectedTypes.includes(t as AdventureType));
-                                return (
-                                  <button
-                                    key={cat.label}
-                                    onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
-                                      isExpanded || hasSelected 
-                                        ? "bg-[#ff5100] text-white border-[#ff5100]" 
-                                        : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
-                                    }`}
-                                  >
-                                    {cat.label}
 
 
                                   {hasSelected && (
