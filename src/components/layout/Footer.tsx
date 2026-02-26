@@ -19,7 +19,7 @@ export default function Footer() {
             </div>
           </Link>
           <p className="mt-12 text-white/40 text-lg lg:text-xl font-light tracking-wide max-w-2xl mx-auto leading-relaxed italic">
-            "We guide explorers to the most authentic adventures across the Indian subcontinent."
+            &quot;We guide explorers to the most authentic adventures across the Indian subcontinent.&quot;
           </p>
         </div>
 
