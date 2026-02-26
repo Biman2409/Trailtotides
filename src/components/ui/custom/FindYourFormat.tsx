@@ -8,14 +8,14 @@ const categories = [
     {
       id: "land",
       label: "Land",
-      icon: <Mountain className="w-6 h-6 text-[#ff6b35]" />,
+      icon: <Mountain className="w-6 h-6 text-[#ff5100]" />,
       subtitle: "Push your limits and own every inch of wild terrain",
       image: "https://images.unsplash.com/photo-1605548109944-9040d0972bf5?w=800&q=80",
-        accent: "#ff6b35",
-        accentLight: "rgba(255,107,53,0.15)",
-        accentBorder: "rgba(255,107,53,0.35)",
-        tagBg: "rgba(255,107,53,0.18)",
-        tagText: "#ff6b35",
+        accent: "#ff5100",
+        accentLight: "rgba(255,81,0,0.15)",
+        accentBorder: "rgba(255,81,0,0.35)",
+        tagBg: "rgba(255,81,0,0.18)",
+        tagText: "#ff5100",
 
     items: [
       { type: "Trekking", count: 94 },
@@ -33,14 +33,14 @@ const categories = [
   {
     id: "water",
     label: "Water",
-    icon: <Waves className="w-6 h-6 text-[#ff6b35]" />,
+    icon: <Waves className="w-6 h-6 text-[#ff5100]" />,
     subtitle: "Ride the currents and dive into the deep unknown",
     image: "https://images.unsplash.com/photo-1459745930869-b3d0d72c3cbb?w=800&q=80",
-    accent: "#ff6b35",
-    accentLight: "rgba(255,107,53,0.15)",
-    accentBorder: "rgba(255,107,53,0.35)",
-    tagBg: "rgba(255,107,53,0.18)",
-    tagText: "#ff6b35",
+    accent: "#ff5100",
+    accentLight: "rgba(255,81,0,0.15)",
+    accentBorder: "rgba(255,81,0,0.35)",
+    tagBg: "rgba(255,81,0,0.18)",
+    tagText: "#ff5100",
     items: [
       { type: "Diving", count: 19 },
       { type: "Kayaking", count: 24 },
@@ -52,14 +52,14 @@ const categories = [
   {
     id: "snow",
     label: "Snow",
-    icon: <Snowflake className="w-6 h-6 text-[#ff6b35]" />,
+    icon: <Snowflake className="w-6 h-6 text-[#ff5100]" />,
     subtitle: "Shred fresh powder and carve perfect lines all season",
     image: "https://images.unsplash.com/photo-1596473537047-50758f115d04?w=800&q=80",
-    accent: "#ff6b35",
-    accentLight: "rgba(255,107,53,0.15)",
-    accentBorder: "rgba(255,107,53,0.35)",
-    tagBg: "rgba(255,107,53,0.18)",
-    tagText: "#ff6b35",
+    accent: "#ff5100",
+    accentLight: "rgba(255,81,0,0.15)",
+    accentBorder: "rgba(255,81,0,0.35)",
+    tagBg: "rgba(255,81,0,0.18)",
+    tagText: "#ff5100",
     items: [
       { type: "Skiing", count: 8 },
       { type: "Snowboarding", count: 5 },
@@ -70,23 +70,23 @@ const categories = [
     {
       id: "air",
       label: "Air",
-      icon: <Wind className="w-6 h-6 text-[#ff6b35]" />,
+      icon: <Wind className="w-6 h-6 text-[#ff5100]" />,
       subtitle: "Soar above the clouds and see the world differently",
       image: "https://images.unsplash.com/photo-1619009515394-f85ca4fb9b9d?q=80&w=2155&auto=format&fit=crop",
-      accent: "#ff6b35",
-    accentLight: "rgba(255,107,53,0.15)",
-    accentBorder: "rgba(255,107,53,0.35)",
-    tagBg: "rgba(255,107,53,0.18)",
-    tagText: "#ff6b35",
-    comingSoon: true,
-    items: [],
-    previewItems: [
-      { type: "Paragliding" },
-      { type: "Skydiving" },
-      { type: "Hot Air Balloon" },
-      { type: "Hang Gliding" },
-    ],
-  },
+      accent: "#ff5100",
+      accentLight: "rgba(255,81,0,0.15)",
+      accentBorder: "rgba(255,81,0,0.35)",
+      tagBg: "rgba(255,81,0,0.18)",
+      tagText: "#ff5100",
+      comingSoon: true,
+      items: [],
+      previewItems: [
+        { type: "Paragliding" },
+        { type: "Skydiving" },
+        { type: "Hot Air Balloon" },
+        { type: "Hang Gliding" },
+      ],
+    },
 ];
 
 export default function FindYourFormat() {
@@ -97,7 +97,7 @@ export default function FindYourFormat() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
           <div className="mb-12">
-            <p className="text-[#ff6b35] text-xs font-semibold tracking-[0.22em] mb-3">
+            <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3">
               Discover by Style
             </p>
             <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
@@ -106,7 +106,7 @@ export default function FindYourFormat() {
             <p className="mt-4 text-white/50 text-base max-w-xl">
               Pick a category that matches your style.
             </p>
-            <div className="mt-5 w-14 h-0.5 bg-[#ff6b35] rounded-full" />
+            <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
           </div>
 
         {/* Cards grid */}
