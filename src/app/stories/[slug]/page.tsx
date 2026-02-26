@@ -114,7 +114,7 @@ export default async function StoryPage({ params }: Props) {
         {/* Back */}
         <Link
           href="/stories"
-          className="absolute top-24 left-6 lg:left-8 flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm font-medium bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full"
+          className="absolute top-24 right-6 lg:right-8 flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm font-medium bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full"
         >
           <ChevronLeft className="w-4 h-4" />
           All Stories
