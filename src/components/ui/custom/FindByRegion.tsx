@@ -183,35 +183,36 @@ export default function FindByRegion() {
                               <Link
                                 key={label}
                                 href={`/explore?region=${encodeURIComponent(region.name)}&subRegion=${encodeURIComponent(label)}`}
-                                className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150 hover:bg-[#c4622d]/10"
+                                className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150 hover:bg-[#ff5722]/10"
                               >
                                 <div className="flex items-center gap-2.5">
-                                  <span className="text-[#f4956a] group-hover/row:scale-110 transition-transform duration-300">{icon}</span>
+                                  <span className="text-[#ff5722] group-hover/row:scale-110 transition-transform duration-300">{icon}</span>
                                   <span className="text-white/70 group-hover/row:text-white text-sm font-medium transition-colors duration-150">
                                     {label}
                                   </span>
                                 </div>
                               <div className="flex items-center gap-2">
-                                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#c4622d]/15 text-[#f4956a]">
+                                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#ff5722]/15 text-[#ff5722]">
                                   {count}
                                 </span>
                                 <ArrowRight
-                                  className="w-3 h-3 opacity-0 group-hover/row:opacity-100 -translate-x-1 group-hover/row:translate-x-0 transition-all duration-150 text-[#f4956a]"
+                                  className="w-3 h-3 opacity-0 group-hover/row:opacity-100 -translate-x-1 group-hover/row:translate-x-0 transition-all duration-150 text-[#ff5722]"
                                 />
                               </div>
                             </Link>
                           ))}
                         </div>
-
+  
                       <div className="mt-4 pt-4 border-t border-white/5">
                         <Link
                           href={`/explore?region=${encodeURIComponent(region.name)}`}
-                          className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 hover:-translate-y-0.5 bg-[#c4622d] text-white shadow-lg shadow-[#c4622d]/20"
+                          className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 hover:-translate-y-0.5 bg-[#ff5722] text-white shadow-lg shadow-[#ff5722]/20"
                         >
                           View all in {region.name}
                           <ArrowRight className="w-3.5 h-3.5" />
                         </Link>
                       </div>
+
                     </div>
                   )}
                 </div>
