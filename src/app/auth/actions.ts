@@ -4,7 +4,7 @@ import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
 export async function signUp(formData: FormData) {
-  const adminClient = await createAdminClient();
+  const supabase = await createClient();
 
   const full_name = formData.get("full_name") as string;
   const email = formData.get("email") as string;
@@ -13,19 +13,29 @@ export async function signUp(formData: FormData) {
   const phone_number = formData.get("phone") as string;
   const phone = `${country_code}${phone_number.replace(/\s+/g, "")}`;
 
-  // Create user with admin client to bypass email confirmation
-  const { data: userData, error: createError } = await adminClient.auth.admin.createUser({
+  // Get origin for verification link
+  const headersList = await (await import("next/headers")).headers();
+  const host = headersList.get("host");
+  const protocol = host?.includes("localhost") ? "http" : "https";
+  const origin = `${protocol}://${host}`;
+
+  const { error } = await supabase.auth.signUp({
     email,
     password,
-    email_confirm: true,
-    user_metadata: { full_name, phone }
+    options: {
+      emailRedirectTo: `${origin}/auth/callback`,
+      data: {
+        full_name,
+        phone,
+      },
+    },
   });
 
-  if (createError) {
-    return { error: createError.message };
+  if (error) {
+    return { error: error.message };
   }
 
-  return { success: "Account created successfully! Redirecting to login..." };
+  return { success: "Please check your email to verify your account." };
 }
 
 
