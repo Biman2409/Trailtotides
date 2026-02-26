@@ -17,19 +17,19 @@ export async function sendVerificationEmail(email: string, link: string, name: s
       subject: 'Verify your Trail to Tides account',
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
-          <h1 style="color: #ff6b35;">Welcome to the Wild, ${name}!</h1>
+          <h1 style="color: #ff5100;">Welcome to the Wild, ${name}!</h1>
           <p style="font-size: 16px; line-height: 1.5;">
             Thank you for joining Trail to Tides. Before you can start exploring exclusive trails and expert advice, we need to verify your email address.
           </p>
           <div style="margin: 30px 0;">
-            <a href="${link}" style="background-color: #ff6b35; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
+            <a href="${link}" style="background-color: #ff5100; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
               Verify Email Address
             </a>
           </div>
           <p style="font-size: 14px; color: #666;">
             If the button above doesn't work, copy and paste this link into your browser:
           </p>
-          <p style="font-size: 14px; color: #ff6b35; word-break: break-all;">
+          <p style="font-size: 14px; color: #ff5100; word-break: break-all;">
             ${link}
           </p>
           <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;" />
@@ -60,12 +60,12 @@ export async function sendPasswordResetEmail(email: string, link: string) {
       subject: 'Reset your Trail to Tides password',
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
-          <h1 style="color: #ff6b35;">Password Reset Request</h1>
+          <h1 style="color: #ff5100;">Password Reset Request</h1>
           <p style="font-size: 16px; line-height: 1.5;">
             We received a request to reset your password for your Trail to Tides account. Click the button below to set a new password.
           </p>
           <div style="margin: 30px 0;">
-            <a href="${link}" style="background-color: #ff6b35; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
+            <a href="${link}" style="background-color: #ff5100; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
               Reset Password
             </a>
           </div>

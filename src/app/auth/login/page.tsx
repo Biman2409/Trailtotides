@@ -27,7 +27,7 @@ function LoginForm() {
     <div className="max-w-md w-full mx-auto">
       {/* Mobile logo */}
       <Link href="/" className="flex items-center gap-2 mb-6 lg:hidden">
-        <Mountain className="w-8 h-8 text-[#ff6b35]" />
+        <Mountain className="w-8 h-8 text-[#ff5100]" />
         <span className="text-white font-bold text-xl tracking-tight">Trail to Tides</span>
       </Link>
 
@@ -39,7 +39,7 @@ function LoginForm() {
         <div className="mb-6">
           <h1 className="text-4xl font-black text-white mb-3 tracking-tight leading-tight">
             Wild is calling,<br />
-            <span className="text-[#ff6b35]">answer it.</span>
+            <span className="text-[#ff5100]">answer it.</span>
           </h1>
           <p className="text-white/40 text-xs font-medium leading-relaxed">
             Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
@@ -68,14 +68,14 @@ function LoginForm() {
             type="email"
             required
             placeholder="name@example.com"
-            className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-[#ff6b35]/50 focus:bg-white/[0.06] transition-all"
+            className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
           />
         </div>
 
         <div>
             <div className="flex justify-between items-center mb-2 ml-1">
               <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Password</label>
-              <Link href="/auth/forgot-password" className="text-[10px] font-bold text-[#ff6b35]/60 hover:text-[#ff6b35] transition-colors uppercase tracking-widest">
+              <Link href="/auth/forgot-password" className="text-[10px] font-bold text-[#ff5100]/60 hover:text-[#ff5100] transition-colors uppercase tracking-widest">
                 Forgot?
               </Link>
             </div>
@@ -85,7 +85,7 @@ function LoginForm() {
               type={showPassword ? "text" : "password"}
               required
               placeholder="••••••••"
-              className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 pr-14 text-white placeholder-white/20 focus:outline-none focus:border-[#ff6b35]/50 focus:bg-white/[0.06] transition-all"
+              className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 pr-14 text-white placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
             />
             <button
               type="button"
@@ -100,7 +100,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#ff6b35] hover:bg-[#ff8e64] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff6b35]/20 mt-2"
+            className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 mt-2"
           >
 
           {loading ? "Verifying..." : "Sign In"}
@@ -109,7 +109,7 @@ function LoginForm() {
 
       <p className="mt-8 text-center text-white/30 text-sm font-medium">
         New to Trail to Tides?{" "}
-        <Link href="/auth/signup" className="text-[#ff6b35] hover:text-[#ff8e64] font-bold transition-colors">
+        <Link href="/auth/signup" className="text-[#ff5100] hover:text-[#ff7d47] font-bold transition-colors">
           Create account
         </Link>
       </p>
@@ -128,7 +128,7 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/20 to-transparent" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
           <Link href="/" className="flex items-center gap-2 text-white font-bold text-xl tracking-tight hover:scale-[1.02] transition-transform origin-left">
-            <div className="w-10 h-10 bg-[#ff6b35] rounded-xl flex items-center justify-center shadow-lg shadow-[#ff6b35]/20">
+            <div className="w-10 h-10 bg-[#ff5100] rounded-xl flex items-center justify-center shadow-lg shadow-[#ff5100]/20">
               <Mountain className="w-6 h-6 text-white" />
             </div>
             <span>Trail to Tides</span>
@@ -137,7 +137,7 @@ export default function LoginPage() {
                 <div className="max-w-md">
                   <h2 className="text-6xl font-black text-white leading-[1.1] mb-6 tracking-tight">
                     Wild is calling, <br />
-                    <span className="text-[#ff6b35] font-black">answer it.</span>
+                    <span className="text-[#ff5100] font-black">answer it.</span>
                   </h2>
                   <p className="text-white/70 text-lg font-medium leading-relaxed max-w-sm">
                     Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
@@ -156,8 +156,8 @@ export default function LoginPage() {
 
       {/* Right panel — form */}
       <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-20 xl:px-32 bg-[#0a0a0a] relative">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff6b35]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff6b35]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
         
         <Suspense fallback={<div className="text-white/50 text-center animate-pulse">Loading adventure...</div>}>
           <LoginForm />

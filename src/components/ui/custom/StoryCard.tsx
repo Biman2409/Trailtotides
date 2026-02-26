@@ -40,7 +40,7 @@ export default function StoryCard({ story }: { story: Story }) {
 
       <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
         {isFeatured && (
-          <div className="group/badge flex items-center gap-1.5 bg-black text-[#ff6b35] rounded-full px-2 py-1 shadow-md overflow-hidden transition-all duration-300 w-7 hover:w-[100px]">
+          <div className="group/badge flex items-center gap-1.5 bg-black text-[#ff5100] rounded-full px-2 py-1 shadow-md overflow-hidden transition-all duration-300 w-7 hover:w-[100px]">
             <Crown className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="text-[10px] font-semibold whitespace-nowrap opacity-0 group-hover/badge:opacity-100 transition-opacity duration-200 delay-100">
               Featured
@@ -48,7 +48,7 @@ export default function StoryCard({ story }: { story: Story }) {
           </div>
         )}
         {isTTTOriginal && (
-          <div className="group/badge flex items-center gap-1.5 bg-[#ff6b35] text-black rounded-full px-2 py-1 shadow-md overflow-hidden transition-all duration-300 w-7 hover:w-[120px]">
+          <div className="group/badge flex items-center gap-1.5 bg-[#ff5100] text-black rounded-full px-2 py-1 shadow-md overflow-hidden transition-all duration-300 w-7 hover:w-[120px]">
             <Mountain className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="text-[10px] font-semibold whitespace-nowrap opacity-0 group-hover/badge:opacity-100 transition-opacity duration-200 delay-100">
               TTT Original
@@ -82,7 +82,7 @@ export default function StoryCard({ story }: { story: Story }) {
           </div>
         )}
 
-        <h3 className="text-white font-bold text-base leading-snug mb-1.5 group-hover:text-[#ff6b35] transition-colors duration-200">
+        <h3 className="text-white font-bold text-base leading-snug mb-1.5 group-hover:text-[#ff5100] transition-colors duration-200">
           {story.title}
         </h3>
 
@@ -92,7 +92,7 @@ export default function StoryCard({ story }: { story: Story }) {
 
         <div className="border-t border-white/10 pt-2.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#ff6b35] to-[#ff8e64] flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
+            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#ff5100] to-[#ff7d47] flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
               {story.author.charAt(0)}
             </div>
             <div>
@@ -100,7 +100,7 @@ export default function StoryCard({ story }: { story: Story }) {
               <p className="text-white/50 text-[9px]">{story.date}</p>
             </div>
           </div>
-          <div className="text-[#ff6b35] text-[10px] font-semibold group-hover:translate-x-1 transition-transform duration-200">
+          <div className="text-[#ff5100] text-[10px] font-semibold group-hover:translate-x-1 transition-transform duration-200">
             Read →
           </div>
         </div>

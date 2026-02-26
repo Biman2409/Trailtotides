@@ -124,13 +124,13 @@ export default async function StoryPage({ params }: Props) {
           {/* Row 1: special badges */}
             <div className="flex items-center gap-3 mb-2 flex-wrap">
               {story.tags.includes("Featured") && (
-                  <span className="flex items-center gap-1.5 bg-black text-[#ff6b35] text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#ff6b35]/20">
+                  <span className="flex items-center gap-1.5 bg-black text-[#ff5100] text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#ff5100]/20">
                     <Crown className="w-3 h-3" />
                     Featured
                   </span>
                 )}
                 {story.tags.includes("TTT Original") && (
-                  <span className="flex items-center gap-1.5 bg-[#ff6b35] text-black text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#ff6b35]/20">
+                  <span className="flex items-center gap-1.5 bg-[#ff5100] text-black text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#ff5100]/20">
                     <Mountain className="w-3 h-3" />
                     TTT Original
                   </span>
@@ -149,7 +149,7 @@ export default async function StoryPage({ params }: Props) {
           </h1>
           <div className="flex items-center gap-4 flex-wrap">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-[#ff6b35]/50 flex items-center justify-center text-sm font-bold text-white shadow-md shadow-[#ff6b35]/20">
+              <div className="w-9 h-9 rounded-full bg-[#ff5100]/50 flex items-center justify-center text-sm font-bold text-white shadow-md shadow-[#ff5100]/20">
                 {story.author[0]}
               </div>
               <div>
@@ -171,7 +171,7 @@ export default async function StoryPage({ params }: Props) {
       {/* Article */}
       <article className="max-w-2xl mx-auto px-6 py-16 lg:py-24">
         {/* Lede */}
-          <p className="text-white/80 text-xl lg:text-2xl font-light leading-relaxed mb-10 border-l-4 border-[#ff6b35] pl-6">
+          <p className="text-white/80 text-xl lg:text-2xl font-light leading-relaxed mb-10 border-l-4 border-[#ff5100] pl-6">
           {story.excerpt}
         </p>
 
@@ -186,7 +186,7 @@ export default async function StoryPage({ params }: Props) {
 
         {/* Author card */}
           <div className="mt-10 bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-5">
-            <div className="w-14 h-14 rounded-full bg-[#ff6b35]/20 flex items-center justify-center text-xl font-bold text-[#ff6b35] shrink-0 shadow-inner">
+            <div className="w-14 h-14 rounded-full bg-[#ff5100]/20 flex items-center justify-center text-xl font-bold text-[#ff5100] shrink-0 shadow-inner">
               {story.author[0]}
             </div>
             <div>
@@ -216,7 +216,7 @@ export default async function StoryPage({ params }: Props) {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <p className="text-[#ff6b35] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
                 Keep Reading
               </p>
               <h2 className="text-white text-3xl font-semibold tracking-tight">
@@ -248,7 +248,7 @@ export default async function StoryPage({ params }: Props) {
                     </span>
                   </div>
                 </div>
-                <h3 className="text-white font-semibold text-base leading-snug group-hover:text-[#ff6b35] transition-colors mb-1">
+                <h3 className="text-white font-semibold text-base leading-snug group-hover:text-[#ff5100] transition-colors mb-1">
                   {s.title}
                 </h3>
                 <p className="text-white/40 text-xs flex items-center gap-1.5">

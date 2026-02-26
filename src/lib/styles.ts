@@ -1,15 +1,15 @@
 export const typeStyle: Record<string, string> = {
   // Land — vibrant orange
-  Trekking:          "bg-[#ff6b35] text-white",
-  Biking:            "bg-[#ff6b35] text-white",
-  Cycling:           "bg-[#ff6b35] text-white",
-  "Rock Climbing":   "bg-[#ff6b35] text-white",
-  Mountaineering:    "bg-[#ff6b35] text-white",
-  "Camel Safari":    "bg-[#ff6b35] text-white",
-  "Jeep Safari":     "bg-[#ff6b35] text-white",
-  Sandboarding:      "bg-[#ff6b35] text-white",
-  "Urban Adventure": "bg-[#ff6b35] text-white",
-  Caving:            "bg-[#ff6b35] text-white",
+  Trekking:          "bg-[#ff5100] text-white",
+  Biking:            "bg-[#ff5100] text-white",
+  Cycling:           "bg-[#ff5100] text-white",
+  "Rock Climbing":   "bg-[#ff5100] text-white",
+  Mountaineering:    "bg-[#ff5100] text-white",
+  "Camel Safari":    "bg-[#ff5100] text-white",
+  "Jeep Safari":     "bg-[#ff5100] text-white",
+  Sandboarding:      "bg-[#ff5100] text-white",
+  "Urban Adventure": "bg-[#ff5100] text-white",
+  Caving:            "bg-[#ff5100] text-white",
   
   // Water — blue
   Diving:            "bg-blue-500 text-white",
@@ -34,7 +34,7 @@ export const typeStyle: Record<string, string> = {
 export const difficultyStyle: Record<string, string> = {
   Beginner:     "bg-emerald-500 text-white",
   Intermediate: "bg-blue-400 text-white",
-  Advanced:     "bg-[#ff6b35] text-white",
-  Expert:       "bg-[#ff6b35] text-white",
+  Advanced:     "bg-[#ff5100] text-white",
+  Expert:       "bg-[#ff5100] text-white",
   Extreme:      "bg-red-600 text-white",
 };
