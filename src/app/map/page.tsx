@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { 
-  Map as MapIcon, Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2, Wind, Sun, 
-  Mountain, Waves, Snowflake, Trees, Palmtree, Sunrise, Building2, Flower2, CloudRain, Leaf, 
+  Map as MapIcon, Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
   Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users 
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
@@ -36,12 +35,12 @@ const difficultyColor: Record<string, string> = {
   Extreme:      "#ef4444",  // red
 };
 
-const seasons: { label: string; months: Month[]; icon: React.ReactNode }[] = [
-  { label: "Winter",  months: ["Dec", "Jan", "Feb"],      icon: <Snowflake className="w-3.5 h-3.5" /> },
-  { label: "Spring",  months: ["Mar", "Apr", "May"],      icon: <Flower2 className="w-3.5 h-3.5" /> },
-  { label: "Summer",  months: ["Apr", "May", "Jun"],      icon: <Sun className="w-3.5 h-3.5" /> },
-  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"], icon: <CloudRain className="w-3.5 h-3.5" /> },
-  { label: "Autumn",  months: ["Oct", "Nov", "Dec"],      icon: <Leaf className="w-3.5 h-3.5" /> },
+const seasons: { label: string; months: Month[] }[] = [
+  { label: "Winter",  months: ["Dec", "Jan", "Feb"] },
+  { label: "Spring",  months: ["Mar", "Apr", "May"] },
+  { label: "Summer",  months: ["Apr", "May", "Jun"] },
+  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"] },
+  { label: "Autumn",  months: ["Oct", "Nov", "Dec"] },
 ];
 
 type NominatimResult = {
@@ -228,9 +227,9 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
 
   useEffect(() => {
     if (!mapRef.current) return;
+    const container = mapRef.current;
     loadLeaflet().then((L) => {
-      if (!mapRef.current) return;
-      const container = mapRef.current;
+      if (!container) return;
       if ((container as any)._leaflet_id) (container as any)._leaflet_id = undefined;
       delete (L.Icon.Default.prototype as any)._getIconUrl;
       L.Icon.Default.mergeOptions({
@@ -252,7 +251,7 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
-      if (mapRef.current) (mapRef.current as any)._leaflet_id = undefined;
+      if (container) (container as any)._leaflet_id = undefined;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -400,22 +399,18 @@ export default function MapPage() {
                         const categories = [
                           {
                             label: "Land Based", 
-                            icon: <Mountain className="w-3.5 h-3.5" />,
                             types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
                           },
                           {
                             label: "Water Based", 
-                            icon: <Waves className="w-3.5 h-3.5" />,
                             types: ["Diving", "Kayaking"],
                           },
                           {
                             label: "Snow Based", 
-                            icon: <Snowflake className="w-3.5 h-3.5" />,
                             types: ["Skiing"],
                           },
                           {
                             label: "Air Based", 
-                            icon: <Wind className="w-3.5 h-3.5" />,
                             types: [] as string[],
                           },
                         ];
@@ -435,7 +430,6 @@ export default function MapPage() {
                                         : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                     }`}
                                   >
-                                    {cat.icon}
                                     {cat.label}
                                 {hasSelected && (
                                   <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
@@ -485,15 +479,15 @@ export default function MapPage() {
                   <div className="col-span-2 lg:col-span-3">
                     <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Region</h3>
                     {(() => {
-                      const regionGroups: { name: Region; icon: React.ReactNode; subRegions: string[] }[] = [
-                        { name: "Himalayas",     icon: <Mountain className="w-3.5 h-3.5" />, subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
-                        { name: "Western Ghats", icon: <Trees className="w-3.5 h-3.5" />, subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"] },
-                        { name: "Eastern Ghats", icon: <Mountain className="w-3.5 h-3.5" />, subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"] },
-                        { name: "Desert",        icon: <Sun className="w-3.5 h-3.5" />, subRegions: ["Rajasthan", "Gujarat"] },
-                        { name: "Coast",         icon: <Waves className="w-3.5 h-3.5" />, subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
-                        { name: "Islands",       icon: <Palmtree className="w-3.5 h-3.5" />, subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
-                        { name: "Northeast",     icon: <Sunrise className="w-3.5 h-3.5" />, subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"] },
-                        { name: "Urban",         icon: <Building2 className="w-3.5 h-3.5" />, subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"] },
+                      const regionGroups: { name: Region; subRegions: string[] }[] = [
+                        { name: "Himalayas",     subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
+                        { name: "Western Ghats", subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"] },
+                        { name: "Eastern Ghats", subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"] },
+                        { name: "Desert",        subRegions: ["Rajasthan", "Gujarat"] },
+                        { name: "Coast",         subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
+                        { name: "Islands",       subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
+                        { name: "Northeast",     subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"] },
+                        { name: "Urban",         subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"] },
                       ];
                       return (
                         <div className="flex flex-col gap-2">
@@ -509,7 +503,6 @@ export default function MapPage() {
                                         ? "bg-[#ff5100] text-white border-[#ff5100]" 
                                         : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                     }`}>
-                                    {rg.icon}
                                     {rg.name}
                                 {subCount > 0 && <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">{subCount}</span>}
                                 <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
@@ -546,7 +539,7 @@ export default function MapPage() {
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Best Season</h3>
                   <div className="flex flex-col gap-2">
                     <div className="flex flex-wrap gap-2">
-                        {seasons.map(({ label, months: sMonths, icon }) => {
+                        {seasons.map(({ label, months: sMonths }) => {
                           const isExpanded = expandedSeason === label;
                           const hasSelected = sMonths.some((m) => selectedMonths.includes(m));
                           const selectedCount = sMonths.filter((m) => selectedMonths.includes(m)).length;
@@ -557,7 +550,6 @@ export default function MapPage() {
                                   ? "bg-[#ff5100] text-white border-[#ff5100]" 
                                   : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                               }`}>
-                              {icon}
                               {label}
                             {hasSelected && <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">{selectedCount}</span>}
                             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
