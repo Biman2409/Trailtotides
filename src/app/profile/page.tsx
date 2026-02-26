@@ -1,6 +1,6 @@
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { User, Mail, Phone, Calendar, Shield, Camera, ArrowLeft } from "lucide-react";
+import { Calendar, Shield, Camera, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import ProfileForm from "./ProfileForm";
@@ -127,7 +127,7 @@ export default async function ProfilePage() {
 
             <div className="mt-8 p-6 rounded-2xl bg-[#ff5100]/5 border border-[#ff5100]/10">
               <p className="text-sm text-[#ff7d47]/80 leading-relaxed italic">
-                "Ready for your next adventure? Your journey with Trail to Tides is just beginning."
+                &quot;Ready for your next adventure? Your journey with Trail to Tides is just beginning.&quot;
               </p>
             </div>
           </div>
