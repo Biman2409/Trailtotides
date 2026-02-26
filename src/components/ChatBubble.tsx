@@ -92,7 +92,7 @@ export default function ChatBubble() {
           boxShadow: "0 10px 40px -10px rgba(255,81,0,0.6)", 
           transition: "opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s" 
         }}
-        aria-label="Open compass.ai"
+        aria-label="Open COMPASS.AI"
       >
         <div className="absolute inset-0 rounded-full bg-white/20 scale-0 group-hover:scale-100 transition-transform duration-500 rounded-full" />
         <Compass className={`w-7 h-7 relative z-10 transition-transform duration-700 ${open ? 'rotate-180' : 'group-hover:rotate-90'}`} />
@@ -110,7 +110,7 @@ export default function ChatBubble() {
                 <Compass className="w-6 h-6 text-white" strokeWidth={2.5} />
               </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-black text-sm lowercase tracking-widest">compass.ai</p>
+                    <p className="text-white font-black text-sm uppercase tracking-widest">COMPASS.AI</p>
                   </div>
             </div>
             <button
