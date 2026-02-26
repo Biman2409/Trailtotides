@@ -260,11 +260,8 @@ export default function InlineChat() {
                     )}
                   </button>
                 </div>
-                <div className="flex items-center justify-between px-2 mt-5">
-                   <p className="text-[10px] text-white/10 uppercase tracking-[0.4em] font-black">
-                     Powered by Compass Intelligence • v4.0.2
-                   </p>
-                   <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-end px-2 mt-5">
+                     <div className="flex items-center gap-4">
                      <div className="flex items-center gap-1.5">
                        <div className="w-1 h-1 rounded-full bg-green-500" />
                        <span className="text-[9px] text-white/20 font-bold uppercase tracking-widest">Encrypted</span>
