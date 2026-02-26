@@ -273,12 +273,13 @@ export default function Navbar() {
               >
                 Log In
               </Link>
-              <Link
-                href="/auth/signup"
-                className="block w-full text-center bg-[#c4622d] hover:bg-[#d97040] text-white font-semibold py-3 rounded-xl transition-colors text-sm"
-              >
-                Sign Up
-              </Link>
+                <Link
+                  href="/auth/signup"
+                  className="block w-full text-center bg-[#ff5722] hover:bg-[#ff7043] text-white font-semibold py-3 rounded-xl transition-colors text-sm"
+                >
+                  Sign Up
+                </Link>
+
             </div>
           )}
         </div>
