@@ -140,12 +140,15 @@ export default function FindByRegion() {
                       </span>
                     </div>
 
-                    <div>
-                      <h3 className="text-white font-bold text-2xl leading-tight tracking-tight flex items-center gap-2">
-                        {regionTitleIcons[region.name]}
-                        {region.name}
-                      </h3>
-                    </div>
+                      <div>
+                        <h3 className="text-white font-bold text-2xl leading-tight tracking-tight flex items-center gap-2">
+                          {regionTitleIcons[region.name]}
+                          {region.name}
+                        </h3>
+                        <p className="text-white/60 text-[11px] mt-1 font-medium tracking-wide uppercase italic">
+                          {regionSubtitles[region.name]}
+                        </p>
+                      </div>
                   </div>
                 </button>
 
