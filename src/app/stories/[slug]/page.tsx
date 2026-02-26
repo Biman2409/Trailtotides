@@ -122,20 +122,20 @@ export default async function StoryPage({ params }: Props) {
 
         <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 pb-14 w-full">
           {/* Row 1: special badges */}
-          <div className="flex items-center gap-3 mb-2 flex-wrap">
-            {story.tags.includes("Featured") && (
-                <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
-                  <Crown className="w-3 h-3" />
-                  Featured
-                </span>
-              )}
-              {story.tags.includes("TTT Original") && (
-                <span className="flex items-center gap-1.5 bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg shadow-[#c4622d]/30">
-                  <Mountain className="w-3 h-3" />
-                  TTT Original
-                </span>
-              )}
-          </div>
+            <div className="flex items-center gap-3 mb-2 flex-wrap">
+              {story.tags.includes("Featured") && (
+                  <span className="flex items-center gap-1.5 bg-black text-[#f4845f] text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#f4845f]/20">
+                    <Crown className="w-3 h-3" />
+                    Featured
+                  </span>
+                )}
+                {story.tags.includes("TTT Original") && (
+                  <span className="flex items-center gap-1.5 bg-black text-[#f4845f] text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#f4845f]/20">
+                    <Mountain className="w-3 h-3" />
+                    TTT Original
+                  </span>
+                )}
+            </div>
             {/* Row 2: content tags — all non-badge tags */}
               <div className="flex items-center gap-3 mb-4 flex-wrap">
                 {story.tags.filter(t => !BADGE_TAGS.includes(t)).map(tag => (
