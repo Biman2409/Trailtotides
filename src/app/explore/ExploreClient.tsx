@@ -136,11 +136,11 @@ const durations: Duration[] = ["Weekend", "3–5 days", "7+ days"];
 const groupSizes: GroupSize[] = ["Solo", "Small group (2–6)", "Large group (6+)"];
 
 const seasons: { label: string; months: Month[]; idleColor: string; activeColor: string }[] = [
-  { label: "Winter",  months: ["Dec", "Jan", "Feb"],      idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-  { label: "Spring",  months: ["Mar", "Apr", "May"],      idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-  { label: "Summer",  months: ["Apr", "May", "Jun"],      idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"], idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-  { label: "Autumn",  months: ["Oct", "Nov", "Dec"],      idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+  { label: "Winter",  months: ["Dec", "Jan", "Feb"],      icon: <Snowflake className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+  { label: "Spring",  months: ["Mar", "Apr", "May"],      icon: <Flower2 className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+  { label: "Summer",  months: ["Apr", "May", "Jun"],      icon: <Sun className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"], icon: <CloudRain className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+  { label: "Autumn",  months: ["Oct", "Nov", "Dec"],      icon: <Leaf className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
 ];
 
 
