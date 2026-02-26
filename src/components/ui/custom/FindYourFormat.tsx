@@ -5,17 +5,18 @@ import Link from "next/link";
 import { ArrowRight, Wind, Mountain, Waves, Snowflake, Footprints, Bike, Car, Sun, HardHat, Building2, Ship, Fan, Cloud, Tent } from "lucide-react";
 
 const categories = [
-  {
-    id: "land",
-    label: "Land",
-    icon: <Mountain className="w-6 h-6 text-[#f4956a]" />,
-    subtitle: "push your limits and own every inch of wild terrain",
-    image: "https://images.unsplash.com/photo-1605548109944-9040d0972bf5?w=800&q=80",
-    accent: "#c4622d",
-    accentLight: "rgba(196,98,45,0.15)",
-    accentBorder: "rgba(196,98,45,0.35)",
-    tagBg: "rgba(196,98,45,0.18)",
-    tagText: "#f4956a",
+    {
+      id: "land",
+      label: "Land",
+      icon: <Mountain className="w-6 h-6 text-[#ff5722]" />,
+      subtitle: "push your limits and own every inch of wild terrain",
+      image: "https://images.unsplash.com/photo-1605548109944-9040d0972bf5?w=800&q=80",
+      accent: "#ff5722",
+      accentLight: "rgba(255,87,34,0.15)",
+      accentBorder: "rgba(255,87,34,0.35)",
+      tagBg: "rgba(255,87,34,0.18)",
+      tagText: "#ff5722",
+
     items: [
       { type: "Trekking", icon: <Footprints className="w-4 h-4" />, count: 94 },
       { type: "Biking", icon: <Bike className="w-4 h-4" />, count: 38 },
