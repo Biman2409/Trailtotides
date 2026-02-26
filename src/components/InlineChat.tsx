@@ -82,8 +82,8 @@ export default function InlineChat() {
             </div>
               <div className="flex items-center gap-4 justify-center">
                 <Compass className="w-10 h-10 lg:w-12 lg:h-12 text-[#ff5100] drop-shadow-[0_0_30px_rgba(255,81,0,0.3)]" strokeWidth={1.2} />
-                <h2 className="text-white text-5xl lg:text-7xl font-black tracking-tighter leading-none lowercase">
-                  compass.ai
+                <h2 className="text-white text-5xl lg:text-7xl font-black tracking-tighter leading-none uppercase">
+                  COMPASS.AI
                 </h2>
               </div>
           </div>
