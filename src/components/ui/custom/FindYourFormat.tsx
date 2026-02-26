@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Wind, Mountain, Waves, Snowflake, Footprints, Bike, Car, Sun, HardHat, Building2, Ship, Cloud } from "lucide-react";
+import { ArrowRight, Wind, Mountain, Waves, Snowflake } from "lucide-react";
 
 const categories = [
     {
