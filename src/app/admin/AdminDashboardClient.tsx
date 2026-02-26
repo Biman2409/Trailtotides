@@ -607,12 +607,12 @@ export default function AdminDashboardClient({
                       cursor={{fill: 'rgba(255,255,255,0.05)'}}
                       contentStyle={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: "12px" }}
                     />
-                    <Bar 
-                      dataKey="count" 
-                      fill="#f97316" 
-                      radius={[6, 6, 0, 0]} 
-                      barSize={24}
-                    />
+                      <Bar 
+                        dataKey="count" 
+                        fill="#f4845f" 
+                        radius={[6, 6, 0, 0]} 
+                        barSize={24}
+                      />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
