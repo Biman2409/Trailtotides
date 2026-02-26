@@ -6,11 +6,13 @@ import { redirect } from "next/navigation";
 export async function signUp(formData: FormData) {
   const supabase = await createClient();
 
-  const full_name = formData.get("full_name") as string;
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const phone = formData.get("phone") as string;
-  const headerList = await (await import("next/headers")).headers();
+    const full_name = formData.get("full_name") as string;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const country_code = formData.get("country_code") as string;
+    const phone_number = formData.get("phone") as string;
+    const phone = `${country_code}${phone_number.replace(/\s+/g, "")}`;
+    const headerList = await (await import("next/headers")).headers();
   const origin = headerList.get("origin");
 
     const { error } = await supabase.auth.signUp({
