@@ -37,7 +37,7 @@ function loadLeaflet(): Promise<any> {
 
 const difficultyColor: Record<string, string> = {
   Beginner: "#22c55e", Intermediate: "#3b82f6", Advanced: "#f59e0b",
-  Expert: "#f97316", Extreme: "#ef4444",
+  Expert: "#ff5722", Extreme: "#ef4444",
 };
 
 const typeEmoji: Partial<Record<AdventureType, string>> = {
