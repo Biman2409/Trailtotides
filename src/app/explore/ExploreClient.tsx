@@ -792,22 +792,22 @@ export default function ExploreClient() {
                       </div>
                     </div>
 
-                  <div className="col-span-2 lg:col-span-3">
-                    <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {([
-                        { val: "Solo",             idle: "bg-violet-50 border-violet-200 text-violet-800 hover:bg-violet-100 border",     active: "bg-violet-600 text-white border border-violet-600" },
-                        { val: "Small group (2–6)", idle: "bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100 border",             active: "bg-teal-600 text-white border border-teal-600" },
-                        { val: "Large group (6+)",  idle: "bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 hover:bg-fuchsia-100 border", active: "bg-fuchsia-600 text-white border border-fuchsia-600" },
-                      ] as { val: GroupSize; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
-                        <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
-                          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
-                          {val}
-                        </button>
-                      ))}
+                    <div className="col-span-2 lg:col-span-3">
+                      <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {([
+                          { val: "Solo",             idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                          { val: "Small group (2–6)", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                          { val: "Large group (6+)",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        ] as { val: GroupSize; idle: string; active: string }[]).map(({ val, idle, active }) => (
+                          <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
+                            {val}
+                          </button>
+                        ))}
 
+                    </div>
                   </div>
-                </div>
 
             </div>
           </div>
