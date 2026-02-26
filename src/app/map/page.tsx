@@ -438,17 +438,17 @@ export default function MapPage() {
                     return (
                       <div className="flex flex-col gap-2">
                         <div className="flex flex-wrap gap-2">
-                          {categories.map((cat) => {
-                            const isExpanded = expandedCategory === cat.label;
-                            const hasSelected = cat.types.some(t => selectedTypes.includes(t as AdventureType));
-                            return (
-                              <button
-                                key={cat.label}
-                                onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? cat.btnActive : cat.btn}`}
-                              >
-                                <span>{cat.icon}</span>
-                                {cat.label}
+                            {categories.map((cat) => {
+                              const isExpanded = expandedCategory === cat.label;
+                              const hasSelected = cat.types.some(t => selectedTypes.includes(t as AdventureType));
+                              return (
+                                <button
+                                  key={cat.label}
+                                  onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
+                                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? cat.btnActive : cat.btn}`}
+                                >
+                                  {cat.label}
+
                                 {hasSelected && (
                                   <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
                                     {cat.types.filter(t => selectedTypes.includes(t as AdventureType)).length}
