@@ -344,3 +344,5 @@ It can also happen if the client has a browser extension installed which messes 
 2026-02-26T20:11:35.467Z [console][warn] Image with src "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=80" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
 2026-02-26T21:09:30.629Z [network][GET 200] /api/stories/views?slug=the-night-photi-la-tested-us
   response: {"views":2448}
+2026-02-26T22:45:05.374Z [network][GET 200] /api/stories/views?slug=the-night-photi-la-tested-us
+  response: {"views":2453}
