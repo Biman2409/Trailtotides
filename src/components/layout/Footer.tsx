@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mountain, Instagram, Youtube, Twitter, Map as MapIcon, Compass, BookOpen, Send, ArrowUpRight, Github } from "lucide-react";
+import { Mountain, Instagram, Youtube, Twitter, Send, ArrowUpRight, Github } from "lucide-react";
 
 export default function Footer() {
   return (
