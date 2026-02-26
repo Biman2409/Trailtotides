@@ -30,10 +30,10 @@ const SECTIONS = [
     title: "7. Intellectual Property",
     content: `All content on Trail to Tides — including text, graphics, adventure data, and design — is the property of Trail to Tides or its content suppliers and is protected by applicable intellectual property laws. You may not reproduce, distribute, or create derivative works without our express written permission.`,
   },
-    {
-      title: "8. AI Features (compass.ai)",
-      content: `compass.ai uses OpenAI's language model technology to provide adventure recommendations. Recommendations are generated automatically and may not always be accurate, appropriate, or safe for your specific circumstances. Always exercise your own judgement and verify information before acting on any AI-generated recommendation.`,
-    },
+      {
+        title: "8. AI Features (COMPASS.AI)",
+        content: `COMPASS.AI uses OpenAI's language model technology to provide adventure recommendations. Recommendations are generated automatically and may not always be accurate, appropriate, or safe for your specific circumstances. Always exercise your own judgement and verify information before acting on any AI-generated recommendation.`,
+      },
 
   {
     title: "9. Limitation of Liability",
