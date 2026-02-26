@@ -35,6 +35,6 @@ export const difficultyStyle: Record<string, string> = {
   Beginner:     "bg-emerald-500 text-white",
   Intermediate: "bg-blue-400 text-white",
   Advanced:     "bg-amber-500 text-white",
-  Expert:       "bg-[#ff5722] text-white",
+  Expert:       "bg-[#f4845f] text-white",
   Extreme:      "bg-red-600 text-white",
 };
