@@ -42,11 +42,11 @@ const categories = [
     tagBg: "rgba(42,124,199,0.18)",
     tagText: "#6ab4f0",
     items: [
-      { type: "Diving", icon: <Waves className="w-4 h-4" />, count: 19 },
-      { type: "Kayaking", icon: <Ship className="w-4 h-4" />, count: 24 },
-      { type: "Surfing", icon: <Waves className="w-4 h-4" />, count: 12 },
-      { type: "River Rafting", icon: <Waves className="w-4 h-4" />, count: 16 },
-      { type: "Snorkelling", icon: <Waves className="w-4 h-4" />, count: 8 },
+      { type: "Diving", count: 19 },
+      { type: "Kayaking", count: 24 },
+      { type: "Surfing", count: 12 },
+      { type: "River Rafting", count: 16 },
+      { type: "Snorkelling", count: 8 },
     ],
   },
   {
@@ -61,10 +61,10 @@ const categories = [
     tagBg: "rgba(74,138,159,0.18)",
     tagText: "#8dcce0",
     items: [
-      { type: "Skiing", icon: <Snowflake className="w-4 h-4" />, count: 8 },
-      { type: "Snowboarding", icon: <Snowflake className="w-4 h-4" />, count: 5 },
-      { type: "Ice Climbing", icon: <Snowflake className="w-4 h-4" />, count: 4 },
-      { type: "Snow Trekking", icon: <Footprints className="w-4 h-4" />, count: 22 },
+      { type: "Skiing", count: 8 },
+      { type: "Snowboarding", count: 5 },
+      { type: "Ice Climbing", count: 4 },
+      { type: "Snow Trekking", count: 22 },
     ],
   },
     {
@@ -81,10 +81,10 @@ const categories = [
     comingSoon: true,
     items: [],
     previewItems: [
-      { type: "Paragliding", icon: <Wind className="w-4 h-4" /> },
-      { type: "Skydiving", icon: <Cloud className="w-4 h-4" /> },
-      { type: "Hot Air Balloon", icon: <Wind className="w-4 h-4" /> },
-      { type: "Hang Gliding", icon: <Wind className="w-4 h-4" /> },
+      { type: "Paragliding" },
+      { type: "Skydiving" },
+      { type: "Hot Air Balloon" },
+      { type: "Hang Gliding" },
     ],
   },
 ];
