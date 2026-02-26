@@ -4,25 +4,34 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Map as MapIcon } from "lucide-react";
 import Image from "next/image";
-import { regions, adventures, adventureTypes } from "@/lib/data";
+import { regions, adventures, Region } from "@/lib/data";
+
+const regionSubRegions: Record<string, string[]> = {
+  "Himalayas": ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
+  "Western Ghats": ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"],
+  "Eastern Ghats": ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"],
+  "Desert": ["Rajasthan", "Gujarat"],
+  "Coast": ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"],
+  "Islands": ["Andaman & Nicobar", "Lakshadweep"],
+  "Northeast": ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"],
+  "Urban": ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"]
+};
 
 export default function FindByRegion() {
   const [openId, setOpenId] = useState<string | null>(null);
 
   const regionData = regions.map((region) => {
     const regionAdventures = adventures.filter((a) => a.region === region.name);
-    const typesMap = new Map<string, number>();
-    regionAdventures.forEach((a) => {
-      typesMap.set(a.type, (typesMap.get(a.type) || 0) + 1);
-    });
-    const items = Array.from(typesMap.entries()).map(([type, count]) => {
-      const typeInfo = adventureTypes.find(t => t.type === type);
+    const subRegions = regionSubRegions[region.name] || [];
+    
+    const items = subRegions.map(sr => {
+      const count = regionAdventures.filter(a => a.state.includes(sr)).length;
       return {
-        type,
+        label: sr,
         count,
-        icon: typeInfo?.icon || "📍"
+        icon: "📍"
       };
-    }).sort((a, b) => b.count - a.count);
+    }).filter(item => item.count > 0);
 
     return {
       ...region,
