@@ -563,104 +563,106 @@ export default function ExploreClient() {
                   })()}
                 </div>
 
-              {/* Region */}
-                <div className="col-span-2 lg:col-span-3">
-                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
-                    Region
-                  </h3>
-                  {(() => {
-                    const regionGroups: { name: Region; icon: React.ReactNode; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
-                      {
-          name: "Himalayas",
-          
-                        btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                        btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
-                        chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                        chipActive: "bg-[#ff6b35] text-white",
-                          subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
-                      },
-                      {
-                          name: "Western Ghats",
-                            
-                        btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                        btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
-                        chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                        chipActive: "bg-[#ff6b35] text-white",
-                        subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"],
-                        },
+                  {/* Region */}
+                  <div className="col-span-2 lg:col-span-3">
+                    <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
+                      Region
+                    </h3>
+                    {(() => {
+                      const regionGroups: { name: Region; icon: React.ReactNode; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
                         {
-                              name: "Eastern Ghats",
-                                
+                          name: "Himalayas",
+                          icon: <Mountain className="w-3.5 h-3.5" />,
                           btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
                           btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
                           chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
                           chipActive: "bg-[#ff6b35] text-white",
-                          subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"],
+                            subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
                         },
                         {
-                          name: "Desert",
-                          
+                            name: "Western Ghats",
+                            icon: <Trees className="w-3.5 h-3.5" />,
                           btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
                           btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
                           chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
                           chipActive: "bg-[#ff6b35] text-white",
-                            subRegions: ["Rajasthan", "Gujarat"],
-                        },
-                      {
-                        name: "Coast",
-                        
-                        btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                        btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
-                        chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                        chipActive: "bg-[#ff6b35] text-white",
-                        subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"],
-                      },
-                      {
-                        name: "Islands",
-                        
-                        btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                        btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
-                        chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                        chipActive: "bg-[#ff6b35] text-white",
-                        subRegions: ["Andaman & Nicobar", "Lakshadweep"],
-                      },
+                          subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"],
+                          },
                           {
-                            name: "Northeast",
-                            
+                                name: "Eastern Ghats",
+                                icon: <Mountain className="w-3.5 h-3.5" />,
                             btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                          btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
-                          chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                          chipActive: "bg-[#ff6b35] text-white",
-                          subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"],
-                        },
+                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                            chipActive: "bg-[#ff6b35] text-white",
+                            subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"],
+                          },
+                          {
+                            name: "Desert",
+                            icon: <Sun className="w-3.5 h-3.5" />,
+                            btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
+                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                            chipActive: "bg-[#ff6b35] text-white",
+                              subRegions: ["Rajasthan", "Gujarat"],
+                          },
                         {
-                          name: "Urban",
-                          
+                          name: "Coast",
+                          icon: <Waves className="w-3.5 h-3.5" />,
                           btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
                           btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
                           chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
                           chipActive: "bg-[#ff6b35] text-white",
-                          subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"],
+                          subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"],
                         },
-                      ];
-                    return (
-                      <div className="flex flex-col gap-2">
-                        <div className="flex flex-wrap gap-2">
-                        {regionGroups.map((rg) => {
-                          const isExpanded = expandedRegion === rg.name;
-                          const hasSelected = selectedRegions.includes(rg.name) || rg.subRegions.some(sr => selectedSubRegions.includes(sr));
-                          const subCount = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
-                          return (
-                            <button
-                              key={rg.name}
-                              onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
-                              className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
-                                isExpanded || hasSelected 
-                                  ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
-                                  : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
-                              }`}
-                            >
-                                {rg.name}
+                        {
+                          name: "Islands",
+                          icon: <Palmtree className="w-3.5 h-3.5" />,
+                          btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
+                          btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                          chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                          chipActive: "bg-[#ff6b35] text-white",
+                          subRegions: ["Andaman & Nicobar", "Lakshadweep"],
+                        },
+                            {
+                              name: "Northeast",
+                              icon: <Sunrise className="w-3.5 h-3.5" />,
+                              btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
+                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                            chipActive: "bg-[#ff6b35] text-white",
+                            subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"],
+                          },
+                          {
+                            name: "Urban",
+                            icon: <Building2 className="w-3.5 h-3.5" />,
+                            btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
+                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
+                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
+                            chipActive: "bg-[#ff6b35] text-white",
+                            subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"],
+                          },
+                        ];
+                      return (
+                        <div className="flex flex-col gap-2">
+                          <div className="flex flex-wrap gap-2">
+                          {regionGroups.map((rg) => {
+                            const isExpanded = expandedRegion === rg.name;
+                            const hasSelected = selectedRegions.includes(rg.name) || rg.subRegions.some(sr => selectedSubRegions.includes(sr));
+                            const subCount = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
+                            return (
+                              <button
+                                key={rg.name}
+                                onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                                  isExpanded || hasSelected 
+                                    ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
+                                    : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                                }`}
+                              >
+                                  {rg.icon}
+                                  {rg.name}
+
 
                               {subCount > 0 && (
                                 <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
