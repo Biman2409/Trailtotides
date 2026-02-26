@@ -140,7 +140,7 @@ const seasons: { label: string; icon: React.ReactNode; months: Month[]; color: s
   { label: "Spring",  icon: <Flower2 className="w-4 h-4" />, months: ["Mar", "Apr", "May"],      color: "text-pink-600",   activeColor: "bg-pink-500 text-white",   idleColor: "bg-pink-50 text-pink-800 hover:bg-pink-100 border border-pink-200" },
   { label: "Summer",  icon: <Sun className="w-4 h-4" />, months: ["Apr", "May", "Jun"],      color: "text-amber-600",  activeColor: "bg-amber-500 text-white",  idleColor: "bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200" },
   { label: "Monsoon", icon: <CloudRain className="w-4 h-4" />, months: ["Jun", "Jul", "Aug", "Sep"], color: "text-teal-600", activeColor: "bg-teal-600 text-white",   idleColor: "bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-200" },
-  { label: "Autumn",  icon: <Leaf className="w-4 h-4" />, months: ["Oct", "Nov", "Dec"],      color: "text-orange-600", activeColor: "bg-orange-500 text-white", idleColor: "bg-orange-50 text-orange-800 hover:bg-orange-100 border border-orange-200" },
+    { label: "Autumn",  icon: <Leaf className="w-4 h-4" />, months: ["Oct", "Nov", "Dec"],      color: "text-[#f4845f]", activeColor: "bg-[#f4845f] text-white", idleColor: "bg-[#f4845f]/5 text-[#f4845f] hover:bg-[#f4845f]/10 border border-[#f4845f]/20" },
 ];
 
 
