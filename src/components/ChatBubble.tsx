@@ -93,7 +93,7 @@ export default function ChatBubble() {
 
         {/* Chat panel */}
         {open && (
-          <div className="fixed bottom-20 right-6 z-50 w-[370px] max-w-[calc(100vw-1.5rem)] bg-[#141920] border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+          <div className="fixed bottom-20 right-6 z-50 w-[370px] max-w-[calc(100vw-1.5rem)] bg-[#141920] border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out"
             style={{ boxShadow: "0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06)" }}
           >
             {/* Header */}
