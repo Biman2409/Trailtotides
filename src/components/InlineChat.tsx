@@ -100,16 +100,10 @@ export default function InlineChat() {
             
             <div className="relative bg-[#11161d]/90 backdrop-blur-2xl border border-white/[0.08] rounded-[2rem] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] overflow-hidden">
               
-              {/* Operational Header */}
-              <div className="px-6 py-4 border-b border-white/[0.05] flex items-center justify-between bg-white/[0.01]">
-                <div className="flex items-center gap-3">
-                  <Compass className="w-4 h-4 text-[#ff5100]" />
-                </div>
-                <div className="absolute left-1/2 -translate-x-1/2">
+                {/* Operational Header */}
+                <div className="px-6 py-4 border-b border-white/[0.05] flex items-center justify-center bg-white/[0.01]">
                   <span className="text-[10px] text-white/40 font-black uppercase tracking-[0.2em]">Recommended Starting Vectors</span>
                 </div>
-                <div className="w-4" /> {/* Spacer to balance the logo */}
-              </div>
 
               {/* Interaction Terminal */}
               <div className={`min-h-[60px] ${messages.length > 0 ? 'max-h-[450px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
