@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Map } from "lucide-react";
+import { ArrowRight, Map as MapIcon } from "lucide-react";
 import Image from "next/image";
 import { regions, adventures } from "@/lib/data";
 
