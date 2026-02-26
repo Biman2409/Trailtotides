@@ -648,8 +648,8 @@ export default function ExploreClient() {
                                   isExpanded || hasSelected ? rg.btnActive : rg.btn
                                 }`}
                               >
-                                <span>{rg.icon}</span>
-                                {rg.name}
+                                  {rg.name}
+
                                 {subCount > 0 && (
                                   <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
                                     {subCount}
