@@ -806,12 +806,13 @@ export default function ExploreClient() {
                       <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
                       <div className="flex flex-wrap gap-2">
                         {([
-                          { val: "Solo",             idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                          { val: "Small group (2–6)", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                          { val: "Large group (6+)",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                        ] as { val: GroupSize; idle: string; active: string }[]).map(({ val, idle, active }) => (
+                          { val: "Solo",             icon: <User className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                          { val: "Small group (2–6)", icon: <Users className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                          { val: "Large group (6+)",  icon: <Users className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        ] as { val: GroupSize; icon: React.ReactNode; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
                           <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
                             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
+                            {icon}
                             {val}
                           </button>
                         ))}
