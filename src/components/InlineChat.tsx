@@ -254,25 +254,13 @@ export default function InlineChat() {
                     ) : (
                       <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     )}
-                  </button>
+                    </button>
+                  </div>
                 </div>
-                  <div className="flex items-center justify-end px-2 mt-4">
-                     <div className="flex items-center gap-3">
-                     <div className="flex items-center gap-1.5">
-                       <div className="w-1 h-1 rounded-full bg-green-500" />
-                       <span className="text-[8px] text-white/20 font-bold uppercase tracking-widest">Encrypted</span>
-                     </div>
-                     <div className="flex items-center gap-1.5">
-                       <div className="w-1 h-1 rounded-full bg-blue-500" />
-                       <span className="text-[8px] text-white/20 font-bold uppercase tracking-widest">Low Latency</span>
-                     </div>
-                   </div>
-                </div>
-              </div>
 
+              </div>
             </div>
           </div>
-        </div>
 
       </div>
       
