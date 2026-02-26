@@ -63,6 +63,7 @@ export interface Adventure {
   operators: Operator[];
   tags: string[];
   featured: boolean;
+  isEditorsChoice?: boolean;
 }
 
 export interface Operator {
@@ -131,6 +132,7 @@ export const adventures: Adventure[] = [
         ],
     tags: ["frozen river", "winter", "Ladakh", "extreme cold", "iconic"],
     featured: true,
+    isEditorsChoice: true,
   },
   {
     id: "2",
