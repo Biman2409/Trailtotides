@@ -588,39 +588,39 @@ export default function ExploreClient() {
                         </div>
                       </div>
 
-                      <div className="col-span-2 lg:col-span-3">
-                        <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
-                        <div className="flex flex-wrap gap-2">
-                          {([
-                            { val: "Weekend",  label: "Weekend",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                            { val: "3–5 days", label: "3–5 days", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                            { val: "7+ days",  label: "7+ days",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                          ] as { val: Duration; label: string; idle: string; active: string }[]).map(({ val, label, idle, active }) => (
-                            <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
-                              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
-                              {label}
-                            </button>
-                          ))}
+                        <div className="col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-8">
+                          <div>
+                            <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
+                            <div className="flex flex-wrap gap-2">
+                              {([
+                                { val: "Weekend",  label: "Weekend",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                                { val: "3–5 days", label: "3–5 days", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                                { val: "7+ days",  label: "7+ days",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                              ] as { val: Duration; label: string; idle: string; active: string }[]).map(({ val, label, idle, active }) => (
+                                <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
+                                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
+                                  {label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div>
+                            <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
+                            <div className="flex flex-wrap gap-2">
+                              {([
+                                { val: "Solo",             idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                                { val: "Small group (2–6)", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                                { val: "Large group (6+)",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                              ] as { val: GroupSize; idle: string; active: string }[]).map(({ val, idle, active }) => (
+                                <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
+                                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
+                                  {val}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-
-                      <div className="col-span-2 lg:col-span-3">
-                        <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
-                        <div className="flex flex-wrap gap-2">
-                          {([
-                            { val: "Solo",             idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                            { val: "Small group (2–6)", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                            { val: "Large group (6+)",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                          ] as { val: GroupSize; idle: string; active: string }[]).map(({ val, idle, active }) => (
-                            <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
-                              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
-                              {val}
-                            </button>
-                          ))}
-
-
-                    </div>
-                  </div>
 
             </div>
           </div>
