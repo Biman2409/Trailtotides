@@ -334,13 +334,14 @@ export default function PlanPage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/30 to-transparent" />
                       <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
                         <span className="bg-[#ff6b35] text-white text-xs font-semibold px-3 py-1.5 rounded-full">{a.type}</span>
-                          <span className={`text-xs font-semibold px-3 py-1.5 rounded-full ${
-                            a.difficulty === "Beginner" ? "bg-emerald-500 text-white" :
-                            a.difficulty === "Intermediate" ? "bg-teal-500 text-white" :
-                            a.difficulty === "Advanced" ? "bg-[#ff8e64] text-white" :
-                            a.difficulty === "Expert" ? "bg-[#ff6b35] text-white" :
-                            "bg-red-500 text-white"
-                          }`}>{a.difficulty}</span>
+                            <span className={`text-xs font-semibold px-3 py-1.5 rounded-full ${
+                              a.difficulty === "Beginner" ? "bg-emerald-500 text-white" :
+                              a.difficulty === "Intermediate" ? "bg-teal-500 text-white" :
+                              a.difficulty === "Advanced" ? "bg-[#ff6b35] text-white" :
+                              a.difficulty === "Expert" ? "bg-[#ff6b35] text-white" :
+                              "bg-red-500 text-white"
+                            }`}>{a.difficulty}</span>
+
 
                       </div>
                       <div className="absolute bottom-0 left-0 right-0 p-5">
