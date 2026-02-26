@@ -104,17 +104,18 @@ export default function InlineChat() {
                 {/* Operational Header */}
                 <div className="px-6 py-4 border-b border-white/[0.05] flex items-center justify-between bg-white/[0.01]">
                   <div className="flex items-center gap-6">
-                    <div className="flex gap-1">
+                    <div className="flex gap-1.5">
                       <div className="w-1 h-1 rounded-full bg-white/20" />
                       <div className="w-1 h-1 rounded-full bg-white/20" />
                       <div className="w-1 h-1 rounded-full bg-white/20" />
                     </div>
-                    <div className="hidden sm:flex items-center gap-2 border-l border-white/[0.05] pl-6">
+                    <div className="hidden sm:flex items-center gap-3 border-l border-white/[0.1] pl-6">
+                      <span className="text-[8px] text-white/20 font-black uppercase tracking-[0.2em] mr-1">Recommended Vectors:</span>
                       {['Coastal Trek', 'Mountain Peak', 'Hidden Lagoon'].map((v) => (
                         <button 
                           key={v}
                           onClick={() => send(v)}
-                          className="px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.05] text-[9px] text-white/40 font-bold uppercase tracking-widest hover:bg-[#ff5100]/10 hover:text-[#ff5100] hover:border-[#ff5100]/30 transition-all duration-300"
+                          className="px-3 py-1 rounded-full bg-white/[0.02] border border-white/[0.05] text-[9px] text-white/40 font-bold uppercase tracking-widest hover:bg-[#ff5100]/10 hover:text-[#ff5100] hover:border-[#ff5100]/30 transition-all duration-300"
                         >
                           {v}
                         </button>
