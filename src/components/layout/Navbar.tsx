@@ -49,7 +49,11 @@ export default function Navbar() {
   useEffect(() => { setMenuOpen(false); setUserMenuOpen(false); }, [pathname]);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 0);
+    const handleScroll = () => {
+      // Immediate response as soon as scroll starts
+      const isScrolled = window.scrollY > 0;
+      setScrolled(isScrolled);
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -85,7 +89,7 @@ export default function Navbar() {
   return (
     <nav
     ref={menuRef}
-    className={`fixed top-0 left-0 right-0 z-[1002] ${
+    className={`fixed top-0 left-0 right-0 z-[1002] transition-colors duration-200 ${
       isTransparent
         ? "bg-transparent"
         : "bg-[#1a1f2e]/96 backdrop-blur-lg border-b border-white/8 shadow-xl shadow-black/10"
