@@ -74,7 +74,7 @@ export default async function ExperiencePage({ params }: Props) {
               <Pill type="type" value={adventure.type} />
               <Pill type="difficulty" value={adventure.difficulty} />
               <span className="flex items-center gap-1.5 text-white/60 text-xs uppercase tracking-tight font-bold">
-                <MapPin className="w-3.5 h-3.5 text-[#f4845f]" />
+                <MapPin className="w-3.5 h-3.5 text-[#f67345]" />
                 {adventure.state}
               </span>
             </div>
@@ -93,7 +93,7 @@ export default async function ExperiencePage({ params }: Props) {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:divide-x divide-white/10">
             <div className="flex items-center gap-3 md:px-6 first:pl-0">
-              <Clock className="w-5 h-5 text-[#f4845f] shrink-0" />
+              <Clock className="w-5 h-5 text-[#f67345] shrink-0" />
               <div>
                 <div className="text-white/40 text-[10px] uppercase tracking-widest">Duration</div>
                 <div className="text-white font-semibold text-base">{adventure.durationDays}</div>
@@ -116,7 +116,7 @@ export default async function ExperiencePage({ params }: Props) {
               </div>
             </div>
             <div className="flex items-center gap-3 md:px-6">
-              <MapPin className="w-5 h-5 text-[#f4845f] shrink-0" />
+              <MapPin className="w-5 h-5 text-[#f67345] shrink-0" />
               <div>
                 <div className="text-white/40 text-[10px] uppercase tracking-widest">Terrain</div>
                 <div className="text-white font-semibold text-sm leading-snug">{adventure.terrain}</div>
@@ -135,7 +135,7 @@ export default async function ExperiencePage({ params }: Props) {
 
             {/* About */}
             <section>
-              <p className="text-[#f4845f] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+              <p className="text-[#f67345] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
                 The Adventure
               </p>
               <p className="text-[#1a1f2e] text-xl leading-relaxed font-light">
@@ -145,10 +145,10 @@ export default async function ExperiencePage({ params }: Props) {
 
             {/* What makes it special */}
             <section>
-              <p className="text-[#f4845f] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+              <p className="text-[#f67345] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
                 What Makes It Special
               </p>
-              <div className="bg-[#f5f0e8] rounded-2xl p-8 border-l-4 border-[#f4845f]">
+              <div className="bg-[#f5f0e8] rounded-2xl p-8 border-l-4 border-[#f67345]">
                 <p className="text-[#1a1f2e] text-lg leading-relaxed">
                   {adventure.whatMakesSpecial}
                 </p>
@@ -157,7 +157,7 @@ export default async function ExperiencePage({ params }: Props) {
 
             {/* Who it's for / not for */}
             <section>
-              <p className="text-[#f4845f] text-xs font-semibold tracking-[0.2em] uppercase mb-6">
+              <p className="text-[#f67345] text-xs font-semibold tracking-[0.2em] uppercase mb-6">
                 Is This For You?
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -180,7 +180,7 @@ export default async function ExperiencePage({ params }: Props) {
 
             {/* Safety notes */}
             <section>
-              <p className="text-[#f4845f] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+              <p className="text-[#f67345] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
                 Safety & Prep
               </p>
               <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 flex gap-4">
@@ -197,7 +197,7 @@ export default async function ExperiencePage({ params }: Props) {
                     <div className="flex items-center gap-3 mb-6">
                       <BadgeCheck className="w-5 h-5 text-emerald-600" />
                       <div>
-                        <p className="text-[#f4845f] text-xs font-semibold tracking-[0.2em] uppercase">
+                        <p className="text-[#f67345] text-xs font-semibold tracking-[0.2em] uppercase">
                           Verified Operators
                         </p>
                           <p className="text-[#9a9590] text-sm mt-0.5">
@@ -340,7 +340,7 @@ export default async function ExperiencePage({ params }: Props) {
 
               {/* Quick stats card */}
               <div className="bg-[#1a1f2e] rounded-2xl p-6 text-white">
-                <p className="text-[#f4845f] text-[10px] font-semibold tracking-[0.2em] uppercase mb-4">
+                <p className="text-[#f67345] text-[10px] font-semibold tracking-[0.2em] uppercase mb-4">
                   At a Glance
                 </p>
                 <div className="space-y-3.5">
@@ -364,7 +364,7 @@ export default async function ExperiencePage({ params }: Props) {
               {/* CTA */}
               <Link
                 href="/plan"
-                className="flex items-center justify-center gap-2 w-full bg-[#f4845f] hover:bg-[#f69d7c] text-white font-semibold py-3.5 rounded-2xl text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#f4845f]/30 group"
+                className="flex items-center justify-center gap-2 w-full bg-[#f67345] hover:bg-[#f88c64] text-white font-semibold py-3.5 rounded-2xl text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#f67345]/30 group"
               >
                 Plan this Adventure
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -387,7 +387,7 @@ export default async function ExperiencePage({ params }: Props) {
           <div className="max-w-7xl mx-auto">
             <div className="flex items-end justify-between mb-10">
               <div>
-                <p className="text-[#f4845f] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+                <p className="text-[#f67345] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
                   You Might Also Like
                 </p>
                 <h2 className="text-[#1a1f2e] text-3xl font-semibold tracking-tight">
@@ -396,7 +396,7 @@ export default async function ExperiencePage({ params }: Props) {
               </div>
               <Link
                 href="/explore"
-                className="hidden md:flex items-center gap-1.5 text-[#1e3d2f] text-sm font-medium hover:text-[#f4845f] transition-colors group"
+                className="hidden md:flex items-center gap-1.5 text-[#1e3d2f] text-sm font-medium hover:text-[#f67345] transition-colors group"
               >
                 Explore all
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -418,7 +418,7 @@ export default async function ExperiencePage({ params }: Props) {
                       </div>
                     <div className="p-5">
                       <div className="flex items-center gap-1.5 mb-1">
-                        <MapPin className="w-3 h-3 text-[#f4845f]" />
+                        <MapPin className="w-3 h-3 text-[#f67345]" />
                         <span className="text-[#9a9590] text-xs">{a.state}</span>
                       </div>
                       <h3 className="text-[#1a1f2e] font-semibold text-base leading-snug mb-1 group-hover:text-[#1e3d2f]">{a.name}</h3>

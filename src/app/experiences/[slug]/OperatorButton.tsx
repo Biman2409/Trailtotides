@@ -13,7 +13,7 @@ export default function OperatorButton({ website, label = "Get Details", variant
       className={`w-full text-sm font-medium py-2.5 rounded-xl transition-colors text-center ${
         variant === "primary"
           ? "bg-[#1e3d2f] hover:bg-[#2d5a42] text-white"
-          : "bg-white border border-[#e0d8cc] hover:border-[#f4845f] text-[#1a1f2e] hover:text-[#f4845f]"
+          : "bg-white border border-[#e0d8cc] hover:border-[#f67345] text-[#1a1f2e] hover:text-[#f67345]"
       }`}
     >
       {label}

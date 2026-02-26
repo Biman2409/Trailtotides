@@ -29,7 +29,7 @@ export default function HomePage() {
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
             {/* Eyebrow */}
             <div className="inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-5 py-2 mb-8">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#f4845f] mr-2.5 animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#f67345] mr-2.5 animate-pulse" />
                 <p className="text-white text-xs font-semibold tracking-[0.18em] uppercase">
                   India&apos;s First Adventure Discovery &amp; Aggregator Platform
                 </p>
@@ -78,7 +78,7 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href="/explore"
-                className="bg-[#f4845f] hover:bg-[#f69d7c] text-white font-semibold px-8 py-4 rounded-xl text-base flex items-center gap-2 group shadow-xl shadow-black/30 min-w-[200px] justify-center hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#f4845f]/40 transition-all duration-200"
+                className="bg-[#f67345] hover:bg-[#f88c64] text-white font-semibold px-8 py-4 rounded-xl text-base flex items-center gap-2 group shadow-xl shadow-black/30 min-w-[200px] justify-center hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#f67345]/40 transition-all duration-200"
               >
                 Explore Adventures
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -114,7 +114,7 @@ export default function HomePage() {
       <section id="featured-adventures" className="py-24 lg:py-32 px-6 lg:px-8 bg-[#111820]">
           <div className="max-w-7xl mx-auto">
             <div className="mb-14">
-              <p className="text-[#f4845f] text-xs font-semibold tracking-[0.22em] mb-3">
+              <p className="text-[#f67345] text-xs font-semibold tracking-[0.22em] mb-3">
                 Our Favourites
               </p>
               <div className="flex items-end justify-between gap-4">
@@ -122,9 +122,9 @@ export default function HomePage() {
                   <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
                     Adventures of a Lifetime
                   </h2>
-                  <div className="mt-5 w-14 h-0.5 bg-[#f4845f] rounded-full" />
+                  <div className="mt-5 w-14 h-0.5 bg-[#f67345] rounded-full" />
                 </div>
-                <span className="hidden sm:flex items-center gap-1.5 text-[#f4845f] text-sm font-semibold bg-[#f4845f]/8 border border-[#f4845f]/20 px-3 py-1.5 rounded-full mb-1">
+                <span className="hidden sm:flex items-center gap-1.5 text-[#f67345] text-sm font-semibold bg-[#f67345]/8 border border-[#f67345]/20 px-3 py-1.5 rounded-full mb-1">
                   {featuredAdventures.length} picks
                 </span>
               </div>
@@ -140,7 +140,7 @@ export default function HomePage() {
           <div className="mt-14 flex justify-center">
             <Link
               href="/explore"
-              className="bg-[#f4845f] hover:bg-[#f69d7c] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#f4845f]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#f4845f]/30 transition-all duration-200"
+              className="bg-[#f67345] hover:bg-[#f88c64] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#f67345]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#f67345]/30 transition-all duration-200"
             >
               View all adventures
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -207,17 +207,17 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-12">
             <div>
-              <p className="text-[#f4845f] text-xs font-semibold tracking-[0.22em] mb-3">
+              <p className="text-[#f67345] text-xs font-semibold tracking-[0.22em] mb-3">
                 From the Field
               </p>
                 <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
                   Voices from the edge
                 </h2>
-              <div className="mt-5 w-14 h-0.5 bg-[#f4845f] rounded-full" />
+              <div className="mt-5 w-14 h-0.5 bg-[#f67345] rounded-full" />
             </div>
             <Link
               href="/stories"
-              className="hidden md:flex items-center gap-1.5 text-white/50 font-semibold hover:text-[#f4845f] transition-colors group text-sm"
+              className="hidden md:flex items-center gap-1.5 text-white/50 font-semibold hover:text-[#f67345] transition-colors group text-sm"
             >
               All stories
               <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -233,7 +233,7 @@ export default function HomePage() {
           <div className="mt-12 flex justify-center md:hidden">
             <Link
               href="/stories"
-              className="flex items-center gap-1.5 text-[#f4845f] font-semibold text-sm"
+              className="flex items-center gap-1.5 text-[#f67345] font-semibold text-sm"
             >
               All stories <ChevronRight className="w-4 h-4" />
             </Link>
@@ -247,21 +247,21 @@ export default function HomePage() {
           className="absolute inset-0 opacity-30"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 15% 50%, #f4845f22 0%, transparent 55%), radial-gradient(circle at 85% 50%, #1a2e2018 0%, transparent 55%)",
+              "radial-gradient(circle at 15% 50%, #f6734522 0%, transparent 55%), radial-gradient(circle at 85% 50%, #1a2e2018 0%, transparent 55%)",
           }}
         />
         <div
           className="absolute inset-0 opacity-4"
           style={{
             backgroundImage:
-              "repeating-linear-gradient(45deg, #f4845f 0, #f4845f 1px, transparent 0, transparent 50%)",
+              "repeating-linear-gradient(45deg, #f67345 0, #f67345 1px, transparent 0, transparent 50%)",
             backgroundSize: "20px 20px",
           }}
         />
           <div className="max-w-2xl mx-auto text-center relative z-10">
           <div className="flex items-center justify-center gap-1 mb-6">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-4 h-4 fill-[#f4845f] text-[#f4845f]" />
+              <Star key={i} className="w-4 h-4 fill-[#f67345] text-[#f67345]" />
             ))}
           </div>
           <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-5">
@@ -274,7 +274,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/explore"
-              className="bg-[#f4845f] hover:bg-[#f69d7c] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#f4845f]/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#f4845f]/30 transition-all duration-200"
+              className="bg-[#f67345] hover:bg-[#f88c64] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#f67345]/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#f67345]/30 transition-all duration-200"
             >
               Start Exploring
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

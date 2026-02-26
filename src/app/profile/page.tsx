@@ -54,7 +54,7 @@ export default async function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-[#f4845f]/30">
+    <div className="min-h-screen bg-[#0a0a0a] text-white font-sans selection:bg-[#f67345]/30">
       <div className="max-w-4xl mx-auto px-6 py-12 md:py-20">
         <Link 
           href="/" 
@@ -68,7 +68,7 @@ export default async function ProfilePage() {
           {/* Sidebar / Info */}
           <div className="md:w-1/3 space-y-8">
             <div className="relative group">
-              <div className="w-32 h-32 rounded-3xl bg-[#f4845f]/10 border border-[#f4845f]/20 flex items-center justify-center text-[#f69d7c] text-4xl font-bold shadow-2xl shadow-[#f4845f]/5 relative overflow-hidden">
+              <div className="w-32 h-32 rounded-3xl bg-[#f67345]/10 border border-[#f67345]/20 flex items-center justify-center text-[#f88c64] text-4xl font-bold shadow-2xl shadow-[#f67345]/5 relative overflow-hidden">
                 {(profile.full_name?.[0] ?? profile.email?.[0] ?? "?").toUpperCase()}
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                   <Camera className="w-6 h-6 text-white" />
@@ -95,7 +95,7 @@ export default async function ProfilePage() {
 
               <div className="flex items-center gap-3 text-sm text-white/60">
                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
-                  <Calendar className="w-4 h-4 text-[#f69d7c]" />
+                  <Calendar className="w-4 h-4 text-[#f88c64]" />
                 </div>
                 <div className="flex flex-col">
                   <span className="text-[10px] uppercase tracking-wider font-bold text-white/30">Member Since</span>
@@ -125,8 +125,8 @@ export default async function ProfilePage() {
               <ProfileForm profile={profile} />
             </div>
 
-            <div className="mt-8 p-6 rounded-2xl bg-[#f4845f]/5 border border-[#f4845f]/10">
-              <p className="text-sm text-[#f69d7c]/80 leading-relaxed italic">
+            <div className="mt-8 p-6 rounded-2xl bg-[#f67345]/5 border border-[#f67345]/10">
+              <p className="text-sm text-[#f88c64]/80 leading-relaxed italic">
                 "Ready for your next adventure? Your journey with Trail to Tides is just beginning."
               </p>
             </div>

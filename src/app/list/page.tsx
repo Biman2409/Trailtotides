@@ -121,11 +121,11 @@ export default function ListPage() {
           className="absolute inset-0 opacity-20"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 20% 50%, #f4845f22 0%, transparent 50%), radial-gradient(circle at 80% 30%, #1e3d2f30 0%, transparent 50%)",
+              "radial-gradient(circle at 20% 50%, #f6734522 0%, transparent 50%), radial-gradient(circle at 80% 30%, #1e3d2f30 0%, transparent 50%)",
           }}
         />
         <div className="max-w-7xl mx-auto relative z-10">
-          <p className="text-[#f4845f] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+          <p className="text-[#f67345] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
             For Operators
           </p>
           <h1 className="text-white text-5xl lg:text-7xl font-bold tracking-tight leading-none mb-6 max-w-3xl">
@@ -137,7 +137,7 @@ export default function ListPage() {
           <div className="mt-8 flex flex-wrap gap-4">
             <a
               href="#apply"
-              className="inline-flex items-center gap-2 bg-[#f4845f] hover:bg-[#f69d7c] text-white font-semibold px-7 py-3.5 rounded-xl text-base transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#f4845f]/25 group"
+              className="inline-flex items-center gap-2 bg-[#f67345] hover:bg-[#f88c64] text-white font-semibold px-7 py-3.5 rounded-xl text-base transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#f67345]/25 group"
             >
               Apply Now
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -156,7 +156,7 @@ export default function ListPage() {
       {/* How it works */}
       <section className="py-20 lg:py-28 px-6 lg:px-8 bg-[#111820]">
         <div className="max-w-7xl mx-auto">
-          <p className="text-[#f4845f] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+          <p className="text-[#f67345] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
             The Process
           </p>
           <h2 className="text-white text-4xl font-bold tracking-tight mb-14">How it works</h2>
@@ -165,8 +165,8 @@ export default function ListPage() {
             {STEPS.map((step) => (
               <div key={step.number} className="relative">
                 <div className="flex items-start gap-5">
-                  <div className="w-12 h-12 rounded-2xl bg-[#f4845f]/15 border border-[#f4845f]/25 flex items-center justify-center shrink-0">
-                    <span className="text-[#f4845f] font-bold text-sm tracking-wider">{step.number}</span>
+                  <div className="w-12 h-12 rounded-2xl bg-[#f67345]/15 border border-[#f67345]/25 flex items-center justify-center shrink-0">
+                    <span className="text-[#f67345] font-bold text-sm tracking-wider">{step.number}</span>
                   </div>
                   <div>
                     <h3 className="text-white font-semibold text-lg mb-2">{step.title}</h3>
@@ -182,7 +182,7 @@ export default function ListPage() {
       {/* Benefits */}
       <section className="py-20 lg:py-28 px-6 lg:px-8 bg-[#1a1f2e] border-t border-white/6">
         <div className="max-w-7xl mx-auto">
-          <p className="text-[#f4845f] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+          <p className="text-[#f67345] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
             Why List With Us
           </p>
           <h2 className="text-white text-4xl font-bold tracking-tight mb-14">What you get</h2>
@@ -191,10 +191,10 @@ export default function ListPage() {
             {BENEFITS.map((benefit) => (
               <div
                 key={benefit.title}
-                className="bg-white/4 border border-white/8 rounded-2xl p-6 hover:border-[#f4845f]/30 hover:bg-white/6 transition-all duration-300"
+                className="bg-white/4 border border-white/8 rounded-2xl p-6 hover:border-[#f67345]/30 hover:bg-white/6 transition-all duration-300"
               >
-                <div className="w-10 h-10 rounded-xl bg-[#f4845f]/15 flex items-center justify-center mb-4">
-                  <benefit.icon className="w-5 h-5 text-[#f4845f]" />
+                <div className="w-10 h-10 rounded-xl bg-[#f67345]/15 flex items-center justify-center mb-4">
+                  <benefit.icon className="w-5 h-5 text-[#f67345]" />
                 </div>
                 <h3 className="text-white font-semibold text-base mb-2">{benefit.title}</h3>
                 <p className="text-white/45 text-sm leading-relaxed">{benefit.description}</p>
@@ -209,7 +209,7 @@ export default function ListPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <p className="text-[#f4845f] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+              <p className="text-[#f67345] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
                 Our Standards
               </p>
               <h2 className="text-white text-4xl font-bold tracking-tight mb-6">
@@ -236,7 +236,7 @@ export default function ListPage() {
             </div>
             <div className="bg-[#1a1f2e] rounded-3xl p-8 border border-white/8">
               <div className="flex items-center gap-3 mb-6">
-                <Mountain className="w-6 h-6 text-[#f4845f]" />
+                <Mountain className="w-6 h-6 text-[#f67345]" />
                 <span className="text-white font-semibold text-lg">Verification Tiers</span>
               </div>
               <div className="space-y-5">
@@ -267,7 +267,7 @@ export default function ListPage() {
       {/* Application form */}
       <section id="apply" className="py-20 lg:py-28 px-6 lg:px-8 bg-[#1a1f2e] border-t border-white/6">
         <div className="max-w-3xl mx-auto">
-          <p className="text-[#f4845f] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
+          <p className="text-[#f67345] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
             Apply
           </p>
           <h2 className="text-white text-4xl font-bold tracking-tight mb-3">
@@ -288,7 +288,7 @@ export default function ListPage() {
               </p>
               <Link
                 href="/explore"
-                className="inline-flex items-center gap-2 bg-[#f4845f] text-white font-semibold px-7 py-3.5 rounded-xl text-base transition-all hover:bg-[#f69d7c] hover:-translate-y-0.5 group"
+                className="inline-flex items-center gap-2 bg-[#f67345] text-white font-semibold px-7 py-3.5 rounded-xl text-base transition-all hover:bg-[#f88c64] hover:-translate-y-0.5 group"
               >
                 Explore Adventures
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -308,7 +308,7 @@ export default function ListPage() {
                       value={form.operatorName}
                       onChange={handleChange}
                       placeholder="e.g. Himalayan Adventures Pvt. Ltd."
-                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors"
+                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
                     />
                   </div>
                   <div>
@@ -318,7 +318,7 @@ export default function ListPage() {
                       value={form.website}
                       onChange={handleChange}
                       placeholder="https://yourwebsite.com"
-                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors"
+                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
                     />
                   </div>
                   <div>
@@ -329,7 +329,7 @@ export default function ListPage() {
                       value={form.contactName}
                       onChange={handleChange}
                       placeholder="Your full name"
-                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors"
+                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
                     />
                   </div>
                   <div>
@@ -341,7 +341,7 @@ export default function ListPage() {
                       value={form.contactEmail}
                       onChange={handleChange}
                       placeholder="you@company.com"
-                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors"
+                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
                     />
                   </div>
                   <div>
@@ -351,7 +351,7 @@ export default function ListPage() {
                       value={form.contactPhone}
                       onChange={handleChange}
                       placeholder="+91 98765 43210"
-                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors"
+                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
                     />
                   </div>
                   <div>
@@ -361,7 +361,7 @@ export default function ListPage() {
                       value={form.certifications}
                       onChange={handleChange}
                       placeholder="e.g. ATOAI, IMF, PADI"
-                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors"
+                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
                     />
                   </div>
                 </div>
@@ -379,7 +379,7 @@ export default function ListPage() {
                       value={form.adventureName}
                       onChange={handleChange}
                       placeholder="e.g. Hampta Pass Trek"
-                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors"
+                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
                     />
                   </div>
                   <div>
@@ -389,7 +389,7 @@ export default function ListPage() {
                       required
                       value={form.adventureType}
                       onChange={handleChange}
-                      className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors"
+                      className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
                     >
                       <option value="">Select type</option>
                       {["Trekking","Biking","Cycling","Mountaineering","Rock Climbing","Jeep Safari","Camel Safari","Caving","Sandboarding","Urban Adventure","Diving","Kayaking","Skiing"].map(t => (
@@ -404,7 +404,7 @@ export default function ListPage() {
                       required
                       value={form.region}
                       onChange={handleChange}
-                      className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors"
+                      className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
                     >
                       <option value="">Select region</option>
                       {["Himalayas","Western Ghats","Eastern Ghats","Desert","Coast","Islands","Northeast","Urban"].map(r => (
@@ -420,7 +420,7 @@ export default function ListPage() {
                       value={form.state}
                       onChange={handleChange}
                       placeholder="e.g. Himachal Pradesh"
-                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors"
+                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
                     />
                   </div>
                   <div>
@@ -430,7 +430,7 @@ export default function ListPage() {
                       required
                       value={form.difficulty}
                       onChange={handleChange}
-                      className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors"
+                      className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
                     >
                       <option value="">Select difficulty</option>
                       {["Beginner","Intermediate","Advanced","Expert","Extreme"].map(d => (
@@ -444,7 +444,7 @@ export default function ListPage() {
                       name="duration"
                       value={form.duration}
                       onChange={handleChange}
-                      className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors"
+                      className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
                     >
                       <option value="">Select duration</option>
                       {["Weekend","3–5 days","7+ days"].map(d => (
@@ -459,7 +459,7 @@ export default function ListPage() {
                       value={form.bestSeason}
                       onChange={handleChange}
                       placeholder="e.g. Oct – Jun"
-                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors"
+                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors"
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -471,7 +471,7 @@ export default function ListPage() {
                       value={form.description}
                       onChange={handleChange}
                       placeholder="Describe the adventure in 2–4 sentences. What makes it special? Who is it for?"
-                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors resize-none"
+                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors resize-none"
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -482,7 +482,7 @@ export default function ListPage() {
                       value={form.message}
                       onChange={handleChange}
                       placeholder="Any additional context, certifications you hold, or specific requests."
-                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f4845f]/60 transition-colors resize-none"
+                      className="w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#f67345]/60 transition-colors resize-none"
                     />
                   </div>
                 </div>
@@ -491,7 +491,7 @@ export default function ListPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#f4845f] hover:bg-[#f69d7c] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl text-base flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#f4845f]/25 group"
+                className="w-full bg-[#f67345] hover:bg-[#f88c64] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl text-base flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#f67345]/25 group"
               >
                 {loading ? (
                   <span>Submitting…</span>
@@ -505,7 +505,7 @@ export default function ListPage() {
 
               <p className="text-white/30 text-xs text-center">
                 By submitting, you agree to our review process and{" "}
-                <Link href="/terms" className="text-white/50 hover:text-[#f4845f] transition-colors">
+                <Link href="/terms" className="text-white/50 hover:text-[#f67345] transition-colors">
                   Terms of Use
                 </Link>
                 .

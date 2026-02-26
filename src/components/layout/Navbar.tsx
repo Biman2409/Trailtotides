@@ -97,7 +97,7 @@ export default function Navbar() {
 
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-lg bg-[#f4845f] flex items-center justify-center group-hover:bg-[#f69d7c] transition-colors duration-200 shadow-md shadow-[#f4845f]/30">
+              <div className="w-8 h-8 rounded-lg bg-[#f67345] flex items-center justify-center group-hover:bg-[#f88c64] transition-colors duration-200 shadow-md shadow-[#f67345]/30">
                 <Mountain className="w-4 h-4 text-white" strokeWidth={2.2} />
               </div>
               <span className="text-white font-semibold text-base tracking-tight leading-none">
@@ -122,7 +122,7 @@ export default function Navbar() {
                 >
                   {link.label}
                   {isActive && (
-                    <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#f4845f]" />
+                    <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#f67345]" />
                   )}
                 </Link>
               );
@@ -137,7 +137,7 @@ export default function Navbar() {
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/8 transition-colors"
                 >
-                  <div className="w-7 h-7 rounded-full bg-[#f4845f]/30 flex items-center justify-center text-[#f69d7c] font-semibold text-xs">
+                  <div className="w-7 h-7 rounded-full bg-[#f67345]/30 flex items-center justify-center text-[#f88c64] font-semibold text-xs">
                     {user.name[0].toUpperCase()}
                   </div>
                   <span className="text-white/80 text-sm font-medium max-w-[120px] truncate">{user.name}</span>
@@ -185,7 +185,7 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/auth/signup"
-                  className="bg-[#f4845f] hover:bg-[#f69d7c] text-white text-sm font-semibold px-5 py-2.5 rounded-lg shadow-md shadow-[#f4845f]/25 hover:shadow-lg hover:shadow-[#f4845f]/30 hover:-translate-y-0.5 transition-all duration-200"
+                  className="bg-[#f67345] hover:bg-[#f88c64] text-white text-sm font-semibold px-5 py-2.5 rounded-lg shadow-md shadow-[#f67345]/25 hover:shadow-lg hover:shadow-[#f67345]/30 hover:-translate-y-0.5 transition-all duration-200"
                 >
                   Sign Up
                 </Link>
@@ -234,7 +234,7 @@ export default function Navbar() {
             {user ? (
               <div className="pt-2 space-y-1">
                 <div className="flex items-center gap-3 px-3 py-3 border-b border-white/5">
-                  <div className="w-8 h-8 rounded-full bg-[#f4845f]/30 flex items-center justify-center text-[#f69d7c] font-semibold text-sm">
+                  <div className="w-8 h-8 rounded-full bg-[#f67345]/30 flex items-center justify-center text-[#f88c64] font-semibold text-sm">
                     {user.name[0].toUpperCase()}
                   </div>
                   <div>
@@ -276,7 +276,7 @@ export default function Navbar() {
               </Link>
                 <Link
                   href="/auth/signup"
-                  className="block w-full text-center bg-[#f4845f] hover:bg-[#f69d7c] text-white font-semibold py-3 rounded-xl transition-colors text-sm"
+                  className="block w-full text-center bg-[#f67345] hover:bg-[#f88c64] text-white font-semibold py-3 rounded-xl transition-colors text-sm"
                 >
                   Sign Up
                 </Link>
