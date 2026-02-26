@@ -25,12 +25,34 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-const difficultyStyle: Record<string, { bg: string; text: string; dot: string }> = {
-  Beginner:     { bg: "bg-emerald-50", text: "text-emerald-700", dot: "bg-emerald-500" },
-  Intermediate: { bg: "bg-teal-50",    text: "text-teal-700",    dot: "bg-teal-500" },
-  Advanced:     { bg: "bg-amber-50",   text: "text-amber-700",   dot: "bg-amber-500" },
-  Expert:       { bg: "bg-orange-50",  text: "text-orange-700",  dot: "bg-orange-500" },
-  Extreme:      { bg: "bg-red-50",     text: "text-red-700",     dot: "bg-red-500" },
+const difficultyStyle: Record<string, string> = {
+  Beginner:     "bg-emerald-500 text-white",
+  Intermediate: "bg-blue-400 text-white",
+  Advanced:     "bg-amber-500 text-white",
+  Expert:       "bg-orange-500 text-white",
+  Extreme:      "bg-red-600 text-white",
+};
+
+const typeStyle: Record<string, string> = {
+  // Land — orange
+  Trekking:          "bg-[#f4845f] text-white",
+  Biking:            "bg-[#f4845f] text-white",
+  Cycling:           "bg-[#f4845f] text-white",
+  "Rock Climbing":   "bg-[#f4845f] text-white",
+  Mountaineering:    "bg-[#f4845f] text-white",
+  "Camel Safari":    "bg-[#f4845f] text-white",
+  "Jeep Safari":     "bg-[#f4845f] text-white",
+  Sandboarding:      "bg-[#f4845f] text-white",
+  "Urban Adventure": "bg-[#f4845f] text-white",
+  Caving:            "bg-[#f4845f] text-white",
+  // Water — blue
+  Diving:            "bg-blue-500 text-white",
+  Kayaking:          "bg-blue-500 text-white",
+  // Snow — white
+  Skiing:            "bg-white text-gray-900 border border-gray-100",
+  // Air — purple
+  Paragliding:       "bg-purple-600 text-white",
+  "Hot Air Balloon": "bg-purple-600 text-white",
 };
 
 export async function generateStaticParams() {
