@@ -102,11 +102,10 @@ export default async function ExperiencePage({ params }: Props) {
         <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pb-16 w-full">
           <div className="max-w-3xl">
             <div className="flex flex-wrap items-center gap-3 mb-5">
-              <span className="bg-[#c4622d] text-white text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide">
+              <span className={`text-xs font-semibold px-3 py-1.5 rounded-full tracking-wide shadow-sm ${typeStyle[adventure.type] ?? "bg-[#c4622d] text-white"}`}>
                 {adventure.type}
               </span>
-              <span className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full ${diff.bg} ${diff.text}`}>
-                <span className={`w-2 h-2 rounded-full ${diff.dot}`} />
+              <span className={`text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm ${difficultyStyle[adventure.difficulty] ?? "bg-gray-500 text-white"}`}>
                 {adventure.difficulty}
               </span>
               <span className="flex items-center gap-1.5 text-white/60 text-xs">
