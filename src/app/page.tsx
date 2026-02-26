@@ -191,61 +191,12 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-      </section>
-
-      {/* ── REGIONS ──────────────────────────────────────── */}
-      <section className="py-24 lg:py-32 bg-[#1a1f2e] px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-            <div className="mb-12">
-                <p className="text-[#c4622d] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
-                  Discover by Region
-                </p>
-                  <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
-                    Adventure lives in every corner.
-                  </h2>
-                <p className="mt-4 text-white/50 text-base max-w-xl">
-                  Pick a region, and let the journey begin.
-                </p>
-                <div className="mt-5 w-14 h-0.5 bg-[#c4622d] rounded-full" />
-            </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 lg:gap-4">
-            {regions.map((region) => (
-              <Link
-                key={region.name}
-                href={`/explore?region=${encodeURIComponent(region.name)}`}
-                className="group relative overflow-hidden rounded-2xl h-[190px] lg:h-[260px]"
-              >
-                <Image
-                  src={region.image}
-                  alt={region.name}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110 brightness-105 saturate-115"
-                />
-                {/* Base gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
-                {/* Hover tint */}
-                <div className="absolute inset-0 bg-[#c4622d]/0 group-hover:bg-[#c4622d]/12 transition-colors duration-300" />
-
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  {/* Adventure count pill */}
-                  <span className="inline-block text-[10px] font-semibold tracking-widest uppercase text-white/50 bg-white/8 border border-white/10 px-2 py-0.5 rounded-full mb-1.5">
-                    {region.adventureCount} adventures
-                  </span>
-                  <h3 className="text-white font-bold text-sm leading-tight group-hover:text-[#f09060] transition-colors duration-200">
-                    {region.name}
-                  </h3>
-                </div>
-
-                {/* Bottom accent line */}
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#c4622d] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── ADVENTURE TYPES ──────────────────────────────── */}
+        </section>
+  
+        {/* ── REGIONS ──────────────────────────────────────── */}
+        <FindByRegion />
+  
+        {/* ── ADVENTURE TYPES ──────────────────────────────── */}
         <FindYourFormat />
 
       {/* ── STORIES ──────────────────────────────────────── */}
