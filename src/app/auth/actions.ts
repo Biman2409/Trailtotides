@@ -40,14 +40,15 @@ export async function signUp(formData: FormData) {
   }
 
   // If we have a Resend key, generate a link and send it manually
-  if (process.env.RESEND_API_KEY) {
-    const { data: linkData, error: linkError } = await adminClient.auth.admin.generateLink({
-      type: 'signup',
-      email: email,
-      options: {
-        redirectTo: `${origin}/auth/callback`,
-      }
-    });
+    if (process.env.RESEND_API_KEY) {
+      const { data: linkData, error: linkError } = await adminClient.auth.admin.generateLink({
+        type: 'signup',
+        email: email,
+        password: password,
+        options: {
+          redirectTo: `${origin}/auth/callback`,
+        }
+      });
 
     if (!linkError && linkData?.properties?.action_link) {
       await sendVerificationEmail(
