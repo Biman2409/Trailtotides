@@ -12,7 +12,7 @@ import InlineChat from "@/components/InlineChat";
 import StatsBar from "@/components/StatsBar";
 import StoryCard from "@/components/ui/custom/StoryCard";
 import FindByRegion from "@/components/ui/custom/FindByRegion";
-import { adventures, stories, regions } from "@/lib/data";
+import { adventures, stories } from "@/lib/data";
 
 const featuredAdventures = adventures.filter((a) => a.featured).slice(0, 6);
 const featuredStories = stories.slice(0, 3);
