@@ -173,7 +173,7 @@ export default function HomePage() {
                 Signature Feature
               </p>
               <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-5">
-                India's adventures,
+                India&apos;s adventures,
                 <br />
                 <span className="text-[#7ec88a]">mapped.</span>
               </h2>
