@@ -77,10 +77,10 @@ export default function FindByRegion() {
     <section className="py-24 lg:py-32 bg-[#1a1f2e] px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-12">
-          <p className="text-[#f4845f] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
-            Discover by Region
-          </p>
+          <div className="mb-12">
+            <p className="text-[#f4845f] text-xs font-semibold tracking-[0.22em] mb-3">
+              Discover by Region
+            </p>
           <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
             Adventure lives in every corner.
           </h2>
