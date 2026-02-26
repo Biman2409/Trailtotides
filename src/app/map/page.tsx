@@ -1,9 +1,13 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Map as MapIcon, Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2, Wind, Sun, Mountain, Waves, Snowflake, Trees, Palmtree, Sunrise, Building2 } from "lucide-react";
+import { 
+  Map as MapIcon, Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2, Wind, Sun, 
+  Mountain, Waves, Snowflake, Trees, Palmtree, Sunrise, Building2, Flower2, CloudRain, Leaf, 
+  Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users 
+} from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
-import { adventures, adventureTypes } from "@/lib/data";
+import { adventures } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
 
 const typeEmoji: Record<AdventureType, string> = {
@@ -14,7 +18,7 @@ const typeEmoji: Record<AdventureType, string> = {
   "Kayaking": "🛶",
   "Skiing": "⛷️",
   "Mountaineering": "🧗",
-    "Rock Climbing": "🧱",
+  "Rock Climbing": "🧱",
   "Jeep Safari": "🚙",
   "Camel Safari": "🐪",
   "Caving": "🪨",
@@ -27,17 +31,17 @@ const typeEmoji: Record<AdventureType, string> = {
 const difficultyColor: Record<string, string> = {
   Beginner:     "#22c55e",  // green
   Intermediate: "#3b82f6",  // blue
-  Advanced:     "#ff8e64",  // soothing orange light
-  Expert:       "#ff6b35",  // soothing orange
+  Advanced:     "#ff6b35",  // brand orange
+  Expert:       "#ff6b35",  // brand orange
   Extreme:      "#ef4444",  // red
 };
 
-const seasons: { label: string; icon: string; months: Month[]; activeColor: string; idleColor: string }[] = [
-  { label: "Winter",  months: ["Dec", "Jan", "Feb"],         activeColor: "bg-sky-600 text-white",    idleColor: "bg-sky-50 text-sky-800 hover:bg-sky-100 border border-sky-200" },
-  { label: "Spring",  months: ["Mar", "Apr", "May"],         activeColor: "bg-pink-500 text-white",   idleColor: "bg-pink-50 text-pink-800 hover:bg-pink-100 border border-pink-200" },
-  { label: "Summer",  months: ["Apr", "May", "Jun"],         activeColor: "bg-amber-500 text-white",  idleColor: "bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200" },
-  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"],  activeColor: "bg-teal-600 text-white",   idleColor: "bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-200" },
-  { label: "Autumn",  months: ["Oct", "Nov", "Dec"],         activeColor: "bg-[#ff6b35] text-white", idleColor: "bg-[#ff6b35]/5 text-[#9c4a2f] hover:bg-[#ff6b35]/10 border border-[#ff6b35]/20" },
+const seasons: { label: string; months: Month[]; icon: React.ReactNode }[] = [
+  { label: "Winter",  months: ["Dec", "Jan", "Feb"],      icon: <Snowflake className="w-3.5 h-3.5" /> },
+  { label: "Spring",  months: ["Mar", "Apr", "May"],      icon: <Flower2 className="w-3.5 h-3.5" /> },
+  { label: "Summer",  months: ["Apr", "May", "Jun"],      icon: <Sun className="w-3.5 h-3.5" /> },
+  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"], icon: <CloudRain className="w-3.5 h-3.5" /> },
+  { label: "Autumn",  months: ["Oct", "Nov", "Dec"],      icon: <Leaf className="w-3.5 h-3.5" /> },
 ];
 
 type NominatimResult = {
@@ -270,7 +274,7 @@ export default function MapPage() {
   const flyToRef = useRef<((lat: number, lng: number) => void) | null>(null);
 
   const [search, setSearch] = useState("");
-    const [selectedTypes, setSelectedTypes] = useState<AdventureType[]>([]);
+  const [selectedTypes, setSelectedTypes] = useState<AdventureType[]>([]);
   const [selectedRegions, setSelectedRegions] = useState<Region[]>([]);
   const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
   const [selectedDurations, setSelectedDurations] = useState<Duration[]>([]);
@@ -287,16 +291,6 @@ export default function MapPage() {
     setter(arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val]);
   }
 
-  function toggleSeason(seasonMonths: Month[]) {
-    const allSelected = seasonMonths.every((m) => selectedMonths.includes(m));
-    if (allSelected) {
-      setSelectedMonths(selectedMonths.filter((m) => !seasonMonths.includes(m)));
-    } else {
-      const merged = Array.from(new Set([...selectedMonths, ...seasonMonths])) as Month[];
-      setSelectedMonths(merged);
-    }
-  }
-
   function clearAll() {
     setSearch("");
     setSelectedTypes([]);
@@ -307,6 +301,8 @@ export default function MapPage() {
     setSelectedGroupSizes([]);
     setSelectedSubRegions([]);
     setExpandedRegion(null);
+    setExpandedCategory(null);
+    setExpandedSeason(null);
   }
 
   const activeFilterCount =
@@ -405,39 +401,23 @@ export default function MapPage() {
                           {
                             label: "Land Based", 
                             icon: <Mountain className="w-3.5 h-3.5" />,
-                            btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
-                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                            chipActive: "bg-[#ff6b35] text-white",
                             types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
                           },
                           {
                             label: "Water Based", 
                             icon: <Waves className="w-3.5 h-3.5" />,
-                            btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
-                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                            chipActive: "bg-[#ff6b35] text-white",
                             types: ["Diving", "Kayaking"],
                           },
                           {
                             label: "Snow Based", 
                             icon: <Snowflake className="w-3.5 h-3.5" />,
-                            btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                            btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
-                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                            chipActive: "bg-[#ff6b35] text-white",
                             types: ["Skiing"],
                           },
-                            {
-                              label: "Air Based", 
-                              icon: <Wind className="w-3.5 h-3.5" />,
-                              btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                              btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",
-                              chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                              chipActive: "bg-[#ff6b35] text-white",
-                              types: [] as string[],
-                            },
+                          {
+                            label: "Air Based", 
+                            icon: <Wind className="w-3.5 h-3.5" />,
+                            types: [] as string[],
+                          },
                         ];
                       return (
                         <div className="flex flex-col gap-2">
@@ -449,12 +429,14 @@ export default function MapPage() {
                                   <button
                                     key={cat.label}
                                     onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? cat.btnActive : cat.btn}`}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                                      isExpanded || hasSelected 
+                                        ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
+                                        : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                                    }`}
                                   >
                                     {cat.icon}
                                     {cat.label}
-
-
                                 {hasSelected && (
                                   <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
                                     {cat.types.filter(t => selectedTypes.includes(t as AdventureType)).length}
@@ -479,7 +461,11 @@ export default function MapPage() {
                                           <button
                                             key={type}
                                             onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
-                                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${isSelected ? cat.chipActive : cat.chip}`}
+                                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                              isSelected 
+                                                ? "bg-[#ff6b35] text-white" 
+                                                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                                            }`}
                                           >
                                             {type}
                                           </button>
@@ -499,16 +485,16 @@ export default function MapPage() {
                   <div className="col-span-2 lg:col-span-3">
                     <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Region</h3>
                     {(() => {
-                      const regionGroups: { name: Region; icon: React.ReactNode; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
-                        { name: "Himalayas",     icon: <Mountain className="w-3.5 h-3.5" />, btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100", btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]", chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200", chipActive: "bg-[#ff6b35] text-white", subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
-                        { name: "Western Ghats", icon: <Trees className="w-3.5 h-3.5" />, btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",             btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",     chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",         chipActive: "bg-[#ff6b35] text-white",     subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"] },
-                        { name: "Eastern Ghats", icon: <Mountain className="w-3.5 h-3.5" />, btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",     btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]", chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",   chipActive: "bg-[#ff6b35] text-white",   subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"] },
-                        { name: "Desert",        icon: <Sun className="w-3.5 h-3.5" />, btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",     btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]", chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",   chipActive: "bg-[#ff6b35] text-white",   subRegions: ["Rajasthan", "Gujarat"] },
-                        { name: "Coast",         icon: <Waves className="w-3.5 h-3.5" />, btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",             btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",     chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",         chipActive: "bg-[#ff6b35] text-white",     subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
-                        { name: "Islands",       icon: <Palmtree className="w-3.5 h-3.5" />, btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",             btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",     chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",         chipActive: "bg-[#ff6b35] text-white",     subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
-                          { name: "Northeast",     icon: <Sunrise className="w-3.5 h-3.5" />, btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",     btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]", chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",   chipActive: "bg-[#ff6b35] text-white",   subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"] },
-                          { name: "Urban",         icon: <Building2 className="w-3.5 h-3.5" />, btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",               btnActive: "bg-[#ff6b35] text-white border-[#ff6b35]",     chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",         chipActive: "bg-[#ff6b35] text-white",     subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"] },
-                        ];
+                      const regionGroups: { name: Region; icon: React.ReactNode; subRegions: string[] }[] = [
+                        { name: "Himalayas",     icon: <Mountain className="w-3.5 h-3.5" />, subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
+                        { name: "Western Ghats", icon: <Trees className="w-3.5 h-3.5" />, subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"] },
+                        { name: "Eastern Ghats", icon: <Mountain className="w-3.5 h-3.5" />, subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"] },
+                        { name: "Desert",        icon: <Sun className="w-3.5 h-3.5" />, subRegions: ["Rajasthan", "Gujarat"] },
+                        { name: "Coast",         icon: <Waves className="w-3.5 h-3.5" />, subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
+                        { name: "Islands",       icon: <Palmtree className="w-3.5 h-3.5" />, subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
+                        { name: "Northeast",     icon: <Sunrise className="w-3.5 h-3.5" />, subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"] },
+                        { name: "Urban",         icon: <Building2 className="w-3.5 h-3.5" />, subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"] },
+                      ];
                       return (
                         <div className="flex flex-col gap-2">
                           <div className="flex flex-wrap gap-2">
@@ -518,11 +504,13 @@ export default function MapPage() {
                                 const subCount = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
                                 return (
                                   <button key={rg.name} onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? rg.btnActive : rg.btn}`}>
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                                      isExpanded || hasSelected 
+                                        ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
+                                        : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                                    }`}>
                                     {rg.icon}
                                     {rg.name}
-
-
                                 {subCount > 0 && <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">{subCount}</span>}
                                 <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                               </button>
@@ -536,7 +524,11 @@ export default function MapPage() {
                               <div className="flex flex-wrap gap-2">
                                 {rg.subRegions.map((sr) => (
                                   <button key={sr} onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
-                                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedSubRegions.includes(sr) ? rg.chipActive : rg.chip}`}>
+                                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                      selectedSubRegions.includes(sr) 
+                                        ? "bg-[#ff6b35] text-white" 
+                                        : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                                    }`}>
                                     {sr}
                                   </button>
                                 ))}
@@ -554,15 +546,19 @@ export default function MapPage() {
                   <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Best Season</h3>
                   <div className="flex flex-col gap-2">
                     <div className="flex flex-wrap gap-2">
-                        {seasons.map(({ label, months: sMonths, activeColor, idleColor }) => {
+                        {seasons.map(({ label, months: sMonths, icon }) => {
                           const isExpanded = expandedSeason === label;
                           const hasSelected = sMonths.some((m) => selectedMonths.includes(m));
                           const selectedCount = sMonths.filter((m) => selectedMonths.includes(m)).length;
                           return (
                             <button key={label} onClick={() => setExpandedSeason(isExpanded ? null : label)}
-                              className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? activeColor : idleColor}`}>
+                              className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                                isExpanded || hasSelected 
+                                  ? "bg-[#ff6b35] text-white border-[#ff6b35]" 
+                                  : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                              }`}>
+                              {icon}
                               {label}
-
                             {hasSelected && <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">{selectedCount}</span>}
                             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                           </button>
@@ -576,7 +572,11 @@ export default function MapPage() {
                           <div className="flex flex-wrap gap-2">
                             {season.months.map((m) => (
                               <button key={m} onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedMonths.includes(m) ? season.activeColor : season.idleColor}`}>
+                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                  selectedMonths.includes(m) 
+                                    ? "bg-[#ff6b35] text-white" 
+                                    : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                                }`}>
                                 {m}
                               </button>
                             ))}
@@ -630,12 +630,13 @@ export default function MapPage() {
                     <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
                     <div className="flex flex-wrap gap-2">
                       {([
-                        { val: "Solo",              idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                        { val: "Small group (2–6)",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                        { val: "Large group (6+)",   idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
-                      ] as { val: GroupSize; icon: string; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
+                        { val: "Solo",             icon: <User className="w-3.5 h-3.5" />,  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        { val: "Small group (2–6)", icon: <Users className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                        { val: "Large group (6+)",  icon: <Users className="w-3.5 h-3.5" />, idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff6b35] text-white border border-[#ff6b35]" },
+                      ] as { val: GroupSize; icon: React.ReactNode; idle: string; active: string }[]).map(({ val, icon, idle, active }) => (
                         <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
                           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedGroupSizes.includes(val) ? active : idle}`}>
+                          {icon}
                           {val}
                         </button>
                       ))}
