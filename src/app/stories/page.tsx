@@ -154,7 +154,7 @@ export default function StoriesPage() {
             Got a story to tell?
           </h2>
           <p className="text-[#6b6560] text-base leading-relaxed mb-8 max-w-lg mx-auto">
-            We feature stories from verified adventurers. If you've done something remarkable out there, we want to hear it.
+            We feature stories from verified adventurers. If you&apos;ve done something remarkable out there, we want to hear it.
           </p>
           <Link
             href="/list"
