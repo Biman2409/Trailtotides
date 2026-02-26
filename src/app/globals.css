@@ -46,8 +46,8 @@
   --color-sand-dark: #e8dfc8;
   --color-slate: #2c3e50;
   --color-charcoal: #1a1f2e;
-    --color-rust: #ff6b35;
-    --color-rust-light: #ff8e64;
+    --color-rust: #ff5100;
+    --color-rust-light: #ff7d47;
     --color-glacier: #5ba3c9;
     --color-off-white: #fafaf8;
     --color-warm-grey: #9a9590;
@@ -68,7 +68,7 @@
     --secondary-foreground: #1a1f2e;
     --muted: #f0ebe0;
     --muted-foreground: #6b6560;
-    --accent: #ff6b35;
+    --accent: #ff5100;
     --accent-foreground: #fafaf8;
     --destructive: oklch(0.577 0.245 27.325);
     --border: #e0d8cc;
@@ -76,7 +76,7 @@
     --ring: #1e3d2f;
     --sidebar: #1a1f2e;
     --sidebar-foreground: #fafaf8;
-    --sidebar-primary: #ff6b35;
+    --sidebar-primary: #ff5100;
   --sidebar-primary-foreground: #fafaf8;
   --sidebar-accent: #2c3e50;
   --sidebar-accent-foreground: #fafaf8;
