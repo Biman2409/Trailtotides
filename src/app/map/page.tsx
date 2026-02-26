@@ -667,6 +667,75 @@ export default function MapPage() {
           )}
         </div>
 
+        {/* Active filter chips */}
+        {activeFilterCount > 0 && (
+          <div className="max-w-7xl mx-auto px-4 lg:px-8 py-3 flex flex-wrap gap-2 border-b border-[#e0d8cc] bg-[#fdfcfb] shrink-0">
+            {selectedTypes.map((t) => (
+              <span
+                key={t}
+                onClick={() => toggle(selectedTypes, t, setSelectedTypes)}
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
+              >
+                {t} <X className="w-3 h-3" />
+              </span>
+            ))}
+            {selectedRegions.map((r) => (
+              <span
+                key={r}
+                onClick={() => toggle(selectedRegions, r, setSelectedRegions)}
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
+              >
+                {r} <X className="w-3 h-3" />
+              </span>
+            ))}
+            {selectedSubRegions.map((sr) => (
+              <span
+                key={sr}
+                onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
+              >
+                {sr} <X className="w-3 h-3" />
+              </span>
+            ))}
+            {selectedDifficulties.map((d) => (
+              <span
+                key={d}
+                onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
+              >
+                {d} <X className="w-3 h-3" />
+              </span>
+            ))}
+            {selectedDurations.map((d) => (
+              <span
+                key={d}
+                onClick={() => toggle(selectedDurations, d, setSelectedDurations)}
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
+              >
+                {d} <X className="w-3 h-3" />
+              </span>
+            ))}
+            {selectedMonths.map((m) => (
+              <span
+                key={m}
+                onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
+              >
+                {m} <X className="w-3 h-3" />
+              </span>
+            ))}
+            {selectedGroupSizes.map((g) => (
+              <span
+                key={g}
+                onClick={() => toggle(selectedGroupSizes, g, setSelectedGroupSizes)}
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
+              >
+                {g} <X className="w-3 h-3" />
+              </span>
+            ))}
+          </div>
+        )}
+
       {/* Map — fills remaining height */}
       <div className="flex-1 relative overflow-hidden">
         {mounted ? (
