@@ -424,14 +424,14 @@ export default function MapPage() {
                         chipActive: "bg-slate-600 text-white",
                         types: ["Skiing"],
                       },
-                      {
-                        label: "Air Based", icon: "🪂",
-                        btn: "bg-purple-50 border-purple-200 text-purple-800 hover:bg-purple-100",
-                        btnActive: "bg-purple-500 text-white border-purple-500",
-                        chip: "bg-purple-100 text-purple-900 hover:bg-purple-200",
-                        chipActive: "bg-purple-500 text-white",
-                        types: [] as string[],
-                      },
+                        {
+                          label: "Air Based", icon: <Wind className="w-4 h-4" />,
+                          btn: "bg-purple-50 border-purple-200 text-purple-800 hover:bg-purple-100",
+                          btnActive: "bg-purple-500 text-white border-purple-500",
+                          chip: "bg-purple-100 text-purple-900 hover:bg-purple-200",
+                          chipActive: "bg-purple-500 text-white",
+                          types: [] as string[],
+                        },
                     ];
                     return (
                       <div className="flex flex-col gap-2">
