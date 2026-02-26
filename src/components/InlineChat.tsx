@@ -177,7 +177,7 @@ export default function InlineChat() {
                                       {rec?.reason && (
                                         <div className="mt-3 pt-3 border-t border-white/[0.05]">
                                           <p className="text-white/60 text-[11px] leading-relaxed italic">
-                                            "{rec.reason}"
+                                            &quot;{rec.reason}&quot;
                                           </p>
                                         </div>
                                       )}
