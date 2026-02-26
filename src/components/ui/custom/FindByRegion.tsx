@@ -96,49 +96,50 @@ export default function FindByRegion() {
             const isOpen = openId === region.id;
             
             return (
-              <div
-                key={region.id}
-                className="rounded-2xl overflow-hidden flex flex-col"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: `1px solid ${isOpen ? "rgba(196,98,45,0.35)" : "rgba(255,255,255,0.08)"}`,
-                  transition: "border-color 0.3s ease",
-                  boxShadow: isOpen
-                    ? `0 0 0 1px rgba(196,98,45,0.35), 0 20px 48px rgba(0,0,0,0.35)`
-                    : "0 4px 16px rgba(0,0,0,0.2)",
-                }}
-              >
-                {/* Image header */}
-                <button
-                  onClick={() => setOpenId(isOpen ? null : region.id)}
-                  className="relative w-full overflow-hidden cursor-pointer group text-left"
-                  style={{ height: "180px" }}
-                  aria-expanded={isOpen}
+                <div
+                  key={region.id}
+                  className="rounded-2xl overflow-hidden flex flex-col"
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    border: `1px solid ${isOpen ? "rgba(255,87,34,0.35)" : "rgba(255,255,255,0.08)"}`,
+                    transition: "border-color 0.3s ease",
+                    boxShadow: isOpen
+                      ? `0 0 0 1px rgba(255,87,34,0.35), 0 20px 48px rgba(0,0,0,0.35)`
+                      : "0 4px 16px rgba(0,0,0,0.2)",
+                  }}
                 >
-                  <Image
-                    src={region.image}
-                    alt={region.name}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
-                  
-                  {/* Content over image */}
-                  <div className="absolute inset-0 p-5 flex flex-col justify-between">
-                      <div className="flex items-start justify-end">
-                        <span
-                          className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                          style={{
-                            background: isOpen ? "#c4622d" : "rgba(255,255,255,0.12)",
-                            color: "white",
-                            backdropFilter: "blur(6px)",
-                            transition: "background 0.25s",
-                          }}
-                        >
-                          {isOpen ? "Close" : "Explore"}
-                        </span>
-                      </div>
+                  {/* Image header */}
+                  <button
+                    onClick={() => setOpenId(isOpen ? null : region.id)}
+                    className="relative w-full overflow-hidden cursor-pointer group text-left"
+                    style={{ height: "180px" }}
+                    aria-expanded={isOpen}
+                  >
+                    <Image
+                      src={region.image}
+                      alt={region.name}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
+                    
+                    {/* Content over image */}
+                    <div className="absolute inset-0 p-5 flex flex-col justify-between">
+                        <div className="flex items-start justify-end">
+                          <span
+                            className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                            style={{
+                              background: isOpen ? "#ff5722" : "rgba(255,255,255,0.12)",
+                              color: "white",
+                              backdropFilter: "blur(6px)",
+                              transition: "background 0.25s",
+                            }}
+                          >
+                            {isOpen ? "Close" : "Explore"}
+                          </span>
+                        </div>
+
 
                       <div>
                         <h3 className="text-white font-bold text-2xl leading-tight tracking-tight flex items-center gap-2">
