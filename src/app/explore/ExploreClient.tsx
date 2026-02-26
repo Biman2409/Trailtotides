@@ -802,73 +802,74 @@ export default function ExploreClient() {
       </div>
 
       {/* Active filter chips */}
-      {activeFilterCount > 0 && (
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-6 flex flex-wrap gap-2">
-          {selectedTypes.map((t) => (
-            <span
-              key={t}
-              onClick={() => toggle(selectedTypes, t, setSelectedTypes)}
-              className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#c4622d]/15 hover:text-[#c4622d] transition-colors"
-            >
-              {t} <X className="w-3 h-3" />
-            </span>
-          ))}
-           {selectedRegions.map((r) => (
+        {activeFilterCount > 0 && (
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-6 flex flex-wrap gap-2">
+            {selectedTypes.map((t) => (
               <span
-                key={r}
-                onClick={() => toggle(selectedRegions, r, setSelectedRegions)}
-                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#c4622d]/15 hover:text-[#c4622d] transition-colors"
+                key={t}
+                onClick={() => toggle(selectedTypes, t, setSelectedTypes)}
+                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5722]/15 hover:text-[#ff5722] transition-colors"
               >
-                {r} <X className="w-3 h-3" />
+                {t} <X className="w-3 h-3" />
               </span>
             ))}
-            {selectedSubRegions.map((sr) => (
+             {selectedRegions.map((r) => (
+                <span
+                  key={r}
+                  onClick={() => toggle(selectedRegions, r, setSelectedRegions)}
+                  className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5722]/15 hover:text-[#ff5722] transition-colors"
+                >
+                  {r} <X className="w-3 h-3" />
+                </span>
+              ))}
+              {selectedSubRegions.map((sr) => (
+                <span
+                  key={sr}
+                  onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
+                  className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5722]/15 hover:text-[#ff5722] transition-colors"
+                >
+                  {sr} <X className="w-3 h-3" />
+                </span>
+              ))}
+            {selectedDifficulties.map((d) => (
               <span
-                key={sr}
-                onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
-                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#c4622d]/15 hover:text-[#c4622d] transition-colors"
+                key={d}
+                onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
+                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5722]/15 hover:text-[#ff5722] transition-colors"
               >
-                {sr} <X className="w-3 h-3" />
+                {d} <X className="w-3 h-3" />
               </span>
             ))}
-          {selectedDifficulties.map((d) => (
-            <span
-              key={d}
-              onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
-              className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#c4622d]/15 hover:text-[#c4622d] transition-colors"
-            >
-              {d} <X className="w-3 h-3" />
-            </span>
-          ))}
-          {selectedDurations.map((d) => (
-            <span
-              key={d}
-              onClick={() => toggle(selectedDurations, d, setSelectedDurations)}
-              className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#c4622d]/15 hover:text-[#c4622d] transition-colors"
-            >
-              {d} <X className="w-3 h-3" />
-            </span>
-          ))}
-          {selectedMonths.map((m) => (
+            {selectedDurations.map((d) => (
               <span
-                key={m}
-                onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                className="flex items-center gap-1.5 bg-teal-100 text-teal-800 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-teal-200 transition-colors"
+                key={d}
+                onClick={() => toggle(selectedDurations, d, setSelectedDurations)}
+                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5722]/15 hover:text-[#ff5722] transition-colors"
               >
-                {m} <X className="w-3 h-3" />
+                {d} <X className="w-3 h-3" />
               </span>
             ))}
-          {selectedGroupSizes.map((g) => (
-            <span
-              key={g}
-              onClick={() => toggle(selectedGroupSizes, g, setSelectedGroupSizes)}
-              className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#c4622d]/15 hover:text-[#c4622d] transition-colors"
-            >
-              {g} <X className="w-3 h-3" />
-            </span>
-          ))}
-        </div>
-      )}
+            {selectedMonths.map((m) => (
+                <span
+                  key={m}
+                  onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
+                  className="flex items-center gap-1.5 bg-teal-100 text-teal-800 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-teal-200 transition-colors"
+                >
+                  {m} <X className="w-3 h-3" />
+                </span>
+              ))}
+            {selectedGroupSizes.map((g) => (
+              <span
+                key={g}
+                onClick={() => toggle(selectedGroupSizes, g, setSelectedGroupSizes)}
+                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5722]/15 hover:text-[#ff5722] transition-colors"
+              >
+                {g} <X className="w-3 h-3" />
+              </span>
+            ))}
+          </div>
+        )}
+
 
       {/* Grid */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
