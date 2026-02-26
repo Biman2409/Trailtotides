@@ -117,40 +117,45 @@ export default function LoginPage() {
       {/* Left panel — image */}
       <div
         className="hidden lg:flex lg:w-1/2 relative bg-cover bg-center"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=100&w=2000')" }}
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1551632811-561732d1e306?w=2560&q=95')" }}
       >
         <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/20 to-transparent" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-          <Link href="/" className="flex items-center gap-2 text-white font-bold text-xl tracking-tight">
-            <Mountain className="w-8 h-8 text-orange-500" />
+          <Link href="/" className="flex items-center gap-2 text-white font-bold text-xl tracking-tight hover:scale-[1.02] transition-transform origin-left">
+            <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/20">
+              <Mountain className="w-6 h-6 text-white" />
+            </div>
             <span>Trail to Tides</span>
           </Link>
           
           <div className="max-w-md">
-            <div className="inline-block px-3 py-1 rounded-full bg-orange-500/20 border border-orange-500/30 text-orange-400 text-xs font-bold uppercase tracking-widest mb-6">
+            <div className="inline-block px-4 py-1.5 rounded-full bg-orange-500/20 border border-orange-500/30 text-orange-400 text-xs font-bold uppercase tracking-[0.2em] mb-8">
               Adventure Awaits
             </div>
-            <h2 className="text-5xl font-black text-white leading-[1.1] mb-6">
-              The wild is calling,<br />
-              <span className="text-orange-500">answer it.</span>
+            <h2 className="text-6xl font-black text-white leading-[1.05] mb-6 tracking-tight">
+              The wild is <br />
+              calling, <span className="text-orange-500">answer.</span>
             </h2>
-            <p className="text-white/80 text-xl font-medium leading-relaxed">
-              Log in to access your custom itineraries and discover India&apos;s hidden gems.
+            <p className="text-white/70 text-lg font-medium leading-relaxed max-w-sm">
+              Log in to your dashboard to manage your itineraries and track your next peak.
             </p>
           </div>
 
-          <div className="flex items-center gap-6 text-white/50 text-sm font-medium">
+          <div className="flex items-center gap-6 text-white/30 text-[11px] font-bold uppercase tracking-[0.15em]">
             <span>© 2026 Trail to Tides</span>
-            <div className="w-1 h-1 rounded-full bg-white/20" />
+            <div className="w-1.5 h-px bg-white/20" />
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-            <div className="w-1 h-1 rounded-full bg-white/20" />
+            <div className="w-1.5 h-px bg-white/20" />
             <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
           </div>
         </div>
       </div>
 
       {/* Right panel — form */}
-      <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-16 xl:px-24 bg-[#0a0a0a]">
+      <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-20 xl:px-32 bg-[#0a0a0a] relative">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-500/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
+        
         <Suspense fallback={<div className="text-white/50 text-center animate-pulse">Loading adventure...</div>}>
           <LoginForm />
         </Suspense>
