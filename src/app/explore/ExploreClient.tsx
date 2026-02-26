@@ -1,63 +1,22 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, Wind, Sun, Mountain, Waves, Snowflake, Trees, Palmtree, Sunrise, Building2, Flower2, CloudRain, Leaf, Footprints, Bike, Car, HardHat, Ship, Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
-import { adventures, adventureTypes, regions } from "@/lib/data";
-import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
-
-// ── Map helpers ────────────────────────────────────────────────────────────
-
-declare global { interface Window { L: any } }
-
-function loadLeaflet(): Promise<any> {
-  return new Promise((resolve) => {
-    if (typeof window === "undefined") return;
-    if (window.L) { resolve(window.L); return; }
-    if (!document.querySelector('link[href*="leaflet"]')) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('script[src*="leaflet"]')) {
-      const script = document.createElement("script");
-      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
-      script.onload = () => resolve(window.L);
-      document.head.appendChild(script);
-    } else {
-      const poll = setInterval(() => { if (window.L) { clearInterval(poll); resolve(window.L); } }, 50);
-    }
-  });
-}
-
-const difficultyColor: Record<string, string> = {
-  Beginner: "#22c55e", Intermediate: "#3b82f6", Advanced: "#ff5100",
-  Expert: "#ff5100", Extreme: "#ef4444",
-};
-
-const typeEmoji: Partial<Record<AdventureType, string>> = {
-  Trekking: "🥾", Biking: "🏍️", Cycling: "🚴", Diving: "🤿",
-  Kayaking: "🛶", Skiing: "⛷️", Mountaineering: "🧗", "Rock Climbing": "🧱",
-  "Jeep Safari": "🚙", "Camel Safari": "🐪", Caving: "🪨",
-  Sandboarding: "🏄", "Urban Adventure": "🏙️",
-};
+import { adventures } from "@/lib/data";
+import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize } from "@/lib/data";
 
 // filter constants
-const difficulties: Difficulty[] = ["Beginner", "Intermediate", "Advanced", "Expert", "Extreme"];
-const durations: Duration[] = ["Weekend", "3–5 days", "7+ days"];
-const groupSizes: GroupSize[] = ["Solo", "Small group (2–6)", "Large group (6+)"];
-
-const seasons: { label: string; months: Month[]; icon: React.ReactNode; idleColor: string; activeColor: string }[] = [
-  { label: "Winter",  months: ["Dec", "Jan", "Feb"],      icon: <Snowflake className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff5100] text-white border border-[#ff5100]" },
-  { label: "Spring",  months: ["Mar", "Apr", "May"],      icon: <Flower2 className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff5100] text-white border border-[#ff5100]" },
-  { label: "Summer",  months: ["Apr", "May", "Jun"],      icon: <Sun className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff5100] text-white border border-[#ff5100]" },
-  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"], icon: <CloudRain className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff5100] text-white border border-[#ff5100]" },
-  { label: "Autumn",  months: ["Oct", "Nov", "Dec"],      icon: <Leaf className="w-3.5 h-3.5" />, idleColor: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", activeColor: "bg-[#ff5100] text-white border border-[#ff5100]" },
+const seasons: { label: string; months: Month[] }[] = [
+  { label: "Winter",  months: ["Dec", "Jan", "Feb"] },
+  { label: "Spring",  months: ["Mar", "Apr", "May"] },
+  { label: "Summer",  months: ["Apr", "May", "Jun"] },
+  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"] },
+  { label: "Autumn",  months: ["Oct", "Nov", "Dec"] },
 ];
 
 
@@ -80,7 +39,6 @@ export default function ExploreClient() {
   const [selectedGroupSizes, setSelectedGroupSizes] = useState<GroupSize[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
   const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
@@ -114,18 +72,6 @@ export default function ExploreClient() {
       setAiMessages((prev) => [...prev, { role: "assistant", content: "Network error. Please try again." }]);
     } finally {
       setAiLoading(false);
-    }
-  }
-
-  useEffect(() => { setMounted(true); }, []);
-
-  function toggleSeason(seasonMonths: Month[]) {
-    const allSelected = seasonMonths.every((m) => selectedMonths.includes(m));
-    if (allSelected) {
-      setSelectedMonths(selectedMonths.filter((m) => !seasonMonths.includes(m)));
-    } else {
-      const merged = Array.from(new Set([...selectedMonths, ...seasonMonths])) as Month[];
-      setSelectedMonths(merged);
     }
   }
 
@@ -377,39 +323,19 @@ export default function ExploreClient() {
                           const categories = [
                               {
                                 label: "Land Based", 
-                                icon: <Mountain className="w-3.5 h-3.5" />,
-                                btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                                btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
-                                chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                                chipActive: "bg-[#ff5100] text-white",
                                 types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
                               },
 
                             {
                               label: "Water Based", 
-                              icon: <Waves className="w-3.5 h-3.5" />,
-                              btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                              btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
-                              chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                              chipActive: "bg-[#ff5100] text-white",
                               types: ["Diving", "Kayaking"],
                             },
                             {
                               label: "Snow Based", 
-                              icon: <Snowflake className="w-3.5 h-3.5" />,
-                              btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                              btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
-                              chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                              chipActive: "bg-[#ff5100] text-white",
                               types: ["Skiing"],
                             },
                             {
                               label: "Air Based", 
-                              icon: <Wind className="w-3.5 h-3.5" />,
-                              btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                              btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
-                              chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                              chipActive: "bg-[#ff5100] text-white",
                               types: [] as string[],
                             },
                           ];
@@ -430,7 +356,6 @@ export default function ExploreClient() {
                                         : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                     }`}
                                   >
-                                    {cat.icon}
                                     {cat.label}
 
 
@@ -487,77 +412,37 @@ export default function ExploreClient() {
                       Region
                     </h3>
                     {(() => {
-                      const regionGroups: { name: Region; icon: React.ReactNode; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
+                      const regionGroups: { name: Region; subRegions: string[] }[] = [
                         {
                           name: "Himalayas",
-                          icon: <Mountain className="w-3.5 h-3.5" />,
-                          btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                          btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
-                          chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                          chipActive: "bg-[#ff5100] text-white",
-                            subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
+                          subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
                         },
                         {
                             name: "Western Ghats",
-                            icon: <Trees className="w-3.5 h-3.5" />,
-                          btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                          btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
-                          chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                          chipActive: "bg-[#ff5100] text-white",
                           subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"],
                           },
                           {
                                 name: "Eastern Ghats",
-                                icon: <Mountain className="w-3.5 h-3.5" />,
-                            btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                            btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
-                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                            chipActive: "bg-[#ff5100] text-white",
                             subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"],
                           },
                           {
                             name: "Desert",
-                            icon: <Sun className="w-3.5 h-3.5" />,
-                            btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                            btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
-                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                            chipActive: "bg-[#ff5100] text-white",
                               subRegions: ["Rajasthan", "Gujarat"],
                           },
                         {
                           name: "Coast",
-                          icon: <Waves className="w-3.5 h-3.5" />,
-                          btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                          btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
-                          chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                          chipActive: "bg-[#ff5100] text-white",
                           subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"],
                         },
                         {
                           name: "Islands",
-                          icon: <Palmtree className="w-3.5 h-3.5" />,
-                          btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                          btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
-                          chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                          chipActive: "bg-[#ff5100] text-white",
                           subRegions: ["Andaman & Nicobar", "Lakshadweep"],
                         },
                             {
                               name: "Northeast",
-                              icon: <Sunrise className="w-3.5 h-3.5" />,
-                              btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                            btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
-                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                            chipActive: "bg-[#ff5100] text-white",
                             subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"],
                           },
                           {
                             name: "Urban",
-                            icon: <Building2 className="w-3.5 h-3.5" />,
-                            btn: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100",
-                            btnActive: "bg-[#ff5100] text-white border-[#ff5100]",
-                            chip: "bg-zinc-100 text-zinc-700 hover:bg-zinc-200",
-                            chipActive: "bg-[#ff5100] text-white",
                             subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"],
                           },
                         ];
@@ -578,7 +463,6 @@ export default function ExploreClient() {
                                     : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                 }`}
                               >
-                                  {rg.icon}
                                   {rg.name}
 
 
@@ -630,7 +514,7 @@ export default function ExploreClient() {
                   <div className="flex flex-col gap-2">
                       {/* Season buttons row */}
                         <div className="flex flex-wrap gap-2">
-                          {seasons.map(({ label, months: sMonths, icon }) => {
+                          {seasons.map(({ label, months: sMonths }) => {
                             const isExpanded = expandedSeason === label;
                             const hasSelected = sMonths.some((m) => selectedMonths.includes(m));
                             const selectedCount = sMonths.filter((m) => selectedMonths.includes(m)).length;
@@ -644,7 +528,6 @@ export default function ExploreClient() {
                                       : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
                                   }`}
                                 >
-                                  {icon}
                                   {label}
 
 
