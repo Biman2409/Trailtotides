@@ -139,33 +139,33 @@ export default function FindByRegion() {
                     </div>
                   )}
 
-                  {/* Expanded items */}
-                  {isOpen && (
-                    <div className="py-4">
-                      <div className="flex flex-col gap-0.5">
-                        {region.items.map(({ type, count, icon }) => (
-                          <Link
-                            key={type}
-                            href={`/explore?region=${encodeURIComponent(region.name)}&type=${encodeURIComponent(type)}`}
-                            className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150 hover:bg-[#c4622d]/10"
-                          >
-                            <div className="flex items-center gap-2.5">
-                              <span className="text-sm grayscale group-hover/row:grayscale-0 transition-all duration-300">{icon}</span>
-                              <span className="text-white/70 group-hover/row:text-white text-sm font-medium transition-colors duration-150">
-                                {type}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#c4622d]/15 text-[#f4956a]">
-                                {count}
-                              </span>
-                              <ArrowRight
-                                className="w-3 h-3 opacity-0 group-hover/row:opacity-100 -translate-x-1 group-hover/row:translate-x-0 transition-all duration-150 text-[#f4956a]"
-                              />
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
+                    {/* Expanded items */}
+                    {isOpen && (
+                      <div className="py-4">
+                        <div className="flex flex-col gap-0.5">
+                          {region.items.map(({ label, count, icon }) => (
+                            <Link
+                              key={label}
+                              href={`/explore?region=${encodeURIComponent(region.name)}&subRegion=${encodeURIComponent(label)}`}
+                              className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150 hover:bg-[#c4622d]/10"
+                            >
+                              <div className="flex items-center gap-2.5">
+                                <span className="text-sm grayscale group-hover/row:grayscale-0 transition-all duration-300">{icon}</span>
+                                <span className="text-white/70 group-hover/row:text-white text-sm font-medium transition-colors duration-150">
+                                  {label}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#c4622d]/15 text-[#f4956a]">
+                                  {count}
+                                </span>
+                                <ArrowRight
+                                  className="w-3 h-3 opacity-0 group-hover/row:opacity-100 -translate-x-1 group-hover/row:translate-x-0 transition-all duration-150 text-[#f4956a]"
+                                />
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
 
                       <div className="mt-4 pt-4 border-t border-white/5">
                         <Link
