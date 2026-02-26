@@ -537,7 +537,7 @@ export default function ExploreClient() {
                     Region
                   </h3>
                   {(() => {
-                    const regionGroups: { name: Region; icon: string; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
+                    const regionGroups: { name: Region; icon: React.ReactNode; btn: string; btnActive: string; chip: string; chipActive: string; subRegions: string[] }[] = [
                       {
           name: "Himalayas",
           icon: "🏔️",
