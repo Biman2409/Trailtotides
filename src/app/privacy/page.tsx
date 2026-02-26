@@ -18,10 +18,10 @@ const SECTIONS = [
     title: "4. Cookies",
     content: `We use cookies to maintain your login session and remember your preferences. We do not use advertising cookies or cross-site tracking cookies. You can delete cookies in your browser settings at any time, which will log you out of the platform.`,
   },
-    {
-      title: "5. Third-Party Services",
-      content: `We use OpenAI's API to power the compass.ai adventure finder. Queries you send to compass.ai are processed by OpenAI and subject to their privacy policy. We use Supabase for authentication and database services. We use Unsplash for imagery, which is served directly from their CDN.`,
-    },
+      {
+        title: "5. Third-Party Services",
+        content: `We use OpenAI's API to power the COMPASS.AI adventure finder. Queries you send to COMPASS.AI are processed by OpenAI and subject to their privacy policy. We use Supabase for authentication and database services. We use Unsplash for imagery, which is served directly from their CDN.`,
+      },
 
   {
     title: "6. Your Rights",
