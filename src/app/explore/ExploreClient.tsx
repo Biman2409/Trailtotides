@@ -832,7 +832,7 @@ export default function ExploreClient() {
               <span
                 key={t}
                 onClick={() => toggle(selectedTypes, t, setSelectedTypes)}
-                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/15 hover:text-[#ff6b35] transition-colors"
+                className="flex items-center gap-1.5 bg-[#ff6b35]/15 text-[#ff6b35] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/25 transition-colors"
               >
                 {t} <X className="w-3 h-3" />
               </span>
@@ -841,7 +841,7 @@ export default function ExploreClient() {
                 <span
                   key={r}
                   onClick={() => toggle(selectedRegions, r, setSelectedRegions)}
-                  className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/15 hover:text-[#ff6b35] transition-colors"
+                  className="flex items-center gap-1.5 bg-[#ff6b35]/15 text-[#ff6b35] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/25 transition-colors"
                 >
                   {r} <X className="w-3 h-3" />
                 </span>
@@ -850,7 +850,7 @@ export default function ExploreClient() {
                 <span
                   key={sr}
                   onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
-                  className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/15 hover:text-[#ff6b35] transition-colors"
+                  className="flex items-center gap-1.5 bg-[#ff6b35]/15 text-[#ff6b35] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/25 transition-colors"
                 >
                   {sr} <X className="w-3 h-3" />
                 </span>
@@ -859,7 +859,7 @@ export default function ExploreClient() {
               <span
                 key={d}
                 onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
-                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/15 hover:text-[#ff6b35] transition-colors"
+                className="flex items-center gap-1.5 bg-[#ff6b35]/15 text-[#ff6b35] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/25 transition-colors"
               >
                 {d} <X className="w-3 h-3" />
               </span>
@@ -868,7 +868,7 @@ export default function ExploreClient() {
               <span
                 key={d}
                 onClick={() => toggle(selectedDurations, d, setSelectedDurations)}
-                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/15 hover:text-[#ff6b35] transition-colors"
+                className="flex items-center gap-1.5 bg-[#ff6b35]/15 text-[#ff6b35] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/25 transition-colors"
               >
                 {d} <X className="w-3 h-3" />
               </span>
@@ -877,7 +877,7 @@ export default function ExploreClient() {
                 <span
                   key={m}
                   onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                  className="flex items-center gap-1.5 bg-teal-100 text-teal-800 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-teal-200 transition-colors"
+                  className="flex items-center gap-1.5 bg-[#ff6b35]/15 text-[#ff6b35] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/25 transition-colors"
                 >
                   {m} <X className="w-3 h-3" />
                 </span>
@@ -886,7 +886,7 @@ export default function ExploreClient() {
               <span
                 key={g}
                 onClick={() => toggle(selectedGroupSizes, g, setSelectedGroupSizes)}
-                className="flex items-center gap-1.5 bg-[#1e3d2f]/10 text-[#1e3d2f] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/15 hover:text-[#ff6b35] transition-colors"
+                className="flex items-center gap-1.5 bg-[#ff6b35]/15 text-[#ff6b35] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff6b35]/25 transition-colors"
               >
                 {g} <X className="w-3 h-3" />
               </span>
