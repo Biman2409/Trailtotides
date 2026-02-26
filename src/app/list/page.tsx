@@ -50,11 +50,11 @@ const BENEFITS = [
     title: "Pinned on the India map",
     description: "Your adventure appears on our interactive India map, giving it geographic discovery alongside search.",
   },
-    {
-      icon: Sparkles,
-      title: "Featured in AI recommendations",
-      description: "Our compass.ai recommends adventures to users. Verified listings are prioritised in AI results.",
-    },
+      {
+        icon: Sparkles,
+        title: "Featured in AI recommendations",
+        description: "Our COMPASS.AI recommends adventures to users. Verified listings are prioritised in AI results.",
+      },
 
 ];
 
