@@ -141,14 +141,20 @@ export default function FindByRegion() {
                         </div>
 
 
-                        <div>
-                          <h3 className="text-white font-bold text-2xl leading-tight tracking-tight">
-                            {region.name}
-                          </h3>
-                            <p className="text-white/60 text-xs mt-1.5 leading-relaxed line-clamp-2">
-                              {regionSubtitles[region.name]}
-                            </p>
-                        </div>
+                          <div>
+                            <div className="flex items-center gap-2.5">
+                              <span className="text-[#ff6b35] transition-colors duration-300">
+                                {regionIcons[region.name]}
+                              </span>
+                              <h3 className="text-white font-bold text-2xl leading-tight tracking-tight">
+                                {region.name}
+                              </h3>
+                            </div>
+                              <p className="text-white/60 text-xs mt-1.5 leading-relaxed line-clamp-2">
+                                {regionSubtitles[region.name]}
+                              </p>
+                          </div>
+
 
                   </div>
                 </button>
