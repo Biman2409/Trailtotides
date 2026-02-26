@@ -82,19 +82,12 @@ export default function InlineChat() {
         
         {/* Architectural Header Section */}
         <div className="flex flex-col items-center text-center mb-20 space-y-6">
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#ff5100]/10 border border-[#ff5100]/20 text-[#ff5100] text-[10px] font-bold uppercase tracking-[0.3em] mb-2 shadow-lg shadow-[#ff5100]/5">
-            <Sparkles className="w-3.5 h-3.5" />
-            AI Discovery Engine
-          </div>
           <div className="flex items-center gap-6 justify-center">
             <Compass className="w-14 h-14 lg:w-20 lg:h-20 text-[#ff5100] drop-shadow-[0_0_30px_rgba(255,81,0,0.3)]" strokeWidth={1.2} />
             <h2 className="text-white text-6xl lg:text-8xl font-black tracking-tighter uppercase leading-none">
               Compass AI
             </h2>
           </div>
-          <p className="text-white/40 text-lg lg:text-xl max-w-2xl mx-auto font-light leading-relaxed">
-            Architecting your next escape with precision intelligence. Describe the terrain, the thrill, or the vibe.
-          </p>
         </div>
 
         {/* Command Center Interface */}
