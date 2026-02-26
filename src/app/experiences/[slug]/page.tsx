@@ -410,14 +410,11 @@ export default async function ExperiencePage({ params }: Props) {
                           <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
                           <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-orange-900/30 via-transparent to-sky-900/20 pointer-events-none" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                        <div className="absolute top-3 left-3 flex flex-wrap gap-2">
-                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full tracking-wider uppercase shadow-sm ${typeStyle[a.type] ?? "bg-[#1a1f2e]/80 text-white/80"}`}>
-                            {a.type}
-                          </span>
-                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tight shadow-sm ${difficultyStyle[a.difficulty] ?? "bg-gray-500 text-white"}`}>
-                            {a.difficulty}
-                          </span>
-                        </div>
+                          <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+                            <Pill type="type" value={a.type} />
+                            <Pill type="difficulty" value={a.difficulty} />
+                          </div>
+
                       </div>
                     <div className="p-5">
                       <div className="flex items-center gap-1.5 mb-1">
