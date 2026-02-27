@@ -113,7 +113,7 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto">
               <div className="mb-14">
                   <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3">
-                    Our Favourites
+                    OUR FAVOURITES
                   </p>
                 <div className="flex items-end justify-between gap-4">
                 <div>
