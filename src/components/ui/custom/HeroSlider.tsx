@@ -11,46 +11,46 @@ type Slide = {
 
 const slides: Slide[] = [
   {
-    src: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1280&q=60",
+    src: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1280&q=40",
     alt: "Trekker on a high-altitude Himalayan ridge",
   },
   {
-    src: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1280&q=60",
+    src: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1280&q=40",
     alt: "Kayaker paddling through vivid turquoise coastal waters",
   },
   {
-    src: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=1280&q=60",
+    src: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=1280&q=40",
     alt: "Mountaineer silhouetted against a vast snowy summit",
   },
   {
-    src: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1280&q=60",
+    src: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1280&q=40",
     alt: "Surfer carving a wave at golden hour",
   },
   {
-    src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1280&q=60",
+    src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1280&q=40",
     alt: "Motorbike rider on a sweeping Himalayan mountain road",
   },
   {
-    src: "https://images.unsplash.com/photo-1669255664788-61c668bd6fe8?w=1280&q=60",
+    src: "https://images.unsplash.com/photo-1669255664788-61c668bd6fe8?w=1280&q=40",
     alt: "Man on a motorcycle riding through mountain terrain",
   },
   {
-    src: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1280&q=60",
+    src: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1280&q=40",
     alt: "Skier carving down a steep snowy mountain slope",
     filter: "brightness(1.12) contrast(1.08) saturate(1.2) hue-rotate(-10deg)",
   },
   {
-    src: "https://images.unsplash.com/photo-1592208128295-5aaa34f1d72b?w=1280&q=60",
+    src: "https://images.unsplash.com/photo-1592208128295-5aaa34f1d72b?w=1280&q=40",
     alt: "Scuba diver exploring vibrant coral reefs in the Andamans",
     filter: "brightness(1.08) contrast(1.1) saturate(1.35) hue-rotate(5deg)",
   },
   {
-    src: "https://images.unsplash.com/photo-1668936132313-2c3105eef631?w=1280&q=60",
+    src: "https://images.unsplash.com/photo-1668936132313-2c3105eef631?w=1280&q=40",
     alt: "Mountain biker descending a rugged trail through dense forest",
     filter: "brightness(1.05) contrast(1.12) saturate(1.25) sepia(0.08)",
   },
   {
-    src: "https://images.unsplash.com/photo-1590898428406-7b9f44b33c22?w=1280&q=60",
+    src: "https://images.unsplash.com/photo-1590898428406-7b9f44b33c22?w=1280&q=40",
     alt: "Rock climber scaling a dramatic cliff face",
     filter: "brightness(1.06) contrast(1.14) saturate(1.2) sepia(0.06) hue-rotate(5deg)",
   },
