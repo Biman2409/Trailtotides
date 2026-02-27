@@ -99,15 +99,19 @@ export default function InlineChat() {
               
               <div className="relative bg-[#11161d]/90 backdrop-blur-2xl border border-white/[0.08] rounded-[2rem] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] overflow-hidden">
                 
-                  {/* Operational Header */}
-                  <div className="px-6 py-3 border-b border-white/[0.05] flex items-center justify-center bg-white/[0.01]">
-                    <span className="text-[10px] text-white/40 font-black uppercase tracking-[0.2em] text-center w-full">Recommended Starting Vectors</span>
-                  </div>
+                    {/* Operational Header */}
+                    <div className="px-8 py-5 border-b border-white/[0.05] flex items-center justify-between bg-white/[0.01]">
+                      <div className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
+                        <span className="text-[10px] text-white/40 font-black uppercase tracking-[0.25em]">System Status: Online</span>
+                      </div>
+                      <span className="text-[10px] text-white/20 font-black uppercase tracking-[0.2em]">Neural Engine v4.0</span>
+                    </div>
 
-                    {/* Interaction Terminal */}
-                    <div className={`min-h-[60px] ${messages.length > 0 ? 'max-h-[450px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
-                      {messages.length === 0 && (
-                        <div className="px-8 py-5 flex flex-nowrap gap-3 justify-center overflow-x-auto no-scrollbar">
+                      {/* Interaction Terminal */}
+                      <div className={`min-h-[100px] ${messages.length > 0 ? 'max-h-[500px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
+                        {messages.length === 0 && (
+                          <div className="px-8 py-10 flex flex-nowrap gap-4 justify-center overflow-x-auto no-scrollbar">
                           {[
                             "Ladakh bike trip under 20k",
                             "Solo trek to Valley of Flowers",
