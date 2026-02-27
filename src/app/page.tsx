@@ -112,7 +112,7 @@ export default function HomePage() {
       <section id="featured-adventures" className="py-24 lg:py-32 px-6 lg:px-8 bg-[#111820]">
           <div className="max-w-7xl mx-auto">
               <div className="mb-14">
-                  <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
+                  <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3">
                     Our Favourites
                   </p>
                 <div className="flex items-end justify-between gap-4">
