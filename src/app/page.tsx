@@ -169,15 +169,15 @@ export default function HomePage() {
         </div>
 
           <div className="max-w-7xl mx-auto relative z-10">
-            <div className="max-w-2xl">
-              <p className="text-[#7ec88a] text-xs font-semibold tracking-[0.22em] uppercase mb-4">
-                Signature Feature
-              </p>
-              <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-5">
-                India&apos;s adventures,
-                <br />
-                <span className="text-[#7ec88a]">mapped.</span>
-              </h2>
+              <div className="max-w-2xl">
+                <p className="text-[#7ec88a] text-xs font-semibold tracking-[0.22em] uppercase mb-4">
+                  SIGNATURE FEATURE
+                </p>
+                <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-5">
+                  India&apos;s adventures,
+                  <br />
+                  <span className="text-[#7ec88a]">mapped.</span>
+                </h2>
               <p className="text-white/72 text-lg md:text-xl leading-relaxed mb-9 max-w-lg">
                 Every adventure across India — trekking, diving, cycling, skiing — on one
                 interactive map. Filter by region, difficulty, or type.
