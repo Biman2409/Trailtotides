@@ -204,15 +204,15 @@ export default function HomePage() {
       <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#0e1420] border-t border-white/6">
         <div className="max-w-7xl mx-auto">
             <div className="flex items-end justify-between mb-12">
-              <div>
-                  <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3">
-                    FROM THE FIELD
-                  </p>
-                      <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
-                          Voices From The Edge
-                        </h2>
-              <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
-            </div>
+                <div>
+                    <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3">
+                      FROM THE FIELD
+                    </p>
+                        <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight uppercase">
+                            VOICES FROM THE EDGE
+                          </h2>
+                <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
+              </div>
             <Link
               href="/stories"
               className="hidden md:flex items-center gap-1.5 text-white/50 font-semibold hover:text-[#ff5100] transition-colors group text-sm"
