@@ -98,10 +98,10 @@ export default function FindYourFormat() {
         {/* Header */}
             <div className="mb-12">
               <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3">
-                DISCOVER YOUR ELEMENT
+                DISCOVER YOUR STYLE
               </p>
-                  <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
-                  Adventure Lives In Every Element
+                  <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight uppercase">
+                  ADVENTURE LIVES IN EVERY ELEMENT
                 </h2>
             <p className="mt-4 text-white/50 text-base max-w-xl">
               Pick a category that matches your style.
