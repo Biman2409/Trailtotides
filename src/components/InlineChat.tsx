@@ -63,31 +63,30 @@ export default function InlineChat() {
   }
 
   return (
-    <section id="compass-ai" className="relative overflow-hidden bg-[#0a0e14] border-y border-white/[0.03] py-8 lg:py-12">
-      {/* Deep atmospheric backgrounds */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#ff5100]/10 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#ff5100]/10 blur-[150px] rounded-full translate-y-1/2 -translate-x-1/2" />
-      
-      {/* Grid pattern overlay */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-        style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+      <section id="compass-ai" className="relative overflow-hidden bg-[#0a0e14] border-y border-white/[0.03] py-6 lg:py-10">
+        {/* Deep atmospheric backgrounds */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#ff5100]/10 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#ff5100]/10 blur-[150px] rounded-full translate-y-1/2 -translate-x-1/2" />
         
-        {/* Architectural Header Section */}
-        <div className="flex flex-col items-center text-center mb-6 space-y-4">
-          <div className="flex flex-col items-center gap-2">
-                <div className="flex items-center gap-4 justify-center">
-                  <Compass className="w-10 h-10 lg:w-12 lg:h-12 text-[#ff5100] drop-shadow-[0_0_30px_rgba(255,81,0,0.3)]" strokeWidth={1.2} />
-                  <h2 className="text-white text-5xl lg:text-7xl font-bold tracking-tighter leading-none">
-                    COMPASS.AI
-                  </h2>
-                </div>
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+          style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+          
+          {/* Architectural Header Section */}
+          <div className="flex flex-col items-center text-center mb-5 space-y-3">
+            <div className="flex flex-col items-center gap-2">
+                  <div className="flex items-center gap-4 justify-center">
+                    <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tighter leading-none">
+                      COMPASS.AI
+                    </h2>
+                  </div>
+            </div>
+            <p className="text-white/40 text-base lg:text-lg font-medium tracking-tight max-w-xl leading-relaxed">
+              Describe your escape. <span className="text-white">We&apos;ll map the adventure.</span>
+            </p>
           </div>
-          <p className="text-white/40 text-base lg:text-lg font-medium tracking-tight max-w-xl leading-relaxed">
-            Describe your escape. <span className="text-white">We&apos;ll map the adventure.</span>
-          </p>
-        </div>
 
           {/* Command Center Interface */}
           <div className="max-w-5xl mx-auto">
