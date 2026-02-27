@@ -241,54 +241,6 @@ export default function HomePage() {
         </div>
       </section>
 
-          {/* ── FINAL CTA ─────────────────────────────────────── */}
-      <section className="relative py-24 lg:py-32 bg-[#141920] border-t border-white/6 px-6 lg:px-8 overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-30"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 15% 50%, #ff510022 0%, transparent 55%), radial-gradient(circle at 85% 50%, #1a2e2018 0%, transparent 55%)",
-          }}
-        />
-        <div
-          className="absolute inset-0 opacity-4"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(45deg, #ff5100 0, #ff5100 1px, transparent 0, transparent 50%)",
-            backgroundSize: "20px 20px",
-          }}
-        />
-          <div className="max-w-2xl mx-auto text-center relative z-10">
-          <div className="flex items-center justify-center gap-1 mb-6">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-4 h-4 fill-[#ff5100] text-[#ff5100]" />
-            ))}
-          </div>
-          <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-5">
-            Find your next edge.
-          </h2>
-          <p className="text-white/50 text-lg leading-relaxed mb-10 max-w-lg mx-auto">
-            287 adventures across India. Verified operators, real terrain data, and stories from
-            people who&apos;ve actually been there.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link
-              href="/explore"
-              className="bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#ff5100]/20 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30 transition-all duration-200"
-            >
-              Start Exploring
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              href="/list"
-              className="border border-white/20 hover:border-white/40 text-white/70 font-semibold px-9 py-4 rounded-xl text-base hover:text-white hover:bg-white/5 hover:-translate-y-0.5 transition-all duration-200"
-            >
-              List Your Adventure
-            </Link>
-          </div>
-        </div>
-      </section>
-
       <Footer />
       <ChatBubble />
     </div>
