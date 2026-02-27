@@ -116,12 +116,12 @@ export default function HomePage() {
                     OUR FAVOURITES
                   </p>
                 <div className="flex items-end justify-between gap-4">
-                <div>
-                  <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
-                        Adventures Of A Lifetime
-                      </h2>
-                  <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
-                </div>
+                  <div>
+                    <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight uppercase">
+                          ADVENTURES OF A LIFETIME
+                        </h2>
+                    <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
+                  </div>
                 <span className="hidden sm:flex items-center gap-1.5 text-[#ff5100] text-sm font-semibold bg-[#ff5100]/8 border border-[#ff5100]/20 px-3 py-1.5 rounded-full mb-1">
                   {featuredAdventures.length} picks
                 </span>
