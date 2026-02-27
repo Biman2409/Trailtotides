@@ -205,7 +205,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
             <div className="flex items-end justify-between mb-12">
               <div>
-                  <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
+                  <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3">
                     From The Field
                   </p>
                       <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
