@@ -63,7 +63,7 @@ export default function InlineChat() {
   }
 
   return (
-    <section id="compass-ai" className="relative overflow-hidden bg-[#0a0e14] border-y border-white/[0.03] py-12 lg:py-16">
+    <section id="compass-ai" className="relative overflow-hidden bg-[#0a0e14] border-y border-white/[0.03] py-8 lg:py-12">
       {/* Deep atmospheric backgrounds */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#ff5100]/10 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#ff5100]/10 blur-[150px] rounded-full translate-y-1/2 -translate-x-1/2" />
