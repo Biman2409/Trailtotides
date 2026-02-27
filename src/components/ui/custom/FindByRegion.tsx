@@ -70,8 +70,8 @@ export default function FindByRegion() {
               <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3">
                 DISCOVER BY REGION
               </p>
-            <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
-            Adventure lives in every corner.
+            <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight uppercase">
+            Adventure lives in every corner
           </h2>
           <p className="mt-4 text-white/50 text-base max-w-xl">
             Pick a region, and let the journey begin.
