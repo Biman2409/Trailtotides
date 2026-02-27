@@ -151,7 +151,7 @@ export default function HomePage() {
       <section className="relative py-24 lg:py-32 bg-[#1a2e20] px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=2000&q=80"
+            src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1200&q=40"
             alt="India map texture"
             fill
             className="object-cover opacity-12"
