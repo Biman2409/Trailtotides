@@ -63,27 +63,30 @@ export default function InlineChat() {
   }
 
   return (
-      <section id="compass-ai" className="relative overflow-hidden bg-[#0a0e14] border-y border-white/[0.03] py-6 lg:py-10">
+      <section id="compass-ai" className="relative overflow-hidden bg-[#0a0e14] border-y border-white/[0.03] py-20 lg:py-32">
         {/* Deep atmospheric backgrounds */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#ff5100]/10 blur-[150px] rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#ff5100]/10 blur-[150px] rounded-full translate-y-1/2 -translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
         
         {/* Grid pattern overlay */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none" 
           style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           
           {/* Architectural Header Section */}
-          <div className="flex flex-col items-center text-center mb-5 space-y-3">
-            <div className="flex flex-col items-center gap-2">
-                  <div className="flex items-center gap-4 justify-center">
-                    <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tighter leading-none">
+          <div className="flex flex-col items-center text-center mb-16 space-y-6">
+            <div className="flex flex-col items-center gap-4">
+                  <div className="flex items-center gap-5 justify-center">
+                    <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-2xl bg-[#ff5100] flex items-center justify-center shadow-2xl shadow-[#ff5100]/20 rotate-3 group-hover:rotate-0 transition-transform duration-500">
+                      <Compass className="w-7 h-7 lg:w-9 lg:h-9 text-white" strokeWidth={2.5} />
+                    </div>
+                    <h2 className="text-white text-5xl lg:text-8xl font-black tracking-tighter leading-none bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/40">
                       COMPASS.AI
                     </h2>
                   </div>
             </div>
-            <p className="text-white/40 text-base lg:text-lg font-medium tracking-tight max-w-xl leading-relaxed">
+            <p className="text-white/40 text-lg lg:text-2xl font-medium tracking-tight max-w-2xl leading-relaxed">
               Describe your escape. <span className="text-white">We&apos;ll map the adventure.</span>
             </p>
           </div>
