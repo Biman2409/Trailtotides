@@ -136,10 +136,10 @@ export default function Footer() {
         {/* Global Network bar */}
         <div className="border-t border-white/[0.03] pt-12 flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
           <div className="flex items-center gap-8">
-            <div className="flex items-center gap-2.5">
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
-              <span className="text-[10px] text-white/40 font-black uppercase tracking-[0.3em]">Systems Operational</span>
-            </div>
+              <div className="flex items-center gap-2.5">
+                <div className="w-2 h-2 rounded-full bg-green-500/50 shadow-[0_0_10px_rgba(34,197,94,0.3)]" />
+                <span className="text-[10px] text-white/40 font-black uppercase tracking-[0.3em]">Systems Operational</span>
+              </div>
             <div className="flex items-center gap-2.5">
               <Globe className="w-3 h-3 text-white/20" />
               <span className="text-[10px] text-white/40 font-black uppercase tracking-[0.3em]">Global Aggregation Active</span>
