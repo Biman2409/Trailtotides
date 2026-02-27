@@ -101,25 +101,25 @@ export default function InlineChat() {
                     <span className="text-[10px] text-white/40 font-black uppercase tracking-[0.2em] text-center w-full">Recommended Starting Vectors</span>
                   </div>
 
-                  {/* Interaction Terminal */}
-                  <div className={`min-h-[60px] ${messages.length > 0 ? 'max-h-[450px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
-                    {messages.length === 0 && (
-                      <div className="px-8 py-6 flex flex-nowrap gap-4 justify-center overflow-x-auto no-scrollbar">
-                        {[
-                          "Ladakh bike trip under 20k",
-                          "Solo trek to Valley of Flowers",
-                          "Scuba diving in Andaman islands"
-                        ].map((v) => (
-                            <button 
-                              key={v}
-                              onClick={() => send(v)}
-                              className="px-6 py-3 rounded-full bg-white/[0.03] border border-white/[0.08] text-[12px] text-white/70 font-medium whitespace-nowrap hover:bg-[#ff5100]/10 hover:text-[#ff5100] hover:border-[#ff5100]/30 transition-all duration-300 shadow-lg flex-shrink-0"
-                            >
-                            {v}
-                          </button>
-                        ))}
-                      </div>
-                    )}
+                    {/* Interaction Terminal */}
+                    <div className={`min-h-[60px] ${messages.length > 0 ? 'max-h-[450px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
+                      {messages.length === 0 && (
+                        <div className="px-8 py-5 flex flex-nowrap gap-3 justify-center overflow-x-auto no-scrollbar">
+                          {[
+                            "Ladakh bike trip under 20k",
+                            "Solo trek to Valley of Flowers",
+                            "Scuba diving in Andaman islands"
+                          ].map((v) => (
+                              <button 
+                                key={v}
+                                onClick={() => send(v)}
+                                className="px-5 py-2.5 rounded-full bg-white/[0.03] border border-white/[0.08] text-[12px] text-white/70 font-medium whitespace-nowrap hover:bg-[#ff5100]/10 hover:text-[#ff5100] hover:border-[#ff5100]/30 transition-all duration-300 shadow-lg flex-shrink-0"
+                              >
+                              {v}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                 
                 {messages.length > 0 && (
                   <div className="p-5 lg:p-6 space-y-5">
