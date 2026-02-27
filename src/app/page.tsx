@@ -205,9 +205,9 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
             <div className="flex items-end justify-between mb-12">
               <div>
-                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3">
-                  FROM THE FIELD
-                </p>
+                  <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
+                    From The Field
+                  </p>
                       <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
                           Voices From The Edge
                         </h2>
