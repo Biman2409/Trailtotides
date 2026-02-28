@@ -42,14 +42,14 @@ export default function Footer() {
             <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#ff5100]/80 mb-6">
               Platform
             </h4>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
-                {[
-                  ["EDITOR'S CHOICE", "/#featured-adventures"],
-                  ["SIGNATURE FEATURE", "/#map-cta"],
-                  ["FROM THE FIELD", "/#stories"],
-                  ["DISCOVER YOUR REGION", "/#regions"],
-                  ["DISCOVER YOUR GENRE", "/#styles"],
-                ].map(([label, href]) => (
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
+                  {[
+                    ["EDITORS CHOICE", "/#featured-adventures"],
+                    ["SIGNATURE FEATURE", "/#map-cta"],
+                    ["FROM THE FIELD", "/#stories"],
+                    ["DISCOVER YOUR REGION", "/#regions"],
+                    ["DISCOVER YOUR GENRE", "/#styles"],
+                  ].map(([label, href]) => (
                 <li key={label}>
                   <Link
                     href={href}
