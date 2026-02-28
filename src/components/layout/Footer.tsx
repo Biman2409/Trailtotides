@@ -13,19 +13,19 @@ export default function Footer() {
           
             {/* Brand Identity */}
             <div className="lg:col-span-5 space-y-12">
-              <Link href="/" className="flex items-center gap-4 group w-fit">
-                <div className="w-12 h-12 rounded-xl bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
-                  <Mountain className="w-6 h-6 text-white" strokeWidth={2.5} />
-                </div>
-                <span className="text-white font-black tracking-tighter text-2xl uppercase leading-none">
-                  TRAIL TO TIDES
-                </span>
-              </Link>
-              
-              <div className="space-y-8">
-                <p className="text-white/40 text-base leading-relaxed max-w-sm font-medium tracking-tight">
-                  India&apos;s definitive adventure discovery engine. Handpicked expeditions, verified operators, and high-precision mapping — engineered for the modern explorer.
-                </p>
+                <Link href="/" className="flex items-center gap-4 group w-fit">
+                  <div className="w-12 h-12 rounded-xl bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
+                    <Mountain className="w-6 h-6 text-white" strokeWidth={2.5} />
+                  </div>
+                  <span className="text-[#ff5100] font-black tracking-tighter text-2xl uppercase leading-none">
+                    TRAIL TO TIDES
+                  </span>
+                </Link>
+                
+                <div className="space-y-8">
+                  <p className="text-white/40 text-base leading-relaxed max-w-sm font-medium tracking-tight">
+                    Discover and compare epic adventures across India — handpicked by explorers, run by verified operators, mapped with precision — for you
+                  </p>
 
                 <div className="space-y-4">
                   <p className="text-white/60 text-sm font-medium leading-relaxed max-w-xs">
