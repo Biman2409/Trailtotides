@@ -135,12 +135,13 @@ export default function FindYourFormat() {
                   style={{ height: "160px" }}
                   aria-expanded={isOpen}
                 >
-                  {/* Background image */}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={cat.image}
                     alt={cat.label}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    fill
+                    quality={100}
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    style={{ filter: "brightness(1.02) contrast(1.05) saturate(1.08)" }}
                   />
                   {/* Gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
