@@ -92,7 +92,7 @@ export default function ChatBubble() {
           boxShadow: "0 10px 40px -10px rgba(255,81,0,0.6)", 
           transition: "opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s" 
         }}
-          aria-label="Open compass.ai"
+          aria-label="Open Compass.ai"
         >
           <div className="absolute inset-0 rounded-full bg-white/20 scale-0 group-hover:scale-100 transition-transform duration-500 rounded-full" />
           <Compass className={`w-7 h-7 relative z-10 transition-transform duration-700 ${open ? 'rotate-180' : 'group-hover:rotate-90'}`} />
@@ -110,7 +110,7 @@ export default function ChatBubble() {
                   <Compass className="w-6 h-6 text-white" strokeWidth={2.5} />
                 </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-white font-bold text-sm tracking-tight lowercase">compass.ai</p>
+                        <p className="text-white font-bold text-sm tracking-tight capitalize">Compass.ai</p>
                       </div>
               </div>
             <button
@@ -199,7 +199,7 @@ export default function ChatBubble() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && send()}
-                    placeholder="Ask compass.ai..."
+                    placeholder="Ask Compass.ai..."
                     className="flex-1 bg-white/[0.04] border border-white/[0.08] text-white placeholder-white/10 text-sm px-5 py-4 rounded-xl outline-none focus:bg-white/[0.06] focus:border-[#ff5100]/40 transition-all font-light"
                 />
               <button
