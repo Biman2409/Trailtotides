@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Compass, Instagram, Youtube, Twitter, Mail, Linkedin, Waves } from "lucide-react";
+import { Compass, Instagram, Youtube, Twitter, Mail, Linkedin, Mountain } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -15,7 +15,7 @@ export default function Footer() {
           <div className="col-span-2 lg:col-span-4 space-y-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center shadow-lg shadow-[#ff5100]/20">
-                <Waves className="w-4.5 h-4.5 text-white" />
+                <Mountain className="w-4.5 h-4.5 text-white" />
               </div>
               <span className="text-white font-black tracking-tighter text-xl uppercase">TRAIL TO TIDES</span>
             </div>
