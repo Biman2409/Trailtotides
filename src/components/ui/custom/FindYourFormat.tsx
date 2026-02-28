@@ -6,8 +6,8 @@ import { ArrowRight, Wind, Mountain, Waves, Snowflake } from "lucide-react";
 
 const categories = [
     {
-      id: "land",
-      label: "Land",
+      id: "earth",
+      label: "Earth",
       icon: <Mountain className="w-6 h-6 text-[#ff5100]" />,
       subtitle: "Push your limits and own every inch of wild terrain",
       image: "https://images.unsplash.com/photo-1605548109944-9040d0972bf5?w=800&q=80",
