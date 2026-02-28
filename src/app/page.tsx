@@ -114,7 +114,7 @@ export default function HomePage() {
                 <div className="mb-14">
                     <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
                       <BadgeCheck className="w-3.5 h-3.5" />
-                      EDITORS CHOICE
+                      EDITOR&apos;S CHOICE
                     </p>
                   <div className="flex items-end justify-between gap-4">
                   <div>
