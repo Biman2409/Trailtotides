@@ -62,8 +62,8 @@ export default function FindByRegion() {
     };
   });
 
-  return (
-    <section className="py-24 lg:py-32 bg-[#1a1f2e] px-6 lg:px-8">
+    return (
+      <section id="regions" className="py-24 lg:py-32 bg-[#1a1f2e] px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
             <div className="mb-12">
