@@ -147,8 +147,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── MAP CTA ───────────────────────────────────────── */}
-      <section className="relative py-24 lg:py-32 bg-[#1a2e20] px-6 lg:px-8 overflow-hidden">
+        {/* ── MAP CTA ───────────────────────────────────────── */}
+        <section id="map-cta" className="relative py-24 lg:py-32 bg-[#1a2e20] px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1200&q=40"
