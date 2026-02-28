@@ -26,21 +26,7 @@ export default function Footer() {
                   <p className="text-white/40 text-base leading-relaxed max-w-sm font-medium tracking-tight">
                     Discover and compare epic adventures across India — handpicked by explorers, run by verified operators, mapped with precision — for you
                   </p>
-
-                <div className="space-y-4">
-                  <div className="flex items-center gap-6">
-                    {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
-                      <a 
-                        key={i}
-                        href="#" 
-                        className="text-white/20 hover:text-[#ff5100] hover:scale-110 transition-all duration-300"
-                      >
-                        <Icon className="w-5 h-5" />
-                      </a>
-                    ))}
-                  </div>
                 </div>
-              </div>
             </div>
 
             {/* Platform Nav */}
