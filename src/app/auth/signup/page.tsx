@@ -36,15 +36,15 @@ export default function SignUpPage() {
       {/* Left panel — image */}
       <div
         className="hidden lg:flex lg:w-1/2 relative bg-cover bg-center"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1551632811-561732d1e306?w=2560&q=95')" }}
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1551632811-561732d1e306?w=2560&q=100')" }}
       >
         <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/20 to-transparent" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-          <Link href="/" className="flex items-center gap-2 text-white font-bold text-xl tracking-tight hover:scale-[1.02] transition-transform origin-left">
-            <div className="w-10 h-10 bg-[#ff5100] rounded-xl flex items-center justify-center shadow-lg shadow-[#ff5100]/20">
+          <Link href="/" className="flex items-center gap-3 text-white font-bold text-xl tracking-tight hover:scale-[1.02] transition-transform origin-left group">
+            <div className="w-10 h-10 bg-[#ff5100] rounded-xl flex items-center justify-center shadow-lg shadow-[#ff5100]/20 group-hover:bg-[#ff7d47] transition-colors">
               <Mountain className="w-6 h-6 text-white" />
             </div>
-            <span>TRAIL TO TIDES</span>
+            <span className="text-[#ff5100] font-black tracking-[-0.06em] text-[1.4rem] uppercase leading-none">TRAIL TO TIDES</span>
           </Link>
           
                 <div className="max-w-md">
