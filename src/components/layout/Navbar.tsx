@@ -104,9 +104,9 @@ export default function Navbar() {
               <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-colors duration-200 shadow-md shadow-[#ff5100]/30">
                 <Mountain className="w-4 h-4 text-white" strokeWidth={2.2} />
               </div>
-              <span className="text-white font-semibold text-base tracking-tight leading-none">
-                Trail to Tides
-              </span>
+                <span className="text-white font-black tracking-tighter text-lg uppercase leading-none">
+                  COMPASS.AI
+                </span>
             </Link>
 
 
