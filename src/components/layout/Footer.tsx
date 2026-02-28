@@ -42,7 +42,7 @@ export default function Footer() {
             </h4>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
                 {[
-                  ["EDITORS CHOICE", "/#featured-adventures"],
+                  ["EDITOR'S CHOICE", "/#featured-adventures"],
                   ["SIGNATURE FEATURE", "/#map-cta"],
                   ["FROM THE FIELD", "/#stories"],
                   ["DISCOVER YOUR REGION", "/#regions"],
