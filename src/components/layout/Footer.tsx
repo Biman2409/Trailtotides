@@ -17,7 +17,7 @@ export default function Footer() {
                   <div className="w-12 h-12 rounded-xl bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
                     <Mountain className="w-6 h-6 text-white" strokeWidth={2.5} />
                   </div>
-                    <span className="text-[#ff5100] font-black tracking-[-0.04em] text-2xl uppercase leading-none">
+                    <span className="text-[#ff5100] font-black tracking-[-0.06em] text-[1.4rem] uppercase leading-none">
                       TRAIL TO TIDES
                     </span>
                 </Link>
@@ -28,9 +28,6 @@ export default function Footer() {
                   </p>
 
                 <div className="space-y-4">
-                  <p className="text-white/60 text-sm font-medium leading-relaxed max-w-xs">
-                    Have an idea for a wild expedition or want to collaborate? Feel free to connect with us.
-                  </p>
                   <div className="flex items-center gap-6">
                     {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
                       <a 
@@ -72,14 +69,14 @@ export default function Footer() {
               </ul>
             </div>
 
-          {/* Write To Us */}
+          {/* Connect */}
           <div className="lg:col-span-3">
             <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-[#ff5100] mb-12 opacity-80">
               Connect
             </h4>
             <div className="space-y-8">
               <p className="text-white/45 text-[14px] font-medium leading-relaxed">
-                Have an idea for a wild expedition or want to collaborate? Write to our dispatch team.
+                Have an idea for a wild expedition or want to collaborate? Feel free to connect with us.
               </p>
               
               <a 
