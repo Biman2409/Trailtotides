@@ -92,27 +92,27 @@ export default function ChatBubble() {
           boxShadow: "0 10px 40px -10px rgba(255,81,0,0.6)", 
           transition: "opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s" 
         }}
-        aria-label="Open TRAIL TO TIDES"
-      >
-        <div className="absolute inset-0 rounded-full bg-white/20 scale-0 group-hover:scale-100 transition-transform duration-500 rounded-full" />
-        <Compass className={`w-7 h-7 relative z-10 transition-transform duration-700 ${open ? 'rotate-180' : 'group-hover:rotate-90'}`} />
-      </button>
-
-      {/* Chat panel */}
-      {open && (
-        <div className="fixed bottom-28 right-8 z-50 w-[420px] max-w-[calc(100vw-4rem)] bg-[#11161d] border border-white/10 rounded-[2rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 slide-in-from-bottom-8 duration-500 ease-out backdrop-blur-3xl"
-          style={{ boxShadow: "0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)" }}
+          aria-label="Open COMPASS.AI"
         >
-          {/* Header */}
-          <div className="px-6 py-5 flex items-center justify-between border-b border-white/[0.05] bg-white/[0.02]">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-2xl bg-[#ff5100] flex items-center justify-center shadow-lg shadow-[#ff5100]/20">
-                <Compass className="w-6 h-6 text-white" strokeWidth={2.5} />
+          <div className="absolute inset-0 rounded-full bg-white/20 scale-0 group-hover:scale-100 transition-transform duration-500 rounded-full" />
+          <Compass className={`w-7 h-7 relative z-10 transition-transform duration-700 ${open ? 'rotate-180' : 'group-hover:rotate-90'}`} />
+        </button>
+
+        {/* Chat panel */}
+        {open && (
+          <div className="fixed bottom-28 right-8 z-50 w-[420px] max-w-[calc(100vw-4rem)] bg-[#11161d] border border-white/10 rounded-[2rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 slide-in-from-bottom-8 duration-500 ease-out backdrop-blur-3xl"
+            style={{ boxShadow: "0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)" }}
+          >
+            {/* Header */}
+            <div className="px-6 py-5 flex items-center justify-between border-b border-white/[0.05] bg-white/[0.02]">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-2xl bg-[#ff5100] flex items-center justify-center shadow-lg shadow-[#ff5100]/20">
+                  <Compass className="w-6 h-6 text-white" strokeWidth={2.5} />
+                </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white font-bold text-sm tracking-tight">COMPASS.AI</p>
+                      </div>
               </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-white font-bold text-sm tracking-tight">TRAIL TO TIDES</p>
-                    </div>
-            </div>
             <button
               onClick={() => setOpen(false)}
               className="w-8 h-8 rounded-full flex items-center justify-center text-white/30 hover:text-white hover:bg-white/5 transition-all"
