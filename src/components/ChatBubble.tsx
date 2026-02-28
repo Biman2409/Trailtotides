@@ -19,7 +19,7 @@ export default function ChatBubble() {
     {
       role: "assistant",
         content:
-          "Hey! I'm TRAIL TO TIDES — tell me what kind of adventure you're after and I'll point you towards it.",
+          "Hey! I'm COMPASS.AI — tell me what kind of adventure you're after and I'll point you towards it.",
     },
   ]);
   const [input, setInput] = useState("");
