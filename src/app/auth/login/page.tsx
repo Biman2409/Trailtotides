@@ -28,7 +28,7 @@ function LoginForm() {
       {/* Mobile logo */}
       <Link href="/" className="flex items-center gap-2 mb-6 lg:hidden">
         <Mountain className="w-8 h-8 text-[#ff5100]" />
-        <span className="text-white font-bold text-xl tracking-tight">COMPASS.AI</span>
+        <span className="text-white font-bold text-xl tracking-tight">TRAIL TO TIDES</span>
       </Link>
 
       <Link href="/" className="hidden lg:inline-flex items-center gap-1 text-white/40 hover:text-white/80 text-sm mb-6 transition-colors group">
@@ -108,7 +108,7 @@ function LoginForm() {
       </form>
 
       <p className="mt-8 text-center text-white/30 text-sm font-medium">
-        New to COMPASS.AI?{" "}
+        New to TRAIL TO TIDES?{" "}
         <Link href="/auth/signup" className="text-[#ff5100] hover:text-[#ff7d47] font-bold transition-colors">
           Create account
         </Link>
@@ -131,7 +131,7 @@ export default function LoginPage() {
             <div className="w-10 h-10 bg-[#ff5100] rounded-xl flex items-center justify-center shadow-lg shadow-[#ff5100]/20">
               <Mountain className="w-6 h-6 text-white" />
             </div>
-            <span>COMPASS.AI</span>
+            <span>TRAIL TO TIDES</span>
           </Link>
           
                 <div className="max-w-md">
@@ -145,7 +145,7 @@ export default function LoginPage() {
                 </div>
 
           <div className="flex items-center gap-6 text-white/30 text-[11px] font-bold uppercase tracking-[0.15em]">
-            <span>© 2026 COMPASS.AI</span>
+            <span>© 2026 TRAIL TO TIDES</span>
             <div className="w-1.5 h-px bg-white/20" />
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
             <div className="w-1.5 h-px bg-white/20" />
