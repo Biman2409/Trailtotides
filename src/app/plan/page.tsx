@@ -268,10 +268,10 @@ export default function PlanPage() {
                     <span className="text-[#ff5100] text-xs font-semibold uppercase tracking-wider">AI Finder</span>
                   </div>
                       <p className="text-white/55 text-sm leading-relaxed mb-3">
-                        Prefer to just describe what you want? Use COMPASS.AI on the home page.
+                        Prefer to just describe what you want? Use TRAIL TO TIDES on the home page.
                       </p>
                       <Link href="/#ai-finder" className="text-[#ff5100] text-xs font-semibold hover:text-[#ff7d47] transition-colors flex items-center gap-1">
-                        Try COMPASS.AI <ArrowRight className="w-3 h-3" />
+                        Try TRAIL TO TIDES <ArrowRight className="w-3 h-3" />
                       </Link>
 
                 </div>
