@@ -32,7 +32,9 @@ export default function StoryCard({ story }: { story: Story }) {
         src={story.heroImage}
         alt={story.title}
         fill
+        quality={100}
         className="object-cover transition-transform duration-500 group-hover:scale-105"
+        style={{ filter: "brightness(1.02) contrast(1.05) saturate(1.08)" }}
         sizes="(max-width: 768px) 100vw, 50vw"
       />
 
