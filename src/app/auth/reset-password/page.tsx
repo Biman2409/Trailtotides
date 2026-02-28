@@ -68,13 +68,13 @@ export default function ResetPasswordPage() {
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
         
         <div className="max-w-md w-full mx-auto relative z-10">
-          {/* Mobile logo */}
-          <Link href="/" className="flex items-center gap-2 mb-8 lg:hidden">
-            <div className="w-8 h-8 bg-[#ff5100] rounded-lg flex items-center justify-center">
-              <Mountain className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-white font-bold text-xl tracking-tight">TRAIL TO TIDES</span>
-          </Link>
+            {/* Mobile logo */}
+            <Link href="/" className="flex items-center gap-2.5 mb-8 lg:hidden group">
+              <div className="w-8 h-8 bg-[#ff5100] rounded-lg flex items-center justify-center group-hover:bg-[#ff7d47] transition-colors">
+                <Mountain className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-[#ff5100] font-black tracking-[-0.06em] text-[1.1rem] uppercase leading-none">TRAIL TO TIDES</span>
+            </Link>
 
           <Link href="/auth/login" className="inline-flex items-center gap-1 text-white/40 hover:text-white/80 text-sm mb-8 transition-colors group">
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
