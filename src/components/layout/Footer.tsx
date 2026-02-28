@@ -13,12 +13,14 @@ export default function Footer() {
           
           {/* Brand Identity */}
           <div className="col-span-2 lg:col-span-4 space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center shadow-lg shadow-[#ff5100]/20">
-                <Mountain className="w-4.5 h-4.5 text-white" />
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-colors duration-200 shadow-md shadow-[#ff5100]/30">
+                <Mountain className="w-4 h-4 text-white" strokeWidth={2.2} />
               </div>
-              <span className="text-white font-black tracking-tighter text-xl uppercase">TRAIL TO TIDES</span>
-            </div>
+                  <span className="text-white font-black tracking-tighter text-lg uppercase leading-none">
+                    TRAIL TO TIDES
+                  </span>
+            </Link>
             <p className="text-white/30 text-[13px] leading-relaxed max-w-xs font-medium tracking-tight">
               Discover and compare epic adventures across India — handpicked by explorers, run by verified operators, mapped with precision — for you
             </p>
