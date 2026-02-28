@@ -29,7 +29,7 @@ const STEPS = [
   },
   {
     number: "03",
-    title: "Go live on COMPASS.AI",
+    title: "Go live on TRAIL TO TIDES",
     description: "Once verified, your adventure is published on our platform — discoverable by thousands of adventure seekers across India.",
   },
 ];
@@ -53,7 +53,7 @@ const BENEFITS = [
       {
         icon: Sparkles,
         title: "Featured in AI recommendations",
-        description: "Our COMPASS.AI recommends adventures to users. Verified listings are prioritised in AI results.",
+        description: "Our TRAIL TO TIDES recommends adventures to users. Verified listings are prioritised in AI results.",
       },
 
 ];
@@ -133,7 +133,7 @@ export default function ListPage() {
             List Your Adventure
           </h1>
           <p className="text-white/55 text-xl max-w-2xl leading-relaxed">
-            Join India&apos;s most trusted adventure discovery platform. Get your experiences in front of serious adventurers — verified, mapped, and COMPASS.AI-recommended.
+            Join India&apos;s most trusted adventure discovery platform. Get your experiences in front of serious adventurers — verified, mapped, and TRAIL TO TIDES-recommended.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <a
@@ -217,7 +217,7 @@ export default function ListPage() {
                 What we verify before listing
               </h2>
               <p className="text-white/50 text-base leading-relaxed mb-8">
-                We maintain strict standards to protect adventurers. Every operator on COMPASS.AI is independently reviewed — not just listed.
+                We maintain strict standards to protect adventurers. Every operator on TRAIL TO TIDES is independently reviewed — not just listed.
               </p>
               <ul className="space-y-4">
                 {[
