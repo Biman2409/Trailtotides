@@ -185,7 +185,7 @@ export default function ExploreClient() {
                       }`}
                   >
                     <Compass className="w-4 h-4" />
-                    <span className="hidden sm:inline">COMPASS.AI</span>
+                    <span className="hidden sm:inline">TRAIL TO TIDES</span>
                     <span className="sm:hidden">ai</span>
                   </button>
 
@@ -262,7 +262,7 @@ export default function ExploreClient() {
                             <div className="flex justify-start">
                               <div className="bg-white/6 border border-white/8 px-4 py-2.5 rounded-xl rounded-bl-sm flex items-center gap-2">
                                 <Loader2 className="w-3.5 h-3.5 text-[#ff5100] animate-spin" />
-                                  <span className="text-white/50 text-sm">COMPASS.AI is finding adventures…</span>
+                                  <span className="text-white/50 text-sm">TRAIL TO TIDES is finding adventures…</span>
                                   </div>
                                 </div>
                               )}
@@ -272,7 +272,7 @@ export default function ExploreClient() {
                         )}
                         {aiMessages.length === 0 && (
                           <div className="px-4 pt-4 pb-3 bg-white/2">
-                            <p className="text-white/20 text-[10px] uppercase tracking-widest mb-3 font-semibold">Try asking COMPASS.AI</p>
+                            <p className="text-white/20 text-[10px] uppercase tracking-widest mb-3 font-semibold">Try asking TRAIL TO TIDES</p>
   
                           <div className="flex flex-wrap gap-2">
                             {AI_SUGGESTIONS.map((s) => (
@@ -292,7 +292,7 @@ export default function ExploreClient() {
                                 value={aiInput}
                                 onChange={(e) => setAiInput(e.target.value)}
                                 onKeyDown={(e) => e.key === "Enter" && sendAi()}
-                                placeholder="Ask COMPASS.AI..."
+                                placeholder="Ask TRAIL TO TIDES..."
                                 className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#ff5100]/50 transition-all"
                               />
 
