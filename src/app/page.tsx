@@ -183,14 +183,14 @@ export default function HomePage() {
                 Every adventure across India — trekking, diving, cycling, skiing — on one
                 interactive map. Filter by region, difficulty, or type.
               </p>
-              <Link
-                href="/map"
-                className="inline-flex items-center gap-2.5 bg-white text-[#1a2e20] font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#f0f7f1] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 group transition-all duration-200 shadow-lg shadow-black/15"
-              >
-                <Map className="w-5 h-5" />
-                Open the Map
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
+                <Link
+                  href="/map"
+                  className="inline-flex items-center gap-2.5 bg-white text-[#1a2e20] font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#f0f7f1] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 group transition-all duration-200 shadow-lg shadow-black/15"
+                >
+                  <Map className="w-5 h-5" />
+                  ADVENTURE MAP
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
             </div>
           </div>
         </section>
