@@ -41,13 +41,13 @@ export default function Footer() {
               Platform
             </h4>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
-              {[
-                ["OUR FAVOURITES", "/#featured-adventures"],
-                ["SIGNATURE FEATURE", "/#map-cta"],
-                ["FROM THE FIELD", "/#stories"],
-                ["DISCOVER YOUR REGION", "/#regions"],
-                ["DISCOVER YOUR GENRE", "/#styles"],
-              ].map(([label, href]) => (
+                {[
+                  ["EDITORS CHOICE", "/#featured-adventures"],
+                  ["SIGNATURE FEATURE", "/#map-cta"],
+                  ["FROM THE FIELD", "/#stories"],
+                  ["DISCOVER YOUR REGION", "/#regions"],
+                  ["DISCOVER YOUR GENRE", "/#styles"],
+                ].map(([label, href]) => (
                 <li key={label}>
                   <Link
                     href={href}
