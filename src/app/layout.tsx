@@ -11,19 +11,19 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Trail to Tides — India's Adventure Discovery Platform",
+  title: "COMPASS.AI — India's Adventure Discovery Platform",
   description:
     "Discover treks, rides, and wild experiences across India — curated, verified, and beautifully mapped. From the Himalayas to the Andamans.",
-  metadataBase: new URL("https://trailtotides.com"),
+  metadataBase: new URL("https://compass.ai"),
   openGraph: {
-    title: "Trail to Tides — India's Adventure Discovery Platform",
+    title: "COMPASS.AI — India's Adventure Discovery Platform",
     description: "Discover treks, rides, and wild experiences across India — curated, verified, and beautifully mapped.",
     type: "website",
     images: [{ url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Trail to Tides",
+    title: "COMPASS.AI",
     description: "India's adventure discovery platform.",
   },
 };
