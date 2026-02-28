@@ -118,7 +118,7 @@ export default function Footer() {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.05]">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[9px] text-white/40 font-bold uppercase tracking-[0.1em]">Nodes Synchronized</span>
+              <span className="text-[9px] text-white/40 font-bold uppercase tracking-[0.1em]">Global Discovery Active</span>
             </div>
             <p className="text-white/20 text-[10px] font-bold uppercase tracking-[0.2em]">
               © 2026 COMPASS.AI
