@@ -8,7 +8,7 @@ const SECTIONS = [
   },
   {
     title: "2. How We Use Your Information",
-    content: `We use your information to operate and improve COMPASS.AI, personalise your adventure recommendations, communicate with you about your account and new features, and — with your permission — send you a newsletter about new adventures and stories. We never sell your data to third parties.`,
+    content: `We use your information to operate and improve TRAIL TO TIDES, personalise your adventure recommendations, communicate with you about your account and new features, and — with your permission — send you a newsletter about new adventures and stories. We never sell your data to third parties.`,
   },
   {
     title: "3. Data Storage & Security",
@@ -20,7 +20,7 @@ const SECTIONS = [
   },
       {
         title: "5. Third-Party Services",
-        content: `We use OpenAI's API to power the COMPASS.AI adventure finder. Queries you send to COMPASS.AI are processed by OpenAI and subject to their privacy policy. We use Supabase for authentication and database services. We use Unsplash for imagery, which is served directly from their CDN.`,
+        content: `We use OpenAI's API to power the TRAIL TO TIDES adventure finder. Queries you send to TRAIL TO TIDES are processed by OpenAI and subject to their privacy policy. We use Supabase for authentication and database services. We use Unsplash for imagery, which is served directly from their CDN.`,
       },
 
   {
@@ -29,7 +29,7 @@ const SECTIONS = [
   },
   {
     title: "7. Children",
-    content: `COMPASS.AI is not intended for use by persons under 13 years of age. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has provided us personal information, please contact us and we will delete it.`,
+    content: `TRAIL TO TIDES is not intended for use by persons under 13 years of age. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has provided us personal information, please contact us and we will delete it.`,
   },
   {
     title: "8. Changes to This Policy",
@@ -37,7 +37,7 @@ const SECTIONS = [
   },
   {
     title: "9. Contact",
-    content: `For privacy-related enquiries, contact us at hello@trailtotides.com or write to: COMPASS.AI, Mumbai, India.`,
+    content: `For privacy-related enquiries, contact us at hello@trailtotides.com or write to: TRAIL TO TIDES, Mumbai, India.`,
   },
 ];
 
@@ -57,7 +57,7 @@ export default function PrivacyPage() {
       <section className="py-16 px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <p className="text-white/60 text-base leading-relaxed mb-12">
-            COMPASS.AI (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) is committed to protecting your privacy. This policy explains what information we collect, how we use it, and what rights you have. Please read it carefully.
+            TRAIL TO TIDES (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) is committed to protecting your privacy. This policy explains what information we collect, how we use it, and what rights you have. Please read it carefully.
           </p>
           <div className="space-y-10">
             {SECTIONS.map((section) => (
