@@ -29,7 +29,7 @@ export default function HomePage() {
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
             <div className="inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-5 py-2 mb-8">
                 <p className="text-white text-xs font-semibold tracking-[0.18em] uppercase">
-                  India&apos;s First Adventure Discovery &amp; Aggregator Platform
+                  COMPASS.AI — India&apos;s First Adventure Discovery &amp; Aggregator Platform
                 </p>
             </div>
 
