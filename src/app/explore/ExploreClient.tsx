@@ -288,13 +288,13 @@ export default function ExploreClient() {
                         </div>
                       )}
                         <div className="border-t border-white/8 p-3 flex gap-3 bg-white/3">
-                            <input
-                              value={aiInput}
-                              onChange={(e) => setAiInput(e.target.value)}
-                              onKeyDown={(e) => e.key === "Enter" && sendAi()}
-                              placeholder="Ask COMPASS.AI what you’re looking for"
-                              className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#ff5100]/50 transition-all"
-                            />
+                              <input
+                                value={aiInput}
+                                onChange={(e) => setAiInput(e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && sendAi()}
+                                placeholder="Ask COMPASS.AI..."
+                                className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#ff5100]/50 transition-all"
+                              />
 
                       <button
                         onClick={() => sendAi()}
