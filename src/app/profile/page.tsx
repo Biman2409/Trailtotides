@@ -127,7 +127,7 @@ export default async function ProfilePage() {
 
             <div className="mt-8 p-6 rounded-2xl bg-[#ff5100]/5 border border-[#ff5100]/10">
               <p className="text-sm text-[#ff7d47]/80 leading-relaxed italic">
-                &quot;Ready for your next adventure? Your journey with COMPASS.AI is just beginning.&quot;
+                &quot;Ready for your next adventure? Your journey with TRAIL TO TIDES is just beginning.&quot;
               </p>
             </div>
           </div>
