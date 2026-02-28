@@ -26,10 +26,10 @@ export default function HomePage() {
       <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
         <HeroSlider />
 
-        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
+        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto mt-12">
             <div className="inline-flex items-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-5 py-2 mb-8">
                 <p className="text-white text-xs font-semibold tracking-[0.18em] uppercase">
-                  TRAIL TO TIDES — India&apos;s First Adventure Discovery &amp; Aggregator Platform
+                  India&apos;s First Adventure Discovery &amp; Aggregator Platform
                 </p>
             </div>
 
