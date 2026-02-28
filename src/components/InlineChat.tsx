@@ -81,9 +81,9 @@ export default function InlineChat() {
                       <div className="w-14 h-14 lg:w-20 lg:h-20 rounded-[1.25rem] bg-[#ff5100] flex items-center justify-center shadow-2xl shadow-[#ff5100]/30 rotate-3 hover:rotate-0 transition-all duration-500">
                         <Compass className="w-8 h-8 lg:w-11 lg:h-11 text-white" strokeWidth={2.5} />
                       </div>
-                      <h2 className="text-white text-5xl lg:text-9xl font-black tracking-[-0.04em] leading-none bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/40">
-                        TRAIL TO TIDES
-                      </h2>
+                        <h2 className="text-white text-5xl lg:text-9xl font-black tracking-[-0.04em] leading-none bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/40">
+                          COMPASS.AI
+                        </h2>
                     </div>
             </div>
             <p className="text-white/40 text-lg lg:text-2xl font-medium tracking-tight max-w-2xl leading-relaxed">
