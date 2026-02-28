@@ -69,25 +69,39 @@ export default function Footer() {
               </ul>
             </div>
 
-          {/* Connect */}
-          <div className="lg:col-span-3">
-            <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-[#ff5100] mb-12 opacity-80">
-              Connect
-            </h4>
-            <div className="space-y-8">
-              <p className="text-white/45 text-[14px] font-medium leading-relaxed">
-                Have an idea for a wild expedition or want to collaborate? Feel free to connect with us.
-              </p>
-              
-              <a 
-                href="mailto:hello@trailtotides.com"
-                className="flex items-center justify-between gap-4 bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 text-[14px] font-bold text-white/60 hover:text-white hover:border-[#ff5100]/40 hover:bg-white/[0.04] transition-all group/btn"
-              >
-                <span>hello@trailtotides.com</span>
-                <Mail className="w-5 h-5 text-[#ff5100] group-hover:scale-110 transition-transform" />
-              </a>
+            {/* Connect */}
+            <div className="lg:col-span-3">
+              <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-[#ff5100] mb-12 opacity-80">
+                Connect
+              </h4>
+              <div className="space-y-8">
+                <p className="text-white/45 text-[14px] font-medium leading-relaxed">
+                  Have an idea for a wild expedition or want to collaborate? Feel free to connect with us.
+                </p>
+                
+                <a 
+                  href="mailto:hello@trailtotides.com"
+                  className="flex items-center justify-between gap-4 bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 text-[14px] font-bold text-white/60 hover:text-white hover:border-[#ff5100]/40 hover:bg-white/[0.04] transition-all group/btn"
+                >
+                  <span>hello@trailtotides.com</span>
+                  <Mail className="w-5 h-5 text-[#ff5100] group-hover:scale-110 transition-transform" />
+                </a>
+
+                <div className="pt-2">
+                  <div className="flex items-center gap-6">
+                    {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
+                      <a 
+                        key={i}
+                        href="#" 
+                        className="text-white/20 hover:text-[#ff5100] hover:scale-110 transition-all duration-300"
+                      >
+                        <Icon className="w-5 h-5" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
 
         </div>
 
