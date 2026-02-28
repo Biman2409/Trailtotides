@@ -18,7 +18,7 @@ const VALUES = [
     {
       icon: Sparkles,
       title: "Discovery-first",
-      description: "Built to help you find the adventure that fits you — not to push the most commercially popular one. COMPASS.AI is our commitment to personalised discovery.",
+      description: "Built to help you find the adventure that fits you — not to push the most commercially popular one. TRAIL TO TIDES is our commitment to personalised discovery.",
     },
   {
     icon: Users,
@@ -31,7 +31,7 @@ const TEAM = [
   {
     name: "Arjun Mehta",
     role: "Co-founder · Trail runner & trekker",
-    bio: "Former software engineer who left a tech job to trek the length of the Western Ghats. Built COMPASS.AI after spending two years frustrated by the lack of reliable information for Indian adventures.",
+    bio: "Former software engineer who left a tech job to trek the length of the Western Ghats. Built TRAIL TO TIDES after spending two years frustrated by the lack of reliable information for Indian adventures.",
     initial: "A",
     adventures: "47 adventures completed",
   },
@@ -71,14 +71,14 @@ export default function AboutPage() {
           <div className="flex items-center gap-2 mb-6">
             <Mountain className="w-5 h-5 text-[#ff5100]" />
             <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase">
-              About COMPASS.AI
+              About TRAIL TO TIDES
             </p>
           </div>
           <h1 className="text-white text-5xl lg:text-7xl font-bold tracking-tight leading-none mb-8">
             Built by people who&apos;ve been out there.
           </h1>
           <p className="text-white/60 text-xl leading-relaxed max-w-2xl">
-            COMPASS.AI is India&apos;s first adventure discovery platform — built to make finding, comparing, and booking real adventures as reliable as the mountains themselves.
+            TRAIL TO TIDES is India&apos;s first adventure discovery platform — built to make finding, comparing, and booking real adventures as reliable as the mountains themselves.
           </p>
         </div>
       </section>
@@ -97,7 +97,7 @@ export default function AboutPage() {
               And yet, for years, planning an adventure in India meant wading through outdated blogs, WhatsApp groups, and operator websites designed in 2009. You couldn&apos;t easily compare what was out there, couldn&apos;t verify who was safe to book with, and couldn&apos;t find a single place where someone had mapped the whole thing.
             </p>
             <p>
-              We built COMPASS.AI to fix that. A platform where every adventure is described properly, every operator is checked, and every recommendation is grounded in real experience — not affiliate commissions.
+              We built TRAIL TO TIDES to fix that. A platform where every adventure is described properly, every operator is checked, and every recommendation is grounded in real experience — not affiliate commissions.
             </p>
           </div>
         </div>
@@ -137,7 +137,7 @@ export default function AboutPage() {
             People who&apos;ve been there
           </h2>
           <p className="text-white/45 text-base mb-14 max-w-xl">
-            Everyone who works on COMPASS.AI has done the adventures. No desk-bound curation here.
+            Everyone who works on TRAIL TO TIDES has done the adventures. No desk-bound curation here.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TEAM.map((member) => (
