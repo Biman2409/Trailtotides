@@ -150,14 +150,14 @@ export default function HomePage() {
 
         {/* ── MAP CTA ───────────────────────────────────────── */}
         <section id="map-cta" className="relative py-24 lg:py-32 bg-[#1a2e20] px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1200&q=40"
-            alt="India map texture"
-            fill
-            className="object-cover opacity-12"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1a2e20]/98 via-[#1a2e20]/80 to-[#1a2e20]/40" />
+          <div className="absolute inset-0">
+            <Image
+              src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1200&q=100"
+              alt="India map texture"
+              fill
+              className="object-cover opacity-12 brightness-[1.05] contrast-[1.1] saturate-[1.1]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#1a2e20]/98 via-[#1a2e20]/80 to-[#1a2e20]/40" />
           {/* Subtle dot grid overlay */}
           <div
             className="absolute inset-0 opacity-10"
