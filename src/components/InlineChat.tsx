@@ -227,7 +227,7 @@ export default function InlineChat() {
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && send()}
-                      placeholder="Ask COMPASS.AI..."
+                        placeholder="Ask TRAIL TO TIDES..."
                       className="w-full bg-white/[0.03] border border-white/[0.07] text-white placeholder-white/10 text-base py-4 pl-12 pr-20 rounded-2xl outline-none focus:bg-white/[0.05] focus:border-[#ff5100]/50 focus:ring-4 focus:ring-[#ff5100]/5 transition-all duration-500 font-light"
                     />
                   <button
