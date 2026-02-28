@@ -199,7 +199,7 @@ export default function ChatBubble() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && send()}
-                    placeholder="Ask Compass.ai..."
+                    placeholder="Ask Compass.AI..."
                     className="flex-1 bg-white/[0.04] border border-white/[0.08] text-white placeholder-white/10 text-sm px-5 py-4 rounded-xl outline-none focus:bg-white/[0.06] focus:border-[#ff5100]/40 transition-all font-light"
                 />
               <button
