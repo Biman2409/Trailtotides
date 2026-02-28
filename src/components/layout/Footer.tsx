@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mountain, Instagram, Youtube, Twitter, Send, ArrowUpRight, Github, Globe } from "lucide-react";
+import { Compass, Instagram, Youtube, Twitter, Send, Github } from "lucide-react";
 
 export default function Footer() {
   return (
