@@ -200,8 +200,8 @@ export default function HomePage() {
         {/* ── ADVENTURE TYPES ──────────────────────────────── */}
         <FindYourFormat />
 
-      {/* ── STORIES ──────────────────────────────────────── */}
-      <section className="py-24 lg:py-32 px-6 lg:px-8 bg-[#0e1420] border-t border-white/6">
+        {/* ── STORIES ──────────────────────────────────────── */}
+        <section id="stories" className="py-24 lg:py-32 px-6 lg:px-8 bg-[#0e1420] border-t border-white/6">
         <div className="max-w-7xl mx-auto">
             <div className="flex items-end justify-between mb-12">
                 <div>
