@@ -109,9 +109,9 @@ export default function ChatBubble() {
                 <div className="w-10 h-10 rounded-2xl bg-[#ff5100] flex items-center justify-center shadow-lg shadow-[#ff5100]/20">
                   <Compass className="w-6 h-6 text-white" strokeWidth={2.5} />
                 </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-white font-bold text-sm tracking-tight capitalize">Compass.AI</p>
-                      </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-white font-bold text-sm tracking-tight">Compass.AI</p>
+                        </div>
               </div>
             <button
               onClick={() => setOpen(false)}
