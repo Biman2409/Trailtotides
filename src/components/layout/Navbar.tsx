@@ -104,7 +104,7 @@ export default function Navbar() {
               <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-colors duration-200 shadow-md shadow-[#ff5100]/30">
                 <Mountain className="w-4 h-4 text-white" strokeWidth={2.2} />
               </div>
-                    <span className="text-[#ff5100] font-black tracking-[-0.04em] text-lg uppercase leading-none">
+                    <span className="text-[#ff5100] font-black tracking-[-0.06em] text-[1.1rem] uppercase leading-none">
                       TRAIL TO TIDES
                     </span>
             </Link>
