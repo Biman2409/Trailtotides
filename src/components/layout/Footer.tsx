@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Compass, Instagram, Youtube, Twitter, Send, Github } from "lucide-react";
+import { Compass, Instagram, Youtube, Twitter, Mail, Linkedin, Waves } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -15,15 +15,15 @@ export default function Footer() {
           <div className="col-span-2 lg:col-span-4 space-y-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center shadow-lg shadow-[#ff5100]/20">
-                <Compass className="w-4.5 h-4.5 text-white" />
+                <Waves className="w-4.5 h-4.5 text-white" />
               </div>
-              <span className="text-white font-black tracking-tighter text-xl uppercase">COMPASS.AI</span>
+              <span className="text-white font-black tracking-tighter text-xl uppercase">TRAIL TO TIDES</span>
             </div>
             <p className="text-white/30 text-[13px] leading-relaxed max-w-xs font-medium tracking-tight">
-              Architecting authentic discovery across the Indian subcontinent. We aggregate the extraordinary, from Himalayan summits to Andaman reefs.
+              Elevating adventure to a fine art through high-precision discovery and architectural storytelling.
             </p>
             <div className="flex items-center gap-4">
-              {[Instagram, Twitter, Youtube, Github].map((Icon, i) => (
+              {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
                 <a 
                   key={i}
                   href="#" 
@@ -35,22 +35,23 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Nav */}
-          <div className="lg:col-span-2">
+          {/* Platform Nav */}
+          <div className="lg:col-span-4">
             <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#ff5100]/80 mb-6">
-              Expeditions
+              Platform
             </h4>
-            <ul className="space-y-3">
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3">
               {[
-                ["Himalayas", "/explore?region=Himalayas"],
-                ["Western Ghats", "/explore?region=Western+Ghats"],
-                ["Islands", "/explore?region=Islands"],
-                ["Northeast", "/explore?region=Northeast"],
+                ["OUR FAVOURITES", "/#featured-adventures"],
+                ["SIGNATURE FEATURE", "/#map-cta"],
+                ["FROM THE FIELD", "/#stories"],
+                ["DISCOVER YOUR REGION", "/#regions"],
+                ["DISCOVER YOUR STYLE", "/#styles"],
               ].map(([label, href]) => (
                 <li key={label}>
                   <Link
                     href={href}
-                    className="text-[13px] text-white/40 hover:text-white transition-all flex items-center group/link font-medium"
+                    className="text-[11px] text-white/40 hover:text-white transition-all flex items-center group/link font-bold tracking-wider"
                   >
                     <span className="group-hover:translate-x-1 transition-transform">{label}</span>
                   </Link>
@@ -59,47 +60,21 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="lg:col-span-2">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#ff5100]/80 mb-6">
-              Disciplines
-            </h4>
-            <ul className="space-y-3">
-              {[
-                ["Trekking", "/explore?type=Trekking"],
-                ["Diving", "/explore?type=Diving"],
-                ["Biking", "/explore?type=Biking"],
-                ["Alpine", "/explore?type=Mountaineering"],
-              ].map(([label, href]) => (
-                <li key={label}>
-                  <Link
-                    href={href}
-                    className="text-[13px] text-white/40 hover:text-white transition-all flex items-center group/link font-medium"
-                  >
-                    <span className="group-hover:translate-x-1 transition-transform">{label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Newsletter / Dispatch */}
+          {/* Write To Us */}
           <div className="col-span-2 md:col-span-2 lg:col-span-4">
             <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#ff5100]/80 mb-6">
-              The Dispatch
+              Connect
             </h4>
             <div className="bg-white/[0.02] border border-white/[0.05] p-5 rounded-2xl relative overflow-hidden group/box">
-              <p className="text-white/40 text-[12px] mb-4 font-medium leading-relaxed">Join 12,000+ for bi-weekly deep dives into India&apos;s wildest corners.</p>
+              <p className="text-white/40 text-[12px] mb-4 font-medium leading-relaxed">Have an idea for a wild expedition or want to collaborate? Write to us.</p>
               
-              <div className="relative z-10 flex gap-2">
-                <input 
-                  type="email" 
-                  placeholder="Join our network" 
-                  className="bg-white/[0.03] border border-white/10 rounded-xl px-4 py-2.5 text-[12px] outline-none focus:border-[#ff5100]/40 transition-all flex-1 font-medium"
-                />
-                <button className="bg-[#ff5100] text-white p-2.5 rounded-xl transition-all hover:bg-[#ff7d47] group/btn">
-                  <Send className="w-4 h-4" />
-                </button>
-              </div>
+              <a 
+                href="mailto:hello@trailtotides.com"
+                className="relative z-10 flex items-center justify-between gap-2 bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-[12px] font-bold text-white/60 hover:text-white hover:border-[#ff5100]/40 transition-all group/btn"
+              >
+                <span>hello@trailtotides.com</span>
+                <Mail className="w-4 h-4 text-[#ff5100]" />
+              </a>
             </div>
           </div>
 
@@ -108,7 +83,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-white/[0.05] flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-8">
-            {["Terms", "Privacy", "Security"].map((item) => (
+            {["Terms", "Privacy"].map((item) => (
               <Link key={item} href={`/${item.toLowerCase()}`} className="text-[10px] text-white/20 hover:text-white font-bold uppercase tracking-[0.2em] transition-colors">
                 {item}
               </Link>
@@ -116,12 +91,8 @@ export default function Footer() {
           </div>
           
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.05]">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[9px] text-white/40 font-bold uppercase tracking-[0.1em]">Global Discovery Active</span>
-            </div>
             <p className="text-white/20 text-[10px] font-bold uppercase tracking-[0.2em]">
-              © 2026 COMPASS.AI
+              © 2026 TRAIL TO TIDES
             </p>
           </div>
         </div>
