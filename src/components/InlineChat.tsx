@@ -82,7 +82,7 @@ export default function InlineChat() {
                         <Compass className="w-8 h-8 lg:w-11 lg:h-11 text-white" strokeWidth={2.5} />
                       </div>
                       <h2 className="text-white text-5xl lg:text-9xl font-black tracking-[-0.04em] leading-none bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/40">
-                        COMPASS.AI
+                        TRAIL TO TIDES
                       </h2>
                     </div>
             </div>
