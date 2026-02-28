@@ -8,7 +8,7 @@ const SECTIONS = [
   },
   {
     title: "2. How We Use Your Information",
-    content: `We use your information to operate and improve Trail to Tides, personalise your adventure recommendations, communicate with you about your account and new features, and — with your permission — send you a newsletter about new adventures and stories. We never sell your data to third parties.`,
+    content: `We use your information to operate and improve COMPASS.AI, personalise your adventure recommendations, communicate with you about your account and new features, and — with your permission — send you a newsletter about new adventures and stories. We never sell your data to third parties.`,
   },
   {
     title: "3. Data Storage & Security",
@@ -29,7 +29,7 @@ const SECTIONS = [
   },
   {
     title: "7. Children",
-    content: `Trail to Tides is not intended for use by persons under 13 years of age. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has provided us personal information, please contact us and we will delete it.`,
+    content: `COMPASS.AI is not intended for use by persons under 13 years of age. We do not knowingly collect personal information from children under 13. If you believe a child under 13 has provided us personal information, please contact us and we will delete it.`,
   },
   {
     title: "8. Changes to This Policy",
@@ -37,7 +37,7 @@ const SECTIONS = [
   },
   {
     title: "9. Contact",
-    content: `For privacy-related enquiries, contact us at hello@trailtotides.com or write to: Trail to Tides, Mumbai, India.`,
+    content: `For privacy-related enquiries, contact us at hello@trailtotides.com or write to: COMPASS.AI, Mumbai, India.`,
   },
 ];
 
@@ -57,7 +57,7 @@ export default function PrivacyPage() {
       <section className="py-16 px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <p className="text-white/60 text-base leading-relaxed mb-12">
-            Trail to Tides (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) is committed to protecting your privacy. This policy explains what information we collect, how we use it, and what rights you have. Please read it carefully.
+            COMPASS.AI (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) is committed to protecting your privacy. This policy explains what information we collect, how we use it, and what rights you have. Please read it carefully.
           </p>
           <div className="space-y-10">
             {SECTIONS.map((section) => (

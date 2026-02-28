@@ -29,7 +29,7 @@ const STEPS = [
   },
   {
     number: "03",
-    title: "Go live on Trail to Tides",
+    title: "Go live on COMPASS.AI",
     description: "Once verified, your adventure is published on our platform — discoverable by thousands of adventure seekers across India.",
   },
 ];
@@ -217,7 +217,7 @@ export default function ListPage() {
                 What we verify before listing
               </h2>
               <p className="text-white/50 text-base leading-relaxed mb-8">
-                We maintain strict standards to protect adventurers. Every operator on Trail to Tides is independently reviewed — not just listed.
+                We maintain strict standards to protect adventurers. Every operator on COMPASS.AI is independently reviewed — not just listed.
               </p>
               <ul className="space-y-4">
                 {[

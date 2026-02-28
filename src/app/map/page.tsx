@@ -733,7 +733,7 @@ export default function MapPage() {
         <div className="absolute bottom-4 right-4 z-[1000] bg-[#1a1f2e]/90 backdrop-blur-md rounded-xl border border-white/10 px-4 py-3 shadow-xl">
           <div className="flex items-center gap-2 text-white/50 text-xs">
             <MapIcon className="w-3.5 h-3.5" />
-            <span>Trail to Tides · India Adventure Map</span>
+            <span>COMPASS.AI · India Adventure Map</span>
           </div>
         </div>
       </div>

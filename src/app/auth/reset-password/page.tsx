@@ -39,7 +39,7 @@ export default function ResetPasswordPage() {
             <div className="w-10 h-10 bg-[#ff5100] rounded-xl flex items-center justify-center shadow-lg shadow-[#ff5100]/20">
               <Mountain className="w-6 h-6 text-white" />
             </div>
-            <span>Trail to Tides</span>
+            <span>COMPASS.AI</span>
           </Link>
           
                 <div className="max-w-md">
@@ -53,7 +53,7 @@ export default function ResetPasswordPage() {
                 </div>
 
           <div className="flex items-center gap-6 text-white/30 text-[11px] font-bold uppercase tracking-[0.15em]">
-            <span>© 2026 Trail to Tides</span>
+            <span>© 2026 COMPASS.AI</span>
             <div className="w-1.5 h-px bg-white/20" />
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
             <div className="w-1.5 h-px bg-white/20" />
@@ -73,7 +73,7 @@ export default function ResetPasswordPage() {
             <div className="w-8 h-8 bg-[#ff5100] rounded-lg flex items-center justify-center">
               <Mountain className="w-5 h-5 text-white" />
             </div>
-            <span className="text-white font-bold text-xl tracking-tight">Trail to Tides</span>
+            <span className="text-white font-bold text-xl tracking-tight">COMPASS.AI</span>
           </Link>
 
           <Link href="/auth/login" className="inline-flex items-center gap-1 text-white/40 hover:text-white/80 text-sm mb-8 transition-colors group">

@@ -165,7 +165,7 @@ export default function AdminDashboardClient({
             <div className="w-8 h-8 rounded-lg bg-[#ff5100]/10 flex items-center justify-center group-hover:bg-[#ff5100]/20 transition-colors">
               <Mountain className="w-5 h-5 text-[#ff7d47]" />
             </div>
-            <span className="font-semibold text-lg tracking-tight">Trail to Tides</span>
+            <span className="font-semibold text-lg tracking-tight">COMPASS.AI</span>
           </Link>
           <span className="text-white/20">|</span>
           <span className="text-white/50 text-sm font-medium">Admin Panel</span>

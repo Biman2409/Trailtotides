@@ -12,14 +12,14 @@ export async function sendVerificationEmail(email: string, link: string, name: s
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Trail to Tides <onboarding@resend.dev>', // User should change this to their domain
+      from: 'COMPASS.AI <onboarding@resend.dev>', // User should change this to their domain
       to: email,
-      subject: 'Verify your Trail to Tides account',
+      subject: 'Verify your COMPASS.AI account',
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
           <h1 style="color: #ff5100;">Welcome to the Wild, ${name}!</h1>
           <p style="font-size: 16px; line-height: 1.5;">
-            Thank you for joining Trail to Tides. Before you can start exploring exclusive trails and expert advice, we need to verify your email address.
+            Thank you for joining COMPASS.AI. Before you can start exploring exclusive trails and expert advice, we need to verify your email address.
           </p>
           <div style="margin: 30px 0;">
             <a href="${link}" style="background-color: #ff5100; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
@@ -34,7 +34,7 @@ export async function sendVerificationEmail(email: string, link: string, name: s
           </p>
           <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;" />
           <p style="font-size: 12px; color: #999;">
-            If you didn't create an account with Trail to Tides, you can safely ignore this email.
+            If you didn't create an account with COMPASS.AI, you can safely ignore this email.
           </p>
         </div>
       `,
@@ -56,14 +56,14 @@ export async function sendPasswordResetEmail(email: string, link: string) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Trail to Tides <onboarding@resend.dev>',
+      from: 'COMPASS.AI <onboarding@resend.dev>',
       to: email,
-      subject: 'Reset your Trail to Tides password',
+      subject: 'Reset your COMPASS.AI password',
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
           <h1 style="color: #ff5100;">Password Reset Request</h1>
           <p style="font-size: 16px; line-height: 1.5;">
-            We received a request to reset your password for your Trail to Tides account. Click the button below to set a new password.
+            We received a request to reset your password for your COMPASS.AI account. Click the button below to set a new password.
           </p>
           <div style="margin: 30px 0;">
             <a href="${link}" style="background-color: #ff5100; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
@@ -75,7 +75,7 @@ export async function sendPasswordResetEmail(email: string, link: string) {
           </p>
           <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;" />
           <p style="font-size: 12px; color: #999;">
-            © 2026 Trail to Tides
+            © 2026 COMPASS.AI
           </p>
         </div>
       `,

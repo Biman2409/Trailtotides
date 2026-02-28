@@ -113,7 +113,7 @@ export default function ContactPage() {
             <div className="bg-[#ff5100]/10 border border-[#ff5100]/20 rounded-2xl p-5">
               <p className="text-[#ff5100] text-xs font-semibold uppercase tracking-wider mb-2">For operators</p>
               <p className="text-white/55 text-sm leading-relaxed mb-3">
-                Want to list your adventure on Trail to Tides?
+                Want to list your adventure on COMPASS.AI?
               </p>
               <Link
                 href="/list"
