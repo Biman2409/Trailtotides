@@ -20,7 +20,7 @@ export default function Footer() {
               <span className="text-white font-black tracking-tighter text-xl uppercase">TRAIL TO TIDES</span>
             </div>
             <p className="text-white/30 text-[13px] leading-relaxed max-w-xs font-medium tracking-tight">
-              Elevating adventure to a fine art through high-precision discovery and architectural storytelling.
+              Discover and compare epic adventures across India — handpicked by explorers, run by verified operators, mapped with precision — for you.
             </p>
             <div className="flex items-center gap-4">
               {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
