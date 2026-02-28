@@ -171,26 +171,26 @@ export default function HomePage() {
 
           <div className="max-w-7xl mx-auto relative z-10">
               <div className="max-w-2xl">
-                  <p className="text-[#7ec88a] text-xs font-semibold tracking-[0.22em] mb-4 uppercase">
-                      ADVENTURE MAP
-                    </p>
-                        <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-5 uppercase">
-                          INDIA&apos;S ADVENTURES,
-                          <br />
-                          <span className="text-[#7ec88a]">MAPPED</span>
-                        </h2>
-              <p className="text-white/72 text-lg md:text-xl leading-relaxed mb-9 max-w-lg">
-                Every adventure across India — trekking, diving, cycling, skiing — on one
-                interactive map. Filter by region, difficulty, or type.
-              </p>
-                <Link
-                  href="/map"
-                  className="inline-flex items-center gap-2.5 bg-white text-[#1a2e20] font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#f0f7f1] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 group transition-all duration-200 shadow-lg shadow-black/15"
-                >
-                  <Map className="w-5 h-5" />
-                  ADVENTURE MAP
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
+                      <p className="text-[#7ec88a] text-xs font-semibold tracking-[0.22em] mb-4 uppercase">
+                        SIGNATURE FEATURE
+                      </p>
+                          <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-5 uppercase">
+                            INDIA&apos;S ADVENTURES,
+                            <br />
+                            <span className="text-[#7ec88a]">MAPPED</span>
+                          </h2>
+                <p className="text-white/72 text-lg md:text-xl leading-relaxed mb-9 max-w-lg">
+                  Every adventure across India — trekking, diving, cycling, skiing — on one
+                  interactive map. Filter by region, difficulty, or type.
+                </p>
+                  <Link
+                    href="/map"
+                    className="inline-flex items-center gap-2.5 bg-white text-[#1a2e20] font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#f0f7f1] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 group transition-all duration-200 shadow-lg shadow-black/15"
+                  >
+                    <Map className="w-5 h-5" />
+                    View Map
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
             </div>
           </div>
         </section>
