@@ -195,14 +195,13 @@ export default function ChatBubble() {
           {/* Input Area */}
           <div className="p-5 border-t border-white/[0.05] bg-white/[0.02]">
             <div className="relative flex items-center gap-2">
-              <input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && send()}
-                    placeholder="Ask COMPASS.AI what you’re looking for"
-                  className="flex-1 bg-white/[0.04] border border-white/[0.08] text-white placeholder-white/10 text-sm px-5 py-4 rounded-xl outline-none focus:bg-white/[0.06] focus:border-[#ff5100]/40 transition-all font-light"
-
-              />
+                <input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && send()}
+                    placeholder="Ask COMPASS.AI..."
+                    className="flex-1 bg-white/[0.04] border border-white/[0.08] text-white placeholder-white/10 text-sm px-5 py-4 rounded-xl outline-none focus:bg-white/[0.06] focus:border-[#ff5100]/40 transition-all font-light"
+                />
               <button
                 onClick={send}
                 disabled={!input.trim() || loading}
