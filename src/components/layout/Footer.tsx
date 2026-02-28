@@ -3,64 +3,56 @@ import { Mountain, Instagram, Youtube, Twitter, Send, ArrowUpRight, Github, Glob
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0a0e14] text-white border-t border-white/[0.03] overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 relative">
+    <footer className="bg-[#05070a] text-white border-t border-white/[0.03] overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 relative">
         
-        {/* Background Decorative Element */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[300px] bg-gradient-to-b from-[#ff5100]/5 to-transparent blur-[100px] pointer-events-none" />
+        {/* Subtle Gradient Accent */}
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/20 to-transparent" />
 
-        {/* Architectural Links Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-12 lg:gap-8 mb-16 relative z-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-8 lg:gap-12 relative z-10">
           
-          {/* Brand Identity column */}
-          <div className="col-span-2 lg:col-span-4 lg:pr-12">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center shadow-lg shadow-[#ff5100]/20">
-                <Mountain className="w-4 h-4 text-white" />
+          {/* Brand Identity */}
+          <div className="col-span-2 lg:col-span-4 space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-[#ff5100] flex items-center justify-center shadow-md shadow-[#ff5100]/10">
+                <Mountain className="w-3.5 h-3.5 text-white" />
               </div>
-              <span className="text-white font-black tracking-tighter text-xl uppercase">COMPASS.AI</span>
+              <span className="text-white font-black tracking-tighter text-lg uppercase">COMPASS.AI</span>
             </div>
-            <p className="text-white/30 text-[13px] leading-relaxed mb-6 max-w-sm font-medium tracking-wide">
+            <p className="text-white/20 text-[12px] leading-relaxed max-w-xs font-medium tracking-tight">
               Architecting authentic discovery across the Indian subcontinent. We aggregate the extraordinary, from Himalayan summits to Andaman reefs.
             </p>
-            <div className="flex items-center gap-4">
-              {[
-                { icon: Instagram, href: "#" },
-                { icon: Twitter, href: "#" },
-                { icon: Youtube, href: "#" },
-                { icon: Github, href: "#" },
-              ].map((social, i) => (
+            <div className="flex items-center gap-3">
+              {[Instagram, Twitter, Youtube, Github].map((Icon, i) => (
                 <a 
                   key={i}
-                  href={social.href} 
-                  className="w-9 h-9 rounded-full border border-white/5 flex items-center justify-center text-white/20 hover:text-[#ff5100] hover:border-[#ff5100]/30 hover:bg-[#ff5100]/5 transition-all duration-300"
+                  href="#" 
+                  className="w-8 h-8 rounded-lg border border-white/[0.03] bg-white/[0.01] flex items-center justify-center text-white/20 hover:text-[#ff5100] hover:border-[#ff5100]/20 hover:bg-[#ff5100]/5 transition-all duration-300"
                 >
-                  <social.icon className="w-4 h-4" />
+                  <Icon className="w-3.5 h-3.5" />
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Link Columns */}
+          {/* Quick Nav */}
           <div className="lg:col-span-2">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff5100] mb-6">
+            <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-[#ff5100]/60 mb-5">
               Expeditions
             </h4>
-            <ul className="space-y-3.5">
+            <ul className="space-y-2.5">
               {[
                 ["Himalayas", "/explore?region=Himalayas"],
                 ["Western Ghats", "/explore?region=Western+Ghats"],
                 ["Islands", "/explore?region=Islands"],
                 ["Northeast", "/explore?region=Northeast"],
-                ["Desert", "/explore?region=Desert"],
               ].map(([label, href]) => (
                 <li key={label}>
                   <Link
                     href={href}
-                    className="text-[13px] text-white/30 hover:text-white transition-all duration-300 flex items-center group/link font-medium"
+                    className="text-[12px] text-white/25 hover:text-white transition-all flex items-center group/link font-medium"
                   >
                     <span className="group-hover:translate-x-1 transition-transform">{label}</span>
-                    <ArrowUpRight className="w-3 h-3 opacity-0 group-hover/link:opacity-100 group-hover/link:text-[#ff5100] ml-2 transition-all" />
                   </Link>
                 </li>
               ))}
@@ -68,47 +60,44 @@ export default function Footer() {
           </div>
 
           <div className="lg:col-span-2">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff5100] mb-6">
+            <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-[#ff5100]/60 mb-5">
               Disciplines
             </h4>
-            <ul className="space-y-3.5">
+            <ul className="space-y-2.5">
               {[
                 ["Trekking", "/explore?type=Trekking"],
                 ["Diving", "/explore?type=Diving"],
-                ["Watersports", "/explore?type=Watersports"],
                 ["Biking", "/explore?type=Biking"],
-                ["Mountaineering", "/explore?type=Mountaineering"],
+                ["Alpine", "/explore?type=Mountaineering"],
               ].map(([label, href]) => (
                 <li key={label}>
                   <Link
                     href={href}
-                    className="text-[13px] text-white/30 hover:text-white transition-all duration-300 flex items-center group/link font-medium"
+                    className="text-[12px] text-white/25 hover:text-white transition-all flex items-center group/link font-medium"
                   >
                     <span className="group-hover:translate-x-1 transition-transform">{label}</span>
-                    <ArrowUpRight className="w-3 h-3 opacity-0 group-hover/link:opacity-100 group-hover/link:text-[#ff5100] ml-2 transition-all" />
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="lg:col-span-4 lg:pl-8">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff5100] mb-6">
+          {/* Newsletter / Dispatch */}
+          <div className="col-span-2 md:col-span-2 lg:col-span-4">
+            <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-[#ff5100]/60 mb-5">
               The Dispatch
             </h4>
-            <div className="bg-white/[0.02] border border-white/[0.05] p-5 rounded-2xl relative overflow-hidden group/box">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-[#ff5100]/5 blur-3xl rounded-full" />
-              <p className="text-white font-bold text-base mb-1.5 relative z-10">Curated Guides.</p>
-              <p className="text-white/30 text-xs mb-4 font-medium leading-relaxed relative z-10">Join 12,000+ explorers for bi-weekly deep dives into India&apos;s wildest corners.</p>
+            <div className="bg-white/[0.01] border border-white/[0.03] p-4 rounded-xl relative overflow-hidden group/box">
+              <p className="text-white/40 text-[11px] mb-3 font-medium leading-relaxed relative z-10">Join 12,000+ for bi-weekly deep dives into India&apos;s wildest corners.</p>
               
               <div className="relative z-10 flex gap-2">
                 <input 
                   type="email" 
-                  placeholder="Email" 
-                  className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs outline-none focus:border-[#ff5100]/40 transition-all flex-1 font-medium"
+                  placeholder="Join our network" 
+                  className="bg-white/[0.02] border border-white/5 rounded-lg px-3 py-1.5 text-[11px] outline-none focus:border-[#ff5100]/20 transition-all flex-1 font-medium"
                 />
-                <button className="bg-[#ff5100] hover:bg-[#ff7d47] text-white p-2 rounded-xl transition-all group/btn">
-                  <Send className="w-4 h-4 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+                <button className="bg-[#ff5100]/90 hover:bg-[#ff5100] text-white p-1.5 rounded-lg transition-all group/btn">
+                  <Send className="w-3 h-3" />
                 </button>
               </div>
             </div>
@@ -116,24 +105,23 @@ export default function Footer() {
 
         </div>
 
-        {/* Global Network bar */}
-        <div className="border-t border-white/[0.03] pt-10 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
-          <div className="flex items-center gap-8">
-            <div className="flex items-center gap-2.5">
-              <Globe className="w-3 h-3 text-white/20" />
-              <span className="text-[10px] text-white/30 font-bold uppercase tracking-[0.2em]">Global Aggregation Active</span>
+        {/* Bottom Bar */}
+        <div className="mt-12 pt-8 border-t border-white/[0.02] flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/40 animate-pulse" />
+              <span className="text-[9px] text-white/20 font-bold uppercase tracking-[0.15em]">Nodes Synchronized</span>
+            </div>
+            <div className="hidden sm:flex items-center gap-6">
+              {["Terms", "Privacy"].map((item) => (
+                <Link key={item} href={`/${item.toLowerCase()}`} className="text-[9px] text-white/10 hover:text-white font-bold uppercase tracking-[0.1em] transition-colors">
+                  {item}
+                </Link>
+              ))}
             </div>
           </div>
           
-          <div className="flex items-center gap-8">
-            {["Terms", "Privacy", "Security"].map((item) => (
-              <Link key={item} href={`/${item.toLowerCase()}`} className="text-[10px] text-white/20 hover:text-white font-bold uppercase tracking-[0.1em] transition-colors">
-                {item}
-              </Link>
-            ))}
-          </div>
-
-          <p className="text-white/10 text-[9px] font-bold uppercase tracking-[0.2em] md:order-last">
+          <p className="text-white/10 text-[9px] font-bold uppercase tracking-[0.2em]">
             © 2026 COMPASS.AI
           </p>
         </div>
@@ -142,3 +130,4 @@ export default function Footer() {
     </footer>
   );
 }
+
