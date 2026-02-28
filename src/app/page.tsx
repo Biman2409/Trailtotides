@@ -87,7 +87,7 @@ export default function HomePage() {
               className="bg-white/12 hover:bg-white/22 backdrop-blur-md text-white font-semibold px-8 py-4 rounded-xl text-base border border-white/25 hover:border-white/40 flex items-center gap-2 min-w-[200px] justify-center hover:-translate-y-0.5 transition-all duration-200"
             >
               <Map className="w-4 h-4" />
-              View the Map
+              ADVENTURE MAP
             </Link>
           </div>
 
