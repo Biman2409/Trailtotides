@@ -26,9 +26,11 @@ function LoginForm() {
   return (
     <div className="max-w-md w-full mx-auto">
       {/* Mobile logo */}
-      <Link href="/" className="flex items-center gap-2 mb-6 lg:hidden">
-        <Mountain className="w-8 h-8 text-[#ff5100]" />
-        <span className="text-white font-bold text-xl tracking-tight">TRAIL TO TIDES</span>
+      <Link href="/" className="flex items-center gap-2.5 mb-6 lg:hidden group">
+        <div className="w-8 h-8 bg-[#ff5100] rounded-lg flex items-center justify-center group-hover:bg-[#ff7d47] transition-colors">
+          <Mountain className="w-4 h-4 text-white" />
+        </div>
+        <span className="text-[#ff5100] font-black tracking-[-0.06em] text-[1.1rem] uppercase leading-none">TRAIL TO TIDES</span>
       </Link>
 
       <Link href="/" className="hidden lg:inline-flex items-center gap-1 text-white/40 hover:text-white/80 text-sm mb-6 transition-colors group">
