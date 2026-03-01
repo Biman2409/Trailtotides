@@ -349,9 +349,11 @@ export const adventures: Adventure[] = [
       terrain: "Dense forest, alpine meadows, seasonal rivers",
         bestSeason: "Jun – Sep, Dec – Mar",
         bestMonths: ["Jun", "Jul", "Aug", "Sep", "Dec", "Jan", "Feb", "Mar"],
-        groupSize: "Small group (2–6)",
-          heroImage: "https://images.unsplash.com/photo-1542709111240-e9df0dd813b4?w=1200&q=70",
-    galleryImages: [],
+          groupSize: "Small group (2–6)",
+            heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0181-resized-1772364881220.jpeg?width=8000&height=8000&resize=contain",
+      galleryImages: [
+        "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0181-resized-1772364881220.jpeg?width=8000&height=8000&resize=contain"
+      ],
     lat: 25.5330,
     lng: 94.1009,
     description:
