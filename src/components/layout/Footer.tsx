@@ -29,7 +29,7 @@ export default function Footer() {
         {/* Subtle Gradient Accent */}
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-12 lg:gap-32 relative z-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-32 relative z-10 items-start">
           
                 {/* Brand & Connect Identity */}
                 <div className="space-y-6">
@@ -86,7 +86,7 @@ export default function Footer() {
                 </div>
 
                 {/* Platform Nav */}
-                <div className="lg:pt-0 w-full lg:max-w-[200px]">
+                <div className="lg:pt-0 w-full lg:max-w-[200px] lg:justify-self-end">
                   <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-6 opacity-80">
                     Platform
                   </h4>
@@ -115,18 +115,19 @@ export default function Footer() {
 
         </div>
 
-      {/* Fixed Floating Back to Top - Subtly Centered above bottom bar divider when at page bottom */}
-      <div className={`fixed bottom-20 left-1/2 -translate-x-1/2 z-[1001] transition-all duration-700 ease-in-out ${
-        showFloatingButton ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
+      {/* Fixed Floating Back to Top - Centered above bottom bar when at the end */}
+      <div className={`fixed bottom-20 left-1/2 -translate-x-1/2 z-[1001] transition-all duration-700 ease-out ${
+        showFloatingButton ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12 pointer-events-none"
       }`}>
         <button
           onClick={scrollToTop}
-          className="p-3 bg-white/[0.01] backdrop-blur-3xl border border-white/[0.02] rounded-full text-white/5 hover:text-[#ff5100]/50 hover:bg-white/[0.03] hover:border-white/[0.05] transition-all duration-500 group shadow-2xl"
+          className="p-3 bg-white/[0.01] backdrop-blur-3xl border border-white/[0.02] rounded-full text-white/5 hover:text-[#ff5100]/60 hover:bg-white/[0.03] hover:border-white/[0.05] transition-all duration-500 group shadow-2xl"
           aria-label="Back to top"
         >
           <ArrowUp className="w-3.5 h-3.5" strokeWidth={2} />
         </button>
       </div>
+
 
 
         {/* Bottom Bar */}
