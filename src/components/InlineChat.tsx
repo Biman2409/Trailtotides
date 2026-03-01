@@ -77,6 +77,9 @@ export default function InlineChat() {
             {/* Architectural Header Section */}
             <div className="flex flex-col items-center text-center mb-16 space-y-6">
               <div className="flex flex-col items-center gap-4">
+                        <p className="text-white/20 text-[10px] font-black uppercase tracking-[0.4em] mb-1">
+                          Looking for something specific?
+                        </p>
                         <div className="inline-flex items-center bg-[#ff5100]/10 border border-[#ff5100]/20 rounded-full px-4 py-1.5 mb-2">
                           <span className="text-[#ff5100] text-[10px] font-black tracking-[0.25em] uppercase">AI Adventure Finder</span>
                         </div>
