@@ -203,26 +203,39 @@ export default function AdminDashboardClient({
             <p className="text-white/50 mt-1">Analytics and user management for your platform.</p>
           </div>
           
-          <Tabs.Root value={activeTab} onValueChange={setActiveTab} className="bg-white/5 p-1 rounded-xl flex gap-1 self-start md:self-auto">
-            <Tabs.Trigger 
-              value="users" 
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'users' ? 'bg-[#ff5100] text-white' : 'text-white/60 hover:text-white'}`}
-            >
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                User Management
-              </div>
-            </Tabs.Trigger>
-            <Tabs.Trigger 
-              value="analytics" 
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'analytics' ? 'bg-[#ff5100] text-white' : 'text-white/60 hover:text-white'}`}
-            >
-              <div className="flex items-center gap-2">
-                <BarChart3 className="w-4 h-4" />
-                Analytics
-              </div>
-            </Tabs.Trigger>
-          </Tabs.Root>
+        <Tabs.Root value={activeTab} onValueChange={setActiveTab} className="bg-white/5 p-1 rounded-xl flex gap-1 self-start md:self-auto">
+          <Tabs.Trigger 
+            value="users" 
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'users' ? 'bg-[#ff5100] text-white' : 'text-white/60 hover:text-white'}`}
+          >
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              User Management
+            </div>
+          </Tabs.Trigger>
+          <Tabs.Trigger 
+            value="messages" 
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'messages' ? 'bg-[#ff5100] text-white' : 'text-white/60 hover:text-white'}`}
+          >
+            <div className="flex items-center gap-2">
+              <MessageSquare className="w-4 h-4" />
+              Messages
+              {messages.length > 0 && (
+                <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded-full ml-1">{messages.length}</span>
+              )}
+            </div>
+          </Tabs.Trigger>
+          <Tabs.Trigger 
+            value="analytics" 
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'analytics' ? 'bg-[#ff5100] text-white' : 'text-white/60 hover:text-white'}`}
+          >
+            <div className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Analytics
+            </div>
+          </Tabs.Trigger>
+        </Tabs.Root>
+
         </div>
 
         {/* Stats Grid */}
