@@ -51,9 +51,9 @@ export default function Footer() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  return (
-    <footer className="bg-[#05070a] text-white border-t border-white/[0.03] overflow-hidden relative">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 lg:py-6 relative">
+    return (
+      <footer ref={footerRef} className="bg-[#05070a] text-white border-t border-white/[0.03] overflow-hidden relative">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 lg:py-6 relative">
         
         {/* Anchor point for docking the back to top button */}
         <div ref={anchorRef} className="absolute bottom-[4rem] left-1/2 -translate-x-1/2 w-10 h-10 pointer-events-none" />
