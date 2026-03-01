@@ -94,7 +94,7 @@ export default function Footer() {
                     </div>
     
                         {/* Legal & Contact Column */}
-                        <div className="lg:text-right flex flex-col lg:items-end lg:pt-0">
+                        <div className="lg:text-right flex flex-col lg:items-end lg:pt-0 lg:-mt-12 transition-all duration-300">
                           <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
                             Legal
                           </h4>
@@ -116,7 +116,7 @@ export default function Footer() {
                           <div className="mt-8">
                             <a 
                               href="mailto:hello@trailtotides.com" 
-                              className="text-[10px] font-bold text-white/5 hover:text-white/20 transition-colors tracking-widest uppercase block w-fit lg:ml-auto"
+                              className="text-[10px] font-bold text-white/[0.03] hover:text-white/20 transition-colors tracking-widest uppercase block w-fit lg:ml-auto"
                             >
                               hello@trailtotides.com
                             </a>
