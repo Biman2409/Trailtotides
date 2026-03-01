@@ -9,22 +9,13 @@ export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setShowFloatingButton(entry.isIntersecting);
-      },
-      { threshold: 0.1 }
-    );
-
-    if (footerRef.current) {
-      observer.observe(footerRef.current);
-    }
-
-    return () => {
-      if (footerRef.current) {
-        observer.unobserve(footerRef.current);
-      }
+    const handleScroll = () => {
+      // Show button after 800px of scrolling
+      setShowFloatingButton(window.scrollY > 800);
     };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToTop = () => {
@@ -124,16 +115,16 @@ export default function Footer() {
 
         </div>
 
-      {/* Single Subtle Back to Top - Centered above bottom bar divider */}
-      <div className="mt-8 mb-4 flex justify-center">
+      {/* Fixed Floating Back to Top - Subtly Centered above bottom bar divider when at page bottom */}
+      <div className={`fixed bottom-20 left-1/2 -translate-x-1/2 z-[1001] transition-all duration-700 ease-in-out ${
+        showFloatingButton ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
+      }`}>
         <button
           onClick={scrollToTop}
-          className={`p-3 bg-white/[0.02] backdrop-blur-3xl border border-white/[0.03] rounded-full text-white/10 hover:text-[#ff5100] hover:bg-white/[0.05] hover:border-white/[0.1] transition-all duration-1000 group shadow-2xl ${
-            showFloatingButton ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 pointer-events-none"
-          }`}
+          className="p-3 bg-white/[0.01] backdrop-blur-3xl border border-white/[0.02] rounded-full text-white/5 hover:text-[#ff5100]/50 hover:bg-white/[0.03] hover:border-white/[0.05] transition-all duration-500 group shadow-2xl"
           aria-label="Back to top"
         >
-          <ArrowUp className="w-3.5 h-3.5" strokeWidth={2.5} />
+          <ArrowUp className="w-3.5 h-3.5" strokeWidth={2} />
         </button>
       </div>
 
@@ -152,6 +143,11 @@ export default function Footer() {
             © 2026 TRAIL TO TIDES — DESIGNED BY EXPLORERS FOR EXPLORERS
           </p>
         </div>
+
+    </div>
+  </footer>
+  );
+}
 
     </div>
   </footer>
