@@ -9,6 +9,7 @@ import Footer from "@/components/layout/Footer";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import { adventures } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
+import { difficultyStyle } from "@/lib/styles";
 
 // filter constants
 const seasons: { label: string; months: Month[] }[] = [
