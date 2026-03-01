@@ -21,10 +21,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [{ url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90", width: 1200, height: 630 }],
   },
-  twitter: {
+    twitter: {
     card: "summary_large_image",
     title: "TRAIL TO TIDES",
-    description: "India's adventure discovery platform.",
+    description: "Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.",
   },
 };
 
