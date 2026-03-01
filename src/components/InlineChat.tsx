@@ -111,11 +111,11 @@ export default function InlineChat() {
                       <div className={`min-h-[100px] ${messages.length > 0 ? 'max-h-[500px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
                         {messages.length === 0 && (
                           <div className="px-8 py-10 flex flex-nowrap gap-4 justify-center overflow-x-auto no-scrollbar">
-                          {[
-                            "Ladakh bike trip under 20k",
-                            "Solo trek to Valley of Flowers",
-                            "Scuba diving in Andaman islands"
-                          ].map((v) => (
+                            {[
+                              "Ladakh bike trip under 20k",
+                              "Dzukou Valley trek in monsoon",
+                              "Scuba diving in Andaman islands"
+                            ].map((v) => (
                               <button 
                                 key={v}
                                 onClick={() => send(v)}
