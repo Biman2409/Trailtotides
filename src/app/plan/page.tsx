@@ -275,11 +275,12 @@ export default function PlanPage() {
                         </Link>
                   </div>
 
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+
 
         {step === "results" && (
           <div>
