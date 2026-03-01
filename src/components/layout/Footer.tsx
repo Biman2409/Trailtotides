@@ -102,7 +102,7 @@ export default function Footer() {
                   </div>
   
                     {/* About & Contact Column */}
-                    <div className="space-y-10 lg:pt-28">
+                    <div className="space-y-10 lg:pt-40">
                       <div>
                       <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-3 opacity-80">
                         ABOUT US
@@ -111,7 +111,7 @@ export default function Footer() {
                         Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
                       </p>
                     </div>
-  
+
                     <div>
                       <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-3 opacity-80">
                         CONTACT US
@@ -144,9 +144,9 @@ export default function Footer() {
                       </div>
                     </div>
                   </div>
-  
+
                   {/* Legal Nav */}
-                  <div className="lg:-mt-36">
+                  <div className="lg:-mt-64">
                     <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-4 opacity-80">
                       Legal
                     </h4>
