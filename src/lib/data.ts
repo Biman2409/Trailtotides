@@ -729,21 +729,21 @@ export const adventures: Adventure[] = [
 ];
 
 export const stories: Story[] = [
-      {
-        id: "7",
-        slug: "the-night-photi-la-tested-us",
-        title: "The Night Photi La Tested Us",
-          excerpt:
-            "A ride to Umling La, a detour to Demchok, and the mountain that watched over us. Some trips are planned. Some trips are reckless. And some trips stay with you forever.",
-            author: "Nishant Ingle",
-            authorRole: "Rider",
-            heroImage: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&q=98&w=1600",
-          readTime: "15 min read",
+        {
+          id: "7",
+          slug: "the-night-photi-la-tested-us",
+          title: "The Night Photi La Tested Us",
+            excerpt:
+              "A ride to Umling La, a detour to Demchok, and the mountain that watched over us. Some trips are planned. Some trips are reckless. And some trips stay with you forever.",
+              author: "Nishant Ingle",
+              authorRole: "Rider",
+              heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_3618_Original-1772333506059.jpeg?width=8000&height=8000&resize=contain",
+            readTime: "15 min read",
 
-            tags: ["Featured", "TTT Original", "Ladakh", "Himalayas"],
-          region: "Himalayas",
-          date: "July 2022",
-      },
+              tags: ["Featured", "TTT Original", "Ladakh", "Himalayas"],
+            region: "Himalayas",
+            date: "July 2022",
+        },
 ];
 
 export const regions = [
