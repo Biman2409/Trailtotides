@@ -174,9 +174,9 @@ export default function Footer() {
               <p className="text-white/20 text-[10px] font-bold tracking-[0.2em] text-center uppercase">
                 © 2026 TRAIL TO TIDES — DESIGNED BY EXPLORERS FOR EXPLORERS
               </p>
-            </div>
+              </div>
 
-    </div>
-  </footer>
+    </footer>
+
   );
 }
