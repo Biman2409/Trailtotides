@@ -174,7 +174,7 @@ export default function HomePage() {
                               <br />
                               <span className="text-[#7ec88a]">MAPPED</span>
                             </h2>
-                      <p className="text-white/72 text-lg md:text-xl leading-relaxed mb-9 max-w-lg">
+                      <p className="text-white/72 text-lg md:text-xl leading-relaxed mb-9 w-full">
                         Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
                       </p>
                   <Link
