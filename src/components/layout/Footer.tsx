@@ -50,15 +50,15 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#05070a] text-white border-t border-white/[0.03] overflow-hidden relative">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6 lg:py-8 relative">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 lg:py-6 relative">
         
         {/* Anchor point for docking the back to top button */}
-        <div ref={anchorRef} className="absolute bottom-[4.5rem] left-1/2 -translate-x-1/2 w-10 h-10 pointer-events-none" />
+        <div ref={anchorRef} className="absolute bottom-[4rem] left-1/2 -translate-x-1/2 w-10 h-10 pointer-events-none" />
 
         {/* Subtle Gradient Accent */}
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-12 lg:gap-32 relative z-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-12 lg:gap-24 relative z-10 items-start">
           
                 {/* Brand & Connect Identity */}
                 <div className="space-y-6">
