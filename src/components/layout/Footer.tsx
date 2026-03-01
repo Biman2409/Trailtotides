@@ -64,8 +64,8 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-x-8 relative z-10 items-start">
                   
                     {/* Brand & Platform Column */}
-                    <div className="space-y-1">
-                        <Link href="/" className="flex items-center gap-4 group w-fit mb-4">
+                    <div className="flex flex-col items-start">
+                        <Link href="/" className="flex items-center gap-4 group w-fit">
                           <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
                             <Mountain className="w-4 h-4 text-white" strokeWidth={2.8} />
                           </div>
@@ -74,7 +74,7 @@ export default function Footer() {
                           </span>
                       </Link>
 
-                      <div className="space-y-1">
+                      <div className="mt-1">
                         <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 opacity-80">
                           Platform
                         </h4>
