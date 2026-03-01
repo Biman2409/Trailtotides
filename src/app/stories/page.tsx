@@ -36,13 +36,14 @@ export default function StoriesPage() {
         <div className="max-w-7xl mx-auto">
           <Link href={`/stories/${featured.slug}`} className="group block">
             <div className="relative h-[420px] lg:h-[540px] rounded-3xl overflow-hidden">
-              <Image
-                src={featured.heroImage}
-                alt={featured.title}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                priority
-              />
+                <Image
+                  src={featured.heroImage}
+                  alt={featured.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  style={{ objectFit: "cover" }}
+                  priority
+                />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-12">
                 {/* Badge pills (Featured, TTT Original) */}
