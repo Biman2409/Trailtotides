@@ -105,7 +105,7 @@ export default function Footer() {
                     </div>
 
                     {/* Platform Nav */}
-                    <div className="lg:pl-24 pt-1">
+                    <div className="lg:pl-24">
                       <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-14 opacity-80">
                         Platform
                       </h4>
