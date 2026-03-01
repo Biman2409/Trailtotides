@@ -77,7 +77,7 @@ export default function Footer() {
             </div>
 
             {/* Column 2: About us, Contact us */}
-            <div className="lg:text-right flex flex-col lg:items-end space-y-16">
+            <div className="text-right flex flex-col items-end space-y-16">
               {/* 4. About us */}
               <div className="max-w-md">
                 <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-6 opacity-80">
