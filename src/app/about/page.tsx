@@ -77,9 +77,9 @@ export default function AboutPage() {
           <h1 className="text-white text-5xl lg:text-7xl font-bold tracking-tight leading-none mb-8">
             Built by people who&apos;ve been out there.
           </h1>
-          <p className="text-white/60 text-xl leading-relaxed max-w-2xl">
-            TRAIL TO TIDES is India&apos;s first adventure discovery platform — built to make finding, comparing, and booking real adventures as reliable as the mountains themselves.
-          </p>
+            <p className="text-white/60 text-xl leading-relaxed max-w-2xl">
+              Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
+            </p>
         </div>
       </section>
 
