@@ -107,9 +107,9 @@ export default function Footer() {
                       <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-3 opacity-80">
                         ABOUT US
                       </h4>
-                      <p className="text-white/30 text-[10px] font-medium leading-relaxed tracking-wider">
-                        Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
-                      </p>
+                        <p className="text-white/30 text-[10px] font-medium leading-relaxed tracking-wider w-full">
+                          Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
+                        </p>
                     </div>
 
                     <div>
