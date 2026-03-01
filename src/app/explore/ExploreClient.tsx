@@ -175,7 +175,7 @@ export default function ExploreClient() {
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
               </button>
   
-              {/* AI Adventure Finder toggle */}
+              {/* Compass.AI toggle */}
                   <button
                     onClick={() => { setAiOpen(!aiOpen); setFiltersOpen(false); }}
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
@@ -185,7 +185,7 @@ export default function ExploreClient() {
                       }`}
                   >
                     <Compass className="w-4 h-4" />
-                    <span className="hidden sm:inline">TRAIL TO TIDES</span>
+                    <span className="hidden sm:inline">Compass.AI</span>
                     <span className="sm:hidden">ai</span>
                   </button>
 
