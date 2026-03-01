@@ -1,9 +1,49 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain, ArrowUp } from "lucide-react";
 
 export default function Footer() {
+  const [showFloatingButton, setShowFloatingButton] = useState(false);
+  const footerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowFloatingButton(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    if (footerRef.current) {
+      observer.observe(footerRef.current);
+    }
+
+    return () => {
+      if (footerRef.current) {
+        observer.unobserve(footerRef.current);
+      }
+    };
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <footer className="bg-[#05070a] text-white border-t border-white/[0.03] overflow-hidden">
+    <footer ref={footerRef} className="bg-[#05070a] text-white border-t border-white/[0.03] overflow-hidden relative">
+      {/* Floating Back to Top - Very subtle, only visible when footer is in view */}
+      <button
+        onClick={scrollToTop}
+        className={`fixed bottom-12 right-12 z-[90] p-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full text-white/40 hover:text-[#ff5100] hover:bg-white/10 hover:border-[#ff5100]/20 transition-all duration-700 group ${
+          showFloatingButton ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-10 scale-90 pointer-events-none"
+        }`}
+        aria-label="Back to top"
+      >
+        <ArrowUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
+      </button>
+
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-24 lg:py-32 relative">
         
         {/* Subtle Gradient Accent */}
