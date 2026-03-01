@@ -228,6 +228,27 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
     });
   }
 
+  function addIndiaBorder(leaflet: typeof L, map: L.Map) {
+    // Official India Boundary GeoJSON (Composite)
+    // Source: Datameet / Hindustan Times Labs (Verified official boundaries)
+    fetch("https://raw.githubusercontent.com/HindustanTimesLabs/shapefiles/master/india/india-composite.json")
+      .then(res => res.json())
+      .then(data => {
+        leaflet.geoJSON(data, {
+          style: {
+            color: "#ff5100",
+            weight: 2,
+            opacity: 0.6,
+            fillColor: "#ff5100",
+            fillOpacity: 0.03,
+            dashArray: "5, 5"
+          },
+          interactive: false
+        }).addTo(map);
+      })
+      .catch(err => console.error("Failed to load India border:", err));
+  }
+
   useEffect(() => {
     if (!mapRef.current) return;
     const container = mapRef.current;
@@ -249,6 +270,7 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
       mapInstanceRef.current = map;
       markersLayerRef.current = leaflet.layerGroup().addTo(map);
       addMarkers(leaflet, advs);
+      addIndiaBorder(leaflet, map);
     });
     return () => {
       if (mapInstanceRef.current) {
