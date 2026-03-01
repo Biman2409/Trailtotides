@@ -70,7 +70,7 @@ export default function Footer() {
                         </div>
 
                         {/* Connect Block */}
-                        <div className="space-y-10 pt-4">
+                        <div className="space-y-10">
                           <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 opacity-80">
                             Connect
                           </h4>
