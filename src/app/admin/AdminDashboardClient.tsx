@@ -16,7 +16,8 @@ import {
   Calendar,
   Filter,
   ArrowUpRight,
-  TrendingUp
+  TrendingUp,
+  MessageSquare
 } from "lucide-react";
 import Link from "next/link";
 import * as XLSX from "xlsx";
@@ -46,12 +47,23 @@ type Profile = {
   created_at: string;
 };
 
+type Message = {
+  id: string;
+  user_id: string | null;
+  email: string;
+  name: string | null;
+  message: string;
+  created_at: string;
+};
+
 export default function AdminDashboardClient({
   profiles,
   currentUserId,
+  messages = [],
 }: {
   profiles: Profile[];
   currentUserId: string;
+  messages?: Message[];
 }) {
   const [activeTab, setActiveTab] = useState("users");
   const [search, setSearch] = useState("");
