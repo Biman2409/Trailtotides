@@ -74,7 +74,9 @@ export default function Footer() {
 
                         <div className="max-w-md">
                           <p className="text-white/30 text-[10.5px] font-medium leading-relaxed tracking-wider">
-                            We’re three IIM alumni united by one obsession: Adventure. We couldn’t find the right platform — so we built it. TrailToTides makes exploring India effortless, intelligent, and exciting.
+                            We’re three IIM alumni united by one obsession: Adventure.<br />
+                            We couldn’t find a platform that made exploring adventures in India simpler — so we built it.<br />
+                            TrailToTides makes exploring India effortless, intelligent, and exciting.
                           </p>
                         </div>
                         
