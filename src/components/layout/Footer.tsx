@@ -2,7 +2,90 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain, ArrowUp } from "lucide-react";
+import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain, ArrowUp, Send } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
+
+function ContactPill() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const supabase = createClient();
+
+  useEffect(() => {
+    async function checkAuth() {
+      const { data: { user } } = await supabase.auth.getUser();
+      setIsLoggedIn(!!user);
+    }
+    checkAuth();
+  }, [supabase]);
+
+  const handleSend = async () => {
+    if (!message.trim()) return;
+    setIsSending(true);
+    
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error("Please login to send a message.");
+        return;
+      }
+
+      const { error } = await supabase.from("messages").insert([
+        { content: message, user_id: user.id }
+      ]);
+
+      if (error) throw error;
+
+      toast.success("Message sent to Trail to Tides!");
+      setMessage("");
+    } catch (error) {
+      console.error("Error sending message:", error);
+      toast.error("Failed to send message. Please try again.");
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  return (
+    <div className="relative group/pill w-full max-w-sm">
+      <div className="flex items-center bg-white/[0.03] border border-white/[0.05] rounded-full px-4 py-2 hover:bg-white/[0.05] transition-all duration-300">
+        <Mail className="w-3.5 h-3.5 text-[#ff5100]/60 mr-3" />
+        {isLoggedIn ? (
+          <div className="flex-1 flex items-center">
+            <input
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Send us a direct message..."
+              className="bg-transparent border-none outline-none text-[10.5px] font-medium text-white/80 placeholder:text-white/20 flex-1"
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            />
+            <button 
+              onClick={handleSend}
+              disabled={isSending || !message.trim()}
+              className="ml-2 text-[#ff5100] hover:text-white transition-colors disabled:opacity-30"
+            >
+              <Send className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        ) : (
+          <a 
+            href="mailto:hello@trailtotides.com"
+            className="text-[10.5px] font-bold text-[#ff5100] hover:text-white transition-colors flex-1"
+          >
+            hello@trailtotides.com
+          </a>
+        )}
+      </div>
+      {!isLoggedIn && (
+        <p className="mt-2 text-[9px] text-white/20 font-medium tracking-wide">
+          Login to send a direct message from here.
+        </p>
+      )}
+    </div>
+  );
+}
 
 export default function Footer() {
   const [showFloatingButton, setShowFloatingButton] = useState(false);
@@ -102,7 +185,7 @@ export default function Footer() {
                   </div>
   
                     {/* About & Contact Column */}
-                    <div className="space-y-10 lg:pt-52">
+                    <div className="space-y-10 lg:pt-72">
                       <div>
                       <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-3 opacity-80">
                         ABOUT US
@@ -122,13 +205,7 @@ export default function Footer() {
                           Feel free to connect with us.
                         </p>
                         
-                        <a 
-                          href="mailto:hello@trailtotides.com"
-                          className="text-[10.5px] font-bold text-[#ff5100] hover:text-white transition-colors relative group/email w-fit block"
-                        >
-                          hello@trailtotides.com
-                          <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#ff5100] transition-all duration-300 group-hover/email:w-full opacity-60" />
-                        </a>
+                        <ContactPill />
                         
                         <div className="flex items-center gap-5 pt-1">
                           {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
@@ -146,7 +223,7 @@ export default function Footer() {
                   </div>
 
                   {/* Legal Nav */}
-                  <div className="lg:-mt-80">
+                  <div className="lg:-mt-[34rem]">
                     <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-4 opacity-80">
                       Legal
                     </h4>
