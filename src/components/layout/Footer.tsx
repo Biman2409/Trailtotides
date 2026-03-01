@@ -1,62 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain, ArrowUp } from "lucide-react";
+import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain } from "lucide-react";
 
 export default function Footer() {
-  const [showFloatingButton, setShowFloatingButton] = useState(false);
-  const [buttonBottom, setButtonBottom] = useState(24);
-  const lastScrollYRef = useRef(0);
-  const footerRef = useRef<HTMLElement>(null);
-  const anchorRef = useRef<HTMLDivElement>(null);
-
-      useEffect(() => {
-        const handleScroll = () => {
-          const currentScrollY = window.scrollY;
-          const scrollingDown = currentScrollY > lastScrollYRef.current;
-          lastScrollYRef.current = currentScrollY;
-          
-          if (footerRef.current && anchorRef.current) {
-            const footerRect = footerRef.current.getBoundingClientRect();
-            const anchorRect = anchorRef.current.getBoundingClientRect();
-            const viewportHeight = window.innerHeight;
-            
-            const distFromBottom = viewportHeight - anchorRect.top;
-            
-            // Docking logic: button follows the anchor once it passes the threshold (24px)
-            setButtonBottom(Math.max(24, distFromBottom));
-
-            const isAtFooter = footerRect.top < viewportHeight;
-            
-            // Show condition: 
-            // 1. If we are in the footer area (isAtFooter)
-            // 2. OR if we are scrolling down and have passed 300px
-            // Hide condition:
-            // 1. Always hide if scrolling up AND NOT in footer area
-            const shouldShow = isAtFooter || (scrollingDown && currentScrollY > 300);
-            setShowFloatingButton(shouldShow);
-          }
-        };
-
-      window.addEventListener("scroll", handleScroll, { passive: true });
-      // Initial check
-      handleScroll();
-      return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-    return (
-      <footer ref={footerRef} className="bg-[#05070a] text-white border-t border-white/[0.03] relative">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-16 relative">
-        
-        {/* Anchor point for docking the back to top button */}
-        <div ref={anchorRef} className="absolute bottom-[3rem] left-1/2 -translate-x-1/2 w-10 h-10 pointer-events-none" />
-
-        {/* Subtle Gradient Accent */}
+  return (
+    <footer className="bg-[#05070a] text-white border-t border-white/[0.03] relative">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-16 relative">
+      
+      {/* Subtle Gradient Accent */}
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-x-16 relative z-10 items-start">
