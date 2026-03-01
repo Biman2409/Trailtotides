@@ -11,16 +11,18 @@ export default function Footer() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show button after 800px of scrolling
-      setShowFloatingButton(window.scrollY > 800);
+      // Show button after 300px of scrolling
+      setShowFloatingButton(window.scrollY > 300);
       
       if (anchorRef.current) {
         const rect = anchorRef.current.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
-        // The button docks in the footer. If the anchor is below the screen bottom - offset,
-        // it stays fixed at 24px. As the anchor moves up, the button follows.
-        const distanceToBottom = viewportHeight - rect.top;
-        setButtonBottom(Math.max(24, distanceToBottom));
+        // This is the distance from the bottom of the viewport to the anchor point
+        const distFromBottom = viewportHeight - rect.top;
+        
+        // We want the button to float at 24px (bottom-6) until it hits the footer position.
+        // Once it hits the footer, it docks and moves up with the footer.
+        setButtonBottom(Math.max(24, distFromBottom));
       }
     };
 
