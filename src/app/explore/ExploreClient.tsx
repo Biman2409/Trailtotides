@@ -136,9 +136,9 @@ export default function ExploreClient() {
           <h1 className="text-white text-5xl lg:text-6xl font-semibold tracking-tight mb-4">
             All Adventures
           </h1>
-          <p className="text-white/45 text-lg">
-            {adventures.length} experiences across India — treks, rides, dives and more.
-          </p>
+            <p className="text-white/45 text-lg">
+              Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
+            </p>
         </div>
       </div>
 
