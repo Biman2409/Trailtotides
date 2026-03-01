@@ -110,7 +110,10 @@ export default function FindByRegion() {
                       fill
                       quality={100}
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        style={{ filter: "brightness(1.05) contrast(1.1) saturate(1.1)" }}
+                        style={{ 
+                          objectFit: "cover",
+                          filter: "brightness(1.05) contrast(1.1) saturate(1.1)" 
+                        }}
                     />
                     {/* Gradient overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
