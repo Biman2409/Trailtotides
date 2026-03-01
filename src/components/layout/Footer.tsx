@@ -6,23 +6,26 @@ import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain, ArrowUp } from "
 
 export default function Footer() {
   const [showFloatingButton, setShowFloatingButton] = useState(false);
-  const [buttonBottom, setButtonBottom] = useState(24); // Start at bottom-6 (24px)
+  const [buttonBottom, setButtonBottom] = useState(24);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const anchorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show button after 300px of scrolling
-      setShowFloatingButton(window.scrollY > 300);
+      const currentScrollY = window.scrollY;
+      const scrollingDown = currentScrollY > lastScrollY;
+      setLastScrollY(currentScrollY);
       
       if (anchorRef.current) {
         const rect = anchorRef.current.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
-        // This is the distance from the bottom of the viewport to the anchor point
         const distFromBottom = viewportHeight - rect.top;
-        
-        // We want the button to float at 24px (bottom-6) until it hits the footer position.
-        // Once it hits the footer, it docks and moves up with the footer.
         setButtonBottom(Math.max(24, distFromBottom));
+
+        const isAtFooter = distFromBottom > 0;
+        // Show if scrolling down (after 300px) OR if at footer area
+        // Hide if scrolling up and NOT in the footer area
+        setShowFloatingButton(isAtFooter || (scrollingDown && currentScrollY > 300));
       }
     };
 
