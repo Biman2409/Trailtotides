@@ -92,28 +92,30 @@ export default function Navbar() {
       className={`fixed top-0 left-0 right-0 z-[1002] transition-colors duration-0 ${
         isTransparent
           ? "bg-transparent"
-          : "bg-[#1a1f2e]/96 backdrop-blur-lg border-b border-white/8 shadow-xl shadow-black/10"
+          : "bg-[#1a1f2e]/98 backdrop-blur-lg border-b border-white/8 shadow-xl shadow-black/10"
       }`}
       >
             {/* Subtle Adventure Design (Mosaic/Topographical) */}
             {!isTransparent && (
-              <div className="absolute inset-0 pointer-events-none opacity-[0.035] overflow-hidden">
+              <div className="absolute inset-0 pointer-events-none opacity-[0.05] overflow-hidden">
                 <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className="absolute top-0 left-0">
                   <defs>
-                    <pattern id="mosaic" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                      <path d="M0 20 L40 20 M20 0 L20 40" fill="none" stroke="currentColor" strokeWidth="0.25" />
-                      <circle cx="20" cy="20" r="1" fill="currentColor" />
+                    <pattern id="mosaic" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+                      <path d="M0 16 L32 16 M16 0 L16 32" fill="none" stroke="currentColor" strokeWidth="0.2" />
+                      <circle cx="16" cy="16" r="0.8" fill="currentColor" />
                     </pattern>
-                    <pattern id="topography" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
-                      <path d="M0 100 C 20 80, 50 80, 70 100 S 120 120, 140 100 S 180 80, 200 100" fill="none" stroke="currentColor" strokeWidth="0.5" />
-                      <path d="M0 120 C 30 100, 60 100, 90 120 S 140 140, 170 120 S 200 100, 200 120" fill="none" stroke="currentColor" strokeWidth="0.5" />
-                      <path d="M0 80 C 10 60, 40 60, 50 80 S 100 100, 110 80 S 160 60, 170 80 S 200 100, 200 80" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                    <pattern id="topography" x="0" y="0" width="250" height="250" patternUnits="userSpaceOnUse">
+                      <path d="M0 120 C 30 100, 70 100, 100 120 S 160 140, 200 120 S 250 100, 250 120" fill="none" stroke="currentColor" strokeWidth="0.6" />
+                      <path d="M0 140 C 40 120, 80 120, 120 140 S 180 160, 220 140 S 250 120, 250 140" fill="none" stroke="currentColor" strokeWidth="0.6" />
+                      <path d="M0 100 C 20 80, 60 80, 80 100 S 140 120, 160 100 S 220 80, 250 100" fill="none" stroke="currentColor" strokeWidth="0.6" />
+                      <path d="M0 160 C 50 140, 100 140, 150 160 S 200 180, 250 160" fill="none" stroke="currentColor" strokeWidth="0.6" />
                     </pattern>
                   </defs>
                   <rect width="100%" height="100%" fill="url(#mosaic)" className="text-white" />
-                  <rect width="100%" height="100%" fill="url(#topography)" className="text-white opacity-40" />
+                  <rect width="100%" height="100%" fill="url(#topography)" className="text-white opacity-60" />
                 </svg>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#ff5100]/5 to-transparent mix-blend-overlay" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#ff5100]/8 to-transparent mix-blend-overlay" />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#111820]/10" />
               </div>
             )}
 
