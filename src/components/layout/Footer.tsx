@@ -31,73 +31,68 @@ export default function Footer() {
 
   return (
     <footer ref={footerRef} className="bg-[#05070a] text-white border-t border-white/[0.03] overflow-hidden relative">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 lg:py-12 relative">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6 lg:py-8 relative">
         
         {/* Subtle Gradient Accent */}
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-32 relative z-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-12 lg:gap-32 relative z-10 items-start">
           
                 {/* Brand & Connect Identity */}
                 <div className="space-y-6">
                     {/* Description Block */}
                     <div className="space-y-4">
                         <Link href="/" className="flex items-center gap-4 group w-fit">
-                            <div className="w-9 h-9 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
-                              <Mountain className="w-5 h-5 text-white" strokeWidth={2.8} />
+                            <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
+                              <Mountain className="w-4 h-4 text-white" strokeWidth={2.8} />
                             </div>
-                              <span className="text-[#ff5100] font-black tracking-[-0.075em] text-[1.25rem] uppercase leading-none antialiased">
+                              <span className="text-[#ff5100] font-black tracking-[-0.075em] text-[1.125rem] uppercase leading-none antialiased">
                               TRAIL TO TIDES
                             </span>
                         </Link>
                         
-                            <p className="text-white/45 text-[13px] leading-relaxed max-w-[440px] font-medium tracking-tight">
+                            <p className="text-white/45 text-[12px] leading-relaxed max-w-[400px] font-medium tracking-tight">
                               Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
                             </p>
                     </div>
 
                     {/* Connect Block */}
-                    <div className="space-y-4">
-                      <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 opacity-80">
-                        Connect
-                      </h4>
-                      <div className="space-y-4">
-                        <p className="text-white/50 text-[13px] font-medium leading-relaxed max-w-xl">
-                          Have an idea for a wild expedition or want to collaborate? Feel free to connect with us.
-                        </p>
-                        
-                            <div className="flex flex-wrap items-center gap-x-10 gap-y-6">
-                                <a 
-                                  href="mailto:hello@trailtotides.com"
-                                  className="text-[13px] font-bold text-[#ff5100] hover:text-white transition-colors relative group/email w-fit"
-                                >
-                                  hello@trailtotides.com
-                                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#ff5100] transition-all duration-300 group-hover/email:w-full opacity-60" />
-                                </a>
-                                
-                                <div className="flex items-center gap-6">
-                                  {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
-                                    <a 
-                                      key={i}
-                                      href="#" 
-                                      className="text-white/15 hover:text-[#ff5100] hover:scale-110 transition-all duration-300 p-1"
-                                    >
-                                      <Icon className="w-[0.9rem] h-[0.9rem]" />
-                                    </a>
-                                  ))}
-                                </div>
-                            </div>
+                    <div className="space-y-3">
+                      <p className="text-white/40 text-[12px] font-medium leading-relaxed max-w-xl">
+                        Have an idea for a wild expedition or want to collaborate? Feel free to connect with us.
+                      </p>
+                      
+                          <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+                              <a 
+                                href="mailto:hello@trailtotides.com"
+                                className="text-[12px] font-bold text-[#ff5100] hover:text-white transition-colors relative group/email w-fit"
+                              >
+                                hello@trailtotides.com
+                                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#ff5100] transition-all duration-300 group-hover/email:w-full opacity-60" />
+                              </a>
+                              
+                              <div className="flex items-center gap-5">
+                                {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
+                                  <a 
+                                    key={i}
+                                    href="#" 
+                                    className="text-white/10 hover:text-[#ff5100] hover:scale-110 transition-all duration-300 p-1"
+                                  >
+                                    <Icon className="w-[0.85rem] h-[0.85rem]" />
+                                  </a>
+                                ))}
+                              </div>
+                          </div>
 
-                      </div>
                     </div>
                 </div>
 
                 {/* Platform Nav */}
-                <div className="lg:pt-0 w-full lg:max-w-[200px] lg:justify-self-end">
-                  <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-6 opacity-80">
+                <div className="lg:pt-1 w-full lg:max-w-[200px] lg:justify-self-end">
+                  <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
                     Platform
                   </h4>
-                    <ul className="grid grid-cols-1 gap-y-3.5">
+                    <ul className="grid grid-cols-1 gap-y-3">
                         {[
                           ["EDITORS CHOICE", "/#featured-adventures"],
                           ["ADVENTURE MAP", "/#map-cta"],
@@ -109,7 +104,7 @@ export default function Footer() {
                         <li key={label}>
                           <Link
                             href={href}
-                            className="text-[10px] text-white/35 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em]"
+                            className="text-[10px] text-white/30 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em]"
                           >
                             <span className="group-hover:translate-x-1.5 transition-transform duration-300">{label}</span>
                           </Link>
