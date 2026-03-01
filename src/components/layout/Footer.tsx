@@ -61,10 +61,10 @@ export default function Footer() {
         {/* Subtle Gradient Accent */}
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
   
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[auto_2fr_1fr_1fr] gap-12 lg:gap-x-16 relative z-10 items-start">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-x-24 relative z-10 items-start">
                   
-                  {/* Brand & Identity */}
-                  <div className="space-y-6">
+                  {/* Brand & Platform Column */}
+                  <div className="space-y-10">
                       <Link href="/" className="flex items-center gap-4 group w-fit">
                           <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
                             <Mountain className="w-4 h-4 text-white" strokeWidth={2.8} />
@@ -73,6 +73,32 @@ export default function Footer() {
                             TRAIL TO TIDES
                           </span>
                       </Link>
+
+                      <div className="space-y-4">
+                        <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 opacity-80">
+                          Platform
+                        </h4>
+                        <ul className="grid grid-cols-1 gap-y-2.5">
+                            {[
+                              ["AI ADVENTURE FINDER", "/#ai-finder"],
+                              ["ADVENTURE MAP", "/#map-cta"],
+                              ["EDITORS CHOICE", "/#featured-adventures"],
+                              ["DISCOVER YOUR REGION", "/#regions"],
+                              ["DISCOVER YOUR GENRE", "/#styles"],
+                              ["STORIES", "/#stories"],
+                              ["LOGIN", "/auth/login"],
+                            ].map(([label, href]) => (
+                          <li key={label}>
+                            <Link
+                              href={href}
+                              className="text-[10px] text-white/30 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em]"
+                            >
+                              <span className="group-hover:translate-x-1.5 transition-transform duration-300">{label}</span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
   
                   {/* About & Contact Column */}
@@ -118,33 +144,6 @@ export default function Footer() {
                         </div>
                       </div>
                     </div>
-                  </div>
-  
-                  {/* Platform Nav */}
-                  <div className="lg:pt-1">
-                    <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-4 opacity-80">
-                      Platform
-                    </h4>
-                        <ul className="grid grid-cols-1 gap-y-2.5">
-                            {[
-                              ["AI ADVENTURE FINDER", "/#ai-finder"],
-                              ["ADVENTURE MAP", "/#map-cta"],
-                              ["EDITORS CHOICE", "/#featured-adventures"],
-                              ["DISCOVER YOUR REGION", "/#regions"],
-                              ["DISCOVER YOUR GENRE", "/#styles"],
-                              ["STORIES", "/#stories"],
-                              ["LOGIN", "/auth/login"],
-                            ].map(([label, href]) => (
-                          <li key={label}>
-                            <Link
-                              href={href}
-                              className="text-[10px] text-white/30 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em]"
-                            >
-                              <span className="group-hover:translate-x-1.5 transition-transform duration-300">{label}</span>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
                   </div>
   
                   {/* Legal Nav */}
