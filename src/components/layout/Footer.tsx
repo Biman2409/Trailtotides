@@ -109,27 +109,37 @@ export default function Footer() {
                       <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-14 opacity-80">
                         Platform
                       </h4>
-                      <ul className="grid grid-cols-1 gap-y-7">
-                        {[
-                          ["AI ADVENTURE FINDER", "/#ai-finder"],
-                          ["EDITORS CHOICE", "/#featured-adventures"],
-                          ["ADVENTURE MAP", "/#map-cta"],
-                          ["DISCOVER YOUR REGION", "/#regions"],
-                          ["DISCOVER YOUR GENRE", "/#styles"],
-                          ["STORIES", "/#stories"],
-                          ["LOGIN", "/auth/login"],
-                          ["BACK TO TOP", "#"],
-                        ].map(([label, href]) => (
-                          <li key={label}>
-                            <Link
-                              href={href}
-                              className="text-[12px] text-white/35 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em]"
-                            >
-                              <span className="group-hover:translate-x-1.5 transition-transform duration-300">{label}</span>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
+                        <ul className="grid grid-cols-1 gap-y-7">
+                          {[
+                            ["AI ADVENTURE FINDER", "/#ai-finder"],
+                            ["EDITORS CHOICE", "/#featured-adventures"],
+                            ["ADVENTURE MAP", "/#map-cta"],
+                            ["DISCOVER YOUR REGION", "/#regions"],
+                            ["DISCOVER YOUR GENRE", "/#styles"],
+                            ["STORIES", "/#stories"],
+                            ["LOGIN", "/auth/login"],
+                            ["BACK TO TOP", "#"],
+                          ].map(([label, href]) => (
+                            <li key={label}>
+                              {label === "BACK TO TOP" ? (
+                                <button
+                                  onClick={scrollToTop}
+                                  className="text-[12px] text-white/35 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em] uppercase"
+                                >
+                                  <span className="group-hover:translate-x-1.5 transition-transform duration-300">{label}</span>
+                                </button>
+                              ) : (
+                                <Link
+                                  href={href}
+                                  className="text-[12px] text-white/35 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em]"
+                                >
+                                  <span className="group-hover:translate-x-1.5 transition-transform duration-300">{label}</span>
+                                </Link>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+
                     </div>
 
 
