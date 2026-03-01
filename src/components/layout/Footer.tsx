@@ -180,20 +180,12 @@ export default function Footer() {
 
 
 
-        {/* Bottom Bar */}
-          <div className="pt-6 border-t border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
-            <div className="flex items-center gap-10">
-              {["Terms", "Privacy"].map((item) => (
-                <Link key={item} href={`/${item.toLowerCase()}`} className="text-[9px] text-white/25 hover:text-white font-bold uppercase tracking-[0.3em] transition-colors">
-                  {item}
-                </Link>
-              ))}
+          {/* Bottom Bar */}
+            <div className="pt-6 border-t border-white/[0.04] flex flex-col items-center justify-center gap-6 relative z-10">
+              <p className="text-white/12 text-[9px] font-bold uppercase tracking-[0.35em] text-center">
+                © 2026 TRAIL TO TIDES — DESIGNED BY EXPLORERS FOR EXPLORERS
+              </p>
             </div>
-          
-          <p className="text-white/12 text-[9px] font-bold uppercase tracking-[0.35em]">
-            © 2026 TRAIL TO TIDES — DESIGNED BY EXPLORERS FOR EXPLORERS
-          </p>
-        </div>
 
     </div>
   </footer>
