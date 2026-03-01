@@ -84,15 +84,12 @@ export default function Footer() {
                 <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80">
                   About Us
                 </h4>
-                <div className="max-w-md">
-                  <p className="text-white/50 text-base font-medium leading-[1.7] tracking-wide">
-                    We’re three IIM alumni united by one obsession: Adventure.
-                    We couldn’t find a platform that made exploring adventures in India simpler — so we built it.
-                  </p>
-                  <p className="text-white/30 text-sm mt-4 font-medium leading-relaxed">
-                    TrailToTides makes exploring India effortless, intelligent, and exciting.
-                  </p>
-                </div>
+                  <div className="max-w-md">
+                    <p className="text-white/50 text-base font-medium leading-[1.7] tracking-wide">
+                      We’re three IIM alumni united by one obsession: Adventure.
+                      We couldn’t find a platform that made exploring adventures in India simpler — so we built it.
+                    </p>
+                  </div>
               </div>
 
               {/* 2. Contact Us */}
