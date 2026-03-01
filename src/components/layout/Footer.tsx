@@ -125,7 +125,7 @@ export default function Footer() {
             </div>
 
             {/* About & Contact Column */}
-            <div className="lg:-mt-28 space-y-10">
+            <div className="lg:-mt-32 space-y-10">
               <div>
                 <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-4 opacity-80">
                   ABOUT US
