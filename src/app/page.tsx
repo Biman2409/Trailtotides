@@ -172,7 +172,7 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto relative z-10">
               <div className="max-w-2xl">
                       <p className="text-[#7ec88a] text-xs font-semibold tracking-[0.22em] mb-4 uppercase">
-                        SIGNATURE FEATURE
+                        . signature feature
                       </p>
                           <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-5 uppercase">
                             INDIA&apos;S ADVENTURES,
