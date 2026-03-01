@@ -188,7 +188,7 @@ export const adventures: Adventure[] = [
       bestSeason: "Jun – Sep",
       bestMonths: ["Jun", "Jul", "Aug", "Sep"],
         groupSize: "Large group (6+)",
-            heroImage: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=1200&q=70",
+            heroImage: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=2070&auto=format&fit=crop",
         galleryImages: [
         "https://images.unsplash.com/photo-1491975474562-1f4e30bc9468?w=800&q=80",
       ],
