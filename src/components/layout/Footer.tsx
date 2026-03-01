@@ -93,35 +93,35 @@ export default function Footer() {
                           </div>
                       </div>
       
-                              {/* Legal & Contact Column */}
-                                <div className="lg:text-right flex flex-col lg:items-end lg:pt-0 lg:-mt-[34rem] transition-all duration-300">
-                              <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
-                                Legal
-                              </h4>
-                            <div className="flex items-center lg:justify-end gap-x-8">
-                              {[
-                                ["Terms", "/terms"],
-                                ["Privacy", "/privacy"],
-                              ].map(([label, href]) => (
-                                <Link
-                                  key={label}
-                                  href={href}
-                                  className="text-[10px] text-white/30 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em]"
-                                >
-                                  <span className="group-hover:translate-x-1.5 lg:group-hover:-translate-x-1.5 transition-transform duration-300">{label}</span>
-                                </Link>
-                              ))}
-                            </div>
-                            
-                              <div className="mt-8">
-                                <a 
-                                  href="mailto:hello@trailtotides.com" 
-                                  className="text-[10px] font-bold text-white/5 hover:text-white/30 transition-colors tracking-widest uppercase block w-fit lg:ml-auto"
-                                >
-                                  hello@trailtotides.com
-                                </a>
+                                {/* Legal & Contact Column */}
+                                  <div className="lg:text-right flex flex-col lg:items-end lg:pt-0 lg:-mt-[36rem] transition-all duration-300">
+                                <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
+                                  Legal
+                                </h4>
+                              <div className="flex items-center lg:justify-end gap-x-8">
+                                {[
+                                  ["Terms", "/terms"],
+                                  ["Privacy", "/privacy"],
+                                ].map(([label, href]) => (
+                                  <Link
+                                    key={label}
+                                    href={href}
+                                    className="text-[10px] text-white/30 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em]"
+                                  >
+                                    <span className="group-hover:translate-x-1.5 lg:group-hover:-translate-x-1.5 transition-transform duration-300">{label}</span>
+                                  </Link>
+                                ))}
                               </div>
-                        </div>
+                              
+                                <div className="mt-8">
+                                  <a 
+                                    href="mailto:hello@trailtotides.com" 
+                                    className="text-[10px] font-bold text-white/[0.03] hover:text-white/30 transition-colors tracking-widest uppercase block w-fit lg:ml-auto"
+                                  >
+                                    hello@trailtotides.com
+                                  </a>
+                                </div>
+                          </div>
   
                 </div>
 
