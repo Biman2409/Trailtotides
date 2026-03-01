@@ -103,13 +103,14 @@ export default function Footer() {
           </div>
 
           {/* Connect Section */}
-          <div className="lg:-mt-14">
+          <div className="lg:-mt-20">
             <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-2 opacity-80">
               Connect
             </h4>
             <div className="space-y-3">
               <p className="text-white/40 text-[11px] font-medium leading-relaxed">
-                Have an idea for a wild expedition or want to collaborate? Feel free to connect with us.
+                Have an idea for a wild expedition or want to collaborate?<br />
+                Feel free to connect with us.
               </p>
               
               <a 
