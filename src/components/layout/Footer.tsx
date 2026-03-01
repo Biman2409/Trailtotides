@@ -38,10 +38,10 @@ export default function Footer() {
         {/* Subtle Gradient Accent */}
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 lg:gap-40 relative z-10 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 lg:gap-32 relative z-10 items-start">
               
                     {/* Brand & Connect Identity */}
-                    <div className="space-y-16">
+                    <div className="lg:col-span-7 space-y-20">
                         {/* Description Block */}
                         <div className="space-y-8">
                             <Link href="/" className="flex items-center gap-4 group w-fit">
@@ -63,12 +63,12 @@ export default function Footer() {
                           <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 opacity-80">
                             Connect
                           </h4>
-                          <div className="space-y-10">
+                          <div className="space-y-12">
                             <p className="text-white/50 text-[15px] font-medium leading-relaxed max-w-xl">
                               Have an idea for a wild expedition or want to collaborate? Feel free to connect with us.
                             </p>
                             
-                                <div className="flex flex-wrap items-center gap-10 lg:gap-14">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-8 sm:gap-14">
                                     <a 
                                       href="mailto:hello@trailtotides.com"
                                       className="text-[15px] font-bold text-[#ff5100] hover:text-white transition-colors relative group/email w-fit"
@@ -77,14 +77,14 @@ export default function Footer() {
                                       <span className="absolute -bottom-1.5 left-0 w-0 h-[1.5px] bg-[#ff5100] transition-all duration-300 group-hover/email:w-full opacity-60" />
                                     </a>
                                     
-                                    <div className="flex items-center gap-7">
+                                    <div className="flex items-center gap-8">
                                       {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
                                         <a 
                                           key={i}
                                           href="#" 
                                           className="text-white/15 hover:text-[#ff5100] hover:scale-110 transition-all duration-300 p-1"
                                         >
-                                          <Icon className="w-[1.05rem] h-[1.05rem]" />
+                                          <Icon className="w-[1.1rem] h-[1.1rem]" />
                                         </a>
                                       ))}
                                     </div>
@@ -95,11 +95,11 @@ export default function Footer() {
                     </div>
 
                     {/* Platform Nav */}
-                    <div className="lg:pl-24">
+                    <div className="lg:col-span-5 lg:pt-0">
                       <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-14 opacity-80">
                         Platform
                       </h4>
-                          <ul className="grid grid-cols-1 gap-y-7">
+                        <ul className="grid grid-cols-1 gap-y-7">
                             {[
                               ["EDITORS CHOICE", "/#featured-adventures"],
                               ["ADVENTURE MAP", "/#map-cta"],
