@@ -98,16 +98,16 @@ export default function SignUpPage() {
   
   
             {message && (
-              <div
-                className={`mb-6 px-5 py-3 rounded-2xl text-sm font-semibold flex items-center gap-3 ${
-                  message.type === "error"
-                    ? "bg-red-500/10 border border-red-500/20 text-red-400"
-                    : "bg-green-500/10 border border-green-500/20 text-green-400"
-                }`}
-              >
-                <div className={`w-2 h-2 rounded-full ${message.type === "error" ? "bg-red-500" : "bg-green-500 animate-pulse"}`} />
-                {message.text}
-              </div>
+                <div
+                  className={`mb-6 px-5 py-3 rounded-2xl text-sm font-semibold flex items-center gap-3 ${
+                    message.type === "error"
+                      ? "bg-red-500/10 border border-red-500/20 text-red-400"
+                      : "bg-green-500/10 border border-green-500/20 text-green-400"
+                  }`}
+                >
+                  <div className={`w-2 h-2 rounded-full ${message.type === "error" ? "bg-red-500" : "bg-green-500"}`} />
+                  {message.text}
+                </div>
             )}
   
               <form onSubmit={handleSubmit} className="space-y-3.5">
