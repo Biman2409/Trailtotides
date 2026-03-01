@@ -74,7 +74,7 @@ export default function Footer() {
                           </span>
                       </Link>
 
-                      <div className="mt-1">
+                      <div className="mt-0">
                         <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 opacity-80">
                           Platform
                         </h4>
