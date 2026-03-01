@@ -102,28 +102,6 @@ export default function Footer() {
               </ul>
           </div>
 
-          {/* Legal Nav */}
-          <div className="lg:pt-1">
-            <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
-              Legal
-            </h4>
-                <ul className="grid grid-cols-1 gap-y-3">
-                    {[
-                      ["Terms", "/terms"],
-                      ["Privacy", "/privacy"],
-                    ].map(([label, href]) => (
-                  <li key={label}>
-                    <Link
-                      href={href}
-                      className="text-[10px] text-white/30 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em]"
-                    >
-                      <span className="group-hover:translate-x-1.5 transition-transform duration-300">{label}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-          </div>
-
           {/* Connect Section */}
           <div className="lg:pt-1">
             <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
@@ -154,6 +132,28 @@ export default function Footer() {
                 ))}
               </div>
             </div>
+          </div>
+
+          {/* Legal Nav */}
+          <div className="lg:pt-1">
+            <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
+              Legal
+            </h4>
+                <ul className="grid grid-cols-1 gap-y-3">
+                    {[
+                      ["Terms", "/terms"],
+                      ["Privacy", "/privacy"],
+                    ].map(([label, href]) => (
+                  <li key={label}>
+                    <Link
+                      href={href}
+                      className="text-[10px] text-white/30 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em]"
+                    >
+                      <span className="group-hover:translate-x-1.5 transition-transform duration-300">{label}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
           </div>
 
         </div>
