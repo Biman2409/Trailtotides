@@ -86,18 +86,18 @@ export default function ResetPasswordPage() {
             <p className="text-white/40 font-medium">Please enter a new password for your account.</p>
           </div>
 
-          {message && (
-            <div
-              className={`mb-8 px-5 py-4 rounded-2xl text-sm font-semibold flex items-center gap-3 ${
-                message.type === "error"
-                  ? "bg-red-500/10 border border-red-500/20 text-red-400"
-                  : "bg-green-500/10 border border-green-500/20 text-green-400"
-              }`}
-            >
-              <div className={`w-2 h-2 rounded-full ${message.type === "error" ? "bg-red-500" : "bg-green-500 animate-pulse"}`} />
-              {message.text}
-            </div>
-          )}
+            {message && (
+              <div
+                className={`mb-8 px-5 py-4 rounded-2xl text-sm font-semibold flex items-center gap-3 ${
+                  message.type === "error"
+                    ? "bg-red-500/10 border border-red-500/20 text-red-400"
+                    : "bg-green-500/10 border border-green-500/20 text-green-400"
+                }`}
+              >
+                {message.text}
+              </div>
+            )}
+
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
