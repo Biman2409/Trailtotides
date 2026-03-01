@@ -114,14 +114,14 @@ export default function Footer() {
                               ))}
                             </div>
                             
-                            <div className="mt-8">
-                              <a 
-                                href="mailto:hello@trailtotides.com" 
-                                className="text-[10px] font-bold text-white/10 hover:text-white/30 transition-colors tracking-widest uppercase block w-fit lg:ml-auto"
-                              >
-                                hello@trailtotides.com
-                              </a>
-                            </div>
+                              <div className="mt-8">
+                                <a 
+                                  href="mailto:hello@trailtotides.com" 
+                                  className="text-[10px] font-bold text-white/5 hover:text-white/30 transition-colors tracking-widest uppercase block w-fit lg:ml-auto"
+                                >
+                                  hello@trailtotides.com
+                                </a>
+                              </div>
                         </div>
   
                 </div>
