@@ -79,27 +79,27 @@ export default function Footer() {
                               Have an idea for a wild expedition or want to collaborate? Feel free to connect with us.
                             </p>
                             
-                            <div className="flex flex-col gap-10">
-                                <a 
-                                  href="mailto:hello@trailtotides.com"
-                                  className="text-[15px] font-bold text-[#ff5100] hover:text-white transition-colors relative group/email w-fit"
-                                >
-                                  hello@trailtotides.com
-                                  <span className="absolute -bottom-1.5 left-0 w-0 h-[1.5px] bg-[#ff5100] transition-all duration-300 group-hover/email:w-full opacity-60" />
-                                </a>
-
-                                <div className="flex items-center gap-8">
-                                  {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
-                                    <a 
-                                      key={i}
-                                      href="#" 
-                                      className="text-white/20 hover:text-[#ff5100] hover:scale-110 transition-all duration-300"
-                                    >
-                                      <Icon className="w-[1.1rem] h-[1.1rem]" />
-                                    </a>
-                                  ))}
-                                </div>
-                            </div>
+                              <div className="flex flex-wrap items-center gap-x-12 gap-y-8">
+                                  <a 
+                                    href="mailto:hello@trailtotides.com"
+                                    className="text-[15px] font-bold text-[#ff5100] hover:text-white transition-colors relative group/email w-fit"
+                                  >
+                                    hello@trailtotides.com
+                                    <span className="absolute -bottom-1.5 left-0 w-0 h-[1.5px] bg-[#ff5100] transition-all duration-300 group-hover/email:w-full opacity-60" />
+                                  </a>
+                                  
+                                  <div className="flex items-center gap-8">
+                                    {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
+                                      <a 
+                                        key={i}
+                                        href="#" 
+                                        className="text-white/20 hover:text-[#ff5100] hover:scale-110 transition-all duration-300"
+                                      >
+                                        <Icon className="w-[1.1rem] h-[1.1rem]" />
+                                      </a>
+                                    ))}
+                                  </div>
+                              </div>
                           </div>
                         </div>
                     </div>
