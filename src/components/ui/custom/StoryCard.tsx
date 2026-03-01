@@ -28,15 +28,18 @@ export default function StoryCard({ story }: { story: Story }) {
       className="group block relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
       style={{ height: "420px" }}
     >
-      <Image
-        src={story.heroImage}
-        alt={story.title}
-        fill
-        quality={100}
-        className="object-cover transition-transform duration-500 group-hover:scale-105"
-        style={{ filter: "brightness(1.1) contrast(1.15) saturate(1.15)" }}
-        sizes="(max-width: 768px) 100vw, 50vw"
-      />
+        <Image
+          src={story.heroImage}
+          alt={story.title}
+          fill
+          quality={100}
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          style={{ 
+            objectFit: "cover",
+            filter: "brightness(1.1) contrast(1.15) saturate(1.15)" 
+          }}
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
