@@ -104,25 +104,6 @@ export default function Footer() {
 
               </div>
 
-      {/* Fixed Floating Back to Top - Moves to dock above terms/privacy when at footer */}
-
-      <div 
-        className={`fixed left-1/2 -translate-x-1/2 z-[1001] transition-opacity duration-500 ease-out ${
-          showFloatingButton ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-        style={{ bottom: `${buttonBottom}px` }}
-      >
-        <button
-          onClick={scrollToTop}
-          className="p-3 bg-white/[0.01] backdrop-blur-3xl border border-white/[0.02] rounded-full text-white/5 hover:text-[#ff5100]/60 hover:bg-white/[0.03] hover:border-white/[0.05] transition-all duration-500 group shadow-2xl"
-          aria-label="Back to top"
-        >
-          <ArrowUp className="w-3.5 h-3.5" strokeWidth={2} />
-        </button>
-      </div>
-
-
-
           {/* Bottom Bar */}
             <div className="pt-10 border-t border-white/[0.04] flex items-center justify-center relative z-10">
               <p className="text-white/20 text-[10px] font-bold tracking-[0.2em] text-center uppercase">
