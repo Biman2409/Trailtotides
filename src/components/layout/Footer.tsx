@@ -24,9 +24,9 @@ export default function Footer() {
                               </span>
                           </Link>
                           
-                          <p className="text-white/45 text-[15px] leading-relaxed max-w-[540px] font-medium tracking-tight">
-                            Discover and compare epic adventures across India — handpicked by explorers, run by verified operators, mapped with precision — for you
-                          </p>
+                            <p className="text-white/45 text-[15px] leading-relaxed max-w-[540px] font-medium tracking-tight">
+                              Every adventure across India — trekking, diving, cycling, skiing — on one interactive map. Filter by region, challenge level, or activity. Or discover what’s waiting near you.
+                            </p>
                       </div>
 
                       {/* Connect Block */}
