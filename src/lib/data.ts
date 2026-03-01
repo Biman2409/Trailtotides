@@ -188,7 +188,7 @@ export const adventures: Adventure[] = [
         bestSeason: "Jun – Sep",
           bestMonths: ["Jun", "Jul", "Aug", "Sep"],
                 groupSize: "Large group (6+)",
-                    heroImage: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&q=95&w=1600",
+                    heroImage: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&q=98&w=1600",
                 galleryImages: [
 
           "https://images.unsplash.com/photo-1491975474562-1f4e30bc9468?w=800&q=80",
@@ -736,7 +736,7 @@ export const stories: Story[] = [
             "A ride to Umling La, a detour to Demchok, and the mountain that watched over us. Some trips are planned. Some trips are reckless. And some trips stay with you forever.",
             author: "Nishant Ingle",
             authorRole: "Rider",
-            heroImage: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&q=95&w=1600",
+            heroImage: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&q=98&w=1600",
           readTime: "15 min read",
 
             tags: ["Featured", "TTT Original", "Ladakh", "Himalayas"],
