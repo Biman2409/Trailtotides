@@ -274,12 +274,6 @@ export default function PlanPage() {
                           Try Compass.AI <ArrowRight className="w-3 h-3" />
                         </Link>
                   </div>
-                      <p className="text-white/55 text-sm leading-relaxed mb-3">
-                        Prefer to just describe what you want? Use TRAIL TO TIDES on the home page.
-                      </p>
-                      <Link href="/#ai-finder" className="text-[#ff5100] text-xs font-semibold hover:text-[#ff7d47] transition-colors flex items-center gap-1">
-                        Try TRAIL TO TIDES <ArrowRight className="w-3 h-3" />
-                      </Link>
 
                 </div>
               </div>
