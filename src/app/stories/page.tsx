@@ -10,7 +10,26 @@ import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 const BADGE_TAGS = ["Featured", "TTT Original"];
 
 export default function StoriesPage() {
-  const [featured, ...rest] = stories;
+  const [featured, ...rest] = stories || [];
+
+  if (!featured) {
+    return (
+      <div className="min-h-screen bg-[#111820]">
+        <Navbar />
+        <section className="pt-32 pb-16 px-6 lg:px-8 bg-[#1a1f2e]">
+          <div className="max-w-7xl mx-auto">
+            <h1 className="text-white text-5xl lg:text-7xl font-semibold tracking-tight leading-none mb-4">
+              Voices from the Edge
+            </h1>
+            <p className="text-white/50 text-lg max-w-xl mt-4">
+              No stories found. Check back later.
+            </p>
+          </div>
+        </section>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#111820]">
@@ -36,29 +55,29 @@ export default function StoriesPage() {
         <div className="max-w-7xl mx-auto">
           <Link href={`/stories/${featured.slug}`} className="group block">
             <div className="relative h-[420px] lg:h-[540px] rounded-3xl overflow-hidden">
-                <Image
-                  src={featured.heroImage}
-                  alt={featured.title}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  style={{ objectFit: "cover" }}
-                  priority
-                />
+              <Image
+                src={featured.heroImage}
+                alt={featured.title}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                style={{ objectFit: "cover" }}
+                priority
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-12">
                 {/* Badge pills (Featured, TTT Original) */}
-                  <div className="flex items-center gap-2 mb-2">
-                    {featured.tags.includes("Featured") && (
-                      <span className="flex items-center gap-1.5 bg-black text-[#ff5100] text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#ff5100]/20">
-                        <Crown className="w-3 h-3" /> Featured
-                      </span>
-                    )}
-                      {featured.tags.includes("TTT Original") && (
-                        <span className="flex items-center gap-1.5 bg-[#ff5100] text-black text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#ff5100]/20">
-                          <Mountain className="w-3 h-3" /> TTT Original
-                        </span>
-                      )}
-                  </div>
+                <div className="flex items-center gap-2 mb-2">
+                  {featured.tags.includes("Featured") && (
+                    <span className="flex items-center gap-1.5 bg-black text-[#ff5100] text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#ff5100]/20">
+                      <Crown className="w-3 h-3" /> Featured
+                    </span>
+                  )}
+                  {featured.tags.includes("TTT Original") && (
+                    <span className="flex items-center gap-1.5 bg-[#ff5100] text-black text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#ff5100]/20">
+                      <Mountain className="w-3 h-3" /> TTT Original
+                    </span>
+                  )}
+                </div>
                 {/* Content tags — all non-badge tags */}
                 <div className="flex items-center gap-2 mb-4 flex-wrap">
                   {featured.tags.filter((t) => !BADGE_TAGS.includes(t)).map((tag) => (
@@ -84,7 +103,6 @@ export default function StoriesPage() {
                   <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full">
                     <Clock className="w-3 h-3" /> {featured.readTime}
                   </span>
-                  {/* StoryViewPill — fetches live count, no initialViews needed */}
                   <StoryViewPill slug={featured.slug} />
                 </div>
               </div>
@@ -101,13 +119,13 @@ export default function StoriesPage() {
             {rest.map((story) => (
               <Link key={story.id} href={`/stories/${story.slug}`} className="group block">
                 <div className="relative h-52 rounded-2xl overflow-hidden mb-5 shadow-md group-hover:shadow-xl group-hover:shadow-black/15 transition-shadow duration-300">
-                    <Image
-                      src={story.heroImage}
-                      alt={story.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      style={{ objectFit: "cover" }}
-                    />
+                  <Image
+                    src={story.heroImage}
+                    alt={story.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    style={{ objectFit: "cover" }}
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
                   {/* Content tags on image — all non-badge tags */}
                   <div className="absolute bottom-4 left-4 flex items-center gap-2 flex-wrap">
