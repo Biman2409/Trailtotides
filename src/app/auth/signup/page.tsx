@@ -105,7 +105,6 @@ export default function SignUpPage() {
                       : "bg-green-500/10 border border-green-500/20 text-green-400"
                   }`}
                 >
-                  <div className={`w-2 h-2 rounded-full ${message.type === "error" ? "bg-red-500" : "bg-green-500"}`} />
                   {message.text}
                 </div>
             )}
