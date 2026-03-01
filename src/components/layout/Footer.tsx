@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain, ArrowUp } from "lucide-react";
 
