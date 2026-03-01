@@ -86,17 +86,32 @@ export default function Navbar() {
 
   const isTransparent = isHome && !scrolled && !menuOpen;
 
-  return (
-    <nav
-    ref={menuRef}
-    className={`fixed top-0 left-0 right-0 z-[1002] transition-colors duration-0 ${
-      isTransparent
-        ? "bg-transparent"
-        : "bg-[#1a1f2e]/96 backdrop-blur-lg border-b border-white/8 shadow-xl shadow-black/10"
-    }`}
+    return (
+      <nav
+      ref={menuRef}
+      className={`fixed top-0 left-0 right-0 z-[1002] transition-colors duration-0 ${
+        isTransparent
+          ? "bg-transparent"
+          : "bg-[#1a1f2e]/96 backdrop-blur-lg border-b border-white/8 shadow-xl shadow-black/10"
+      }`}
+      >
+        {/* Subtle Adventure Design (Mosaic/Gradient) */}
+        {!isTransparent && (
+          <div className="absolute inset-0 pointer-events-none opacity-[0.03] overflow-hidden">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="mosaic" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                  <path d="M0 100 L50 20 L100 100 Z" fill="none" stroke="currentColor" strokeWidth="1" />
+                  <path d="M20 100 L60 40 L100 100 Z" fill="none" stroke="currentColor" strokeWidth="1" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#mosaic)" className="text-white" />
+            </svg>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#ff5100]/5 to-transparent" />
+          </div>
+        )}
 
-    >
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         <div className="flex items-center justify-between h-16 lg:h-20">
 
                 {/* Logo */}
