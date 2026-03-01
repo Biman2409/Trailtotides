@@ -6,12 +6,19 @@ import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain, ArrowUp } from "
 
 export default function Footer() {
   const [showFloatingButton, setShowFloatingButton] = useState(false);
+  const [atFooter, setAtFooter] = useState(false);
   const footerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       // Show button after 800px of scrolling
       setShowFloatingButton(window.scrollY > 800);
+      
+      // Detect if we are at the footer
+      if (footerRef.current) {
+        const rect = footerRef.current.getBoundingClientRect();
+        setAtFooter(rect.top <= window.innerHeight - 100);
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -115,10 +122,12 @@ export default function Footer() {
 
         </div>
 
-      {/* Fixed Floating Back to Top - Centered above bottom bar when at the end */}
-      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[1001] transition-all duration-700 ease-out ${
-        showFloatingButton ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12 pointer-events-none"
-      }`}>
+      {/* Fixed Floating Back to Top - Moves to dock above terms/privacy when at footer */}
+      <div 
+        className={`fixed left-1/2 -translate-x-1/2 z-[1001] transition-all duration-700 ease-out ${
+          showFloatingButton ? "opacity-100" : "opacity-0 pointer-events-none"
+        } ${atFooter ? "bottom-[4.5rem]" : "bottom-6"}`}
+      >
         <button
           onClick={scrollToTop}
           className="p-3 bg-white/[0.01] backdrop-blur-3xl border border-white/[0.02] rounded-full text-white/5 hover:text-[#ff5100]/60 hover:bg-white/[0.03] hover:border-white/[0.05] transition-all duration-500 group shadow-2xl"
