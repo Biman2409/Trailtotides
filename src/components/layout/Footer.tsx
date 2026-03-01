@@ -63,11 +63,9 @@ export default function Footer() {
                 </h4>
                 <ul className="grid grid-cols-1 gap-y-4">
                   {[
-                    ["Terms & Conditions", "/terms"],
-                    ["Privacy Policy", "/privacy"],
-                    ["Cookie Policy", "/cookies"],
-                    ["Safety Guidelines", "/safety"],
-                  ].map(([label, href]) => (
+                      ["Terms & Conditions", "/terms"],
+                      ["Privacy Policy", "/privacy"],
+                    ].map(([label, href]) => (
                     <li key={label}>
                       <Link href={href} className="text-[12px] text-white/40 hover:text-white transition-all duration-300 font-medium tracking-wide inline-block hover:translate-x-1">
                         {label}
