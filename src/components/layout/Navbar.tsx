@@ -97,25 +97,31 @@ export default function Navbar() {
       >
             {/* Subtle Adventure Design (Mosaic/Topographical) */}
             {!isTransparent && (
-              <div className="absolute inset-0 pointer-events-none opacity-[0.05] overflow-hidden">
+              <div className="absolute inset-0 pointer-events-none opacity-[0.08] overflow-hidden">
                 <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className="absolute top-0 left-0">
                   <defs>
-                    <pattern id="mosaic" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
-                      <path d="M0 16 L32 16 M16 0 L16 32" fill="none" stroke="currentColor" strokeWidth="0.2" />
-                      <circle cx="16" cy="16" r="0.8" fill="currentColor" />
+                    {/* Adventure Grid (Mosaic) */}
+                    <pattern id="mosaic" x="0" y="0" width="64" height="64" patternUnits="userSpaceOnUse">
+                      <path d="M32 0 L32 64 M0 32 L64 32" fill="none" stroke="currentColor" strokeWidth="0.15" />
+                      <path d="M30 32 L34 32 M32 30 L32 34" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                      <circle cx="32" cy="32" r="1.5" fill="none" stroke="currentColor" strokeWidth="0.1" />
                     </pattern>
-                    <pattern id="topography" x="0" y="0" width="250" height="250" patternUnits="userSpaceOnUse">
-                      <path d="M0 120 C 30 100, 70 100, 100 120 S 160 140, 200 120 S 250 100, 250 120" fill="none" stroke="currentColor" strokeWidth="0.6" />
-                      <path d="M0 140 C 40 120, 80 120, 120 140 S 180 160, 220 140 S 250 120, 250 140" fill="none" stroke="currentColor" strokeWidth="0.6" />
-                      <path d="M0 100 C 20 80, 60 80, 80 100 S 140 120, 160 100 S 220 80, 250 100" fill="none" stroke="currentColor" strokeWidth="0.6" />
-                      <path d="M0 160 C 50 140, 100 140, 150 160 S 200 180, 250 160" fill="none" stroke="currentColor" strokeWidth="0.6" />
+                    
+                    {/* Trail to Tides Concept: Mountain Trails and Ocean Tides */}
+                    <pattern id="trail-to-tides" x="0" y="0" width="320" height="80" patternUnits="userSpaceOnUse">
+                      {/* Mountain Peaks (Trails) */}
+                      <path d="M0 60 L30 20 L60 55 L90 15 L120 60 L150 30 L180 60" fill="none" stroke="currentColor" strokeWidth="0.5" className="opacity-60" />
+                      {/* Transitionary Contours */}
+                      <path d="M0 70 Q 50 50, 100 70 T 200 70 T 320 70" fill="none" stroke="currentColor" strokeWidth="0.3" className="opacity-30" />
+                      {/* Ocean Waves (Tides) */}
+                      <path d="M180 60 C 200 45, 220 45, 240 60 S 280 75, 300 60 S 320 45, 340 60" fill="none" stroke="currentColor" strokeWidth="0.5" className="opacity-60" />
+                      <path d="M180 75 C 200 65, 220 65, 240 75 S 280 85, 300 75 S 320 65, 340 75" fill="none" stroke="currentColor" strokeWidth="0.3" className="opacity-30" />
                     </pattern>
                   </defs>
                   <rect width="100%" height="100%" fill="url(#mosaic)" className="text-white" />
-                  <rect width="100%" height="100%" fill="url(#topography)" className="text-white opacity-60" />
+                  <rect width="100%" height="100%" fill="url(#trail-to-tides)" className="text-white" />
                 </svg>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#ff5100]/8 to-transparent mix-blend-overlay" />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#111820]/10" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#ff5100]/5 to-transparent mix-blend-overlay" />
               </div>
             )}
 
