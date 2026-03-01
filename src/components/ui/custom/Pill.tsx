@@ -11,7 +11,7 @@ export default function Pill({ type, value, className = "" }: PillProps) {
   const styles = type === "type" ? typeStyle : difficultyStyle;
   const styleClass = styles[value] || "bg-gray-500 text-white";
   
-  const baseClasses = "text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-tight shadow-sm transition-all duration-300";
+  const baseClasses = "text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight shadow-sm transition-all duration-300";
   
   return (
     <span className={`${baseClasses} ${styleClass} ${className}`}>
