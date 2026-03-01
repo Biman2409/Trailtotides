@@ -102,35 +102,47 @@ export default function Footer() {
               </ul>
           </div>
 
-          {/* Connect Section */}
-          <div className="lg:-mt-28">
-            <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-2 opacity-80">
-              CONTACT US
-            </h4>
-            <div className="space-y-3">
-              <p className="text-white/40 text-[11px] font-medium leading-relaxed">
-                Have an idea for a wild expedition or want to collaborate?<br />
-                Feel free to connect with us.
+          {/* About & Contact Column */}
+          <div className="lg:-mt-28 space-y-10">
+            <div>
+              <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-4 opacity-80">
+                ABOUT US
+              </h4>
+              <p className="text-white/30 text-[10px] font-medium leading-relaxed tracking-wider max-w-[200px]">
+                The premier map-based discovery platform for high-impact adventures across the Indian Subcontinent. 
+                Handpicked by explorers, run by verified operators, mapped with precision.
               </p>
-              
-              <a 
-                href="mailto:hello@trailtotides.com"
-                className="text-[11px] font-bold text-[#ff5100] hover:text-white transition-colors relative group/email w-fit block"
-              >
-                hello@trailtotides.com
-                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#ff5100] transition-all duration-300 group-hover/email:w-full opacity-60" />
-              </a>
-              
-              <div className="flex items-center gap-5 pt-2">
-                {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
-                  <a 
-                    key={i}
-                    href="#" 
-                    className="text-white/10 hover:text-[#ff5100] hover:scale-110 transition-all duration-300"
-                  >
-                    <Icon className="w-4 h-4" />
-                  </a>
-                ))}
+            </div>
+
+            <div>
+              <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-2 opacity-80">
+                CONTACT US
+              </h4>
+              <div className="space-y-3">
+                <p className="text-white/40 text-[11px] font-medium leading-relaxed">
+                  Have an idea for a wild expedition or want to collaborate?<br />
+                  Feel free to connect with us.
+                </p>
+                
+                <a 
+                  href="mailto:hello@trailtotides.com"
+                  className="text-[11px] font-bold text-[#ff5100] hover:text-white transition-colors relative group/email w-fit block"
+                >
+                  hello@trailtotides.com
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#ff5100] transition-all duration-300 group-hover/email:w-full opacity-60" />
+                </a>
+                
+                <div className="flex items-center gap-5 pt-2">
+                  {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
+                    <a 
+                      key={i}
+                      href="#" 
+                      className="text-white/10 hover:text-[#ff5100] hover:scale-110 transition-all duration-300"
+                    >
+                      <Icon className="w-4 h-4" />
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
