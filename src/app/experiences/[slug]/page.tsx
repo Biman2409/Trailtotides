@@ -406,10 +406,10 @@ export default async function ExperiencePage({ params }: Props) {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {related.map((a) => {
                   return (
-                    <Link key={a.id} href={`/experiences/${a.slug}`} className="group block bg-white rounded-2xl overflow-hidden border border-[#e0d8cc] hover:shadow-lg transition-all hover:-translate-y-1 duration-300">
-                      <div className="relative h-48 overflow-hidden">
-                          <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-                          <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-orange-900/30 via-transparent to-sky-900/20 pointer-events-none" />
+                      <Link key={a.id} href={`/experiences/${a.slug}`} className="group block bg-white rounded-2xl overflow-hidden border border-[#e0d8cc] hover:shadow-lg transition-all hover:-translate-y-1 duration-300">
+                        <div className="relative h-48 overflow-hidden">
+                            <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
+                            <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-orange-900/30 via-transparent to-sky-900/20 pointer-events-none" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                           <div className="absolute top-3 left-3 flex flex-wrap gap-2">
                             <Pill type="type" value={a.type} />
