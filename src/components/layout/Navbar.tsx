@@ -95,21 +95,22 @@ export default function Navbar() {
           : "bg-[#1a1f2e]/96 backdrop-blur-lg border-b border-white/8 shadow-xl shadow-black/10"
       }`}
       >
-        {/* Subtle Adventure Design (Mosaic/Gradient) */}
-        {!isTransparent && (
-          <div className="absolute inset-0 pointer-events-none opacity-[0.03] overflow-hidden">
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="mosaic" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-                  <path d="M0 100 L50 20 L100 100 Z" fill="none" stroke="currentColor" strokeWidth="1" />
-                  <path d="M20 100 L60 40 L100 100 Z" fill="none" stroke="currentColor" strokeWidth="1" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#mosaic)" className="text-white" />
-            </svg>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#ff5100]/5 to-transparent" />
-          </div>
-        )}
+          {/* Subtle Adventure Design (Mosaic/Topographical) */}
+          {!isTransparent && (
+            <div className="absolute inset-0 pointer-events-none opacity-[0.03] overflow-hidden">
+              <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className="absolute top-0 left-0">
+                <defs>
+                  <pattern id="topography" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+                    <path d="M0 100 C 20 80, 50 80, 70 100 S 120 120, 140 100 S 180 80, 200 100" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                    <path d="M0 120 C 30 100, 60 100, 90 120 S 140 140, 170 120 S 200 100, 200 120" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                    <path d="M0 80 C 10 60, 40 60, 50 80 S 100 100, 110 80 S 160 60, 170 80 S 200 100, 200 80" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#topography)" className="text-white" />
+              </svg>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#ff5100]/8 to-transparent mix-blend-overlay" />
+            </div>
+          )}
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         <div className="flex items-center justify-between h-16 lg:h-20">
