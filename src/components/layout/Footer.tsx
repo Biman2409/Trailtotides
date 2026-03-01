@@ -129,18 +129,18 @@ export default function Footer() {
                 <div className="mt-16 pt-8 border-t border-white/[0.03]">
                   <ul className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
                       {[
-                        ["AI ADVENTURE FINDER", "/#ai-finder"],
-                        ["ADVENTURE MAP", "/#map-cta"],
-                        ["EDITORS CHOICE", "/#featured-adventures"],
-                        ["DISCOVER YOUR REGION", "/#regions"],
-                        ["DISCOVER YOUR GENRE", "/#styles"],
-                        ["STORIES", "/#stories"],
-                        ["LOGIN", "/auth/login"],
+                        ["AI Adventure Finder", "/#ai-finder"],
+                        ["Adventure Map", "/#map-cta"],
+                        ["Editors Choice", "/#featured-adventures"],
+                        ["Discover Your Region", "/#regions"],
+                        ["Discover Your Genre", "/#styles"],
+                        ["Stories", "/#stories"],
+                        ["Login", "/auth/login"],
                       ].map(([label, href]) => (
                     <li key={label}>
                       <Link
                         href={href}
-                        className="text-[9px] text-white/20 hover:text-white transition-all font-black tracking-[0.25em] uppercase"
+                        className="text-[9px] text-white/20 hover:text-white transition-all font-black tracking-[0.25em]"
                       >
                         {label}
                       </Link>
