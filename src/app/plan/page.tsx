@@ -262,10 +262,17 @@ export default function PlanPage() {
                   </ul>
                 </div>
 
-                <div className="bg-[#ff5100]/10 border border-[#ff5100]/20 rounded-2xl p-5">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Sparkles className="w-4 h-4 text-[#ff5100]" />
-                    <span className="text-[#ff5100] text-xs font-semibold uppercase tracking-wider">AI Finder</span>
+                  <div className="bg-[#ff5100]/10 border border-[#ff5100]/20 rounded-2xl p-5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sparkles className="w-4 h-4 text-[#ff5100]" />
+                      <span className="text-[#ff5100] text-xs font-semibold uppercase tracking-wider">Compass.AI</span>
+                    </div>
+                        <p className="text-white/55 text-sm leading-relaxed mb-3">
+                          Prefer to just describe what you want? Use Compass.AI on the home page.
+                        </p>
+                        <Link href="/#ai-finder" className="text-[#ff5100] text-xs font-semibold hover:text-[#ff7d47] transition-colors flex items-center gap-1">
+                          Try Compass.AI <ArrowRight className="w-3 h-3" />
+                        </Link>
                   </div>
                       <p className="text-white/55 text-sm leading-relaxed mb-3">
                         Prefer to just describe what you want? Use TRAIL TO TIDES on the home page.
