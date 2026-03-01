@@ -2,9 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain, ArrowUp, Send } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
-import { toast } from "sonner";
+import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain, ArrowUp } from "lucide-react";
 
 export default function Footer() {
   const [showFloatingButton, setShowFloatingButton] = useState(false);
@@ -41,8 +39,6 @@ export default function Footer() {
           }
         };
 
-
-
       window.addEventListener("scroll", handleScroll, { passive: true });
       // Initial check
       handleScroll();
@@ -55,7 +51,7 @@ export default function Footer() {
 
     return (
       <footer ref={footerRef} className="bg-[#05070a] text-white border-t border-white/[0.03] relative">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10 lg:py-12 relative">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-20 relative">
         
         {/* Anchor point for docking the back to top button */}
         <div ref={anchorRef} className="absolute bottom-[4rem] left-1/2 -translate-x-1/2 w-10 h-10 pointer-events-none" />
@@ -63,11 +59,11 @@ export default function Footer() {
         {/* Subtle Gradient Accent */}
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
   
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-x-12 relative z-10 items-start">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-x-16 relative z-10 items-start">
                   
                     {/* Brand & Platform Column */}
-                    <div className="flex flex-col items-start">
-                        <Link href="/" className="flex items-center gap-4 group w-fit mb-4">
+                    <div className="flex flex-col items-start pt-0">
+                        <Link href="/" className="flex items-center gap-4 group w-fit mb-6">
                           <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
                             <Mountain className="w-4 h-4 text-white" strokeWidth={2.8} />
                           </div>
@@ -76,11 +72,11 @@ export default function Footer() {
                           </span>
                       </Link>
 
-                      <div className="mt-0">
-                        <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 opacity-80 mb-3">
+                      <div className="mt-2">
+                        <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 opacity-80 mb-4">
                           Platform
                         </h4>
-                        <ul className="grid grid-cols-1 gap-y-2">
+                        <ul className="grid grid-cols-1 gap-y-2.5">
                             {[
                               ["AI ADVENTURE FINDER", "/#ai-finder"],
                               ["ADVENTURE MAP", "/#map-cta"],
@@ -104,21 +100,21 @@ export default function Footer() {
                   </div>
   
                     {/* About & Contact Column */}
-                    <div className="space-y-10 lg:pt-96">
+                    <div className="space-y-12 lg:pt-16">
                       <div>
-                      <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-3 opacity-80">
+                      <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-4 opacity-80">
                         ABOUT US
                       </h4>
-                        <p className="text-white/30 text-[10px] font-medium leading-relaxed tracking-wider w-full">
-                          Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
+                        <p className="text-white/30 text-[10.5px] font-medium leading-relaxed tracking-wider w-full max-w-sm">
+                          Three IIM grads. One shared obsession: adventure. So we built the platform we couldn’t find.
                         </p>
                     </div>
 
                     <div>
-                      <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-3 opacity-80">
+                      <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-4 opacity-80">
                         CONTACT US
                       </h4>
-                      <div className="space-y-4">
+                      <div className="space-y-5">
                         <p className="text-white/40 text-[10.5px] font-medium leading-relaxed">
                           Have an idea for a wild expedition or want to collaborate?<br />
                           Feel free to connect with us.
@@ -126,12 +122,12 @@ export default function Footer() {
                         
                         <a 
                           href="mailto:hello@trailtotides.com" 
-                          className="text-[11px] font-bold text-white/20 hover:text-white transition-colors tracking-widest uppercase block"
+                          className="text-[11px] font-bold text-white/10 hover:text-white/40 transition-colors tracking-widest uppercase block w-fit"
                         >
                           hello@trailtotides.com
                         </a>
                         
-                        <div className="flex items-center gap-5 pt-1">
+                        <div className="flex items-center gap-6 pt-1">
                           {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
                             <a 
                               key={i}
@@ -147,8 +143,8 @@ export default function Footer() {
                   </div>
 
                   {/* Legal Nav */}
-                  <div className="lg:-mt-[42rem]">
-                    <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-4 opacity-80">
+                  <div className="lg:pt-0">
+                    <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
                       Legal
                     </h4>
                     <div className="flex items-center gap-x-8">
@@ -188,7 +184,7 @@ export default function Footer() {
 
 
           {/* Bottom Bar */}
-            <div className="pt-8 border-t border-white/[0.04] flex items-center justify-center relative z-10">
+            <div className="pt-10 border-t border-white/[0.04] flex items-center justify-center relative z-10">
               <p className="text-white/20 text-[10px] font-bold tracking-[0.2em] text-center uppercase">
                 © 2026 TRAIL TO TIDES — DESIGNED BY EXPLORERS FOR EXPLORERS
               </p>
