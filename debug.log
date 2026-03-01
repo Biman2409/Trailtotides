@@ -346,3 +346,32 @@ It can also happen if the client has a browser extension installed which messes 
   response: {"views":2448}
 2026-02-26T22:45:05.374Z [network][GET 200] /api/stories/views?slug=the-night-photi-la-tested-us
   response: {"views":2453}
+2026-03-01T02:08:54.628Z [console][warn] Image with src "https://images.unsplash.com/photo-1638008302541-5f5a98159df5?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+2026-03-01T02:08:54.629Z [console][warn] Image with src "https://images.unsplash.com/photo-1542709111240-e9df0dd813b4?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+2026-03-01T02:08:54.630Z [console][warn] Image with src "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_2383_Original-resized-1772330716467.jpeg?width=8000&height=8000&resize=contain" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+2026-03-01T02:08:54.631Z [console][warn] Image with src "https://images.unsplash.com/photo-1706021220078-2051d17b1576?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+2026-03-01T02:08:54.631Z [console][warn] Image with src "https://images.unsplash.com/photo-1628782379401-4fff9cdcbbfe?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+2026-03-01T02:08:54.632Z [console][warn] Image with src "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+2026-03-01T02:08:54.633Z [console][warn] Image with src "https://images.unsplash.com/photo-1549364472-0972cec89cd8?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+2026-03-01T02:08:54.633Z [console][warn] Image with src "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+2026-03-01T02:08:54.634Z [console][warn] Image with src "https://images.unsplash.com/photo-1590487372251-54c7d235c414?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+2026-03-01T02:08:54.637Z [console][warn] Image with src "https://images.unsplash.com/photo-1508303070482-47dcb5358f9b?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+2026-03-01T02:08:54.637Z [console][warn] Image with src "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+2026-03-01T02:08:54.638Z [console][warn] Image with src "https://images.unsplash.com/photo-1530635412219-c28892ccf251?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+2026-03-01T02:08:54.639Z [console][warn] Image with src "https://images.unsplash.com/photo-1623190827216-5b4308817926?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+2026-03-01T02:08:54.639Z [console][warn] Image with src "https://images.unsplash.com/photo-1570160897040-30430ef2018a?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+2026-03-01T02:09:21.567Z [console][warn] Detected `scroll-behavior: smooth` on the `<html>` element. In a future version, Next.js will no longer automatically disable smooth scrolling during route transitions. To prepare for this change, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
