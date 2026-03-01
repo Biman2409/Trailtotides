@@ -469,6 +469,53 @@ export default function AdminDashboardClient({
           </p>
         </Tabs.Content>
 
+        <Tabs.Content value="messages" className="space-y-6 outline-none">
+          <div className="bg-white/3 border border-white/10 rounded-2xl overflow-hidden shadow-xl backdrop-blur-sm">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-white/10 bg-white/2">
+                    <th className="text-left px-6 py-4 text-white/40 font-semibold uppercase tracking-wider text-[10px]">Sender</th>
+                    <th className="text-left px-6 py-4 text-white/40 font-semibold uppercase tracking-wider text-[10px]">Message</th>
+                    <th className="text-left px-6 py-4 text-white/40 font-semibold uppercase tracking-wider text-[10px]">Sent At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {messages.length === 0 && (
+                    <tr>
+                      <td colSpan={3} className="text-center py-20">
+                        <div className="flex flex-col items-center gap-2 text-white/20">
+                          <MessageSquare className="w-12 h-12" />
+                          <p className="text-base font-medium">No messages received yet</p>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                  {messages.map((msg) => (
+                    <tr key={msg.id} className="border-b border-white/5 hover:bg-white/5 transition-all group/row">
+                      <td className="px-6 py-4 align-top">
+                        <div className="flex flex-col">
+                          <span className="font-semibold text-white">{msg.name || "Guest"}</span>
+                          <span className="text-white/40 text-xs font-mono">{msg.email}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-white/70 max-w-xl whitespace-pre-wrap leading-relaxed">
+                        {msg.message}
+                      </td>
+                      <td className="px-6 py-4 text-white/40 text-xs font-medium whitespace-nowrap align-top">
+                        {format(parseISO(msg.created_at), "MMM dd, HH:mm")}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p className="text-white/30 text-xs font-medium uppercase tracking-widest text-center py-4">
+            Total messages: {messages.length}
+          </p>
+        </Tabs.Content>
+
         <Tabs.Content value="analytics" className="space-y-6 outline-none">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* User Growth Chart */}
