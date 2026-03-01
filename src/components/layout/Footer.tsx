@@ -9,10 +9,10 @@ export default function Footer() {
         {/* Subtle Gradient Accent */}
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 lg:gap-32 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 lg:gap-32 relative z-10">
             
                 {/* Brand & Connect Identity */}
-                <div className="space-y-16">
+                <div className="lg:col-span-8 space-y-20">
                     <div className="space-y-10">
                         <Link href="/" className="flex items-center gap-4 group w-fit">
                             <div className="w-12 h-12 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
@@ -23,7 +23,7 @@ export default function Footer() {
                             </span>
                         </Link>
                         
-                        <p className="text-white/45 text-[15px] leading-relaxed max-w-[440px] font-medium tracking-tight">
+                        <p className="text-white/45 text-[15px] leading-relaxed max-w-[540px] font-medium tracking-tight">
                           Discover and compare epic adventures across India — handpicked by explorers, run by verified operators, mapped with precision — for you
                         </p>
                     </div>
@@ -32,8 +32,8 @@ export default function Footer() {
                       <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 opacity-80">
                         Connect
                       </h4>
-                      <div className="space-y-10">
-                        <p className="text-white/50 text-[15px] font-medium leading-relaxed max-w-sm">
+                      <div className="space-y-8">
+                        <p className="text-white/50 text-[15px] font-medium leading-relaxed max-w-xl">
                           Have an idea for a wild expedition or want to collaborate? Feel free to connect with us.
                         </p>
                         
@@ -63,7 +63,7 @@ export default function Footer() {
                 </div>
 
                 {/* Platform Nav */}
-                <div className="lg:pl-32">
+                <div className="lg:col-span-4 lg:pl-12">
                   <h4 className="text-[10px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-12 opacity-80">
                     Platform
                   </h4>
