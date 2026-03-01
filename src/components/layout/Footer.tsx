@@ -1,9 +1,28 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import MessageModal from "./MessageModal";
 
 export default function Footer() {
+  const [user, setUser] = useState<{ email: string } | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user ? { email: user.email ?? "" } : null);
+    };
+    fetchUser();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ? { email: session.user.email ?? "" } : null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
   return (
     <footer className="bg-[#05070a] text-white border-t border-white/[0.03] relative overflow-hidden">
       {/* Subtle Gradient Accent */}
@@ -98,15 +117,15 @@ export default function Footer() {
                   Contact Us
                 </h4>
                 <div className="flex flex-col gap-10">
-                  <a 
-                    href="mailto:hello@trailtotides.com" 
+                  <button 
+                    onClick={() => user ? setIsModalOpen(true) : window.location.href = "mailto:hello@trailtotides.com"}
                     className="group flex items-center gap-5 bg-white/[0.015] border border-white/[0.04] hover:border-[#ff5100]/40 px-8 py-4 rounded-2xl w-fit transition-all duration-500 hover:bg-white/[0.035] shadow-lg shadow-black/5"
                   >
                     <Mail className="w-4.5 h-4.5 text-white/15 group-hover:text-[#ff5100] transition-colors duration-300" />
                     <span className="text-[13px] font-bold text-white/35 group-hover:text-white transition-colors duration-300 tracking-[0.14em]">
                       hello@trailtotides.com
                     </span>
-                  </a>
+                  </button>
                   
                   <div className="flex items-center gap-10">
                     {[
@@ -140,6 +159,14 @@ export default function Footer() {
 
       {/* Background Decor */}
       <div className="absolute bottom-0 right-0 w-[60%] h-[80%] bg-[#ff5100]/[0.02] blur-[150px] rounded-full pointer-events-none" />
+
+      {user && (
+        <MessageModal 
+          isOpen={isModalOpen} 
+          onClose={() => setIsModalOpen(false)} 
+          userEmail={user.email} 
+        />
+      )}
     </footer>
   );
 }
