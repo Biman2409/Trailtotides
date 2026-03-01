@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin } from "lucide-react";
-import type { Adventure } from "@/lib/data";
+import type { Adventure, Month } from "@/lib/data";
 import Pill from "./Pill";
 
 interface AdventureCardProps {
@@ -13,6 +13,9 @@ interface AdventureCardProps {
 
 export default function AdventureCard({ adventure, size = "default" }: AdventureCardProps) {
   const isLarge = size === "large";
+  const months: Month[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const currentMonth = months[new Date().getMonth()];
+  const isSeasonActive = adventure.bestMonths.includes(currentMonth);
 
   return (
     <Link
