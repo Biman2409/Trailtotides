@@ -147,6 +147,7 @@ export default function HomePage() {
               alt="India map texture"
               fill
               className="object-cover opacity-12 brightness-[1.05] contrast-[1.1] saturate-[1.1]"
+              style={{ objectFit: "cover" }}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#1a2e20]/98 via-[#1a2e20]/80 to-[#1a2e20]/40" />
           {/* Subtle dot grid overlay */}
