@@ -750,9 +750,9 @@ export default function ExploreClient() {
                 className="inline-flex items-center gap-2.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap"
               >
                 <MapIcon className="w-4 h-4" />
-                Open full map
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+                  Open Map
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
             </div>
           </div>
 
