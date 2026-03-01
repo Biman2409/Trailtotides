@@ -39,15 +39,14 @@ export default function Footer() {
                     Platform
                   </h4>
                   <ul className="flex flex-col gap-y-4">
-                    {[
-                      ["AI Adventure Finder", "/#ai-finder"],
-                      ["Adventure Map", "/#map-cta"],
-                      ["Editor's Choice", "/#featured-adventures"],
-                      ["Discover Your Region", "/#regions"],
-                      ["Discover Your Genre", "/#styles"],
-                      ["Stories", "/#stories"],
-                      ["Partner Portal", "/auth/login"],
-                    ].map(([label, href]) => (
+                      {[
+                        ["AI Adventure Finder", "/#ai-finder"],
+                        ["Adventure Map", "/#map-cta"],
+                        ["Editor's Choice", "/#featured-adventures"],
+                        ["Discover Your Region", "/#regions"],
+                        ["Discover Your Genre", "/#styles"],
+                        ["Stories", "/#stories"],
+                      ].map(([label, href]) => (
                       <li key={label}>
                         <Link href={href} className="text-[12px] text-white/40 hover:text-white transition-all duration-300 font-medium tracking-wide inline-block hover:translate-x-1">
                           {label}
