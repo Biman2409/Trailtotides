@@ -17,7 +17,7 @@ export default function Footer() {
                         <div className="w-12 h-12 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
                           <Mountain className="w-7 h-7 text-white" strokeWidth={2.8} />
                         </div>
-                        <span className="text-[#ff5100] font-black tracking-[-0.085em] text-[1.65rem] uppercase leading-none antialiased">
+                          <span className="text-[#ff5100] font-black tracking-[-0.075em] text-[1.65rem] uppercase leading-none antialiased">
                           TRAIL TO TIDES
                         </span>
                     </Link>
