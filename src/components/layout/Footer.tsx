@@ -72,13 +72,13 @@ export default function Footer() {
                             </span>
                         </Link>
 
-                            <div className="max-w-md">
-                              <p className="text-white/40 text-[10.5px] font-medium leading-relaxed tracking-wider">
-                                We’re three IIM alumni united by one obsession: Adventure.<br />
-                                We couldn’t find a platform that made exploring adventures in India simpler — so we built it.<br />
-                                TrailToTides makes exploring India effortless, intelligent, and exciting.
-                              </p>
-                            </div>
+                              <div className="max-w-md">
+                                <p className="text-white/40 text-[10.5px] font-medium leading-relaxed tracking-wider whitespace-pre-line">
+                                  We’re three IIM alumni united by one obsession: Adventure.
+                                  We couldn’t find a platform that made exploring adventures in India simpler — so we built it.
+                                  TrailToTides makes exploring India effortless, intelligent, and exciting.
+                                </p>
+                              </div>
                           
                           <div className="flex items-center gap-6 mt-8">
                             {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
