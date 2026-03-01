@@ -152,23 +152,24 @@ export default function HeroSlider() {
               pointerEvents: "none",
             }}
           >
-            <Image
-              src={slide.src}
-              alt={slide.alt}
-              fill
-              priority={i === 0}
-              quality={100}
-              sizes="100vw"
-              className="object-cover"
-              onLoad={() => setLoaded(p => ({ ...p, [i]: true }))}
-                style={{
-                  filter:     slide.filter || "brightness(1.05) contrast(1.1) saturate(1.1)",
-                  willChange: "transform",
-                  animation:  isActive
-                    ? `kb${panIdx} ${SLIDE_DURATION + TRANSITION_MS}ms cubic-bezier(0.22,0.61,0.36,1) forwards`
-                    : "none",
-                }}
-            />
+              <Image
+                src={slide.src}
+                alt={slide.alt}
+                fill
+                priority={i === 0}
+                quality={100}
+                sizes="100vw"
+                className="object-cover"
+                onLoad={() => setLoaded(p => ({ ...p, [i]: true }))}
+                  style={{
+                    objectFit:  "cover",
+                    filter:     slide.filter || "brightness(1.05) contrast(1.1) saturate(1.1)",
+                    willChange: "transform",
+                    animation:  isActive
+                      ? `kb${panIdx} ${SLIDE_DURATION + TRANSITION_MS}ms cubic-bezier(0.22,0.61,0.36,1) forwards`
+                      : "none",
+                  }}
+              />
           </div>
         );
       })}
