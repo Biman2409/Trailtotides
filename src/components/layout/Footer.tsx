@@ -10,24 +10,33 @@ export default function Footer() {
   const lastScrollYRef = useRef(0);
   const anchorRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const scrollingDown = currentScrollY > lastScrollYRef.current;
-      lastScrollYRef.current = currentScrollY;
-      
-      if (anchorRef.current) {
-        const rect = anchorRef.current.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        const distFromBottom = viewportHeight - rect.top;
-        setButtonBottom(Math.max(24, distFromBottom));
+    useEffect(() => {
+      const handleScroll = () => {
+        const currentScrollY = window.scrollY;
+        const scrollingDown = currentScrollY > lastScrollYRef.current;
+        lastScrollYRef.current = currentScrollY;
+        
+        if (anchorRef.current) {
+          const rect = anchorRef.current.getBoundingClientRect();
+          const viewportHeight = window.innerHeight;
+          const distFromBottom = viewportHeight - rect.top;
+          
+          // Docking logic: button follows the anchor once it passes the threshold
+          setButtonBottom(Math.max(24, distFromBottom));
 
-        const isAtFooter = distFromBottom > 0;
-        // Show if scrolling down (after 300px) OR if at footer area
-        // Hide if scrolling up and NOT in the footer area
-        setShowFloatingButton(isAtFooter || (scrollingDown && currentScrollY > 300));
-      }
-    };
+          const isNearFooter = rect.top < viewportHeight + 100;
+          const isAtFooter = distFromBottom > 0;
+          
+          // Show condition: 
+          // 1. If we are scrolling down and have passed 300px
+          // 2. OR if we are in/near the footer area (regardless of scroll direction)
+          // Hide condition:
+          // 1. If we are scrolling up and are ABOVE the footer area
+          const shouldShow = isAtFooter || (scrollingDown && currentScrollY > 300);
+          setShowFloatingButton(shouldShow);
+        }
+      };
+
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     // Initial check
