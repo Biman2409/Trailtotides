@@ -185,7 +185,7 @@ export default function Footer() {
                   </div>
   
                     {/* About & Contact Column */}
-                    <div className="space-y-10 lg:pt-72">
+                    <div className="space-y-10 lg:pt-80">
                       <div>
                       <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-3 opacity-80">
                         ABOUT US
@@ -223,7 +223,7 @@ export default function Footer() {
                   </div>
 
                   {/* Legal Nav */}
-                  <div className="lg:-mt-[34rem]">
+                  <div className="lg:-mt-[38rem]">
                     <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-4 opacity-80">
                       Legal
                     </h4>
