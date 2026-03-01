@@ -63,25 +63,22 @@ export default function Footer() {
 
         <div className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-12 lg:gap-24 relative z-10 items-start">
           
-                {/* Brand & Connect Identity */}
-                <div className="space-y-6">
-                    {/* Description Block */}
-                    <div className="space-y-4">
-                        <Link href="/" className="flex items-center gap-4 group w-fit">
-                            <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
-                              <Mountain className="w-4 h-4 text-white" strokeWidth={2.8} />
-                            </div>
-                              <span className="text-[#ff5100] font-black tracking-[-0.075em] text-[1.125rem] uppercase leading-none antialiased">
-                              TRAIL TO TIDES
-                            </span>
-                        </Link>
-                        
-                            <p className="text-white/45 text-[12px] leading-relaxed max-w-[400px] font-medium tracking-tight">
-                              Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
-                            </p>
-                    </div>
+                  {/* Brand & Connect Identity */}
+                  <div className="space-y-6">
+                      {/* Brand Logo Block */}
+                      <div className="space-y-4">
+                          <Link href="/" className="flex items-center gap-4 group w-fit">
+                              <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
+                                <Mountain className="w-4 h-4 text-white" strokeWidth={2.8} />
+                              </div>
+                                <span className="text-[#ff5100] font-black tracking-[-0.075em] text-[1.125rem] uppercase leading-none antialiased">
+                                TRAIL TO TIDES
+                              </span>
+                          </Link>
+                      </div>
 
-                    {/* Connect Block */}
+                      {/* Connect Block */}
+
                     <div className="space-y-3">
                       <p className="text-white/40 text-[12px] font-medium leading-relaxed max-w-xl">
                         Have an idea for a wild expedition or want to collaborate? Feel free to connect with us.
