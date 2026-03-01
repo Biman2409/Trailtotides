@@ -94,8 +94,8 @@ export default function Footer() {
                           </div>
                       </div>
       
-                            {/* Legal & Contact Column */}
-                              <div className="lg:text-right flex flex-col lg:items-end lg:pt-0 lg:-mt-[28rem] transition-all duration-300">
+                              {/* Legal & Contact Column */}
+                                <div className="lg:text-right flex flex-col lg:items-end lg:pt-0 lg:-mt-[34rem] transition-all duration-300">
                               <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
                                 Legal
                               </h4>
