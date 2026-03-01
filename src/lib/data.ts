@@ -172,46 +172,6 @@ export const adventures: Adventure[] = [
       featured: true,
     },
 
-  {
-    id: "2",
-    slug: "valley-of-flowers",
-    name: "Valley of Flowers",
-      tagline: "300 species of wildflowers carpet a Himalayan valley that hides all summer",
-    region: "Himalayas",
-    state: "Uttarakhand",
-      type: "Trekking",
-      difficulty: "Beginner",
-      duration: "3–5 days",
-      durationDays: "4 days",
-      altitude: "3,658m",
-    terrain: "Alpine meadows, glacial streams",
-    bestSeason: "Jul – Sep",
-    bestMonths: ["Jul", "Aug", "Sep"],
-    groupSize: "Small group (2–6)",
-        heroImage: "https://images.unsplash.com/photo-1740116887029-511f9113a782?w=1200&q=70",
-    galleryImages: [
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80",
-    ],
-    lat: 30.7283,
-    lng: 79.6057,
-    description:
-      "A UNESCO World Heritage site, the Valley of Flowers blooms with over 300 species of wildflowers during the monsoon. Snow-fed rivers cut through meadows of blue poppies, brahma kamal, and countless endemic species. It's a trek that makes you slow down.",
-    whatMakesSpecial:
-      "The contrast of glacial peaks and a valley carpeted in wildflowers is impossibly beautiful. The density and variety of blooms changes week by week through the season.",
-    whoFor: "Nature lovers, photographers, first-time Himalayan trekkers, families with fit teenagers.",
-    whoNot: "Those wanting adrenaline or summit glory. This trek rewards patience.",
-    safetyNotes:
-      "The trail can be slippery during monsoon. Carry rain gear, watch for leeches on lower sections. Camp only at designated sites — it's a protected area.",
-        operators: [
-          { name: "Indiahikes", verified: true, priceFrom: "₹8,750", rating: 4.9, website: "https://indiahikes.com/valley-of-flowers-trek" },
-          { name: "Trek The Himalayas", verified: true, priceFrom: "₹7,500", rating: 4.7, website: "https://trekthehimalayas.com" },
-          { name: "Bikat Adventures", verified: true, priceFrom: "₹9,200", rating: 4.8, website: "https://bikatadventures.com" },
-          { name: "Thrillophilia", verified: false, priceFrom: "₹6,200", rating: 4.2, website: "https://www.thrillophilia.com/valley-of-flowers-trek" },
-          { name: "Himalayan Hikers", verified: false, priceFrom: "₹7,000", rating: 4.1, website: "https://himalayanhikers.in" },
-        ],
-    tags: ["wildflowers", "UNESCO", "monsoon", "gentle", "photography"],
-    featured: true,
-  },
     {
       id: "3",
       slug: "manali-leh-bike-expedition",
