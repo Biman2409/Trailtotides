@@ -81,9 +81,6 @@ export default function InlineChat() {
                                 <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.45em] opacity-60">
                                   LOOKING FOR SOMETHING SPECIFIC?
                                 </p>
-                                <p className="text-white/20 text-[9px] font-bold uppercase tracking-[0.3em] opacity-40">
-                                  OUR AI ENGINE WILL MAP YOUR ESCAPE IN REAL-TIME
-                                </p>
                               </div>
                               <div className="flex items-center gap-6 justify-center">
                               <div className="w-14 h-14 lg:w-20 lg:h-20 rounded-[1.25rem] bg-[#ff5100] flex items-center justify-center shadow-2xl shadow-[#ff5100]/30 rotate-3 hover:rotate-0 transition-all duration-500">
