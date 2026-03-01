@@ -61,10 +61,10 @@ export default function Footer() {
         {/* Subtle Gradient Accent */}
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
   
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-x-16 relative z-10 items-start">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-x-8 relative z-10 items-start">
                   
                   {/* Brand & Platform Column */}
-                  <div className="space-y-8">
+                  <div className="space-y-4">
                       <Link href="/" className="flex items-center gap-4 group w-fit">
                           <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
                             <Mountain className="w-4 h-4 text-white" strokeWidth={2.8} />
@@ -102,19 +102,18 @@ export default function Footer() {
                   </div>
   
                   {/* About & Contact Column */}
-                  <div className="space-y-8 lg:pt-1">
+                  <div className="space-y-10 lg:pt-1">
                     <div>
                       <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-3 opacity-80">
                         ABOUT US
                       </h4>
-                      <p className="text-white/30 text-[10px] font-medium leading-relaxed tracking-wider max-w-[220px]">
-                        The premier map-based discovery platform for high-impact adventures across the Indian Subcontinent. 
-                        Handpicked by explorers, run by verified operators, mapped with precision.
+                      <p className="text-white/30 text-[10px] font-medium leading-relaxed tracking-wider max-w-[280px]">
+                        Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
                       </p>
                     </div>
   
                     <div>
-                      <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-2 opacity-80">
+                      <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-3 opacity-80">
                         CONTACT US
                       </h4>
                       <div className="space-y-3">
@@ -151,7 +150,7 @@ export default function Footer() {
                     <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-4 opacity-80">
                       Legal
                     </h4>
-                    <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                    <div className="flex items-center gap-x-8">
                       {[
                         ["Terms", "/terms"],
                         ["Privacy", "/privacy"],
