@@ -86,9 +86,9 @@ export default function HomePage() {
               </Link>
           </div>
 
-            <p className="mt-7 text-white/38 text-xs tracking-[0.15em] uppercase">
-              Built by people who&apos;ve been out there
-            </p>
+              <p className="mt-7 text-white/38 text-xs tracking-[0.15em] uppercase">
+                Designed by Explorers for Explorers
+              </p>
         </div>
 
         {/* Scroll cue arrow */}
