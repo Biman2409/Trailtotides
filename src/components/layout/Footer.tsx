@@ -73,11 +73,12 @@ export default function Footer() {
                       {[
                         ["AI ADVENTURE FINDER", "/#ai-finder"],
                         ["EDITORS CHOICE", "/#featured-adventures"],
-                        ["ADVENTURE MAP", "/#map-cta"],
-                        ["DISCOVER YOUR REGION", "/#regions"],
-                        ["DISCOVER YOUR GENRE", "/#styles"],
-                        ["STORIES", "/#stories"],
-                      ].map(([label, href]) => (
+                          ["ADVENTURE MAP", "/#map-cta"],
+                          ["DISCOVER YOUR REGION", "/#regions"],
+                          ["DISCOVER YOUR GENRE", "/#styles"],
+                          ["STORIES", "/#stories"],
+                          ["LOGIN", "/auth/login"],
+                        ].map(([label, href]) => (
                         <li key={label}>
                           <Link
                             href={href}
