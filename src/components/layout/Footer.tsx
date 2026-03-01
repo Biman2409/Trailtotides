@@ -6,95 +6,6 @@ import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain, ArrowUp, Send } 
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
-function ContactPill() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [message, setMessage] = useState("");
-  const [isSending, setIsSending] = useState(false);
-  const supabase = createClient();
-
-  useEffect(() => {
-    async function checkAuth() {
-      const { data: { user } } = await supabase.auth.getUser();
-      setIsLoggedIn(!!user);
-    }
-    checkAuth();
-  }, [supabase]);
-
-  const handleSend = async () => {
-    if (!message.trim()) return;
-    setIsSending(true);
-    
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast.error("Please login to send a message.");
-        return;
-      }
-
-      const { error } = await supabase.from("messages").insert([
-        { content: message, user_id: user.id }
-      ]);
-
-      if (error) throw error;
-
-      toast.success("Message sent to Trail to Tides!");
-      setMessage("");
-    } catch (error) {
-      console.error("Error sending message:", error);
-      toast.error("Failed to send message. Please try again.");
-    } finally {
-      setIsSending(false);
-    }
-  };
-
-  return (
-    <div className="relative group/pill w-full max-w-sm">
-      <div className={`flex items-center bg-white/[0.03] border border-white/[0.08] rounded-2xl px-4 py-3.5 transition-all duration-300 ${isLoggedIn ? 'focus-within:border-[#ff5100]/40 focus-within:bg-white/[0.06] shadow-2xl shadow-black/40' : 'hover:bg-white/[0.05]'}`}>
-        <div className="flex-1 flex flex-col min-w-0">
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[8.5px] font-black text-[#ff5100] uppercase tracking-[0.25em] opacity-80">
-              Direct Contact
-            </span>
-            <Mail className="w-3 h-3 text-[#ff5100]/40" />
-          </div>
-          
-          {isLoggedIn ? (
-            <div className="flex items-center gap-3">
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Message hello@trailtotides.com..."
-                className="bg-transparent border-none outline-none text-[11px] font-bold text-white placeholder:text-white/15 w-full selection:bg-[#ff5100]/30"
-                onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              />
-              <button 
-                onClick={handleSend}
-                disabled={isSending || !message.trim()}
-                className="text-[#ff5100] hover:text-white transition-all disabled:opacity-10 hover:scale-110 active:scale-95"
-              >
-                <Send className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-white/80 tracking-wide">
-                hello@trailtotides.com
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-      {!isLoggedIn && (
-        <p className="mt-3 text-[8.5px] text-white/20 font-bold tracking-[0.05em] uppercase flex items-center gap-2 px-1">
-          <span className="w-1 h-1 rounded-full bg-[#ff5100]/40 animate-pulse" />
-          Sign in to message us directly
-        </p>
-      )}
-    </div>
-  );
-}
-
 export default function Footer() {
   const [showFloatingButton, setShowFloatingButton] = useState(false);
   const [buttonBottom, setButtonBottom] = useState(24);
@@ -102,41 +13,41 @@ export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-      const handleScroll = () => {
-        const currentScrollY = window.scrollY;
-        const scrollingDown = currentScrollY > lastScrollYRef.current;
-        lastScrollYRef.current = currentScrollY;
-        
-        if (footerRef.current && anchorRef.current) {
-          const footerRect = footerRef.current.getBoundingClientRect();
-          const anchorRect = anchorRef.current.getBoundingClientRect();
-          const viewportHeight = window.innerHeight;
+      useEffect(() => {
+        const handleScroll = () => {
+          const currentScrollY = window.scrollY;
+          const scrollingDown = currentScrollY > lastScrollYRef.current;
+          lastScrollYRef.current = currentScrollY;
           
-          const distFromBottom = viewportHeight - anchorRect.top;
-          
-          // Docking logic: button follows the anchor once it passes the threshold (24px)
-          setButtonBottom(Math.max(24, distFromBottom));
+          if (footerRef.current && anchorRef.current) {
+            const footerRect = footerRef.current.getBoundingClientRect();
+            const anchorRect = anchorRef.current.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+            
+            const distFromBottom = viewportHeight - anchorRect.top;
+            
+            // Docking logic: button follows the anchor once it passes the threshold (24px)
+            setButtonBottom(Math.max(24, distFromBottom));
 
-          const isAtFooter = footerRect.top < viewportHeight;
-          
-          // Show condition: 
-          // 1. If we are in the footer area (isAtFooter)
-          // 2. OR if we are scrolling down and have passed 300px
-          // Hide condition:
-          // 1. Always hide if scrolling up AND NOT in footer area
-          const shouldShow = isAtFooter || (scrollingDown && currentScrollY > 300);
-          setShowFloatingButton(shouldShow);
-        }
-      };
+            const isAtFooter = footerRect.top < viewportHeight;
+            
+            // Show condition: 
+            // 1. If we are in the footer area (isAtFooter)
+            // 2. OR if we are scrolling down and have passed 300px
+            // Hide condition:
+            // 1. Always hide if scrolling up AND NOT in footer area
+            const shouldShow = isAtFooter || (scrollingDown && currentScrollY > 300);
+            setShowFloatingButton(shouldShow);
+          }
+        };
 
 
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    // Initial check
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      // Initial check
+      handleScroll();
+      return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -152,10 +63,10 @@ export default function Footer() {
         {/* Subtle Gradient Accent */}
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
   
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-x-8 relative z-10 items-start">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-x-12 relative z-10 items-start">
                   
                     {/* Brand & Platform Column */}
-                    <div className="flex flex-col items-start">
+                    <div className="flex flex-col items-start gap-y-10">
                         <Link href="/" className="flex items-center gap-4 group w-fit">
                           <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
                             <Mountain className="w-4 h-4 text-white" strokeWidth={2.8} />
@@ -166,7 +77,7 @@ export default function Footer() {
                       </Link>
 
                       <div className="mt-0">
-                        <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 opacity-80">
+                        <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 opacity-80 mb-4">
                           Platform
                         </h4>
                         <ul className="grid grid-cols-1 gap-y-2">
@@ -193,7 +104,7 @@ export default function Footer() {
                   </div>
   
                     {/* About & Contact Column */}
-                    <div className="space-y-10 lg:pt-80">
+                    <div className="space-y-10 lg:pt-96">
                       <div>
                       <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-3 opacity-80">
                         ABOUT US
@@ -207,13 +118,18 @@ export default function Footer() {
                       <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-3 opacity-80">
                         CONTACT US
                       </h4>
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         <p className="text-white/40 text-[10.5px] font-medium leading-relaxed">
                           Have an idea for a wild expedition or want to collaborate?<br />
                           Feel free to connect with us.
                         </p>
                         
-                        <ContactPill />
+                        <a 
+                          href="mailto:hello@trailtotides.com" 
+                          className="text-[11px] font-bold text-white/20 hover:text-white transition-colors tracking-widest uppercase block"
+                        >
+                          hello@trailtotides.com
+                        </a>
                         
                         <div className="flex items-center gap-5 pt-1">
                           {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
@@ -231,7 +147,7 @@ export default function Footer() {
                   </div>
 
                   {/* Legal Nav */}
-                  <div className="lg:-mt-[38rem]">
+                  <div className="lg:-mt-[42rem]">
                     <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-4 opacity-80">
                       Legal
                     </h4>
