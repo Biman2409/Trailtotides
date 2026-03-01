@@ -59,59 +59,26 @@ export default function Footer() {
         {/* Subtle Gradient Accent */}
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
   
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-x-16 relative z-10 items-start">
-                  
-                    {/* Brand & Platform Column */}
-                    <div className="flex flex-col items-start pt-0">
-                        <Link href="/" className="flex items-center gap-4 group w-fit mb-6">
-                          <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
-                            <Mountain className="w-4 h-4 text-white" strokeWidth={2.8} />
-                          </div>
-                            <span className="text-[#ff5100] font-black tracking-[-0.075em] text-[1.125rem] uppercase leading-none antialiased">
-                            TRAIL TO TIDES
-                          </span>
-                      </Link>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-x-16 relative z-10 items-start">
+                    
+                      {/* Brand & About Story Column */}
+                      <div className="flex flex-col items-start pt-0">
+                          <Link href="/" className="flex items-center gap-4 group w-fit mb-6">
+                            <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
+                              <Mountain className="w-4 h-4 text-white" strokeWidth={2.8} />
+                            </div>
+                              <span className="text-[#ff5100] font-black tracking-[-0.075em] text-[1.125rem] uppercase leading-none antialiased">
+                              TRAIL TO TIDES
+                            </span>
+                        </Link>
 
-                      <div className="mt-2">
-                        <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 opacity-80 mb-4">
-                          Platform
-                        </h4>
-                        <ul className="grid grid-cols-1 gap-y-2.5">
-                            {[
-                              ["AI ADVENTURE FINDER", "/#ai-finder"],
-                              ["ADVENTURE MAP", "/#map-cta"],
-                              ["EDITORS CHOICE", "/#featured-adventures"],
-                              ["DISCOVER YOUR REGION", "/#regions"],
-                              ["DISCOVER YOUR GENRE", "/#styles"],
-                              ["STORIES", "/#stories"],
-                              ["LOGIN", "/auth/login"],
-                            ].map(([label, href]) => (
-                          <li key={label}>
-                            <Link
-                              href={href}
-                              className="text-[10px] text-white/30 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em]"
-                            >
-                              <span className="group-hover:translate-x-1.5 transition-transform duration-300">{label}</span>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-  
-                      {/* About & Brand Story Column */}
-                      <div className="space-y-12 lg:pt-0">
-                        <div>
-                        <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-4 opacity-80">
-                          ABOUT US
-                        </h4>
-                          <p className="text-white/30 text-[10.5px] font-medium leading-relaxed tracking-wider w-full max-w-sm">
+                        <div className="max-w-md">
+                          <p className="text-white/30 text-[10.5px] font-medium leading-relaxed tracking-wider">
                             We’re three IIM alumni united by one obsession: Adventure. We couldn’t find the right platform — so we built it. TrailToTides makes exploring India effortless, intelligent, and exciting.
                           </p>
-                      </div>
-
-                      <div className="pt-2">
-                        <div className="flex items-center gap-6 pt-1">
+                        </div>
+                        
+                        <div className="flex items-center gap-6 mt-8">
                           {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
                             <a 
                               key={i}
@@ -122,38 +89,64 @@ export default function Footer() {
                             </a>
                           ))}
                         </div>
-                      </div>
                     </div>
+    
+                        {/* Legal & Contact Column */}
+                        <div className="lg:text-right flex flex-col lg:items-end lg:pt-0">
+                          <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
+                            Legal
+                          </h4>
+                          <div className="flex items-center lg:justify-end gap-x-8">
+                            {[
+                              ["Terms", "/terms"],
+                              ["Privacy", "/privacy"],
+                            ].map(([label, href]) => (
+                              <Link
+                                key={label}
+                                href={href}
+                                className="text-[10px] text-white/30 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em]"
+                              >
+                                <span className="group-hover:translate-x-1.5 lg:group-hover:-translate-x-1.5 transition-transform duration-300">{label}</span>
+                              </Link>
+                            ))}
+                          </div>
+                          
+                          <div className="mt-8">
+                            <a 
+                              href="mailto:hello@trailtotides.com" 
+                              className="text-[10px] font-bold text-white/5 hover:text-white/20 transition-colors tracking-widest uppercase block w-fit lg:ml-auto"
+                            >
+                              hello@trailtotides.com
+                            </a>
+                          </div>
+                      </div>
+  
+                </div>
 
-                    {/* Legal Nav */}
-                    <div className="lg:-mt-24 lg:pt-0">
-                      <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
-                        Legal
-                      </h4>
-                      <div className="flex items-center gap-x-8">
-                        {[
-                          ["Terms", "/terms"],
-                          ["Privacy", "/privacy"],
-                        ].map(([label, href]) => (
-                          <Link
-                            key={label}
-                            href={href}
-                            className="text-[10px] text-white/30 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em]"
-                          >
-                            <span className="group-hover:translate-x-1.5 transition-transform duration-300">{label}</span>
-                          </Link>
-                        ))}
-                      </div>
-                      
-                      <div className="mt-8">
-                        <a 
-                          href="mailto:hello@trailtotides.com" 
-                          className="text-[10px] font-bold text-white/5 hover:text-white/20 transition-colors tracking-widest uppercase block w-fit"
-                        >
-                          hello@trailtotides.com
-                        </a>
-                      </div>
-                    </div>
+                {/* Platform Navigation Bar */}
+                <div className="mt-20 pt-10 border-t border-white/[0.03]">
+                  <ul className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
+                      {[
+                        ["AI ADVENTURE FINDER", "/#ai-finder"],
+                        ["ADVENTURE MAP", "/#map-cta"],
+                        ["EDITORS CHOICE", "/#featured-adventures"],
+                        ["DISCOVER YOUR REGION", "/#regions"],
+                        ["DISCOVER YOUR GENRE", "/#styles"],
+                        ["STORIES", "/#stories"],
+                        ["LOGIN", "/auth/login"],
+                      ].map(([label, href]) => (
+                    <li key={label}>
+                      <Link
+                        href={href}
+                        className="text-[9px] text-white/20 hover:text-white transition-all font-black tracking-[0.25em] uppercase"
+                      >
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
 
   
               </div>
