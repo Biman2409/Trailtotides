@@ -8,6 +8,7 @@ export default function Footer() {
   const [showFloatingButton, setShowFloatingButton] = useState(false);
   const [buttonBottom, setButtonBottom] = useState(24);
   const lastScrollYRef = useRef(0);
+  const footerRef = useRef<HTMLElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -16,26 +17,28 @@ export default function Footer() {
         const scrollingDown = currentScrollY > lastScrollYRef.current;
         lastScrollYRef.current = currentScrollY;
         
-        if (anchorRef.current) {
-          const rect = anchorRef.current.getBoundingClientRect();
+        if (footerRef.current && anchorRef.current) {
+          const footerRect = footerRef.current.getBoundingClientRect();
+          const anchorRect = anchorRef.current.getBoundingClientRect();
           const viewportHeight = window.innerHeight;
-          const distFromBottom = viewportHeight - rect.top;
           
-          // Docking logic: button follows the anchor once it passes the threshold
+          const distFromBottom = viewportHeight - anchorRect.top;
+          
+          // Docking logic: button follows the anchor once it passes the threshold (24px)
           setButtonBottom(Math.max(24, distFromBottom));
 
-          const isNearFooter = rect.top < viewportHeight + 100;
-          const isAtFooter = distFromBottom > 0;
+          const isAtFooter = footerRect.top < viewportHeight;
           
-            // Show condition: 
-            // 1. If we are in the footer area (isAtFooter)
-            // 2. OR if we are scrolling down and have passed 300px
-            // Hide condition:
-            // 1. Always hide if scrolling up AND NOT in footer area
-            const shouldShow = isAtFooter || (scrollingDown && currentScrollY > 300);
-            setShowFloatingButton(shouldShow);
-          }
-        };
+          // Show condition: 
+          // 1. If we are in the footer area (isAtFooter)
+          // 2. OR if we are scrolling down and have passed 300px
+          // Hide condition:
+          // 1. Always hide if scrolling up AND NOT in footer area
+          const shouldShow = isAtFooter || (scrollingDown && currentScrollY > 300);
+          setShowFloatingButton(shouldShow);
+        }
+      };
+
 
 
     window.addEventListener("scroll", handleScroll, { passive: true });
