@@ -10,31 +10,31 @@ export default function Footer() {
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/20 to-transparent" />
       
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-20 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-20 lg:gap-32">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-24 lg:gap-40">
             
-            {/* Column 1: Branding, Platform, Legal */}
-            <div className="space-y-14">
+            {/* Column 1: Identity, Platform, Legal */}
+            <div className="space-y-16">
               {/* 1. Branding */}
-              <div className="flex flex-col gap-5 group">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-11 h-11 rounded-xl bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-500 shadow-2xl shadow-[#ff5100]/20 group-hover:rotate-6">
-                    <Mountain className="w-6 h-6 text-white" strokeWidth={2.8} />
+              <div className="flex flex-col gap-6 group">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-500 shadow-2xl shadow-[#ff5100]/25 group-hover:rotate-6">
+                    <Mountain className="w-6.5 h-6.5 text-white" strokeWidth={3} />
                   </div>
                   <div className="flex flex-col">
-                      <span className="text-[#ff5100] font-black tracking-[-0.05em] text-[1.6rem] leading-none antialiased group-hover:text-white transition-colors duration-500 uppercase">
+                      <span className="text-[#ff5100] font-black tracking-[-0.05em] text-[1.75rem] leading-none antialiased group-hover:text-white transition-colors duration-500 uppercase">
                         TRAIL TO TIDES
                       </span>
                     </div>
                   </div>
                 </div>
 
-              <div className="grid grid-cols-2 gap-12">
+              <div className="grid grid-cols-2 gap-16">
                 {/* 2. Platform */}
-                <div className="space-y-6">
-                  <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80">
+                <div className="space-y-7">
+                  <h4 className="text-[11px] font-black uppercase tracking-[0.45em] text-[#ff5100] opacity-90">
                     Platform
                   </h4>
-                  <ul className="space-y-4">
+                  <ul className="space-y-5">
                     {[
                       { label: "Explore", href: "/explore" },
                       { label: "Map View", href: "/map" },
@@ -44,7 +44,7 @@ export default function Footer() {
                       <li key={link.label}>
                         <Link 
                           href={link.href}
-                          className="text-[13px] font-bold text-white/40 hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]"
+                          className="text-[14px] font-bold text-white/35 hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]"
                         >
                           {link.label}
                         </Link>
@@ -54,11 +54,11 @@ export default function Footer() {
                 </div>
 
                 {/* 3. Legal */}
-                <div className="space-y-6">
-                  <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80">
+                <div className="space-y-7">
+                  <h4 className="text-[11px] font-black uppercase tracking-[0.45em] text-[#ff5100] opacity-90">
                     Legal
                   </h4>
-                  <ul className="space-y-4">
+                  <ul className="space-y-5">
                     {[
                       { label: "Terms of Service", href: "/terms" },
                       { label: "Privacy Policy", href: "/privacy" },
@@ -66,7 +66,7 @@ export default function Footer() {
                       <li key={link.label}>
                         <Link 
                           href={link.href}
-                          className="text-[13px] font-bold text-white/40 hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]"
+                          className="text-[14px] font-bold text-white/35 hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]"
                         >
                           {link.label}
                         </Link>
@@ -77,15 +77,15 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Column 2: About Us, Contact Us */}
-            <div className="space-y-16">
+            {/* Column 2: Narrative & Connect */}
+            <div className="space-y-20">
               {/* 1. About Us */}
-              <div className="space-y-5">
-                <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80">
+              <div className="space-y-6">
+                <h4 className="text-[11px] font-black uppercase tracking-[0.45em] text-[#ff5100] opacity-90">
                   About Us
                 </h4>
                   <div className="max-w-md">
-                    <p className="text-white/50 text-base font-medium leading-[1.7] tracking-wide">
+                    <p className="text-white/45 text-[15px] font-medium leading-[1.8] tracking-wide">
                       We’re three IIM alumni united by one obsession: Adventure.
                       We couldn’t find a platform that made exploring adventures in India simpler — so we built it.
                     </p>
@@ -93,22 +93,22 @@ export default function Footer() {
               </div>
 
               {/* 2. Contact Us */}
-              <div className="space-y-6">
-                <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80">
+              <div className="space-y-7">
+                <h4 className="text-[11px] font-black uppercase tracking-[0.45em] text-[#ff5100] opacity-90">
                   Contact Us
                 </h4>
-                <div className="flex flex-col gap-8">
+                <div className="flex flex-col gap-10">
                   <a 
                     href="mailto:hello@trailtotides.com" 
-                    className="group flex items-center gap-4 bg-white/[0.02] border border-white/[0.05] hover:border-[#ff5100]/30 px-7 py-3.5 rounded-xl w-fit transition-all duration-500 hover:bg-white/[0.04]"
+                    className="group flex items-center gap-5 bg-white/[0.015] border border-white/[0.04] hover:border-[#ff5100]/40 px-8 py-4 rounded-2xl w-fit transition-all duration-500 hover:bg-white/[0.035] shadow-lg shadow-black/5"
                   >
-                    <Mail className="w-4 h-4 text-white/20 group-hover:text-[#ff5100] transition-colors duration-300" />
-                    <span className="text-[12px] font-bold text-white/40 group-hover:text-white transition-colors duration-300 tracking-[0.12em]">
+                    <Mail className="w-4.5 h-4.5 text-white/15 group-hover:text-[#ff5100] transition-colors duration-300" />
+                    <span className="text-[13px] font-bold text-white/35 group-hover:text-white transition-colors duration-300 tracking-[0.14em]">
                       hello@trailtotides.com
                     </span>
                   </a>
                   
-                  <div className="flex items-center gap-9">
+                  <div className="flex items-center gap-10">
                     {[
                       { Icon: Instagram, href: "https://instagram.com/trailtotides", name: "Instagram" },
                       { Icon: Twitter, href: "https://twitter.com/trailtotides", name: "Twitter" },
@@ -120,10 +120,10 @@ export default function Footer() {
                         href={href} 
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-center justify-center transition-all duration-300 hover:-translate-y-1"
+                        className="group flex items-center justify-center transition-all duration-300 hover:-translate-y-1.5"
                         aria-label={`Visit our ${name}`}
                       >
-                        <Icon className="w-5 h-5 text-white/20 group-hover:text-[#ff5100] transition-colors duration-300" strokeWidth={1.5} />
+                        <Icon className="w-5.5 h-5.5 text-white/15 group-hover:text-[#ff5100] transition-colors duration-300" strokeWidth={1.25} />
                       </a>
                     ))}
                   </div>
