@@ -80,7 +80,7 @@ export default function Footer() {
           </div>
 
             {/* Right Side: Narrative & Contact (Identity Focus) */}
-            <div className="lg:col-span-5 flex flex-col lg:items-end space-y-16">
+            <div className="lg:col-span-5 flex flex-col lg:items-end space-y-20">
               {/* 4. About Us (Founding Story) */}
               <div className="max-w-md lg:text-right">
                 <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80 mb-8">
@@ -95,36 +95,37 @@ export default function Footer() {
               </div>
 
               {/* 5. Contact Us */}
-              <div className="flex flex-col lg:items-end space-y-8">
-                <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80 mb-2">
-                  Contact Us
+              <div className="flex flex-col lg:items-end space-y-10">
+                <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80">
+                  Connect With Us
                 </h4>
-                <div className="flex items-center gap-8 lg:justify-end">
-                  {[
-                    { Icon: Instagram, href: "#", name: "Instagram" },
-                    { Icon: Twitter, href: "#", name: "Twitter" },
-                    { Icon: Youtube, href: "#", name: "Youtube" },
-                    { Icon: Linkedin, href: "#", name: "Linkedin" }
-                  ].map(({ Icon, href, name }, i) => (
-                    <a 
-                      key={i} 
-                      href={href} 
-                      className="group flex items-center justify-center p-2 -m-2"
-                      aria-label={`Visit our ${name}`}
-                    >
-                      <Icon className="w-5 h-5 text-white/20 group-hover:text-[#ff5100] group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500" strokeWidth={1.5} />
-                    </a>
-                  ))}
-                </div>
-                
-                <div className="pt-4">
+                <div className="flex flex-col lg:items-end gap-8">
+                  <div className="flex items-center gap-8 lg:justify-end">
+                    {[
+                      { Icon: Instagram, href: "https://instagram.com/trailtotides", name: "Instagram" },
+                      { Icon: Twitter, href: "https://twitter.com/trailtotides", name: "Twitter" },
+                      { Icon: Youtube, href: "https://youtube.com/@trailtotides", name: "Youtube" },
+                      { Icon: Linkedin, href: "https://linkedin.com/company/trailtotides", name: "Linkedin" }
+                    ].map(({ Icon, href, name }, i) => (
+                      <a 
+                        key={i} 
+                        href={href} 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center justify-center transition-all duration-300"
+                        aria-label={`Visit our ${name}`}
+                      >
+                        <Icon className="w-5 h-5 text-white/15 group-hover:text-[#ff5100] transition-colors duration-300" strokeWidth={1.5} />
+                      </a>
+                    ))}
+                  </div>
+                  
                   <a 
                     href="mailto:hello@trailtotides.com" 
-                    className="group relative px-6 py-3 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:border-[#ff5100]/30 transition-all duration-500 flex items-center gap-3 overflow-hidden"
+                    className="group flex items-center gap-3"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#ff5100]/0 via-[#ff5100]/5 to-[#ff5100]/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                    <Mail className="w-4 h-4 text-white/30 group-hover:text-[#ff5100] transition-colors duration-500" />
-                    <span className="text-[12px] font-bold text-white/40 group-hover:text-white transition-colors duration-500 tracking-[0.1em]">
+                    <Mail className="w-4 h-4 text-white/20 group-hover:text-[#ff5100] transition-colors duration-300" />
+                    <span className="text-[12px] font-bold text-white/30 group-hover:text-white transition-colors duration-300 tracking-[0.1em]">
                       hello@trailtotides.com
                     </span>
                   </a>
