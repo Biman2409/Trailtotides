@@ -52,7 +52,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         <div className="absolute inset-0 p-5 flex flex-col justify-end">
           <div className="flex items-center gap-1.5 mb-1.5 opacity-80">
             <MapPin className="w-3 h-3 text-[#ff5100]" />
-            <span className="text-white text-[10px] font-medium tracking-wide uppercase">{adventure.state}</span>
+            <span className="text-white text-[10px] font-medium tracking-wide">{adventure.state}</span>
           </div>
           <h3 className="text-white font-bold text-xl leading-tight tracking-tight mb-1 group-hover:text-[#ff5100] transition-colors">
             {adventure.name}
