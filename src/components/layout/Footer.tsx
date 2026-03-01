@@ -116,7 +116,7 @@ export default function Footer() {
         </div>
 
       {/* Fixed Floating Back to Top - Centered above bottom bar when at the end */}
-      <div className={`fixed bottom-20 left-1/2 -translate-x-1/2 z-[1001] transition-all duration-700 ease-out ${
+      <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[1001] transition-all duration-700 ease-out ${
         showFloatingButton ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12 pointer-events-none"
       }`}>
         <button
