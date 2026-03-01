@@ -48,12 +48,12 @@ function LoginForm() {
           </p>
         </div>
 
-      {message && !error && (
-        <div className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold bg-green-500/10 border border-green-500/20 text-green-400 flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-          {message}
-        </div>
-      )}
+        {message && !error && (
+          <div className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold bg-green-500/10 border border-green-500/20 text-green-400 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+            {message}
+          </div>
+        )}
 
       {error && (
         <div className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-2">
