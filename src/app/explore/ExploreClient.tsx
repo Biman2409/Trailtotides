@@ -261,40 +261,40 @@ export default function ExploreClient() {
                           {aiLoading && (
                             <div className="flex justify-start">
                               <div className="bg-white/6 border border-white/8 px-4 py-2.5 rounded-xl rounded-bl-sm flex items-center gap-2">
-                                <Loader2 className="w-3.5 h-3.5 text-[#ff5100] animate-spin" />
-                                  <span className="text-white/50 text-sm">TRAIL TO TIDES is finding adventures…</span>
+                                  <Loader2 className="w-3.5 h-3.5 text-[#ff5100] animate-spin" />
+                                    <span className="text-white/50 text-sm">Compass.AI is finding adventures…</span>
+                                    </div>
                                   </div>
-                                </div>
-                              )}
+                                )}
+      
+                              <div ref={aiBottomRef} />
+                            </div>
+                          )}
+                          {aiMessages.length === 0 && (
+                            <div className="px-4 pt-4 pb-3 bg-white/2">
+                              <p className="text-white/20 text-[10px] uppercase tracking-widest mb-3 font-semibold">Try asking Compass.AI</p>
     
-                            <div ref={aiBottomRef} />
+                            <div className="flex flex-wrap gap-2">
+                              {AI_SUGGESTIONS.map((s) => (
+                                <button
+                                  key={s}
+                                  onClick={() => sendAi(s)}
+                                  className="text-xs border border-white/10 text-white/50 hover:text-white hover:border-[#ff5100]/50 hover:bg-[#ff5100]/5 px-3 py-1.5 rounded-full transition-all"
+                                >
+                                  {s}
+                                </button>
+                              ))}
+                            </div>
                           </div>
                         )}
-                        {aiMessages.length === 0 && (
-                          <div className="px-4 pt-4 pb-3 bg-white/2">
-                            <p className="text-white/20 text-[10px] uppercase tracking-widest mb-3 font-semibold">Try asking TRAIL TO TIDES</p>
-  
-                          <div className="flex flex-wrap gap-2">
-                            {AI_SUGGESTIONS.map((s) => (
-                              <button
-                                key={s}
-                                onClick={() => sendAi(s)}
-                                className="text-xs border border-white/10 text-white/50 hover:text-white hover:border-[#ff5100]/50 hover:bg-[#ff5100]/5 px-3 py-1.5 rounded-full transition-all"
-                              >
-                                {s}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                        <div className="border-t border-white/8 p-3 flex gap-3 bg-white/3">
-                              <input
-                                value={aiInput}
-                                onChange={(e) => setAiInput(e.target.value)}
-                                onKeyDown={(e) => e.key === "Enter" && sendAi()}
-                                placeholder="Ask TRAIL TO TIDES..."
-                                className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#ff5100]/50 transition-all"
-                              />
+                          <div className="border-t border-white/8 p-3 flex gap-3 bg-white/3">
+                                <input
+                                  value={aiInput}
+                                  onChange={(e) => setAiInput(e.target.value)}
+                                  onKeyDown={(e) => e.key === "Enter" && sendAi()}
+                                  placeholder="Ask Compass.AI..."
+                                  className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#ff5100]/50 transition-all"
+                                />
 
                       <button
                         onClick={() => sendAi()}
