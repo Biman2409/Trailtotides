@@ -127,9 +127,10 @@ export default function Footer() {
 
       {/* Fixed Floating Back to Top - Moves to dock above terms/privacy when at footer */}
       <div 
-        className={`fixed left-1/2 -translate-x-1/2 z-[1001] transition-all duration-700 ease-out ${
+        className={`fixed left-1/2 -translate-x-1/2 z-[1001] transition-opacity duration-500 ease-out ${
           showFloatingButton ? "opacity-100" : "opacity-0 pointer-events-none"
-        } ${atFooter ? "bottom-[4.5rem]" : "bottom-6"}`}
+        }`}
+        style={{ bottom: `${buttonBottom}px` }}
       >
         <button
           onClick={scrollToTop}
