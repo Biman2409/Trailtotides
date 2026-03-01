@@ -159,7 +159,7 @@ export default function LoginPage() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
         
-        <Suspense fallback={<div className="text-white/50 text-center animate-pulse">Loading adventure...</div>}>
+          <Suspense fallback={<div className="text-white/50 text-center">Loading adventure...</div>}>
           <LoginForm />
         </Suspense>
       </div>
