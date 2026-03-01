@@ -45,13 +45,14 @@ export default async function ExperiencePage({ params }: Props) {
 
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="relative h-[90vh] min-h-[600px] flex items-end overflow-hidden">
-        <Image
-          src={adventure.heroImage}
-          alt={adventure.name}
-          fill
-          priority
-          className="object-cover"
-        />
+          <Image
+            src={adventure.heroImage}
+            alt={adventure.name}
+            fill
+            priority
+            className="object-cover"
+            style={{ objectFit: "cover" }}
+          />
           {/* Vibrancy filter */}
           <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-orange-900/30 via-transparent to-sky-900/20 pointer-events-none" />
           {/* Multi-layer gradient for readability */}
