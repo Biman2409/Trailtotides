@@ -574,23 +574,28 @@ export default function ExploreClient() {
                 </div>
 
                 {/* Difficulty, Duration, Group Size — each on its own row */}
-                    <div className="col-span-2 lg:col-span-3">
-                      <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">Difficulty</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {([ 
-                          { val: "Beginner",     idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                          { val: "Intermediate", idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                          { val: "Advanced",     idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                          { val: "Expert",       idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                          { val: "Extreme",      idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                          ] as { val: Difficulty; idle: string; active: string }[]).map(({ val, idle, active }) => (
-                            <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
-                              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDifficulties.includes(val) ? active : idle}`}>
-                              {val}
-                            </button>
-                          ))}
+                      <div className="col-span-2 lg:col-span-3">
+                        <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">Difficulty</h3>
+                        <div className="flex flex-wrap gap-2">
+                          {(["Beginner", "Intermediate", "Advanced", "Expert", "Extreme"] as Difficulty[]).map((val) => {
+                              const isSelected = selectedDifficulties.includes(val);
+                              const activeClass = difficultyStyle[val] || "bg-[#ff5100] text-white";
+                              return (
+                                <button 
+                                  key={val} 
+                                  onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
+                                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                                    isSelected 
+                                      ? `${activeClass} border-transparent` 
+                                      : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border"
+                                  }`}
+                                >
+                                  {val}
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
-                      </div>
 
                         <div className="col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-8">
                           <div>
