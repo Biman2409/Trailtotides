@@ -38,7 +38,7 @@ export default function Footer() {
             {/* Subtle Gradient Accent */}
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
 
-            <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-12 lg:gap-20 relative z-10 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-32 relative z-10 items-start">
               
                     {/* Brand & Connect Identity */}
                     <div className="space-y-8">
@@ -95,7 +95,7 @@ export default function Footer() {
                     </div>
 
                     {/* Platform Nav */}
-                    <div className="lg:pt-0 lg:ml-auto">
+                    <div className="lg:pt-0 lg:ml-auto w-full lg:max-w-[240px]">
                       <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-8 opacity-80">
                         Platform
                       </h4>
