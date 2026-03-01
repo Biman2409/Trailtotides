@@ -79,73 +79,67 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Right Side: Narrative & Contact (Identity Focus) */}
-          <div className="lg:col-span-5 flex flex-col lg:items-end space-y-16">
-            {/* 4. About Us (Founding Story) */}
-            <div className="max-w-md lg:text-right">
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80 mb-8">
-                About Us
-              </h4>
-              <p className="text-white/40 text-[13px] font-medium leading-[1.8] tracking-wide whitespace-pre-line">
-                We’re three IIM alumni united by one obsession: Adventure.
-                We couldn’t find a platform that made exploring adventures in India simpler — so we built it.
+            {/* Right Side: Narrative & Contact (Identity Focus) */}
+            <div className="lg:col-span-5 flex flex-col lg:items-end space-y-16">
+              {/* 4. About Us (Founding Story) */}
+              <div className="max-w-md lg:text-right">
+                <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80 mb-8">
+                  About Us
+                </h4>
+                <p className="text-white/40 text-[13px] font-medium leading-[1.8] tracking-wide whitespace-pre-line">
+                  We’re three IIM alumni united by one obsession: Adventure.
+                  We couldn’t find a platform that made exploring adventures in India simpler — so we built it.
+                  
+                  TrailToTides makes exploring India effortless, intelligent, and exciting.
+                </p>
+              </div>
+
+              {/* 5. Contact Us */}
+              <div className="flex flex-col lg:items-end space-y-8">
+                <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80 mb-2">
+                  Contact Us
+                </h4>
+                <div className="flex items-center gap-8 lg:justify-end">
+                  {[
+                    { Icon: Instagram, href: "#", name: "Instagram" },
+                    { Icon: Twitter, href: "#", name: "Twitter" },
+                    { Icon: Youtube, href: "#", name: "Youtube" },
+                    { Icon: Linkedin, href: "#", name: "Linkedin" }
+                  ].map(({ Icon, href, name }, i) => (
+                    <a 
+                      key={i} 
+                      href={href} 
+                      className="group flex items-center justify-center p-2 -m-2"
+                      aria-label={`Visit our ${name}`}
+                    >
+                      <Icon className="w-5 h-5 text-white/20 group-hover:text-[#ff5100] group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500" strokeWidth={1.5} />
+                    </a>
+                  ))}
+                </div>
                 
-                TrailToTides makes exploring India effortless, intelligent, and exciting.
-              </p>
-            </div>
-
-            {/* 5. Contact Touchpoints */}
-            <div className="flex flex-col lg:items-end space-y-8">
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80 mb-2">
-                Connect
-              </h4>
-              <div className="flex items-center gap-8 lg:justify-end">
-                {[
-                  { Icon: Instagram, href: "#" },
-                  { Icon: Twitter, href: "#" },
-                  { Icon: Youtube, href: "#" },
-                  { Icon: Linkedin, href: "#" }
-                ].map(({ Icon, href }, i) => (
+                <div className="pt-4">
                   <a 
-                    key={i} 
-                    href={href} 
-                    className="group flex items-center justify-center p-2 -m-2"
-                    aria-label={`Visit our ${Icon.name}`}
+                    href="mailto:hello@trailtotides.com" 
+                    className="group relative px-6 py-3 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:border-[#ff5100]/30 transition-all duration-500 flex items-center gap-3 overflow-hidden"
                   >
-                    <Icon className="w-5 h-5 text-white/20 group-hover:text-[#ff5100] group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500" strokeWidth={1.5} />
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#ff5100]/0 via-[#ff5100]/5 to-[#ff5100]/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                    <Mail className="w-4 h-4 text-white/30 group-hover:text-[#ff5100] transition-colors duration-500" />
+                    <span className="text-[12px] font-bold text-white/40 group-hover:text-white transition-colors duration-500 tracking-[0.1em]">
+                      hello@trailtotides.com
+                    </span>
                   </a>
-                ))}
-              </div>
-              
-              <div className="pt-4">
-                <a 
-                  href="mailto:hello@trailtotides.com" 
-                  className="group relative px-6 py-3 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:border-[#ff5100]/30 transition-all duration-500 flex items-center gap-3 overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#ff5100]/0 via-[#ff5100]/5 to-[#ff5100]/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                  <Mail className="w-4 h-4 text-white/30 group-hover:text-[#ff5100] transition-colors duration-500" />
-                  <span className="text-[12px] font-bold text-white/40 group-hover:text-white transition-colors duration-500 tracking-[0.1em]">
-                    hello@trailtotides.com
-                  </span>
-                </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Brand Bottom Bar */}
-        <div className="mt-24 pt-12 border-t border-white/[0.03] flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
-          <p className="text-white/20 text-[10px] font-black tracking-[0.3em] uppercase order-2 md:order-1">
-            © 2026 TRAIL TO TIDES — DESIGNED BY EXPLORERS FOR EXPLORERS
-          </p>
-          
-          <div className="flex items-center gap-8 order-1 md:order-2">
-            <span className="text-white/10 text-[9px] font-bold tracking-[0.2em] uppercase">
-              Built with precision in India
-            </span>
+          {/* Brand Bottom Bar */}
+          <div className="mt-24 pt-12 border-t border-white/[0.03] flex flex-col md:flex-row items-center justify-center gap-6 relative z-10">
+            <p className="text-white/20 text-[10px] font-black tracking-[0.3em] uppercase">
+              © 2026 TRAIL TO TIDES — DESIGNED BY EXPLORERS FOR EXPLORERS
+            </p>
           </div>
         </div>
-      </div>
 
       {/* Background Decor */}
       <div className="absolute bottom-0 right-0 w-[40%] h-[60%] bg-[#ff5100]/[0.02] blur-[120px] rounded-full pointer-events-none" />
