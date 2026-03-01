@@ -7,14 +7,14 @@ import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain, ArrowUp } from "
 export default function Footer() {
   const [showFloatingButton, setShowFloatingButton] = useState(false);
   const [buttonBottom, setButtonBottom] = useState(24);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollYRef = useRef(0);
   const anchorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const scrollingDown = currentScrollY > lastScrollY;
-      setLastScrollY(currentScrollY);
+      const scrollingDown = currentScrollY > lastScrollYRef.current;
+      lastScrollYRef.current = currentScrollY;
       
       if (anchorRef.current) {
         const rect = anchorRef.current.getBoundingClientRect();
