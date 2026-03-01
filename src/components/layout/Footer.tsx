@@ -11,83 +11,80 @@ export default function Footer() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-24 lg:gap-32 relative z-10">
           
-            {/* Brand Identity */}
-            <div className="lg:col-span-5 space-y-12">
-                <Link href="/" className="flex items-center gap-4 group w-fit">
-                    <div className="w-12 h-12 rounded-xl bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
-                      <Mountain className="w-6 h-6 text-white" strokeWidth={2.8} />
+              {/* Brand Identity */}
+              <div className="lg:col-span-6 space-y-12">
+                  <Link href="/" className="flex items-center gap-4 group w-fit">
+                      <div className="w-12 h-12 rounded-xl bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-2xl shadow-[#ff5100]/20">
+                        <Mountain className="w-6 h-6 text-white" strokeWidth={2.8} />
+                      </div>
+                        <span className="text-[#ff5100] font-black tracking-[-0.085em] text-[1.55rem] uppercase leading-none antialiased">
+                          TRAIL TO TIDES
+                        </span>
+                  </Link>
+                  
+                  <div className="space-y-10">
+                    <p className="text-white/40 text-base leading-relaxed max-w-md font-medium tracking-tight">
+                      Discover and compare epic adventures across India — handpicked by explorers, run by verified operators, mapped with precision — for you
+                    </p>
+
+                    <div className="space-y-6 pt-2">
+                        <p className="text-white/45 text-[14px] font-medium leading-relaxed max-w-sm">
+                          Have an idea for a wild expedition or want to collaborate? Feel free to connect with us.
+                        </p>
+                        
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                            <a 
+                              href="mailto:hello@trailtotides.com"
+                              className="text-[14px] font-bold text-[#ff5100] hover:text-white transition-colors"
+                            >
+                              hello@trailtotides.com
+                            </a>
+
+                            <div className="flex items-center gap-5">
+                              {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
+                                <a 
+                                  key={i}
+                                  href="#" 
+                                  className="text-white/20 hover:text-[#ff5100] hover:scale-110 transition-all duration-300"
+                                >
+                                  <Icon className="w-4 h-4" />
+                                </a>
+                              ))}
+                            </div>
+                        </div>
                     </div>
-                      <span className="text-[#ff5100] font-black tracking-[-0.075em] text-[1.45rem] uppercase leading-none antialiased">
-                        TRAIL TO TIDES
-                      </span>
-                </Link>
-                
-                <div className="space-y-8">
-                  <p className="text-white/40 text-base leading-relaxed max-w-sm font-medium tracking-tight">
-                    Discover and compare epic adventures across India — handpicked by explorers, run by verified operators, mapped with precision — for you
-                  </p>
-                </div>
-            </div>
-
-            {/* Platform Nav */}
-            <div className="lg:col-span-4 lg:pl-16">
-              <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-[#ff5100] mb-12 opacity-80">
-                Platform
-              </h4>
-              <ul className="grid grid-cols-1 gap-y-6">
-                {[
-                  ["AI ADVENTURE FINDER", "/#ai-finder"],
-                  ["EDITORS CHOICE", "/#featured-adventures"],
-                  ["ADVENTURE MAP", "/#map-cta"],
-                  ["DISCOVER YOUR REGION", "/#regions"],
-                  ["DISCOVER YOUR GENRE", "/#styles"],
-                  ["STORIES", "/#stories"],
-                ].map(([label, href]) => (
-                  <li key={label}>
-                    <Link
-                      href={href}
-                      className="text-[13px] text-white/45 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.1em]"
-                    >
-                      <span className="group-hover:translate-x-1.5 transition-transform duration-300">{label}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Connect */}
-            <div className="lg:col-span-3">
-              <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-[#ff5100] mb-12 opacity-80">
-                Connect
-              </h4>
-              <div className="space-y-8">
-                <p className="text-white/45 text-[14px] font-medium leading-relaxed">
-                  Have an idea for a wild expedition or want to collaborate? Feel free to connect with us.
-                </p>
-                
-                <a 
-                  href="mailto:hello@trailtotides.com"
-                  className="flex items-center justify-between gap-4 bg-white/[0.02] border border-white/10 rounded-2xl px-6 py-5 text-[14px] font-bold text-white/60 hover:text-white hover:border-[#ff5100]/40 hover:bg-white/[0.04] transition-all group/btn"
-                >
-                  <span>hello@trailtotides.com</span>
-                  <Mail className="w-5 h-5 text-[#ff5100] group-hover:scale-110 transition-transform" />
-                </a>
-
-                <div className="pt-2">
-                  <div className="flex items-center gap-6">
-                    {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
-                      <a 
-                        key={i}
-                        href="#" 
-                        className="text-white/20 hover:text-[#ff5100] hover:scale-110 transition-all duration-300"
-                      >
-                        <Icon className="w-5 h-5" />
-                      </a>
-                    ))}
                   </div>
-                </div>
               </div>
-            </div>
+
+              {/* Platform Nav */}
+              <div className="lg:col-span-3 lg:pl-8">
+                <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-[#ff5100] mb-12 opacity-80">
+                  Platform
+                </h4>
+                <ul className="grid grid-cols-1 gap-y-6">
+                  {[
+                    ["AI ADVENTURE FINDER", "/#ai-finder"],
+                    ["EDITORS CHOICE", "/#featured-adventures"],
+                    ["ADVENTURE MAP", "/#map-cta"],
+                    ["DISCOVER YOUR REGION", "/#regions"],
+                    ["DISCOVER YOUR GENRE", "/#styles"],
+                    ["STORIES", "/#stories"],
+                  ].map(([label, href]) => (
+                    <li key={label}>
+                      <Link
+                        href={href}
+                        className="text-[13px] text-white/45 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.1em]"
+                      >
+                        <span className="group-hover:translate-x-1.5 transition-transform duration-300">{label}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Space for additional columns if needed */}
+              <div className="lg:col-span-3">
+              </div>
 
         </div>
 
