@@ -125,20 +125,20 @@ export default function Footer() {
             </div>
 
           {/* Single Subtle Back to Top - Centered above bottom bar */}
-          <div className="mt-36 flex justify-center">
+          <div className="mt-24 flex justify-center">
             <button
               onClick={scrollToTop}
-              className={`p-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full text-white/20 hover:text-[#ff5100] hover:bg-white/10 hover:border-[#ff5100]/20 transition-all duration-1000 group ${
+              className={`p-3.5 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full text-white/15 hover:text-[#ff5100] hover:bg-white/10 hover:border-[#ff5100]/20 transition-all duration-1000 group ${
                 showFloatingButton ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
               }`}
               aria-label="Back to top"
             >
-              <ArrowUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
+              <ArrowUp className="w-4.5 h-4.5 group-hover:-translate-y-1 transition-transform" />
             </button>
           </div>
 
           {/* Bottom Bar */}
-            <div className="mt-12 pt-12 border-t border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-10 relative z-10">
+            <div className="mt-8 pt-10 border-t border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-10 relative z-10">
               <div className="flex items-center gap-12">
                 {["Terms", "Privacy"].map((item) => (
                   <Link key={item} href={`/${item.toLowerCase()}`} className="text-[10px] text-white/25 hover:text-white font-bold uppercase tracking-[0.3em] transition-colors">
