@@ -133,8 +133,8 @@ export default function Footer() {
           </div>
 
         {/* Brand Bottom Bar */}
-        <div className="mt-20 pt-10 border-t border-white/[0.03] flex flex-col md:flex-row items-center justify-between gap-6 relative z-10 text-[10px] font-bold tracking-[0.2em] text-white/20 uppercase text-center md:text-left">
-          <p>© 2026 TRAIL TO TIDES</p>
+        <div className="mt-20 pt-10 border-t border-white/[0.03] flex flex-col items-center justify-center gap-6 relative z-10 text-[10px] font-bold tracking-[0.2em] text-white/20 uppercase text-center">
+          <p>© 2026 TRAIL TO TIDES. DESIGNED FOR EXPLORERS BY EXPLORERS</p>
         </div>
       </div>
 
