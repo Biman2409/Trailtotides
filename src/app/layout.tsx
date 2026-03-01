@@ -12,12 +12,12 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: "TRAIL TO TIDES — India's Adventure Discovery Platform",
-  description:
-    "Discover treks, rides, and wild experiences across India — curated, verified, and beautifully mapped. From the Himalayas to the Andamans.",
-  metadataBase: new URL("https://trailtotides.com"),
-  openGraph: {
-    title: "TRAIL TO TIDES — India's Adventure Discovery Platform",
-    description: "Discover treks, rides, and wild experiences across India — curated, verified, and beautifully mapped.",
+    description:
+      "Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.",
+    metadataBase: new URL("https://trailtotides.com"),
+    openGraph: {
+      title: "TRAIL TO TIDES — India's Adventure Discovery Platform",
+      description: "Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.",
     type: "website",
     images: [{ url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90", width: 1200, height: 630 }],
   },
