@@ -117,15 +117,16 @@ export default function Footer() {
                   <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
                     Platform
                   </h4>
-                    <ul className="grid grid-cols-1 gap-y-3">
-                        {[
-                          ["EDITORS CHOICE", "/#featured-adventures"],
-                          ["ADVENTURE MAP", "/#map-cta"],
-                          ["DISCOVER YOUR REGION", "/#regions"],
-                          ["DISCOVER YOUR GENRE", "/#styles"],
-                          ["STORIES", "/#stories"],
-                          ["LOGIN", "/auth/login"],
-                        ].map(([label, href]) => (
+                      <ul className="grid grid-cols-1 gap-y-3">
+                          {[
+                            ["AI ADVENTURE FINDER", "/#ai-finder"],
+                            ["ADVENTURE MAP", "/#map-cta"],
+                            ["EDITORS CHOICE", "/#featured-adventures"],
+                            ["DISCOVER YOUR REGION", "/#regions"],
+                            ["DISCOVER YOUR GENRE", "/#styles"],
+                            ["STORIES", "/#stories"],
+                            ["LOGIN", "/auth/login"],
+                          ].map(([label, href]) => (
                         <li key={label}>
                           <Link
                             href={href}
