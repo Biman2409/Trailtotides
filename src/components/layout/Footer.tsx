@@ -4,7 +4,7 @@ import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain } from "lucide-re
 export default function Footer() {
   return (
     <footer className="bg-[#05070a] text-white border-t border-white/[0.03] overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-48 relative">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-24 lg:py-32 relative">
         
         {/* Subtle Gradient Accent */}
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
