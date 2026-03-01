@@ -153,13 +153,14 @@ export default function Footer() {
                     {item}
                   </Link>
                 ))}
-                <a 
-                  href="#"
-                  className="flex items-center gap-2 text-[10px] text-[#ff5100] hover:text-white font-bold uppercase tracking-[0.3em] transition-all group"
-                >
-                  Back to Top
-                  <ArrowUp className="w-3 h-3 group-hover:-translate-y-1 transition-transform" />
-                </a>
+                  <button 
+                    onClick={scrollToTop}
+                    className="flex items-center gap-2 text-[10px] text-[#ff5100] hover:text-white font-bold uppercase tracking-[0.3em] transition-all group"
+                  >
+                    Back to Top
+                    <ArrowUp className="w-3 h-3 group-hover:-translate-y-1 transition-transform" />
+                  </button>
+
               </div>
             
             <p className="text-white/12 text-[10px] font-bold uppercase tracking-[0.35em]">
