@@ -187,9 +187,9 @@ export const adventures: Adventure[] = [
     terrain: "Mountain highways, river crossings, high passes",
       bestSeason: "Jun – Sep",
         bestMonths: ["Jun", "Jul", "Aug", "Sep"],
-          groupSize: "Large group (6+)",
-                heroImage: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=1200&q=80",
-          galleryImages: [
+            groupSize: "Large group (6+)",
+                  heroImage: "https://images.unsplash.com/photo-1614165933833-9759075713c2?auto=format&fit=crop&q=80",
+            galleryImages: [
           "https://images.unsplash.com/photo-1491975474562-1f4e30bc9468?w=800&q=80",
       ],
     lat: 32.2396,
