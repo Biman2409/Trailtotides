@@ -208,7 +208,7 @@ export default function ExploreClient() {
             )}
           </div>
 
-          {/* AI Adventure Finder panel */}
+          {/* Compass.AI panel */}
           {aiOpen && (
             <div className="border-t border-[#e0d8cc] bg-[#141920] px-6 lg:px-8 py-5">
               <div className="max-w-7xl mx-auto">
