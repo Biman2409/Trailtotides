@@ -177,9 +177,9 @@ export default function Footer() {
 
 
           {/* Bottom Bar */}
-            <div className="pt-6 border-t border-white/[0.04] flex flex-col items-center justify-center gap-6 relative z-10">
-              <p className="text-white/12 text-[9px] font-bold tracking-[0.35em] text-center uppercase">
-                © 2026 TRAIL TO TIDES — <span className="normal-case">Designed by Explorers for Explorers</span>
+            <div className="pt-8 border-t border-white/[0.04] flex items-center justify-center relative z-10">
+              <p className="text-white/20 text-[10px] font-bold tracking-[0.2em] text-center uppercase">
+                © 2026 TRAIL TO TIDES — DESIGNED BY EXPLORERS FOR EXPLORERS
               </p>
             </div>
 
