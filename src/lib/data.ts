@@ -367,9 +367,9 @@ export const adventures: Adventure[] = [
           { name: "Twisted Trails Adventures", verified: false, priceFrom: "₹48,000", rating: 4.2, website: "https://www.twistedtrailsadv.com" },
           { name: "Dream Riders Group", verified: false, priceFrom: "₹44,000", rating: 4.1, website: "https://thedreamridersgroup.com" },
         ],
-          tags: ["Mig La", "world record", "Ladakh", "extreme altitude", "circuit"],
-        featured: false,
-      },
+            tags: ["Mig La", "world record", "Ladakh", "extreme altitude", "circuit"],
+          featured: true,
+        },
   {
     id: "12",
     slug: "zanskar-valley-bike",
