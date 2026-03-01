@@ -27,15 +27,15 @@ export default function Footer() {
           const isNearFooter = rect.top < viewportHeight + 100;
           const isAtFooter = distFromBottom > 0;
           
-          // Show condition: 
-          // 1. If we are scrolling down and have passed 300px
-          // 2. OR if we are in/near the footer area (regardless of scroll direction)
-          // Hide condition:
-          // 1. If we are scrolling up and are ABOVE the footer area
-          const shouldShow = isAtFooter || (scrollingDown && currentScrollY > 300);
-          setShowFloatingButton(shouldShow);
-        }
-      };
+            // Show condition: 
+            // 1. If we are in the footer area (isAtFooter)
+            // 2. OR if we are scrolling down and have passed 300px
+            // Hide condition:
+            // 1. Always hide if scrolling up AND NOT in footer area
+            const shouldShow = isAtFooter || (scrollingDown && currentScrollY > 300);
+            setShowFloatingButton(shouldShow);
+          }
+        };
 
 
     window.addEventListener("scroll", handleScroll, { passive: true });
