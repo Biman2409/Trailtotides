@@ -85,55 +85,54 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Platform, Legal */}
-          <div className="grid grid-cols-2 gap-8 md:gap-12">
-            {/* 1. Platform */}
-            <div className="space-y-6">
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80">
-                Platform
-              </h4>
-              <ul className="space-y-4">
-                {[
-                  { label: "Explore", href: "/explore" },
-                  { label: "Map View", href: "/map" },
-                  { label: "Stories", href: "/stories" },
-                  { label: "Plan Trip", href: "/plan" },
-                ].map((link) => (
-                  <li key={link.label}>
-                    <Link 
-                      href={link.href}
-                      className="text-[13px] font-bold text-white/40 hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {/* Column 2: Platform, Legal */}
+            <div className="space-y-16">
+              {/* 1. Platform */}
+              <div className="space-y-6">
+                <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80">
+                  Platform
+                </h4>
+                <ul className="space-y-4">
+                  {[
+                    { label: "Explore", href: "/explore" },
+                    { label: "Map View", href: "/map" },
+                    { label: "Stories", href: "/stories" },
+                    { label: "Plan Trip", href: "/plan" },
+                  ].map((link) => (
+                    <li key={link.label}>
+                      <Link 
+                        href={link.href}
+                        className="text-[13px] font-bold text-white/40 hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-            {/* 2. Legal */}
-            <div className="space-y-6">
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80">
-                Legal
-              </h4>
-              <ul className="space-y-4">
-                {[
-                  { label: "Terms of Service", href: "/terms" },
-                  { label: "Privacy Policy", href: "/privacy" },
-                  { label: "Cookie Policy", href: "/cookies" },
-                ].map((link) => (
-                  <li key={link.label}>
-                    <Link 
-                      href={link.href}
-                      className="text-[13px] font-bold text-white/40 hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              {/* 2. Legal */}
+              <div className="space-y-6">
+                <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#ff5100] opacity-80">
+                  Legal
+                </h4>
+                <ul className="space-y-4">
+                  {[
+                    { label: "Terms of Service", href: "/terms" },
+                    { label: "Privacy Policy", href: "/privacy" },
+                  ].map((link) => (
+                    <li key={link.label}>
+                      <Link 
+                        href={link.href}
+                        className="text-[13px] font-bold text-white/40 hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
         </div>
 
         {/* Brand Bottom Bar */}
