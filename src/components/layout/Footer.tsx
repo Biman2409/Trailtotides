@@ -6,22 +6,27 @@ import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain, ArrowUp } from "
 
 export default function Footer() {
   const [showFloatingButton, setShowFloatingButton] = useState(false);
-  const [atFooter, setAtFooter] = useState(false);
-  const footerRef = useRef<HTMLElement>(null);
+  const [buttonBottom, setButtonBottom] = useState(24); // Start at bottom-6 (24px)
+  const anchorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       // Show button after 800px of scrolling
       setShowFloatingButton(window.scrollY > 800);
       
-      // Detect if we are at the footer
-      if (footerRef.current) {
-        const rect = footerRef.current.getBoundingClientRect();
-        setAtFooter(rect.top <= window.innerHeight - 100);
+      if (anchorRef.current) {
+        const rect = anchorRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        // The button docks in the footer. If the anchor is below the screen bottom - offset,
+        // it stays fixed at 24px. As the anchor moves up, the button follows.
+        const distanceToBottom = viewportHeight - rect.top;
+        setButtonBottom(Math.max(24, distanceToBottom));
       }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    // Initial check
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -30,9 +35,12 @@ export default function Footer() {
   };
 
   return (
-    <footer ref={footerRef} className="bg-[#05070a] text-white border-t border-white/[0.03] overflow-hidden relative">
+    <footer className="bg-[#05070a] text-white border-t border-white/[0.03] overflow-hidden relative">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6 lg:py-8 relative">
         
+        {/* Anchor point for docking the back to top button */}
+        <div ref={anchorRef} className="absolute bottom-[4.5rem] left-1/2 -translate-x-1/2 w-10 h-10 pointer-events-none" />
+
         {/* Subtle Gradient Accent */}
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
 
