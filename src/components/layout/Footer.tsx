@@ -128,12 +128,12 @@ export default function Footer() {
           <div className="mt-20 mb-8 flex justify-center">
             <button
               onClick={scrollToTop}
-              className={`p-4 bg-white/[0.03] backdrop-blur-3xl border border-white/[0.06] rounded-full text-white/10 hover:text-[#ff5100] hover:bg-white/5 hover:border-[#ff5100]/30 transition-all duration-1000 group shadow-2xl ${
-                showFloatingButton ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6 pointer-events-none"
+              className={`p-3 bg-white/[0.02] backdrop-blur-3xl border border-white/[0.04] rounded-full text-white/5 hover:text-white/30 hover:bg-white/5 hover:border-white/10 transition-all duration-1000 group ${
+                showFloatingButton ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
               }`}
               aria-label="Back to top"
             >
-              <ArrowUp className="w-4 h-4 group-hover:-translate-y-1.5 transition-transform" strokeWidth={3} />
+              <ArrowUp className="w-4 h-4" strokeWidth={2} />
             </button>
           </div>
 
