@@ -94,14 +94,21 @@ export default function Footer() {
             </div>
 
           {/* Bottom Bar */}
-          <div className="mt-36 pt-12 border-t border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-10 relative z-10">
-            <div className="flex items-center gap-12">
-              {["Terms", "Privacy"].map((item) => (
-                <Link key={item} href={`/${item.toLowerCase()}`} className="text-[10px] text-white/25 hover:text-white font-bold uppercase tracking-[0.3em] transition-colors">
-                  {item}
-                </Link>
-              ))}
-            </div>
+            <div className="mt-36 pt-12 border-t border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-10 relative z-10">
+              <div className="flex items-center gap-12">
+                {["Terms", "Privacy"].map((item) => (
+                  <Link key={item} href={`/${item.toLowerCase()}`} className="text-[10px] text-white/25 hover:text-white font-bold uppercase tracking-[0.3em] transition-colors">
+                    {item}
+                  </Link>
+                ))}
+                <button 
+                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                  className="flex items-center gap-2 text-[10px] text-[#ff5100] hover:text-white font-bold uppercase tracking-[0.3em] transition-all group"
+                >
+                  Back to Top
+                  <ArrowUp className="w-3 h-3 group-hover:-translate-y-1 transition-transform" />
+                </button>
+              </div>
             
             <p className="text-white/12 text-[10px] font-bold uppercase tracking-[0.35em]">
               © 2026 TRAIL TO TIDES — DESIGNED BY EXPLORERS FOR EXPLORERS
