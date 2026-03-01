@@ -28,15 +28,18 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         className="relative w-full overflow-hidden text-left block"
         style={{ height: isLarge ? "320px" : "220px" }}
       >
-        <Image
-          src={adventure.heroImage}
-          alt={adventure.name}
-          fill
-          quality={100}
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-          style={{ filter: "brightness(1.05) contrast(1.1) saturate(1.1)" }}
-          sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
-        />
+          <Image
+            src={adventure.heroImage}
+            alt={adventure.name}
+            fill
+            quality={100}
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            style={{ 
+              objectFit: "cover",
+              filter: "brightness(1.05) contrast(1.1) saturate(1.1)" 
+            }}
+            sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
+          />
         
         {/* Gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
