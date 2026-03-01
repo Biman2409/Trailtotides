@@ -101,12 +101,13 @@ export default function StoriesPage() {
             {rest.map((story) => (
               <Link key={story.id} href={`/stories/${story.slug}`} className="group block">
                 <div className="relative h-52 rounded-2xl overflow-hidden mb-5 shadow-md group-hover:shadow-xl group-hover:shadow-black/15 transition-shadow duration-300">
-                  <Image
-                    src={story.heroImage}
-                    alt={story.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+                    <Image
+                      src={story.heroImage}
+                      alt={story.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      style={{ objectFit: "cover" }}
+                    />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
                   {/* Content tags on image — all non-badge tags */}
                   <div className="absolute bottom-4 left-4 flex items-center gap-2 flex-wrap">
