@@ -74,9 +74,9 @@ export default function AboutPage() {
               About TRAIL TO TIDES
             </p>
           </div>
-          <h1 className="text-white text-5xl lg:text-7xl font-bold tracking-tight leading-none mb-8">
-            Built by people who&apos;ve been out there.
-          </h1>
+            <h1 className="text-white text-5xl lg:text-7xl font-bold tracking-tight leading-none mb-8">
+              Designed by Explorers for Explorers
+            </h1>
             <p className="text-white/60 text-xl leading-relaxed max-w-2xl">
               Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
             </p>
