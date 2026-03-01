@@ -64,13 +64,13 @@ export default function HomePage() {
             </span>
           </h1>
 
-          {/* Subheading */}
-              <p
-                className="text-white/82 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
-                style={{ textShadow: "0 1px 10px rgba(0,0,0,0.85)" }}
-              >
-                Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you
-              </p>
+            {/* Subheading */}
+                <p
+                  className="text-white/82 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10 line-clamp-2"
+                  style={{ textShadow: "0 1px 10px rgba(0,0,0,0.85)" }}
+                >
+                  Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
+                </p>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
