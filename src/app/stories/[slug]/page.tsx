@@ -105,9 +105,10 @@ export default async function StoryPage({ params }: Props) {
           src={story.heroImage}
           alt={story.title}
           fill
-          priority
-          className="object-cover"
-        />
+            priority
+            className="object-cover"
+            style={{ filter: "brightness(1.1) contrast(1.15) saturate(1.15)" }}
+          />
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
 
