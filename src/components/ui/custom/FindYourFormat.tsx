@@ -136,14 +136,17 @@ export default function FindYourFormat() {
                   style={{ height: "160px" }}
                   aria-expanded={isOpen}
                 >
-                  <Image
-                    src={cat.image}
-                    alt={cat.label}
-                    fill
-                    quality={100}
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    style={{ filter: "brightness(1.05) contrast(1.1) saturate(1.1)" }}
-                  />
+                    <Image
+                      src={cat.image}
+                      alt={cat.label}
+                      fill
+                      quality={100}
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      style={{ 
+                        objectFit: "cover",
+                        filter: "brightness(1.05) contrast(1.1) saturate(1.1)" 
+                      }}
+                    />
                   {/* Gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
                   {/* Accent tint on hover */}
