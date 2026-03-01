@@ -126,7 +126,7 @@ export default function Footer() {
             </div>
 
           {/* Single Subtle Back to Top - Centered above bottom bar divider */}
-          <div className="mt-40 mb-10 flex justify-center">
+          <div className="mt-20 mb-8 flex justify-center">
             <button
               onClick={scrollToTop}
               className={`p-4 bg-white/[0.03] backdrop-blur-3xl border border-white/[0.06] rounded-full text-white/10 hover:text-[#ff5100] hover:bg-white/5 hover:border-[#ff5100]/30 transition-all duration-1000 group shadow-2xl ${
