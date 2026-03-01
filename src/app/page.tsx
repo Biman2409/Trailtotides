@@ -84,14 +84,10 @@ export default function HomePage() {
                 <Map className="w-4 h-4" />
                 Adventure Map
               </Link>
+            </div>
           </div>
 
-              <p className="mt-7 text-white/38 text-xs tracking-[0.15em] uppercase">
-                Designed by Explorers for Explorers
-              </p>
-        </div>
-
-        {/* Scroll cue arrow */}
+          {/* Scroll cue arrow */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity duration-300">
           <ChevronDown className="w-5 h-5 text-white" />
         </div>
