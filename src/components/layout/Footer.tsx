@@ -72,32 +72,32 @@ export default function Footer() {
                             </span>
                         </Link>
 
-                        <div className="max-w-md">
-                          <p className="text-white/30 text-[10.5px] font-medium leading-relaxed tracking-wider">
-                            We’re three IIM alumni united by one obsession: Adventure.<br />
-                            We couldn’t find a platform that made exploring adventures in India simpler — so we built it.<br />
-                            TrailToTides makes exploring India effortless, intelligent, and exciting.
-                          </p>
-                        </div>
-                        
-                        <div className="flex items-center gap-6 mt-8">
-                          {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
-                            <a 
-                              key={i}
-                              href="#" 
-                              className="text-white/10 hover:text-[#ff5100] hover:scale-110 transition-all duration-300"
-                            >
-                              <Icon className="w-4 h-4" />
-                            </a>
-                          ))}
-                        </div>
-                    </div>
-    
-                        {/* Legal & Contact Column */}
-                        <div className="lg:text-right flex flex-col lg:items-end lg:pt-0 lg:-mt-64 transition-all duration-300">
-                          <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
-                            Legal
-                          </h4>
+                          <div className="max-w-md">
+                            <p className="text-white/30 text-[10.5px] font-medium leading-relaxed tracking-wider">
+                              We’re three IIM alumni united by one obsession: Adventure.<br />
+                              We couldn’t find a platform that made exploring adventures in India simpler — so we built it.<br />
+                              TrailToTides makes exploring India effortless, intelligent, and exciting.
+                            </p>
+                          </div>
+                          
+                          <div className="flex items-center gap-6 mt-8">
+                            {[Instagram, Twitter, Youtube, Linkedin].map((Icon, i) => (
+                              <a 
+                                key={i}
+                                href="#" 
+                                className="text-white/10 hover:text-[#ff5100] hover:scale-110 transition-all duration-300"
+                              >
+                                <Icon className="w-4 h-4" />
+                              </a>
+                            ))}
+                          </div>
+                      </div>
+      
+                          {/* Legal & Contact Column */}
+                          <div className="lg:text-right flex flex-col lg:items-end lg:pt-0 lg:-mt-72 transition-all duration-300">
+                            <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
+                              Legal
+                            </h4>
                           <div className="flex items-center lg:justify-end gap-x-8">
                             {[
                               ["Terms", "/terms"],
