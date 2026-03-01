@@ -21,15 +21,12 @@ export default function Footer() {
                   <Mountain className="w-6 h-6 text-white" strokeWidth={2.8} />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[#ff5100] font-black tracking-[-0.05em] text-[1.4rem] leading-none antialiased group-hover:text-white transition-colors duration-500 uppercase">
-                    TRAIL TO TIDES
-                  </span>
-                  <span className="text-white/20 text-[9px] font-bold tracking-[0.4em] uppercase mt-1">
-                    India's Adventure Engine
-                  </span>
+                    <span className="text-[#ff5100] font-black tracking-[-0.05em] text-[1.4rem] leading-none antialiased group-hover:text-white transition-colors duration-500 uppercase">
+                      TRAIL TO TIDES
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
             {/* 2. About Us */}
             <div className="space-y-4 max-w-md">
