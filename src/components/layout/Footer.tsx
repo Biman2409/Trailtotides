@@ -102,7 +102,7 @@ export default function Footer() {
                   </div>
   
                   {/* About & Contact Column */}
-                  <div className="space-y-10 lg:pt-1">
+                  <div className="space-y-10 lg:pt-12">
                     <div>
                       <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-3 opacity-80">
                         ABOUT US
