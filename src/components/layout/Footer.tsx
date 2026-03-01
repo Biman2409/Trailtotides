@@ -146,7 +146,7 @@ export default function Footer() {
                   </div>
   
                   {/* Legal Nav */}
-                  <div className="lg:-mt-6">
+                  <div className="lg:-mt-24">
                     <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-4 opacity-80">
                       Legal
                     </h4>
