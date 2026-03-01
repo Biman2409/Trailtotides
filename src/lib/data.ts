@@ -107,11 +107,11 @@ export const adventures: Adventure[] = [
           bestSeason: "Jul – Sep",
           bestMonths: ["Jul", "Aug", "Sep"],
           groupSize: "Small group (2–6)",
-            heroImage: "https://images.unsplash.com/photo-1549364472-0972cec89cd8?w=1200&q=70",
-      galleryImages: [
-        "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60",
-        "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=800&q=60"
-      ],
+      heroImage: "https://images.unsplash.com/photo-1549364472-0972cec89cd8?w=1200&q=70",
+        galleryImages: [
+          "https://images.unsplash.com/photo-1549364472-0972cec89cd8?w=800&q=60",
+          "https://images.unsplash.com/photo-1506701068163-470002181514?w=800&q=60"
+        ],
         lat: 33.9139,
         lng: 77.6285,
       description:
