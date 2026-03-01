@@ -74,7 +74,7 @@ export default function Footer() {
                           </span>
                       </Link>
 
-                      <div className="space-y-3 pt-4 border-t border-white/5">
+                      <div className="space-y-3">
                         <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 opacity-80">
                           Platform
                         </h4>
