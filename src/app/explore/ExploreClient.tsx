@@ -242,11 +242,11 @@ export default function ExploreClient() {
                                         >
                                           {/* eslint-disable-next-line @next/next/no-img-element */}
                                           <img src={card.heroImage} alt={card.name} className="w-16 h-16 object-cover flex-shrink-0" />
-                                          <div className="p-3 flex-1 min-w-0">
-                                            <p className="text-white text-xs font-semibold tracking-tight">{card.name}</p>
-                                            <p className="text-white/40 text-xs mt-0.5 uppercase tracking-wide">{card.state} · {card.type} · {card.difficulty}</p>
-                                            {rec?.reason && <p className="text-[#ff5100] text-xs mt-1 line-clamp-1">{rec.reason}</p>}
-                                          </div>
+                                            <div className="p-3 flex-1 min-w-0">
+                                              <p className="text-white text-xs font-semibold tracking-tight">{card.name}</p>
+                                              <p className="text-white/40 text-xs mt-0.5 tracking-wide">{card.state} · {card.type} · {card.difficulty}</p>
+                                              {rec?.reason && <p className="text-[#ff5100] text-xs mt-1 line-clamp-1">{rec.reason}</p>}
+                                            </div>
                                           <div className="flex items-center pr-3">
                                             <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#ff5100] transition-colors" />
                                           </div>
