@@ -123,7 +123,7 @@ export default function ExploreClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fafaf8]">
+    <div className="min-h-screen bg-[#111820]">
       <Navbar />
 
       {/* Page header */}
@@ -133,7 +133,7 @@ export default function ExploreClient() {
           Discover
         </p>
 
-          <h1 className="text-white text-5xl lg:text-6xl font-semibold tracking-tight mb-4">
+          <h1 className="text-white text-5xl lg:text-6xl font-semibold tracking-tight mb-4 uppercase">
             All Adventures
           </h1>
               <p className="text-white/45 text-lg w-full">
@@ -143,16 +143,16 @@ export default function ExploreClient() {
       </div>
 
       {/* Search + filter bar */}
-      <div className="sticky top-16 lg:top-20 z-40 bg-white/96 backdrop-blur-lg border-b border-[#e0d8cc] shadow-sm">
+      <div className="sticky top-16 lg:top-20 z-40 bg-[#111820]/96 backdrop-blur-lg border-b border-white/10 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex items-center gap-4">
           {/* Search */}
           <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9a9590]" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search adventures, regions..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#f5f0e8] text-[#1a1f2e] text-sm placeholder-[#9a9590] border border-transparent focus:outline-none focus:border-[#1e3d2f] transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 text-white text-sm placeholder-white/30 border border-transparent focus:outline-none focus:border-[#ff5100]/50 transition-colors"
             />
           </div>
 
@@ -161,14 +161,14 @@ export default function ExploreClient() {
                 onClick={() => { setFiltersOpen(!filtersOpen); setAiOpen(false); }}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   filtersOpen || activeFilterCount > 0
-                    ? "bg-[#1e3d2f] text-white"
-                    : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"
+                    ? "bg-[#ff5100] text-white"
+                    : "bg-white/5 text-white hover:bg-white/10"
                 }`}
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 Filters
                 {activeFilterCount > 0 && (
-                  <span className="bg-[#ff5100] text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
+                  <span className="bg-white text-[#ff5100] text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
                     {activeFilterCount}
                   </span>
                 )}
@@ -192,7 +192,7 @@ export default function ExploreClient() {
 
 
           {/* Result count */}
-          <span className="hidden md:block text-sm text-[#9a9590] ml-auto">
+          <span className="hidden md:block text-sm text-white/40 ml-auto uppercase tracking-wider font-medium">
             {filtered.length} of {adventures.length} adventures
           </span>
 
@@ -210,7 +210,7 @@ export default function ExploreClient() {
 
           {/* Compass.AI panel */}
           {aiOpen && (
-            <div className="border-t border-[#e0d8cc] bg-[#141920] px-6 lg:px-8 py-5">
+            <div className="border-t border-white/10 bg-[#141920] px-6 lg:px-8 py-5">
               <div className="max-w-7xl mx-auto">
                   <div className="border border-white/8 rounded-2xl overflow-hidden">
                     {aiMessages.length > 0 && (
@@ -243,8 +243,8 @@ export default function ExploreClient() {
                                             {/* eslint-disable-next-line @next/next/no-img-element */}
                                             <img src={card.heroImage} alt={card.name} className="w-16 h-16 object-cover flex-shrink-0" style={{ objectFit: "cover" }} />
                                             <div className="p-3 flex-1 min-w-0">
-                                              <p className="text-white text-xs font-semibold tracking-tight">{card.name}</p>
-                                              <p className="text-white/40 text-xs mt-0.5 tracking-wide">{card.state} · {card.type} · {card.difficulty}</p>
+                                              <p className="text-white text-xs font-semibold tracking-tight uppercase">{card.name}</p>
+                                              <p className="text-white/40 text-xs mt-0.5 tracking-wide uppercase">{card.state} · {card.type} · {card.difficulty}</p>
                                               {rec?.reason && <p className="text-[#ff5100] text-xs mt-1 line-clamp-1">{rec.reason}</p>}
                                             </div>
                                           <div className="flex items-center pr-3">
@@ -303,7 +303,7 @@ export default function ExploreClient() {
                         style={{ background: "#ff5100" }}
                       >
                         <Send className="w-4 h-4" />
-                        <span className="hidden sm:inline">Search</span>
+                        <span className="hidden sm:inline uppercase tracking-wider">Search</span>
                       </button>
                     </div>
 
@@ -314,12 +314,12 @@ export default function ExploreClient() {
 
         {/* Filter panel */}
           {filtersOpen && (
-            <div className="border-t border-[#e0d8cc] bg-white px-6 lg:px-8 py-6 max-h-[60vh] overflow-y-auto">
+            <div className="border-t border-white/10 bg-[#111820] px-6 lg:px-8 py-6 max-h-[60vh] overflow-y-auto no-scrollbar">
               <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-8">
 
                 {/* Adventure type */}
                 <div className="col-span-2 lg:col-span-3">
-                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
+                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">
                     Adventure Type
                   </h3>
                     {(() => {
@@ -355,7 +355,7 @@ export default function ExploreClient() {
                                         className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
                                           isExpanded || hasSelected 
                                             ? "bg-[#ff5100] text-white border-[#ff5100]" 
-                                            : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                                            : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
                                         }`}
                                       >
                                         {cat.label}
@@ -378,7 +378,7 @@ export default function ExploreClient() {
                             {expandedCategory && (() => {
                               const cat = categories.find(c => c.label === expandedCategory)!;
                               return (
-                                <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                                <div className="rounded-xl border border-white/10 bg-white/5 p-3">
                                   {cat.types.length === 0 ? (
                                     <p className="text-xs text-[#ff5100] italic">Coming soon</p>
                                   ) : (
@@ -393,7 +393,7 @@ export default function ExploreClient() {
                                             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                                               isSelected 
                                                 ? "bg-[#ff5100] text-white" 
-                                                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                                                : "bg-white/10 text-white/70 hover:bg-white/20"
                                             }`}
                                           >
                                             {type}
@@ -412,7 +412,7 @@ export default function ExploreClient() {
 
                   {/* Region */}
                   <div className="col-span-2 lg:col-span-3">
-                    <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
+                    <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">
                       Region
                     </h3>
                     {(() => {
@@ -464,7 +464,7 @@ export default function ExploreClient() {
                                      className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
                                        isExpanded || hasSelected 
                                          ? "bg-[#ff5100] text-white border-[#ff5100]" 
-                                         : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                                         : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
                                      }`}
                                    >
                                        {rg.name}
@@ -485,7 +485,7 @@ export default function ExploreClient() {
                       {expandedRegion && (() => {
                         const rg = regionGroups.find(r => r.name === expandedRegion)!;
                         return (
-                          <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                          <div className="rounded-xl border border-white/10 bg-white/5 p-3">
                             <div className="flex flex-wrap gap-2">
                               {rg.subRegions.map((sr) => {
                                 const isSelected = selectedSubRegions.includes(sr);
@@ -496,7 +496,7 @@ export default function ExploreClient() {
                                     className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                                       isSelected 
                                         ? "bg-[#ff5100] text-white" 
-                                        : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                                        : "bg-white/10 text-white/70 hover:bg-white/20"
                                     }`}
                                   >
                                     {sr}
@@ -514,7 +514,7 @@ export default function ExploreClient() {
 
               {/* Best Season */}
                 <div className="col-span-2 lg:col-span-3">
-                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">
+                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">
                     Best Season
                   </h3>
                   <div className="flex flex-col gap-2">
@@ -531,7 +531,7 @@ export default function ExploreClient() {
                                   className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
                                     isExpanded || hasSelected 
                                       ? "bg-[#ff5100] text-white border-[#ff5100]" 
-                                      : "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100"
+                                      : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
                                   }`}
                                 >
                                   {label}
@@ -550,7 +550,7 @@ export default function ExploreClient() {
                       {/* Expanded month chips */}
                       {expandedSeason && (() => {
                         return (
-                          <div className="rounded-xl border border-[#e8dfc8] bg-[#fafaf8] p-3">
+                          <div className="rounded-xl border border-white/10 bg-white/5 p-3">
                             <div className="flex flex-wrap gap-2">
                               {seasons.find((s) => s.label === expandedSeason)!.months.map((m) => (
                                 <button
@@ -559,7 +559,7 @@ export default function ExploreClient() {
                                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                                     selectedMonths.includes(m) 
                                       ? "bg-[#ff5100] text-white" 
-                                      : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                                      : "bg-white/10 text-white/70 hover:bg-white/20"
                                   }`}
                                 >
                                   {m}
@@ -574,14 +574,14 @@ export default function ExploreClient() {
 
                 {/* Difficulty, Duration, Group Size — each on its own row */}
                     <div className="col-span-2 lg:col-span-3">
-                      <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Difficulty</h3>
+                      <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">Difficulty</h3>
                       <div className="flex flex-wrap gap-2">
                         {([ 
-                          { val: "Beginner",     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                          { val: "Intermediate", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                          { val: "Advanced",     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                          { val: "Expert",       idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                          { val: "Extreme",      idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                          { val: "Beginner",     idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                          { val: "Intermediate", idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                          { val: "Advanced",     idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                          { val: "Expert",       idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                          { val: "Extreme",      idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
                           ] as { val: Difficulty; idle: string; active: string }[]).map(({ val, idle, active }) => (
                             <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
                               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDifficulties.includes(val) ? active : idle}`}>
@@ -593,12 +593,12 @@ export default function ExploreClient() {
 
                         <div className="col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-8">
                           <div>
-                            <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Duration</h3>
+                            <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">Duration</h3>
                             <div className="flex flex-wrap gap-2">
                               {([
-                                { val: "Weekend",  label: "Weekend",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                                { val: "3–5 days", label: "3–5 days", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                                { val: "7+ days",  label: "7+ days",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                                { val: "Weekend",  label: "Weekend",  idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                                { val: "3–5 days", label: "3–5 days", idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                                { val: "7+ days",  label: "7+ days",  idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
                               ] as { val: Duration; label: string; idle: string; active: string }[]).map(({ val, label, idle, active }) => (
                                 <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
                                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
@@ -609,12 +609,12 @@ export default function ExploreClient() {
                           </div>
 
                             <div>
-                              <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Group Size</h3>
+                              <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">Group Size</h3>
                               <div className="flex flex-nowrap overflow-x-auto pb-1 gap-2 no-scrollbar">
                                 {([
-                                  { val: "Solo",             idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                                  { val: "Small group (2–6)", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                                  { val: "Large group (6+)",  idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                                  { val: "Solo",             idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                                  { val: "Small group (2–6)", idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                                  { val: "Large group (6+)",  idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
                                 ] as { val: GroupSize; idle: string; active: string }[]).map(({ val, idle, active }) => (
                                   <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${selectedGroupSizes.includes(val) ? active : idle}`}>
@@ -637,7 +637,7 @@ export default function ExploreClient() {
               <span
                 key={t}
                 onClick={() => toggle(selectedTypes, t, setSelectedTypes)}
-                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
               >
                 {t} <X className="w-3 h-3" />
               </span>
@@ -646,7 +646,7 @@ export default function ExploreClient() {
                 <span
                   key={r}
                   onClick={() => toggle(selectedRegions, r, setSelectedRegions)}
-                  className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
+                  className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
                 >
                   {r} <X className="w-3 h-3" />
                 </span>
@@ -655,7 +655,7 @@ export default function ExploreClient() {
                 <span
                   key={sr}
                   onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
-                  className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
+                  className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
                 >
                   {sr} <X className="w-3 h-3" />
                 </span>
@@ -664,7 +664,7 @@ export default function ExploreClient() {
               <span
                 key={d}
                 onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
-                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
               >
                 {d} <X className="w-3 h-3" />
               </span>
@@ -673,7 +673,7 @@ export default function ExploreClient() {
               <span
                 key={d}
                 onClick={() => toggle(selectedDurations, d, setSelectedDurations)}
-                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
               >
                 {d} <X className="w-3 h-3" />
               </span>
@@ -682,7 +682,7 @@ export default function ExploreClient() {
                 <span
                   key={m}
                   onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                  className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
+                  className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
                 >
                   {m} <X className="w-3 h-3" />
                 </span>
@@ -691,7 +691,7 @@ export default function ExploreClient() {
               <span
                 key={g}
                 onClick={() => toggle(selectedGroupSizes, g, setSelectedGroupSizes)}
-                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors"
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
               >
                 {g} <X className="w-3 h-3" />
               </span>
@@ -705,13 +705,13 @@ export default function ExploreClient() {
         {filtered.length === 0 ? (
           <div className="text-center py-28">
               <div className="text-6xl mb-5">🗺️</div>
-              <h3 className="text-[#1a1f2e] text-2xl font-bold mb-2">No adventures found</h3>
-              <p className="text-[#9a9590] mb-7 max-w-xs mx-auto leading-relaxed">
+              <h3 className="text-white text-2xl font-bold mb-2 uppercase tracking-tight">No adventures found</h3>
+              <p className="text-white/40 mb-7 max-w-xs mx-auto leading-relaxed">
                 Try adjusting your filters or search term
               </p>
               <button
                 onClick={clearAll}
-                className="bg-[#1e3d2f] text-white px-7 py-3 rounded-xl text-sm font-semibold hover:bg-[#2d5a42] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200"
+                className="bg-[#ff5100] text-white px-7 py-3 rounded-xl text-sm font-semibold hover:bg-[#ff7d47] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 uppercase tracking-wider"
               >
                 Clear all filters
               </button>
@@ -726,7 +726,7 @@ export default function ExploreClient() {
       </div>
 
         {/* Map CTA Section */}
-          <div className="bg-[#1a1f2e] mt-16">
+          <div className="bg-[#1a1f2e] mt-16 border-t border-white/5">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
                 <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
