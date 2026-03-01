@@ -240,8 +240,8 @@ export default function ExploreClient() {
                                           href={`/adventure/${card.slug}`}
                                           className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-white/16 rounded-xl overflow-hidden transition-all group"
                                         >
-                                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                                          <img src={card.heroImage} alt={card.name} className="w-16 h-16 object-cover flex-shrink-0" />
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                            <img src={card.heroImage} alt={card.name} className="w-16 h-16 object-cover flex-shrink-0" style={{ objectFit: "cover" }} />
                                             <div className="p-3 flex-1 min-w-0">
                                               <p className="text-white text-xs font-semibold tracking-tight">{card.name}</p>
                                               <p className="text-white/40 text-xs mt-0.5 tracking-wide">{card.state} · {card.type} · {card.difficulty}</p>
