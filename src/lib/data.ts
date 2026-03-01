@@ -91,19 +91,60 @@ export interface Story {
 }
 
 export const adventures: Adventure[] = [
-  {
-    id: "1",
-    slug: "chadar-trek",
-    name: "Chadar Trek",
-      tagline: "Walk a frozen river at -30°C — if it cracks, there's no trail back",
-    region: "Himalayas",
-    state: "Ladakh",
+    {
+      id: "10",
+      slug: "stok-kangri",
+      name: "Stok Kangri Summit",
+        tagline: "Stand on a 6,153m summit with all of Ladakh spread below you",
+      region: "Himalayas",
+      state: "Ladakh",
+      type: "Mountaineering",
+        difficulty: "Expert",
+        duration: "7+ days",
+        durationDays: "8 days",
+      altitude: "6,153m",
+        terrain: "Glaciers, scree, summit ridge",
+          bestSeason: "Jul – Sep",
+          bestMonths: ["Jul", "Aug", "Sep"],
+          groupSize: "Small group (2–6)",
+            heroImage: "https://images.unsplash.com/photo-1549364472-0972cec89cd8?w=1200&q=70",
+      galleryImages: [
+        "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60",
+        "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=800&q=60"
+      ],
+        lat: 33.9139,
+        lng: 77.6285,
+      description:
+        "Stok Kangri is one of the most accessible 6,000m peaks in the world — and one of the best introductory mountaineering expeditions in India. The summit ridge is a narrow blade of ice and rock with a 360° view of the entire Ladakh range. On a clear summit day, you can see K2.",
+      whatMakesSpecial:
+        "The jump from 5,000m trekking to 6,000m climbing is immense. This mountain teaches you what your body can do when it has no other option.",
+      whoFor: "Trekkers who want their first high-altitude climb. Basic mountaineering course recommended but not mandatory.",
+      whoNot: "Those without altitude exposure, weak lungs, or heart conditions. This is serious mountaineering.",
+      safetyNotes:
+        "Acclimatise in Leh for minimum 3 days. Carry crampons, ice axe, helmet. Go with a certified mountaineering guide — the summit ridge crevasses are real.",
+          operators: [
+            { name: "Rimo Expeditions", verified: true, priceFrom: "₹32,000", rating: 4.9, website: "https://www.rimoexpeditions.com" },
+            { name: "Bikat Adventures", verified: true, priceFrom: "₹26,000", rating: 4.8, website: "https://www.bikatadventures.com" },
+            { name: "White Magic Adventure", verified: true, priceFrom: "₹28,500", rating: 4.7, website: "https://whitemagicadventures.com" },
+            { name: "Shikhar Travels", verified: false, priceFrom: "₹24,000", rating: 4.3, website: "https://www.shikhartravels.com" },
+            { name: "Trek The Himalayas Mountaineering", verified: false, priceFrom: "₹29,000", rating: 4.2, website: "https://trekthehimalayas.com" },
+          ],
+      tags: ["mountaineering", "6000m", "glaciers", "summit", "Ladakh"],
+      featured: true,
+    },
+    {
+      id: "1",
+      slug: "chadar-trek",
+      name: "Chadar Trek",
+        tagline: "Walk a frozen river at -30°C — if it cracks, there's no trail back",
+      region: "Himalayas",
+      state: "Ladakh",
       type: "Trekking",
       difficulty: "Extreme",
       duration: "7+ days",
       durationDays: "9 days",
-    altitude: "3,450m",
-    terrain: "Frozen river, ice sheets",
+      altitude: "3,450m",
+      terrain: "Frozen river, ice sheets",
       bestSeason: "Jan – Feb",
       bestMonths: ["Jan", "Feb"],
       groupSize: "Small group (2–6)",
@@ -112,26 +153,27 @@ export const adventures: Adventure[] = [
         "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=60",
         "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=800&q=60",
       ],
-    lat: 34.1526,
-    lng: 76.8571,
-    description:
-      "The Chadar Trek is one of the most extraordinary winter treks on Earth. Named after the thick sheet of ice that forms over the Zanskar River each January, this trek takes you through a frozen gorge carved over millennia — a place few humans ever witness. You walk, slip, camp, and survive on the river itself.",
-    whatMakesSpecial:
-      "There is no trail — the river IS the trail. Vertical cliff walls, frozen waterfalls, and temperatures that plunge to -30°C make this an expedition, not a walk. The silence is otherworldly.",
-    whoFor: "Trekkers with prior high-altitude cold-weather experience. Those who want the edge of what's possible.",
-    whoNot: "First-time trekkers, those with heart or respiratory conditions, or anyone who hasn't trained in cold.",
-    safetyNotes:
-      "Carry emergency bivouac gear, layered thermals, and micro-spike crampons. River ice can crack unexpectedly. Always trek with a certified local guide.",
-      operators: [
-          { name: "Rimo Expeditions", verified: true, priceFrom: "₹28,000", rating: 4.9, website: "https://www.rimoexpeditions.com" },
-          { name: "Dreamland Trek & Tour", verified: true, priceFrom: "₹22,000", rating: 4.8, website: "https://www.dreamladakh.com" },
-          { name: "Trek The Himalayas", verified: true, priceFrom: "₹19,500", rating: 4.7, website: "https://trekthehimalayas.com" },
-          { name: "Altitude Adventure Ladakh", verified: false, priceFrom: "₹17,500", rating: 4.3, website: "https://www.altitudeadventureladakh.com" },
-          { name: "Overland Escape", verified: false, priceFrom: "₹21,000", rating: 4.2, website: "https://www.overlandescape.com" },
-        ],
-    tags: ["frozen river", "winter", "Ladakh", "extreme cold", "iconic"],
-    featured: true,
-  },
+      lat: 34.1526,
+      lng: 76.8571,
+      description:
+        "The Chadar Trek is one of the most extraordinary winter treks on Earth. Named after the thick sheet of ice that forms over the Zanskar River each January, this trek takes you through a frozen gorge carved over millennia — a place few humans ever witness. You walk, slip, camp, and survive on the river itself.",
+      whatMakesSpecial:
+        "There is no trail — the river IS the trail. Vertical cliff walls, frozen waterfalls, and temperatures that plunge to -30°C make this an expedition, not a walk. The silence is otherworldly.",
+      whoFor: "Trekkers with prior high-altitude cold-weather experience. Those who want the edge of what's possible.",
+      whoNot: "First-time trekkers, those with heart or respiratory conditions, or anyone who hasn't trained in cold.",
+      safetyNotes:
+        "Carry emergency bivouac gear, layered thermals, and micro-spike crampons. River ice can crack unexpectedly. Always trek with a certified local guide.",
+        operators: [
+            { name: "Rimo Expeditions", verified: true, priceFrom: "₹28,000", rating: 4.9, website: "https://www.rimoexpeditions.com" },
+            { name: "Dreamland Trek & Tour", verified: true, priceFrom: "₹22,000", rating: 4.8, website: "https://www.dreamladakh.com" },
+            { name: "Trek The Himalayas", verified: true, priceFrom: "₹19,500", rating: 4.7, website: "https://trekthehimalayas.com" },
+            { name: "Altitude Adventure Ladakh", verified: false, priceFrom: "₹17,500", rating: 4.3, website: "https://www.altitudeadventureladakh.com" },
+            { name: "Overland Escape", verified: false, priceFrom: "₹21,000", rating: 4.2, website: "https://www.overlandescape.com" },
+          ],
+      tags: ["frozen river", "winter", "Ladakh", "extreme cold", "iconic"],
+      featured: true,
+    },
+
   {
     id: "2",
     slug: "valley-of-flowers",
