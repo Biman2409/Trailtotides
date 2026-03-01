@@ -347,7 +347,7 @@ export const adventures: Adventure[] = [
       bestSeason: "Jun – Sep",
       bestMonths: ["Jun", "Jul", "Aug", "Sep"],
       groupSize: "Large group (6+)",
-        heroImage: "https://images.unsplash.com/photo-1619103801164-1166263cb3b6?w=1200&q=70",
+        heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_2383_Original-resized-1772330716467.jpeg?width=8000&height=8000&resize=contain",
     galleryImages: [],
     lat: 33.7782,
     lng: 78.6753,
