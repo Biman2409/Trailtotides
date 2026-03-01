@@ -49,38 +49,46 @@ function ContactPill() {
 
   return (
     <div className="relative group/pill w-full max-w-sm">
-      <div className="flex items-center bg-white/[0.03] border border-white/[0.05] rounded-full px-4 py-2 hover:bg-white/[0.05] transition-all duration-300">
-        <Mail className="w-3.5 h-3.5 text-[#ff5100]/60 mr-3" />
-        {isLoggedIn ? (
-          <div className="flex-1 flex items-center">
-            <input
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Send us a direct message..."
-              className="bg-transparent border-none outline-none text-[10.5px] font-medium text-white/80 placeholder:text-white/20 flex-1"
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            />
-            <button 
-              onClick={handleSend}
-              disabled={isSending || !message.trim()}
-              className="ml-2 text-[#ff5100] hover:text-white transition-colors disabled:opacity-30"
-            >
-              <Send className="w-3.5 h-3.5" />
-            </button>
+      <div className={`flex items-center bg-white/[0.03] border border-white/[0.08] rounded-2xl px-4 py-3.5 transition-all duration-300 ${isLoggedIn ? 'focus-within:border-[#ff5100]/40 focus-within:bg-white/[0.06] shadow-2xl shadow-black/40' : 'hover:bg-white/[0.05]'}`}>
+        <div className="flex-1 flex flex-col min-w-0">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[8.5px] font-black text-[#ff5100] uppercase tracking-[0.25em] opacity-80">
+              Direct Contact
+            </span>
+            <Mail className="w-3 h-3 text-[#ff5100]/40" />
           </div>
-        ) : (
-          <a 
-            href="mailto:hello@trailtotides.com"
-            className="text-[10.5px] font-bold text-[#ff5100] hover:text-white transition-colors flex-1"
-          >
-            hello@trailtotides.com
-          </a>
-        )}
+          
+          {isLoggedIn ? (
+            <div className="flex items-center gap-3">
+              <input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Message hello@trailtotides.com..."
+                className="bg-transparent border-none outline-none text-[11px] font-bold text-white placeholder:text-white/15 w-full selection:bg-[#ff5100]/30"
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              />
+              <button 
+                onClick={handleSend}
+                disabled={isSending || !message.trim()}
+                className="text-[#ff5100] hover:text-white transition-all disabled:opacity-10 hover:scale-110 active:scale-95"
+              >
+                <Send className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-white/80 tracking-wide">
+                hello@trailtotides.com
+              </span>
+            </div>
+          )}
+        </div>
       </div>
       {!isLoggedIn && (
-        <p className="mt-2 text-[9px] text-white/20 font-medium tracking-wide">
-          Login to send a direct message from here.
+        <p className="mt-3 text-[8.5px] text-white/20 font-bold tracking-[0.05em] uppercase flex items-center gap-2 px-1">
+          <span className="w-1 h-1 rounded-full bg-[#ff5100]/40 animate-pulse" />
+          Sign in to message us directly
         </p>
       )}
     </div>
