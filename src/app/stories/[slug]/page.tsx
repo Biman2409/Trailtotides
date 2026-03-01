@@ -239,12 +239,13 @@ export default async function StoryPage({ params }: Props) {
             {others.map((s) => (
               <Link key={s.id} href={`/stories/${s.slug}`} className="group block">
                 <div className="relative h-48 rounded-2xl overflow-hidden mb-4">
-                  <Image
-                    src={s.heroImage}
-                    alt={s.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+                    <Image
+                      src={s.heroImage}
+                      alt={s.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      style={{ objectFit: "cover" }}
+                    />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
                   <div className="absolute bottom-3 left-3">
                     <span className="bg-white/10 backdrop-blur-sm border border-white/15 text-white text-xs px-2.5 py-1 rounded-full">
