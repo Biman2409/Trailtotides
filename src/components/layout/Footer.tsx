@@ -61,7 +61,7 @@ export default function Footer() {
         {/* Subtle Gradient Accent */}
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/25 to-transparent" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-[7fr_5fr] gap-12 lg:gap-24 relative z-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[6fr_3fr_3fr] gap-12 lg:gap-24 relative z-10 items-start">
           
                   {/* Brand & Connect Identity */}
                   <div className="space-y-6">
@@ -107,6 +107,28 @@ export default function Footer() {
                           </div>
 
                     </div>
+                </div>
+
+                {/* Legal Nav */}
+                <div className="lg:pt-1 w-full lg:max-w-[200px] lg:justify-self-end">
+                  <h4 className="text-[9px] font-black uppercase tracking-[0.5em] text-[#ff5100]/80 mb-5 opacity-80">
+                    Legal
+                  </h4>
+                      <ul className="grid grid-cols-1 gap-y-3">
+                          {[
+                            ["Terms", "/terms"],
+                            ["Privacy", "/privacy"],
+                          ].map(([label, href]) => (
+                        <li key={label}>
+                          <Link
+                            href={href}
+                            className="text-[10px] text-white/30 hover:text-white transition-all flex items-center group/link font-bold tracking-[0.12em]"
+                          >
+                            <span className="group-hover:translate-x-1.5 transition-transform duration-300">{label}</span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
                 </div>
 
                 {/* Platform Nav */}
