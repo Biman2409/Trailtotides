@@ -76,11 +76,11 @@ export default function InlineChat() {
           
             {/* Architectural Header Section */}
             <div className="flex flex-col items-center text-center mb-16 space-y-6">
-              <div className="flex flex-col items-center gap-4">
-                        <p className="text-white/20 text-[10px] font-black uppercase tracking-[0.4em] mb-1">
-                          LOOKING FOR SOMETHING SPECIFIC?
-                        </p>
-                        <div className="flex items-center gap-6 justify-center">
+                <div className="flex flex-col items-center gap-6">
+                          <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.45em] mb-2">
+                            LOOKING FOR SOMETHING SPECIFIC?
+                          </p>
+                          <div className="flex items-center gap-6 justify-center">
                           <div className="w-14 h-14 lg:w-20 lg:h-20 rounded-[1.25rem] bg-[#ff5100] flex items-center justify-center shadow-2xl shadow-[#ff5100]/30 rotate-3 hover:rotate-0 transition-all duration-500">
                             <Compass className="w-8 h-8 lg:w-11 lg:h-11 text-white" strokeWidth={2.5} />
                           </div>
