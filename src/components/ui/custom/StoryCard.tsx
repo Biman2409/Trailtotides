@@ -34,7 +34,7 @@ export default function StoryCard({ story }: { story: Story }) {
         fill
         quality={100}
         className="object-cover transition-transform duration-500 group-hover:scale-105"
-        style={{ filter: "brightness(1.05) contrast(1.1) saturate(1.1)" }}
+        style={{ filter: "brightness(1.1) contrast(1.15) saturate(1.15)" }}
         sizes="(max-width: 768px) 100vw, 50vw"
       />
 
