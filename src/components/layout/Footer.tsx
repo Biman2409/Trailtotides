@@ -148,10 +148,10 @@ export default function Footer() {
               </div>
 
 
-  
               </div>
 
       {/* Fixed Floating Back to Top - Moves to dock above terms/privacy when at footer */}
+
       <div 
         className={`fixed left-1/2 -translate-x-1/2 z-[1001] transition-opacity duration-500 ease-out ${
           showFloatingButton ? "opacity-100" : "opacity-0 pointer-events-none"
