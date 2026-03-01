@@ -54,6 +54,19 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
               <Pill type="difficulty" value={adventure.difficulty} />
             </div>
 
+            {/* Season Badge at the Top Right */}
+            {isSeasonActive && (
+              <div className="absolute top-4 right-4 z-20 pointer-events-none">
+                <div className="bg-[#10b981]/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2 border border-white/20 shadow-[0_0_20px_rgba(16,185,129,0.4)] animate-pulse">
+                  <div className="relative">
+                    <div className="w-2 h-2 rounded-full bg-white animate-ping absolute opacity-75" />
+                    <div className="w-2 h-2 rounded-full bg-white relative shadow-[0_0_8px_white]" />
+                  </div>
+                  <span className="text-white text-[10px] font-bold tracking-[0.1em] uppercase">Season Active</span>
+                </div>
+              </div>
+            )}
+
         {/* Title Content */}
         <div className="absolute inset-0 p-5 flex flex-col justify-end">
           <div className="flex items-center gap-1.5 mb-1.5 opacity-80">
