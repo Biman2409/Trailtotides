@@ -57,11 +57,11 @@ export default function CompareAdventures() {
             <GitCompareArrows className="w-3.5 h-3.5" />
             Side by Side
           </p>
-          <h2 className="text-white text-3xl lg:text-4xl font-bold tracking-tight leading-tight uppercase">
-            Compare Adventures
-          </h2>
-          <div className="mt-3 w-14 h-0.5 bg-[#ff5100] rounded-full" />
-          <p className="mt-3 text-white/35 text-sm leading-relaxed">
+          <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight uppercase">
+              Compare Adventures
+            </h2>
+            <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
+            <p className="mt-4 text-white/50 text-base">
             Select up to {MAX} adventures to compare them side by side
           </p>
         </div>
