@@ -101,7 +101,6 @@ export default function HomePage() {
         <InlineChat />
 
           {/* ── FEATURED ADVENTURES + COMPARE (shared context) ── */}
-        <CompareWrapper>
         <section id="featured-adventures" className="py-24 lg:py-32 px-6 lg:px-8 bg-[#111820]">
             <div className="max-w-7xl mx-auto">
                     <div className="mb-14">
