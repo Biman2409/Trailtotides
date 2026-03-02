@@ -81,23 +81,19 @@ export default function CompareAdventures() {
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
-        <div className="mb-10">
-          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
-            <GitCompareArrows className="w-3.5 h-3.5" />
-            Side by Side
-          </p>
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <h2 className="text-white text-3xl lg:text-4xl font-bold tracking-tight leading-tight uppercase">
-                Compare Adventures
-              </h2>
-              <div className="mt-4 w-14 h-0.5 bg-[#ff5100] rounded-full" />
-            </div>
-            <p className="hidden md:block text-white/35 text-sm max-w-xs text-right leading-relaxed">
+          <div className="mb-10">
+            <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
+              <GitCompareArrows className="w-3.5 h-3.5" />
+              Side by Side
+            </p>
+            <h2 className="text-white text-3xl lg:text-4xl font-bold tracking-tight leading-tight uppercase">
+              Compare Adventures
+            </h2>
+            <div className="mt-3 w-14 h-0.5 bg-[#ff5100] rounded-full" />
+            <p className="mt-3 text-white/35 text-sm leading-relaxed">
               Select up to {MAX} adventures to compare them side by side
             </p>
           </div>
-        </div>
 
         {/* Selector row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
