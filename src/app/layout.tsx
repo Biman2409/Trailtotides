@@ -12,21 +12,47 @@ const dmSans = DM_Sans({
   weight: ["300", "400", "500", "600", "700"],
 });
 
+const BASE_URL = "https://trailtotides.com";
+
 export const metadata: Metadata = {
-  title: "TRAIL TO TIDES — India's Adventure Discovery Platform",
-    description:
-      "Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.",
-    metadataBase: new URL("https://trailtotides.com"),
-    openGraph: {
-      title: "TRAIL TO TIDES — India's Adventure Discovery Platform",
-      description: "Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.",
-    type: "website",
-    images: [{ url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90", width: 1200, height: 630 }],
+  title: "Trail to Tides — India's Adventure Discovery Platform",
+  description:
+    "Discover and compare epic adventures across the Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision.",
+  metadataBase: new URL(BASE_URL),
+  icons: {
+    icon: [
+      { url: "/logo.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico" },
+    ],
+    apple: "/logo.svg",
   },
-    twitter: {
+  openGraph: {
+    title: "Trail to Tides — India's Adventure Discovery Platform",
+    description:
+      "Discover and compare epic adventures across the Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision.",
+    type: "website",
+    url: BASE_URL,
+    siteName: "Trail to Tides",
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90",
+        width: 1200,
+        height: 630,
+        alt: "Trail to Tides — India's Adventure Discovery Platform",
+      },
+    ],
+  },
+  twitter: {
     card: "summary_large_image",
-    title: "TRAIL TO TIDES",
-    description: "Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.",
+    title: "Trail to Tides",
+    description:
+      "Discover and compare epic adventures across the Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision.",
+    images: ["https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
   },
 };
 
