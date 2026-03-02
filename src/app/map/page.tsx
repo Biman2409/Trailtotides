@@ -263,7 +263,7 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
         iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
       });
-      const map = leaflet.map(container, { center: [22.5, 80.0], zoom: 5, zoomControl: true, attributionControl: false });
+        const map = leaflet.map(container, { center: [22.5, 80.0], zoom: 5, zoomControl: true, attributionControl: false, scrollWheelZoom: true });
       leaflet.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19, attribution: '&copy; OpenStreetMap contributors',
       }).addTo(map);
