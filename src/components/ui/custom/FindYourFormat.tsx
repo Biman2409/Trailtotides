@@ -101,13 +101,13 @@ export default function FindYourFormat() {
               <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
                 DISCOVER YOUR GENRE
               </p>
-                  <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight uppercase">
-                  ADVENTURE LIVES IN EVERY ELEMENT
-                </h2>
-            <p className="mt-4 text-white/50 text-base max-w-xl">
-              Pick a category that matches your style.
-            </p>
-            <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
+                    <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight uppercase">
+                    ADVENTURE LIVES IN EVERY ELEMENT
+                  </h2>
+              <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
+              <p className="mt-4 text-white/50 text-base max-w-xl">
+                Pick a category that matches your style.
+              </p>
           </div>
 
         {/* Cards grid */}
