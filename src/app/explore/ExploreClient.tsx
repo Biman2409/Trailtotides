@@ -327,11 +327,109 @@ export default function ExploreClient() {
             <div className="border-t border-white/10 bg-[#111820] px-6 lg:px-8 py-6 max-h-[60vh] overflow-y-auto no-scrollbar">
               <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-8">
 
-                {/* Adventure type */}
-                <div className="col-span-2 lg:col-span-3">
-                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">
-                    Adventure Type
-                  </h3>
+                  {/* Region */}
+                    <div className="col-span-2 lg:col-span-3">
+                      <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">
+                        Region
+                      </h3>
+                      {(() => {
+                          const regionGroups: { name: Region; subRegions: string[] }[] = [
+                            {
+                              name: "Himalayas",
+                              subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
+                            },
+                            {
+                                name: "Western Ghats",
+                              subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"],
+                              },
+                              {
+                                    name: "Eastern Ghats",
+                                subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"],
+                              },
+                              {
+                                name: "Desert",
+                                  subRegions: ["Rajasthan", "Gujarat"],
+                              },
+                            {
+                              name: "Coast",
+                              subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"],
+                            },
+                            {
+                              name: "Islands",
+                              subRegions: ["Andaman & Nicobar", "Lakshadweep"],
+                            },
+                                {
+                                  name: "Northeast",
+                                subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"],
+                              },
+                              {
+                                name: "Urban",
+                                subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"],
+                              },
+                            ];
+                          return (
+                            <div className="flex flex-col gap-2">
+                              <div className="flex flex-wrap gap-2">
+                              {regionGroups.map((rg) => {
+                                const isExpanded = expandedRegion === rg.name;
+                                const hasSelected = selectedRegions.includes(rg.name) || rg.subRegions.some(sr => selectedSubRegions.includes(sr));
+                                const subCount = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
+                                return (
+                                     <button
+                                       key={rg.name}
+                                       onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
+                                       className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
+                                         isExpanded || hasSelected 
+                                           ? "bg-[#ff5100] text-white border-[#ff5100]" 
+                                           : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
+                                       }`}
+                                     >
+                                         {rg.name}
+                               {subCount > 0 && (
+                                  <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
+                                    {subCount}
+                                  </span>
+                                )}
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {expandedRegion && (() => {
+                          const rg = regionGroups.find(r => r.name === expandedRegion)!;
+                          return (
+                            <div className="rounded-xl border border-white/10 bg-white/5 p-3">
+                              <div className="flex flex-wrap gap-2">
+                                {rg.subRegions.map((sr) => {
+                                  const isSelected = selectedSubRegions.includes(sr);
+                                  return (
+                                    <button
+                                      key={sr}
+                                      onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
+                                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                        isSelected 
+                                          ? "bg-[#ff5100] text-white" 
+                                          : "bg-white/10 text-white/70 hover:bg-white/20"
+                                      }`}
+                                    >
+                                      {sr}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          );
+                        })()}
+                        </div>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Adventure type */}
+                  <div className="col-span-2 lg:col-span-3">
+                    <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">
+                      Adventure Type
+                    </h3>
                     {(() => {
                             const categories = [
                                 {
