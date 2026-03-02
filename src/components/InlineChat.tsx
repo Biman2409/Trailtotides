@@ -80,19 +80,19 @@ export default function InlineChat() {
                               <p className="text-white/15 text-[10px] font-black tracking-[0.4em] uppercase">
                                 Looking for something specific?
                               </p>
-                              <div className="flex items-center gap-6 justify-center">
-                              <div className="w-14 h-14 lg:w-20 lg:h-20 rounded-[1.25rem] bg-[#ff5100] flex items-center justify-center shadow-2xl shadow-[#ff5100]/30 rotate-3 hover:rotate-0 transition-all duration-500">
-                                <Compass className="w-8 h-8 lg:w-11 lg:h-11 text-white" strokeWidth={2.5} />
+                <div className="flex items-center gap-4 justify-center">
+                                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-[#ff5100] flex items-center justify-center shadow-xl shadow-[#ff5100]/30 rotate-3 hover:rotate-0 transition-all duration-500">
+                                  <Compass className="w-5 h-5 lg:w-6 lg:h-6 text-white" strokeWidth={2.5} />
+                                </div>
+                                <h2 className="text-white text-3xl lg:text-5xl font-black tracking-[-0.03em] leading-none bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/40">
+                                  Compass.AI
+                                </h2>
                               </div>
-                                    <h2 className="text-white text-5xl lg:text-9xl font-black tracking-[-0.04em] leading-none bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/40">
-                                      Compass.AI
-                                    </h2>
-                            </div>
-                  </div>
-            <p className="text-white/40 text-lg lg:text-2xl font-medium tracking-tight max-w-2xl leading-relaxed">
-              Describe your escape. <span className="text-white">We&apos;ll map the adventure.</span>
-            </p>
-          </div>
+                    </div>
+              <p className="text-white/40 text-base lg:text-lg font-medium tracking-tight max-w-xl leading-relaxed">
+                Describe your escape. <span className="text-white">We&apos;ll map the adventure.</span>
+              </p>
+            </div>
 
           {/* Command Center Interface */}
           <div className="max-w-5xl mx-auto">
