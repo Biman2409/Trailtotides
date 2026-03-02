@@ -143,7 +143,7 @@ export default function ExploreClient() {
           Discover
         </p>
 
-          <h1 className="text-white text-5xl lg:text-6xl font-semibold tracking-tight mb-4 uppercase">
+          <h1 className="text-white text-5xl lg:text-6xl font-semibold tracking-tight mb-4">
             All Adventures
           </h1>
               <p className="text-white/45 text-lg w-full">
