@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import type { Adventure } from "@/lib/data";
 
-const MAX = 3;
+const MAX = 6;
 
 interface CompareContextValue {
   selected: Adventure[];
