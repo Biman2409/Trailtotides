@@ -167,11 +167,11 @@ export default function HomePage() {
                         <p className="text-[#7ec88a] text-xs font-black tracking-[0.25em] mb-4 uppercase">
                           SIGNATURE FEATURE
                         </p>
-                            <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-5 uppercase">
-                              INDIA&apos;S ADVENTURES,
-                              <br />
-                              <span className="text-[#7ec88a]">MAPPED</span>
-                            </h2>
+            <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-5">
+                India's Adventures,
+                <br />
+                <span className="text-[#7ec88a]">Mapped</span>
+              </h2>
                         <p className="text-white/72 text-lg md:text-xl leading-relaxed mb-9 w-full">
                           Every trail, summit, coast, and canyon — pinned, filtered, and ready to explore on one interactive map.
                         </p>
