@@ -182,7 +182,7 @@ export default function Navbar() {
                         <div key={a.id} className="flex items-center gap-3 px-4 py-2.5">
                           <div className="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={a.image} alt={a.name} className="w-full h-full object-cover" />
+                            <img src={a.heroImage} alt={a.name} className="w-full h-full object-cover" />
                           </div>
                           <span className="text-white/85 text-sm font-medium flex-1 truncate">{a.name}</span>
                           <button
