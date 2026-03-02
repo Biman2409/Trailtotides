@@ -104,7 +104,13 @@ export default function ExploreClient() {
         return false;
       return true;
     });
-  }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes]);
+    }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes]);
+
+  // Reset to page 1 whenever filters change
+  useEffect(() => { setCurrentPage(1); }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes]);
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const pagedResults = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   const activeFilterCount =
     selectedTypes.length +
