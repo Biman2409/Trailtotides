@@ -294,7 +294,7 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
     });
   }, [advs]);
 
-  return <div ref={mapRef} className="w-full h-full" />;
+    return <div ref={mapRef} className="w-full h-full" style={{ cursor: "grab", touchAction: "none" }} />;
 }
 
 export default function MapPage() {
