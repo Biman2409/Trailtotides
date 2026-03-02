@@ -166,7 +166,7 @@ export default function Navbar() {
                 {compareOpen && (
                   <div className="absolute right-0 top-full mt-2 w-72 bg-[#1a1f2e] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50">
                     <div className="px-4 py-3 border-b border-white/8 flex items-center justify-between">
-                      <span className="text-white text-sm font-semibold">Comparing {selected.length}/3</span>
+                      <span className="text-white text-sm font-semibold">Comparing {selected.length}/6</span>
                       <button
                         onClick={() => {
                           setCompareOpen(false);
