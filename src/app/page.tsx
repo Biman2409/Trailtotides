@@ -8,6 +8,7 @@ import AdventureCard from "@/components/ui/custom/AdventureCard";
 import HeroSlider from "@/components/ui/custom/HeroSlider";
 import FindYourFormat from "@/components/ui/custom/FindYourFormat";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
+import CompareWrapper from "@/components/ui/custom/CompareWrapper";
 import ChatBubble from "@/components/ChatBubble";
 import InlineChat from "@/components/InlineChat";
 import StatsBar from "@/components/StatsBar";
