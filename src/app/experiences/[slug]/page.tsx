@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,6 +29,29 @@ interface Props {
 
 export async function generateStaticParams() {
   return adventures.map((a) => ({ slug: a.slug }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const adventure = adventures.find((a) => a.slug === slug);
+  if (!adventure) return {};
+  return {
+    title: `${adventure.name} — Trail to Tides`,
+    description: `${adventure.type} in ${adventure.region} · ${adventure.difficulty} · ${adventure.duration} days. ${adventure.tagline ?? "Discover this handpicked adventure on Trail to Tides."}`,
+    openGraph: {
+      title: `${adventure.name} — Trail to Tides`,
+      description: `${adventure.type} in ${adventure.region} · ${adventure.difficulty} · ${adventure.duration} days.`,
+      url: `https://trailtotides.com/experiences/${slug}`,
+      images: [{ url: adventure.heroImage, width: 1200, height: 630, alt: adventure.name }],
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${adventure.name} — Trail to Tides`,
+      images: [adventure.heroImage],
+    },
+    alternates: { canonical: `https://trailtotides.com/experiences/${slug}` },
+  };
 }
 
 export default async function ExperiencePage({ params }: Props) {
