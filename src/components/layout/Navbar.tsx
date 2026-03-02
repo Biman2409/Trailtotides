@@ -149,6 +149,55 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
+
+            {/* Compare tray */}
+            {selected.length > 0 && (
+              <div className="relative" ref={compareRef}>
+                <button
+                  onClick={() => setCompareOpen(!compareOpen)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#ff5100]/15 border border-[#ff5100]/30 hover:bg-[#ff5100]/25 transition-colors"
+                >
+                  <GitCompareArrows className="w-4 h-4 text-[#ff5100]" />
+                  <span className="text-[#ff5100] text-sm font-semibold">Compare</span>
+                  <span className="w-5 h-5 rounded-full bg-[#ff5100] text-white text-[11px] font-bold flex items-center justify-center leading-none">
+                    {selected.length}
+                  </span>
+                </button>
+                {compareOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-72 bg-[#1a1f2e] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50">
+                    <div className="px-4 py-3 border-b border-white/8 flex items-center justify-between">
+                      <span className="text-white text-sm font-semibold">Comparing {selected.length}/3</span>
+                      <button
+                        onClick={() => {
+                          setCompareOpen(false);
+                          document.getElementById("compare-section")?.scrollIntoView({ behavior: "smooth" });
+                        }}
+                        className="text-[#ff5100] text-xs font-semibold hover:underline"
+                      >
+                        View comparison
+                      </button>
+                    </div>
+                    <div className="divide-y divide-white/5">
+                      {selected.map((a) => (
+                        <div key={a.id} className="flex items-center gap-3 px-4 py-2.5">
+                          <div className="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={a.image} alt={a.name} className="w-full h-full object-cover" />
+                          </div>
+                          <span className="text-white/85 text-sm font-medium flex-1 truncate">{a.name}</span>
+                          <button
+                            onClick={() => remove(a.id)}
+                            className="text-white/30 hover:text-white/70 transition-colors flex-shrink-0"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
             {user ? (
               <div className="relative" ref={userMenuRef}>
                 <button
