@@ -109,8 +109,8 @@ export default function CompareAdventures() {
               </div>
             ))}
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
             {Array.from({ length: MAX }).map((_, i) => (
               <div
                 key={i}
