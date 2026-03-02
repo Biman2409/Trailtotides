@@ -95,35 +95,7 @@ export default function Navbar() {
           : "bg-[#1a1f2e]/98 backdrop-blur-lg border-b border-white/8 shadow-xl shadow-black/10"
       }`}
       >
-            {/* Subtle Adventure Design (Mosaic/Topographical) */}
-            {!isTransparent && (
-              <div className="absolute inset-0 pointer-events-none opacity-[0.08] overflow-hidden">
-                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className="absolute top-0 left-0">
-                  <defs>
-                    {/* Adventure Grid (Mosaic) */}
-                    <pattern id="mosaic" x="0" y="0" width="64" height="64" patternUnits="userSpaceOnUse">
-                      <path d="M32 0 L32 64 M0 32 L64 32" fill="none" stroke="currentColor" strokeWidth="0.15" />
-                      <path d="M30 32 L34 32 M32 30 L32 34" fill="none" stroke="currentColor" strokeWidth="0.5" />
-                      <circle cx="32" cy="32" r="1.5" fill="none" stroke="currentColor" strokeWidth="0.1" />
-                    </pattern>
-                    
-                    {/* Trail to Tides Concept: Mountain Trails and Ocean Tides */}
-                    <pattern id="trail-to-tides" x="0" y="0" width="320" height="80" patternUnits="userSpaceOnUse">
-                      {/* Mountain Peaks (Trails) */}
-                      <path d="M0 60 L30 20 L60 55 L90 15 L120 60 L150 30 L180 60" fill="none" stroke="currentColor" strokeWidth="0.5" className="opacity-60" />
-                      {/* Transitionary Contours */}
-                      <path d="M0 70 Q 50 50, 100 70 T 200 70 T 320 70" fill="none" stroke="currentColor" strokeWidth="0.3" className="opacity-30" />
-                      {/* Ocean Waves (Tides) */}
-                      <path d="M180 60 C 200 45, 220 45, 240 60 S 280 75, 300 60 S 320 45, 340 60" fill="none" stroke="currentColor" strokeWidth="0.5" className="opacity-60" />
-                      <path d="M180 75 C 200 65, 220 65, 240 75 S 280 85, 300 75 S 320 65, 340 75" fill="none" stroke="currentColor" strokeWidth="0.3" className="opacity-30" />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#mosaic)" className="text-white" />
-                  <rect width="100%" height="100%" fill="url(#trail-to-tides)" className="text-white" />
-                </svg>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#ff5100]/5 to-transparent mix-blend-overlay" />
-              </div>
-            )}
+      
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         <div className="flex items-center justify-between h-16 lg:h-20">
