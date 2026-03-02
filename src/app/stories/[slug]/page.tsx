@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,7 +8,6 @@ import { stories } from "@/lib/data";
 import { ChevronLeft, Clock, ArrowRight, Crown, Mountain } from "lucide-react";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 
-// Tags rendered as orange badges — everything else is a content pill
 const BADGE_TAGS = ["Featured", "TTT Original"];
 
 interface Props {
@@ -16,6 +16,29 @@ interface Props {
 
 export async function generateStaticParams() {
   return stories.map((s) => ({ slug: s.slug }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const story = stories.find((s) => s.slug === slug);
+  if (!story) return {};
+  return {
+    title: `${story.title} — Trail to Tides`,
+    description: story.excerpt,
+    openGraph: {
+      title: `${story.title} — Trail to Tides`,
+      description: story.excerpt,
+      url: `https://trailtotides.com/stories/${slug}`,
+      images: [{ url: story.heroImage, width: 1200, height: 630, alt: story.title }],
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${story.title} — Trail to Tides`,
+      images: [story.heroImage],
+    },
+    alternates: { canonical: `https://trailtotides.com/stories/${slug}` },
+  };
 }
 
 // Generate a plausible article body from the excerpt + title
