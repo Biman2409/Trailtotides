@@ -195,7 +195,6 @@ export default function HomePage() {
 
           {/* ── COMPARE ADVENTURES ───────────────────────────── */}
           <CompareAdventures />
-          </CompareWrapper>
 
           {/* ── STORIES ──────────────────────────────────────── */}
         <section id="stories" className="py-24 lg:py-32 px-6 lg:px-8 bg-[#0e1420] border-t border-white/6">
