@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin } from "lucide-react";
+import { MapPin, GitCompareArrows, Users, CheckCheck } from "lucide-react";
 import type { Adventure, Month } from "@/lib/data";
-import Pill from "./Pill";
+import { difficultyStyle, typeStyle } from "@/lib/styles";
+import { useCompare } from "@/contexts/CompareContext";
 
 interface AdventureCardProps {
   adventure: Adventure;
@@ -16,20 +17,43 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
   const months: Month[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const currentMonth = months[new Date().getMonth()];
   const isSeasonActive = adventure.bestMonths.includes(currentMonth);
+  const operatorCount = adventure.operators?.length ?? 0;
+
+  const { add, remove, isSelected, isFull } = useCompare();
+  const selected = isSelected(adventure.id);
+
+  function handleCompare(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (selected) {
+      remove(adventure.id);
+    } else if (!isFull) {
+      add(adventure);
+      // Scroll to compare section
+      document.getElementById("compare-section")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
 
   return (
-    <Link
-      href={`/experiences/${adventure.slug}`}
-      className="rounded-2xl overflow-hidden flex flex-col group transition-all duration-300 shadow-lg shadow-black/20 hover:shadow-2xl hover:shadow-black/40 hover:-translate-y-1"
+    <div
+      className="rounded-2xl overflow-hidden flex flex-col transition-all duration-300"
       style={{
-        background: "rgba(255,255,255,0.04)",
-        border: "1px solid rgba(255,255,255,0.08)",
+        background: selected
+          ? "rgba(255,81,0,0.07)"
+          : "rgba(255,255,255,0.04)",
+        border: selected
+          ? "1px solid rgba(255,81,0,0.55)"
+          : "1px solid rgba(255,255,255,0.08)",
+        boxShadow: selected
+          ? "0 0 0 1px rgba(255,81,0,0.3), 0 0 32px rgba(255,81,0,0.12), 0 8px 32px rgba(0,0,0,0.3)"
+          : "0 4px 20px rgba(0,0,0,0.2)",
       }}
     >
-      {/* Header / Image Area */}
-      <div
-        className="relative w-full overflow-hidden text-left block"
-        style={{ height: isLarge ? "320px" : "220px" }}
+      {/* Image area */}
+      <Link
+        href={`/experiences/${adventure.slug}`}
+        className="relative w-full overflow-hidden block group"
+        style={{ height: isLarge ? "260px" : "200px" }}
       >
         <Image
           src={adventure.heroImage}
@@ -37,52 +61,92 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           fill
           quality={100}
           className="object-cover transition-transform duration-700 group-hover:scale-105"
-          style={{
-            objectFit: "cover",
-            filter: "brightness(1.05) contrast(1.1) saturate(1.1)"
-          }}
+          style={{ filter: "brightness(1.05) contrast(1.1) saturate(1.1)" }}
           sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
         />
-
-        {/* Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#ff5100]/10" />
-
-        {/* Pills — top left */}
-        <div className="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
-          <Pill type="type" value={adventure.type} />
-          <Pill type="difficulty" value={adventure.difficulty} />
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
+        {selected && (
+          <div className="absolute inset-0 bg-[#ff5100]/8 pointer-events-none" />
+        )}
 
         {/* Season Active badge — top right */}
         {isSeasonActive && (
-          <div className="absolute top-4 right-4 z-20 pointer-events-none">
-              <div className="bg-emerald-500/20 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-emerald-400/40 shadow-[0_0_16px_rgba(52,211,153,0.5)]">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_6px_#34d399]" />
-                </span>
-                <span className="text-emerald-300 text-[10px] font-bold tracking-tight drop-shadow-[0_0_6px_rgba(52,211,153,0.8)]">
-                  Season Active
-                </span>
-              </div>
+          <div className="absolute top-3 right-3 z-20 pointer-events-none">
+            <div className="bg-emerald-500/20 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-emerald-400/40 shadow-[0_0_16px_rgba(52,211,153,0.5)]">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+              </span>
+              <span className="text-emerald-300 text-[10px] font-bold tracking-tight drop-shadow-[0_0_6px_rgba(52,211,153,0.8)]">
+                Season Active
+              </span>
+            </div>
           </div>
         )}
 
-        {/* Title Content */}
-        <div className="absolute inset-0 p-5 flex flex-col justify-end">
-          <div className="flex items-center gap-1.5 mb-1.5 opacity-80">
+        {/* Bottom content over image */}
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <div className="flex items-center gap-1.5 mb-1 opacity-80">
             <MapPin className="w-3 h-3 text-[#ff5100]" />
             <span className="text-white text-[10px] font-medium tracking-wide">{adventure.state}</span>
           </div>
-          <h3 className="text-white font-bold text-xl leading-tight tracking-tight mb-1 group-hover:text-[#ff5100] transition-colors">
+          <h3 className="text-white font-bold text-lg leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors">
             {adventure.name}
           </h3>
-          <p className="text-white/60 text-xs leading-relaxed line-clamp-2 font-medium tracking-wide">
-            {adventure.tagline}
-          </p>
         </div>
+      </Link>
+
+      {/* Dashboard body */}
+      <div className="px-4 pt-3 pb-4 flex flex-col gap-3">
+        {/* Pills row */}
+        <div className="flex flex-wrap gap-1.5">
+          <span className={`inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight text-white ${typeStyle[adventure.type] ?? "bg-white/15 text-white"}`}>
+            {adventure.type}
+          </span>
+          <span className={`inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight text-white ${difficultyStyle[adventure.difficulty] ?? "bg-white/15 text-white"}`}>
+            {adventure.difficulty}
+          </span>
+        </div>
+
+        {/* Stats row */}
+        <div className="flex items-center justify-between text-[11px] text-white/45 font-medium">
+          <span>{adventure.duration}</span>
+          {operatorCount > 0 && (
+            <span className="flex items-center gap-1">
+              <Users className="w-3 h-3" />
+              {operatorCount} operator{operatorCount !== 1 ? "s" : ""}
+            </span>
+          )}
+        </div>
+
+        {/* Divider */}
+        <div className="h-px bg-white/6" />
+
+        {/* Add to Compare button */}
+        <button
+          onClick={handleCompare}
+          disabled={!selected && isFull}
+          className={`w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold tracking-wide transition-all duration-200 ${
+            selected
+              ? "bg-[#ff5100] text-white shadow-[0_0_20px_rgba(255,81,0,0.4)]"
+              : isFull
+              ? "bg-white/4 text-white/25 cursor-not-allowed"
+              : "bg-white/6 text-white/60 hover:bg-[#ff5100]/15 hover:text-[#ff5100] border border-white/8 hover:border-[#ff5100]/30"
+          }`}
+        >
+          {selected ? (
+            <>
+              <CheckCheck className="w-3.5 h-3.5" />
+              Added to Compare
+            </>
+          ) : (
+            <>
+              <GitCompareArrows className="w-3.5 h-3.5" />
+              {isFull ? "Compare Full (3/3)" : "Add to Compare"}
+            </>
+          )}
+        </button>
       </div>
-    </Link>
+    </div>
   );
 }
