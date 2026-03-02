@@ -1,8 +1,22 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Clock, Crown, Mountain } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+
+export const metadata: Metadata = {
+  title: "Field Stories — Trail to Tides",
+  description:
+    "First-hand accounts from adventurers across India — high-altitude treks, ocean dives, desert rides, and everything in between.",
+  openGraph: {
+    title: "Field Stories — Trail to Tides",
+    description: "First-hand accounts from adventurers across India — high-altitude treks, ocean dives, desert rides, and everything in between.",
+    url: "https://trailtotides.com/stories",
+    images: [{ url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90", width: 1200, height: 630 }],
+  },
+  alternates: { canonical: "https://trailtotides.com/stories" },
+};
 import { stories } from "@/lib/data";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 
