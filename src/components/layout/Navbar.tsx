@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, Mountain, LogOut, Shield, User, ChevronDown } from "lucide-react";
+import { Menu, X, Mountain, LogOut, Shield, User, ChevronDown, GitCompareArrows } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useCompare } from "@/contexts/CompareContext";
 
 const navLinks = [
   { href: "/explore", label: "Explore" },
