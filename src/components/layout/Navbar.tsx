@@ -24,6 +24,9 @@ export default function Navbar() {
   const isHome = pathname === "/";
   const menuRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const { selected, remove } = useCompare();
+  const [compareOpen, setCompareOpen] = useState(false);
+  const compareRef = useRef<HTMLDivElement>(null);
 
   // Fetch auth state
   useEffect(() => {
