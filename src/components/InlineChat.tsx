@@ -81,7 +81,7 @@ export default function InlineChat() {
                                 Looking for something specific?
                               </p>
                 <div className="flex items-center gap-4 justify-center">
-                                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-[#ff5100] flex items-center justify-center shadow-xl shadow-[#ff5100]/30 rotate-3 hover:rotate-0 transition-all duration-500">
+                                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-[#ff5100] flex items-center justify-center shadow-xl shadow-[#ff5100]/40">
                                   <Compass className="w-5 h-5 lg:w-6 lg:h-6 text-white" strokeWidth={2.5} />
                                 </div>
                                 <h2 className="text-white text-3xl lg:text-5xl font-black tracking-[-0.03em] leading-none bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/40">
