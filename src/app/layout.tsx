@@ -4,7 +4,6 @@ import "./globals.css";
 import { VisualEditsMessenger } from "orchids-visual-edits";
 import Script from "next/script";
 import CompareWrapper from "@/components/ui/custom/CompareWrapper";
-import { CompareProvider } from "@/contexts/CompareContext";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
