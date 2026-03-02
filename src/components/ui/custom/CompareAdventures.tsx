@@ -67,9 +67,9 @@ export default function CompareAdventures() {
         </div>
 
         {/* Selected slots preview */}
-        {selected.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            {selected.map((adventure) => (
+          {selected.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+              {selected.map((adventure) => (
               <div
                 key={adventure.id}
                 className="relative rounded-xl overflow-hidden border border-[#ff5100]/35 bg-[#ff5100]/5 shadow-[0_0_24px_rgba(255,81,0,0.1)]"
