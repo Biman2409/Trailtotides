@@ -101,45 +101,46 @@ export default function HomePage() {
         {/* ── AI FINDER ────────────────────────────────────── */}
         <InlineChat />
 
-        {/* ── FEATURED ADVENTURES ─────────────────────────── */}
-      <section id="featured-adventures" className="py-24 lg:py-32 px-6 lg:px-8 bg-[#111820]">
-          <div className="max-w-7xl mx-auto">
-                  <div className="mb-14">
-                    <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
-                      <BadgeCheck className="w-3.5 h-3.5" />
-                      EDITORS CHOICE
-                    </p>
-                  <div className="flex items-end justify-between gap-4">
-                  <div>
-                    <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight uppercase">
-                          ADVENTURES OF A LIFETIME
-                        </h2>
-                    <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
-                  </div>
-                <span className="hidden sm:flex items-center gap-1.5 text-[#ff5100] text-sm font-semibold bg-[#ff5100]/8 border border-[#ff5100]/20 px-3 py-1.5 rounded-full mb-1">
-                  {featuredAdventures.length} picks
-                </span>
+          {/* ── FEATURED ADVENTURES + COMPARE (shared context) ── */}
+        <CompareWrapper>
+        <section id="featured-adventures" className="py-24 lg:py-32 px-6 lg:px-8 bg-[#111820]">
+            <div className="max-w-7xl mx-auto">
+                    <div className="mb-14">
+                      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
+                        <BadgeCheck className="w-3.5 h-3.5" />
+                        EDITORS CHOICE
+                      </p>
+                    <div className="flex items-end justify-between gap-4">
+                    <div>
+                      <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight uppercase">
+                            ADVENTURES OF A LIFETIME
+                          </h2>
+                      <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
+                    </div>
+                  <span className="hidden sm:flex items-center gap-1.5 text-[#ff5100] text-sm font-semibold bg-[#ff5100]/8 border border-[#ff5100]/20 px-3 py-1.5 rounded-full mb-1">
+                    {featuredAdventures.length} picks
+                  </span>
+                </div>
               </div>
+
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+              {featuredAdventures.map((adventure) => (
+                <AdventureCard key={adventure.id} adventure={adventure} size="default" />
+              ))}
             </div>
 
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
-            {featuredAdventures.map((adventure) => (
-              <AdventureCard key={adventure.id} adventure={adventure} size="default" />
-            ))}
+            <div className="mt-14 flex justify-center">
+              <Link
+                href="/explore"
+                className="bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#ff5100]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30 transition-all duration-200"
+              >
+                View all adventures
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
-
-          <div className="mt-14 flex justify-center">
-            <Link
-              href="/explore"
-              className="bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#ff5100]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30 transition-all duration-200"
-            >
-              View all adventures
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
 
         {/* ── MAP CTA ───────────────────────────────────────── */}
         <section id="map-cta" className="relative py-24 lg:py-32 bg-[#1a2e20] px-6 lg:px-8 overflow-hidden">
