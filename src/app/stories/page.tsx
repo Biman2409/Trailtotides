@@ -5,6 +5,9 @@ import { ArrowRight, Clock, Crown, Mountain } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
+import { stories } from "@/lib/data";
+import StoryViewPill from "@/components/ui/custom/StoryViewPill";
+
 export const metadata: Metadata = {
   title: "Field Stories — Trail to Tides",
   description:
@@ -17,8 +20,6 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "https://trailtotides.com/stories" },
 };
-import { stories } from "@/lib/data";
-import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 
 // Tags that are rendered as orange badge pills (not content pills)
 const BADGE_TAGS = ["Featured", "TTT Original"];
