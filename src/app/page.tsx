@@ -193,6 +193,9 @@ export default function HomePage() {
         {/* ── ADVENTURE TYPES ──────────────────────────────── */}
         <FindYourFormat />
 
+        {/* ── COMPARE ADVENTURES ───────────────────────────── */}
+        <CompareAdventures />
+
         {/* ── STORIES ──────────────────────────────────────── */}
         <section id="stories" className="py-24 lg:py-32 px-6 lg:px-8 bg-[#0e1420] border-t border-white/6">
         <div className="max-w-7xl mx-auto">
