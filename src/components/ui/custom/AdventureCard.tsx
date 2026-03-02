@@ -31,41 +31,43 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         className="relative w-full overflow-hidden text-left block"
         style={{ height: isLarge ? "320px" : "220px" }}
       >
-          <Image
-            src={adventure.heroImage}
-            alt={adventure.name}
-            fill
-            quality={100}
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
-            style={{ 
-              objectFit: "cover",
-              filter: "brightness(1.05) contrast(1.1) saturate(1.1)" 
-            }}
-            sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
-          />
-        
+        <Image
+          src={adventure.heroImage}
+          alt={adventure.name}
+          fill
+          quality={100}
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          style={{
+            objectFit: "cover",
+            filter: "brightness(1.05) contrast(1.1) saturate(1.1)"
+          }}
+          sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
+        />
+
         {/* Gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10" />
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#ff5100]/10" />
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[#ff5100]/10" />
 
-            {/* Pills at the Top */}
-            <div className="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
-              <Pill type="type" value={adventure.type} />
-              <Pill type="difficulty" value={adventure.difficulty} />
+        {/* Pills — top left */}
+        <div className="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
+          <Pill type="type" value={adventure.type} />
+          <Pill type="difficulty" value={adventure.difficulty} />
+        </div>
+
+        {/* Season Active badge — top right */}
+        {isSeasonActive && (
+          <div className="absolute top-4 right-4 z-20 pointer-events-none">
+            <div className="bg-emerald-500/20 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-emerald-400/40 shadow-[0_0_16px_rgba(52,211,153,0.5)]">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+              </span>
+              <span className="text-emerald-300 text-[10px] font-bold tracking-[0.12em] uppercase drop-shadow-[0_0_6px_rgba(52,211,153,0.8)]">
+                Season Active
+              </span>
             </div>
-
-            {/* Season Badge at the Top Right */}
-            {isSeasonActive && (
-              <div className="absolute top-4 right-4 z-20 pointer-events-none">
-                <div className="bg-[#10b981]/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2 border border-white/20 shadow-[0_0_20px_rgba(16,185,129,0.4)] animate-pulse">
-                  <div className="relative">
-                    <div className="w-2 h-2 rounded-full bg-white animate-ping absolute opacity-75" />
-                    <div className="w-2 h-2 rounded-full bg-white relative shadow-[0_0_8px_white]" />
-                  </div>
-                  <span className="text-white text-[10px] font-bold tracking-[0.1em] uppercase">Season Active</span>
-                </div>
-              </div>
-            )}
+          </div>
+        )}
 
         {/* Title Content */}
         <div className="absolute inset-0 p-5 flex flex-col justify-end">
@@ -76,9 +78,9 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           <h3 className="text-white font-bold text-xl leading-tight tracking-tight mb-1 group-hover:text-[#ff5100] transition-colors">
             {adventure.name}
           </h3>
-            <p className="text-white/60 text-xs leading-relaxed line-clamp-2 font-medium tracking-wide">
-              {adventure.tagline}
-            </p>
+          <p className="text-white/60 text-xs leading-relaxed line-clamp-2 font-medium tracking-wide">
+            {adventure.tagline}
+          </p>
         </div>
       </div>
     </Link>
