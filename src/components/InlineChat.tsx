@@ -63,7 +63,7 @@ export default function InlineChat() {
   }
 
   return (
-      <section id="ai-finder" className="relative overflow-hidden bg-[#0a0e14] border-y border-white/[0.03] py-20 lg:py-32">
+      <section id="ai-finder" className="relative overflow-hidden bg-[#0a0e14] border-y border-white/[0.03] py-14 lg:py-20">
         {/* Deep atmospheric backgrounds */}
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
