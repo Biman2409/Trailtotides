@@ -80,6 +80,15 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handler);
   }, [userMenuOpen]);
 
+  useEffect(() => {
+    if (!compareOpen) return;
+    function handler(e: MouseEvent) {
+      if (compareRef.current && !compareRef.current.contains(e.target as Node)) setCompareOpen(false);
+    }
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [compareOpen]);
+
   async function handleLogout() {
     const supabase = createClient();
     await supabase.auth.signOut();
