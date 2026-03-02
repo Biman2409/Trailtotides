@@ -75,7 +75,7 @@ export default function InlineChat() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           
                 {/* Architectural Header Section */}
-                <div className="flex flex-col items-center text-center mb-16 space-y-6">
+                <div className="flex flex-col items-center text-center mb-10 space-y-4">
                     <div className="flex flex-col items-center gap-6">
                               <p className="text-white/15 text-[10px] font-black tracking-[0.4em] uppercase">
                                 Looking for something specific?
