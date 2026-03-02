@@ -40,10 +40,16 @@ export function CompareProvider({ children }: { children: ReactNode }) {
   );
 }
 
+const NO_OP: CompareContextValue = {
+  selected: [],
+  add: () => {},
+  remove: () => {},
+  isSelected: () => false,
+  isFull: false,
+};
+
 export function useCompare() {
-  const ctx = useContext(CompareContext);
-  if (!ctx) throw new Error("useCompare must be used inside CompareProvider");
-  return ctx;
+  return useContext(CompareContext) ?? NO_OP;
 }
 
 export { MAX };
