@@ -65,6 +65,22 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${dmSans.variable} antialiased`}>
         <Script
+          id="org-structured-data"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Trail to Tides",
+              url: BASE_URL,
+              logo: `${BASE_URL}/logo.svg`,
+              sameAs: [],
+              description:
+                "India's adventure discovery platform — handpicked adventures across the Indian Subcontinent, run by verified operators.",
+            }),
+          }}
+        />
+        <Script
           id="orchids-browser-logs"
           src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/scripts/orchids-browser-logs.js"
           strategy="afterInteractive"
