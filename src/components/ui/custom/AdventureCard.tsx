@@ -84,31 +84,31 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           </div>
         )}
 
-        {/* Bottom content over image */}
-        <div className="absolute bottom-0 left-0 right-0 p-4">
-          <div className="flex items-center gap-1.5 mb-1 opacity-80">
-            <MapPin className="w-3 h-3 text-[#ff5100]" />
-            <span className="text-white text-[10px] font-medium tracking-wide">{adventure.state}</span>
+          {/* Pills — top left */}
+          <div className="absolute top-3 left-3 z-20 flex flex-wrap gap-1.5 pointer-events-none">
+            <span className={`inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight text-white ${typeStyle[adventure.type] ?? "bg-white/15 text-white"}`}>
+              {adventure.type}
+            </span>
+            <span className={`inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight text-white ${difficultyStyle[adventure.difficulty] ?? "bg-white/15 text-white"}`}>
+              {adventure.difficulty}
+            </span>
           </div>
-          <h3 className="text-white font-bold text-lg leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors">
-            {adventure.name}
-          </h3>
-        </div>
-      </Link>
 
-      {/* Dashboard body */}
-      <div className="px-4 pt-3 pb-4 flex flex-col gap-3">
-        {/* Pills row */}
-        <div className="flex flex-wrap gap-1.5">
-          <span className={`inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight text-white ${typeStyle[adventure.type] ?? "bg-white/15 text-white"}`}>
-            {adventure.type}
-          </span>
-          <span className={`inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight text-white ${difficultyStyle[adventure.difficulty] ?? "bg-white/15 text-white"}`}>
-            {adventure.difficulty}
-          </span>
-        </div>
+          {/* Bottom content over image */}
+          <div className="absolute bottom-0 left-0 right-0 p-4">
+            <div className="flex items-center gap-1.5 mb-1 opacity-80">
+              <MapPin className="w-3 h-3 text-[#ff5100]" />
+              <span className="text-white text-[10px] font-medium tracking-wide">{adventure.state}</span>
+            </div>
+            <h3 className="text-white font-bold text-lg leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors">
+              {adventure.name}
+            </h3>
+          </div>
+        </Link>
 
-        {/* Stats row */}
+        {/* Dashboard body */}
+        <div className="px-4 pt-3 pb-4 flex flex-col gap-3">
+          {/* Stats row */}
         <div className="flex items-center justify-between text-[11px] text-white/45 font-medium">
           <span>{adventure.duration}</span>
           {operatorCount > 0 && (
