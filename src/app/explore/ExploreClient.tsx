@@ -732,6 +732,9 @@ export default function ExploreClient() {
         )}
       </div>
 
+        {/* Compare Adventures */}
+        <CompareAdventures />
+
         {/* Map CTA Section */}
           <div className="bg-[#1a1f2e] mt-16 border-t border-white/5">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
