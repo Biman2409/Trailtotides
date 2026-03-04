@@ -129,7 +129,7 @@ export default async function ExperiencePage({ params }: Props) {
       {/* ── STATS STRIP ──────────────────────────────────── */}
       <section className="bg-[#1a1f2e] py-6 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className={`grid grid-cols-2 ${adventure.distance ? 'md:grid-cols-5' : 'md:grid-cols-4'} gap-6 md:divide-x divide-white/10`}>
+          <div className={`grid grid-cols-2 md:grid-cols-${statCount} gap-6 md:divide-x divide-white/10`}>
             <div className="flex items-center gap-3 md:px-6 first:pl-0">
               <Clock className="w-5 h-5 text-[#ff5100] shrink-0" />
               <div>
@@ -150,7 +150,7 @@ export default async function ExperiencePage({ params }: Props) {
               <div className="flex items-center gap-3 md:px-6">
                 <TrendingUp className="w-5 h-5 text-[#5ba3c9] shrink-0" />
                 <div>
-                  <div className="text-white/40 text-[10px] uppercase tracking-widest">Max Altitude</div>
+                  <div className="text-white/40 text-[10px] uppercase tracking-widest">Max Alt</div>
                   <div className="text-white font-semibold text-base">{adventure.altitude}</div>
                 </div>
               </div>
