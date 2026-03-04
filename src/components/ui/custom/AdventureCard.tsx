@@ -4,8 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, GitCompareArrows, Users, CheckCheck } from "lucide-react";
 import type { Adventure, Month } from "@/lib/data";
-import { difficultyStyle, typeStyle } from "@/lib/styles";
 import { useCompare } from "@/contexts/CompareContext";
+import Pill from "./Pill";
 
 interface AdventureCardProps {
   adventure: Adventure;
@@ -45,11 +45,11 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
       }}
     >
       {/* Image area */}
-      <Link
-        href={`/experiences/${adventure.slug}`}
-        className="relative w-full overflow-hidden block group"
-        style={{ height: isLarge ? "260px" : "200px" }}
-      >
+      <div className="relative w-full overflow-hidden block group" style={{ height: isLarge ? "260px" : "200px" }}>
+        <Link
+          href={`/experiences/${adventure.slug}`}
+          className="absolute inset-0 z-10"
+        />
         <Image
           src={adventure.heroImage}
           alt={adventure.name}
@@ -59,17 +59,13 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           style={{ filter: "brightness(1.05) contrast(1.1) saturate(1.1)" }}
           sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
-        {selected && <div className="absolute inset-0 bg-[#ff5100]/8 pointer-events-none" />}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10 z-10 pointer-events-none" />
+        {selected && <div className="absolute inset-0 bg-[#ff5100]/8 pointer-events-none z-10" />}
 
         {/* Pills — top left */}
-        <div className="absolute top-3 left-3 z-20 flex flex-wrap gap-1.5 pointer-events-none">
-          <span className={`inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight text-white ${typeStyle[adventure.type] ?? "bg-white/15 text-white"}`}>
-            {adventure.type}
-          </span>
-          <span className={`inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight text-white ${difficultyStyle[adventure.difficulty] ?? "bg-white/15 text-white"}`}>
-            {adventure.difficulty}
-          </span>
+        <div className="absolute top-3 left-3 z-20 flex flex-wrap gap-1.5">
+          <Pill type="type" value={adventure.type} />
+          <Pill type="difficulty" value={adventure.difficulty} />
         </div>
 
         {/* Season Active badge — top right */}
@@ -88,16 +84,22 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         )}
 
         {/* Bottom content over image */}
-        <div className="absolute bottom-0 left-0 right-0 p-4">
-          <div className="flex items-center gap-1.5 mb-1 opacity-80">
+        <div className="absolute bottom-0 left-0 right-0 p-4 z-20 pointer-events-none">
+          <div className="flex items-center gap-1.5 mb-1 opacity-80 pointer-events-auto">
             <MapPin className="w-3 h-3 text-[#ff5100]" />
-            <span className="text-white text-[10px] font-medium tracking-wide">{adventure.state}</span>
+            <Link 
+              href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
+              onClick={(e) => e.stopPropagation()}
+              className="text-white text-[10px] font-medium tracking-wide hover:text-[#ff5100] transition-colors"
+            >
+              {adventure.state}
+            </Link>
           </div>
-          <h3 className="text-white font-bold text-lg leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors">
+          <h3 className="text-white font-bold text-lg leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors pointer-events-none">
             {adventure.name}
           </h3>
         </div>
-      </Link>
+      </div>
 
       {/* Dashboard body */}
       <div className="px-4 pt-3 pb-4 flex flex-col gap-3">
