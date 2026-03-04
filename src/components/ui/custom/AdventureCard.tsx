@@ -66,7 +66,6 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         <div className="absolute top-3 left-3 z-20 flex flex-wrap gap-1.5">
           <Pill type="type" value={adventure.type} />
           <Pill type="difficulty" value={adventure.difficulty} />
-          <Pill type="region" value={adventure.region} />
         </div>
 
         {/* Season Active badge — top right */}
