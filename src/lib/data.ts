@@ -144,30 +144,31 @@ export const adventures: Adventure[] = [
         durationDays: "9 days",
         altitude: "3,450m",
         terrain: "Frozen river, ice sheets",
-        bestSeason: "Jan – Feb",
-        bestMonths: ["Jan", "Feb"],
-        groupSize: "Small group (2–6)",
-          heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0183-resized-1772365087456.jpeg?width=8000&height=8000&resize=contain",
-        galleryImages: [
-          "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0183-resized-1772365087456.jpeg?width=8000&height=8000&resize=contain",
-        ],
-      lat: 34.1526,
-      lng: 76.8571,
-      description:
-        "The Chadar Trek is one of the most extraordinary winter treks on Earth. Named after the thick sheet of ice that forms over the Zanskar River each January, this trek takes you through a frozen gorge carved over millennia — a place few humans ever witness. You walk, slip, camp, and survive on the river itself.",
-      whatMakesSpecial:
-        "There is no trail — the river IS the trail. Vertical cliff walls, frozen waterfalls, and temperatures that plunge to -30°C make this an expedition, not a walk. The silence is otherworldly.",
-      whoFor: "Trekkers with prior high-altitude cold-weather experience. Those who want the edge of what's possible.",
-      whoNot: "First-time trekkers, those with heart or respiratory conditions, or anyone who hasn't trained in cold.",
-      safetyNotes:
-        "Carry emergency bivouac gear, layered thermals, and micro-spike crampons. River ice can crack unexpectedly. Always trek with a certified local guide.",
-        operators: [
-            { name: "Rimo Expeditions", verified: true, priceFrom: "₹28,000", rating: 4.9, website: "https://www.rimoexpeditions.com" },
-            { name: "Dreamland Trek & Tour", verified: true, priceFrom: "₹22,000", rating: 4.8, website: "https://www.dreamladakh.com" },
-            { name: "Trek The Himalayas", verified: true, priceFrom: "₹26,500", rating: 4.8, website: "https://trekthehimalayas.com/chadar-trek" },
-            { name: "Altitude Adventure Ladakh", verified: false, priceFrom: "₹17,500", rating: 4.3, website: "https://www.altitudeadventureladakh.com" },
-            { name: "Overland Escape", verified: false, priceFrom: "₹21,000", rating: 4.2, website: "https://www.overlandescape.com" },
+          bestSeason: "Jan-Feb",
+          bestMonths: ["Jan", "Feb"],
+          groupSize: "Small group (2–6)",
+            heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0183-resized-1772365087456.jpeg?width=8000&height=8000&resize=contain",
+          galleryImages: [
+            "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0183-resized-1772365087456.jpeg?width=8000&height=8000&resize=contain",
           ],
+        lat: 34.1526,
+        lng: 76.8571,
+        description:
+          "The Chadar Trek is one of the most extraordinary winter treks on Earth. Named after the thick sheet of ice that forms over the Zanskar River each January, this trek takes you through a frozen gorge carved over millennia — a place few humans ever witness. You walk, slip, camp, and survive on the river itself.",
+        whatMakesSpecial:
+          "There is no trail — the river IS the trail. Vertical cliff walls, frozen waterfalls, and temperatures that plunge to -30°C make this an expedition, not a walk. The silence is otherworldly.",
+        whoFor: "Trekkers with prior high-altitude cold-weather experience. Those who want the edge of what's possible.",
+        whoNot: "First-time trekkers, those with heart or respiratory conditions, or anyone who hasn't trained in cold.",
+        safetyNotes:
+          "Carry emergency bivouac gear, layered thermals, and micro-spike crampons. River ice can crack unexpectedly. Always trek with a certified local guide.",
+          operators: [
+              { name: "Indiahikes", verified: true, priceFrom: "₹25,000", rating: 4.9, website: "https://indiahikes.com/chadar-trek" },
+              { name: "Rimo Expeditions", verified: true, priceFrom: "₹28,000", rating: 4.9, website: "https://www.rimoexpeditions.com" },
+              { name: "Dreamland Trek & Tour", verified: true, priceFrom: "₹22,000", rating: 4.8, website: "https://www.dreamladakh.com" },
+              { name: "Trek The Himalayas", verified: true, priceFrom: "₹26,500", rating: 4.8, website: "https://trekthehimalayas.com/chadar-trek" },
+              { name: "Altitude Adventure Ladakh", verified: false, priceFrom: "₹17,500", rating: 4.3, website: "https://www.altitudeadventureladakh.com" },
+              { name: "Overland Escape", verified: false, priceFrom: "₹21,000", rating: 4.2, website: "https://www.overlandescape.com" },
+            ],
       tags: ["frozen river", "winter", "Ladakh", "extreme cold", "iconic"],
       featured: true,
     },
