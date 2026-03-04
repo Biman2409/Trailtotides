@@ -51,6 +51,7 @@ export interface Adventure {
   bestSeason: string;
   bestMonths: Month[];
   groupSize: GroupSize;
+  baseCamp?: string;
   heroImage: string;
   galleryImages: string[];
   lat: number;
