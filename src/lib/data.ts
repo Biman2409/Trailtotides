@@ -901,6 +901,7 @@ export const adventures: Adventure[] = [
         bestSeason: "All year (except Jul-Aug)",
         bestMonths: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Sep", "Oct", "Nov", "Dec"],
         groupSize: "Small group (2–6)",
+        baseCamp: "Raithal",
         heroImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=70",
         galleryImages: [],
         lat: 0,
