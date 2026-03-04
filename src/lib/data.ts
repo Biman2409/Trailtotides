@@ -869,6 +869,7 @@ export const adventures: Adventure[] = [
         bestSeason: "Apr-May | Sep-Nov",
         bestMonths: ["Apr", "May", "Sep", "Oct", "Nov"],
         groupSize: "Small group (2–6)",
+        baseCamp: "Yuksom",
         heroImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=70",
         galleryImages: [],
         lat: 0,
