@@ -98,7 +98,6 @@ export default async function ExperiencePage({ params }: Props) {
               <div className="flex flex-wrap items-center gap-3 mb-5">
                 <Pill type="type" value={adventure.type} />
                 <Pill type="difficulty" value={adventure.difficulty} />
-                <Pill type="region" value={adventure.region} />
                 <Link 
                   href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
                   className="flex items-center gap-1.5 text-white/60 text-xs tracking-tight font-bold hover:text-[#ff5100] transition-colors"
