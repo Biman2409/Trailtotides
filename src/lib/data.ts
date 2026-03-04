@@ -91,7 +91,8 @@ export interface Story {
   // To add a new story: insert a row into story_views with { slug, views: <seed> }.
 }
 
-export const adventures: Adventure[] = [{
+export const adventures: Adventure[] = [
+{
       id: "10",
       slug: "stok-kangri",
       name: "Stok Kangri Summit",
@@ -1935,21 +1936,6 @@ export const adventures: Adventure[] = [{
         tags: ["trekking", "nepal", "expert"],
         featured: false,
       },
-{
-          id: "7",
-          slug: "the-night-photi-la-tested-us",
-          title: "The Night Photi La Tested Us",
-            excerpt:
-              "A ride to Umling La, a detour to Demchok, and the mountain that watched over us. Some trips are planned. Some trips are reckless. And some trips stay with you forever.",
-              author: "Nishant Ingle",
-              authorRole: "Rider",
-              heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_3620_Original-resized-1772404370295.jpeg?width=8000&height=8000&resize=contain",
-            readTime: "15 min read",
-
-              tags: ["Featured", "TTT Original", "Ladakh", "Himalayas"],
-            region: "Himalayas",
-            date: "July 2022",
-        },
   {
     id: "105",
     slug: "chadar-trek-frozen-river",
@@ -2099,4 +2085,90 @@ export const adventures: Adventure[] = [{
     operators: [{ name: "Trek The Himalayas", verified: true, priceFrom: "₹12600", rating: 4.8, website: "https://trekthehimalayas.com/bajre-dara-trek" }],
     tags: ["trekking", "sikkim", "intermediate"],
     featured: false,
-  }];
+  }
+];
+
+export const stories: Story[] = [
+        {
+          id: "7",
+          slug: "the-night-photi-la-tested-us",
+          title: "The Night Photi La Tested Us",
+            excerpt:
+              "A ride to Umling La, a detour to Demchok, and the mountain that watched over us. Some trips are planned. Some trips are reckless. And some trips stay with you forever.",
+              author: "Nishant Ingle",
+              authorRole: "Rider",
+              heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_3620_Original-resized-1772404370295.jpeg?width=8000&height=8000&resize=contain",
+            readTime: "15 min read",
+
+              tags: ["Featured", "TTT Original", "Ladakh", "Himalayas"],
+            region: "Himalayas",
+            date: "July 2022",
+        },
+];
+
+export const regions = [
+  {
+    name: "Himalayas" as Region,
+    tagline: "Peaks, passes & frozen rivers",
+      image: "https://images.unsplash.com/photo-1599661520791-8aabee470d55?w=800&q=80",
+      adventureCount: 127,
+  },
+  {
+    name: "Western Ghats" as Region,
+      tagline: "Rainforests, rivers & ancient trails",
+        image: "https://images.unsplash.com/photo-1695211564991-9cf8f7a1d799?w=800&q=80",
+      adventureCount: 43,
+  },
+  {
+    name: "Eastern Ghats" as Region,
+    image: "https://images.unsplash.com/photo-1663597675745-96a3f784369e?w=800&q=80",
+    tagline: "Tribal trails, gorges & hidden waterfalls",
+    adventureCount: 19,
+  },
+  {
+    name: "Desert" as Region,
+    tagline: "Salt flats, sand dunes & night skies",
+      image: "https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?w=800&q=80",
+    adventureCount: 28,
+  },
+  {
+    name: "Coast" as Region,
+    tagline: "Surf, sea kayaking & coastal hikes",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80",
+    adventureCount: 36,
+  },
+  {
+    name: "Islands" as Region,
+    tagline: "Diving, reefs & untouched beaches",
+      image: "https://images.unsplash.com/photo-1745917784557-a93bf209232c?w=800&q=80",
+    adventureCount: 22,
+  },
+  {
+    name: "Northeast" as Region,
+      tagline: "Offbeat valleys & living root bridges",
+        image: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80",
+    adventureCount: 31,
+  },
+  {
+    name: "Urban" as Region,
+    tagline: "City trails, rooftops & street culture",
+    image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=80",
+    adventureCount: 14,
+  },
+];
+
+export const adventureTypes = [
+  { type: "Trekking" as AdventureType, count: 94 },
+  { type: "Biking" as AdventureType, count: 38 },
+  { type: "Cycling" as AdventureType, count: 27 },
+  { type: "Mountaineering" as AdventureType, count: 15 },
+  { type: "Rock Climbing" as AdventureType, count: 18 },
+  { type: "Jeep Safari" as AdventureType, count: 22 },
+  { type: "Camel Safari" as AdventureType, count: 9 },
+  { type: "Caving" as AdventureType, count: 7 },
+  { type: "Sandboarding" as AdventureType, count: 5 },
+  { type: "Urban Adventure" as AdventureType, count: 11 },
+  { type: "Diving" as AdventureType, count: 19 },
+  { type: "Kayaking" as AdventureType, count: 24 },
+  { type: "Skiing" as AdventureType, count: 8 },
+];
