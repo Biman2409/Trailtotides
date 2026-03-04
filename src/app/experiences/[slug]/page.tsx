@@ -11,12 +11,13 @@ import {
   ShieldCheck,
   ChevronLeft,
   Star,
-  CheckCircle2,
-  XCircle,
-  AlertTriangle,
-  ArrowRight,
-  BadgeCheck,
-  ExternalLink,
+    CheckCircle2,
+    XCircle,
+    AlertTriangle,
+    ArrowRight,
+    Route,
+    BadgeCheck,
+    ExternalLink,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
