@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { typeStyle, difficultyStyle } from "@/lib/styles";
@@ -20,7 +22,7 @@ export default function Pill({ type, value, className = "", clickable = true }: 
     styleClass = difficultyStyle[value] || "bg-gray-500 text-white";
     href = `/explore?difficulty=${encodeURIComponent(value)}`;
   } else if (type === "region") {
-    styleClass = "bg-sky-500 text-white";
+    styleClass = "bg-[#ff5100] text-white"; // Using consistent orange for location
     href = `/explore?region=${encodeURIComponent(value)}`;
   } else if (type === "subRegion") {
     styleClass = "bg-white/15 text-white backdrop-blur-sm";
@@ -35,7 +37,7 @@ export default function Pill({ type, value, className = "", clickable = true }: 
       <Link 
         href={href} 
         onClick={(e) => e.stopPropagation()} 
-        className={`${finalClass} hover:scale-105 active:scale-95 cursor-pointer`}
+        className={`${finalClass} hover:scale-105 active:scale-95 cursor-pointer z-30`}
       >
         {value}
       </Link>
