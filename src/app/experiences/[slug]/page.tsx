@@ -372,16 +372,15 @@ export default async function ExperiencePage({ params }: Props) {
                   At a Glance
                 </p>
                 <div className="space-y-3.5">
-                    {[
-                      { label: "Region", value: adventure.region, href: `/explore?region=${encodeURIComponent(adventure.region)}` },
-                      ...(adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
-                      { label: "Duration", value: adventure.durationDays },
-                      { label: "Difficulty", value: adventure.difficulty, href: `/explore?difficulty=${encodeURIComponent(adventure.difficulty)}` },
-                    { label: "Best Season", value: adventure.bestSeason },
-                    ...(adventure.altitude ? [{ label: "Max Altitude", value: adventure.altitude }] : []),
-                    { label: "Terrain", value: adventure.terrain },
-                    { label: "Group Size", value: adventure.groupSize },
-                  ].map(({ label, value, href }) => (
+                  {[
+                    ...(adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
+                    { label: "Duration", value: adventure.durationDays },
+                    { label: "Difficulty", value: adventure.difficulty, href: `/explore?difficulty=${encodeURIComponent(adventure.difficulty)}` },
+                  { label: "Best Season", value: adventure.bestSeason },
+                  ...(adventure.altitude ? [{ label: "Max Altitude", value: adventure.altitude }] : []),
+                  { label: "Terrain", value: adventure.terrain },
+                  { label: "Group Size", value: adventure.groupSize },
+                ].map(({ label, value, href }) => (
                     <div key={label} className="flex items-start justify-between gap-4 border-b border-white/5 pb-3 last:border-0 last:pb-0">
                       <span className="text-white/38 text-xs shrink-0">{label}</span>
                       {href ? (
