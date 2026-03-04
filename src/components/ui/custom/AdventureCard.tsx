@@ -135,7 +135,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           ) : (
             <>
               <GitCompareArrows className="w-3.5 h-3.5" />
-              {isFull ? "Compare Full (3/3)" : "Add to Compare"}
+                {isFull ? "Compare Full (6/6)" : "Add to Compare"}
             </>
           )}
         </button>
