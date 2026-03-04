@@ -773,6 +773,7 @@ export const adventures: Adventure[] = [
         bestSeason: "Jul-Sep",
         bestMonths: ["Jul", "Aug", "Sep"],
         groupSize: "Small group (2–6)",
+        baseCamp: "Kafnu",
         heroImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=70",
         galleryImages: [],
         lat: 0,
