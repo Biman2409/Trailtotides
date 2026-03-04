@@ -95,14 +95,17 @@ export default async function ExperiencePage({ params }: Props) {
         {/* Hero text */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pb-16 w-full">
           <div className="max-w-3xl">
-            <div className="flex flex-wrap items-center gap-3 mb-5">
-              <Pill type="type" value={adventure.type} />
-              <Pill type="difficulty" value={adventure.difficulty} />
-              <span className="flex items-center gap-1.5 text-white/60 text-xs uppercase tracking-tight font-bold">
-                <MapPin className="w-3.5 h-3.5 text-[#ff5100]" />
-                {adventure.state}
-              </span>
-            </div>
+              <div className="flex flex-wrap items-center gap-3 mb-5">
+                <Pill type="type" value={adventure.type} />
+                <Pill type="difficulty" value={adventure.difficulty} />
+                <Link 
+                  href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
+                  className="flex items-center gap-1.5 text-white/60 text-xs tracking-tight font-bold hover:text-[#ff5100] transition-colors"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-[#ff5100]" />
+                  {adventure.state}
+                </Link>
+              </div>
             <h1 className="text-white text-5xl md:text-7xl font-semibold tracking-tight leading-[1.0] mb-4">
               {adventure.name}
             </h1>
