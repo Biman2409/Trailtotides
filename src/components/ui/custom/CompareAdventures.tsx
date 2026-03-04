@@ -16,8 +16,9 @@ const FIELDS: { label: string; key: keyof Adventure | "price" | "rating" | "oper
     { label: "Duration",        key: "duration" },
     { label: "Days",            key: "durationDays" },
     { label: "Distance",        key: "distance" },
-    { label: "Altitude",        key: "altitude" },
-  { label: "Best Season",     key: "bestSeason" },
+    { label: "Max Alt",         key: "altitude" },
+    { label: "Best Season",     key: "bestSeason" },
+
   { label: "Group Size",      key: "groupSize" },
   { label: "Operators",       key: "operators" },
   { label: "Starting From",   key: "price" },
