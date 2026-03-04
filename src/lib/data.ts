@@ -104,6 +104,7 @@ export const adventures: Adventure[] = [
         difficulty: "Expert",
         duration: "7+ days",
         durationDays: "8 days",
+        distance: "40km",
       altitude: "6,153m",
         terrain: "Glaciers, scree, summit ridge",
           bestSeason: "Jul – Sep",
