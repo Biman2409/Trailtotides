@@ -9,6 +9,7 @@ import { useCompare, MAX } from "@/contexts/CompareContext";
 
 const FIELDS: { label: string; key: keyof Adventure | "price" | "rating" | "operators" }[] = [
   { label: "Region",          key: "region" },
+  { label: "Base Camp",       key: "baseCamp" },
   { label: "State",           key: "state" },
   { label: "Type",            key: "type" },
   { label: "Difficulty",      key: "difficulty" },
