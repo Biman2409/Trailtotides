@@ -373,18 +373,24 @@ export default async function ExperiencePage({ params }: Props) {
                 </p>
                 <div className="space-y-3.5">
                     {[
-                      { label: "Region", value: adventure.region },
+                      { label: "Region", value: adventure.region, href: `/explore?region=${encodeURIComponent(adventure.region)}` },
                       ...(adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
                       { label: "Duration", value: adventure.durationDays },
-                      { label: "Difficulty", value: adventure.difficulty },
+                      { label: "Difficulty", value: adventure.difficulty, href: `/explore?difficulty=${encodeURIComponent(adventure.difficulty)}` },
                     { label: "Best Season", value: adventure.bestSeason },
                     ...(adventure.altitude ? [{ label: "Max Altitude", value: adventure.altitude }] : []),
                     { label: "Terrain", value: adventure.terrain },
                     { label: "Group Size", value: adventure.groupSize },
-                  ].map(({ label, value }) => (
+                  ].map(({ label, value, href }) => (
                     <div key={label} className="flex items-start justify-between gap-4 border-b border-white/5 pb-3 last:border-0 last:pb-0">
                       <span className="text-white/38 text-xs shrink-0">{label}</span>
-                      <span className="text-white/80 text-xs text-right leading-snug">{value}</span>
+                      {href ? (
+                        <Link href={href} className="text-white/80 text-xs text-right leading-snug hover:text-[#ff5100] transition-colors underline decoration-white/10 underline-offset-4">
+                          {value}
+                        </Link>
+                      ) : (
+                        <span className="text-white/80 text-xs text-right leading-snug">{value}</span>
+                      )}
                     </div>
                   ))}
                 </div>
