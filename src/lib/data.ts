@@ -46,6 +46,7 @@ export interface Adventure {
   difficulty: Difficulty;
   duration: Duration;
   durationDays: string;
+  distance?: string;
   altitude?: string;
   terrain: string;
   bestSeason: string;
