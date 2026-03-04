@@ -38,10 +38,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!adventure) return {};
   return {
     title: `${adventure.name} — Trail to Tides`,
-    description: `${adventure.type} in ${adventure.region} · ${adventure.difficulty} · ${adventure.duration} days. ${adventure.tagline ?? "Discover this handpicked adventure on Trail to Tides."}`,
+    description: `${adventure.type} in ${adventure.state} · ${adventure.difficulty} · ${adventure.duration} days. ${adventure.tagline ?? "Discover this handpicked adventure on Trail to Tides."}`,
     openGraph: {
       title: `${adventure.name} — Trail to Tides`,
-      description: `${adventure.type} in ${adventure.region} · ${adventure.difficulty} · ${adventure.duration} days.`,
+      description: `${adventure.type} in ${adventure.state} · ${adventure.difficulty} · ${adventure.duration} days.`,
       url: `https://trailtotides.com/experiences/${slug}`,
       images: [{ url: adventure.heroImage, width: 1200, height: 630, alt: adventure.name }],
       type: "article",
