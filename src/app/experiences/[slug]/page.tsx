@@ -406,10 +406,10 @@ export default async function ExperiencePage({ params }: Props) {
 
               {/* Back to explore */}
               <Link
-                href={`/explore?region=${encodeURIComponent(adventure.region)}`}
+                href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
                 className="flex items-center justify-center gap-2 w-full bg-transparent border border-[#1a1f2e]/20 hover:border-[#1a1f2e]/40 text-[#1a1f2e] font-medium py-3 rounded-2xl text-sm transition-all duration-200 hover:bg-[#1a1f2e]/5"
               >
-                More in {adventure.region}
+                More in {adventure.state}
               </Link>
             </div>
           </div>
@@ -425,7 +425,7 @@ export default async function ExperiencePage({ params }: Props) {
                   You Might Also Like
                 </p>
                 <h2 className="text-[#1a1f2e] text-3xl font-semibold tracking-tight">
-                  More in {adventure.region}
+                  More in {adventure.state}
                 </h2>
               </div>
               <Link
