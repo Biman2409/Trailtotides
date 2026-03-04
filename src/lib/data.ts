@@ -475,9 +475,9 @@ export const stories: Story[] = [
               heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_3620_Original-resized-1772404370295.jpeg?width=8000&height=8000&resize=contain",
             readTime: "15 min read",
 
-              tags: ["Featured", "TTT Original", "Ladakh", "Himalayas"],
-            region: "Himalayas",
-            date: "July 2022",
+              tags: ["Featured", "TTT Original", "Ladakh"],
+              region: "Himalayas",
+              date: "July 2022",
         },
 ];
 
