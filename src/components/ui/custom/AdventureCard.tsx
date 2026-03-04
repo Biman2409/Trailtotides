@@ -105,15 +105,22 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
       <div className="px-4 pt-3 pb-4 flex flex-col gap-3">
         {/* Stats row */}
         <div className="flex items-center justify-between text-[11px] text-white/45 font-medium">
-          <div className="flex items-center gap-2">
-            <span>{adventure.duration}</span>
-            {adventure.distance && (
-              <>
-                <span className="w-1 h-1 rounded-full bg-white/20" />
-                <span>{adventure.distance}</span>
-              </>
-            )}
-          </div>
+            <div className="flex items-center gap-2">
+              <span>{adventure.duration}</span>
+              {adventure.distance && (
+                <>
+                  <span className="w-1 h-1 rounded-full bg-white/20" />
+                  <span>{adventure.distance}</span>
+                </>
+              )}
+              {adventure.altitude && (adventure.type === "Trekking" || adventure.type === "Biking" || adventure.type === "Mountaineering" || adventure.type === "Cycling") && (
+                <>
+                  <span className="w-1 h-1 rounded-full bg-white/20" />
+                  <span>{adventure.altitude}</span>
+                </>
+              )}
+            </div>
+
           {operatorCount > 0 && (
             <span className="flex items-center gap-1">
               <Users className="w-3 h-3" />
