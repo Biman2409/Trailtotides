@@ -369,10 +369,11 @@ export default async function ExperiencePage({ params }: Props) {
                   At a Glance
                 </p>
                 <div className="space-y-3.5">
-                  {[
-                    { label: "Region", value: adventure.region },
-                    { label: "Duration", value: adventure.durationDays },
-                    { label: "Difficulty", value: adventure.difficulty },
+                    {[
+                      { label: "Region", value: adventure.region },
+                      ...(adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
+                      { label: "Duration", value: adventure.durationDays },
+                      { label: "Difficulty", value: adventure.difficulty },
                     { label: "Best Season", value: adventure.bestSeason },
                     ...(adventure.altitude ? [{ label: "Max Altitude", value: adventure.altitude }] : []),
                     { label: "Terrain", value: adventure.terrain },
