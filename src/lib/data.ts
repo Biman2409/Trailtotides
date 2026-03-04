@@ -2008,6 +2008,7 @@ export const adventures: Adventure[] = [
       tags: ["trekking", "nepal", "expert"],
       featured: false,
     },
+  ];
 
 export const stories: Story[] = [
         {
