@@ -712,7 +712,6 @@ export const adventures: Adventure[] = [
         bestSeason: "May-Jun | Sep-Oct",
         bestMonths: ["May", "Jun", "Sep", "Oct"],
         groupSize: "Small group (2–6)",
-        baseCamp: "Sankri",
         heroImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=70",
         galleryImages: [],
         lat: 0,
