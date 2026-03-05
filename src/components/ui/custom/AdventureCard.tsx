@@ -96,27 +96,25 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         </div>
       </div>
 
-      {/* Dashboard — duration left, operators right */}
-      <div className="px-4 pt-3 pb-4">
-        <div className="flex items-center justify-between gap-2">
-          <span className="text-white/55 text-[11px] font-medium">{adventure.durationDays}</span>
+        {/* Dashboard — duration left, operators right */}
+        <div className="px-3 py-2.5 flex items-center justify-between gap-2">
+          <span className="text-white/50 text-[10px] font-medium leading-none">{adventure.durationDays}</span>
 
           {operatorCount > 0 && (
-            <div className="flex items-center gap-1.5 text-[11px]">
+            <div className="flex items-center gap-1 text-[10px] leading-none">
               <BadgeCheck className="w-3 h-3 text-emerald-400/80 shrink-0" />
-              <span className="text-white/45">
-                <span className="text-white/70 font-semibold">{displayCount}</span> operators
+              <span className="text-white/40">
+                <span className="text-white/65 font-semibold">{displayCount}</span> ops
                 {lowestPrice && (
                   <>
-                    <span className="text-white/25 mx-1">·</span>
-                    <span className="text-[#ff5100]/90 font-semibold">starting ₹{lowestPrice.toLocaleString("en-IN")}</span>
+                    <span className="text-white/20 mx-1">·</span>
+                    <span className="text-[#ff5100]/85 font-semibold">₹{lowestPrice.toLocaleString("en-IN")}</span>
                   </>
                 )}
               </span>
             </div>
           )}
         </div>
-      </div>
     </div>
   );
 }
