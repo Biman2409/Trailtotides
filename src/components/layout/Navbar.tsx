@@ -120,7 +120,7 @@ export default function Navbar() {
                     </div>
                         <span className="text-white text-base leading-none tracking-tight">
                           <span className="font-black uppercase">TRAIL</span>
-                          <span style={{fontFamily: "var(--font-dancing-script)"}} className="text-white/60 text-[15px] normal-case tracking-normal font-normal mx-1">to</span>
+                          <span style={{fontFamily: "var(--font-cursive)"}} className="text-white/60 text-[15px] normal-case tracking-normal font-normal mx-1">to</span>
                           <span className="font-black uppercase">TIDES</span>
                         </span>
                 </Link>
