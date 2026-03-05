@@ -153,7 +153,7 @@ export default async function ExperiencePage({ params }: Props) {
                   <TrendingUp className="w-5 h-5 text-[#5ba3c9] shrink-0" />
                   <div>
                     <div className="text-white/40 text-[10px] uppercase tracking-widest">
-                      {adventure.type === "Diving" ? "Max Depth" : "Max Alt"}
+                      {adventure.type === "Diving" ? "Max Depth" : "Max Altitude"}
                     </div>
                     <div className="text-white font-semibold text-base">
                       {adventure.depth ?? adventure.altitude}
