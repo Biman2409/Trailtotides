@@ -99,7 +99,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
                 {lowestPrice && (
                   <>
                     <span className="text-white/25 mx-1">·</span>
-                    <span className="text-[#ff5100]/90 font-semibold">from ₹{lowestPrice.toLocaleString("en-IN")}</span>
+                      <span className="text-[#ff5100]/90 font-semibold">starting ₹{lowestPrice.toLocaleString("en-IN")}</span>
                   </>
                 )}
               </span>
