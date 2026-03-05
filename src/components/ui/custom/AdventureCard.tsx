@@ -11,11 +11,18 @@ interface AdventureCardProps {
   size?: "default" | "large";
 }
 
+function formatSeasonShort(bestMonths: Month[]): string {
+  if (!bestMonths || bestMonths.length === 0) return "";
+  if (bestMonths.length === 1) return bestMonths[0];
+  return `${bestMonths[0]}–${bestMonths[bestMonths.length - 1]}`;
+}
+
 export default function AdventureCard({ adventure, size = "default" }: AdventureCardProps) {
   const isLarge = size === "large";
   const months: Month[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const currentMonth = months[new Date().getMonth()];
   const isSeasonActive = adventure.bestMonths.includes(currentMonth);
+  const seasonLabel = formatSeasonShort(adventure.bestMonths);
   const operatorCount = adventure.operators?.length ?? 0;
 
   const verifiedOps = adventure.operators?.filter(o => o.verified) ?? [];
