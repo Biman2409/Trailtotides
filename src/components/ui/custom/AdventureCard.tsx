@@ -98,7 +98,15 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
 
         {/* Dashboard — duration left, operators right */}
         <div className="px-3 py-2.5 flex items-center justify-between gap-2">
-          <span className="text-white/50 text-[10px] font-medium leading-none">{adventure.durationDays}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-white/50 text-[10px] font-medium leading-none">{adventure.durationDays}</span>
+            {adventure.type === "Trekking" && adventure.baseCamp && (
+              <>
+                <span className="text-white/20 text-[10px]">·</span>
+                <span className="text-white/50 text-[10px] font-medium leading-none">{adventure.baseCamp}</span>
+              </>
+            )}
+          </div>
 
           {operatorCount > 0 && (
             <div className="flex items-center gap-1 text-[10px] leading-none">
