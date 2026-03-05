@@ -307,7 +307,7 @@ export const adventures: Adventure[] = [
           durationDays: "3 days",
           distance: "15km",
         altitude: "2,452m",
-      baseCamp: "Kohima / Viswema",
+      baseCamp: "Viswema / Zakhama",
         bestSeason: "Jun – Sep, Dec – Mar",
         bestMonths: ["Jun", "Jul", "Aug", "Sep", "Dec", "Jan", "Feb", "Mar"],
           groupSize: "Small group (2–6)",
