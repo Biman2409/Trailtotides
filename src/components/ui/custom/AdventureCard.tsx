@@ -18,37 +18,26 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
   const isSeasonActive = adventure.bestMonths.includes(currentMonth);
   const operatorCount = adventure.operators?.length ?? 0;
 
-  const { add, remove, isSelected, isFull } = useCompare();
-  const selected = isSelected(adventure.id);
-
-  function handleCompare(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (selected) {
-      remove(adventure.id);
-    } else if (!isFull) {
-      add(adventure);
-      document.getElementById("compare-section")?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  }
+  const verifiedOps = adventure.operators?.filter(o => o.verified) ?? [];
+  const allPrices = adventure.operators
+    ?.map(o => parseInt(o.priceFrom.replace(/[^\d]/g, "")))
+    .filter(p => !isNaN(p)) ?? [];
+  const lowestPrice = allPrices.length > 0 ? Math.min(...allPrices) : null;
+  const displayCount = verifiedOps.length > 0 ? verifiedOps.length : operatorCount;
+  const displayLabel = verifiedOps.length > 0 ? "verified" : "operators";
 
   return (
     <div
       className="rounded-2xl overflow-hidden flex flex-col transition-all duration-300"
       style={{
-        background: selected ? "rgba(255,81,0,0.07)" : "rgba(255,255,255,0.04)",
-        border: selected ? "1px solid rgba(255,81,0,0.55)" : "1px solid rgba(255,255,255,0.08)",
-        boxShadow: selected
-          ? "0 0 0 1px rgba(255,81,0,0.3), 0 0 32px rgba(255,81,0,0.12), 0 8px 32px rgba(0,0,0,0.3)"
-          : "0 4px 20px rgba(0,0,0,0.2)",
+        background: "rgba(255,255,255,0.04)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
       }}
     >
       {/* Image area */}
       <div className="relative w-full overflow-hidden block group" style={{ height: isLarge ? "260px" : "200px" }}>
-        <Link
-          href={`/experiences/${adventure.slug}`}
-          className="absolute inset-0 z-10"
-        />
+        <Link href={`/experiences/${adventure.slug}`} className="absolute inset-0 z-10" />
         <Image
           src={adventure.heroImage}
           alt={adventure.name}
@@ -59,7 +48,6 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10 z-10 pointer-events-none" />
-        {selected && <div className="absolute inset-0 bg-[#ff5100]/8 pointer-events-none z-10" />}
 
         {/* Pills — top left */}
         <div className="absolute top-3 left-3 z-20 flex flex-wrap gap-1.5">
@@ -86,7 +74,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         <div className="absolute bottom-0 left-0 right-0 p-4 z-20 pointer-events-none">
           <div className="flex items-center gap-1.5 mb-1 opacity-80 pointer-events-auto">
             <MapPin className="w-3 h-3 text-[#ff5100]" />
-            <Link 
+            <Link
               href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
               onClick={(e) => e.stopPropagation()}
               className="text-white text-[10px] font-medium tracking-wide hover:text-[#ff5100] transition-colors"
@@ -100,36 +88,25 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         </div>
       </div>
 
-      {/* Dashboard body */}
+      {/* Dashboard — duration left, operators right */}
       <div className="px-4 pt-3 pb-4">
         <div className="flex items-center justify-between gap-2">
-          {/* Duration — left */}
           <span className="text-white/55 text-[11px] font-medium">{adventure.durationDays}</span>
 
-          {/* Verified operators + lowest price — right */}
-          {operatorCount > 0 && (() => {
-            const verifiedOps = adventure.operators.filter(o => o.verified);
-            const allPrices = adventure.operators
-              .map(o => parseInt(o.priceFrom.replace(/[^\d]/g, "")))
-              .filter(p => !isNaN(p));
-            const lowestPrice = allPrices.length > 0 ? Math.min(...allPrices) : null;
-            const count = verifiedOps.length > 0 ? verifiedOps.length : operatorCount;
-            const label = verifiedOps.length > 0 ? "verified" : "operators";
-            return (
-              <div className="flex items-center gap-1.5 text-[11px]">
-                <BadgeCheck className="w-3 h-3 text-emerald-400/80 shrink-0" />
-                <span className="text-white/45">
-                  <span className="text-white/70 font-semibold">{count}</span> {label}
-                  {lowestPrice && (
-                    <>
-                      <span className="text-white/25 mx-1">·</span>
-                      <span className="text-[#ff5100]/90 font-semibold">from ₹{lowestPrice.toLocaleString("en-IN")}</span>
-                    </>
-                  )}
-                </span>
-              </div>
-            );
-          })()}
+          {operatorCount > 0 && (
+            <div className="flex items-center gap-1.5 text-[11px]">
+              <BadgeCheck className="w-3 h-3 text-emerald-400/80 shrink-0" />
+              <span className="text-white/45">
+                <span className="text-white/70 font-semibold">{displayCount}</span> {displayLabel}
+                {lowestPrice && (
+                  <>
+                    <span className="text-white/25 mx-1">·</span>
+                    <span className="text-[#ff5100]/90 font-semibold">from ₹{lowestPrice.toLocaleString("en-IN")}</span>
+                  </>
+                )}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </div>
