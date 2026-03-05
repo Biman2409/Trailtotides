@@ -67,8 +67,8 @@ export default function StatsBar() {
     <section ref={ref} className="bg-[#141920] border-b border-white/6">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/8">
-          {STATS.map(({ value, label, suffix }) => (
-            <StatItem key={label} value={value} label={label} suffix={suffix} started={started} />
+          {STATS.map(({ value, label }) => (
+              <StatItem key={label} value={value} label={label} started={started} />
           ))}
         </div>
       </div>
