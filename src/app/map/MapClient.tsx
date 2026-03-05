@@ -512,16 +512,16 @@ export default function MapPage() {
                   <div className="col-span-2 lg:col-span-3">
                     <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Region</h3>
                     {(() => {
-                        const regionGroups: { name: Region; subRegions: string[] }[] = [
-                          { name: "Himalayas",     subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
-                          { name: "Western Ghats", subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"] },
-                          { name: "Eastern Ghats", subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"] },
-                          { name: "Desert",        subRegions: ["Rajasthan", "Gujarat"] },
-                          { name: "Coast",         subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
-                          { name: "Islands",       subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
-                          { name: "Northeast",     subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"] },
-                          { name: "Urban",         subRegions: ["Mumbai", "Delta", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"] },
-                        ];
+          const regionGroups: { name: Region; subRegions: string[] }[] = [
+                            { name: "Himalayas",     subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
+                            { name: "Western Ghats", subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra"] },
+                            { name: "Eastern Ghats", subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu", "Karnataka"] },
+                            { name: "Desert",        subRegions: ["Rajasthan", "Gujarat"] },
+                            { name: "Coast",         subRegions: ["Maharashtra", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
+                            { name: "Islands",       subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
+                            { name: "Northeast",     subRegions: ["Nagaland", "Manipur", "Meghalaya", "Mizoram", "Assam", "Arunachal Pradesh", "Sikkim"] },
+                            { name: "Urban",         subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"] },
+                          ];
 
                       return (
                         <div className="flex flex-col gap-2">
