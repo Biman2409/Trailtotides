@@ -231,7 +231,7 @@ export const adventures: Adventure[] = [
       difficulty: "Beginner",
       duration: "3–5 days",
       durationDays: "4 days",
-      depth: "30m (recreational limit)",
+      depth: "30m",
     terrain: "Coral reefs, drop-offs, WWII wrecks",
       bestSeason: "Nov – May",
       bestMonths: ["Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May"],
