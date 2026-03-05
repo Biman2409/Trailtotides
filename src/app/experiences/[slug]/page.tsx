@@ -459,7 +459,7 @@ export default async function ExperiencePage({ params }: Props) {
               <div className="flex gap-5 overflow-x-auto pb-4 -mx-2 px-2 snap-x snap-mandatory scrollbar-hide">
                     {related.map((a) => {
                     return (
-                        <div key={a.id} className="group relative block bg-white rounded-2xl overflow-hidden border border-[#e0d8cc] hover:shadow-lg transition-all hover:-translate-y-1 duration-300">
+                        <div key={a.id} className="group relative block bg-white rounded-2xl overflow-hidden border border-[#e0d8cc] hover:shadow-lg transition-all hover:-translate-y-1 duration-300 flex-none w-72 snap-start">
                           <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
                           <div className="relative h-48 overflow-hidden">
                               <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
