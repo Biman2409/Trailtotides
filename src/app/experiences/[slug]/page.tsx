@@ -402,7 +402,7 @@ export default async function ExperiencePage({ params }: Props) {
                         { label: "Best Season", value: adventure.bestSeason },
                         ...(adventure.altitude ? [{ label: "Max Altitude", value: adventure.altitude }] : []),
           ...(adventure.depth ? [{ label: "Max Depth", value: adventure.depth }] : []),
-                        { label: "Terrain", value: adventure.terrain },
+
                         { label: "Group Size", value: adventure.groupSize },
                       ].map(({ label, value }) => (
                           <div key={label} className="flex items-start justify-between gap-4 border-b border-white/5 pb-3 last:border-0 last:pb-0">
