@@ -131,7 +131,7 @@ export default async function ExperiencePage({ params }: Props) {
       {/* ── STATS STRIP ──────────────────────────────────── */}
       <section className="bg-[#1a1f2e] py-6 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className={`grid grid-cols-2 md:grid-cols-${statCount} gap-6 md:divide-x divide-white/10`}>
+          <div className="flex flex-wrap md:flex-nowrap items-center divide-y md:divide-y-0 md:divide-x divide-white/10 gap-y-4">
             <div className="flex items-center gap-3 md:px-6 first:pl-0">
               <Clock className="w-5 h-5 text-[#ff5100] shrink-0" />
               <div>
