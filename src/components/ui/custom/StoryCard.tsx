@@ -26,7 +26,7 @@ export default function StoryCard({ story }: { story: Story }) {
       href={`/stories/${story.slug}`}
       onClick={handleClick}
       className="group block relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
-      style={{ height: "420px" }}
+      style={{ aspectRatio: "3/4" }}
     >
         <Image
           src={story.heroImage}
