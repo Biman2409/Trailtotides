@@ -483,6 +483,3 @@ export default async function ExperiencePage({ params }: Props) {
     );
   }
 
-
-
-
