@@ -391,8 +391,9 @@ export const adventures: Adventure[] = [
         altitude: "5,091m (Shinku La)",
       bestSeason: "Jul – Sep",
       bestMonths: ["Jul", "Aug", "Sep"],
-      groupSize: "Small group (2–6)",
-        heroImage: "https://images.unsplash.com/photo-1706021220078-2051d17b1576?w=1200&q=70",
+        groupSize: "Small group (2–6)",
+        startingPoint: "Kargil",
+          heroImage: "https://images.unsplash.com/photo-1706021220078-2051d17b1576?w=1200&q=70",
 
     galleryImages: [],
     lat: 33.4427,
