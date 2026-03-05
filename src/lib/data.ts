@@ -48,6 +48,7 @@ export interface Adventure {
   durationDays: string;
   distance?: string;
   altitude?: string;
+  depth?: string;
   terrain: string;
   bestSeason: string;
   bestMonths: Month[];
