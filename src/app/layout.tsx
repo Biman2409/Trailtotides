@@ -5,10 +5,10 @@ import { VisualEditsMessenger } from "orchids-visual-edits";
 import Script from "next/script";
 import CompareWrapper from "@/components/ui/custom/CompareWrapper";
 
-const dancingScript = Dancing_Script({
-  variable: "--font-dancing-script",
+const greatVibes = Great_Vibes({
+  variable: "--font-cursive",
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400"],
 });
 
 const dmSans = DM_Sans({
