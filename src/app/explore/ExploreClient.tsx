@@ -355,7 +355,7 @@ export default function ExploreClient() {
                               },
                             {
                               name: "Coast",
-                              subRegions: ["Maharashtra (Konkan)", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"],
+                              subRegions: ["Maharashtra", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"],
                             },
                             {
                               name: "Islands",
