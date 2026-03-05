@@ -343,7 +343,7 @@ export default function ExploreClient() {
                             },
                             {
                                 name: "Western Ghats",
-                              subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra", "Gujarat"],
+                              subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra"],
                               },
                               {
                                     name: "Eastern Ghats",
