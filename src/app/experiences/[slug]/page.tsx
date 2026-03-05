@@ -403,8 +403,8 @@ export default async function ExperiencePage({ params }: Props) {
                       <div className="space-y-3.5">
                         {[
                           { label: "Type", value: adventure.type },
-                          ...(adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
-                          ...(adventure.startingPoint ? [{ label: "Starting Point", value: adventure.startingPoint }] : []),
+            ...(adventure.type === "Trekking" && adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
+            ...(adventure.type === "Biking" && adventure.startingPoint ? [{ label: "Starting Point", value: adventure.startingPoint }] : []),
                           { label: "Duration", value: adventure.durationDays },
                         ...((adventure.type === "Trekking" || adventure.type === "Biking") 
                           ? [{ label: "Distance", value: adventure.distance || "Contact for route" }] 
