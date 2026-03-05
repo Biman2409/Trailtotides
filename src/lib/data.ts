@@ -193,7 +193,7 @@ export const adventures: Adventure[] = [
         bestSeason: "Jun – Sep",
         bestMonths: ["Jun", "Jul", "Aug", "Sep"],
         groupSize: "Large group (6+)",
-          heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0180-resized-1772364569585.jpeg?width=8000&height=8000&resize=contain",
+          startingPoint: "Manali",?width=8000&height=8000&resize=contain",
           galleryImages: [
             "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0180-resized-1772364569585.jpeg?width=8000&height=8000&resize=contain",
           ],
