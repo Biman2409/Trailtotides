@@ -66,13 +66,13 @@ export default async function ExperiencePage({ params }: Props) {
       .filter((a) => a.id !== adventure.id && (a.region === adventure.region || a.type === adventure.type))
       .slice(0, 3);
 
-      const statCount = [
-        true, // Duration
-        !!adventure.distance,
-        !!adventure.altitude,
-        true, // Best Season
-        true  // Terrain
-      ].filter(Boolean).length;
+        const statCount = [
+          true, // Duration
+          !!adventure.distance,
+          !!(adventure.altitude || adventure.depth),
+          true, // Best Season
+          true  // Terrain
+        ].filter(Boolean).length;
 
       return (
       <div className="min-h-screen bg-[#fafaf8]">
