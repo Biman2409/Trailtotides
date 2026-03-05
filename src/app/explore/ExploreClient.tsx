@@ -347,7 +347,7 @@ export default function ExploreClient() {
                               },
                               {
                                     name: "Eastern Ghats",
-                                subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu"],
+                                subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu", "Karnataka"],
                               },
                               {
                                 name: "Desert",
