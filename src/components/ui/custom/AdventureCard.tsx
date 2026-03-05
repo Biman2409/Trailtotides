@@ -4,8 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, BadgeCheck } from "lucide-react";
 import type { Adventure, Month } from "@/lib/data";
-import { useCompare } from "@/contexts/CompareContext";
-import Pill from "./Pill";
 
 interface AdventureCardProps {
   adventure: Adventure;
