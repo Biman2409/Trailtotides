@@ -483,9 +483,11 @@ export default async function ExperiencePage({ params }: Props) {
               </div>
           </div>
         </section>
-      )}
+        )}
 
-      <Footer />
-    </div>
-  );
-}
+        <CompareAdventures />
+        <Footer />
+      </div>
+    );
+  }
+
