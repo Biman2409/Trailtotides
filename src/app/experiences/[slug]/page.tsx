@@ -407,7 +407,7 @@ export default async function ExperiencePage({ params }: Props) {
                       ].map(({ label, value }) => (
                           <div key={label} className="flex items-start justify-between gap-4 border-b border-white/5 pb-3 last:border-0 last:pb-0">
                             <span className="text-white/38 text-xs shrink-0">{label}</span>
-                            <span className="text-white/80 text-xs text-right leading-snug whitespace-pre-line">{value}</span>
+                            <span className="text-white/80 text-xs text-right leading-snug">{value}</span>
                           </div>
                         ))}
                     </div>
