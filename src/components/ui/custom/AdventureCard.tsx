@@ -62,20 +62,24 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           <Pill type="difficulty" value={adventure.difficulty} />
         </div>
 
-        {/* Season Active badge — top right */}
-        {isSeasonActive && (
+          {/* Season badge — top right */}
           <div className="absolute top-3 right-3 z-20 pointer-events-none">
-            <div className="bg-emerald-500/20 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-emerald-400/40 shadow-[0_0_16px_rgba(52,211,153,0.5)]">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_6px_#34d399]" />
-              </span>
-              <span className="text-emerald-300 text-[10px] font-bold tracking-tight drop-shadow-[0_0_6px_rgba(52,211,153,0.8)]">
-                Season Active
-              </span>
-            </div>
+            {isSeasonActive ? (
+              <div className="bg-emerald-500/20 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-emerald-400/40 shadow-[0_0_16px_rgba(52,211,153,0.5)]">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400 shadow-[0_0_6px_#34d399]" />
+                </span>
+                <span className="text-emerald-300 text-[10px] font-bold tracking-tight drop-shadow-[0_0_6px_rgba(52,211,153,0.8)]">
+                  Season Active
+                </span>
+              </div>
+            ) : seasonLabel ? (
+              <div className="bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10">
+                <span className="text-white/60 text-[10px] font-medium tracking-tight">{seasonLabel}</span>
+              </div>
+            ) : null}
           </div>
-        )}
 
         {/* Bottom content over image */}
         <div className="absolute bottom-0 left-0 right-0 p-4 z-20 pointer-events-none">
