@@ -456,7 +456,7 @@ export default async function ExperiencePage({ params }: Props) {
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
-              <div className="flex gap-5 overflow-x-auto pb-4 -mx-2 px-2 snap-x snap-mandatory scrollbar-hide">
+              <div className="flex gap-5 overflow-x-auto pb-4 -mx-2 px-2 snap-x snap-mandatory no-scrollbar">
                     {related.map((a) => {
                     return (
                         <div key={a.id} className="group relative block bg-white rounded-2xl overflow-hidden border border-[#e0d8cc] hover:shadow-lg transition-all hover:-translate-y-1 duration-300 flex-none w-72 snap-start">
