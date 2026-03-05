@@ -31,7 +31,6 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
     .filter(p => !isNaN(p)) ?? [];
   const lowestPrice = allPrices.length > 0 ? Math.min(...allPrices) : null;
   const displayCount = verifiedOps.length > 0 ? verifiedOps.length : operatorCount;
-  const displayLabel = verifiedOps.length > 0 ? "verified" : "operators";
 
   return (
     <div
