@@ -100,8 +100,8 @@ export default function FindByRegion() {
                   {/* Image header */}
                   <button
                     onClick={() => setOpenId(isOpen ? null : region.id)}
-                    className="relative w-full overflow-hidden cursor-pointer group text-left"
-                    style={{ height: "180px" }}
+                      className="relative w-full overflow-hidden cursor-pointer group text-left"
+                      style={{ aspectRatio: "16/9" }}
                     aria-expanded={isOpen}
                   >
                     <Image
