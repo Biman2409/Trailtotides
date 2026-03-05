@@ -37,11 +37,12 @@ const difficultyColor: Record<string, string> = {
 };
 
 const seasons: { label: string; months: Month[] }[] = [
-  { label: "Winter",  months: ["Dec", "Jan", "Feb"] },
-  { label: "Spring",  months: ["Mar", "Apr", "May"] },
-  { label: "Summer",  months: ["Apr", "May", "Jun"] },
-  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"] },
-  { label: "Autumn",  months: ["Oct", "Nov", "Dec"] },
+  { label: "Spring",     months: ["Mar", "Apr"] },
+  { label: "Summer",     months: ["May", "Jun"] },
+  { label: "Monsoon",    months: ["Jul", "Aug"] },
+  { label: "Autumn",     months: ["Sep", "Oct"] },
+  { label: "Pre Winter", months: ["Nov", "Dec"] },
+  { label: "Winter",     months: ["Jan", "Feb"] },
 ];
 
 type NominatimResult = {
