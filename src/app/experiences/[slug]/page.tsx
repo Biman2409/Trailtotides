@@ -424,66 +424,64 @@ export default async function ExperiencePage({ params }: Props) {
               >
                 More in {adventure.state}
               </Link>
+              </div>
             </div>
           </div>
         </div>
 
-      {/* ── RELATED ADVENTURES ───────────────────────────── */}
-      {related.length > 0 && (
-        <section className="bg-[#f5f0e8] py-16 lg:py-24 px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex items-end justify-between mb-10">
-              <div>
-                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
-                  You Might Also Like
-                </p>
-                <h2 className="text-[#1a1f2e] text-3xl font-semibold tracking-tight">
-                  More in {adventure.state}
-                </h2>
+        {/* ── RELATED ADVENTURES ───────────────────────────── */}
+        {related.length > 0 && (
+          <section className="bg-[#f5f0e8] py-16 lg:py-24 px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-end justify-between mb-10">
+                <div>
+                  <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+                    You Might Also Like
+                  </p>
+                  <h2 className="text-[#1a1f2e] text-3xl font-semibold tracking-tight">
+                    More in {adventure.state}
+                  </h2>
+                </div>
+                <Link
+                  href="/explore"
+                  className="hidden md:flex items-center gap-1.5 text-[#1e3d2f] text-sm font-medium hover:text-[#ff5100] transition-colors group"
+                >
+                  Explore all
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
-              <Link
-                href="/explore"
-                className="hidden md:flex items-center gap-1.5 text-[#1e3d2f] text-sm font-medium hover:text-[#ff5100] transition-colors group"
-              >
-                Explore all
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
               <div className="flex gap-5 overflow-x-auto pb-4 -mx-2 px-2 snap-x snap-mandatory no-scrollbar">
-                    {related.map((a) => {
-                    return (
-                        <div key={a.id} className="group relative block bg-white rounded-2xl overflow-hidden border border-[#e0d8cc] hover:shadow-lg transition-all hover:-translate-y-1 duration-300 flex-none w-72 snap-start">
-                          <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
-                          <div className="relative h-48 overflow-hidden">
-                              <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
-                              <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-orange-900/30 via-transparent to-sky-900/20 pointer-events-none" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                            <div className="absolute top-3 left-3 flex flex-wrap gap-2 z-20">
-                              <Pill type="type" value={a.type} />
-                              <Pill type="difficulty" value={a.difficulty} />
-                            </div>
-  
-                        </div>
-                      <div className="p-5">
-                        <div className="flex items-center gap-1.5 mb-1">
-                          <MapPin className="w-3 h-3 text-[#ff5100]" />
-                          <span className="text-[#9a9590] text-xs">{a.state}</span>
-                        </div>
-                        <h3 className="text-[#1a1f2e] font-semibold text-base leading-snug mb-1 group-hover:text-[#1e3d2f]">{a.name}</h3>
-                        <p className="text-[#9a9590] text-xs line-clamp-2">{a.tagline}</p>
+                {related.map((a) => (
+                  <div key={a.id} className="group relative block bg-white rounded-2xl overflow-hidden border border-[#e0d8cc] hover:shadow-lg transition-all hover:-translate-y-1 duration-300 flex-none w-72 snap-start">
+                    <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
+                    <div className="relative h-48 overflow-hidden">
+                      <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
+                      <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-orange-900/30 via-transparent to-sky-900/20 pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                      <div className="absolute top-3 left-3 flex flex-wrap gap-2 z-20">
+                        <Pill type="type" value={a.type} />
+                        <Pill type="difficulty" value={a.difficulty} />
                       </div>
                     </div>
-                  );
-                })}
+                    <div className="p-5">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <MapPin className="w-3 h-3 text-[#ff5100]" />
+                        <span className="text-[#9a9590] text-xs">{a.state}</span>
+                      </div>
+                      <h3 className="text-[#1a1f2e] font-semibold text-base leading-snug mb-1 group-hover:text-[#1e3d2f]">{a.name}</h3>
+                      <p className="text-[#9a9590] text-xs line-clamp-2">{a.tagline}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-          </div>
-        </section>
+            </div>
+          </section>
         )}
 
-          <CompareAdventures />
-          <Footer />
-        </div>
-      );
-    }
+        <CompareAdventures />
+        <Footer />
+      </div>
+    );
+  }
 
 
