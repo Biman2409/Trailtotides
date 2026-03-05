@@ -405,7 +405,7 @@ export default async function ExperiencePage({ params }: Props) {
                           : (adventure.distance ? [{ label: "Distance", value: adventure.distance }] : [])),
                           { label: "Difficulty", value: adventure.difficulty },
                         { label: "Best Season", value: adventure.bestSeason },
-                        ...(adventure.altitude ? [{ label: "Max Alt", value: adventure.altitude }] : []),
+                        ...(adventure.altitude ? [{ label: "Max Altitude", value: adventure.altitude }] : []),
           ...(adventure.depth ? [{ label: "Max Depth", value: adventure.depth }] : []),
                         { label: "Terrain", value: adventure.terrain },
                         { label: "Group Size", value: adventure.groupSize },
