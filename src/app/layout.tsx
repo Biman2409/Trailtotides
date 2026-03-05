@@ -5,6 +5,12 @@ import { VisualEditsMessenger } from "orchids-visual-edits";
 import Script from "next/script";
 import CompareWrapper from "@/components/ui/custom/CompareWrapper";
 
+const dancingScript = Dancing_Script({
+  variable: "--font-dancing-script",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
