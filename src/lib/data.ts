@@ -349,7 +349,7 @@ export const adventures: Adventure[] = [
               duration: "7+ days",
               durationDays: "14 days",
               distance: "1,800km",
-                altitude: "5,913m (Mig La)",
+                altitude: "5,883m (Umling La)",
             bestSeason: "Jun – Sep",
             bestMonths: ["Jun", "Jul", "Aug", "Sep"],
               groupSize: "Large group (6+)",
