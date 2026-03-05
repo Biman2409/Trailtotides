@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Dancing_Script } from "next/font/google";
+import { DM_Sans, Great_Vibes } from "next/font/google";
 import "./globals.css";
 import { VisualEditsMessenger } from "orchids-visual-edits";
 import Script from "next/script";
