@@ -162,7 +162,7 @@ export default async function ExperiencePage({ params }: Props) {
                 <div className="text-white font-semibold text-base">{adventure.bestSeason}</div>
               </div>
             </div>
-              {adventure.type === "Trekking" && adventure.baseCamp && (
+              {(adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp && (
                 <div className="flex items-center gap-3 px-6 py-2 w-1/2 md:w-auto md:flex-1">
                   <Flag className="w-5 h-5 text-violet-400 shrink-0" />
                   <div>
