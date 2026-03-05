@@ -53,7 +53,9 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           style={{ filter: "brightness(1.05) contrast(1.1) saturate(1.1)" }}
           sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
         />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
+
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
 
         {/* Pills — top left */}
         <div className="absolute top-3 left-3 z-20 flex flex-wrap gap-1.5">
@@ -61,17 +63,17 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           <Pill type="difficulty" value={adventure.difficulty} />
         </div>
 
-          {/* Season pill — top right */}
-          {isSeasonActive ? (
-            <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight bg-emerald-500/20 text-emerald-300 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
-              Season Active
-            </span>
-          ) : seasonLabel ? (
-            <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight bg-white/15 text-white/80 backdrop-blur-sm">
-              {seasonLabel}
-            </span>
-          ) : null}
+        {/* Season pill — top right */}
+        {isSeasonActive ? (
+          <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight bg-emerald-500/20 text-emerald-300 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+            Season Active
+          </span>
+        ) : seasonLabel ? (
+          <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight bg-white/15 text-white/80 backdrop-blur-sm">
+            {seasonLabel}
+          </span>
+        ) : null}
 
         {/* Bottom content over image */}
         <div className="absolute bottom-0 left-0 right-0 p-4 z-20 pointer-events-none">
@@ -86,11 +88,11 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
             </Link>
           </div>
           <h3 className="text-white font-bold text-lg leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors pointer-events-none">
-              {adventure.name}
-            </h3>
-            <p className="text-white/60 text-[11px] leading-snug mt-1 pointer-events-none line-clamp-2">
-              {adventure.tagline}
-            </p>
+            {adventure.name}
+          </h3>
+          <p className="text-white/60 text-[11px] leading-snug mt-1 pointer-events-none line-clamp-2">
+            {adventure.tagline}
+          </p>
         </div>
       </div>
 
@@ -102,12 +104,12 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           {operatorCount > 0 && (
             <div className="flex items-center gap-1.5 text-[11px]">
               <BadgeCheck className="w-3 h-3 text-emerald-400/80 shrink-0" />
-                <span className="text-white/45">
-                  <span className="text-white/70 font-semibold">{displayCount}</span> operators
+              <span className="text-white/45">
+                <span className="text-white/70 font-semibold">{displayCount}</span> operators
                 {lowestPrice && (
                   <>
                     <span className="text-white/25 mx-1">·</span>
-                      <span className="text-[#ff5100]/90 font-semibold">starting ₹{lowestPrice.toLocaleString("en-IN")}</span>
+                    <span className="text-[#ff5100]/90 font-semibold">starting ₹{lowestPrice.toLocaleString("en-IN")}</span>
                   </>
                 )}
               </span>
