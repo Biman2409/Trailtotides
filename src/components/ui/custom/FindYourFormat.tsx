@@ -132,8 +132,8 @@ export default function FindYourFormat() {
                 {/* Image header */}
                 <button
                   onClick={() => setOpenId(isOpen ? null : cat.id)}
-                  className="relative w-full overflow-hidden cursor-pointer group text-left"
-                  style={{ height: "160px" }}
+                    className="relative w-full overflow-hidden cursor-pointer group text-left"
+                    style={{ aspectRatio: "16/9" }}
                   aria-expanded={isOpen}
                 >
                     <Image
