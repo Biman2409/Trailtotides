@@ -148,15 +148,19 @@ export default async function ExperiencePage({ params }: Props) {
                 </div>
               </div>
             )}
-            {adventure.altitude && (
-              <div className="flex items-center gap-3 md:px-6">
-                <TrendingUp className="w-5 h-5 text-[#5ba3c9] shrink-0" />
-                <div>
-                  <div className="text-white/40 text-[10px] uppercase tracking-widest">Max Alt</div>
-                  <div className="text-white font-semibold text-base">{adventure.altitude}</div>
+              {(adventure.altitude || adventure.depth) && (
+                <div className="flex items-center gap-3 md:px-6">
+                  <TrendingUp className="w-5 h-5 text-[#5ba3c9] shrink-0" />
+                  <div>
+                    <div className="text-white/40 text-[10px] uppercase tracking-widest">
+                      {adventure.type === "Diving" ? "Max Depth" : "Max Alt"}
+                    </div>
+                    <div className="text-white font-semibold text-base">
+                      {adventure.depth ?? adventure.altitude}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
             <div className="flex items-center gap-3 md:px-6">
               <Sun className="w-5 h-5 text-amber-400 shrink-0" />
               <div>
