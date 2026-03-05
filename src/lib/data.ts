@@ -431,8 +431,9 @@ export const adventures: Adventure[] = [
           altitude: "4,551m (Kunzum Pass)",
         bestSeason: "Jun – Oct",
         bestMonths: ["Jun", "Jul", "Aug", "Sep", "Oct"],
-        groupSize: "Small group (2–6)",
-        heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0182-resized-1772365162828.jpeg?width=8000&height=8000&resize=contain",
+          groupSize: "Small group (2–6)",
+          startingPoint: "Manali",
+          heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0182-resized-1772365162828.jpeg?width=8000&height=8000&resize=contain",
       galleryImages: [
         "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0182-resized-1772365162828.jpeg?width=8000&height=8000&resize=contain"
       ],
