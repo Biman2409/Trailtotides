@@ -387,46 +387,42 @@ export default async function ExperiencePage({ params }: Props) {
             {/* Right — sidebar */}
             <div className="space-y-5 lg:sticky lg:top-24 lg:self-start">
 
-                <div className="bg-[#1a1f2e] rounded-2xl p-6 text-white">
-                  <p className="text-[#ff5100] text-[10px] font-semibold tracking-[0.2em] uppercase mb-4">
-                    At a Glance
-                  </p>
-                  <div className="space-y-3.5">
-                    {[
-                      ...(adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
-                      { label: "Duration", value: adventure.durationDays },
-                      ...(adventure.distance ? [{ label: "Distance", value: adventure.distance }] : []),
-                      { label: "Difficulty", value: adventure.difficulty, href: `/explore?difficulty=${encodeURIComponent(adventure.difficulty)}` },
-                      { label: "Best Season", value: adventure.bestSeason },
-                      ...(adventure.altitude ? [{ label: "Max Alt", value: adventure.altitude }] : []),
-                      { label: "Terrain", value: adventure.terrain },
-                      { label: "Group Size", value: adventure.groupSize },
-                    ].map(({ label, value, href }) => (
-                      <div key={label} className="flex items-start justify-between gap-4 border-b border-white/5 pb-3 last:border-0 last:pb-0">
-                        <span className="text-white/38 text-xs shrink-0">{label}</span>
-                        {href ? (
-                          <Link href={href} className="text-white/80 text-xs text-right leading-snug hover:text-[#ff5100] transition-colors underline decoration-white/10 underline-offset-4">
-                            {value}
-                          </Link>
-                        ) : (
-                          <span className="text-white/80 text-xs text-right leading-snug">{value}</span>
-                        )}
-                      </div>
-                    ))}
+                  <div className="bg-[#1a1f2e] rounded-2xl p-6 text-white">
+                    <p className="text-[#ff5100] text-[10px] font-semibold tracking-[0.2em] uppercase mb-4">
+                      At a Glance
+                    </p>
+                    <div className="space-y-3.5">
+                      {[
+                        ...(adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
+                        { label: "Duration", value: adventure.durationDays },
+                        ...((adventure.type === "Trekking" || adventure.type === "Biking") 
+                          ? [{ label: "Distance", value: adventure.distance || "Contact for route" }] 
+                          : (adventure.distance ? [{ label: "Distance", value: adventure.distance }] : [])),
+                        { label: "Difficulty", value: adventure.difficulty, href: `/explore?difficulty=${encodeURIComponent(adventure.difficulty)}` },
+                        { label: "Best Season", value: adventure.bestSeason },
+                        ...(adventure.altitude ? [{ label: "Max Alt", value: adventure.altitude }] : []),
+                        { label: "Terrain", value: adventure.terrain },
+                        { label: "Group Size", value: adventure.groupSize },
+                      ].map(({ label, value, href }) => (
+                        <div key={label} className="flex items-start justify-between gap-4 border-b border-white/5 pb-3 last:border-0 last:pb-0">
+                          <span className="text-white/38 text-xs shrink-0">{label}</span>
+                          {href ? (
+                            <Link href={href} className="text-white/80 text-xs text-right leading-snug hover:text-[#ff5100] transition-colors underline decoration-white/10 underline-offset-4">
+                              {value}
+                            </Link>
+                          ) : (
+                            <span className="text-white/80 text-xs text-right leading-snug">{value}</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
 
-              {/* CTA */}
-              <Link
-                href="/plan"
-                className="flex items-center justify-center gap-2 w-full bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold py-3.5 rounded-2xl text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/30 group"
-              >
-                Plan this Adventure
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
+                {/* CTA */}
+                <CompareCTA adventure={adventure} />
 
-              {/* Back to explore */}
+                {/* Back to explore */}
               <Link
                 href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
                 className="flex items-center justify-center gap-2 w-full bg-transparent border border-[#1a1f2e]/20 hover:border-[#1a1f2e]/40 text-[#1a1f2e] font-medium py-3 rounded-2xl text-sm transition-all duration-200 hover:bg-[#1a1f2e]/5"
