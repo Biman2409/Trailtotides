@@ -86,8 +86,11 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
             </Link>
           </div>
           <h3 className="text-white font-bold text-lg leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors pointer-events-none">
-            {adventure.name}
-          </h3>
+              {adventure.name}
+            </h3>
+            <p className="text-white/60 text-[11px] leading-snug mt-1 pointer-events-none line-clamp-2">
+              {adventure.tagline}
+            </p>
         </div>
       </div>
 
