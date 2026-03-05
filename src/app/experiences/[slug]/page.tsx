@@ -403,18 +403,12 @@ export default async function ExperiencePage({ params }: Props) {
                         ...(adventure.altitude ? [{ label: "Max Alt", value: adventure.altitude }] : []),
                         { label: "Terrain", value: adventure.terrain },
                         { label: "Group Size", value: adventure.groupSize },
-                      ].map(({ label, value, href }) => (
-                        <div key={label} className="flex items-start justify-between gap-4 border-b border-white/5 pb-3 last:border-0 last:pb-0">
-                          <span className="text-white/38 text-xs shrink-0">{label}</span>
-                          {href ? (
-                            <Link href={href} className="text-white/80 text-xs text-right leading-snug hover:text-[#ff5100] transition-colors underline decoration-white/10 underline-offset-4">
-                              {value}
-                            </Link>
-                          ) : (
+                      ].map(({ label, value }) => (
+                          <div key={label} className="flex items-start justify-between gap-4 border-b border-white/5 pb-3 last:border-0 last:pb-0">
+                            <span className="text-white/38 text-xs shrink-0">{label}</span>
                             <span className="text-white/80 text-xs text-right leading-snug">{value}</span>
-                          )}
-                        </div>
-                      ))}
+                          </div>
+                        ))}
                     </div>
                   </div>
 
