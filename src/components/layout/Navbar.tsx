@@ -118,11 +118,7 @@ export default function Navbar() {
                     <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-md shadow-[#ff5100]/30">
                       <Mountain className="w-4 h-4 text-white" strokeWidth={2.5} />
                     </div>
-                      <span className="leading-none antialiased flex items-baseline gap-0">
-                        <span className="text-[#ff5100] font-black tracking-[-0.05em] text-[1.125rem] uppercase">TRAIL</span>
-                        <span className="text-white/60 font-normal italic text-[1rem] mx-1">to</span>
-                        <span className="text-[#ff5100] font-black tracking-[-0.05em] text-[1.125rem] uppercase">TIDES</span>
-                      </span>
+                      <span className="text-white font-semibold text-base tracking-tight">Trail to Tides</span>
                 </Link>
 
 
