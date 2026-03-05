@@ -392,7 +392,7 @@ export const adventures: Adventure[] = [
       bestSeason: "Jul – Sep",
       bestMonths: ["Jul", "Aug", "Sep"],
         groupSize: "Small group (2–6)",
-        startingPoint: "Kargil",
+        startingPoint: "Leh / Manali / Kargil",
           heroImage: "https://images.unsplash.com/photo-1706021220078-2051d17b1576?w=1200&q=70",
 
     galleryImages: [],
