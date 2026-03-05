@@ -131,8 +131,8 @@ export default async function ExperiencePage({ params }: Props) {
       {/* ── STATS STRIP ──────────────────────────────────── */}
       <section className="bg-[#1a1f2e] py-6 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-wrap md:flex-nowrap items-center divide-y md:divide-y-0 md:divide-x divide-white/10 gap-y-4">
-            <div className="flex items-center gap-3 md:px-6 first:pl-0">
+          <div className="flex flex-wrap md:flex-nowrap items-center w-full divide-y md:divide-y-0 md:divide-x divide-white/10">
+            <div className="flex items-center gap-3 px-6 py-2 first:pl-0 w-1/2 md:w-auto md:flex-1">
               <Clock className="w-5 h-5 text-[#ff5100] shrink-0" />
               <div>
                 <div className="text-white/40 text-[10px] uppercase tracking-widest">Duration</div>
@@ -140,7 +140,7 @@ export default async function ExperiencePage({ params }: Props) {
               </div>
             </div>
             {adventure.distance && (
-              <div className="flex items-center gap-3 md:px-6">
+              <div className="flex items-center gap-3 px-6 py-2 w-1/2 md:w-auto md:flex-1">
                 <Route className="w-5 h-5 text-emerald-400 shrink-0" />
                 <div>
                   <div className="text-white/40 text-[10px] uppercase tracking-widest">Distance</div>
@@ -148,27 +148,27 @@ export default async function ExperiencePage({ params }: Props) {
                 </div>
               </div>
             )}
-              {(adventure.altitude || adventure.depth) && (
-                <div className="flex items-center gap-3 md:px-6">
-                  <TrendingUp className="w-5 h-5 text-[#5ba3c9] shrink-0" />
-                  <div>
-                    <div className="text-white/40 text-[10px] uppercase tracking-widest">
-                      {adventure.type === "Diving" ? "Max Depth" : "Max Altitude"}
-                    </div>
-                    <div className="text-white font-semibold text-base">
-                      {adventure.depth ?? adventure.altitude}
-                    </div>
+            {(adventure.altitude || adventure.depth) && (
+              <div className="flex items-center gap-3 px-6 py-2 w-1/2 md:w-auto md:flex-1">
+                <TrendingUp className="w-5 h-5 text-[#5ba3c9] shrink-0" />
+                <div>
+                  <div className="text-white/40 text-[10px] uppercase tracking-widest">
+                    {adventure.type === "Diving" ? "Max Depth" : "Max Altitude"}
+                  </div>
+                  <div className="text-white font-semibold text-base">
+                    {adventure.depth ?? adventure.altitude}
                   </div>
                 </div>
-              )}
-            <div className="flex items-center gap-3 md:px-6">
+              </div>
+            )}
+            <div className="flex items-center gap-3 px-6 py-2 w-1/2 md:w-auto md:flex-1">
               <Sun className="w-5 h-5 text-amber-400 shrink-0" />
               <div>
                 <div className="text-white/40 text-[10px] uppercase tracking-widest">Best Season</div>
                 <div className="text-white font-semibold text-base">{adventure.bestSeason}</div>
               </div>
             </div>
-            <div className="flex items-center gap-3 md:px-6">
+            <div className="flex items-center gap-3 px-6 py-2 w-1/2 md:w-auto md:flex-1">
               <MapPin className="w-5 h-5 text-[#ff5100] shrink-0" />
               <div>
                 <div className="text-white/40 text-[10px] uppercase tracking-widest">Terrain</div>
