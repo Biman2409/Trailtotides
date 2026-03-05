@@ -16,9 +16,9 @@ import { difficultyStyle } from "@/lib/styles";
 const seasons: { label: string; months: Month[] }[] = [
   { label: "Winter",  months: ["Dec", "Jan", "Feb"] },
   { label: "Spring",  months: ["Mar", "Apr", "May"] },
-  { label: "Summer",  months: ["Apr", "May", "Jun"] },
-  { label: "Monsoon", months: ["Jun", "Jul", "Aug", "Sep"] },
-  { label: "Autumn",  months: ["Oct", "Nov", "Dec"] },
+  { label: "Summer",  months: ["Jun"] },
+  { label: "Monsoon", months: ["Jul", "Aug", "Sep"] },
+  { label: "Autumn",  months: ["Oct", "Nov"] },
 ];
 
 
