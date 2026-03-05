@@ -41,9 +41,9 @@ export default function Footer() {
                   </div>
                   <div className="flex flex-col">
                         <span className="font-semibold text-[1.75rem] leading-none antialiased tracking-tight text-white group-hover:text-white transition-colors duration-500">
-                          <span className="font-black uppercase text-white">TRAIL</span>
-                          <span className="italic font-light text-white/60 mx-1">to</span>
-                          <span className="font-black uppercase text-white">TIDES</span>
+                            <span className="font-black uppercase text-white">TRAIL</span>
+                            <span style={{fontFamily: "var(--font-dancing-script)"}} className="text-white/60 mx-1 text-[1.4rem] normal-case tracking-normal font-normal">to</span>
+                            <span className="font-black uppercase text-white">TIDES</span>
                         </span>
                     </div>
                   </div>
