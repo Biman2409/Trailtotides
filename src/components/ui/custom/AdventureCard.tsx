@@ -42,7 +42,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
       }}
     >
       {/* Image area */}
-      <div className="relative w-full overflow-hidden block group" style={{ height: isLarge ? "260px" : "200px" }}>
+      <div className="relative w-full overflow-hidden block group" style={{ aspectRatio: isLarge ? "16/9" : "4/3" }}>
         <Link href={`/experiences/${adventure.slug}`} className="absolute inset-0 z-10" />
         <Image
           src={adventure.heroImage}
