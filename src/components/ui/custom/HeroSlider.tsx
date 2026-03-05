@@ -118,7 +118,7 @@ export default function HeroSlider() {
   `).join("");
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[#0d1117]">
+    <div className="absolute inset-0 overflow-hidden bg-[#0d1117]" style={{ contain: "strict" }}>
 
       <style>{`
         ${kenBurnsCSS}
