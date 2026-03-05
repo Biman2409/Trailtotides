@@ -398,7 +398,7 @@ export default async function ExperiencePage({ params }: Props) {
                         ...((adventure.type === "Trekking" || adventure.type === "Biking") 
                           ? [{ label: "Distance", value: adventure.distance || "Contact for route" }] 
                           : (adventure.distance ? [{ label: "Distance", value: adventure.distance }] : [])),
-                        { label: "Difficulty", value: adventure.difficulty, href: `/explore?difficulty=${encodeURIComponent(adventure.difficulty)}` },
+                          { label: "Difficulty", value: adventure.difficulty },
                         { label: "Best Season", value: adventure.bestSeason },
                         ...(adventure.altitude ? [{ label: "Max Alt", value: adventure.altitude }] : []),
                         { label: "Terrain", value: adventure.terrain },
