@@ -171,6 +171,15 @@ export default async function ExperiencePage({ params }: Props) {
                   </div>
                 </div>
               )}
+              {adventure.type === "Biking" && adventure.startingPoint && (
+                <div className="flex items-center gap-3 px-6 py-2 w-1/2 md:w-auto md:flex-1">
+                  <Navigation className="w-5 h-5 text-emerald-400 shrink-0" />
+                  <div>
+                    <div className="text-white/40 text-[10px] uppercase tracking-widest">Starting Point</div>
+                    <div className="text-white font-semibold text-base">{adventure.startingPoint}</div>
+                  </div>
+                </div>
+              )}
             </div>
         </div>
       </section>
