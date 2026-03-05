@@ -40,9 +40,11 @@ export default function Footer() {
                     <Mountain className="w-6.5 h-6.5 text-white" strokeWidth={3} />
                   </div>
                   <div className="flex flex-col">
-                      <span className="text-[#ff5100] font-black tracking-[-0.05em] text-[1.75rem] leading-none antialiased group-hover:text-white transition-colors duration-500 uppercase">
-                        TRAIL TO TIDES
-                      </span>
+                        <span className="font-semibold text-[1.75rem] leading-none antialiased tracking-tight text-white group-hover:text-white transition-colors duration-500">
+                          <span className="font-black uppercase text-white">TRAIL</span>
+                          <span className="italic font-light text-white/60 mx-1">to</span>
+                          <span className="font-black uppercase text-white">TIDES</span>
+                        </span>
                     </div>
                   </div>
                 </div>
