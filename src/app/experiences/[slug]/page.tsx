@@ -161,13 +161,6 @@ export default async function ExperiencePage({ params }: Props) {
                 <div className="text-white font-semibold text-base">{adventure.bestSeason}</div>
               </div>
             </div>
-              <div className="flex items-center gap-3 px-6 py-2 w-1/2 md:w-auto md:flex-1">
-                <MapPin className="w-5 h-5 text-[#ff5100] shrink-0" />
-                <div>
-                  <div className="text-white/40 text-[10px] uppercase tracking-widest">Terrain</div>
-                  <div className="text-white font-semibold text-sm leading-snug">{adventure.terrain}</div>
-                </div>
-              </div>
               {adventure.type === "Trekking" && adventure.baseCamp && (
                 <div className="flex items-center gap-3 px-6 py-2 w-1/2 md:w-auto md:flex-1">
                   <Flag className="w-5 h-5 text-violet-400 shrink-0" />
