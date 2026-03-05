@@ -68,7 +68,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-        <body className={`${dmSans.variable} ${dancingScript.variable} antialiased`}>
+        <body className={`${dmSans.variable} ${greatVibes.variable} antialiased`}>
         <Script
           id="org-structured-data"
           type="application/ld+json"
