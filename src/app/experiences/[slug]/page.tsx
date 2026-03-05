@@ -424,7 +424,6 @@ export default async function ExperiencePage({ params }: Props) {
               >
                 More in {adventure.state}
               </Link>
-              </div>
             </div>
           </div>
         </div>
