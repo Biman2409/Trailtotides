@@ -391,10 +391,11 @@ export default async function ExperiencePage({ params }: Props) {
                     <p className="text-[#ff5100] text-[10px] font-semibold tracking-[0.2em] uppercase mb-4">
                       At a Glance
                     </p>
-                    <div className="space-y-3.5">
-                      {[
-                        ...(adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
-                        { label: "Duration", value: adventure.durationDays },
+                      <div className="space-y-3.5">
+                        {[
+                          { label: "Type", value: adventure.type },
+                          ...(adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
+                          { label: "Duration", value: adventure.durationDays },
                         ...((adventure.type === "Trekking" || adventure.type === "Biking") 
                           ? [{ label: "Distance", value: adventure.distance || "Contact for route" }] 
                           : (adventure.distance ? [{ label: "Distance", value: adventure.distance }] : [])),
