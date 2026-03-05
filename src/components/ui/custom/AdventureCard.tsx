@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, BadgeCheck } from "lucide-react";
 import type { Adventure, Month } from "@/lib/data";
+import Pill from "./Pill";
 
 interface AdventureCardProps {
   adventure: Adventure;
