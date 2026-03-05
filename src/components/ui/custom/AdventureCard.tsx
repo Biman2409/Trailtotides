@@ -103,15 +103,15 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           {operatorCount > 0 && (
             <div className="flex items-center gap-1 text-[10px] leading-none">
               <BadgeCheck className="w-3 h-3 text-emerald-400/80 shrink-0" />
-              <span className="text-white/40">
-                <span className="text-white/65 font-semibold">{displayCount}</span> ops
-                {lowestPrice && (
-                  <>
-                    <span className="text-white/20 mx-1">·</span>
-                    <span className="text-[#ff5100]/85 font-semibold">₹{lowestPrice.toLocaleString("en-IN")}</span>
-                  </>
-                )}
-              </span>
+                <span className="text-white/40">
+                  <span className="text-white/65 font-semibold">{displayCount}</span> operators
+                  {lowestPrice && (
+                    <>
+                      <span className="text-white/20 mx-1">·</span>
+                      <span className="text-[#ff5100]/85 font-semibold">₹{lowestPrice.toLocaleString("en-IN")} onwards</span>
+                    </>
+                  )}
+                </span>
             </div>
           )}
         </div>
