@@ -61,13 +61,11 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           <Pill type="difficulty" value={adventure.difficulty} />
         </div>
 
-          {/* Season badge — top right (only when not active) */}
+          {/* Season label — top right (only when season is not active) */}
           {!isSeasonActive && seasonLabel && (
-            <div className="absolute top-3 right-3 z-20 pointer-events-none">
-              <div className="bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10">
-                <span className="text-white/60 text-[10px] font-medium tracking-tight">{seasonLabel}</span>
-              </div>
-            </div>
+            <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight shadow-sm bg-white/15 text-white/80 backdrop-blur-sm">
+              {seasonLabel}
+            </span>
           )}
 
         {/* Bottom content over image */}
