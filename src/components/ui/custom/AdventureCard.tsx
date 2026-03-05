@@ -53,7 +53,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           style={{ filter: "brightness(1.05) contrast(1.1) saturate(1.1)" }}
           sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10 z-10 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
 
         {/* Pills — top left */}
         <div className="absolute top-3 left-3 z-20 flex flex-wrap gap-1.5">
