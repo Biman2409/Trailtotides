@@ -362,7 +362,7 @@ export default function ExploreClient() {
                             },
                                 {
                                   name: "Northeast",
-                                subRegions: ["Nagaland", "Manipur", "Meghalaya", "Assam", "Arunachal Pradesh", "Sikkim"],
+                                subRegions: ["Nagaland", "Manipur", "Meghalaya", "Mizoram", "Assam", "Arunachal Pradesh", "Sikkim"],
                               },
                               {
                                 name: "Urban",
