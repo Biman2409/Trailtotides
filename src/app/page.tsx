@@ -88,10 +88,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Scroll cue arrow */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 opacity-40 hover:opacity-100 transition-opacity duration-300">
-          <ChevronDown className="w-5 h-5 text-white" />
-        </div>
+
       </section>
 
         {/* ── STATS BAR ────────────────────────────────────── */}
