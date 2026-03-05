@@ -155,7 +155,7 @@ export default function Footer() {
 
         {/* Brand Bottom Bar */}
         <div className="mt-20 pt-10 border-t border-white/[0.03] flex flex-col items-center justify-center gap-6 relative z-10 text-[10px] font-bold tracking-[0.2em] text-white/20 uppercase text-center">
-                <p>© 2026 <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ff5100] to-[#ff8c47]">TRAIL</span> <span className="italic font-light">to</span> <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ff8c47] to-[#ff5100]">TIDES</span>. DESIGNED FOR EXPLORERS BY EXPLORERS</p>
+                <p>© 2026 <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ff5100] to-[#ff8c47]">TRAIL</span> <span className="italic font-light">to</span> <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#3b82f6] to-[#60a5fa]">TIDES</span>. DESIGNED FOR EXPLORERS BY EXPLORERS</p>
         </div>
       </div>
 
