@@ -14,11 +14,12 @@ import { difficultyStyle } from "@/lib/styles";
 
 // filter constants
 const seasons: { label: string; months: Month[] }[] = [
-  { label: "Winter",  months: ["Dec", "Jan", "Feb"] },
-  { label: "Spring",  months: ["Mar", "Apr", "May"] },
-  { label: "Summer",  months: ["Jun"] },
-  { label: "Monsoon", months: ["Jul", "Aug", "Sep"] },
-  { label: "Autumn",  months: ["Oct", "Nov"] },
+  { label: "Spring",     months: ["Mar", "Apr"] },
+  { label: "Summer",     months: ["May", "Jun"] },
+  { label: "Monsoon",    months: ["Jul", "Aug"] },
+  { label: "Autumn",     months: ["Sep", "Oct"] },
+  { label: "Pre Winter", months: ["Nov", "Dec"] },
+  { label: "Winter",     months: ["Jan", "Feb"] },
 ];
 
 
