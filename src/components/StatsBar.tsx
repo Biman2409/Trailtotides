@@ -1,12 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { adventures } from "@/lib/data";
+
+const totalAdventures = adventures.length;
+const totalRegions = new Set(adventures.map((a) => a.region)).size;
+const totalTypes = new Set(adventures.map((a) => a.type)).size;
+const totalVerifiedOperators = adventures.reduce(
+  (sum, a) => sum + a.operators.filter((o) => o.verified).length,
+  0
+);
 
 const STATS = [
-  { value: 287, label: "Adventures" },
-  { value: 6,   label: "Regions" },
-  { value: 8,   label: "Adventure Types" },
-  { value: 48,  label: "Verified Operators", suffix: "+" },
+  { value: totalAdventures, label: "Adventures" },
+  { value: totalRegions,    label: "Regions" },
+  { value: totalTypes,      label: "Adventure Types" },
+  { value: totalVerifiedOperators, label: "Verified Operators" },
 ];
 
 function useCountUp(target: number, duration = 1400, started = false) {
