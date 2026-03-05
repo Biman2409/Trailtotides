@@ -23,6 +23,8 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
+import CompareCTA from "./CompareCTA";
+import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 
 interface Props {
   params: Promise<{ slug: string }>;
