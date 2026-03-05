@@ -106,8 +106,8 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           {operatorCount > 0 && (
             <div className="flex items-center gap-1.5 text-[11px]">
               <BadgeCheck className="w-3 h-3 text-emerald-400/80 shrink-0" />
-              <span className="text-white/45">
-                <span className="text-white/70 font-semibold">{displayCount}</span> {displayLabel}
+                <span className="text-white/45">
+                  <span className="text-white/70 font-semibold">{displayCount}</span> operators
                 {lowestPrice && (
                   <>
                     <span className="text-white/25 mx-1">·</span>
