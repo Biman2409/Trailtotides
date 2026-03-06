@@ -7,6 +7,8 @@ import Footer from "@/components/layout/Footer";
 import { stories } from "@/lib/data";
 import { ChevronLeft, Clock, ArrowRight, Crown, Mountain } from "lucide-react";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
+import StoryShareBar from "@/components/ui/custom/StoryShareBar";
+import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 
 const BADGE_TAGS = ["Featured", "TTT Original"];
 
@@ -120,6 +122,7 @@ export default async function StoryPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-[#111820]">
+      <ScrollToTop />
       <Navbar />
 
       {/* Hero */}
@@ -236,6 +239,8 @@ export default async function StoryPage({ params }: Props) {
               </span>
             ))}
           </div>
+
+          <StoryShareBar title={story.title} slug={story.slug} />
       </article>
 
       {/* More stories */}
