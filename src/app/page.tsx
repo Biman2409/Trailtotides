@@ -27,14 +27,13 @@ export default function HomePage() {
       <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
         <HeroSlider />
 
-        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto mt-32">
-
+        <div className="relative z-10 text-center px-5 max-w-5xl mx-auto mt-24 md:mt-32">
 
           {/* Headline */}
           <h1
-            className="font-bold tracking-tight mb-6"
+            className="font-bold tracking-tight mb-5"
             style={{
-              fontSize: "clamp(2.8rem, 7.5vw, 6rem)",
+              fontSize: "clamp(2.2rem, 7.5vw, 6rem)",
               lineHeight: 1.08,
               color: "white",
               textShadow: "0 2px 24px rgba(0,0,0,0.65)",
@@ -60,33 +59,33 @@ export default function HomePage() {
             </span>
           </h1>
 
-              {/* Subheading */}
-                  <p
-                    className="text-white/82 text-lg md:text-xl w-full mx-auto leading-relaxed mb-10"
-                    style={{ textShadow: "0 1px 10px rgba(0,0,0,0.85)" }}
-                  >
-                  Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
-                </p>
+          {/* Subheading */}
+          <p
+            className="text-white/82 text-base md:text-xl w-full mx-auto leading-relaxed mb-8"
+            style={{ textShadow: "0 1px 10px rgba(0,0,0,0.85)" }}
+          >
+            Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision.
+          </p>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link
-                href="/explore"
-                className="bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-8 py-4 rounded-xl text-base flex items-center gap-2 group shadow-xl shadow-black/30 min-w-[200px] justify-center hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/40 transition-all duration-200"
-              >
-                Explore Adventures
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/explore"
+              className="bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-7 py-3.5 rounded-xl text-sm md:text-base flex items-center gap-2 group shadow-xl shadow-black/30 w-full sm:w-auto justify-center hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/40 transition-all duration-200"
+            >
+              Explore Adventures
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
 
-              <Link
-                href="/map"
-                className="bg-white/12 hover:bg-white/22 backdrop-blur-md text-white font-semibold px-8 py-4 rounded-xl text-base border border-white/25 hover:border-white/40 flex items-center gap-2 min-w-[200px] justify-center hover:-translate-y-0.5 transition-all duration-200"
-              >
-                <Map className="w-4 h-4" />
-                Adventure Map
-              </Link>
-            </div>
+            <Link
+              href="/map"
+              className="bg-white/12 hover:bg-white/22 backdrop-blur-md text-white font-semibold px-7 py-3.5 rounded-xl text-sm md:text-base border border-white/25 hover:border-white/40 flex items-center gap-2 w-full sm:w-auto justify-center hover:-translate-y-0.5 transition-all duration-200"
+            >
+              <Map className="w-4 h-4" />
+              Adventure Map
+            </Link>
           </div>
+        </div>
 
 
       </section>
@@ -98,19 +97,19 @@ export default function HomePage() {
         <InlineChat />
 
           {/* ── FEATURED ADVENTURES + COMPARE (shared context) ── */}
-        <section id="featured-adventures" className="py-24 lg:py-32 px-6 lg:px-8 bg-[#111820]">
+        <section id="featured-adventures" className="py-16 lg:py-32 px-5 lg:px-8 bg-[#111820]">
             <div className="max-w-7xl mx-auto">
-                    <div className="mb-14">
+                    <div className="mb-10 lg:mb-14">
                       <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
                         <BadgeCheck className="w-3.5 h-3.5" />
                         EDITORS CHOICE
                       </p>
                     <div className="flex items-end justify-between gap-4">
                     <div>
-        <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight">
-              Adventures of a Lifetime
-            </h2>
-                      <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
+                      <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+                        Adventures of a Lifetime
+                      </h2>
+                      <div className="mt-4 lg:mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
                     </div>
                   <span className="hidden sm:flex items-center gap-1.5 text-[#ff5100] text-sm font-semibold bg-[#ff5100]/8 border border-[#ff5100]/20 px-3 py-1.5 rounded-full mb-1">
                     {featuredAdventures.length} picks
@@ -138,7 +137,7 @@ export default function HomePage() {
         </section>
 
         {/* ── MAP CTA ───────────────────────────────────────── */}
-        <section id="map-cta" className="relative py-24 lg:py-32 bg-[#1a2e20] px-6 lg:px-8 overflow-hidden">
+        <section id="map-cta" className="relative py-16 lg:py-32 bg-[#1a2e20] px-5 lg:px-8 overflow-hidden">
           <div className="absolute inset-0">
             <Image
               src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1200&q=100"
@@ -164,12 +163,12 @@ export default function HomePage() {
                         <p className="text-[#7ec88a] text-xs font-black tracking-[0.25em] mb-4 uppercase">
                           SIGNATURE FEATURE
                         </p>
-            <h2 className="text-white text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-5">
+            <h2 className="text-white text-3xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 lg:mb-5">
                 India's Adventures,
                 <br />
                 <span className="text-[#7ec88a]">Mapped</span>
               </h2>
-                        <p className="text-white/72 text-lg md:text-xl leading-relaxed mb-9 w-full">
+                        <p className="text-white/72 text-base md:text-xl leading-relaxed mb-7 lg:mb-9 w-full">
                           Every trail, summit, coast, and canyon — pinned, filtered, and ready to explore on one interactive map.
                         </p>
                   <Link
@@ -194,17 +193,17 @@ export default function HomePage() {
           <CompareAdventures />
 
           {/* ── STORIES ──────────────────────────────────────── */}
-        <section id="stories" className="py-24 lg:py-32 px-6 lg:px-8 bg-[#0e1420] border-t border-white/6">
+        <section id="stories" className="py-16 lg:py-32 px-5 lg:px-8 bg-[#0e1420] border-t border-white/6">
         <div className="max-w-7xl mx-auto">
-            <div className="flex items-end justify-between mb-12">
+            <div className="flex items-end justify-between mb-10 lg:mb-12">
                 <div>
                     <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3">
                       FROM THE FIELD
                     </p>
-                          <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
+                          <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight">
                               Voices from the Edge
                             </h2>
-                <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
+                <div className="mt-4 lg:mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
               </div>
             <Link
               href="/stories"
