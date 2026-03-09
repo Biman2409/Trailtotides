@@ -186,7 +186,7 @@ export default function SignUpPage() {
                   name="email"
                   type="email"
                   required
-                  placeholder="name@email.com"
+                  placeholder="rahul@email.com"
                   className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-3.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
