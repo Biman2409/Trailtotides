@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { signUp } from "@/app/auth/actions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Mountain, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Mountain, ArrowLeft, CheckCircle2, XCircle, Loader2, AtSign } from "lucide-react";
 import countries from "@/lib/countries.json";
 
 export default function SignUpPage() {
@@ -12,6 +12,21 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
+  const [username, setUsername] = useState("");
+  const [usernameState, setUsernameState] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const checkUsername = useCallback((value: string) => {
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    if (!value) { setUsernameState("idle"); return; }
+    if (!/^[a-z0-9_]{3,20}$/.test(value)) { setUsernameState("invalid"); return; }
+    setUsernameState("checking");
+    debounceTimer.current = setTimeout(async () => {
+      const res = await fetch(`/api/check-username?username=${encodeURIComponent(value)}`);
+      const data = await res.json();
+      setUsernameState(data.available ? "available" : "taken");
+    }, 500);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -123,6 +138,49 @@ export default function SignUpPage() {
               </div>
 
               <div>
+                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Username</label>
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20">
+                    <AtSign className="w-4 h-4" />
+                  </div>
+                  <input
+                    name="username"
+                    type="text"
+                    required
+                    value={username}
+                    onChange={(e) => {
+                      const val = e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, "");
+                      setUsername(val);
+                      checkUsername(val);
+                    }}
+                    placeholder="rahul_explorer"
+                    className={`w-full bg-white/[0.03] border rounded-2xl pl-10 pr-10 py-3.5 text-white text-sm placeholder-white/20 focus:outline-none focus:bg-white/[0.06] transition-all ${
+                      usernameState === "available" ? "border-emerald-500/50 focus:border-emerald-500" :
+                      usernameState === "taken" || usernameState === "invalid" ? "border-red-500/40 focus:border-red-500/60" :
+                      "border-white/10 focus:border-[#ff5100]/50"
+                    }`}
+                  />
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                    {usernameState === "checking" && <Loader2 className="w-4 h-4 text-white/30 animate-spin" />}
+                    {usernameState === "available" && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
+                    {(usernameState === "taken" || usernameState === "invalid") && <XCircle className="w-4 h-4 text-red-400" />}
+                  </div>
+                </div>
+                <p className={`mt-1.5 ml-1 text-[10px] font-medium transition-colors ${
+                  usernameState === "available" ? "text-emerald-500" :
+                  usernameState === "taken" ? "text-red-400" :
+                  usernameState === "invalid" ? "text-amber-400" :
+                  "text-white/25"
+                }`}>
+                  {usernameState === "idle" && "3–20 chars, letters, numbers and _ only"}
+                  {usernameState === "checking" && "Checking availability…"}
+                  {usernameState === "available" && `@${username} is available`}
+                  {usernameState === "taken" && `@${username} is already taken`}
+                  {usernameState === "invalid" && "3–20 chars, only lowercase letters, numbers and _"}
+                </p>
+              </div>
+
+              <div>
                 <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Email</label>
                 <input
                   name="email"
@@ -209,7 +267,7 @@ export default function SignUpPage() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || usernameState !== "available"}
               className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 text-sm mt-2"
             >
               {loading ? "Creating adventure..." : "Create Account"}

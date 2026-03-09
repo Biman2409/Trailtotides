@@ -9,11 +9,28 @@ export async function signUp(formData: FormData) {
   const adminClient = await createAdminClient();
 
   const full_name = formData.get("full_name") as string;
+  const username = (formData.get("username") as string).toLowerCase().trim();
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const country_code = formData.get("country_code") as string;
   const phone_number = formData.get("phone") as string;
   const phone = `${country_code}${phone_number.replace(/\s+/g, "")}`;
+
+  // Validate username format
+  if (!/^[a-z0-9_]{3,20}$/.test(username)) {
+    return { error: "Username must be 3–20 characters: lowercase letters, numbers and _ only." };
+  }
+
+  // Check username uniqueness server-side
+  const { data: existing } = await adminClient
+    .from("profiles")
+    .select("id")
+    .eq("username", username)
+    .maybeSingle();
+
+  if (existing) {
+    return { error: `The username @${username} is already taken. Please choose another.` };
+  }
 
   // Get origin for verification link
   const headersList = await (await import("next/headers")).headers();
@@ -22,7 +39,6 @@ export async function signUp(formData: FormData) {
   const origin = `${protocol}://${host}`;
 
   // Sign up using normal client first
-  // This might trigger a Supabase email if SMTP is configured, but we'll also send our own
   const { data, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
@@ -30,6 +46,7 @@ export async function signUp(formData: FormData) {
       emailRedirectTo: `${origin}/auth/callback`,
       data: {
         full_name,
+        username,
         phone,
       },
     },
@@ -37,6 +54,13 @@ export async function signUp(formData: FormData) {
 
   if (signUpError) {
     return { error: signUpError.message };
+  }
+
+  // Save username to profiles table
+  if (data.user) {
+    await adminClient
+      .from("profiles")
+      .upsert({ id: data.user.id, username, full_name, phone }, { onConflict: "id" });
   }
 
   // If we have a Resend key, generate a link and send it manually
@@ -52,8 +76,8 @@ export async function signUp(formData: FormData) {
 
     if (!linkError && linkData?.properties?.action_link) {
       await sendVerificationEmail(
-        email, 
-        linkData.properties.action_link, 
+        email,
+        linkData.properties.action_link,
         full_name
       );
     }
@@ -65,9 +89,31 @@ export async function signUp(formData: FormData) {
 
 export async function login(formData: FormData) {
   const supabase = await createClient();
+  const adminClient = await createAdminClient();
 
-  const email = formData.get("email") as string;
+  const identifier = (formData.get("email") as string).trim();
   const password = formData.get("password") as string;
+
+  let email = identifier;
+
+  // If identifier doesn't look like an email, treat it as a username
+  if (!identifier.includes("@")) {
+    const { data: profile } = await adminClient
+      .from("profiles")
+      .select("id")
+      .eq("username", identifier.toLowerCase())
+      .maybeSingle();
+
+    if (!profile) {
+      return { error: "No account found with that username." };
+    }
+
+    const { data: userData } = await adminClient.auth.admin.getUserById(profile.id);
+    if (!userData?.user?.email) {
+      return { error: "Could not resolve account. Please use your email instead." };
+    }
+    email = userData.user.email;
+  }
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
