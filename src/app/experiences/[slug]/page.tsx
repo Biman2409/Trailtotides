@@ -17,7 +17,6 @@ import {
     ArrowRight,
     Route,
     BadgeCheck,
-    ExternalLink,
     Flag,
     Navigation,
 } from "lucide-react";

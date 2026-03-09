@@ -3,12 +3,10 @@
 import { useState, useRef, useCallback } from "react";
 import { signUp } from "@/app/auth/actions";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Mountain, ArrowLeft, CheckCircle2, XCircle, Loader2, AtSign } from "lucide-react";
 import countries from "@/lib/countries.json";
 
 export default function SignUpPage() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
