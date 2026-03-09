@@ -5,6 +5,7 @@ import { signUp } from "@/app/auth/actions";
 import Link from "next/link";
 import { Eye, EyeOff, Mountain, ArrowLeft, CheckCircle2, XCircle, Loader2, AtSign } from "lucide-react";
 import countries from "@/lib/countries.json";
+import TermsModal from "@/components/ui/custom/TermsModal";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,6 +13,8 @@ export default function SignUpPage() {
   const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [username, setUsername] = useState("");
   const [usernameState, setUsernameState] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const checkUsername = useCallback((value: string) => {
@@ -46,6 +49,12 @@ export default function SignUpPage() {
 
   return (
     <div className="h-screen bg-[#0a0a0a] flex overflow-hidden">
+      {showTermsModal && (
+        <TermsModal
+          onAccept={() => setTermsAccepted(true)}
+          onClose={() => setShowTermsModal(false)}
+        />
+      )}
       {/* Left panel — image */}
       <div
         className="hidden lg:flex lg:w-1/2 relative bg-cover bg-center"
@@ -247,26 +256,43 @@ export default function SignUpPage() {
             </div>
 
             <div className="flex items-start gap-3 py-2">
-              <div className="flex items-center h-5 mt-0.5">
+              <div className="flex items-center h-5 mt-0.5 shrink-0">
                 <input
                   id="terms"
                   name="terms"
                   type="checkbox"
                   required
-                  className="w-4 h-4 rounded-lg border-white/10 bg-white/5 text-[#ff5100] focus:ring-[#ff5100]/20 transition-all cursor-pointer"
+                  checked={termsAccepted}
+                  onChange={() => {
+                    if (!termsAccepted) setShowTermsModal(true);
+                    else setTermsAccepted(false);
+                  }}
+                  className="w-4 h-4 rounded-lg border-white/10 bg-white/5 text-[#ff5100] focus:ring-[#ff5100]/20 transition-all cursor-pointer accent-[#ff5100]"
                 />
               </div>
-              <label htmlFor="terms" className="text-[11px] text-white/40 leading-snug cursor-pointer font-medium">
+              <label className="text-[11px] text-white/40 leading-snug font-medium">
                 I agree to the{" "}
-                <Link href="/terms" className="text-[#ff5100]/70 hover:text-[#ff5100] transition-colors underline underline-offset-2">Terms</Link>
+                <button
+                  type="button"
+                  onClick={() => setShowTermsModal(true)}
+                  className="text-[#ff5100]/70 hover:text-[#ff5100] transition-colors underline underline-offset-2"
+                >
+                  Terms
+                </button>
                 {" "}and{" "}
-                <Link href="/privacy" className="text-[#ff5100]/70 hover:text-[#ff5100] transition-colors underline underline-offset-2">Privacy Policy</Link>
+                <button
+                  type="button"
+                  onClick={() => setShowTermsModal(true)}
+                  className="text-[#ff5100]/70 hover:text-[#ff5100] transition-colors underline underline-offset-2"
+                >
+                  Privacy Policy
+                </button>
               </label>
             </div>
 
             <button
               type="submit"
-              disabled={loading || usernameState !== "available"}
+              disabled={loading || usernameState !== "available" || !termsAccepted}
               className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 text-sm mt-2"
             >
               {loading ? "Creating adventure..." : "Create Account"}
