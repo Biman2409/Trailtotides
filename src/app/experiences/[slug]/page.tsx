@@ -26,9 +26,6 @@ import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
 import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
-import { createClient } from "@/lib/supabase/server";
-
-export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -66,9 +63,6 @@ export default async function ExperiencePage({ params }: Props) {
   const adventure = adventures.find((a) => a.slug === slug);
   if (!adventure) notFound();
 
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const isLoggedIn = !!user;
 
     const relatedByState = adventures
       .filter((a) => a.id !== adventure.id && a.state === adventure.state)
@@ -259,194 +253,130 @@ export default async function ExperiencePage({ params }: Props) {
 
               {/* Operators Section */}
               <section>
-                {isLoggedIn ? (
-                  <>
-                    {/* Verified Operators */}
-                    {adventure.operators.some((op) => op.verified) && (
-                      <div className="mb-10">
-                        <div className="flex items-center gap-3 mb-6">
-                          <BadgeCheck className="w-5 h-5 text-emerald-600" />
-                          <div>
-                            <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">
-                              Verified Operators
-                            </p>
-                            <p className="text-[#9a9590] text-sm mt-0.5">
-                              ALTOA/PADI/IMF registered or established operators with a verifiable track record
-                            </p>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {adventure.operators.filter((op) => op.verified).map((op) => (
-                            <div
-                              key={op.name}
-                              className="bg-white border border-emerald-100 rounded-2xl p-5 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow"
-                            >
-                              <div className="flex items-start justify-between gap-2">
-                                <div>
-                                  <div className="flex items-center gap-1.5 flex-wrap">
-                                    <span className="text-[#1a1f2e] font-semibold text-sm leading-snug">{op.name}</span>
-                                    <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-200">
-                                      <ShieldCheck className="w-3 h-3" />
-                                      Verified
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center gap-1 mt-1.5">
-                                    {[1, 2, 3, 4, 5].map((s) => (
-                                      <Star key={s} className={`w-3 h-3 ${s <= Math.round(op.rating) ? "text-amber-400 fill-amber-400" : "text-gray-200 fill-gray-200"}`} />
-                                    ))}
-                                    <span className="text-[#9a9590] text-xs ml-1">{op.rating}</span>
-                                  </div>
-                                </div>
-                                <div className="text-right shrink-0">
-                                  <div className="text-[#9a9590] text-[10px] uppercase tracking-wide">From</div>
-                                  <div className="text-[#1a1f2e] font-bold text-base">{op.priceFrom}</div>
-                                </div>
-                              </div>
-                              <OperatorButton website={op.website ?? ""} />
-                            </div>
-                          ))}
-                        </div>
-                        <p className="mt-4 text-[#9a9590] text-xs flex items-center gap-1.5">
-                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                          All verified operators hold valid permits, safety certifications and guide credentials.
+                {/* Verified Operators */}
+                {adventure.operators.some((op) => op.verified) && (
+                  <div className="mb-10">
+                    <div className="flex items-center gap-3 mb-6">
+                      <BadgeCheck className="w-5 h-5 text-emerald-600" />
+                      <div>
+                        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">
+                          Verified Operators
+                        </p>
+                        <p className="text-[#9a9590] text-sm mt-0.5">
+                          ALTOA/PADI/IMF registered or established operators with a verifiable track record
                         </p>
                       </div>
-                    )}
-
-                    {/* Verification Criteria Box */}
-                    <div className="mb-10 bg-emerald-50 border border-emerald-100 rounded-2xl p-5">
-                      <div className="flex items-center gap-2 mb-3">
-                        <BadgeCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                        <p className="text-emerald-800 text-xs font-bold tracking-[0.15em] uppercase">How We Verify Operators</p>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {[
-                          { icon: CheckCircle2, text: "Valid government permits & licenses" },
-                          { icon: CheckCircle2, text: "ATOAI / IMF / PADI certification confirmed" },
-                          { icon: CheckCircle2, text: "Certified & trained local guides on staff" },
-                          { icon: CheckCircle2, text: "Safety gear & evacuation protocols in place" },
-                          { icon: CheckCircle2, text: "Independently reviewed by our team on-ground" },
-                          { icon: CheckCircle2, text: "Consistent track record over 2+ seasons" },
-                        ].map(({ icon: Icon, text }) => (
-                          <div key={text} className="flex items-center gap-2">
-                            <Icon className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                            <span className="text-emerald-900 text-xs">{text}</span>
-                          </div>
-                        ))}
-                      </div>
                     </div>
-
-                    {/* Other Operators */}
-                    {adventure.operators.some((op) => !op.verified) && (
-                      <div>
-                        <div className="flex items-center gap-3 mb-6">
-                          <AlertTriangle className="w-5 h-5 text-amber-500" />
-                          <div>
-                            <p className="text-[#1a1f2e] text-xs font-semibold tracking-[0.2em] uppercase">
-                              Other Operators
-                            </p>
-                            <p className="text-[#9a9590] text-sm mt-0.5">
-                              Listed by the community — not verified by us
-                            </p>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {adventure.operators.filter((op) => !op.verified).map((op) => (
-                            <div
-                              key={op.name}
-                              className="bg-[#fafaf8] border border-[#e0d8cc] rounded-2xl p-5 flex flex-col gap-4 opacity-90 hover:opacity-100 transition-opacity"
-                            >
-                              <div className="flex items-start justify-between gap-2">
-                                <div>
-                                  <div className="flex items-center gap-1.5 flex-wrap">
-                                    <span className="text-[#1a1f2e] font-semibold text-sm leading-snug">{op.name}</span>
-                                    <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-amber-200">
-                                      <AlertTriangle className="w-3 h-3" />
-                                      Unverified
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center gap-1 mt-1.5">
-                                    {[1, 2, 3, 4, 5].map((s) => (
-                                      <Star key={s} className={`w-3 h-3 ${s <= Math.round(op.rating) ? "text-amber-400 fill-amber-400" : "text-gray-200 fill-gray-200"}`} />
-                                    ))}
-                                    <span className="text-[#9a9590] text-xs ml-1">{op.rating}</span>
-                                  </div>
-                                </div>
-                                <div className="text-right shrink-0">
-                                  <div className="text-[#9a9590] text-[10px] uppercase tracking-wide">From</div>
-                                  <div className="text-[#1a1f2e] font-bold text-base">{op.priceFrom}</div>
-                                </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {adventure.operators.filter((op) => op.verified).map((op) => (
+                        <div
+                          key={op.name}
+                          className="bg-white border border-emerald-100 rounded-2xl p-5 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className="text-[#1a1f2e] font-semibold text-sm leading-snug">{op.name}</span>
+                                <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-200">
+                                  <ShieldCheck className="w-3 h-3" />
+                                  Verified
+                                </span>
                               </div>
-                              <OperatorButton website={op.website ?? ""} label="Visit Website" variant="secondary" />
+                              <div className="flex items-center gap-1 mt-1.5">
+                                {[1, 2, 3, 4, 5].map((s) => (
+                                  <Star key={s} className={`w-3 h-3 ${s <= Math.round(op.rating) ? "text-amber-400 fill-amber-400" : "text-gray-200 fill-gray-200"}`} />
+                                ))}
+                                <span className="text-[#9a9590] text-xs ml-1">{op.rating}</span>
+                              </div>
                             </div>
-                          ))}
+                            <div className="text-right shrink-0">
+                              <div className="text-[#9a9590] text-[10px] uppercase tracking-wide">From</div>
+                              <div className="text-[#1a1f2e] font-bold text-base">{op.priceFrom}</div>
+                            </div>
+                          </div>
+                          <OperatorButton website={op.website ?? ""} />
                         </div>
-                        <p className="mt-4 text-[#9a9590] text-xs flex items-center gap-1.5">
-                          <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                          Do your own research before booking with unverified operators. We recommend asking for permits and certifications directly.
+                      ))}
+                    </div>
+                    <p className="mt-4 text-[#9a9590] text-xs flex items-center gap-1.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                      All verified operators hold valid permits, safety certifications and guide credentials.
+                    </p>
+                  </div>
+                )}
+
+                {/* Verification Criteria Box */}
+                <div className="mb-10 bg-emerald-50 border border-emerald-100 rounded-2xl p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <BadgeCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <p className="text-emerald-800 text-xs font-bold tracking-[0.15em] uppercase">How We Verify Operators</p>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {[
+                      { icon: CheckCircle2, text: "Valid government permits & licenses" },
+                      { icon: CheckCircle2, text: "ATOAI / IMF / PADI certification confirmed" },
+                      { icon: CheckCircle2, text: "Certified & trained local guides on staff" },
+                      { icon: CheckCircle2, text: "Safety gear & evacuation protocols in place" },
+                      { icon: CheckCircle2, text: "Independently reviewed by our team on-ground" },
+                      { icon: CheckCircle2, text: "Consistent track record over 2+ seasons" },
+                    ].map(({ icon: Icon, text }) => (
+                      <div key={text} className="flex items-center gap-2">
+                        <Icon className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span className="text-emerald-900 text-xs">{text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Other Operators */}
+                {adventure.operators.some((op) => !op.verified) && (
+                  <div>
+                    <div className="flex items-center gap-3 mb-6">
+                      <AlertTriangle className="w-5 h-5 text-amber-500" />
+                      <div>
+                        <p className="text-[#1a1f2e] text-xs font-semibold tracking-[0.2em] uppercase">
+                          Other Operators
+                        </p>
+                        <p className="text-[#9a9590] text-sm mt-0.5">
+                          Listed by the community — not verified by us
                         </p>
                       </div>
-                    )}
-                  </>
-                ) : (
-                  /* Login gate */
-                  <div className="rounded-2xl border border-[#e0d8cc] bg-[#fafaf8] overflow-hidden">
-                    {/* Blurred preview */}
-                    <div className="relative select-none pointer-events-none">
-                      <div className="p-6 blur-sm opacity-40">
-                        <div className="flex items-center gap-3 mb-5">
-                          <BadgeCheck className="w-5 h-5 text-emerald-600" />
-                          <div>
-                            <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">Verified Operators</p>
-                            <p className="text-[#9a9590] text-sm mt-0.5">ALTOA/PADI/IMF registered operators</p>
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {[1, 2].map((i) => (
-                            <div key={i} className="bg-white border border-emerald-100 rounded-2xl p-5 flex flex-col gap-3">
-                              <div className="flex items-start justify-between">
-                                <div className="space-y-2">
-                                  <div className="h-3.5 w-32 bg-[#1a1f2e]/15 rounded-full" />
-                                  <div className="flex gap-1">
-                                    {[1,2,3,4,5].map(s => <div key={s} className="w-3 h-3 rounded-full bg-amber-300" />)}
-                                  </div>
-                                </div>
-                                <div className="text-right space-y-1">
-                                  <div className="h-2.5 w-8 bg-[#1a1f2e]/10 rounded-full ml-auto" />
-                                  <div className="h-4 w-20 bg-[#1a1f2e]/20 rounded-full ml-auto" />
-                                </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {adventure.operators.filter((op) => !op.verified).map((op) => (
+                        <div
+                          key={op.name}
+                          className="bg-[#fafaf8] border border-[#e0d8cc] rounded-2xl p-5 flex flex-col gap-4 opacity-90 hover:opacity-100 transition-opacity"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className="text-[#1a1f2e] font-semibold text-sm leading-snug">{op.name}</span>
+                                <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-amber-200">
+                                  <AlertTriangle className="w-3 h-3" />
+                                  Unverified
+                                </span>
                               </div>
-                              <div className="h-9 bg-[#ff5100]/20 rounded-xl" />
+                              <div className="flex items-center gap-1 mt-1.5">
+                                {[1, 2, 3, 4, 5].map((s) => (
+                                  <Star key={s} className={`w-3 h-3 ${s <= Math.round(op.rating) ? "text-amber-400 fill-amber-400" : "text-gray-200 fill-gray-200"}`} />
+                                ))}
+                                <span className="text-[#9a9590] text-xs ml-1">{op.rating}</span>
+                              </div>
                             </div>
-                          ))}
+                            <div className="text-right shrink-0">
+                              <div className="text-[#9a9590] text-[10px] uppercase tracking-wide">From</div>
+                              <div className="text-[#1a1f2e] font-bold text-base">{op.priceFrom}</div>
+                            </div>
+                          </div>
+                          <OperatorButton website={op.website ?? ""} label="Visit Website" variant="secondary" />
                         </div>
-                      </div>
-                      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#fafaf8]/60 to-[#fafaf8]" />
+                      ))}
                     </div>
-                    {/* CTA */}
-                    <div className="px-6 pb-8 pt-2 flex flex-col items-center text-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-[#ff5100]/10 flex items-center justify-center">
-                        <ShieldCheck className="w-6 h-6 text-[#ff5100]" />
-                      </div>
-                      <div>
-                        <p className="text-[#1a1f2e] font-semibold text-base mb-1">See verified operators & pricing</p>
-                        <p className="text-[#9a9590] text-sm">Create a free account to unlock operator listings, ratings, and direct booking links for every adventure.</p>
-                      </div>
-                      <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
-                        <Link
-                          href="/auth/signup"
-                          className="flex-1 flex items-center justify-center gap-2 bg-[#ff5100] hover:bg-[#e64800] text-white font-semibold py-2.5 px-5 rounded-xl text-sm transition-colors"
-                        >
-                          Sign up free
-                        </Link>
-                        <Link
-                          href="/auth/login"
-                          className="flex-1 flex items-center justify-center gap-2 bg-transparent border border-[#1a1f2e]/20 hover:border-[#1a1f2e]/40 text-[#1a1f2e] font-medium py-2.5 px-5 rounded-xl text-sm transition-colors"
-                        >
-                          Log in
-                        </Link>
-                      </div>
-                    </div>
+                    <p className="mt-4 text-[#9a9590] text-xs flex items-center gap-1.5">
+                      <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                      Do your own research before booking with unverified operators. We recommend asking for permits and certifications directly.
+                    </p>
                   </div>
                 )}
               </section>
