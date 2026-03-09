@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { updateProfile } from "./actions";
-import { User, Mail, Phone, Save, Loader2, CheckCircle2 } from "lucide-react";
+import { User, Mail, Phone, Save, Loader2, CheckCircle2, AtSign } from "lucide-react";
 
 type Profile = {
   id: string;
   full_name: string | null;
   email: string | null;
   phone: string | null;
+  username: string | null;
   role: string;
   created_at: string;
 };
@@ -36,6 +37,25 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
 
   return (
     <form action={handleSubmit} className="space-y-6">
+      <div className="space-y-2">
+        <label className="text-xs font-bold text-white/40 uppercase tracking-widest pl-1">
+          Username
+        </label>
+        <div className="relative">
+          <AtSign className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/10" />
+          <input
+            type="text"
+            defaultValue={profile.username || ""}
+            disabled
+            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-white/40 cursor-not-allowed"
+          />
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-white/20 uppercase tracking-wider bg-white/5 px-2 py-1 rounded">
+            Fixed
+          </span>
+        </div>
+        <p className="text-[10px] text-white/30 pl-1 mt-1">Username cannot be changed after registration.</p>
+      </div>
+
       <div className="space-y-2">
         <label className="text-xs font-bold text-white/40 uppercase tracking-widest pl-1">
           Full Name

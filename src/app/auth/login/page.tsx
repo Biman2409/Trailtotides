@@ -62,12 +62,12 @@ function LoginForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Email Address</label>
+          <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Username or Email</label>
           <input
             name="email"
-            type="email"
+            type="text"
             required
-            placeholder="name@example.com"
+            placeholder="rahul_explorer or name@example.com"
             className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
           />
         </div>

@@ -79,6 +79,9 @@ export default async function ProfilePage() {
 
             <div>
               <h1 className="text-2xl font-bold tracking-tight">{profile.full_name || "Guest User"}</h1>
+              {profile.username && (
+                <p className="text-[#ff5100]/70 text-sm font-medium mt-0.5">@{profile.username}</p>
+              )}
               <p className="text-white/40 text-sm mt-1">{profile.email}</p>
             </div>
 
