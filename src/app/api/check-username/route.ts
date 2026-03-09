@@ -9,11 +9,15 @@ export async function GET(req: NextRequest) {
   }
 
   const supabase = await createAdminClient();
-  const { data } = await supabase
-    .from("profiles")
-    .select("id")
-    .eq("username", username)
-    .maybeSingle();
 
-  return NextResponse.json({ available: data === null });
+  // Search through auth users' metadata for matching username
+  // listUsers returns pages of users; for small apps this is fine
+  const { data, error } = await supabase.auth.admin.listUsers({ perPage: 1000 });
+  if (error) return NextResponse.json({ available: true }); // fail open
+
+  const taken = data.users.some(
+    (u) => (u.user_metadata?.username ?? "").toLowerCase() === username.toLowerCase()
+  );
+
+  return NextResponse.json({ available: !taken });
 }

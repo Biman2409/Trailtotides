@@ -79,8 +79,8 @@ export default async function ProfilePage() {
 
             <div>
               <h1 className="text-2xl font-bold tracking-tight">{profile.full_name || "Guest User"}</h1>
-              {profile.username && (
-                <p className="text-[#ff5100]/70 text-sm font-medium mt-0.5">@{profile.username}</p>
+              {(user.user_metadata?.username || profile.username) && (
+                <p className="text-[#ff5100]/70 text-sm font-medium mt-0.5">@{user.user_metadata?.username || profile.username}</p>
               )}
               <p className="text-white/40 text-sm mt-1">{profile.email}</p>
             </div>
@@ -125,7 +125,7 @@ export default async function ProfilePage() {
                 <p className="text-white/40 text-sm mt-1">Manage your public profile and account details.</p>
               </div>
 
-              <ProfileForm profile={profile} />
+              <ProfileForm profile={{ ...profile, username: user.user_metadata?.username || profile.username || null }} />
             </div>
 
             <div className="mt-8 p-6 rounded-2xl bg-[#ff5100]/5 border border-[#ff5100]/10">

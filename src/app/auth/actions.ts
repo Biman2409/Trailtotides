@@ -21,14 +21,12 @@ export async function signUp(formData: FormData) {
     return { error: "Username must be 3–20 characters: lowercase letters, numbers and _ only." };
   }
 
-  // Check username uniqueness server-side
-  const { data: existing } = await adminClient
-    .from("profiles")
-    .select("id")
-    .eq("username", username)
-    .maybeSingle();
-
-  if (existing) {
+  // Check username uniqueness via auth metadata (no schema changes needed)
+  const { data: allUsers } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
+  const taken = allUsers?.users.some(
+    (u) => (u.user_metadata?.username ?? "").toLowerCase() === username
+  );
+  if (taken) {
     return { error: `The username @${username} is already taken. Please choose another.` };
   }
 
@@ -38,17 +36,13 @@ export async function signUp(formData: FormData) {
   const protocol = headersList.get("x-forwarded-proto") || (host?.includes("localhost") ? "http" : "https");
   const origin = `${protocol}://${host}`;
 
-  // Sign up using normal client first
+  // Sign up — username stored in user_metadata, no DB schema changes needed
   const { data, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
     options: {
       emailRedirectTo: `${origin}/auth/callback`,
-      data: {
-        full_name,
-        username,
-        phone,
-      },
+      data: { full_name, username, phone },
     },
   });
 
@@ -56,30 +50,17 @@ export async function signUp(formData: FormData) {
     return { error: signUpError.message };
   }
 
-  // Save username to profiles table
-  if (data.user) {
-    await adminClient
-      .from("profiles")
-      .upsert({ id: data.user.id, username, full_name, phone }, { onConflict: "id" });
-  }
-
   // If we have a Resend key, generate a link and send it manually
-    if (process.env.RESEND_API_KEY) {
-      const { data: linkData, error: linkError } = await adminClient.auth.admin.generateLink({
-        type: 'signup',
-        email: email,
-        password: password,
-        options: {
-          redirectTo: `${origin}/auth/callback`,
-        }
-      });
+  if (process.env.RESEND_API_KEY) {
+    const { data: linkData, error: linkError } = await adminClient.auth.admin.generateLink({
+      type: 'signup',
+      email: email,
+      password: password,
+      options: { redirectTo: `${origin}/auth/callback` }
+    });
 
     if (!linkError && linkData?.properties?.action_link) {
-      await sendVerificationEmail(
-        email,
-        linkData.properties.action_link,
-        full_name
-      );
+      await sendVerificationEmail(email, linkData.properties.action_link, full_name);
     }
   }
 
@@ -98,21 +79,15 @@ export async function login(formData: FormData) {
 
   // If identifier doesn't look like an email, treat it as a username
   if (!identifier.includes("@")) {
-    const { data: profile } = await adminClient
-      .from("profiles")
-      .select("id")
-      .eq("username", identifier.toLowerCase())
-      .maybeSingle();
+    const { data: allUsers } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
+    const match = allUsers?.users.find(
+      (u) => (u.user_metadata?.username ?? "").toLowerCase() === identifier.toLowerCase()
+    );
 
-    if (!profile) {
+    if (!match?.email) {
       return { error: "No account found with that username." };
     }
-
-    const { data: userData } = await adminClient.auth.admin.getUserById(profile.id);
-    if (!userData?.user?.email) {
-      return { error: "Could not resolve account. Please use your email instead." };
-    }
-    email = userData.user.email;
+    email = match.email;
   }
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
