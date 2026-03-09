@@ -164,18 +164,19 @@ export default function SignUpPage() {
                     {(usernameState === "taken" || usernameState === "invalid") && <XCircle className="w-4 h-4 text-red-400" />}
                   </div>
                 </div>
-                <p className={`mt-1.5 ml-1 text-[10px] font-medium transition-colors ${
-                  usernameState === "available" ? "text-emerald-500" :
-                  usernameState === "taken" ? "text-red-400" :
-                  usernameState === "invalid" ? "text-amber-400" :
-                  "text-white/25"
-                }`}>
-                  {usernameState === "idle" && "3–20 chars, letters, numbers and _ only"}
-                  {usernameState === "checking" && "Checking availability…"}
-                  {usernameState === "available" && `@${username} is available`}
-                  {usernameState === "taken" && `@${username} is already taken`}
-                  {usernameState === "invalid" && "3–20 chars, only lowercase letters, numbers and _"}
-                </p>
+                {usernameState !== "idle" && (
+                  <p className={`mt-1.5 ml-1 text-[10px] font-medium transition-colors ${
+                    usernameState === "available" ? "text-emerald-500" :
+                    usernameState === "taken" ? "text-red-400" :
+                    usernameState === "invalid" ? "text-amber-400" :
+                    "text-white/25"
+                  }`}>
+                    {usernameState === "checking" && "Checking availability…"}
+                    {usernameState === "available" && `@${username} is available`}
+                    {usernameState === "taken" && `@${username} is already taken`}
+                    {usernameState === "invalid" && "3–20 chars, only lowercase letters, numbers and _"}
+                  </p>
+                )}
               </div>
 
               <div>
