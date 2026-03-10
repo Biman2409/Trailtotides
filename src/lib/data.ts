@@ -327,6 +327,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-spiti-cyc-1", username: "rahul_c", rating: 5, body: "Kunzum La at 4,590m on a loaded bicycle. I still can't believe I did that. The Spiti Valley is probably the most visually dramatic landscape I've cycled through anywhere in the world. Prepare for thin air and thin tyres — bring two spare tubes minimum.", created_at: "2025-08-20T07:00:00Z", user_id: "" },
       { id: "sr-spiti-cyc-2", username: "shruti_cycles", rating: 4, body: "Did this in September — perfect timing for clear roads and empty campsites. Key Monastery in the late afternoon light from a bike saddle is one of those moments you just sit and absorb. Altitude headaches on day 2 are normal; take it easy.", created_at: "2025-09-08T14:30:00Z", user_id: "" },
+      { id: "sr-spiti-cyc-3", username: "mihir_g", rating: 5, body: "Chicham bridge — the highest bridge in Asia — is right on this route and most people just ride past it in five minutes. Stop. Sit on it. Look down. That moment alone justifies the entire trip. Physically the hardest thing I've ever done on a bicycle and I'd go back tomorrow.", created_at: "2025-09-20T08:15:00Z", user_id: "" },
     ],
   },
 {
@@ -462,6 +463,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-zanskar-1", username: "sameer_offroad", rating: 5, body: "The Zanskar road is not a road — it's a suggestion. River crossings, loose scree, landslide debris. And the valley on the other side is one of the most beautiful and isolated places on the planet. Absolutely not for beginners.", created_at: "2025-08-22T07:30:00Z", user_id: "" },
       { id: "sr-zanskar-2", username: "leela_b", rating: 4, body: "Go with Mototour Ladakh — they know the river crossing timings (crucial for safety) and have a support vehicle. The monastery at Padum is worth a full rest day. Carry more cash than you think you need — no ATMs beyond Kargil.", created_at: "2025-09-03T12:00:00Z", user_id: "" },
+      { id: "sr-zanskar-3", username: "keshav_z", rating: 5, body: "Three days without phone signal. Woke up to a frozen tent on day two. The Zanskar River at sunrise was a shade of blue I've never seen anywhere else. This is real remote India and it will reset your perspective completely. Non-negotiable: go with a local guide.", created_at: "2025-08-30T06:00:00Z", user_id: "" },
     ],
   },
 {
@@ -507,6 +509,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-spiti-bike-1", username: "gaurav_spiti", rating: 5, body: "The Spiti loop is what riding in India is actually about. Dhankar Monastery perched on a cliff, Pin Valley in golden hour, locals waving from monastery rooftops. Not once did it feel like a tourist route.", created_at: "2025-07-25T09:00:00Z", user_id: "" },
       { id: "sr-spiti-bike-2", username: "divya_m", rating: 5, body: "Did the loop in 10 days but could easily have stayed 14. Kibber is the place to base yourself for a rest day — the village is tiny and perfect. Spiti Riders Group handled everything seamlessly; would book with them again without question.", created_at: "2025-08-10T15:45:00Z", user_id: "" },
+      { id: "sr-spiti-bike-3", username: "tanvir_s", rating: 4, body: "The stretch from Kaza to Losar before Kunzum La is some of the most surreal riding in the country — brown desert mountains, a turquoise river, zero traffic. Book accommodation at Kaza in advance for July/August. Everything else can be figured out on the road.", created_at: "2025-07-30T13:00:00Z", user_id: "" },
     ],
   }
 ];
