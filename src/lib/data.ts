@@ -66,6 +66,7 @@ export interface Adventure {
   operators: Operator[];
   tags: string[];
   featured: boolean;
+  seedReviews?: SeedReview[];
 }
 
 export interface Operator {
@@ -74,6 +75,15 @@ export interface Operator {
   priceFrom: string;
   rating: number;
   website?: string;
+}
+
+export interface SeedReview {
+  id: string;
+  username: string;
+  rating: number;
+  body: string;
+  created_at: string;
+  user_id: string; // empty string for seed reviews
 }
 
 export interface Story {
@@ -134,6 +144,11 @@ export const adventures: Adventure[] = [
           ],
       tags: ["mountaineering", "6000m", "glaciers", "summit", "Ladakh"],
       featured: true,
+      seedReviews: [
+        { id: "sr-stok-1", username: "ananya_m", rating: 5, body: "One of the hardest and most rewarding things I've done. Summit day is brutal — wind chill at 3am is no joke — but standing on top with all of Ladakh in sight is something I'll never forget. Go with a certified guide, acclimatise properly, and don't rush it.", created_at: "2025-09-14T07:22:00Z", user_id: "" },
+        { id: "sr-stok-2", username: "vikram_outdoors", rating: 4, body: "Incredible summit views. The base camp itself is spectacular enough. Only knocked a star because the scree on the descent destroyed my knees — bring trekking poles and take it slow. Would do it again in a heartbeat though.", created_at: "2025-08-28T11:45:00Z", user_id: "" },
+        { id: "sr-stok-3", username: "priya_s", rating: 5, body: "Summited in August and conditions were perfect. Our guide Tashi was phenomenal — read the weather better than any app. Highly recommend going with a local Ladakhi operator rather than a Delhi-based agency. Better food, better acclimatisation schedule.", created_at: "2025-08-02T09:10:00Z", user_id: "" },
+      ],
     },
 {
         id: "1",
@@ -176,6 +191,11 @@ export const adventures: Adventure[] = [
             ],
       tags: ["frozen river", "winter", "Ladakh", "extreme cold", "iconic"],
       featured: true,
+      seedReviews: [
+        { id: "sr-chadar-1", username: "rohan_trek", rating: 5, body: "Walked on a frozen river for four days. That sentence still sounds unreal. The silence out there is unlike anything in the world. Incredibly cold (-25°C at night) but the operators had excellent sleeping gear. A life-defining experience.", created_at: "2025-02-10T06:30:00Z", user_id: "" },
+        { id: "sr-chadar-2", username: "deepika_w", rating: 4, body: "Physically demanding but not technically difficult — it's the cold that gets you. Do NOT skip the acclimatisation days in Leh. I saw two people turn back on day one from altitude sickness because they flew straight from Delhi and ignored advice. Otherwise flawless trip.", created_at: "2025-01-25T14:15:00Z", user_id: "" },
+        { id: "sr-chadar-3", username: "suresh_k", rating: 5, body: "Third time doing Chadar. The river changes every year — some years there are big ice caves, some years it's flat blue sheets. That unpredictability is half the beauty. Go in late January for the best ice conditions.", created_at: "2025-01-19T08:45:00Z", user_id: "" },
+      ],
     },
 {
       id: "3",
@@ -217,6 +237,11 @@ export const adventures: Adventure[] = [
         ],
     tags: ["motorcycle", "high passes", "Ladakh", "iconic", "long ride"],
     featured: true,
+    seedReviews: [
+      { id: "sr-manali-1", username: "kartik_r", rating: 5, body: "Did it on a Royal Enfield Himalayan. Tanglang La in rain is terrifying and spectacular at the same time. The camaraderie with other riders on the road is something you can't plan — just happens naturally. Do it before the road gets too crowded.", created_at: "2025-07-18T10:00:00Z", user_id: "" },
+      { id: "sr-manali-2", username: "neha_rides", rating: 5, body: "First time on a high-altitude ride and it exceeded every expectation. Baralacha La sunrise was otherworldly. Make sure your bike is serviced the day before departure and carry extra engine oil. The roads after Keylong can be rough.", created_at: "2025-06-30T15:30:00Z", user_id: "" },
+      { id: "sr-manali-3", username: "aditya_b", rating: 4, body: "Iconic route, zero arguments. Lost a full day at Keylong due to landslide — factor in buffer days. The Sarchu campsite under the stars is the highlight. Avoid July 15–Aug 15 if you hate crowds.", created_at: "2025-07-05T09:00:00Z", user_id: "" },
+    ],
   },
 {
     id: "4",
@@ -256,6 +281,11 @@ export const adventures: Adventure[] = [
         ],
     tags: ["diving", "coral reefs", "islands", "marine life", "WWII wreck"],
     featured: true,
+    seedReviews: [
+      { id: "sr-andaman-1", username: "meera_dives", rating: 5, body: "The WWII wreck at 28m is something else entirely. Saw a reef shark on my third dive, completely chill. Visibility was 25–30m in November. Book your advanced open water before the trip so you can do the deeper dives — totally worth it.", created_at: "2025-11-22T08:00:00Z", user_id: "" },
+      { id: "sr-andaman-2", username: "karan_u", rating: 5, body: "Did my PADI open water here as a complete beginner. The instructors at Dive India were patient and incredibly safety-conscious. The coral at Nemo Reef is in perfect health — never seen colour like it. Absolute must-do.", created_at: "2025-12-05T16:20:00Z", user_id: "" },
+      { id: "sr-andaman-3", username: "tara_a", rating: 4, body: "Visibility and marine life are genuinely world-class. Just be aware the ferry timings from Port Blair to Havelock are unpredictable — missed one and lost a dive day. Go with a buffer day on either side of your trip.", created_at: "2025-11-10T12:00:00Z", user_id: "" },
+    ],
   },
 {
     id: "5",
@@ -294,6 +324,10 @@ export const adventures: Adventure[] = [
         ],
     tags: ["cycling", "remote", "cold desert", "monasteries", "extreme"],
     featured: false,
+    seedReviews: [
+      { id: "sr-spiti-cyc-1", username: "rahul_c", rating: 5, body: "Kunzum La at 4,590m on a loaded bicycle. I still can't believe I did that. The Spiti Valley is probably the most visually dramatic landscape I've cycled through anywhere in the world. Prepare for thin air and thin tyres — bring two spare tubes minimum.", created_at: "2025-08-20T07:00:00Z", user_id: "" },
+      { id: "sr-spiti-cyc-2", username: "shruti_cycles", rating: 4, body: "Did this in September — perfect timing for clear roads and empty campsites. Key Monastery in the late afternoon light from a bike saddle is one of those moments you just sit and absorb. Altitude headaches on day 2 are normal; take it easy.", created_at: "2025-09-08T14:30:00Z", user_id: "" },
+    ],
   },
 {
     id: "7",
@@ -336,6 +370,11 @@ export const adventures: Adventure[] = [
         ],
     tags: ["offbeat", "endemic flora", "Northeast", "rare", "solitude"],
     featured: true,
+    seedReviews: [
+      { id: "sr-dzukou-1", username: "ira_northeast", rating: 5, body: "The valley in bloom (June–July) is absolutely surreal — a carpet of Dzükou lilies as far as you can see. Almost nobody from outside the region knows this place exists. The trail from Viswema side is more scenic; the Jakhama side is easier. Do both.", created_at: "2025-07-12T08:30:00Z", user_id: "" },
+      { id: "sr-dzukou-2", username: "mohan_n", rating: 5, body: "Stayed two nights at the valley campsite. Woke up to fog rolling through at 5am with the lilies swaying. No phone signal, no other trekkers — pure wilderness. One of the most peaceful 48 hours of my life.", created_at: "2025-07-28T11:00:00Z", user_id: "" },
+      { id: "sr-dzukou-3", username: "preethi_t", rating: 4, body: "Stunning but the trail conditions in monsoon can be slippery. Hire local Naga guides — they know every shortcut and are great company. Permit process is simple but do it in advance online. Highly recommend over the more crowded Himalayan treks.", created_at: "2025-08-05T09:45:00Z", user_id: "" },
+    ],
   },
 {
         id: "11",
@@ -375,6 +414,11 @@ export const adventures: Adventure[] = [
         ],
             tags: ["Umling La", "world record", "Ladakh", "extreme altitude", "circuit"],
           featured: true,
+          seedReviews: [
+            { id: "sr-ladakh-1", username: "arjun_rides", rating: 5, body: "Umling La at 5,883m — the world's highest motorable road. My GoPro frosted over. The Bullet misfired twice. My face was numb. Worth every minute of it. The scale of Ladakh from that elevation is incomprehensible.", created_at: "2025-08-15T06:45:00Z", user_id: "" },
+            { id: "sr-ladakh-2", username: "nandini_r", rating: 5, body: "22 days, 2,000+km, five of us from Bangalore. The circuit forces you to slow down — it's not a race, it's a complete disconnection from everything. Pangong sunrise on day 10 is when it all clicks. Plan 25 days minimum.", created_at: "2025-07-30T10:15:00Z", user_id: "" },
+            { id: "sr-ladakh-3", username: "vivek_l", rating: 4, body: "Do not do this alone on a rental bike. Go with a group or an organised expedition. The remoteness is part of the magic but a breakdown at 5,000m with no signal is genuinely dangerous. With the right crew it's the trip of your life.", created_at: "2025-09-01T14:00:00Z", user_id: "" },
+          ],
         },
 {
     id: "12",
@@ -415,6 +459,10 @@ export const adventures: Adventure[] = [
         ],
     tags: ["Zanskar", "remote", "off-road", "river crossings", "expedition"],
     featured: false,
+    seedReviews: [
+      { id: "sr-zanskar-1", username: "sameer_offroad", rating: 5, body: "The Zanskar road is not a road — it's a suggestion. River crossings, loose scree, landslide debris. And the valley on the other side is one of the most beautiful and isolated places on the planet. Absolutely not for beginners.", created_at: "2025-08-22T07:30:00Z", user_id: "" },
+      { id: "sr-zanskar-2", username: "leela_b", rating: 4, body: "Go with Mototour Ladakh — they know the river crossing timings (crucial for safety) and have a support vehicle. The monastery at Padum is worth a full rest day. Carry more cash than you think you need — no ATMs beyond Kargil.", created_at: "2025-09-03T12:00:00Z", user_id: "" },
+    ],
   },
 {
       id: "13",
@@ -456,6 +504,10 @@ export const adventures: Adventure[] = [
         ],
     tags: ["Spiti", "cold desert", "monasteries", "loop", "Kunzum La"],
     featured: false,
+    seedReviews: [
+      { id: "sr-spiti-bike-1", username: "gaurav_spiti", rating: 5, body: "The Spiti loop is what riding in India is actually about. Dhankar Monastery perched on a cliff, Pin Valley in golden hour, locals waving from monastery rooftops. Not once did it feel like a tourist route.", created_at: "2025-07-25T09:00:00Z", user_id: "" },
+      { id: "sr-spiti-bike-2", username: "divya_m", rating: 5, body: "Did the loop in 10 days but could easily have stayed 14. Kibber is the place to base yourself for a rest day — the village is tiny and perfect. Spiti Riders Group handled everything seamlessly; would book with them again without question.", created_at: "2025-08-10T15:45:00Z", user_id: "" },
+    ],
   }
 ];
 

@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { adventures } from "@/lib/data";
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -12,6 +13,9 @@ export async function GET(req: NextRequest) {
   const slug = req.nextUrl.searchParams.get("slug");
   if (!slug) return NextResponse.json({ error: "Missing slug" }, { status: 400 });
 
+  const adventure = adventures.find((a) => a.slug === slug);
+  const seedReviews = adventure?.seedReviews ?? [];
+
   const { data, error } = await admin
     .from("reviews")
     .select("id, username, rating, body, created_at, user_id")
@@ -19,14 +23,21 @@ export async function GET(req: NextRequest) {
     .order("created_at", { ascending: false });
 
   if (error) {
-    // Table may not exist yet
+    // Table not yet created — serve seed reviews so the UI looks great immediately
     if (error.code === "PGRST205" || error.message?.includes("reviews")) {
-      return NextResponse.json({ reviews: [], tableReady: false });
+      return NextResponse.json({ reviews: seedReviews, tableReady: false });
     }
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ reviews: data ?? [], tableReady: true });
+  // Merge: real DB reviews first, then seed reviews that don't duplicate
+  const dbIds = new Set((data ?? []).map((r) => r.id));
+  const merged = [
+    ...(data ?? []),
+    ...seedReviews.filter((r) => !dbIds.has(r.id)),
+  ];
+
+  return NextResponse.json({ reviews: merged, tableReady: true });
 }
 
 // POST /api/reviews  — submit a review (auth required)
