@@ -442,7 +442,7 @@ export default async function ExperiencePage({ params }: Props) {
                 href={`/explore?type=${encodeURIComponent(adventure.type)}`}
                 className="flex items-center justify-center gap-2 w-full bg-transparent border border-[#1a1f2e]/20 hover:border-[#1a1f2e]/40 text-[#1a1f2e] font-medium py-3 rounded-2xl text-sm transition-all duration-200 hover:bg-[#1a1f2e]/5"
               >
-                More {adventure.type}
+                More in {adventure.type}
               </Link>
             </div>
           </div>
@@ -507,7 +507,7 @@ export default async function ExperiencePage({ params }: Props) {
                     Same Format, Different Terrain
                   </p>
                   <h2 className="text-[#1a1f2e] text-3xl font-semibold tracking-tight">
-                    More {adventure.type}
+                    More in {adventure.type}
                   </h2>
                 </div>
                 <Link
