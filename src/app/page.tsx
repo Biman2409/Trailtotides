@@ -198,7 +198,7 @@ export default function HomePage() {
             <div className="flex items-end justify-between mb-10 lg:mb-12">
                 <div>
                     <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3">
-                      FROM THE FIELD
+                      FROM THE TRAILS
                     </p>
                           <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight">
                               Voices from the Edge

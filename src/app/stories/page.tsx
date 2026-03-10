@@ -54,7 +54,7 @@ export default function StoriesPage() {
       <section className="pt-32 pb-16 px-6 lg:px-8 bg-[#1a1f2e]">
         <div className="max-w-7xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
-            From the Field
+            From the Trails
           </p>
           <h1 className="text-white text-5xl lg:text-7xl font-semibold tracking-tight leading-none mb-4">
             Voices from the Edge

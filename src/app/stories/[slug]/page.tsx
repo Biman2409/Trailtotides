@@ -252,7 +252,7 @@ export default async function StoryPage({ params }: Props) {
                 Keep Reading
               </p>
               <h2 className="text-white text-3xl font-semibold tracking-tight">
-                More from the field
+                More from the trails
               </h2>
             </div>
             <Link
