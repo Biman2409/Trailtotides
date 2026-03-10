@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Star, Trash2, Loader2, MessageSquare } from "lucide-react";
+import { Star, Trash2, Loader2, MessageSquare, ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 interface Review {
@@ -76,6 +76,10 @@ export default function ReviewSection({ slug, currentUserId }: Props) {
 
   const [rating, setRating] = useState(0);
   const [body, setBody] = useState("");
+  const [showAll, setShowAll] = useState(false);
+
+  const INITIAL_COUNT = 3;
+  const visibleReviews = showAll ? reviews : reviews.slice(0, INITIAL_COUNT);
 
   const hasReviewed = currentUserId
     ? reviews.some((r) => r.user_id === currentUserId)
@@ -141,7 +145,7 @@ export default function ReviewSection({ slug, currentUserId }: Props) {
         <MessageSquare className="w-5 h-5 text-[#ff5100]" />
         <div>
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">
-            Traveller Reviews
+            What People Say
           </p>
           {avgRating !== null ? (
             <div className="flex items-center gap-2 mt-0.5">
@@ -238,7 +242,7 @@ export default function ReviewSection({ slug, currentUserId }: Props) {
         </p>
       ) : (
         <div className="space-y-4">
-          {reviews.map((r) => (
+          {visibleReviews.map((r) => (
             <div
               key={r.id}
               className="bg-white border border-[#e0d8cc] rounded-2xl p-6 shadow-sm"
@@ -285,6 +289,15 @@ export default function ReviewSection({ slug, currentUserId }: Props) {
               <p className="text-[#1a1f2e]/75 text-sm leading-relaxed">{r.body}</p>
             </div>
           ))}
+          {reviews.length > INITIAL_COUNT && !showAll && (
+            <button
+              onClick={() => setShowAll(true)}
+              className="w-full flex items-center justify-center gap-2 py-3 text-sm font-medium text-[#1a1f2e]/60 hover:text-[#1a1f2e] border border-[#e0d8cc] rounded-2xl hover:border-[#1a1f2e]/30 transition-all bg-white"
+            >
+              <ChevronDown className="w-4 h-4" />
+              Show all {reviews.length} reviews
+            </button>
+          )}
         </div>
       )}
     </section>
