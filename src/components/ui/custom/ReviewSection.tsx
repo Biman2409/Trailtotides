@@ -20,7 +20,7 @@ interface Props {
   adventureName?: string;
 }
 
-const SUMMIT_KEYWORDS = /summit|peak|top|kantha|la pass|pass/i;
+const SUMMIT_KEYWORDS = /summit|peak/i;
 
 function ctaText(type?: string, name?: string): string {
   if (type === "Trekking" && name && SUMMIT_KEYWORDS.test(name)) {
