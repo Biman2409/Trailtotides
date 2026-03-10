@@ -529,8 +529,8 @@ export const adventures: Adventure[] = [
   bestMonths: ["Jul", "Aug", "Sep"],
   groupSize: "Large group (6+)",
   baseCamp: "Govind Ghat",
-  heroImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=70",
-  galleryImages: [],
+  heroImage: "/valley-of-flowers.jpeg",
+  galleryImages: ["/valley-of-flowers.jpeg"],
   lat: 30.7275,
   lng: 79.6071,
   description:
