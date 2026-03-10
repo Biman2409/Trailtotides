@@ -389,7 +389,7 @@ export default async function ExperiencePage({ params }: Props) {
               </section>
 
               {/* Reviews */}
-              <ReviewSection slug={adventure.slug} currentUserId={currentUserId} />
+              <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} />
 
               {/* Tags */}
               <section>

@@ -16,6 +16,22 @@ interface Review {
 interface Props {
   slug: string;
   currentUserId?: string;
+  adventureType?: string;
+}
+
+function ctaText(type?: string): string {
+  switch (type) {
+    case "Trekking":       return "Done this trek? Tell others what to expect.";
+    case "Mountaineering": return "Summited this peak? Share how it went.";
+    case "Biking":         return "Ridden this route? Share the experience.";
+    case "Cycling":        return "Cycled this route? Share the experience.";
+    case "Diving":         return "Dived here? Tell others what's down there.";
+    case "Kayaking":       return "Paddled this stretch? Share your story.";
+    case "Skiing":         return "Skied these slopes? Tell others about it.";
+    case "Rock Climbing":  return "Climbed here? Share the beta.";
+    case "Paragliding":    return "Flown here? Tell others what it's like.";
+    default:               return "Done this adventure? Share your experience.";
+  }
 }
 
 function StarRating({
@@ -65,7 +81,7 @@ function timeAgo(dateStr: string): string {
   return `${Math.floor(months / 12)}y ago`;
 }
 
-export default function ReviewSection({ slug, currentUserId }: Props) {
+export default function ReviewSection({ slug, currentUserId, adventureType }: Props) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [tableReady, setTableReady] = useState(true);
@@ -214,7 +230,7 @@ export default function ReviewSection({ slug, currentUserId }: Props) {
       ) : (
         <div className="bg-[#fafaf8] border border-[#e0d8cc] rounded-2xl p-5 mb-8 flex items-center justify-between gap-4">
           <p className="text-[#9a9590] text-sm">
-            Done this adventure? Share your experience with others.
+            {ctaText(adventureType)}
           </p>
           <div className="flex gap-2 shrink-0">
             <Link
@@ -237,64 +253,61 @@ export default function ReviewSection({ slug, currentUserId }: Props) {
           No reviews yet. Be the first to share your experience!
         </p>
       ) : (
-        <div className="space-y-4">
-          {visibleReviews.map((r) => (
-            <div
-              key={r.id}
-              className="bg-white border border-[#e0d8cc] rounded-2xl p-6 shadow-sm"
-            >
-              {/* Top row: avatar + name + date + delete */}
-              <div className="flex items-start justify-between gap-3 mb-3">
-                <div className="flex items-center gap-3">
-                  {/* Avatar */}
-                  <div className="w-9 h-9 rounded-full bg-[#1a1f2e] flex items-center justify-center shrink-0">
+        <>
+          <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1 snap-x snap-mandatory no-scrollbar">
+            {visibleReviews.map((r) => (
+              <div
+                key={r.id}
+                className="bg-white border border-[#e0d8cc] rounded-2xl p-5 shadow-sm flex-none w-72 snap-start flex flex-col"
+              >
+                {/* Avatar + name + date */}
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 rounded-full bg-[#1a1f2e] flex items-center justify-center shrink-0">
                     <span className="text-white text-xs font-bold uppercase">
                       {r.username.charAt(0)}
                     </span>
                   </div>
-                  <div>
-                    <p className="text-[#1a1f2e] font-semibold text-sm leading-none mb-1">
+                  <div className="min-w-0">
+                    <p className="text-[#1a1f2e] font-semibold text-sm leading-none truncate">
                       {r.username}
                     </p>
-                    <p className="text-[#9a9590] text-xs">{timeAgo(r.created_at)}</p>
+                    <p className="text-[#9a9590] text-xs mt-0.5">{timeAgo(r.created_at)}</p>
                   </div>
-                </div>
-                <div className="flex items-center gap-3 shrink-0">
-                  <StarRating value={r.rating} />
                   {currentUserId === r.user_id && (
                     <button
                       onClick={() => handleDelete(r.id)}
                       disabled={deleting === r.id}
-                      className="text-[#9a9590] hover:text-red-500 transition-colors disabled:opacity-40"
+                      className="ml-auto text-[#9a9590] hover:text-red-500 transition-colors disabled:opacity-40 shrink-0"
                       title="Delete review"
                     >
                       {deleting === r.id ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
                       ) : (
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       )}
                     </button>
                   )}
                 </div>
+
+                <StarRating value={r.rating} />
+
+                <div className="border-t border-[#f0ebe3] my-3" />
+
+                <p className="text-[#1a1f2e]/75 text-sm leading-relaxed flex-1">{r.body}</p>
               </div>
+            ))}
+          </div>
 
-              {/* Divider */}
-              <div className="border-t border-[#f0ebe3] mb-3" />
-
-              {/* Review body */}
-              <p className="text-[#1a1f2e]/75 text-sm leading-relaxed">{r.body}</p>
-            </div>
-          ))}
           {reviews.length > INITIAL_COUNT && !showAll && (
             <button
               onClick={() => setShowAll(true)}
-              className="w-full flex items-center justify-center gap-2 py-3 text-sm font-medium text-[#1a1f2e]/60 hover:text-[#1a1f2e] border border-[#e0d8cc] rounded-2xl hover:border-[#1a1f2e]/30 transition-all bg-white"
+              className="mt-4 w-full flex items-center justify-center gap-2 py-3 text-sm font-medium text-[#1a1f2e]/60 hover:text-[#1a1f2e] border border-[#e0d8cc] rounded-2xl hover:border-[#1a1f2e]/30 transition-all bg-white"
             >
               <ChevronDown className="w-4 h-4" />
               Show all {reviews.length} reviews
             </button>
           )}
-        </div>
+        </>
       )}
     </section>
   );
