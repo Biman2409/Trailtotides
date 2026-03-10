@@ -241,33 +241,47 @@ export default function ReviewSection({ slug, currentUserId }: Props) {
           {reviews.map((r) => (
             <div
               key={r.id}
-              className="bg-white border border-[#e0d8cc] rounded-2xl p-5"
+              className="bg-white border border-[#e0d8cc] rounded-2xl p-6 shadow-sm"
             >
-              <div className="flex items-start justify-between gap-3 mb-2">
-                <div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[#1a1f2e] font-semibold text-sm">
-                      {r.username}
+              {/* Top row: avatar + name + date + delete */}
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="flex items-center gap-3">
+                  {/* Avatar */}
+                  <div className="w-9 h-9 rounded-full bg-[#1a1f2e] flex items-center justify-center shrink-0">
+                    <span className="text-white text-xs font-bold uppercase">
+                      {r.username.charAt(0)}
                     </span>
-                    <StarRating value={r.rating} />
-                    <span className="text-[#9a9590] text-xs">{timeAgo(r.created_at)}</span>
+                  </div>
+                  <div>
+                    <p className="text-[#1a1f2e] font-semibold text-sm leading-none mb-1">
+                      {r.username}
+                    </p>
+                    <p className="text-[#9a9590] text-xs">{timeAgo(r.created_at)}</p>
                   </div>
                 </div>
-                {currentUserId === r.user_id && (
-                  <button
-                    onClick={() => handleDelete(r.id)}
-                    disabled={deleting === r.id}
-                    className="text-[#9a9590] hover:text-red-500 transition-colors disabled:opacity-40 shrink-0"
-                    title="Delete review"
-                  >
-                    {deleting === r.id ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Trash2 className="w-4 h-4" />
-                    )}
-                  </button>
-                )}
+                <div className="flex items-center gap-3 shrink-0">
+                  <StarRating value={r.rating} />
+                  {currentUserId === r.user_id && (
+                    <button
+                      onClick={() => handleDelete(r.id)}
+                      disabled={deleting === r.id}
+                      className="text-[#9a9590] hover:text-red-500 transition-colors disabled:opacity-40"
+                      title="Delete review"
+                    >
+                      {deleting === r.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
+                    </button>
+                  )}
+                </div>
               </div>
+
+              {/* Divider */}
+              <div className="border-t border-[#f0ebe3] mb-3" />
+
+              {/* Review body */}
               <p className="text-[#1a1f2e]/75 text-sm leading-relaxed">{r.body}</p>
             </div>
           ))}
