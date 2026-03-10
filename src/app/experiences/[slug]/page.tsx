@@ -26,6 +26,8 @@ import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
 import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
+import ReviewSection from "@/components/ui/custom/ReviewSection";
+import { createClient } from "@/lib/supabase/server";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -63,6 +65,10 @@ export default async function ExperiencePage({ params }: Props) {
   const adventure = adventures.find((a) => a.slug === slug);
   if (!adventure) notFound();
 
+
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    const currentUserId = user?.id;
 
     const relatedByState = adventures
       .filter((a) => a.id !== adventure.id && a.state === adventure.state)
@@ -380,6 +386,9 @@ export default async function ExperiencePage({ params }: Props) {
                   </div>
                 )}
               </section>
+
+              {/* Reviews */}
+              <ReviewSection slug={adventure.slug} currentUserId={currentUserId} />
 
               {/* Tags */}
               <section>
