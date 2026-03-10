@@ -17,9 +17,15 @@ interface Props {
   slug: string;
   currentUserId?: string;
   adventureType?: string;
+  adventureName?: string;
 }
 
-function ctaText(type?: string): string {
+const SUMMIT_KEYWORDS = /summit|peak|top|kantha|la pass|pass/i;
+
+function ctaText(type?: string, name?: string): string {
+  if (type === "Trekking" && name && SUMMIT_KEYWORDS.test(name)) {
+    return "Done this summit? Tell others what to expect.";
+  }
   switch (type) {
     case "Trekking":       return "Done this trek? Tell others what to expect.";
     case "Mountaineering": return "Summited this peak? Share how it went.";
@@ -81,7 +87,7 @@ function timeAgo(dateStr: string): string {
   return `${Math.floor(months / 12)}y ago`;
 }
 
-export default function ReviewSection({ slug, currentUserId, adventureType }: Props) {
+export default function ReviewSection({ slug, currentUserId, adventureType, adventureName }: Props) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [tableReady, setTableReady] = useState(true);
@@ -250,7 +256,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType }: Pr
       ) : (
         <div className="bg-[#fafaf8] border border-[#e0d8cc] rounded-2xl p-5 mb-8 flex items-center justify-between gap-4">
           <p className="text-[#9a9590] text-sm">
-            {ctaText(adventureType)}
+            {ctaText(adventureType, adventureName)}
           </p>
           <div className="flex gap-2 shrink-0">
             <Link
