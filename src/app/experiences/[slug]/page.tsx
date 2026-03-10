@@ -74,8 +74,9 @@ export default async function ExperiencePage({ params }: Props) {
       .filter((a) => a.id !== adventure.id && a.state === adventure.state)
       .slice(0, 6);
 
+    const relatedByStateIds = new Set(relatedByState.map((a) => a.id));
     const relatedByType = adventures
-      .filter((a) => a.id !== adventure.id && a.type === adventure.type && a.state !== adventure.state)
+      .filter((a) => a.id !== adventure.id && a.type === adventure.type && !relatedByStateIds.has(a.id))
       .slice(0, 6);
 
       return (
