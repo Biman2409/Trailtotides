@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Star, Trash2, Loader2, MessageSquare, ChevronDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Star, Trash2, Loader2, MessageSquare, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 interface Review {
@@ -93,9 +93,29 @@ export default function ReviewSection({ slug, currentUserId, adventureType }: Pr
   const [rating, setRating] = useState(0);
   const [body, setBody] = useState("");
   const [showAll, setShowAll] = useState(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const INITIAL_COUNT = 3;
   const visibleReviews = showAll ? reviews : reviews.slice(0, INITIAL_COUNT);
+
+  function updateScrollState() {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  }
+
+  function scroll(dir: "left" | "right") {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir === "left" ? -300 : 300, behavior: "smooth" });
+  }
+
+  useEffect(() => {
+    updateScrollState();
+  }, [visibleReviews]);
 
   const hasReviewed = currentUserId
     ? reviews.some((r) => r.user_id === currentUserId)
@@ -254,7 +274,37 @@ export default function ReviewSection({ slug, currentUserId, adventureType }: Pr
         </p>
       ) : (
         <>
-          <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1 snap-x snap-mandatory no-scrollbar">
+          <div className="relative">
+            {/* Left arrow */}
+            {canScrollLeft && (
+              <button
+                onClick={() => scroll("left")}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-8 h-8 rounded-full bg-white border border-[#e0d8cc] shadow-md flex items-center justify-center hover:border-[#1a1f2e]/30 transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4 text-[#1a1f2e]" />
+              </button>
+            )}
+
+            {/* Right arrow */}
+            {canScrollRight && (
+              <button
+                onClick={() => scroll("right")}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-8 h-8 rounded-full bg-white border border-[#e0d8cc] shadow-md flex items-center justify-center hover:border-[#1a1f2e]/30 transition-colors"
+              >
+                <ChevronRight className="w-4 h-4 text-[#1a1f2e]" />
+              </button>
+            )}
+
+            {/* Right fade */}
+            {canScrollRight && (
+              <div className="absolute right-0 top-0 bottom-2 w-12 bg-gradient-to-l from-[#fafaf8] to-transparent pointer-events-none z-[5]" />
+            )}
+
+            <div
+              ref={scrollRef}
+              onScroll={updateScrollState}
+              className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory no-scrollbar scroll-smooth"
+            >
             {visibleReviews.map((r) => (
               <div
                 key={r.id}
@@ -296,6 +346,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType }: Pr
                 <p className="text-[#1a1f2e]/75 text-sm leading-relaxed flex-1">{r.body}</p>
               </div>
             ))}
+            </div>
           </div>
 
           {reviews.length > INITIAL_COUNT && !showAll && (
