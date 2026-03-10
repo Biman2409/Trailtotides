@@ -233,16 +233,30 @@ export default async function ExperiencePage({ params }: Props) {
                 <div className="bg-emerald-50 rounded-2xl p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                    <h3 className="font-semibold text-[#1a1f2e] text-sm">This is for you if…</h3>
+                    <h3 className="font-semibold text-[#1a1f2e] text-sm">Go if you have</h3>
                   </div>
-                  <p className="text-[#4b6560] text-sm leading-relaxed">{adventure.whoFor}</p>
+                  <ul className="space-y-2">
+                    {adventure.whoFor.split("·").map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <span className="text-emerald-500 mt-0.5 shrink-0">✓</span>
+                        <span className="text-[#4b6560] text-sm leading-snug">{item.trim()}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
                 <div className="bg-red-50 rounded-2xl p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <XCircle className="w-5 h-5 text-red-500" />
-                    <h3 className="font-semibold text-[#1a1f2e] text-sm">Not for you if…</h3>
+                    <h3 className="font-semibold text-[#1a1f2e] text-sm">Skip if you have</h3>
                   </div>
-                  <p className="text-[#6b4040] text-sm leading-relaxed">{adventure.whoNot}</p>
+                  <ul className="space-y-2">
+                    {adventure.whoNot.split("·").map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <span className="text-red-400 mt-0.5 shrink-0">✕</span>
+                        <span className="text-[#6b4040] text-sm leading-snug">{item.trim()}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </section>

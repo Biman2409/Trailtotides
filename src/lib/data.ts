@@ -131,8 +131,8 @@ export const adventures: Adventure[] = [
         "Stok Kangri is one of the most accessible 6,000m peaks in the world — and one of the best introductory mountaineering expeditions in India. The summit ridge is a narrow blade of ice and rock with a 360° view of the entire Ladakh range. On a clear summit day, you can see K2.",
       whatMakesSpecial:
         "The jump from 5,000m trekking to 6,000m climbing is immense. This mountain teaches you what your body can do when it has no other option.",
-      whoFor: "Trekkers who want their first high-altitude climb. Basic mountaineering course recommended but not mandatory.",
-      whoNot: "Those without altitude exposure, weak lungs, or heart conditions. This is serious mountaineering.",
+      whoFor: "5,000m+ trekking experience · Basic crampon & ice axe handling · Comfortable with 10–12hr summit day · Fit enough for 15km/day with 10kg pack",
+      whoNot: "No prior high-altitude trekking · Cardiac or pulmonary conditions · Arriving without acclimatisation days in Leh · Unable to handle sub-zero bivouac conditions",
       safetyNotes:
         "Acclimatise in Leh for minimum 3 days. Carry crampons, ice axe, helmet. Go with a certified mountaineering guide — the summit ridge crevasses are real.",
           operators: [
@@ -177,8 +177,8 @@ export const adventures: Adventure[] = [
           "The Chadar Trek is one of the most extraordinary winter treks on Earth. Named after the thick sheet of ice that forms over the Zanskar River each January, this trek takes you through a frozen gorge carved over millennia — a place few humans ever witness. You walk, slip, camp, and survive on the river itself.",
         whatMakesSpecial:
           "There is no trail — the river IS the trail. Vertical cliff walls, frozen waterfalls, and temperatures that plunge to -30°C make this an expedition, not a walk. The silence is otherworldly.",
-        whoFor: "Trekkers with prior high-altitude cold-weather experience. Those who want the edge of what's possible.",
-        whoNot: "First-time trekkers, those with heart or respiratory conditions, or anyone who hasn't trained in cold.",
+        whoFor: "Prior cold-weather trekking above 4,000m · Sustained cold tolerance (-25°C nights) · Strong lower-body endurance for 8–12km/day on ice · Comfortable with microspike/crampon travel",
+        whoNot: "No previous sub-zero camping · Respiratory or cardiac conditions · Arriving from sea level without 3+ acclimatisation days · Expecting reliable resupply or evacuation access",
         safetyNotes:
           "Carry emergency bivouac gear, layered thermals, and micro-spike crampons. River ice can crack unexpectedly. Always trek with a certified local guide.",
           operators: [
@@ -224,8 +224,8 @@ export const adventures: Adventure[] = [
         "The Manali–Leh highway is the crown jewel of Indian motorcycling. At over 490km, it crosses five high-altitude passes including Rohtang, Baralacha La, and Tanglang La — each one demanding respect. The road alternates between pristine tarmac and lunar-like gravel stretches. The landscapes are alien in their scale.",
     whatMakesSpecial:
       "No other road on Earth gives you altitude, isolation, and scenery like this. Every 50km the terrain changes completely — pine forests to barren moonscapes to river valleys to glacier edges.",
-    whoFor: "Experienced riders with 500cc+ bikes, those with basic mechanical knowledge, altitude-fit adventurers.",
-    whoNot: "First-time riders, those without altitude acclimatisation, anyone on unreliable bikes.",
+    whoFor: "500cc+ motorcycle · 3,000km+ highway riding experience · Basic roadside mechanics (chain, puncture, carb) · AMS-acclimatised before departure from Manali",
+    whoNot: "Under 500cc engine on steep passes · No prior mountain riding · Zero mechanical knowledge · Tight fixed itinerary with no buffer days",
     safetyNotes:
       "Carry a basic repair kit, spare clutch cable, and fuel for 150km stretches. Altitude sickness is real — acclimatise in Manali for 2 days minimum. Ride before noon to avoid afternoon weather.",
         operators: [
@@ -268,8 +268,8 @@ export const adventures: Adventure[] = [
       "The Andaman Islands sit in the Bay of Bengal, far enough from the mainland to have kept their reefs largely intact. Visibility regularly exceeds 30m. You'll dive alongside sea turtles, reef sharks, manta rays, and clouds of barracuda. The Japanese WWII wreck at Rana Shoal is one of the most haunting dives in Asia.",
     whatMakesSpecial:
       "The sheer health of the reefs here is rare. Hard and soft corals in perfect condition, mega-fauna encounters, and remoteness that keeps crowds away.",
-    whoFor: "Both beginners (PADI Open Water can be done here) and advanced divers seeking macro or wall diving.",
-    whoNot: "Those with severe ear issues or heart conditions without clearance. Not ideal mid-monsoon (Jun–Sep).",
+    whoFor: "PADI Open Water or equivalent (beginner-friendly) · Advanced divers for wreck & wall dives to 28m · EFR/Rescue Diver cert holders for deep sites · Strong swimmers comfortable in mild current",
+    whoNot: "Perforated eardrum or chronic equalisation issues · Cardiac conditions without dive medical clearance · Visiting Jun–Sep (visibility drops to 5–8m during monsoon) · Non-swimmers",
     safetyNotes:
       "Always dive with a certified dive centre. Currents can be strong at certain sites. Never touch coral. Keep buoyancy neutral at all times.",
         operators: [
@@ -311,8 +311,8 @@ export const adventures: Adventure[] = [
       "Spiti Valley is one of the most remote inhabited regions on Earth. Cycling through it — past mud-brick monasteries perched on cliffs, turquoise rivers, and barren high-altitude desert — is an experience that recalibrates your sense of scale. The oxygen is thin, the landscapes vast.",
     whatMakesSpecial:
       "The isolation is absolute. Many stretches have zero mobile signal, zero other cyclists, and zero settlements for 40–50km. The silence is profound.",
-    whoFor: "Strong, experienced cyclists with high-altitude endurance training. Those who value solitude over comfort.",
-    whoNot: "Casual cyclists. Those who need reliable resupply or hospitalisation access nearby.",
+    whoFor: "3,000km+ loaded touring experience · VO2 threshold training for 4,000m+ altitude · Capable of 60–80km/day with 15kg panniers · Self-sufficient with basic bike mechanics",
+    whoNot: "No multi-day cycle touring background · Reliant on support vehicle for carry weight · No altitude exposure above 3,500m · Expecting daily resupply or medical access",
     safetyNotes:
       "Carry CO2 cartridges, a multi-tool, and spare brake cables. First aid kit essential. Download offline maps — Google Maps fails here.",
         operators: [
@@ -358,8 +358,8 @@ export const adventures: Adventure[] = [
       "Dzükou Valley sits on the border of Nagaland and Manipur at over 2,400m, largely unknown to mainstream trekkers. In summer, the valley floor is carpeted with the rare Dzükou lily — found nowhere else on Earth. In winter, a layer of snow transforms it into complete silence.",
     whatMakesSpecial:
       "The endemic Dzükou lily blooms here and nowhere else. The valley feels genuinely undiscovered, a rare quality in 2024.",
-    whoFor: "Intermediate trekkers, those seeking offbeat Northeast India, nature photographers, solitude seekers.",
-    whoNot: "Those expecting tourist infrastructure. Amenities are minimal. You carry your world.",
+    whoFor: "2+ prior multi-day treks · Comfortable with 10–14km/day on mixed trail · Self-sufficient camping with 12kg pack · No permit bureaucracy — ILP for Nagaland required in advance",
+    whoNot: "Zero trekking background · Requiring fixed lodges or daily resupply · Visiting without Inner Line Permit · Expecting maintained trail markings or signage",
     safetyNotes:
       "Register at the Viswema check-post. Carry all your food and water. The trail can be slippery after rain. Download offline maps.",
         operators: [
@@ -402,8 +402,8 @@ export const adventures: Adventure[] = [
           "The Ladakh Circuit is the ultimate Indian biking odyssey. Covering over 1,800km, this route takes you through Leh, across the towering dunes of Nubra Valley via Khardung La, down to the hypnotic blue expanse of Pangong Lake — whose waters shift from sapphire to turquoise in minutes — then on to the remote plains of Hanle, where the air is so clear and the skies so dark that the Milky Way stretches horizon to horizon like a river of light, and finally up to Umling La at 5,883m, the world's highest motorable road. This circuit pushes both rider and machine to their absolute limits. The landscapes are raw, alien, and unforgettable.",
         whatMakesSpecial:
           "Nubra's sand dunes at 3,000m feel like another planet. Pangong Lake's colour is like nothing else on Earth — 134km of water shifting between sapphire, jade and electric blue. And Umling La at 5,883m is the world's highest motorable road — standing on it on two wheels is a moment very few humans will ever experience.",
-    whoFor: "Expert riders with Himalayan experience, those with 500cc+ bikes, altitude-acclimatised adventurers seeking the ultimate India ride.",
-    whoNot: "Inexperienced riders, those without prior high-altitude riding, anyone without solid bike mechanics knowledge.",
+    whoFor: "500cc+ motorcycle (RE Himalayan, KTM 390 Adventure or equivalent) · 10,000km+ riding including mountain roads · Roadside repair-capable · Acclimatised before day 1 (3 nights in Leh minimum)",
+    whoNot: "Under 350cc engine · No off-road or gravel riding experience · Fixed departure dates with no buffer · Solo riders without satellite communication device",
     safetyNotes:
       "Spend minimum 3 days acclimatising in Leh before starting. Carry oxygen, full repair kit, and satellite communicator. Fuel up whenever possible — stations are 200km+ apart. File a route plan with local police.",
         operators: [
@@ -447,8 +447,8 @@ export const adventures: Adventure[] = [
       "Zanskar is one of the most isolated inhabited valleys on Earth. The road into it — through Pensi La pass and down into the gorge — is barely a road at all. River crossings, crumbling cliff-side tracks, and zero mobile signal make this a true expedition. The reward is a valley frozen in time, with Buddhist monasteries, turquoise rivers, and total silence.",
     whatMakesSpecial:
       "Zanskar is cut off by snow for 8 months a year — this is one of the only places in India where the outside world genuinely cannot reach you. The riding is raw and technical.",
-    whoFor: "Expert off-road riders, those seeking complete remoteness, adventure motorcyclists with expedition experience.",
-    whoNot: "Riders on road bikes, those without off-road experience or without Himalayan riding background.",
+    whoFor: "500cc+ enduro or adventure motorcycle · Off-road riding proficiency (gravel, river crossings, loose scree) · Full expedition kit including recovery gear · Support vehicle strongly recommended",
+    whoNot: "Road-biased tyres or low-clearance bikes · No river-crossing experience · Unwilling to walk sections during difficult passes · No prior Himalayan riding",
     safetyNotes:
       "Carry a satellite phone — there is no mobile signal in Zanskar. River crossings should only be attempted in the morning before glacial melt raises water levels. Always ride in pairs minimum.",
         operators: [
@@ -493,8 +493,8 @@ export const adventures: Adventure[] = [
       "The Spiti loop — entering via Manali over Rohtang and Kunzum La, and exiting via Shimla through Kinnaur — is one of the most beautiful roads in Asia. Mud monasteries at 4,000m, apple orchards in ancient river valleys, and stretches of road so remote the tarmac simply stops. Spiti delivers everything.",
     whatMakesSpecial:
       "The circuit is completable without extreme technical skill, yet the scenery rivals anything in Ladakh. Key Monastery, Dhankar, and Tabo make this as culturally rich as it is visually stunning.",
-    whoFor: "Intermediate to expert riders, those on first Himalayan trips who want a slightly more forgiving circuit than Leh-Ladakh.",
-    whoNot: "Beginners on 150cc bikes. The passes require engine power and rider confidence.",
+    whoFor: "350cc+ motorcycle with good torque · 5,000km+ riding experience on varied terrain · Comfortable navigating without painted roads · Altitude-conscious and carrying diamox if needed",
+    whoNot: "150–200cc commuter bikes (insufficient power on Kunzum La) · No prior Himalayan or high-altitude riding · Tight schedule with no contingency days · Riders without cold-weather riding gear",
     safetyNotes:
       "Kunzum La can be snowbound until late June — check pass status before departure. Carry chain lube, tyre plugs, and a basic toolkit. Fuel up at Kaza — it's the last pump for 130km.",
         operators: [
