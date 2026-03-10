@@ -232,10 +232,6 @@ export default function ReviewSection({ slug, currentUserId }: Props) {
         <div className="flex justify-center py-8">
           <Loader2 className="w-5 h-5 animate-spin text-[#9a9590]" />
         </div>
-      ) : !tableReady ? (
-        <p className="text-[#9a9590] text-sm text-center py-8">
-          Reviews are being set up — check back shortly.
-        </p>
       ) : reviews.length === 0 ? (
         <p className="text-[#9a9590] text-sm text-center py-8">
           No reviews yet. Be the first to share your experience!
