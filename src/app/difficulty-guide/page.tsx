@@ -1,7 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
-import { AlertTriangle, ArrowRight, Mountain, Zap, ShieldAlert, Wrench } from "lucide-react";
+import { AlertTriangle, ArrowRight, Zap, ShieldAlert, Wrench } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { getERT } from "@/lib/ert";
 import ERTBadge from "@/components/ui/custom/ERTBadge";
@@ -121,73 +121,76 @@ export default function DifficultyGuidePage() {
       <Navbar />
 
       {/* ── HERO ──────────────────────────────────────────── */}
-      <section className="bg-[#0d1117] pt-32 pb-24 px-6 relative overflow-hidden">
-        {/* subtle grid */}
+      <section className="bg-[#0d1117] pt-32 pb-20 px-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
           backgroundSize: "60px 60px"
         }} />
         <div className="max-w-5xl mx-auto relative">
-          <h1 className="text-4xl lg:text-6xl font-black text-white tracking-tight leading-[1.05] mb-5 uppercase">
-            TrailtoTides<br />Grading System
+          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.25em] uppercase mb-5">TrailtoTides Grading System</p>
+          <h1 className="text-4xl lg:text-6xl font-black text-white tracking-tight leading-[1.05] mb-6 uppercase">
+            What is ERT?
           </h1>
-          <p className="text-[#ff5100] text-sm font-semibold tracking-[0.15em] uppercase mb-6">
-            Why one difficulty label is never enough
+          <p className="text-white/60 text-lg leading-relaxed max-w-2xl mb-3">
+            ERT stands for <span className="text-white font-semibold">Exertion · Risk · Technicality</span>. It is how TrailtoTides scores every adventure on three independent dimensions — so you know exactly what you&apos;re getting into before you go.
           </p>
-          <p className="text-white/55 text-lg leading-relaxed max-w-2xl mb-4">
-            "Moderate" on one website means something completely different on another. A short route at 5,000m in a storm is more dangerous than a long route at 2,000m in perfect weather. A physically demanding trek can require zero technical skill.
-          </p>
-          <p className="text-white/55 text-lg leading-relaxed max-w-2xl">
-            Every TrailtoTides adventure is scored on three independent axes — <span className="text-white font-semibold">Exertion</span>, <span className="text-white font-semibold">Risk</span>, and <span className="text-white font-semibold">Technicality</span> — so you can filter and choose with precision.
+          <p className="text-white/40 text-base leading-relaxed max-w-2xl mb-12">
+            &ldquo;Moderate&rdquo; means something different on every website. A short route at 5,000 m in a storm is more dangerous than a long route at 2,000 m in perfect weather. A physically demanding trek can require zero technical skill. ERT separates all three.
           </p>
 
-          {/* floating ERT preview */}
-          <div className="mt-10 flex flex-wrap gap-6">
+          {/* Three pillars */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-14">
             {[
-              { ert: { e: 1, r: 2, t: 1 }, label: "Dayara Bugyal" },
-              { ert: { e: 4, r: 3, t: 2 }, label: "Rupin Pass" },
-              { ert: { e: 5, r: 4, t: 4 }, label: "Stok Kangri" },
-            ].map(({ ert, label }) => (
-              <div key={label} className="flex items-center gap-3">
-                <ERTBadge ert={ert} size="md" />
-                <span className="text-white/40 text-xs font-medium">{label}</span>
+              { letter: "E", title: "Exertion",     color: "#f97316", icon: <Zap className="w-5 h-5" />,       desc: "How hard your body has to work. Distance, elevation gain, altitude, and consecutive days on trail." },
+              { letter: "R", title: "Risk",          color: "#ef4444", icon: <ShieldAlert className="w-5 h-5" />, desc: "Environmental danger and rescue difficulty. Isolation, weather volatility, and exposed terrain." },
+              { letter: "T", title: "Technicality",  color: "#8b5cf6", icon: <Wrench className="w-5 h-5" />,    desc: "Skill and gear required — independent of fitness. From walking trails to glacier travel with ice axe and crampons." },
+            ].map(({ letter, title, color, icon, desc }) => (
+              <div
+                key={letter}
+                className="rounded-2xl p-6 border"
+                style={{ background: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.08)" }}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl font-black shrink-0"
+                    style={{ background: `${color}18`, color }}
+                  >
+                    {letter}
+                  </div>
+                  <div>
+                    <p className="text-white font-bold text-base">{title}</p>
+                    <div className="flex gap-0.5 mt-1">
+                      {[1,2,3,4,5].map(n => (
+                        <div key={n} className="w-3 h-1 rounded-full" style={{ background: `${color}${Math.round(30 + n * 14).toString(16)}` }} />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="ml-auto opacity-20" style={{ color }}>{icon}</div>
+                </div>
+                <p className="text-white/45 text-sm leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* ── WHAT IS ERT ───────────────────────────────────── */}
-      <section className="max-w-5xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[
-            { letter: "E", title: "Exertion", color: "#f97316", icon: <Zap className="w-8 h-8" />, desc: "How hard your body has to work — calculated from distance, elevation gain, altitude, and number of days on trail." },
-            { letter: "R", title: "Risk",     color: "#ef4444", icon: <ShieldAlert className="w-8 h-8" />, desc: "Environmental danger and rescue difficulty — isolation, weather volatility, exposed terrain, and rescue accessibility." },
-            { letter: "T", title: "Technicality", color: "#8b5cf6", icon: <Wrench className="w-8 h-8" />, desc: "The skill and equipment required — not fitness. From simple walking to glacier travel requiring ice axe and crampons." },
-          ].map(({ letter, title, color, icon, desc }) => (
-            <div key={letter} className="rounded-2xl p-6 bg-white" style={{ border: "1px solid rgba(0,0,0,0.07)" }}>
-              <div className="flex items-start justify-between mb-4">
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl font-black"
-                  style={{ background: `${color}12`, color }}
-                >
-                  {letter}
+          {/* How it reads */}
+          <div className="rounded-2xl p-6 border mb-4" style={{ background: "rgba(255,81,0,0.06)", borderColor: "rgba(255,81,0,0.2)" }}>
+            <p className="text-[#ff5100] text-xs font-semibold tracking-widest uppercase mb-3">How to read an ERT score</p>
+            <p className="text-white/60 text-sm leading-relaxed mb-5">
+              Each dimension is scored <span className="text-white font-semibold">1 to 5</span>, independently. A trek can be physically brutal (E5) but technically trivial (T1). Another can be technically demanding (T4) but manageable in fitness (E2). You read all three together.
+            </p>
+            <div className="flex flex-wrap gap-6 items-center">
+              {[
+                { ert: { e: 1, r: 2, t: 1 }, label: "Dayara Bugyal" },
+                { ert: { e: 4, r: 3, t: 2 }, label: "Rupin Pass" },
+                { ert: { e: 5, r: 4, t: 4 }, label: "Stok Kangri" },
+              ].map(({ ert, label }) => (
+                <div key={label} className="flex items-center gap-3">
+                  <ERTBadge ert={ert} size="md" />
+                  <span className="text-white/40 text-xs font-medium">{label}</span>
                 </div>
-                <div className="opacity-10" style={{ color }}>{icon}</div>
-              </div>
-              <h3 className="font-black text-[#1a1f2e] text-xl mb-2">{title}</h3>
-              <p className="text-[#4b6560] text-sm leading-relaxed">{desc}</p>
-              <div className="flex gap-1 mt-4">
-                {[1,2,3,4,5].map((n) => (
-                  <div key={n} className="h-1 flex-1 rounded-full" style={{ background: `${color}${Math.round(20 + n * 16).toString(16)}` }} />
-                ))}
-              </div>
-              <div className="flex justify-between mt-1">
-                <span className="text-[9px] font-medium" style={{ color }}>{letter}1</span>
-                <span className="text-[9px] font-medium" style={{ color }}>{letter}5</span>
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </section>
 
