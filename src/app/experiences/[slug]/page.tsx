@@ -32,6 +32,7 @@ import ReviewSection from "@/components/ui/custom/ReviewSection";
 import { createClient } from "@/lib/supabase/server";
 import { getERT, ertSummary, parseAltitudeM } from "@/lib/ert";
 import type { Adventure } from "@/lib/data";
+import RealityCheck from "@/components/ui/custom/RealityCheck";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -634,6 +635,9 @@ export default async function ExperiencePage({ params }: Props) {
                     </div>
                   </div>
 
+
+                {/* Reality Check */}
+                {showERT && <RealityCheck adventure={adventure} />}
 
                 {/* CTA */}
                 <CompareCTA adventure={adventure} />

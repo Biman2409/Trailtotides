@@ -12,6 +12,7 @@ const navLinks = [
   { href: "/map", label: "Map" },
   { href: "/stories", label: "Stories" },
   { href: "/plan", label: "Plan" },
+  { href: "/matchmaker", label: "Matchmaker", highlight: true },
 ];
 
 export default function Navbar() {
@@ -130,6 +131,21 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
+              if ((link as { highlight?: boolean }).highlight) {
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 ml-1"
+                    style={{
+                      background: isActive ? "#ff5100" : "rgba(255,81,0,0.15)",
+                      color: isActive ? "white" : "#ff5100",
+                    }}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              }
               return (
                 <Link
                   key={link.href}
