@@ -72,7 +72,7 @@ export default async function ExperiencePage({ params }: Props) {
   const adventureIndex = adventures.findIndex((a) => a.slug === slug);
   const explorePage = adventureIndex >= 0 ? Math.ceil((adventureIndex + 1) / PAGE_SIZE) : 1;
 
-  const showERT = ["Trekking", "Mountaineering", "Biking"].includes(adventure.type);
+  const showERT = !["Diving", "Kayaking", "Scuba Diving"].includes(adventure.type);
   const ert = getERT(adventure);
   const altM = adventure.altitude ? parseFloat(adventure.altitude.replace(/,/g, "").replace(/[^0-9.]/g, "")) : 0;
   const showAltitudeWarning = altM >= 4200;
