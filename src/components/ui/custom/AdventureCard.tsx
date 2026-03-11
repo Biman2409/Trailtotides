@@ -52,7 +52,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           fill
           quality={100}
           className="object-cover transition-transform duration-700 group-hover:scale-105"
-          style={{ filter: "brightness(1.05) contrast(1.18) saturate(1.35)" }}
+          style={{ filter: "brightness(1.05) contrast(1.12) saturate(1.2)" }}
           sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
         />
 
