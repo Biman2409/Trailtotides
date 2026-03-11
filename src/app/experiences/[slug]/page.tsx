@@ -207,6 +207,60 @@ export default async function ExperiencePage({ params }: Props) {
         </div>
       </section>
 
+      {/* ── ERT STRIP ─────────────────────────────────────── */}
+      <section className="bg-[#f5f3ef] border-b border-[#1a1f2e]/8 py-5">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex flex-wrap md:flex-nowrap items-center gap-6 md:gap-0 md:divide-x divide-[#1a1f2e]/10">
+            {/* Label */}
+            <div className="flex items-center gap-2 pr-6">
+              <span className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 font-medium">ERT Difficulty</span>
+            </div>
+            {/* E */}
+            <div className="flex items-center gap-3 px-6">
+              <div>
+                <div className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-1">Exertion</div>
+                <div className="flex items-center gap-1.5">
+                  {[1,2,3,4,5].map(n => (
+                    <div key={n} className={`w-6 h-2 rounded-sm ${n <= ert.e ? 'bg-[#ff5100]' : 'bg-[#1a1f2e]/10'}`} />
+                  ))}
+                  <span className="text-xs font-bold text-[#1a1f2e] ml-1">{ert.e}/5</span>
+                </div>
+              </div>
+            </div>
+            {/* R */}
+            <div className="flex items-center gap-3 px-6">
+              <div>
+                <div className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-1">Risk</div>
+                <div className="flex items-center gap-1.5">
+                  {[1,2,3,4,5].map(n => (
+                    <div key={n} className={`w-6 h-2 rounded-sm ${n <= ert.r ? 'bg-amber-500' : 'bg-[#1a1f2e]/10'}`} />
+                  ))}
+                  <span className="text-xs font-bold text-[#1a1f2e] ml-1">{ert.r}/5</span>
+                </div>
+              </div>
+            </div>
+            {/* T */}
+            <div className="flex items-center gap-3 px-6">
+              <div>
+                <div className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-1">Technicality</div>
+                <div className="flex items-center gap-1.5">
+                  {[1,2,3,4,5].map(n => (
+                    <div key={n} className={`w-6 h-2 rounded-sm ${n <= ert.t ? 'bg-violet-500' : 'bg-[#1a1f2e]/10'}`} />
+                  ))}
+                  <span className="text-xs font-bold text-[#1a1f2e] ml-1">{ert.t}/5</span>
+                </div>
+              </div>
+            </div>
+            {/* Guide link */}
+            <div className="flex items-center gap-3 md:ml-auto md:pl-6">
+              <a href="/difficulty-guide" className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 hover:text-[#ff5100] transition-colors">
+                What is ERT? →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── MAIN CONTENT ─────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
