@@ -345,31 +345,28 @@ export default async function ExperiencePage({ params }: Props) {
               </div>
 
               {/* Tier + ERT badge */}
-              <div
-                className="rounded-2xl p-6 mb-4"
-                style={{ background: "rgba(15,20,30,0.04)", border: "1px solid rgba(0,0,0,0.07)" }}
-              >
-                <div className="flex flex-wrap items-start gap-6">
+              <div className="rounded-2xl p-6 mb-4 bg-[#1a1f2e]">
+                <div className="flex flex-wrap items-start gap-6 mb-5">
                   <div>
-                    <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-1.5">Difficulty Tier</p>
+                    <p className="text-[10px] uppercase tracking-widest text-white/40 mb-1.5">Difficulty Tier</p>
                     <Pill type="difficulty" value={adventure.difficulty} />
                   </div>
                   <div>
-                    <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-2">ERT Score</p>
+                    <p className="text-[10px] uppercase tracking-widest text-white/40 mb-2">ERT Score</p>
                     <ERTBadge ert={ert} size="md" />
                   </div>
                 </div>
 
                 {/* ERT dimension bars */}
-                <div className="mt-5 grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                   {([
-                    { key: "E", val: ert.e, label: "Exertion", color: "#f97316" },
-                    { key: "R", val: ert.r, label: "Risk", color: "#ef4444" },
-                    { key: "T", val: ert.t, label: "Technicality", color: "#8b5cf6" },
+                    { key: "E", val: ert.e, label: "Exertion", color: "#ff5100" },
+                    { key: "R", val: ert.r, label: "Risk", color: "#f59e0b" },
+                    { key: "T", val: ert.t, label: "Technicality", color: "#a78bfa" },
                   ] as const).map(({ key, val, label, color }) => (
                     <div key={key}>
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[10px] font-semibold text-[#1a1f2e]/50 uppercase tracking-wide">{label}</span>
+                        <span className="text-[10px] font-semibold text-white/50 uppercase tracking-wide">{label}</span>
                         <span className="text-[10px] font-bold" style={{ color }}>{key}{val}</span>
                       </div>
                       <div className="flex gap-1">
@@ -377,10 +374,7 @@ export default async function ExperiencePage({ params }: Props) {
                           <div
                             key={n}
                             className="h-1.5 flex-1 rounded-full"
-                            style={{
-                              background: n <= val ? color : "rgba(0,0,0,0.08)",
-                              opacity: n <= val ? (0.4 + n * 0.12) : 1,
-                            }}
+                            style={{ background: n <= val ? color : "rgba(255,255,255,0.1)" }}
                           />
                         ))}
                       </div>
@@ -389,7 +383,7 @@ export default async function ExperiencePage({ params }: Props) {
                 </div>
 
                 {/* Summary text */}
-                <p className="mt-5 text-[#1a1f2e]/60 text-sm leading-relaxed">
+                <p className="mt-5 text-white/60 text-sm leading-relaxed">
                   {ertSummary(ert, adventure.name)}
                 </p>
               </div>
