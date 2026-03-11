@@ -157,6 +157,7 @@ export const adventures: Adventure[] = [
           ],
       tags: ["mountaineering", "6000m", "glaciers", "summit", "Ladakh"],
       featured: true,
+    ert: { e: 5, r: 4, t: 4 },
       seedReviews: [
         { id: "sr-stok-1", username: "ananya_m", rating: 5, body: "One of the hardest and most rewarding things I've done. Summit day is brutal — wind chill at 3am is no joke — but standing on top with all of Ladakh in sight is something I'll never forget. Go with a certified guide, acclimatise properly, and don't rush it.", created_at: "2025-09-14T07:22:00Z", user_id: "" },
         { id: "sr-stok-2", username: "vikram_outdoors", rating: 4, body: "Incredible summit views. The base camp itself is spectacular enough. Only knocked a star because the scree on the descent destroyed my knees — bring trekking poles and take it slow. Would do it again in a heartbeat though.", created_at: "2025-08-28T11:45:00Z", user_id: "" },
@@ -517,6 +518,7 @@ export const adventures: Adventure[] = [
   ],
   tags: ["winter summit", "snow trek", "beginner summit", "Uttarakhand", "iconic"],
   featured: true,
+    ert: { e: 2, r: 2, t: 1 },
   seedReviews: [
     { id: "sr-kedarkantha-1", username: "priyanka_h", rating: 5, body: "My first summit ever and I could not have picked a better one. The sunrise from the top with Bandarpunch and Swargarohini turning pink is something that I keep coming back to in my mind. The trail through the pine forest at night with headlamps was magical. Do it.", created_at: "2025-01-18T07:45:00Z", user_id: "" },
     { id: "sr-kedarkantha-2", username: "aditya_snow", rating: 5, body: "Third time on Kedarkantha and I still get emotional at the top. January is the best month — waist-deep snow in the forest, crystal clear skies at the summit. Indiahikes runs it extremely well. The food at camp in sub-zero temperatures is surprisingly good.", created_at: "2025-01-28T09:00:00Z", user_id: "" },
@@ -559,6 +561,7 @@ export const adventures: Adventure[] = [
   ],
   tags: ["four peaks view", "West Bengal", "Singalila ridge", "rhododendrons", "iconic"],
   featured: true,
+    ert: { e: 2, r: 2, t: 1 },
   seedReviews: [
     { id: "sr-sandakphu-1", username: "ishaan_wbengal", rating: 5, body: "4:30am on the summit of Sandakphu. Everest, Kangchenjunga, Lhotse, Makalu all rising above the clouds simultaneously as the first light hits them. Forty other trekkers stood in complete silence for ten minutes. Nobody had any words. This is why we trek.", created_at: "2025-04-12T05:00:00Z", user_id: "" },
     { id: "sr-sandakphu-2", username: "sonal_ridge", rating: 5, body: "The rhododendron forest in full April bloom is one of the most beautiful landscapes I've walked through anywhere in the world — blood red and pink canopy over the entire ridge. Combine that with the greatest mountain panorama on Earth and you have a perfect trek.", created_at: "2025-04-18T09:00:00Z", user_id: "" },
@@ -601,6 +604,7 @@ export const adventures: Adventure[] = [
   ],
   tags: ["alpine lakes", "Kashmir", "shepherd country", "twin lakes", "Kolahoi"],
   featured: false,
+    ert: { e: 3, r: 3, t: 1 },
   seedReviews: [
     { id: "sr-tarsar-1", username: "faiza_kashmir", rating: 5, body: "Tarsar at dusk with the peaks turning pink above it and a lone shepherd crossing the meadow below — I've been trekking for eight years and this is still my favourite single image. Kashmir's high valleys are in a class of their own for colour and drama.", created_at: "2025-07-25T18:00:00Z", user_id: "" },
     { id: "sr-tarsar-2", username: "ajay_j", rating: 5, body: "The Marsar side gets far fewer trekkers than Tarsar and it's the more dramatic of the two. The descent from the pass into the Marsar bowl feels like entering a secret. The shepherd community is extremely hospitable — we shared tea and stories across a language gap.", created_at: "2025-08-05T09:00:00Z", user_id: "" },
@@ -677,6 +681,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹8,950", rating: 4.3, website: "https://www.trekupindia.com/ali-bedni-bugyal-trek" },
     ],
     tags: ["bugyal", "meadows", "Uttarakhand", "moderate", "rhododendron"], featured: false,
+    ert: { e: 1, r: 2, t: 1 },
     seedReviews: [
       { id: "sr-alibed-1", username: "supriya_h", rating: 5, body: "The meadow at sunset with Trishul in the background — I didn't take a single photo because I didn't want to look away from it.", created_at: "2025-10-02T17:00:00Z", user_id: "" },
       { id: "sr-alibed-2", username: "rohit_loh", rating: 4, body: "Great first Himalayan trek. Day 3 on the open bugyal is the reward for all the forest slog.", created_at: "2025-09-18T09:30:00Z", user_id: "" },
@@ -705,6 +710,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹35,000", rating: 4.3, website: "https://www.trekupindia.com/annapurna-base-camp-trek" },
     ],
     tags: ["Nepal", "Annapurna", "sanctuary", "high altitude", "panoramic"], featured: false,
+    ert: { e: 3, r: 2, t: 1 },
     seedReviews: [
       { id: "sr-abc-1", username: "arjun_abc", rating: 5, body: "Standing at ABC at 5am with Annapurna I turning pink in the dawn light — that image will never leave me.", created_at: "2025-10-15T05:30:00Z", user_id: "" },
       { id: "sr-abc-2", username: "meghna_p", rating: 4, body: "Incredible trek but teahouses above Chhomrong are very basic. The landscape above the treeline is otherworldly.", created_at: "2025-04-20T10:00:00Z", user_id: "" },
@@ -731,6 +737,7 @@ export const adventures: Adventure[] = [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹75,000", rating: 4.8, website: "https://trekthehimalayas.com/annapurna-circuit-trek" },
     ],
     tags: ["Nepal", "Thorong La", "circumnavigation", "classic", "Tibetan culture"], featured: false,
+    ert: { e: 4, r: 2, t: 1 },
     seedReviews: [
       { id: "sr-ac-1", username: "preetam_c", rating: 5, body: "Thorong La at 5,416m — 4am start, -15°C, headtorch on. By 9am I was over and looking back at Manang below. Best decision of my life.", created_at: "2025-10-12T04:30:00Z", user_id: "" },
       { id: "sr-ac-2", username: "swathi_r", rating: 5, body: "The transition from Manang to Muktinath in a single day is emotionally overwhelming. This trek changes you.", created_at: "2025-04-28T11:00:00Z", user_id: "" },
@@ -757,6 +764,7 @@ export const adventures: Adventure[] = [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹14,800", rating: 4.7, website: "https://trekthehimalayas.com/bagini-glacier-and-changbang-base-camp" },
     ],
     tags: ["glacier", "Changbang", "remote", "Uttarakhand", "wilderness"], featured: false,
+    ert: { e: 2, r: 3, t: 2 },
     seedReviews: [
       { id: "sr-bag-1", username: "nikhil_g", rating: 5, body: "Changbang's face from the glacier is genuinely terrifying — 1,500m of vertical granite. The trek is hard but not technical.", created_at: "2025-09-10T08:00:00Z", user_id: "" },
       { id: "sr-bag-2", username: "anisha_d", rating: 4, body: "The moraine is exhausting but the glacier campsite at sunrise made everything irrelevant. Hire a Pipalkoti guide.", created_at: "2025-05-20T09:15:00Z", user_id: "" },
@@ -786,6 +794,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹20,000", rating: 4.3, website: "https://www.trekupindia.com/bali-pass-trek" },
     ],
     tags: ["pass trek", "Har Ki Dun", "snow", "Uttarakhand", "Swargarohini"], featured: false,
+    ert: { e: 4, r: 4, t: 2 },
     seedReviews: [
       { id: "sr-bali-1", username: "surya_pass", rating: 5, body: "The pass crossing was the single hardest day I've had in the mountains — 14 hours, knee-deep snow, wind that cuts through everything. The view from the top made every step disappear.", created_at: "2025-06-12T06:00:00Z", user_id: "" },
       { id: "sr-bali-2", username: "kamla_g", rating: 4, body: "Physically demanding beyond what 'difficult' suggests. Come very fit. The Bandarpunch views the whole way up are extraordinary.", created_at: "2025-09-28T08:30:00Z", user_id: "" },
@@ -873,6 +882,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹7,000", rating: 4.3, website: "https://www.trekupindia.com/bhrigu-lake-trek" },
     ],
     tags: ["glacial lake", "Manali", "alpine meadows", "Himachal Pradesh", "moderate"], featured: false,
+    ert: { e: 2, r: 2, t: 1 },
     seedReviews: [
       { id: "sr-bhrigu-1", username: "reema_h", rating: 5, body: "The meadows below the lake in July are a carpet of wildflowers. Nothing from Manali prepares you for how beautiful the upper section is.", created_at: "2025-07-22T09:00:00Z", user_id: "" },
       { id: "sr-bhrigu-2", username: "anil_trek", rating: 4, body: "The altitude gain is faster than it looks on paper. Take your time on day 2. The lake itself is stunning — dark blue in a bowl of snow.", created_at: "2025-08-18T10:30:00Z", user_id: "" },
@@ -901,6 +911,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹10,000", rating: 4.3, website: "https://www.trekupindia.com/brahmatal-trek" },
     ],
     tags: ["winter trek", "frozen lake", "Uttarakhand", "snow forest", "Trishul view"], featured: false,
+    ert: { e: 2, r: 2, t: 1 },
     seedReviews: [
       { id: "sr-brah-1", username: "tanmay_snow", rating: 5, body: "Walking through the snow forest at night with headlamps was one of the most beautiful things I've experienced. The lake completely frozen and Trishul behind it — wow.", created_at: "2025-01-15T07:00:00Z", user_id: "" },
       { id: "sr-brah-2", username: "asha_w", rating: 5, body: "Perfect first winter trek. Indiahikes gear was excellent and the guides managed the group brilliantly in -10°C conditions.", created_at: "2025-02-08T09:00:00Z", user_id: "" },
@@ -929,6 +940,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹7,000", rating: 4.3, website: "https://www.trekupindia.com/dayara-bugyal-trek" },
     ],
     tags: ["bugyal", "meadow", "Uttarakhand", "beginner-friendly", "Bandarpunch view"], featured: false,
+    ert: { e: 1, r: 2, t: 1 },
     seedReviews: [
       { id: "sr-day-1", username: "prerna_d", rating: 5, body: "The bugyal at sunrise with Bandarpunch turning orange — it looked painted. Easy enough for beginners but the views are world-class.", created_at: "2025-10-10T06:30:00Z", user_id: "" },
       { id: "sr-day-2", username: "saurabh_g", rating: 4, body: "Came in November and the autumn colours were incredible. Raithal village is charming. The campsite on the bugyal is wide open and starry.", created_at: "2025-11-05T08:00:00Z", user_id: "" },
@@ -957,6 +969,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹9,000", rating: 4.3, website: "https://www.trekupindia.com/deoriatal-chandrashila-trek" },
     ],
     tags: ["Chandrashila", "Deoria Tal", "Uttarakhand", "summit", "Kedarnath view"], featured: false,
+    ert: { e: 1, r: 2, t: 1 },
     seedReviews: [
       { id: "sr-dc-1", username: "amruta_h", rating: 5, body: "Deoria Tal at 6am with Chaukhamba perfectly reflected in the still water — I've never seen anything like it. The summit the next morning seals the deal.", created_at: "2025-04-15T06:00:00Z", user_id: "" },
       { id: "sr-dc-2", username: "ravi_trek", rating: 5, body: "Chandrashila is the best 'beginner summit' in Uttarakhand. The Kedarnath peak view from the top is absolutely surreal.", created_at: "2025-10-20T07:30:00Z", user_id: "" },
@@ -985,6 +998,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹80,000", rating: 4.4, website: "https://www.trekupindia.com/everest-base-camp-trek" },
     ],
     tags: ["Nepal", "Everest", "iconic", "Khumbu", "high altitude"], featured: true,
+    ert: { e: 4, r: 3, t: 1 },
     seedReviews: [
       { id: "sr-ebc-1", username: "nidhi_e", rating: 5, body: "14 days of building towards one moment — standing at EBC with Everest directly above. Namche Bazaar is a highlight in itself. Go in October for crystal-clear skies.", created_at: "2025-10-25T08:00:00Z", user_id: "" },
       { id: "sr-ebc-2", username: "kartik_ebc", rating: 5, body: "The Tengboche Monastery against Ama Dablam was my favourite moment — more than the base camp itself. This trek is about the whole journey, not just the destination.", created_at: "2025-04-18T06:30:00Z", user_id: "" },
@@ -1044,6 +1058,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹20,000", rating: 4.3, website: "https://www.trekupindia.com/goechala-trek" },
     ],
     tags: ["Sikkim", "Kangchenjunga", "Goechala", "rhododendron", "national park"], featured: false,
+    ert: { e: 4, r: 3, t: 1 },
     seedReviews: [
       { id: "sr-goechala-1", username: "binita_s", rating: 5, body: "Kangchenjunga from Goechala viewpoint 3 is something that no photo captures. It's not a mountain you see — it's a wall of ice you stand in front of.", created_at: "2025-10-18T06:00:00Z", user_id: "" },
       { id: "sr-goechala-2", username: "pankaj_trek", rating: 5, body: "The rhododendron forest in April is in full bloom and completely extraordinary. The whole trek is magnificent, not just the viewpoint.", created_at: "2025-04-25T09:00:00Z", user_id: "" },
@@ -1072,6 +1087,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹12,000", rating: 4.3, website: "https://www.trekupindia.com/hampta-pass-trek" },
     ],
     tags: ["Hampta Pass", "Spiti", "Kullu", "Himachal Pradesh", "contrast"], featured: false,
+    ert: { e: 3, r: 3, t: 1 },
     seedReviews: [
       { id: "sr-hamp-1", username: "radhika_h", rating: 5, body: "The pass crossing is incredible — green meadows behind you, brown moonscape ahead. That single step is the whole point of this trek.", created_at: "2025-08-10T10:00:00Z", user_id: "" },
       { id: "sr-hamp-2", username: "shubham_trek", rating: 5, body: "Combined with Chandratal it's a perfect 6-day trip. Chandratal at sunset is the best lake I've ever seen anywhere.", created_at: "2025-07-22T09:00:00Z", user_id: "" },
@@ -1101,6 +1117,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹13,000", rating: 4.3, website: "https://www.trekupindia.com/har-ki-dun-trek" },
     ],
     tags: ["Har Ki Dun", "valley", "Uttarakhand", "cultural", "Swargarohini"], featured: false,
+    ert: { e: 2, r: 2, t: 1 },
     seedReviews: [
       { id: "sr-hkd-1", username: "sunita_garhwal", rating: 5, body: "Har Ki Dun campsite with Swargarohini directly above is the most beautiful valley floor I've seen. The ancient Duryodhana temple in the village is a genuinely unique experience.", created_at: "2025-10-08T09:00:00Z", user_id: "" },
       { id: "sr-hkd-2", username: "vijay_trek", rating: 5, body: "Accessible for most trekkers but absolutely beautiful. November — bare trees, soft light, the valley completely to ourselves. The best version of Uttarakhand trekking.", created_at: "2025-11-02T08:00:00Z", user_id: "" },
@@ -1128,6 +1145,7 @@ export const adventures: Adventure[] = [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹21,000", rating: 4.8, website: "https://trekthehimalayas.com/kashmir-great-lakes-trek" },
     ],
     tags: ["Kashmir", "alpine lakes", "Gadsar Pass", "short season", "high altitude"], featured: true,
+    ert: { e: 3, r: 3, t: 1 },
     seedReviews: [
       { id: "sr-kgl-1", username: "zara_k", rating: 5, body: "The colour of Vishansar Lake — an impossible shade of blue — at sunrise. This trek is genuinely one of the most beautiful things in India. Do it before it gets discovered.", created_at: "2025-08-05T06:30:00Z", user_id: "" },
       { id: "sr-kgl-2", username: "adnan_trek", rating: 5, body: "Seven lakes, seven sunsets, seven wildflower meadows. The Gadsar crossing in August had knee-deep snow — thrilling. The whole trek is world-class.", created_at: "2025-07-28T09:00:00Z", user_id: "" },
@@ -1185,6 +1203,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹10,000", rating: 4.3, website: "https://www.trekupindia.com/kuari-pass-trek" },
     ],
     tags: ["Kuari Pass", "winter trek", "Nanda Devi view", "Uttarakhand", "panorama"], featured: false,
+    ert: { e: 2, r: 2, t: 1 },
     seedReviews: [
       { id: "sr-kuari-1", username: "arun_winter", rating: 5, body: "The view from Kuari Pass in January with a foot of fresh snow and Nanda Devi sharp against a blue sky — I was speechless. A genuinely perfect mountain moment.", created_at: "2025-01-20T09:00:00Z", user_id: "" },
       { id: "sr-kuari-2", username: "priya_gaur", rating: 5, body: "Best winter trek I've done. The forests above Khulara are beautiful and the pass view makes everything click into place.", created_at: "2025-02-15T08:00:00Z", user_id: "" },
@@ -1211,6 +1230,7 @@ export const adventures: Adventure[] = [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹22,500", rating: 4.8, website: "https://trekthehimalayas.com/markha-valley-trek" },
     ],
     tags: ["Ladakh", "Markha Valley", "river crossings", "Kongmaru La", "remote"], featured: false,
+    ert: { e: 3, r: 3, t: 1 },
     seedReviews: [
       { id: "sr-markha-1", username: "kartik_ladakh", rating: 5, body: "Seven days walking through a Ladakhi painting. Hankar village, the Nimaling plateau with yak herders, Kongmaru La — each day better than the last.", created_at: "2025-08-20T08:00:00Z", user_id: "" },
       { id: "sr-markha-2", username: "divya_markha", rating: 5, body: "The river crossing at Chilling is exciting — thigh deep, fast current, absolutely thrilling. Poles essential. The valley after is perfect.", created_at: "2025-07-10T09:30:00Z", user_id: "" },
@@ -1240,6 +1260,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹35,000", rating: 4.3, website: "https://www.trekupindia.com/pin-parvati-pass-trek" },
     ],
     tags: ["Pin Parvati", "glacier", "Spiti", "Himachal Pradesh", "expert"], featured: false,
+    ert: { e: 5, r: 4, t: 2 },
     seedReviews: [
       { id: "sr-pp-1", username: "nitin_glacier", rating: 5, body: "The glacier crossing is terrifying and magnificent. Nothing in my previous 15 Himalayan treks prepared me for the scale of Pin Parvati. This is the real thing.", created_at: "2025-07-25T07:00:00Z", user_id: "" },
       { id: "sr-pp-2", username: "kaveri_exp", rating: 5, body: "11 days to cross 110km with a glacier in the middle. Every day is different. The Pin Valley side is completely alien — orange and ochre and silent.", created_at: "2025-08-02T08:00:00Z", user_id: "" },
@@ -1269,6 +1290,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹16,000", rating: 4.3, website: "https://www.trekupindia.com/rupin-pass-trek" },
     ],
     tags: ["Rupin Pass", "waterfall", "snow tunnel", "Uttarakhand", "gully climb"], featured: false,
+    ert: { e: 4, r: 3, t: 2 },
     seedReviews: [
       { id: "sr-rupin-1", username: "abhay_rupin", rating: 5, body: "The waterfall campsite is one of the most dramatic places I've ever camped. A 1,500ft cascade literally beside your tent. The snow tunnel on the way up is pure joy.", created_at: "2025-06-05T07:00:00Z", user_id: "" },
       { id: "sr-rupin-2", username: "sonal_trek", rating: 5, body: "The gully above Upper Waterfall campsite — near-vertical in June with snow — is genuinely challenging. The pass view makes it worthwhile in an instant.", created_at: "2025-05-28T08:00:00Z", user_id: "" },
@@ -1297,6 +1319,7 @@ export const adventures: Adventure[] = [
       { name: "Trekup India", verified: false, priceFrom: "₹11,000", rating: 4.3, website: "https://www.trekupindia.com/valley-of-flowers-trek" },
     ],
     tags: ["Valley of Flowers", "UNESCO", "wildflowers", "Hemkund", "Uttarakhand"], featured: false,
+    ert: { e: 1, r: 2, t: 1 },
     seedReviews: [
       { id: "sr-vof-1", username: "flora_h", rating: 5, body: "August in the valley — every colour simultaneously. I'd never seen a Himalayan blue poppy before. After one morning here I understood why it has UNESCO status.", created_at: "2025-08-08T09:00:00Z", user_id: "" },
       { id: "sr-vof-2", username: "gurmeet_h", rating: 5, body: "Hemkund Sahib at dawn — the lake, the gurudwara, the snow peaks. A profoundly moving place regardless of your faith. The approach staircase is brutal but sacred.", created_at: "2025-08-15T05:30:00Z", user_id: "" },
@@ -1323,6 +1346,7 @@ export const adventures: Adventure[] = [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹12,600", rating: 4.7, website: "https://trekthehimalayas.com/bajre-dara-trek" },
     ],
     tags: ["Sikkim", "winter trek", "rhododendron", "Kangchenjunga", "meadow"], featured: false,
+    ert: { e: 1, r: 3, t: 1 },
     seedReviews: [
       { id: "sr-bajre-1", username: "tenzin_s", rating: 5, body: "Bajre Dara in December — crisp air, no crowds, and Kangchenjunga perfectly framed above the frost-white meadow. Sikkim's best kept trekking secret.", created_at: "2025-12-20T08:00:00Z", user_id: "" },
       { id: "sr-bajre-2", username: "prerna_k", rating: 4, body: "The forest trail through old-growth rhododendrons is stunning even in winter. The meadow views are worth every cold night in the tent.", created_at: "2026-01-15T07:30:00Z", user_id: "" },
@@ -1423,6 +1447,7 @@ export const adventures: Adventure[] = [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹97,000", rating: 4.8, website: "https://trekthehimalayas.com/everest-base-camp-via-gokyo-ri" },
     ],
     tags: ["Gokyo", "Nepal", "Khumbu", "Gokyo Ri", "glacial lakes"], featured: false,
+    ert: { e: 4, r: 3, t: 1 },
     seedReviews: [
       { id: "sr-gokyo-1", username: "meera_n", rating: 5, body: "Gokyo Ri at dawn with all four 8,000ers lit up — I had tears in my eyes. The lakes themselves are otherworldly. A better experience than EBC in my opinion.", created_at: "2025-10-20T06:00:00Z", user_id: "" },
       { id: "sr-gokyo-2", username: "siddharth_p", rating: 5, body: "Less crowded than the standard EBC trail and visually superior. The Gokyo valley has a peaceful, remote quality despite being in the popular Khumbu region.", created_at: "2025-04-18T07:30:00Z", user_id: "" },
@@ -1627,6 +1652,7 @@ export const adventures: Adventure[] = [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹13,250", rating: 4.7, website: "https://trekthehimalayas.com/pangarchulla-peak-trek" },
     ],
     tags: ["Pangarchulla", "Auli", "Nanda Devi", "snow trek", "Uttarakhand"], featured: false,
+    ert: { e: 3, r: 3, t: 2 },
     seedReviews: [
       { id: "sr-panga-1", username: "harsh_a", rating: 5, body: "Summit of Pangarchulla in late March with 2 feet of snow — crampons on at 3am, sunrise hit us at the top with Nanda Devi glowing pink. Unforgettable.", created_at: "2026-03-28T06:30:00Z", user_id: "" },
       { id: "sr-panga-2", username: "simran_a", rating: 4, body: "The April window is perfect — enough snow for dramatic conditions, not too technical. The 360° view from the top is extraordinary. Well worth the early start.", created_at: "2025-04-10T07:00:00Z", user_id: "" },
@@ -1811,6 +1837,7 @@ export const adventures: Adventure[] = [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹11,300", rating: 4.7, website: "https://trekthehimalayas.com/sar-pass-trek" },
     ],
     tags: ["Sar Pass", "Kasol", "Parvati Valley", "snow pass", "Himachal Pradesh"], featured: false,
+    ert: { e: 3, r: 3, t: 1 },
     seedReviews: [
       { id: "sr-sarpass-1", username: "priyanka_k", rating: 5, body: "The Sar Pass snow descent was the most fun I've had on a trek. Glissading down in June with the whole Parvati Valley below — instant classic moment. Great first pass trek.", created_at: "2025-06-08T10:00:00Z", user_id: "" },
       { id: "sr-sarpass-2", username: "gaurav_p", rating: 4, body: "Good introduction to Himalayan pass trekking from Kasol. The pass views are solid. Trail is well-managed. The descent on snow is the highlight — don't miss early June for it.", created_at: "2025-05-25T09:00:00Z", user_id: "" },
