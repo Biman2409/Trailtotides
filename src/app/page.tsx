@@ -207,7 +207,7 @@ export default function HomePage() {
               </div>
 
               {/* Right — ERT preview cards */}
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {[
                   { name: "Dayara Bugyal", state: "Uttarakhand", e: 1, r: 1, t: 1, match: true, label: "Perfect match" },
                   { name: "Kedarkantha Trek", state: "Uttarakhand", e: 2, r: 2, t: 1, match: true, label: "Within range" },
@@ -215,19 +215,18 @@ export default function HomePage() {
                 ].map((item) => (
                   <div
                     key={item.name}
-                    className="flex items-center justify-between px-5 py-4 rounded-2xl border transition-all"
+                    className="flex items-center justify-between px-4 py-2.5 rounded-xl border"
                     style={{
                       background: item.match ? "rgba(16,185,129,0.06)" : "rgba(245,158,11,0.06)",
-                      borderColor: item.match ? "rgba(16,185,129,0.2)" : "rgba(245,158,11,0.2)",
+                      borderColor: item.match ? "rgba(16,185,129,0.18)" : "rgba(245,158,11,0.18)",
                     }}
                   >
                     <div>
-                      <p className="text-white font-semibold text-sm">{item.name}</p>
-                      <p className="text-white/35 text-[10px] mt-0.5">{item.state}</p>
+                      <p className="text-white font-semibold text-xs">{item.name}</p>
+                      <p className="text-white/35 text-[9px] mt-0.5">{item.state}</p>
                     </div>
-                    <div className="flex items-center gap-3">
-                      {/* Mini ERT pips */}
-                      <div className="flex items-center gap-1.5 text-[10px] font-bold">
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1 text-[9px] font-bold">
                         <span style={{ color: "#ff5100" }}>E{item.e}</span>
                         <span className="text-white/15">·</span>
                         <span style={{ color: "#f59e0b" }}>R{item.r}</span>
@@ -235,7 +234,7 @@ export default function HomePage() {
                         <span style={{ color: "#a78bfa" }}>T{item.t}</span>
                       </div>
                       <span
-                        className="text-[10px] font-semibold px-2.5 py-1 rounded-full"
+                        className="text-[9px] font-semibold px-2 py-0.5 rounded-full"
                         style={{
                           background: item.match ? "rgba(16,185,129,0.15)" : "rgba(245,158,11,0.15)",
                           color: item.match ? "#34d399" : "#fbbf24",
@@ -246,7 +245,7 @@ export default function HomePage() {
                     </div>
                   </div>
                 ))}
-                <p className="text-white/20 text-xs text-center pt-2">Results are based on your personal ERT comfort profile</p>
+                <p className="text-white/20 text-[9px] text-center pt-1">Based on your personal ERT profile</p>
               </div>
 
             </div>
