@@ -192,8 +192,7 @@ export default function HomePage() {
               <div>
                 <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
                 <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-5">
-                  Find adventures built<br />
-                  <span className="text-[#ff5100]">for your body.</span>
+                  Adventures built <span className="text-[#ff5100]">for your body.</span>
                 </h2>
                 <p className="text-white/55 text-base lg:text-lg leading-relaxed mb-8">
                   Answer 5 quick questions about your fitness, altitude experience, and terrain comfort. We'll calculate your personal ERT profile and match you to adventures you can actually complete — safely.
