@@ -52,7 +52,7 @@ export const TECHNICALITY_DESCRIPTIONS: Record<number, string> = {
 
 // ─── Auto-computation from Adventure fields ───────────────────────────────────
 
-function parseAltitudeM(alt?: string): number {
+export function parseAltitudeM(alt?: string): number {
   if (!alt) return 0;
   const clean = alt.replace(/,/g, "").replace(/[^0-9.]/g, "");
   return parseFloat(clean) || 0;
@@ -60,7 +60,7 @@ function parseAltitudeM(alt?: string): number {
 
 function parseDays(durationDays: string): number {
   const m = durationDays.match(/(\d+)/);
-  return m ? parseInt(m[1]) : 5;
+  return m ? parseInt(m[1], 10) : 5;
 }
 
 const DIFF_RISK: Record<Difficulty, number> = {

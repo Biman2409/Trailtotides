@@ -1,19 +1,15 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function GradingPill() {
   const [expanded, setExpanded] = useState(false);
-  const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
 
-  // Collapse when clicking outside
   useEffect(() => {
     if (!expanded) return;
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setExpanded(false);
-      }
+      if (ref.current && !ref.current.contains(e.target as Node)) setExpanded(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -21,23 +17,20 @@ export default function GradingPill() {
 
   return (
     <div ref={ref} className="flex items-center">
-      {/* Expanded pill — clicking navigates */}
       <div
         className="overflow-hidden transition-all duration-300 flex items-center"
         style={{ maxWidth: expanded ? "190px" : "0px", paddingLeft: expanded ? "10px" : "0" }}
       >
-        <button
-          onClick={() => router.push("/difficulty-guide")}
-          className="whitespace-nowrap font-semibold text-[#ff5100] leading-none cursor-pointer hover:underline"
+        <Link
+          href="/difficulty-guide"
+          className="whitespace-nowrap font-semibold text-[#ff5100] leading-none hover:underline"
           style={{ fontSize: "10px" }}
         >
           How do we grade difficulty
-        </button>
+        </Link>
       </div>
-
-      {/* ? button — clicking toggles expand */}
       <button
-        onClick={() => setExpanded((v) => !v)}
+        onClick={() => setExpanded(v => !v)}
         className="flex items-center justify-center w-5 h-5 shrink-0 rounded-full border border-[#ff5100] text-[10px] font-bold text-[#ff5100] hover:bg-[#ff5100] hover:text-white transition-colors duration-150"
       >
         ?

@@ -30,10 +30,93 @@ import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import ReviewSection from "@/components/ui/custom/ReviewSection";
 import { createClient } from "@/lib/supabase/server";
-import { getERT, ertSummary } from "@/lib/ert";
+import { getERT, ertSummary, parseAltitudeM } from "@/lib/ert";
 
 interface Props {
   params: Promise<{ slug: string }>;
+}
+
+type Operator = NonNullable<import("@/lib/data").Adventure["operators"]>[number];
+type AdventureItem = import("@/lib/data").Adventure;
+
+function OperatorCard({ op, verified }: { op: Operator; verified: boolean }) {
+  return (
+    <div className={`rounded-2xl p-5 flex flex-col gap-4 ${
+      verified
+        ? "bg-white border border-emerald-100 shadow-sm hover:shadow-md transition-shadow"
+        : "bg-[#fafaf8] border border-[#e0d8cc] opacity-90 hover:opacity-100 transition-opacity"
+    }`}>
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-[#1a1f2e] font-semibold text-sm leading-snug">{op.name}</span>
+            {verified ? (
+              <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-200">
+                <ShieldCheck className="w-3 h-3" />Verified
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-amber-200">
+                <AlertTriangle className="w-3 h-3" />Unverified
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-1 mt-1.5">
+            {[1, 2, 3, 4, 5].map((s) => (
+              <Star key={s} className={`w-3 h-3 ${s <= Math.round(op.rating) ? "text-amber-400 fill-amber-400" : "text-gray-200 fill-gray-200"}`} />
+            ))}
+            <span className="text-[#9a9590] text-xs ml-1">{op.rating}</span>
+          </div>
+        </div>
+        <div className="text-right shrink-0">
+          <div className="text-[#9a9590] text-[10px] uppercase tracking-wide">From</div>
+          <div className="text-[#1a1f2e] font-bold text-base">{op.priceFrom}</div>
+        </div>
+      </div>
+      <OperatorButton website={op.website ?? ""} {...(!verified ? { label: "Visit Website", variant: "secondary" as const } : {})} />
+    </div>
+  );
+}
+
+function RelatedSection({ title, items, exploreHref }: { title: string; items: AdventureItem[]; exploreHref: string }) {
+  if (items.length === 0) return null;
+  return (
+    <div>
+      <div className="flex items-end justify-between mb-8">
+        <div>
+          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">You Might Also Like</p>
+          <h2 className="text-[#1a1f2e] text-3xl font-semibold tracking-tight">{title}</h2>
+        </div>
+        <Link href={exploreHref} className="hidden md:flex items-center gap-1.5 text-[#1e3d2f] text-sm font-medium hover:text-[#ff5100] transition-colors group">
+          Explore all
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </div>
+      <div className="flex gap-5 overflow-x-auto pb-4 -mx-2 px-2 snap-x snap-mandatory no-scrollbar">
+        {items.map((a) => (
+          <div key={a.id} className="group relative block bg-white rounded-2xl overflow-hidden border border-[#e0d8cc] hover:shadow-lg transition-all hover:-translate-y-1 duration-300 flex-none w-72 snap-start">
+            <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
+            <div className="relative h-48 overflow-hidden">
+              <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
+              <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-orange-900/30 via-transparent to-sky-900/20 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+              <div className="absolute top-3 left-3 flex flex-wrap gap-2 z-20">
+                <Pill type="type" value={a.type} />
+                <Pill type="difficulty" value={a.difficulty} />
+              </div>
+            </div>
+            <div className="p-5">
+              <div className="flex items-center gap-1.5 mb-1">
+                <MapPin className="w-3 h-3 text-[#ff5100]" />
+                <span className="text-[#9a9590] text-xs">{a.state}</span>
+              </div>
+              <h3 className="text-[#1a1f2e] font-semibold text-base leading-snug mb-1 group-hover:text-[#1e3d2f]">{a.name}</h3>
+              <p className="text-[#9a9590] text-xs line-clamp-2">{a.tagline}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export async function generateStaticParams() {
@@ -72,9 +155,9 @@ export default async function ExperiencePage({ params }: Props) {
   const adventureIndex = adventures.findIndex((a) => a.slug === slug);
   const explorePage = adventureIndex >= 0 ? Math.ceil((adventureIndex + 1) / PAGE_SIZE) : 1;
 
-  const showERT = !["Diving", "Kayaking", "Scuba Diving"].includes(adventure.type);
+  const showERT = !["Diving", "Kayaking"].includes(adventure.type);
   const ert = getERT(adventure);
-  const altM = adventure.altitude ? parseFloat(adventure.altitude.replace(/,/g, "").replace(/[^0-9.]/g, "")) : 0;
+  const altM = parseAltitudeM(adventure.altitude);
   const showAltitudeWarning = altM >= 4200;
   const showIsolationWarning = ert.r >= 5;
   const showTechnicalWarning = ert.t >= 5;
@@ -438,33 +521,7 @@ export default async function ExperiencePage({ params }: Props) {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {adventure.operators.filter((op) => op.verified).map((op) => (
-                        <div
-                          key={op.name}
-                          className="bg-white border border-emerald-100 rounded-2xl p-5 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow"
-                        >
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <div className="flex items-center gap-1.5 flex-wrap">
-                                <span className="text-[#1a1f2e] font-semibold text-sm leading-snug">{op.name}</span>
-                                <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-200">
-                                  <ShieldCheck className="w-3 h-3" />
-                                  Verified
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1 mt-1.5">
-                                {[1, 2, 3, 4, 5].map((s) => (
-                                  <Star key={s} className={`w-3 h-3 ${s <= Math.round(op.rating) ? "text-amber-400 fill-amber-400" : "text-gray-200 fill-gray-200"}`} />
-                                ))}
-                                <span className="text-[#9a9590] text-xs ml-1">{op.rating}</span>
-                              </div>
-                            </div>
-                            <div className="text-right shrink-0">
-                              <div className="text-[#9a9590] text-[10px] uppercase tracking-wide">From</div>
-                              <div className="text-[#1a1f2e] font-bold text-base">{op.priceFrom}</div>
-                            </div>
-                          </div>
-                          <OperatorButton website={op.website ?? ""} />
-                        </div>
+                        <OperatorCard key={op.name} op={op} verified />
                       ))}
                     </div>
                     <p className="mt-4 text-[#9a9590] text-xs flex items-center gap-1.5">
@@ -513,33 +570,7 @@ export default async function ExperiencePage({ params }: Props) {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {adventure.operators.filter((op) => !op.verified).map((op) => (
-                        <div
-                          key={op.name}
-                          className="bg-[#fafaf8] border border-[#e0d8cc] rounded-2xl p-5 flex flex-col gap-4 opacity-90 hover:opacity-100 transition-opacity"
-                        >
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <div className="flex items-center gap-1.5 flex-wrap">
-                                <span className="text-[#1a1f2e] font-semibold text-sm leading-snug">{op.name}</span>
-                                <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-amber-200">
-                                  <AlertTriangle className="w-3 h-3" />
-                                  Unverified
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1 mt-1.5">
-                                {[1, 2, 3, 4, 5].map((s) => (
-                                  <Star key={s} className={`w-3 h-3 ${s <= Math.round(op.rating) ? "text-amber-400 fill-amber-400" : "text-gray-200 fill-gray-200"}`} />
-                                ))}
-                                <span className="text-[#9a9590] text-xs ml-1">{op.rating}</span>
-                              </div>
-                            </div>
-                            <div className="text-right shrink-0">
-                              <div className="text-[#9a9590] text-[10px] uppercase tracking-wide">From</div>
-                              <div className="text-[#1a1f2e] font-bold text-base">{op.priceFrom}</div>
-                            </div>
-                          </div>
-                          <OperatorButton website={op.website ?? ""} label="Visit Website" variant="secondary" />
-                        </div>
+                        <OperatorCard key={op.name} op={op} verified={false} />
                       ))}
                     </div>
                     <p className="mt-4 text-[#9a9590] text-xs flex items-center gap-1.5">
@@ -626,98 +657,18 @@ export default async function ExperiencePage({ params }: Props) {
             <div className="max-w-7xl mx-auto space-y-14">
 
               {/* More in [State] */}
-              {relatedByState.length > 0 && (
-                <div>
-                  <div className="flex items-end justify-between mb-8">
-                    <div>
-                      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
-                        You Might Also Like
-                      </p>
-                      <h2 className="text-[#1a1f2e] text-3xl font-semibold tracking-tight">
-                        More in {adventure.state}
-                      </h2>
-                    </div>
-                    <Link
-                      href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
-                      className="hidden md:flex items-center gap-1.5 text-[#1e3d2f] text-sm font-medium hover:text-[#ff5100] transition-colors group"
-                    >
-                      Explore all
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
-                  <div className="flex gap-5 overflow-x-auto pb-4 -mx-2 px-2 snap-x snap-mandatory no-scrollbar">
-                    {relatedByState.map((a) => (
-                      <div key={a.id} className="group relative block bg-white rounded-2xl overflow-hidden border border-[#e0d8cc] hover:shadow-lg transition-all hover:-translate-y-1 duration-300 flex-none w-72 snap-start">
-                        <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
-                        <div className="relative h-48 overflow-hidden">
-                          <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
-                          <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-orange-900/30 via-transparent to-sky-900/20 pointer-events-none" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                          <div className="absolute top-3 left-3 flex flex-wrap gap-2 z-20">
-                            <Pill type="type" value={a.type} />
-                            <Pill type="difficulty" value={a.difficulty} />
-                          </div>
-                        </div>
-                        <div className="p-5">
-                          <div className="flex items-center gap-1.5 mb-1">
-                            <MapPin className="w-3 h-3 text-[#ff5100]" />
-                            <span className="text-[#9a9590] text-xs">{a.state}</span>
-                          </div>
-                          <h3 className="text-[#1a1f2e] font-semibold text-base leading-snug mb-1 group-hover:text-[#1e3d2f]">{a.name}</h3>
-                          <p className="text-[#9a9590] text-xs line-clamp-2">{a.tagline}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <RelatedSection
+                title={`More in ${adventure.state}`}
+                items={relatedByState}
+                exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
+              />
 
-              {/* More in [Type] — subsection */}
-              {relatedByType.length > 0 && (
-                <div>
-                  <div className="flex items-end justify-between mb-8">
-                    <div>
-                      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
-                        You Might Also Like
-                      </p>
-                      <h2 className="text-[#1a1f2e] text-3xl font-semibold tracking-tight">
-                        More in {adventure.type}
-                      </h2>
-                    </div>
-                    <Link
-                      href={`/explore?type=${encodeURIComponent(adventure.type)}`}
-                      className="hidden md:flex items-center gap-1.5 text-[#1e3d2f] text-sm font-medium hover:text-[#ff5100] transition-colors group"
-                    >
-                      Explore all
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
-                  <div className="flex gap-5 overflow-x-auto pb-4 -mx-2 px-2 snap-x snap-mandatory no-scrollbar">
-                    {relatedByType.map((a) => (
-                      <div key={a.id} className="group relative block bg-white rounded-2xl overflow-hidden border border-[#e0d8cc] hover:shadow-lg transition-all hover:-translate-y-1 duration-300 flex-none w-72 snap-start">
-                        <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
-                        <div className="relative h-48 overflow-hidden">
-                          <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
-                          <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-orange-900/30 via-transparent to-sky-900/20 pointer-events-none" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                          <div className="absolute top-3 left-3 flex flex-wrap gap-2 z-20">
-                            <Pill type="type" value={a.type} />
-                            <Pill type="difficulty" value={a.difficulty} />
-                          </div>
-                        </div>
-                        <div className="p-5">
-                          <div className="flex items-center gap-1.5 mb-1">
-                            <MapPin className="w-3 h-3 text-[#ff5100]" />
-                            <span className="text-[#9a9590] text-xs">{a.state}</span>
-                          </div>
-                          <h3 className="text-[#1a1f2e] font-semibold text-base leading-snug mb-1 group-hover:text-[#1e3d2f]">{a.name}</h3>
-                          <p className="text-[#9a9590] text-xs line-clamp-2">{a.tagline}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              {/* More in [Type] */}
+              <RelatedSection
+                title={`More in ${adventure.type}`}
+                items={relatedByType}
+                exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`}
+              />
 
             </div>
           </section>

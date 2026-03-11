@@ -11,6 +11,8 @@ interface AdventureCardProps {
   size?: "default" | "large";
 }
 
+const MONTHS: Month[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 function formatSeasonShort(bestMonths: Month[]): string {
   if (!bestMonths || bestMonths.length === 0) return "";
   if (bestMonths.length === 1) return bestMonths[0];
@@ -19,19 +21,20 @@ function formatSeasonShort(bestMonths: Month[]): string {
 
 export default function AdventureCard({ adventure, size = "default" }: AdventureCardProps) {
   const isLarge = size === "large";
-  const months: Month[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const currentMonth = months[new Date().getMonth()];
-  const nextMonth = months[(new Date().getMonth() + 1) % 12];
+  const now = new Date();
+  const currentMonth = MONTHS[now.getMonth()];
+  const nextMonth = MONTHS[(now.getMonth() + 1) % 12];
   const isSeasonActive = adventure.bestMonths.includes(currentMonth);
   const isSeasonUpcoming = !isSeasonActive && adventure.bestMonths.includes(nextMonth);
   const seasonLabel = formatSeasonShort(adventure.bestMonths);
   const operatorCount = adventure.operators?.length ?? 0;
 
   const verifiedOps = adventure.operators?.filter(o => o.verified) ?? [];
-  const allPrices = adventure.operators
-    ?.map(o => parseInt(o.priceFrom.replace(/[^\d]/g, "")))
-    .filter(p => !isNaN(p)) ?? [];
-  const lowestPrice = allPrices.length > 0 ? Math.min(...allPrices) : null;
+  const lowestPrice = adventure.operators?.reduce<number | null>((min, o) => {
+    const p = parseInt(o.priceFrom.replace(/[^\d]/g, ""), 10);
+    if (isNaN(p)) return min;
+    return min === null ? p : Math.min(min, p);
+  }, null) ?? null;
   const displayCount = verifiedOps.length > 0 ? verifiedOps.length : operatorCount;
 
   return (
