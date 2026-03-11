@@ -35,6 +35,15 @@ export type Month =
 
 export type GroupSize = "Solo" | "Small group (2–6)" | "Large group (6+)";
 
+export interface ERT {
+  /** Exertion 1–5: physical effort based on distance, altitude, days */
+  e: number;
+  /** Risk 1–5: environmental hazard and rescue difficulty */
+  r: number;
+  /** Technicality 1–5: skill and equipment required */
+  t: number;
+}
+
 export interface Adventure {
   id: string;
   slug: string;
@@ -69,6 +78,8 @@ export interface Adventure {
   tags: string[];
   featured: boolean;
   seedReviews?: SeedReview[];
+  /** ERT difficulty scores — auto-computed if omitted */
+  ert?: ERT;
 }
 
 export interface Operator {
