@@ -195,57 +195,89 @@ export default function HomePage() {
                   Adventures built,<br /><span className="text-[#ff5100]">for your body</span>
                 </h2>
                 <p className="text-white/55 text-base lg:text-lg leading-relaxed mb-8">
-                  Answer 5 quick questions about your fitness, altitude experience, and terrain comfort. We'll calculate your personal ERT profile and match you to adventures you can actually complete — safely.
+                  5 quick questions. We calculate your personal{" "}
+                  <Link
+                    href="/ert"
+                    className="font-bold text-[#ff5100] underline decoration-[#ff5100]/30 underline-offset-2 hover:decoration-[#ff5100] transition-all"
+                  >
+                    ERT
+                  </Link>{" "}
+                  profile and surface the exact adventures your body is ready for — and what it takes to go further.
                 </p>
                 <Link
                   href="/matchmaker"
                   className="inline-flex items-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#e04800] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/20 group transition-all duration-200"
                 >
-                  Take Assessment
+                  Find My Adventures
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
 
               {/* Right — ERT preview cards */}
-              <div className="space-y-2">
+              <div className="space-y-2.5">
+                {/* Profile bar */}
+                <div
+                  className="flex items-center justify-between px-4 py-3 rounded-xl border mb-1"
+                  style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}
+                >
+                  <p className="text-white/40 text-[10px] font-medium tracking-wide uppercase">Your ERT Profile</p>
+                  <div className="flex items-center gap-2 text-[10px] font-black">
+                    <span style={{ color: "#ff5100" }}>E2</span>
+                    <span className="text-white/15">·</span>
+                    <span style={{ color: "#f59e0b" }}>R2</span>
+                    <span className="text-white/15">·</span>
+                    <span style={{ color: "#a78bfa" }}>T1</span>
+                  </div>
+                </div>
+
                 {[
-                  { name: "Dayara Bugyal", state: "Uttarakhand", e: 1, r: 1, t: 1, match: true, label: "Perfect match" },
-                  { name: "Kedarkantha Trek", state: "Uttarakhand", e: 2, r: 2, t: 1, match: true, label: "Within range" },
-                  { name: "Everest Base Camp", state: "Nepal", e: 4, r: 2, t: 1, match: false, label: "Needs training" },
-                ].map((item) => (
-                  <div
-                    key={item.name}
-                    className="flex items-center justify-between px-4 py-2.5 rounded-xl border"
-                    style={{
-                      background: item.match ? "rgba(16,185,129,0.06)" : "rgba(245,158,11,0.06)",
-                      borderColor: item.match ? "rgba(16,185,129,0.18)" : "rgba(245,158,11,0.18)",
-                    }}
-                  >
-                    <div>
-                      <p className="text-white font-semibold text-xs">{item.name}</p>
-                      <p className="text-white/35 text-[9px] mt-0.5">{item.state}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1 text-[9px] font-bold">
+                  { name: "Dayara Bugyal", state: "Uttarakhand", e: 1, r: 1, t: 1, status: "ready" as const },
+                  { name: "Kedarkantha Trek", state: "Uttarakhand", e: 2, r: 2, t: 1, status: "ready" as const },
+                  { name: "Har Ki Dun", state: "Uttarakhand", e: 2, r: 2, t: 2, status: "stretch" as const },
+                  { name: "Everest Base Camp", state: "Nepal", e: 4, r: 3, t: 2, status: "future" as const },
+                ].map((item) => {
+                  const cfg = {
+                    ready:   { bg: "rgba(16,185,129,0.06)",  border: "rgba(16,185,129,0.15)",  dot: "#34d399", label: "Ready",   labelBg: "rgba(16,185,129,0.12)",  labelColor: "#34d399" },
+                    stretch: { bg: "rgba(245,158,11,0.06)",  border: "rgba(245,158,11,0.15)",  dot: "#fbbf24", label: "Stretch", labelBg: "rgba(245,158,11,0.12)",  labelColor: "#fbbf24" },
+                    future:  { bg: "rgba(167,139,250,0.05)", border: "rgba(167,139,250,0.13)", dot: "#a78bfa", label: "Future",  labelBg: "rgba(167,139,250,0.12)", labelColor: "#a78bfa" },
+                  }[item.status];
+
+                  return (
+                    <div
+                      key={item.name}
+                      className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl border"
+                      style={{ background: cfg.bg, borderColor: cfg.border }}
+                    >
+                      {/* Status dot */}
+                      <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: cfg.dot }} />
+
+                      {/* Name + location */}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white font-semibold text-[11px] leading-none truncate">{item.name}</p>
+                        <p className="text-white/30 text-[9px] mt-0.5">{item.state}</p>
+                      </div>
+
+                      {/* ERT scores */}
+                      <div className="flex items-center gap-1 text-[9px] font-bold shrink-0">
                         <span style={{ color: "#ff5100" }}>E{item.e}</span>
                         <span className="text-white/15">·</span>
                         <span style={{ color: "#f59e0b" }}>R{item.r}</span>
                         <span className="text-white/15">·</span>
                         <span style={{ color: "#a78bfa" }}>T{item.t}</span>
                       </div>
+
+                      {/* Status pill */}
                       <span
-                        className="text-[9px] font-semibold px-2 py-0.5 rounded-full"
-                        style={{
-                          background: item.match ? "rgba(16,185,129,0.15)" : "rgba(245,158,11,0.15)",
-                          color: item.match ? "#34d399" : "#fbbf24",
-                        }}
+                        className="text-[9px] font-semibold px-2 py-0.5 rounded-full shrink-0"
+                        style={{ background: cfg.labelBg, color: cfg.labelColor }}
                       >
-                        {item.label}
+                        {cfg.label}
                       </span>
                     </div>
-                  </div>
-                ))}
-                <p className="text-white/20 text-[9px] text-center pt-1">Based on your personal ERT profile</p>
+                  );
+                })}
+
+                <p className="text-white/18 text-[9px] text-center pt-0.5">Personalised once you complete the assessment</p>
               </div>
 
             </div>
