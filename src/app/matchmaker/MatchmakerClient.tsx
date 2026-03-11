@@ -111,9 +111,9 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
   return (
     <div className="max-w-xl mx-auto px-6 py-24">
       {/* Header */}
-      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Mountain Capability Assessment</p>
+      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Find Your Mountain</p>
       <h1 className="text-white text-4xl font-bold tracking-tight leading-tight mb-3">
-        Adventures built,<br />for your body
+        Adventures built, for your body
       </h1>
       <p className="text-white/50 text-base leading-relaxed mb-8">
         Answer a few questions and discover the toughest adventure you&apos;re ready for.
