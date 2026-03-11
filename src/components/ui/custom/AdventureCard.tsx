@@ -21,21 +21,21 @@ function formatSeasonShort(bestMonths: Month[]): string {
 
 export default function AdventureCard({ adventure, size = "default" }: AdventureCardProps) {
   const isLarge = size === "large";
-  const now = new Date();
-  const currentMonth = MONTHS[now.getMonth()];
-  const nextMonth = MONTHS[(now.getMonth() + 1) % 12];
+  const monthIndex = new Date().getMonth();
+  const currentMonth = MONTHS[monthIndex];
+  const nextMonth = MONTHS[(monthIndex + 1) % 12];
   const isSeasonActive = adventure.bestMonths.includes(currentMonth);
   const isSeasonUpcoming = !isSeasonActive && adventure.bestMonths.includes(nextMonth);
   const seasonLabel = formatSeasonShort(adventure.bestMonths);
   const operatorCount = adventure.operators?.length ?? 0;
 
-  const verifiedOps = adventure.operators?.filter(o => o.verified) ?? [];
+  const verifiedCount = adventure.operators?.filter(o => o.verified).length ?? 0;
   const lowestPrice = adventure.operators?.reduce<number | null>((min, o) => {
     const p = parseInt(o.priceFrom.replace(/[^\d]/g, ""), 10);
     if (isNaN(p)) return min;
     return min === null ? p : Math.min(min, p);
   }, null) ?? null;
-  const displayCount = verifiedOps.length > 0 ? verifiedOps.length : operatorCount;
+  const displayCount = verifiedCount > 0 ? verifiedCount : operatorCount;
 
   return (
     <div

@@ -31,13 +31,13 @@ import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import ReviewSection from "@/components/ui/custom/ReviewSection";
 import { createClient } from "@/lib/supabase/server";
 import { getERT, ertSummary, parseAltitudeM } from "@/lib/ert";
+import type { Adventure } from "@/lib/data";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-type Operator = NonNullable<import("@/lib/data").Adventure["operators"]>[number];
-type AdventureItem = import("@/lib/data").Adventure;
+type Operator = NonNullable<Adventure["operators"]>[number];
 
 function OperatorCard({ op, verified }: { op: Operator; verified: boolean }) {
   return (
@@ -72,12 +72,16 @@ function OperatorCard({ op, verified }: { op: Operator; verified: boolean }) {
           <div className="text-[#1a1f2e] font-bold text-base">{op.priceFrom}</div>
         </div>
       </div>
-      <OperatorButton website={op.website ?? ""} {...(!verified ? { label: "Visit Website", variant: "secondary" as const } : {})} />
+      <OperatorButton
+        website={op.website ?? ""}
+        label={verified ? "Get Details" : "Visit Website"}
+        variant={verified ? "primary" : "secondary"}
+      />
     </div>
   );
 }
 
-function RelatedSection({ title, items, exploreHref }: { title: string; items: AdventureItem[]; exploreHref: string }) {
+function RelatedSection({ title, items, exploreHref }: { title: string; items: Adventure[]; exploreHref: string }) {
   if (items.length === 0) return null;
   return (
     <div>
