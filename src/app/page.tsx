@@ -184,29 +184,32 @@ export default function HomePage() {
         </section>
   
         {/* ── ADVENTURE MATCHMAKER ─────────────────────────── */}
-        <section className="py-16 lg:py-28 px-5 lg:px-8 bg-[#0f1420] border-t border-white/5">
-          <div className="max-w-3xl mx-auto text-center">
-            <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
-            <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-5">
-              Adventures built, <span className="text-[#ff5100]">for your body</span>
-            </h2>
-            <p className="text-white/55 text-base lg:text-lg leading-relaxed mb-8">
-              5 quick questions. We calculate your personal{" "}
+        <section className="py-16 lg:py-32 px-5 lg:px-8 bg-[#0f1420] border-t border-white/5">
+          <div className="max-w-7xl mx-auto">
+            <div className="max-w-2xl">
+              <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
+              <h2 className="text-white text-3xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 lg:mb-5">
+                Adventures built,<br />
+                <span className="text-[#ff5100]">for your body</span>
+              </h2>
+              <p className="text-white/72 text-base md:text-xl leading-relaxed mb-7 lg:mb-9">
+                5 quick questions. We calculate your personal{" "}
+                <Link
+                  href="/ert"
+                  className="font-bold text-[#ff5100] underline decoration-[#ff5100]/30 underline-offset-2 hover:decoration-[#ff5100] transition-all"
+                >
+                  ERT
+                </Link>{" "}
+                profile and surface the exact adventures your body is ready for — and what it takes to go further.
+              </p>
               <Link
-                href="/ert"
-                className="font-bold text-[#ff5100] underline decoration-[#ff5100]/30 underline-offset-2 hover:decoration-[#ff5100] transition-all"
+                href="/matchmaker"
+                className="inline-flex items-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#e04800] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/20 group transition-all duration-200"
               >
-                ERT
-              </Link>{" "}
-              profile and surface the exact adventures your body is ready for — and what it takes to go further.
-            </p>
-            <Link
-              href="/matchmaker"
-              className="inline-flex items-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#e04800] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/20 group transition-all duration-200"
-            >
-              Take Assessment
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
+                Take Assessment
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
         </section>
 
