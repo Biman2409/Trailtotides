@@ -251,15 +251,6 @@ export default async function ExperiencePage({ params }: Props) {
                 </div>
               </div>
             </div>
-            {/* Guide link */}
-            <div className="flex items-center md:ml-auto md:pl-6 group relative">
-              <a href="/difficulty-guide" className="flex items-center gap-0 overflow-hidden">
-                <span className="w-5 h-5 rounded-full border border-[#1a1f2e]/20 flex items-center justify-center text-[10px] font-bold text-[#1a1f2e]/40 group-hover:border-[#ff5100] group-hover:text-[#ff5100] transition-all duration-200 shrink-0">?</span>
-                <span className="max-w-0 group-hover:max-w-[200px] overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out text-[11px] text-[#ff5100] font-medium pl-0 group-hover:pl-2">
-                  How we grade difficulty
-                </span>
-              </a>
-            </div>
           </div>
         </div>
       </section>
