@@ -14,19 +14,27 @@ import {
 interface Props {
   ert: ERT;
   size?: "sm" | "md";
+  dark?: boolean;
 }
 
-const segmentColor = (val: number) => {
-  if (val <= 1) return { bg: "rgba(34,197,94,0.15)", border: "rgba(34,197,94,0.4)", text: "#86efac" };
-  if (val === 2) return { bg: "rgba(132,204,22,0.15)", border: "rgba(132,204,22,0.4)", text: "#bef264" };
-  if (val === 3) return { bg: "rgba(234,179,8,0.15)", border: "rgba(234,179,8,0.4)", text: "#fde047" };
-  if (val === 4) return { bg: "rgba(249,115,22,0.15)", border: "rgba(249,115,22,0.4)", text: "#fdba74" };
-  return { bg: "rgba(239,68,68,0.15)", border: "rgba(239,68,68,0.4)", text: "#fca5a5" };
+const segmentColor = (val: number, dark: boolean) => {
+  if (dark) {
+    if (val <= 1) return { bg: "rgba(34,197,94,0.15)",  border: "rgba(34,197,94,0.4)",  text: "#86efac" };
+    if (val === 2) return { bg: "rgba(132,204,22,0.15)", border: "rgba(132,204,22,0.4)", text: "#bef264" };
+    if (val === 3) return { bg: "rgba(234,179,8,0.15)",  border: "rgba(234,179,8,0.4)",  text: "#fde047" };
+    if (val === 4) return { bg: "rgba(249,115,22,0.15)", border: "rgba(249,115,22,0.4)", text: "#fdba74" };
+    return          { bg: "rgba(239,68,68,0.15)",  border: "rgba(239,68,68,0.4)",  text: "#fca5a5" };
+  }
+  if (val <= 1) return { bg: "rgba(34,197,94,0.12)",  border: "rgba(34,197,94,0.35)",  text: "#16a34a" };
+  if (val === 2) return { bg: "rgba(101,163,13,0.12)", border: "rgba(101,163,13,0.35)", text: "#65a30d" };
+  if (val === 3) return { bg: "rgba(202,138,4,0.12)",  border: "rgba(202,138,4,0.35)",  text: "#b45309" };
+  if (val === 4) return { bg: "rgba(234,88,12,0.12)",  border: "rgba(234,88,12,0.35)",  text: "#c2410c" };
+  return          { bg: "rgba(220,38,38,0.12)",  border: "rgba(220,38,38,0.35)",  text: "#b91c1c" };
 };
 
 type TooltipKey = "e" | "r" | "t" | null;
 
-export default function ERTBadge({ ert, size = "md" }: Props) {
+export default function ERTBadge({ ert, size = "md", dark = false }: Props) {
   const [tooltip, setTooltip] = useState<TooltipKey>(null);
 
   const isSmall = size === "sm";
@@ -60,7 +68,7 @@ export default function ERTBadge({ ert, size = "md" }: Props) {
   return (
     <div className="relative inline-flex items-center gap-0.5">
       {segments.map((seg, i) => {
-        const col = segmentColor(seg.val);
+        const col = segmentColor(seg.val, dark);
         const isActive = tooltip === seg.key;
         return (
           <div key={seg.key} className="relative">
