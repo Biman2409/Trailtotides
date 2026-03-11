@@ -66,37 +66,20 @@ function OptionBtn({
   );
 }
 
-// ─── Phase progress bar ───────────────────────────────────────────────────────
+// ─── Step progress tabs ───────────────────────────────────────────────────────
 
-function PhaseProgress({ stepIndex }: { stepIndex: number }) {
-  const phases = [
-    { label: "Engine Check",         steps: [0, 1] },
-    { label: "Resilience Check",     steps: [2] },
-    { label: "Technical Experience", steps: [3, 4] },
-  ];
-
+function StepProgress({ stepIndex }: { stepIndex: number }) {
   return (
-    <div className="flex items-center gap-0 mb-10">
-      {phases.map((phase, pi) => {
-        const done = phase.steps.every(s => s < stepIndex);
-        const active = phase.steps.includes(stepIndex);
-        return (
-          <div key={pi} className="flex-1 flex flex-col items-center gap-1.5">
-            <div
-              className="w-full h-1 rounded-full transition-all duration-300"
-              style={{
-                background: done ? "#ff5100" : active ? "rgba(255,81,0,0.5)" : "rgba(255,255,255,0.08)",
-              }}
-            />
-            <span
-              className="text-[9px] uppercase tracking-widest font-semibold transition-colors duration-200"
-              style={{ color: done || active ? "#ff5100" : "rgba(255,255,255,0.2)" }}
-            >
-              {phase.label}
-            </span>
-          </div>
-        );
-      })}
+    <div className="flex items-center gap-2 mb-10">
+      {STEPS.map((_, i) => (
+        <div
+          key={i}
+          className="h-1 flex-1 rounded-full transition-all duration-300"
+          style={{
+            background: i <= stepIndex ? "#ff5100" : "rgba(255,255,255,0.1)",
+          }}
+        />
+      ))}
     </div>
   );
 }
@@ -233,7 +216,7 @@ export default function MatchmakerClient() {
         <p className="text-white/35 text-sm mt-1">{phase.title}</p>
       </div>
 
-      <PhaseProgress stepIndex={stepIndex} />
+      <StepProgress stepIndex={stepIndex} />
 
       {/* Step content */}
       <div className="space-y-3">
