@@ -343,7 +343,7 @@ export default async function ExperiencePage({ params }: Props) {
                 <Link
                   href="/difficulty-guide"
                   title="How we grade difficulty"
-                  className="flex items-center justify-center w-5 h-5 rounded-full border border-[#1a1f2e]/20 text-[10px] font-bold text-[#1a1f2e]/35 hover:border-[#ff5100] hover:text-[#ff5100] transition-colors duration-150"
+                  className="flex items-center justify-center w-5 h-5 rounded-full border border-[#ff5100] text-[10px] font-bold text-[#ff5100] hover:bg-[#ff5100] hover:text-white transition-colors duration-150"
                 >
                   ?
                 </Link>
