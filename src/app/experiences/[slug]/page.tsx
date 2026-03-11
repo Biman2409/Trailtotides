@@ -214,8 +214,8 @@ export default async function ExperiencePage({ params }: Props) {
           <div className="flex flex-wrap md:flex-nowrap items-center gap-6 md:gap-0 md:divide-x divide-white/10">
             {/* Label */}
             <div className="flex items-center gap-2 pr-6">
-              <span className="text-[10px] uppercase tracking-widest text-white/40 font-medium">ERT</span>
-              <a href="/difficulty-guide" title="How we rate difficulty" className="flex items-center justify-center w-4 h-4 rounded-full border border-white/20 text-[9px] font-bold text-white/35 hover:border-[#ff5100] hover:text-[#ff5100] transition-colors duration-150">?</a>
+              <span className="text-[10px] uppercase tracking-widest text-[#ff5100] font-medium">ERT</span>
+              <a href="/difficulty-guide" title="How we rate difficulty" className="flex items-center justify-center w-4 h-4 rounded-full border border-[#ff5100] text-[9px] font-bold text-[#ff5100] hover:bg-[#ff5100] hover:text-white transition-colors duration-150">?</a>
             </div>
             {/* E */}
             <div className="flex items-center gap-3 px-6">
