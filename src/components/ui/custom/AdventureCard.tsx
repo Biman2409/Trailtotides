@@ -52,9 +52,12 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           fill
           quality={100}
           className="object-cover transition-transform duration-700 group-hover:scale-105"
-          style={{ filter: "brightness(1.05) contrast(1.1) saturate(1.1)" }}
+          style={{ filter: "brightness(1.05) contrast(1.18) saturate(1.35)" }}
           sizes={isLarge ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
         />
+
+        {/* Cinematic colour-grade overlay — unifies tone across all images */}
+        <div className="absolute inset-0 z-10 pointer-events-none" style={{ background: "linear-gradient(160deg, rgba(30,60,110,0.10) 0%, rgba(10,30,60,0.06) 50%, rgba(80,30,10,0.08) 100%)", mixBlendMode: "multiply" }} />
 
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
