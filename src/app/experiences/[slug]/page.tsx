@@ -71,6 +71,7 @@ export default async function ExperiencePage({ params }: Props) {
   const adventureIndex = adventures.findIndex((a) => a.slug === slug);
   const explorePage = adventureIndex >= 0 ? Math.ceil((adventureIndex + 1) / PAGE_SIZE) : 1;
 
+  const showERT = ["Trekking", "Mountaineering", "Biking"].includes(adventure.type);
   const ert = getERT(adventure);
   const altM = adventure.altitude ? parseFloat(adventure.altitude.replace(/,/g, "").replace(/[^0-9.]/g, "")) : 0;
   const showAltitudeWarning = altM >= 4200;
@@ -208,7 +209,7 @@ export default async function ExperiencePage({ params }: Props) {
       </section>
 
       {/* ── ERT STRIP ─────────────────────────────────────── */}
-      <section className="bg-[#1a1f2e] py-5 border-b border-white/5">
+      {showERT && <section className="bg-[#1a1f2e] py-5 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex flex-wrap md:flex-nowrap items-center gap-6 md:gap-0 md:divide-x divide-white/10">
             {/* Label */}
@@ -254,7 +255,7 @@ export default async function ExperiencePage({ params }: Props) {
             </div>
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* ── MAIN CONTENT ─────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
@@ -334,7 +335,7 @@ export default async function ExperiencePage({ params }: Props) {
             </section>
 
             {/* ── ERT Difficulty Breakdown ─────────────────── */}
-            <section>
+            {showERT && <section>
               <div className="flex items-center justify-between mb-6">
                 <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">
                   Difficulty Breakdown
@@ -428,7 +429,7 @@ export default async function ExperiencePage({ params }: Props) {
                   </div>
                 )}
               </div>
-            </section>
+            </section>}
 
               {/* Operators Section */}
               <section>
