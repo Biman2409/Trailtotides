@@ -529,8 +529,8 @@ export const adventures: Adventure[] = [
   bestMonths: ["Mar", "Apr", "May", "Oct", "Nov", "Dec"],
   groupSize: "Large group (6+)",
   baseCamp: "Manebhanjan",
-  heroImage: "https://images.unsplash.com/photo-1583318432730-a19c89692612?w=1200&q=70",
-  galleryImages: [],
+  heroImage: "/sandakphu.jpeg",
+  galleryImages: ["/sandakphu.jpeg"],
   lat: 27.1069,
   lng: 88.0142,
   description:
