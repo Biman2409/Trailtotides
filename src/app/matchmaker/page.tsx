@@ -4,8 +4,8 @@ import Footer from "@/components/layout/Footer";
 import MatchmakerClient from "./MatchmakerClient";
 
 export const metadata: Metadata = {
-  title: "Adventure Matchmaker — Trail to Tides",
-  description: "Answer 5 quick questions and discover adventures perfectly matched to your fitness and experience level.",
+  title: "Find Your Mountain — Trail to Tides",
+  description: "A mountain capability assessment. Answer a few questions and discover the toughest adventure you're genuinely ready for.",
 };
 
 export default function MatchmakerPage() {
