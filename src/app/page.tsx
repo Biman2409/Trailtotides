@@ -198,22 +198,6 @@ export default function HomePage() {
                 <p className="text-white/55 text-base lg:text-lg leading-relaxed mb-8">
                   Answer 5 quick questions about your fitness, altitude experience, and terrain comfort. We'll calculate your personal ERT profile and match you to adventures you can actually complete — safely.
                 </p>
-                <div className="flex flex-wrap gap-3 mb-8">
-                  {[
-                    { label: "Cardio", sub: "Your endurance" },
-                    { label: "Load", sub: "Pack experience" },
-                    { label: "Altitude", sub: "Highest sleep" },
-                    { label: "Terrain", sub: "Technical comfort" },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-xl border border-white/8" style={{ background: "rgba(255,255,255,0.03)" }}>
-                      <span className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{i + 1}</span>
-                      <div>
-                        <p className="text-white text-xs font-semibold leading-none">{item.label}</p>
-                        <p className="text-white/35 text-[10px] mt-0.5">{item.sub}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
                 <Link
                   href="/matchmaker"
                   className="inline-flex items-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#e04800] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/20 group transition-all duration-200"
