@@ -147,64 +147,64 @@ export default async function ExperiencePage({ params }: Props) {
       </section>
 
       {/* ── STATS STRIP ──────────────────────────────────── */}
-      <section className="bg-[#1a1f2e] py-6 border-b border-white/5">
+      <section className="bg-[#1a1f2e] py-4 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-wrap md:flex-nowrap items-center w-full divide-y md:divide-y-0 md:divide-x divide-white/10">
-            <div className="flex items-center gap-3 px-6 py-2 first:pl-0 w-1/2 md:w-auto md:flex-1">
-              <Clock className="w-5 h-5 text-[#ff5100] shrink-0" />
-              <div>
-                <div className="text-white/40 text-[10px] uppercase tracking-widest">Duration</div>
-                <div className="text-white font-semibold text-base">{adventure.durationRange ?? adventure.durationDays}</div>
+          <div className="flex items-center overflow-x-auto no-scrollbar divide-x divide-white/10 min-w-0">
+            <div className="flex items-center gap-2 px-5 first:pl-0 shrink-0">
+              <Clock className="w-4 h-4 text-[#ff5100] shrink-0" />
+              <div className="min-w-0">
+                <div className="text-white/40 text-[9px] uppercase tracking-widest">Duration</div>
+                <div className="text-white font-semibold text-sm whitespace-nowrap">{adventure.durationRange ?? adventure.durationDays}</div>
               </div>
             </div>
             {adventure.distance && (
-              <div className="flex items-center gap-3 px-6 py-2 w-1/2 md:w-auto md:flex-1">
-                <Route className="w-5 h-5 text-emerald-400 shrink-0" />
-                <div>
-                  <div className="text-white/40 text-[10px] uppercase tracking-widest">Distance</div>
-                  <div className="text-white font-semibold text-base">{adventure.distanceRange ?? adventure.distance}</div>
+              <div className="flex items-center gap-2 px-5 shrink-0">
+                <Route className="w-4 h-4 text-emerald-400 shrink-0" />
+                <div className="min-w-0">
+                  <div className="text-white/40 text-[9px] uppercase tracking-widest">Distance</div>
+                  <div className="text-white font-semibold text-sm whitespace-nowrap">{adventure.distanceRange ?? adventure.distance}</div>
                 </div>
               </div>
             )}
             {(adventure.altitude || adventure.depth) && (
-              <div className="flex items-center gap-3 px-6 py-2 w-1/2 md:w-auto md:flex-1">
-                <TrendingUp className="w-5 h-5 text-[#5ba3c9] shrink-0" />
-                <div>
-                  <div className="text-white/40 text-[10px] uppercase tracking-widest">
+              <div className="flex items-center gap-2 px-5 shrink-0">
+                <TrendingUp className="w-4 h-4 text-[#5ba3c9] shrink-0" />
+                <div className="min-w-0">
+                  <div className="text-white/40 text-[9px] uppercase tracking-widest">
                     {adventure.type === "Diving" ? "Max Depth" : "Max Altitude"}
                   </div>
-                  <div className="text-white font-semibold text-base">
+                  <div className="text-white font-semibold text-sm whitespace-nowrap">
                     {adventure.depth ?? adventure.altitude}
                   </div>
                 </div>
               </div>
             )}
-            <div className="flex items-center gap-3 px-6 py-2 w-1/2 md:w-auto md:flex-1">
-              <Sun className="w-5 h-5 text-amber-400 shrink-0" />
-              <div>
-                <div className="text-white/40 text-[10px] uppercase tracking-widest">Best Season</div>
-                <div className="text-white font-semibold text-base">{adventure.bestSeason}</div>
+            <div className="flex items-center gap-2 px-5 shrink-0">
+              <Sun className="w-4 h-4 text-amber-400 shrink-0" />
+              <div className="min-w-0">
+                <div className="text-white/40 text-[9px] uppercase tracking-widest">Best Season</div>
+                <div className="text-white font-semibold text-sm whitespace-nowrap">{adventure.bestSeason}</div>
               </div>
             </div>
-              {(adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp && (
-                <div className="flex items-center gap-3 px-6 py-2 w-1/2 md:w-auto md:flex-1">
-                  <Flag className="w-5 h-5 text-violet-400 shrink-0" />
-                  <div>
-                    <div className="text-white/40 text-[10px] uppercase tracking-widest">Base Camp</div>
-                    <div className="text-white font-semibold text-base">{adventure.baseCamp}</div>
-                  </div>
+            {(adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp && (
+              <div className="flex items-center gap-2 px-5 shrink-0">
+                <Flag className="w-4 h-4 text-violet-400 shrink-0" />
+                <div className="min-w-0">
+                  <div className="text-white/40 text-[9px] uppercase tracking-widest">Base Camp</div>
+                  <div className="text-white font-semibold text-sm whitespace-nowrap">{adventure.baseCamp}</div>
                 </div>
-              )}
-              {adventure.type === "Biking" && adventure.startingPoint && (
-                <div className="flex items-center gap-3 px-6 py-2 w-1/2 md:w-auto md:flex-1">
-                  <Navigation className="w-5 h-5 text-emerald-400 shrink-0" />
-                  <div>
-                    <div className="text-white/40 text-[10px] uppercase tracking-widest">Starting Point</div>
-                    <div className="text-white font-semibold text-base">{adventure.startingPoint}</div>
-                  </div>
+              </div>
+            )}
+            {adventure.type === "Biking" && adventure.startingPoint && (
+              <div className="flex items-center gap-2 px-5 shrink-0">
+                <Navigation className="w-4 h-4 text-emerald-400 shrink-0" />
+                <div className="min-w-0">
+                  <div className="text-white/40 text-[9px] uppercase tracking-widest">Starting Point</div>
+                  <div className="text-white font-semibold text-sm whitespace-nowrap">{adventure.startingPoint}</div>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
