@@ -21,7 +21,9 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
   const isLarge = size === "large";
   const months: Month[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const currentMonth = months[new Date().getMonth()];
+  const nextMonth = months[(new Date().getMonth() + 1) % 12];
   const isSeasonActive = adventure.bestMonths.includes(currentMonth);
+  const isSeasonUpcoming = !isSeasonActive && adventure.bestMonths.includes(nextMonth);
   const seasonLabel = formatSeasonShort(adventure.bestMonths);
   const operatorCount = adventure.operators?.length ?? 0;
 
@@ -68,6 +70,11 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
             <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
               Season Active
+            </span>
+          ) : isSeasonUpcoming ? (
+            <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight flex items-center gap-1" style={{ background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
+              Season Soon
             </span>
           ) : seasonLabel ? (
             <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.85)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }}>
