@@ -665,7 +665,7 @@ export default function ExploreClient() {
                         <div className="col-span-2 lg:col-span-3">
                           <div className="flex items-center justify-between mb-3">
                             <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40">ERT Difficulty</h3>
-                            <a href="/difficulty-guide" target="_blank" className="text-[10px] text-white/25 hover:text-[#ff5100] transition-colors">What is ERT?</a>
+                            <a href="/ert" target="_blank" className="text-[10px] text-white/25 hover:text-[#ff5100] transition-colors">What is ERT?</a>
                           </div>
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             {([

@@ -22,7 +22,7 @@ export default function GradingPill() {
         style={{ maxWidth: expanded ? "190px" : "0px", paddingLeft: expanded ? "10px" : "0" }}
       >
         <Link
-          href="/difficulty-guide"
+          href="/ert"
           className="whitespace-nowrap font-semibold text-[#ff5100] leading-none hover:underline"
           style={{ fontSize: "10px" }}
         >
