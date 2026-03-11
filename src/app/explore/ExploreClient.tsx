@@ -47,7 +47,10 @@ export default function ExploreClient() {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
   const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(() => {
+    const p = parseInt(searchParams.get("page") ?? "1", 10);
+    return isNaN(p) || p < 1 ? 1 : p;
+  });
   const PAGE_SIZE = 12;
 
   // AI chat state

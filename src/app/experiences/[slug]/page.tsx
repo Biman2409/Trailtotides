@@ -65,6 +65,10 @@ export default async function ExperiencePage({ params }: Props) {
   const adventure = adventures.find((a) => a.slug === slug);
   if (!adventure) notFound();
 
+  const PAGE_SIZE = 12;
+  const adventureIndex = adventures.findIndex((a) => a.slug === slug);
+  const explorePage = adventureIndex >= 0 ? Math.ceil((adventureIndex + 1) / PAGE_SIZE) : 1;
+
 
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -102,7 +106,7 @@ export default async function ExperiencePage({ params }: Props) {
 
         {/* Back button */}
         <Link
-          href="/explore"
+          href={`/explore?page=${explorePage}`}
           className="absolute top-24 left-6 lg:left-8 flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm font-medium bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full"
         >
           <ChevronLeft className="w-4 h-4" />
