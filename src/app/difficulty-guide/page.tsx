@@ -7,7 +7,7 @@ import { getERT } from "@/lib/ert";
 import ERTBadge from "@/components/ui/custom/ERTBadge";
 
 export const metadata = {
-  title: "How Trail Difficulty Works — Trail to Tides",
+  title: "TrailtoTides Grading System — Trail to Tides",
   description:
     "TrailtoTides grades every adventure on three independent dimensions — Exertion, Risk, and Technicality — so you know exactly what you're getting into.",
 };
@@ -128,12 +128,12 @@ export default function DifficultyGuidePage() {
           backgroundSize: "60px 60px"
         }} />
         <div className="max-w-5xl mx-auto relative">
-          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-5">
-            TrailtoTides Grading System
-          </p>
-          <h1 className="text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.05] mb-8 max-w-2xl">
-            Why one difficulty label is never enough
+          <h1 className="text-4xl lg:text-6xl font-black text-white tracking-tight leading-[1.05] mb-5 uppercase">
+            TrailtoTides<br />Grading System
           </h1>
+          <p className="text-[#ff5100] text-sm font-semibold tracking-[0.15em] uppercase mb-6">
+            Why one difficulty label is never enough
+          </p>
           <p className="text-white/55 text-lg leading-relaxed max-w-2xl mb-4">
             "Moderate" on one website means something completely different on another. A short route at 5,000m in a storm is more dangerous than a long route at 2,000m in perfect weather. A physically demanding trek can require zero technical skill.
           </p>

@@ -197,7 +197,7 @@ export default function HomePage() {
                 <p className="text-white/55 text-base lg:text-lg leading-relaxed mb-8">
                   5 quick questions. We calculate your personal{" "}
                   <Link
-                    href="/ert"
+                    href="/difficulty-guide"
                     className="font-bold text-[#ff5100] underline decoration-[#ff5100]/30 underline-offset-2 hover:decoration-[#ff5100] transition-all"
                   >
                     ERT
