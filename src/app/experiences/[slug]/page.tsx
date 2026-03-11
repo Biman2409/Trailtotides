@@ -25,6 +25,7 @@ import Footer from "@/components/layout/Footer";
 import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
 import ERTBadge from "@/components/ui/custom/ERTBadge";
+import GradingPill from "@/components/ui/custom/GradingPill";
 import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import ReviewSection from "@/components/ui/custom/ReviewSection";
@@ -340,15 +341,7 @@ export default async function ExperiencePage({ params }: Props) {
                 <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">
                   Difficulty Breakdown
                 </p>
-                <Link
-                  href="/difficulty-guide"
-                  className="group flex items-center gap-0 border border-[#ff5100] rounded-full overflow-hidden transition-all duration-300 hover:pr-3"
-                >
-                  <span className="flex items-center justify-center w-5 h-5 shrink-0 text-[10px] font-bold text-[#ff5100] group-hover:text-[#ff5100]">?</span>
-                  <span className="max-w-0 group-hover:max-w-[160px] overflow-hidden whitespace-nowrap transition-all duration-300 text-[10px] font-semibold text-[#ff5100] leading-none">
-                    How do we grade difficulty
-                  </span>
-                </Link>
+                <GradingPill />
               </div>
 
               {/* Tier + ERT badge */}
