@@ -312,12 +312,6 @@ export default async function ExperiencePage({ params }: Props) {
                     <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-2">ERT Score</p>
                     <ERTBadge ert={ert} size="md" />
                   </div>
-                  {adventure.altitude && (
-                    <div>
-                      <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-1.5">Max Altitude</p>
-                      <p className="text-[#1a1f2e] font-bold text-base">{adventure.altitude}</p>
-                    </div>
-                  )}
                 </div>
 
                 {/* ERT dimension bars */}
