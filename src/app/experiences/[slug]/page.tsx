@@ -247,7 +247,7 @@ export default async function ExperiencePage({ params }: Props) {
                 <div className="text-[10px] uppercase tracking-widest text-white/40 mb-1">Technicality</div>
                 <div className="flex items-center gap-1.5">
                   {[1,2,3,4,5].map(n => (
-                    <div key={n} className={`w-6 h-2 rounded-sm ${n <= ert.t ? '[background:#a78bfa]' : 'bg-white/10'}`} />
+                    <div key={n} className="w-6 h-2 rounded-sm" style={{ background: n <= ert.t ? '#a78bfa' : 'rgba(255,255,255,0.1)' }} />
                   ))}
                   <span className="text-xs font-bold text-white ml-1">{ert.t}/5</span>
                 </div>
