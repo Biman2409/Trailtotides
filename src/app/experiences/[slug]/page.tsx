@@ -24,10 +24,12 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
+import ERTBadge from "@/components/ui/custom/ERTBadge";
 import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import ReviewSection from "@/components/ui/custom/ReviewSection";
 import { createClient } from "@/lib/supabase/server";
+import { getERT, ertSummary } from "@/lib/ert";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -68,6 +70,12 @@ export default async function ExperiencePage({ params }: Props) {
   const PAGE_SIZE = 12;
   const adventureIndex = adventures.findIndex((a) => a.slug === slug);
   const explorePage = adventureIndex >= 0 ? Math.ceil((adventureIndex + 1) / PAGE_SIZE) : 1;
+
+  const ert = getERT(adventure);
+  const altM = adventure.altitude ? parseFloat(adventure.altitude.replace(/,/g, "").replace(/[^0-9.]/g, "")) : 0;
+  const showAltitudeWarning = altM >= 4200;
+  const showIsolationWarning = ert.r >= 5;
+  const showTechnicalWarning = ert.t >= 5;
 
 
     const supabase = await createClient();
@@ -273,6 +281,108 @@ export default async function ExperiencePage({ params }: Props) {
               <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 flex gap-4">
                 <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                 <p className="text-[#6b5a20] text-sm leading-relaxed">{adventure.safetyNotes}</p>
+              </div>
+            </section>
+
+            {/* ── ERT Difficulty Breakdown ─────────────────── */}
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">
+                  Difficulty Breakdown
+                </p>
+                <Link
+                  href="/difficulty-guide"
+                  className="text-[10px] text-[#ff5100]/70 hover:text-[#ff5100] transition-colors font-medium tracking-wide"
+                >
+                  How we grade difficulty →
+                </Link>
+              </div>
+
+              {/* Tier + ERT badge */}
+              <div
+                className="rounded-2xl p-6 mb-4"
+                style={{ background: "rgba(15,20,30,0.04)", border: "1px solid rgba(0,0,0,0.07)" }}
+              >
+                <div className="flex flex-wrap items-start gap-6">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-1.5">Difficulty Tier</p>
+                    <Pill type="difficulty" value={adventure.difficulty} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-2">ERT Score</p>
+                    <ERTBadge ert={ert} size="md" />
+                  </div>
+                  {adventure.altitude && (
+                    <div>
+                      <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-1.5">Max Altitude</p>
+                      <p className="text-[#1a1f2e] font-bold text-base">{adventure.altitude}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* ERT dimension bars */}
+                <div className="mt-5 grid grid-cols-3 gap-4">
+                  {([
+                    { key: "E", val: ert.e, label: "Exertion", color: "#f97316" },
+                    { key: "R", val: ert.r, label: "Risk", color: "#ef4444" },
+                    { key: "T", val: ert.t, label: "Technicality", color: "#8b5cf6" },
+                  ] as const).map(({ key, val, label, color }) => (
+                    <div key={key}>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[10px] font-semibold text-[#1a1f2e]/50 uppercase tracking-wide">{label}</span>
+                        <span className="text-[10px] font-bold" style={{ color }}>{key}{val}</span>
+                      </div>
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((n) => (
+                          <div
+                            key={n}
+                            className="h-1.5 flex-1 rounded-full"
+                            style={{
+                              background: n <= val ? color : "rgba(0,0,0,0.08)",
+                              opacity: n <= val ? (0.4 + n * 0.12) : 1,
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Summary text */}
+                <p className="mt-5 text-[#1a1f2e]/60 text-sm leading-relaxed">
+                  {ertSummary(ert, adventure.name)}
+                </p>
+              </div>
+
+              {/* Automatic safety warning banners */}
+              <div className="space-y-3">
+                {showAltitudeWarning && (
+                  <div className="flex gap-3 rounded-xl px-4 py-3" style={{ background: "rgba(234,179,8,0.1)", border: "1px solid rgba(234,179,8,0.3)" }}>
+                    <AlertTriangle className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs font-bold text-yellow-700">High Risk of Altitude Sickness</p>
+                      <p className="text-xs text-yellow-700/70 mt-0.5">Proper acclimatization is required. Ascend gradually — do not exceed 300–500m of altitude gain per day above 3,000m.</p>
+                    </div>
+                  </div>
+                )}
+                {showIsolationWarning && (
+                  <div className="flex gap-3 rounded-xl px-4 py-3" style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)" }}>
+                    <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs font-bold text-red-700">Remote Environment</p>
+                      <p className="text-xs text-red-700/70 mt-0.5">Rescue may be delayed depending on weather and terrain. Carry a satellite communicator and travel with a registered guide.</p>
+                    </div>
+                  </div>
+                )}
+                {showTechnicalWarning && (
+                  <div className="flex gap-3 rounded-xl px-4 py-3" style={{ background: "rgba(139,92,246,0.08)", border: "1px solid rgba(139,92,246,0.25)" }}>
+                    <AlertTriangle className="w-4 h-4 text-violet-500 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs font-bold text-violet-700">Mountaineering Route</p>
+                      <p className="text-xs text-violet-700/70 mt-0.5">Specialized equipment and training required — ice axe, crampons, and glacier travel experience are essential.</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </section>
 
