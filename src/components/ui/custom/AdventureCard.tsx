@@ -77,7 +77,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
           ) : isSeasonUpcoming ? (
             <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight flex items-center gap-1" style={{ background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
-              Season Soon
+              Upcoming
             </span>
           ) : seasonLabel ? (
             <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.85)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }}>
