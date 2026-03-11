@@ -571,8 +571,8 @@ export const adventures: Adventure[] = [
   bestMonths: ["Jul", "Aug"],
   groupSize: "Small group (2–6)",
   baseCamp: "Aru",
-  heroImage: "https://images.unsplash.com/photo-1622547748225-3fc4abd2cca0?w=1200&q=70",
-  galleryImages: [],
+  heroImage: "/tarsar-marsar.jpeg",
+  galleryImages: ["/tarsar-marsar.jpeg"],
   lat: 34.2500,
   lng: 75.3100,
   description:
