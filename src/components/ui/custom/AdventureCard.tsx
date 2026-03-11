@@ -4,9 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, BadgeCheck } from "lucide-react";
 import type { Adventure, Month } from "@/lib/data";
-import { getERT } from "@/lib/ert";
 import Pill from "./Pill";
-import ERTBadge from "./ERTBadge";
 
 interface AdventureCardProps {
   adventure: Adventure;
@@ -29,7 +27,6 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
   const seasonLabel = formatSeasonShort(adventure.bestMonths);
   const operatorCount = adventure.operators?.length ?? 0;
 
-  const ert = getERT(adventure);
   const verifiedOps = adventure.operators?.filter(o => o.verified) ?? [];
   const allPrices = adventure.operators
     ?.map(o => parseInt(o.priceFrom.replace(/[^\d]/g, "")))
@@ -109,18 +106,8 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
         </div>
       </div>
 
-        {/* Dashboard row 1 — ERT + altitude */}
-        <div className="px-3 pt-2.5 pb-1.5 flex items-center justify-between gap-2">
-          <ERTBadge ert={ert} size="sm" />
-          {adventure.altitude && (
-            <span className="text-white/35 text-[9px] font-medium tracking-wide leading-none">
-              ↑ {adventure.altitude}
-            </span>
-          )}
-        </div>
-
-        {/* Dashboard row 2 — duration left, operators right */}
-        <div className="px-3 pb-2.5 flex items-center justify-between gap-2">
+        {/* Dashboard — duration left, operators right */}
+        <div className="px-3 py-2.5 flex items-center justify-between gap-2">
           <span className="text-white/50 text-[10px] font-medium leading-none">{adventure.durationDays}</span>
 
           {operatorCount > 0 && (
