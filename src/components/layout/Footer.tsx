@@ -60,7 +60,7 @@ export default function Footer() {
                       { label: "Explore", href: "/explore" },
                       { label: "Map View", href: "/map" },
                       { label: "Stories", href: "/stories" },
-                      { label: "Plan Trip", href: "/plan" },
+                      { label: "Matchmaker", href: "/matchmaker" },
                     ].map((link) => (
                       <li key={link.label}>
                         <Link 
