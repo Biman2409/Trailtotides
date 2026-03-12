@@ -6,11 +6,101 @@ import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import Logo from "@/components/ui/custom/Logo";
 
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const PROJECT_REF = SUPABASE_URL.replace("https://", "").split(".")[0];
+const COOKIE_NAME = `sb-${PROJECT_REF}-auth-token`;
+
+function base64url(str: string): string {
+  // Simple UTF-8 → base64url encoding matching @supabase/ssr format
+  const bytes = new TextEncoder().encode(str);
+  let binary = "";
+  bytes.forEach((b) => (binary += String.fromCharCode(b)));
+  return "base64-" + btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function setSessionCookie(session: {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  expires_at?: number;
+  token_type: string;
+  user: object;
+}) {
+  const value = base64url(JSON.stringify(session));
+  const maxAge = 400 * 24 * 60 * 60; // 400 days
+  document.cookie = `${COOKIE_NAME}=${value}; path=/; max-age=${maxAge}; samesite=lax`;
+}
+
 function LoginForm() {
   const searchParams = useSearchParams();
   const message = searchParams.get("message");
   const errorParam = searchParams.get("error");
   const [showPassword, setShowPassword] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(errorParam);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setPending(true);
+    setError(null);
+
+    const fd = new FormData(e.currentTarget);
+    let identifier = (fd.get("identifier") as string).trim();
+    const password = fd.get("password") as string;
+
+    try {
+      // Resolve username → email if needed (our own API, no Set-Cookie issues)
+      let email = identifier;
+      if (!identifier.includes("@")) {
+        const res = await fetch("/api/auth/resolve-username", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: identifier }),
+        });
+        const data = await res.json();
+        if (!res.ok || data.error) {
+          setError(data.error || "No account found with that username.");
+          setPending(false);
+          return;
+        }
+        email = data.email;
+      }
+
+      // Call Supabase auth DIRECTLY from browser — bypasses proxy entirely
+      const tokenRes = await fetch(
+        `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", apikey: ANON_KEY },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+      const tokenData = await tokenRes.json();
+
+      if (!tokenRes.ok || tokenData.error) {
+        setError(tokenData.error_description || tokenData.error || "Invalid credentials");
+        setPending(false);
+        return;
+      }
+
+      // Write session cookie directly — same format @supabase/ssr uses
+      setSessionCookie({
+        access_token: tokenData.access_token,
+        refresh_token: tokenData.refresh_token,
+        expires_in: tokenData.expires_in,
+        expires_at: tokenData.expires_at,
+        token_type: tokenData.token_type,
+        user: tokenData.user,
+      });
+
+      // Hard reload to homepage — server and client will now see the cookie
+      window.location.replace("/");
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+      setPending(false);
+    }
+  }
 
   return (
     <div className="max-w-md w-full mx-auto">
@@ -33,21 +123,19 @@ function LoginForm() {
         </p>
       </div>
 
-      {message && !errorParam && (
+      {message && !error && (
         <div className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold bg-green-500/10 border border-green-500/20 text-green-400">
           {message}
         </div>
       )}
 
-      {errorParam && (
+      {error && (
         <div className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold bg-red-500/10 border border-red-500/20 text-red-400">
-          {errorParam}
+          {error}
         </div>
       )}
 
-      {/* Native form POST → server redirect with Set-Cookie (bypasses proxy fetch restrictions) */}
-      <form method="POST" action="/auth/login-action" className="space-y-4">
-        <input type="hidden" name="next" value="/" />
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">
             Username or Email
@@ -88,9 +176,10 @@ function LoginForm() {
 
         <button
           type="submit"
-          className="w-full bg-[#ff5100] hover:bg-[#ff7d47] text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 mt-2"
+          disabled={pending}
+          className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 mt-2"
         >
-          Sign In
+          {pending ? "Signing in…" : "Sign In"}
         </button>
       </form>
 
