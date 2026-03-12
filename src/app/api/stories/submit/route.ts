@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
       authorBio,
       dateOfAdventure,
       region,
-      tags,
       heroImageUrl,
     } = body;
 
@@ -54,7 +53,6 @@ export async function POST(req: NextRequest) {
       phone,
       date_of_adventure: dateOfAdventure,
       region,
-      tags: tags ? tags.split(",").map((t: string) => t.trim()).filter(Boolean) : [],
       hero_image_url: heroImageUrl || null,
       status: "pending",
     });

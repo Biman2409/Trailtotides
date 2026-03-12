@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   Mountain,
   Calendar,
-  Tag,
   User,
   FileText,
   Image as ImageIcon,
@@ -26,7 +25,6 @@ type FormData = {
   authorBio: string;
   dateOfAdventure: string;
   region: string;
-  tags: string;
   heroImageUrl: string;
 };
 
@@ -39,7 +37,6 @@ const INITIAL: FormData = {
   authorBio: "",
   dateOfAdventure: "",
   region: "",
-  tags: "",
   heroImageUrl: "",
 };
 
@@ -253,20 +250,6 @@ export default function SubmitStoryPage() {
                         className={`${inputClass} pl-10`}
                       />
                     </div>
-                  </div>
-                  <div className="sm:col-span-2">
-                    <FieldLabel>Tags</FieldLabel>
-                    <div className="relative">
-                      <Tag className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
-                      <input
-                        name="tags"
-                        value={form.tags}
-                        onChange={handleChange}
-                        placeholder="e.g. Trekking, High Altitude, Solo, Spiti Valley"
-                        className={`${inputClass} pl-10`}
-                      />
-                    </div>
-                    <p className="text-white/25 text-xs mt-1.5">Separate tags with commas.</p>
                   </div>
                   <div className="sm:col-span-2">
                     <FieldLabel>Hero Image URL</FieldLabel>
