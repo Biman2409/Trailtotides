@@ -295,7 +295,7 @@ export default function SignUpPage() {
               disabled={loading || usernameState !== "available" || !termsAccepted}
               className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 text-sm mt-2"
             >
-              {loading ? "Creating adventure..." : "Create Account"}
+              {loading ? "Creating account..." : "Create Account"}
             </button>
           </form>
 
