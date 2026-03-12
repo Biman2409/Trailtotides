@@ -44,21 +44,20 @@ export default function RealityCheck({ adventure }: Props) {
   }, []);
 
   if (!profile) {
-    // No profile yet — show a soft CTA to take the matchmaker
     return (
-      <div className="rounded-2xl border border-dashed border-[#1a1f2e]/15 p-5 flex items-center gap-4">
-        <div className="w-10 h-10 rounded-full bg-[#ff5100]/10 flex items-center justify-center shrink-0">
-          <span className="text-[#ff5100] text-lg font-bold">?</span>
-        </div>
-        <div className="flex-1 min-w-0">
+      <div className="rounded-2xl border border-dashed border-[#1a1f2e]/15 px-5 py-4">
+        <div className="flex items-center gap-2.5 mb-3">
+          <div className="w-7 h-7 rounded-full bg-[#ff5100]/10 flex items-center justify-center shrink-0">
+            <span className="text-[#ff5100] text-sm font-bold">?</span>
+          </div>
           <p className="text-[#1a1f2e] font-semibold text-sm">Is this adventure right for you?</p>
-          <p className="text-[#1a1f2e]/50 text-xs mt-0.5">Take the 2-minute matchmaker to find out.</p>
         </div>
+        <p className="text-[#1a1f2e]/50 text-xs leading-relaxed mb-4">Take the 2-minute matchmaker to find out.</p>
         <Link
           href="/matchmaker"
-          className="shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#ff5100] text-white text-xs font-semibold"
+          className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl bg-[#ff5100] text-white text-xs font-semibold"
         >
-          Match me
+          Take Assessment
           <ArrowRight className="w-3 h-3" />
         </Link>
       </div>
