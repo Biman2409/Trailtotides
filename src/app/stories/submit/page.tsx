@@ -304,7 +304,7 @@ export default function SubmitStoryPage() {
               </button>
 
               <p className="text-white/30 text-xs text-center">
-                By submitting, you confirm that this story is your own. We&apos;ll reach out via your account contact details if we&apos;d like to feature it.
+                Your story, your words. We&apos;ll reach out if it makes the cut.
               </p>
             </form>
           )}
