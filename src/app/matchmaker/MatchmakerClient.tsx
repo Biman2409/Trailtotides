@@ -116,21 +116,8 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
         Adventures built, for your body
       </h1>
       <p className="text-white/50 text-base leading-relaxed mb-8">
-        Answer a few questions and discover the toughest adventure you&apos;re ready for.
+        Not every trek is for everyone. Discover what your body is genuinely ready for — and what it takes to go further.
       </p>
-
-      {/* Why this exists */}
-      <div
-        className="rounded-2xl px-6 py-5 mb-8 border"
-        style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.08)" }}
-      >
-        <p className="text-white/60 text-sm leading-relaxed">
-          Not every trek is meant for everyone.<br />
-          Mountains demand different levels of endurance, resilience, and technical skill.
-          This assessment helps you discover the adventures your body and experience are genuinely ready for —
-          and shows you what it takes to go further.
-        </p>
-      </div>
 
       {/* ERT Pillars */}
       <p className="text-white/30 text-[10px] uppercase tracking-widest mb-4">How we assess you</p>
