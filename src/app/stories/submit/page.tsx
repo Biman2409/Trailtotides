@@ -169,12 +169,12 @@ export default function SubmitStoryPage() {
                     />
                   </div>
                   <div>
-                    <FieldLabel>How would you describe yourself?</FieldLabel>
+                    <FieldLabel>What kind of adventurer are you?</FieldLabel>
                     <input
                       name="authorRole"
                       value={form.authorRole}
                       onChange={handleChange}
-                      placeholder="e.g. Biker, Trekker, Diver…"
+                      placeholder="e.g. Solo biker, High-altitude trekker, Freediver…"
                       className={inputClass}
                     />
                   </div>
