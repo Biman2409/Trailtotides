@@ -662,9 +662,6 @@ function AdventureCategory({
         <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ borderTop: `1px solid ${accentColor}18` }}>
           {list.map(a => {
             const ert = getERT(a);
-            const topRating = a.operators.length > 0
-              ? Math.max(...a.operators.map(o => o.rating))
-              : null;
             return (
               <Link
                 key={a.slug}
@@ -684,16 +681,6 @@ function AdventureCategory({
                     style={{ filter: dimmed ? "saturate(0.75)" : undefined }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-                  {/* Rating badge — coloured to match tier */}
-                  {topRating && (
-                    <div
-                      className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full"
-                      style={{ background: `${accentColor}cc`, backdropFilter: "blur(4px)" }}
-                    >
-                      <span className="text-[10px]" style={{ color: "rgba(0,0,0,0.7)" }}>★</span>
-                      <span className="text-[10px] font-bold" style={{ color: "rgba(0,0,0,0.8)" }}>{topRating.toFixed(1)}</span>
-                    </div>
-                  )}
                   <div className="absolute bottom-3 left-3 right-3">
                     <div className="flex items-center gap-1 mb-1">
                       <MapPin className="w-3 h-3 shrink-0" style={{ color: accentColor }} />
