@@ -4,13 +4,12 @@ import { useState, Suspense } from "react";
 import { resolveEmail } from "@/app/auth/actions";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Mountain, ArrowLeft } from "lucide-react";
 import Logo from "@/components/ui/custom/Logo";
 
 function LoginForm() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const message = searchParams.get("message");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,12 +30,11 @@ function LoginForm() {
 
     const supabase = createClient();
     const { error: signInError } = await supabase.auth.signInWithPassword({ email: email!, password });
-    setLoading(false);
     if (signInError) {
+      setLoading(false);
       setError(signInError.message);
     } else {
-      router.push("/");
-      router.refresh();
+      window.location.href = "/";
     }
   }
 
