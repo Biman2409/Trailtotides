@@ -4,6 +4,7 @@ import { useState, useRef, useCallback } from "react";
 import { signUp } from "@/app/auth/actions";
 import Link from "next/link";
 import { Eye, EyeOff, Mountain, ArrowLeft, CheckCircle2, XCircle, Loader2, AtSign } from "lucide-react";
+import Logo from "@/components/ui/custom/Logo";
 import countries from "@/lib/countries.json";
 import TermsModal from "@/components/ui/custom/TermsModal";
 
@@ -62,12 +63,7 @@ export default function SignUpPage() {
       >
         <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/20 to-transparent" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-          <Link href="/" className="flex items-center gap-3 text-white font-bold text-xl tracking-tight hover:scale-[1.02] transition-transform origin-left group">
-            <div className="w-10 h-10 bg-[#ff5100] rounded-xl flex items-center justify-center shadow-lg shadow-[#ff5100]/20 group-hover:bg-[#ff7d47] transition-colors">
-              <Mountain className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-[#ff5100] font-black tracking-[-0.06em] text-[1.4rem] uppercase leading-none">TRAIL TO TIDES</span>
-          </Link>
+          <Logo size="lg" />
           
                 <div className="max-w-md">
                   <h2 className="text-6xl font-black text-white leading-[1.1] mb-6 tracking-tight">
@@ -90,62 +86,57 @@ export default function SignUpPage() {
       </div>
 
         {/* Right panel — form */}
-        <div className="flex-1 flex flex-col justify-center px-6 py-8 lg:px-20 xl:px-32 bg-[#0a0a0a] relative overflow-y-auto lg:overflow-hidden">
+        <div className="flex-1 flex flex-col justify-center px-6 py-4 lg:px-16 xl:px-24 bg-[#0a0a0a] relative overflow-y-auto">
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
           
           <div className="max-w-md w-full mx-auto relative z-10">
             {/* Mobile logo */}
-            <Link href="/" className="flex items-center gap-2.5 mb-6 lg:hidden group">
-              <div className="w-8 h-8 bg-[#ff5100] rounded-lg flex items-center justify-center group-hover:bg-[#ff7d47] transition-colors">
-                <Mountain className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-[#ff5100] font-black tracking-[-0.06em] text-[1.1rem] uppercase leading-none">TRAIL TO TIDES</span>
-            </Link>
+            <div className="mb-4 lg:hidden">
+              <Logo size="sm" />
+            </div>
   
-            <Link href="/" className="hidden lg:inline-flex items-center gap-1 text-white/40 hover:text-white/80 text-sm mb-6 transition-colors group">
+            <Link href="/" className="hidden lg:inline-flex items-center gap-1 text-white/40 hover:text-white/80 text-sm mb-4 transition-colors group">
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               Back to home
             </Link>
-  
-                <div className="mb-6">
-                  <h1 className="text-4xl font-black text-white mb-2 tracking-tight leading-tight">
-                    Wild is calling,<br />
-                    <span className="text-[#ff5100]">answer it.</span>
-                  </h1>
-                  <p className="text-white/40 text-xs font-medium leading-relaxed">
-                    Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
-                  </p>
-                </div>
+
+            <div className="mb-4">
+              <h1 className="text-3xl font-black text-white mb-1 tracking-tight leading-tight">
+                Wild is calling,<br />
+                <span className="text-[#ff5100]">answer it.</span>
+              </h1>
+              <p className="text-white/40 text-xs font-medium">
+                Create your explorer account.
+              </p>
+            </div>
   
   
             {message && (
-                <div
-                  className={`mb-6 px-5 py-3 rounded-2xl text-sm font-semibold flex items-center gap-3 ${
-                    message.type === "error"
-                      ? "bg-red-500/10 border border-red-500/20 text-red-400"
-                      : "bg-green-500/10 border border-green-500/20 text-green-400"
-                  }`}
-                >
-                  {message.text}
-                </div>
+              <div className={`mb-3 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
+                message.type === "error"
+                  ? "bg-red-500/10 border border-red-500/20 text-red-400"
+                  : "bg-green-500/10 border border-green-500/20 text-green-400"
+              }`}>
+                {message.text}
+              </div>
             )}
-  
-              <form onSubmit={handleSubmit} className="space-y-3.5">
+
+            <form onSubmit={handleSubmit} className="space-y-2.5">
 
               <div>
-                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Full Name</label>
+                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Full Name</label>
                 <input
                   name="full_name"
                   type="text"
                   required
                   placeholder="Rahul Sharma"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-3.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Username</label>
+                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Username</label>
                 <div className="relative">
                   <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20">
                     <AtSign className="w-4 h-4" />
@@ -161,7 +152,7 @@ export default function SignUpPage() {
                       checkUsername(val);
                     }}
                     placeholder="rahul_explorer"
-                    className={`w-full bg-white/[0.03] border rounded-2xl pl-10 pr-10 py-3.5 text-white text-sm placeholder-white/20 focus:outline-none focus:bg-white/[0.06] transition-all ${
+                    className={`w-full bg-white/[0.03] border rounded-2xl pl-10 pr-10 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:bg-white/[0.06] transition-all ${
                       usernameState === "available" ? "border-emerald-500/50 focus:border-emerald-500" :
                       usernameState === "taken" || usernameState === "invalid" ? "border-red-500/40 focus:border-red-500/60" :
                       "border-white/10 focus:border-[#ff5100]/50"
@@ -189,25 +180,25 @@ export default function SignUpPage() {
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Email</label>
+                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Email</label>
                 <input
                   name="email"
                   type="email"
                   required
                   placeholder="rahul@email.com"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-3.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
 
 
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Phone Number</label>
+              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Phone Number</label>
               <div className="flex gap-2">
                 <div className="relative">
                   <select
                     name="country_code"
                     defaultValue="+91"
-                    className="h-full bg-white/[0.03] border border-white/10 rounded-2xl pl-5 pr-10 py-3.5 text-white text-sm focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all appearance-none cursor-pointer min-w-[100px]"
+                    className="h-full bg-white/[0.03] border border-white/10 rounded-2xl pl-5 pr-10 py-2.5 text-white text-sm focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all appearance-none cursor-pointer min-w-[100px]"
                   >
                     {[
                       ...countries.filter(c => c.code === "IN"),
@@ -229,13 +220,13 @@ export default function SignUpPage() {
                   type="tel"
                   required
                   placeholder="9876543210"
-                  className="flex-1 bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-3.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  className="flex-1 bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Password</label>
+              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Password</label>
               <div className="relative">
                 <input
                   name="password"
@@ -243,7 +234,7 @@ export default function SignUpPage() {
                   required
                   minLength={6}
                   placeholder="••••••••"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-3.5 pr-14 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 pr-14 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
                 <button
                   type="button"
@@ -255,7 +246,7 @@ export default function SignUpPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 py-2">
+            <div className="flex items-start gap-3 py-0.5">
               <div className="flex items-center h-5 mt-0.5 shrink-0">
                 <input
                   id="terms"
@@ -293,13 +284,13 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={loading || usernameState !== "available" || !termsAccepted}
-              className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 text-sm mt-2"
+              className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-3 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 text-sm mt-1"
             >
               {loading ? "Creating account..." : "Create Account"}
             </button>
           </form>
 
-          <p className="mt-8 text-center text-white/30 text-xs font-medium">
+          <p className="mt-4 text-center text-white/30 text-xs font-medium">
             Already have an account?{" "}
             <Link href="/auth/login" className="text-[#ff5100] hover:text-[#ff7d47] font-bold transition-colors">
               Log in
