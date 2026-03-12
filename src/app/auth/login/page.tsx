@@ -1,46 +1,32 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { resolveEmail } from "@/app/auth/actions";
-import { createClient } from "@/lib/supabase/client";
+import { login } from "@/app/auth/actions";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Eye, EyeOff, Mountain, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import Logo from "@/components/ui/custom/Logo";
 
 function LoginForm() {
   const searchParams = useSearchParams();
   const message = searchParams.get("message");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
+  async function handleAction(formData: FormData) {
+    setPending(true);
     setError(null);
-    const formData = new FormData(e.currentTarget);
-    const identifier = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    // Resolve username → email on server if needed, then sign in client-side
-    // so the browser Supabase client stores the session cookie itself
-    const { email, error: resolveError } = await resolveEmail(identifier);
-    if (resolveError) { setError(resolveError); setLoading(false); return; }
-
-    const supabase = createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email: email!, password });
-    if (signInError) {
-      setLoading(false);
-      setError(signInError.message);
-    } else {
-      window.location.href = "/";
+    const result = await login(formData);
+    // redirect() throws — we only reach here on error
+    if (result?.error) {
+      setError(result.error);
+      setPending(false);
     }
   }
 
   return (
     <div className="max-w-md w-full mx-auto">
-      {/* Mobile logo */}
       <div className="mb-6 lg:hidden">
         <Logo size="sm" />
       </div>
@@ -50,31 +36,33 @@ function LoginForm() {
         Back to home
       </Link>
 
-        <div className="mb-6">
-          <h1 className="text-4xl font-black text-white mb-3 tracking-tight leading-tight">
-            Wild is calling,<br />
-            <span className="text-[#ff5100]">answer it.</span>
-          </h1>
-          <p className="text-white/40 text-xs font-medium leading-relaxed">
-            Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
-          </p>
-        </div>
+      <div className="mb-6">
+        <h1 className="text-4xl font-black text-white mb-3 tracking-tight leading-tight">
+          Wild is calling,<br />
+          <span className="text-[#ff5100]">answer it.</span>
+        </h1>
+        <p className="text-white/40 text-xs font-medium leading-relaxed">
+          Sign in to access your adventure profile and saved treks.
+        </p>
+      </div>
 
-        {message && !error && (
-          <div className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold bg-green-500/10 border border-green-500/20 text-green-400 flex items-center gap-2">
-            {message}
-          </div>
-        )}
+      {message && !error && (
+        <div className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold bg-green-500/10 border border-green-500/20 text-green-400">
+          {message}
+        </div>
+      )}
 
       {error && (
-        <div className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-2">
+        <div className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold bg-red-500/10 border border-red-500/20 text-red-400">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form action={handleAction} className="space-y-4">
         <div>
-          <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">Username or Email</label>
+          <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">
+            Username or Email
+          </label>
           <input
             name="email"
             type="text"
@@ -85,12 +73,12 @@ function LoginForm() {
         </div>
 
         <div>
-            <div className="flex justify-between items-center mb-2 ml-1">
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Password</label>
-              <Link href="/auth/forgot-password" className="text-[10px] font-bold text-[#ff5100]/60 hover:text-[#ff5100] transition-colors uppercase tracking-widest">
-                Forgot?
-              </Link>
-            </div>
+          <div className="flex justify-between items-center mb-2 ml-1">
+            <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Password</label>
+            <Link href="/auth/forgot-password" className="text-[10px] font-bold text-[#ff5100]/60 hover:text-[#ff5100] transition-colors uppercase tracking-widest">
+              Forgot?
+            </Link>
+          </div>
           <div className="relative">
             <input
               name="password"
@@ -109,13 +97,12 @@ function LoginForm() {
           </div>
         </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 mt-2"
-          >
-
-          {loading ? "Verifying..." : "Sign In"}
+        <button
+          type="submit"
+          disabled={pending}
+          className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 mt-2"
+        >
+          {pending ? "Signing in…" : "Sign In"}
         </button>
       </form>
 
@@ -132,7 +119,6 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <div className="h-screen bg-[#0a0a0a] flex overflow-hidden">
-      {/* Left panel — image */}
       <div
         className="hidden lg:flex lg:w-1/2 relative bg-cover bg-center"
         style={{ backgroundImage: "url('https://images.unsplash.com/photo-1551632811-561732d1e306?w=2560&q=100')" }}
@@ -140,17 +126,15 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/20 to-transparent" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
           <Logo size="lg" />
-          
-                <div className="max-w-md">
-                  <h2 className="text-6xl font-black text-white leading-[1.1] mb-6 tracking-tight">
-                    Wild is calling, <br />
-                    <span className="text-[#ff5100] font-black">answer it.</span>
-                  </h2>
-                  <p className="text-white/70 text-lg font-medium leading-relaxed max-w-sm">
-                    Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
-                  </p>
-                </div>
-
+          <div className="max-w-md">
+            <h2 className="text-6xl font-black text-white leading-[1.1] mb-6 tracking-tight">
+              Wild is calling,<br />
+              <span className="text-[#ff5100] font-black">answer it.</span>
+            </h2>
+            <p className="text-white/70 text-lg font-medium leading-relaxed max-w-sm">
+              Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
+            </p>
+          </div>
           <div className="flex items-center gap-6 text-white/30 text-[11px] font-bold uppercase tracking-[0.15em]">
             <span>© 2026 TRAIL TO TIDES</span>
             <div className="w-1.5 h-px bg-white/20" />
@@ -161,12 +145,10 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right panel — form */}
       <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-20 xl:px-32 bg-[#0a0a0a] relative">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
-        
-          <Suspense fallback={<div className="text-white/50 text-center">Loading adventure...</div>}>
+        <Suspense fallback={<div className="text-white/50 text-center">Loading…</div>}>
           <LoginForm />
         </Suspense>
       </div>

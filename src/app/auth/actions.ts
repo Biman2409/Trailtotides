@@ -45,18 +45,28 @@ export async function signUp(formData: FormData) {
 }
 
 
-// Resolves a username or email to an email address (used by client-side login)
-export async function resolveEmail(identifier: string): Promise<{ email?: string; error?: string }> {
-  const trimmed = identifier.trim();
-  if (trimmed.includes("@")) return { email: trimmed };
-
+export async function login(formData: FormData) {
+  const supabase = await createClient();
   const adminClient = await createAdminClient();
-  const { data: allUsers } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
-  const match = allUsers?.users.find(
-    (u) => (u.user_metadata?.username ?? "").toLowerCase() === trimmed.toLowerCase()
-  );
-  if (!match?.email) return { error: "No account found with that username." };
-  return { email: match.email };
+
+  const identifier = (formData.get("email") as string).trim();
+  const password = formData.get("password") as string;
+
+  // Resolve username → email
+  let email = identifier;
+  if (!identifier.includes("@")) {
+    const { data: allUsers } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
+    const match = allUsers?.users.find(
+      (u) => (u.user_metadata?.username ?? "").toLowerCase() === identifier.toLowerCase()
+    );
+    if (!match?.email) return { error: "No account found with that username." };
+    email = match.email;
+  }
+
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) return { error: error.message };
+
+  redirect("/");
 }
 
 export async function resetPassword(formData: FormData) {
