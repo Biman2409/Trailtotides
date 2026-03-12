@@ -5,6 +5,14 @@ import { createAdminClient } from "@/lib/supabase/server";
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
+/** Build an absolute URL using the real public host (works behind Orchids/ngrok proxies) */
+function buildUrl(request: NextRequest, path: string): URL {
+  const forwarded = request.headers.get("x-forwarded-host");
+  const host = forwarded || request.headers.get("host") || "localhost:3000";
+  const proto = request.headers.get("x-forwarded-proto")?.split(",")[0] || "https";
+  return new URL(path, `${proto}://${host}`);
+}
+
 // This route handles form POST submissions (not JSON API)
 // Returns a redirect with Set-Cookie so the browser gets the cookie
 // as part of a navigation (not fetch), bypassing any proxy cookie restrictions.
@@ -25,7 +33,7 @@ export async function POST(request: NextRequest) {
     );
     if (!match?.email) {
       return NextResponse.redirect(
-        new URL(`/auth/login?error=${encodeURIComponent("No account found with that username.")}`, request.url)
+        buildUrl(request, `/auth/login?error=${encodeURIComponent("No account found with that username.")}`)
       );
     }
     email = match.email;
@@ -42,12 +50,12 @@ export async function POST(request: NextRequest) {
   if (!tokenRes.ok || tokenData.error) {
     const msg = tokenData.error_description || tokenData.error || "Invalid credentials";
     return NextResponse.redirect(
-      new URL(`/auth/login?error=${encodeURIComponent(msg)}`, request.url)
+      buildUrl(request, `/auth/login?error=${encodeURIComponent(msg)}`)
     );
   }
 
   // Build redirect response with session cookies
-  const redirectResponse = NextResponse.redirect(new URL(next, request.url));
+  const redirectResponse = NextResponse.redirect(buildUrl(request, next));
 
   const supabase = createServerClient(SUPABASE_URL, ANON_KEY, {
     cookies: {
