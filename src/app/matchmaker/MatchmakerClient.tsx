@@ -484,9 +484,10 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
       <AdventureCategory
         label="Ready Now"
         sublabel="Treks you can confidently attempt with your current capability"
-        icon={<CheckCircle2 className="w-4 h-4" style={{ color: "#4ade80" }} />}
+        icon={<CheckCircle2 className="w-4 h-4" />}
         adventures={readyNow}
         accentColor="#4ade80"
+        stars={1}
         defaultOpen
       />
 
@@ -495,9 +496,10 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
         <AdventureCategory
           label="Stretch Challenge"
           sublabel="Slightly above your current range — achievable with focused preparation"
-          icon={<TrendingUp className="w-4 h-4" style={{ color: "#f59e0b" }} />}
+          icon={<TrendingUp className="w-4 h-4" />}
           adventures={stretchMatches}
           accentColor="#f59e0b"
+          stars={2}
           dimmed
         />
       )}
@@ -507,9 +509,10 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
         <AdventureCategory
           label="Future Expeditions"
           sublabel="Long-term goals that require dedicated training and experience building"
-          icon={<Lock className="w-4 h-4" style={{ color: "#a78bfa" }} />}
+          icon={<Lock className="w-4 h-4" />}
           adventures={futureMatches}
           accentColor="#a78bfa"
+          stars={3}
           dimmed
         />
       )}
@@ -574,7 +577,7 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
 // ─── Adventure category section ───────────────────────────────────────────────
 
 function AdventureCategory({
-  label, sublabel, icon, adventures: list, accentColor, dimmed = false, defaultOpen = false,
+  label, sublabel, icon, adventures: list, accentColor, dimmed = false, defaultOpen = false, stars = 1,
 }: {
   label: string;
   sublabel: string;
@@ -583,6 +586,7 @@ function AdventureCategory({
   accentColor: string;
   dimmed?: boolean;
   defaultOpen?: boolean;
+  stars?: number;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -590,18 +594,35 @@ function AdventureCategory({
   if (list.length === 0) return null;
 
   return (
-    <div className="mb-3 rounded-2xl border overflow-hidden" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+    <div
+      className="mb-3 rounded-2xl border overflow-hidden"
+      style={{ borderColor: `${accentColor}30`, borderLeftWidth: "3px", borderLeftColor: accentColor }}
+    >
       {/* Tab header */}
       <button
         onClick={() => setOpen(o => !o)}
         className="w-full flex items-center justify-between px-5 py-4 transition-colors hover:bg-white/[0.03]"
-        style={{ background: open ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)" }}
+        style={{ background: open ? `${accentColor}0a` : "rgba(255,255,255,0.02)" }}
       >
         <div className="flex items-center gap-3">
-          {icon}
+          {/* Coloured icon badge */}
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+            style={{ background: `${accentColor}20`, color: accentColor }}
+          >
+            {icon}
+          </div>
           <div className="text-left">
-            <p className="text-white font-semibold text-sm">{label}</p>
-            <p className="text-white/35 text-xs mt-0.5">{sublabel}</p>
+            <div className="flex items-center gap-2 mb-0.5">
+              <p className="text-white font-semibold text-sm">{label}</p>
+              {/* Star tier indicators */}
+              <span className="flex items-center gap-0.5">
+                {[1,2,3].map(n => (
+                  <span key={n} className="text-[10px]" style={{ color: n <= stars ? accentColor : "rgba(255,255,255,0.12)" }}>★</span>
+                ))}
+              </span>
+            </div>
+            <p className="text-white/35 text-xs">{sublabel}</p>
           </div>
         </div>
         <div className="flex items-center gap-3 shrink-0">
@@ -612,8 +633,8 @@ function AdventureCategory({
             {list.length} trek{list.length !== 1 ? "s" : ""}
           </span>
           <ChevronRight
-            className="w-4 h-4 text-white/30 transition-transform duration-200"
-            style={{ transform: open ? "rotate(90deg)" : "rotate(0deg)" }}
+            className="w-4 h-4 transition-transform duration-200"
+            style={{ color: accentColor, transform: open ? "rotate(90deg)" : "rotate(0deg)" }}
           />
         </div>
       </button>
@@ -622,9 +643,9 @@ function AdventureCategory({
       <div
         ref={contentRef}
         className="overflow-hidden transition-all duration-300 ease-in-out"
-        style={{ maxHeight: open ? `${(contentRef.current?.scrollHeight ?? 1000)}px` : "0px" }}
+        style={{ maxHeight: open ? `${(contentRef.current?.scrollHeight ?? 1200)}px` : "0px" }}
       >
-        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ borderTop: `1px solid ${accentColor}18` }}>
           {list.map(a => {
             const ert = getERT(a);
             return (
@@ -633,7 +654,7 @@ function AdventureCategory({
                 href={`/experiences/${a.slug}`}
                 className="group rounded-xl overflow-hidden border transition-all hover:-translate-y-0.5 hover:shadow-lg duration-200"
                 style={{
-                  borderColor: dimmed ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.09)",
+                  borderColor: `${accentColor}25`,
                   background: "rgba(255,255,255,0.03)",
                 }}
               >
@@ -646,11 +667,14 @@ function AdventureCategory({
                     style={{ filter: dimmed ? "saturate(0.75)" : undefined }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-                  {/* Rating badge */}
+                  {/* Rating badge — coloured to match tier */}
                   {a.rating && (
-                    <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}>
-                      <span className="text-yellow-400 text-[10px]">★</span>
-                      <span className="text-white text-[10px] font-semibold">{a.rating.toFixed(1)}</span>
+                    <div
+                      className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full"
+                      style={{ background: `${accentColor}cc`, backdropFilter: "blur(4px)" }}
+                    >
+                      <span className="text-[10px]" style={{ color: "rgba(0,0,0,0.7)" }}>★</span>
+                      <span className="text-[10px] font-bold" style={{ color: "rgba(0,0,0,0.8)" }}>{a.rating.toFixed(1)}</span>
                     </div>
                   )}
                   <div className="absolute bottom-3 left-3 right-3">
@@ -663,7 +687,7 @@ function AdventureCategory({
                 </div>
                 <div className="px-3 py-2.5 flex items-center justify-between">
                   <ERTBadge ert={ert} size="sm" dark />
-                  <ArrowRight className="w-3 h-3 text-white/25 group-hover:text-[#ff5100] transition-colors" />
+                  <ArrowRight className="w-3 h-3 text-white/25 group-hover:transition-colors" style={{ color: undefined }} />
                 </div>
               </Link>
             );
