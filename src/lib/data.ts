@@ -111,6 +111,7 @@ export interface Story {
   tags: string[];
   region: Region;
   date: string;
+  submittedBy?: string; // user ID of the TTT member who submitted the story
   // views are stored in Supabase story_views table (slug is the key).
   // Use StoryViewPill component to display live counts.
   // To add a new story: insert a row into story_views with { slug, views: <seed> }.
@@ -1910,13 +1911,14 @@ export const stories: Story[] = [
             excerpt:
               "A ride to Umling La, a detour to Demchok, and the mountain that watched over us. Some trips are planned. Some trips are reckless. And some trips stay with you forever.",
               author: "Nishant Ingle",
-              authorRole: "Rider",
+              authorRole: "TTT Member",
               heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_3620_Original-resized-1772404370295.jpeg?width=8000&height=8000&resize=contain",
             readTime: "15 min read",
 
               tags: ["Featured", "TTT Original", "Ladakh"],
               region: "Himalayas",
               date: "July 2022",
+              submittedBy: "986fb39a-f174-40ba-aefa-eddee3145687",
         },
 ];
 
