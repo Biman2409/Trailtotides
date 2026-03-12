@@ -16,9 +16,9 @@ export async function signUp(formData: FormData) {
   const phone_number = formData.get("phone") as string;
   const phone = `${country_code}${phone_number.replace(/\s+/g, "")}`;
 
-  // Validate username format
-  if (!/^[a-z0-9_]{3,20}$/.test(username)) {
-    return { error: "Username must be 3–20 characters: lowercase letters, numbers and _ only." };
+  // Validate username length
+  if (username.length < 3 || username.length > 20) {
+    return { error: "Username must be between 3 and 20 characters." };
   }
 
   // Check username uniqueness via auth metadata (no schema changes needed)
