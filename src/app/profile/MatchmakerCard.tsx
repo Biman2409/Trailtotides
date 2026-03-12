@@ -28,7 +28,6 @@ export default function MatchmakerCard({ isLoggedIn }: { isLoggedIn: boolean }) 
       <div className="px-6 py-4 border-b border-white/6 flex items-center justify-between">
         <div>
           <p className="text-white font-semibold text-sm">Adventure Profile</p>
-          <p className="text-white/35 text-xs mt-0.5">Your matchmaker assessment result</p>
         </div>
         {profile && (
           <button

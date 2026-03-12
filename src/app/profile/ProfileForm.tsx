@@ -255,7 +255,7 @@ function AdventureProfileSection() {
   const tier = TIER_INFO[stored.label] ?? TIER_INFO["Trail Trekker"];
 
   return (
-    <Section title="Adventure Profile" subtitle="Based on your matchmaker assessment.">
+    <Section title="Adventure Profile">
       <div className="flex items-center gap-4 mb-5 p-4 rounded-2xl border"
         style={{ background: `${tier.color}0d`, borderColor: `${tier.color}28` }}>
         <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
