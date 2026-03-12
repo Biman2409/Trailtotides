@@ -70,11 +70,12 @@ type StorySubmission = {
   body: string;
   author_name: string;
   author_role: string | null;
-  email: string;
+  author_bio: string | null;
+  email: string | null;
   phone: string | null;
   date_of_adventure: string;
   region: string;
-  state: string;
+  state: string | null;
   tags: string[] | null;
   read_time: string | null;
   hero_image_url: string | null;
@@ -582,13 +583,18 @@ export default function AdminDashboardClient({
                   ) : (
                     storySubmissions.map((sub) => (
                       <tr key={sub.id} className="border-b border-white/[0.04] hover:bg-white/[0.03] transition-colors last:border-0 group/row">
-                        <td className="px-6 py-4 align-top w-48">
+                        <td className="px-6 py-4 align-top w-56">
                           <p className="font-semibold text-white/90 text-[13px] leading-tight group-hover/row:text-white transition-colors">{sub.author_name}</p>
                           {sub.author_role && <p className="text-white/35 text-[11px] mt-0.5">{sub.author_role}</p>}
+                          {sub.author_bio && (
+                            <p className="text-white/40 text-[11px] leading-relaxed mt-1.5 italic line-clamp-3">{sub.author_bio}</p>
+                          )}
                           <div className="flex flex-col gap-1 mt-2">
+                            {sub.email && (
                             <a href={`mailto:${sub.email}`} className="inline-flex items-center gap-1 text-[11px] text-[#ff7d47]/70 hover:text-[#ff7d47] transition-colors font-mono">
                               <Mail className="w-2.5 h-2.5 flex-shrink-0" />{sub.email}
                             </a>
+                            )}
                             {sub.phone && (
                               <span className="inline-flex items-center gap-1 text-[11px] text-white/35 font-mono">
                                 <Phone className="w-2.5 h-2.5 flex-shrink-0" />{sub.phone}

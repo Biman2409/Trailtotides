@@ -23,6 +23,7 @@ type FormData = {
   body: string;
   authorName: string;
   authorRole: string;
+  authorBio: string;
   dateOfAdventure: string;
   region: string;
   tags: string;
@@ -35,6 +36,7 @@ const INITIAL: FormData = {
   body: "",
   authorName: "",
   authorRole: "",
+  authorBio: "",
   dateOfAdventure: "",
   region: "",
   tags: "",
@@ -177,6 +179,17 @@ export default function SubmitStoryPage() {
                       onChange={handleChange}
                       placeholder="e.g. Biker, Trekker, Diver…"
                       className={inputClass}
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <FieldLabel>Author Bio</FieldLabel>
+                    <textarea
+                      name="authorBio"
+                      rows={3}
+                      value={form.authorBio}
+                      onChange={handleChange}
+                      placeholder="A few lines about yourself — who you are, what drives you out there. This appears on your story page."
+                      className={`${inputClass} resize-none`}
                     />
                   </div>
                 </div>
