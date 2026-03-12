@@ -30,6 +30,7 @@ export const metadata: Metadata = {
       { url: "/favicon.ico" },
     ],
     apple: "/logo.svg",
+    shortcut: "/logo.svg",
   },
   openGraph: {
     title: "Trail to Tides — India's Adventure Discovery Platform",
