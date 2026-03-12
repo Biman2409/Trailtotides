@@ -32,21 +32,31 @@ function setSessionCookies(session: {
   const maxAge = 400 * 24 * 60 * 60;
   const opts = `; path=/; max-age=${maxAge}; samesite=lax`;
 
-  // Clear any old chunks first
+  // Clear any old chunks first (same key and up to 5 chunks)
+  document.cookie = `${COOKIE_NAME}=; path=/; max-age=0; samesite=lax`;
   for (let i = 0; i < 5; i++) {
     document.cookie = `${COOKIE_NAME}.${i}=; path=/; max-age=0; samesite=lax`;
   }
-  document.cookie = `${COOKIE_NAME}=; path=/; max-age=0; samesite=lax`;
 
-  if (value.length <= COOKIE_CHUNK_SIZE) {
-    // Fits in one cookie — write as chunk 0 so server reassembles correctly
-    document.cookie = `${COOKIE_NAME}.0=${value}${opts}`;
+  // @supabase/ssr createChunks: if encodeURIComponent(value) fits in one chunk,
+  // store as plain `key` (no .0 suffix). Otherwise split into key.0, key.1, ...
+  const encoded = encodeURIComponent(value);
+  if (encoded.length <= COOKIE_CHUNK_SIZE) {
+    document.cookie = `${COOKIE_NAME}=${value}${opts}`;
   } else {
-    // Split into chunks
-    const chunks = value.match(new RegExp(`.{1,${COOKIE_CHUNK_SIZE}}`, "g")) || [];
-    chunks.forEach((chunk, i) => {
+    // Split on encoded boundaries, store decoded chunks
+    let remaining = encoded;
+    let i = 0;
+    while (remaining.length > 0) {
+      let head = remaining.slice(0, COOKIE_CHUNK_SIZE);
+      // Don't split in middle of a % escape
+      const lastPct = head.lastIndexOf("%");
+      if (lastPct > COOKIE_CHUNK_SIZE - 3) head = head.slice(0, lastPct);
+      const chunk = decodeURIComponent(head);
       document.cookie = `${COOKIE_NAME}.${i}=${chunk}${opts}`;
-    });
+      remaining = remaining.slice(head.length);
+      i++;
+    }
   }
 }
 
