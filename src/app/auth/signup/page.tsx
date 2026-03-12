@@ -156,7 +156,7 @@ export default function SignUpPage() {
                     required
                     value={username}
                     onChange={(e) => {
-                      const val = e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, "");
+                      const val = e.target.value.toLowerCase();
                       setUsername(val);
                       checkUsername(val);
                     }}
