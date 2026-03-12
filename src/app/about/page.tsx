@@ -6,14 +6,20 @@ import Footer from "@/components/layout/Footer";
 import { ArrowRight, Mountain, Map, Sparkles, BadgeCheck, Users } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Us — Trail to Tides",
+  title: "About Us",
   description:
-    "Trail to Tides is India's adventure discovery platform — built by explorers for explorers. Learn about our mission, values, and the team behind the platform.",
+    "Trail to Tides is India's adventure discovery platform — built by explorers for explorers. Learn about our mission, values, and the team behind it.",
   openGraph: {
-    title: "About Us — Trail to Tides",
-    description: "Trail to Tides is India's adventure discovery platform — built by explorers for explorers.",
+    title: "About Trail to Tides",
+    description: "Built by explorers for explorers. Learn about our mission, values, and the team behind India's adventure discovery platform.",
     url: "https://trailtotides.com/about",
-    images: [{ url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90", width: 1200, height: 630 }],
+    images: [{ url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90", width: 1200, height: 630, alt: "About Trail to Tides" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Trail to Tides",
+    description: "Built by explorers for explorers — India's adventure discovery platform.",
+    images: ["https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90"],
   },
   alternates: { canonical: "https://trailtotides.com/about" },
 };

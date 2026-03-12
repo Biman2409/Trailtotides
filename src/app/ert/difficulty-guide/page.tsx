@@ -7,9 +7,22 @@ import { getERT } from "@/lib/ert";
 import ERTBadge from "@/components/ui/custom/ERTBadge";
 
 export const metadata = {
-  title: "TrailtoTides Grading System — Trail to Tides",
+  title: "ERT Grading System",
   description:
-    "TrailtoTides grades every adventure on three independent dimensions — Exertion, Risk, and Technicality — so you know exactly what you're getting into.",
+    "Every adventure on Trail to Tides is graded on three independent dimensions — Exertion, Risk, and Technicality — so you know exactly what you're getting into.",
+  openGraph: {
+    title: "ERT Grading System — Trail to Tides",
+    description: "Every adventure graded on Exertion, Risk, and Technicality — so you know exactly what you're getting into.",
+    url: "https://trailtotides.com/ert/difficulty-guide",
+    images: [{ url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90", width: 1200, height: 630, alt: "ERT Grading System — Trail to Tides" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ERT Grading System — Trail to Tides",
+    description: "Every adventure graded on Exertion, Risk, and Technicality.",
+    images: ["https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90"],
+  },
+  alternates: { canonical: "https://trailtotides.com/ert/difficulty-guide" },
 };
 
 const EXERTION = [

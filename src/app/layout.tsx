@@ -20,9 +20,12 @@ const dmSans = DM_Sans({
 const BASE_URL = "https://trailtotides.com";
 
 export const metadata: Metadata = {
-  title: "Trail to Tides — India's Adventure Discovery Platform",
+  title: {
+    default: "Trail to Tides — India's Adventure Discovery Platform",
+    template: "%s — Trail to Tides",
+  },
   description:
-    "Discover and compare epic adventures across the Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision.",
+    "Discover and compare epic adventures across India — handpicked by explorers, run by verified operators, mapped with precision.",
   metadataBase: new URL(BASE_URL),
   icons: {
     icon: [
@@ -35,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Trail to Tides — India's Adventure Discovery Platform",
     description:
-      "Discover and compare epic adventures across the Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision.",
+      "Discover and compare epic adventures across India — handpicked by explorers, run by verified operators, mapped with precision.",
     type: "website",
     url: BASE_URL,
     siteName: "Trail to Tides",
@@ -50,15 +53,16 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Trail to Tides",
+    site: "@trailtotides",
+    title: "Trail to Tides — India's Adventure Discovery Platform",
     description:
-      "Discover and compare epic adventures across the Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision.",
+      "Discover and compare epic adventures across India — handpicked by explorers, run by verified operators, mapped with precision.",
     images: ["https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90"],
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true },
+    googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large" },
   },
 };
 

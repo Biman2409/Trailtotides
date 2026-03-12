@@ -9,14 +9,20 @@ import { stories } from "@/lib/data";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 
 export const metadata: Metadata = {
-  title: "Field Stories — Trail to Tides",
+  title: "Field Stories",
   description:
-    "First-hand accounts from adventurers across India — high-altitude treks, ocean dives, desert rides, and everything in between.",
+    "First-hand accounts from real adventurers across India — high-altitude treks, ocean dives, desert rides, and everything in between.",
   openGraph: {
     title: "Field Stories — Trail to Tides",
-    description: "First-hand accounts from adventurers across India — high-altitude treks, ocean dives, desert rides, and everything in between.",
+    description: "First-hand accounts from real adventurers across India — high-altitude treks, ocean dives, desert rides, and everything in between.",
     url: "https://trailtotides.com/stories",
-    images: [{ url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90", width: 1200, height: 630 }],
+    images: [{ url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=90", width: 1200, height: 630, alt: "Field Stories — Trail to Tides" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Field Stories — Trail to Tides",
+    description: "First-hand accounts from real adventurers across India.",
+    images: ["https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=90"],
   },
   alternates: { canonical: "https://trailtotides.com/stories" },
 };
