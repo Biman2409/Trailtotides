@@ -19,6 +19,12 @@ import {
   TrendingUp,
   MessageSquare,
   ExternalLink,
+  BookOpen,
+  MapPin,
+  Tag,
+  Clock,
+  Phone,
+  Mail,
 } from "lucide-react";
 import Link from "next/link";
 import * as XLSX from "xlsx";
@@ -57,14 +63,35 @@ type Message = {
   created_at: string;
 };
 
+type StorySubmission = {
+  id: string;
+  title: string;
+  excerpt: string;
+  body: string;
+  author_name: string;
+  author_role: string | null;
+  email: string;
+  phone: string | null;
+  date_of_adventure: string;
+  region: string;
+  state: string;
+  tags: string[] | null;
+  read_time: string | null;
+  hero_image_url: string | null;
+  status: string;
+  created_at: string;
+};
+
 export default function AdminDashboardClient({
   profiles,
   currentUserId,
   messages = [],
+  storySubmissions = [],
 }: {
   profiles: Profile[];
   currentUserId: string;
   messages?: Message[];
+  storySubmissions?: StorySubmission[];
 }) {
   const [activeTab, setActiveTab] = useState("users");
   const [search, setSearch] = useState("");
@@ -219,6 +246,7 @@ export default function AdminDashboardClient({
               {[
                 { value: "users", icon: Users, label: "Users" },
                 { value: "messages", icon: MessageSquare, label: "Messages", badge: messages.length },
+                { value: "stories", icon: BookOpen, label: "Stories", badge: storySubmissions.filter(s => s.status === "pending").length },
                 { value: "analytics", icon: BarChart3, label: "Analytics" },
               ].map(({ value, icon: Icon, label, badge }) => (
                 <Tabs.Trigger
@@ -244,7 +272,7 @@ export default function AdminDashboardClient({
         </div>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-10">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-10">
           {[
             {
               label: "Total Users",
@@ -285,6 +313,16 @@ export default function AdminDashboardClient({
               bg: "bg-green-500/10",
               glow: "bg-green-500/20",
               subColor: "text-green-400",
+            },
+            {
+              label: "Story Submissions",
+              value: storySubmissions.length,
+              sub: `${storySubmissions.filter(s => s.status === "pending").length} pending review`,
+              icon: BookOpen,
+              color: "#f59e0b",
+              bg: "bg-amber-500/10",
+              glow: "bg-amber-500/20",
+              subColor: "text-amber-400",
             },
           ].map(({ label, value, sub, icon: Icon, bg, glow, subColor }) => (
             <div
@@ -512,6 +550,108 @@ export default function AdminDashboardClient({
             </div>
             <p className="text-center text-[10px] font-bold uppercase tracking-[0.15em] text-white/20 py-2">
               {messages.length} {messages.length === 1 ? "message" : "messages"} total
+            </p>
+          </Tabs.Content>
+
+          {/* ── STORY SUBMISSIONS TAB ── */}
+          <Tabs.Content value="stories" className="outline-none space-y-5">
+            <div className="border border-white/[0.07] rounded-2xl overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-white/[0.06] bg-white/[0.02]">
+                    <th className="text-left px-6 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Submitter</th>
+                    <th className="text-left px-6 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Story</th>
+                    <th className="text-left px-6 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30 hidden lg:table-cell">Location</th>
+                    <th className="text-left px-6 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30 hidden md:table-cell">Status</th>
+                    <th className="text-left px-6 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30 whitespace-nowrap hidden sm:table-cell">Submitted</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {storySubmissions.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="py-24 text-center">
+                        <div className="flex flex-col items-center gap-3 text-white/20">
+                          <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center">
+                            <BookOpen className="w-7 h-7" />
+                          </div>
+                          <p className="text-sm font-semibold">No story submissions yet</p>
+                          <p className="text-xs text-white/15">Submissions from /stories/submit will appear here.</p>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    storySubmissions.map((sub) => (
+                      <tr key={sub.id} className="border-b border-white/[0.04] hover:bg-white/[0.03] transition-colors last:border-0 group/row">
+                        <td className="px-6 py-4 align-top w-48">
+                          <p className="font-semibold text-white/90 text-[13px] leading-tight group-hover/row:text-white transition-colors">{sub.author_name}</p>
+                          {sub.author_role && <p className="text-white/35 text-[11px] mt-0.5">{sub.author_role}</p>}
+                          <div className="flex flex-col gap-1 mt-2">
+                            <a href={`mailto:${sub.email}`} className="inline-flex items-center gap-1 text-[11px] text-[#ff7d47]/70 hover:text-[#ff7d47] transition-colors font-mono">
+                              <Mail className="w-2.5 h-2.5 flex-shrink-0" />{sub.email}
+                            </a>
+                            {sub.phone && (
+                              <span className="inline-flex items-center gap-1 text-[11px] text-white/35 font-mono">
+                                <Phone className="w-2.5 h-2.5 flex-shrink-0" />{sub.phone}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 align-top max-w-xs">
+                          <p className="font-semibold text-white/90 text-[13px] leading-tight mb-1">{sub.title}</p>
+                          <p className="text-white/40 text-[11px] leading-relaxed line-clamp-2 mb-2">{sub.excerpt}</p>
+                          {sub.tags && sub.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {sub.tags.slice(0, 3).map((tag) => (
+                                <span key={tag} className="inline-flex items-center gap-0.5 bg-white/5 border border-white/8 text-white/35 text-[9px] font-semibold px-2 py-0.5 rounded-full">
+                                  <Tag className="w-2 h-2" />{tag}
+                                </span>
+                              ))}
+                              {sub.tags.length > 3 && (
+                                <span className="text-white/25 text-[9px] font-semibold px-1 py-0.5">+{sub.tags.length - 3}</span>
+                              )}
+                            </div>
+                          )}
+                          {sub.read_time && (
+                            <span className="inline-flex items-center gap-1 text-white/25 text-[10px] mt-1.5">
+                              <Clock className="w-2.5 h-2.5" />{sub.read_time}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 align-top hidden lg:table-cell">
+                          <div className="flex items-center gap-1 text-white/50 text-[12px]">
+                            <MapPin className="w-3 h-3 text-white/25 flex-shrink-0" />
+                            <span>{sub.state}</span>
+                          </div>
+                          <p className="text-white/30 text-[10px] mt-1 ml-4">{sub.region}</p>
+                          {sub.date_of_adventure && (
+                            <p className="text-white/25 text-[10px] mt-1 ml-4 flex items-center gap-1">
+                              <Calendar className="w-2.5 h-2.5" />
+                              {format(new Date(sub.date_of_adventure), "MMM d, yyyy")}
+                            </p>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 align-top hidden md:table-cell">
+                          <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${
+                            sub.status === "pending"
+                              ? "bg-amber-500/15 text-amber-300 border border-amber-500/20"
+                              : sub.status === "approved"
+                              ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/20"
+                              : "bg-white/5 text-white/30 border border-white/8"
+                          }`}>
+                            {sub.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-white/30 text-[11px] font-medium align-top whitespace-nowrap hidden sm:table-cell">
+                          {format(parseISO(sub.created_at), "MMM d · HH:mm")}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-center text-[10px] font-bold uppercase tracking-[0.15em] text-white/20 py-2">
+              {storySubmissions.length} {storySubmissions.length === 1 ? "submission" : "submissions"} total
             </p>
           </Tabs.Content>
 

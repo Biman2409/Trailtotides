@@ -32,5 +32,11 @@ export default async function AdminPage() {
     .select("*")
     .order("created_at", { ascending: false });
 
-  return <AdminDashboardClient profiles={profiles ?? []} currentUserId={user.id} messages={messages ?? []} />;
+  // Fetch story submissions
+  const { data: storySubmissions } = await adminClient
+    .from("story_submissions")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  return <AdminDashboardClient profiles={profiles ?? []} currentUserId={user.id} messages={messages ?? []} storySubmissions={storySubmissions ?? []} />;
 }

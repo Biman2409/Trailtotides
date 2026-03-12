@@ -192,7 +192,7 @@ export default function StoriesPage() {
             We feature stories from verified adventurers. If you&apos;ve done something remarkable out there, we want to hear it.
           </p>
           <Link
-            href="/list"
+            href="/stories/submit"
             className="inline-flex items-center gap-2 bg-[#1e3d2f] hover:bg-[#2d5a42] text-white font-medium px-8 py-4 rounded-xl text-base transition-colors group"
           >
             Share Your Story
