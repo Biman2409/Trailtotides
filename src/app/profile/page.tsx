@@ -122,24 +122,12 @@ export default async function ProfilePage() {
 
           {/* Main Content / Form */}
           <div className="flex-1">
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl backdrop-blur-sm">
-              <div className="mb-8">
-                <h2 className="text-xl font-bold">Account Settings</h2>
-                <p className="text-white/40 text-sm mt-1">Manage your public profile and account details.</p>
-              </div>
+            <ProfileForm profile={{
+              ...profile,
+              username: user.user_metadata?.username || profile.username || null,
+              phone: profile.phone || user.user_metadata?.phone || null,
+            }} />
 
-              <ProfileForm profile={{
-                ...profile,
-                username: user.user_metadata?.username || profile.username || null,
-                phone: profile.phone || user.user_metadata?.phone || null,
-              }} />
-            </div>
-
-            <div className="mt-8 p-6 rounded-2xl bg-[#ff5100]/5 border border-[#ff5100]/10">
-              <p className="text-sm text-[#ff7d47]/80 leading-relaxed italic">
-                &quot;The mountains are calling. The only question is — are you ready?&quot;
-              </p>
-            </div>
           </div>
         </div>
       </div>

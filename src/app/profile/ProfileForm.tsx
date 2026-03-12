@@ -1,8 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { updateProfile } from "./actions";
-import { User, Mail, Phone, Save, Loader2, CheckCircle2, AtSign } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import Link from "next/link";
+import {
+  User, Mail, Phone, Save, Loader2, CheckCircle2, AtSign,
+  Eye, EyeOff, Lock, XCircle, ArrowRight, Compass,
+  Footprints, Mountain, CloudSnow, Flag,
+} from "lucide-react";
+import { updateProfile, changePassword } from "./actions";
+import { loadProfile } from "@/lib/matchmaker";
 
 type Profile = {
   id: string;
@@ -14,129 +20,274 @@ type Profile = {
   created_at: string;
 };
 
-export default function ProfileForm({ profile }: { profile: Profile }) {
+const TIER_INFO: Record<string, { color: string; icon: React.ReactNode; stars: number; desc: string }> = {
+  "Beginner Explorer":     { color: "#22d3ee", stars: 1, icon: <Compass    className="w-5 h-5" />, desc: "You're at the start of your mountain journey." },
+  "Trail Trekker":         { color: "#4ade80", stars: 2, icon: <Footprints className="w-5 h-5" />, desc: "You can handle multi-day treks on well-established routes." },
+  "Mountain Adventurer":   { color: "#f59e0b", stars: 3, icon: <Mountain   className="w-5 h-5" />, desc: "You're ready for challenging high-altitude treks." },
+  "High-Altitude Trekker": { color: "#f97316", stars: 4, icon: <CloudSnow  className="w-5 h-5" />, desc: "Qualified for high-altitude and remote environments." },
+  "Expedition Climber":    { color: "#a78bfa", stars: 5, icon: <Flag       className="w-5 h-5" />, desc: "Elite-level readiness for full expedition routes." },
+};
+
+function Section({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
+  return (
+    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl">
+      <div className="mb-6">
+        <h2 className="text-lg font-bold text-white">{title}</h2>
+        {subtitle && <p className="text-white/40 text-sm mt-0.5">{subtitle}</p>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function AccountDetails({ profile }: { profile: Profile }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [username, setUsername] = useState(profile.username || "");
+  const [usernameState, setUsernameState] = useState<"idle" | "checking" | "available" | "taken" | "invalid" | "unchanged">("unchanged");
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const checkUsername = useCallback((val: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (!val || val === profile.username) { setUsernameState("unchanged"); return; }
+    if (val.length < 3 || val.length > 20) { setUsernameState("invalid"); return; }
+    setUsernameState("checking");
+    debounceRef.current = setTimeout(async () => {
+      const res = await fetch(`/api/check-username?username=${encodeURIComponent(val)}`);
+      const data = await res.json();
+      setUsernameState(data.available ? "available" : "taken");
+    }, 500);
+  }, [profile.username]);
 
   async function handleSubmit(formData: FormData) {
-    setLoading(true);
-    setSuccess(false);
-    setError(null);
-
+    setLoading(true); setSuccess(false); setError(null);
     try {
       await updateProfile(formData);
       setSuccess(true);
+      setUsernameState("unchanged");
       setTimeout(() => setSuccess(false), 3000);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
+  }
+
+  const canSave = usernameState !== "taken" && usernameState !== "checking" && usernameState !== "invalid";
+
+  return (
+    <Section title="Account Details" subtitle="Update your name, username, email and phone.">
+      <form action={handleSubmit} className="space-y-4">
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Full Name</label>
+          <div className="relative group">
+            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
+            <input name="fullName" type="text" defaultValue={profile.full_name || ""} placeholder="Your full name" required
+              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Username</label>
+          <div className="relative group">
+            <AtSign className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
+            <input name="username" type="text" value={username}
+              onChange={(e) => { const v = e.target.value.toLowerCase(); setUsername(v); checkUsername(v); }}
+              placeholder="your_username"
+              className={`w-full bg-white/5 border rounded-2xl pl-11 pr-10 py-3 text-white text-sm placeholder-white/20 focus:outline-none transition-all ${
+                usernameState === "available" ? "border-emerald-500/50" :
+                usernameState === "taken" || usernameState === "invalid" ? "border-red-500/40" :
+                "border-white/10 focus:border-[#ff5100]/50"
+              }`} />
+            <div className="absolute right-4 top-1/2 -translate-y-1/2">
+              {usernameState === "checking"  && <Loader2      className="w-4 h-4 text-white/30 animate-spin" />}
+              {usernameState === "available" && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
+              {(usernameState === "taken" || usernameState === "invalid") && <XCircle className="w-4 h-4 text-red-400" />}
+            </div>
+          </div>
+          {usernameState !== "idle" && usernameState !== "unchanged" && (
+            <p className={`text-[10px] ml-1 ${
+              usernameState === "available" ? "text-emerald-500" :
+              usernameState === "taken" ? "text-red-400" :
+              usernameState === "invalid" ? "text-amber-400" : "text-white/30"
+            }`}>
+              {usernameState === "checking"  && "Checking availability…"}
+              {usernameState === "available" && `@${username} is available`}
+              {usernameState === "taken"     && `@${username} is already taken`}
+              {usernameState === "invalid"   && "3–20 characters required"}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Email Address</label>
+          <div className="relative group">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
+            <input name="email" type="email" defaultValue={profile.email || ""} placeholder="your@email.com"
+              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Phone Number</label>
+          <div className="relative group">
+            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
+            <input name="phone" type="tel" defaultValue={profile.phone || ""} placeholder="+91 9876543210"
+              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between pt-2 gap-4">
+          <div>
+            {error   && <p className="text-red-400 text-xs font-medium">{error}</p>}
+            {success && <p className="text-emerald-400 text-xs font-medium flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" />Saved successfully</p>}
+          </div>
+          <button type="submit" disabled={loading || !canSave}
+            className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-40 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
+            {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Saving…</> : <><Save className="w-4 h-4" />Save Changes</>}
+          </button>
+        </div>
+      </form>
+    </Section>
+  );
+}
+
+function ChangePasswordSection() {
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  async function handleSubmit(formData: FormData) {
+    setLoading(true); setSuccess(false); setError(null);
+    try {
+      await changePassword(formData);
+      setSuccess(true);
+      formRef.current?.reset();
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Something went wrong");
+    } finally { setLoading(false); }
   }
 
   return (
-    <form action={handleSubmit} className="space-y-6">
-      <div className="space-y-2">
-        <label className="text-xs font-bold text-white/40 uppercase tracking-widest pl-1">
-          Username
-        </label>
-        <div className="relative">
-          <AtSign className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/10" />
-          <input
-            type="text"
-            defaultValue={profile.username || ""}
-            disabled
-            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-white/40 cursor-not-allowed"
-          />
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-white/20 uppercase tracking-wider bg-white/5 px-2 py-1 rounded">
-            Fixed
-          </span>
-        </div>
-        <p className="text-[10px] text-white/30 pl-1 mt-1">Username cannot be changed after registration.</p>
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-xs font-bold text-white/40 uppercase tracking-widest pl-1">
-          Full Name
-        </label>
-        <div className="relative group">
-          <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
-          <input
-            name="fullName"
-            type="text"
-            defaultValue={profile.full_name || ""}
-            placeholder="e.g. John Doe"
-            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-white placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:ring-4 focus:ring-[#ff5100]/5 transition-all"
-            required
-          />
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-xs font-bold text-white/40 uppercase tracking-widest pl-1">
-          Email Address
-        </label>
-        <div className="relative">
-          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/10" />
-          <input
-            type="email"
-            defaultValue={profile.email || ""}
-            disabled
-            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-white/40 cursor-not-allowed"
-          />
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-white/20 uppercase tracking-wider bg-white/5 px-2 py-1 rounded">
-            Primary
-          </span>
-        </div>
-        <p className="text-[10px] text-white/30 pl-1 mt-1">Contact support to change your primary email.</p>
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-xs font-bold text-white/40 uppercase tracking-widest pl-1">
-          Phone Number
-        </label>
-        <div className="relative group">
-          <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
-          <input
-            name="phone"
-            type="tel"
-            defaultValue={profile.phone || ""}
-            placeholder="e.g. +91 9876543210"
-            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-white placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:ring-4 focus:ring-[#ff5100]/5 transition-all"
-          />
-        </div>
-      </div>
-
-      <div className="pt-4 flex items-center justify-between gap-4">
-        {error && (
-          <p className="text-red-400 text-sm font-medium">{error}</p>
-        )}
-        {success && (
-          <div className="flex items-center gap-2 text-green-400 text-sm font-medium animate-in fade-in slide-in-from-left-2">
-            <CheckCircle2 className="w-4 h-4" />
-            <span>Profile updated successfully</span>
+    <Section title="Change Password" subtitle="Choose a new password for your account.">
+      <form ref={formRef} action={handleSubmit} className="space-y-4">
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">New Password</label>
+          <div className="relative group">
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
+            <input name="newPassword" type={showNew ? "text" : "password"} placeholder="Min. 6 characters" minLength={6} required
+              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-11 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
+            <button type="button" onClick={() => setShowNew(v => !v)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors">
+              {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
           </div>
-        )}
-        <div className="flex-1" />
-        <button
-          type="submit"
-          disabled={loading}
-          className="flex items-center gap-2 bg-[#d84315] hover:bg-[#ff5100] text-white px-8 py-3 rounded-2xl text-sm font-bold tracking-tight shadow-xl shadow-[#d84315]/20 transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Saving...</span>
-            </>
-          ) : (
-            <>
-              <Save className="w-4 h-4" />
-              <span>Save Changes</span>
-            </>
-          )}
-        </button>
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Confirm Password</label>
+          <div className="relative group">
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
+            <input name="confirmPassword" type={showConfirm ? "text" : "password"} placeholder="Repeat new password" required
+              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-11 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
+            <button type="button" onClick={() => setShowConfirm(v => !v)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors">
+              {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between pt-2 gap-4">
+          <div>
+            {error   && <p className="text-red-400 text-xs font-medium">{error}</p>}
+            {success && <p className="text-emerald-400 text-xs font-medium flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" />Password updated</p>}
+          </div>
+          <button type="submit" disabled={loading}
+            className="flex items-center gap-2 bg-white/8 hover:bg-white/14 border border-white/10 hover:border-white/20 disabled:opacity-40 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
+            {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Updating…</> : <><Lock className="w-4 h-4" />Update Password</>}
+          </button>
+        </div>
+      </form>
+    </Section>
+  );
+}
+
+function AdventureProfileSection() {
+  const [stored, setStored] = useState<ReturnType<typeof loadProfile>>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setStored(loadProfile()); setMounted(true); }, []);
+  if (!mounted) return null;
+
+  if (!stored) {
+    return (
+      <Section title="Adventure Profile" subtitle="Your personal ERT rating and matched adventures.">
+        <div className="text-center py-6">
+          <Compass className="w-10 h-10 text-white/15 mx-auto mb-3" />
+          <p className="text-white/40 text-sm mb-4">You haven&apos;t taken the matchmaker yet.</p>
+          <Link href="/matchmaker"
+            className="inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-all group">
+            Take Assessment <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
+      </Section>
+    );
+  }
+
+  const tier = TIER_INFO[stored.label] ?? TIER_INFO["Trail Trekker"];
+
+  return (
+    <Section title="Adventure Profile" subtitle="Based on your matchmaker assessment.">
+      <div className="flex items-center gap-4 mb-5 p-4 rounded-2xl border"
+        style={{ background: `${tier.color}0d`, borderColor: `${tier.color}28` }}>
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{ background: `${tier.color}20`, color: tier.color }}>
+          {tier.icon}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-bold text-sm" style={{ color: tier.color }}>{stored.label}</p>
+          <div className="flex items-center gap-0.5 mt-0.5">
+            {Array.from({ length: tier.stars }).map((_, i) => (
+              <span key={i} className="text-xs" style={{ color: tier.color }}>★</span>
+            ))}
+          </div>
+          <p className="text-white/40 text-xs mt-1 leading-snug">{tier.desc}</p>
+        </div>
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          {([["E", stored.ert.e, "#f97316"], ["R", stored.ert.r, "#ef4444"], ["T", stored.ert.t, "#8b5cf6"]] as const).map(([label, value, color]) => (
+            <div key={label} className="flex flex-col items-center bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5">
+              <span className="text-[9px] font-bold text-white/40 uppercase">{label}</span>
+              <span className="text-base font-bold" style={{ color }}>{value}</span>
+            </div>
+          ))}
+        </div>
       </div>
-    </form>
+
+      {stored.summary && (
+        <p className="text-white/50 text-xs leading-relaxed mb-5 border-l-2 border-white/10 pl-3">{stored.summary}</p>
+      )}
+
+      <div className="flex flex-wrap gap-2">
+        <Link href={`/explore?maxE=${stored.ert.e}&maxR=${stored.ert.r}&maxT=${stored.ert.t}`}
+          className="inline-flex items-center gap-1.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-4 py-2 rounded-xl text-xs transition-all group">
+          Explore matching treks <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+        </Link>
+        <Link href="/matchmaker"
+          className="inline-flex items-center gap-1.5 border border-white/10 hover:border-white/20 text-white/50 hover:text-white font-medium px-4 py-2 rounded-xl text-xs transition-all">
+          Retake assessment
+        </Link>
+      </div>
+    </Section>
+  );
+}
+
+export default function ProfileForm({ profile }: { profile: Profile }) {
+  return (
+    <div className="space-y-6">
+      <AccountDetails profile={profile} />
+      <ChangePasswordSection />
+      <AdventureProfileSection />
+    </div>
   );
 }
