@@ -50,7 +50,7 @@ export default function ExploreClient() {
   const [maxRisk, setMaxRisk] = useState<number | null>(searchParams.get("maxR") ? Number(searchParams.get("maxR")) : null);
   const [minTechnicality, setMinTechnicality] = useState<number | null>(null);
   const [maxTechnicality, setMaxTechnicality] = useState<number | null>(searchParams.get("maxT") ? Number(searchParams.get("maxT")) : null);
-  const [filtersOpen, setFiltersOpen] = useState(!!(searchParams.get("maxE") || searchParams.get("maxR") || searchParams.get("maxT")));
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
