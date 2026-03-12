@@ -3,12 +3,13 @@
 import { useState, Suspense } from "react";
 import { login } from "@/app/auth/actions";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Eye, EyeOff, Mountain, ArrowLeft } from "lucide-react";
 import Logo from "@/components/ui/custom/Logo";
 
 function LoginForm() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const message = searchParams.get("message");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,12 @@ function LoginForm() {
     const formData = new FormData(e.currentTarget);
     const result = await login(formData);
     setLoading(false);
-    if (result?.error) setError(result.error);
+    if (result?.error) {
+      setError(result.error);
+    } else if (result?.success) {
+      router.push("/");
+      router.refresh();
+    }
   }
 
   return (
