@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -487,6 +487,7 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
         icon={<CheckCircle2 className="w-4 h-4" style={{ color: "#4ade80" }} />}
         adventures={readyNow}
         accentColor="#4ade80"
+        defaultOpen
       />
 
       {/* ── Stretch Challenge ── */}
@@ -559,7 +560,8 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
               window.location.reload();
             }
           }}
-          className="flex items-center gap-2 px-5 py-3 rounded-full text-white/30 text-sm hover:text-white/60 transition-colors"
+          className="flex items-center gap-2 px-5 py-3 rounded-full border text-white/60 text-sm font-medium hover:text-white transition-colors"
+          style={{ borderColor: "rgba(255,255,255,0.12)" }}
         >
           <RotateCcw className="w-3.5 h-3.5" />
           Retake assessment
@@ -572,7 +574,7 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
 // ─── Adventure category section ───────────────────────────────────────────────
 
 function AdventureCategory({
-  label, sublabel, icon, adventures: list, accentColor, dimmed = false,
+  label, sublabel, icon, adventures: list, accentColor, dimmed = false, defaultOpen = false,
 }: {
   label: string;
   sublabel: string;
@@ -580,55 +582,93 @@ function AdventureCategory({
   adventures: Adventure[];
   accentColor: string;
   dimmed?: boolean;
+  defaultOpen?: boolean;
 }) {
+  const [open, setOpen] = useState(defaultOpen);
+  const contentRef = useRef<HTMLDivElement>(null);
+
   if (list.length === 0) return null;
 
   return (
-    <div className="mb-10">
-      <div className="flex items-center gap-2 mb-1">
-        {icon}
-        <h2 className="text-white font-bold text-lg">{label}</h2>
-      </div>
-      <p className="text-white/35 text-sm mb-5">{sublabel}</p>
+    <div className="mb-3 rounded-2xl border overflow-hidden" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+      {/* Tab header */}
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between px-5 py-4 transition-colors hover:bg-white/[0.03]"
+        style={{ background: open ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)" }}
+      >
+        <div className="flex items-center gap-3">
+          {icon}
+          <div className="text-left">
+            <p className="text-white font-semibold text-sm">{label}</p>
+            <p className="text-white/35 text-xs mt-0.5">{sublabel}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3 shrink-0">
+          <span
+            className="text-[10px] font-semibold px-2.5 py-1 rounded-full"
+            style={{ background: `${accentColor}18`, color: accentColor }}
+          >
+            {list.length} trek{list.length !== 1 ? "s" : ""}
+          </span>
+          <ChevronRight
+            className="w-4 h-4 text-white/30 transition-transform duration-200"
+            style={{ transform: open ? "rotate(90deg)" : "rotate(0deg)" }}
+          />
+        </div>
+      </button>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {list.map(a => {
-          const ert = getERT(a);
-          return (
-            <Link
-              key={a.slug}
-              href={`/experiences/${a.slug}`}
-              className="group rounded-2xl overflow-hidden border transition-all hover:-translate-y-1 hover:shadow-xl duration-300"
-              style={{
-                borderColor: dimmed ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.1)",
-                background: "rgba(255,255,255,0.03)",
-                opacity: dimmed ? 0.8 : 1,
-              }}
-            >
-              <div className="relative h-40 overflow-hidden">
-                <Image
-                  src={a.heroImage}
-                  alt={a.name}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  style={{ filter: dimmed ? "saturate(0.7)" : undefined }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                <div className="absolute bottom-3 left-3 right-3">
-                  <div className="flex items-center gap-1 mb-1">
-                    <MapPin className="w-3 h-3" style={{ color: accentColor }} />
-                    <span className="text-white/60 text-[10px]">{a.state}</span>
+      {/* Expandable cards */}
+      <div
+        ref={contentRef}
+        className="overflow-hidden transition-all duration-300 ease-in-out"
+        style={{ maxHeight: open ? `${(contentRef.current?.scrollHeight ?? 1000)}px` : "0px" }}
+      >
+        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          {list.map(a => {
+            const ert = getERT(a);
+            return (
+              <Link
+                key={a.slug}
+                href={`/experiences/${a.slug}`}
+                className="group rounded-xl overflow-hidden border transition-all hover:-translate-y-0.5 hover:shadow-lg duration-200"
+                style={{
+                  borderColor: dimmed ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.09)",
+                  background: "rgba(255,255,255,0.03)",
+                }}
+              >
+                <div className="relative h-36 overflow-hidden">
+                  <Image
+                    src={a.heroImage}
+                    alt={a.name}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    style={{ filter: dimmed ? "saturate(0.75)" : undefined }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                  {/* Rating badge */}
+                  {a.rating && (
+                    <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full" style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}>
+                      <span className="text-yellow-400 text-[10px]">★</span>
+                      <span className="text-white text-[10px] font-semibold">{a.rating.toFixed(1)}</span>
+                    </div>
+                  )}
+                  <div className="absolute bottom-3 left-3 right-3">
+                    <div className="flex items-center gap-1 mb-1">
+                      <MapPin className="w-3 h-3 shrink-0" style={{ color: accentColor }} />
+                      <span className="text-white/55 text-[10px] truncate">{a.state}</span>
+                    </div>
+                    <h3 className="text-white font-semibold text-sm leading-tight">{a.name}</h3>
                   </div>
-                  <h3 className="text-white font-semibold text-sm leading-tight">{a.name}</h3>
                 </div>
-              </div>
-              <div className="px-4 py-3 flex items-center justify-between">
-                <ERTBadge ert={ert} size="sm" dark />
-                <ArrowRight className="w-3.5 h-3.5 text-white/30 group-hover:text-[#ff5100] transition-colors" />
-              </div>
-            </Link>
-          );
-        })}
+                <div className="px-3 py-2.5 flex items-center justify-between">
+                  <ERTBadge ert={ert} size="sm" dark />
+                  <ArrowRight className="w-3 h-3 text-white/25 group-hover:text-[#ff5100] transition-colors" />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
