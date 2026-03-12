@@ -8,6 +8,7 @@ import {
   Zap, Shield, Mountain, CheckCircle2, TrendingUp, Lock,
 } from "lucide-react";
 import { adventures } from "@/lib/data";
+import type { Adventure } from "@/lib/data";
 import { getERT } from "@/lib/ert";
 import {
   computeUserProfile,
@@ -569,8 +570,6 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
 }
 
 // ─── Adventure category section ───────────────────────────────────────────────
-
-import type { Adventure } from "@/lib/data";
 
 function AdventureCategory({
   label, sublabel, icon, adventures: list, accentColor, dimmed = false,
