@@ -41,11 +41,11 @@ function Section({ title, subtitle, children }: { title: string; subtitle?: stri
 }
 
 function AccountDetails({ profile }: { profile: Profile }) {
+  const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Controlled fields for dirty tracking
   const [fullName, setFullName] = useState(profile.full_name || "");
   const [username, setUsername] = useState(profile.username || "");
   const [email, setEmail] = useState(profile.email || "");
@@ -72,12 +72,23 @@ function AccountDetails({ profile }: { profile: Profile }) {
     }, 500);
   }, [profile.username]);
 
+  function handleCancel() {
+    setFullName(profile.full_name || "");
+    setUsername(profile.username || "");
+    setEmail(profile.email || "");
+    setPhone(profile.phone || "");
+    setUsernameState("unchanged");
+    setError(null);
+    setEditing(false);
+  }
+
   async function handleSubmit(formData: FormData) {
     setLoading(true); setSuccess(false); setError(null);
     try {
       await updateProfile(formData);
       setSuccess(true);
       setUsernameState("unchanged");
+      setEditing(false);
       setTimeout(() => setSuccess(false), 3000);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong");
@@ -86,16 +97,22 @@ function AccountDetails({ profile }: { profile: Profile }) {
 
   const canSave = isDirty && usernameState !== "taken" && usernameState !== "checking" && usernameState !== "invalid";
 
+  const fieldClass = (editable: boolean) =>
+    `w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm transition-all ${
+      editable
+        ? "text-white placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 cursor-text"
+        : "text-white/50 cursor-default select-none pointer-events-none"
+    }`;
+
   return (
-    <Section title="Account Details" subtitle="Update your name, username, email and phone.">
+    <Section title="Account Details" subtitle="Your personal information.">
       <form action={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
           <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Full Name</label>
           <div className="relative group">
             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
-            <input name="fullName" type="text" value={fullName} onChange={e => setFullName(e.target.value)}
-              placeholder="Your full name" required
-              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
+            <input name="fullName" type="text" value={fullName} onChange={e => editing && setFullName(e.target.value)}
+              readOnly={!editing} placeholder="Your full name" required className={fieldClass(editing)} />
           </div>
         </div>
 
@@ -103,25 +120,27 @@ function AccountDetails({ profile }: { profile: Profile }) {
           <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Username</label>
           <div className="relative group">
             <AtSign className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
-            <input name="username" type="text" value={username}
-              onChange={(e) => { const v = e.target.value.toLowerCase(); setUsername(v); checkUsername(v); }}
+            <input name="username" type="text" value={username} readOnly={!editing}
+              onChange={(e) => { if (!editing) return; const v = e.target.value.toLowerCase(); setUsername(v); checkUsername(v); }}
               placeholder="your_username"
-              className={`w-full bg-white/5 border rounded-2xl pl-11 pr-10 py-3 text-white text-sm placeholder-white/20 focus:outline-none transition-all ${
-                usernameState === "available" ? "border-emerald-500/50" :
-                usernameState === "taken" || usernameState === "invalid" ? "border-red-500/40" :
-                "border-white/10 focus:border-[#ff5100]/50"
+              className={`w-full bg-white/5 border rounded-2xl pl-11 pr-10 py-3 text-sm transition-all ${
+                !editing ? "text-white/50 cursor-default select-none pointer-events-none border-white/10" :
+                usernameState === "available" ? "text-white border-emerald-500/50 focus:outline-none" :
+                usernameState === "taken" || usernameState === "invalid" ? "text-white border-red-500/40 focus:outline-none" :
+                "text-white border-white/10 focus:outline-none focus:border-[#ff5100]/50"
               }`} />
-            <div className="absolute right-4 top-1/2 -translate-y-1/2">
-              {usernameState === "checking"  && <Loader2      className="w-4 h-4 text-white/30 animate-spin" />}
-              {usernameState === "available" && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
-              {(usernameState === "taken" || usernameState === "invalid") && <XCircle className="w-4 h-4 text-red-400" />}
-            </div>
+            {editing && (
+              <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                {usernameState === "checking"  && <Loader2      className="w-4 h-4 text-white/30 animate-spin" />}
+                {usernameState === "available" && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
+                {(usernameState === "taken" || usernameState === "invalid") && <XCircle className="w-4 h-4 text-red-400" />}
+              </div>
+            )}
           </div>
-          {usernameState !== "idle" && usernameState !== "unchanged" && (
+          {editing && usernameState !== "idle" && usernameState !== "unchanged" && (
             <p className={`text-[10px] ml-1 ${
               usernameState === "available" ? "text-emerald-500" :
-              usernameState === "taken" ? "text-red-400" :
-              usernameState === "invalid" ? "text-amber-400" : "text-white/30"
+              usernameState === "taken" ? "text-red-400" : "text-amber-400"
             }`}>
               {usernameState === "checking"  && "Checking availability…"}
               {usernameState === "available" && `@${username} is available`}
@@ -135,9 +154,9 @@ function AccountDetails({ profile }: { profile: Profile }) {
           <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Email Address</label>
           <div className="relative group">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
-            <input name="email" type="email" value={email} onChange={e => setEmail(e.target.value)}
-              placeholder="your@email.com"
-              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
+            <input name="email" type="email" value={email} readOnly={!editing}
+              onChange={e => editing && setEmail(e.target.value)} placeholder="your@email.com"
+              className={fieldClass(editing)} />
           </div>
         </div>
 
@@ -145,23 +164,38 @@ function AccountDetails({ profile }: { profile: Profile }) {
           <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Phone Number</label>
           <div className="relative group">
             <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
-            <input name="phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)}
-              placeholder="+91 9876543210"
-              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
+            <input name="phone" type="tel" value={phone} readOnly={!editing}
+              onChange={e => editing && setPhone(e.target.value)} placeholder="+91 9876543210"
+              className={fieldClass(editing)} />
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-2 gap-4">
+        <div className="flex items-center justify-between pt-2 gap-3">
           <div>
             {error   && <p className="text-red-400 text-xs font-medium">{error}</p>}
             {success && <p className="text-emerald-400 text-xs font-medium flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" />Saved successfully</p>}
           </div>
-          {canSave && (
-            <button type="submit" disabled={loading}
-              className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-40 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
-              {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Saving…</> : <><Save className="w-4 h-4" />Save Changes</>}
-            </button>
-          )}
+          <div className="flex items-center gap-2 ml-auto">
+            {!editing ? (
+              <button type="button" onClick={() => setEditing(true)}
+                className="flex items-center gap-2 border border-white/10 hover:border-white/20 text-white/70 hover:text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
+                Update Details
+              </button>
+            ) : (
+              <>
+                <button type="button" onClick={handleCancel} disabled={loading}
+                  className="px-4 py-2.5 rounded-xl text-sm font-medium text-white/40 hover:text-white/70 transition-colors">
+                  Cancel
+                </button>
+                {canSave && (
+                  <button type="submit" disabled={loading}
+                    className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-40 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
+                    {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Saving…</> : <><Save className="w-4 h-4" />Save Changes</>}
+                  </button>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </form>
     </Section>
