@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { login } from "@/app/auth/actions";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
@@ -14,13 +13,29 @@ function LoginForm() {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleAction(formData: FormData) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setPending(true);
     setError(null);
-    const result = await login(formData);
-    // redirect() throws — we only reach here on error
-    if (result?.error) {
-      setError(result.error);
+    const fd = new FormData(e.currentTarget);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          identifier: fd.get("email"),
+          password: fd.get("password"),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        setError(data.error || "Login failed");
+        setPending(false);
+      } else {
+        window.location.href = "/";
+      }
+    } catch {
+      setError("Something went wrong. Please try again.");
       setPending(false);
     }
   }
@@ -58,7 +73,7 @@ function LoginForm() {
         </div>
       )}
 
-      <form action={handleAction} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">
             Username or Email
