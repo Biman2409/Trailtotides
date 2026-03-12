@@ -174,7 +174,7 @@ export default function SubmitStoryPage() {
                       name="authorRole"
                       value={form.authorRole}
                       onChange={handleChange}
-                      placeholder="e.g. Solo biker, High-altitude trekker, Freediver…"
+                      placeholder="e.g. Solo biker, Freediver…"
                       className={inputClass}
                     />
                   </div>
