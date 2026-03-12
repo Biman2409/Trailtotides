@@ -86,7 +86,7 @@ export default function MatchmakerHomepageSection() {
   }
 
   const tier = TIER_INFO[profile.label] ?? TIER_INFO["Trail Trekker"];
-  const matches = getMatchedAdventures(profile.ert, adventures);
+  const matches = getMatchedAdventures(profile.ert, adventures).slice(0, 3);
 
   return (
     <section className="py-16 lg:py-32 px-5 lg:px-8 bg-[#0f1420] border-t border-white/5">
