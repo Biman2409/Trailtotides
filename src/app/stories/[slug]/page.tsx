@@ -239,7 +239,7 @@ export default async function StoryPage({ params }: Props) {
               </div>
               <p className="text-white/40 text-sm mt-0.5">{story.authorRole}</p>
               <p className="text-white/50 text-sm mt-2 leading-relaxed">
-                Writing about adventure since {story.date.split(" ")[1] ?? "2022"}. Based out of India, usually somewhere between a trailhead and a deadline.
+                Runs a business, escapes it once a year. One long, proper adventure — no shortcuts, no itinerary. The kind most people only ever put on a bucket list.
               </p>
             </div>
           </div>
