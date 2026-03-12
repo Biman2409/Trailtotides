@@ -20,7 +20,7 @@ export default function SignUpPage() {
   const checkUsername = useCallback((value: string) => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     if (!value) { setUsernameState("idle"); return; }
-    if (!/^[a-z0-9_]{3,20}$/.test(value)) { setUsernameState("invalid"); return; }
+    if (value.length < 3 || value.length > 20) { setUsernameState("invalid"); return; }
     setUsernameState("checking");
     debounceTimer.current = setTimeout(async () => {
       const res = await fetch(`/api/check-username?username=${encodeURIComponent(value)}`);
@@ -183,7 +183,7 @@ export default function SignUpPage() {
                     {usernameState === "checking" && "Checking availability…"}
                     {usernameState === "available" && `@${username} is available`}
                     {usernameState === "taken" && `@${username} is already taken`}
-                    {usernameState === "invalid" && "3–20 chars, only lowercase letters, numbers and _"}
+                    {usernameState === "invalid" && "Username must be between 3 and 20 characters"}
                   </p>
                 )}
               </div>
