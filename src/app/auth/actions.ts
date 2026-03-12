@@ -45,35 +45,18 @@ export async function signUp(formData: FormData) {
 }
 
 
-export async function login(formData: FormData) {
-  const supabase = await createClient();
+// Resolves a username or email to an email address (used by client-side login)
+export async function resolveEmail(identifier: string): Promise<{ email?: string; error?: string }> {
+  const trimmed = identifier.trim();
+  if (trimmed.includes("@")) return { email: trimmed };
+
   const adminClient = await createAdminClient();
-
-  const identifier = (formData.get("email") as string).trim();
-  const password = formData.get("password") as string;
-
-  let email = identifier;
-
-  // If identifier doesn't look like an email, treat it as a username
-  if (!identifier.includes("@")) {
-    const { data: allUsers } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
-    const match = allUsers?.users.find(
-      (u) => (u.user_metadata?.username ?? "").toLowerCase() === identifier.toLowerCase()
-    );
-
-    if (!match?.email) {
-      return { error: "No account found with that username." };
-    }
-    email = match.email;
-  }
-
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-  if (error) {
-    return { error: error.message };
-  }
-
-  return { success: true };
+  const { data: allUsers } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
+  const match = allUsers?.users.find(
+    (u) => (u.user_metadata?.username ?? "").toLowerCase() === trimmed.toLowerCase()
+  );
+  if (!match?.email) return { error: "No account found with that username." };
+  return { email: match.email };
 }
 
 export async function resetPassword(formData: FormData) {

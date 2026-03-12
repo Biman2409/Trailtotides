@@ -228,7 +228,7 @@ export default function Navbar() {
                   <ChevronDown className={`w-3.5 h-3.5 text-white/40 transition-transform ${userMenuOpen ? "rotate-180" : ""}`} />
                 </button>
                 {userMenuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-52 bg-[#1a1f2e] border border-white/10 rounded-2xl shadow-xl overflow-hidden">
+                  <div className="absolute right-0 top-full mt-2 w-52 bg-[#1a1f2e] border border-white/10 rounded-2xl shadow-xl overflow-hidden z-50">
                     <div className="px-4 py-3 border-b border-white/8">
                       <p className="text-white text-sm font-medium truncate">{user.name}</p>
                       <p className="text-white/40 text-xs truncate">{user.email}</p>

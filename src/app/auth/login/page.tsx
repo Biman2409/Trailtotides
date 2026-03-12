@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { login } from "@/app/auth/actions";
+import { resolveEmail } from "@/app/auth/actions";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Eye, EyeOff, Mountain, ArrowLeft } from "lucide-react";
@@ -20,11 +21,20 @@ function LoginForm() {
     setLoading(true);
     setError(null);
     const formData = new FormData(e.currentTarget);
-    const result = await login(formData);
+    const identifier = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    // Resolve username → email on server if needed, then sign in client-side
+    // so the browser Supabase client stores the session cookie itself
+    const { email, error: resolveError } = await resolveEmail(identifier);
+    if (resolveError) { setError(resolveError); setLoading(false); return; }
+
+    const supabase = createClient();
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email: email!, password });
     setLoading(false);
-    if (result?.error) {
-      setError(result.error);
-    } else if (result?.success) {
+    if (signInError) {
+      setError(signInError.message);
+    } else {
       router.push("/");
       router.refresh();
     }
