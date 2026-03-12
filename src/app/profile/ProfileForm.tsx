@@ -287,7 +287,7 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
     <div className="space-y-6">
       <AccountDetails profile={profile} />
       <ChangePasswordSection />
-      <AdventureProfileSection />
+      {profile.role !== "admin" && <AdventureProfileSection />}
     </div>
   );
 }
