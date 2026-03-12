@@ -111,7 +111,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
   return (
     <div className="max-w-xl mx-auto px-6 py-24">
       {/* Header */}
-      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Find Your Mountain</p>
+      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Matchmaker</p>
       <h1 className="text-white text-4xl font-bold tracking-tight leading-tight mb-3">
         Adventures built, for your body
       </h1>
@@ -209,7 +209,7 @@ export default function MatchmakerClient() {
     <div className="max-w-xl mx-auto px-6 py-24">
       {/* Header */}
       <div className="mb-8">
-        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Find Your Mountain</p>
+        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Matchmaker</p>
         <h1 className="text-white text-2xl font-bold tracking-tight">
           {phase.phase}
         </h1>
