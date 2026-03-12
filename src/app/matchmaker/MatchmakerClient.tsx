@@ -539,7 +539,7 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
       {/* ── CTAs ── */}
       <div className="flex flex-wrap gap-3 items-center">
         <Link
-          href="/explore"
+          href={`/explore?maxE=${profile.ert.e}&maxR=${profile.ert.r}&maxT=${profile.ert.t}`}
           className="flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm text-white transition-all hover:brightness-110"
           style={{ background: "#ff5100" }}
         >

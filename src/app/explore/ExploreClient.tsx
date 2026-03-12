@@ -44,13 +44,13 @@ export default function ExploreClient() {
   const [selectedMonths, setSelectedMonths] = useState<Month[]>([]);
   const [selectedGroupSizes, setSelectedGroupSizes] = useState<GroupSize[]>([]);
   // ERT filters: null = no filter, number = minimum value
-  const [minExertion, setMinExertion] = useState<number | null>(null);
-  const [maxExertion, setMaxExertion] = useState<number | null>(null);
+  const [minExertion, setMinExertion] = useState<number | null>(searchParams.get("maxE") ? null : null);
+  const [maxExertion, setMaxExertion] = useState<number | null>(searchParams.get("maxE") ? Number(searchParams.get("maxE")) : null);
   const [minRisk, setMinRisk] = useState<number | null>(null);
-  const [maxRisk, setMaxRisk] = useState<number | null>(null);
+  const [maxRisk, setMaxRisk] = useState<number | null>(searchParams.get("maxR") ? Number(searchParams.get("maxR")) : null);
   const [minTechnicality, setMinTechnicality] = useState<number | null>(null);
-  const [maxTechnicality, setMaxTechnicality] = useState<number | null>(null);
-  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [maxTechnicality, setMaxTechnicality] = useState<number | null>(searchParams.get("maxT") ? Number(searchParams.get("maxT")) : null);
+  const [filtersOpen, setFiltersOpen] = useState(!!(searchParams.get("maxE") || searchParams.get("maxR") || searchParams.get("maxT")));
   const [aiOpen, setAiOpen] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
