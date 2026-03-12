@@ -11,15 +11,16 @@ const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const PROJECT_REF = SUPABASE_URL.replace("https://", "").split(".")[0];
 const COOKIE_NAME = `sb-${PROJECT_REF}-auth-token`;
 
-function base64url(str: string): string {
-  // Simple UTF-8 → base64url encoding matching @supabase/ssr format
+const COOKIE_CHUNK_SIZE = 3180;
+
+function encodeValue(str: string): string {
   const bytes = new TextEncoder().encode(str);
   let binary = "";
   bytes.forEach((b) => (binary += String.fromCharCode(b)));
   return "base64-" + btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
-function setSessionCookie(session: {
+function setSessionCookies(session: {
   access_token: string;
   refresh_token: string;
   expires_in: number;
@@ -27,9 +28,26 @@ function setSessionCookie(session: {
   token_type: string;
   user: object;
 }) {
-  const value = base64url(JSON.stringify(session));
-  const maxAge = 400 * 24 * 60 * 60; // 400 days
-  document.cookie = `${COOKIE_NAME}=${value}; path=/; max-age=${maxAge}; samesite=lax`;
+  const value = encodeValue(JSON.stringify(session));
+  const maxAge = 400 * 24 * 60 * 60;
+  const opts = `; path=/; max-age=${maxAge}; samesite=lax`;
+
+  // Clear any old chunks first
+  for (let i = 0; i < 5; i++) {
+    document.cookie = `${COOKIE_NAME}.${i}=; path=/; max-age=0; samesite=lax`;
+  }
+  document.cookie = `${COOKIE_NAME}=; path=/; max-age=0; samesite=lax`;
+
+  if (value.length <= COOKIE_CHUNK_SIZE) {
+    // Fits in one cookie — write as chunk 0 so server reassembles correctly
+    document.cookie = `${COOKIE_NAME}.0=${value}${opts}`;
+  } else {
+    // Split into chunks
+    const chunks = value.match(new RegExp(`.{1,${COOKIE_CHUNK_SIZE}}`, "g")) || [];
+    chunks.forEach((chunk, i) => {
+      document.cookie = `${COOKIE_NAME}.${i}=${chunk}${opts}`;
+    });
+  }
 }
 
 function LoginForm() {
@@ -84,8 +102,8 @@ function LoginForm() {
         return;
       }
 
-      // Write session cookie directly — same format @supabase/ssr uses
-      setSessionCookie({
+      // Write session cookie directly — same chunked format @supabase/ssr uses
+      setSessionCookies({
         access_token: tokenData.access_token,
         refresh_token: tokenData.refresh_token,
         expires_in: tokenData.expires_in,
