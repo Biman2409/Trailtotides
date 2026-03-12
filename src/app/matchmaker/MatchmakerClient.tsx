@@ -480,7 +480,7 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
           <div className="flex items-start justify-between gap-4 mb-5">
             <div>
               <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Adventure Tier</p>
-              <h1 className="text-white text-3xl font-bold tracking-tight">{profile.label}</h1>
+              <h1 className="text-3xl font-bold tracking-tight" style={{ color: tier.color }}>{profile.label}</h1>
               <p className="text-white/50 text-sm mt-1.5 leading-relaxed">{tier.desc}</p>
             </div>
             {/* Icon badge + stars */}
@@ -492,8 +492,8 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
                 {tier.icon}
               </div>
               <div className="flex items-center gap-0.5">
-                {[1,2,3,4,5].map(n => (
-                  <span key={n} className="text-[10px]" style={{ color: n <= tier.stars ? tier.color : "rgba(255,255,255,0.12)" }}>★</span>
+                {Array.from({ length: tier.stars }).map((_, i) => (
+                  <span key={i} className="text-sm" style={{ color: tier.color }}>★</span>
                 ))}
               </div>
             </div>
