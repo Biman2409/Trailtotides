@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 import { createAdminClient } from "@/lib/supabase/server";
 
 export async function POST(request: NextRequest) {
@@ -19,55 +20,34 @@ export async function POST(request: NextRequest) {
     email = match.email;
   }
 
-  // Sign in via Supabase REST directly to get tokens
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/token?grant_type=password`,
+  // Build a response and use createServerClient so it handles cookie chunking correctly
+  const response = NextResponse.json({ ok: true });
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          );
+        },
       },
-      body: JSON.stringify({ email, password }),
     }
   );
 
-  const data = await res.json();
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-  if (!res.ok || data.error) {
+  if (error) {
     return NextResponse.json(
-      { error: data.error_description || data.msg || "Invalid credentials" },
+      { error: error.message },
       { status: 401 }
     );
   }
-
-  const projectRef = process.env.NEXT_PUBLIC_SUPABASE_URL!
-    .replace("https://", "")
-    .split(".")[0];
-
-  const cookieOpts = {
-    path: "/",
-    httpOnly: false,
-    sameSite: "lax" as const,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: data.expires_in ?? 3600,
-  };
-
-  const response = NextResponse.json({ ok: true });
-
-  // Set the Supabase session cookies directly
-  response.cookies.set(
-    `sb-${projectRef}-auth-token`,
-    JSON.stringify({
-      access_token: data.access_token,
-      token_type: data.token_type,
-      expires_in: data.expires_in,
-      expires_at: data.expires_at,
-      refresh_token: data.refresh_token,
-      user: data.user,
-    }),
-    cookieOpts
-  );
 
   return response;
 }

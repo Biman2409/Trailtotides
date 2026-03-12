@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import Logo from "@/components/ui/custom/Logo";
+import { createClient } from "@/lib/supabase/client";
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -18,22 +19,38 @@ function LoginForm() {
     setPending(true);
     setError(null);
     const fd = new FormData(e.currentTarget);
+    const identifier = (fd.get("email") as string).trim();
+    const password = fd.get("password") as string;
+
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          identifier: fd.get("email"),
-          password: fd.get("password"),
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok || data.error) {
-        setError(data.error || "Login failed");
-        setPending(false);
-      } else {
-        window.location.href = "/";
+      // Resolve username → email via API if needed
+      let email = identifier;
+      if (!identifier.includes("@")) {
+        const res = await fetch("/api/auth/resolve-username", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: identifier }),
+        });
+        const data = await res.json();
+        if (!res.ok || data.error) {
+          setError(data.error || "No account found with that username.");
+          setPending(false);
+          return;
+        }
+        email = data.email;
       }
+
+      // Sign in directly with browser client so session is stored in cookies/localStorage
+      const supabase = createClient();
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+      if (signInError) {
+        setError(signInError.message);
+        setPending(false);
+        return;
+      }
+
+      // Hard reload so Next.js server picks up the new session cookie
+      window.location.href = "/";
     } catch {
       setError("Something went wrong. Please try again.");
       setPending(false);
