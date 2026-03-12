@@ -358,12 +358,12 @@ export default function MatchmakerClient() {
 
 // ─── Results screen ───────────────────────────────────────────────────────────
 
-const TIER_INFO: Record<string, { color: string; icon: React.ReactNode; desc: string }> = {
-  "Beginner Explorer":     { color: "#22d3ee", icon: <Compass   className="w-6 h-6" />, desc: "You're at the start of your mountain journey. Excellent trails await." },
-  "Trail Trekker":         { color: "#4ade80", icon: <Footprints className="w-6 h-6" />, desc: "You can handle multi-day treks on well-established routes." },
-  "Mountain Adventurer":   { color: "#f59e0b", icon: <Mountain  className="w-6 h-6" />, desc: "You're ready for challenging high-altitude treks with real commitment." },
-  "High-Altitude Trekker": { color: "#f97316", icon: <CloudSnow className="w-6 h-6" />, desc: "Remote, demanding expeditions are within your reach." },
-  "Expedition Climber":    { color: "#a78bfa", icon: <Flag      className="w-6 h-6" />, desc: "You're operating at the upper end. Technical peaks are viable." },
+const TIER_INFO: Record<string, { color: string; icon: React.ReactNode; desc: string; stars: number }> = {
+  "Beginner Explorer":     { color: "#22d3ee", stars: 1, icon: <Compass    className="w-6 h-6" />, desc: "You're at the start of your mountain journey. Excellent trails await." },
+  "Trail Trekker":         { color: "#4ade80", stars: 2, icon: <Footprints className="w-6 h-6" />, desc: "You can handle multi-day treks on well-established routes." },
+  "Mountain Adventurer":   { color: "#f59e0b", stars: 3, icon: <Mountain   className="w-6 h-6" />, desc: "You're ready for challenging high-altitude treks with real commitment." },
+  "High-Altitude Trekker": { color: "#f97316", stars: 4, icon: <CloudSnow  className="w-6 h-6" />, desc: "Remote, demanding expeditions are within your reach." },
+  "Expedition Climber":    { color: "#a78bfa", stars: 5, icon: <Flag        className="w-6 h-6" />, desc: "You're operating at the upper end. Technical peaks are viable." },
 };
 
 const IMPROVEMENT_TIPS: Record<string, string[]> = {
@@ -467,9 +467,13 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
         className="rounded-3xl p-7 mb-6 border relative overflow-hidden"
         style={{ background: "rgba(255,255,255,0.04)", borderColor: `${tier.color}35`, borderLeftWidth: "4px", borderLeftColor: tier.color }}
       >
-        {/* Glow accent */}
+        {/* Glow accent — strong, matches tier colour */}
         <div
-          className="absolute top-0 right-0 w-56 h-56 rounded-full opacity-10 blur-3xl pointer-events-none"
+          className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-20 blur-3xl pointer-events-none"
+          style={{ background: tier.color }}
+        />
+        <div
+          className="absolute bottom-0 left-0 w-40 h-40 rounded-full opacity-10 blur-2xl pointer-events-none"
           style={{ background: tier.color }}
         />
         <div className="relative">
@@ -479,12 +483,19 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
               <h1 className="text-white text-3xl font-bold tracking-tight">{profile.label}</h1>
               <p className="text-white/50 text-sm mt-1.5 leading-relaxed">{tier.desc}</p>
             </div>
-            {/* Icon badge */}
-            <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
-              style={{ background: `${tier.color}20`, color: tier.color }}
-            >
-              {tier.icon}
+            {/* Icon badge + stars */}
+            <div className="flex flex-col items-center gap-1.5 shrink-0">
+              <div
+                className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg"
+                style={{ background: `${tier.color}25`, color: tier.color, boxShadow: `0 0 20px ${tier.color}40` }}
+              >
+                {tier.icon}
+              </div>
+              <div className="flex items-center gap-0.5">
+                {[1,2,3,4,5].map(n => (
+                  <span key={n} className="text-[10px]" style={{ color: n <= tier.stars ? tier.color : "rgba(255,255,255,0.12)" }}>★</span>
+                ))}
+              </div>
             </div>
           </div>
 
