@@ -128,7 +128,11 @@ export default async function ProfilePage() {
                 <p className="text-white/40 text-sm mt-1">Manage your public profile and account details.</p>
               </div>
 
-              <ProfileForm profile={{ ...profile, username: user.user_metadata?.username || profile.username || null }} />
+              <ProfileForm profile={{
+                ...profile,
+                username: user.user_metadata?.username || profile.username || null,
+                phone: profile.phone || user.user_metadata?.phone || null,
+              }} />
             </div>
 
             <div className="mt-8 p-6 rounded-2xl bg-[#ff5100]/5 border border-[#ff5100]/10">
