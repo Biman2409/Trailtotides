@@ -179,7 +179,7 @@ export default function SubmitStoryPage() {
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <FieldLabel>Author Bio</FieldLabel>
+                    <FieldLabel>How would you describe yourself?</FieldLabel>
                     <textarea
                       name="authorBio"
                       rows={3}
