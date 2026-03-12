@@ -215,11 +215,11 @@ export default function SubmitStoryPage() {
                     <textarea
                       name="excerpt"
                       required
-                      rows={2}
+                      rows={3}
                       value={form.excerpt}
                       onChange={handleChange}
                       placeholder="1–2 sentences that capture the essence of the story. This appears on the story card."
-                      className={`${inputClass} resize-none`}
+                      className={`${inputClass} resize-none overflow-hidden`}
                     />
                   </div>
                   <div>
