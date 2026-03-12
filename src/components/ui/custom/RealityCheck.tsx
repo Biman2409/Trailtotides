@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { AlertTriangle, CheckCircle, ChevronDown, ChevronUp, ArrowRight, MapPin } from "lucide-react";
+import { AlertTriangle, CheckCircle, ChevronDown, ChevronUp, ArrowRight, MapPin, Compass } from "lucide-react";
 import type { Adventure, ERT } from "@/lib/data";
 import { getERT } from "@/lib/ert";
 import {
@@ -45,21 +45,33 @@ export default function RealityCheck({ adventure }: Props) {
 
   if (!profile) {
     return (
-      <div className="rounded-2xl border border-dashed border-[#1a1f2e]/15 px-5 py-4">
-        <div className="flex items-center gap-2.5 mb-3">
-          <div className="w-7 h-7 rounded-full bg-[#ff5100]/10 flex items-center justify-center shrink-0">
-            <span className="text-[#ff5100] text-sm font-bold">?</span>
+      <div
+        className="rounded-2xl overflow-hidden"
+        style={{ background: "linear-gradient(135deg, #0f1420 0%, #1a1f2e 100%)", border: "1px solid rgba(255,255,255,0.08)" }}
+      >
+        <div className="px-5 pt-5 pb-4">
+          {/* Icon + heading */}
+          <div className="flex items-center gap-3 mb-3">
+            <div
+              className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+              style={{ background: "rgba(167,139,250,0.15)", color: "#a78bfa" }}
+            >
+              <Compass className="w-5 h-5" />
+            </div>
+            <p className="text-white font-semibold text-sm">Is this adventure right for you?</p>
           </div>
-          <p className="text-[#1a1f2e] font-semibold text-sm">Is this adventure right for you?</p>
+          <p className="text-white/45 text-xs leading-relaxed mb-5">
+            Take the 2 minute assessment to find out.
+          </p>
+          <Link
+            href="/matchmaker"
+            className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-white text-xs font-semibold transition-all hover:brightness-110"
+            style={{ background: "linear-gradient(135deg, #a78bfa, #7c3aed)" }}
+          >
+            Take Assessment
+            <ArrowRight className="w-3 h-3" />
+          </Link>
         </div>
-        <p className="text-[#1a1f2e]/50 text-xs leading-relaxed mb-4">Take the 2-minute matchmaker to find out.</p>
-        <Link
-          href="/matchmaker"
-          className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl bg-[#ff5100] text-white text-xs font-semibold"
-        >
-          Take Assessment
-          <ArrowRight className="w-3 h-3" />
-        </Link>
       </div>
     );
   }
