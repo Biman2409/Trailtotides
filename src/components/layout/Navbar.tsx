@@ -10,7 +10,7 @@ import { useCompare } from "@/contexts/CompareContext";
 const navLinks = [
   { href: "/explore", label: "Explore" },
   { href: "/map", label: "Map" },
-  { href: "/matchmaker", label: "Matchmaker", highlight: true },
+  { href: "/matchmaker", label: "Matchmaker" },
   { href: "/stories", label: "Stories" },
 ];
 
