@@ -114,7 +114,7 @@ export default function SubmitStoryPage() {
           </p>
           <h1 className="text-white text-5xl lg:text-6xl font-bold tracking-tight leading-none mb-4">
             Tell us what<br />
-            <span className="text-[#ff5100]">happened out there.</span>
+            <span className="text-[#ff5100]">happened out there</span>
           </h1>
           <p className="text-white/50 text-base leading-relaxed max-w-xl">
             We feature stories from real adventurers — not travel bloggers, not influencers. If you&apos;ve done something remarkable, fill out the form below. Our team reviews every submission and reaches out to you personally if your story makes the cut.
