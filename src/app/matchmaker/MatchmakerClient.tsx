@@ -6,7 +6,9 @@ import Link from "next/link";
 import {
   ChevronRight, ChevronLeft, MapPin, ArrowRight, RotateCcw,
   Zap, Shield, Mountain, CheckCircle2, TrendingUp, Lock,
+  Compass, Footprints, Flame, CloudSnow, Flag,
 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 import { adventures } from "@/lib/data";
 import type { Adventure } from "@/lib/data";
 import { getERT } from "@/lib/ert";
@@ -356,12 +358,12 @@ export default function MatchmakerClient() {
 
 // ─── Results screen ───────────────────────────────────────────────────────────
 
-const TIER_INFO: Record<string, { color: string; icon: string; desc: string }> = {
-  "Beginner Explorer":      { color: "#22d3ee", icon: "◈", desc: "You're at the start of your mountain journey. Excellent trails await." },
-  "Trail Trekker":          { color: "#4ade80", icon: "◈◈", desc: "You can handle multi-day treks on well-established routes." },
-  "Mountain Adventurer":    { color: "#f59e0b", icon: "◈◈◈", desc: "You're ready for challenging high-altitude treks with real commitment." },
-  "High-Altitude Trekker":  { color: "#f97316", icon: "◈◈◈◈", desc: "Remote, demanding expeditions are within your reach." },
-  "Expedition Climber":     { color: "#a78bfa", icon: "◈◈◈◈◈", desc: "You're operating at the upper end. Technical peaks are viable." },
+const TIER_INFO: Record<string, { color: string; icon: React.ReactNode; desc: string }> = {
+  "Beginner Explorer":     { color: "#22d3ee", icon: <Compass   className="w-6 h-6" />, desc: "You're at the start of your mountain journey. Excellent trails await." },
+  "Trail Trekker":         { color: "#4ade80", icon: <Footprints className="w-6 h-6" />, desc: "You can handle multi-day treks on well-established routes." },
+  "Mountain Adventurer":   { color: "#f59e0b", icon: <Mountain  className="w-6 h-6" />, desc: "You're ready for challenging high-altitude treks with real commitment." },
+  "High-Altitude Trekker": { color: "#f97316", icon: <CloudSnow className="w-6 h-6" />, desc: "Remote, demanding expeditions are within your reach." },
+  "Expedition Climber":    { color: "#a78bfa", icon: <Flag      className="w-6 h-6" />, desc: "You're operating at the upper end. Technical peaks are viable." },
 };
 
 const IMPROVEMENT_TIPS: Record<string, string[]> = {
@@ -403,6 +405,26 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
   const tier = TIER_INFO[profile.label] ?? TIER_INFO["Trail Trekker"];
   const tips = IMPROVEMENT_TIPS[profile.label] ?? IMPROVEMENT_TIPS["Trail Trekker"];
 
+  // Save to Supabase profile if logged in
+  useState(() => {
+    (async () => {
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase.from("profiles").update({
+            ert_tier: profile.label,
+            ert_e: profile.ert.e,
+            ert_r: profile.ert.r,
+            ert_t: profile.ert.t,
+            ert_summary: profile.summary,
+            ert_taken_at: new Date().toISOString(),
+          }).eq("id", user.id);
+        }
+      } catch {}
+    })();
+  });
+
   // Bucket matched adventures: Ready Now (top 4), Stretch (1 level above), Future (2+ above)
   const readyNow = allMatches.slice(0, 4);
 
@@ -442,8 +464,8 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
         <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Your Adventure Profile</p>
       </div>
       <div
-        className="rounded-3xl p-7 mb-10 border relative overflow-hidden"
-        style={{ background: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.09)" }}
+        className="rounded-3xl p-7 mb-6 border relative overflow-hidden"
+        style={{ background: "rgba(255,255,255,0.04)", borderColor: `${tier.color}35`, borderLeftWidth: "4px", borderLeftColor: tier.color }}
       >
         {/* Glow accent */}
         <div
@@ -457,9 +479,13 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
               <h1 className="text-white text-3xl font-bold tracking-tight">{profile.label}</h1>
               <p className="text-white/50 text-sm mt-1.5 leading-relaxed">{tier.desc}</p>
             </div>
-            <span className="text-3xl shrink-0 mt-1" style={{ color: tier.color, letterSpacing: "-2px" }}>
+            {/* Icon badge */}
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
+              style={{ background: `${tier.color}20`, color: tier.color }}
+            >
               {tier.icon}
-            </span>
+            </div>
           </div>
 
           {/* ERT breakdown */}
@@ -487,7 +513,6 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
         icon={<CheckCircle2 className="w-4 h-4" />}
         adventures={readyNow}
         accentColor="#4ade80"
-        stars={1}
         defaultOpen
       />
 
@@ -499,7 +524,6 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
           icon={<TrendingUp className="w-4 h-4" />}
           adventures={stretchMatches}
           accentColor="#f59e0b"
-          stars={2}
           dimmed
         />
       )}
@@ -512,7 +536,6 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
           icon={<Lock className="w-4 h-4" />}
           adventures={futureMatches}
           accentColor="#a78bfa"
-          stars={3}
           dimmed
         />
       )}
@@ -577,7 +600,7 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
 // ─── Adventure category section ───────────────────────────────────────────────
 
 function AdventureCategory({
-  label, sublabel, icon, adventures: list, accentColor, dimmed = false, defaultOpen = false, stars = 1,
+  label, sublabel, icon, adventures: list, accentColor, dimmed = false, defaultOpen = false,
 }: {
   label: string;
   sublabel: string;
@@ -586,7 +609,6 @@ function AdventureCategory({
   accentColor: string;
   dimmed?: boolean;
   defaultOpen?: boolean;
-  stars?: number;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -613,15 +635,7 @@ function AdventureCategory({
             {icon}
           </div>
           <div className="text-left">
-            <div className="flex items-center gap-2 mb-0.5">
-              <p className="text-white font-semibold text-sm">{label}</p>
-              {/* Star tier indicators */}
-              <span className="flex items-center gap-0.5">
-                {[1,2,3].map(n => (
-                  <span key={n} className="text-[10px]" style={{ color: n <= stars ? accentColor : "rgba(255,255,255,0.12)" }}>★</span>
-                ))}
-              </span>
-            </div>
+            <p className="text-white font-semibold text-sm mb-0.5">{label}</p>
             <p className="text-white/35 text-xs">{sublabel}</p>
           </div>
         </div>
@@ -648,6 +662,9 @@ function AdventureCategory({
         <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ borderTop: `1px solid ${accentColor}18` }}>
           {list.map(a => {
             const ert = getERT(a);
+            const topRating = a.operators.length > 0
+              ? Math.max(...a.operators.map(o => o.rating))
+              : null;
             return (
               <Link
                 key={a.slug}
@@ -668,13 +685,13 @@ function AdventureCategory({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
                   {/* Rating badge — coloured to match tier */}
-                  {a.rating && (
+                  {topRating && (
                     <div
                       className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full"
                       style={{ background: `${accentColor}cc`, backdropFilter: "blur(4px)" }}
                     >
                       <span className="text-[10px]" style={{ color: "rgba(0,0,0,0.7)" }}>★</span>
-                      <span className="text-[10px] font-bold" style={{ color: "rgba(0,0,0,0.8)" }}>{a.rating.toFixed(1)}</span>
+                      <span className="text-[10px] font-bold" style={{ color: "rgba(0,0,0,0.8)" }}>{topRating.toFixed(1)}</span>
                     </div>
                   )}
                   <div className="absolute bottom-3 left-3 right-3">

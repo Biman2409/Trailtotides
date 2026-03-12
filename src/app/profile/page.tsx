@@ -1,6 +1,7 @@
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Calendar, Shield, Camera, ArrowLeft } from "lucide-react";
+import MatchmakerCard from "./MatchmakerCard";
 import Link from "next/link";
 import { format } from "date-fns";
 import ProfileForm from "./ProfileForm";
@@ -108,13 +109,15 @@ export default async function ProfilePage() {
             </div>
 
             {profile.role === "admin" && (
-              <Link 
+              <Link
                 href="/admin"
                 className="block w-full text-center py-3 rounded-xl bg-purple-600/10 border border-purple-600/20 text-purple-400 text-sm font-bold uppercase tracking-wider hover:bg-purple-600/20 transition-all active:scale-[0.98]"
               >
                 Access Admin Panel
               </Link>
             )}
+
+            <MatchmakerCard isLoggedIn={true} />
           </div>
 
           {/* Main Content / Form */}
