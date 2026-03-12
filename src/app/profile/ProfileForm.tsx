@@ -206,6 +206,7 @@ function ChangePasswordSection() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -223,8 +224,20 @@ function ChangePasswordSection() {
   }
 
   return (
-    <Section title="Change Password" subtitle="Choose a new password for your account.">
+    <Section title="Change Password" subtitle="Verify your current password before setting a new one.">
       <form ref={formRef} action={handleSubmit} className="space-y-4">
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Current Password</label>
+          <div className="relative group">
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
+            <input name="currentPassword" type={showCurrent ? "text" : "password"} placeholder="Your current password" required
+              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-11 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
+            <button type="button" onClick={() => setShowCurrent(v => !v)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors">
+              {showCurrent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+
         <div className="space-y-1.5">
           <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">New Password</label>
           <div className="relative group">
@@ -238,7 +251,7 @@ function ChangePasswordSection() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Confirm Password</label>
+          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Confirm New Password</label>
           <div className="relative group">
             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
             <input name="confirmPassword" type={showConfirm ? "text" : "password"} placeholder="Repeat new password" required

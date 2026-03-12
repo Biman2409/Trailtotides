@@ -56,11 +56,20 @@ export async function changePassword(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
+  const currentPassword = formData.get("currentPassword") as string;
   const newPassword = formData.get("newPassword") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
 
-  if (newPassword.length < 6) throw new Error("Password must be at least 6 characters.");
+  if (!currentPassword) throw new Error("Please enter your current password.");
+  if (newPassword.length < 6) throw new Error("New password must be at least 6 characters.");
   if (newPassword !== confirmPassword) throw new Error("Passwords do not match.");
+
+  // Verify current password by re-authenticating
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: user.email!,
+    password: currentPassword,
+  });
+  if (signInError) throw new Error("Current password is incorrect.");
 
   const { error } = await supabase.auth.updateUser({ password: newPassword });
   if (error) throw new Error(error.message);
