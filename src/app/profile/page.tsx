@@ -1,10 +1,10 @@
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { Calendar, Shield, Camera, ArrowLeft } from "lucide-react";
-import MatchmakerCard from "./MatchmakerCard";
 import Link from "next/link";
 import { format } from "date-fns";
 import ProfileForm from "./ProfileForm";
+import AdventureProfileSidebar from "./AdventureProfileSidebar";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -75,7 +75,6 @@ export default async function ProfilePage() {
                   <Camera className="w-6 h-6 text-white" />
                 </div>
               </div>
-              <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-green-500 border-4 border-[#0a0a0a]" title="Online" />
             </div>
 
             <div>
@@ -117,7 +116,7 @@ export default async function ProfilePage() {
               </Link>
             )}
 
-            <MatchmakerCard isLoggedIn={true} />
+            {profile.role !== "admin" && <AdventureProfileSidebar />}
           </div>
 
           {/* Main Content / Form */}

@@ -44,9 +44,21 @@ function AccountDetails({ profile }: { profile: Profile }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Controlled fields for dirty tracking
+  const [fullName, setFullName] = useState(profile.full_name || "");
   const [username, setUsername] = useState(profile.username || "");
+  const [email, setEmail] = useState(profile.email || "");
+  const [phone, setPhone] = useState(profile.phone || "");
+
   const [usernameState, setUsernameState] = useState<"idle" | "checking" | "available" | "taken" | "invalid" | "unchanged">("unchanged");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const isDirty =
+    fullName !== (profile.full_name || "") ||
+    username !== (profile.username || "") ||
+    email !== (profile.email || "") ||
+    phone !== (profile.phone || "");
 
   const checkUsername = useCallback((val: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -72,7 +84,7 @@ function AccountDetails({ profile }: { profile: Profile }) {
     } finally { setLoading(false); }
   }
 
-  const canSave = usernameState !== "taken" && usernameState !== "checking" && usernameState !== "invalid";
+  const canSave = isDirty && usernameState !== "taken" && usernameState !== "checking" && usernameState !== "invalid";
 
   return (
     <Section title="Account Details" subtitle="Update your name, username, email and phone.">
@@ -81,7 +93,8 @@ function AccountDetails({ profile }: { profile: Profile }) {
           <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Full Name</label>
           <div className="relative group">
             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
-            <input name="fullName" type="text" defaultValue={profile.full_name || ""} placeholder="Your full name" required
+            <input name="fullName" type="text" value={fullName} onChange={e => setFullName(e.target.value)}
+              placeholder="Your full name" required
               className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
           </div>
         </div>
@@ -122,7 +135,8 @@ function AccountDetails({ profile }: { profile: Profile }) {
           <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Email Address</label>
           <div className="relative group">
             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
-            <input name="email" type="email" defaultValue={profile.email || ""} placeholder="your@email.com"
+            <input name="email" type="email" value={email} onChange={e => setEmail(e.target.value)}
+              placeholder="your@email.com"
               className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
           </div>
         </div>
@@ -131,7 +145,8 @@ function AccountDetails({ profile }: { profile: Profile }) {
           <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Phone Number</label>
           <div className="relative group">
             <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
-            <input name="phone" type="tel" defaultValue={profile.phone || ""} placeholder="+91 9876543210"
+            <input name="phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)}
+              placeholder="+91 9876543210"
               className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
           </div>
         </div>
@@ -141,10 +156,12 @@ function AccountDetails({ profile }: { profile: Profile }) {
             {error   && <p className="text-red-400 text-xs font-medium">{error}</p>}
             {success && <p className="text-emerald-400 text-xs font-medium flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" />Saved successfully</p>}
           </div>
-          <button type="submit" disabled={loading || !canSave}
-            className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-40 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
-            {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Saving…</> : <><Save className="w-4 h-4" />Save Changes</>}
-          </button>
+          {canSave && (
+            <button type="submit" disabled={loading}
+              className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-40 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
+              {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Saving…</> : <><Save className="w-4 h-4" />Save Changes</>}
+            </button>
+          )}
         </div>
       </form>
     </Section>
@@ -287,7 +304,6 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
     <div className="space-y-6">
       <AccountDetails profile={profile} />
       <ChangePasswordSection />
-      {profile.role !== "admin" && <AdventureProfileSection />}
     </div>
   );
 }
