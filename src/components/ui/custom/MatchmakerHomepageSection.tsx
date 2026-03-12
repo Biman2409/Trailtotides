@@ -97,7 +97,7 @@ export default function MatchmakerHomepageSection() {
             Adventure Matchmaker
           </p>
           <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-3">
-            Your mountain profile
+            Your adventure profile
           </h2>
           <p className="text-white/55 text-sm">Based on your assessment — here's what you're ready for.</p>
         </div>
