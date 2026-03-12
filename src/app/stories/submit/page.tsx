@@ -223,13 +223,13 @@ export default function SubmitStoryPage() {
                     />
                   </div>
                   <div>
-                    <FieldLabel>Date of Adventure *</FieldLabel>
+                    <FieldLabel>Adventure Date *</FieldLabel>
                     <div className="relative">
                       <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
                       <input
                         name="dateOfAdventure"
                         required
-                        type="date"
+                        type="month"
                         value={form.dateOfAdventure}
                         onChange={handleChange}
                         className={`${inputClass} pl-10`}
