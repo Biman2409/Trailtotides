@@ -2,10 +2,9 @@
 
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { sendVerificationEmail, sendPasswordResetEmail } from "@/lib/email";
+import { sendPasswordResetEmail } from "@/lib/email";
 
 export async function signUp(formData: FormData) {
-  const supabase = await createClient();
   const adminClient = await createAdminClient();
 
   const full_name = formData.get("full_name") as string;
@@ -21,7 +20,7 @@ export async function signUp(formData: FormData) {
     return { error: "Username must be between 3 and 20 characters." };
   }
 
-  // Check username uniqueness via auth metadata (no schema changes needed)
+  // Check username uniqueness
   const { data: allUsers } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
   const taken = allUsers?.users.some(
     (u) => (u.user_metadata?.username ?? "").toLowerCase() === username
@@ -30,31 +29,16 @@ export async function signUp(formData: FormData) {
     return { error: `The username @${username} is already taken. Please choose another.` };
   }
 
-  // Get origin for verification link
-  const headersList = await (await import("next/headers")).headers();
-  const host = headersList.get("host");
-  const protocol = headersList.get("x-forwarded-proto") || (host?.includes("localhost") ? "http" : "https");
-  const origin = `${protocol}://${host}`;
-
-  // Sign up — username stored in user_metadata, no DB schema changes needed
-  const { data, error: signUpError } = await supabase.auth.signUp({
+  // Create user directly via admin — bypasses email confirmation entirely
+  const { data, error: signUpError } = await adminClient.auth.admin.createUser({
     email,
     password,
-    options: {
-      emailRedirectTo: `${origin}/auth/callback`,
-      data: { full_name, username, phone },
-    },
+    email_confirm: true,
+    user_metadata: { full_name, username, phone },
   });
 
   if (signUpError) {
     return { error: signUpError.message };
-  }
-
-  // Auto-confirm the email via admin so user can log in immediately
-  if (data.user) {
-    await adminClient.auth.admin.updateUser(data.user.id, {
-      email_confirm: true,
-    });
   }
 
   return { success: "Account created! You can now log in." };
