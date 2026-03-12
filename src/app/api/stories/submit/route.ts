@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,18 +11,33 @@ export async function POST(req: NextRequest) {
       body: storyBody,
       authorName,
       authorRole,
-      email,
-      phone,
       dateOfAdventure,
       region,
-      state,
       tags,
-      readTime,
       heroImageUrl,
     } = body;
 
-    if (!title || !excerpt || !storyBody || !authorName || !email || !dateOfAdventure || !region || !state) {
+    if (!title || !excerpt || !storyBody || !authorName || !dateOfAdventure || !region) {
       return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
+    }
+
+    // Pull contact info from the logged-in user's session + profile
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    let email: string | null = null;
+    let phone: string | null = null;
+
+    if (user) {
+      email = user.email ?? null;
+      // Fetch phone from profiles table
+      const adminClient = await createAdminClient();
+      const { data: profile } = await adminClient
+        .from("profiles")
+        .select("phone")
+        .eq("id", user.id)
+        .single();
+      phone = profile?.phone ?? null;
     }
 
     const adminClient = await createAdminClient();
@@ -34,12 +49,10 @@ export async function POST(req: NextRequest) {
       author_name: authorName,
       author_role: authorRole || null,
       email,
-      phone: phone || null,
+      phone,
       date_of_adventure: dateOfAdventure,
       region,
-      state,
       tags: tags ? tags.split(",").map((t: string) => t.trim()).filter(Boolean) : [],
-      read_time: readTime || null,
       hero_image_url: heroImageUrl || null,
       status: "pending",
     });

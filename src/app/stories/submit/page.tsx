@@ -9,15 +9,12 @@ import {
   ArrowLeft,
   CheckCircle2,
   Mountain,
-  Clock,
-  MapPin,
   Calendar,
   Tag,
   User,
-  Mail,
-  Phone,
   FileText,
   Image as ImageIcon,
+  MapPin,
 } from "lucide-react";
 
 type FormData = {
@@ -26,13 +23,9 @@ type FormData = {
   body: string;
   authorName: string;
   authorRole: string;
-  email: string;
-  phone: string;
   dateOfAdventure: string;
   region: string;
-  state: string;
   tags: string;
-  readTime: string;
   heroImageUrl: string;
 };
 
@@ -42,36 +35,11 @@ const INITIAL: FormData = {
   body: "",
   authorName: "",
   authorRole: "",
-  email: "",
-  phone: "",
   dateOfAdventure: "",
   region: "",
-  state: "",
   tags: "",
-  readTime: "",
   heroImageUrl: "",
 };
-
-const REGIONS = [
-  "Himalayas",
-  "Western Ghats",
-  "Eastern Ghats",
-  "Desert",
-  "Coast",
-  "Islands",
-  "Northeast",
-  "Urban",
-];
-
-const READ_TIMES = [
-  "3 min read",
-  "5 min read",
-  "7 min read",
-  "10 min read",
-  "12 min read",
-  "15 min read",
-  "20 min read",
-];
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -83,8 +51,6 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
 
 const inputClass =
   "w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors";
-const selectClass =
-  "w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors";
 
 export default function SubmitStoryPage() {
   const [form, setForm] = useState<FormData>(INITIAL);
@@ -93,9 +59,7 @@ export default function SubmitStoryPage() {
   const [error, setError] = useState<string | null>(null);
 
   function handleChange(
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
@@ -154,7 +118,7 @@ export default function SubmitStoryPage() {
             <span className="text-[#ff5100]">happened out there.</span>
           </h1>
           <p className="text-white/50 text-base leading-relaxed max-w-xl">
-            We feature stories from real adventurers — not travel bloggers, not influencers. If you&apos;ve done something remarkable and want to share it, fill out the form below. Our team reviews every submission and reaches out to you personally if your story makes the cut.
+            We feature stories from real adventurers — not travel bloggers, not influencers. If you&apos;ve done something remarkable, fill out the form below. Our team reviews every submission and reaches out to you personally if your story makes the cut.
           </p>
         </div>
       </section>
@@ -187,7 +151,7 @@ export default function SubmitStoryPage() {
                 </div>
               )}
 
-              {/* Your details */}
+              {/* About You */}
               <div className="bg-white/4 border border-white/8 rounded-2xl p-7 space-y-5">
                 <div className="flex items-center gap-2.5 mb-1">
                   <User className="w-4 h-4 text-[#ff5100]" />
@@ -215,32 +179,10 @@ export default function SubmitStoryPage() {
                       className={inputClass}
                     />
                   </div>
-                  <div>
-                    <FieldLabel>Email *</FieldLabel>
-                    <input
-                      name="email"
-                      required
-                      type="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      placeholder="you@email.com"
-                      className={inputClass}
-                    />
-                  </div>
-                  <div>
-                    <FieldLabel>Phone</FieldLabel>
-                    <input
-                      name="phone"
-                      value={form.phone}
-                      onChange={handleChange}
-                      placeholder="+91 98765 43210"
-                      className={inputClass}
-                    />
-                  </div>
                 </div>
               </div>
 
-              {/* Adventure details */}
+              {/* The Adventure */}
               <div className="bg-white/4 border border-white/8 rounded-2xl p-7 space-y-5">
                 <div className="flex items-center gap-2.5 mb-1">
                   <Mountain className="w-4 h-4 text-[#ff5100]" />
@@ -286,50 +228,15 @@ export default function SubmitStoryPage() {
                     </div>
                   </div>
                   <div>
-                    <FieldLabel>Approximate Read Time</FieldLabel>
-                    <div className="relative">
-                      <Clock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
-                      <select
-                        name="readTime"
-                        value={form.readTime}
-                        onChange={handleChange}
-                        className={`${selectClass} pl-10`}
-                      >
-                        <option value="">Select read time</option>
-                        {READ_TIMES.map((r) => (
-                          <option key={r} value={r}>{r}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                  <div>
-                    <FieldLabel>Region *</FieldLabel>
+                    <FieldLabel>Where did this happen? *</FieldLabel>
                     <div className="relative">
                       <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
-                      <select
+                      <input
                         name="region"
                         required
                         value={form.region}
                         onChange={handleChange}
-                        className={`${selectClass} pl-10`}
-                      >
-                        <option value="">Select region</option>
-                        {REGIONS.map((r) => (
-                          <option key={r} value={r}>{r}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                  <div>
-                    <FieldLabel>State / Location *</FieldLabel>
-                    <div className="relative">
-                      <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
-                      <input
-                        name="state"
-                        required
-                        value={form.state}
-                        onChange={handleChange}
-                        placeholder="e.g. Himachal Pradesh"
+                        placeholder="e.g. Spiti Valley, Himachal Pradesh"
                         className={`${inputClass} pl-10`}
                       />
                     </div>
@@ -346,7 +253,7 @@ export default function SubmitStoryPage() {
                         className={`${inputClass} pl-10`}
                       />
                     </div>
-                    <p className="text-white/25 text-xs mt-1.5">Separate tags with commas. These appear as pills on the story card.</p>
+                    <p className="text-white/25 text-xs mt-1.5">Separate tags with commas.</p>
                   </div>
                   <div className="sm:col-span-2">
                     <FieldLabel>Hero Image URL</FieldLabel>
@@ -364,7 +271,7 @@ export default function SubmitStoryPage() {
                 </div>
               </div>
 
-              {/* The story */}
+              {/* Your Story */}
               <div className="bg-white/4 border border-white/8 rounded-2xl p-7 space-y-5">
                 <div className="flex items-center gap-2.5 mb-1">
                   <FileText className="w-4 h-4 text-[#ff5100]" />
@@ -401,7 +308,7 @@ export default function SubmitStoryPage() {
               </button>
 
               <p className="text-white/30 text-xs text-center">
-                By submitting, you confirm that this story is your own. We&apos;ll reach out via email or phone if we&apos;d like to feature it.
+                By submitting, you confirm that this story is your own. We&apos;ll reach out via your account contact details if we&apos;d like to feature it.
               </p>
             </form>
           )}
