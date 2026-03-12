@@ -5,11 +5,17 @@ import { createAdminClient } from "@/lib/supabase/server";
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
+// This route handles form POST submissions (not JSON API)
+// Returns a redirect with Set-Cookie so the browser gets the cookie
+// as part of a navigation (not fetch), bypassing any proxy cookie restrictions.
 export async function POST(request: NextRequest) {
-  const { identifier, password } = await request.json();
+  const formData = await request.formData();
+  const identifier = ((formData.get("identifier") as string) ?? "").trim();
+  const password = (formData.get("password") as string) ?? "";
+  const next = (formData.get("next") as string) || "/";
 
   // Resolve username → email
-  let email = (identifier ?? "").trim();
+  let email = identifier;
   if (!email.includes("@")) {
     const adminClient = await createAdminClient();
     const { data: allUsers } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
@@ -18,12 +24,14 @@ export async function POST(request: NextRequest) {
         (u.user_metadata?.username ?? "").toLowerCase() === email.toLowerCase()
     );
     if (!match?.email) {
-      return NextResponse.json({ error: "No account found with that username." }, { status: 400 });
+      return NextResponse.redirect(
+        new URL(`/auth/login?error=${encodeURIComponent("No account found with that username.")}`, request.url)
+      );
     }
     email = match.email;
   }
 
-  // Call Supabase token endpoint directly
+  // Call Supabase token endpoint
   const tokenRes = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
     method: "POST",
     headers: { "Content-Type": "application/json", apikey: ANON_KEY },
@@ -32,15 +40,15 @@ export async function POST(request: NextRequest) {
   const tokenData = await tokenRes.json();
 
   if (!tokenRes.ok || tokenData.error) {
-    return NextResponse.json(
-      { error: tokenData.error_description || tokenData.error || "Invalid credentials" },
-      { status: 401 }
+    const msg = tokenData.error_description || tokenData.error || "Invalid credentials";
+    return NextResponse.redirect(
+      new URL(`/auth/login?error=${encodeURIComponent(msg)}`, request.url)
     );
   }
 
-  const response = NextResponse.json({ ok: true });
+  // Build redirect response with session cookies
+  const redirectResponse = NextResponse.redirect(new URL(next, request.url));
 
-  // Use createServerClient to set properly formatted base64url cookies
   const supabase = createServerClient(SUPABASE_URL, ANON_KEY, {
     cookies: {
       getAll() {
@@ -48,12 +56,11 @@ export async function POST(request: NextRequest) {
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value, options }) =>
-          response.cookies.set(name, value, {
+          redirectResponse.cookies.set(name, value, {
             ...options,
             httpOnly: false,
             sameSite: "lax",
             path: "/",
-            secure: false,
           })
         );
       },
@@ -65,5 +72,5 @@ export async function POST(request: NextRequest) {
     refresh_token: tokenData.refresh_token,
   });
 
-  return response;
+  return redirectResponse;
 }

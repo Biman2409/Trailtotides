@@ -32,21 +32,37 @@ export default function Navbar() {
   useEffect(() => {
     const supabase = createClient();
     async function fetchUser() {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (!authUser) { setUser(null); return; }
+      // Use getSession() for immediate local read, then verify with getUser()
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) { setUser(null); return; }
+      const authUser = session.user;
       const { data: profile } = await supabase
         .from("profiles")
         .select("full_name, role")
         .eq("id", authUser.id)
         .single();
       setUser({
-        name: profile?.full_name || authUser.email?.split("@")[0] || "User",
+        name: profile?.full_name || authUser.user_metadata?.full_name || authUser.email?.split("@")[0] || "User",
         email: authUser.email ?? "",
         role: profile?.role ?? "user",
       });
     }
     fetchUser();
-    const { data: listener } = supabase.auth.onAuthStateChange(() => fetchUser());
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        const authUser = session.user;
+        supabase.from("profiles").select("full_name, role").eq("id", authUser.id).single()
+          .then(({ data: profile }) => {
+            setUser({
+              name: profile?.full_name || authUser.user_metadata?.full_name || authUser.email?.split("@")[0] || "User",
+              email: authUser.email ?? "",
+              role: profile?.role ?? "user",
+            });
+          });
+      } else {
+        setUser(null);
+      }
+    });
     return () => listener.subscription.unsubscribe();
   }, []);
 

@@ -5,57 +5,12 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import Logo from "@/components/ui/custom/Logo";
-import { createClient } from "@/lib/supabase/client";
 
 function LoginForm() {
   const searchParams = useSearchParams();
   const message = searchParams.get("message");
+  const errorParam = searchParams.get("error");
   const [showPassword, setShowPassword] = useState(false);
-  const [pending, setPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setPending(true);
-    setError(null);
-    const fd = new FormData(e.currentTarget);
-    const identifier = (fd.get("email") as string).trim();
-    const password = fd.get("password") as string;
-
-    try {
-      // Resolve username → email via API if needed
-      let email = identifier;
-      if (!identifier.includes("@")) {
-        const res = await fetch("/api/auth/resolve-username", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username: identifier }),
-        });
-        const data = await res.json();
-        if (!res.ok || data.error) {
-          setError(data.error || "No account found with that username.");
-          setPending(false);
-          return;
-        }
-        email = data.email;
-      }
-
-      // Sign in directly with browser client so session is stored in cookies/localStorage
-      const supabase = createClient();
-      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-      if (signInError) {
-        setError(signInError.message);
-        setPending(false);
-        return;
-      }
-
-      // Hard reload so Next.js server picks up the new session cookie
-      window.location.href = "/";
-    } catch {
-      setError("Something went wrong. Please try again.");
-      setPending(false);
-    }
-  }
 
   return (
     <div className="max-w-md w-full mx-auto">
@@ -78,25 +33,27 @@ function LoginForm() {
         </p>
       </div>
 
-      {message && !error && (
+      {message && !errorParam && (
         <div className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold bg-green-500/10 border border-green-500/20 text-green-400">
           {message}
         </div>
       )}
 
-      {error && (
+      {errorParam && (
         <div className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold bg-red-500/10 border border-red-500/20 text-red-400">
-          {error}
+          {errorParam}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Native form POST → server redirect with Set-Cookie (bypasses proxy fetch restrictions) */}
+      <form method="POST" action="/auth/login-action" className="space-y-4">
+        <input type="hidden" name="next" value="/" />
         <div>
           <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">
             Username or Email
           </label>
           <input
-            name="email"
+            name="identifier"
             type="text"
             required
             placeholder="rahul_explorer or rahul@email.com"
@@ -131,10 +88,9 @@ function LoginForm() {
 
         <button
           type="submit"
-          disabled={pending}
-          className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 mt-2"
+          className="w-full bg-[#ff5100] hover:bg-[#ff7d47] text-white font-bold rounded-2xl py-4 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 mt-2"
         >
-          {pending ? "Signing in…" : "Sign In"}
+          Sign In
         </button>
       </form>
 
