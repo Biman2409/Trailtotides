@@ -12,6 +12,8 @@ import {
 import ACEBadge from "@/components/ui/custom/ACEBadge";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import { saveProfile } from "@/lib/matchmaker";
+import { adventures as ALL_ADVENTURES } from "@/lib/data";
+import { getACE } from "@/lib/ace";
 
 // ─── Question definitions (Q1–Q8 map to 8 bio axes) ──────────────────────────
 
@@ -551,7 +553,7 @@ function AdventureSection({
                 </div>
               </div>
               <div className="px-3 py-2.5">
-                {a.requirements && <ACEBadge ace={a.requirements} size="sm" dark />}
+                {a.requirements && <ACEBadge ace={a.requirements as unknown as Parameters<typeof ACEBadge>[0]["ace"]} size="sm" dark />}
                 {a.weakAxes.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-2">
                     {a.weakAxes.slice(0, 3).map(ax => (
@@ -586,33 +588,102 @@ export default function MatchmakerClient() {
   const currentQ = QUESTIONS[stepIndex];
   const canAdvance = !!answers[currentQ.key];
 
-  async function submitAssessment(finalAnswers: Answers) {
+  function submitAssessment(finalAnswers: Answers) {
     setLoading(true);
     setApiError(null);
-    try {
-      const res = await fetch("/api/matchmaker/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers: finalAnswers }),
+
+    // Answer → score: A=1, B=2, C=3, D=4, E=5
+    const score = (key: string) => ({ A:1, B:2, C:3, D:4, E:5 }[finalAnswers[key] ?? "A"] ?? 1);
+
+    const userAxes = {
+      stamina:  score("Q1"),
+      power:    score("Q2"),
+      strength: score("Q3"),
+      agility:  score("Q4"),
+      water:    score("Q5"),
+      altitude: score("Q6"),
+      nerve:    score("Q7"),
+      focus:    score("Q8"),
+    };
+
+    // Match adventures algorithmically
+    const enriched: EnrichedAdventure[] = ALL_ADVENTURES.map((adv) => {
+      const req = getACE(adv);
+      const axes = Object.keys(userAxes) as (keyof typeof userAxes)[];
+      const weakAxes = axes.filter(ax => req[ax] > 0 && userAxes[ax] < req[ax]);
+      const maxGap = weakAxes.reduce((max, ax) => Math.max(max, req[ax] - userAxes[ax]), 0);
+
+      const status: "IN_ZONE" | "STRETCH" | "RESTRICTED" =
+        maxGap === 0 ? "IN_ZONE" :
+        maxGap <= 1  ? "STRETCH" :
+                       "RESTRICTED";
+
+      return {
+        id: adv.slug,
+        slug: adv.slug,
+        name: adv.name,
+        heroImage: adv.heroImage,
+        state: adv.state,
+        region: (adv.region ?? "") as string,
+        type: adv.type as string,
+        difficulty: adv.difficulty as string,
+        altitude: adv.altitude,
+        status,
+        weakAxes,
+        missingKeys: weakAxes,
+        analysis: "",
+        requirements: req as unknown as Record<string, number>,
+        riskLevel: maxGap,
+      };
+    });
+
+    // Training plan: unique axes where user is weakest
+    const allWeakAxes = enriched
+      .filter(a => a.status !== "RESTRICTED")
+      .flatMap(a => a.weakAxes);
+    const axisGapMap: Record<string, number> = {};
+    ALL_ADVENTURES.forEach(adv => {
+      const req = getACE(adv);
+      (Object.keys(userAxes) as (keyof typeof userAxes)[]).forEach(ax => {
+        if (req[ax] > userAxes[ax]) {
+          axisGapMap[ax] = Math.max(axisGapMap[ax] ?? 0, req[ax] - userAxes[ax]);
+        }
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Analysis failed");
-      setResult(data);
-      // Save ACE profile to localStorage so other pages can use it
-      if (data.userAxes) {
-        const avgScore = Object.values(data.userAxes as Record<string, number>).reduce((a: number, b: number) => a + b, 0) / 8;
-        const label =
-          avgScore >= 4.2 ? "Expedition Athlete" :
-          avgScore >= 3.2 ? "High-Altitude Adventurer" :
-          avgScore >= 2.2 ? "Mountain Adventurer" :
-          avgScore >= 1.5 ? "Trail Trekker" :
-          "Beginner Explorer";
-        saveProfile({ ace: data.userAxes, label, summary: "" });
-      }
-    } catch (err) {
-      setApiError(err instanceof Error ? err.message : "Something went wrong");
-      setLoading(false);
-    }
+    });
+
+    const TRAINING_TIPS: Record<string, string> = {
+      stamina:  "Build aerobic base with 3–4 weekly runs or hikes. Progress to back-to-back long days.",
+      power:    "Add interval training and steep hill repeats to develop explosive leg power.",
+      strength: "Weighted step-ups, squats and loaded carries will develop the strength needed.",
+      agility:  "Practice trail running on technical terrain; add balance and proprioception drills.",
+      water:    "Swim 2–3 times a week. Progress from pool to open water, then moving water.",
+      altitude: "Spend nights above 3,000m before attempting higher objectives. Acclimatise gradually.",
+      nerve:    "Exposure therapy on smaller heights — via ferrata and scrambling routes build tolerance.",
+      focus:    "Long mountain days with navigation challenges develop the sustained focus required.",
+    };
+
+    const trainingPlan: TrainingItem[] = Object.entries(axisGapMap)
+      .filter(([, gap]) => gap > 0)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 4)
+      .map(([ax, gap]) => ({
+        axis: ax,
+        current_level: (userAxes as Record<string, number>)[ax],
+        required_level: (userAxes as Record<string, number>)[ax] + gap,
+        recommendation: TRAINING_TIPS[ax] ?? "Train consistently to improve this capability.",
+      }));
+
+    const avgScore = Object.values(userAxes).reduce((a, b) => a + b, 0) / 8;
+    const label =
+      avgScore >= 4.2 ? "Expedition Athlete" :
+      avgScore >= 3.2 ? "High-Altitude Adventurer" :
+      avgScore >= 2.2 ? "Mountain Adventurer" :
+      avgScore >= 1.5 ? "Trail Trekker" :
+      "Beginner Explorer";
+    saveProfile({ ace: userAxes, label, summary: "" });
+
+    setResult({ userAxes, adventures: enriched, trainingPlan });
+    setLoading(false);
   }
 
   function advance() {
@@ -671,7 +742,7 @@ export default function MatchmakerClient() {
             key={o.v}
             value={o.v}
             label={o.l}
-            sub={o.s}
+            sub={undefined}
             selected={answers[currentQ.key] === o.v}
             onClick={() => setAnswers(prev => ({ ...prev, [currentQ.key]: o.v }))}
           />
