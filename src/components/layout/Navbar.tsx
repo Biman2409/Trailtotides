@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, Mountain, LogOut, Shield, User, ChevronDown, GitCompareArrows } from "lucide-react";
+import { Menu, X, Mountain, LogOut, Shield, User, ChevronDown, GitCompareArrows, Compass } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useCompare } from "@/contexts/CompareContext";
 
@@ -259,9 +259,13 @@ export default function Navbar() {
                         Admin Dashboard
                       </Link>
                     )}
-                    <Link href="/profile" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-black/5" style={{ color: "var(--text-secondary)" }}>
+                    <Link href="/profile" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5" style={{ color: "var(--text-secondary)" }}>
                       <User className="w-4 h-4" />
                       Profile
+                    </Link>
+                    <Link href="/matchmaker" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5" style={{ color: "var(--text-secondary)", borderTop: "1px solid var(--border-subtle)" }}>
+                      <Compass className="w-4 h-4" />
+                      Adventure Profile
                     </Link>
                     <button
                       onClick={handleLogout}
