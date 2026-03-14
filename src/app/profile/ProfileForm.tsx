@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { updateProfile, changePassword } from "./actions";
 import { loadProfile } from "@/lib/matchmaker";
-import { ACE_AXIS_COLORS, ACE_AXES } from "@/lib/ace";
+import ACERadar from "@/components/ui/custom/ACERadar";
 
 type Profile = {
   id: string;
@@ -303,37 +303,34 @@ function AdventureProfileSection() {
   const tier = TIER_INFO[stored.label] ?? TIER_INFO["Trail Trekker"];
 
   return (
-    <Section title="Adventure Profile">
-      <div className="flex items-center gap-4 mb-5 p-4 rounded-2xl border"
-        style={{ background: `${tier.color}0d`, borderColor: `${tier.color}28` }}>
-        <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: `${tier.color}20`, color: tier.color }}>
-          {tier.icon}
+    <Section title="ACE Profile">
+      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-5">
+        {/* Radar */}
+        <div className="shrink-0">
+          <ACERadar ace={stored.ace} size={200} showLabels />
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="font-bold text-sm" style={{ color: tier.color }}>{stored.label}</p>
-          <div className="flex items-center gap-0.5 mt-0.5">
-            {Array.from({ length: tier.stars }).map((_, i) => (
-              <span key={i} className="text-xs" style={{ color: tier.color }}>★</span>
-            ))}
+
+        {/* Tier info + summary */}
+        <div className="flex flex-col justify-center gap-3 min-w-0">
+          <div className="flex items-center gap-3 p-4 rounded-2xl border"
+            style={{ background: `${tier.color}0d`, borderColor: `${tier.color}28` }}>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+              style={{ background: `${tier.color}20`, color: tier.color }}>
+              {tier.icon}
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-widest font-semibold mb-0.5 text-white/40">Your ACE Profile</p>
+              <p className="font-bold text-base leading-tight" style={{ color: tier.color }}>{stored.label}</p>
+              <div className="flex items-center gap-0.5 mt-0.5">
+                {Array.from({ length: tier.stars }).map((_, i) => (
+                  <span key={i} className="text-xs" style={{ color: tier.color }}>★</span>
+                ))}
+              </div>
+            </div>
           </div>
-          <p className="text-white/40 text-xs mt-1 leading-snug">{tier.desc}</p>
-        </div>
-        <div className="flex items-center gap-1.5 flex-shrink-0">
-          {(ACE_AXES as unknown as string[])
-            .map((k) => ({ key: k, val: stored.ace[k as keyof typeof stored.ace] as number }))
-            .filter(({ val }) => val > 0)
-            .sort((a, b) => b.val - a.val)
-            .slice(0, 3)
-            .map(({ key, val }) => {
-              const color = ACE_AXIS_COLORS[key as keyof typeof ACE_AXIS_COLORS] ?? "#ff5100";
-              return (
-                <div key={key} className="flex flex-col items-center bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5">
-                  <span className="text-[9px] font-bold text-white/40 uppercase">{key.slice(0, 3)}</span>
-                  <span className="text-base font-bold" style={{ color }}>{val}</span>
-                </div>
-              );
-            })}
+          {stored.summary && (
+            <p className="text-white/40 text-xs leading-relaxed border-l-2 border-white/10 pl-3">{stored.summary}</p>
+          )}
         </div>
       </div>
 
