@@ -261,7 +261,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
         Adventures built for your body
       </h1>
       <p className="text-white/50 text-base leading-relaxed mb-8">
-        Eight questions. Eight biological axes. One honest answer about what you&apos;re ready for — and what it takes to go further.
+        Every adventure makes specific demands on your body. ACE breaks those demands into eight axes — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you know exactly what you&apos;re signing up for.
       </p>
 
       <p className="text-white/30 text-[10px] uppercase tracking-widest mb-4">How we assess you</p>
