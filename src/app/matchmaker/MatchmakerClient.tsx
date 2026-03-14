@@ -395,12 +395,13 @@ function ResultsScreen({
   // Overall score
   const axisValues = Object.values(userAxes).filter(v => v > 0);
   const avgScore = axisValues.length ? axisValues.reduce((a, b) => a + b, 0) / axisValues.length : 0;
+  const totalScore = axisValues.reduce((a, b) => a + b, 0);
   const tier =
-    avgScore >= 4.5 ? { label: "Expedition Athlete",  color: "#a78bfa" } :
-    avgScore >= 3.5 ? { label: "High-Altitude Adventurer", color: "#f97316" } :
-    avgScore >= 2.5 ? { label: "Mountain Adventurer",  color: "#f59e0b" } :
-    avgScore >= 1.5 ? { label: "Trail Trekker",        color: "#4ade80" } :
-                      { label: "Beginner Explorer",    color: "#22d3ee" };
+    totalScore >= 40 ? { label: "Apex",          color: "#a78bfa" } :
+    totalScore >= 32 ? { label: "Expeditioner",  color: "#f97316" } :
+    totalScore >= 24 ? { label: "Navigator",     color: "#f59e0b" } :
+    totalScore >= 16 ? { label: "Trailblazer",   color: "#4ade80" } :
+                       { label: "Uncharted",     color: "#22d3ee" };
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-16">
@@ -676,13 +677,13 @@ export default function MatchmakerClient() {
       water: score("Q5"), altitude: score("Q6"), nerve: score("Q7"), focus: score("Q8"),
     };
 
-    const avgScore = Object.values(userAxes).reduce((a, b) => a + b, 0) / 8;
+    const total = Object.values(userAxes).reduce((a, b) => a + b, 0);
     const label =
-      avgScore >= 4.2 ? "Expedition Athlete" :
-      avgScore >= 3.2 ? "High-Altitude Adventurer" :
-      avgScore >= 2.2 ? "Mountain Adventurer" :
-      avgScore >= 1.5 ? "Trail Trekker" :
-      "Beginner Explorer";
+      total >= 40 ? "Apex" :
+      total >= 32 ? "Expeditioner" :
+      total >= 24 ? "Navigator" :
+      total >= 16 ? "Trailblazer" :
+      "Uncharted";
     const profile = { ace: userAxes, label, summary: "" };
     saveProfile(profile);
     saveProfileToServer(profile); // persist for logged-in users

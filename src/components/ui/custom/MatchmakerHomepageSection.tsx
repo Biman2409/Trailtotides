@@ -3,19 +3,17 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  ArrowRight, Compass, Footprints, Mountain, CloudSnow, Flag, RotateCcw,
-} from "lucide-react";
+import { ArrowRight, RotateCcw } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { ACE_AXIS_COLORS, ACE_AXES } from "@/lib/ace";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
 
-const TIER_INFO: Record<string, { color: string; icon: React.ReactNode; stars: number }> = {
-  "Beginner Explorer":        { color: "#22d3ee", stars: 1, icon: <Compass    className="w-5 h-5" /> },
-  "Trail Trekker":            { color: "#4ade80", stars: 2, icon: <Footprints className="w-5 h-5" /> },
-  "Mountain Adventurer":      { color: "#f59e0b", stars: 3, icon: <Mountain   className="w-5 h-5" /> },
-  "High-Altitude Adventurer": { color: "#f97316", stars: 4, icon: <CloudSnow  className="w-5 h-5" /> },
-  "Expedition Athlete":       { color: "#a78bfa", stars: 5, icon: <Flag       className="w-5 h-5" /> },
+const TIER_INFO: Record<string, { color: string; stars: number; icon: React.ReactNode }> = {
+  "Uncharted":    { color: "#22d3ee", stars: 1, icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><circle cx="10" cy="10" r="2" fill="currentColor"/></svg> },
+  "Trailblazer": { color: "#4ade80", stars: 2, icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><path d="M5 15c1-2 2-3 3-5s1-4 2-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M8 15c1-2 2-3 3-5s1-4 2-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><circle cx="6" cy="10" r="1.5" fill="currentColor"/><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="13" r="1.5" fill="currentColor"/></svg> },
+  "Navigator":   { color: "#f59e0b", stars: 3, icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.5"/><path d="M10 3v14M3 10h14" stroke="currentColor" strokeWidth="1" strokeOpacity="0.4"/><path d="M10 5l2 4H8l2-4z" fill="currentColor"/><path d="M10 15l-2-4h4l-2 4z" fill="currentColor" fillOpacity="0.4"/></svg> },
+  "Expeditioner":{ color: "#f97316", stars: 4, icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><path d="M3 15l3.5-5 2.5 3 3-4.5L16 15H3z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/><path d="M10 5.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" fill="currentColor"/><path d="M7 15v-2a3 3 0 016 0v2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg> },
+  "Apex":        { color: "#a78bfa", stars: 5, icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><path d="M10 3l2 4 4.5.7-3.25 3.15.77 4.5L10 13.25l-4.02 2.1.77-4.5L3.5 7.7 8 7l2-4z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="currentColor" fillOpacity="0.25"/></svg> },
 };
 
 
@@ -69,7 +67,7 @@ export default function MatchmakerHomepageSection() {
 
   if (!mounted || !profile) return <DefaultCTA />;
 
-  const tier = TIER_INFO[profile.label] ?? TIER_INFO["Trail Trekker"];
+  const tier = TIER_INFO[profile.label] ?? TIER_INFO["Uncharted"];
   const matches = getMatchedAdventures(profile.ace, adventures).slice(0, 6);
 
   // All 8 axes in canonical order
