@@ -160,7 +160,7 @@ export default function ACEPage() {
                   {/* Radar + badge */}
                   <div className="px-5 pt-4 pb-5">
                     <div className="flex justify-center mb-4">
-                      <ACERadar ace={ace} size={140} showLabels={false} />
+                      <ACERadar ace={ace} size={140} showLabels />
                     </div>
                     {/* All 8 axes as pills */}
                     <div className="flex flex-wrap gap-1.5">
