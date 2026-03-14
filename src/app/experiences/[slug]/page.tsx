@@ -423,67 +423,24 @@ export default async function ExperiencePage({ params }: Props) {
               </div>
             </section>
 
-            {/* ── ACE Adventure Profile ────────────────────── */}
+            {/* ── ACE Profile ────────────────────── */}
             <section>
               <div className="flex items-center justify-between mb-6">
                 <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">
-                  ACE Adventure Profile
+                  ACE Profile
                 </p>
                 <GradingPill />
               </div>
 
-              {/* Radar + axes card */}
               <div className="rounded-2xl p-6 mb-4" style={{ background: "#f8f6f2", border: "1px solid rgba(26,31,46,0.08)" }}>
-                <div className="flex flex-wrap items-start gap-8 mb-5">
-                  {/* Radar */}
-                  <div className="flex-shrink-0">
-                    <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-3">Capability Radar</p>
-                    <div style={{ filter: "invert(1) hue-rotate(180deg) brightness(0.9)" }}>
-                      <ACERadar ace={ace} size={160} showLabels />
-                    </div>
+                <div className="flex flex-wrap items-center gap-8">
+                  <div style={{ filter: "invert(1) hue-rotate(180deg) brightness(0.9)" }}>
+                    <ACERadar ace={ace} size={160} showLabels />
                   </div>
-                  {/* Difficulty tier + badge */}
-                  <div className="flex-1 min-w-[160px]">
-                    <div className="mb-4">
-                      <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-1.5">Difficulty Tier</p>
-                      <Pill type="difficulty" value={adventure.difficulty} />
-                    </div>
-                    <div>
-                      <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-2">ACE Rating</p>
-                      <ACEBadge ace={ace} size="md" />
-                    </div>
-                  </div>
+                  <p className="flex-1 min-w-[160px] text-[#1a1f2e]/60 text-sm leading-relaxed">
+                    {aceSummary(ace, adventure.name)}
+                  </p>
                 </div>
-
-                {/* Axis breakdown bars */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                  {ACE_AXES.filter(k => ace[k] > 0).map((k) => {
-                    const val = ace[k];
-                    const color = ACE_AXIS_COLORS[k];
-                    return (
-                      <div key={k}>
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-[10px] font-semibold text-[#1a1f2e]/50 uppercase tracking-wide">{ACE_AXIS_LABELS[k]}</span>
-                          <span className="text-[10px] font-bold" style={{ color }}>{val}/5</span>
-                        </div>
-                        <div className="flex gap-0.5">
-                          {[1, 2, 3, 4, 5].map((n) => (
-                            <div
-                              key={n}
-                              className="h-1.5 flex-1 rounded-full"
-                              style={{ background: n <= val ? color : "rgba(26,31,46,0.1)" }}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Summary text */}
-                <p className="text-[#1a1f2e]/60 text-sm leading-relaxed">
-                  {aceSummary(ace, adventure.name)}
-                </p>
               </div>
 
               {/* Automatic safety warning banners */}
