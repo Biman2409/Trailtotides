@@ -78,7 +78,7 @@ export default function ACEPage() {
               <p className="text-white/30 text-sm font-semibold tracking-[0.25em] uppercase mb-7">
                 Adventure Capability Engine
               </p>
-              <h1 className="text-5xl lg:text-7xl font-black text-white tracking-tight leading-[0.95] mb-6">
+              <h1 className="text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight mb-6">
                 The <span className="text-[#ff5100]">ACE</span> Rating System
               </h1>
 
