@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Brain } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { getACE, ACE_AXIS_COLORS, ACE_DOMAINS } from "@/lib/ace";
@@ -21,26 +22,33 @@ export const metadata = {
 };
 
 const AXES = [
-  { key: "stamina",  icon: <Flame    className="w-5 h-5" />, color: "#f97316", label: "Stamina",  desc: "Sustained physical effort and endurance. Drives multi-day trekking, long motorcycle rides and consecutive days at altitude." },
-  { key: "power",    icon: <Zap      className="w-5 h-5" />, color: "#eab308", label: "Power",    desc: "Short explosive bursts — steep ascents, paddling rapids, scrambling over boulders or fighting a current." },
-  { key: "strength", icon: <Dumbbell className="w-5 h-5" />, color: "#84cc16", label: "Strength", desc: "Load-bearing capability and joint stress — carrying a heavy pack for days or hauling yourself up technical terrain." },
-  { key: "agility",  icon: <Compass  className="w-5 h-5" />, color: "#22d3ee", label: "Agility",  desc: "Balance, coordination and terrain navigation — rock hopping, technical motorcycle riding, snow travel." },
+  { key: "stamina",  icon: <Flame    className="w-5 h-5" />, color: "#f97316", label: "Stamina",  desc: "Sustained physical effort and endurance — multi-day trekking, long motorcycle rides, consecutive days at altitude." },
+  { key: "power",    icon: <Zap      className="w-5 h-5" />, color: "#eab308", label: "Power",    desc: "Short explosive bursts — steep ascents, paddling rapids, scrambling over boulders, fighting a current." },
+  { key: "strength", icon: <Dumbbell className="w-5 h-5" />, color: "#84cc16", label: "Strength", desc: "Load-bearing capability and joint stress — carrying heavy packs for days or hauling up technical terrain." },
+  { key: "agility",  icon: <Compass  className="w-5 h-5" />, color: "#22d3ee", label: "Agility",  desc: "Balance, coordination and terrain navigation — rock hopping, technical riding, snow and ice travel." },
   { key: "water",    icon: <Waves    className="w-5 h-5" />, color: "#3b82f6", label: "Water",    desc: "Swimming ability and aquatic survival — required for rafting, sea kayaking, scuba and river crossings." },
   { key: "altitude", icon: <Mountain className="w-5 h-5" />, color: "#a78bfa", label: "Altitude", desc: "Physiological tolerance to high elevation — the hypoxic stress of Himalayan trekking and 6,000m peaks." },
-  { key: "nerve",    icon: <Shield   className="w-5 h-5" />, color: "#f43f5e", label: "Nerve",    desc: "Psychological exposure tolerance — comfort on cliff edges, in caves, on extreme exposed terrain or dangerous rapids." },
-  { key: "focus",    icon: <Brain    className="w-5 h-5" />, color: "#10b981", label: "Focus",    desc: "Sustained attention and hazard awareness — technical riding, route-finding, rope work, and multi-day navigation." },
+  { key: "nerve",    icon: <Shield   className="w-5 h-5" />, color: "#f43f5e", label: "Nerve",    desc: "Psychological exposure tolerance — comfort on cliff edges, in caves, on extreme terrain or dangerous rapids." },
+  { key: "focus",    icon: <Brain    className="w-5 h-5" />, color: "#10b981", label: "Focus",    desc: "Sustained attention and hazard awareness — technical riding, route-finding, rope work, multi-day navigation." },
 ];
 
 const SCALE = [
-  { level: 0, label: "Not Relevant", color: "rgba(255,255,255,0.15)" },
-  { level: 1, label: "Very Low",     color: "#22c55e" },
-  { level: 2, label: "Low",          color: "#84cc16" },
-  { level: 3, label: "Moderate",     color: "#eab308" },
-  { level: 4, label: "High",         color: "#f97316" },
-  { level: 5, label: "Extreme",      color: "#ef4444" },
+  { level: 0, label: "Not Relevant", sub: "Axis doesn't apply",   color: "rgba(255,255,255,0.2)" },
+  { level: 1, label: "Very Low",     sub: "Minimal demand",        color: "#22c55e" },
+  { level: 2, label: "Low",          sub: "Light conditioning",    color: "#84cc16" },
+  { level: 3, label: "Moderate",     sub: "Regular training",      color: "#eab308" },
+  { level: 4, label: "High",         sub: "Strong preparation",    color: "#f97316" },
+  { level: 5, label: "Extreme",      sub: "Elite level required",  color: "#ef4444" },
 ];
 
 const EXAMPLE_SLUGS = ["kedarkantha-trek", "rupin-pass", "stok-kangri"];
+
+const DOMAIN_ICONS: Record<string, React.ReactNode> = {
+  Engine:   <Flame    className="w-5 h-5" />,
+  Chassis:  <Dumbbell className="w-5 h-5" />,
+  Elements: <Waves    className="w-5 h-5" />,
+  Mind:     <Brain    className="w-5 h-5" />,
+};
 
 export default function ACEPage() {
   const exampleAdventures = EXAMPLE_SLUGS
@@ -48,78 +56,358 @@ export default function ACEPage() {
     .filter(Boolean) as typeof adventures;
 
   return (
-    <div className="min-h-screen bg-[#fafaf8]">
+    <div className="min-h-screen bg-[#0a0e17]">
       <Navbar />
 
-      {/* ── HERO ──────────────────────────────────────────── */}
-      <section className="bg-[#0d1117] pt-32 pb-20 px-6 relative overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-[0.025]"
-          style={{
-            backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-          }}
-        />
-        <div className="max-w-5xl mx-auto relative">
-          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.25em] uppercase mb-5">
-            Trail to Tides Grading System
-          </p>
-          <h1 className="text-4xl lg:text-6xl font-black text-white tracking-tight leading-[1.05] mb-4 uppercase">
-            The ACE Rating
-          </h1>
-          <p className="text-white/30 text-sm font-semibold tracking-[0.2em] uppercase mb-6">
-            Adventure Capability Engine · Know Your Adventure
-          </p>
-          <p className="text-white/60 text-lg leading-relaxed max-w-2xl mb-4">
-            Traditional difficulty labels — Easy, Hard, Expert — collapse everything into one number. One trail at 2,000m is &ldquo;Moderate.&rdquo; Another at 5,000m with glacier travel is also &ldquo;Moderate.&rdquo; They are not the same adventure.
-          </p>
-          <p className="text-white/40 text-base leading-relaxed max-w-2xl mb-12">
-            ACE rates every adventure across <span className="text-white font-semibold">eight biological axes</span> — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you know exactly what your body needs before you go.
-          </p>
+      {/* ── HERO ──────────────────────────────────────────────────────── */}
+      <section className="relative pt-32 pb-24 px-6 overflow-hidden">
+        {/* Background grid */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+        }} />
+        {/* Radial glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full opacity-10 blur-3xl pointer-events-none"
+          style={{ background: "radial-gradient(ellipse, #ff5100 0%, #a78bfa 50%, transparent 100%)" }} />
 
-          {/* Four domains */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-14">
-            {ACE_DOMAINS.map((d) => (
+        <div className="max-w-6xl mx-auto relative">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center gap-16">
+
+            {/* Left: copy */}
+            <div className="flex-1 max-w-2xl">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mb-8 border"
+                style={{ background: "rgba(255,81,0,0.08)", borderColor: "rgba(255,81,0,0.25)" }}>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
+                <span className="text-[#ff5100] text-[11px] font-bold tracking-[0.2em] uppercase">Trail to Tides · Grading System</span>
+              </div>
+
+              <h1 className="text-5xl lg:text-7xl font-black text-white tracking-tight leading-[0.95] mb-6">
+                The <span className="text-[#ff5100]">ACE</span><br />
+                Rating
+              </h1>
+              <p className="text-white/30 text-sm font-semibold tracking-[0.25em] uppercase mb-7">
+                Adventure Capability Engine
+              </p>
+
+              <p className="text-white/65 text-lg leading-relaxed mb-5">
+                &ldquo;Moderate&rdquo; means nothing. A short trail at 2,000m is moderate.
+                A 5,000m glacier crossing is also moderate. They are not the same.
+              </p>
+              <p className="text-white/40 text-base leading-relaxed mb-10">
+                ACE rates every adventure across <span className="text-white font-semibold">eight biological axes</span> — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you know exactly what your body needs before you commit.
+              </p>
+
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href="/matchmaker"
+                  className="inline-flex items-center gap-2 bg-[#ff5100] text-white px-7 py-3.5 rounded-full font-bold text-sm hover:bg-[#e04800] transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/30"
+                >
+                  Take Assessment
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  href="/explore"
+                  className="inline-flex items-center gap-2 border border-white/15 text-white/70 px-6 py-3.5 rounded-full font-semibold text-sm hover:border-white/30 hover:text-white transition-all"
+                >
+                  Browse Adventures
+                </Link>
+              </div>
+            </div>
+
+            {/* Right: large radar */}
+            <div className="relative shrink-0 mx-auto lg:mx-0">
+              {/* Glow behind radar */}
+              <div className="absolute inset-0 rounded-full blur-3xl opacity-20 scale-75"
+                style={{ background: "conic-gradient(from 0deg, #f97316, #eab308, #84cc16, #22d3ee, #3b82f6, #a78bfa, #f43f5e, #10b981, #f97316)" }} />
+              <ACERadar
+                ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, nerve: 4, focus: 3 }}
+                size={280}
+                showLabels
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── STAT BAR ──────────────────────────────────────────────────── */}
+      <div className="border-y border-white/5" style={{ background: "rgba(255,255,255,0.025)" }}>
+        <div className="max-w-6xl mx-auto px-6 py-5 flex flex-wrap items-center gap-8 justify-between">
+          {[
+            { value: "8",    label: "Biological axes" },
+            { value: "0–5",  label: "Score per axis" },
+            { value: "57",   label: "Adventures rated" },
+            { value: "4",    label: "Capability domains" },
+          ].map(({ value, label }) => (
+            <div key={label} className="flex items-baseline gap-3">
+              <span className="text-3xl font-black text-white">{value}</span>
+              <span className="text-white/35 text-sm">{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── LIVE EXAMPLES ─────────────────────────────────────────────── */}
+      <section className="py-24 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+            <div>
+              <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">Live Examples</p>
+              <h2 className="text-white text-4xl font-black tracking-tight">Three very different adventures.</h2>
+              <p className="text-white/35 text-base mt-2">One label can&apos;t capture this. ACE can.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {exampleAdventures.map((a, idx) => {
+              const ace = getACE(a);
+              const topAxis = (Object.entries(ace) as [string, number][]).sort(([,a],[,b]) => b-a)[0];
+              const topColor = topAxis ? ACE_AXIS_COLORS[topAxis[0] as keyof typeof ACE_AXIS_COLORS] : "#ff5100";
+              return (
+                <Link
+                  key={a.slug}
+                  href={`/experiences/${a.slug}`}
+                  className="group relative rounded-3xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+                  style={{ borderColor: `${topColor}25`, background: "#0f1420" }}
+                >
+                  {/* Hero image */}
+                  <div className="relative h-48 overflow-hidden">
+                    <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(15,20,32,0.1) 0%, rgba(15,20,32,0.9) 100%)" }} />
+                    {/* Glow accent */}
+                    <div className="absolute top-3 right-3 w-16 h-16 rounded-full blur-xl opacity-40" style={{ background: topColor }} />
+                    {/* Rank badge */}
+                    <div className="absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center text-sm font-black text-white/50 border border-white/10"
+                      style={{ background: "rgba(0,0,0,0.5)" }}>
+                      {idx + 1}
+                    </div>
+                    <div className="absolute bottom-3 left-4 right-4">
+                      <p className="text-white/45 text-[10px] uppercase tracking-widest mb-0.5">{a.state}</p>
+                      <h3 className="text-white font-bold text-base leading-tight">{a.name}</h3>
+                    </div>
+                  </div>
+
+                  {/* Radar + badge */}
+                  <div className="px-5 pt-4 pb-5">
+                    <div className="flex items-center gap-4 mb-4">
+                      <ACERadar ace={ace} size={100} showLabels={false} />
+                      <div className="flex-1">
+                        <p className="text-white/30 text-[9px] uppercase tracking-widest mb-2">ACE Profile</p>
+                        <ACEBadge ace={ace} size="sm" />
+                      </div>
+                    </div>
+                    {/* Top 3 axes */}
+                    <div className="space-y-1.5">
+                      {(Object.entries(ace) as [string, number][])
+                        .filter(([,v]) => v > 0)
+                        .sort(([,a],[,b]) => b-a)
+                        .slice(0, 3)
+                        .map(([axis, val]) => {
+                          const color = ACE_AXIS_COLORS[axis as keyof typeof ACE_AXIS_COLORS];
+                          return (
+                            <div key={axis} className="flex items-center gap-2">
+                              <span className="text-[10px] font-bold uppercase tracking-wide w-16 shrink-0" style={{ color }}>
+                                {axis.slice(0,3).toUpperCase()}
+                              </span>
+                              <div className="flex-1 h-1 rounded-full bg-white/5">
+                                <div className="h-full rounded-full transition-all" style={{ width: `${(val/5)*100}%`, background: color }} />
+                              </div>
+                              <span className="text-white/40 text-[10px] font-mono w-4 text-right">{val}</span>
+                            </div>
+                          );
+                        })}
+                    </div>
+                    {a.altitude && (
+                      <p className="text-white/20 text-[10px] mt-3 pt-3 border-t border-white/5">
+                        Max altitude: {a.altitude}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── THE EIGHT AXES ────────────────────────────────────────────── */}
+      <section className="py-24 px-6 border-t border-white/5" style={{ background: "rgba(255,255,255,0.015)" }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-14">
+            <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">The Eight Axes</p>
+            <h2 className="text-white text-4xl font-black tracking-tight">What your body needs.</h2>
+            <p className="text-white/35 text-base mt-2 max-w-xl">Each axis is scored independently from 0 to 5. An adventure can demand nothing of one axis while pushing another to the maximum.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {AXES.map(({ key, icon, color, label, desc }) => (
               <div
-                key={d.name}
-                className="rounded-2xl p-5 border"
-                style={{ background: `${d.color}08`, borderColor: `${d.color}20` }}
+                key={key}
+                className="group relative rounded-2xl p-5 border overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
+                style={{ background: `${color}08`, borderColor: `${color}20` }}
               >
-                <p className="font-black text-base mb-1" style={{ color: d.color }}>{d.name}</p>
-                <p className="text-white/30 text-[11px] leading-relaxed mb-3">{d.desc}</p>
-                <div className="flex flex-wrap gap-1">
-                  {d.axes.map((ax) => (
-                    <span key={ax} className="text-[10px] px-2 py-0.5 rounded-md font-semibold uppercase tracking-wide"
-                      style={{ background: `${ACE_AXIS_COLORS[ax]}18`, color: ACE_AXIS_COLORS[ax] }}>
-                      {ax}
-                    </span>
-                  ))}
+                {/* Glow top-right */}
+                <div className="absolute top-0 right-0 w-20 h-20 rounded-full blur-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-300"
+                  style={{ background: color }} />
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 relative"
+                  style={{ background: `${color}18`, color }}
+                >
+                  {icon}
+                </div>
+                <p className="font-black text-white text-base mb-1.5 relative">{label}</p>
+                <p className="text-white/40 text-xs leading-relaxed relative">{desc}</p>
+                {/* Bottom accent line */}
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── SCALE ─────────────────────────────────────────────────────── */}
+      <section className="py-24 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-14">
+            <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">The Demand Scale</p>
+            <h2 className="text-white text-4xl font-black tracking-tight">0 to 5. No ambiguity.</h2>
+            <p className="text-white/35 text-base mt-2">Every axis uses the same six-point scale. Here's exactly what each level means in the real world.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {SCALE.map(({ level, label, sub, color }) => (
+              <div
+                key={level}
+                className="relative rounded-2xl border overflow-hidden"
+                style={{ background: `${color}08`, borderColor: `${color}18` }}
+              >
+                {/* Fill indicator */}
+                <div className="absolute top-0 left-0 bottom-0 opacity-10"
+                  style={{ width: level === 0 ? "0%" : `${(level / 5) * 100}%`, background: color }} />
+                <div className="relative flex items-center gap-5 p-5">
+                  {/* Number */}
+                  <div
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl font-black shrink-0"
+                    style={{ background: `${color}18`, color, boxShadow: level >= 4 ? `0 0 20px ${color}40` : "none" }}
+                  >
+                    {level}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-white font-bold text-base">{label}</p>
+                    <p className="text-white/40 text-xs mt-0.5">{sub}</p>
+                    {/* Pip row */}
+                    <div className="flex gap-1 mt-2">
+                      {[1,2,3,4,5].map((n) => (
+                        <div key={n} className="h-1 flex-1 rounded-full"
+                          style={{ background: n <= level ? color : `${color}18` }} />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          {/* How to read */}
-          <div
-            className="rounded-2xl p-6 border"
-            style={{ background: "rgba(255,81,0,0.05)", borderColor: "rgba(255,81,0,0.2)" }}
-          >
-            <p className="text-[#ff5100] text-xs font-semibold tracking-widest uppercase mb-3">
-              How to read an ACE profile
-            </p>
-            <p className="text-white/55 text-sm leading-relaxed mb-5">
-              Each axis is scored <span className="text-white font-semibold">0 to 5</span>, independently.
-              A 0 means that axis is completely irrelevant — a desert camel safari has Water: 0.
-              Two adventures with the same difficulty tier can have completely different ACE profiles.
-              You read all eight axes together.
-            </p>
-            <div className="flex flex-wrap gap-6 items-center">
+      {/* ── DOMAINS ───────────────────────────────────────────────────── */}
+      <section className="py-24 px-6 border-t border-white/5" style={{ background: "rgba(255,255,255,0.015)" }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-14">
+            <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">Capability Domains</p>
+            <h2 className="text-white text-4xl font-black tracking-tight">Four pillars of readiness.</h2>
+            <p className="text-white/35 text-base mt-2 max-w-xl">The eight axes are grouped into four biological domains. Every adventure activates a unique combination of them.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {ACE_DOMAINS.map((d) => (
+              <div
+                key={d.name}
+                className="relative rounded-3xl border overflow-hidden p-7"
+                style={{ background: `${d.color}07`, borderColor: `${d.color}20` }}
+              >
+                {/* Corner glow */}
+                <div className="absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl opacity-10 pointer-events-none"
+                  style={{ background: d.color }} />
+
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
+                      style={{ background: `${d.color}18`, color: d.color }}>
+                      {DOMAIN_ICONS[d.name]}
+                    </div>
+                    <div>
+                      <p className="text-white font-black text-xl leading-none">{d.name}</p>
+                    </div>
+                  </div>
+
+                  <p className="text-white/45 text-sm leading-relaxed mb-6">{d.desc}</p>
+
+                  <div className="flex gap-2">
+                    {d.axes.map((ax) => {
+                      const color = ACE_AXIS_COLORS[ax];
+                      const axisData = AXES.find((a) => a.key === ax);
+                      return (
+                        <div
+                          key={ax}
+                          className="flex items-center gap-1.5 px-3 py-2 rounded-xl border"
+                          style={{ background: `${color}12`, borderColor: `${color}25`, color }}
+                        >
+                          <span className="text-xs">{axisData?.icon}</span>
+                          <span className="text-xs font-bold capitalize">{ax}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── HOW TO READ ───────────────────────────────────────────────── */}
+      <section className="py-24 px-6 border-t border-white/5">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Copy */}
+            <div>
+              <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">How to read it</p>
+              <h2 className="text-white text-4xl font-black tracking-tight mb-6">The same tier. A completely different adventure.</h2>
+              <div className="space-y-5">
+                {[
+                  { label: "Axis 0", text: "Completely irrelevant to this adventure — a camel safari has Water: 0." },
+                  { label: "Read together", text: "Two adventures can share a difficulty tier but have opposite profiles. ACE shows you exactly where the demands lie." },
+                  { label: "Your profile", text: "Take the 8-axis assessment and get your personal ACE map. Then compare it directly against any adventure." },
+                ].map(({ label, text }) => (
+                  <div key={label} className="flex gap-4">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] mt-2 shrink-0" />
+                    <div>
+                      <p className="text-white font-semibold text-sm mb-0.5">{label}</p>
+                      <p className="text-white/45 text-sm leading-relaxed">{text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Example comparison */}
+            <div className="space-y-3">
               {exampleAdventures.slice(0, 2).map((a) => {
                 const ace = getACE(a);
                 return (
-                  <div key={a.slug} className="flex items-center gap-3">
-                    <ACEBadge ace={ace} size="md" />
-                    <span className="text-white/35 text-xs font-medium">{a.name}</span>
+                  <div key={a.slug} className="rounded-2xl border p-5"
+                    style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.08)" }}>
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <p className="text-white/35 text-[10px] uppercase tracking-widest mb-0.5">{a.state}</p>
+                        <p className="text-white font-bold text-sm">{a.name}</p>
+                      </div>
+                      <div className="shrink-0">
+                        <ACERadar ace={ace} size={72} showLabels={false} />
+                      </div>
+                    </div>
+                    <ACEBadge ace={ace} size="sm" />
                   </div>
                 );
               })}
@@ -128,151 +416,33 @@ export default function ACEPage() {
         </div>
       </section>
 
-      {/* ── LIVE EXAMPLES ─────────────────────────────────── */}
-      <section className="bg-[#0d1117] py-16 px-6 border-t border-white/5">
-        <div className="max-w-5xl mx-auto">
-          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Live Examples</p>
-          <h2 className="text-3xl font-black text-white tracking-tight mb-2">Three very different adventures</h2>
-          <p className="text-white/40 text-sm mb-8">ACE makes clear what a single tier label cannot.</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {exampleAdventures.map((a) => {
-              const ace = getACE(a);
-              return (
-                <Link
-                  key={a.slug}
-                  href={`/experiences/${a.slug}`}
-                  className="rounded-2xl p-6 transition-all hover:bg-white/[0.07]"
-                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
-                >
-                  <p className="text-white/35 text-[10px] uppercase tracking-widest mb-1">{a.state}</p>
-                  <h3 className="text-white font-bold text-base mb-4">{a.name}</h3>
-                  <ACERadar ace={ace} size={140} showLabels />
-                  <div className="mt-4">
-                    <ACEBadge ace={ace} size="sm" />
-                  </div>
-                  {a.altitude && (
-                    <p className="text-white/20 text-[10px] mt-3">Max altitude: {a.altitude}</p>
-                  )}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* ── CTA ───────────────────────────────────────────────────────── */}
+      <section className="py-24 px-6 border-t border-white/5 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-5" style={{
+          backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+        }} />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,81,0,0.12) 0%, transparent 70%)" }} />
 
-      {/* ── THE EIGHT AXES ────────────────────────────────── */}
-      <section className="max-w-5xl mx-auto px-6 py-16">
-        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">The Eight Axes</p>
-        <h2 className="text-3xl font-black text-[#1a1f2e] tracking-tight mb-10">What each axis measures</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {AXES.map(({ key, icon, color, label, desc }) => (
-            <div
-              key={key}
-              className="flex items-start gap-4 rounded-2xl p-5 border"
-              style={{ background: `${color}06`, borderColor: `${color}20` }}
-            >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                style={{ background: `${color}18`, color }}
-              >
-                {icon}
-              </div>
-              <div>
-                <p className="font-bold text-[#1a1f2e] text-sm mb-1">{label}</p>
-                <p className="text-[#4b6560] text-xs leading-relaxed">{desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── SCALE ─────────────────────────────────────────── */}
-      <section className="bg-white py-16 px-6" style={{ borderTop: "1px solid rgba(0,0,0,0.05)", borderBottom: "1px solid rgba(0,0,0,0.05)" }}>
-        <div className="max-w-5xl mx-auto">
-          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">The Scale</p>
-          <h2 className="text-3xl font-black text-[#1a1f2e] tracking-tight mb-10">What each level means</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            {SCALE.map(({ level, label, color }) => (
-              <div
-                key={level}
-                className="rounded-2xl p-5 flex flex-col items-center text-center border"
-                style={{ background: `${color}10`, borderColor: `${color}30` }}
-              >
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-black mb-3"
-                  style={{ background: `${color}20`, color }}
-                >
-                  {level}
-                </div>
-                <p className="font-bold text-[#1a1f2e] text-sm">{label}</p>
-                <div className="flex gap-0.5 mt-2">
-                  {[1,2,3,4,5].map((n) => (
-                    <div key={n} className="w-2.5 h-1 rounded-full"
-                      style={{ background: n <= level ? color : `${color}20` }} />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── DOMAINS ───────────────────────────────────────── */}
-      <section className="max-w-5xl mx-auto px-6 py-16">
-        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Capability Domains</p>
-        <h2 className="text-3xl font-black text-[#1a1f2e] tracking-tight mb-4">Four pillars of adventure readiness</h2>
-        <p className="text-[#4b6560] text-sm leading-relaxed max-w-2xl mb-10">
-          The eight axes are grouped into four biological capability domains. Every adventure activates a unique combination of them.
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {ACE_DOMAINS.map((d) => (
-            <div
-              key={d.name}
-              className="rounded-2xl p-6 border"
-              style={{ background: `${d.color}06`, borderColor: `${d.color}18` }}
-            >
-              <p className="font-black text-xl mb-1" style={{ color: d.color }}>{d.name}</p>
-              <p className="text-[#4b6560] text-sm leading-relaxed mb-4">{d.desc}</p>
-              <div className="flex gap-2">
-                {d.axes.map((ax) => {
-                  const axisData = AXES.find((a) => a.key === ax);
-                  return (
-                    <div
-                      key={ax}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg"
-                      style={{ background: `${ACE_AXIS_COLORS[ax]}15`, color: ACE_AXIS_COLORS[ax] }}
-                    >
-                      <span className="text-xs">{axisData?.icon}</span>
-                      <span className="text-xs font-semibold capitalize">{ax}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── CTA ───────────────────────────────────────────── */}
-      <section className="bg-[#0d1117] py-20 px-6">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-          <div>
-            <h2 className="text-3xl font-black text-white tracking-tight mb-2">Find your adventure match</h2>
-            <p className="text-white/40 text-sm max-w-md">
-              Take the 8-axis assessment and let the ACE engine surface exactly which adventures your body is built for.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3 shrink-0">
+        <div className="max-w-3xl mx-auto text-center relative">
+          <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-5">Know your adventure</p>
+          <h2 className="text-white text-5xl font-black tracking-tight leading-tight mb-5">
+            Find exactly what<br />your body is built for.
+          </h2>
+          <p className="text-white/45 text-lg leading-relaxed mb-10 max-w-xl mx-auto">
+            Eight questions. The ACE engine maps your biological profile and surfaces the adventures that fit — and the ones that would push you over the edge.
+          </p>
+          <div className="flex flex-wrap gap-3 justify-center">
             <Link
               href="/matchmaker"
-              className="inline-flex items-center gap-2 bg-[#ff5100] text-white px-8 py-4 rounded-full font-bold text-sm hover:bg-[#e04800] transition-colors"
+              className="inline-flex items-center gap-2 bg-[#ff5100] text-white px-9 py-4 rounded-full font-bold text-base hover:bg-[#e04800] transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30"
             >
-              Take Assessment
+              Take Assessment — 3 mins
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/explore"
-              className="inline-flex items-center gap-2 border border-white/20 text-white px-6 py-4 rounded-full font-semibold text-sm hover:border-white/40 transition-colors"
+              className="inline-flex items-center gap-2 border border-white/15 text-white/70 px-8 py-4 rounded-full font-semibold text-base hover:border-white/30 hover:text-white transition-all"
             >
               Browse Adventures
             </Link>
