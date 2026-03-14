@@ -24,13 +24,12 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
-import ACERadar from "@/components/ui/custom/ACERadar";
-import GradingPill from "@/components/ui/custom/GradingPill";
+import ACEProfileSection from "./ACEProfileSection";
 import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import ReviewSection from "@/components/ui/custom/ReviewSection";
 import { createClient } from "@/lib/supabase/server";
-import { getACE, aceSummary } from "@/lib/ace";
+import { getACE } from "@/lib/ace";
 import type { Adventure } from "@/lib/data";
 import RealityCheck from "@/components/ui/custom/RealityCheck";
 
@@ -373,58 +372,13 @@ export default async function ExperiencePage({ params }: Props) {
             </section>
 
             {/* ACE Profile */}
-            <section>
-              <div className="flex items-center justify-between mb-5">
-                <SectionLabel>ACE Profile</SectionLabel>
-                <GradingPill />
-              </div>
-
-              <div
-                className="rounded-2xl p-6 mb-4"
-                style={{
-                  background: "linear-gradient(135deg, #0c1020 0%, #0f1520 100%)",
-                  border: "1px solid var(--border-subtle)",
-                }}
-              >
-                <div className="flex flex-wrap items-center gap-8">
-                  <ACERadar ace={ace} size={160} showLabels />
-                  <p className="flex-1 min-w-[160px] text-sm leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
-                    {aceSummary(ace, adventure.name)}
-                  </p>
-                </div>
-              </div>
-
-              {/* Safety warning banners */}
-              <div className="space-y-2.5">
-                {showAltitudeWarning && (
-                  <div className="flex gap-3 rounded-xl px-4 py-3.5" style={{ background: "rgba(234,179,8,0.07)", border: "1px solid rgba(234,179,8,0.22)" }}>
-                    <AlertTriangle className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs font-bold text-yellow-400 mb-0.5">High Risk of Altitude Sickness</p>
-                      <p className="text-xs text-yellow-400/55 leading-relaxed">Proper acclimatization is required. Do not exceed 300–500m of altitude gain per day above 3,000m.</p>
-                    </div>
-                  </div>
-                )}
-                {showIsolationWarning && (
-                  <div className="flex gap-3 rounded-xl px-4 py-3.5" style={{ background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.2)" }}>
-                    <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs font-bold text-red-400 mb-0.5">Extreme Exposure Environment</p>
-                      <p className="text-xs text-red-400/55 leading-relaxed">Rescue may be delayed. Carry a satellite communicator and travel with a registered guide.</p>
-                    </div>
-                  </div>
-                )}
-                {showTechnicalWarning && (
-                  <div className="flex gap-3 rounded-xl px-4 py-3.5" style={{ background: "rgba(139,92,246,0.07)", border: "1px solid rgba(139,92,246,0.2)" }}>
-                    <AlertTriangle className="w-4 h-4 text-violet-400 shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs font-bold text-violet-400 mb-0.5">Mountaineering Route</p>
-                      <p className="text-xs text-violet-400/55 leading-relaxed">Ice axe, crampons, and glacier travel experience are essential. Do not attempt without proper training.</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </section>
+            <ACEProfileSection
+              ace={ace}
+              adventureName={adventure.name}
+              showAltitudeWarning={showAltitudeWarning}
+              showIsolationWarning={showIsolationWarning}
+              showTechnicalWarning={showTechnicalWarning}
+            />
 
             {/* Operators */}
             <section>
