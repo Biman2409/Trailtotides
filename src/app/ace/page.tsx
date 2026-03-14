@@ -93,21 +93,6 @@ export default function ACEPage() {
                 ACE rates every adventure across <span className="text-white font-semibold">eight axes</span> — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you know exactly what your body needs before you commit.
               </p>
 
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/matchmaker"
-                  className="inline-flex items-center gap-2 bg-[#ff5100] text-white px-7 py-3.5 rounded-full font-bold text-sm hover:bg-[#e04800] transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/30"
-                >
-                  Take Assessment
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link
-                  href="/explore"
-                  className="inline-flex items-center gap-2 border border-white/15 text-white/70 px-6 py-3.5 rounded-full font-semibold text-sm hover:border-white/30 hover:text-white transition-all"
-                >
-                  Browse Adventures
-                </Link>
-              </div>
             </div>
 
             {/* Right: large radar */}
@@ -428,19 +413,13 @@ export default function ACEPage() {
           <p className="text-white/45 text-lg leading-relaxed mb-10 max-w-xl mx-auto">
             Eight questions. The ACE engine maps your biological profile and surfaces the adventures that fit — and the ones that would push you over the edge.
           </p>
-          <div className="flex flex-wrap gap-3 justify-center">
+          <div className="flex justify-center">
             <Link
               href="/matchmaker"
               className="inline-flex items-center gap-2 bg-[#ff5100] text-white px-9 py-4 rounded-full font-bold text-base hover:bg-[#e04800] transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30"
             >
               Take Assessment — 3 mins
               <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/explore"
-              className="inline-flex items-center gap-2 border border-white/15 text-white/70 px-8 py-4 rounded-full font-semibold text-base hover:border-white/30 hover:text-white transition-all"
-            >
-              Browse Adventures
             </Link>
           </div>
         </div>
