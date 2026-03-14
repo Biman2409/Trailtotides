@@ -297,35 +297,76 @@ export default async function ExperiencePage({ params }: Props) {
         </div>
       </section>
 
-      {/* ── ACE STRIP ─────────────────────────────────────── */}
-      <section className="bg-[#1a1f2e] py-5 border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-wrap items-center gap-4 md:gap-0 md:divide-x divide-white/10">
-            {/* Label */}
-            <div className="flex items-center gap-2 pr-6">
-              <span className="text-[10px] uppercase tracking-widest text-[#ff5100] font-semibold">ACE Rating</span>
-              <a href="/ace" title="What is the ACE Rating?" className="flex items-center justify-center w-4 h-4 rounded-full border border-[#ff5100] text-[9px] font-bold text-[#ff5100] hover:bg-[#ff5100] hover:text-white transition-colors duration-150">?</a>
+      {/* ── ACE CAPABILITY PROFILE STRIP ─────────────────── */}
+      <section className="bg-[#0d1117] border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
+          <div className="flex flex-col md:flex-row md:items-center gap-6">
+
+            {/* Left: radar + label */}
+            <div className="flex items-center gap-5 shrink-0">
+              <ACERadar ace={ace} size={120} showLabels={false} />
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-[#ff5100] font-bold">ACE Rating</span>
+                  <a
+                    href="/ace"
+                    title="What is the ACE Rating?"
+                    className="flex items-center justify-center w-4 h-4 rounded-full border border-[#ff5100] text-[9px] font-bold text-[#ff5100] hover:bg-[#ff5100] hover:text-white transition-colors"
+                  >?</a>
+                </div>
+                <p className="text-white font-bold text-lg leading-tight">{adventure.name}</p>
+                <p className="text-white/35 text-xs mt-0.5">Capability Profile</p>
+              </div>
             </div>
-            {/* Axes */}
-            {ACE_AXES.filter(k => ace[k] > 0).map((k) => {
-              const val = ace[k];
-              const color = ACE_AXIS_COLORS[k];
-              return (
-                <div key={k} className="flex items-center gap-2.5 px-4 shrink-0">
-                  <div>
-                    <div className="text-[9px] uppercase tracking-widest mb-1" style={{ color: `${color}90` }}>
-                      {ACE_AXIS_LABELS[k]}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      {[1,2,3,4,5].map(n => (
-                        <div key={n} className="w-4 h-1.5 rounded-sm" style={{ background: n <= val ? color : 'rgba(255,255,255,0.1)' }} />
-                      ))}
-                      <span className="text-[10px] font-bold text-white ml-1">{val}</span>
+
+            {/* Divider */}
+            <div className="hidden md:block w-px self-stretch bg-white/8" />
+
+            {/* Right: axis tiles */}
+            <div className="flex flex-wrap gap-2 flex-1">
+              {ACE_AXES.filter(k => ace[k] > 0).map((k) => {
+                const val = ace[k];
+                const color = ACE_AXIS_COLORS[k];
+                const pct = (val / 5) * 100;
+                return (
+                  <div
+                    key={k}
+                    className="relative flex flex-col justify-between rounded-xl px-3 py-2.5 overflow-hidden"
+                    style={{
+                      minWidth: 72,
+                      background: `${color}0d`,
+                      border: `1px solid ${color}25`,
+                    }}
+                  >
+                    {/* fill bar behind content */}
+                    <div
+                      className="absolute bottom-0 left-0 right-0 rounded-b-xl transition-all"
+                      style={{ height: `${pct}%`, background: `${color}12` }}
+                    />
+                    <div className="relative">
+                      <p className="text-[9px] font-bold uppercase tracking-widest mb-1.5" style={{ color: `${color}` }}>
+                        {ACE_AXIS_LABELS[k]}
+                      </p>
+                      <div className="flex items-end gap-0.5">
+                        <span className="text-2xl font-black leading-none text-white">{val}</span>
+                        <span className="text-white/25 text-xs mb-0.5">/5</span>
+                      </div>
+                      {/* dot row */}
+                      <div className="flex gap-0.5 mt-1.5">
+                        {[1,2,3,4,5].map(n => (
+                          <div
+                            key={n}
+                            className="h-0.5 flex-1 rounded-full"
+                            style={{ background: n <= val ? color : `${color}25` }}
+                          />
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+
           </div>
         </div>
       </section>
