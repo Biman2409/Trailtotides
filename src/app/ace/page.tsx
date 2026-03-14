@@ -131,7 +131,7 @@ export default function ACEPage() {
             <div>
               <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">Live Examples</p>
               <h2 className="text-white text-4xl font-black tracking-tight">See it in action.</h2>
-              <p className="text-white/35 text-base mt-2">One label can&apos;t capture this. ACE can.</p>
+              <p className="text-white/35 text-base mt-2">Typical labels hide the detail. ACE exposes it.</p>
             </div>
           </div>
 
