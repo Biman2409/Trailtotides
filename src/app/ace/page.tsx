@@ -75,7 +75,7 @@ export default function ACEPage() {
 
             {/* Left: copy */}
             <div className="flex-1 max-w-2xl">
-<h1 className="text-5xl lg:text-7xl font-black text-white tracking-tight leading-[0.95] mb-6">
+              <h1 className="text-5xl lg:text-7xl font-black text-white tracking-tight leading-[0.95] mb-6">
                 The <span className="text-[#ff5100]">ACE</span> Rating
               </h1>
               <p className="text-white/30 text-sm font-semibold tracking-[0.25em] uppercase mb-7">
