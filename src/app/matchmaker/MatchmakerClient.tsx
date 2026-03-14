@@ -704,7 +704,7 @@ export default function MatchmakerClient() {
     setLoading(false);
   }
 
-  if (!started) return <IntroScreen onStart={() => setStarted(true)} />;
+  if (!started) return <IntroScreen onStart={() => { setStarted(true); window.scrollTo({ top: 0, behavior: "instant" }); }} />;
   if (loading && !result) return <LoadingScreen />;
   if (result) return <ResultsScreen result={result} onReset={reset} />;
 
