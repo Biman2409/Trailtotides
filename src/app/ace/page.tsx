@@ -265,7 +265,7 @@ export default function ACEPage() {
               href="/matchmaker"
               className="inline-flex items-center gap-2 bg-[#ff5100] text-white px-9 py-4 rounded-full font-bold text-base hover:bg-[#e04800] transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30"
             >
-              Take Assessment — 3 mins
+              Take Assessment ~ 3 mins
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
