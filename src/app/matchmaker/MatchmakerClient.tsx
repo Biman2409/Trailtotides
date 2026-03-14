@@ -757,7 +757,20 @@ export default function MatchmakerClient() {
             label={o.l}
             sub={undefined}
             selected={answers[currentQ.key] === o.v}
-            onClick={() => setAnswers(prev => ({ ...prev, [currentQ.key]: o.v }))}
+            onClick={() => {
+              setAnswers(prev => {
+                const updated = { ...prev, [currentQ.key]: o.v };
+                // Auto-advance after brief delay so selection is visible
+                setTimeout(() => {
+                  if (stepIndex < QUESTIONS.length - 1) {
+                    setStepIndex(i => i + 1);
+                  } else {
+                    submitAssessment(updated);
+                  }
+                }, 180);
+                return updated;
+              });
+            }}
           />
         ))}
       </div>
@@ -771,7 +784,7 @@ export default function MatchmakerClient() {
       )}
 
       {/* Nav */}
-      <div className="flex items-center justify-between mt-10">
+      <div className="flex items-center mt-10">
         <button
           onClick={() => {
             if (stepIndex === 0) setStarted(false);
@@ -781,18 +794,6 @@ export default function MatchmakerClient() {
         >
           <ChevronLeft className="w-4 h-4" />
           Back
-        </button>
-        <button
-          onClick={advance}
-          disabled={!canAdvance}
-          className="flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition-all"
-          style={{
-            background: canAdvance ? "#ff5100" : "rgba(255,255,255,0.08)",
-            color: canAdvance ? "white" : "rgba(255,255,255,0.2)",
-          }}
-        >
-          {stepIndex === QUESTIONS.length - 1 ? "Analyse my profile" : "Continue"}
-          <ChevronRight className="w-4 h-4" />
         </button>
       </div>
 
