@@ -75,13 +75,7 @@ export default function ACEPage() {
 
             {/* Left: copy */}
             <div className="flex-1 max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 mb-8 border"
-                style={{ background: "rgba(255,81,0,0.08)", borderColor: "rgba(255,81,0,0.25)" }}>
-                <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
-                <span className="text-[#ff5100] text-[11px] font-bold tracking-[0.2em] uppercase">Trail to Tides · Grading System</span>
-              </div>
-
-              <h1 className="text-5xl lg:text-7xl font-black text-white tracking-tight leading-[0.95] mb-6">
+<h1 className="text-5xl lg:text-7xl font-black text-white tracking-tight leading-[0.95] mb-6">
                 The <span className="text-[#ff5100]">ACE</span><br />
                 Rating
               </h1>
