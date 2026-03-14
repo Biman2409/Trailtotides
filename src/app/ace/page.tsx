@@ -83,7 +83,7 @@ export default function ACEPage() {
               </h1>
 
               <p className="text-white/55 text-base leading-relaxed mb-5">
-                ACE rates every adventure across <span className="text-white font-semibold">eight axes</span> — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you show up prepared, not surprised.
+                Every adventure makes specific demands on your body. ACE breaks those demands into <span className="text-white font-semibold">eight axes</span> — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you know exactly what you&apos;re signing up for.
               </p>
               <div className="flex flex-wrap gap-2 mb-10">
                 {[
@@ -130,7 +130,7 @@ export default function ACEPage() {
           <div className="mb-14">
             <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">The Eight Axes</p>
             <h2 className="text-white text-4xl font-black tracking-tight">What your body needs.</h2>
-            <p className="text-white/35 text-base mt-2 max-w-xl">Eight independent dimensions of physical and mental demand. Each scored 0–5. Every adventure has a unique combination.</p>
+            <p className="text-white/35 text-base mt-2 max-w-xl">Each axis targets a specific physical or mental capability. An adventure can push one to the limit while demanding nothing from another — that distinction is everything when you&apos;re preparing.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -166,7 +166,7 @@ export default function ACEPage() {
           <div className="mb-14">
             <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">The Demand Scale</p>
             <h2 className="text-white text-4xl font-black tracking-tight">0 to 5. No ambiguity.</h2>
-            <p className="text-white/35 text-base mt-2">Every axis uses the same six-point scale. Here's exactly what each level means in the real world.</p>
+            <p className="text-white/35 text-base mt-2">Once you know which axes matter, you need to know how hard. Every axis uses the same 0–5 scale — consistent, comparable, and honest about what you&apos;ll actually face.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -212,7 +212,7 @@ export default function ACEPage() {
             <div>
               <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">Live Examples</p>
               <h2 className="text-white text-4xl font-black tracking-tight">See it in action.</h2>
-              <p className="text-white/35 text-base mt-2">Same difficulty tier. Completely different demands on your body.</p>
+              <p className="text-white/35 text-base mt-2">Here&apos;s what ACE looks like on real adventures. The radar shapes alone tell you more than any difficulty label ever could.</p>
             </div>
           </div>
 
@@ -262,7 +262,7 @@ export default function ACEPage() {
             Find exactly what<br />your body is built for.
           </h2>
           <p className="text-white/45 text-lg leading-relaxed mb-10 max-w-xl mx-auto">
-            Answer 8 questions. Discover your ACE profile and find the adventures you&apos;re truly ready for.
+            Now the last piece — your own profile. Eight questions maps your capability across all eight axes. Then we show you which adventures fit, and exactly where you&apos;d need to grow for the ones that don&apos;t.
           </p>
           <div className="flex justify-center">
             <Link
