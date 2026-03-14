@@ -47,10 +47,11 @@ function buildPath(values: number[], max: number, cx: number, cy: number, radius
 }
 
 export default function ACERadar({ ace, size = 200, showLabels = true, userAce }: Props) {
+  const pad = 14;
   const cx = size / 2;
   const cy = size / 2;
-  const radius = size * 0.36;
-  const labelRadius = size * 0.48;
+  const radius = size * 0.33;
+  const labelRadius = size * 0.44;
   const n = AXIS_ORDER.length;
   const max = 5;
 
@@ -63,7 +64,7 @@ export default function ACERadar({ ace, size = 200, showLabels = true, userAce }
   const userPath = userValues ? buildPath(userValues, max, cx, cy, radius) : null;
 
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+    <svg width={size} height={size} viewBox={`${-pad} ${-pad} ${size + pad * 2} ${size + pad * 2}`}>
       {/* Grid rings */}
       {gridLevels.map((level) => {
         const r = (level / max) * radius;
