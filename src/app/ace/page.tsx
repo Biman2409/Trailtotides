@@ -388,7 +388,7 @@ export default function ACEPage() {
             Find exactly what<br />your body is built for.
           </h2>
           <p className="text-white/45 text-lg leading-relaxed mb-10 max-w-xl mx-auto">
-            Answer 8 questions. Discover your ACE profile and the adventures you&apos;re truly ready for.
+            Answer 8 questions. Discover your ACE profile and find the adventures you&apos;re truly ready for.
           </p>
           <div className="flex justify-center">
             <Link
