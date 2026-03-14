@@ -259,13 +259,13 @@ export default function Navbar() {
                         Admin Dashboard
                       </Link>
                     )}
-                    <Link href="/profile" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5" style={{ color: "var(--text-secondary)" }}>
-                      <User className="w-4 h-4" />
-                      Profile
-                    </Link>
                     <Link href="/matchmaker?results=1" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5" style={{ color: "var(--text-secondary)" }}>
                       <Compass className="w-4 h-4" />
-                      Adventure Profile
+                      Profile
+                    </Link>
+                    <Link href="/profile" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5" style={{ color: "var(--text-secondary)" }}>
+                      <User className="w-4 h-4" />
+                      Settings
                     </Link>
                     <button
                       onClick={handleLogout}
@@ -351,11 +351,11 @@ export default function Navbar() {
                   <Shield className="w-4 h-4" />Admin Dashboard
                 </Link>
               )}
-              <Link href="/profile" className="flex items-center gap-2 py-3 px-3 text-sm font-medium rounded-xl transition-colors" style={{ color: "var(--text-secondary)" }}>
-                <User className="w-4 h-4" />Profile
-              </Link>
               <Link href="/matchmaker?results=1" className="flex items-center gap-2 py-3 px-3 text-sm font-medium rounded-xl transition-colors" style={{ color: "var(--text-secondary)" }}>
-                <Compass className="w-4 h-4" />Adventure Profile
+                <Compass className="w-4 h-4" />Profile
+              </Link>
+              <Link href="/profile" className="flex items-center gap-2 py-3 px-3 text-sm font-medium rounded-xl transition-colors" style={{ color: "var(--text-secondary)" }}>
+                <User className="w-4 h-4" />Settings
               </Link>
               <button onClick={handleLogout} className="w-full flex items-center gap-2 py-3 px-3 text-sm font-medium rounded-xl transition-colors" style={{ color: "var(--text-tertiary)" }}>
                 <LogOut className="w-4 h-4" />Log out
