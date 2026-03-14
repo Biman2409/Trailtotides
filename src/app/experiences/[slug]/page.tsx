@@ -24,13 +24,14 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
-import ERTBadge from "@/components/ui/custom/ERTBadge";
+import ACEBadge from "@/components/ui/custom/ACEBadge";
+import ACERadar from "@/components/ui/custom/ACERadar";
 import GradingPill from "@/components/ui/custom/GradingPill";
 import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import ReviewSection from "@/components/ui/custom/ReviewSection";
 import { createClient } from "@/lib/supabase/server";
-import { getERT, ertSummary, parseAltitudeM } from "@/lib/ert";
+import { getACE, aceSummary, ACE_AXES, ACE_AXIS_LABELS, ACE_AXIS_COLORS } from "@/lib/ace";
 import type { Adventure } from "@/lib/data";
 import RealityCheck from "@/components/ui/custom/RealityCheck";
 
@@ -160,12 +161,11 @@ export default async function ExperiencePage({ params }: Props) {
   const adventureIndex = adventures.findIndex((a) => a.slug === slug);
   const explorePage = adventureIndex >= 0 ? Math.ceil((adventureIndex + 1) / PAGE_SIZE) : 1;
 
-  const showERT = !["Diving", "Kayaking"].includes(adventure.type);
-  const ert = getERT(adventure);
-  const altM = parseAltitudeM(adventure.altitude);
-  const showAltitudeWarning = altM >= 4200;
-  const showIsolationWarning = ert.r >= 5;
-  const showTechnicalWarning = ert.t >= 5;
+  const ace = getACE(adventure);
+  const altM = adventure.altitude ? parseFloat(adventure.altitude.replace(/[^0-9.]/g, "")) : 0;
+  const showAltitudeWarning = altM >= 4200 || ace.altitude >= 4;
+  const showIsolationWarning = ace.nerve >= 5;
+  const showTechnicalWarning = (ace.strength >= 5 || ace.agility >= 5);
 
 
     const supabase = await createClient();
@@ -297,54 +297,38 @@ export default async function ExperiencePage({ params }: Props) {
         </div>
       </section>
 
-      {/* ── ERT STRIP ─────────────────────────────────────── */}
-      {showERT && <section className="bg-[#1a1f2e] py-5 border-b border-white/5">
+      {/* ── ACE STRIP ─────────────────────────────────────── */}
+      <section className="bg-[#1a1f2e] py-5 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-wrap md:flex-nowrap items-center gap-6 md:gap-0 md:divide-x divide-white/10">
+          <div className="flex flex-wrap items-center gap-4 md:gap-0 md:divide-x divide-white/10">
             {/* Label */}
             <div className="flex items-center gap-2 pr-6">
-              <span className="text-[10px] uppercase tracking-widest text-[#ff5100] font-medium">ERT</span>
-              <a href="/ert" title="How we rate difficulty" className="flex items-center justify-center w-4 h-4 rounded-full border border-[#ff5100] text-[9px] font-bold text-[#ff5100] hover:bg-[#ff5100] hover:text-white transition-colors duration-150">?</a>
+              <span className="text-[10px] uppercase tracking-widest text-[#ff5100] font-semibold">ACE Rating</span>
+              <a href="/ace" title="What is the ACE Rating?" className="flex items-center justify-center w-4 h-4 rounded-full border border-[#ff5100] text-[9px] font-bold text-[#ff5100] hover:bg-[#ff5100] hover:text-white transition-colors duration-150">?</a>
             </div>
-            {/* E */}
-            <div className="flex items-center gap-3 px-6">
-              <div>
-                <div className="text-[10px] uppercase tracking-widest text-white/40 mb-1">Exertion</div>
-                <div className="flex items-center gap-1.5">
-                  {[1,2,3,4,5].map(n => (
-                    <div key={n} className={`w-6 h-2 rounded-sm ${n <= ert.e ? 'bg-[#ff5100]' : 'bg-white/10'}`} />
-                  ))}
-                  <span className="text-xs font-bold text-white ml-1">{ert.e}/5</span>
+            {/* Axes */}
+            {ACE_AXES.filter(k => ace[k] > 0).map((k) => {
+              const val = ace[k];
+              const color = ACE_AXIS_COLORS[k];
+              return (
+                <div key={k} className="flex items-center gap-2.5 px-4 shrink-0">
+                  <div>
+                    <div className="text-[9px] uppercase tracking-widest mb-1" style={{ color: `${color}90` }}>
+                      {ACE_AXIS_LABELS[k]}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      {[1,2,3,4,5].map(n => (
+                        <div key={n} className="w-4 h-1.5 rounded-sm" style={{ background: n <= val ? color : 'rgba(255,255,255,0.1)' }} />
+                      ))}
+                      <span className="text-[10px] font-bold text-white ml-1">{val}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            {/* R */}
-            <div className="flex items-center gap-3 px-6">
-              <div>
-                <div className="text-[10px] uppercase tracking-widest text-white/40 mb-1">Risk</div>
-                <div className="flex items-center gap-1.5">
-                  {[1,2,3,4,5].map(n => (
-                    <div key={n} className={`w-6 h-2 rounded-sm ${n <= ert.r ? 'bg-amber-500' : 'bg-white/10'}`} />
-                  ))}
-                  <span className="text-xs font-bold text-white ml-1">{ert.r}/5</span>
-                </div>
-              </div>
-            </div>
-            {/* T */}
-            <div className="flex items-center gap-3 px-6">
-              <div>
-                <div className="text-[10px] uppercase tracking-widest text-white/40 mb-1">Technicality</div>
-                <div className="flex items-center gap-1.5">
-                  {[1,2,3,4,5].map(n => (
-                    <div key={n} className="w-6 h-2 rounded-sm" style={{ background: n <= ert.t ? '#a78bfa' : 'rgba(255,255,255,0.1)' }} />
-                  ))}
-                  <span className="text-xs font-bold text-white ml-1">{ert.t}/5</span>
-                </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
-      </section>}
+      </section>
 
       {/* ── MAIN CONTENT ─────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
@@ -423,56 +407,66 @@ export default async function ExperiencePage({ params }: Props) {
               </div>
             </section>
 
-            {/* ── ERT Difficulty Breakdown ─────────────────── */}
-            {showERT && <section>
+            {/* ── ACE Adventure Profile ────────────────────── */}
+            <section>
               <div className="flex items-center justify-between mb-6">
                 <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">
-                  Difficulty Breakdown
+                  ACE Adventure Profile
                 </p>
                 <GradingPill />
               </div>
 
-              {/* Tier + ERT badge */}
+              {/* Radar + axes card */}
               <div className="rounded-2xl p-6 mb-4" style={{ background: "#f8f6f2", border: "1px solid rgba(26,31,46,0.08)" }}>
-                <div className="flex flex-wrap items-start gap-6 mb-5">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-1.5">Difficulty Tier</p>
-                    <Pill type="difficulty" value={adventure.difficulty} />
+                <div className="flex flex-wrap items-start gap-8 mb-5">
+                  {/* Radar */}
+                  <div className="flex-shrink-0">
+                    <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-3">Capability Radar</p>
+                    <div style={{ filter: "invert(1) hue-rotate(180deg) brightness(0.9)" }}>
+                      <ACERadar ace={ace} size={160} showLabels />
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-2">ERT Score</p>
-                    <ERTBadge ert={ert} size="md" />
+                  {/* Difficulty tier + badge */}
+                  <div className="flex-1 min-w-[160px]">
+                    <div className="mb-4">
+                      <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-1.5">Difficulty Tier</p>
+                      <Pill type="difficulty" value={adventure.difficulty} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-widest text-[#1a1f2e]/40 mb-2">ACE Rating</p>
+                      <ACEBadge ace={ace} size="md" />
+                    </div>
                   </div>
                 </div>
 
-                {/* ERT dimension bars */}
-                <div className="grid grid-cols-3 gap-4">
-                  {([
-                    { key: "E", val: ert.e, label: "Exertion", color: "#ff5100" },
-                    { key: "R", val: ert.r, label: "Risk", color: "#f59e0b" },
-                    { key: "T", val: ert.t, label: "Technicality", color: "#8b5cf6" },
-                  ] as const).map(({ key, val, label, color }) => (
-                    <div key={key}>
-                      <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[10px] font-semibold text-[#1a1f2e]/50 uppercase tracking-wide">{label}</span>
-                        <span className="text-[10px] font-bold" style={{ color }}>{key}{val}</span>
+                {/* Axis breakdown bars */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                  {ACE_AXES.filter(k => ace[k] > 0).map((k) => {
+                    const val = ace[k];
+                    const color = ACE_AXIS_COLORS[k];
+                    return (
+                      <div key={k}>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-[10px] font-semibold text-[#1a1f2e]/50 uppercase tracking-wide">{ACE_AXIS_LABELS[k]}</span>
+                          <span className="text-[10px] font-bold" style={{ color }}>{val}/5</span>
+                        </div>
+                        <div className="flex gap-0.5">
+                          {[1, 2, 3, 4, 5].map((n) => (
+                            <div
+                              key={n}
+                              className="h-1.5 flex-1 rounded-full"
+                              style={{ background: n <= val ? color : "rgba(26,31,46,0.1)" }}
+                            />
+                          ))}
+                        </div>
                       </div>
-                      <div className="flex gap-1">
-                        {[1, 2, 3, 4, 5].map((n) => (
-                          <div
-                            key={n}
-                            className="h-1.5 flex-1 rounded-full"
-                            style={{ background: n <= val ? color : "rgba(26,31,46,0.1)" }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 {/* Summary text */}
-                <p className="mt-5 text-[#1a1f2e]/60 text-sm leading-relaxed">
-                  {ertSummary(ert, adventure.name)}
+                <p className="text-[#1a1f2e]/60 text-sm leading-relaxed">
+                  {aceSummary(ace, adventure.name)}
                 </p>
               </div>
 
@@ -491,7 +485,7 @@ export default async function ExperiencePage({ params }: Props) {
                   <div className="flex gap-3 rounded-xl px-4 py-3" style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)" }}>
                     <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs font-bold text-red-700">Remote Environment</p>
+                      <p className="text-xs font-bold text-red-700">Extreme Exposure Environment</p>
                       <p className="text-xs text-red-700/70 mt-0.5">Rescue may be delayed depending on weather and terrain. Carry a satellite communicator and travel with a registered guide.</p>
                     </div>
                   </div>
@@ -506,7 +500,7 @@ export default async function ExperiencePage({ params }: Props) {
                   </div>
                 )}
               </div>
-            </section>}
+            </section>
 
               {/* Operators Section */}
               <section>
@@ -637,7 +631,7 @@ export default async function ExperiencePage({ params }: Props) {
 
 
                 {/* Reality Check */}
-                {showERT && <RealityCheck adventure={adventure} />}
+                <RealityCheck adventure={adventure} />
 
                 {/* CTA */}
                 <CompareCTA adventure={adventure} />

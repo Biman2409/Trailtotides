@@ -22,11 +22,11 @@ export default function GradingPill() {
         style={{ maxWidth: expanded ? "190px" : "0px", paddingLeft: expanded ? "10px" : "0" }}
       >
         <Link
-          href="/ert"
+          href="/ace"
           className="whitespace-nowrap font-semibold text-[#ff5100] leading-none hover:underline"
           style={{ fontSize: "10px" }}
         >
-          How do we grade difficulty
+          How we rate difficulty
         </Link>
       </div>
       <button

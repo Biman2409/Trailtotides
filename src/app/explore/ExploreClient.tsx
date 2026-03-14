@@ -11,7 +11,7 @@ import AdventureCard from "@/components/ui/custom/AdventureCard";
 import { adventures } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
 import { difficultyStyle } from "@/lib/styles";
-import { getERT } from "@/lib/ert";
+import { getACE } from "@/lib/ace";
 
 // filter constants
 const seasons: { label: string; months: Month[] }[] = [
@@ -43,13 +43,10 @@ export default function ExploreClient() {
   const [selectedDurations, setSelectedDurations] = useState<Duration[]>([]);
   const [selectedMonths, setSelectedMonths] = useState<Month[]>([]);
   const [selectedGroupSizes, setSelectedGroupSizes] = useState<GroupSize[]>([]);
-  // ERT filters: null = no filter, number = minimum value
-  const [minExertion, setMinExertion] = useState<number | null>(searchParams.get("maxE") ? null : null);
-  const [maxExertion, setMaxExertion] = useState<number | null>(searchParams.get("maxE") ? Number(searchParams.get("maxE")) : null);
-  const [minRisk, setMinRisk] = useState<number | null>(null);
-  const [maxRisk, setMaxRisk] = useState<number | null>(searchParams.get("maxR") ? Number(searchParams.get("maxR")) : null);
-  const [minTechnicality, setMinTechnicality] = useState<number | null>(null);
-  const [maxTechnicality, setMaxTechnicality] = useState<number | null>(searchParams.get("maxT") ? Number(searchParams.get("maxT")) : null);
+  // ACE filters
+  const [maxStamina, setMaxStamina] = useState<number | null>(null);
+  const [maxAltitude, setMaxAltitude] = useState<number | null>(null);
+  const [maxNerve, setMaxNerve] = useState<number | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
@@ -116,20 +113,17 @@ export default function ExploreClient() {
         return false;
       if (selectedGroupSizes.length && !selectedGroupSizes.includes(a.groupSize))
         return false;
-      // ERT filters
-      const ert = getERT(a);
-      if (minExertion !== null && ert.e < minExertion) return false;
-      if (maxExertion !== null && ert.e > maxExertion) return false;
-      if (minRisk !== null && ert.r < minRisk) return false;
-      if (maxRisk !== null && ert.r > maxRisk) return false;
-      if (minTechnicality !== null && ert.t < minTechnicality) return false;
-      if (maxTechnicality !== null && ert.t > maxTechnicality) return false;
+      // ACE filters
+      const ace = getACE(a);
+      if (maxStamina !== null && ace.stamina > maxStamina) return false;
+      if (maxAltitude !== null && ace.altitude > maxAltitude) return false;
+      if (maxNerve !== null && ace.nerve > maxNerve) return false;
       return true;
     });
-    }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, minExertion, maxExertion, minRisk, maxRisk, minTechnicality, maxTechnicality]);
+    }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, maxStamina, maxAltitude, maxNerve]);
 
   // Reset to page 1 whenever filters change
-  useEffect(() => { setCurrentPage(1); }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, minExertion, maxExertion, minRisk, maxRisk, minTechnicality, maxTechnicality]);
+  useEffect(() => { setCurrentPage(1); }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, maxStamina, maxAltitude, maxNerve]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const pagedResults = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -142,9 +136,7 @@ export default function ExploreClient() {
     selectedDurations.length +
     selectedMonths.length +
     selectedGroupSizes.length +
-    (minExertion !== null ? 1 : 0) + (maxExertion !== null ? 1 : 0) +
-    (minRisk !== null ? 1 : 0) + (maxRisk !== null ? 1 : 0) +
-    (minTechnicality !== null ? 1 : 0) + (maxTechnicality !== null ? 1 : 0);
+    (maxStamina !== null ? 1 : 0) + (maxAltitude !== null ? 1 : 0) + (maxNerve !== null ? 1 : 0);
 
   function clearAll() {
     setSelectedTypes([]);
@@ -661,36 +653,27 @@ export default function ExploreClient() {
                             </div>
                         </div>
 
-                        {/* ERT Filters */}
+                        {/* ACE Filters */}
                         <div className="col-span-2 lg:col-span-3">
                           <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40">ERT Difficulty</h3>
-                            <a href="/ert" target="_blank" className="text-[10px] text-white/25 hover:text-[#ff5100] transition-colors">What is ERT?</a>
+                            <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40">ACE Difficulty</h3>
+                            <a href="/ace" target="_blank" className="text-[10px] text-white/25 hover:text-[#ff5100] transition-colors">What is ACE?</a>
                           </div>
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             {([
-                              { label: "Exertion", min: minExertion, setMin: setMinExertion, max: maxExertion, setMax: setMaxExertion, color: "#f97316" },
-                              { label: "Risk",     min: minRisk,     setMin: setMinRisk,     max: maxRisk,     setMax: setMaxRisk,     color: "#ef4444" },
-                              { label: "Technicality", min: minTechnicality, setMin: setMinTechnicality, max: maxTechnicality, setMax: setMaxTechnicality, color: "#8b5cf6" },
-                            ] as const).map(({ label, min, setMin, max, setMax, color }) => (
+                              { label: "Max Stamina",  value: maxStamina,  setValue: setMaxStamina,  color: "#f97316" },
+                              { label: "Max Altitude", value: maxAltitude, setValue: setMaxAltitude, color: "#a78bfa" },
+                              { label: "Max Nerve",    value: maxNerve,    setValue: setMaxNerve,    color: "#f43f5e" },
+                            ] as const).map(({ label, value, setValue, color }) => (
                               <div key={label}>
                                 <p className="text-[10px] font-medium text-white/40 mb-2">{label}</p>
                                 <div className="flex gap-1">
                                   {[1,2,3,4,5].map((n) => {
-                                    const inRange = (min === null || n >= min) && (max === null || n <= max);
-                                    const isActive = min !== null || max !== null ? inRange : false;
+                                    const isActive = value !== null && n === value;
                                     return (
                                       <button
                                         key={n}
-                                        onClick={() => {
-                                          if (min === null && max === null) { setMin(n); setMax(n); }
-                                          else if (min !== null && max !== null && n === min && n === max) { setMin(null); setMax(null); }
-                                          else if (n < (min ?? n)) setMin(n);
-                                          else if (n > (max ?? n)) setMax(n);
-                                          else if (n === min) setMin(n + 1 <= (max ?? 5) ? n + 1 : null);
-                                          else if (n === max) setMax(n - 1 >= (min ?? 1) ? n - 1 : null);
-                                          else { setMin(n); setMax(n); }
-                                        }}
+                                        onClick={() => setValue(value === n ? null : n)}
                                         className="flex-1 h-7 rounded text-[10px] font-bold transition-all"
                                         style={{
                                           background: isActive ? `${color}30` : "rgba(255,255,255,0.05)",
@@ -703,10 +686,10 @@ export default function ExploreClient() {
                                     );
                                   })}
                                 </div>
-                                {(min !== null || max !== null) && (
+                                {value !== null && (
                                   <p className="text-[9px] text-white/30 mt-1">
-                                    {min === max ? `${label[0]}${min}` : `${label[0]}${min ?? 1}–${label[0]}${max ?? 5}`}
-                                    <button onClick={() => { setMin(null); setMax(null); }} className="ml-1.5 text-white/20 hover:text-white/50">×</button>
+                                    ≤ {value}
+                                    <button onClick={() => setValue(null)} className="ml-1.5 text-white/20 hover:text-white/50">×</button>
                                   </p>
                                 )}
                               </div>

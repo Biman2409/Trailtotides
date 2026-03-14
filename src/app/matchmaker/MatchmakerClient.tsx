@@ -9,8 +9,9 @@ import {
   Compass, Dumbbell, Waves, Wind, Brain, Target, Flame,
   AlertTriangle, Loader2,
 } from "lucide-react";
-import type { ERT } from "@/lib/data";
-import ERTBadge from "@/components/ui/custom/ERTBadge";
+import ACEBadge from "@/components/ui/custom/ACEBadge";
+import ACERadar from "@/components/ui/custom/ACERadar";
+import { saveProfile } from "@/lib/matchmaker";
 
 // ─── Question definitions (Q1–Q8 map to 8 bio axes) ──────────────────────────
 
@@ -173,7 +174,6 @@ interface EnrichedAdventure {
   type: string;
   difficulty: string;
   altitude?: string;
-  ert: ERT;
   status: "IN_ZONE" | "STRETCH" | "RESTRICTED";
   weakAxes: string[];
   missingKeys: string[];
@@ -402,12 +402,17 @@ function ResultsScreen({
             </div>
           </div>
 
-          {/* Axis bars */}
-          <p className="text-white/30 text-[10px] uppercase tracking-widest mb-3">Capability Axes</p>
-          <div className="space-y-2.5">
-            {Object.entries(userAxes).map(([axis, val]) => (
-              <AxisBar key={axis} axis={axis} value={val} />
-            ))}
+          {/* ACE Radar + Axis bars */}
+          <div className="flex flex-wrap gap-6 items-start">
+            <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={180} showLabels />
+            <div className="flex-1 min-w-[160px]">
+              <p className="text-white/30 text-[10px] uppercase tracking-widest mb-3">Capability Axes</p>
+              <div className="space-y-2.5">
+                {Object.entries(userAxes).map(([axis, val]) => (
+                  <AxisBar key={axis} axis={axis} value={val} />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -539,7 +544,7 @@ function AdventureSection({
                 </div>
               </div>
               <div className="px-3 py-2.5">
-                <ERTBadge ert={a.ert} size="sm" dark />
+                {a.requirements && <ACEBadge ace={a.requirements} size="sm" dark />}
                 {a.weakAxes.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-2">
                     {a.weakAxes.slice(0, 3).map(ax => (
@@ -586,6 +591,17 @@ export default function MatchmakerClient() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Analysis failed");
       setResult(data);
+      // Save ACE profile to localStorage so other pages can use it
+      if (data.userAxes) {
+        const avgScore = Object.values(data.userAxes as Record<string, number>).reduce((a: number, b: number) => a + b, 0) / 8;
+        const label =
+          avgScore >= 4.2 ? "Expedition Athlete" :
+          avgScore >= 3.2 ? "High-Altitude Adventurer" :
+          avgScore >= 2.2 ? "Mountain Adventurer" :
+          avgScore >= 1.5 ? "Trail Trekker" :
+          "Beginner Explorer";
+        saveProfile({ ace: data.userAxes, label, summary: "" });
+      }
     } catch (err) {
       setApiError(err instanceof Error ? err.message : "Something went wrong");
       setLoading(false);

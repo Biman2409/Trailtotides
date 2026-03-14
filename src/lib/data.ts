@@ -44,6 +44,18 @@ export interface ERT {
   t: number;
 }
 
+/** ACE Rating (Adventure Capability Engine) — 8-axis biological capability profile */
+export interface ACEAxes {
+  stamina:  number;
+  power:    number;
+  strength: number;
+  agility:  number;
+  water:    number;
+  altitude: number;
+  nerve:    number;
+  focus:    number;
+}
+
 export interface Adventure {
   id: string;
   slug: string;
@@ -80,6 +92,8 @@ export interface Adventure {
   seedReviews?: SeedReview[];
   /** ERT difficulty scores — auto-computed if omitted */
   ert?: ERT;
+  /** ACE Rating — 8-axis biological capability profile, auto-computed if omitted */
+  ace?: ACEAxes;
 }
 
 export interface Operator {

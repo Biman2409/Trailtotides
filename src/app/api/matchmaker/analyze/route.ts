@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { anthropic } from "@/lib/anthropic";
 import { adventures } from "@/lib/data";
-import { getERT } from "@/lib/ert";
+import { getACE } from "@/lib/ace";
 
 // ─── System prompts verbatim from the 5 agent definitions ────────────────────
 
@@ -399,7 +399,7 @@ ${JSON.stringify(
     const enrichedAdventures = adventures.map((a) => {
       const match = matchMap.get(a.slug);
       const req = reqMap.get(a.slug);
-      const ert = getERT(a);
+      const ace = getACE(a);
       return {
         id: a.id,
         slug: a.slug,
@@ -410,7 +410,7 @@ ${JSON.stringify(
         type: a.type,
         difficulty: a.difficulty,
         altitude: a.altitude,
-        ert,
+        ace,
         status: match?.status ?? "RESTRICTED",
         weakAxes: match?.weak_axes ?? [],
         missingKeys: match?.missing_keys ?? [],
