@@ -287,6 +287,12 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
         ))}
       </div>
 
+      <Link
+        href="/ace"
+        className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-full font-semibold text-sm text-white/60 border border-white/10 hover:border-white/20 hover:text-white/80 transition-all mb-3"
+      >
+        Learn more about ACE
+      </Link>
       <button
         onClick={onStart}
         className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-full font-semibold text-sm text-white transition-all hover:brightness-110"
