@@ -238,7 +238,7 @@ export default function ACEPage() {
                   </div>
                   <div className="px-5 pt-4 pb-5">
                     <div className="flex justify-center mb-4">
-                      <ACERadar ace={ace} size={140} showLabels />
+                      <ACERadar ace={ace} size={180} showLabels />
                     </div>
                   </div>
                 </Link>
