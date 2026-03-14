@@ -103,22 +103,6 @@ export default function ACEPage() {
         </div>
       </section>
 
-      {/* ── STAT BAR ──────────────────────────────────────────────────── */}
-      <div className="border-y border-white/5" style={{ background: "rgba(255,255,255,0.025)" }}>
-        <div className="max-w-6xl mx-auto px-6 py-5 flex flex-wrap items-center gap-8 justify-between">
-          {[
-            { value: "8",    label: "Biological axes" },
-            { value: "0–5",  label: "Score per axis" },
-            { value: "57",   label: "Adventures rated" },
-            { value: "4",    label: "Capability domains" },
-          ].map(({ value, label }) => (
-            <div key={label} className="flex items-baseline gap-3">
-              <span className="text-3xl font-black text-white">{value}</span>
-              <span className="text-white/35 text-sm">{label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* ── LIVE EXAMPLES ─────────────────────────────────────────────── */}
       <section className="py-24 px-6">
