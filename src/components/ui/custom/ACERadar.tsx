@@ -165,8 +165,7 @@ export default function ACERadar({ ace, size = 200, showLabels = true, userAce }
               >
                 {shortLabel}
               </text>
-              {val > 0 && (
-                <text
+              <text
                   x={x.toFixed(2)}
                   y={(y + (size < 160 ? 9 : 10)).toFixed(2)}
                   textAnchor={anchor}
@@ -176,7 +175,6 @@ export default function ACERadar({ ace, size = 200, showLabels = true, userAce }
                 >
                   {val}
                 </text>
-              )}
             </g>
           );
         })}
