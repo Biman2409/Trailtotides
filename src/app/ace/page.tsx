@@ -177,7 +177,7 @@ export default function ACEPage() {
           <div className="mb-14">
             <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">The Eight Axes</p>
             <h2 className="text-white text-4xl font-black tracking-tight">What your body needs.</h2>
-            <p className="text-white/35 text-base mt-2 max-w-xl">Each axis is scored independently from 0 to 5. An adventure can demand nothing of one axis while pushing another to the maximum.</p>
+            <p className="text-white/35 text-base mt-2 max-w-xl">Eight independent dimensions of physical and mental demand. Each scored 0–5. Every adventure has a unique combination.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
