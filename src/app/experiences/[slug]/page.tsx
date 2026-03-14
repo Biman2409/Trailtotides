@@ -384,12 +384,10 @@ export default async function ExperiencePage({ params }: Props) {
                 <GradingPill />
               </div>
 
-              <div className="rounded-2xl p-6 mb-4" style={{ background: "#f8f6f2", border: "1px solid rgba(26,31,46,0.08)" }}>
+              <div className="rounded-2xl p-6 mb-4" style={{ background: "#0d1117", border: "1px solid rgba(255,255,255,0.07)" }}>
                 <div className="flex flex-wrap items-center gap-8">
-                  <div style={{ filter: "invert(1) hue-rotate(180deg) brightness(0.9)" }}>
-                    <ACERadar ace={ace} size={160} showLabels />
-                  </div>
-                  <p className="flex-1 min-w-[160px] text-[#1a1f2e]/60 text-sm leading-relaxed">
+                  <ACERadar ace={ace} size={160} showLabels />
+                  <p className="flex-1 min-w-[160px] text-white/50 text-sm leading-relaxed">
                     {aceSummary(ace, adventure.name)}
                   </p>
                 </div>
