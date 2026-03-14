@@ -83,7 +83,7 @@ export default function ACEPage() {
               </h1>
 
               <p className="text-white/55 text-base leading-relaxed mb-5">
-                ACE rates every adventure across <span className="text-white font-semibold">eight axes</span> — so you show up prepared, not surprised.
+                ACE rates every adventure across <span className="text-white font-semibold">eight axes</span> — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you show up prepared, not surprised.
               </p>
               <div className="flex flex-wrap gap-2 mb-10">
                 {[
