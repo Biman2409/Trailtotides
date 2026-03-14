@@ -75,7 +75,7 @@ export default function ACEPage() {
 
             {/* Left: copy */}
             <div className="flex-1 max-w-2xl">
-              <p className="text-white/30 text-sm font-semibold tracking-[0.25em] uppercase mb-7">
+              <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-7">
                 Adventure Capability Engine
               </p>
               <h1 className="text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight mb-6">
