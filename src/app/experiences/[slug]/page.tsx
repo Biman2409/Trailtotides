@@ -11,27 +11,26 @@ import {
   ShieldCheck,
   ChevronLeft,
   Star,
-    CheckCircle2,
-    XCircle,
-    AlertTriangle,
-    ArrowRight,
-    Route,
-    BadgeCheck,
-    Flag,
-    Navigation,
+  CheckCircle2,
+  XCircle,
+  AlertTriangle,
+  ArrowRight,
+  Route,
+  BadgeCheck,
+  Flag,
+  Navigation,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
-import ACEBadge from "@/components/ui/custom/ACEBadge";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import GradingPill from "@/components/ui/custom/GradingPill";
 import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import ReviewSection from "@/components/ui/custom/ReviewSection";
 import { createClient } from "@/lib/supabase/server";
-import { getACE, aceSummary, ACE_AXES, ACE_AXIS_LABELS, ACE_AXIS_COLORS } from "@/lib/ace";
+import { getACE, aceSummary } from "@/lib/ace";
 import type { Adventure } from "@/lib/data";
 import RealityCheck from "@/components/ui/custom/RealityCheck";
 
@@ -43,21 +42,30 @@ type Operator = NonNullable<Adventure["operators"]>[number];
 
 function OperatorCard({ op, verified }: { op: Operator; verified: boolean }) {
   return (
-    <div className={`rounded-2xl p-5 flex flex-col gap-4 ${
-      verified
-        ? "bg-white/5 border border-emerald-500/20 hover:border-emerald-500/40 transition-colors"
-        : "bg-white/3 border border-white/8 opacity-90 hover:opacity-100 transition-opacity"
-    }`}>
+    <div
+      className="rounded-2xl p-5 flex flex-col gap-4 transition-all duration-200"
+      style={
+        verified
+          ? {
+              background: "linear-gradient(135deg, rgba(16,185,129,0.07) 0%, rgba(5,150,105,0.03) 100%)",
+              border: "1px solid rgba(16,185,129,0.18)",
+            }
+          : {
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(255,255,255,0.07)",
+            }
+      }
+    >
       <div className="flex items-start justify-between gap-2">
         <div>
           <div className="flex items-center gap-1.5 flex-wrap">
             <span className="text-white font-semibold text-sm leading-snug">{op.name}</span>
             {verified ? (
-              <span className="inline-flex items-center gap-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-emerald-500/20">
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.12)", color: "#34d399", border: "1px solid rgba(16,185,129,0.2)" }}>
                 <ShieldCheck className="w-3 h-3" />Verified
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 bg-amber-500/10 text-amber-400 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-amber-500/20">
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(245,158,11,0.1)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.2)" }}>
                 <AlertTriangle className="w-3 h-3" />Unverified
               </span>
             )}
@@ -66,11 +74,11 @@ function OperatorCard({ op, verified }: { op: Operator; verified: boolean }) {
             {[1, 2, 3, 4, 5].map((s) => (
               <Star key={s} className={`w-3 h-3 ${s <= Math.round(op.rating) ? "text-amber-400 fill-amber-400" : "text-white/10 fill-white/10"}`} />
             ))}
-            <span className="text-white/40 text-xs ml-1">{op.rating}</span>
+            <span className="text-white/35 text-xs ml-1">{op.rating}</span>
           </div>
         </div>
         <div className="text-right shrink-0">
-          <div className="text-white/30 text-[10px] uppercase tracking-wide">From</div>
+          <div className="text-white/25 text-[10px] uppercase tracking-wide">From</div>
           <div className="text-white font-bold text-base">{op.priceFrom}</div>
         </div>
       </div>
@@ -83,40 +91,48 @@ function OperatorCard({ op, verified }: { op: Operator; verified: boolean }) {
   );
 }
 
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4 flex items-center gap-2">
+      <span className="w-4 h-px bg-[#ff5100]/40 inline-block" />
+      {children}
+    </p>
+  );
+}
+
 function RelatedSection({ title, items, exploreHref }: { title: string; items: Adventure[]; exploreHref: string }) {
   if (items.length === 0) return null;
   return (
     <div>
       <div className="flex items-end justify-between mb-8">
         <div>
-          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">You Might Also Like</p>
+          <SectionLabel>You Might Also Like</SectionLabel>
           <h2 className="text-white text-3xl font-semibold tracking-tight">{title}</h2>
         </div>
-        <Link href={exploreHref} className="hidden md:flex items-center gap-1.5 text-white/50 text-sm font-medium hover:text-[#ff5100] transition-colors group">
+        <Link href={exploreHref} className="hidden md:flex items-center gap-1.5 text-white/40 text-sm font-medium hover:text-[#ff5100] transition-colors group">
           Explore all
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
       <div className="flex gap-5 overflow-x-auto pb-4 -mx-2 px-2 snap-x snap-mandatory no-scrollbar">
         {items.map((a) => (
-          <div key={a.id} className="group relative block bg-white/5 rounded-2xl overflow-hidden border border-white/8 hover:border-white/15 hover:shadow-lg transition-all hover:-translate-y-1 duration-300 flex-none w-72 snap-start">
+          <div key={a.id} className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-72 snap-start transition-all duration-300 hover:-translate-y-1.5" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
             <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
             <div className="relative h-48 overflow-hidden">
               <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
-              <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-orange-900/30 via-transparent to-sky-900/20 pointer-events-none" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              <div className="absolute top-3 left-3 flex flex-wrap gap-2 z-20">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+              <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-20">
                 <Pill type="type" value={a.type} />
                 <Pill type="difficulty" value={a.difficulty} />
               </div>
             </div>
-            <div className="p-5">
-              <div className="flex items-center gap-1.5 mb-1">
+            <div className="p-5 flex-1">
+              <div className="flex items-center gap-1.5 mb-1.5">
                 <MapPin className="w-3 h-3 text-[#ff5100]" />
-                <span className="text-white/40 text-xs">{a.state}</span>
+                <span className="text-white/35 text-xs">{a.state}</span>
               </div>
               <h3 className="text-white font-semibold text-base leading-snug mb-1 group-hover:text-[#ff5100] transition-colors">{a.name}</h3>
-              <p className="text-white/40 text-xs line-clamp-2">{a.tagline}</p>
+              <p className="text-white/35 text-xs line-clamp-2 leading-relaxed">{a.tagline}</p>
             </div>
           </div>
         ))}
@@ -165,198 +181,174 @@ export default async function ExperiencePage({ params }: Props) {
   const altM = adventure.altitude ? parseFloat(adventure.altitude.replace(/[^0-9.]/g, "")) : 0;
   const showAltitudeWarning = altM >= 4200 || ace.altitude >= 4;
   const showIsolationWarning = ace.nerve >= 5;
-  const showTechnicalWarning = (ace.strength >= 5 || ace.agility >= 5);
+  const showTechnicalWarning = ace.strength >= 5 || ace.agility >= 5;
 
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const currentUserId = user?.id;
 
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    const currentUserId = user?.id;
+  const relatedByState = adventures
+    .filter((a) => a.id !== adventure.id && a.state === adventure.state)
+    .slice(0, 6);
+  const relatedByStateIds = new Set(relatedByState.map((a) => a.id));
+  const relatedByType = adventures
+    .filter((a) => a.id !== adventure.id && a.type === adventure.type && !relatedByStateIds.has(a.id))
+    .slice(0, 6);
 
-    const relatedByState = adventures
-      .filter((a) => a.id !== adventure.id && a.state === adventure.state)
-      .slice(0, 6);
-
-    const relatedByStateIds = new Set(relatedByState.map((a) => a.id));
-    const relatedByType = adventures
-      .filter((a) => a.id !== adventure.id && a.type === adventure.type && !relatedByStateIds.has(a.id))
-      .slice(0, 6);
-
-      return (
-      <div className="min-h-screen bg-[#0a0e17]">
-
+  return (
+    <div className="min-h-screen" style={{ background: "#080c14" }}>
       <Navbar />
 
-      {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative h-[90vh] min-h-[600px] flex items-end overflow-hidden">
-          <Image
-            src={adventure.heroImage}
-            alt={adventure.name}
-            fill
-            priority
-            className="object-cover"
-            style={{ objectFit: "cover" }}
-          />
-          {/* Vibrancy filter */}
-          <div className="absolute inset-0 mix-blend-multiply bg-gradient-to-br from-orange-900/30 via-transparent to-sky-900/20 pointer-events-none" />
-          {/* Multi-layer gradient for readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-[#0d1117]/40 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0d1117]/50 to-transparent" />
+      {/* ── HERO ──────────────────────────────────────────────── */}
+      <section className="relative h-[92vh] min-h-[640px] flex items-end overflow-hidden">
+        <Image
+          src={adventure.heroImage}
+          alt={adventure.name}
+          fill
+          priority
+          className="object-cover scale-[1.02]"
+          style={{ objectFit: "cover" }}
+        />
+        {/* Color grade overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#ff5100]/10 via-transparent to-sky-900/15 mix-blend-multiply pointer-events-none" />
+        {/* Gradient fade to page bg */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#080c14] via-[#080c14]/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#080c14]/60 to-transparent" />
 
         {/* Back button */}
         <Link
           href={`/explore?page=${explorePage}`}
-          className="absolute top-24 left-6 lg:left-8 flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm font-medium bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full"
+          className="absolute top-24 left-6 lg:left-8 z-20 flex items-center gap-2 text-white/60 hover:text-white transition-all text-sm font-medium backdrop-blur-md px-4 py-2 rounded-full"
+          style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)" }}
         >
           <ChevronLeft className="w-4 h-4" />
           All Adventures
         </Link>
 
         {/* Hero text */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pb-16 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pb-20 w-full">
           <div className="max-w-3xl">
-              <div className="flex flex-wrap items-center gap-3 mb-5">
-                <Pill type="type" value={adventure.type} />
-                <Pill type="difficulty" value={adventure.difficulty} />
-                <Link
-                  href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
-                  className="flex items-center gap-1.5 text-white/60 text-xs tracking-tight font-bold hover:text-[#ff5100] transition-colors"
-                >
-                  <MapPin className="w-3.5 h-3.5 text-[#ff5100]" />
-                  {adventure.state}
-                </Link>
-              </div>
-            <h1 className="text-white text-5xl md:text-7xl font-semibold tracking-tight leading-[1.0] mb-4">
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+              <Pill type="type" value={adventure.type} />
+              <Pill type="difficulty" value={adventure.difficulty} />
+              <Link
+                href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
+                className="flex items-center gap-1.5 text-white/50 text-xs font-semibold tracking-tight hover:text-[#ff5100] transition-colors"
+              >
+                <MapPin className="w-3.5 h-3.5 text-[#ff5100]" />
+                {adventure.state}
+              </Link>
+            </div>
+            <h1 className="text-white text-5xl md:text-7xl font-semibold tracking-tight leading-[1.0] mb-5">
               {adventure.name}
             </h1>
-            <p className="text-white/60 text-xl leading-relaxed max-w-xl">
+            <p className="text-white/55 text-xl leading-relaxed max-w-xl font-light">
               {adventure.tagline}
             </p>
           </div>
         </div>
       </section>
 
-      {/* ── STATS STRIP ──────────────────────────────────── */}
-      <section className="bg-[#0f1420] py-4 border-b border-white/5">
+      {/* ── STATS STRIP ───────────────────────────────────────── */}
+      <section style={{ background: "rgba(255,255,255,0.025)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center overflow-x-auto no-scrollbar divide-x divide-white/10 min-w-0">
-            <div className="flex items-center gap-2 px-5 first:pl-0 shrink-0">
-              <Clock className="w-4 h-4 text-[#ff5100] shrink-0" />
-              <div className="min-w-0">
-                <div className="text-white/40 text-[9px] uppercase tracking-widest">Duration</div>
-                <div className="text-white font-semibold text-sm whitespace-nowrap">{adventure.durationRange ?? adventure.durationDays}</div>
-              </div>
-            </div>
-            {adventure.distance && (
-              <div className="flex items-center gap-2 px-5 shrink-0">
-                <Route className="w-4 h-4 text-emerald-400 shrink-0" />
-                <div className="min-w-0">
-                  <div className="text-white/40 text-[9px] uppercase tracking-widest">Distance</div>
-                  <div className="text-white font-semibold text-sm whitespace-nowrap">{adventure.distanceRange ?? adventure.distance}</div>
+          <div className="flex items-stretch overflow-x-auto no-scrollbar divide-x" style={{ divideColor: "rgba(255,255,255,0.06)" }}>
+            {[
+              { icon: <Clock className="w-4 h-4 text-[#ff5100]" />, label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
+              ...(adventure.distance ? [{ icon: <Route className="w-4 h-4 text-emerald-400" />, label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
+              ...((adventure.altitude || adventure.depth) ? [{ icon: <TrendingUp className="w-4 h-4 text-sky-400" />, label: adventure.type === "Diving" ? "Max Depth" : "Max Altitude", value: adventure.depth ?? adventure.altitude }] : []),
+              { icon: <Sun className="w-4 h-4 text-amber-400" />, label: "Best Season", value: adventure.bestSeason },
+              ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ icon: <Flag className="w-4 h-4 text-violet-400" />, label: "Base Camp", value: adventure.baseCamp }] : []),
+              ...(adventure.type === "Biking" && adventure.startingPoint ? [{ icon: <Navigation className="w-4 h-4 text-emerald-400" />, label: "Starting Point", value: adventure.startingPoint }] : []),
+            ].map(({ icon, label, value }, i) => (
+              <div key={i} className="flex items-center gap-3 px-6 py-4 shrink-0 first:pl-0">
+                {icon}
+                <div>
+                  <div className="text-white/25 text-[9px] uppercase tracking-widest">{label}</div>
+                  <div className="text-white font-medium text-sm whitespace-nowrap">{value}</div>
                 </div>
               </div>
-            )}
-            {(adventure.altitude || adventure.depth) && (
-              <div className="flex items-center gap-2 px-5 shrink-0">
-                <TrendingUp className="w-4 h-4 text-[#5ba3c9] shrink-0" />
-                <div className="min-w-0">
-                  <div className="text-white/40 text-[9px] uppercase tracking-widest">
-                    {adventure.type === "Diving" ? "Max Depth" : "Max Altitude"}
-                  </div>
-                  <div className="text-white font-semibold text-sm whitespace-nowrap">
-                    {adventure.depth ?? adventure.altitude}
-                  </div>
-                </div>
-              </div>
-            )}
-            <div className="flex items-center gap-2 px-5 shrink-0">
-              <Sun className="w-4 h-4 text-amber-400 shrink-0" />
-              <div className="min-w-0">
-                <div className="text-white/40 text-[9px] uppercase tracking-widest">Best Season</div>
-                <div className="text-white font-semibold text-sm whitespace-nowrap">{adventure.bestSeason}</div>
-              </div>
-            </div>
-            {(adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp && (
-              <div className="flex items-center gap-2 px-5 shrink-0">
-                <Flag className="w-4 h-4 text-violet-400 shrink-0" />
-                <div className="min-w-0">
-                  <div className="text-white/40 text-[9px] uppercase tracking-widest">Base Camp</div>
-                  <div className="text-white font-semibold text-sm whitespace-nowrap">{adventure.baseCamp}</div>
-                </div>
-              </div>
-            )}
-            {adventure.type === "Biking" && adventure.startingPoint && (
-              <div className="flex items-center gap-2 px-5 shrink-0">
-                <Navigation className="w-4 h-4 text-emerald-400 shrink-0" />
-                <div className="min-w-0">
-                  <div className="text-white/40 text-[9px] uppercase tracking-widest">Starting Point</div>
-                  <div className="text-white font-semibold text-sm whitespace-nowrap">{adventure.startingPoint}</div>
-                </div>
-              </div>
-            )}
+            ))}
           </div>
         </div>
       </section>
 
-
-      {/* ── MAIN CONTENT ─────────────────────────────────── */}
+      {/* ── MAIN CONTENT ──────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
 
-          {/* Left — main article content */}
+          {/* ── LEFT COLUMN ── */}
           <div className="lg:col-span-2 space-y-16">
 
-            {/* About */}
+            {/* The Adventure */}
             <section>
-              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
-                The Adventure
-              </p>
-              <p className="text-white/70 text-xl leading-relaxed font-light">
+              <SectionLabel>The Adventure</SectionLabel>
+              <p className="text-white/65 text-xl leading-relaxed font-light">
                 {adventure.description}
               </p>
             </section>
 
-            {/* What makes it special */}
+            {/* What Makes It Special */}
             <section>
-              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
-                What Makes It Special
-              </p>
-              <div className="rounded-2xl p-8 border-l-4 border-[#ff5100]" style={{ background: "rgba(255,81,0,0.06)", borderTop: "none", borderRight: "none", borderBottom: "none" }}>
-                <p className="text-white/75 text-lg leading-relaxed">
-                  {adventure.whatMakesSpecial}
-                </p>
+              <SectionLabel>What Makes It Special</SectionLabel>
+              <div
+                className="rounded-2xl p-7"
+                style={{
+                  background: "linear-gradient(135deg, rgba(255,81,0,0.07) 0%, rgba(255,81,0,0.02) 100%)",
+                  borderLeft: "3px solid rgba(255,81,0,0.5)",
+                  borderTop: "1px solid rgba(255,81,0,0.08)",
+                  borderRight: "1px solid rgba(255,81,0,0.05)",
+                  borderBottom: "1px solid rgba(255,81,0,0.05)",
+                }}
+              >
+                <p className="text-white/75 text-lg leading-relaxed">{adventure.whatMakesSpecial}</p>
               </div>
             </section>
 
-            {/* Who it's for / not for */}
+            {/* Is This For You? */}
             <section>
-              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-6">
-                Is This For You?
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-emerald-950/40 border border-emerald-500/15 rounded-2xl p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+              <SectionLabel>Is This For You?</SectionLabel>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div
+                  className="rounded-2xl p-6"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(5,150,105,0.03) 100%)",
+                    border: "1px solid rgba(16,185,129,0.15)",
+                  }}
+                >
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(16,185,129,0.15)" }}>
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    </div>
                     <h3 className="font-semibold text-white text-sm">Go if you have</h3>
                   </div>
-                  <ul className="space-y-2">
+                  <ul className="space-y-2.5">
                     {adventure.whoFor.split("·").map((item) => (
-                      <li key={item} className="flex items-start gap-2">
-                        <span className="text-emerald-400 mt-0.5 shrink-0">✓</span>
-                        <span className="text-white/55 text-sm leading-snug">{item.trim()}</span>
+                      <li key={item} className="flex items-start gap-2.5">
+                        <span className="text-emerald-400 mt-0.5 shrink-0 text-sm">✓</span>
+                        <span className="text-white/50 text-sm leading-snug">{item.trim()}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
-                <div className="bg-red-950/40 border border-red-500/15 rounded-2xl p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <XCircle className="w-5 h-5 text-red-400" />
+                <div
+                  className="rounded-2xl p-6"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(239,68,68,0.07) 0%, rgba(185,28,28,0.03) 100%)",
+                    border: "1px solid rgba(239,68,68,0.15)",
+                  }}
+                >
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(239,68,68,0.12)" }}>
+                      <XCircle className="w-4 h-4 text-red-400" />
+                    </div>
                     <h3 className="font-semibold text-white text-sm">Skip if you have</h3>
                   </div>
-                  <ul className="space-y-2">
+                  <ul className="space-y-2.5">
                     {adventure.whoNot.split("·").map((item) => (
-                      <li key={item} className="flex items-start gap-2">
-                        <span className="text-red-400 mt-0.5 shrink-0">✕</span>
-                        <span className="text-white/55 text-sm leading-snug">{item.trim()}</span>
+                      <li key={item} className="flex items-start gap-2.5">
+                        <span className="text-red-400 mt-0.5 shrink-0 text-sm">✕</span>
+                        <span className="text-white/50 text-sm leading-snug">{item.trim()}</span>
                       </li>
                     ))}
                   </ul>
@@ -364,244 +356,265 @@ export default async function ExperiencePage({ params }: Props) {
               </div>
             </section>
 
-            {/* Safety notes */}
+            {/* Safety & Prep */}
             <section>
-              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
-                Safety & Prep
-              </p>
-              <div className="bg-amber-950/30 border border-amber-500/20 rounded-2xl p-6 flex gap-4">
-                <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                <p className="text-white/60 text-sm leading-relaxed">{adventure.safetyNotes}</p>
+              <SectionLabel>Safety &amp; Prep</SectionLabel>
+              <div
+                className="rounded-2xl p-6 flex gap-4"
+                style={{
+                  background: "linear-gradient(135deg, rgba(245,158,11,0.07) 0%, rgba(180,83,9,0.03) 100%)",
+                  border: "1px solid rgba(245,158,11,0.18)",
+                }}
+              >
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: "rgba(245,158,11,0.12)" }}>
+                  <AlertTriangle className="w-4 h-4 text-amber-400" />
+                </div>
+                <p className="text-white/55 text-sm leading-relaxed">{adventure.safetyNotes}</p>
               </div>
             </section>
 
-            {/* ── ACE Profile ────────────────────── */}
+            {/* ACE Profile */}
             <section>
-              <div className="flex items-center justify-between mb-6">
-                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">
-                  ACE Profile
-                </p>
+              <div className="flex items-center justify-between mb-5">
+                <SectionLabel>ACE Profile</SectionLabel>
                 <GradingPill />
               </div>
 
-              <div className="rounded-2xl p-6 mb-4" style={{ background: "#0d1117", border: "1px solid rgba(255,255,255,0.07)" }}>
+              <div
+                className="rounded-2xl p-6 mb-4"
+                style={{
+                  background: "linear-gradient(135deg, #0c1020 0%, #0f1520 100%)",
+                  border: "1px solid rgba(255,255,255,0.07)",
+                }}
+              >
                 <div className="flex flex-wrap items-center gap-8">
                   <ACERadar ace={ace} size={160} showLabels />
-                  <p className="flex-1 min-w-[160px] text-white/50 text-sm leading-relaxed">
+                  <p className="flex-1 min-w-[160px] text-white/45 text-sm leading-relaxed">
                     {aceSummary(ace, adventure.name)}
                   </p>
                 </div>
               </div>
 
-              {/* Automatic safety warning banners */}
-              <div className="space-y-3">
+              {/* Safety warning banners */}
+              <div className="space-y-2.5">
                 {showAltitudeWarning && (
-                  <div className="flex gap-3 rounded-xl px-4 py-3" style={{ background: "rgba(234,179,8,0.1)", border: "1px solid rgba(234,179,8,0.3)" }}>
-                    <AlertTriangle className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5" />
+                  <div className="flex gap-3 rounded-xl px-4 py-3.5" style={{ background: "rgba(234,179,8,0.07)", border: "1px solid rgba(234,179,8,0.22)" }}>
+                    <AlertTriangle className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs font-bold text-yellow-400">High Risk of Altitude Sickness</p>
-                      <p className="text-xs text-yellow-400/70 mt-0.5">Proper acclimatization is required. Ascend gradually — do not exceed 300–500m of altitude gain per day above 3,000m.</p>
+                      <p className="text-xs font-bold text-yellow-400 mb-0.5">High Risk of Altitude Sickness</p>
+                      <p className="text-xs text-yellow-400/55 leading-relaxed">Proper acclimatization is required. Do not exceed 300–500m of altitude gain per day above 3,000m.</p>
                     </div>
                   </div>
                 )}
                 {showIsolationWarning && (
-                  <div className="flex gap-3 rounded-xl px-4 py-3" style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.25)" }}>
+                  <div className="flex gap-3 rounded-xl px-4 py-3.5" style={{ background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.2)" }}>
                     <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs font-bold text-red-400">Extreme Exposure Environment</p>
-                      <p className="text-xs text-red-400/70 mt-0.5">Rescue may be delayed depending on weather and terrain. Carry a satellite communicator and travel with a registered guide.</p>
+                      <p className="text-xs font-bold text-red-400 mb-0.5">Extreme Exposure Environment</p>
+                      <p className="text-xs text-red-400/55 leading-relaxed">Rescue may be delayed. Carry a satellite communicator and travel with a registered guide.</p>
                     </div>
                   </div>
                 )}
                 {showTechnicalWarning && (
-                  <div className="flex gap-3 rounded-xl px-4 py-3" style={{ background: "rgba(139,92,246,0.08)", border: "1px solid rgba(139,92,246,0.25)" }}>
+                  <div className="flex gap-3 rounded-xl px-4 py-3.5" style={{ background: "rgba(139,92,246,0.07)", border: "1px solid rgba(139,92,246,0.2)" }}>
                     <AlertTriangle className="w-4 h-4 text-violet-400 shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-xs font-bold text-violet-400">Mountaineering Route</p>
-                      <p className="text-xs text-violet-400/70 mt-0.5">Specialized equipment and training required — ice axe, crampons, and glacier travel experience are essential.</p>
+                      <p className="text-xs font-bold text-violet-400 mb-0.5">Mountaineering Route</p>
+                      <p className="text-xs text-violet-400/55 leading-relaxed">Ice axe, crampons, and glacier travel experience are essential. Do not attempt without proper training.</p>
                     </div>
                   </div>
                 )}
               </div>
             </section>
 
-              {/* Operators Section */}
-              <section>
-                {/* Verified Operators */}
-                {adventure.operators.some((op) => op.verified) && (
-                  <div className="mb-10">
-                    <div className="flex items-center gap-3 mb-6">
-                      <BadgeCheck className="w-5 h-5 text-emerald-400" />
-                      <div>
-                        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">
-                          Verified Operators
-                        </p>
-                        <p className="text-white/40 text-sm mt-0.5">
-                          ALTOA/PADI/IMF registered or established operators with a verifiable track record
-                        </p>
-                      </div>
+            {/* Operators */}
+            <section>
+              {/* Verified */}
+              {adventure.operators.some((op) => op.verified) && (
+                <div className="mb-10">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(16,185,129,0.12)" }}>
+                      <BadgeCheck className="w-4 h-4 text-emerald-400" />
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {adventure.operators.filter((op) => op.verified).map((op) => (
-                        <OperatorCard key={op.name} op={op} verified />
-                      ))}
+                    <div>
+                      <SectionLabel>Verified Operators</SectionLabel>
+                      <p className="text-white/35 text-xs -mt-3">ATOAI / PADI / IMF registered, vetted track record</p>
                     </div>
-                    <p className="mt-4 text-white/30 text-xs flex items-center gap-1.5">
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                      All verified operators hold valid permits, safety certifications and guide credentials.
-                    </p>
                   </div>
-                )}
-
-                {/* Verification Criteria Box */}
-                <div className="mb-10 rounded-2xl p-5" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <BadgeCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <p className="text-emerald-400 text-xs font-bold tracking-[0.15em] uppercase">How We Verify Operators</p>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {[
-                      { icon: CheckCircle2, text: "Valid government permits & licenses" },
-                      { icon: CheckCircle2, text: "ATOAI / IMF / PADI certification confirmed" },
-                      { icon: CheckCircle2, text: "Certified & trained local guides on staff" },
-                      { icon: CheckCircle2, text: "Safety gear & evacuation protocols in place" },
-                      { icon: CheckCircle2, text: "Independently reviewed by our team on-ground" },
-                      { icon: CheckCircle2, text: "Consistent track record over 2+ seasons" },
-                    ].map(({ icon: Icon, text }) => (
-                      <div key={text} className="flex items-center gap-2">
-                        <Icon className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                        <span className="text-white/50 text-xs">{text}</span>
-                      </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {adventure.operators.filter((op) => op.verified).map((op) => (
+                      <OperatorCard key={op.name} op={op} verified />
                     ))}
                   </div>
+                  <p className="mt-4 text-white/25 text-xs flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    All verified operators hold valid permits, safety certifications and guide credentials.
+                  </p>
                 </div>
+              )}
 
-                {/* Other Operators */}
-                {adventure.operators.some((op) => !op.verified) && (
-                  <div>
-                    <div className="flex items-center gap-3 mb-6">
-                      <AlertTriangle className="w-5 h-5 text-amber-400" />
-                      <div>
-                        <p className="text-white text-xs font-semibold tracking-[0.2em] uppercase">
-                          Other Operators
-                        </p>
-                        <p className="text-white/40 text-sm mt-0.5">
-                          Listed by the community — not verified by us
-                        </p>
-                      </div>
+              {/* Verification criteria */}
+              <div
+                className="mb-10 rounded-2xl p-5"
+                style={{
+                  background: "rgba(16,185,129,0.04)",
+                  border: "1px solid rgba(16,185,129,0.12)",
+                }}
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <BadgeCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <p className="text-emerald-400/80 text-xs font-bold tracking-[0.15em] uppercase">How We Verify Operators</p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {[
+                    "Valid government permits & licenses",
+                    "ATOAI / IMF / PADI certification confirmed",
+                    "Certified & trained local guides on staff",
+                    "Safety gear & evacuation protocols in place",
+                    "Independently reviewed by our team on-ground",
+                    "Consistent track record over 2+ seasons",
+                  ].map((text) => (
+                    <div key={text} className="flex items-center gap-2">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400/60 shrink-0" />
+                      <span className="text-white/40 text-xs">{text}</span>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {adventure.operators.filter((op) => !op.verified).map((op) => (
-                        <OperatorCard key={op.name} op={op} verified={false} />
-                      ))}
-                    </div>
-                    <p className="mt-4 text-white/30 text-xs flex items-center gap-1.5">
-                      <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                      Do your own research before booking with unverified operators. We recommend asking for permits and certifications directly.
-                    </p>
-                  </div>
-                )}
-              </section>
-
-              {/* Reviews */}
-              <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
-
-              {/* Tags */}
-              <section>
-                <div className="flex flex-wrap gap-2">
-                  {adventure.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="bg-white/5 text-white/35 text-xs px-3 py-1.5 rounded-full border border-white/8"
-                    >
-                      #{tag}
-                    </span>
                   ))}
                 </div>
-              </section>
-            </div>
+              </div>
 
-            {/* Right — sidebar */}
-            <div className="space-y-5 lg:sticky lg:top-24 lg:self-start">
-
-                  <div className="bg-[#0f1420] border border-white/8 rounded-2xl p-6 text-white">
-                    <p className="text-[#ff5100] text-[10px] font-semibold tracking-[0.2em] uppercase mb-4">
-                      At a Glance
-                    </p>
-                      <div className="space-y-3.5">
-                        {[
-                          { label: "Type", value: adventure.type },
-            ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
-            ...(adventure.type === "Biking" && adventure.startingPoint ? [{ label: "Starting Point", value: adventure.startingPoint }] : []),
-                          { label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
-                        ...((adventure.type === "Trekking" || adventure.type === "Biking")
-                          ? [{ label: "Distance", value: adventure.distanceRange ?? adventure.distance ?? "Contact for route" }]
-                          : (adventure.distance ? [{ label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : [])),
-                          { label: "Difficulty", value: adventure.difficulty },
-                        { label: "Best Season", value: adventure.bestSeason },
-                        ...(adventure.altitude ? [{ label: "Max Altitude", value: adventure.altitude }] : []),
-          ...(adventure.depth ? [{ label: "Max Depth", value: adventure.depth }] : []),
-
-                        { label: "Group Size", value: adventure.groupSize },
-                      ].map(({ label, value }) => (
-                          <div key={label} className="flex items-start justify-between gap-4 border-b border-white/5 pb-3 last:border-0 last:pb-0">
-                            <span className="text-white/35 text-xs shrink-0">{label}</span>
-                            <span className="text-white/75 text-xs text-right leading-snug">{value}</span>
-                          </div>
-                        ))}
+              {/* Unverified */}
+              {adventure.operators.some((op) => !op.verified) && (
+                <div>
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(245,158,11,0.1)" }}>
+                      <AlertTriangle className="w-4 h-4 text-amber-400" />
+                    </div>
+                    <div>
+                      <p className="text-white/60 text-xs font-bold tracking-[0.2em] uppercase">Other Operators</p>
+                      <p className="text-white/30 text-xs mt-0.5">Listed by the community — not verified by us</p>
                     </div>
                   </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {adventure.operators.filter((op) => !op.verified).map((op) => (
+                      <OperatorCard key={op.name} op={op} verified={false} />
+                    ))}
+                  </div>
+                  <p className="mt-4 text-white/25 text-xs flex items-center gap-1.5">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    Do your own research. Ask operators directly for permits and certifications.
+                  </p>
+                </div>
+              )}
+            </section>
 
+            {/* Reviews */}
+            <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
 
-                {/* Reality Check */}
-                <RealityCheck adventure={adventure} />
+            {/* Tags */}
+            <section>
+              <div className="flex flex-wrap gap-2">
+                {adventure.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="text-white/30 text-xs px-3 py-1.5 rounded-full transition-colors hover:text-white/50"
+                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            </section>
+          </div>
 
-                {/* CTA */}
-                <CompareCTA adventure={adventure} />
+          {/* ── RIGHT SIDEBAR ── */}
+          <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
 
-                {/* Back to explore */}
-              <Link
-                href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
-                className="flex items-center justify-center gap-2 w-full bg-transparent border border-white/12 hover:border-white/25 text-white/60 hover:text-white font-medium py-3 rounded-2xl text-sm transition-all duration-200 hover:bg-white/5"
-              >
-                More in {adventure.state}
-              </Link>
-              <Link
-                href={`/explore?type=${encodeURIComponent(adventure.type)}`}
-                className="flex items-center justify-center gap-2 w-full bg-transparent border border-white/12 hover:border-white/25 text-white/60 hover:text-white font-medium py-3 rounded-2xl text-sm transition-all duration-200 hover:bg-white/5"
-              >
-                More in {adventure.type}
-              </Link>
+            {/* At a Glance */}
+            <div
+              className="rounded-2xl p-6"
+              style={{
+                background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-5 flex items-center gap-2">
+                <span className="w-4 h-px bg-[#ff5100]/40 inline-block" />
+                At a Glance
+              </p>
+              <div className="space-y-3">
+                {[
+                  { label: "Type", value: adventure.type },
+                  ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
+                  ...(adventure.type === "Biking" && adventure.startingPoint ? [{ label: "Starting Point", value: adventure.startingPoint }] : []),
+                  { label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
+                  ...((adventure.type === "Trekking" || adventure.type === "Biking")
+                    ? [{ label: "Distance", value: adventure.distanceRange ?? adventure.distance ?? "Contact for route" }]
+                    : adventure.distance ? [{ label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
+                  { label: "Difficulty", value: adventure.difficulty },
+                  { label: "Best Season", value: adventure.bestSeason },
+                  ...(adventure.altitude ? [{ label: "Max Altitude", value: adventure.altitude }] : []),
+                  ...(adventure.depth ? [{ label: "Max Depth", value: adventure.depth }] : []),
+                  { label: "Group Size", value: adventure.groupSize },
+                ].map(({ label, value }) => (
+                  <div key={label} className="flex items-start justify-between gap-4 pb-3 last:pb-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    <span className="text-white/30 text-xs shrink-0">{label}</span>
+                    <span className="text-white/70 text-xs text-right leading-snug">{value}</span>
+                  </div>
+                ))}
+              </div>
             </div>
+
+            {/* Reality Check */}
+            <RealityCheck adventure={adventure} />
+
+            {/* Compare CTA */}
+            <CompareCTA adventure={adventure} />
+
+            {/* Explore links */}
+            <Link
+              href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-white/50 hover:text-white text-sm font-medium transition-all duration-200 hover:bg-white/5"
+              style={{ border: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              More in {adventure.state}
+            </Link>
+            <Link
+              href={`/explore?type=${encodeURIComponent(adventure.type)}`}
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-white/50 hover:text-white text-sm font-medium transition-all duration-200 hover:bg-white/5"
+              style={{ border: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              More in {adventure.type}
+            </Link>
           </div>
         </div>
-
-        {/* ── YOU MIGHT ALSO LIKE ───────────────────────────── */}
-        {(relatedByState.length > 0 || relatedByType.length > 0) && (
-          <section className="py-16 lg:py-24 px-6 lg:px-8" style={{ background: "rgba(255,255,255,0.02)", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-            <div className="max-w-7xl mx-auto space-y-14">
-
-              {/* More in [State] */}
-              <RelatedSection
-                title={`More in ${adventure.state}`}
-                items={relatedByState}
-                exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
-              />
-
-              {/* More in [Type] */}
-              <RelatedSection
-                title={`More in ${adventure.type}`}
-                items={relatedByType}
-                exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`}
-              />
-
-            </div>
-          </section>
-        )}
-
-        <CompareAdventures />
-        <Footer />
       </div>
-    );
-  }
 
+      {/* ── YOU MIGHT ALSO LIKE ───────────────────────────────── */}
+      {(relatedByState.length > 0 || relatedByType.length > 0) && (
+        <section
+          className="py-20 px-6 lg:px-8"
+          style={{
+            background: "rgba(255,255,255,0.015)",
+            borderTop: "1px solid rgba(255,255,255,0.05)",
+          }}
+        >
+          <div className="max-w-7xl mx-auto space-y-16">
+            <RelatedSection
+              title={`More in ${adventure.state}`}
+              items={relatedByState}
+              exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
+            />
+            <RelatedSection
+              title={`More in ${adventure.type}`}
+              items={relatedByType}
+              exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`}
+            />
+          </div>
+        </section>
+      )}
+
+      <CompareAdventures />
+      <Footer />
+    </div>
+  );
+}
