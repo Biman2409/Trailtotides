@@ -5,10 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowRight, Compass, Footprints, Mountain, CloudSnow, Flag, RotateCcw,
-  Flame, Zap,
 } from "lucide-react";
 import { adventures } from "@/lib/data";
-import { getACE, ACE_AXIS_COLORS, ACE_AXES } from "@/lib/ace";
+import { ACE_AXIS_COLORS, ACE_AXES } from "@/lib/ace";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
 
 const TIER_INFO: Record<string, { color: string; icon: React.ReactNode; stars: number }> = {
@@ -19,14 +18,8 @@ const TIER_INFO: Record<string, { color: string; icon: React.ReactNode; stars: n
   "Expedition Athlete":       { color: "#a78bfa", stars: 5, icon: <Flag       className="w-5 h-5" /> },
 };
 
-const ACE_PILL_AXES = [
-  { key: "stamina",  icon: <Flame  className="w-2.5 h-2.5" />, color: "#f97316" },
-  { key: "altitude", icon: <Mountain className="w-2.5 h-2.5" />, color: "#a78bfa" },
-  { key: "nerve",    icon: <Zap    className="w-2.5 h-2.5" />, color: "#f43f5e" },
-];
 
 function MiniAdventureCard({ adventure }: { adventure: (typeof adventures)[number] }) {
-  const ace = getACE(adventure);
   return (
     <Link
       href={`/experiences/${adventure.slug}`}
@@ -41,15 +34,6 @@ function MiniAdventureCard({ adventure }: { adventure: (typeof adventures)[numbe
           className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-        {/* ACE highlights */}
-        <div className="absolute bottom-1.5 left-1.5 flex items-center gap-1 bg-black/60 backdrop-blur-sm rounded-md px-1.5 py-0.5">
-          {ACE_PILL_AXES.filter(({ key }) => ace[key as keyof typeof ace] > 0).slice(0, 2).map(({ key, icon, color }) => (
-            <span key={key} className="flex items-center gap-0.5" style={{ color }}>
-              {icon}
-              <span className="text-[8px] font-bold text-white/80">{ace[key as keyof typeof ace]}</span>
-            </span>
-          ))}
-        </div>
       </div>
       <div className="p-2.5">
         <p className="text-white text-xs font-semibold leading-tight line-clamp-2 group-hover:text-[#ff5100] transition-colors">
