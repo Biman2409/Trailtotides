@@ -90,7 +90,7 @@ export default function ACEPage() {
               </p>
 
               <p className="text-white/55 text-base leading-relaxed mb-10">
-                ACE rates every adventure across <span className="text-white font-semibold">eight biological axes</span> — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you know exactly what your body needs before you commit.
+                ACE rates every adventure across <span className="text-white font-semibold">eight axes</span> — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you know exactly what your body needs before you commit.
               </p>
 
               <div className="flex flex-wrap gap-3">
