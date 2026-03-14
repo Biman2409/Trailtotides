@@ -270,8 +270,8 @@ OUTPUT SCHEMA
 
 async function callClaude(system: string, userMessage: string): Promise<unknown> {
   const message = await anthropic.messages.create({
-    model: "claude-opus-4-6",
-    max_tokens: 1024,
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 8192,
     system,
     messages: [{ role: "user", content: userMessage }],
   });
@@ -279,10 +279,21 @@ async function callClaude(system: string, userMessage: string): Promise<unknown>
   const text = message.content.find((b) => b.type === "text")?.text ?? "{}";
   // Strip markdown code fences if present
   const clean = text.replace(/```(?:json)?\n?/gi, "").replace(/```/g, "").trim();
-  return JSON.parse(clean);
+  try {
+    return JSON.parse(clean);
+  } catch {
+    // Try to extract JSON array or object from the response
+    const arrMatch = clean.match(/\[[\s\S]*\]/);
+    const objMatch = clean.match(/\{[\s\S]*\}/);
+    if (arrMatch) return JSON.parse(arrMatch[0]);
+    if (objMatch) return JSON.parse(objMatch[0]);
+    throw new Error(`Failed to parse Claude response: ${clean.slice(0, 200)}`);
+  }
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
+
+export const maxDuration = 60; // seconds (Vercel/Next.js edge or serverless)
 
 export async function POST(req: NextRequest) {
   try {
@@ -296,23 +307,17 @@ export async function POST(req: NextRequest) {
     ) as { axes: Record<string, number> };
 
     // ── Step 2: Analyse each adventure's bio requirements ────────────────────
-    const adventureSummaries = adventures.map((a) => {
-      const ert = getERT(a);
-      return {
-        id: a.id,
-        slug: a.slug,
-        name: a.name,
-        type: a.type,
-        difficulty: a.difficulty,
-        altitude: a.altitude ?? null,
-        depth: a.depth ?? null,
-        description: a.description,
-        whoFor: a.whoFor,
-        whoNot: a.whoNot,
-        ert,
-        tags: a.tags,
-      };
-    });
+    const adventureSummaries = adventures.map((a) => ({
+      slug: a.slug,
+      name: a.name,
+      type: a.type,
+      difficulty: a.difficulty,
+      altitude: a.altitude ?? null,
+      depth: a.depth ?? null,
+      tags: a.tags,
+      whoFor: a.whoFor,
+      whoNot: a.whoNot,
+    }));
 
     // Analyse all adventures in one call for efficiency
     const bioRequirements = await callClaude(
