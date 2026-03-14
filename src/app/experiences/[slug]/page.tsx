@@ -297,54 +297,6 @@ export default async function ExperiencePage({ params }: Props) {
         </div>
       </section>
 
-      {/* ── ACE CAPABILITY PROFILE STRIP ─────────────────── */}
-      <section className="bg-[#0d1117] border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4">
-          <div className="flex flex-col md:flex-row md:items-center gap-4">
-
-            {/* Left: label */}
-            <div className="shrink-0">
-              <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-[10px] uppercase tracking-[0.2em] text-[#ff5100] font-bold">ACE Rating</span>
-                <a
-                  href="/ace"
-                  title="What is the ACE Rating?"
-                  className="flex items-center justify-center w-4 h-4 rounded-full border border-[#ff5100] text-[9px] font-bold text-[#ff5100] hover:bg-[#ff5100] hover:text-white transition-colors"
-                >?</a>
-              </div>
-              <p className="text-white/35 text-[11px]">Adventure Capability Profile</p>
-            </div>
-
-            {/* Divider */}
-            <div className="hidden md:block w-px self-stretch bg-white/8" />
-
-            {/* All 8 axis tiles */}
-            <div className="flex flex-wrap gap-2 flex-1">
-              {ACE_AXES.map((k) => {
-                const val = ace[k];
-                const color = ACE_AXIS_COLORS[k];
-                const active = val > 0;
-                return (
-                  <div
-                    key={k}
-                    className="relative flex items-center gap-2 rounded-lg px-3 py-1.5"
-                    style={{
-                      background: active ? `${color}0d` : "rgba(255,255,255,0.03)",
-                      border: `1px solid ${active ? `${color}25` : "rgba(255,255,255,0.06)"}`,
-                    }}
-                  >
-                    <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: active ? color : "rgba(255,255,255,0.2)" }}>
-                      {ACE_AXIS_LABELS[k]}
-                    </p>
-                    <span className="text-sm font-black leading-none" style={{ color: active ? "white" : "rgba(255,255,255,0.2)" }}>{val}</span>
-                  </div>
-                );
-              })}
-            </div>
-
-          </div>
-        </div>
-      </section>
 
       {/* ── MAIN CONTENT ─────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
