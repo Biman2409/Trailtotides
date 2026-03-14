@@ -88,10 +88,15 @@ export default function ACEProfileSection({
                 </p>
                 <Link
                   href="/matchmaker"
-                  className="text-xs hover:text-[#ff5100] transition-colors w-fit"
-                  style={{ color: "var(--text-muted)" }}
+                  className="flex items-center gap-1.5 w-fit text-xs font-semibold px-3 py-2 rounded-lg transition-all hover:brightness-110"
+                  style={{
+                    background: "rgba(255,81,0,0.1)",
+                    border: "1px solid rgba(255,81,0,0.2)",
+                    color: "#ff5100",
+                  }}
                 >
-                  Retake assessment →
+                  Retake Assessment
+                  <ArrowRight className="w-3 h-3" />
                 </Link>
               </>
             ) : (
