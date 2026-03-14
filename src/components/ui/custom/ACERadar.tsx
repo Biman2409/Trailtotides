@@ -15,6 +15,17 @@ const AXIS_ORDER: AceAxis[] = [
   "water", "altitude", "nerve", "focus",
 ];
 
+const AXIS_ABBR: Record<AceAxis, string> = {
+  stamina:  "STA",
+  power:    "PWR",
+  strength: "STR",
+  agility:  "AGI",
+  water:    "WAT",
+  altitude: "ALT",
+  nerve:    "NRV",
+  focus:    "FOC",
+};
+
 function polarToXY(angle: number, r: number, cx: number, cy: number) {
   const rad = (angle - 90) * (Math.PI / 180);
   return {
@@ -137,8 +148,7 @@ export default function ACERadar({ ace, size = 200, showLabels = true, userAce }
           const anchor =
             Math.abs(x - cx) < 4 ? "middle" : x < cx ? "end" : "start";
 
-          const label = ACE_AXIS_LABELS[key];
-          const shortLabel = label.slice(0, 3).toUpperCase();
+          const shortLabel = AXIS_ABBR[key];
 
           return (
             <g key={key}>

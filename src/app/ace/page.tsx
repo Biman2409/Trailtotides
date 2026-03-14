@@ -220,7 +220,7 @@ export default function ACEPage() {
                           return (
                             <div key={axis} className="flex items-center gap-2">
                               <span className="text-[10px] font-bold uppercase tracking-wide w-16 shrink-0" style={{ color }}>
-                                {axis.slice(0,3).toUpperCase()}
+                                {({ stamina:"STA", power:"PWR", strength:"STR", agility:"AGI", water:"WAT", altitude:"ALT", nerve:"NRV", focus:"FOC" } as Record<string,string>)[axis] ?? axis.slice(0,3).toUpperCase()}
                               </span>
                               <div className="flex-1 h-1 rounded-full bg-white/5">
                                 <div className="h-full rounded-full transition-all" style={{ width: `${(val/5)*100}%`, background: color }} />
