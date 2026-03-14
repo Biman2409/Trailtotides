@@ -1,39 +1,193 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
   ChevronRight, ChevronLeft, MapPin, ArrowRight, RotateCcw,
   Zap, Shield, Mountain, CheckCircle2, TrendingUp, Lock,
-  Compass, Footprints, Flame, CloudSnow, Flag,
+  Compass, Dumbbell, Waves, Wind, Brain, Target, Flame,
+  AlertTriangle, Loader2,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
-import { adventures } from "@/lib/data";
-import type { Adventure } from "@/lib/data";
-import { getERT } from "@/lib/ert";
-import {
-  computeUserProfile,
-  getMatchedAdventures,
-  saveProfile,
-  type MatchmakerAnswers,
-} from "@/lib/matchmaker";
+import type { ERT } from "@/lib/data";
 import ERTBadge from "@/components/ui/custom/ERTBadge";
 
-// ─── Step definitions ─────────────────────────────────────────────────────────
+// ─── Question definitions (Q1–Q8 map to 8 bio axes) ──────────────────────────
 
-const STEPS = ["cardio", "load", "altitude", "terrain", "bio"] as const;
-type Step = typeof STEPS[number];
-type Answers = Partial<MatchmakerAnswers>;
+const QUESTIONS = [
+  {
+    key: "Q1",
+    axis: "Stamina",
+    icon: <Flame className="w-4 h-4" />,
+    question: "How long can you sustain continuous physical effort without stopping to rest?",
+    hint: "Think of hiking, cycling, or any activity at a steady pace.",
+    options: [
+      { v: "A", l: "Under 30 minutes before needing a break", s: "Just building base fitness" },
+      { v: "B", l: "30–60 minutes at a comfortable pace",     s: "Recreational fitness" },
+      { v: "C", l: "1–3 hours with occasional stops",         s: "Regular weekend warrior" },
+      { v: "D", l: "3–6 hours on demanding terrain",          s: "Strong endurance base" },
+      { v: "E", l: "6+ hours — all-day efforts are normal",   s: "Expedition-level stamina" },
+    ],
+  },
+  {
+    key: "Q2",
+    axis: "Power",
+    icon: <Zap className="w-4 h-4" />,
+    question: "How well do you handle short, explosive bursts of intense effort?",
+    hint: "Sprint up a steep section, scramble over a boulder, or fight a current for 30 seconds.",
+    options: [
+      { v: "A", l: "I struggle with any sudden burst of exertion", s: "Low power output" },
+      { v: "B", l: "I can manage short bursts but tire quickly",    s: "Building power" },
+      { v: "C", l: "Comfortable with moderate explosive effort",    s: "Decent athletic power" },
+      { v: "D", l: "Strong bursts — train with sprints or weights", s: "Athletic" },
+      { v: "E", l: "High power athlete — explosive effort is easy", s: "Elite power output" },
+    ],
+  },
+  {
+    key: "Q3",
+    axis: "Strength",
+    icon: <Dumbbell className="w-4 h-4" />,
+    question: "How do you handle carrying heavy loads or sustained full-body force?",
+    hint: "Carrying a 10–15 kg pack for hours, or hauling yourself up a rock face.",
+    options: [
+      { v: "A", l: "I struggle with anything over 5 kg",                      s: "Light loads only" },
+      { v: "B", l: "Comfortable with 5–8 kg day packs",                        s: "Light trekking" },
+      { v: "C", l: "Can carry 8–12 kg on multi-day treks",                     s: "Solid base strength" },
+      { v: "D", l: "Carry 12–15 kg comfortably for multiple days",             s: "Strong and capable" },
+      { v: "E", l: "Carry 15+ kg loads — regular strength training background", s: "Very strong" },
+    ],
+  },
+  {
+    key: "Q4",
+    axis: "Agility",
+    icon: <Compass className="w-4 h-4" />,
+    question: "What's your comfort level moving through technically demanding terrain?",
+    hint: "Loose scree, river crossings, narrow exposed ridges, boulders.",
+    options: [
+      { v: "A", l: "Flat or gentle walking trails only",                  s: "Path-only traveller" },
+      { v: "B", l: "Uneven trails — some rocks and roots are fine",       s: "Moderate terrain" },
+      { v: "C", l: "Steep, rocky trails and basic river crossings",       s: "Confident hiker" },
+      { v: "D", l: "Scrambling, exposed ridges, technical terrain",       s: "Skilled and agile" },
+      { v: "E", l: "Snow, ice, ropes — mountaineering-grade navigation", s: "Expert-level agility" },
+    ],
+  },
+  {
+    key: "Q5",
+    axis: "Water",
+    icon: <Waves className="w-4 h-4" />,
+    question: "How confident are you in water?",
+    hint: "Swimming ability, comfort in currents, sea or river experience.",
+    options: [
+      { v: "A", l: "I cannot swim",                                     s: "Non-swimmer" },
+      { v: "B", l: "Basic swimmer — calm pool or flat water only",      s: "Limited water comfort" },
+      { v: "C", l: "Comfortable swimmer in open water",                 s: "Competent swimmer" },
+      { v: "D", l: "Strong swimmer — comfortable in moving water",      s: "River/sea ready" },
+      { v: "E", l: "Certified diver or rescue swimmer",                 s: "Advanced aquatics" },
+    ],
+  },
+  {
+    key: "Q6",
+    axis: "Altitude",
+    icon: <Mountain className="w-4 h-4" />,
+    question: "What's the highest altitude you've slept overnight, and how did you respond?",
+    hint: "Sleeping altitude matters more than passing through.",
+    options: [
+      { v: "A", l: "Below 1,500m — sea level to foothills",    s: "No altitude exposure" },
+      { v: "B", l: "1,500–2,500m without symptoms",            s: "Low altitude proven" },
+      { v: "C", l: "2,500–3,500m — some symptoms, managed",    s: "Moderate altitude" },
+      { v: "D", l: "3,500–4,500m — high passes and base camps", s: "High altitude proven" },
+      { v: "E", l: "Above 4,500m — expedition territory",       s: "Extreme altitude capable" },
+    ],
+  },
+  {
+    key: "Q7",
+    axis: "Nerve",
+    icon: <Shield className="w-4 h-4" />,
+    question: "How do you handle high-exposure, fear-inducing situations?",
+    hint: "Narrow ledges with drop-offs, entering underwater caves, white-water rapids.",
+    options: [
+      { v: "A", l: "Heights or exposure cause severe panic",          s: "Strong aversion" },
+      { v: "B", l: "Uncomfortable — can manage with effort",          s: "Manageable fear" },
+      { v: "C", l: "Some nerves but I push through",                  s: "Moderate nerve" },
+      { v: "D", l: "Calm and methodical under pressure",              s: "Strong nerve" },
+      { v: "E", l: "Exposure and danger are my element — calm always", s: "Ice-cold composure" },
+    ],
+  },
+  {
+    key: "Q8",
+    axis: "Focus",
+    icon: <Brain className="w-4 h-4" />,
+    question: "Can you maintain sharp situational awareness over many hours?",
+    hint: "Navigation in a whiteout, timing tidal crossings, managing a group's safety.",
+    options: [
+      { v: "A", l: "I lose focus quickly — fatigue or stress derails me", s: "Focus fades fast" },
+      { v: "B", l: "Manageable for a few hours with breaks",              s: "Moderate focus" },
+      { v: "C", l: "Sustained focus across a full day",                   s: "Solid concentration" },
+      { v: "D", l: "Sharp all day even under physical strain",            s: "High-performance focus" },
+      { v: "E", l: "Multi-day, high-stakes focus is a strength",          s: "Elite situational awareness" },
+    ],
+  },
+];
 
-// Phase labels for progress display
-const PHASE_LABELS: Record<Step, { phase: string; title: string }> = {
-  cardio:   { phase: "Engine Check",         title: "Cardiovascular Fitness" },
-  load:     { phase: "Engine Check",         title: "Strength & Load" },
-  altitude: { phase: "Resilience Check",     title: "Altitude Experience" },
-  terrain:  { phase: "Technical Experience", title: "Terrain Comfort" },
-  bio:      { phase: "Technical Experience", title: "Physical Profile" },
+type Answers = Partial<Record<string, string>>;
+
+// ─── Axis colour map ──────────────────────────────────────────────────────────
+
+const AXIS_COLORS: Record<string, string> = {
+  stamina: "#f97316",
+  power:   "#eab308",
+  strength:"#84cc16",
+  agility: "#22d3ee",
+  water:   "#3b82f6",
+  altitude:"#a78bfa",
+  nerve:   "#f43f5e",
+  focus:   "#10b981",
 };
+
+const AXIS_ICONS: Record<string, React.ReactNode> = {
+  stamina:  <Flame    className="w-3.5 h-3.5" />,
+  power:    <Zap      className="w-3.5 h-3.5" />,
+  strength: <Dumbbell className="w-3.5 h-3.5" />,
+  agility:  <Compass  className="w-3.5 h-3.5" />,
+  water:    <Waves    className="w-3.5 h-3.5" />,
+  altitude: <Mountain className="w-3.5 h-3.5" />,
+  nerve:    <Shield   className="w-3.5 h-3.5" />,
+  focus:    <Brain    className="w-3.5 h-3.5" />,
+};
+
+// ─── Types from API ───────────────────────────────────────────────────────────
+
+interface AnalysisResult {
+  userAxes: Record<string, number>;
+  adventures: EnrichedAdventure[];
+  trainingPlan: TrainingItem[];
+}
+
+interface EnrichedAdventure {
+  id: string;
+  slug: string;
+  name: string;
+  heroImage: string;
+  state: string;
+  region: string;
+  type: string;
+  difficulty: string;
+  altitude?: string;
+  ert: ERT;
+  status: "IN_ZONE" | "STRETCH" | "RESTRICTED";
+  weakAxes: string[];
+  missingKeys: string[];
+  analysis: string;
+  requirements: Record<string, number> | null;
+  riskLevel: number | null;
+}
+
+interface TrainingItem {
+  axis: string;
+  current_level: number;
+  required_level: number;
+  recommendation: string;
+}
 
 // ─── Option button ────────────────────────────────────────────────────────────
 
@@ -69,20 +223,24 @@ function OptionBtn({
   );
 }
 
-// ─── Step progress tabs ───────────────────────────────────────────────────────
+// ─── Axis bar ─────────────────────────────────────────────────────────────────
 
-function StepProgress({ stepIndex }: { stepIndex: number }) {
+function AxisBar({ axis, value, max = 5 }: { axis: string; value: number; max?: number }) {
+  const color = AXIS_COLORS[axis] ?? "#ff5100";
+  const icon = AXIS_ICONS[axis];
   return (
-    <div className="flex items-center gap-2 mb-10">
-      {STEPS.map((_, i) => (
+    <div className="flex items-center gap-3">
+      <div className="w-24 flex items-center gap-1.5 shrink-0">
+        <span style={{ color }} className="opacity-70">{icon}</span>
+        <span className="text-white/50 text-[11px] uppercase tracking-wide capitalize">{axis}</span>
+      </div>
+      <div className="flex-1 h-1.5 rounded-full bg-white/[0.07]">
         <div
-          key={i}
-          className="h-1 flex-1 rounded-full transition-all duration-300"
-          style={{
-            background: i <= stepIndex ? "#ff5100" : "rgba(255,255,255,0.1)",
-          }}
+          className="h-full rounded-full transition-all duration-500"
+          style={{ width: `${(value / max) * 100}%`, background: color }}
         />
-      ))}
+      </div>
+      <span className="text-white/60 text-xs w-4 text-right font-mono">{value}</span>
     </div>
   );
 }
@@ -91,38 +249,21 @@ function StepProgress({ stepIndex }: { stepIndex: number }) {
 
 function IntroScreen({ onStart }: { onStart: () => void }) {
   const pillars = [
-    {
-      icon: <Zap className="w-5 h-5" />,
-      name: "Engine",
-      color: "#f59e0b",
-      desc: "Your cardiovascular endurance and stamina. Can your heart and lungs sustain long days at altitude?",
-    },
-    {
-      icon: <Shield className="w-5 h-5" />,
-      name: "Resilience",
-      color: "#22d3ee",
-      desc: "Your ability to handle fatigue, altitude, multi-day exertion, and remote environments.",
-    },
-    {
-      icon: <Mountain className="w-5 h-5" />,
-      name: "Technical",
-      color: "#a78bfa",
-      desc: "Your familiarity with trekking terrain, gear, exposed ridges, and mountain conditions.",
-    },
+    { icon: <Flame className="w-5 h-5" />,    name: "Engine",      color: "#f97316", desc: "Stamina, power and strength — the physical engine that carries you through long, demanding days." },
+    { icon: <Compass className="w-5 h-5" />,  name: "Movement",    color: "#22d3ee", desc: "Agility and water confidence — how your body navigates terrain, currents, and technical environments." },
+    { icon: <Brain className="w-5 h-5" />,    name: "Resilience",  color: "#a78bfa", desc: "Altitude, nerve and focus — the mental and physiological resilience to operate in extreme conditions." },
   ];
 
   return (
     <div className="max-w-xl mx-auto px-6 py-24">
-      {/* Header */}
       <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Adventure Matchmaker</p>
       <h1 className="text-white text-4xl font-bold tracking-tight leading-tight mb-3">
-        Adventures built, for your body
+        Adventures built for your body
       </h1>
       <p className="text-white/50 text-base leading-relaxed mb-8">
-        Not every trek is for everyone. Discover what your body is genuinely ready for — and what it takes to go further.
+        Eight questions. Eight biological axes. One honest answer about what you&apos;re ready for — and what it takes to go further.
       </p>
 
-      {/* ERT Pillars */}
       <p className="text-white/30 text-[10px] uppercase tracking-widest mb-4">How we assess you</p>
       <div className="space-y-3 mb-10">
         {pillars.map(p => (
@@ -153,450 +294,177 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
         Begin Assessment
         <ChevronRight className="w-4 h-4" />
       </button>
-      <p className="text-white/20 text-xs text-center mt-3">5 questions · takes about 2 minutes</p>
+      <p className="text-white/20 text-xs text-center mt-3">8 questions · takes about 3 minutes</p>
     </div>
   );
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
+// ─── Loading screen ───────────────────────────────────────────────────────────
 
-export default function MatchmakerClient() {
-  const [started, setStarted] = useState(false);
-  const [stepIndex, setStepIndex] = useState(0);
-  const [answers, setAnswers] = useState<Answers>({});
-  const [done, setDone] = useState(false);
+function LoadingScreen() {
+  const steps = [
+    "Mapping your biological capability profile…",
+    "Analysing adventure requirements across 8 axes…",
+    "Running matchmaker engine…",
+    "Building your training plan…",
+  ];
+  const [step, setStep] = useState(0);
 
-  const currentStep = STEPS[stepIndex];
-
-  function set<K extends keyof Answers>(key: K, val: Answers[K]) {
-    setAnswers(prev => ({ ...prev, [key]: val }));
-  }
-
-  function canAdvance(): boolean {
-    if (currentStep === "cardio") return !!answers.cardio;
-    if (currentStep === "load") return !!answers.load;
-    if (currentStep === "altitude") return !!answers.altitude;
-    if (currentStep === "terrain") return !!answers.terrain;
-    if (currentStep === "bio") return !!(answers.age && answers.weight && answers.height);
-    return false;
-  }
-
-  function advance() {
-    if (!canAdvance()) return;
-    if (stepIndex < STEPS.length - 1) { setStepIndex(i => i + 1); return; }
-    const full = answers as MatchmakerAnswers;
-    const profile = computeUserProfile(full);
-    saveProfile({ ert: profile.ert, label: profile.label, summary: profile.summary, answers: full });
-    setDone(true);
-  }
-
-  if (!started) return <IntroScreen onStart={() => setStarted(true)} />;
-  if (done) return <ResultsScreen answers={answers as MatchmakerAnswers} />;
-
-  const phase = PHASE_LABELS[currentStep];
+  useState(() => {
+    const interval = setInterval(() => {
+      setStep(s => (s < steps.length - 1 ? s + 1 : s));
+    }, 2200);
+    return () => clearInterval(interval);
+  });
 
   return (
-    <div className="max-w-xl mx-auto px-6 py-24">
-      {/* Header */}
-      <div className="mb-8">
-        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Adventure Matchmaker</p>
-        <h1 className="text-white text-2xl font-bold tracking-tight">
-          {phase.phase}
-        </h1>
-        <p className="text-white/35 text-sm mt-1">{phase.title}</p>
+    <div className="max-w-xl mx-auto px-6 py-32 text-center">
+      <div className="w-16 h-16 rounded-2xl bg-[#ff5100]/15 flex items-center justify-center mx-auto mb-8">
+        <Loader2 className="w-8 h-8 text-[#ff5100] animate-spin" />
       </div>
-
-      <StepProgress stepIndex={stepIndex} />
-
-      {/* Step content */}
+      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Analysing</p>
+      <h2 className="text-white text-2xl font-bold mb-8">Running your assessment</h2>
       <div className="space-y-3">
-        {currentStep === "cardio" && (
-          <>
-            <h2 className="text-white text-xl font-semibold mb-5">
-              If you had to run 5 km today, how would it go?
-            </h2>
-            {[
-              { v: "A", l: "Under 25 minutes, comfortably", s: "Strong aerobic base" },
-              { v: "B", l: "25–32 minutes with some effort", s: "Solid fitness, room to push" },
-              { v: "C", l: "32–40 minutes with walking breaks", s: "Building base fitness" },
-              { v: "D", l: "Over 40 minutes, or I wouldn't attempt it", s: "Just getting started" },
-            ].map(o => (
-              <OptionBtn key={o.v} value={o.v} label={o.l} sub={o.s} selected={answers.cardio === o.v} onClick={() => set("cardio", o.v as "A")} />
-            ))}
-          </>
-        )}
-
-        {currentStep === "load" && (
-          <>
-            <h2 className="text-white text-xl font-semibold mb-5">
-              Have you hiked carrying a 10–12 kg backpack?
-            </h2>
-            {[
-              { v: "A", l: "Yes — on multi-day treks", s: "5+ days carrying a full pack" },
-              { v: "B", l: "Yes — on day hikes", s: "But not overnight" },
-              { v: "C", l: "Only light day packs", s: "Under 5 kg" },
-              { v: "D", l: "Never carried a backpack", s: "Starting from scratch" },
-            ].map(o => (
-              <OptionBtn key={o.v} value={o.v} label={o.l} sub={o.s} selected={answers.load === o.v} onClick={() => set("load", o.v as "A")} />
-            ))}
-          </>
-        )}
-
-        {currentStep === "altitude" && (
-          <>
-            <h2 className="text-white text-xl font-semibold mb-5">
-              What&apos;s the highest altitude where you&apos;ve slept overnight?
-            </h2>
-            {[
-              { v: "A", l: "Below 2,000 m", s: "Sea level to foothills" },
-              { v: "B", l: "2,000 – 3,500 m", s: "Lower Himalayan treks" },
-              { v: "C", l: "3,500 – 4,500 m", s: "High passes and base camps" },
-              { v: "D", l: "Above 4,500 m", s: "Expedition territory" },
-            ].map(o => (
-              <OptionBtn key={o.v} value={o.v} label={o.l} sub={o.s} selected={answers.altitude === o.v} onClick={() => set("altitude", o.v as "A")} />
-            ))}
-          </>
-        )}
-
-        {currentStep === "terrain" && (
-          <>
-            <h2 className="text-white text-xl font-semibold mb-5">
-              What&apos;s the most technical terrain you&apos;re comfortable moving through?
-            </h2>
-            {[
-              { v: "A", l: "Walking trails only", s: "Flat to moderate incline, clear paths" },
-              { v: "B", l: "Steep, rocky, uneven trails", s: "Loose scree, river crossings" },
-              { v: "C", l: "Scrambling on exposed sections", s: "Hands needed for balance" },
-              { v: "D", l: "Snow and ice with microspikes or crampons", s: "Confident on frozen terrain" },
-              { v: "E", l: "Full mountaineering — ropes and ice axe", s: "Glacier travel, crevasse terrain" },
-            ].map(o => (
-              <OptionBtn key={o.v} value={o.v} label={o.l} sub={o.s} selected={answers.terrain === o.v} onClick={() => set("terrain", o.v as "A")} />
-            ))}
-          </>
-        )}
-
-        {currentStep === "bio" && (
-          <>
-            <h2 className="text-white text-xl font-semibold mb-2">
-              A few quick numbers.
-            </h2>
-            <p className="text-white/35 text-sm mb-5">Used to estimate joint load and exertion limits — nothing more.</p>
-            <div className="space-y-4">
-              {[
-                { key: "age" as const,    label: "Age",    placeholder: "e.g. 34",  unit: "yrs" },
-                { key: "weight" as const, label: "Weight", placeholder: "e.g. 72",  unit: "kg" },
-                { key: "height" as const, label: "Height", placeholder: "e.g. 175", unit: "cm" },
-              ].map(f => (
-                <div
-                  key={f.key}
-                  className="flex items-center gap-3 rounded-2xl border px-5 py-3"
-                  style={{ background: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.1)" }}
-                >
-                  <label className="text-white/40 text-xs uppercase tracking-widest w-16 shrink-0">{f.label}</label>
-                  <input
-                    type="number"
-                    placeholder={f.placeholder}
-                    value={answers[f.key] ?? ""}
-                    onChange={e => set(f.key, e.target.value ? Number(e.target.value) : undefined as unknown as number)}
-                    className="flex-1 bg-transparent text-white text-sm outline-none placeholder:text-white/20"
-                  />
-                  <span className="text-white/25 text-xs">{f.unit}</span>
-                </div>
-              ))}
-              <div
-                className="rounded-2xl border px-5 py-3"
-                style={{ background: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.1)" }}
-              >
-                <label className="text-white/40 text-xs uppercase tracking-widest block mb-1.5">
-                  Past Injuries <span className="normal-case text-white/20">(optional)</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. knee surgery 2022, ankle sprain"
-                  value={answers.injuries ?? ""}
-                  onChange={e => set("injuries", e.target.value || undefined)}
-                  className="w-full bg-transparent text-white text-sm outline-none placeholder:text-white/20"
-                />
-              </div>
+        {steps.map((s, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-3 rounded-xl px-4 py-3 border transition-all"
+            style={{
+              background: i <= step ? "rgba(255,81,0,0.08)" : "rgba(255,255,255,0.02)",
+              borderColor: i <= step ? "rgba(255,81,0,0.25)" : "rgba(255,255,255,0.06)",
+            }}
+          >
+            <div
+              className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+              style={{ background: i < step ? "#ff5100" : i === step ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)" }}
+            >
+              {i < step ? (
+                <CheckCircle2 className="w-3 h-3 text-white" />
+              ) : i === step ? (
+                <Loader2 className="w-2.5 h-2.5 text-[#ff5100] animate-spin" />
+              ) : null}
             </div>
-          </>
-        )}
+            <p className={`text-sm ${i <= step ? "text-white/80" : "text-white/25"}`}>{s}</p>
+          </div>
+        ))}
       </div>
-
-      {/* Nav */}
-      <div className="flex items-center justify-between mt-10">
-        <button
-          onClick={() => {
-            if (stepIndex === 0) { setStarted(false); }
-            else { setStepIndex(i => i - 1); }
-          }}
-          className="flex items-center gap-1.5 text-white/30 hover:text-white/60 transition-colors text-sm"
-        >
-          <ChevronLeft className="w-4 h-4" />
-          Back
-        </button>
-        <button
-          onClick={advance}
-          disabled={!canAdvance()}
-          className="flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition-all"
-          style={{
-            background: canAdvance() ? "#ff5100" : "rgba(255,255,255,0.08)",
-            color: canAdvance() ? "white" : "rgba(255,255,255,0.2)",
-          }}
-        >
-          {stepIndex === STEPS.length - 1 ? "See my results" : "Continue"}
-          <ChevronRight className="w-4 h-4" />
-        </button>
-      </div>
-
-      <p className="text-center text-white/15 text-xs mt-6">
-        {stepIndex + 1} of {STEPS.length}
-      </p>
     </div>
   );
 }
 
 // ─── Results screen ───────────────────────────────────────────────────────────
 
-const TIER_INFO: Record<string, { color: string; icon: React.ReactNode; desc: string; stars: number }> = {
-  "Beginner Explorer":     { color: "#22d3ee", stars: 1, icon: <Compass    className="w-6 h-6" />, desc: "You're at the start of your mountain journey. Excellent trails await." },
-  "Trail Trekker":         { color: "#4ade80", stars: 2, icon: <Footprints className="w-6 h-6" />, desc: "You can handle multi-day treks on well-established routes." },
-  "Mountain Adventurer":   { color: "#f59e0b", stars: 3, icon: <Mountain   className="w-6 h-6" />, desc: "You're ready for challenging high-altitude treks with real commitment." },
-  "High-Altitude Trekker": { color: "#f97316", stars: 4, icon: <CloudSnow  className="w-6 h-6" />, desc: "Remote, demanding expeditions are within your reach." },
-  "Expedition Climber":    { color: "#a78bfa", stars: 5, icon: <Flag        className="w-6 h-6" />, desc: "You're operating at the upper end. Technical peaks are viable." },
-};
+function ResultsScreen({
+  result,
+  onReset,
+}: {
+  result: AnalysisResult;
+  onReset: () => void;
+}) {
+  const { userAxes, adventures: enriched, trainingPlan } = result;
 
-const IMPROVEMENT_TIPS: Record<string, string[]> = {
-  "Beginner Explorer": [
-    "Complete a 3-day trek to build overnight experience",
-    "Train cardio with 3 runs per week for 8 weeks",
-    "Sleep at 2,500 m+ to begin altitude exposure",
-    "Carry a 6–8 kg daypack on weekend hikes",
-  ],
-  "Trail Trekker": [
-    "Complete a 5+ day trek with a 10 kg pack",
-    "Sleep above 3,500 m on your next trip",
-    "Practice on rocky, uneven trails regularly",
-    "Add interval training to your cardio routine",
-  ],
-  "Mountain Adventurer": [
-    "Gain experience sleeping above 4,000 m",
-    "Complete a trek with a high pass crossing",
-    "Practice scrambling on exposed terrain",
-    "Train loaded carries of 12+ kg",
-  ],
-  "High-Altitude Trekker": [
-    "Take a basic mountaineering skills course",
-    "Practice crampon use and ice axe techniques",
-    "Build expedition experience with a guided 6,000 m peak",
-    "Train for sustained 8-hour walking days",
-  ],
-  "Expedition Climber": [
-    "Pursue technical climbing certifications",
-    "Expand glacier travel and crevasse rescue skills",
-    "Consider 7,000 m peak preparation",
-    "Work with a high-altitude training coach",
-  ],
-};
+  const inZone    = enriched.filter(a => a.status === "IN_ZONE");
+  const stretch   = enriched.filter(a => a.status === "STRETCH");
+  const restricted = enriched.filter(a => a.status === "RESTRICTED");
 
-function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
-  const profile = computeUserProfile(answers);
-  const allMatches = getMatchedAdventures(profile.ert, adventures);
-  const tier = TIER_INFO[profile.label] ?? TIER_INFO["Trail Trekker"];
-  const tips = IMPROVEMENT_TIPS[profile.label] ?? IMPROVEMENT_TIPS["Trail Trekker"];
-
-  // Save to Supabase profile if logged in
-  useState(() => {
-    (async () => {
-      try {
-        const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          await supabase.from("profiles").update({
-            ert_tier: profile.label,
-            ert_e: profile.ert.e,
-            ert_r: profile.ert.r,
-            ert_t: profile.ert.t,
-            ert_summary: profile.summary,
-            ert_taken_at: new Date().toISOString(),
-          }).eq("id", user.id);
-        }
-      } catch {}
-    })();
-  });
-
-  // Bucket matched adventures: Ready Now (top 4), Stretch (1 level above), Future (2+ above)
-  const readyNow = allMatches.slice(0, 4);
-
-  // Stretch = adventures with total ERT 1 above user ceiling
-  const stretchMatches = adventures
-    .filter(a => {
-      const ert = getERT(a);
-      const userTotal = profile.ert.e + profile.ert.r + profile.ert.t;
-      const advTotal = ert.e + ert.r + ert.t;
-      return advTotal === userTotal + 1 || advTotal === userTotal + 2;
-    })
-    .sort((a, b) => {
-      const ea = getERT(a), eb = getERT(b);
-      return (ea.e + ea.r + ea.t) - (eb.e + eb.r + eb.t);
-    })
-    .slice(0, 2);
-
-  // Future = further above
-  const futureMatches = adventures
-    .filter(a => {
-      const ert = getERT(a);
-      const userTotal = profile.ert.e + profile.ert.r + profile.ert.t;
-      const advTotal = ert.e + ert.r + ert.t;
-      return advTotal >= userTotal + 3;
-    })
-    .sort((a, b) => {
-      const ea = getERT(a), eb = getERT(b);
-      return (ea.e + ea.r + ea.t) - (eb.e + eb.r + eb.t);
-    })
-    .slice(0, 2);
+  // Overall score
+  const axisValues = Object.values(userAxes).filter(v => v > 0);
+  const avgScore = axisValues.length ? axisValues.reduce((a, b) => a + b, 0) / axisValues.length : 0;
+  const tier =
+    avgScore >= 4.5 ? { label: "Expedition Athlete",  color: "#a78bfa" } :
+    avgScore >= 3.5 ? { label: "High-Altitude Adventurer", color: "#f97316" } :
+    avgScore >= 2.5 ? { label: "Mountain Adventurer",  color: "#f59e0b" } :
+    avgScore >= 1.5 ? { label: "Trail Trekker",        color: "#4ade80" } :
+                      { label: "Beginner Explorer",    color: "#22d3ee" };
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-24">
+    <div className="max-w-3xl mx-auto px-6 py-16">
 
-      {/* Tier card */}
-      <div className="mb-3">
-        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Your Adventure Profile</p>
-      </div>
+      {/* Capability profile card */}
+      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Your Biological Profile</p>
       <div
         className="rounded-3xl p-7 mb-6 border relative overflow-hidden"
-        style={{ background: "rgba(255,255,255,0.04)", borderColor: `${tier.color}35`, borderLeftWidth: "4px", borderLeftColor: tier.color }}
+        style={{ background: "rgba(255,255,255,0.04)", borderLeftWidth: "4px", borderLeftColor: tier.color, borderColor: `${tier.color}35` }}
       >
-        {/* Glow accent — strong, matches tier colour */}
-        <div
-          className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-20 blur-3xl pointer-events-none"
-          style={{ background: tier.color }}
-        />
-        <div
-          className="absolute bottom-0 left-0 w-40 h-40 rounded-full opacity-10 blur-2xl pointer-events-none"
-          style={{ background: tier.color }}
-        />
+        <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-15 blur-3xl pointer-events-none" style={{ background: tier.color }} />
         <div className="relative">
-          <div className="flex items-start justify-between gap-4 mb-5">
+          <div className="flex items-start justify-between gap-4 mb-6">
             <div>
               <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Adventure Tier</p>
-              <h1 className="text-3xl font-bold tracking-tight" style={{ color: tier.color }}>{profile.label}</h1>
-              <p className="text-white/50 text-sm mt-1.5 leading-relaxed">{tier.desc}</p>
+              <h1 className="text-3xl font-bold tracking-tight" style={{ color: tier.color }}>{tier.label}</h1>
+              <p className="text-white/45 text-sm mt-2">Based on your 8-axis biological capability profile.</p>
             </div>
-            {/* Icon badge + stars */}
-            <div className="flex flex-col items-center gap-1.5 shrink-0">
-              <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg"
-                style={{ background: `${tier.color}25`, color: tier.color, boxShadow: `0 0 20px ${tier.color}40` }}
-              >
-                {tier.icon}
-              </div>
-              <div className="flex items-center gap-0.5">
-                {Array.from({ length: tier.stars }).map((_, i) => (
-                  <span key={i} className="text-sm" style={{ color: tier.color }}>★</span>
-                ))}
-              </div>
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
+              style={{ background: `${tier.color}25`, color: tier.color, boxShadow: `0 0 20px ${tier.color}40` }}
+            >
+              <Target className="w-6 h-6" />
             </div>
           </div>
 
-          {/* ERT breakdown */}
-          <p className="text-white/30 text-[10px] uppercase tracking-widest mb-3">Your ERT Capability</p>
-          <ERTBadge ert={profile.ert} size="md" dark />
-
-          <p className="text-white/50 text-sm leading-relaxed mt-4">{profile.summary}</p>
-
-          {profile.limitReasons.length > 0 && (
-            <div className="mt-4 space-y-1.5 pt-4 border-t border-white/6">
-              {profile.limitReasons.map((r, i) => (
-                <p key={i} className="text-white/30 text-xs flex items-start gap-2">
-                  <span className="text-amber-400/70 mt-0.5 shrink-0">•</span>{r}
-                </p>
-              ))}
-            </div>
-          )}
+          {/* Axis bars */}
+          <p className="text-white/30 text-[10px] uppercase tracking-widest mb-3">Capability Axes</p>
+          <div className="space-y-2.5">
+            {Object.entries(userAxes).map(([axis, val]) => (
+              <AxisBar key={axis} axis={axis} value={val} />
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* ── Ready Now ── */}
-      <AdventureCategory
-        label="Ready Now"
-        sublabel="Treks you can confidently attempt with your current capability"
-        icon={<CheckCircle2 className="w-4 h-4" />}
-        adventures={readyNow}
-        accentColor="#4ade80"
-        defaultOpen
-      />
+      {/* Adventures */}
+      <AdventureSection label="Ready Now" sublabel="Adventures within your current capability" icon={<CheckCircle2 className="w-4 h-4" />} adventures={inZone} accentColor="#4ade80" defaultOpen />
+      {stretch.length > 0 && <AdventureSection label="Stretch Challenge" sublabel="Slightly above your current range — achievable with focused training" icon={<TrendingUp className="w-4 h-4" />} adventures={stretch} accentColor="#f59e0b" />}
+      {restricted.length > 0 && <AdventureSection label="Currently Out of Range" sublabel="Require capabilities significantly beyond your current profile" icon={<Lock className="w-4 h-4" />} adventures={restricted} accentColor="#f43f5e" />}
 
-      {/* ── Stretch Challenge ── */}
-      {stretchMatches.length > 0 && (
-        <AdventureCategory
-          label="Stretch Challenge"
-          sublabel="Slightly above your current range — achievable with focused preparation"
-          icon={<TrendingUp className="w-4 h-4" />}
-          adventures={stretchMatches}
-          accentColor="#f59e0b"
-          dimmed
-        />
-      )}
-
-      {/* ── Future Expeditions ── */}
-      {futureMatches.length > 0 && (
-        <AdventureCategory
-          label="Future Expeditions"
-          sublabel="Long-term goals that require dedicated training and experience building"
-          icon={<Lock className="w-4 h-4" />}
-          adventures={futureMatches}
-          accentColor="#a78bfa"
-          dimmed
-        />
-      )}
-
-      {/* ── Improvement Guidance ── */}
-      <div
-        className="rounded-2xl p-6 mb-10 border"
-        style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}
-      >
-        <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">To reach the next tier</p>
-        <h3 className="text-white font-semibold text-base mb-4">How to unlock harder adventures</h3>
-        <div className="space-y-2.5">
-          {tips.map((tip, i) => (
-            <div key={i} className="flex items-start gap-3">
-              <span
-                className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5"
-                style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}
-              >
-                {i + 1}
-              </span>
-              <p className="text-white/55 text-sm leading-snug">{tip}</p>
-            </div>
-          ))}
+      {/* Training plan */}
+      {trainingPlan.length > 0 && (
+        <div
+          className="rounded-2xl p-6 mb-8 border"
+          style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}
+        >
+          <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Your Training Plan</p>
+          <h3 className="text-white font-semibold text-base mb-5">How to unlock harder adventures</h3>
+          <div className="space-y-4">
+            {trainingPlan.map((item, i) => {
+              const color = AXIS_COLORS[item.axis] ?? "#ff5100";
+              const icon = AXIS_ICONS[item.axis];
+              return (
+                <div key={i} className="flex items-start gap-4">
+                  <div
+                    className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
+                    style={{ background: `${color}18`, color }}
+                  >
+                    {icon}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-white font-semibold text-sm capitalize">{item.axis}</span>
+                      <span className="text-white/30 text-xs">
+                        Level {item.current_level} → {item.required_level}
+                      </span>
+                    </div>
+                    <p className="text-white/55 text-sm leading-snug">{item.recommendation}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* ── CTAs ── */}
+      {/* CTAs */}
       <div className="flex flex-wrap gap-3 items-center">
         <Link
-          href={`/explore?maxE=${profile.ert.e}&maxR=${profile.ert.r}&maxT=${profile.ert.t}`}
+          href="/explore"
           className="flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm text-white transition-all hover:brightness-110"
           style={{ background: "#ff5100" }}
         >
-          Explore similar treks
+          Browse all adventures
           <ArrowRight className="w-4 h-4" />
         </Link>
-        <Link
-          href="/explore"
-          className="flex items-center gap-2 px-5 py-3 rounded-full border text-white/60 text-sm font-medium hover:text-white transition-colors"
-          style={{ borderColor: "rgba(255,255,255,0.12)" }}
-        >
-          Browse all adventures
-        </Link>
         <button
-          onClick={() => {
-            if (typeof window !== "undefined") {
-              localStorage.removeItem("ttt_matchmaker_profile");
-              window.location.reload();
-            }
-          }}
+          onClick={onReset}
           className="flex items-center gap-2 px-5 py-3 rounded-full border text-white/60 text-sm font-medium hover:text-white transition-colors"
           style={{ borderColor: "rgba(255,255,255,0.12)" }}
         >
@@ -608,22 +476,19 @@ function ResultsScreen({ answers }: { answers: MatchmakerAnswers }) {
   );
 }
 
-// ─── Adventure category section ───────────────────────────────────────────────
+// ─── Adventure section ────────────────────────────────────────────────────────
 
-function AdventureCategory({
-  label, sublabel, icon, adventures: list, accentColor, dimmed = false, defaultOpen = false,
+function AdventureSection({
+  label, sublabel, icon, adventures: list, accentColor, defaultOpen = false,
 }: {
   label: string;
   sublabel: string;
   icon: React.ReactNode;
-  adventures: Adventure[];
+  adventures: EnrichedAdventure[];
   accentColor: string;
-  dimmed?: boolean;
   defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
-  const contentRef = useRef<HTMLDivElement>(null);
-
   if (list.length === 0) return null;
 
   return (
@@ -631,18 +496,13 @@ function AdventureCategory({
       className="mb-3 rounded-2xl border overflow-hidden"
       style={{ borderColor: `${accentColor}30`, borderLeftWidth: "3px", borderLeftColor: accentColor }}
     >
-      {/* Tab header */}
       <button
         onClick={() => setOpen(o => !o)}
         className="w-full flex items-center justify-between px-5 py-4 transition-colors hover:bg-white/[0.03]"
         style={{ background: open ? `${accentColor}0a` : "rgba(255,255,255,0.02)" }}
       >
         <div className="flex items-center gap-3">
-          {/* Coloured icon badge */}
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-            style={{ background: `${accentColor}20`, color: accentColor }}
-          >
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${accentColor}20`, color: accentColor }}>
             {icon}
           </div>
           <div className="text-left">
@@ -651,64 +511,187 @@ function AdventureCategory({
           </div>
         </div>
         <div className="flex items-center gap-3 shrink-0">
-          <span
-            className="text-[10px] font-semibold px-2.5 py-1 rounded-full"
-            style={{ background: `${accentColor}18`, color: accentColor }}
-          >
-            {list.length} trek{list.length !== 1 ? "s" : ""}
+          <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full" style={{ background: `${accentColor}18`, color: accentColor }}>
+            {list.length} adventure{list.length !== 1 ? "s" : ""}
           </span>
-          <ChevronRight
-            className="w-4 h-4 transition-transform duration-200"
-            style={{ color: accentColor, transform: open ? "rotate(90deg)" : "rotate(0deg)" }}
-          />
+          <ChevronRight className="w-4 h-4 transition-transform duration-200" style={{ color: accentColor, transform: open ? "rotate(90deg)" : "rotate(0deg)" }} />
         </div>
       </button>
 
-      {/* Expandable cards */}
-      <div
-        ref={contentRef}
-        className="overflow-hidden transition-all duration-300 ease-in-out"
-        style={{ maxHeight: open ? `${(contentRef.current?.scrollHeight ?? 1200)}px` : "0px" }}
-      >
+      {open && (
         <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ borderTop: `1px solid ${accentColor}18` }}>
-          {list.map(a => {
-            const ert = getERT(a);
-            return (
-              <Link
-                key={a.slug}
-                href={`/experiences/${a.slug}`}
-                className="group rounded-xl overflow-hidden border transition-all hover:-translate-y-0.5 hover:shadow-lg duration-200"
-                style={{
-                  borderColor: `${accentColor}25`,
-                  background: "rgba(255,255,255,0.03)",
-                }}
-              >
-                <div className="relative h-36 overflow-hidden">
-                  <Image
-                    src={a.heroImage}
-                    alt={a.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    style={{ filter: dimmed ? "saturate(0.75)" : undefined }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-                  <div className="absolute bottom-3 left-3 right-3">
-                    <div className="flex items-center gap-1 mb-1">
-                      <MapPin className="w-3 h-3 shrink-0" style={{ color: accentColor }} />
-                      <span className="text-white/55 text-[10px] truncate">{a.state}</span>
-                    </div>
-                    <h3 className="text-white font-semibold text-sm leading-tight">{a.name}</h3>
+          {list.map(a => (
+            <Link
+              key={a.slug}
+              href={`/experiences/${a.slug}`}
+              className="group rounded-xl overflow-hidden border transition-all hover:-translate-y-0.5 hover:shadow-lg duration-200"
+              style={{ borderColor: `${accentColor}25`, background: "rgba(255,255,255,0.03)" }}
+            >
+              <div className="relative h-36 overflow-hidden">
+                <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                <div className="absolute bottom-3 left-3 right-3">
+                  <div className="flex items-center gap-1 mb-1">
+                    <MapPin className="w-3 h-3 shrink-0" style={{ color: accentColor }} />
+                    <span className="text-white/55 text-[10px] truncate">{a.state}</span>
                   </div>
+                  <h3 className="text-white font-semibold text-sm leading-tight">{a.name}</h3>
                 </div>
-                <div className="px-3 py-2.5 flex items-center justify-between">
-                  <ERTBadge ert={ert} size="sm" dark />
-                  <ArrowRight className="w-3 h-3 text-white/25 group-hover:transition-colors" style={{ color: undefined }} />
-                </div>
-              </Link>
-            );
-          })}
+              </div>
+              <div className="px-3 py-2.5">
+                <ERTBadge ert={a.ert} size="sm" dark />
+                {a.weakAxes.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {a.weakAxes.slice(0, 3).map(ax => (
+                      <span key={ax} className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded" style={{ background: `${AXIS_COLORS[ax] ?? "#fff"}18`, color: AXIS_COLORS[ax] ?? "#fff" }}>
+                        {AXIS_ICONS[ax]}<span className="ml-0.5">{ax}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {a.analysis && (
+                  <p className="text-white/35 text-[10px] leading-relaxed mt-1.5 line-clamp-2">{a.analysis}</p>
+                )}
+              </div>
+            </Link>
+          ))}
         </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
+
+export default function MatchmakerClient() {
+  const [started, setStarted] = useState(false);
+  const [stepIndex, setStepIndex] = useState(0);
+  const [answers, setAnswers] = useState<Answers>({});
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
+
+  const currentQ = QUESTIONS[stepIndex];
+  const canAdvance = !!answers[currentQ.key];
+
+  async function submitAssessment(finalAnswers: Answers) {
+    setLoading(true);
+    setApiError(null);
+    try {
+      const res = await fetch("/api/matchmaker/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers: finalAnswers }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Analysis failed");
+      setResult(data);
+    } catch (err) {
+      setApiError(err instanceof Error ? err.message : "Something went wrong");
+      setLoading(false);
+    }
+  }
+
+  function advance() {
+    if (!canAdvance) return;
+    if (stepIndex < QUESTIONS.length - 1) {
+      setStepIndex(i => i + 1);
+    } else {
+      submitAssessment(answers);
+    }
+  }
+
+  function reset() {
+    setStarted(false);
+    setStepIndex(0);
+    setAnswers({});
+    setResult(null);
+    setApiError(null);
+    setLoading(false);
+  }
+
+  if (!started) return <IntroScreen onStart={() => setStarted(true)} />;
+  if (loading && !result) return <LoadingScreen />;
+  if (result) return <ResultsScreen result={result} onReset={reset} />;
+
+  return (
+    <div className="max-w-xl mx-auto px-6 py-24">
+      {/* Header */}
+      <div className="mb-8">
+        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Adventure Matchmaker</p>
+        <div className="flex items-center gap-2 mb-1">
+          <span style={{ color: AXIS_COLORS[currentQ.axis.toLowerCase()] ?? "#ff5100" }}>
+            {AXIS_ICONS[currentQ.axis.toLowerCase()]}
+          </span>
+          <h1 className="text-white text-2xl font-bold tracking-tight">{currentQ.axis}</h1>
+        </div>
+        <p className="text-white/35 text-sm">Question {stepIndex + 1} of {QUESTIONS.length}</p>
       </div>
+
+      {/* Progress */}
+      <div className="flex items-center gap-1.5 mb-10">
+        {QUESTIONS.map((_, i) => (
+          <div
+            key={i}
+            className="h-1 flex-1 rounded-full transition-all duration-300"
+            style={{ background: i <= stepIndex ? "#ff5100" : "rgba(255,255,255,0.1)" }}
+          />
+        ))}
+      </div>
+
+      {/* Question */}
+      <div className="space-y-3">
+        <h2 className="text-white text-xl font-semibold mb-1">{currentQ.question}</h2>
+        {currentQ.hint && <p className="text-white/35 text-sm mb-5">{currentQ.hint}</p>}
+        {currentQ.options.map(o => (
+          <OptionBtn
+            key={o.v}
+            value={o.v}
+            label={o.l}
+            sub={o.s}
+            selected={answers[currentQ.key] === o.v}
+            onClick={() => setAnswers(prev => ({ ...prev, [currentQ.key]: o.v }))}
+          />
+        ))}
+      </div>
+
+      {/* Error */}
+      {apiError && (
+        <div className="mt-6 flex items-center gap-3 bg-red-500/10 border border-red-500/25 rounded-xl px-4 py-3">
+          <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+          <p className="text-red-400 text-sm">{apiError}</p>
+        </div>
+      )}
+
+      {/* Nav */}
+      <div className="flex items-center justify-between mt-10">
+        <button
+          onClick={() => {
+            if (stepIndex === 0) setStarted(false);
+            else setStepIndex(i => i - 1);
+          }}
+          className="flex items-center gap-1.5 text-white/30 hover:text-white/60 transition-colors text-sm"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          Back
+        </button>
+        <button
+          onClick={advance}
+          disabled={!canAdvance}
+          className="flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm transition-all"
+          style={{
+            background: canAdvance ? "#ff5100" : "rgba(255,255,255,0.08)",
+            color: canAdvance ? "white" : "rgba(255,255,255,0.2)",
+          }}
+        >
+          {stepIndex === QUESTIONS.length - 1 ? "Analyse my profile" : "Continue"}
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+
+      <p className="text-center text-white/15 text-xs mt-6">
+        {stepIndex + 1} of {QUESTIONS.length}
+      </p>
     </div>
   );
 }
