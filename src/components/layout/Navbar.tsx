@@ -263,13 +263,13 @@ export default function Navbar() {
                       <User className="w-4 h-4" />
                       Profile
                     </Link>
-                    <Link href="/matchmaker" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5" style={{ color: "var(--text-secondary)", borderTop: "1px solid var(--border-subtle)" }}>
+                    <Link href="/matchmaker" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5" style={{ color: "var(--text-secondary)" }}>
                       <Compass className="w-4 h-4" />
                       Adventure Profile
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-black/5"
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5"
                       style={{ color: "var(--text-tertiary)", borderTop: "1px solid var(--border-subtle)" }}
                     >
                       <LogOut className="w-4 h-4" />
