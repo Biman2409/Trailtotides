@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Compass, Footprints, Mountain, CloudSnow, Flag, ArrowRight } from "lucide-react";
 import { loadProfile } from "@/lib/matchmaker";
+import { ACE_AXIS_COLORS, ACE_AXES } from "@/lib/ace";
 
 const TIER_INFO: Record<string, { color: string; icon: React.ReactNode; stars: number }> = {
-  "Beginner Explorer":     { color: "#22d3ee", stars: 1, icon: <Compass    className="w-4 h-4" /> },
-  "Trail Trekker":         { color: "#4ade80", stars: 2, icon: <Footprints className="w-4 h-4" /> },
-  "Mountain Adventurer":   { color: "#f59e0b", stars: 3, icon: <Mountain   className="w-4 h-4" /> },
-  "High-Altitude Trekker": { color: "#f97316", stars: 4, icon: <CloudSnow  className="w-4 h-4" /> },
-  "Expedition Climber":    { color: "#a78bfa", stars: 5, icon: <Flag       className="w-4 h-4" /> },
+  "Beginner Explorer":        { color: "#22d3ee", stars: 1, icon: <Compass    className="w-4 h-4" /> },
+  "Trail Trekker":            { color: "#4ade80", stars: 2, icon: <Footprints className="w-4 h-4" /> },
+  "Mountain Adventurer":      { color: "#f59e0b", stars: 3, icon: <Mountain   className="w-4 h-4" /> },
+  "High-Altitude Adventurer": { color: "#f97316", stars: 4, icon: <CloudSnow  className="w-4 h-4" /> },
+  "Expedition Athlete":       { color: "#a78bfa", stars: 5, icon: <Flag       className="w-4 h-4" /> },
 };
 
 export default function AdventureProfileSidebar() {
@@ -35,9 +36,16 @@ export default function AdventureProfileSidebar() {
 
   const tier = TIER_INFO[stored.label] ?? TIER_INFO["Trail Trekker"];
 
+  // Top 4 axes by value for the mini stat display
+  const topAxes = (ACE_AXES as unknown as string[])
+    .map((k) => ({ key: k, val: stored.ace[k as keyof typeof stored.ace] as number }))
+    .filter(({ val }) => val > 0)
+    .sort((a, b) => b.val - a.val)
+    .slice(0, 4);
+
   return (
     <div className="pt-4 border-t border-white/5 space-y-3">
-      <p className="text-[10px] uppercase tracking-wider font-bold text-white/30">Adventure Profile</p>
+      <p className="text-[10px] uppercase tracking-wider font-bold text-white/30">ACE Profile</p>
 
       <div className="flex items-center gap-3 p-3 rounded-2xl border"
         style={{ background: `${tier.color}0d`, borderColor: `${tier.color}28` }}>
@@ -53,20 +61,28 @@ export default function AdventureProfileSidebar() {
             ))}
           </div>
         </div>
-        <div className="flex items-center gap-1 flex-shrink-0">
-          {([["E", stored.ert.e, "#f97316"], ["R", stored.ert.r, "#ef4444"], ["T", stored.ert.t, "#8b5cf6"]] as const).map(([label, value, color]) => (
-            <div key={label} className="flex flex-col items-center bg-white/5 border border-white/10 rounded-lg px-2 py-1">
-              <span className="text-[8px] font-bold text-white/40 uppercase">{label}</span>
-              <span className="text-sm font-bold leading-tight" style={{ color }}>{value}</span>
+      </div>
+
+      {/* Top ACE axes */}
+      <div className="grid grid-cols-4 gap-1.5">
+        {topAxes.map(({ key, val }) => {
+          const color = ACE_AXIS_COLORS[key as keyof typeof ACE_AXIS_COLORS] ?? "#ff5100";
+          return (
+            <div key={key} className="flex flex-col items-center rounded-xl px-1.5 py-2 border"
+              style={{ background: `${color}10`, borderColor: `${color}22` }}>
+              <span className="text-[8px] font-bold uppercase tracking-wide mb-0.5" style={{ color: `${color}99` }}>
+                {key.slice(0, 3).toUpperCase()}
+              </span>
+              <span className="text-sm font-bold leading-tight" style={{ color }}>{val}</span>
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
 
       <div className="flex gap-2">
-        <Link href={`/explore?maxE=${stored.ert.e}&maxR=${stored.ert.r}&maxT=${stored.ert.t}`}
+        <Link href="/matchmaker"
           className="flex-1 text-center bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-3 py-2 rounded-xl text-xs transition-all">
-          Explore Treks
+          Find Adventures
         </Link>
         <Link href="/matchmaker"
           className="flex-1 text-center border border-white/10 hover:border-white/20 text-white/50 hover:text-white font-medium px-3 py-2 rounded-xl text-xs transition-all">
