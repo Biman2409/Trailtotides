@@ -51,11 +51,11 @@ export interface Upsell {
 // Rank 1 = 8, Rank 2 = 16, Rank 3 = 24, Rank 4 = 32, Rank 5 = 40
 function aceToLabel(ace: ACE): string {
   const total = Object.values(ace).reduce((a, b) => a + b, 0);
-  if (total >= 40) return "Expedition Athlete";
-  if (total >= 32) return "High-Altitude Adventurer";
-  if (total >= 24) return "Mountain Adventurer";
-  if (total >= 16) return "Trail Trekker";
-  return "Beginner Explorer";
+  if (total >= 40) return "Apex";
+  if (total >= 32) return "Expeditioner";
+  if (total >= 24) return "Navigator";
+  if (total >= 16) return "Trailblazer";
+  return "Uncharted";
 }
 
 // ─── Adventure matching (ACE-based) ──────────────────────────────────────────
