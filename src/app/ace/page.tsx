@@ -173,26 +173,26 @@ export default function ACEPage() {
                         <ACEBadge ace={ace} size="sm" />
                       </div>
                     </div>
-                    {/* Top 3 axes */}
-                    <div className="space-y-1.5">
-                      {(Object.entries(ace) as [string, number][])
-                        .filter(([,v]) => v > 0)
-                        .sort(([,a],[,b]) => b-a)
-                        .slice(0, 3)
-                        .map(([axis, val]) => {
-                          const color = ACE_AXIS_COLORS[axis as keyof typeof ACE_AXIS_COLORS];
-                          return (
-                            <div key={axis} className="flex items-center gap-2">
-                              <span className="text-[10px] font-bold uppercase tracking-wide w-16 shrink-0" style={{ color }}>
-                                {({ stamina:"STA", power:"PWR", strength:"STR", agility:"AGI", water:"WAT", altitude:"ALT", nerve:"NRV", focus:"FOC" } as Record<string,string>)[axis] ?? axis.slice(0,3).toUpperCase()}
-                              </span>
-                              <div className="flex-1 h-1 rounded-full bg-white/5">
-                                <div className="h-full rounded-full transition-all" style={{ width: `${(val/5)*100}%`, background: color }} />
-                              </div>
-                              <span className="text-white/40 text-[10px] font-mono w-4 text-right">{val}</span>
-                            </div>
-                          );
-                        })}
+                    {/* All 8 axes as pills */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {(["stamina","power","strength","agility","water","altitude","nerve","focus"] as const).map((axis) => {
+                        const val = ace[axis];
+                        const color = ACE_AXIS_COLORS[axis];
+                        const abbr = ({ stamina:"STA", power:"PWR", strength:"STR", agility:"AGI", water:"WAT", altitude:"ALT", nerve:"NRV", focus:"FOC" })[axis];
+                        return (
+                          <span
+                            key={axis}
+                            className="px-2 py-1 rounded-lg text-[10px] font-bold tracking-wider border"
+                            style={{
+                              background: val > 0 ? `${color}15` : "rgba(255,255,255,0.04)",
+                              borderColor: val > 0 ? `${color}30` : "rgba(255,255,255,0.08)",
+                              color: val > 0 ? color : "rgba(255,255,255,0.2)",
+                            }}
+                          >
+                            {abbr} {val}
+                          </span>
+                        );
+                      })}
                     </div>
                     {a.altitude && (
                       <p className="text-white/20 text-[10px] mt-3 pt-3 border-t border-white/5">
