@@ -104,8 +104,8 @@ export default function MatchmakerHomepageSection() {
             </div>
           </div>
 
-          {/* ACE axis pills — all 8 */}
-          <div className="flex items-center gap-2 flex-wrap">
+          {/* ACE axis pills — all 8, 4 per row */}
+          <div className="grid grid-cols-4 gap-2">
             {allAxes.map((axis) => (
               <AcePill key={axis} axis={axis} value={profile.ace[axis as keyof typeof profile.ace]} />
             ))}
