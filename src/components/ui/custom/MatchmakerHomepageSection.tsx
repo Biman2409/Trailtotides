@@ -171,11 +171,11 @@ function DefaultCTA() {
             <span className="text-[#ff5100]">for your body</span>
           </h2>
           <p className="text-white/72 text-base md:text-xl leading-relaxed mb-7 lg:mb-9">
-            8 questions. We build your personal{" "}
+            Answer 8 questions. Discover your{" "}
             <Link href="/ace" className="font-bold text-[#ff5100] underline decoration-[#ff5100]/30 underline-offset-2 hover:decoration-[#ff5100] transition-all">
               ACE
             </Link>{" "}
-            capability profile and surface the exact adventures your body is ready for.
+            profile and the adventures you&apos;re truly ready for.
           </p>
           <Link
             href="/matchmaker"
