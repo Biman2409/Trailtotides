@@ -124,62 +124,6 @@ export default function ACEPage() {
       </section>
 
 
-      {/* ── DOMAINS ───────────────────────────────────────────────────── */}
-      <section className="py-24 px-6 border-t border-white/5" style={{ background: "rgba(255,255,255,0.015)" }}>
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-14">
-            <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">Capability Domains</p>
-            <h2 className="text-white text-4xl font-black tracking-tight">Four pillars of readiness.</h2>
-            <p className="text-white/35 text-base mt-2 max-w-xl">The eight axes are grouped into four domains.</p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {ACE_DOMAINS.map((d) => (
-              <div
-                key={d.name}
-                className="relative rounded-3xl border overflow-hidden p-7"
-                style={{ background: `${d.color}07`, borderColor: `${d.color}20` }}
-              >
-                {/* Corner glow */}
-                <div className="absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl opacity-10 pointer-events-none"
-                  style={{ background: d.color }} />
-
-                <div className="relative">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
-                      style={{ background: `${d.color}18`, color: d.color }}>
-                      {DOMAIN_ICONS[d.name]}
-                    </div>
-                    <div>
-                      <p className="text-white font-black text-xl leading-none">{d.name}</p>
-                    </div>
-                  </div>
-
-                  <p className="text-white/45 text-sm leading-relaxed mb-6">{d.desc}</p>
-
-                  <div className="flex gap-2">
-                    {d.axes.map((ax) => {
-                      const color = ACE_AXIS_COLORS[ax];
-                      const axisData = AXES.find((a) => a.key === ax);
-                      return (
-                        <div
-                          key={ax}
-                          className="flex items-center gap-1.5 px-3 py-2 rounded-xl border"
-                          style={{ background: `${color}12`, borderColor: `${color}25`, color }}
-                        >
-                          <span className="text-xs">{axisData?.icon}</span>
-                          <span className="text-xs font-bold capitalize">{ax}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── LIVE EXAMPLES ─────────────────────────────────────────────── */}
       <section className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
@@ -259,6 +203,62 @@ export default function ACEPage() {
                 </Link>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── DOMAINS ───────────────────────────────────────────────────── */}
+      <section className="py-24 px-6 border-t border-white/5" style={{ background: "rgba(255,255,255,0.015)" }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-14">
+            <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">Capability Domains</p>
+            <h2 className="text-white text-4xl font-black tracking-tight">Four pillars of readiness.</h2>
+            <p className="text-white/35 text-base mt-2 max-w-xl">The eight axes are grouped into four domains.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {ACE_DOMAINS.map((d) => (
+              <div
+                key={d.name}
+                className="relative rounded-3xl border overflow-hidden p-7"
+                style={{ background: `${d.color}07`, borderColor: `${d.color}20` }}
+              >
+                {/* Corner glow */}
+                <div className="absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl opacity-10 pointer-events-none"
+                  style={{ background: d.color }} />
+
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0"
+                      style={{ background: `${d.color}18`, color: d.color }}>
+                      {DOMAIN_ICONS[d.name]}
+                    </div>
+                    <div>
+                      <p className="text-white font-black text-xl leading-none">{d.name}</p>
+                    </div>
+                  </div>
+
+                  <p className="text-white/45 text-sm leading-relaxed mb-6">{d.desc}</p>
+
+                  <div className="flex gap-2">
+                    {d.axes.map((ax) => {
+                      const color = ACE_AXIS_COLORS[ax];
+                      const axisData = AXES.find((a) => a.key === ax);
+                      return (
+                        <div
+                          key={ax}
+                          className="flex items-center gap-1.5 px-3 py-2 rounded-xl border"
+                          style={{ background: `${color}12`, borderColor: `${color}25`, color }}
+                        >
+                          <span className="text-xs">{axisData?.icon}</span>
+                          <span className="text-xs font-bold capitalize">{ax}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
