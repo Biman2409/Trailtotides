@@ -405,7 +405,7 @@ export default function ACEPage() {
             Find exactly what<br />your body is built for.
           </h2>
           <p className="text-white/45 text-lg leading-relaxed mb-10 max-w-xl mx-auto">
-            Eight questions. The ACE engine maps your biological profile and surfaces the adventures that fit — and the ones that would push you over the edge.
+            Eight questions. We build your personal ACE profile and surface the exact adventures your body is built for — nothing more, nothing less.
           </p>
           <div className="flex justify-center">
             <Link
