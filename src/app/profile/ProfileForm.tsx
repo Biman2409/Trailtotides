@@ -7,7 +7,6 @@ import {
   Eye, EyeOff, Lock, XCircle, ArrowRight,
 } from "lucide-react";
 import { updateProfile, changePassword } from "./actions";
-import ACEProfileSection from "./ACEProfileSection";
 
 type Profile = {
   id: string;
@@ -274,7 +273,6 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
     <div className="space-y-6">
       <AccountDetails profile={profile} />
       <ChangePasswordSection />
-      <ACEProfileSection />
     </div>
   );
 }
