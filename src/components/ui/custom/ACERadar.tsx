@@ -1,7 +1,7 @@
 "use client";
 
 import type { ACE, AceAxis } from "@/lib/ace";
-import { ACE_AXES, ACE_AXIS_COLORS, ACE_AXIS_LABELS } from "@/lib/ace";
+import { ACE_AXIS_COLORS } from "@/lib/ace";
 
 interface Props {
   ace: ACE;
