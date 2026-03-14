@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, RotateCcw } from "lucide-react";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import GradingPill from "@/components/ui/custom/GradingPill";
 import { aceSummary } from "@/lib/ace";
@@ -96,7 +96,7 @@ export default function ACEProfileSection({
                   }}
                 >
                   Retake Assessment
-                  <ArrowRight className="w-3 h-3" />
+                  <RotateCcw className="w-3 h-3" />
                 </Link>
               </>
             ) : (
