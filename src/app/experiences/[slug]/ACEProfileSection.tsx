@@ -79,9 +79,10 @@ export default function ACEProfileSection({
               /* Has profile — show summary + retake link */
               <>
                 {profileLabel && (
-                  <p className="text-[10px] uppercase tracking-widest font-semibold" style={{ color: "var(--text-muted)" }}>
-                    Your profile: <span className="text-white/50 normal-case tracking-normal font-normal">{profileLabel}</span>
-                  </p>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest font-semibold mb-1" style={{ color: "var(--text-tertiary)" }}>Your ACE Profile</p>
+                    <p className="text-white font-bold text-lg tracking-tight">{profileLabel}</p>
+                  </div>
                 )}
                 <p className="text-sm leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
                   {aceSummary(ace, adventureName)}
