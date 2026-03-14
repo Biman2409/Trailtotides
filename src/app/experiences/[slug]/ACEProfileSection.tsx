@@ -110,8 +110,8 @@ export default function ACEProfileSection({
             <div
               className="w-full rounded-xl px-5 py-4 flex flex-col sm:flex-row items-center justify-between gap-4"
               style={{
-                background: "rgba(167,139,250,0.06)",
-                border: "1px solid rgba(167,139,250,0.15)",
+                background: "rgba(255,81,0,0.06)",
+                border: "1px solid rgba(255,81,0,0.15)",
               }}
             >
               <div>
@@ -123,7 +123,7 @@ export default function ACEProfileSection({
               <Link
                 href="/matchmaker"
                 className="flex items-center gap-1.5 whitespace-nowrap text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-all hover:brightness-110 hover:-translate-y-0.5 shrink-0"
-                style={{ background: "linear-gradient(135deg, #a78bfa, #7c3aed)" }}
+                style={{ background: "#ff5100" }}
               >
                 Take Assessment
                 <ArrowRight className="w-3.5 h-3.5" />

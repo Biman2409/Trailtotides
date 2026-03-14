@@ -35,15 +35,15 @@ export default function RealityCheck({ adventure }: Props) {
       <div
         className="rounded-2xl overflow-hidden"
         style={{
-          background: "linear-gradient(135deg, rgba(167,139,250,0.08) 0%, rgba(124,58,237,0.05) 100%)",
-          border: "1px solid rgba(167,139,250,0.15)",
+          background: "rgba(255,81,0,0.05)",
+          border: "1px solid rgba(255,81,0,0.15)",
         }}
       >
         <div className="px-5 pt-5 pb-5">
           <div className="flex items-center gap-3 mb-3">
             <div
               className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-              style={{ background: "rgba(167,139,250,0.15)", color: "#a78bfa" }}
+              style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}
             >
               <Compass className="w-5 h-5" />
             </div>
@@ -58,7 +58,7 @@ export default function RealityCheck({ adventure }: Props) {
           <Link
             href="/matchmaker"
             className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-white text-xs font-semibold transition-all hover:brightness-110 hover:-translate-y-0.5"
-            style={{ background: "linear-gradient(135deg, #a78bfa, #7c3aed)" }}
+            style={{ background: "#ff5100" }}
           >
             Take Assessment
             <ArrowRight className="w-3 h-3" />
