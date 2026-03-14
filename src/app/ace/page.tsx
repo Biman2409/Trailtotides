@@ -33,7 +33,7 @@ const AXES = [
 ];
 
 const SCALE = [
-  { level: 0, label: "Not Relevant", sub: "Axis doesn't apply",   color: "rgba(255,255,255,0.2)" },
+  { level: 0, label: "Not Relevant", sub: "Axis doesn't apply",   color: "rgba(255,255,255,0.08)" },
   { level: 1, label: "Very Low",     sub: "Minimal demand",        color: "#22c55e" },
   { level: 2, label: "Low",          sub: "Light conditioning",    color: "#84cc16" },
   { level: 3, label: "Moderate",     sub: "Regular training",      color: "#eab308" },
