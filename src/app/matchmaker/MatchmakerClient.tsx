@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import ACEBadge from "@/components/ui/custom/ACEBadge";
 import ACERadar from "@/components/ui/custom/ACERadar";
-import { saveProfile, loadProfile, clearProfile } from "@/lib/matchmaker";
+import { saveProfile, loadProfile, clearProfile, saveProfileToServer, loadProfileFromServer } from "@/lib/matchmaker";
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
 import { getACE } from "@/lib/ace";
 
@@ -639,10 +639,12 @@ export default function MatchmakerClient() {
 
   // Auto-load previous result from localStorage
   useEffect(() => {
-    const saved = loadProfile();
-    if (saved?.ace) {
-      setResult(buildResult(saved.ace as unknown as Record<string, number>));
-    }
+    // Try server first (logged-in users), fall back to localStorage
+    loadProfileFromServer().then((saved) => {
+      if (saved?.ace) {
+        setResult(buildResult(saved.ace as unknown as Record<string, number>));
+      }
+    });
   }, []);
 
   const currentQ = QUESTIONS[stepIndex];
@@ -665,7 +667,9 @@ export default function MatchmakerClient() {
       avgScore >= 2.2 ? "Mountain Adventurer" :
       avgScore >= 1.5 ? "Trail Trekker" :
       "Beginner Explorer";
-    saveProfile({ ace: userAxes, label, summary: "" });
+    const profile = { ace: userAxes, label, summary: "" };
+    saveProfile(profile);
+    saveProfileToServer(profile); // persist for logged-in users
 
     setResult(buildResult(userAxes));
     setLoading(false);

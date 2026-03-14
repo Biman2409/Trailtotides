@@ -205,6 +205,34 @@ export function clearProfile(): void {
   try { localStorage.removeItem(STORAGE_KEY); } catch {}
 }
 
+// ─── Server sync helpers ───────────────────────────────────────────────────────
+
+/** Save profile to Supabase (fire-and-forget, only for logged-in users) */
+export async function saveProfileToServer(profile: StoredProfile): Promise<void> {
+  try {
+    await fetch("/api/ace-profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(profile),
+    });
+  } catch {}
+}
+
+/** Load profile from Supabase, falling back to localStorage */
+export async function loadProfileFromServer(): Promise<StoredProfile | null> {
+  try {
+    const res = await fetch("/api/ace-profile");
+    if (!res.ok) return loadProfile();
+    const { profile } = await res.json();
+    if (profile?.ace) {
+      // Sync to localStorage so offline reads work
+      saveProfile(profile as StoredProfile);
+      return profile as StoredProfile;
+    }
+  } catch {}
+  return loadProfile();
+}
+
 // ─── Legacy ERT gap (kept for RealityCheck backward compat) ───────────────────
 
 export interface ErtGap {
