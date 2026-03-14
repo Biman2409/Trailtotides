@@ -177,7 +177,7 @@ export default async function ExperiencePage({ params }: Props) {
   const ace = getACE(adventure);
   const altM = adventure.altitude ? parseFloat(adventure.altitude.replace(/[^0-9.]/g, "")) : 0;
   const showAltitudeWarning = altM >= 4200 || ace.altitude >= 4;
-  const showIsolationWarning = ace.nerve >= 5;
+  const showIsolationWarning = ace.nerve >= 5 || ace.focus >= 5;
   const showTechnicalWarning = ace.strength >= 5 || ace.agility >= 5;
 
   const supabase = await createClient();
