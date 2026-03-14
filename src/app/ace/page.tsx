@@ -82,9 +82,29 @@ export default function ACEPage() {
                 The <span className="text-[#ff5100]">ACE</span> Rating System
               </h1>
 
-              <p className="text-white/55 text-base leading-relaxed mb-10">
-                ACE rates every adventure across <span className="text-white font-semibold">eight axes</span> — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you show up prepared, not surprised.
+              <p className="text-white/55 text-base leading-relaxed mb-5">
+                ACE rates every adventure across <span className="text-white font-semibold">eight axes</span> — so you show up prepared, not surprised.
               </p>
+              <div className="flex flex-wrap gap-2 mb-10">
+                {[
+                  { abbr: "STA", key: "stamina",  color: "#f97316" },
+                  { abbr: "PWR", key: "power",    color: "#eab308" },
+                  { abbr: "STR", key: "strength", color: "#84cc16" },
+                  { abbr: "AGI", key: "agility",  color: "#22d3ee" },
+                  { abbr: "WAT", key: "water",    color: "#3b82f6" },
+                  { abbr: "ALT", key: "altitude", color: "#a78bfa" },
+                  { abbr: "NRV", key: "nerve",    color: "#f43f5e" },
+                  { abbr: "FOC", key: "focus",    color: "#10b981" },
+                ].map(({ abbr, color }) => (
+                  <span
+                    key={abbr}
+                    className="px-3 py-1 rounded-full text-[11px] font-bold tracking-widest border"
+                    style={{ background: `${color}12`, borderColor: `${color}30`, color }}
+                  >
+                    {abbr}
+                  </span>
+                ))}
+              </div>
 
             </div>
 
