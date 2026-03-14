@@ -32,11 +32,32 @@ export default async function AdminPage() {
     .select("*")
     .order("created_at", { ascending: false });
 
-  // Fetch story submissions
-  const { data: storySubmissions } = await adminClient
-    .from("story_submissions")
-    .select("*")
-    .order("created_at", { ascending: false });
+  // Fetch story submissions from Storage bucket
+  let storySubmissions: Record<string, unknown>[] = [];
+  try {
+    const { data: files } = await adminClient.storage
+      .from("story-submissions")
+      .list("", { limit: 200, sortBy: { column: "created_at", order: "desc" } });
 
-  return <AdminDashboardClient profiles={profiles ?? []} currentUserId={user.id} messages={messages ?? []} storySubmissions={storySubmissions ?? []} />;
+    if (files && files.length > 0) {
+      const downloads = await Promise.all(
+        files.map(async (file) => {
+          const { data } = await adminClient.storage
+            .from("story-submissions")
+            .download(file.name);
+          if (!data) return null;
+          const text = await data.text();
+          return JSON.parse(text);
+        })
+      );
+      storySubmissions = downloads.filter(Boolean);
+      storySubmissions.sort((a, b) =>
+        new Date(b.created_at as string).getTime() - new Date(a.created_at as string).getTime()
+      );
+    }
+  } catch {
+    // bucket may not exist yet
+  }
+
+  return <AdminDashboardClient profiles={profiles ?? []} currentUserId={user.id} messages={messages ?? []} storySubmissions={storySubmissions} />;
 }

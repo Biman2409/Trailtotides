@@ -30,7 +30,6 @@ export async function POST(req: NextRequest) {
 
     if (user) {
       email = user.email ?? null;
-      // Fetch phone from profiles table
       const adminClient = await createAdminClient();
       const { data: profile } = await adminClient
         .from("profiles")
@@ -42,7 +41,9 @@ export async function POST(req: NextRequest) {
 
     const adminClient = await createAdminClient();
 
-    const { error } = await adminClient.from("story_submissions").insert({
+    // Build submission object
+    const submission = {
+      id: crypto.randomUUID(),
       title,
       excerpt,
       body: storyBody,
@@ -55,10 +56,22 @@ export async function POST(req: NextRequest) {
       region,
       hero_image_url: heroImageUrl || null,
       status: "pending",
-    });
+      created_at: new Date().toISOString(),
+    };
+
+    // Store as JSON file in Supabase Storage bucket "story-submissions"
+    const fileName = `${submission.created_at.replace(/[:.]/g, "-")}_${submission.id}.json`;
+    const fileContent = JSON.stringify(submission, null, 2);
+
+    const { error } = await adminClient.storage
+      .from("story-submissions")
+      .upload(fileName, new Blob([fileContent], { type: "application/json" }), {
+        contentType: "application/json",
+        upsert: false,
+      });
 
     if (error) {
-      console.error("story_submissions insert error:", error);
+      console.error("story submission storage error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
