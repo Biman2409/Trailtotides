@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import ACEBadge from "@/components/ui/custom/ACEBadge";
 import ACERadar from "@/components/ui/custom/ACERadar";
-import { saveProfile } from "@/lib/matchmaker";
+import { saveProfile, loadProfile, clearProfile } from "@/lib/matchmaker";
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
 import { getACE } from "@/lib/ace";
 
@@ -577,6 +577,58 @@ function AdventureSection({
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
+const TRAINING_TIPS: Record<string, string> = {
+  stamina:  "Build aerobic base with 3–4 weekly runs or hikes. Progress to back-to-back long days.",
+  power:    "Add interval training and steep hill repeats to develop explosive leg power.",
+  strength: "Weighted step-ups, squats and loaded carries will develop the strength needed.",
+  agility:  "Practice trail running on technical terrain; add balance and proprioception drills.",
+  water:    "Swim 2–3 times a week. Progress from pool to open water, then moving water.",
+  altitude: "Spend nights above 3,000m before attempting higher objectives. Acclimatise gradually.",
+  nerve:    "Exposure therapy on smaller heights — via ferrata and scrambling routes build tolerance.",
+  focus:    "Long mountain days with navigation challenges develop the sustained focus required.",
+};
+
+function buildResult(userAxes: Record<string, number>): AnalysisResult {
+  const enriched: EnrichedAdventure[] = ALL_ADVENTURES.map((adv) => {
+    const req = getACE(adv);
+    const axes = Object.keys(userAxes) as (keyof typeof userAxes)[];
+    const weakAxes = axes.filter(ax => req[ax as keyof typeof req] > 0 && userAxes[ax] < req[ax as keyof typeof req]);
+    const maxGap = weakAxes.reduce((max, ax) => Math.max(max, req[ax as keyof typeof req] - userAxes[ax]), 0);
+    const status: "IN_ZONE" | "STRETCH" | "RESTRICTED" =
+      maxGap === 0 ? "IN_ZONE" : maxGap <= 1 ? "STRETCH" : "RESTRICTED";
+    return {
+      id: adv.slug, slug: adv.slug, name: adv.name, heroImage: adv.heroImage,
+      state: adv.state, region: (adv.region ?? "") as string,
+      type: adv.type as string, difficulty: adv.difficulty as string,
+      altitude: adv.altitude, status, weakAxes, missingKeys: weakAxes,
+      analysis: "", requirements: req as unknown as Record<string, number>, riskLevel: maxGap,
+    };
+  });
+
+  const axisGapMap: Record<string, number> = {};
+  ALL_ADVENTURES.forEach(adv => {
+    const req = getACE(adv);
+    (Object.keys(userAxes) as string[]).forEach(ax => {
+      if (req[ax as keyof typeof req] > userAxes[ax]) {
+        axisGapMap[ax] = Math.max(axisGapMap[ax] ?? 0, req[ax as keyof typeof req] - userAxes[ax]);
+      }
+    });
+  });
+
+  const trainingPlan: TrainingItem[] = Object.entries(axisGapMap)
+    .filter(([, gap]) => gap > 0)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 4)
+    .map(([ax, gap]) => ({
+      axis: ax,
+      current_level: userAxes[ax],
+      required_level: userAxes[ax] + gap,
+      recommendation: TRAINING_TIPS[ax] ?? "Train consistently to improve this capability.",
+    }));
+
+  return { userAxes, adventures: enriched, trainingPlan };
+}
+
 export default function MatchmakerClient() {
   const [started, setStarted] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
@@ -585,6 +637,14 @@ export default function MatchmakerClient() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
 
+  // Auto-load previous result from localStorage
+  useEffect(() => {
+    const saved = loadProfile();
+    if (saved?.ace) {
+      setResult(buildResult(saved.ace as unknown as Record<string, number>));
+    }
+  }, []);
+
   const currentQ = QUESTIONS[stepIndex];
   const canAdvance = !!answers[currentQ.key];
 
@@ -592,86 +652,11 @@ export default function MatchmakerClient() {
     setLoading(true);
     setApiError(null);
 
-    // Answer → score: A=1, B=2, C=3, D=4, E=5
     const score = (key: string) => ({ A:1, B:2, C:3, D:4, E:5 }[finalAnswers[key] ?? "A"] ?? 1);
-
     const userAxes = {
-      stamina:  score("Q1"),
-      power:    score("Q2"),
-      strength: score("Q3"),
-      agility:  score("Q4"),
-      water:    score("Q5"),
-      altitude: score("Q6"),
-      nerve:    score("Q7"),
-      focus:    score("Q8"),
+      stamina: score("Q1"), power: score("Q2"), strength: score("Q3"), agility: score("Q4"),
+      water: score("Q5"), altitude: score("Q6"), nerve: score("Q7"), focus: score("Q8"),
     };
-
-    // Match adventures algorithmically
-    const enriched: EnrichedAdventure[] = ALL_ADVENTURES.map((adv) => {
-      const req = getACE(adv);
-      const axes = Object.keys(userAxes) as (keyof typeof userAxes)[];
-      const weakAxes = axes.filter(ax => req[ax] > 0 && userAxes[ax] < req[ax]);
-      const maxGap = weakAxes.reduce((max, ax) => Math.max(max, req[ax] - userAxes[ax]), 0);
-
-      const status: "IN_ZONE" | "STRETCH" | "RESTRICTED" =
-        maxGap === 0 ? "IN_ZONE" :
-        maxGap <= 1  ? "STRETCH" :
-                       "RESTRICTED";
-
-      return {
-        id: adv.slug,
-        slug: adv.slug,
-        name: adv.name,
-        heroImage: adv.heroImage,
-        state: adv.state,
-        region: (adv.region ?? "") as string,
-        type: adv.type as string,
-        difficulty: adv.difficulty as string,
-        altitude: adv.altitude,
-        status,
-        weakAxes,
-        missingKeys: weakAxes,
-        analysis: "",
-        requirements: req as unknown as Record<string, number>,
-        riskLevel: maxGap,
-      };
-    });
-
-    // Training plan: unique axes where user is weakest
-    const allWeakAxes = enriched
-      .filter(a => a.status !== "RESTRICTED")
-      .flatMap(a => a.weakAxes);
-    const axisGapMap: Record<string, number> = {};
-    ALL_ADVENTURES.forEach(adv => {
-      const req = getACE(adv);
-      (Object.keys(userAxes) as (keyof typeof userAxes)[]).forEach(ax => {
-        if (req[ax] > userAxes[ax]) {
-          axisGapMap[ax] = Math.max(axisGapMap[ax] ?? 0, req[ax] - userAxes[ax]);
-        }
-      });
-    });
-
-    const TRAINING_TIPS: Record<string, string> = {
-      stamina:  "Build aerobic base with 3–4 weekly runs or hikes. Progress to back-to-back long days.",
-      power:    "Add interval training and steep hill repeats to develop explosive leg power.",
-      strength: "Weighted step-ups, squats and loaded carries will develop the strength needed.",
-      agility:  "Practice trail running on technical terrain; add balance and proprioception drills.",
-      water:    "Swim 2–3 times a week. Progress from pool to open water, then moving water.",
-      altitude: "Spend nights above 3,000m before attempting higher objectives. Acclimatise gradually.",
-      nerve:    "Exposure therapy on smaller heights — via ferrata and scrambling routes build tolerance.",
-      focus:    "Long mountain days with navigation challenges develop the sustained focus required.",
-    };
-
-    const trainingPlan: TrainingItem[] = Object.entries(axisGapMap)
-      .filter(([, gap]) => gap > 0)
-      .sort(([, a], [, b]) => b - a)
-      .slice(0, 4)
-      .map(([ax, gap]) => ({
-        axis: ax,
-        current_level: (userAxes as Record<string, number>)[ax],
-        required_level: (userAxes as Record<string, number>)[ax] + gap,
-        recommendation: TRAINING_TIPS[ax] ?? "Train consistently to improve this capability.",
-      }));
 
     const avgScore = Object.values(userAxes).reduce((a, b) => a + b, 0) / 8;
     const label =
@@ -682,7 +667,7 @@ export default function MatchmakerClient() {
       "Beginner Explorer";
     saveProfile({ ace: userAxes, label, summary: "" });
 
-    setResult({ userAxes, adventures: enriched, trainingPlan });
+    setResult(buildResult(userAxes));
     setLoading(false);
   }
 
@@ -696,6 +681,7 @@ export default function MatchmakerClient() {
   }
 
   function reset() {
+    clearProfile();
     setStarted(false);
     setStepIndex(0);
     setAnswers({});
