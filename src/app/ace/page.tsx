@@ -250,10 +250,6 @@ export default function ACEPage() {
 
       {/* ── CTA ───────────────────────────────────────────────────────── */}
       <section className="py-24 px-6 border-t border-white/5 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5" style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }} />
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,81,0,0.12) 0%, transparent 70%)" }} />
 
         <div className="max-w-3xl mx-auto text-center relative">
