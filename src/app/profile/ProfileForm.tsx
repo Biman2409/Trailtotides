@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { updateProfile, changePassword } from "./actions";
 import { loadProfile } from "@/lib/matchmaker";
+import { ACE_AXIS_COLORS, ACE_AXES } from "@/lib/ace";
 
 type Profile = {
   id: string;
@@ -319,12 +320,20 @@ function AdventureProfileSection() {
           <p className="text-white/40 text-xs mt-1 leading-snug">{tier.desc}</p>
         </div>
         <div className="flex items-center gap-1.5 flex-shrink-0">
-          {([["E", stored.ert.e, "#f97316"], ["R", stored.ert.r, "#ef4444"], ["T", stored.ert.t, "#8b5cf6"]] as const).map(([label, value, color]) => (
-            <div key={label} className="flex flex-col items-center bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5">
-              <span className="text-[9px] font-bold text-white/40 uppercase">{label}</span>
-              <span className="text-base font-bold" style={{ color }}>{value}</span>
-            </div>
-          ))}
+          {(ACE_AXES as unknown as string[])
+            .map((k) => ({ key: k, val: stored.ace[k as keyof typeof stored.ace] as number }))
+            .filter(({ val }) => val > 0)
+            .sort((a, b) => b.val - a.val)
+            .slice(0, 3)
+            .map(({ key, val }) => {
+              const color = ACE_AXIS_COLORS[key as keyof typeof ACE_AXIS_COLORS] ?? "#ff5100";
+              return (
+                <div key={key} className="flex flex-col items-center bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5">
+                  <span className="text-[9px] font-bold text-white/40 uppercase">{key.slice(0, 3)}</span>
+                  <span className="text-base font-bold" style={{ color }}>{val}</span>
+                </div>
+              );
+            })}
         </div>
       </div>
 
@@ -333,9 +342,9 @@ function AdventureProfileSection() {
       )}
 
       <div className="flex flex-wrap gap-2">
-        <Link href={`/explore?maxE=${stored.ert.e}&maxR=${stored.ert.r}&maxT=${stored.ert.t}`}
+        <Link href="/matchmaker"
           className="inline-flex items-center gap-1.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-4 py-2 rounded-xl text-xs transition-all group">
-          Explore matching treks <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          Find matching adventures <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </Link>
         <Link href="/matchmaker"
           className="inline-flex items-center gap-1.5 border border-white/10 hover:border-white/20 text-white/50 hover:text-white font-medium px-4 py-2 rounded-xl text-xs transition-all">
