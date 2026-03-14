@@ -2,7 +2,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Brain } from "lucide-react";
+import { ArrowRight, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Brain, Gauge } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { getACE, ACE_AXIS_COLORS, ACE_DOMAINS } from "@/lib/ace";
 import ACEBadge from "@/components/ui/custom/ACEBadge";
@@ -44,7 +44,7 @@ const SCALE = [
 const EXAMPLE_SLUGS = ["kedarkantha-trek", "rupin-pass", "stok-kangri"];
 
 const DOMAIN_ICONS: Record<string, React.ReactNode> = {
-  Engine:   <Flame    className="w-5 h-5" />,
+  Engine:   <Gauge    className="w-5 h-5" />,
   Chassis:  <Dumbbell className="w-5 h-5" />,
   Elements: <Waves    className="w-5 h-5" />,
   Mind:     <Brain    className="w-5 h-5" />,
