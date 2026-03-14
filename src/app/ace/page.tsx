@@ -110,7 +110,7 @@ export default function ACEPage() {
           <div className="mb-14">
             <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">Capability Domains</p>
             <h2 className="text-white text-4xl font-black tracking-tight">Four pillars of readiness.</h2>
-            <p className="text-white/35 text-base mt-2 max-w-xl">The eight axes are grouped into four biological domains. Every adventure activates a unique combination of them.</p>
+            <p className="text-white/35 text-base mt-2 max-w-xl">The eight axes are grouped into four domains.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
