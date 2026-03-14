@@ -75,12 +75,12 @@ export default function ACEPage() {
 
             {/* Left: copy */}
             <div className="flex-1 max-w-2xl">
-              <h1 className="text-5xl lg:text-7xl font-black text-white tracking-tight leading-[0.95] mb-6">
-                The <span className="text-[#ff5100]">ACE</span> Rating System
-              </h1>
               <p className="text-white/30 text-sm font-semibold tracking-[0.25em] uppercase mb-7">
                 Adventure Capability Engine
               </p>
+              <h1 className="text-5xl lg:text-7xl font-black text-white tracking-tight leading-[0.95] mb-6">
+                The <span className="text-[#ff5100]">ACE</span> Rating System
+              </h1>
 
               <p className="text-white/55 text-base leading-relaxed mb-10">
                 ACE rates every adventure across <span className="text-white font-semibold">eight axes</span> — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you show up prepared, not surprised.
