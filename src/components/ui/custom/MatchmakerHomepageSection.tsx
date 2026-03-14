@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowRight, Compass, Footprints, Mountain, CloudSnow, Flag, RotateCcw,
+  Flame, Zap,
 } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { getACE, ACE_AXIS_COLORS, ACE_AXES } from "@/lib/ace";
