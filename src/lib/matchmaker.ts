@@ -47,12 +47,14 @@ export interface Upsell {
 
 // ─── Tier labels ──────────────────────────────────────────────────────────────
 
+// Total ACE score: 8 axes × 1–5 each = range 8–40
+// Rank 1 = 8, Rank 2 = 16, Rank 3 = 24, Rank 4 = 32, Rank 5 = 40
 function aceToLabel(ace: ACE): string {
-  const avg = Object.values(ace).reduce((a, b) => a + b, 0) / 8;
-  if (avg >= 4.2) return "Expedition Athlete";
-  if (avg >= 3.2) return "High-Altitude Adventurer";
-  if (avg >= 2.2) return "Mountain Adventurer";
-  if (avg >= 1.5) return "Trail Trekker";
+  const total = Object.values(ace).reduce((a, b) => a + b, 0);
+  if (total >= 40) return "Expedition Athlete";
+  if (total >= 32) return "High-Altitude Adventurer";
+  if (total >= 24) return "Mountain Adventurer";
+  if (total >= 16) return "Trail Trekker";
   return "Beginner Explorer";
 }
 
