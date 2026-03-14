@@ -39,14 +39,9 @@ function MiniAdventureCard({ adventure }: { adventure: (typeof adventures)[numbe
         <p className="text-white text-xs font-semibold leading-tight line-clamp-2 group-hover:text-[#ff5100] transition-colors">
           {adventure.name}
         </p>
-        <div className="flex flex-wrap gap-1 mt-1.5">
-          {adventure.state && (
-            <span className="px-1.5 py-0.5 rounded-md bg-white/8 text-white/50 text-[9px] font-medium truncate max-w-[80px]">{adventure.state}</span>
-          )}
-          {adventure.type && (
-            <span className="px-1.5 py-0.5 rounded-md bg-[#ff5100]/15 text-[#ff5100]/80 text-[9px] font-medium">{adventure.type}</span>
-          )}
-        </div>
+        {adventure.type && (
+          <span className="inline-block mt-1.5 px-1.5 py-0.5 rounded-md bg-[#ff5100]/15 text-[#ff5100]/80 text-[9px] font-medium">{adventure.type}</span>
+        )}
       </div>
     </Link>
   );
