@@ -134,36 +134,43 @@ export default function ACEProfileSection({
         </div>
       </div>
 
-      {/* Safety warning banners */}
-      <div className="space-y-2.5">
-        {showAltitudeWarning && (
-          <div className="flex gap-3 rounded-xl px-4 py-3.5" style={{ background: "rgba(234,179,8,0.07)", border: "1px solid rgba(234,179,8,0.22)" }}>
-            <span className="text-yellow-400 shrink-0 mt-0.5 text-base">⚠</span>
-            <div>
-              <p className="text-xs font-bold text-yellow-400 mb-0.5">High Risk of Altitude Sickness</p>
-              <p className="text-xs text-yellow-400/55 leading-relaxed">Proper acclimatization is required. Do not exceed 300–500m of altitude gain per day above 3,000m.</p>
-            </div>
+      {/* Safety alerts — only render if any exist */}
+      {(showAltitudeWarning || showIsolationWarning || showTechnicalWarning) && (
+        <div className="mt-6 pt-6" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">
+            Alerts
+          </p>
+          <div className="space-y-2.5">
+            {showAltitudeWarning && (
+              <div className="flex gap-3 rounded-xl px-4 py-3.5" style={{ background: "rgba(234,179,8,0.07)", border: "1px solid rgba(234,179,8,0.22)" }}>
+                <span className="text-yellow-400 shrink-0 mt-0.5 text-base">⚠</span>
+                <div>
+                  <p className="text-xs font-bold text-yellow-400 mb-0.5">High Risk of Altitude Sickness</p>
+                  <p className="text-xs text-yellow-400/55 leading-relaxed">Proper acclimatization is required. Do not exceed 300–500m of altitude gain per day above 3,000m.</p>
+                </div>
+              </div>
+            )}
+            {showIsolationWarning && (
+              <div className="flex gap-3 rounded-xl px-4 py-3.5" style={{ background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.2)" }}>
+                <span className="text-red-400 shrink-0 mt-0.5 text-base">⚠</span>
+                <div>
+                  <p className="text-xs font-bold text-red-400 mb-0.5">Extreme Exposure Environment</p>
+                  <p className="text-xs text-red-400/55 leading-relaxed">Rescue may be delayed. Carry a satellite communicator and travel with a registered guide.</p>
+                </div>
+              </div>
+            )}
+            {showTechnicalWarning && (
+              <div className="flex gap-3 rounded-xl px-4 py-3.5" style={{ background: "rgba(139,92,246,0.07)", border: "1px solid rgba(139,92,246,0.2)" }}>
+                <span className="text-violet-400 shrink-0 mt-0.5 text-base">⚠</span>
+                <div>
+                  <p className="text-xs font-bold text-violet-400 mb-0.5">Mountaineering Route</p>
+                  <p className="text-xs text-violet-400/55 leading-relaxed">Ice axe, crampons, and glacier travel experience are essential. Do not attempt without proper training.</p>
+                </div>
+              </div>
+            )}
           </div>
-        )}
-        {showIsolationWarning && (
-          <div className="flex gap-3 rounded-xl px-4 py-3.5" style={{ background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.2)" }}>
-            <span className="text-red-400 shrink-0 mt-0.5 text-base">⚠</span>
-            <div>
-              <p className="text-xs font-bold text-red-400 mb-0.5">Extreme Exposure Environment</p>
-              <p className="text-xs text-red-400/55 leading-relaxed">Rescue may be delayed. Carry a satellite communicator and travel with a registered guide.</p>
-            </div>
-          </div>
-        )}
-        {showTechnicalWarning && (
-          <div className="flex gap-3 rounded-xl px-4 py-3.5" style={{ background: "rgba(139,92,246,0.07)", border: "1px solid rgba(139,92,246,0.2)" }}>
-            <span className="text-violet-400 shrink-0 mt-0.5 text-base">⚠</span>
-            <div>
-              <p className="text-xs font-bold text-violet-400 mb-0.5">Mountaineering Route</p>
-              <p className="text-xs text-violet-400/55 leading-relaxed">Ice axe, crampons, and glacier travel experience are essential. Do not attempt without proper training.</p>
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   );
 }
