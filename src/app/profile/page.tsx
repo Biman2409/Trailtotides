@@ -4,6 +4,7 @@ import { Calendar, Shield, Camera, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import ProfileForm from "./ProfileForm";
+import AdventureProfileSidebar from "./AdventureProfileSidebar";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -115,6 +116,7 @@ export default async function ProfilePage() {
               </Link>
             )}
 
+            {profile.role !== "admin" && <AdventureProfileSidebar />}
           </div>
 
           {/* Main Content / Form */}
