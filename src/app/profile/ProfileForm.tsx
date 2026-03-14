@@ -334,10 +334,6 @@ function AdventureProfileSection() {
         </div>
       </div>
 
-      {stored.summary && (
-        <p className="text-white/50 text-xs leading-relaxed mb-5 border-l-2 border-white/10 pl-3">{stored.summary}</p>
-      )}
-
       <div className="flex flex-wrap gap-2">
         <Link href="/matchmaker"
           className="inline-flex items-center gap-1.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-4 py-2 rounded-xl text-xs transition-all group">
@@ -357,6 +353,7 @@ export default function ProfileForm({ profile }: { profile: Profile }) {
     <div className="space-y-6">
       <AccountDetails profile={profile} />
       <ChangePasswordSection />
+      <AdventureProfileSection />
     </div>
   );
 }
