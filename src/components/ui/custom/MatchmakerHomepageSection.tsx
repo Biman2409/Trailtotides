@@ -5,10 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowRight, Compass, Footprints, Mountain, CloudSnow, Flag, RotateCcw,
-  Flame, Zap, Dumbbell, Waves,
 } from "lucide-react";
 import { adventures } from "@/lib/data";
-import { getACE, ACE_AXIS_COLORS } from "@/lib/ace";
+import { getACE, ACE_AXIS_COLORS, ACE_AXES } from "@/lib/ace";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
 
 const TIER_INFO: Record<string, { color: string; icon: React.ReactNode; stars: number }> = {
@@ -84,14 +83,10 @@ export default function MatchmakerHomepageSection() {
   if (!mounted || !profile) return <DefaultCTA />;
 
   const tier = TIER_INFO[profile.label] ?? TIER_INFO["Trail Trekker"];
-  const matches = getMatchedAdventures(profile.ace, adventures).slice(0, 3);
+  const matches = getMatchedAdventures(profile.ace, adventures).slice(0, 6);
 
-  // Show 4 most relevant non-zero axes
-  const topAxes = (Object.entries(profile.ace) as [string, number][])
-    .filter(([, v]) => v > 0)
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 4)
-    .map(([k]) => k);
+  // All 8 axes in canonical order
+  const allAxes = ACE_AXES as unknown as string[];
 
   return (
     <section className="py-16 lg:py-32 px-5 lg:px-8 t-bg-surface border-t border-white/5">
@@ -122,9 +117,9 @@ export default function MatchmakerHomepageSection() {
             </div>
           </div>
 
-          {/* ACE axis pills */}
+          {/* ACE axis pills — all 8 */}
           <div className="flex items-center gap-2 flex-wrap">
-            {topAxes.map((axis) => (
+            {allAxes.map((axis) => (
               <AcePill key={axis} axis={axis} value={profile.ace[axis as keyof typeof profile.ace]} />
             ))}
           </div>
