@@ -61,7 +61,7 @@ const levelColors = ["#22d399", "#86efac", "#fbbf24", "#f97316", "#ef4444"];
 
 export default function ERTPage() {
   return (
-    <div className="min-h-screen bg-[#0e1420]">
+    <div className="min-h-screen">
       <Navbar />
 
       <main className="max-w-4xl mx-auto px-5 lg:px-8 pt-28 pb-24">

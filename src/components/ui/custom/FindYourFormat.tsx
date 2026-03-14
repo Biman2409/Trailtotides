@@ -94,7 +94,7 @@ export default function FindYourFormat() {
   const [openId, setOpenId] = useState<string | null>(null);
 
     return (
-      <section id="styles" className="py-24 lg:py-32 px-6 lg:px-8 bg-[#111820]">
+      <section id="styles" className="py-24 lg:py-32 px-6 lg:px-8 t-bg-page">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
             <div className="mb-12">

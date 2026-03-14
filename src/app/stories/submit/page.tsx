@@ -89,11 +89,11 @@ export default function SubmitStoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#111820]">
+    <div className="min-h-screen">
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-32 pb-16 px-6 lg:px-8 bg-[#1a1f2e] relative overflow-hidden">
+      <section className="pt-32 pb-16 px-6 lg:px-8 t-bg-surface2 relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-20"
           style={{

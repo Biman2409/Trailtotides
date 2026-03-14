@@ -56,7 +56,7 @@ export default function ACEPage() {
     .filter(Boolean) as typeof adventures;
 
   return (
-    <div className="min-h-screen bg-[#0a0e17]">
+    <div className="min-h-screen">
       <Navbar />
 
       {/* ── HERO ──────────────────────────────────────────────────────── */}
@@ -125,7 +125,7 @@ export default function ACEPage() {
 
 
       {/* ── THE EIGHT AXES ────────────────────────────────────────────── */}
-      <section className="py-24 px-6 border-t border-white/5" style={{ background: "rgba(255,255,255,0.015)" }}>
+      <section className="py-24 px-6 t-bg-surface" style={{ borderTop: "1px solid var(--border-subtle)" }}>
         <div className="max-w-6xl mx-auto">
           <div className="mb-14">
             <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">The Eight Axes</p>

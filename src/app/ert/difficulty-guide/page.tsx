@@ -130,7 +130,7 @@ export default function DifficultyGuidePage() {
     .filter(Boolean) as typeof adventures;
 
   return (
-    <div className="min-h-screen bg-[#fafaf8]">
+    <div className="min-h-screen t-bg-page">
       <Navbar />
 
       {/* ── HERO ──────────────────────────────────────────── */}

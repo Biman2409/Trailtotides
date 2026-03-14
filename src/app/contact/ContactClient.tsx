@@ -33,11 +33,11 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#111820]">
+    <div className="min-h-screen">
       <Navbar />
 
       {/* Header */}
-      <section className="pt-32 pb-16 px-6 lg:px-8 bg-[#1a1f2e]">
+      <section className="pt-32 pb-16 px-6 lg:px-8 t-bg-surface2">
         <div className="max-w-7xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
             Get in Touch
@@ -51,7 +51,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="py-16 lg:py-24 px-6 lg:px-8 bg-[#111820]">
+      <section className="py-16 lg:py-24 px-6 lg:px-8 t-bg-page">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-14">
 
           {/* Contact info sidebar */}
@@ -169,7 +169,7 @@ export default function ContactPage() {
                     name="topic"
                     value={form.topic}
                     onChange={handleChange}
-                    className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
+                    className="w-full t-bg-surface2 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
                   >
                     <option value="">Select a topic</option>
                     {TOPICS.map((t) => <option key={t} value={t}>{t}</option>)}

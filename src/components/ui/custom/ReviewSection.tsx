@@ -318,7 +318,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
               >
                 {/* Avatar + name + date */}
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 rounded-full bg-[#1a1f2e] flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-full t-bg-surface2 flex items-center justify-center shrink-0">
                     <span className="text-white text-xs font-bold uppercase">
                       {r.username.charAt(0)}
                     </span>

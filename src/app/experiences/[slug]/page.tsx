@@ -51,15 +51,15 @@ function OperatorCard({ op, verified }: { op: Operator; verified: boolean }) {
               border: "1px solid rgba(16,185,129,0.18)",
             }
           : {
-              background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.07)",
+              background: "var(--bg-card)",
+              border: "1px solid var(--border-subtle)",
             }
       }
     >
       <div className="flex items-start justify-between gap-2">
         <div>
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-white font-semibold text-sm leading-snug">{op.name}</span>
+            <span className="font-semibold text-sm leading-snug" style={{ color: "var(--text-primary)" }}>{op.name}</span>
             {verified ? (
               <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.12)", color: "#34d399", border: "1px solid rgba(16,185,129,0.2)" }}>
                 <ShieldCheck className="w-3 h-3" />Verified
@@ -78,8 +78,8 @@ function OperatorCard({ op, verified }: { op: Operator; verified: boolean }) {
           </div>
         </div>
         <div className="text-right shrink-0">
-          <div className="text-white/25 text-[10px] uppercase tracking-wide">From</div>
-          <div className="text-white font-bold text-base">{op.priceFrom}</div>
+          <div className="text-[10px] uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>From</div>
+          <div className="font-bold text-base" style={{ color: "var(--text-primary)" }}>{op.priceFrom}</div>
         </div>
       </div>
       <OperatorButton
@@ -93,8 +93,7 @@ function OperatorCard({ op, verified }: { op: Operator; verified: boolean }) {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4 flex items-center gap-2">
-      <span className="w-4 h-px bg-[#ff5100]/40 inline-block" />
+    <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4">
       {children}
     </p>
   );
@@ -116,7 +115,7 @@ function RelatedSection({ title, items, exploreHref }: { title: string; items: A
       </div>
       <div className="flex gap-5 overflow-x-auto pb-4 -mx-2 px-2 snap-x snap-mandatory no-scrollbar">
         {items.map((a) => (
-          <div key={a.id} className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-72 snap-start transition-all duration-300 hover:-translate-y-1.5" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+          <div key={a.id} className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-72 snap-start transition-all duration-300 hover:-translate-y-1.5" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
             <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
             <div className="relative h-48 overflow-hidden">
               <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
@@ -196,7 +195,7 @@ export default async function ExperiencePage({ params }: Props) {
     .slice(0, 6);
 
   return (
-    <div className="min-h-screen" style={{ background: "#080c14" }}>
+    <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
       <Navbar />
 
       {/* ── HERO ──────────────────────────────────────────────── */}
@@ -219,7 +218,7 @@ export default async function ExperiencePage({ params }: Props) {
         <Link
           href={`/explore?page=${explorePage}`}
           className="absolute top-24 left-6 lg:left-8 z-20 flex items-center gap-2 text-white/60 hover:text-white transition-all text-sm font-medium backdrop-blur-md px-4 py-2 rounded-full"
-          style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)" }}
+          style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}
         >
           <ChevronLeft className="w-4 h-4" />
           All Adventures
@@ -239,7 +238,7 @@ export default async function ExperiencePage({ params }: Props) {
                 {adventure.state}
               </Link>
             </div>
-            <h1 className="text-white text-5xl md:text-7xl font-semibold tracking-tight leading-[1.0] mb-5">
+            <h1 className="text-5xl md:text-7xl font-semibold tracking-tight leading-[1.0] mb-5" style={{ color: "#f0ede8" }}>
               {adventure.name}
             </h1>
             <p className="text-white/55 text-xl leading-relaxed max-w-xl font-light">
@@ -250,9 +249,9 @@ export default async function ExperiencePage({ params }: Props) {
       </section>
 
       {/* ── STATS STRIP ───────────────────────────────────────── */}
-      <section style={{ background: "rgba(255,255,255,0.025)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+      <section style={{ background: "var(--bg-surface)", borderBottom: "1px solid var(--border-subtle)" }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-stretch overflow-x-auto no-scrollbar divide-x" style={{ divideColor: "rgba(255,255,255,0.06)" }}>
+          <div className="flex items-stretch overflow-x-auto no-scrollbar divide-x" style={{ borderColor: "var(--border-subtle)" }}>
             {[
               { icon: <Clock className="w-4 h-4 text-[#ff5100]" />, label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
               ...(adventure.distance ? [{ icon: <Route className="w-4 h-4 text-emerald-400" />, label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
@@ -384,12 +383,12 @@ export default async function ExperiencePage({ params }: Props) {
                 className="rounded-2xl p-6 mb-4"
                 style={{
                   background: "linear-gradient(135deg, #0c1020 0%, #0f1520 100%)",
-                  border: "1px solid rgba(255,255,255,0.07)",
+                  border: "1px solid var(--border-subtle)",
                 }}
               >
                 <div className="flex flex-wrap items-center gap-8">
                   <ACERadar ace={ace} size={160} showLabels />
-                  <p className="flex-1 min-w-[160px] text-white/45 text-sm leading-relaxed">
+                  <p className="flex-1 min-w-[160px] text-sm leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
                     {aceSummary(ace, adventure.name)}
                   </p>
                 </div>
@@ -517,7 +516,7 @@ export default async function ExperiencePage({ params }: Props) {
                   <span
                     key={tag}
                     className="text-white/30 text-xs px-3 py-1.5 rounded-full transition-colors hover:text-white/50"
-                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
+                    style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}
                   >
                     #{tag}
                   </span>
@@ -533,12 +532,11 @@ export default async function ExperiencePage({ params }: Props) {
             <div
               className="rounded-2xl p-6"
               style={{
-                background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: "var(--bg-surface)",
+                border: "1px solid var(--border-subtle)",
               }}
             >
-              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-5 flex items-center gap-2">
-                <span className="w-4 h-px bg-[#ff5100]/40 inline-block" />
+              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-5">
                 At a Glance
               </p>
               <div className="space-y-3">
@@ -556,7 +554,7 @@ export default async function ExperiencePage({ params }: Props) {
                   ...(adventure.depth ? [{ label: "Max Depth", value: adventure.depth }] : []),
                   { label: "Group Size", value: adventure.groupSize },
                 ].map(({ label, value }) => (
-                  <div key={label} className="flex items-start justify-between gap-4 pb-3 last:pb-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                  <div key={label} className="flex items-start justify-between gap-4 pb-3 last:pb-0" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
                     <span className="text-white/30 text-xs shrink-0">{label}</span>
                     <span className="text-white/70 text-xs text-right leading-snug">{value}</span>
                   </div>
@@ -574,14 +572,14 @@ export default async function ExperiencePage({ params }: Props) {
             <Link
               href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
               className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-white/50 hover:text-white text-sm font-medium transition-all duration-200 hover:bg-white/5"
-              style={{ border: "1px solid rgba(255,255,255,0.08)" }}
+              style={{ border: "1px solid var(--border-subtle)" }}
             >
               More in {adventure.state}
             </Link>
             <Link
               href={`/explore?type=${encodeURIComponent(adventure.type)}`}
               className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-white/50 hover:text-white text-sm font-medium transition-all duration-200 hover:bg-white/5"
-              style={{ border: "1px solid rgba(255,255,255,0.08)" }}
+              style={{ border: "1px solid var(--border-subtle)" }}
             >
               More in {adventure.type}
             </Link>
@@ -594,8 +592,8 @@ export default async function ExperiencePage({ params }: Props) {
         <section
           className="py-20 px-6 lg:px-8"
           style={{
-            background: "rgba(255,255,255,0.015)",
-            borderTop: "1px solid rgba(255,255,255,0.05)",
+            background: "var(--bg-surface)",
+            borderTop: "1px solid var(--border-subtle)",
           }}
         >
           <div className="max-w-7xl mx-auto space-y-16">

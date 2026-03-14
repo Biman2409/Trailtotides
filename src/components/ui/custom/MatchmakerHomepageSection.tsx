@@ -94,7 +94,7 @@ export default function MatchmakerHomepageSection() {
     .map(([k]) => k);
 
   return (
-    <section className="py-16 lg:py-32 px-5 lg:px-8 bg-[#0f1420] border-t border-white/5">
+    <section className="py-16 lg:py-32 px-5 lg:px-8 t-bg-surface border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         <div className="max-w-2xl mb-10">
           <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
@@ -162,7 +162,7 @@ export default function MatchmakerHomepageSection() {
 
 function DefaultCTA() {
   return (
-    <section className="py-16 lg:py-32 px-5 lg:px-8 bg-[#0f1420] border-t border-white/5">
+    <section className="py-16 lg:py-32 px-5 lg:px-8 t-bg-surface border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         <div className="max-w-2xl">
           <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>

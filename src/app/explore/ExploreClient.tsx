@@ -150,11 +150,11 @@ export default function ExploreClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#111820]">
+    <div className="min-h-screen">
       <Navbar />
 
       {/* Page header */}
-      <div className="bg-[#1a1f2e] pt-28 pb-14 px-6 lg:px-8">
+      <div className="t-bg-surface pt-28 pb-14 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
           Discover
@@ -170,7 +170,7 @@ export default function ExploreClient() {
       </div>
 
       {/* Search + filter bar */}
-      <div className="sticky top-16 lg:top-20 z-40 bg-[#111820]/96 backdrop-blur-lg border-b border-white/10 shadow-sm">
+      <div className="sticky top-16 lg:top-20 z-40 t-bg-page/96 backdrop-blur-lg border-b border-white/10 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex items-center gap-4">
           {/* Search */}
           <div className="relative flex-1 max-w-md">
@@ -341,7 +341,7 @@ export default function ExploreClient() {
 
         {/* Filter panel */}
           {filtersOpen && (
-            <div className="border-t border-white/10 bg-[#111820] px-6 lg:px-8 py-6 max-h-[60vh] overflow-y-auto no-scrollbar">
+            <div className="border-t border-white/10 t-bg-page px-6 lg:px-8 py-6 max-h-[60vh] overflow-y-auto no-scrollbar">
               <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-8">
 
                   {/* Region */}
@@ -856,7 +856,7 @@ export default function ExploreClient() {
         <CompareAdventures />
 
         {/* Map CTA Section */}
-          <div className="bg-[#1a1f2e] mt-16 border-t border-white/5">
+          <div className="t-bg-surface mt-16 border-t border-white/5">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
                 <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">

@@ -113,11 +113,11 @@ export default function ListPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#111820]">
+    <div className="min-h-screen">
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-32 pb-20 px-6 lg:px-8 bg-[#1a1f2e] relative overflow-hidden">
+      <section className="pt-32 pb-20 px-6 lg:px-8 t-bg-surface2 relative overflow-hidden">
         <div
           className="absolute inset-0 opacity-20"
           style={{
@@ -155,7 +155,7 @@ export default function ListPage() {
       </section>
 
       {/* How it works */}
-      <section className="py-20 lg:py-28 px-6 lg:px-8 bg-[#111820]">
+      <section className="py-20 lg:py-28 px-6 lg:px-8 t-bg-page">
         <div className="max-w-7xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
             The Process
@@ -181,7 +181,7 @@ export default function ListPage() {
       </section>
 
       {/* Benefits */}
-      <section className="py-20 lg:py-28 px-6 lg:px-8 bg-[#1a1f2e] border-t border-white/6">
+      <section className="py-20 lg:py-28 px-6 lg:px-8 t-bg-surface2 border-t border-[var(--border-subtle)]">
         <div className="max-w-7xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
             Why List With Us
@@ -206,7 +206,7 @@ export default function ListPage() {
       </section>
 
       {/* Verification standards */}
-      <section className="py-20 lg:py-28 px-6 lg:px-8 bg-[#111820] border-t border-white/6">
+      <section className="py-20 lg:py-28 px-6 lg:px-8 t-bg-page border-t border-[var(--border-subtle)]">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
@@ -235,7 +235,7 @@ export default function ListPage() {
                 ))}
               </ul>
             </div>
-            <div className="bg-[#1a1f2e] rounded-3xl p-8 border border-white/8">
+            <div className="t-bg-surface2 rounded-3xl p-8 border border-white/8">
               <div className="flex items-center gap-3 mb-6">
                 <Mountain className="w-6 h-6 text-[#ff5100]" />
                 <span className="text-white font-semibold text-lg">Verification Tiers</span>
@@ -266,7 +266,7 @@ export default function ListPage() {
       </section>
 
       {/* Application form */}
-      <section id="apply" className="py-20 lg:py-28 px-6 lg:px-8 bg-[#1a1f2e] border-t border-white/6">
+      <section id="apply" className="py-20 lg:py-28 px-6 lg:px-8 t-bg-surface2 border-t border-[var(--border-subtle)]">
         <div className="max-w-3xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
             Apply
@@ -390,7 +390,7 @@ export default function ListPage() {
                       required
                       value={form.adventureType}
                       onChange={handleChange}
-                      className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
+                      className="w-full t-bg-surface2 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
                     >
                       <option value="">Select type</option>
                       {["Trekking","Biking","Cycling","Mountaineering","Rock Climbing","Jeep Safari","Camel Safari","Caving","Sandboarding","Urban Adventure","Diving","Kayaking","Skiing"].map(t => (
@@ -405,7 +405,7 @@ export default function ListPage() {
                       required
                       value={form.region}
                       onChange={handleChange}
-                      className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
+                      className="w-full t-bg-surface2 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
                     >
                       <option value="">Select region</option>
                       {["Himalayas","Western Ghats","Eastern Ghats","Desert","Coast","Islands","Northeast","Urban"].map(r => (
@@ -431,7 +431,7 @@ export default function ListPage() {
                       required
                       value={form.difficulty}
                       onChange={handleChange}
-                      className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
+                      className="w-full t-bg-surface2 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
                     >
                       <option value="">Select difficulty</option>
                       {["Beginner","Intermediate","Advanced","Expert","Extreme"].map(d => (
@@ -445,7 +445,7 @@ export default function ListPage() {
                       name="duration"
                       value={form.duration}
                       onChange={handleChange}
-                      className="w-full bg-[#1a1f2e] border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
+                      className="w-full t-bg-surface2 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
                     >
                       <option value="">Select duration</option>
                       {["Weekend","3–5 days","7+ days"].map(d => (

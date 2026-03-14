@@ -24,7 +24,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-[#05070a] text-white border-t border-white/[0.03] relative overflow-hidden">
+    <footer className="relative overflow-hidden" style={{ background: "var(--bg-page)", borderTop: "1px solid var(--border-subtle)", color: "var(--text-primary)" }}>
       {/* Subtle Gradient Accent */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/20 to-transparent" />
       
@@ -40,10 +40,10 @@ export default function Footer() {
                     <Mountain className="w-6 h-6 text-white" strokeWidth={3} />
                   </div>
                   <div className="flex flex-col">
-                        <span className="font-semibold text-[1.75rem] leading-none antialiased tracking-tight text-white group-hover:text-white transition-colors duration-500">
-                            <span className="font-black uppercase text-white">TRAIL</span>
-                            <span style={{fontFamily: "var(--font-cursive)"}} className="text-white/60 mx-1 text-[1.4rem] normal-case tracking-normal font-normal">to</span>
-                            <span className="font-black uppercase text-white">TIDES</span>
+                        <span className="font-semibold text-[1.75rem] leading-none antialiased tracking-tight transition-colors duration-500" style={{ color: "var(--text-primary)" }}>
+                            <span className="font-black uppercase">TRAIL</span>
+                            <span style={{fontFamily: "var(--font-cursive)", color: "var(--text-tertiary)"}} className="mx-1 text-[1.4rem] normal-case tracking-normal font-normal">to</span>
+                            <span className="font-black uppercase">TIDES</span>
                         </span>
                     </div>
                   </div>
@@ -65,7 +65,7 @@ export default function Footer() {
                       <li key={link.label}>
                         <Link 
                           href={link.href}
-                          className="text-[14px] font-bold text-white/35 hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]"
+                          className="text-[14px] font-bold hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]" style={{ color: "var(--text-tertiary)" }}
                         >
                           {link.label}
                         </Link>
@@ -87,7 +87,7 @@ export default function Footer() {
                       <li key={link.label}>
                         <Link 
                           href={link.href}
-                          className="text-[14px] font-bold text-white/35 hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]"
+                          className="text-[14px] font-bold hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]" style={{ color: "var(--text-tertiary)" }}
                         >
                           {link.label}
                         </Link>
@@ -106,7 +106,7 @@ export default function Footer() {
                   About Us
                 </h4>
                   <div className="max-w-md">
-                    <p className="text-white/45 text-[15px] font-medium leading-[1.8] tracking-wide">
+                    <p className="text-[15px] font-medium leading-[1.8] tracking-wide" style={{ color: "var(--text-tertiary)" }}>
                       We’re three IIM alumni united by one obsession: Adventure.
                       We couldn’t find a platform that made exploring adventures in India simpler — so we built it.
                     </p>
@@ -121,10 +121,11 @@ export default function Footer() {
                 <div className="flex flex-col gap-8">
                   <button
                     onClick={() => user ? setIsModalOpen(true) : window.location.href = "mailto:hello@trailtotides.com"}
-                    className="group flex items-center gap-3 bg-white/[0.015] border border-white/[0.04] hover:border-[#ff5100]/40 px-5 py-3 rounded-2xl w-fit transition-all duration-500 hover:bg-white/[0.035] shadow-lg shadow-black/5"
+                    className="group flex items-center gap-3 px-5 py-3 rounded-2xl w-fit transition-all duration-500"
+                    style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}
                   >
-                    <Mail className="w-4 h-4 text-white/15 group-hover:text-[#ff5100] transition-colors duration-300 shrink-0" />
-                    <span className="text-[12px] font-bold text-white/35 group-hover:text-white transition-colors duration-300 tracking-[0.1em]">
+                    <Mail className="w-4 h-4 group-hover:text-[#ff5100] transition-colors duration-300 shrink-0" style={{ color: "var(--text-muted)" }} />
+                    <span className="text-[12px] font-bold group-hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]" style={{ color: "var(--text-tertiary)" }}>
                       hello@trailtotides.com
                     </span>
                   </button>
@@ -154,7 +155,7 @@ export default function Footer() {
           </div>
 
         {/* Brand Bottom Bar */}
-        <div className="mt-12 lg:mt-20 pt-8 lg:pt-10 border-t border-white/[0.03] flex flex-col items-center justify-center gap-4 relative z-10 text-[10px] font-bold tracking-[0.15em] lg:tracking-[0.2em] text-white/20 uppercase text-center">
+        <div className="mt-12 lg:mt-20 pt-8 lg:pt-10 flex flex-col items-center justify-center gap-4 relative z-10 text-[10px] font-bold tracking-[0.15em] lg:tracking-[0.2em] uppercase text-center" style={{ borderTop: "1px solid var(--border-subtle)", color: "var(--text-muted)" }}>
                 <p>© 2026 <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ff5100] to-[#ff8c47]">TRAIL</span> <span style={{fontFamily: "var(--font-cursive)"}} className="text-white/60 text-[13px] normal-case tracking-normal font-normal">to</span> <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#3b82f6] to-[#60a5fa]">TIDES</span>. DESIGNED FOR EXPLORERS BY EXPLORERS</p>
         </div>
       </div>

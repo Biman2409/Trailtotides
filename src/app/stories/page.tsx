@@ -35,9 +35,9 @@ export default function StoriesPage() {
 
   if (!featured) {
     return (
-      <div className="min-h-screen bg-[#111820]">
+      <div className="min-h-screen">
         <Navbar />
-        <section className="pt-32 pb-16 px-6 lg:px-8 bg-[#1a1f2e]">
+        <section className="pt-32 pb-16 px-6 lg:px-8 t-bg-surface2">
           <div className="max-w-7xl mx-auto">
             <h1 className="text-white text-5xl lg:text-7xl font-semibold tracking-tight leading-none mb-4">
               Voices from the Edge
@@ -53,11 +53,11 @@ export default function StoriesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#111820]">
+    <div className="min-h-screen">
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-32 pb-16 px-6 lg:px-8 bg-[#1a1f2e]">
+      <section className="pt-32 pb-16 px-6 lg:px-8 t-bg-surface2">
         <div className="max-w-7xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
             From the Trails
@@ -72,7 +72,7 @@ export default function StoriesPage() {
       </section>
 
       {/* Featured story */}
-      <section className="px-6 lg:px-8 -mt-1 bg-[#1a1f2e] pb-16">
+      <section className="px-6 lg:px-8 -mt-1 t-bg-surface2 pb-16">
         <div className="max-w-7xl mx-auto">
           <Link href={`/stories/${featured.slug}`} className="group block">
             <div className="relative h-[420px] lg:h-[540px] rounded-3xl overflow-hidden">

@@ -51,10 +51,10 @@ const SECTIONS = [
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-[#111820]">
+    <div className="min-h-screen">
       <Navbar />
 
-      <section className="pt-32 pb-14 px-6 lg:px-8 bg-[#1a1f2e]">
+      <section className="pt-32 pb-14 px-6 lg:px-8 t-bg-surface2">
         <div className="max-w-3xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Legal</p>
           <h1 className="text-white text-5xl font-bold tracking-tight mb-4">Terms of Use</h1>

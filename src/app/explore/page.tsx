@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 
 export default function ExplorePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#111820]" />}>
+    <Suspense fallback={<div className="min-h-screen" />}>
       <ExploreClient />
     </Suspense>
   );

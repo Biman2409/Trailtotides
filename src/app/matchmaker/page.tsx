@@ -25,7 +25,7 @@ export default function MatchmakerPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-[#0f1420]">
+      <main className="min-h-screen">
         <MatchmakerClient />
       </main>
       <Footer />

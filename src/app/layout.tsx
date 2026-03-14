@@ -72,8 +72,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-        <body className={`${dmSans.variable} ${greatVibes.variable} antialiased`}>
+    <html lang="en" style={{ colorScheme: "dark light" }}>
+        <body className={`${dmSans.variable} ${greatVibes.variable} antialiased`} style={{ background: "var(--bg-page)", color: "var(--text-primary)" }}>
         <Script
           id="org-structured-data"
           type="application/ld+json"

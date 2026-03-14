@@ -21,7 +21,7 @@ const featuredStories = stories.slice(0, 3);
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#111820]">
+    <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
       <Navbar />
 
       {/* ── HERO ─────────────────────────────────────────── */}
@@ -98,7 +98,7 @@ export default function HomePage() {
         <InlineChat />
 
           {/* ── FEATURED ADVENTURES + COMPARE (shared context) ── */}
-        <section id="featured-adventures" className="py-16 lg:py-32 px-5 lg:px-8 bg-[#111820]">
+        <section id="featured-adventures" className="py-16 lg:py-32 px-5 lg:px-8 t-bg-page">
             <div className="max-w-7xl mx-auto">
                     <div className="mb-10 lg:mb-14">
                       <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
@@ -107,7 +107,7 @@ export default function HomePage() {
                       </p>
                     <div className="flex items-end justify-between gap-4">
                     <div>
-                      <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+                      <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
                         Adventures of a Lifetime
                       </h2>
                       <div className="mt-4 lg:mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
@@ -164,7 +164,7 @@ export default function HomePage() {
                         <p className="text-[#7ec88a] text-xs font-black tracking-[0.25em] mb-4 uppercase">
                           SIGNATURE FEATURE
                         </p>
-            <h2 className="text-white text-3xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 lg:mb-5">
+            <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
                 India's Adventures,
                 <br />
                 <span className="text-[#7ec88a]">Mapped</span>
@@ -197,14 +197,14 @@ export default function HomePage() {
           <CompareAdventures />
 
           {/* ── STORIES ──────────────────────────────────────── */}
-        <section id="stories" className="py-16 lg:py-32 px-5 lg:px-8 bg-[#0e1420] border-t border-white/6">
+        <section id="stories" className="py-16 lg:py-32 px-5 lg:px-8 t-bg-surface border-t border-[var(--border-subtle)]">
         <div className="max-w-7xl mx-auto">
             <div className="flex items-end justify-between mb-10 lg:mb-12">
                 <div>
                     <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3">
                       FROM THE TRAILS
                     </p>
-                          <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight">
+                          <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
                               Voices from the Edge
                             </h2>
                 <div className="mt-4 lg:mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />

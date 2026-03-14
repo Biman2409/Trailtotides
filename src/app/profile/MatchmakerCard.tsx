@@ -26,7 +26,7 @@ export default function MatchmakerCard({ isLoggedIn }: { isLoggedIn: boolean }) 
 
   return (
     <div className="mt-8 rounded-2xl border border-white/8 overflow-hidden" style={{ background: "rgba(255,255,255,0.03)" }}>
-      <div className="px-6 py-4 border-b border-white/6 flex items-center justify-between">
+      <div className="px-6 py-4 border-b border-[var(--border-subtle)] flex items-center justify-between">
         <p className="text-white font-semibold text-sm">Adventure Profile</p>
         {profile && (
           <button

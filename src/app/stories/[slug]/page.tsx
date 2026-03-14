@@ -121,7 +121,7 @@ export default async function StoryPage({ params }: Props) {
   const others = stories.filter((s) => s.id !== story.id).slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-[#111820]">
+    <div className="min-h-screen">
       <ScrollToTop />
       <Navbar />
 
@@ -260,7 +260,7 @@ export default async function StoryPage({ params }: Props) {
       </article>
 
       {/* More stories */}
-      <section className="bg-[#1a1f2e] py-16 lg:py-24 px-6 lg:px-8">
+      <section className="t-bg-surface2 py-16 lg:py-24 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between mb-10">
             <div>

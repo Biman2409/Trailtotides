@@ -747,13 +747,13 @@ export default function MapPage() {
         {mounted ? (
             <MapView adventures={visibleAdventures} flyToRef={flyToRef} />
         ) : (
-          <div className="w-full h-full bg-[#1a1f2e] flex items-center justify-center">
+          <div className="w-full h-full t-bg-surface2 flex items-center justify-center">
             <div className="text-white/40 text-sm">Loading map…</div>
           </div>
         )}
 
         {/* Legend */}
-        <div className="absolute bottom-4 right-4 z-[1000] bg-[#1a1f2e]/90 backdrop-blur-md rounded-xl border border-white/10 px-4 py-3 shadow-xl">
+        <div className="absolute bottom-4 right-4 z-[1000] t-bg-surface2/90 backdrop-blur-md rounded-xl border border-white/10 px-4 py-3 shadow-xl">
           <div className="flex items-center gap-2 text-white/50 text-xs">
             <MapIcon className="w-3.5 h-3.5" />
             <span>TRAIL TO TIDES · India Adventure Map</span>
