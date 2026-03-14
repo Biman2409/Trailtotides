@@ -44,7 +44,7 @@ export default function ACEProfileSection({
         <GradingPill />
       </div>
 
-      {/* Main radar card */}
+      {/* Radar card — single radar, left/right layout */}
       <div
         className="rounded-2xl p-6 mb-3"
         style={{
@@ -52,85 +52,80 @@ export default function ACEProfileSection({
           border: "1px solid var(--border-subtle)",
         }}
       >
-        {userAce ? (
-          /* ── Comparison view ── */
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-wrap items-start gap-8 justify-center">
-              {/* Adventure radar */}
-              <div className="flex flex-col items-center gap-2">
-                <ACERadar ace={ace} size={220} showLabels />
-                <p className="text-[10px] uppercase tracking-widest text-white/25 font-semibold">
-                  Adventure Demands
-                </p>
-              </div>
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
 
-              {/* Comparison radar (user overlaid) */}
-              <div className="flex flex-col items-center gap-2">
-                <ACERadar ace={ace} userAce={userAce} size={220} showLabels />
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-0.5 rounded-full bg-[#ff5100]" />
-                    <span className="text-[9px] text-white/30 uppercase tracking-wide">Required</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-3 h-0.5 rounded-full border-t border-dashed border-white/40" />
-                    <span className="text-[9px] text-white/30 uppercase tracking-wide">Your level</span>
-                  </div>
+          {/* LEFT — single radar (adventure + optional user overlay) */}
+          <div className="flex flex-col items-center gap-3 shrink-0">
+            <ACERadar ace={ace} userAce={userAce ?? undefined} size={220} showLabels />
+            {userAce && (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-0.5 rounded-full bg-[#ff5100]" />
+                  <span className="text-[9px] text-white/30 uppercase tracking-wide">Required</span>
                 </div>
-                <p className="text-[10px] uppercase tracking-widest text-white/25 font-semibold">
-                  vs. Your Profile
-                  {profileLabel && (
-                    <span className="ml-1.5 normal-case tracking-normal text-white/45 font-normal">({profileLabel})</span>
-                  )}
-                </p>
+                <div className="flex items-center gap-1.5">
+                  <svg width="14" height="4" viewBox="0 0 14 4">
+                    <line x1="0" y1="2" x2="14" y2="2" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" strokeDasharray="3 2" />
+                  </svg>
+                  <span className="text-[9px] text-white/30 uppercase tracking-wide">Your level</span>
+                </div>
               </div>
-            </div>
-
-            {/* Summary text */}
-            <p className="text-sm leading-relaxed text-center" style={{ color: "var(--text-tertiary)" }}>
-              {aceSummary(ace, adventureName)}
-            </p>
-
-            <div className="flex justify-center">
-              <Link
-                href="/matchmaker"
-                className="text-xs text-white/25 hover:text-[#ff5100] transition-colors"
-              >
-                Retake assessment →
-              </Link>
-            </div>
+            )}
           </div>
-        ) : (
-          /* ── No profile: single radar + CTA ── */
-          <div className="flex flex-col items-center gap-6">
-            <ACERadar ace={ace} size={220} showLabels />
-            <p className="text-sm leading-relaxed text-center max-w-sm" style={{ color: "var(--text-tertiary)" }}>
-              {aceSummary(ace, adventureName)}
-            </p>
-            <div
-              className="w-full rounded-xl px-5 py-4 flex flex-col sm:flex-row items-center justify-between gap-4"
-              style={{
-                background: "rgba(255,81,0,0.06)",
-                border: "1px solid rgba(255,81,0,0.15)",
-              }}
-            >
-              <div>
-                <p className="text-white/80 font-semibold text-sm">See how you compare</p>
-                <p className="text-white/35 text-xs mt-0.5">
-                  Take the ACE assessment to overlay your profile on this radar.
+
+          {/* RIGHT — description or CTA */}
+          <div className="flex-1 flex flex-col justify-center gap-4 min-w-0">
+            {userAce ? (
+              /* Has profile — show summary + retake link */
+              <>
+                {profileLabel && (
+                  <p className="text-[10px] uppercase tracking-widest font-semibold" style={{ color: "var(--text-muted)" }}>
+                    Your profile: <span className="text-white/50 normal-case tracking-normal font-normal">{profileLabel}</span>
+                  </p>
+                )}
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+                  {aceSummary(ace, adventureName)}
                 </p>
-              </div>
-              <Link
-                href="/matchmaker"
-                className="flex items-center gap-1.5 whitespace-nowrap text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-all hover:brightness-110 hover:-translate-y-0.5 shrink-0"
-                style={{ background: "#ff5100" }}
-              >
-                Take Assessment
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
+                <Link
+                  href="/matchmaker"
+                  className="text-xs hover:text-[#ff5100] transition-colors w-fit"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  Retake assessment →
+                </Link>
+              </>
+            ) : (
+              /* No profile — description + take assessment CTA */
+              <>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+                  {aceSummary(ace, adventureName)}
+                </p>
+                <div
+                  className="rounded-xl px-4 py-4 flex flex-col gap-3"
+                  style={{
+                    background: "rgba(255,81,0,0.06)",
+                    border: "1px solid rgba(255,81,0,0.15)",
+                  }}
+                >
+                  <div>
+                    <p className="text-white/80 font-semibold text-sm">See how you compare</p>
+                    <p className="text-white/35 text-xs mt-1 leading-relaxed">
+                      Take the ACE assessment to overlay your profile on this radar.
+                    </p>
+                  </div>
+                  <Link
+                    href="/matchmaker"
+                    className="flex items-center gap-1.5 w-fit text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-all hover:brightness-110 hover:-translate-y-0.5"
+                    style={{ background: "#ff5100" }}
+                  >
+                    Take Assessment
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Safety warning banners */}

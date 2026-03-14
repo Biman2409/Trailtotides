@@ -312,7 +312,7 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
 
 function LoadingScreen() {
   const steps = [
-    "Mapping your biological capability profile…",
+    "Mapping your ACE profile…",
     "Analysing adventure requirements across 8 axes…",
     "Running matchmaker engine…",
     "Building your training plan…",
@@ -390,7 +390,7 @@ function ResultsScreen({
     <div className="max-w-3xl mx-auto px-6 py-16">
 
       {/* Capability profile card */}
-      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Your Biological Profile</p>
+      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Your ACE Profile</p>
       <div
         className="rounded-3xl p-7 mb-6 border relative overflow-hidden"
         style={{ background: "rgba(255,255,255,0.04)", borderLeftWidth: "4px", borderLeftColor: tier.color, borderColor: `${tier.color}35` }}
@@ -401,7 +401,7 @@ function ResultsScreen({
             <div>
               <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Adventure Tier</p>
               <h1 className="text-3xl font-bold tracking-tight" style={{ color: tier.color }}>{tier.label}</h1>
-              <p className="text-white/45 text-sm mt-2">Based on your 8-axis biological capability profile.</p>
+              <p className="text-white/45 text-sm mt-2">Based on your 8-axis ACE capability profile.</p>
             </div>
             <div
               className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
