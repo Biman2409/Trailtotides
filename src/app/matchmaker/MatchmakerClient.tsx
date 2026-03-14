@@ -249,7 +249,7 @@ function AxisBar({ axis, value, max = 5 }: { axis: string; value: number; max?: 
 
 // ─── Intro screen ─────────────────────────────────────────────────────────────
 
-function IntroScreen({ onStart }: { onStart: () => void }) {
+function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => void; onViewResults: () => void; hasProfile: boolean }) {
   const pillars = [
     { icon: <Flame className="w-5 h-5" />,    name: "Engine",   color: "#f97316", desc: "Stamina + Power — sustained output and explosive effort. The fuel that keeps you moving." },
     { icon: <Dumbbell className="w-5 h-5" />, name: "Chassis",  color: "#22d3ee", desc: "Strength + Agility — load-bearing capacity and terrain navigation. How your body handles the ground." },
@@ -295,13 +295,25 @@ function IntroScreen({ onStart }: { onStart: () => void }) {
       >
         Learn more about ACE
       </Link>
+      {hasProfile && (
+        <button
+          onClick={onViewResults}
+          className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-full font-semibold text-sm text-white transition-all hover:brightness-110 mb-3"
+          style={{ background: "#ff5100" }}
+        >
+          View My Results
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      )}
       <button
         onClick={onStart}
-        className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-full font-semibold text-sm text-white transition-all hover:brightness-110"
-        style={{ background: "#ff5100" }}
+        className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-full font-semibold text-sm transition-all hover:brightness-110"
+        style={hasProfile
+          ? { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.7)" }
+          : { background: "#ff5100", color: "#fff" }
+        }
       >
-        Begin Assessment
-        <ChevronRight className="w-4 h-4" />
+        {hasProfile ? <><RotateCcw className="w-4 h-4" />Retake Assessment</> : <><ChevronRight className="w-4 h-4" />Begin Assessment</>}
       </button>
       <p className="text-white/20 text-xs text-center mt-3">8 questions · takes about 3 minutes</p>
     </div>
@@ -635,14 +647,15 @@ export default function MatchmakerClient() {
   const [answers, setAnswers] = useState<Answers>({});
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [savedResult, setSavedResult] = useState<AnalysisResult | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // Auto-load previous result from localStorage
+  // Load previous result on mount (server for logged-in, localStorage otherwise)
   useEffect(() => {
-    // Try server first (logged-in users), fall back to localStorage
     loadProfileFromServer().then((saved) => {
       if (saved?.ace) {
-        setResult(buildResult(saved.ace as unknown as Record<string, number>));
+        const r = buildResult(saved.ace as unknown as Record<string, number>);
+        setSavedResult(r);
       }
     });
   }, []);
@@ -690,11 +703,18 @@ export default function MatchmakerClient() {
     setStepIndex(0);
     setAnswers({});
     setResult(null);
+    setSavedResult(null);
     setApiError(null);
     setLoading(false);
   }
 
-  if (!started) return <IntroScreen onStart={() => { setStarted(true); window.scrollTo({ top: 0, behavior: "instant" }); }} />;
+  if (!started && !result) return (
+    <IntroScreen
+      onStart={() => { setStarted(true); window.scrollTo({ top: 0, behavior: "instant" }); }}
+      onViewResults={() => { setResult(savedResult); window.scrollTo({ top: 0, behavior: "instant" }); }}
+      hasProfile={!!savedResult}
+    />
+  );
   if (loading && !result) return <LoadingScreen />;
   if (result) return <ResultsScreen result={result} onReset={reset} />;
 
