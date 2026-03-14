@@ -162,27 +162,6 @@ export default function ACEPage() {
                     <div className="flex justify-center mb-4">
                       <ACERadar ace={ace} size={140} showLabels />
                     </div>
-                    {/* All 8 axes as pills */}
-                    <div className="flex flex-wrap gap-1.5">
-                      {(["stamina","power","strength","agility","water","altitude","nerve","focus"] as const).map((axis) => {
-                        const val = ace[axis];
-                        const color = ACE_AXIS_COLORS[axis];
-                        const abbr = ({ stamina:"STA", power:"PWR", strength:"STR", agility:"AGI", water:"WAT", altitude:"ALT", nerve:"NRV", focus:"FOC" })[axis];
-                        return (
-                          <span
-                            key={axis}
-                            className="px-2 py-1 rounded-lg text-[10px] font-bold tracking-wider border"
-                            style={{
-                              background: val > 0 ? `${color}15` : "rgba(255,255,255,0.04)",
-                              borderColor: val > 0 ? `${color}30` : "rgba(255,255,255,0.08)",
-                              color: val > 0 ? color : "rgba(255,255,255,0.2)",
-                            }}
-                          >
-                            {abbr} {val}
-                          </span>
-                        );
-                      })}
-                    </div>
                   </div>
                 </Link>
               );
