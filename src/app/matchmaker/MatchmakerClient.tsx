@@ -267,27 +267,31 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
         Every adventure makes specific demands on your body. ACE breaks those demands into eight axes — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you know exactly what you&apos;re signing up for.
       </p>
 
-      <p className="text-white/30 text-[10px] uppercase tracking-widest mb-4">How we assess you</p>
-      <div className="space-y-3 mb-10">
-        {pillars.map(p => (
-          <div
-            key={p.name}
-            className="flex items-start gap-4 rounded-2xl px-5 py-4 border"
-            style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}
-          >
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
-              style={{ background: `${p.color}18`, color: p.color }}
-            >
-              {p.icon}
-            </div>
-            <div>
-              <p className="text-white font-semibold text-sm mb-0.5">{p.name}</p>
-              <p className="text-white/45 text-xs leading-relaxed">{p.desc}</p>
-            </div>
+      {!hasProfile && (
+        <>
+          <p className="text-white/30 text-[10px] uppercase tracking-widest mb-4">How we assess you</p>
+          <div className="space-y-3 mb-10">
+            {pillars.map(p => (
+              <div
+                key={p.name}
+                className="flex items-start gap-4 rounded-2xl px-5 py-4 border"
+                style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}
+              >
+                <div
+                  className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
+                  style={{ background: `${p.color}18`, color: p.color }}
+                >
+                  {p.icon}
+                </div>
+                <div>
+                  <p className="text-white font-semibold text-sm mb-0.5">{p.name}</p>
+                  <p className="text-white/45 text-xs leading-relaxed">{p.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
 
       <Link
         href="/ace"
