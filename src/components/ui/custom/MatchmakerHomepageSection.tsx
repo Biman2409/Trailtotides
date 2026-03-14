@@ -175,7 +175,7 @@ function DefaultCTA() {
             <Link href="/ace" className="font-bold text-[#ff5100] underline decoration-[#ff5100]/30 underline-offset-2 hover:decoration-[#ff5100] transition-all">
               ACE
             </Link>{" "}
-            profile and the adventures you&apos;re truly ready for.
+            profile and find the adventures you&apos;re truly ready for.
           </p>
           <Link
             href="/matchmaker"
