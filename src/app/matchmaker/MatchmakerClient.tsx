@@ -249,9 +249,10 @@ function AxisBar({ axis, value, max = 5 }: { axis: string; value: number; max?: 
 
 function IntroScreen({ onStart }: { onStart: () => void }) {
   const pillars = [
-    { icon: <Flame className="w-5 h-5" />,    name: "Engine",      color: "#f97316", desc: "Stamina, power and strength — the physical engine that carries you through long, demanding days." },
-    { icon: <Compass className="w-5 h-5" />,  name: "Movement",    color: "#22d3ee", desc: "Agility and water confidence — how your body navigates terrain, currents, and technical environments." },
-    { icon: <Brain className="w-5 h-5" />,    name: "Resilience",  color: "#a78bfa", desc: "Altitude, nerve and focus — the mental and physiological resilience to operate in extreme conditions." },
+    { icon: <Flame className="w-5 h-5" />,    name: "Engine",   color: "#f97316", desc: "Stamina + Power — sustained output and explosive effort. The fuel that keeps you moving." },
+    { icon: <Dumbbell className="w-5 h-5" />, name: "Chassis",  color: "#22d3ee", desc: "Strength + Agility — load-bearing capacity and terrain navigation. How your body handles the ground." },
+    { icon: <Waves className="w-5 h-5" />,    name: "Elements", color: "#a78bfa", desc: "Water + Altitude — aquatic survival and high-altitude physiology. Environmental exposure demands." },
+    { icon: <Brain className="w-5 h-5" />,    name: "Mind",     color: "#10b981", desc: "Nerve + Focus — psychological exposure tolerance and sustained situational awareness." },
   ];
 
   return (
