@@ -257,7 +257,7 @@ export default function ACEPage() {
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,81,0,0.12) 0%, transparent 70%)" }} />
 
         <div className="max-w-3xl mx-auto text-center relative">
-          <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-5">Know your adventure</p>
+          <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-5">Your turn</p>
           <h2 className="text-white text-5xl font-black tracking-tight leading-tight mb-5">
             Find exactly what<br />your body is built for.
           </h2>
