@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -650,12 +650,19 @@ export default function MatchmakerClient() {
   const [savedResult, setSavedResult] = useState<AnalysisResult | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // Load previous result on mount (server for logged-in, localStorage otherwise)
+  // Load previous result on mount; auto-show results if ?results=1 in URL
+  const autoShown = useRef(false);
   useEffect(() => {
+    const showResults = new URLSearchParams(window.location.search).get("results") === "1";
     loadProfileFromServer().then((saved) => {
       if (saved?.ace) {
         const r = buildResult(saved.ace as unknown as Record<string, number>);
         setSavedResult(r);
+        if (showResults && !autoShown.current) {
+          autoShown.current = true;
+          setResult(r);
+          window.scrollTo({ top: 0, behavior: "instant" });
+        }
       }
     });
   }, []);
