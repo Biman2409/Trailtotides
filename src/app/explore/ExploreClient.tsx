@@ -12,6 +12,26 @@ import { adventures } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
 import { difficultyStyle } from "@/lib/styles";
 import { getACE } from "@/lib/ace";
+import type { AceAxis } from "@/lib/ace";
+import { loadProfile } from "@/lib/matchmaker";
+import type { StoredProfile } from "@/lib/matchmaker";
+
+type AceCategory = "ready" | "stretch" | "out-of-range";
+
+function classifyAdventure(userAce: StoredProfile["ace"], adventureAce: ReturnType<typeof getACE>): AceCategory {
+  const axes = Object.keys(adventureAce) as AceAxis[];
+  let maxShortfall = 0;
+  for (const axis of axes) {
+    const req = adventureAce[axis];
+    if (req === 0) continue;
+    const has = userAce[axis];
+    const shortfall = req - has;
+    if (shortfall > maxShortfall) maxShortfall = shortfall;
+  }
+  if (maxShortfall <= 0) return "ready";
+  if (maxShortfall <= 1) return "stretch";
+  return "out-of-range";
+}
 
 // filter constants
 const seasons: { label: string; months: Month[] }[] = [
@@ -44,9 +64,8 @@ export default function ExploreClient() {
   const [selectedMonths, setSelectedMonths] = useState<Month[]>([]);
   const [selectedGroupSizes, setSelectedGroupSizes] = useState<GroupSize[]>([]);
   // ACE filters
-  const [maxStamina, setMaxStamina] = useState<number | null>(null);
-  const [maxAltitude, setMaxAltitude] = useState<number | null>(null);
-  const [maxNerve, setMaxNerve] = useState<number | null>(null);
+  const [aceCategory, setAceCategory] = useState<AceCategory | null>(null);
+  const [userProfile, setUserProfile] = useState<StoredProfile | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
@@ -65,6 +84,8 @@ export default function ExploreClient() {
   const [aiLoading, setAiLoading] = useState(false);
   const aiBottomRef = useRef<HTMLDivElement>(null);
   const AI_SUGGESTIONS = ["Easy Himalayan trek for beginners", "Scuba diving near islands", "Solo adventure in Northeast", "Extreme cycling in summer"];
+
+  useEffect(() => { setUserProfile(loadProfile()); }, []);
 
   useEffect(() => { aiBottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [aiMessages]);
 
@@ -113,17 +134,18 @@ export default function ExploreClient() {
         return false;
       if (selectedGroupSizes.length && !selectedGroupSizes.includes(a.groupSize))
         return false;
-      // ACE filters
-      const ace = getACE(a);
-      if (maxStamina !== null && ace.stamina > maxStamina) return false;
-      if (maxAltitude !== null && ace.altitude > maxAltitude) return false;
-      if (maxNerve !== null && ace.nerve > maxNerve) return false;
+      // ACE category filter
+      if (aceCategory && userProfile) {
+        const req = getACE(a);
+        const cat = classifyAdventure(userProfile.ace, req);
+        if (cat !== aceCategory) return false;
+      }
       return true;
     });
-    }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, maxStamina, maxAltitude, maxNerve]);
+    }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, aceCategory, userProfile]);
 
   // Reset to page 1 whenever filters change
-  useEffect(() => { setCurrentPage(1); }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, maxStamina, maxAltitude, maxNerve]);
+  useEffect(() => { setCurrentPage(1); }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, aceCategory]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const pagedResults = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -136,7 +158,7 @@ export default function ExploreClient() {
     selectedDurations.length +
     selectedMonths.length +
     selectedGroupSizes.length +
-    (maxStamina !== null ? 1 : 0) + (maxAltitude !== null ? 1 : 0) + (maxNerve !== null ? 1 : 0);
+    (aceCategory !== null ? 1 : 0);
 
   function clearAll() {
     setSelectedTypes([]);
@@ -146,6 +168,7 @@ export default function ExploreClient() {
     setSelectedDurations([]);
     setSelectedMonths([]);
     setSelectedGroupSizes([]);
+    setAceCategory(null);
     setSearch("");
   }
 
@@ -659,42 +682,48 @@ export default function ExploreClient() {
                             <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40">ACE Difficulty</h3>
                             <a href="/ace" target="_blank" className="text-[10px] text-white/25 hover:text-[#ff5100] transition-colors">What is ACE?</a>
                           </div>
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            {([
-                              { label: "Max Stamina",  value: maxStamina,  setValue: setMaxStamina,  color: "#f97316" },
-                              { label: "Max Altitude", value: maxAltitude, setValue: setMaxAltitude, color: "#a78bfa" },
-                              { label: "Max Nerve",    value: maxNerve,    setValue: setMaxNerve,    color: "#f43f5e" },
-                            ] as const).map(({ label, value, setValue, color }) => (
-                              <div key={label}>
-                                <p className="text-[10px] font-medium text-white/40 mb-2">{label}</p>
-                                <div className="flex gap-1">
-                                  {[1,2,3,4,5].map((n) => {
-                                    const isActive = value !== null && n === value;
-                                    return (
-                                      <button
-                                        key={n}
-                                        onClick={() => setValue(value === n ? null : n)}
-                                        className="flex-1 h-7 rounded text-[10px] font-bold transition-all"
-                                        style={{
-                                          background: isActive ? `${color}30` : "rgba(255,255,255,0.05)",
-                                          border: `1px solid ${isActive ? color : "rgba(255,255,255,0.1)"}`,
-                                          color: isActive ? color : "rgba(255,255,255,0.35)",
-                                        }}
-                                      >
-                                        {n}
-                                      </button>
-                                    );
-                                  })}
-                                </div>
-                                {value !== null && (
-                                  <p className="text-[9px] text-white/30 mt-1">
-                                    ≤ {value}
-                                    <button onClick={() => setValue(null)} className="ml-1.5 text-white/20 hover:text-white/50">×</button>
-                                  </p>
-                                )}
+                          {!userProfile ? (
+                            <div className="flex items-center gap-4 p-4 rounded-2xl border border-white/8 bg-white/3">
+                              <div className="w-9 h-9 rounded-xl bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center justify-center shrink-0">
+                                <Compass className="w-4 h-4 text-[#ff5100]/60" />
                               </div>
-                            ))}
-                          </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-white/60 text-xs font-medium">No ACE profile yet</p>
+                                <p className="text-white/30 text-[11px] mt-0.5">Take the assessment to filter by your capability level</p>
+                              </div>
+                              <Link
+                                href="/matchmaker"
+                                className="shrink-0 inline-flex items-center gap-1.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-3 py-2 rounded-xl text-xs transition-all"
+                              >
+                                Take Assessment
+                                <ArrowRight className="w-3 h-3" />
+                              </Link>
+                            </div>
+                          ) : (
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                              {([
+                                { key: "ready" as AceCategory, label: "Ready Now", desc: "Matches your current level", color: "#4ade80", bg: "#4ade8015" },
+                                { key: "stretch" as AceCategory, label: "Stretch Challenge", desc: "Slightly above your level", color: "#f59e0b", bg: "#f59e0b15" },
+                                { key: "out-of-range" as AceCategory, label: "Out of Range", desc: "Significantly beyond current ability", color: "#f43f5e", bg: "#f43f5e15" },
+                              ]).map(({ key, label, desc, color, bg }) => {
+                                const isActive = aceCategory === key;
+                                return (
+                                  <button
+                                    key={key}
+                                    onClick={() => setAceCategory(isActive ? null : key)}
+                                    className="text-left p-3.5 rounded-2xl border transition-all"
+                                    style={{
+                                      background: isActive ? bg : "rgba(255,255,255,0.03)",
+                                      borderColor: isActive ? color : "rgba(255,255,255,0.08)",
+                                    }}
+                                  >
+                                    <p className="text-xs font-bold mb-0.5" style={{ color: isActive ? color : "rgba(255,255,255,0.6)" }}>{label}</p>
+                                    <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.35)" }}>{desc}</p>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
                         </div>
 
             </div>
@@ -768,6 +797,14 @@ export default function ExploreClient() {
                 {g} <X className="w-3 h-3" />
               </span>
             ))}
+            {aceCategory && (
+              <span
+                onClick={() => setAceCategory(null)}
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
+              >
+                ACE: {aceCategory === "ready" ? "Ready Now" : aceCategory === "stretch" ? "Stretch" : "Out of Range"} <X className="w-3 h-3" />
+              </span>
+            )}
           </div>
         )}
 
