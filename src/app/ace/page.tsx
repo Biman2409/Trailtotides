@@ -124,53 +124,6 @@ export default function ACEPage() {
       </section>
 
 
-      {/* ── LIVE EXAMPLES ─────────────────────────────────────────────── */}
-      <section className="py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
-            <div>
-              <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">Live Examples</p>
-              <h2 className="text-white text-4xl font-black tracking-tight">See it in action.</h2>
-              <p className="text-white/35 text-base mt-2">Same difficulty tier. Completely different demands on your body.</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {exampleAdventures.map((a, idx) => {
-              const ace = getACE(a);
-              const topAxis = (Object.entries(ace) as [string, number][]).sort(([,a],[,b]) => b-a)[0];
-              const topColor = topAxis ? ACE_AXIS_COLORS[topAxis[0] as keyof typeof ACE_AXIS_COLORS] : "#ff5100";
-              return (
-                <Link
-                  key={a.slug}
-                  href={`/experiences/${a.slug}`}
-                  className="group relative rounded-3xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
-                  style={{ borderColor: `${topColor}25`, background: "#0f1420" }}
-                >
-                  {/* Hero image */}
-                  <div className="relative h-48 overflow-hidden">
-                    <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
-                    <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(15,20,32,0.1) 0%, rgba(15,20,32,0.9) 100%)" }} />
-                    <div className="absolute bottom-3 left-4 right-4">
-                      <p className="text-white/45 text-[10px] uppercase tracking-widest mb-0.5">{a.state}</p>
-                      <h3 className="text-white font-bold text-base leading-tight">{a.name}</h3>
-                    </div>
-                  </div>
-
-                  {/* Radar + badge */}
-                  <div className="px-5 pt-4 pb-5">
-                    <div className="flex justify-center mb-4">
-                      <ACERadar ace={ace} size={140} showLabels />
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-
       {/* ── THE EIGHT AXES ────────────────────────────────────────────── */}
       <section className="py-24 px-6 border-t border-white/5" style={{ background: "rgba(255,255,255,0.015)" }}>
         <div className="max-w-6xl mx-auto">
@@ -252,52 +205,45 @@ export default function ACEPage() {
         </div>
       </section>
 
-      {/* ── HOW TO READ ───────────────────────────────────────────────── */}
+      {/* ── LIVE EXAMPLES ─────────────────────────────────────────────── */}
       <section className="py-24 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Copy */}
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
             <div>
-              <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">How to read it</p>
-              <h2 className="text-white text-4xl font-black tracking-tight mb-6">The same tier. A completely different adventure.</h2>
-              <div className="space-y-5">
-                {[
-                  { label: "Axis 0", text: "Completely irrelevant to this adventure — a camel safari has Water: 0." },
-                  { label: "Read together", text: "Two adventures can share a difficulty tier but have opposite profiles. ACE shows you exactly where the demands lie." },
-                  { label: "Your profile", text: "Take the 8-axis assessment and get your personal ACE map. Then compare it directly against any adventure." },
-                ].map(({ label, text }) => (
-                  <div key={label} className="flex gap-4">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] mt-2 shrink-0" />
-                    <div>
-                      <p className="text-white font-semibold text-sm mb-0.5">{label}</p>
-                      <p className="text-white/45 text-sm leading-relaxed">{text}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">Live Examples</p>
+              <h2 className="text-white text-4xl font-black tracking-tight">See it in action.</h2>
+              <p className="text-white/35 text-base mt-2">Same difficulty tier. Completely different demands on your body.</p>
             </div>
+          </div>
 
-            {/* Example comparison */}
-            <div className="space-y-3">
-              {exampleAdventures.slice(0, 2).map((a) => {
-                const ace = getACE(a);
-                return (
-                  <div key={a.slug} className="rounded-2xl border p-5"
-                    style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.08)" }}>
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <p className="text-white/35 text-[10px] uppercase tracking-widest mb-0.5">{a.state}</p>
-                        <p className="text-white font-bold text-sm">{a.name}</p>
-                      </div>
-                      <div className="shrink-0">
-                        <ACERadar ace={ace} size={72} showLabels={false} />
-                      </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {exampleAdventures.map((a) => {
+              const ace = getACE(a);
+              const topAxis = (Object.entries(ace) as [string, number][]).sort(([,a],[,b]) => b-a)[0];
+              const topColor = topAxis ? ACE_AXIS_COLORS[topAxis[0] as keyof typeof ACE_AXIS_COLORS] : "#ff5100";
+              return (
+                <Link
+                  key={a.slug}
+                  href={`/experiences/${a.slug}`}
+                  className="group relative rounded-3xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+                  style={{ borderColor: `${topColor}25`, background: "#0f1420" }}
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(15,20,32,0.1) 0%, rgba(15,20,32,0.9) 100%)" }} />
+                    <div className="absolute bottom-3 left-4 right-4">
+                      <p className="text-white/45 text-[10px] uppercase tracking-widest mb-0.5">{a.state}</p>
+                      <h3 className="text-white font-bold text-base leading-tight">{a.name}</h3>
                     </div>
-                    <ACEBadge ace={ace} size="sm" />
                   </div>
-                );
-              })}
-            </div>
+                  <div className="px-5 pt-4 pb-5">
+                    <div className="flex justify-center mb-4">
+                      <ACERadar ace={ace} size={140} showLabels />
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
