@@ -89,11 +89,7 @@ export default function ACEPage() {
                 Adventure Capability Engine
               </p>
 
-              <p className="text-white/65 text-lg leading-relaxed mb-5">
-                &ldquo;Moderate&rdquo; means nothing. A short trail at 2,000m is moderate.
-                A 5,000m glacier crossing is also moderate. They are not the same.
-              </p>
-              <p className="text-white/40 text-base leading-relaxed mb-10">
+              <p className="text-white/55 text-base leading-relaxed mb-10">
                 ACE rates every adventure across <span className="text-white font-semibold">eight biological axes</span> — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you know exactly what your body needs before you commit.
               </p>
 
