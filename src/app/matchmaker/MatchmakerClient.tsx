@@ -427,17 +427,9 @@ function ResultsScreen({
             </div>
           </div>
 
-          {/* ACE Radar + Axis bars */}
-          <div className="flex flex-wrap gap-6 items-start">
-            <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={180} showLabels />
-            <div className="flex-1 min-w-[160px]">
-              <p className="text-white/30 text-[10px] uppercase tracking-widest mb-3">Capability Axes</p>
-              <div className="space-y-2.5">
-                {Object.entries(userAxes).map(([axis, val]) => (
-                  <AxisBar key={axis} axis={axis} value={val} />
-                ))}
-              </div>
-            </div>
+          {/* ACE Radar */}
+          <div className="flex justify-center">
+            <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={260} showLabels />
           </div>
         </div>
       </div>

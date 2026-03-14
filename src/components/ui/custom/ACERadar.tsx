@@ -16,14 +16,14 @@ const AXIS_ORDER: AceAxis[] = [
 ];
 
 const AXIS_ABBR: Record<AceAxis, string> = {
-  stamina:  "STA",
-  power:    "PWR",
-  strength: "STR",
-  agility:  "AGI",
-  water:    "WAT",
-  altitude: "ALT",
-  nerve:    "NRV",
-  focus:    "FOC",
+  stamina:  "Stamina",
+  power:    "Power",
+  strength: "Strength",
+  agility:  "Agility",
+  water:    "Water",
+  altitude: "Altitude",
+  nerve:    "Nerve",
+  focus:    "Focus",
 };
 
 function polarToXY(angle: number, r: number, cx: number, cy: number) {
@@ -47,11 +47,11 @@ function buildPath(values: number[], max: number, cx: number, cy: number, radius
 }
 
 export default function ACERadar({ ace, size = 200, showLabels = true, userAce }: Props) {
-  const pad = 14;
+  const pad = 30;
   const cx = size / 2;
   const cy = size / 2;
-  const radius = size * 0.33;
-  const labelRadius = size * 0.44;
+  const radius = size * 0.28;
+  const labelRadius = size * 0.42;
   const n = AXIS_ORDER.length;
   const max = 5;
 
@@ -158,23 +158,22 @@ export default function ACERadar({ ace, size = 200, showLabels = true, userAce }
                 textAnchor={anchor}
                 dominantBaseline="central"
                 fill={val > 0 ? color : "rgba(255,255,255,0.2)"}
-                fontSize={size < 160 ? "7" : "8"}
+                fontSize={size < 180 ? "7" : "8.5"}
                 fontWeight="700"
                 fontFamily="system-ui, sans-serif"
-                letterSpacing="0.05em"
               >
                 {shortLabel}
               </text>
               <text
-                  x={x.toFixed(2)}
-                  y={(y + (size < 160 ? 9 : 10)).toFixed(2)}
-                  textAnchor={anchor}
-                  fill="rgba(255,255,255,0.4)"
-                  fontSize={size < 160 ? "6" : "7"}
-                  fontFamily="system-ui, sans-serif"
-                >
-                  {val}
-                </text>
+                x={x.toFixed(2)}
+                y={(y + (size < 180 ? 10 : 11)).toFixed(2)}
+                textAnchor={anchor}
+                fill="rgba(255,255,255,0.4)"
+                fontSize={size < 180 ? "6.5" : "7.5"}
+                fontFamily="system-ui, sans-serif"
+              >
+                {val}
+              </text>
             </g>
           );
         })}
