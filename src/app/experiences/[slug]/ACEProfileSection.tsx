@@ -138,7 +138,7 @@ export default function ACEProfileSection({
       {(showAltitudeWarning || showIsolationWarning || showTechnicalWarning) && (
         <div className="mt-6 pt-6" style={{ borderTop: "1px solid var(--border-subtle)" }}>
           <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">
-            Alerts
+            Know Before You Go
           </p>
           <div className="space-y-2.5">
             {showAltitudeWarning && (
