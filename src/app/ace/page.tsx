@@ -129,7 +129,7 @@ export default function ACEPage() {
         <div className="max-w-6xl mx-auto">
           <div className="mb-14">
             <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">The Eight Axes</p>
-            <h2 className="text-white text-4xl font-black tracking-tight">What your body needs.</h2>
+            <h2 className="text-white text-4xl font-black tracking-tight">What your body needs</h2>
             <p className="text-white/35 text-base mt-2 max-w-xl">Each axis targets a specific physical or mental capability. An adventure can push one to the limit while demanding nothing from another — that distinction is everything when you&apos;re preparing.</p>
           </div>
 
@@ -165,7 +165,7 @@ export default function ACEPage() {
         <div className="max-w-6xl mx-auto">
           <div className="mb-14">
             <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">The Demand Scale</p>
-            <h2 className="text-white text-4xl font-black tracking-tight">0 to 5. No ambiguity.</h2>
+            <h2 className="text-white text-4xl font-black tracking-tight">0 to 5. No ambiguity</h2>
             <p className="text-white/35 text-base mt-2">Once you know which axes matter, you need to know how hard. Every axis uses the same 0–5 scale — consistent, comparable, and honest about what you&apos;ll actually face.</p>
           </div>
 
@@ -211,7 +211,7 @@ export default function ACEPage() {
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
             <div>
               <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">Live Examples</p>
-              <h2 className="text-white text-4xl font-black tracking-tight">See it in action.</h2>
+              <h2 className="text-white text-4xl font-black tracking-tight">See it in action</h2>
               <p className="text-white/35 text-base mt-2">Here&apos;s what ACE looks like on real adventures. The radar shapes alone tell you more than any difficulty label ever could.</p>
             </div>
           </div>
