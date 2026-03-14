@@ -151,13 +151,6 @@ export default function ACEPage() {
                   <div className="relative h-48 overflow-hidden">
                     <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
                     <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(15,20,32,0.1) 0%, rgba(15,20,32,0.9) 100%)" }} />
-                    {/* Glow accent */}
-                    <div className="absolute top-3 right-3 w-16 h-16 rounded-full blur-xl opacity-40" style={{ background: topColor }} />
-                    {/* Rank badge */}
-                    <div className="absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center text-sm font-black text-white/50 border border-white/10"
-                      style={{ background: "rgba(0,0,0,0.5)" }}>
-                      {idx + 1}
-                    </div>
                     <div className="absolute bottom-3 left-4 right-4">
                       <p className="text-white/45 text-[10px] uppercase tracking-widest mb-0.5">{a.state}</p>
                       <h3 className="text-white font-bold text-base leading-tight">{a.name}</h3>
@@ -166,12 +159,8 @@ export default function ACEPage() {
 
                   {/* Radar + badge */}
                   <div className="px-5 pt-4 pb-5">
-                    <div className="flex items-center gap-4 mb-4">
-                      <ACERadar ace={ace} size={100} showLabels={false} />
-                      <div className="flex-1">
-                        <p className="text-white/30 text-[9px] uppercase tracking-widest mb-2">ACE Profile</p>
-                        <ACEBadge ace={ace} size="sm" />
-                      </div>
+                    <div className="flex justify-center mb-4">
+                      <ACERadar ace={ace} size={140} showLabels={false} />
                     </div>
                     {/* All 8 axes as pills */}
                     <div className="flex flex-wrap gap-1.5">
@@ -194,11 +183,6 @@ export default function ACEPage() {
                         );
                       })}
                     </div>
-                    {a.altitude && (
-                      <p className="text-white/20 text-[10px] mt-3 pt-3 border-t border-white/5">
-                        Max altitude: {a.altitude}
-                      </p>
-                    )}
                   </div>
                 </Link>
               );
