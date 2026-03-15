@@ -27,16 +27,6 @@ const AXIS_ABBR: Record<AceAxis, string> = {
   focus:    "Focus",
 };
 
-const AXIS_FULL: Record<AceAxis, string> = {
-  stamina:  "Stamina",
-  power:    "Power",
-  strength: "Strength",
-  agility:  "Agility",
-  water:    "Water",
-  altitude: "Altitude",
-  nerve:    "Nerve",
-  focus:    "Focus",
-};
 
 function polarToXY(angle: number, r: number, cx: number, cy: number) {
   const rad = (angle - 90) * (Math.PI / 180);

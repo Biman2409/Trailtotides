@@ -38,15 +38,11 @@ export default function ACEProfileSection({
   showTechnicalWarning,
 }: Props) {
   const [userAce, setUserAce] = useState<ACE | null>(null);
-  const [profileLabel, setProfileLabel] = useState<string | null>(null);
   const [userColor] = useState("#4ade80");
 
   useEffect(() => {
     const p = loadProfile();
-    if (p) {
-      setUserAce(p.ace);
-      setProfileLabel(p.label);
-    }
+    if (p) setUserAce(p.ace);
   }, []);
 
   return (
