@@ -84,39 +84,41 @@ export default function ACEProfileSection({
               <div className="px-3 py-2 border-b border-white/[0.06]">
                 <p className="text-[9px] uppercase tracking-widest font-bold text-white/30">Your Capability vs Trek Requirement</p>
               </div>
-              <div className="grid grid-cols-2 flex-1 divide-x divide-white/[0.05]">
+              <div className="flex flex-col flex-1 divide-y divide-white/[0.05]">
                 {DOMAINS.map(({ label: domainLabel, color: domainColor, axes }) => (
-                  <div key={domainLabel} className="flex flex-col divide-y divide-white/[0.05]">
+                  <div key={domainLabel}>
                     {/* Domain header */}
-                    <div className="px-3 py-1.5" style={{ background: `${domainColor}10` }}>
+                    <div className="px-3 py-1.5 border-b border-white/[0.04]" style={{ background: `${domainColor}10` }}>
                       <span className="text-[8px] uppercase tracking-widest font-bold" style={{ color: domainColor }}>{domainLabel}</span>
                     </div>
-                    {/* Axes */}
-                    {axes.map((axis) => {
-                      const color = ACE_AXIS_COLORS[axis];
-                      const axisLabel = ACE_AXIS_LABELS[axis];
-                      const trekVal = ace[axis];
-                      const userVal = (userAce as Record<string, number>)[axis] ?? 0;
-                      const meets = userVal >= trekVal;
-                      return (
-                        <div key={axis} className="flex items-center justify-between px-3 py-2 flex-1">
-                          <p className="text-[8px] uppercase tracking-widest font-bold" style={{ color }}>{axisLabel}</p>
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-[11px] font-black leading-none" style={{ color: userColor }}>{userVal}</span>
-                            <span className="text-[8px] text-white/25">/ {trekVal}</span>
-                            <div
-                              className="text-[7px] font-bold px-1.5 py-px rounded-full whitespace-nowrap"
-                              style={{
-                                background: meets ? "#22c55e18" : "#ef444418",
-                                color: meets ? "#22c55e" : "#ef4444",
-                              }}
-                            >
-                              {meets ? "✓ Ready" : `+${(trekVal - userVal).toFixed(1)} needed`}
+                    {/* Axes — two on one line */}
+                    <div className="flex divide-x divide-white/[0.05]">
+                      {axes.map((axis) => {
+                        const color = ACE_AXIS_COLORS[axis];
+                        const axisLabel = ACE_AXIS_LABELS[axis];
+                        const trekVal = ace[axis];
+                        const userVal = (userAce as Record<string, number>)[axis] ?? 0;
+                        const meets = userVal >= trekVal;
+                        return (
+                          <div key={axis} className="flex-1 flex items-center justify-between px-3 py-2">
+                            <p className="text-[8px] uppercase tracking-widest font-bold" style={{ color }}>{axisLabel}</p>
+                            <div className="flex items-center gap-1">
+                              <span className="text-[11px] font-black leading-none" style={{ color: userColor }}>{userVal}</span>
+                              <span className="text-[8px] text-white/25">/ {trekVal}</span>
+                              <div
+                                className="text-[7px] font-bold px-1.5 py-px rounded-full whitespace-nowrap"
+                                style={{
+                                  background: meets ? "#22c55e18" : "#ef444418",
+                                  color: meets ? "#22c55e" : "#ef4444",
+                                }}
+                              >
+                                {meets ? "✓ Ready" : `+${(trekVal - userVal).toFixed(1)} needed`}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 ))}
               </div>
