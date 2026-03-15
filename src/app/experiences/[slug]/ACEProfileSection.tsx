@@ -241,7 +241,7 @@ export default function ACEProfileSection({
                 <span className="text-yellow-400 shrink-0 mt-0.5 text-base">⚠</span>
                 <div>
                   <p className="text-xs font-bold text-yellow-400 mb-0.5">High Risk of Altitude Sickness</p>
-                  <p className="text-xs text-yellow-400/55 leading-relaxed">Proper acclimatization is required. Do not exceed 300–500m of altitude gain per day above 3,000m.</p>
+                  <p className="text-xs text-yellow-400/55 leading-relaxed">Proper acclimatization is required. Do not exceed 500m of altitude gain per day above 4,500m.</p>
                 </div>
               </div>
             )}
