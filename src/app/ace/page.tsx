@@ -33,7 +33,6 @@ const AXES = [
 ];
 
 const SCALE = [
-  { level: 0, label: "Not Relevant", sub: "Axis doesn't apply",   color: "rgba(255,255,255,0.02)" },
   { level: 1, label: "Very Low",     sub: "Minimal demand",        color: "#22c55e" },
   { level: 2, label: "Low",          sub: "Light conditioning",    color: "#84cc16" },
   { level: 3, label: "Moderate",     sub: "Regular training",      color: "#eab308" },
@@ -165,8 +164,8 @@ export default function ACEPage() {
         <div className="max-w-6xl mx-auto">
           <div className="mb-14">
             <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">The Demand Scale</p>
-            <h2 className="text-white text-4xl font-black tracking-tight">0 to 5. No ambiguity</h2>
-            <p className="text-white/35 text-base mt-2">Once you know which axes matter, you need to know how hard. Every axis uses the same 0–5 scale — consistent, comparable, and honest about what you&apos;ll actually face.</p>
+            <h2 className="text-white text-4xl font-black tracking-tight">1 to 5. No ambiguity</h2>
+            <p className="text-white/35 text-base mt-2">Once you know which axes matter, you need to know how hard. Every axis uses the same 1–5 scale — consistent, comparable, and honest about what you&apos;ll actually face.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -174,11 +173,11 @@ export default function ACEPage() {
               <div
                 key={level}
                 className="relative rounded-2xl border overflow-hidden"
-                style={{ background: level === 0 ? "rgba(255,255,255,0.01)" : `${color}08`, borderColor: level === 0 ? "rgba(255,255,255,0.05)" : `${color}18` }}
+                style={{ background: `${color}08`, borderColor: `${color}18` }}
               >
                 {/* Fill indicator */}
                 <div className="absolute top-0 left-0 bottom-0 opacity-10"
-                  style={{ width: level === 0 ? "0%" : `${(level / 5) * 100}%`, background: color }} />
+                  style={{ width: `${(level / 5) * 100}%`, background: color }} />
                 <div className="relative flex items-center gap-5 p-5">
                   {/* Number */}
                   <div
