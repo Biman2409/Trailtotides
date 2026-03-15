@@ -55,7 +55,7 @@ export default function ACEProfileSection({
   showTechnicalWarning,
 }: Props) {
   const [userAce, setUserAce] = useState<ACE | null>(null);
-  const [userColor] = useState("#4ade80");
+  const [userColor] = useState("#ffffff");
 
   useEffect(() => {
     const p = loadProfile();
