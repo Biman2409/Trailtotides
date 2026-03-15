@@ -205,6 +205,105 @@ export default function ACEPage() {
         </div>
       </section>
 
+      {/* ── RANK SYSTEM ───────────────────────────────────────────────── */}
+      <section className="py-24 px-6 t-bg-surface" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-14">
+            <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">Adventure Rank</p>
+            <h2 className="text-white text-4xl font-black tracking-tight">Your overall capability tier</h2>
+            <p className="text-white/35 text-base mt-2 max-w-xl">
+              Your ACE assessment produces a total score across all eight axes. That score places you on the Adventure Rank ladder — from first steps through to elite capability.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              {
+                label: "Uncharted",   color: "#6b7280", stars: 0, range: "—",
+                desc: "No assessment taken. Your capability is unknown — take the assessment to find out where you stand.",
+                icon: <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7"><circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" strokeDasharray="3 2.5" fill="currentColor" fillOpacity="0.06"/><path d="M9 9a3 3 0 016 0c0 2-2 2.5-3 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="16.5" r="1.2" fill="currentColor"/></svg>,
+              },
+              {
+                label: "Pathfinder",  color: "#22d3ee", stars: 1, range: "8 – 15",
+                desc: "You're fit, active and ready to explore. Day hikes, beginner water sports, and accessible multi-day routes are your playground.",
+                icon: <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7"><circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1"/><path d="M12 16.5V8.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><path d="M8.5 12L12 8.5L15.5 12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+              },
+              {
+                label: "Navigator",   color: "#4ade80", stars: 2, range: "16 – 23",
+                desc: "You can read terrain, handle multiple days in the field and manage moderate physical demands across several axes simultaneously.",
+                icon: <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7"><circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><path d="M12 4l2.5 7.5L12 10l-2.5 1.5L12 4z" fill="currentColor"/></svg>,
+              },
+              {
+                label: "Trailblazer", color: "#f59e0b", stars: 3, range: "24 – 31",
+                desc: "Serious preparation, consistent training. You push into new territory — technical routes, high altitude objectives and demanding multi-day expeditions.",
+                icon: <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7"><path d="M12 2.5L20 6.5V13C20 17.8 16.5 21.3 12 22.8C7.5 21.3 4 17.8 4 13V6.5L12 2.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" fill="currentColor" fillOpacity="0.1"/><path d="M8 15.5l2-3.5 2 2.5 2-4.5 2 5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+              },
+              {
+                label: "Vanguard",    color: "#f97316", stars: 4, range: "32 – 39",
+                desc: "You lead from the front. The most demanding adventures on the platform are within reach — expedition-level objectives and extreme terrain.",
+                icon: <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7"><path d="M12 2L20 7V13.5C20 18.2 16.5 21.8 12 23.5C7.5 21.8 4 18.2 4 13.5V7L12 2Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" fill="currentColor" fillOpacity="0.1"/><path d="M12 2L14 7H20L15.5 10.5L17 16L12 12.5L7 16L8.5 10.5L4 7H10L12 2Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" fill="currentColor" fillOpacity="0.2"/></svg>,
+              },
+              {
+                label: "Apex",        color: "#a78bfa", stars: 5, range: "40",
+                desc: "Perfect score. Elite capability across every axis — stamina, strength, altitude, nerve. No adventure is out of reach.",
+                icon: <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7"><polygon points="12,1.5 15.5,9.5 24,10 17.8,16 19.8,24 12,19.8 4.2,24 6.2,16 0,10 8.5,9.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" fill="currentColor" fillOpacity="0.12"/><polygon points="12,6.5 14,11.5 19.5,12 15.3,15.8 16.7,21 12,18.2 7.3,21 8.7,15.8 4.5,12 10,11.5" fill="currentColor" fillOpacity="0.85"/></svg>,
+              },
+            ].map((rank, i) => (
+              <div
+                key={rank.label}
+                className="group relative rounded-2xl p-6 border overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
+                style={{ background: `${rank.color}08`, borderColor: `${rank.color}22` }}
+              >
+                <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full blur-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-300" style={{ background: rank.color }} />
+                <div className="relative">
+                  {/* Badge + rank number */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                      style={{ background: `${rank.color}18`, color: rank.color, boxShadow: `0 0 16px ${rank.color}25` }}>
+                      {rank.icon}
+                    </div>
+                    <div className="text-right">
+                      {rank.stars > 0 ? (
+                        <div className="flex gap-0.5 justify-end mb-1">
+                          {Array.from({ length: 5 }).map((_, si) => (
+                            <span key={si} className="text-xs" style={{ color: si < rank.stars ? rank.color : "rgba(255,255,255,0.08)" }}>★</span>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="mb-1 h-[18px]" />
+                      )}
+                      <span className="text-[9px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-full"
+                        style={{ background: `${rank.color}18`, color: rank.color }}>
+                        {rank.range === "—" ? "Unassessed" : `Score ${rank.range}`}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="font-black text-white text-lg mb-2">{rank.label}</p>
+                  <p className="text-white/40 text-xs leading-relaxed">{rank.desc}</p>
+                  {/* Bottom accent */}
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-2xl"
+                    style={{ background: `linear-gradient(90deg, transparent, ${rank.color}, transparent)` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Score formula note */}
+          <div className="mt-8 rounded-2xl px-6 py-4 border flex items-start gap-4"
+            style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.06)" }}>
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>
+              <Gauge className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-white/70 text-sm font-semibold mb-1">How your score is calculated</p>
+              <p className="text-white/35 text-xs leading-relaxed">
+                Your total score is the sum of your ratings across all eight axes (max 5 per axis × 8 axes = <span className="text-white/60 font-semibold">40 points</span>). A score of 8 means you rated 1 on each axis — a solid baseline. Each point above that reflects real, specific capability growth.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── LIVE EXAMPLES ─────────────────────────────────────────────── */}
       <section className="py-24 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
