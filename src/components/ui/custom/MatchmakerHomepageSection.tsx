@@ -87,10 +87,10 @@ export default function MatchmakerHomepageSection() {
         </div>
 
         {/* Tier badge + radar side by side */}
-        <div className="flex flex-wrap items-start gap-6 mb-10">
+        <div className="flex flex-wrap items-stretch gap-6 mb-10">
           {/* Left: tier + progress */}
           <div
-            className="flex flex-col min-w-[220px] rounded-2xl overflow-hidden"
+            className="flex flex-col flex-1 min-w-[220px] rounded-2xl overflow-hidden"
             style={{ border: `1px solid ${tier.color}30`, background: `${tier.color}08` }}
           >
             {/* Label */}
@@ -146,9 +146,9 @@ export default function MatchmakerHomepageSection() {
           </div>
 
           {/* Right: radar */}
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col flex-1 min-w-[220px]">
             <div
-              className="rounded-2xl overflow-hidden"
+              className="rounded-2xl overflow-hidden flex flex-col flex-1"
               style={{
                 background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, rgba(255,255,255,0.02) 75%)",
                 border: "1px solid rgba(255,255,255,0.07)",
@@ -157,7 +157,7 @@ export default function MatchmakerHomepageSection() {
               <div className="px-4 pt-3 pb-1">
                 <p className="text-[10px] uppercase tracking-widest font-bold text-white/30">ACE Profile</p>
               </div>
-              <div className="p-2">
+              <div className="flex flex-1 items-center justify-center p-2">
                 <ACERadar ace={profile.ace} size={200} showLabels />
               </div>
             </div>
