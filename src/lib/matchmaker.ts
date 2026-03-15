@@ -52,9 +52,9 @@ export interface Upsell {
 function aceToLabel(ace: ACE): string {
   const total = Object.values(ace).reduce((a, b) => a + b, 0);
   if (total >= 40) return "Apex";
-  if (total >= 32) return "Expeditioner";
-  if (total >= 24) return "Navigator";
-  if (total >= 16) return "Trailblazer";
+  if (total >= 32) return "Vanguard";
+  if (total >= 24) return "Trailblazer";
+  if (total >= 16) return "Navigator";
   return "Pathfinder";
 }
 

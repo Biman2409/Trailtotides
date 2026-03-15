@@ -9,11 +9,12 @@ export interface TierInfo {
 }
 
 export const TIERS: Record<string, TierInfo> = {
-  "Uncharted":    { rank: 1, color: "#22d3ee", stars: 1 },
-  "Trailblazer":  { rank: 2, color: "#4ade80", stars: 2 },
-  "Navigator":    { rank: 3, color: "#f59e0b", stars: 3 },
-  "Expeditioner": { rank: 4, color: "#f97316", stars: 4 },
-  "Apex":         { rank: 5, color: "#a78bfa", stars: 5 },
+  "Uncharted":   { rank: 0, color: "#6b7280", stars: 0 },
+  "Pathfinder":  { rank: 1, color: "#22d3ee", stars: 1 },
+  "Navigator":   { rank: 2, color: "#4ade80", stars: 2 },
+  "Trailblazer": { rank: 3, color: "#f59e0b", stars: 3 },
+  "Vanguard":    { rank: 4, color: "#f97316", stars: 4 },
+  "Apex":        { rank: 5, color: "#a78bfa", stars: 5 },
 };
 
 export function getTier(label: string): TierInfo {
@@ -22,8 +23,8 @@ export function getTier(label: string): TierInfo {
 
 export function getTierLabel(total: number): string {
   if (total >= 40) return "Apex";
-  if (total >= 32) return "Expeditioner";
-  if (total >= 24) return "Navigator";
-  if (total >= 16) return "Trailblazer";
+  if (total >= 32) return "Vanguard";
+  if (total >= 24) return "Trailblazer";
+  if (total >= 16) return "Navigator";
   return "Uncharted";
 }
