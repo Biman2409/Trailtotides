@@ -63,27 +63,71 @@ export default function ACEProfileSection({
           border: "1px solid var(--border-subtle)",
         }}
       >
-        <div className="flex flex-col sm:flex-row">
+        {/* TOP — radar (left) + domain strip (right) */}
+        <div className="flex flex-row items-stretch">
 
-          {/* LEFT — description / CTA */}
-          <div className="flex-1 flex flex-col justify-center gap-4 p-6 sm:border-r border-white/[0.06]">
-            {userAce ? (
-              <>
-                <p className="text-xs leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
-                  {aceSummary(ace, adventureName)}
-                </p>
-                <Link
-                  href="/matchmaker"
-                  className="flex items-center gap-1.5 w-fit text-xs font-semibold px-3 py-2 rounded-lg transition-all hover:brightness-110"
-                  style={{ background: "rgba(255,81,0,0.1)", border: "1px solid rgba(255,81,0,0.2)", color: "#ff5100" }}
-                >
-                  Retake Assessment
-                  <RotateCcw className="w-3 h-3" />
-                </Link>
-              </>
-            ) : (
+          {/* Radar */}
+          <div className="flex flex-col items-center justify-center pt-6 px-5 pb-4 shrink-0">
+            <ACERadar ace={ace} userAce={userAce ?? undefined} userColor={userColor} size={240} showLabels />
+            <div className="flex items-center gap-5 mt-3">
+              <div className="flex items-center gap-1.5">
+                <div className="w-3 h-0.5 rounded-full bg-[#ff5100]" />
+                <span className="text-[9px] text-white/30 uppercase tracking-wide">Trek required</span>
+              </div>
+              {userAce && (
+                <div className="flex items-center gap-1.5">
+                  <svg width="14" height="4" viewBox="0 0 14 4">
+                    <line x1="0" y1="2" x2="14" y2="2" stroke={userColor} strokeWidth="1.5" strokeDasharray="4 2.5" />
+                  </svg>
+                  <span className="text-[9px] uppercase tracking-wide font-semibold" style={{ color: userColor }}>
+                    {profileLabel ?? "Your level"}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Domain capability strip — vertical, fills height */}
+          {userAce ? (
+            <div className="flex flex-col flex-1 border-l border-white/[0.06] divide-y divide-white/[0.05]">
+              {DOMAINS.map(({ label, axes, color, desc }) => {
+                const trekVal = avg(ace, axes);
+                const userVal = avg(userAce, axes);
+                const meets = userVal >= trekVal;
+                return (
+                  <div
+                    key={label}
+                    className="flex items-center gap-3 px-4 py-3 flex-1"
+                    style={{ background: `${color}05` }}
+                  >
+                    <div className="w-1.5 h-6 rounded-full shrink-0" style={{ background: color }} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[9px] uppercase tracking-widest font-bold leading-none" style={{ color }}>{label}</p>
+                      <p className="text-[9px] text-white/25 mt-0.5">{desc}</p>
+                    </div>
+                    <div className="flex flex-col items-end gap-1 shrink-0">
+                      <div className="flex items-baseline gap-0.5">
+                        <span className="text-sm font-black leading-none" style={{ color: userColor }}>{userVal}</span>
+                        <span className="text-[9px] text-white/25">/{trekVal}</span>
+                      </div>
+                      <div
+                        className="text-[8px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap"
+                        style={{
+                          background: meets ? "#22c55e18" : "#ef444418",
+                          color: meets ? "#22c55e" : "#ef4444",
+                        }}
+                      >
+                        {meets ? "✓ Ready" : `+${(trekVal - userVal).toFixed(1)} needed`}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex-1 flex items-center p-6">
               <div
-                className="rounded-xl px-4 py-4 flex flex-col gap-3"
+                className="rounded-xl px-4 py-4 flex flex-col gap-3 w-full"
                 style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.15)" }}
               >
                 <div>
@@ -101,73 +145,25 @@ export default function ACEProfileSection({
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
-            )}
-          </div>
-
-          {/* RIGHT — radar left, domain strip right */}
-          <div className="shrink-0 flex flex-row items-stretch">
-
-            {/* Radar */}
-            <div className="flex flex-col items-center justify-center pt-6 px-5 pb-4">
-              <ACERadar ace={ace} userAce={userAce ?? undefined} userColor={userColor} size={240} showLabels />
-              <div className="flex items-center gap-5 mt-3">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-3 h-0.5 rounded-full bg-[#ff5100]" />
-                  <span className="text-[9px] text-white/30 uppercase tracking-wide">Trek required</span>
-                </div>
-                {userAce && (
-                  <div className="flex items-center gap-1.5">
-                    <svg width="14" height="4" viewBox="0 0 14 4">
-                      <line x1="0" y1="2" x2="14" y2="2" stroke={userColor} strokeWidth="1.5" strokeDasharray="4 2.5" />
-                    </svg>
-                    <span className="text-[9px] uppercase tracking-wide font-semibold" style={{ color: userColor }}>
-                      {profileLabel ?? "Your level"}
-                    </span>
-                  </div>
-                )}
-              </div>
             </div>
+          )}
+        </div>
 
-            {/* Domain capability strip — vertical */}
-            {userAce && (
-              <div className="flex flex-col border-l border-white/[0.06] divide-y divide-white/[0.05]">
-                {DOMAINS.map(({ label, axes, color, desc }) => {
-                  const trekVal = avg(ace, axes);
-                  const userVal = avg(userAce, axes);
-                  const meets = userVal >= trekVal;
-                  return (
-                    <div
-                      key={label}
-                      className="flex items-center gap-3 px-4 py-3 flex-1"
-                      style={{ background: `${color}05` }}
-                    >
-                      <div className="w-1.5 h-6 rounded-full shrink-0" style={{ background: color }} />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[9px] uppercase tracking-widest font-bold leading-none" style={{ color }}>{label}</p>
-                        <p className="text-[9px] text-white/25 mt-0.5">{desc}</p>
-                      </div>
-                      <div className="flex flex-col items-end gap-1 shrink-0">
-                        <div className="flex items-baseline gap-0.5">
-                          <span className="text-sm font-black leading-none" style={{ color: userColor }}>{userVal}</span>
-                          <span className="text-[9px] text-white/25">/{trekVal}</span>
-                        </div>
-                        <div
-                          className="text-[8px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap"
-                          style={{
-                            background: meets ? "#22c55e18" : "#ef444418",
-                            color: meets ? "#22c55e" : "#ef4444",
-                          }}
-                        >
-                          {meets ? "✓ Ready" : `+${(trekVal - userVal).toFixed(1)} needed`}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
+        {/* BOTTOM — description + retake */}
+        <div className="px-6 py-4 border-t border-white/[0.06]">
+          <p className="text-xs leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+            {aceSummary(ace, adventureName)}
+          </p>
+          {userAce && (
+            <Link
+              href="/matchmaker"
+              className="inline-flex items-center gap-1.5 mt-3 text-xs font-semibold px-3 py-2 rounded-lg transition-all hover:brightness-110"
+              style={{ background: "rgba(255,81,0,0.1)", border: "1px solid rgba(255,81,0,0.2)", color: "#ff5100" }}
+            >
+              Retake Assessment
+              <RotateCcw className="w-3 h-3" />
+            </Link>
+          )}
         </div>
       </div>
 
