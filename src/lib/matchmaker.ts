@@ -48,14 +48,14 @@ export interface Upsell {
 // ─── Tier labels ──────────────────────────────────────────────────────────────
 
 // Total ACE score: 8 axes × 1–5 each = range 8–40
-// Rank 1 = 8, Rank 2 = 16, Rank 3 = 24, Rank 4 = 32, Rank 5 = 40
+// Rank 0 = no assessment | Rank 1 = 8–15 | Rank 2 = 16–23 | Rank 3 = 24–31 | Rank 4 = 32–39 | Rank 5 = 40
 function aceToLabel(ace: ACE): string {
   const total = Object.values(ace).reduce((a, b) => a + b, 0);
   if (total >= 40) return "Apex";
   if (total >= 32) return "Expeditioner";
   if (total >= 24) return "Navigator";
   if (total >= 16) return "Trailblazer";
-  return "Uncharted";
+  return "Pathfinder";
 }
 
 // ─── Adventure matching (ACE-based) ──────────────────────────────────────────
