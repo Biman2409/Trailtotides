@@ -111,8 +111,14 @@ export default function MatchmakerCard({ isLoggedIn }: { isLoggedIn: boolean }) 
           {/* Radar */}
           <div>
             <p className="text-white/25 text-[9px] uppercase tracking-widest mb-3">ACE Capability Profile</p>
-            <div className="flex justify-center">
-              <ACERadar ace={profile.ace} size={160} showLabels />
+            <div
+              className="flex justify-center rounded-2xl py-3"
+              style={{
+                background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, rgba(255,255,255,0.02) 75%)",
+                border: "1px solid rgba(255,255,255,0.07)",
+              }}
+            >
+              <ACERadar ace={profile.ace} size={168} showLabels />
             </div>
           </div>
 

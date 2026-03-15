@@ -141,7 +141,15 @@ export default function MatchmakerHomepageSection() {
           {/* Right: radar */}
           <div className="flex flex-col items-center gap-2">
             <p className="text-[10px] uppercase tracking-widest font-bold text-white/25 self-start">ACE Capability Profile</p>
-            <ACERadar ace={profile.ace} size={200} showLabels />
+            <div
+              className="rounded-2xl p-2"
+              style={{
+                background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, rgba(255,255,255,0.02) 75%)",
+                border: "1px solid rgba(255,255,255,0.07)",
+              }}
+            >
+              <ACERadar ace={profile.ace} size={200} showLabels />
+            </div>
           </div>
         </div>
 

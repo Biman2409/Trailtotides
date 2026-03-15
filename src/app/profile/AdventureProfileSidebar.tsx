@@ -103,8 +103,14 @@ export default function AdventureProfileSidebar() {
       )}
 
       {/* Radar */}
-      <div className="flex justify-center py-1">
-        <ACERadar ace={stored.ace} size={160} showLabels />
+      <div
+        className="flex justify-center rounded-2xl py-3"
+        style={{
+          background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, rgba(255,255,255,0.02) 75%)",
+          border: "1px solid rgba(255,255,255,0.07)",
+        }}
+      >
+        <ACERadar ace={stored.ace} size={168} showLabels />
       </div>
 
       <div className="flex gap-2">

@@ -716,8 +716,14 @@ function ResultsScreen({
             };
             return (
               <div className="flex items-center gap-4 mb-6">
-                <div className="shrink-0">
-                  <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={220} showLabels />
+                <div
+                  className="shrink-0 rounded-2xl flex items-center justify-center p-3"
+                  style={{
+                    background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, rgba(255,255,255,0.02) 70%)",
+                    border: "1px solid rgba(255,255,255,0.07)",
+                  }}
+                >
+                  <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={210} showLabels />
                 </div>
                 <div className="flex-1 space-y-2.5">
                   <p className="text-[9px] uppercase tracking-[0.18em] font-bold text-white/25 mb-3">Standout Strengths</p>

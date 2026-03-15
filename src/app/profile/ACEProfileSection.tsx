@@ -280,9 +280,13 @@ export default function ACEProfileSection() {
   const totalScore = Object.values(stored.ace).reduce((a, b) => a + b, 0);
 
   return (
-    <div className="rounded-3xl p-6 md:p-8 border border-white/10 bg-white/5">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-bold text-white">ACE Profile</h2>
+    <div className="rounded-3xl border border-white/10 overflow-hidden" style={{ background: "linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%)" }}>
+      {/* Header bar */}
+      <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.07]">
+        <div className="flex items-center gap-2">
+          <div className="w-1.5 h-4 rounded-full bg-[#ff5100]" />
+          <h2 className="text-sm font-bold tracking-wide text-white uppercase" style={{ letterSpacing: "0.12em" }}>Capability Profile</h2>
+        </div>
         <Link
           href="/matchmaker"
           className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:brightness-110"
@@ -293,16 +297,22 @@ export default function ACEProfileSection() {
         </Link>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-        {/* Radar */}
-        <div className="shrink-0 flex justify-center">
-          <ACERadar ace={stored.ace} size={220} showLabels />
+      <div className="flex flex-col sm:flex-row items-stretch gap-0">
+        {/* Radar panel */}
+        <div
+          className="shrink-0 flex items-center justify-center p-6 sm:p-8"
+          style={{
+            background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, transparent 70%)",
+            borderRight: "1px solid rgba(255,255,255,0.06)",
+          }}
+        >
+          <ACERadar ace={stored.ace} size={240} showLabels />
         </div>
 
         {/* Right column */}
-        <div className="flex flex-col gap-4 min-w-0 flex-1">
+        <div className="flex flex-col gap-4 min-w-0 flex-1 p-6">
           {/* Rank progression */}
-          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
             <RankProgressionBar totalScore={totalScore} />
           </div>
 
@@ -314,7 +324,7 @@ export default function ACEProfileSection() {
 
           <Link
             href="/matchmaker"
-            className="inline-flex items-center gap-1.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all group w-fit"
+            className="inline-flex items-center gap-1.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all group w-fit mt-auto"
           >
             Find matching adventures
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
