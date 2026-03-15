@@ -16,14 +16,14 @@ const AXIS_ORDER: AceAxis[] = [
 ];
 
 const AXIS_ABBR: Record<AceAxis, string> = {
-  stamina:  "STM",
-  power:    "PWR",
-  strength: "STR",
-  agility:  "AGI",
-  water:    "H₂O",
-  altitude: "ALT",
-  nerve:    "NRV",
-  focus:    "FOC",
+  stamina:  "Stamina",
+  power:    "Power",
+  strength: "Strength",
+  agility:  "Agility",
+  water:    "Water",
+  altitude: "Altitude",
+  nerve:    "Nerve",
+  focus:    "Focus",
 };
 
 const AXIS_FULL: Record<AceAxis, string> = {
