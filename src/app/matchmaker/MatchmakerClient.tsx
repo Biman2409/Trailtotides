@@ -6,7 +6,7 @@ import Link from "next/link";
 import {
   ChevronRight, ChevronLeft, MapPin, ArrowRight, RotateCcw,
   Zap, Shield, Mountain, CheckCircle2, TrendingUp, Lock,
-  Compass, Dumbbell, Waves, Wind, Brain, Target, Flame,
+  Compass, Dumbbell, Waves, Wind, Brain, Flame,
   AlertTriangle, Loader2,
 } from "lucide-react";
 import ACEBadge from "@/components/ui/custom/ACEBadge";
@@ -618,6 +618,7 @@ function ResultsScreen({
     totalScore >= 24 ? { label: "Navigator",     color: "#f59e0b" } :
     totalScore >= 16 ? { label: "Trailblazer",   color: "#4ade80" } :
                        { label: "Pathfinder",    color: "#22d3ee" };
+  const tierRank = RANKS.find(r => r.label === tier.label);
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-16">
@@ -632,15 +633,32 @@ function ResultsScreen({
         <div className="relative">
           <div className="flex items-start justify-between gap-4 mb-6">
             <div>
-              <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Adventure Tier</p>
-              <h1 className="text-3xl font-bold tracking-tight" style={{ color: tier.color }}>{tier.label}</h1>
-              <p className="text-white/45 text-sm mt-2">Based on your 8-axis ACE capability profile.</p>
+              <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Adventure Rank</p>
+              <div className="flex items-center gap-3">
+                <h1 className="text-3xl font-bold tracking-tight" style={{ color: tier.color }}>{tier.label}</h1>
+                {tierRank && (
+                  <div
+                    className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                    style={{ background: `${tier.color}20`, color: tier.color }}
+                  >
+                    {tierRank.icon}
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center gap-1.5 mt-2">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <span key={i} className="text-base" style={{ color: i < (tierRank?.stars ?? 0) ? tier.color : "rgba(255,255,255,0.1)" }}>★</span>
+                ))}
+                <span className="text-white/30 text-xs ml-1">Rank {(RANKS.findIndex(r => r.label === tier.label) + 1)} / 5</span>
+              </div>
             </div>
             <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
-              style={{ background: `${tier.color}25`, color: tier.color, boxShadow: `0 0 20px ${tier.color}40` }}
+              className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0"
+              style={{ background: `${tier.color}20`, color: tier.color, boxShadow: `0 0 24px ${tier.color}45`, border: `1px solid ${tier.color}35` }}
             >
-              <Target className="w-6 h-6" />
+              <div className="scale-150">
+                {tierRank?.icon}
+              </div>
             </div>
           </div>
 
