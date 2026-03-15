@@ -104,11 +104,12 @@ export default function ACEProfileSection({
             )}
           </div>
 
-          {/* RIGHT — radar + domain strip */}
-          <div className="shrink-0 flex flex-col items-center">
+          {/* RIGHT — radar left, domain strip right */}
+          <div className="shrink-0 flex flex-row items-stretch">
+
             {/* Radar */}
-            <div className="flex flex-col items-center pt-6 px-6 pb-4">
-              <ACERadar ace={ace} userAce={userAce ?? undefined} userColor={userColor} size={260} showLabels />
+            <div className="flex flex-col items-center justify-center pt-6 px-5 pb-4">
+              <ACERadar ace={ace} userAce={userAce ?? undefined} userColor={userColor} size={240} showLabels />
               <div className="flex items-center gap-5 mt-3">
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-0.5 rounded-full bg-[#ff5100]" />
@@ -127,9 +128,9 @@ export default function ACEProfileSection({
               </div>
             </div>
 
-            {/* Domain capability strip */}
+            {/* Domain capability strip — vertical */}
             {userAce && (
-              <div className="grid grid-cols-4 w-full border-t border-white/[0.06]">
+              <div className="flex flex-col border-l border-white/[0.06] divide-y divide-white/[0.05]">
                 {DOMAINS.map(({ label, axes, color, desc }) => {
                   const trekVal = avg(ace, axes);
                   const userVal = avg(userAce, axes);
@@ -137,23 +138,28 @@ export default function ACEProfileSection({
                   return (
                     <div
                       key={label}
-                      className="flex flex-col items-center gap-1.5 py-4 px-2 border-r border-white/[0.05] last:border-r-0"
+                      className="flex items-center gap-3 px-4 py-3 flex-1"
                       style={{ background: `${color}05` }}
                     >
-                      <span className="text-[9px] uppercase tracking-widest font-bold" style={{ color }}>{label}</span>
-                      <span className="text-[9px] text-white/25 text-center leading-tight">{desc}</span>
-                      <div className="flex items-end gap-1 mt-1">
-                        <span className="text-sm font-black leading-none" style={{ color: userColor }}>{userVal}</span>
-                        <span className="text-[9px] text-white/25 mb-px">/ {trekVal}</span>
+                      <div className="w-1.5 h-6 rounded-full shrink-0" style={{ background: color }} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[9px] uppercase tracking-widest font-bold leading-none" style={{ color }}>{label}</p>
+                        <p className="text-[9px] text-white/25 mt-0.5">{desc}</p>
                       </div>
-                      <div
-                        className="text-[8px] font-bold px-1.5 py-0.5 rounded-full"
-                        style={{
-                          background: meets ? "#22c55e18" : "#ef444418",
-                          color: meets ? "#22c55e" : "#ef4444",
-                        }}
-                      >
-                        {meets ? "✓ Ready" : `+${(trekVal - userVal).toFixed(1)} needed`}
+                      <div className="flex flex-col items-end gap-1 shrink-0">
+                        <div className="flex items-baseline gap-0.5">
+                          <span className="text-sm font-black leading-none" style={{ color: userColor }}>{userVal}</span>
+                          <span className="text-[9px] text-white/25">/{trekVal}</span>
+                        </div>
+                        <div
+                          className="text-[8px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap"
+                          style={{
+                            background: meets ? "#22c55e18" : "#ef444418",
+                            color: meets ? "#22c55e" : "#ef4444",
+                          }}
+                        >
+                          {meets ? "✓ Ready" : `+${(trekVal - userVal).toFixed(1)} needed`}
+                        </div>
                       </div>
                     </div>
                   );
