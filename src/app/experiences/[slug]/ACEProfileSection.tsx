@@ -5,9 +5,9 @@ import Link from "next/link";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import GradingPill from "@/components/ui/custom/GradingPill";
-import { aceSummary } from "@/lib/ace";
+import { aceSummary, ACE_AXIS_COLORS, ACE_AXIS_LABELS } from "@/lib/ace";
 import { loadProfile } from "@/lib/matchmaker";
-import type { ACE } from "@/lib/ace";
+import type { ACE, AceAxis } from "@/lib/ace";
 
 interface Props {
   ace: ACE;
@@ -18,17 +18,7 @@ interface Props {
 }
 
 
-const DOMAINS = [
-  { label: "Engine",   axes: ["stamina", "power"],    color: "#f97316", desc: "Stamina & Power" },
-  { label: "Chassis",  axes: ["strength", "agility"], color: "#22d3ee", desc: "Strength & Agility" },
-  { label: "Elements", axes: ["water", "altitude"],   color: "#a78bfa", desc: "Water & Altitude" },
-  { label: "Mind",     axes: ["nerve", "focus"],      color: "#10b981", desc: "Nerve & Focus" },
-];
-
-function avg(ace: ACE, axes: string[]) {
-  const vals = axes.map(a => (ace as Record<string, number>)[a] ?? 0);
-  return Math.round((vals.reduce((s, v) => s + v, 0) / vals.length) * 10) / 10;
-}
+const AXES: AceAxis[] = ["stamina", "power", "strength", "agility", "water", "altitude", "nerve", "focus"];
 
 export default function ACEProfileSection({
   ace,
@@ -86,43 +76,40 @@ export default function ACEProfileSection({
           {/* Domain capability strip — vertical, fills height */}
           {userAce ? (
             <div className="flex flex-col flex-1 border-l border-white/[0.06]">
-              <div className="px-3 py-2.5 border-b border-white/[0.06]">
+              <div className="px-3 py-2 border-b border-white/[0.06]">
                 <p className="text-[9px] uppercase tracking-widest font-bold text-white/30">Your Capability vs Trek Requirement</p>
               </div>
               <div className="flex flex-col flex-1 divide-y divide-white/[0.05]">
-              {DOMAINS.map(({ label, axes, color, desc }) => {
-                const trekVal = avg(ace, axes);
-                const userVal = avg(userAce, axes);
-                const meets = userVal >= trekVal;
-                return (
-                  <div
-                    key={label}
-                    className="flex items-center gap-2.5 px-3 py-2.5 flex-1"
-                    style={{ background: `${color}05` }}
-                  >
-                    <div className="w-1 h-5 rounded-full shrink-0" style={{ background: color }} />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[8px] uppercase tracking-widest font-bold leading-none" style={{ color }}>{label}</p>
-                      <p className="text-[8px] text-white/20 mt-0.5">{desc}</p>
-                    </div>
-                    <div className="flex flex-col items-end gap-0.5 shrink-0">
-                      <div className="flex items-baseline gap-px">
+                {AXES.map((axis) => {
+                  const color = ACE_AXIS_COLORS[axis];
+                  const label = ACE_AXIS_LABELS[axis];
+                  const trekVal = ace[axis];
+                  const userVal = (userAce as Record<string, number>)[axis] ?? 0;
+                  const meets = userVal >= trekVal;
+                  return (
+                    <div
+                      key={axis}
+                      className="flex items-center gap-2.5 px-3 py-2 flex-1"
+                      style={{ background: `${color}05` }}
+                    >
+                      <div className="w-1 h-4 rounded-full shrink-0" style={{ background: color }} />
+                      <p className="flex-1 text-[8px] uppercase tracking-widest font-bold leading-none" style={{ color }}>{label}</p>
+                      <div className="flex items-center gap-1.5 shrink-0">
                         <span className="text-xs font-black leading-none" style={{ color: userColor }}>{userVal}</span>
-                        <span className="text-[8px] text-white/25">/{trekVal}</span>
-                      </div>
-                      <div
-                        className="text-[7px] font-bold px-1 py-px rounded-full whitespace-nowrap"
-                        style={{
-                          background: meets ? "#22c55e18" : "#ef444418",
-                          color: meets ? "#22c55e" : "#ef4444",
-                        }}
-                      >
-                        {meets ? "✓ Ready" : `+${(trekVal - userVal).toFixed(1)} needed`}
+                        <span className="text-[8px] text-white/25">/ {trekVal}</span>
+                        <div
+                          className="text-[7px] font-bold px-1.5 py-px rounded-full whitespace-nowrap"
+                          style={{
+                            background: meets ? "#22c55e18" : "#ef444418",
+                            color: meets ? "#22c55e" : "#ef4444",
+                          }}
+                        >
+                          {meets ? "✓ Ready" : `+${(trekVal - userVal).toFixed(1)} needed`}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
               </div>
             </div>
           ) : (
