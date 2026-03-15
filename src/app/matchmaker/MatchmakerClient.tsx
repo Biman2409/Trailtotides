@@ -634,17 +634,7 @@ function ResultsScreen({
           <div className="flex items-start justify-between gap-4 mb-6">
             <div>
               <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Adventure Rank</p>
-              <div className="flex items-center gap-3">
-                <h1 className="text-3xl font-bold tracking-tight" style={{ color: tier.color }}>{tier.label}</h1>
-                {tierRank && (
-                  <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: `${tier.color}20`, color: tier.color }}
-                  >
-                    {tierRank.icon}
-                  </div>
-                )}
-              </div>
+              <h1 className="text-3xl font-bold tracking-tight" style={{ color: tier.color }}>{tier.label}</h1>
               <div className="flex items-center gap-1.5 mt-2">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <span key={i} className="text-base" style={{ color: i < (tierRank?.stars ?? 0) ? tier.color : "rgba(255,255,255,0.1)" }}>★</span>
