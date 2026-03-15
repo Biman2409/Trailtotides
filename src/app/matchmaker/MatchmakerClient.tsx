@@ -333,83 +333,93 @@ function RankProgressionBar({ totalScore, tierLabel }: { totalScore: number; tie
         )}
       </div>
 
-      {/* Rank track timeline */}
-      <div className="w-full">
-        {/* Circle row with track line behind it */}
-        <div className="relative flex items-center justify-between px-5">
-          {/* Track background */}
-          <div className="absolute inset-x-5 top-1/2 -translate-y-1/2 h-px bg-white/10 z-0" />
+      {/* Rank track timeline — single unified grid */}
+      <div className="relative w-full" style={{ paddingTop: "6px" }}>
+        {/* Track bg: from centre of col-1 to centre of col-N */}
+        <div
+          className="absolute h-px bg-white/[0.08] z-0"
+          style={{
+            top: `${6 + 16}px`,
+            left: `calc(100% / ${totalRanks * 2})`,
+            right: `calc(100% / ${totalRanks * 2})`,
+          }}
+        />
+        {/* Track fill */}
+        <div
+          className="absolute h-px z-0 transition-all duration-700"
+          style={{
+            top: `${6 + 16}px`,
+            left: `calc(100% / ${totalRanks * 2})`,
+            width: `calc((100% - 100% / ${totalRanks}) * ${filledFraction})`,
+            background: `linear-gradient(to right, ${RANKS[1].color}80, ${currentRank.color})`,
+            boxShadow: `0 0 6px ${currentRank.color}70`,
+          }}
+        />
 
-          {/* Track filled portion */}
-          <div
-            className="absolute top-1/2 -translate-y-1/2 h-px z-0 transition-all duration-700"
-            style={{
-              left: "20px",
-              width: `calc((100% - 40px) * ${filledFraction})`,
-              background: `linear-gradient(to right, ${RANKS[0].color}70, ${currentRank.color})`,
-              boxShadow: `0 0 4px ${currentRank.color}60`,
-            }}
-          />
-
-          {/* Circles */}
+        {/* Unified grid — circles + labels in same column */}
+        <div className="relative grid z-10" style={{ gridTemplateColumns: `repeat(${totalRanks}, 1fr)` }}>
           {RANKS.map((rank, i) => {
             const isUnlocked = i <= currentRankIndex;
             const isCurrent  = i === currentRankIndex;
             return (
-              <div key={rank.label} className="relative z-10">
-                {isCurrent && (
+              <div key={rank.label} className="flex flex-col items-center gap-2">
+                {/* Badge circle */}
+                <div className="relative flex items-center justify-center">
+                  {isCurrent && (
+                    <div
+                      className="absolute rounded-full animate-pulse pointer-events-none"
+                      style={{
+                        inset: "-5px",
+                        border: `1.5px solid ${rank.color}55`,
+                      }}
+                    />
+                  )}
                   <div
-                    className="absolute inset-0 rounded-full border-2 animate-pulse pointer-events-none"
-                    style={{ borderColor: `${rank.color}50`, margin: "-4px" }}
-                  />
-                )}
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center"
-                  style={
-                    isCurrent
-                      ? { background: `${rank.color}28`, border: `2px solid ${rank.color}`, color: rank.color, boxShadow: `0 0 12px ${rank.color}60` }
-                      : isUnlocked
-                      ? { background: `${rank.color}15`, border: `1.5px solid ${rank.color}50`, color: rank.color }
-                      : { background: "rgba(255,255,255,0.04)", border: "1.5px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.2)" }
-                  }
-                >
-                  <div style={{ transform: "scale(0.7)" }}>
-                    {isUnlocked ? rank.icon : <Lock className="w-3 h-3" />}
+                    className="w-8 h-8 rounded-full flex items-center justify-center relative z-10"
+                    style={
+                      isCurrent
+                        ? { background: `${rank.color}25`, border: `2px solid ${rank.color}`, color: rank.color, boxShadow: `0 0 14px ${rank.color}65` }
+                        : isUnlocked
+                        ? { background: `${rank.color}15`, border: `1.5px solid ${rank.color}45`, color: rank.color }
+                        : { background: "rgba(255,255,255,0.03)", border: "1.5px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.18)" }
+                    }
+                  >
+                    <div style={{ transform: "scale(0.72)" }}>
+                      {isUnlocked ? rank.icon : <Lock className="w-3 h-3" />}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
 
-        {/* Labels row */}
-        <div className="flex justify-between px-0 mt-2">
-          {RANKS.map((rank, i) => {
-            const isUnlocked = i <= currentRankIndex;
-            const isCurrent  = i === currentRankIndex;
-            return (
-              <div key={rank.label} className="flex flex-col items-center gap-0.5" style={{ width: `${100 / RANKS.length}%` }}>
+                {/* Label */}
                 <p
-                  className="text-[7px] font-semibold text-center leading-tight tracking-wide"
-                  style={{ color: isCurrent ? rank.color : isUnlocked ? `${rank.color}70` : "rgba(255,255,255,0.2)" }}
+                  className="text-[7px] font-semibold text-center leading-tight tracking-wide w-full"
+                  style={{ color: isCurrent ? rank.color : isUnlocked ? `${rank.color}65` : "rgba(255,255,255,0.18)" }}
                 >
                   {rank.label}
                 </p>
-                {rank.stars > 0 && (
-                  <div className="flex gap-px">
+
+                {/* Stars */}
+                {rank.stars > 0 ? (
+                  <div className="flex gap-px -mt-1.5">
                     {Array.from({ length: rank.stars }).map((_, si) => (
-                      <span key={si} className="text-[5.5px] leading-none"
+                      <span key={si} className="text-[5px] leading-none"
                         style={{ color: isUnlocked ? rank.color : "rgba(255,255,255,0.1)" }}>★</span>
                     ))}
                   </div>
+                ) : (
+                  <div className="h-[7px] -mt-1.5" /> // spacer so all columns same height
                 )}
-                {isCurrent && (
+
+                {/* You chip */}
+                {isCurrent ? (
                   <span
-                    className="text-[6px] font-bold uppercase tracking-wider px-1.5 py-px rounded-full"
-                    style={{ background: `${rank.color}20`, color: rank.color, border: `1px solid ${rank.color}35` }}
+                    className="text-[6px] font-bold uppercase tracking-wider px-1.5 py-px rounded-full -mt-0.5"
+                    style={{ background: `${rank.color}22`, color: rank.color, border: `1px solid ${rank.color}40` }}
                   >
                     You
                   </span>
+                ) : (
+                  <div className="h-[14px]" /> // spacer to keep column heights equal
                 )}
               </div>
             );
