@@ -868,18 +868,16 @@ export default function MatchmakerClient() {
   const [savedResult, setSavedResult] = useState<AnalysisResult | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // Load previous result on mount; auto-show results if ?results=1 in URL
+  // Load previous result on mount — always show results if profile exists
   const autoShown = useRef(false);
   useEffect(() => {
-    const showResults = new URLSearchParams(window.location.search).get("results") === "1";
     loadProfileFromServer().then((saved) => {
       if (saved?.ace) {
         const r = buildResult(saved.ace as unknown as Record<string, number>);
         setSavedResult(r);
-        if (showResults && !autoShown.current) {
+        if (!autoShown.current) {
           autoShown.current = true;
           setResult(r);
-          window.scrollTo({ top: 0, behavior: "instant" });
         }
       }
     });
