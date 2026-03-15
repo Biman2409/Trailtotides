@@ -190,8 +190,7 @@ export default function CompareAdventures() {
                 {/* ACE Radar row — Your Body + trek profiles */}
                 <tr className="border-t border-white/8 bg-white/[0.01]">
                   {/* Your Body cell */}
-                  <td className="px-4 py-4 align-top">
-                    <p className="text-[10px] uppercase tracking-widest font-bold text-white/30 mb-3">ACE Profile</p>
+                  <td className="px-4 py-4 align-middle">
                     {userAce ? (
                       <div
                         className="inline-flex flex-col items-center rounded-xl overflow-hidden"
@@ -206,7 +205,7 @@ export default function CompareAdventures() {
                     )}
                   </td>
                   {selected.map((a) => (
-                    <td key={a.id} className="px-4 py-4 align-top">
+                    <td key={a.id} className="px-4 py-4 align-middle">
                       <div
                         className="rounded-xl p-2 inline-block"
                         style={{
