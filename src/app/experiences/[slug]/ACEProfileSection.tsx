@@ -27,10 +27,10 @@ const RANKS = [
 ];
 
 const DOMAINS = [
-  { label: "Engine",   axes: ["stamina", "power"],    color: "#f97316", desc: "Cardio & power output" },
-  { label: "Chassis",  axes: ["strength", "agility"], color: "#22d3ee", desc: "Strength & agility" },
-  { label: "Elements", axes: ["water", "altitude"],   color: "#a78bfa", desc: "Water & altitude" },
-  { label: "Mind",     axes: ["nerve", "focus"],      color: "#10b981", desc: "Nerve & focus" },
+  { label: "Engine",   axes: ["stamina", "power"],    color: "#f97316", desc: "Stamina & Power" },
+  { label: "Chassis",  axes: ["strength", "agility"], color: "#22d3ee", desc: "Strength & Agility" },
+  { label: "Elements", axes: ["water", "altitude"],   color: "#a78bfa", desc: "Water & Altitude" },
+  { label: "Mind",     axes: ["nerve", "focus"],      color: "#10b981", desc: "Nerve & Focus" },
 ];
 
 function avg(ace: ACE, axes: string[]) {
