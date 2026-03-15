@@ -654,11 +654,11 @@ function ResultsScreen({
   const avgScore = axisValues.length ? axisValues.reduce((a, b) => a + b, 0) / axisValues.length : 0;
   const totalScore = axisValues.reduce((a, b) => a + b, 0);
   const tier =
-    totalScore >= 40 ? { label: "Apex",          color: "#a78bfa" } :
-    totalScore >= 32 ? { label: "Expeditioner",  color: "#f97316" } :
-    totalScore >= 24 ? { label: "Navigator",     color: "#f59e0b" } :
-    totalScore >= 16 ? { label: "Trailblazer",   color: "#4ade80" } :
-                       { label: "Pathfinder",    color: "#22d3ee" };
+    totalScore >= 40 ? { label: "Apex",        color: "#a78bfa" } :
+    totalScore >= 32 ? { label: "Vanguard",    color: "#f97316" } :
+    totalScore >= 24 ? { label: "Trailblazer", color: "#f59e0b" } :
+    totalScore >= 16 ? { label: "Navigator",   color: "#4ade80" } :
+                       { label: "Pathfinder",  color: "#22d3ee" };
   const tierRank = RANKS.find(r => r.label === tier.label);
 
   return (
