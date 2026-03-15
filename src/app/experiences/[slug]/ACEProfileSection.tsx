@@ -72,7 +72,7 @@ export default function ACEProfileSection({
             <div className="flex items-center gap-5 mt-3">
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-0.5 rounded-full bg-[#ff5100]" />
-                <span className="text-[9px] text-white/30 uppercase tracking-wide">Trek required</span>
+                <span className="text-[9px] text-white/30 uppercase tracking-wide">Trek Requirements</span>
               </div>
               {userAce && (
                 <div className="flex items-center gap-1.5">
@@ -80,7 +80,7 @@ export default function ACEProfileSection({
                     <line x1="0" y1="2" x2="14" y2="2" stroke={userColor} strokeWidth="1.5" strokeDasharray="4 2.5" />
                   </svg>
                   <span className="text-[9px] uppercase tracking-wide font-semibold" style={{ color: userColor }}>
-                    Your Body
+                    Your Capability
                   </span>
                 </div>
               )}
