@@ -18,7 +18,12 @@ interface Props {
 }
 
 
-const AXES: AceAxis[] = ["stamina", "power", "strength", "agility", "water", "altitude", "nerve", "focus"];
+const DOMAINS = [
+  { label: "Engine",   color: "#f97316", axes: ["stamina", "power"]    as AceAxis[] },
+  { label: "Chassis",  color: "#22d3ee", axes: ["strength", "agility"] as AceAxis[] },
+  { label: "Elements", color: "#a78bfa", axes: ["water", "altitude"]   as AceAxis[] },
+  { label: "Mind",     color: "#10b981", axes: ["nerve", "focus"]      as AceAxis[] },
+];
 
 export default function ACEProfileSection({
   ace,
@@ -80,36 +85,42 @@ export default function ACEProfileSection({
                 <p className="text-[9px] uppercase tracking-widest font-bold text-white/30">Your Capability vs Trek Requirement</p>
               </div>
               <div className="flex flex-col flex-1 divide-y divide-white/[0.05]">
-                {AXES.map((axis) => {
-                  const color = ACE_AXIS_COLORS[axis];
-                  const label = ACE_AXIS_LABELS[axis];
-                  const trekVal = ace[axis];
-                  const userVal = (userAce as Record<string, number>)[axis] ?? 0;
-                  const meets = userVal >= trekVal;
-                  return (
-                    <div
-                      key={axis}
-                      className="flex items-center gap-2.5 px-3 py-2 flex-1"
-                      style={{ background: `${color}05` }}
-                    >
-                      <div className="w-1 h-4 rounded-full shrink-0" style={{ background: color }} />
-                      <p className="flex-1 text-[8px] uppercase tracking-widest font-bold leading-none" style={{ color }}>{label}</p>
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <span className="text-xs font-black leading-none" style={{ color: userColor }}>{userVal}</span>
-                        <span className="text-[8px] text-white/25">/ {trekVal}</span>
-                        <div
-                          className="text-[7px] font-bold px-1.5 py-px rounded-full whitespace-nowrap"
-                          style={{
-                            background: meets ? "#22c55e18" : "#ef444418",
-                            color: meets ? "#22c55e" : "#ef4444",
-                          }}
-                        >
-                          {meets ? "✓ Ready" : `+${(trekVal - userVal).toFixed(1)} needed`}
-                        </div>
-                      </div>
+                {DOMAINS.map(({ label: domainLabel, color: domainColor, axes }) => (
+                  <div key={domainLabel} className="flex items-stretch flex-1" style={{ background: `${domainColor}04` }}>
+                    {/* Domain label */}
+                    <div className="flex items-center px-3 border-r border-white/[0.05]" style={{ minWidth: "60px" }}>
+                      <span className="text-[8px] uppercase tracking-widest font-bold" style={{ color: domainColor }}>{domainLabel}</span>
                     </div>
-                  );
-                })}
+                    {/* Axes on one line */}
+                    <div className="flex flex-1 divide-x divide-white/[0.05]">
+                      {axes.map((axis) => {
+                        const color = ACE_AXIS_COLORS[axis];
+                        const axisLabel = ACE_AXIS_LABELS[axis];
+                        const trekVal = ace[axis];
+                        const userVal = (userAce as Record<string, number>)[axis] ?? 0;
+                        const meets = userVal >= trekVal;
+                        return (
+                          <div key={axis} className="flex-1 flex flex-col justify-center gap-1 px-3 py-2.5">
+                            <p className="text-[8px] uppercase tracking-widest font-bold leading-none" style={{ color }}>{axisLabel}</p>
+                            <div className="flex items-center gap-1">
+                              <span className="text-xs font-black leading-none" style={{ color: userColor }}>{userVal}</span>
+                              <span className="text-[8px] text-white/25">/ {trekVal}</span>
+                              <div
+                                className="text-[7px] font-bold px-1 py-px rounded-full whitespace-nowrap"
+                                style={{
+                                  background: meets ? "#22c55e18" : "#ef444418",
+                                  color: meets ? "#22c55e" : "#ef4444",
+                                }}
+                              >
+                                {meets ? "✓" : `+${(trekVal - userVal).toFixed(1)}`}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ) : (
