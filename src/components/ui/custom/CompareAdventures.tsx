@@ -197,10 +197,6 @@ export default function CompareAdventures() {
                         className="inline-flex flex-col items-center rounded-xl overflow-hidden"
                         style={{ border: "1px solid rgba(255,255,255,0.10)", background: "radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 75%)" }}
                       >
-                        <div className="px-3 pt-2 pb-0.5 w-full">
-                          <p className="text-[9px] uppercase tracking-widest font-bold text-white/40">Your Body</p>
-                          <p className="text-[9px] text-white/60 font-semibold">{userLabel}</p>
-                        </div>
                         <div className="p-2">
                           <ACERadar ace={userAce} size={160} showLabels />
                         </div>
@@ -211,7 +207,6 @@ export default function CompareAdventures() {
                   </td>
                   {selected.map((a) => (
                     <td key={a.id} className="px-4 py-4 align-top">
-                      <p className="text-[10px] uppercase tracking-widest font-bold text-white/30 mb-3">Trek ACE</p>
                       <div
                         className="rounded-xl p-2 inline-block"
                         style={{
