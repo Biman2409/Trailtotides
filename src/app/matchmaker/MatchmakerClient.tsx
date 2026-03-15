@@ -308,7 +308,7 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
                 <span key={si} className="text-sm" style={{ color: si < currentRank.stars ? currentRank.color : "rgba(255,255,255,0.08)" }}>★</span>
               ))}
             </div>
-            <span className="text-[9px] text-white/25 uppercase tracking-wider">Rank {currentRankIndex} / 5</span>
+            <span className="text-[9px] text-white/25 uppercase tracking-wider">Rank {currentRank.stars} / 5</span>
           </div>
         </div>
         {nextRank && (
@@ -681,7 +681,7 @@ function ResultsScreen({
                 {Array.from({ length: 5 }).map((_, i) => (
                   <span key={i} className="text-base" style={{ color: i < (tierRank?.stars ?? 0) ? tier.color : "rgba(255,255,255,0.1)" }}>★</span>
                 ))}
-                <span className="text-white/30 text-xs ml-1">Rank {(RANKS.findIndex(r => r.label === tier.label) + 1)} / 5</span>
+                <span className="text-white/30 text-xs ml-1">Rank {tierRank?.stars ?? 0} / 5</span>
               </div>
             </div>
             <div
