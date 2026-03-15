@@ -6,6 +6,15 @@ import { ArrowRight } from "lucide-react";
 import { loadProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
 
+const RANKS = [
+  { label: "Uncharted",   color: "#6b7280", stars: 0, minScore: 0  },
+  { label: "Pathfinder",  color: "#22d3ee", stars: 1, minScore: 8  },
+  { label: "Navigator",   color: "#4ade80", stars: 2, minScore: 16 },
+  { label: "Trailblazer", color: "#f59e0b", stars: 3, minScore: 24 },
+  { label: "Vanguard",    color: "#f97316", stars: 4, minScore: 32 },
+  { label: "Apex",        color: "#a78bfa", stars: 5, minScore: 40 },
+];
+
 const TIER_INFO: Record<string, { color: string; stars: number; icon: React.ReactNode }> = {
   "Uncharted":   { color: "#6b7280", stars: 0, icon: <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5"><circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" strokeDasharray="3 2.5" fill="currentColor" fillOpacity="0.06"/><path d="M9 9a3 3 0 016 0c0 2-2 2.5-3 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="16.5" r="1.2" fill="currentColor"/></svg> },
   "Pathfinder":  { color: "#22d3ee", stars: 1, icon: <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5"><circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1"/><path d="M12 16.5V8.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><path d="M8.5 12L12 8.5L15.5 12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg> },
@@ -36,6 +45,13 @@ export default function AdventureProfileSidebar() {
   }
 
   const tier = TIER_INFO[stored.label] ?? TIER_INFO["Pathfinder"];
+  const totalScore = Object.values(stored.ace).reduce((a: number, b) => a + (b as number), 0);
+  const rankIndex   = RANKS.findIndex(r => r.label === stored.label);
+  const currentRank = RANKS[rankIndex] ?? RANKS[1];
+  const nextRank    = RANKS[rankIndex + 1] ?? null;
+  const progressPct = nextRank
+    ? Math.min(100, Math.round(((totalScore - currentRank.minScore) / (nextRank.minScore - currentRank.minScore)) * 100))
+    : 100;
 
   return (
     <div className="pt-4 border-t border-white/5 space-y-3">
@@ -45,18 +61,46 @@ export default function AdventureProfileSidebar() {
       <div className="flex items-center gap-3 p-3 rounded-2xl border"
         style={{ background: `${tier.color}0d`, borderColor: `${tier.color}28` }}>
         <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-          style={{ background: `${tier.color}20`, color: tier.color }}>
+          style={{ background: `${tier.color}20`, color: tier.color, boxShadow: `0 0 10px ${tier.color}30` }}>
           {tier.icon}
         </div>
-        <div>
+        <div className="flex-1 min-w-0">
           <p className="font-bold text-xs leading-tight" style={{ color: tier.color }}>{stored.label}</p>
           <div className="flex items-center gap-0.5 mt-0.5">
-            {Array.from({ length: tier.stars }).map((_, i) => (
-              <span key={i} className="text-[10px]" style={{ color: tier.color }}>★</span>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <span key={i} className="text-[9px]" style={{ color: i < tier.stars ? tier.color : "rgba(255,255,255,0.1)" }}>★</span>
             ))}
           </div>
         </div>
       </div>
+
+      {/* Next level progress */}
+      {nextRank ? (
+        <div className="px-0.5">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[9px] text-white/30">
+              <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span>
+              <span className="text-white/20"> · {nextRank.minScore - totalScore} pts away</span>
+            </span>
+            <span className="text-[9px] font-bold font-mono" style={{ color: currentRank.color }}>{progressPct}%</span>
+          </div>
+          <div className="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
+            <div
+              className="h-full rounded-full"
+              style={{
+                width: `${progressPct}%`,
+                background: `linear-gradient(to right, ${currentRank.color}, ${nextRank.color})`,
+                boxShadow: `0 0 6px ${currentRank.color}50`,
+              }}
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2 px-0.5">
+          <div className="h-1.5 flex-1 rounded-full" style={{ background: `linear-gradient(to right, #22d3ee, #a78bfa)`, boxShadow: "0 0 6px #a78bfa40" }} />
+          <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa]">Max</span>
+        </div>
+      )}
 
       {/* Radar */}
       <div className="flex justify-center py-1">
