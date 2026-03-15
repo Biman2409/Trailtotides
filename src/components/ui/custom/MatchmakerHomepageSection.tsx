@@ -89,17 +89,22 @@ export default function MatchmakerHomepageSection() {
         {/* Tier badge + radar side by side */}
         <div className="flex flex-wrap items-start gap-6 mb-10">
           {/* Left: tier + progress */}
-          <div className="flex flex-col gap-4 min-w-[220px]">
-            <div
-              className="flex items-center gap-3 rounded-2xl px-5 py-4 border"
-              style={{ background: `${tier.color}12`, borderColor: `${tier.color}30`, boxShadow: `0 0 24px ${tier.color}18` }}
-            >
+          <div
+            className="flex flex-col min-w-[220px] rounded-2xl overflow-hidden"
+            style={{ border: `1px solid ${tier.color}30`, background: `${tier.color}08` }}
+          >
+            {/* Label */}
+            <div className="px-4 pt-3 pb-1">
+              <p className="text-[10px] uppercase tracking-widest font-bold text-white/30">Adventure Tier</p>
+            </div>
+
+            {/* Tier badge */}
+            <div className="flex items-center gap-3 px-4 py-3">
               <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
                 style={{ background: `${tier.color}22`, color: tier.color, boxShadow: `0 0 16px ${tier.color}35` }}>
                 {tier.icon}
               </div>
               <div>
-                <p className="text-[10px] text-white/40 uppercase tracking-widest mb-0.5">Adventure Tier</p>
                 <p className="font-bold text-base leading-tight" style={{ color: tier.color }}>{profile.label}</p>
                 <div className="flex items-center gap-0.5 mt-1">
                   {Array.from({ length: 5 }).map((_, i) => (
@@ -110,32 +115,34 @@ export default function MatchmakerHomepageSection() {
             </div>
 
             {/* Next level progress */}
-            {nextRank ? (
-              <div className="rounded-2xl px-4 py-3 border" style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] text-white/40">
-                    Next: <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span>
-                  </span>
-                  <span className="text-[10px] font-bold font-mono" style={{ color: currentRank.color }}>{progressPct}% there</span>
+            <div className="px-4 pb-4 pt-1">
+              {nextRank ? (
+                <div className="rounded-xl px-3 py-2.5 border" style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] text-white/40">
+                      Next: <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span>
+                    </span>
+                    <span className="text-[10px] font-bold font-mono" style={{ color: currentRank.color }}>{progressPct}% there</span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{
+                        width: `${progressPct}%`,
+                        background: `linear-gradient(to right, ${currentRank.color}, ${nextRank.color})`,
+                        boxShadow: `0 0 8px ${currentRank.color}60`,
+                      }}
+                    />
+                  </div>
+                  <p className="text-[9px] text-white/25 mt-1.5">{nextRank.minScore - totalScore} pts to {nextRank.label}</p>
                 </div>
-                <div className="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-700"
-                    style={{
-                      width: `${progressPct}%`,
-                      background: `linear-gradient(to right, ${currentRank.color}, ${nextRank.color})`,
-                      boxShadow: `0 0 8px ${currentRank.color}60`,
-                    }}
-                  />
+              ) : (
+                <div className="rounded-xl px-3 py-2.5 border flex items-center gap-3" style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}>
+                  <div className="h-1.5 flex-1 rounded-full" style={{ background: "linear-gradient(to right, #22d3ee, #a78bfa)", boxShadow: "0 0 8px #a78bfa40" }} />
+                  <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa] shrink-0">Max Rank</span>
                 </div>
-                <p className="text-[9px] text-white/25 mt-1.5">{nextRank.minScore - totalScore} pts to {nextRank.label}</p>
-              </div>
-            ) : (
-              <div className="rounded-2xl px-4 py-3 border flex items-center gap-3" style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}>
-                <div className="h-1.5 flex-1 rounded-full" style={{ background: "linear-gradient(to right, #22d3ee, #a78bfa)", boxShadow: "0 0 8px #a78bfa40" }} />
-                <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa] shrink-0">Max Rank</span>
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           {/* Right: radar */}
