@@ -84,15 +84,15 @@ export default function ACEProfileSection({
               <div className="px-3 py-2 border-b border-white/[0.06]">
                 <p className="text-[9px] uppercase tracking-widest font-bold text-white/30">Your Capability vs Trek Requirement</p>
               </div>
-              <div className="flex flex-col flex-1 divide-y divide-white/[0.05]">
-                {DOMAINS.map(({ label: domainLabel, color: domainColor, axes }) => (
-                  <div key={domainLabel}>
+              <div className="flex flex-col flex-1">
+                {DOMAINS.map(({ label: domainLabel, color: domainColor, axes }, di) => (
+                  <div key={domainLabel} className={`flex flex-col flex-1${di > 0 ? " border-t border-white/[0.05]" : ""}`}>
                     {/* Domain header */}
-                    <div className="px-3 py-1.5 border-b border-white/[0.04]" style={{ background: `${domainColor}10` }}>
+                    <div className="px-3 py-1.5 border-b border-white/[0.04]" style={{ background: `${domainColor}12` }}>
                       <span className="text-[8px] uppercase tracking-widest font-bold" style={{ color: domainColor }}>{domainLabel}</span>
                     </div>
-                    {/* Axes — two on one line */}
-                    <div className="flex divide-x divide-white/[0.05]">
+                    {/* Axes — two on one line, stretch to fill remaining */}
+                    <div className="flex flex-1 divide-x divide-white/[0.05]">
                       {axes.map((axis) => {
                         const color = ACE_AXIS_COLORS[axis];
                         const axisLabel = ACE_AXIS_LABELS[axis];
@@ -100,7 +100,7 @@ export default function ACEProfileSection({
                         const userVal = (userAce as Record<string, number>)[axis] ?? 0;
                         const meets = userVal >= trekVal;
                         return (
-                          <div key={axis} className="flex-1 flex items-center justify-between px-3 py-2">
+                          <div key={axis} className="flex-1 flex items-center justify-between px-3">
                             <p className="text-[8px] uppercase tracking-widest font-bold" style={{ color }}>{axisLabel}</p>
                             <div className="flex items-center gap-1">
                               <span className="text-[11px] font-black leading-none" style={{ color: userColor }}>{userVal}</span>
