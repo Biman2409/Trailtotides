@@ -401,7 +401,7 @@ function ResultsScreen({
     totalScore >= 32 ? { label: "Expeditioner",  color: "#f97316" } :
     totalScore >= 24 ? { label: "Navigator",     color: "#f59e0b" } :
     totalScore >= 16 ? { label: "Trailblazer",   color: "#4ade80" } :
-                       { label: "Uncharted",     color: "#22d3ee" };
+                       { label: "Pathfinder",    color: "#22d3ee" };
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-16">
@@ -683,7 +683,7 @@ export default function MatchmakerClient() {
       total >= 32 ? "Expeditioner" :
       total >= 24 ? "Navigator" :
       total >= 16 ? "Trailblazer" :
-      "Uncharted";
+      "Pathfinder";
     const profile = { ace: userAxes, label, summary: "" };
     saveProfile(profile);
     saveProfileToServer(profile); // persist for logged-in users

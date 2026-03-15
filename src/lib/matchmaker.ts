@@ -196,7 +196,7 @@ export function loadProfile(): StoredProfile | null {
     if (!parsed.ace && parsed.ert) {
       const { e, r, t } = parsed.ert;
       parsed.ace = { stamina: e, power: Math.max(1, e - 1), strength: e, agility: t, water: 1, altitude: r, nerve: t, focus: t };
-      parsed.label = parsed.label ?? "Uncharted";
+      parsed.label = parsed.label ?? "Pathfinder";
       parsed.summary = parsed.summary ?? "";
     }
     return parsed.ace ? parsed : null;
