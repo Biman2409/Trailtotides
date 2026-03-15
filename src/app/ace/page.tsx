@@ -33,6 +33,7 @@ const AXES = [
 ];
 
 const SCALE = [
+  { level: 0, label: "Not Relevant", sub: "Axis doesn't apply",   color: "rgba(255,255,255,0.15)" },
   { level: 1, label: "Very Low",     sub: "Minimal demand",        color: "#22c55e" },
   { level: 2, label: "Low",          sub: "Light conditioning",    color: "#84cc16" },
   { level: 3, label: "Moderate",     sub: "Regular training",      color: "#eab308" },
@@ -173,11 +174,11 @@ export default function ACEPage() {
               <div
                 key={level}
                 className="relative rounded-2xl border overflow-hidden"
-                style={{ background: `${color}08`, borderColor: `${color}18` }}
+                style={{ background: level === 0 ? "rgba(255,255,255,0.01)" : `${color}08`, borderColor: level === 0 ? "rgba(255,255,255,0.06)" : `${color}18` }}
               >
                 {/* Fill indicator */}
                 <div className="absolute top-0 left-0 bottom-0 opacity-10"
-                  style={{ width: `${(level / 5) * 100}%`, background: color }} />
+                  style={{ width: level === 0 ? "0%" : `${(level / 5) * 100}%`, background: color }} />
                 <div className="relative flex items-center gap-5 p-5">
                   {/* Number */}
                   <div
