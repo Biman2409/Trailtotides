@@ -191,6 +191,116 @@ interface TrainingItem {
   recommendation: string;
 }
 
+// ─── Rank data ────────────────────────────────────────────────────────────────
+
+const RANKS = [
+  { label: "Pathfinder",   color: "#22d3ee", stars: 1, minScore: 8  },
+  { label: "Trailblazer",  color: "#4ade80", stars: 2, minScore: 16 },
+  { label: "Navigator",    color: "#f59e0b", stars: 3, minScore: 24 },
+  { label: "Expeditioner", color: "#f97316", stars: 4, minScore: 32 },
+  { label: "Apex",         color: "#a78bfa", stars: 5, minScore: 40 },
+];
+
+function RankProgressionBar({ totalScore, tierLabel }: { totalScore: number; tierLabel: string }) {
+  const currentRankIndex = RANKS.findIndex(r => r.label === tierLabel);
+
+  return (
+    <div className="w-full">
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-[10px] uppercase tracking-widest font-semibold text-white/30">Rank Progression</p>
+        <p className="text-[10px] text-white/30 font-mono">{totalScore} / 40 pts</p>
+      </div>
+
+      <div className="relative">
+        {/* Base connector */}
+        <div className="absolute top-[18px] left-4 right-4 h-px bg-white/10" />
+
+        {/* Filled connector up to current rank */}
+        {currentRankIndex >= 0 && (
+          <div
+            className="absolute top-[18px] left-4 h-px"
+            style={{
+              width: currentRankIndex === RANKS.length - 1
+                ? "calc(100% - 2rem)"
+                : `${(currentRankIndex / (RANKS.length - 1)) * 100}%`,
+              background: `linear-gradient(to right, ${RANKS[0].color}, ${RANKS[currentRankIndex].color})`,
+            }}
+          />
+        )}
+
+        <div className="relative flex items-start justify-between">
+          {RANKS.map((rank, i) => {
+            const isUnlocked = i <= currentRankIndex;
+            const isCurrent  = i === currentRankIndex;
+            return (
+              <div key={rank.label} className="flex flex-col items-center gap-1.5" style={{ width: "20%" }}>
+                <div
+                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 relative"
+                  style={
+                    isCurrent
+                      ? { background: `${rank.color}25`, border: `2px solid ${rank.color}`, color: rank.color, boxShadow: `0 0 14px ${rank.color}50` }
+                      : isUnlocked
+                      ? { background: `${rank.color}18`, border: `1.5px solid ${rank.color}55`, color: rank.color }
+                      : { background: "rgba(255,255,255,0.04)", border: "1.5px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.15)" }
+                  }
+                >
+                  {isUnlocked ? (
+                    <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4">
+                      <path d="M5 10l3.5 3.5L15 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  ) : (
+                    <Lock className="w-3 h-3" />
+                  )}
+                  {isCurrent && (
+                    <span className="absolute inset-0 rounded-full animate-ping opacity-20" style={{ background: rank.color }} />
+                  )}
+                </div>
+                <div className="flex flex-col items-center gap-0.5 text-center">
+                  <p className="text-[9px] font-semibold leading-tight tracking-wide"
+                    style={{ color: isCurrent ? rank.color : isUnlocked ? `${rank.color}99` : "rgba(255,255,255,0.2)" }}>
+                    {rank.label}
+                  </p>
+                  <div className="flex gap-px">
+                    {Array.from({ length: rank.stars }).map((_, si) => (
+                      <span key={si} className="text-[7px] leading-none"
+                        style={{ color: isUnlocked ? rank.color : "rgba(255,255,255,0.12)" }}>★</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Progress to next rank */}
+      {currentRankIndex >= 0 && currentRankIndex < RANKS.length - 1 && (
+        <div className="mt-4">
+          <div className="flex items-center justify-between mb-1.5">
+            <p className="text-[9px] text-white/25 uppercase tracking-wider">Progress to {RANKS[currentRankIndex + 1].label}</p>
+            <p className="text-[9px] text-white/25 font-mono">{totalScore} / {RANKS[currentRankIndex + 1].minScore}</p>
+          </div>
+          <div className="h-1 rounded-full bg-white/[0.06] overflow-hidden">
+            <div
+              className="h-full rounded-full"
+              style={{
+                width: `${Math.min(100, ((totalScore - RANKS[currentRankIndex].minScore) / (RANKS[currentRankIndex + 1].minScore - RANKS[currentRankIndex].minScore)) * 100)}%`,
+                background: `linear-gradient(to right, ${RANKS[currentRankIndex].color}, ${RANKS[currentRankIndex + 1].color})`,
+              }}
+            />
+          </div>
+        </div>
+      )}
+      {currentRankIndex === RANKS.length - 1 && (
+        <div className="mt-4 flex items-center gap-2">
+          <div className="h-1 flex-1 rounded-full" style={{ background: `linear-gradient(to right, ${RANKS[0].color}, #a78bfa)` }} />
+          <p className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa]">Max Rank</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Option button ────────────────────────────────────────────────────────────
 
 function OptionBtn({
@@ -429,8 +539,13 @@ function ResultsScreen({
           </div>
 
           {/* ACE Radar */}
-          <div className="flex justify-center">
+          <div className="flex justify-center mb-6">
             <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={260} showLabels />
+          </div>
+
+          {/* Rank progression */}
+          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+            <RankProgressionBar totalScore={totalScore} tierLabel={tier.label} />
           </div>
         </div>
       </div>
