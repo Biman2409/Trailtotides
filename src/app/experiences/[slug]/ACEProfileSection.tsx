@@ -17,14 +17,6 @@ interface Props {
   showTechnicalWarning: boolean;
 }
 
-const RANKS = [
-  { label: "Uncharted",   color: "#6b7280", minScore: 0  },
-  { label: "Pathfinder",  color: "#22d3ee", minScore: 8  },
-  { label: "Navigator",   color: "#4ade80", minScore: 16 },
-  { label: "Trailblazer", color: "#f59e0b", minScore: 24 },
-  { label: "Vanguard",    color: "#f97316", minScore: 32 },
-  { label: "Apex",        color: "#a78bfa", minScore: 40 },
-];
 
 const DOMAINS = [
   { label: "Engine",   axes: ["stamina", "power"],    color: "#f97316", desc: "Stamina & Power" },
@@ -47,16 +39,13 @@ export default function ACEProfileSection({
 }: Props) {
   const [userAce, setUserAce] = useState<ACE | null>(null);
   const [profileLabel, setProfileLabel] = useState<string | null>(null);
-  const [userColor, setUserColor] = useState("#38bdf8");
+  const [userColor] = useState("#4ade80");
 
   useEffect(() => {
     const p = loadProfile();
     if (p) {
       setUserAce(p.ace);
       setProfileLabel(p.label);
-      const totalScore = Object.values(p.ace).reduce((a, b) => a + b, 0);
-      const rankIndex = totalScore >= 40 ? 5 : totalScore >= 32 ? 4 : totalScore >= 24 ? 3 : totalScore >= 16 ? 2 : totalScore >= 8 ? 1 : 0;
-      setUserColor(RANKS[rankIndex].color);
     }
   }, []);
 
