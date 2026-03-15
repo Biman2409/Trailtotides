@@ -48,8 +48,8 @@ const TIER_INFO: Record<string, { color: string; stars: number; icon: React.Reac
   "Apex":        { color: "#a78bfa", stars: 5, icon: <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6"><polygon points="12,1.5 15.5,9.5 24,10 17.8,16 19.8,24 12,19.8 4.2,24 6.2,16 0,10 8.5,9.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" fill="currentColor" fillOpacity="0.12"/><polygon points="12,6.5 14,11.5 19.5,12 15.3,15.8 16.7,21 12,18.2 7.3,21 8.7,15.8 4.5,12 10,11.5" fill="currentColor" fillOpacity="0.85"/></svg> },
 };
 
-function RankProgressionBar({ totalScore, currentLabel }: { totalScore: number; currentLabel: string }) {
-  const currentRankIndex = RANKS.findIndex(r => r.label === currentLabel);
+function RankProgressionBar({ totalScore }: { totalScore: number }) {
+  const currentRankIndex = totalScore >= 40 ? 5 : totalScore >= 32 ? 4 : totalScore >= 24 ? 3 : totalScore >= 16 ? 2 : totalScore >= 8 ? 1 : 0;
   const currentRank = RANKS[currentRankIndex];
   const nextRank = RANKS[currentRankIndex + 1] ?? null;
   const progressPct = nextRank
@@ -303,7 +303,7 @@ export default function ACEProfileSection() {
         <div className="flex flex-col gap-4 min-w-0 flex-1">
           {/* Rank progression */}
           <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
-            <RankProgressionBar totalScore={totalScore} currentLabel={stored.label} />
+            <RankProgressionBar totalScore={totalScore} />
           </div>
 
           {stored.summary && (

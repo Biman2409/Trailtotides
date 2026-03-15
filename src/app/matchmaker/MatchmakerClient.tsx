@@ -260,8 +260,8 @@ const RANKS = [
   },
 ];
 
-function RankProgressionBar({ totalScore, tierLabel }: { totalScore: number; tierLabel: string }) {
-  const currentRankIndex = RANKS.findIndex(r => r.label === tierLabel);
+function RankProgressionBar({ totalScore }: { totalScore: number }) {
+  const currentRankIndex = totalScore >= 40 ? 5 : totalScore >= 32 ? 4 : totalScore >= 24 ? 3 : totalScore >= 16 ? 2 : totalScore >= 8 ? 1 : 0;
   const currentRank = RANKS[currentRankIndex];
   const nextRank = RANKS[currentRankIndex + 1] ?? null;
   const progressPct = nextRank
@@ -748,7 +748,7 @@ function ResultsScreen({
 
           {/* Rank progression */}
           <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
-            <RankProgressionBar totalScore={totalScore} tierLabel={tier.label} />
+            <RankProgressionBar totalScore={totalScore} />
           </div>
         </div>
       </div>

@@ -46,7 +46,7 @@ export default function AdventureProfileSidebar() {
 
   const tier = TIER_INFO[stored.label] ?? TIER_INFO["Pathfinder"];
   const totalScore = Object.values(stored.ace).reduce((a: number, b) => a + (b as number), 0);
-  const rankIndex   = RANKS.findIndex(r => r.label === stored.label);
+  const rankIndex   = totalScore >= 40 ? 5 : totalScore >= 32 ? 4 : totalScore >= 24 ? 3 : totalScore >= 16 ? 2 : totalScore >= 8 ? 1 : 0;
   const currentRank = RANKS[rankIndex] ?? RANKS[1];
   const nextRank    = RANKS[rankIndex + 1] ?? null;
   const progressPct = nextRank

@@ -70,7 +70,7 @@ export default function MatchmakerHomepageSection() {
   const matches = getMatchedAdventures(profile.ace, adventures).slice(0, 6);
 
   const totalScore  = Object.values(profile.ace).reduce((a: number, b) => a + (b as number), 0);
-  const rankIndex   = RANKS.findIndex(r => r.label === profile.label);
+  const rankIndex   = totalScore >= 40 ? 5 : totalScore >= 32 ? 4 : totalScore >= 24 ? 3 : totalScore >= 16 ? 2 : totalScore >= 8 ? 1 : 0;
   const currentRank = RANKS[rankIndex] ?? RANKS[1];
   const nextRank    = RANKS[rankIndex + 1] ?? null;
   const progressPct = nextRank
