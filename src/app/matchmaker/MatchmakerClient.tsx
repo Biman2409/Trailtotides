@@ -652,7 +652,6 @@ function ResultsScreen({
 
   // Overall score
   const axisValues = Object.values(userAxes).filter(v => v > 0);
-  const avgScore = axisValues.length ? axisValues.reduce((a, b) => a + b, 0) / axisValues.length : 0;
   const totalScore = axisValues.reduce((a, b) => a + b, 0);
   const tier =
     totalScore >= 40 ? { label: "Apex",        color: "#a78bfa" } :
@@ -1058,9 +1057,9 @@ export default function MatchmakerClient() {
     const total = Object.values(userAxes).reduce((a, b) => a + b, 0);
     const label =
       total >= 40 ? "Apex" :
-      total >= 32 ? "Expeditioner" :
-      total >= 24 ? "Navigator" :
-      total >= 16 ? "Trailblazer" :
+      total >= 32 ? "Vanguard" :
+      total >= 24 ? "Trailblazer" :
+      total >= 16 ? "Navigator" :
       "Pathfinder";
     const profile = { ace: userAxes, label, summary: "" };
     saveProfile(profile);
