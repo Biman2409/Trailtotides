@@ -77,11 +77,11 @@ export default function ACEProfileSection({
         }}
       >
         {/* TOP — radar (left) + domain strip (right) */}
-        <div className="flex flex-row items-stretch">
+        <div className="flex flex-col md:flex-row items-stretch">
 
           {/* Radar */}
           <div className="flex flex-col items-center justify-center pt-6 px-5 pb-4 shrink-0">
-            <ACERadar ace={ace} userAce={userAce ?? undefined} userColor={userColor} size={290} showLabels />
+            <ACERadar ace={ace} userAce={userAce ?? undefined} userColor={userColor} size={240} showLabels />
             <div className="flex items-center gap-5 mt-3">
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-0.5 rounded-full bg-[#ff5100]" />
@@ -102,7 +102,7 @@ export default function ACEProfileSection({
 
           {/* Domain capability strip — vertical, fills height */}
           {userAce ? (
-            <div className="flex flex-col flex-1 border-l border-white/[0.06]">
+            <div className="flex flex-col flex-1 border-t md:border-t-0 md:border-l border-white/[0.06]">
               <div className="px-3 py-2 border-b border-white/[0.06]">
                 <p className="text-[9px] uppercase tracking-widest font-bold text-white/30">Your Capability vs Trek Requirement</p>
               </div>

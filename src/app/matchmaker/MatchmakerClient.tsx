@@ -663,12 +663,12 @@ function ResultsScreen({
   const tierRank = RANKS.find(r => r.label === tier.label);
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-16">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
 
       {/* Capability profile card */}
       <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Your ACE Profile</p>
       <div
-        className="rounded-3xl p-7 mb-6 border relative overflow-hidden"
+        className="rounded-2xl sm:rounded-3xl p-4 sm:p-7 mb-6 border relative overflow-hidden"
         style={{ background: "rgba(255,255,255,0.04)", borderLeftWidth: "4px", borderLeftColor: tier.color, borderColor: `${tier.color}35` }}
       >
         <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-15 blur-3xl pointer-events-none" style={{ background: tier.color }} />
@@ -715,15 +715,15 @@ function ResultsScreen({
               focus: "Sustained situational awareness",
             };
             return (
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-start gap-4 mb-6">
                 <div
-                  className="shrink-0 rounded-2xl flex items-center justify-center p-3"
+                  className="shrink-0 rounded-2xl flex items-center justify-center p-3 self-center sm:self-auto"
                   style={{
                     background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, rgba(255,255,255,0.02) 70%)",
                     border: "1px solid rgba(255,255,255,0.07)",
                   }}
                 >
-                  <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={210} showLabels />
+                  <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={200} showLabels />
                 </div>
                 <div className="flex-1 space-y-2.5">
                   <p className="text-[9px] uppercase tracking-[0.18em] font-bold text-white/25 mb-3">Standout Strengths</p>
