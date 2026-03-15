@@ -89,7 +89,11 @@ export default function ACEProfileSection({
 
           {/* Domain capability strip — vertical, fills height */}
           {userAce ? (
-            <div className="flex flex-col flex-1 border-l border-white/[0.06] divide-y divide-white/[0.05]">
+            <div className="flex flex-col flex-1 border-l border-white/[0.06]">
+              <div className="px-3 py-2.5 border-b border-white/[0.06]">
+                <p className="text-[9px] uppercase tracking-widest font-bold text-white/30">Your Capability vs Trek Requirement</p>
+              </div>
+              <div className="flex flex-col flex-1 divide-y divide-white/[0.05]">
               {DOMAINS.map(({ label, axes, color, desc }) => {
                 const trekVal = avg(ace, axes);
                 const userVal = avg(userAce, axes);
@@ -123,6 +127,7 @@ export default function ACEProfileSection({
                   </div>
                 );
               })}
+              </div>
             </div>
           ) : (
             <div className="flex-1 flex items-center p-6">
