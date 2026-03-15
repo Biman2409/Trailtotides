@@ -63,8 +63,12 @@ export default function ExploreClient() {
   const [selectedDurations, setSelectedDurations] = useState<Duration[]>([]);
   const [selectedMonths, setSelectedMonths] = useState<Month[]>([]);
   const [selectedGroupSizes, setSelectedGroupSizes] = useState<GroupSize[]>([]);
-  // ACE filters
-  const [aceCategory, setAceCategory] = useState<AceCategory | null>(null);
+  // ACE filters — initialise from ?ace= URL param if present
+  const [aceCategory, setAceCategory] = useState<AceCategory | null>(() => {
+    const p = searchParams.get("ace");
+    if (p === "ready" || p === "stretch" || p === "out-of-range") return p;
+    return null;
+  });
   const [userProfile, setUserProfile] = useState<StoredProfile | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);

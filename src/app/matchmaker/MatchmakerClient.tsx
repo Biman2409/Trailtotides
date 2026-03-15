@@ -754,7 +754,16 @@ function ResultsScreen({
       </div>
 
       {/* Adventures */}
-      <AdventureSection label="Ready Now" sublabel="Adventures within your current capability" icon={<CheckCircle2 className="w-4 h-4" />} adventures={inZone} accentColor="#4ade80" defaultOpen />
+      <AdventureSection
+        label="Ready Now"
+        sublabel="Adventures within your current capability"
+        icon={<CheckCircle2 className="w-4 h-4" />}
+        adventures={[...inZone].sort((a, b) => a.riskLevel - b.riskLevel).slice(0, 6)}
+        totalCount={inZone.length}
+        exploreUrl="/explore?ace=ready"
+        accentColor="#4ade80"
+        defaultOpen
+      />
       {stretch.length > 0 && <AdventureSection label="Stretch Challenge" sublabel="Slightly above your current range — achievable with focused training" icon={<TrendingUp className="w-4 h-4" />} adventures={stretch} accentColor="#f59e0b" />}
       {restricted.length > 0 && <AdventureSection label="Currently Out of Range" sublabel="Require capabilities significantly beyond your current profile" icon={<Lock className="w-4 h-4" />} adventures={restricted} accentColor="#f43f5e" />}
 
@@ -828,7 +837,7 @@ function ResultsScreen({
 // ─── Adventure section ────────────────────────────────────────────────────────
 
 function AdventureSection({
-  label, sublabel, icon, adventures: list, accentColor, defaultOpen = false,
+  label, sublabel, icon, adventures: list, accentColor, defaultOpen = false, totalCount, exploreUrl,
 }: {
   label: string;
   sublabel: string;
@@ -836,9 +845,12 @@ function AdventureSection({
   adventures: EnrichedAdventure[];
   accentColor: string;
   defaultOpen?: boolean;
+  totalCount?: number;
+  exploreUrl?: string;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   if (list.length === 0) return null;
+  const hiddenCount = totalCount ? totalCount - list.length : 0;
 
   return (
     <div
@@ -861,49 +873,65 @@ function AdventureSection({
         </div>
         <div className="flex items-center gap-3 shrink-0">
           <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full" style={{ background: `${accentColor}18`, color: accentColor }}>
-            {list.length} adventure{list.length !== 1 ? "s" : ""}
+            {totalCount ?? list.length} adventure{(totalCount ?? list.length) !== 1 ? "s" : ""}
           </span>
           <ChevronRight className="w-4 h-4 transition-transform duration-200" style={{ color: accentColor, transform: open ? "rotate(90deg)" : "rotate(0deg)" }} />
         </div>
       </button>
 
       {open && (
-        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ borderTop: `1px solid ${accentColor}18` }}>
-          {list.map(a => (
-            <Link
-              key={a.slug}
-              href={`/experiences/${a.slug}`}
-              className="group rounded-xl overflow-hidden border transition-all hover:-translate-y-0.5 hover:shadow-lg duration-200"
-              style={{ borderColor: `${accentColor}25`, background: "rgba(255,255,255,0.03)" }}
-            >
-              <div className="relative h-36 overflow-hidden">
-                <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-                <div className="absolute bottom-3 left-3 right-3">
-                  <div className="flex items-center gap-1 mb-1">
-                    <MapPin className="w-3 h-3 shrink-0" style={{ color: accentColor }} />
-                    <span className="text-white/55 text-[10px] truncate">{a.state}</span>
+        <div style={{ borderTop: `1px solid ${accentColor}18` }}>
+          <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {list.map(a => (
+              <Link
+                key={a.slug}
+                href={`/experiences/${a.slug}`}
+                className="group rounded-xl overflow-hidden border transition-all hover:-translate-y-0.5 hover:shadow-lg duration-200"
+                style={{ borderColor: `${accentColor}25`, background: "rgba(255,255,255,0.03)" }}
+              >
+                <div className="relative h-36 overflow-hidden">
+                  <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                  <div className="absolute bottom-3 left-3 right-3">
+                    <div className="flex items-center gap-1 mb-1">
+                      <MapPin className="w-3 h-3 shrink-0" style={{ color: accentColor }} />
+                      <span className="text-white/55 text-[10px] truncate">{a.state}</span>
+                    </div>
+                    <h3 className="text-white font-semibold text-sm leading-tight">{a.name}</h3>
                   </div>
-                  <h3 className="text-white font-semibold text-sm leading-tight">{a.name}</h3>
                 </div>
-              </div>
-              <div className="px-3 py-2.5">
-                {a.requirements && <ACEBadge ace={a.requirements as unknown as Parameters<typeof ACEBadge>[0]["ace"]} size="sm" dark />}
-                {a.weakAxes.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {a.weakAxes.slice(0, 3).map(ax => (
-                      <span key={ax} className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded" style={{ background: `${AXIS_COLORS[ax] ?? "#fff"}18`, color: AXIS_COLORS[ax] ?? "#fff" }}>
-                        {AXIS_ICONS[ax]}<span className="ml-0.5">{ax}</span>
-                      </span>
-                    ))}
-                  </div>
-                )}
-                {a.analysis && (
-                  <p className="text-white/35 text-[10px] leading-relaxed mt-1.5 line-clamp-2">{a.analysis}</p>
-                )}
-              </div>
-            </Link>
-          ))}
+                <div className="px-3 py-2.5">
+                  {a.requirements && <ACEBadge ace={a.requirements as unknown as Parameters<typeof ACEBadge>[0]["ace"]} size="sm" dark />}
+                  {a.weakAxes.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {a.weakAxes.slice(0, 3).map(ax => (
+                        <span key={ax} className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded" style={{ background: `${AXIS_COLORS[ax] ?? "#fff"}18`, color: AXIS_COLORS[ax] ?? "#fff" }}>
+                          {AXIS_ICONS[ax]}<span className="ml-0.5">{ax}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {a.analysis && (
+                    <p className="text-white/35 text-[10px] leading-relaxed mt-1.5 line-clamp-2">{a.analysis}</p>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {/* View all button when there are hidden results */}
+          {hiddenCount > 0 && exploreUrl && (
+            <div className="px-4 pb-4">
+              <Link
+                href={exploreUrl}
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold transition-all hover:brightness-110"
+                style={{ background: `${accentColor}15`, color: accentColor, border: `1px solid ${accentColor}30` }}
+              >
+                Explore all {totalCount} adventures
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </div>
