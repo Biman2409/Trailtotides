@@ -8,6 +8,7 @@ interface Props {
   size?: number;
   showLabels?: boolean;
   userAce?: ACE;
+  userColor?: string;
 }
 
 const AXIS_ORDER: AceAxis[] = [
@@ -66,7 +67,7 @@ function hexToRgb(hex: string) {
   return `${r},${g},${b}`;
 }
 
-export default function ACERadar({ ace, size = 220, showLabels = true, userAce }: Props) {
+export default function ACERadar({ ace, size = 220, showLabels = true, userAce, userColor = "#38bdf8" }: Props) {
   const pad = 36;
   const cx = size / 2;
   const cy = size / 2;
@@ -170,10 +171,11 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce }
       {userPath && (
         <path
           d={userPath}
-          fill="rgba(255,255,255,0.05)"
-          stroke="rgba(255,255,255,0.2)"
-          strokeWidth="1"
-          strokeDasharray="3 2"
+          fill={`${userColor}18`}
+          stroke={userColor}
+          strokeWidth="1.5"
+          strokeDasharray="4 2.5"
+          strokeLinejoin="round"
         />
       )}
 
