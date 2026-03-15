@@ -68,7 +68,7 @@ export default function ACEProfileSection({
 
           {/* Radar */}
           <div className="flex flex-col items-center justify-center pt-6 px-5 pb-4 shrink-0">
-            <ACERadar ace={ace} userAce={userAce ?? undefined} userColor={userColor} size={240} showLabels />
+            <ACERadar ace={ace} userAce={userAce ?? undefined} userColor={userColor} size={290} showLabels />
             <div className="flex items-center gap-5 mt-3">
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-0.5 rounded-full bg-[#ff5100]" />
@@ -97,27 +97,27 @@ export default function ACEProfileSection({
                 return (
                   <div
                     key={label}
-                    className="flex items-center gap-3 px-4 py-3 flex-1"
+                    className="flex items-center gap-2.5 px-3 py-2.5 flex-1"
                     style={{ background: `${color}05` }}
                   >
-                    <div className="w-1.5 h-6 rounded-full shrink-0" style={{ background: color }} />
+                    <div className="w-1 h-5 rounded-full shrink-0" style={{ background: color }} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-[9px] uppercase tracking-widest font-bold leading-none" style={{ color }}>{label}</p>
-                      <p className="text-[9px] text-white/25 mt-0.5">{desc}</p>
+                      <p className="text-[8px] uppercase tracking-widest font-bold leading-none" style={{ color }}>{label}</p>
+                      <p className="text-[8px] text-white/20 mt-0.5">{desc}</p>
                     </div>
-                    <div className="flex flex-col items-end gap-1 shrink-0">
-                      <div className="flex items-baseline gap-0.5">
-                        <span className="text-sm font-black leading-none" style={{ color: userColor }}>{userVal}</span>
-                        <span className="text-[9px] text-white/25">/{trekVal}</span>
+                    <div className="flex flex-col items-end gap-0.5 shrink-0">
+                      <div className="flex items-baseline gap-px">
+                        <span className="text-xs font-black leading-none" style={{ color: userColor }}>{userVal}</span>
+                        <span className="text-[8px] text-white/25">/{trekVal}</span>
                       </div>
                       <div
-                        className="text-[8px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap"
+                        className="text-[7px] font-bold px-1 py-px rounded-full whitespace-nowrap"
                         style={{
                           background: meets ? "#22c55e18" : "#ef444418",
                           color: meets ? "#22c55e" : "#ef4444",
                         }}
                       >
-                        {meets ? "✓ Ready" : `+${(trekVal - userVal).toFixed(1)} needed`}
+                        {meets ? "✓" : `+${(trekVal - userVal).toFixed(1)}`}
                       </div>
                     </div>
                   </div>
