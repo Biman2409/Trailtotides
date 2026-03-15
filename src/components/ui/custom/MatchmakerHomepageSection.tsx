@@ -5,8 +5,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import { adventures } from "@/lib/data";
-import { ACE_AXIS_COLORS, ACE_AXES } from "@/lib/ace";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
+import ACERadar from "@/components/ui/custom/ACERadar";
+
+const RANKS = [
+  { label: "Uncharted",   color: "#6b7280", stars: 0, minScore: 0  },
+  { label: "Pathfinder",  color: "#22d3ee", stars: 1, minScore: 8  },
+  { label: "Navigator",   color: "#4ade80", stars: 2, minScore: 16 },
+  { label: "Trailblazer", color: "#f59e0b", stars: 3, minScore: 24 },
+  { label: "Vanguard",    color: "#f97316", stars: 4, minScore: 32 },
+  { label: "Apex",        color: "#a78bfa", stars: 5, minScore: 40 },
+];
 
 const TIER_INFO: Record<string, { color: string; stars: number; icon: React.ReactNode }> = {
   "Uncharted":   { color: "#6b7280", stars: 0, icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 2"/><path d="M7.5 7.5a2.5 2.5 0 015 0c0 1.5-1.5 2-2.5 2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><circle cx="10" cy="14" r="1" fill="currentColor"/></svg> },
@@ -46,17 +55,6 @@ function MiniAdventureCard({ adventure }: { adventure: (typeof adventures)[numbe
   );
 }
 
-function AcePill({ axis, value }: { axis: string; value: number }) {
-  const color = ACE_AXIS_COLORS[axis as keyof typeof ACE_AXIS_COLORS] ?? "#ff5100";
-  return (
-    <div className="flex flex-col items-center gap-1 border rounded-xl px-3 py-2 min-w-[52px]"
-      style={{ background: `${color}12`, borderColor: `${color}25` }}>
-      <span className="text-white/40 text-[9px] font-bold tracking-widest uppercase">{axis.slice(0,3).toUpperCase()}</span>
-      <span className="text-lg font-bold" style={{ color }}>{value}</span>
-    </div>
-  );
-}
-
 export default function MatchmakerHomepageSection() {
   const [profile, setProfile] = useState<StoredProfile | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -71,8 +69,13 @@ export default function MatchmakerHomepageSection() {
   const tier = TIER_INFO[profile.label] ?? TIER_INFO["Pathfinder"];
   const matches = getMatchedAdventures(profile.ace, adventures).slice(0, 6);
 
-  // All 8 axes in canonical order
-  const allAxes = ACE_AXES as unknown as string[];
+  const totalScore  = Object.values(profile.ace).reduce((a: number, b) => a + (b as number), 0);
+  const rankIndex   = RANKS.findIndex(r => r.label === profile.label);
+  const currentRank = RANKS[rankIndex] ?? RANKS[1];
+  const nextRank    = RANKS[rankIndex + 1] ?? null;
+  const progressPct = nextRank
+    ? Math.min(100, Math.round(((totalScore - currentRank.minScore) / (nextRank.minScore - currentRank.minScore)) * 100))
+    : 100;
 
   return (
     <section className="py-16 lg:py-32 px-5 lg:px-8 t-bg-surface border-t border-white/5">
@@ -83,31 +86,62 @@ export default function MatchmakerHomepageSection() {
           <p className="text-white/55 text-sm">Based on your ACE assessment — here&apos;s what you&apos;re built for.</p>
         </div>
 
-        {/* Tier badge + ACE axes */}
-        <div className="flex flex-wrap items-center gap-4 mb-10">
-          <div
-            className="flex items-center gap-3 rounded-2xl px-5 py-3 border"
-            style={{ background: `${tier.color}12`, borderColor: `${tier.color}30`, boxShadow: `0 0 24px ${tier.color}18` }}
-          >
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${tier.color}22`, color: tier.color }}>
-              {tier.icon}
-            </div>
-            <div>
-              <p className="text-xs text-white/40 font-medium mb-0.5">Your tier</p>
-              <p className="font-bold text-sm leading-tight" style={{ color: tier.color }}>{profile.label}</p>
-              <div className="flex items-center gap-0.5 mt-0.5">
-                {Array.from({ length: tier.stars }).map((_, i) => (
-                  <span key={i} className="text-xs" style={{ color: tier.color }}>★</span>
-                ))}
+        {/* Tier badge + radar side by side */}
+        <div className="flex flex-wrap items-start gap-6 mb-10">
+          {/* Left: tier + progress */}
+          <div className="flex flex-col gap-4 min-w-[220px]">
+            <div
+              className="flex items-center gap-3 rounded-2xl px-5 py-4 border"
+              style={{ background: `${tier.color}12`, borderColor: `${tier.color}30`, boxShadow: `0 0 24px ${tier.color}18` }}
+            >
+              <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+                style={{ background: `${tier.color}22`, color: tier.color, boxShadow: `0 0 16px ${tier.color}35` }}>
+                {tier.icon}
+              </div>
+              <div>
+                <p className="text-[10px] text-white/40 uppercase tracking-widest mb-0.5">Adventure Tier</p>
+                <p className="font-bold text-base leading-tight" style={{ color: tier.color }}>{profile.label}</p>
+                <div className="flex items-center gap-0.5 mt-1">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <span key={i} className="text-xs" style={{ color: i < tier.stars ? tier.color : "rgba(255,255,255,0.1)" }}>★</span>
+                  ))}
+                </div>
               </div>
             </div>
+
+            {/* Next level progress */}
+            {nextRank ? (
+              <div className="rounded-2xl px-4 py-3 border" style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] text-white/40">
+                    Next: <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span>
+                  </span>
+                  <span className="text-[10px] font-bold font-mono" style={{ color: currentRank.color }}>{progressPct}% there</span>
+                </div>
+                <div className="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all duration-700"
+                    style={{
+                      width: `${progressPct}%`,
+                      background: `linear-gradient(to right, ${currentRank.color}, ${nextRank.color})`,
+                      boxShadow: `0 0 8px ${currentRank.color}60`,
+                    }}
+                  />
+                </div>
+                <p className="text-[9px] text-white/25 mt-1.5">{nextRank.minScore - totalScore} pts to {nextRank.label}</p>
+              </div>
+            ) : (
+              <div className="rounded-2xl px-4 py-3 border flex items-center gap-3" style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}>
+                <div className="h-1.5 flex-1 rounded-full" style={{ background: "linear-gradient(to right, #22d3ee, #a78bfa)", boxShadow: "0 0 8px #a78bfa40" }} />
+                <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa] shrink-0">Max Rank</span>
+              </div>
+            )}
           </div>
 
-          {/* ACE axis pills — all 8, 4 per row */}
-          <div className="grid grid-cols-4 gap-2">
-            {allAxes.map((axis) => (
-              <AcePill key={axis} axis={axis} value={profile.ace[axis as keyof typeof profile.ace]} />
-            ))}
+          {/* Right: radar */}
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-[10px] uppercase tracking-widest font-bold text-white/25 self-start">ACE Capability Profile</p>
+            <ACERadar ace={profile.ace} size={200} showLabels />
           </div>
         </div>
 
