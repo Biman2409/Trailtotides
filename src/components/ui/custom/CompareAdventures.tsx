@@ -142,6 +142,24 @@ export default function CompareAdventures() {
           </div>
         )}
 
+        {/* ACE Profile — Your Body standalone card */}
+        {selected.length >= 2 && userAce && (
+          <div className="mb-8">
+            <p className="text-[10px] uppercase tracking-widest font-bold text-white/30 mb-4">ACE Profile</p>
+            <div
+              className="inline-flex flex-col items-center rounded-2xl overflow-hidden"
+              style={{ border: "1px solid rgba(255,255,255,0.10)", background: "radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 75%)" }}
+            >
+              <div className="px-4 pt-3 pb-1 w-full">
+                <p className="text-[9px] uppercase tracking-widest font-bold text-white/40">Your Body · <span className="text-white/60">{userLabel}</span></p>
+              </div>
+              <div className="p-3">
+                <ACERadar ace={userAce} size={180} showLabels />
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Comparison table — only show when ≥2 selected */}
         {selected.length >= 2 && (
           <div className="overflow-x-auto rounded-xl border border-white/8">
@@ -151,11 +169,6 @@ export default function CompareAdventures() {
                   <th className="text-left text-white/35 text-[11px] font-semibold tracking-widest uppercase px-4 py-3 w-36">
                     Attribute
                   </th>
-                  {userAce && (
-                    <th className="text-left px-4 py-3 border-r border-white/[0.06]">
-                      <span className="text-white/50 font-semibold text-sm">Your Body</span>
-                    </th>
-                  )}
                   {selected.map((a) => (
                     <th key={a.id} className="text-left px-4 py-3">
                       <Link
@@ -192,29 +205,13 @@ export default function CompareAdventures() {
                   </tr>
                 ))}
 
-                {/* ACE Radar row */}
+                {/* ACE Radar row — trek profiles only */}
                 <tr className="border-t border-white/8 bg-white/[0.01]">
                   <td className="px-4 py-4 text-white/40 text-[11px] font-semibold tracking-wide uppercase align-top pt-5">
-                    ACE Profile
+                    Trek ACE
                   </td>
-                  {/* Your Body — first */}
-                  {userAce && (
-                    <td className="px-4 py-4 align-top border-r border-white/[0.06]">
-                      <p className="text-[9px] uppercase tracking-widest font-bold text-white/30 mb-2">Your Body · {userLabel}</p>
-                      <div
-                        className="rounded-xl p-2 inline-block"
-                        style={{
-                          background: "radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 75%)",
-                          border: "1px solid rgba(255,255,255,0.10)",
-                        }}
-                      >
-                        <ACERadar ace={userAce} size={160} showLabels />
-                      </div>
-                    </td>
-                  )}
                   {selected.map((a) => (
                     <td key={a.id} className="px-4 py-4 align-top">
-                      <p className="text-[9px] uppercase tracking-widest font-bold text-white/30 mb-2">Trek Required</p>
                       <div
                         className="rounded-xl p-2 inline-block"
                         style={{
