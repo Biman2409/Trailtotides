@@ -104,10 +104,11 @@ function RankProgressionBar({ totalScore, currentLabel }: { totalScore: number; 
           <div className="mt-3">
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[9px] text-white/30">
-                <span className="font-semibold" style={{ color: `${nextRank.color}bb` }}>{nextRank.label}</span>
-                <span className="text-white/20"> · {nextRank.minScore - totalScore} pts away</span>
+                <span className="text-white/40">Next: </span>
+                <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span>
+                <span className="text-white/25"> — {nextRank.minScore - totalScore} pts needed</span>
               </span>
-              <span className="text-[9px] font-mono text-white/25">{progressPct}%</span>
+              <span className="text-[9px] font-mono font-bold" style={{ color: currentRank.color }}>{progressPct}% there</span>
             </div>
             <div className="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
               <div
