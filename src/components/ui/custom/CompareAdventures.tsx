@@ -207,7 +207,7 @@ export default function CompareAdventures() {
                   </td>
                   {selected.map((a) => (
                     <td key={a.id} className="px-4 py-4 align-top">
-                      <p className="text-[10px] uppercase tracking-widest font-bold text-white/30 mb-3">ACE Profile</p>
+                      <div className="h-[22px] mb-3" />
                       <div
                         className="rounded-xl p-2 inline-block"
                         style={{
