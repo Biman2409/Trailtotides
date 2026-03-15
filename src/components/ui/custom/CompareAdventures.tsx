@@ -3,11 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { X, ArrowRight, GitCompareArrows } from "lucide-react";
+import { useState, useEffect } from "react";
 import { Adventure } from "@/lib/data";
 import { difficultyStyle } from "@/lib/styles";
 import { useCompare, MAX } from "@/contexts/CompareContext";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import { getACE } from "@/lib/ace";
+import type { ACE } from "@/lib/ace";
+import { loadProfile } from "@/lib/matchmaker";
 
 const FIELDS: { label: string; key: keyof Adventure | "price" | "rating" | "operators" }[] = [
   { label: "Region",          key: "region" },
@@ -51,6 +54,18 @@ function getValue(a: Adventure, key: keyof Adventure | "price" | "rating" | "ope
 
 export default function CompareAdventures() {
   const { selected, remove } = useCompare();
+  const [userAce, setUserAce] = useState<ACE | null>(null);
+  const [userLabel, setUserLabel] = useState<string>("Your Body");
+
+  useEffect(() => {
+    const p = loadProfile();
+    if (p) {
+      setUserAce(p.ace);
+      const total = Object.values(p.ace).reduce((a, b) => a + b, 0);
+      const rank = total >= 40 ? "Apex" : total >= 32 ? "Vanguard" : total >= 24 ? "Trailblazer" : total >= 16 ? "Navigator" : total >= 8 ? "Pathfinder" : "Uncharted";
+      setUserLabel(rank);
+    }
+  }, []);
 
   return (
     <section id="compare-section" className="py-16 lg:py-20 px-6 lg:px-8 bg-[#0d1520] border-t border-white/6">
@@ -136,6 +151,11 @@ export default function CompareAdventures() {
                   <th className="text-left text-white/35 text-[11px] font-semibold tracking-widest uppercase px-4 py-3 w-36">
                     Attribute
                   </th>
+                  {userAce && (
+                    <th className="text-left px-4 py-3 border-r border-white/[0.06]">
+                      <span className="text-white/50 font-semibold text-sm">Your Body</span>
+                    </th>
+                  )}
                   {selected.map((a) => (
                     <th key={a.id} className="text-left px-4 py-3">
                       <Link
@@ -173,12 +193,28 @@ export default function CompareAdventures() {
                 ))}
 
                 {/* ACE Radar row */}
-                <tr className="border-t border-white/8">
+                <tr className="border-t border-white/8 bg-white/[0.01]">
                   <td className="px-4 py-4 text-white/40 text-[11px] font-semibold tracking-wide uppercase align-top pt-5">
                     ACE Profile
                   </td>
+                  {/* Your Body — first */}
+                  {userAce && (
+                    <td className="px-4 py-4 align-top border-r border-white/[0.06]">
+                      <p className="text-[9px] uppercase tracking-widest font-bold text-white/30 mb-2">Your Body · {userLabel}</p>
+                      <div
+                        className="rounded-xl p-2 inline-block"
+                        style={{
+                          background: "radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 75%)",
+                          border: "1px solid rgba(255,255,255,0.10)",
+                        }}
+                      >
+                        <ACERadar ace={userAce} size={160} showLabels />
+                      </div>
+                    </td>
+                  )}
                   {selected.map((a) => (
-                    <td key={a.id} className="px-4 py-4">
+                    <td key={a.id} className="px-4 py-4 align-top">
+                      <p className="text-[9px] uppercase tracking-widest font-bold text-white/30 mb-2">Trek Required</p>
                       <div
                         className="rounded-xl p-2 inline-block"
                         style={{
