@@ -194,109 +194,180 @@ interface TrainingItem {
 // ─── Rank data ────────────────────────────────────────────────────────────────
 
 const RANKS = [
-  { label: "Pathfinder",   color: "#22d3ee", stars: 1, minScore: 8  },
-  { label: "Trailblazer",  color: "#4ade80", stars: 2, minScore: 16 },
-  { label: "Navigator",    color: "#f59e0b", stars: 3, minScore: 24 },
-  { label: "Expeditioner", color: "#f97316", stars: 4, minScore: 32 },
-  { label: "Apex",         color: "#a78bfa", stars: 5, minScore: 40 },
+  {
+    label: "Pathfinder", color: "#22d3ee", stars: 1, minScore: 8,
+    icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><circle cx="10" cy="4.5" r="1.5" fill="currentColor"/><path d="M10 7v4l-2 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M10 11l2 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M7 9h6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>,
+    desc: "First steps into the wild",
+  },
+  {
+    label: "Trailblazer", color: "#4ade80", stars: 2, minScore: 16,
+    icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><path d="M5 15c1-2 2-3 3-5s1-4 2-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M8 15c1-2 2-3 3-5s1-4 2-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><circle cx="6" cy="10" r="1.5" fill="currentColor"/><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="13" r="1.5" fill="currentColor"/></svg>,
+    desc: "Pushing into new terrain",
+  },
+  {
+    label: "Navigator", color: "#f59e0b", stars: 3, minScore: 24,
+    icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.5"/><path d="M10 3v14M3 10h14" stroke="currentColor" strokeWidth="1" strokeOpacity="0.4"/><path d="M10 5l2 4H8l2-4z" fill="currentColor"/><path d="M10 15l-2-4h4l-2 4z" fill="currentColor" fillOpacity="0.4"/></svg>,
+    desc: "Reading the land with confidence",
+  },
+  {
+    label: "Expeditioner", color: "#f97316", stars: 4, minScore: 32,
+    icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><path d="M3 15l3.5-5 2.5 3 3-4.5L16 15H3z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/><path d="M10 5.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" fill="currentColor"/></svg>,
+    desc: "Multi-day expeditions, any terrain",
+  },
+  {
+    label: "Apex", color: "#a78bfa", stars: 5, minScore: 40,
+    icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><path d="M10 3l2 4 4.5.7-3.25 3.15.77 4.5L10 13.25l-4.02 2.1.77-4.5L3.5 7.7 8 7l2-4z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="currentColor" fillOpacity="0.3"/></svg>,
+    desc: "Elite physical capability across all axes",
+  },
 ];
 
 function RankProgressionBar({ totalScore, tierLabel }: { totalScore: number; tierLabel: string }) {
   const currentRankIndex = RANKS.findIndex(r => r.label === tierLabel);
+  const currentRank = RANKS[currentRankIndex];
+  const nextRank = RANKS[currentRankIndex + 1] ?? null;
+  const progressPct = nextRank
+    ? Math.min(100, Math.round(((totalScore - currentRank.minScore) / (nextRank.minScore - currentRank.minScore)) * 100))
+    : 100;
 
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-between mb-3">
-        <p className="text-[10px] uppercase tracking-widest font-semibold text-white/30">Rank Progression</p>
-        <p className="text-[10px] text-white/30 font-mono">{totalScore} / 40 pts</p>
+    <div className="w-full space-y-5">
+
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-white/25">Rank Progression</p>
+        <span className="text-[10px] font-mono text-white/25 bg-white/5 px-2 py-0.5 rounded-full">{totalScore} pts</span>
       </div>
 
-      <div className="relative">
-        {/* Base connector */}
-        <div className="absolute top-[18px] left-4 right-4 h-px bg-white/10" />
+      {/* Current rank hero */}
+      <div
+        className="relative rounded-2xl p-5 overflow-hidden"
+        style={{ background: `linear-gradient(135deg, ${currentRank.color}18 0%, ${currentRank.color}08 100%)`, border: `1px solid ${currentRank.color}30` }}
+      >
+        {/* Glow blob */}
+        <div className="absolute -top-6 -right-6 w-32 h-32 rounded-full blur-2xl opacity-20 pointer-events-none" style={{ background: currentRank.color }} />
 
-        {/* Filled connector up to current rank */}
-        {currentRankIndex >= 0 && (
+        <div className="relative flex items-center gap-4">
+          {/* Badge icon */}
           <div
-            className="absolute top-[18px] left-4 h-px"
-            style={{
-              width: currentRankIndex === RANKS.length - 1
-                ? "calc(100% - 2rem)"
-                : `${(currentRankIndex / (RANKS.length - 1)) * 100}%`,
-              background: `linear-gradient(to right, ${RANKS[0].color}, ${RANKS[currentRankIndex].color})`,
-            }}
-          />
-        )}
+            className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
+            style={{ background: `${currentRank.color}20`, color: currentRank.color, boxShadow: `0 0 20px ${currentRank.color}35` }}
+          >
+            {currentRank.icon}
+          </div>
 
-        <div className="relative flex items-start justify-between">
-          {RANKS.map((rank, i) => {
-            const isUnlocked = i <= currentRankIndex;
-            const isCurrent  = i === currentRankIndex;
-            return (
-              <div key={rank.label} className="flex flex-col items-center gap-1.5" style={{ width: "20%" }}>
-                <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 relative"
-                  style={
-                    isCurrent
-                      ? { background: `${rank.color}25`, border: `2px solid ${rank.color}`, color: rank.color, boxShadow: `0 0 14px ${rank.color}50` }
-                      : isUnlocked
-                      ? { background: `${rank.color}18`, border: `1.5px solid ${rank.color}55`, color: rank.color }
-                      : { background: "rgba(255,255,255,0.04)", border: "1.5px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.15)" }
-                  }
-                >
-                  {isUnlocked ? (
-                    <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4">
-                      <path d="M5 10l3.5 3.5L15 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  ) : (
-                    <Lock className="w-3 h-3" />
-                  )}
-                  {isCurrent && (
-                    <span className="absolute inset-0 rounded-full animate-ping opacity-20" style={{ background: rank.color }} />
-                  )}
-                </div>
-                <div className="flex flex-col items-center gap-0.5 text-center">
-                  <p className="text-[9px] font-semibold leading-tight tracking-wide"
-                    style={{ color: isCurrent ? rank.color : isUnlocked ? `${rank.color}99` : "rgba(255,255,255,0.2)" }}>
-                    {rank.label}
-                  </p>
-                  <div className="flex gap-px">
-                    {Array.from({ length: rank.stars }).map((_, si) => (
-                      <span key={si} className="text-[7px] leading-none"
-                        style={{ color: isUnlocked ? rank.color : "rgba(255,255,255,0.12)" }}>★</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-0.5">
+              <span className="text-[9px] uppercase tracking-[0.15em] font-semibold text-white/30">Current Rank</span>
+            </div>
+            <p className="text-lg font-bold tracking-tight" style={{ color: currentRank.color }}>{currentRank.label}</p>
+            <p className="text-[11px] text-white/35 mt-0.5">{currentRank.desc}</p>
+          </div>
+
+          {/* Stars */}
+          <div className="flex flex-col items-end gap-1 shrink-0">
+            <div className="flex gap-0.5">
+              {Array.from({ length: 5 }).map((_, si) => (
+                <span key={si} className="text-sm transition-colors" style={{ color: si < currentRank.stars ? currentRank.color : "rgba(255,255,255,0.08)" }}>★</span>
+              ))}
+            </div>
+            <span className="text-[9px] text-white/25 uppercase tracking-wider">Rank {currentRankIndex + 1} / 5</span>
+          </div>
         </div>
+
+        {/* Progress bar to next rank */}
+        {nextRank && (
+          <div className="mt-4">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[9px] text-white/30">
+                <span className="font-medium" style={{ color: `${nextRank.color}cc` }}>{nextRank.label}</span>
+                <span className="text-white/20"> · {nextRank.minScore - totalScore} pts away</span>
+              </span>
+              <span className="text-[9px] font-mono text-white/25">{progressPct}%</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-700"
+                style={{
+                  width: `${progressPct}%`,
+                  background: `linear-gradient(to right, ${currentRank.color}, ${nextRank.color})`,
+                  boxShadow: `0 0 8px ${currentRank.color}60`,
+                }}
+              />
+            </div>
+          </div>
+        )}
+        {!nextRank && (
+          <div className="mt-3 flex items-center gap-2">
+            <div className="h-1.5 flex-1 rounded-full" style={{ background: `linear-gradient(to right, ${RANKS[0].color}, #a78bfa)`, boxShadow: "0 0 10px #a78bfa40" }} />
+            <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa]">Max Rank</span>
+          </div>
+        )}
       </div>
 
-      {/* Progress to next rank */}
-      {currentRankIndex >= 0 && currentRankIndex < RANKS.length - 1 && (
-        <div className="mt-4">
-          <div className="flex items-center justify-between mb-1.5">
-            <p className="text-[9px] text-white/25 uppercase tracking-wider">Progress to {RANKS[currentRankIndex + 1].label}</p>
-            <p className="text-[9px] text-white/25 font-mono">{totalScore} / {RANKS[currentRankIndex + 1].minScore}</p>
-          </div>
-          <div className="h-1 rounded-full bg-white/[0.06] overflow-hidden">
+      {/* Full rank ladder */}
+      <div className="grid grid-cols-5 gap-2">
+        {RANKS.map((rank, i) => {
+          const isUnlocked = i <= currentRankIndex;
+          const isCurrent  = i === currentRankIndex;
+          return (
             <div
-              className="h-full rounded-full"
-              style={{
-                width: `${Math.min(100, ((totalScore - RANKS[currentRankIndex].minScore) / (RANKS[currentRankIndex + 1].minScore - RANKS[currentRankIndex].minScore)) * 100)}%`,
-                background: `linear-gradient(to right, ${RANKS[currentRankIndex].color}, ${RANKS[currentRankIndex + 1].color})`,
-              }}
-            />
-          </div>
-        </div>
-      )}
-      {currentRankIndex === RANKS.length - 1 && (
-        <div className="mt-4 flex items-center gap-2">
-          <div className="h-1 flex-1 rounded-full" style={{ background: `linear-gradient(to right, ${RANKS[0].color}, #a78bfa)` }} />
-          <p className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa]">Max Rank</p>
-        </div>
-      )}
+              key={rank.label}
+              className="relative flex flex-col items-center gap-2 rounded-xl py-3 px-1 transition-all"
+              style={
+                isCurrent
+                  ? { background: `${rank.color}18`, border: `1px solid ${rank.color}45`, boxShadow: `0 0 12px ${rank.color}25` }
+                  : isUnlocked
+                  ? { background: `${rank.color}0a`, border: `1px solid ${rank.color}20` }
+                  : { background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)" }
+              }
+            >
+              {/* Rank number pip */}
+              <span
+                className="absolute top-1.5 right-1.5 text-[8px] font-bold leading-none"
+                style={{ color: isUnlocked ? `${rank.color}80` : "rgba(255,255,255,0.12)" }}
+              >{i + 1}</span>
+
+              {/* Icon */}
+              <div
+                className="w-8 h-8 rounded-xl flex items-center justify-center"
+                style={
+                  isCurrent
+                    ? { background: `${rank.color}25`, color: rank.color }
+                    : isUnlocked
+                    ? { background: `${rank.color}15`, color: `${rank.color}aa` }
+                    : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.15)" }
+                }
+              >
+                {isUnlocked
+                  ? <div style={{ transform: "scale(0.85)" }}>{rank.icon}</div>
+                  : <Lock className="w-3 h-3" />
+                }
+              </div>
+
+              {/* Label */}
+              <p
+                className="text-[8px] font-semibold leading-tight text-center"
+                style={{ color: isCurrent ? rank.color : isUnlocked ? `${rank.color}80` : "rgba(255,255,255,0.18)" }}
+              >
+                {rank.label}
+              </p>
+
+              {/* Stars */}
+              <div className="flex gap-px">
+                {Array.from({ length: rank.stars }).map((_, si) => (
+                  <span key={si} className="text-[6px] leading-none"
+                    style={{ color: isUnlocked ? rank.color : "rgba(255,255,255,0.1)" }}>★</span>
+                ))}
+              </div>
+
+              {isCurrent && (
+                <span className="absolute -top-px left-1/2 -translate-x-1/2 text-[7px] font-bold uppercase tracking-wider px-1.5 py-px rounded-b-md"
+                  style={{ background: rank.color, color: "#000" }}>You</span>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
