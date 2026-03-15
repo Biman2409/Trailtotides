@@ -6,6 +6,8 @@ import { X, ArrowRight, GitCompareArrows } from "lucide-react";
 import { Adventure } from "@/lib/data";
 import { difficultyStyle } from "@/lib/styles";
 import { useCompare, MAX } from "@/contexts/CompareContext";
+import ACERadar from "@/components/ui/custom/ACERadar";
+import { getACE } from "@/lib/ace";
 
 const FIELDS: { label: string; key: keyof Adventure | "price" | "rating" | "operators" }[] = [
   { label: "Region",          key: "region" },
@@ -169,6 +171,26 @@ export default function CompareAdventures() {
                     })}
                   </tr>
                 ))}
+
+                {/* ACE Radar row */}
+                <tr className="border-t border-white/8">
+                  <td className="px-4 py-4 text-white/40 text-[11px] font-semibold tracking-wide uppercase align-top pt-5">
+                    ACE Profile
+                  </td>
+                  {selected.map((a) => (
+                    <td key={a.id} className="px-4 py-4">
+                      <div
+                        className="rounded-xl p-2 inline-block"
+                        style={{
+                          background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, rgba(255,255,255,0.02) 75%)",
+                          border: "1px solid rgba(255,255,255,0.07)",
+                        }}
+                      >
+                        <ACERadar ace={getACE(a)} size={160} showLabels />
+                      </div>
+                    </td>
+                  ))}
+                </tr>
 
                 {/* View detail links row */}
                 <tr className="border-t border-white/8">

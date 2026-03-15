@@ -15,23 +15,38 @@ interface CompareContextValue {
 
 const CompareContext = createContext<CompareContextValue | null>(null);
 
+const STORAGE_KEY = "compare_selected";
+
 export function CompareProvider({ children }: { children: ReactNode }) {
-  const [selected, setSelected] = useState<Adventure[]>([]);
+  const [selected, setSelected] = useState<Adventure[]>(() => {
+    if (typeof window === "undefined") return [];
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
+  });
 
   function add(a: Adventure) {
     setSelected((prev) => {
       if (prev.find((s) => s.id === a.id) || prev.length >= MAX) return prev;
-      return [...prev, a];
+      const next = [...prev, a];
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch {}
+      return next;
     });
   }
 
   function remove(id: string) {
-    setSelected((prev) => prev.filter((a) => a.id !== id));
+    setSelected((prev) => {
+      const next = prev.filter((a) => a.id !== id);
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
   }
 
   function isSelected(id: string) {
     return selected.some((a) => a.id === id);
   }
+
 
   return (
     <CompareContext.Provider value={{ selected, add, remove, isSelected, isFull: selected.length >= MAX }}>
