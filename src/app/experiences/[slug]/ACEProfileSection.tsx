@@ -80,7 +80,7 @@ export default function ACEProfileSection({
                     <line x1="0" y1="2" x2="14" y2="2" stroke={userColor} strokeWidth="1.5" strokeDasharray="4 2.5" />
                   </svg>
                   <span className="text-[9px] uppercase tracking-wide font-semibold" style={{ color: userColor }}>
-                    {profileLabel ?? "Your level"}
+                    Your Body
                   </span>
                 </div>
               )}
