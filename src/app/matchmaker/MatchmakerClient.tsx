@@ -664,7 +664,7 @@ export default function MatchmakerClient() {
     });
   }, []);
 
-  const currentQ = QUESTIONS[stepIndex];
+  const currentQ = QUESTIONS[stepIndex] ?? QUESTIONS[0];
   const canAdvance = !!answers[currentQ.key];
 
   function submitAssessment(finalAnswers: Answers) {
@@ -759,18 +759,16 @@ export default function MatchmakerClient() {
             sub={undefined}
             selected={answers[currentQ.key] === o.v}
             onClick={() => {
-              setAnswers(prev => {
-                const updated = { ...prev, [currentQ.key]: o.v };
-                // Auto-advance after brief delay so selection is visible
-                setTimeout(() => {
-                  if (stepIndex < QUESTIONS.length - 1) {
-                    setStepIndex(i => i + 1);
-                  } else {
-                    submitAssessment(updated);
-                  }
-                }, 180);
-                return updated;
-              });
+              const updated = { ...answers, [currentQ.key]: o.v };
+              setAnswers(updated);
+              // Auto-advance after brief delay so selection is visible
+              setTimeout(() => {
+                if (stepIndex < QUESTIONS.length - 1) {
+                  setStepIndex(stepIndex + 1);
+                } else {
+                  submitAssessment(updated);
+                }
+              }, 180);
             }}
           />
         ))}
