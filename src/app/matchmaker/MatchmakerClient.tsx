@@ -764,8 +764,28 @@ function ResultsScreen({
         accentColor="#4ade80"
         defaultOpen
       />
-      {stretch.length > 0 && <AdventureSection label="Stretch Challenge" sublabel="Slightly above your current range — achievable with focused training" icon={<TrendingUp className="w-4 h-4" />} adventures={stretch} accentColor="#f59e0b" />}
-      {restricted.length > 0 && <AdventureSection label="Currently Out of Range" sublabel="Require capabilities significantly beyond your current profile" icon={<Lock className="w-4 h-4" />} adventures={restricted} accentColor="#f43f5e" />}
+      {stretch.length > 0 && (
+        <AdventureSection
+          label="Stretch Challenge"
+          sublabel="Slightly above your current range — achievable with focused training"
+          icon={<TrendingUp className="w-4 h-4" />}
+          adventures={[...stretch].sort((a, b) => a.riskLevel - b.riskLevel).slice(0, 6)}
+          totalCount={stretch.length}
+          exploreUrl="/explore?ace=stretch"
+          accentColor="#f59e0b"
+        />
+      )}
+      {restricted.length > 0 && (
+        <AdventureSection
+          label="Currently Out of Range"
+          sublabel="Require capabilities significantly beyond your current profile"
+          icon={<Lock className="w-4 h-4" />}
+          adventures={[...restricted].sort((a, b) => a.riskLevel - b.riskLevel).slice(0, 6)}
+          totalCount={restricted.length}
+          exploreUrl="/explore?ace=out-of-range"
+          accentColor="#f43f5e"
+        />
+      )}
 
       {/* Training plan — top lagging axes only */}
       {trainingPlan.length > 0 && (() => {
