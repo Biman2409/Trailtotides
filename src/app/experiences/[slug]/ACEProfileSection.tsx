@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, RotateCcw } from "lucide-react";
+import { ArrowRight, RotateCcw, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Brain } from "lucide-react";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import GradingPill from "@/components/ui/custom/GradingPill";
 import { aceSummary, ACE_AXIS_COLORS, ACE_AXIS_LABELS } from "@/lib/ace";
@@ -17,6 +17,28 @@ interface Props {
   showTechnicalWarning: boolean;
 }
 
+
+const AXIS_ICONS: Record<string, React.ReactNode> = {
+  stamina:  <Flame    className="w-3.5 h-3.5" />,
+  power:    <Zap      className="w-3.5 h-3.5" />,
+  strength: <Dumbbell className="w-3.5 h-3.5" />,
+  agility:  <Compass  className="w-3.5 h-3.5" />,
+  water:    <Waves    className="w-3.5 h-3.5" />,
+  altitude: <Mountain className="w-3.5 h-3.5" />,
+  nerve:    <Shield   className="w-3.5 h-3.5" />,
+  focus:    <Brain    className="w-3.5 h-3.5" />,
+};
+
+const TRAINING_TIPS: Record<string, string> = {
+  stamina:  "Build aerobic base with 3–4 weekly runs or hikes. Progress to back-to-back long days.",
+  power:    "Add interval training and steep hill repeats to develop explosive leg power.",
+  strength: "Weighted step-ups, squats and loaded carries will develop the strength needed.",
+  agility:  "Practice trail running on technical terrain; add balance and proprioception drills.",
+  water:    "Swim 2–3 times a week. Progress from pool to open water, then moving water.",
+  altitude: "Spend nights above 3,000m before attempting higher objectives. Acclimatise gradually.",
+  nerve:    "Exposure therapy on smaller heights — via ferrata and scrambling routes build tolerance.",
+  focus:    "Long mountain days with navigation challenges develop the sustained focus required.",
+};
 
 const DOMAINS = [
   { label: "Engine",   color: "#f97316", axes: ["stamina", "power"]    as AceAxis[] },
@@ -165,6 +187,49 @@ export default function ACEProfileSection({
           )}
         </div>
       </div>
+
+      {/* Focus Areas — only when user has gaps on this trek */}
+      {userAce && (() => {
+        const gaps = (Object.keys(ace) as AceAxis[])
+          .map(ax => ({ ax, gap: ace[ax] - ((userAce as Record<string, number>)[ax] ?? 0) }))
+          .filter(({ gap }) => gap > 0)
+          .sort((a, b) => b.gap - a.gap)
+          .slice(0, 3);
+        if (!gaps.length) return null;
+        return (
+          <div
+            className="rounded-2xl p-5 mb-3 border"
+            style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}
+          >
+            <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1">Focus Areas</p>
+            <p className="text-white font-semibold text-sm mb-1">What to train for this trek</p>
+            <p className="text-white/35 text-xs mb-4">These axes are holding you back the most. Improve these first.</p>
+            <div className="space-y-3">
+              {gaps.map(({ ax, gap }) => {
+                const color = ACE_AXIS_COLORS[ax];
+                const icon = AXIS_ICONS[ax];
+                const userVal = (userAce as Record<string, number>)[ax] ?? 0;
+                const trekVal = ace[ax];
+                return (
+                  <div key={ax} className="flex items-start gap-3 rounded-xl p-3.5" style={{ background: `${color}08`, border: `1px solid ${color}18` }}>
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${color}20`, color }}>
+                      {icon}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-white font-semibold text-xs capitalize">{ACE_AXIS_LABELS[ax]}</span>
+                        <span className="text-[9px] px-1.5 py-px rounded-full font-bold" style={{ background: `${color}20`, color }}>+{gap} needed</span>
+                        <span className="text-white/25 text-[9px] ml-auto">Lv {userVal} → {trekVal}</span>
+                      </div>
+                      <p className="text-white/45 text-xs leading-snug">{TRAINING_TIPS[ax]}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Safety alerts */}
       {(showAltitudeWarning || showIsolationWarning || showTechnicalWarning) && (
