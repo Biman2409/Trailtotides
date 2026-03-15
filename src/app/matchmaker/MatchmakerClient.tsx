@@ -694,10 +694,57 @@ function ResultsScreen({
             </div>
           </div>
 
-          {/* ACE Radar */}
-          <div className="flex justify-center mb-6">
-            <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={260} showLabels />
-          </div>
+          {/* ACE Radar + Strengths side-by-side */}
+          {(() => {
+            const axisEntries = Object.entries(userAxes).filter(([, v]) => v > 0);
+            const sorted = [...axisEntries].sort(([, a], [, b]) => b - a);
+            const strengths = sorted.slice(0, 3);
+            const AXIS_LABELS: Record<string, string> = {
+              stamina: "Stamina", power: "Power", strength: "Strength",
+              agility: "Agility", water: "Water", altitude: "Altitude",
+              nerve: "Nerve", focus: "Focus",
+            };
+            const AXIS_DESC: Record<string, string> = {
+              stamina: "Sustained aerobic output over long durations",
+              power: "Explosive force and burst capacity",
+              strength: "Load-bearing and muscular endurance",
+              agility: "Terrain navigation and body control",
+              water: "Aquatic comfort and swim capability",
+              altitude: "High-altitude acclimatisation",
+              nerve: "Psychological exposure tolerance",
+              focus: "Sustained situational awareness",
+            };
+            return (
+              <div className="flex items-center gap-4 mb-6">
+                <div className="shrink-0">
+                  <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={220} showLabels />
+                </div>
+                <div className="flex-1 space-y-2.5">
+                  <p className="text-[9px] uppercase tracking-[0.18em] font-bold text-white/25 mb-3">Standout Strengths</p>
+                  {strengths.map(([axis, val]) => {
+                    const color = AXIS_COLORS[axis] ?? "#ff5100";
+                    const icon = AXIS_ICONS[axis];
+                    return (
+                      <div key={axis} className="rounded-xl p-3" style={{ background: `${color}10`, border: `1px solid ${color}25` }}>
+                        <div className="flex items-center gap-2 mb-1">
+                          <div className="w-5 h-5 rounded-md flex items-center justify-center shrink-0" style={{ background: `${color}20`, color }}>
+                            {icon}
+                          </div>
+                          <span className="text-xs font-semibold capitalize" style={{ color }}>{AXIS_LABELS[axis]}</span>
+                          <div className="flex gap-px ml-auto">
+                            {Array.from({ length: 5 }).map((_, si) => (
+                              <div key={si} className="w-2 h-2 rounded-sm" style={{ background: si < val ? color : "rgba(255,255,255,0.08)" }} />
+                            ))}
+                          </div>
+                        </div>
+                        <p className="text-[10px] text-white/35 leading-snug">{AXIS_DESC[axis]}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Rank progression */}
           <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
@@ -711,41 +758,49 @@ function ResultsScreen({
       {stretch.length > 0 && <AdventureSection label="Stretch Challenge" sublabel="Slightly above your current range — achievable with focused training" icon={<TrendingUp className="w-4 h-4" />} adventures={stretch} accentColor="#f59e0b" />}
       {restricted.length > 0 && <AdventureSection label="Currently Out of Range" sublabel="Require capabilities significantly beyond your current profile" icon={<Lock className="w-4 h-4" />} adventures={restricted} accentColor="#f43f5e" />}
 
-      {/* Training plan */}
-      {trainingPlan.length > 0 && (
-        <div
-          className="rounded-2xl p-6 mb-8 border"
-          style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}
-        >
-          <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Your Training Plan</p>
-          <h3 className="text-white font-semibold text-base mb-5">How to unlock harder adventures</h3>
-          <div className="space-y-4">
-            {trainingPlan.map((item, i) => {
-              const color = AXIS_COLORS[item.axis] ?? "#ff5100";
-              const icon = AXIS_ICONS[item.axis];
-              return (
-                <div key={i} className="flex items-start gap-4">
-                  <div
-                    className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
-                    style={{ background: `${color}18`, color }}
-                  >
-                    {icon}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-white font-semibold text-sm capitalize">{item.axis}</span>
-                      <span className="text-white/30 text-xs">
-                        Level {item.current_level} → {item.required_level}
-                      </span>
+      {/* Training plan — top lagging axes only */}
+      {trainingPlan.length > 0 && (() => {
+        const prioritised = [...trainingPlan]
+          .sort((a, b) => (b.required_level - b.current_level) - (a.required_level - a.current_level))
+          .slice(0, 3);
+        return (
+          <div
+            className="rounded-2xl p-6 mb-8 border"
+            style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}
+          >
+            <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Focus Areas</p>
+            <h3 className="text-white font-semibold text-base mb-1">How to unlock harder adventures</h3>
+            <p className="text-white/35 text-xs mb-5">These are the axes holding you back the most. Improve these first.</p>
+            <div className="space-y-4">
+              {prioritised.map((item, i) => {
+                const color = AXIS_COLORS[item.axis] ?? "#ff5100";
+                const icon = AXIS_ICONS[item.axis];
+                const gap = item.required_level - item.current_level;
+                return (
+                  <div key={i} className="flex items-start gap-4 rounded-xl p-3.5" style={{ background: `${color}08`, border: `1px solid ${color}18` }}>
+                    <div
+                      className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
+                      style={{ background: `${color}20`, color }}
+                    >
+                      {icon}
                     </div>
-                    <p className="text-white/55 text-sm leading-snug">{item.recommendation}</p>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-white font-semibold text-sm capitalize">{item.axis}</span>
+                        <span className="text-[10px] px-1.5 py-px rounded-full font-medium" style={{ background: `${color}20`, color }}>
+                          +{gap} needed
+                        </span>
+                        <span className="text-white/25 text-xs ml-auto">Lv {item.current_level} → {item.required_level}</span>
+                      </div>
+                      <p className="text-white/50 text-xs leading-snug">{item.recommendation}</p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* CTAs */}
       <div className="flex flex-wrap gap-3 items-center">
