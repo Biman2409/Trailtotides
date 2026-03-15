@@ -147,8 +147,8 @@ export default function MatchmakerHomepageSection() {
                 border: "1px solid rgba(255,255,255,0.07)",
               }}
             >
-              <div className="px-4 pt-3 pb-1 border-b border-white/[0.06]">
-                <p className="text-[10px] uppercase tracking-widest font-bold text-white/30 text-center">ACE Profile</p>
+              <div className="px-4 pt-3 pb-1">
+                <p className="text-[10px] uppercase tracking-widest font-bold text-white/30">ACE Profile</p>
               </div>
               <div className="p-2">
                 <ACERadar ace={profile.ace} size={200} showLabels />
