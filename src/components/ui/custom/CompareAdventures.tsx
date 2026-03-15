@@ -142,31 +142,13 @@ export default function CompareAdventures() {
           </div>
         )}
 
-        {/* ACE Profile — Your Body standalone card */}
-        {selected.length >= 2 && userAce && (
-          <div className="mb-8">
-            <p className="text-[10px] uppercase tracking-widest font-bold text-white/30 mb-4">ACE Profile</p>
-            <div
-              className="inline-flex flex-col items-center rounded-2xl overflow-hidden"
-              style={{ border: "1px solid rgba(255,255,255,0.10)", background: "radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 75%)" }}
-            >
-              <div className="px-4 pt-3 pb-1 w-full">
-                <p className="text-[9px] uppercase tracking-widest font-bold text-white/40">Your Body · <span className="text-white/60">{userLabel}</span></p>
-              </div>
-              <div className="p-3">
-                <ACERadar ace={userAce} size={180} showLabels />
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Comparison table — only show when ≥2 selected */}
         {selected.length >= 2 && (
           <div className="overflow-x-auto rounded-xl border border-white/8">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-white/8">
-                  <th className="text-left text-white/35 text-[11px] font-semibold tracking-widest uppercase px-4 py-3 w-36">
+                  <th className="text-left text-white/35 text-[11px] font-semibold tracking-widest uppercase px-4 py-3 w-44">
                     Attribute
                   </th>
                   {selected.map((a) => (
@@ -205,13 +187,31 @@ export default function CompareAdventures() {
                   </tr>
                 ))}
 
-                {/* ACE Radar row — trek profiles only */}
+                {/* ACE Radar row — Your Body + trek profiles */}
                 <tr className="border-t border-white/8 bg-white/[0.01]">
-                  <td className="px-4 py-4 text-white/40 text-[11px] font-semibold tracking-wide uppercase align-top pt-5">
-                    Trek ACE
+                  {/* Your Body cell */}
+                  <td className="px-4 py-4 align-top">
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-white/30 mb-3">ACE Profile</p>
+                    {userAce ? (
+                      <div
+                        className="inline-flex flex-col items-center rounded-xl overflow-hidden"
+                        style={{ border: "1px solid rgba(255,255,255,0.10)", background: "radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 75%)" }}
+                      >
+                        <div className="px-3 pt-2 pb-0.5 w-full">
+                          <p className="text-[9px] uppercase tracking-widest font-bold text-white/40">Your Body</p>
+                          <p className="text-[9px] text-white/60 font-semibold">{userLabel}</p>
+                        </div>
+                        <div className="p-2">
+                          <ACERadar ace={userAce} size={160} showLabels />
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-white/25 text-xs">No profile yet</p>
+                    )}
                   </td>
                   {selected.map((a) => (
                     <td key={a.id} className="px-4 py-4 align-top">
+                      <p className="text-[10px] uppercase tracking-widest font-bold text-white/30 mb-3">Trek ACE</p>
                       <div
                         className="rounded-xl p-2 inline-block"
                         style={{
