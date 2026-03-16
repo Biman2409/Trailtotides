@@ -1,13 +1,35 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { 
+import {
   Map as MapIcon, Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
-  Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users
+  Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users, ArrowRight
 } from "lucide-react";
+import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import { adventures } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
+import { getACE } from "@/lib/ace";
+import type { AceAxis } from "@/lib/ace";
+import { loadProfile } from "@/lib/matchmaker";
+import type { StoredProfile } from "@/lib/matchmaker";
+
+type AceCategory = "ready" | "stretch" | "out-of-range";
+
+function classifyAdventure(userAce: StoredProfile["ace"], adventureAce: ReturnType<typeof getACE>): AceCategory {
+  const axes = Object.keys(adventureAce) as AceAxis[];
+  let maxShortfall = 0;
+  for (const axis of axes) {
+    const req = adventureAce[axis];
+    if (req === 0) continue;
+    const has = userAce[axis];
+    const shortfall = req - has;
+    if (shortfall > maxShortfall) maxShortfall = shortfall;
+  }
+  if (maxShortfall <= 0) return "ready";
+  if (maxShortfall <= 1) return "stretch";
+  return "out-of-range";
+}
 import type L from "leaflet";
 
 const typeEmoji: Record<AdventureType, string> = {
@@ -314,8 +336,10 @@ export default function MapPage() {
   const [expandedRegion, setExpandedRegion] = useState<Region | null>(null);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
+  const [aceCategory, setAceCategory] = useState<AceCategory | null>(null);
+  const [userProfile, setUserProfile] = useState<StoredProfile | null>(null);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => { setMounted(true); setUserProfile(loadProfile()); }, []);
 
   function toggle<T>(arr: T[], val: T, setter: (v: T[]) => void) {
     setter(arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val]);
@@ -333,6 +357,7 @@ export default function MapPage() {
     setExpandedRegion(null);
     setExpandedCategory(null);
     setExpandedSeason(null);
+    setAceCategory(null);
   }
 
   const activeFilterCount =
@@ -342,7 +367,8 @@ export default function MapPage() {
     selectedDifficulties.length +
     selectedDurations.length +
     selectedMonths.length +
-    selectedGroupSizes.length;
+    selectedGroupSizes.length +
+    (aceCategory !== null ? 1 : 0);
 
   const visibleAdventures = adventures.filter((a) => {
     if (
@@ -358,6 +384,10 @@ export default function MapPage() {
     if (selectedDurations.length && !selectedDurations.includes(a.duration)) return false;
     if (selectedMonths.length && !selectedMonths.some((m) => a.bestMonths.includes(m))) return false;
     if (selectedGroupSizes.length && !selectedGroupSizes.includes(a.groupSize)) return false;
+    if (aceCategory && userProfile) {
+      const cat = classifyAdventure(userProfile.ace, getACE(a));
+      if (cat !== aceCategory) return false;
+    }
     return true;
   });
 
@@ -668,6 +698,50 @@ export default function MapPage() {
                         </div>
                     </div>
 
+                {/* ACE Profile Filter */}
+                <div className="col-span-2 lg:col-span-3">
+                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">ACE Profile Match</h3>
+                  {!userProfile ? (
+                    <div className="flex items-center justify-between gap-4 p-3 rounded-xl bg-zinc-50 border border-zinc-200">
+                      <div>
+                        <p className="text-sm font-medium text-zinc-600">No ACE profile yet</p>
+                        <p className="text-xs text-zinc-400 mt-0.5">Take the assessment to filter by your capability level</p>
+                      </div>
+                      <Link
+                        href="/matchmaker"
+                        className="shrink-0 inline-flex items-center gap-1.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-3 py-2 rounded-xl text-xs transition-all"
+                      >
+                        Take Assessment
+                        <ArrowRight className="w-3 h-3" />
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {([
+                        { key: "ready" as AceCategory, label: "Ready Now", desc: "Matches your current level", color: "#1e3d2f", bg: "#1e3d2f15", border: "#1e3d2f40" },
+                        { key: "stretch" as AceCategory, label: "Stretch Challenge", desc: "Slightly above your level", color: "#b45309", bg: "#b4530915", border: "#b4530940" },
+                        { key: "out-of-range" as AceCategory, label: "Out of Range", desc: "Significantly beyond current ability", color: "#dc2626", bg: "#dc262615", border: "#dc262640" },
+                      ]).map(({ key, label, desc, color, bg, border }) => {
+                        const isActive = aceCategory === key;
+                        return (
+                          <button
+                            key={key}
+                            onClick={() => setAceCategory(isActive ? null : key)}
+                            className="text-left p-3.5 rounded-xl border transition-all"
+                            style={{
+                              background: isActive ? bg : "#f5f0e8",
+                              borderColor: isActive ? border : "#e0d8cc",
+                            }}
+                          >
+                            <p className="text-xs font-bold mb-0.5" style={{ color: isActive ? color : "#6b6560" }}>{label}</p>
+                            <p className="text-[11px] text-zinc-400">{desc}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
               </div>
             </div>
           )}
@@ -739,6 +813,14 @@ export default function MapPage() {
                 {g} <X className="w-3 h-3" />
               </span>
             ))}
+            {aceCategory && (
+              <span
+                onClick={() => setAceCategory(null)}
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
+              >
+                ACE: {aceCategory === "ready" ? "Ready Now" : aceCategory === "stretch" ? "Stretch" : "Out of Range"} <X className="w-3 h-3" />
+              </span>
+            )}
           </div>
         )}
 
