@@ -429,7 +429,7 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
                   <div className="h-[6px] -mt-1" />
                 )}
 
-                {/* You chip */}
+                {/* You chip / Progress info */}
                 {isCurrent ? (
                   <span
                     className="text-[6px] font-bold uppercase tracking-wider px-1.5 py-px rounded-full"
@@ -437,6 +437,11 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
                   >
                     You
                   </span>
+                ) : !isUnlocked && nextRank && rank.label === nextRank.label ? (
+                  <div className="flex flex-col items-center gap-0.5">
+                    <span className="text-[8px] font-bold leading-none" style={{ color: rank.color }}>{progressPct}%</span>
+                    <span className="text-[7px] text-white/40 leading-none whitespace-nowrap">{nextRank.minScore - totalScore} pts</span>
+                  </div>
                 ) : (
                   <div className="h-[14px]" />
                 )}
@@ -724,16 +729,17 @@ function ResultsScreen({
                                 ))}
                               </div>
                             ) : <div className="h-[6px]" />}
+                            {/* Progress info under next locked rank */}
+                            {!isUnlocked && nextRank && rank.label === nextRank.label ? (
+                              <div className="flex flex-col items-center gap-0.5 mt-1">
+                                <span className="text-[8px] font-bold leading-none" style={{ color: rank.color }}>{progressPct}%</span>
+                                <span className="text-[7px] text-white/40 leading-none whitespace-nowrap">{nextRank.minScore - totalScore} pts</span>
+                              </div>
+                            ) : (!isUnlocked && <div className="h-[22px]" />)}
                           </div>
                         );
                       })}
                     </div>
-                    {nextRank && (
-                      <p className="text-[9px] text-white/20 mt-3">
-                        <span style={{ color: nextRank.color }} className="font-medium">{nextRank.label}</span>
-                        <span> — {nextRank.minScore - totalScore} pts away · {progressPct}% there</span>
-                      </p>
-                    )}
                   </div>
                 );
               })()}
