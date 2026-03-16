@@ -135,11 +135,11 @@ export default function StoriesPage() {
       {/* All stories grid */}
       <section className="py-20 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-white text-2xl font-semibold mb-10">All Voices from the Edge</h2>
+          <h2 className="text-[#ff5100] text-2xl font-semibold mb-10">All Voices from the Edge</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {rest.map((story) => (
-              <Link key={story.id} href={`/stories/${story.slug}`} className="group block">
-                <div className="relative h-52 rounded-2xl overflow-hidden mb-5 shadow-md group-hover:shadow-xl group-hover:shadow-black/30 transition-shadow duration-300">
+              <Link key={story.id} href={`/stories/${story.slug}`} className="group block bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-[#ff5100]/30 hover:bg-white/8 transition-all duration-300">
+                <div className="relative h-52 overflow-hidden">
                   <Image
                     src={story.heroImage}
                     alt={story.title}
@@ -157,7 +157,7 @@ export default function StoriesPage() {
                     ))}
                   </div>
                 </div>
-                <div>
+                <div className="p-5">
                   <h3 className="text-white text-xl font-semibold leading-snug mb-2 group-hover:text-[#ff5100] transition-colors">
                     {story.title}
                   </h3>
