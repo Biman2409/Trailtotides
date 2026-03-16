@@ -244,7 +244,7 @@ export default function MatchmakerHomepageSection() {
         {/* CTAs */}
         <div className="flex flex-wrap items-center gap-3 mt-8">
           <Link
-            href="/explore"
+            href="/explore?ace=ready"
             className="inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#e04800] text-white font-semibold px-6 py-3 rounded-xl text-sm hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25 group transition-all duration-200"
           >
             Explore matching adventures
