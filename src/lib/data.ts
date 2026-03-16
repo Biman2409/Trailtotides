@@ -1585,7 +1585,7 @@ export const adventures: Adventure[] = [
     name: "Manaslu Circuit Trek", tagline: "A complete circuit of the world's eighth-highest mountain through remote Nepali villages",
     region: "Himalayas", state: "Nepal", type: "Trekking", difficulty: "Advanced",
     duration: "7+ days", durationDays: "14 days", durationRange: "14 Days",
-    distance: "140km", distanceRange: "140 km", altitude: "5,106m",
+    distance: "140km", distanceRange: "140 km", altitude: "5,106m (Larke La)",
     bestSeason: "Apr–May, Oct", bestMonths: ["Apr","May","Oct"],
     groupSize: "Small group (2–6)", baseCamp: "Kathmandu",
     heroImage: "/manaslu-circuit.jpeg",
