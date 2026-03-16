@@ -1927,7 +1927,7 @@ export const stories: Story[] = [
     authorRole: "A jack of all trades",
     heroImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
     readTime: "8 min read",
-    tags: ["Featured", "TTT Original", "Nepal", "Biking"],
+    tags: ["Featured", "TTT Original", "Nepal", "Biking", "Motorcycle", "Road Trip", "Himalayas", "Kathmandu", "Adventure Travel", "Overland", "Solo Rider", "Travel Story"],
     region: "Himalayas",
     date: "Sep 2024",
     submittedBy: "aditya-yadav",
@@ -1943,7 +1943,7 @@ export const stories: Story[] = [
               heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_3620_Original-resized-1772404370295.jpeg?width=8000&height=8000&resize=contain",
             readTime: "15 min read",
 
-              tags: ["Featured", "TTT Original", "Ladakh", "Biking"],
+              tags: ["Featured", "TTT Original", "Ladakh", "Biking", "Motorcycle", "Umling La", "Himalayas", "High Altitude", "Road Trip", "Demchok", "Adventure Travel", "India"],
               region: "Himalayas",
               date: "July 2022",
               submittedBy: "986fb39a-f174-40ba-aefa-eddee3145687",
