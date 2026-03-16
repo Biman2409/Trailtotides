@@ -1929,7 +1929,7 @@ export const stories: Story[] = [
     authorRole: "A jack of all trades",
     authorBio: "I read relentlessly and write poetry to ground myself. A mountaineer and skier at heart, I find joy navigating riverbeds on my Himalayan. Anchored by amazing friends, I keep chasing new extremes. Ultimately, my chief occupation is living a life of love. Everything else is fluff.",
     pillTags: ["Nepal", "Biking"],
-    heroImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+    heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/story-submissions/nepal-story-hero.jpeg",
     readTime: "8 min read",
     tags: ["Featured", "TTT Original", "Nepal", "Biking", "Motorcycle", "Road Trip", "Himalayas", "Kathmandu", "Adventure Travel", "Overland", "Solo Rider", "Travel Story"],
     region: "Himalayas",
