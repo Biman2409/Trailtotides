@@ -366,7 +366,28 @@ export default async function ExperiencePage({ params }: Props) {
                 <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: "rgba(245,158,11,0.12)" }}>
                   <AlertTriangle className="w-4 h-4 text-amber-400" />
                 </div>
-                <p className="text-white/55 text-sm leading-relaxed">{adventure.safetyNotes}</p>
+                <div className="flex-1">
+                  <p className="text-white/55 text-sm leading-relaxed">{adventure.safetyNotes}</p>
+                  {(showAltitudeWarning || showIsolationWarning || showTechnicalWarning) && (
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {showAltitudeWarning && (
+                        <span className="inline-flex items-center gap-1.5 text-yellow-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(234,179,8,0.12)", border: "1px solid rgba(234,179,8,0.25)" }}>
+                          ⚠ High Risk of Altitude Sickness
+                        </span>
+                      )}
+                      {showIsolationWarning && (
+                        <span className="inline-flex items-center gap-1.5 text-red-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)" }}>
+                          ⚠ Extreme Exposure Environment
+                        </span>
+                      )}
+                      {showTechnicalWarning && (
+                        <span className="inline-flex items-center gap-1.5 text-violet-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.25)" }}>
+                          ⚠ Mountaineering Route
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </section>
 
