@@ -3,28 +3,37 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, RotateCcw } from "lucide-react";
+import { ArrowRight, RotateCcw, Lock } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
 
 const RANKS = [
-  { label: "Uncharted",   color: "#6b7280", stars: 0, minScore: 0  },
-  { label: "Pathfinder",  color: "#22d3ee", stars: 1, minScore: 8  },
-  { label: "Navigator",   color: "#4ade80", stars: 2, minScore: 16 },
-  { label: "Trailblazer", color: "#f59e0b", stars: 3, minScore: 24 },
-  { label: "Vanguard",    color: "#f97316", stars: 4, minScore: 32 },
-  { label: "Apex",        color: "#a78bfa", stars: 5, minScore: 40 },
+  {
+    label: "Uncharted", color: "#6b7280", stars: 0, minScore: 0,
+    icon: <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5"><circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" strokeDasharray="3 2.5" fill="currentColor" fillOpacity="0.06"/><path d="M9 9a3 3 0 016 0c0 2-2 2.5-3 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="16.5" r="1.2" fill="currentColor"/></svg>,
+  },
+  {
+    label: "Pathfinder", color: "#22d3ee", stars: 1, minScore: 8,
+    icon: <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5"><circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1"/><path d="M12 16.5V8.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><path d="M8.5 12L12 8.5L15.5 12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  },
+  {
+    label: "Navigator", color: "#4ade80", stars: 2, minScore: 16,
+    icon: <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5"><circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><path d="M12 4l2.5 7.5L12 10l-2.5 1.5L12 4z" fill="currentColor"/></svg>,
+  },
+  {
+    label: "Trailblazer", color: "#f59e0b", stars: 3, minScore: 24,
+    icon: <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5"><path d="M12 2.5L20 6.5V13C20 17.8 16.5 21.3 12 22.8C7.5 21.3 4 17.8 4 13V6.5L12 2.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" fill="currentColor" fillOpacity="0.1"/><path d="M8 15.5l2-3.5 2 2.5 2-4.5 2 5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  },
+  {
+    label: "Vanguard", color: "#f97316", stars: 4, minScore: 32,
+    icon: <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5"><path d="M12 2L20 7V13.5C20 18.2 16.5 21.8 12 23.5C7.5 21.8 4 18.2 4 13.5V7L12 2Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" fill="currentColor" fillOpacity="0.1"/><path d="M12 2L14 7H20L15.5 10.5L17 16L12 12.5L7 16L8.5 10.5L4 7H10L12 2Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" fill="currentColor" fillOpacity="0.2"/></svg>,
+  },
+  {
+    label: "Apex", color: "#a78bfa", stars: 5, minScore: 40,
+    icon: <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5"><polygon points="12,1.5 15.5,9.5 24,10 17.8,16 19.8,24 12,19.8 4.2,24 6.2,16 0,10 8.5,9.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" fill="currentColor" fillOpacity="0.12"/><polygon points="12,6.5 14,11.5 19.5,12 15.3,15.8 16.7,21 12,18.2 7.3,21 8.7,15.8 4.5,12 10,11.5" fill="currentColor" fillOpacity="0.85"/></svg>,
+  },
 ];
-
-const TIER_INFO: Record<string, { color: string; stars: number; icon: React.ReactNode }> = {
-  "Uncharted":   { color: "#6b7280", stars: 0, icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 2"/><path d="M7.5 7.5a2.5 2.5 0 015 0c0 1.5-1.5 2-2.5 2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><circle cx="10" cy="14" r="1" fill="currentColor"/></svg> },
-  "Pathfinder":  { color: "#22d3ee", stars: 1, icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.5" fill="currentColor" fillOpacity="0.1"/><path d="M10 13.5V7.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="M7.5 10L10 7.5L12.5 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg> },
-  "Navigator":   { color: "#4ade80", stars: 2, icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.5" fill="currentColor" fillOpacity="0.1"/><circle cx="10" cy="10" r="1.8" fill="currentColor"/><path d="M10 4v2M10 14v2M4 10h2M14 10h2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M10 4l1.8 5.5L10 9l-1.8.5L10 4z" fill="currentColor"/></svg> },
-  "Trailblazer": { color: "#f59e0b", stars: 3, icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><path d="M10 2.5L17 6V11c0 4-2.8 6.5-7 8C3.8 17.5 1 15 1 11V6l9-3.5z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="currentColor" fillOpacity="0.1"/><path d="M6.5 13l1.5-2.5 1.5 2 1.5-3.5L12.5 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg> },
-  "Vanguard":    { color: "#f97316", stars: 4, icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><path d="M10 2L17 6V11.5C17 15.5 14 18.5 10 20C6 18.5 3 15.5 3 11.5V6L10 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="currentColor" fillOpacity="0.1"/><path d="M10 2l1.5 4.5H17L12.5 9.5 14 14l-4-2.5L6 14l1.5-4.5L3 6.5H8.5L10 2Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" fill="currentColor" fillOpacity="0.2"/></svg> },
-  "Apex":        { color: "#a78bfa", stars: 5, icon: <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5"><path d="M10 3l2 4 4.5.7-3.25 3.15.77 4.5L10 13.25l-4.02 2.1.77-4.5L3.5 7.7 8 7l2-4z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="currentColor" fillOpacity="0.25"/></svg> },
-};
 
 
 function MiniAdventureCard({ adventure }: { adventure: (typeof adventures)[number] }) {
@@ -71,7 +80,7 @@ export default function MatchmakerHomepageSection() {
   const totalScore  = Object.values(profile.ace).reduce((a: number, b) => a + (b as number), 0);
   const rankIndex   = totalScore >= 40 ? 5 : totalScore >= 32 ? 4 : totalScore >= 24 ? 3 : totalScore >= 16 ? 2 : totalScore >= 8 ? 1 : 0;
   const currentRank = RANKS[rankIndex] ?? RANKS[1];
-  const tier = TIER_INFO[currentRank.label] ?? TIER_INFO["Pathfinder"];
+  const tier = currentRank;
   const nextRank    = RANKS[rankIndex + 1] ?? null;
   const progressPct = nextRank
     ? Math.min(100, Math.round(((totalScore - currentRank.minScore) / (nextRank.minScore - currentRank.minScore)) * 100))
@@ -88,14 +97,14 @@ export default function MatchmakerHomepageSection() {
 
         {/* Tier badge + radar side by side */}
         <div className="flex flex-wrap items-stretch gap-6 mb-10">
-          {/* Left: tier + progress */}
+          {/* Left: tier + progression timeline */}
           <div
-            className="flex flex-col flex-1 min-w-[220px] rounded-2xl overflow-hidden"
+            className="flex flex-col flex-1 min-w-[260px] rounded-2xl overflow-hidden"
             style={{ border: `1px solid ${tier.color}30`, background: `${tier.color}08` }}
           >
             {/* Label */}
             <div className="px-4 pt-3 pb-1">
-              <p className="text-[10px] uppercase tracking-widest font-bold text-white/30">Adventure Tier</p>
+              <p className="text-[10px] uppercase tracking-widest font-bold text-white/30">Adventure Rank</p>
             </div>
 
             {/* Tier badge */}
@@ -114,35 +123,70 @@ export default function MatchmakerHomepageSection() {
               </div>
             </div>
 
-            {/* Next level progress */}
-            <div className="px-4 pb-4 pt-1">
-              {nextRank ? (
-                <div className="rounded-xl px-3 py-2.5 border" style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] text-white/40">
-                      Next: <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span>
-                    </span>
-                    <span className="text-[10px] font-bold font-mono" style={{ color: currentRank.color }}>{progressPct}% there</span>
+            {/* Rank badge timeline */}
+            {(() => {
+              const totalRanks = RANKS.length;
+              const filledFraction = totalRanks > 1
+                ? (rankIndex + (nextRank ? progressPct / 100 : 1)) / (totalRanks - 1)
+                : 1;
+              return (
+                <div className="px-4 pb-4 pt-1">
+                  <div className="relative grid" style={{ gridTemplateColumns: `repeat(${totalRanks}, 1fr)` }}>
+                    {/* Track bg */}
+                    <div className="absolute h-px pointer-events-none" style={{ top: "14px", left: `calc(100% / ${totalRanks * 2})`, right: `calc(100% / ${totalRanks * 2})`, background: "rgba(255,255,255,0.07)", zIndex: 0 }} />
+                    {/* Track fill */}
+                    <div className="absolute h-px pointer-events-none transition-all duration-700" style={{ top: "14px", left: `calc(100% / ${totalRanks * 2})`, width: `calc((100% - 100% / ${totalRanks}) * ${filledFraction})`, background: `linear-gradient(to right, ${RANKS[1].color}90, ${tier.color})`, boxShadow: `0 0 5px ${tier.color}70`, zIndex: 0 }} />
+                    {RANKS.map((rank, i) => {
+                      const isUnlocked = i <= rankIndex;
+                      const isCurrent = i === rankIndex;
+                      return (
+                        <div key={rank.label} className="flex flex-col items-center gap-1" style={{ position: "relative", zIndex: 1 }}>
+                          <div className="relative flex items-center justify-center">
+                            {isCurrent && <div className="absolute rounded-full animate-pulse pointer-events-none" style={{ inset: "-4px", border: `1.5px solid ${rank.color}50` }} />}
+                            <div className="w-7 h-7 rounded-full flex items-center justify-center" style={
+                              isCurrent
+                                ? { background: `color-mix(in srgb, ${rank.color} 22%, #0e0e12)`, border: `2px solid ${rank.color}`, color: rank.color, boxShadow: `0 0 12px ${rank.color}60` }
+                                : isUnlocked
+                                ? { background: `color-mix(in srgb, ${rank.color} 14%, #0e0e12)`, border: `1.5px solid ${rank.color}50`, color: rank.color }
+                                : { background: "#13131a", border: "1.5px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.18)" }
+                            }>
+                              <div style={{ transform: "scale(0.65)" }}>{isUnlocked ? rank.icon : <Lock className="w-3 h-3" />}</div>
+                            </div>
+                          </div>
+                          <p className="text-[7px] font-semibold text-center leading-tight w-full" style={{ color: isCurrent ? rank.color : isUnlocked ? `${rank.color}60` : "rgba(255,255,255,0.18)" }}>{rank.label}</p>
+                          {rank.stars > 0 ? (
+                            <div className="flex gap-px -mt-0.5">
+                              {Array.from({ length: rank.stars }).map((_, si) => (
+                                <span key={si} className="text-[5px] leading-none" style={{ color: isUnlocked ? rank.color : "rgba(255,255,255,0.1)" }}>★</span>
+                              ))}
+                            </div>
+                          ) : <div className="h-[6px]" />}
+                          {/* Progress info under next locked rank */}
+                          {isCurrent ? (
+                            <span className="text-[6px] font-bold uppercase tracking-wider px-1.5 py-px rounded-full" style={{ background: `${rank.color}20`, color: rank.color, border: `1px solid ${rank.color}40` }}>You</span>
+                          ) : !isUnlocked && nextRank && rank.label === nextRank.label ? (
+                            <div className="flex flex-col items-center gap-0.5 mt-0.5">
+                              <span className="text-[8px] font-bold leading-none" style={{ color: rank.color }}>{progressPct}%</span>
+                              <span className="text-[7px] text-white/40 leading-none whitespace-nowrap">{nextRank.minScore - totalScore} pts</span>
+                            </div>
+                          ) : (
+                            <div className="h-[22px]" />
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
-                  <div className="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-700"
-                      style={{
-                        width: `${progressPct}%`,
-                        background: `linear-gradient(to right, ${currentRank.color}, ${nextRank.color})`,
-                        boxShadow: `0 0 8px ${currentRank.color}60`,
-                      }}
-                    />
-                  </div>
-                  <p className="text-[9px] text-white/25 mt-1.5">{nextRank.minScore - totalScore} pts to {nextRank.label}</p>
+
+                  {/* Max rank indicator */}
+                  {!nextRank && (
+                    <div className="mt-3 flex items-center gap-2">
+                      <div className="h-1.5 flex-1 rounded-full" style={{ background: "linear-gradient(to right, #22d3ee, #a78bfa)", boxShadow: "0 0 8px #a78bfa40" }} />
+                      <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa] shrink-0">Max Rank</span>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="rounded-xl px-3 py-2.5 border flex items-center gap-3" style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}>
-                  <div className="h-1.5 flex-1 rounded-full" style={{ background: "linear-gradient(to right, #22d3ee, #a78bfa)", boxShadow: "0 0 8px #a78bfa40" }} />
-                  <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa] shrink-0">Max Rank</span>
-                </div>
-              )}
-            </div>
+              );
+            })()}
           </div>
 
           {/* Right: radar */}
