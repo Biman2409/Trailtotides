@@ -683,34 +683,56 @@ function ResultsScreen({
                 <span className="text-white/30 text-xs ml-1">Rank {tierRank?.stars ?? 0} / 5</span>
               </div>
 
-              {/* Inline rank progression — subtle */}
+              {/* Rank badge timeline */}
               {(() => {
-                const nextRank = RANKS[(tierRank ? RANKS.indexOf(tierRank) : 0) + 1] ?? null;
                 const currentRankIndex = tierRank ? RANKS.indexOf(tierRank) : 0;
-                const currentRankData = RANKS[currentRankIndex];
+                const totalRanks = RANKS.length;
+                const nextRank = RANKS[currentRankIndex + 1] ?? null;
                 const progressPct = nextRank
-                  ? Math.min(100, Math.round(((totalScore - currentRankData.minScore) / (nextRank.minScore - currentRankData.minScore)) * 100))
+                  ? Math.min(100, Math.round(((totalScore - RANKS[currentRankIndex].minScore) / (nextRank.minScore - RANKS[currentRankIndex].minScore)) * 100))
                   : 100;
+                const filledFraction = totalRanks > 1
+                  ? (currentRankIndex + (nextRank ? progressPct / 100 : 1)) / (totalRanks - 1)
+                  : 1;
                 return (
-                  <div className="mt-3 max-w-xs">
-                    {nextRank ? (
-                      <>
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-[9px] text-white/25">
-                            <span className="font-medium" style={{ color: nextRank.color }}>{nextRank.label}</span>
-                            <span className="text-white/20"> — {nextRank.minScore - totalScore} pts away</span>
-                          </span>
-                          <span className="text-[9px] font-mono" style={{ color: tier.color }}>{progressPct}%</span>
-                        </div>
-                        <div className="h-1 rounded-full bg-white/[0.07] overflow-hidden">
-                          <div className="h-full rounded-full transition-all duration-700" style={{ width: `${progressPct}%`, background: `linear-gradient(to right, ${tier.color}, ${nextRank.color})`, boxShadow: `0 0 6px ${tier.color}60` }} />
-                        </div>
-                      </>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <div className="h-1 flex-1 rounded-full" style={{ background: `linear-gradient(to right, ${RANKS[1].color}80, #a78bfa)` }} />
-                        <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa]">Max Rank</span>
-                      </div>
+                  <div className="mt-4 w-full">
+                    <div className="relative grid" style={{ gridTemplateColumns: `repeat(${totalRanks}, 1fr)` }}>
+                      {/* Track bg */}
+                      <div className="absolute h-px pointer-events-none" style={{ top: "14px", left: `calc(100% / ${totalRanks * 2})`, right: `calc(100% / ${totalRanks * 2})`, background: "rgba(255,255,255,0.07)", zIndex: 0 }} />
+                      {/* Track fill */}
+                      <div className="absolute h-px pointer-events-none transition-all duration-700" style={{ top: "14px", left: `calc(100% / ${totalRanks * 2})`, width: `calc((100% - 100% / ${totalRanks}) * ${filledFraction})`, background: `linear-gradient(to right, ${RANKS[1].color}90, ${tier.color})`, boxShadow: `0 0 5px ${tier.color}70`, zIndex: 0 }} />
+                      {RANKS.map((rank, i) => {
+                        const isUnlocked = i <= currentRankIndex;
+                        const isCurrent = i === currentRankIndex;
+                        return (
+                          <div key={rank.label} className="flex flex-col items-center gap-1" style={{ position: "relative", zIndex: 1 }}>
+                            <div className="relative flex items-center justify-center">
+                              {isCurrent && <div className="absolute rounded-full animate-pulse pointer-events-none" style={{ inset: "-4px", border: `1.5px solid ${rank.color}50` }} />}
+                              <div className="w-7 h-7 rounded-full flex items-center justify-center" style={
+                                isCurrent ? { background: `color-mix(in srgb, ${rank.color} 22%, #0e0e12)`, border: `2px solid ${rank.color}`, color: rank.color, boxShadow: `0 0 12px ${rank.color}60` }
+                                : isUnlocked ? { background: `color-mix(in srgb, ${rank.color} 14%, #0e0e12)`, border: `1.5px solid ${rank.color}50`, color: rank.color }
+                                : { background: "#13131a", border: "1.5px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.18)" }
+                              }>
+                                <div style={{ transform: "scale(0.65)" }}>{isUnlocked ? rank.icon : <Lock className="w-3 h-3" />}</div>
+                              </div>
+                            </div>
+                            <p className="text-[7px] font-semibold text-center leading-tight w-full" style={{ color: isCurrent ? rank.color : isUnlocked ? `${rank.color}60` : "rgba(255,255,255,0.18)" }}>{rank.label}</p>
+                            {rank.stars > 0 ? (
+                              <div className="flex gap-px -mt-0.5">
+                                {Array.from({ length: rank.stars }).map((_, si) => (
+                                  <span key={si} className="text-[5px] leading-none" style={{ color: isUnlocked ? rank.color : "rgba(255,255,255,0.1)" }}>★</span>
+                                ))}
+                              </div>
+                            ) : <div className="h-[6px]" />}
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {nextRank && (
+                      <p className="text-[9px] text-white/20 mt-3">
+                        <span style={{ color: nextRank.color }} className="font-medium">{nextRank.label}</span>
+                        <span> — {nextRank.minScore - totalScore} pts away · {progressPct}% there</span>
+                      </p>
                     )}
                   </div>
                 );
