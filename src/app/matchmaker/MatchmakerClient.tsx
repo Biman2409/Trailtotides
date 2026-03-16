@@ -673,7 +673,7 @@ function ResultsScreen({
         <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-15 blur-3xl pointer-events-none" style={{ background: tier.color }} />
         <div className="relative">
           <div className="flex items-start justify-between gap-4 mb-6">
-            <div>
+            <div className="flex-1 min-w-0">
               <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Adventure Rank</p>
               <h1 className="text-3xl font-bold tracking-tight" style={{ color: tier.color }}>{tier.label}</h1>
               <div className="flex items-center gap-1.5 mt-2">
@@ -682,6 +682,39 @@ function ResultsScreen({
                 ))}
                 <span className="text-white/30 text-xs ml-1">Rank {tierRank?.stars ?? 0} / 5</span>
               </div>
+
+              {/* Inline rank progression — subtle */}
+              {(() => {
+                const nextRank = RANKS[(tierRank ? RANKS.indexOf(tierRank) : 0) + 1] ?? null;
+                const currentRankIndex = tierRank ? RANKS.indexOf(tierRank) : 0;
+                const currentRankData = RANKS[currentRankIndex];
+                const progressPct = nextRank
+                  ? Math.min(100, Math.round(((totalScore - currentRankData.minScore) / (nextRank.minScore - currentRankData.minScore)) * 100))
+                  : 100;
+                return (
+                  <div className="mt-3 max-w-xs">
+                    {nextRank ? (
+                      <>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[9px] text-white/25">
+                            <span className="font-medium" style={{ color: nextRank.color }}>{nextRank.label}</span>
+                            <span className="text-white/20"> — {nextRank.minScore - totalScore} pts away</span>
+                          </span>
+                          <span className="text-[9px] font-mono" style={{ color: tier.color }}>{progressPct}%</span>
+                        </div>
+                        <div className="h-1 rounded-full bg-white/[0.07] overflow-hidden">
+                          <div className="h-full rounded-full transition-all duration-700" style={{ width: `${progressPct}%`, background: `linear-gradient(to right, ${tier.color}, ${nextRank.color})`, boxShadow: `0 0 6px ${tier.color}60` }} />
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <div className="h-1 flex-1 rounded-full" style={{ background: `linear-gradient(to right, ${RANKS[1].color}80, #a78bfa)` }} />
+                        <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa]">Max Rank</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
             <div
               className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0"
@@ -751,10 +784,6 @@ function ResultsScreen({
             );
           })()}
 
-          {/* Rank progression */}
-          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
-            <RankProgressionBar totalScore={totalScore} />
-          </div>
         </div>
       </div>
 
