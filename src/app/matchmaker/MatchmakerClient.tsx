@@ -603,7 +603,7 @@ function ResultsScreen({
                 <span className="text-white/30 text-xs ml-1">Rank {tierRank?.stars ?? 0} / 5</span>
               </div>
 
-              {/* Rank badge timeline */}
+              {/* Rank progression bar */}
               {(() => {
                 const currentRankIndex = tierRank ? RANKS.indexOf(tierRank) : 0;
                 const totalRanks = RANKS.length;
@@ -611,47 +611,62 @@ function ResultsScreen({
                 const progressPct = nextRank
                   ? Math.min(100, Math.round(((totalScore - RANKS[currentRankIndex].minScore) / (nextRank.minScore - RANKS[currentRankIndex].minScore)) * 100))
                   : 100;
-                const filledFraction = totalRanks > 1
-                  ? (currentRankIndex + (nextRank ? progressPct / 100 : 1)) / (totalRanks - 1)
-                  : 1;
                 return (
-                  <div className="mt-4 w-full">
-                    <div className="relative grid" style={{ gridTemplateColumns: `repeat(${totalRanks}, 1fr)` }}>
-                      {/* Track bg */}
-                      <div className="absolute h-px pointer-events-none" style={{ top: "14px", left: `calc(100% / ${totalRanks * 2})`, right: `calc(100% / ${totalRanks * 2})`, background: "rgba(255,255,255,0.07)", zIndex: 0 }} />
-                      {/* Track fill */}
-                      <div className="absolute h-px pointer-events-none transition-all duration-700" style={{ top: "14px", left: `calc(100% / ${totalRanks * 2})`, width: `calc((100% - 100% / ${totalRanks}) * ${filledFraction})`, background: `linear-gradient(to right, ${RANKS[1].color}90, ${tier.color})`, boxShadow: `0 0 5px ${tier.color}70`, zIndex: 0 }} />
+                  <div className="mt-5 space-y-2">
+                    {nextRank ? (
+                      <div className="flex items-end justify-between mb-3">
+                        <div>
+                          <span className="text-4xl font-black tabular-nums tracking-tight leading-none" style={{ color: tier.color }}>{progressPct}<span className="text-xl font-bold opacity-70">%</span></span>
+                          <p className="text-[10px] text-white/35 mt-1">to <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span></p>
+                        </div>
+                        <div className="text-right pb-0.5">
+                          <p className="text-2xl font-bold tabular-nums text-white/80">{nextRank.minScore - totalScore}</p>
+                          <p className="text-[10px] text-white/30">pts needed</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa] mb-3">Maximum Rank — Apex</p>
+                    )}
+                    <div className="relative h-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+                      <div
+                        className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
+                        style={{
+                          width: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
+                          background: `linear-gradient(to right, ${RANKS[1].color}cc, ${tier.color})`,
+                          boxShadow: `0 0 12px ${tier.color}50`,
+                        }}
+                      />
+                      {RANKS.slice(1, -1).map((rank, i) => (
+                        <div key={rank.label} className="absolute inset-y-0 w-px" style={{ left: `${((i + 1) / (totalRanks - 1)) * 100}%`, background: "rgba(14,14,18,0.7)" }} />
+                      ))}
+                      <div
+                        className="absolute w-4 h-4 rounded-full border-2 transition-all duration-700"
+                        style={{
+                          left: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
+                          top: "50%",
+                          transform: `translate(-50%, -50%)`,
+                          background: tier.color,
+                          borderColor: "#0e0e12",
+                          boxShadow: `0 0 10px ${tier.color}`,
+                        }}
+                      />
+                    </div>
+                    <div className="relative h-4 mt-1">
                       {RANKS.map((rank, i) => {
-                        const isUnlocked = i <= currentRankIndex;
                         const isCurrent = i === currentRankIndex;
+                        const isUnlocked = i < currentRankIndex;
                         return (
-                          <div key={rank.label} className="flex flex-col items-center gap-1" style={{ position: "relative", zIndex: 1 }}>
-                            <div className="relative flex items-center justify-center">
-                              {isCurrent && <div className="absolute rounded-full animate-pulse pointer-events-none" style={{ inset: "-4px", border: `1.5px solid ${rank.color}50` }} />}
-                              <div className="w-7 h-7 rounded-full flex items-center justify-center" style={
-                                isCurrent ? { background: `color-mix(in srgb, ${rank.color} 22%, #0e0e12)`, border: `2px solid ${rank.color}`, color: rank.color, boxShadow: `0 0 12px ${rank.color}60` }
-                                : isUnlocked ? { background: `color-mix(in srgb, ${rank.color} 14%, #0e0e12)`, border: `1.5px solid ${rank.color}50`, color: rank.color }
-                                : { background: "#13131a", border: "1.5px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.18)" }
-                              }>
-                                <div style={{ transform: "scale(0.65)" }}>{isUnlocked ? rank.icon : <Lock className="w-3 h-3" />}</div>
-                              </div>
-                            </div>
-                            <p className="text-[7px] font-semibold text-center leading-tight w-full" style={{ color: isCurrent ? rank.color : isUnlocked ? `${rank.color}60` : "rgba(255,255,255,0.18)" }}>{rank.label}</p>
-                            {rank.stars > 0 ? (
-                              <div className="flex gap-px -mt-0.5">
-                                {Array.from({ length: rank.stars }).map((_, si) => (
-                                  <span key={si} className="text-[5px] leading-none" style={{ color: isUnlocked ? rank.color : "rgba(255,255,255,0.1)" }}>★</span>
-                                ))}
-                              </div>
-                            ) : <div className="h-[6px]" />}
-                            {/* Progress info under next locked rank */}
-                            {!isUnlocked && nextRank && rank.label === nextRank.label ? (
-                              <div className="flex flex-col items-center gap-0.5 mt-1">
-                                <span className="text-[8px] font-bold leading-none" style={{ color: rank.color }}>{progressPct}%</span>
-                                <span className="text-[7px] text-white/40 leading-none whitespace-nowrap">{nextRank.minScore - totalScore} pts</span>
-                              </div>
-                            ) : (!isUnlocked && <div className="h-[22px]" />)}
-                          </div>
+                          <span
+                            key={rank.label}
+                            className="absolute text-[7.5px] font-semibold leading-none whitespace-nowrap"
+                            style={{
+                              left: `${(i / (totalRanks - 1)) * 100}%`,
+                              transform: `translateX(-${(i / (totalRanks - 1)) * 100}%)`,
+                              color: isCurrent ? tier.color : isUnlocked ? `${rank.color}55` : "rgba(255,255,255,0.15)",
+                            }}
+                          >
+                            {rank.label}
+                          </span>
                         );
                       })}
                     </div>
