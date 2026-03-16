@@ -11,7 +11,7 @@ const BADGE_TAGS = ["Featured", "TTT Original"];
 export default function StoryCard({ story }: { story: Story }) {
   const isFeatured = story.tags.includes("Featured");
   const isTTTOriginal = story.tags.includes("TTT Original");
-  const contentTags = story.tags.filter((t) => !BADGE_TAGS.includes(t));
+  const contentTags = story.pillTags ?? story.tags.filter((t) => !BADGE_TAGS.includes(t)).slice(0, 2);
 
   const handleClick = () => {
     fetch("/api/stories/views", {
