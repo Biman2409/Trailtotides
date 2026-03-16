@@ -174,9 +174,9 @@ export default async function StoryPage({ params }: Props) {
                   </span>
                 )}
             </div>
-            {/* Row 2: content tags — all non-badge tags */}
+            {/* Row 2: pill tags — only pillTags if set, else first 2 non-badge tags */}
               <div className="flex items-center gap-3 mb-4 flex-wrap">
-                {story.tags.filter(t => !BADGE_TAGS.includes(t)).map(tag => (
+                {(story.pillTags ?? story.tags.filter(t => !BADGE_TAGS.includes(t)).slice(0, 2)).map(tag => (
                   <span key={tag} className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs px-3 py-1.5 rounded-full">
                     {tag}
                   </span>
