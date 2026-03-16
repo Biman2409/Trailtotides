@@ -1930,6 +1930,7 @@ export const stories: Story[] = [
     tags: ["Featured", "TTT Original", "Nepal", "Biking"],
     region: "Himalayas",
     date: "Sep 2024",
+    submittedBy: "aditya-yadav",
   },
         {
           id: "7",
