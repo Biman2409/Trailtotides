@@ -31,8 +31,8 @@ export async function POST(req: NextRequest) {
       } else {
         await supabase
           .from("story_views")
-          .insert({ slug, views: 1 });
-        return NextResponse.json({ views: 1 });
+          .insert({ slug, views: 2500 });
+        return NextResponse.json({ views: 2500 });
       }
     }
 
