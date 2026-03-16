@@ -298,7 +298,7 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
             {currentRank.icon}
           </div>
           <div className="flex-1 min-w-0">
-            <span className="text-[9px] uppercase tracking-[0.15em] font-semibold text-white/30">Current Rank</span>
+            <span className="text-[9px] uppercase tracking-[0.15em] font-semibold text-white/30">Current Tier</span>
             <p className="text-lg font-bold tracking-tight" style={{ color: currentRank.color }}>{currentRank.label}</p>
             <p className="text-[11px] text-white/35 mt-0.5">{currentRank.desc}</p>
           </div>
@@ -679,7 +679,7 @@ function ResultsScreen({
         <div className="relative">
           <div className="flex items-start justify-between gap-4 mb-6">
             <div className="flex-1 min-w-0">
-              <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Adventure Rank</p>
+              <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Adventure Tier</p>
               <h1 className="text-3xl font-bold tracking-tight" style={{ color: tier.color }}>{tier.label}</h1>
               <div className="flex items-center gap-1.5 mt-2">
                 {Array.from({ length: 5 }).map((_, i) => (
