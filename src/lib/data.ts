@@ -120,6 +120,7 @@ export interface Story {
   excerpt: string;
   author: string;
   authorRole: string;
+  authorBio?: string;
   heroImage: string;
   readTime: string;
   tags: string[];
@@ -1925,6 +1926,7 @@ export const stories: Story[] = [
     excerpt: "Riding to Nepal and landing in the middle of the Gen Z revolution. We made the best of it however we could.",
     author: "Aditya Yadav",
     authorRole: "A jack of all trades",
+    authorBio: "I write, I run, I ride, I climb, I dive - I live.",
     heroImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
     readTime: "8 min read",
     tags: ["Featured", "TTT Original", "Nepal", "Biking", "Motorcycle", "Road Trip", "Himalayas", "Kathmandu", "Adventure Travel", "Overland", "Solo Rider", "Travel Story"],
@@ -1940,6 +1942,7 @@ export const stories: Story[] = [
               "A ride to Umling La, a detour to Demchok, and the mountain that watched over us. Some trips are planned. Some trips are reckless. And some trips stay with you forever.",
               author: "Nishant Ingle",
               authorRole: "Rider",
+              authorBio: "Spends most of the year running a business. Once a year, the suit comes off, the saddle goes on, and he goes all in — no guided tours, no safety nets. Just one raw, unscripted adventure that most people only ever dream about.",
               heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_3620_Original-resized-1772404370295.jpeg?width=8000&height=8000&resize=contain",
             readTime: "15 min read",
 

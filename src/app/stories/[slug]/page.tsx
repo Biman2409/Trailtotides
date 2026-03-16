@@ -246,9 +246,9 @@ export default async function StoryPage({ params }: Props) {
                 <p className="text-white font-semibold text-base">{story.author}</p>
               </div>
               <p className="text-white/40 text-sm mt-0.5">{story.authorRole}</p>
-              <p className="text-white/50 text-sm mt-2 leading-relaxed">
-                Spends most of the year running a business. Once a year, the suit comes off, the saddle goes on, and he goes all in — no guided tours, no safety nets. Just one raw, unscripted adventure that most people only ever dream about.
-              </p>
+              {story.authorBio && (
+                <p className="text-white/50 text-sm mt-2 leading-relaxed">{story.authorBio}</p>
+              )}
             </div>
           </div>
 
