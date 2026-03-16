@@ -54,10 +54,7 @@ export default function StoriesPage() {
       {/* Hero header */}
       <section className="pt-32 pb-12 px-6 lg:px-8 t-bg-surface2">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-2 mb-5">
-            <span className="w-1 h-5 rounded-full bg-[#ff5100] inline-block" />
-            <p className="text-[#ff5100] text-xs font-bold tracking-[0.25em] uppercase">From the Trails</p>
-          </div>
+          <p className="text-[#ff5100] text-xs font-bold tracking-[0.25em] uppercase mb-5">From the Trails</p>
           <h1 className="text-white text-5xl lg:text-7xl font-bold tracking-tight leading-none mb-5">
             Voices from<br className="hidden lg:block" /> the Edge
           </h1>
@@ -144,7 +141,6 @@ export default function StoriesPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-10">
             <div className="flex items-center gap-3">
-              <span className="w-1 h-5 rounded-full bg-[#ff5100] inline-block" />
               <h2 className="text-[#ff5100] text-2xl font-bold">All Voices from the Edge</h2>
             </div>
             <p className="text-white/25 text-sm hidden sm:block">{rest.length} {rest.length === 1 ? "story" : "stories"}</p>
