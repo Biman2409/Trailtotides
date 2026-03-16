@@ -236,14 +236,14 @@ export default async function StoryPage({ params }: Props) {
               {story.author[0]}
             </div>
             <div className="flex-1">
-              <div className="flex items-center gap-2 flex-wrap">
+              {story.submittedBy && (
+                <span className="inline-flex items-center gap-1 bg-[#ff5100]/15 border border-[#ff5100]/25 text-[#ff7d47] text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md mb-1.5">
+                  <Mountain className="w-2.5 h-2.5" />
+                  TTT Member
+                </span>
+              )}
+              <div>
                 <p className="text-white font-semibold text-base">{story.author}</p>
-                {story.submittedBy && (
-                  <span className="inline-flex items-center gap-1 bg-[#ff5100]/15 border border-[#ff5100]/25 text-[#ff7d47] text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md">
-                    <Mountain className="w-2.5 h-2.5" />
-                    TTT Member
-                  </span>
-                )}
               </div>
               <p className="text-white/40 text-sm mt-0.5">{story.authorRole}</p>
               <p className="text-white/50 text-sm mt-2 leading-relaxed">
