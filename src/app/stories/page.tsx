@@ -135,11 +135,11 @@ export default function StoriesPage() {
       {/* All stories grid */}
       <section className="py-20 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-[#1a1f2e] text-2xl font-semibold mb-10">All Voices from the Edge</h2>
+          <h2 className="text-white text-2xl font-semibold mb-10">All Voices from the Edge</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {rest.map((story) => (
               <Link key={story.id} href={`/stories/${story.slug}`} className="group block">
-                <div className="relative h-52 rounded-2xl overflow-hidden mb-5 shadow-md group-hover:shadow-xl group-hover:shadow-black/15 transition-shadow duration-300">
+                <div className="relative h-52 rounded-2xl overflow-hidden mb-5 shadow-md group-hover:shadow-xl group-hover:shadow-black/30 transition-shadow duration-300">
                   <Image
                     src={story.heroImage}
                     alt={story.title}
@@ -158,27 +158,27 @@ export default function StoriesPage() {
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-[#1a1f2e] text-xl font-semibold leading-snug mb-2 group-hover:text-[#ff5100] transition-colors">
+                  <h3 className="text-white text-xl font-semibold leading-snug mb-2 group-hover:text-[#ff5100] transition-colors">
                     {story.title}
                   </h3>
-                  <p className="text-[#6b6560] text-sm leading-relaxed line-clamp-2 mb-4">
+                  <p className="text-white/50 text-sm leading-relaxed line-clamp-2 mb-4">
                     {story.excerpt}
                   </p>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full bg-[#e0d8cc] flex items-center justify-center text-xs font-bold text-[#6b6560]">
+                      <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-white/70">
                         {story.author[0]}
                       </div>
                       <div>
-                        <p className="text-[#1a1f2e] text-xs font-semibold">{story.author}</p>
-                        <p className="text-[#9a9590] text-xs">{story.date}</p>
+                        <p className="text-white text-xs font-semibold">{story.author}</p>
+                        <p className="text-white/40 text-xs">{story.date}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="flex items-center gap-1.5 bg-black/5 border border-black/10 text-[#6b6560] text-xs px-3 py-1.5 rounded-full">
+                      <span className="flex items-center gap-1.5 bg-white/8 border border-white/10 text-white/50 text-xs px-3 py-1.5 rounded-full">
                         <Clock className="w-3 h-3" /> {story.readTime}
                       </span>
-                      <StoryViewPill slug={story.slug} className="!bg-black/5 !border-black/10 !text-[#6b6560]" />
+                      <StoryViewPill slug={story.slug} />
                     </div>
                   </div>
                 </div>
