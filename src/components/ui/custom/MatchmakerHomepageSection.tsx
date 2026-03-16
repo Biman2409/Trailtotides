@@ -190,9 +190,10 @@ export default function MatchmakerHomepageSection() {
                             return (
                               <span
                                 key={rank.label}
-                                className="absolute -translate-x-1/2 text-[7.5px] font-semibold leading-none whitespace-nowrap"
+                                className="absolute text-[7.5px] font-semibold leading-none whitespace-nowrap"
                                 style={{
                                   left: `${pct}%`,
+                                  transform: `translateX(-${(i / (totalRanks - 1)) * 100}%)`,
                                   color: isCurrent ? tier.color : isUnlocked ? `${rank.color}55` : "rgba(255,255,255,0.15)",
                                 }}
                               >
