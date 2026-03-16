@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, RotateCcw } from "lucide-react";
+import { ArrowRight, BarChart2 } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
@@ -250,13 +250,13 @@ export default function MatchmakerHomepageSection() {
             Explore matching adventures
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
-          <button
-            onClick={() => { localStorage.removeItem("ttt_matchmaker_profile"); setProfile(null); }}
-            className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 font-medium px-4 py-3 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all duration-200"
+          <Link
+            href="/matchmaker"
+            className="inline-flex items-center gap-2 text-white/50 hover:text-white/80 font-medium px-4 py-3 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all duration-200"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
-            Retake assessment
-          </button>
+            <BarChart2 className="w-3.5 h-3.5" />
+            View detailed results
+          </Link>
         </div>
       </div>
     </section>
