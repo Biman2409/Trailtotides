@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, RotateCcw, Lock } from "lucide-react";
+import { ArrowRight, RotateCcw } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
@@ -97,93 +97,123 @@ export default function MatchmakerHomepageSection() {
 
         {/* Tier badge + radar side by side */}
         <div className="flex flex-wrap items-stretch gap-6 mb-10">
-          {/* Left: tier + progression timeline */}
+          {/* Left: rank card */}
           <div
-            className="flex flex-col flex-1 min-w-[260px] rounded-2xl overflow-hidden"
-            style={{ border: `1px solid ${tier.color}30`, background: `${tier.color}08` }}
+            className="flex flex-col flex-1 min-w-[260px] rounded-2xl p-5 gap-5"
+            style={{ border: `1px solid ${tier.color}25`, background: `linear-gradient(135deg, ${tier.color}10 0%, ${tier.color}04 100%)` }}
           >
-            {/* Label */}
-            <div className="px-4 pt-3 pb-1">
-              <p className="text-[10px] uppercase tracking-widest font-bold text-white/30">Adventure Rank</p>
-            </div>
-
-            {/* Tier badge */}
-            <div className="flex items-center gap-3 px-4 py-3">
-              <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
-                style={{ background: `${tier.color}22`, color: tier.color, boxShadow: `0 0 16px ${tier.color}35` }}>
-                {tier.icon}
-              </div>
+            {/* Header row */}
+            <div className="flex items-center justify-between">
               <div>
-                <p className="font-bold text-base leading-tight" style={{ color: tier.color }}>{profile.label}</p>
-                <div className="flex items-center gap-0.5 mt-1">
+                <p className="text-[10px] uppercase tracking-widest font-semibold text-white/30 mb-1">Adventure Rank</p>
+                <p className="text-xl font-bold leading-none" style={{ color: tier.color }}>{profile.label}</p>
+              </div>
+              <div className="flex flex-col items-end gap-1.5">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${tier.color}18`, color: tier.color, boxShadow: `0 0 14px ${tier.color}30` }}>
+                  {tier.icon}
+                </div>
+                <div className="flex items-center gap-0.5">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <span key={i} className="text-xs" style={{ color: i < tier.stars ? tier.color : "rgba(255,255,255,0.1)" }}>★</span>
+                    <span key={i} className="text-[10px]" style={{ color: i < tier.stars ? tier.color : "rgba(255,255,255,0.1)" }}>★</span>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* Rank badge timeline */}
+            {/* Progress scale */}
             {(() => {
-              const totalRanks = RANKS.length;
-              const filledFraction = totalRanks > 1
-                ? (rankIndex + (nextRank ? progressPct / 100 : 1)) / (totalRanks - 1)
-                : 1;
+              const totalRanks = RANKS.length; // 6
+              // Overall fill fraction across the full scale (0→1)
+              const fillPct = totalRanks > 1
+                ? ((rankIndex + (nextRank ? progressPct / 100 : 1)) / (totalRanks - 1)) * 100
+                : 100;
+
               return (
-                <div className="px-4 pb-4 pt-1">
-                  <div className="relative grid" style={{ gridTemplateColumns: `repeat(${totalRanks}, 1fr)` }}>
-                    {/* Track bg */}
-                    <div className="absolute h-px pointer-events-none" style={{ top: "14px", left: `calc(100% / ${totalRanks * 2})`, right: `calc(100% / ${totalRanks * 2})`, background: "rgba(255,255,255,0.07)", zIndex: 0 }} />
-                    {/* Track fill */}
-                    <div className="absolute h-px pointer-events-none transition-all duration-700" style={{ top: "14px", left: `calc(100% / ${totalRanks * 2})`, width: `calc((100% - 100% / ${totalRanks}) * ${filledFraction})`, background: `linear-gradient(to right, ${RANKS[1].color}90, ${tier.color})`, boxShadow: `0 0 5px ${tier.color}70`, zIndex: 0 }} />
+                <div className="space-y-3">
+                  {/* Next rank callout */}
+                  {nextRank ? (
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-white/40">
+                        Next: <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span>
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold tabular-nums" style={{ color: tier.color }}>{progressPct}%</span>
+                        <span className="text-[10px] text-white/30 tabular-nums">{nextRank.minScore - totalScore} pts to go</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-white/40">Maximum rank achieved</span>
+                      <span className="text-xs font-bold text-[#a78bfa]">Apex ★</span>
+                    </div>
+                  )}
+
+                  {/* Scale bar with rank ticks */}
+                  <div className="relative">
+                    {/* Track */}
+                    <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                      <div
+                        className="h-full rounded-full transition-all duration-700"
+                        style={{
+                          width: `${fillPct}%`,
+                          background: `linear-gradient(to right, ${RANKS[1].color}, ${tier.color})`,
+                          boxShadow: `0 0 10px ${tier.color}60`,
+                        }}
+                      />
+                    </div>
+
+                    {/* Tick marks at each rank boundary */}
+                    {RANKS.map((rank, i) => {
+                      if (i === 0) return null; // no tick at start
+                      const pct = (i / (totalRanks - 1)) * 100;
+                      const isReached = i <= rankIndex;
+                      return (
+                        <div
+                          key={rank.label}
+                          className="absolute top-1/2 -translate-y-1/2 w-px h-3"
+                          style={{
+                            left: `${pct}%`,
+                            background: isReached ? `${rank.color}80` : "rgba(255,255,255,0.12)",
+                          }}
+                        />
+                      );
+                    })}
+
+                    {/* Thumb dot at current progress */}
+                    <div
+                      className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full border-2 transition-all duration-700"
+                      style={{
+                        left: `${fillPct}%`,
+                        background: tier.color,
+                        borderColor: "rgba(14,14,18,0.9)",
+                        boxShadow: `0 0 8px ${tier.color}90`,
+                      }}
+                    />
+                  </div>
+
+                  {/* Rank labels row */}
+                  <div className="relative flex justify-between mt-1">
                     {RANKS.map((rank, i) => {
                       const isUnlocked = i <= rankIndex;
                       const isCurrent = i === rankIndex;
                       return (
-                        <div key={rank.label} className="flex flex-col items-center gap-1" style={{ position: "relative", zIndex: 1 }}>
-                          <div className="relative flex items-center justify-center">
-                            {isCurrent && <div className="absolute rounded-full animate-pulse pointer-events-none" style={{ inset: "-4px", border: `1.5px solid ${rank.color}50` }} />}
-                            <div className="w-7 h-7 rounded-full flex items-center justify-center" style={
-                              isCurrent
-                                ? { background: `color-mix(in srgb, ${rank.color} 22%, #0e0e12)`, border: `2px solid ${rank.color}`, color: rank.color, boxShadow: `0 0 12px ${rank.color}60` }
-                                : isUnlocked
-                                ? { background: `color-mix(in srgb, ${rank.color} 14%, #0e0e12)`, border: `1.5px solid ${rank.color}50`, color: rank.color }
-                                : { background: "#13131a", border: "1.5px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.18)" }
-                            }>
-                              <div style={{ transform: "scale(0.65)" }}>{isUnlocked ? rank.icon : <Lock className="w-3 h-3" />}</div>
-                            </div>
-                          </div>
-                          <p className="text-[7px] font-semibold text-center leading-tight w-full" style={{ color: isCurrent ? rank.color : isUnlocked ? `${rank.color}60` : "rgba(255,255,255,0.18)" }}>{rank.label}</p>
-                          {rank.stars > 0 ? (
-                            <div className="flex gap-px -mt-0.5">
-                              {Array.from({ length: rank.stars }).map((_, si) => (
-                                <span key={si} className="text-[5px] leading-none" style={{ color: isUnlocked ? rank.color : "rgba(255,255,255,0.1)" }}>★</span>
-                              ))}
-                            </div>
-                          ) : <div className="h-[6px]" />}
-                          {/* Progress info under next locked rank */}
-                          {isCurrent ? (
-                            <span className="text-[6px] font-bold uppercase tracking-wider px-1.5 py-px rounded-full" style={{ background: `${rank.color}20`, color: rank.color, border: `1px solid ${rank.color}40` }}>You</span>
-                          ) : !isUnlocked && nextRank && rank.label === nextRank.label ? (
-                            <div className="flex flex-col items-center gap-0.5 mt-0.5">
-                              <span className="text-[8px] font-bold leading-none" style={{ color: rank.color }}>{progressPct}%</span>
-                              <span className="text-[7px] text-white/40 leading-none whitespace-nowrap">{nextRank.minScore - totalScore} pts</span>
-                            </div>
-                          ) : (
-                            <div className="h-[22px]" />
-                          )}
+                        <div
+                          key={rank.label}
+                          className="flex flex-col items-center gap-0.5"
+                          style={{ width: `${100 / totalRanks}%` }}
+                        >
+                          <span
+                            className="text-[8px] font-semibold text-center leading-none"
+                            style={{
+                              color: isCurrent ? tier.color : isUnlocked ? `${rank.color}70` : "rgba(255,255,255,0.2)",
+                            }}
+                          >
+                            {rank.label}
+                          </span>
                         </div>
                       );
                     })}
                   </div>
-
-                  {/* Max rank indicator */}
-                  {!nextRank && (
-                    <div className="mt-3 flex items-center gap-2">
-                      <div className="h-1.5 flex-1 rounded-full" style={{ background: "linear-gradient(to right, #22d3ee, #a78bfa)", boxShadow: "0 0 8px #a78bfa40" }} />
-                      <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa] shrink-0">Max Rank</span>
-                    </div>
-                  )}
                 </div>
               );
             })()}
