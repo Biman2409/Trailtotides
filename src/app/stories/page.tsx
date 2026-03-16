@@ -99,9 +99,9 @@ export default function StoriesPage() {
                     </span>
                   )}
                 </div>
-                {/* Content tags — all non-badge tags */}
+                {/* Content tags — pillTags only */}
                 <div className="flex items-center gap-2 mb-4 flex-wrap">
-                  {featured.tags.filter((t) => !BADGE_TAGS.includes(t)).map((tag) => (
+                  {(featured.pillTags ?? featured.tags.filter((t) => !BADGE_TAGS.includes(t)).slice(0, 2)).map((tag) => (
                     <span key={tag} className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs px-3 py-1.5 rounded-full">
                       {tag}
                     </span>
@@ -148,9 +148,9 @@ export default function StoriesPage() {
                     style={{ objectFit: "cover" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-                  {/* Content tags on image — all non-badge tags */}
+                  {/* Content tags on image — pillTags only */}
                   <div className="absolute bottom-4 left-4 flex items-center gap-2 flex-wrap">
-                    {story.tags.filter((t) => !BADGE_TAGS.includes(t)).map((tag) => (
+                    {(story.pillTags ?? story.tags.filter((t) => !BADGE_TAGS.includes(t)).slice(0, 2)).map((tag) => (
                       <span key={tag} className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs px-3 py-1.5 rounded-full">
                         {tag}
                       </span>
