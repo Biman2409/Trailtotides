@@ -1927,7 +1927,7 @@ export const stories: Story[] = [
     excerpt: "Riding to Nepal and landing in the middle of the Gen Z revolution. We made the best of it however we could.",
     author: "Aditya Yadav",
     authorRole: "A jack of all trades",
-    authorBio: "I write, I run, I ride, I climb, I dive - I live.",
+    authorBio: "I read relentlessly and write poetry to ground myself. A mountaineer and skier at heart, I find joy navigating riverbeds on my Himalayan. Anchored by amazing friends, I keep chasing new extremes. Ultimately, my chief occupation is living a life of love. Everything else is fluff.",
     pillTags: ["Nepal", "Biking"],
     heroImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
     readTime: "8 min read",
