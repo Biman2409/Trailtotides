@@ -111,7 +111,7 @@ export default function MatchmakerHomepageSection() {
                 </div>
                 <div>
                   <p className="text-[9px] uppercase tracking-[0.18em] font-semibold text-white/30 mb-0.5">Adventure Tier</p>
-                  <p className="text-lg font-bold leading-none" style={{ color: tier.color }}>{profile.label}</p>
+                  <p className="text-lg font-bold leading-none" style={{ color: tier.color }}>{tier.label}</p>
                 </div>
               </div>
               <div className="flex gap-0.5">
