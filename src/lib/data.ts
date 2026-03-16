@@ -1918,6 +1918,19 @@ export const adventures: Adventure[] = [
 ];
 
 export const stories: Story[] = [
+  {
+    id: "8",
+    slug: "riding-through-a-revolution",
+    title: "Riding through a revolution",
+    excerpt: "Riding to Nepal and landing in the middle of the Gen Z revolution. We made the best of it however we could.",
+    author: "Aditya Yadav",
+    authorRole: "A jack of all trades",
+    heroImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+    readTime: "8 min read",
+    tags: ["Nepal", "Motorcycle", "Adventure"],
+    region: "Himalayas",
+    date: "Sep 2024",
+  },
         {
           id: "7",
           slug: "the-night-photi-la-tested-us",
