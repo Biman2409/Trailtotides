@@ -247,7 +247,7 @@ export default async function StoryPage({ params }: Props) {
               </div>
               <p className="text-white/40 text-sm mt-0.5">{story.authorRole}</p>
               <p className="text-white/50 text-sm mt-2 leading-relaxed">
-                Spends most of the year running a business. Once a year, he trades the boardroom for a saddle or a summit — and goes all in. No guided tours, no safety nets. Just one raw, unscripted adventure that most people dream about and never do.
+                Spends most of the year running a business. Once a year, the suit comes off, the saddle goes on, and he goes all in — no guided tours, no safety nets. Just one raw, unscripted adventure that most people only ever dream about.
               </p>
             </div>
           </div>
