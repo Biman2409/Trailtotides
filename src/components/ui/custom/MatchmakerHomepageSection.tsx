@@ -181,20 +181,23 @@ export default function MatchmakerHomepageSection() {
                             }}
                           />
                         </div>
-                        {/* Rank name labels */}
-                        <div className="flex">
+                        {/* Rank name labels — pinned to tick positions */}
+                        <div className="relative h-4 mt-1">
                           {RANKS.map((rank, i) => {
                             const isCurrent = i === rankIndex;
                             const isUnlocked = i < rankIndex;
+                            const pct = (i / (totalRanks - 1)) * 100;
                             return (
-                              <div key={rank.label} className="flex-1 flex justify-center">
-                                <span
-                                  className="text-[7.5px] font-semibold text-center leading-none"
-                                  style={{ color: isCurrent ? tier.color : isUnlocked ? `${rank.color}55` : "rgba(255,255,255,0.15)" }}
-                                >
-                                  {rank.label}
-                                </span>
-                              </div>
+                              <span
+                                key={rank.label}
+                                className="absolute -translate-x-1/2 text-[7.5px] font-semibold leading-none whitespace-nowrap"
+                                style={{
+                                  left: `${pct}%`,
+                                  color: isCurrent ? tier.color : isUnlocked ? `${rank.color}55` : "rgba(255,255,255,0.15)",
+                                }}
+                              >
+                                {rank.label}
+                              </span>
                             );
                           })}
                         </div>
