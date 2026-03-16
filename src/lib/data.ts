@@ -1921,6 +1921,22 @@ export const adventures: Adventure[] = [
 
 export const stories: Story[] = [
   {
+    id: "7",
+    slug: "the-night-photi-la-tested-us",
+    title: "The Night Photi La Tested Us",
+    excerpt: "A ride to Umling La, a detour to Demchok, and the mountain that watched over us. Some trips are planned. Some trips are reckless. And some trips stay with you forever.",
+    author: "Nishant Ingle",
+    authorRole: "Rider",
+    authorBio: "Spends most of the year running a business. Once a year, the suit comes off, the saddle goes on, and he goes all in — no guided tours, no safety nets. Just one raw, unscripted adventure that most people only ever dream about.",
+    pillTags: ["Ladakh", "Biking"],
+    heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_3620_Original-resized-1772404370295.jpeg?width=8000&height=8000&resize=contain",
+    readTime: "15 min read",
+    tags: ["Featured", "TTT Original", "Ladakh", "Biking", "Motorcycle", "Umling La", "Himalayas", "High Altitude", "Road Trip", "Demchok", "Adventure Travel", "India"],
+    region: "Himalayas",
+    date: "July 2022",
+    submittedBy: "986fb39a-f174-40ba-aefa-eddee3145687",
+  },
+  {
     id: "8",
     slug: "riding-through-a-revolution",
     title: "Riding through a revolution",
@@ -1936,24 +1952,6 @@ export const stories: Story[] = [
     date: "Sep 2024",
     submittedBy: "aditya-yadav",
   },
-        {
-          id: "7",
-          slug: "the-night-photi-la-tested-us",
-          title: "The Night Photi La Tested Us",
-            excerpt:
-              "A ride to Umling La, a detour to Demchok, and the mountain that watched over us. Some trips are planned. Some trips are reckless. And some trips stay with you forever.",
-              author: "Nishant Ingle",
-              authorRole: "Rider",
-              authorBio: "Spends most of the year running a business. Once a year, the suit comes off, the saddle goes on, and he goes all in — no guided tours, no safety nets. Just one raw, unscripted adventure that most people only ever dream about.",
-              pillTags: ["Ladakh", "Biking"],
-              heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_3620_Original-resized-1772404370295.jpeg?width=8000&height=8000&resize=contain",
-            readTime: "15 min read",
-
-              tags: ["Featured", "TTT Original", "Ladakh", "Biking", "Motorcycle", "Umling La", "Himalayas", "High Altitude", "Road Trip", "Demchok", "Adventure Travel", "India"],
-              region: "Himalayas",
-              date: "July 2022",
-              submittedBy: "986fb39a-f174-40ba-aefa-eddee3145687",
-        },
 ];
 
 export const regions = [
