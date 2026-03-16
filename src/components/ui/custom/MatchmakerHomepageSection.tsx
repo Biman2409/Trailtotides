@@ -102,16 +102,16 @@ export default function MatchmakerHomepageSection() {
             className="flex flex-col flex-1 min-w-[260px] rounded-2xl overflow-hidden"
             style={{ border: `1px solid ${tier.color}22`, background: `linear-gradient(160deg, ${tier.color}0e 0%, rgba(14,14,18,0) 60%)` }}
           >
-            {/* Top: current rank identity */}
+            {/* Top: current tier identity */}
             <div className="flex items-center justify-between px-5 pt-5 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                  style={{ background: `${tier.color}18`, color: tier.color, boxShadow: `0 0 16px ${tier.color}35` }}>
-                  {tier.icon}
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
+                  style={{ background: `${tier.color}20`, color: tier.color, boxShadow: `0 0 22px ${tier.color}45` }}>
+                  <div className="scale-[1.4]">{tier.icon}</div>
                 </div>
                 <div>
-                  <p className="text-[9px] uppercase tracking-[0.18em] font-semibold text-white/30 mb-0.5">Adventure Rank</p>
-                  <p className="text-base font-bold leading-none" style={{ color: tier.color }}>{profile.label}</p>
+                  <p className="text-[9px] uppercase tracking-[0.18em] font-semibold text-white/30 mb-0.5">Adventure Tier</p>
+                  <p className="text-lg font-bold leading-none" style={{ color: tier.color }}>{profile.label}</p>
                 </div>
               </div>
               <div className="flex gap-0.5">
