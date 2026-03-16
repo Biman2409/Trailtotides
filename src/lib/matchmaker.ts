@@ -19,8 +19,6 @@ export interface MatchmakerAnswers {
 
 export interface UserAceProfile {
   ace: ACE;
-  label: string;
-  summary: string;
 }
 
 export interface AceGap {
@@ -176,8 +174,6 @@ const STORAGE_KEY = "ttt_matchmaker_profile";
 
 export interface StoredProfile {
   ace: ACE;
-  label: string;
-  summary: string;
   answers?: Record<string, unknown>; // kept for backward compatibility
   // Legacy ERT field — kept so old profiles don't break
   ert?: { e: number; r: number; t: number };
@@ -196,8 +192,6 @@ export function loadProfile(): StoredProfile | null {
     if (!parsed.ace && parsed.ert) {
       const { e, r, t } = parsed.ert;
       parsed.ace = { stamina: e, power: Math.max(1, e - 1), strength: e, agility: t, water: 1, altitude: r, nerve: t, focus: t };
-      parsed.label = parsed.label ?? "Pathfinder";
-      parsed.summary = parsed.summary ?? "";
     }
     return parsed.ace ? parsed : null;
   } catch { return null; }

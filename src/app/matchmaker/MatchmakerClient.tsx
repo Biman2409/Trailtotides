@@ -1111,14 +1111,7 @@ export default function MatchmakerClient() {
       water: score("Q5"), altitude: score("Q6"), nerve: score("Q7"), focus: score("Q8"),
     };
 
-    const total = Object.values(userAxes).reduce((a, b) => a + b, 0);
-    const label =
-      total >= 40 ? "Apex" :
-      total >= 32 ? "Vanguard" :
-      total >= 24 ? "Trailblazer" :
-      total >= 16 ? "Navigator" :
-      "Pathfinder";
-    const profile = { ace: userAxes, label, summary: "" };
+    const profile = { ace: userAxes };
     saveProfile(profile);
     saveProfileToServer(profile); // persist for logged-in users
 
