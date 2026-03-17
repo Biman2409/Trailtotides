@@ -736,10 +736,9 @@ function ResultsScreen({
             {/* Content */}
             <div className="flex flex-col sm:flex-row sm:items-start gap-5 p-4 sm:p-6">
               {/* Radar column — label sits above it */}
-              <div className="shrink-0 flex flex-col items-center gap-3 self-center sm:self-start">
-                <div className="text-center">
-                  <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 mb-0.5">Capability Breakdown</p>
-                  <p className="text-white font-bold text-sm">ACE Profile</p>
+              <div className="shrink-0 flex flex-col items-start gap-3 self-center sm:self-start">
+                <div>
+                  <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25">Capability Breakdown</p>
                 </div>
                 <div
                   className="rounded-xl sm:rounded-2xl flex items-center justify-center p-3 sm:p-4"
