@@ -94,21 +94,21 @@ export default function FindYourFormat() {
   const [openId, setOpenId] = useState<string | null>(null);
 
     return (
-      <section id="styles" className="py-20 lg:py-32 px-6 lg:px-8 t-bg-page">
+      <section id="styles" className="py-20 lg:py-28 px-5 lg:px-8 t-bg-page">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-            <div className="mb-12 lg:mb-14">
-              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
-                DISCOVER YOUR GENRE
-              </p>
-                    <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
-                    Adventure Lives in Every Element
-                  </h2>
-              <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
-              <p className="mt-4 text-white/50 text-base max-w-xl">
-                Pick a category that matches your style.
-              </p>
-          </div>
+        <div className="mb-10 lg:mb-12">
+          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
+            DISCOVER YOUR GENRE
+          </p>
+          <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+            Adventure Lives in Every Element
+          </h2>
+          <div className="mt-4 w-12 h-0.5 bg-[#ff5100] rounded-full" />
+          <p className="mt-3 text-white/50 text-sm lg:text-base max-w-xl">
+            Pick a category that matches your style.
+          </p>
+        </div>
 
         {/* Cards grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">

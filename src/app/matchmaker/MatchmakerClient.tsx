@@ -582,23 +582,23 @@ function ResultsScreen({
   const tierRank = RANKS.find(r => r.label === tier.label);
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
 
       {/* ── 1. PAGE HEADER ───────────────────────────────────────────────────── */}
-      <div className="mb-8 sm:mb-10">
+      <div className="mb-6 sm:mb-8">
         <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-2">Adventure Matchmaker</p>
         <h2 className="text-white text-2xl sm:text-3xl font-black tracking-tight">Your ACE Profile</h2>
       </div>
 
       {/* ── 2. TIER HERO CARD ────────────────────────────────────────────────── */}
       <div
-        className="rounded-2xl sm:rounded-3xl overflow-hidden border relative mb-6 sm:mb-8"
+        className="rounded-2xl sm:rounded-3xl overflow-hidden border relative mb-5 sm:mb-7"
         style={{ background: `linear-gradient(150deg, ${tier.color}14 0%, rgba(14,14,18,0.0) 60%)`, borderColor: `${tier.color}25` }}
       >
-        <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.08] blur-3xl pointer-events-none" style={{ background: tier.color }} />
+        <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: tier.color }} />
 
         {/* Identity */}
-        <div className="relative flex items-center gap-4 sm:gap-5 px-5 sm:px-8 pt-6 sm:pt-8 pb-5 sm:pb-6">
+        <div className="relative flex items-center gap-4 sm:gap-5 px-5 sm:px-7 pt-5 sm:pt-7 pb-4 sm:pb-5">
           <div
             className="w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] rounded-2xl flex items-center justify-center shrink-0"
             style={{ background: `${tier.color}18`, color: tier.color, boxShadow: `0 0 32px ${tier.color}38`, border: `1px solid ${tier.color}28` }}
@@ -618,7 +618,7 @@ function ResultsScreen({
         </div>
 
         {/* Divider */}
-        <div className="mx-5 sm:mx-8 h-px" style={{ background: `${tier.color}14` }} />
+        <div className="mx-5 sm:mx-7 h-px" style={{ background: `${tier.color}14` }} />
 
         {/* Rank progression */}
         {(() => {
@@ -629,34 +629,34 @@ function ResultsScreen({
             ? Math.min(100, Math.round(((totalScore - RANKS[currentRankIndex].minScore) / (nextRank.minScore - RANKS[currentRankIndex].minScore)) * 100))
             : 100;
           return (
-            <div className="pt-5 sm:pt-6 pb-6 sm:pb-7">
+            <div className="pt-4 sm:pt-5 pb-5 sm:pb-6">
               {/* % + pts row — padded */}
-              <div className="px-5 sm:px-8">
+              <div className="px-5 sm:px-7">
                 {nextRank ? (
-                  <div className="flex items-end justify-between mb-5">
+                  <div className="flex items-end justify-between mb-4">
                     <div>
                       <div className="flex items-baseline gap-0.5 leading-none">
-                        <span className="text-[42px] sm:text-[52px] font-black tabular-nums tracking-tight" style={{ color: tier.color }}>{progressPct}</span>
-                        <span className="text-xl sm:text-2xl font-bold ml-0.5" style={{ color: `${tier.color}70` }}>%</span>
+                        <span className="text-[38px] sm:text-[48px] font-black tabular-nums tracking-tight" style={{ color: tier.color }}>{progressPct}</span>
+                        <span className="text-lg sm:text-xl font-bold ml-0.5" style={{ color: `${tier.color}70` }}>%</span>
                       </div>
-                      <p className="text-[11px] text-white/30 mt-1.5 leading-none">
+                      <p className="text-[11px] text-white/30 mt-1 leading-none">
                         to reach <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span>
                       </p>
                     </div>
-                    <div className="text-right pb-1.5">
-                      <p className="text-[28px] sm:text-[34px] font-black tabular-nums leading-none text-white/70">{nextRank.minScore - totalScore}</p>
+                    <div className="text-right pb-1">
+                      <p className="text-[24px] sm:text-[30px] font-black tabular-nums leading-none text-white/70">{nextRank.minScore - totalScore}</p>
                       <p className="text-[11px] text-white/28 mt-1 leading-none">pts needed</p>
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2 mb-5">
+                  <div className="flex items-center gap-2 mb-4">
                     <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
                     <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">Maximum Rank Reached — Apex</p>
                   </div>
                 )}
               </div>
               {/* Bar + labels — full width with px padding applied via mx */}
-              <div className="px-5 sm:px-8">
+              <div className="px-5 sm:px-7">
                 <div className="relative h-[10px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.055)" }}>
                   <div
                     className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
@@ -724,13 +724,13 @@ function ResultsScreen({
         };
         return (
           <div
-            className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-6 sm:mb-8"
-            style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}
+            className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-5 sm:mb-7"
+            style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}
           >
             {/* Content */}
-            <div className="flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-6 p-4 sm:p-7">
+            <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-5 p-4 sm:p-6">
               {/* Radar column — label sits above it */}
-              <div className="shrink-0 flex flex-col items-center sm:items-start gap-3 w-full sm:w-auto">
+              <div className="shrink-0 flex flex-col items-center sm:items-start gap-2.5 w-full sm:w-auto">
                 <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 self-start">Capability Breakdown</p>
                 <div
                   className="rounded-xl sm:rounded-2xl flex items-center justify-center p-3 sm:p-4 w-full sm:w-auto"
@@ -739,19 +739,19 @@ function ResultsScreen({
                     border: "1px solid rgba(255,255,255,0.06)",
                   }}
                 >
-                  <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={192} showLabels />
+                  <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={190} showLabels />
                 </div>
               </div>
               {/* Strengths list */}
-              <div className="flex-1 flex flex-col gap-2.5">
-                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22 mb-1">Standout Strengths</p>
+              <div className="flex-1 flex flex-col gap-2">
+                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22 mb-0.5">Standout Strengths</p>
                 {strengths.map(([axis, val]) => {
                   const color = AXIS_COLORS[axis] ?? "#ff5100";
                   const icon = AXIS_ICONS[axis];
                   return (
-                    <div key={axis} className="rounded-xl p-3.5" style={{ background: `${color}0c`, border: `1px solid ${color}20` }}>
-                      <div className="flex items-center gap-2.5 mb-1.5">
-                        <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${color}1e`, color }}>
+                    <div key={axis} className="rounded-xl p-3" style={{ background: `${color}0c`, border: `1px solid ${color}1c` }}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${color}1e`, color }}>
                           <div className="scale-90">{icon}</div>
                         </div>
                         <span className="text-sm font-bold capitalize" style={{ color }}>{AXIS_LABELS[axis]}</span>
@@ -762,7 +762,7 @@ function ResultsScreen({
                           Lv {val}
                         </span>
                       </div>
-                      <p className="text-[10px] text-white/32 leading-[1.55]">{AXIS_DESC[axis]}</p>
+                      <p className="text-[10px] text-white/30 leading-[1.55]">{AXIS_DESC[axis]}</p>
                     </div>
                   );
                 })}
@@ -773,8 +773,8 @@ function ResultsScreen({
       })()}
 
       {/* ── 4. ADVENTURE SECTIONS ────────────────────────────────────────────── */}
-      <div className="space-y-3 mb-6 sm:mb-8">
-        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 px-0.5 mb-3">Matched Adventures</p>
+      <div className="space-y-2.5 mb-5 sm:mb-7">
+        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 px-0.5 mb-2.5">Matched Adventures</p>
         <AdventureSection
           label="Ready Now"
           sublabel="Adventures within your current capability"
@@ -816,31 +816,31 @@ function ResultsScreen({
           .slice(0, 3);
         return (
           <div
-            className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-6 sm:mb-8"
+            className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-5 sm:mb-7"
             style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}
           >
-            <div className="px-5 sm:px-7 pt-5 sm:pt-6 pb-4 sm:pb-5 border-b border-white/[0.05]">
-              <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 mb-1.5">Training Plan</p>
-              <h3 className="text-white font-bold text-base sm:text-[17px] leading-tight">How to unlock harder adventures</h3>
-              <p className="text-white/32 text-[11px] mt-1.5 leading-relaxed">Improve these axes to expand your accessible adventure range.</p>
+            <div className="px-4 sm:px-6 pt-4 sm:pt-5 pb-3.5 sm:pb-4 border-b border-white/[0.05]">
+              <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 mb-1">Training Plan</p>
+              <h3 className="text-white font-bold text-base leading-tight">How to unlock harder adventures</h3>
+              <p className="text-white/30 text-[11px] mt-1 leading-relaxed">Improve these axes to expand your accessible adventure range.</p>
             </div>
-            <div className="px-5 sm:px-7 py-5 space-y-3">
+            <div className="px-4 sm:px-6 py-4 space-y-2.5">
               {prioritised.map((item, i) => {
                 const color = AXIS_COLORS[item.axis] ?? "#ff5100";
                 const icon = AXIS_ICONS[item.axis];
                 const gap = item.required_level - item.current_level;
                 return (
-                  <div key={i} className="flex items-start gap-3.5 sm:gap-4 rounded-xl p-4" style={{ background: `${color}08`, border: `1px solid ${color}16` }}>
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${color}1e`, color }}>
+                  <div key={i} className="flex items-start gap-3 rounded-xl p-3.5" style={{ background: `${color}08`, border: `1px solid ${color}16` }}>
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${color}1e`, color }}>
                       <div className="scale-90">{icon}</div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                         <span className="text-white font-bold text-sm capitalize">{item.axis}</span>
                         <span className="text-[10px] px-2 py-0.5 rounded-full font-bold" style={{ background: `${color}1e`, color }}>+{gap} needed</span>
                         <span className="text-white/22 text-[10px] ml-auto font-mono">Lv {item.current_level} → {item.required_level}</span>
                       </div>
-                      <p className="text-white/40 text-[11px] leading-[1.55]">{item.recommendation}</p>
+                      <p className="text-white/38 text-[11px] leading-[1.55]">{item.recommendation}</p>
                     </div>
                   </div>
                 );
@@ -851,10 +851,10 @@ function ResultsScreen({
       })()}
 
       {/* ── 6. CTA BUTTONS ───────────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row gap-3 pt-1">
         <Link
           href="/explore?ace=ready"
-          className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 active:translate-y-0"
+          className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 active:translate-y-0"
           style={{ background: "linear-gradient(135deg, #ff5100, #ff7340)" }}
         >
           All adventures
@@ -862,7 +862,7 @@ function ResultsScreen({
         </Link>
         <button
           onClick={onReset}
-          className="sm:w-auto flex items-center justify-center gap-2 px-6 py-4 rounded-xl border text-white/45 text-sm font-medium hover:text-white/75 hover:border-white/22 transition-all active:scale-[0.98]"
+          className="sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border text-white/40 text-sm font-medium hover:text-white/70 hover:border-white/20 transition-all active:scale-[0.98]"
           style={{ borderColor: "rgba(255,255,255,0.10)" }}
         >
           <RotateCcw className="w-3.5 h-3.5" />

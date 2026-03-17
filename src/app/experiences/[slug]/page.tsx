@@ -197,35 +197,35 @@ export default async function ExperiencePage({ params }: Props) {
       <Navbar />
 
       {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="relative h-[88vh] min-h-[600px] max-h-[900px] flex items-end overflow-hidden">
+      <section className="relative h-[85vh] min-h-[560px] max-h-[860px] flex items-end overflow-hidden">
         <Image
           src={adventure.heroImage}
           alt={adventure.name}
           fill
           priority
-          className="object-cover scale-[1.02]"
+          className="object-cover"
           style={{ objectFit: "cover" }}
         />
         {/* Color grade overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#ff5100]/10 via-transparent to-sky-900/15 mix-blend-multiply pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#ff5100]/8 via-transparent to-sky-900/12 mix-blend-multiply pointer-events-none" />
         {/* Gradient fade to page bg */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#080c14] via-[#080c14]/50 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#080c14]/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#080c14] via-[#080c14]/45 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#080c14]/55 to-transparent" />
 
         {/* Back button */}
         <Link
           href={`/explore?page=${explorePage}`}
-          className="absolute top-24 left-6 lg:left-8 z-20 flex items-center gap-2 text-white/60 hover:text-white transition-all text-sm font-medium backdrop-blur-md px-4 py-2 rounded-full"
-          style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}
+          className="absolute top-20 left-5 lg:left-8 z-20 flex items-center gap-2 text-white/60 hover:text-white transition-all text-sm font-medium backdrop-blur-md px-4 py-2 rounded-full"
+          style={{ background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.12)" }}
         >
           <ChevronLeft className="w-4 h-4" />
           All Adventures
         </Link>
 
         {/* Hero text */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pb-14 md:pb-20 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-5 lg:px-8 pb-10 md:pb-16 w-full">
           <div className="max-w-3xl">
-            <div className="flex flex-wrap items-center gap-2.5 mb-5">
+            <div className="flex flex-wrap items-center gap-2 mb-4">
               <Pill type="type" value={adventure.type} />
               <Pill type="difficulty" value={adventure.difficulty} />
               <Link
@@ -236,10 +236,10 @@ export default async function ExperiencePage({ params }: Props) {
                 {adventure.state}
               </Link>
             </div>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.02] mb-5" style={{ color: "#f0ede8" }}>
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.02] mb-4" style={{ color: "#f0ede8" }}>
               {adventure.name}
             </h1>
-            <p className="text-white/55 text-base md:text-xl leading-relaxed max-w-xl font-light">
+            <p className="text-white/55 text-sm md:text-lg leading-relaxed max-w-xl font-light">
               {adventure.tagline}
             </p>
           </div>
@@ -248,7 +248,7 @@ export default async function ExperiencePage({ params }: Props) {
 
       {/* ── STATS STRIP ───────────────────────────────────────── */}
       <section style={{ background: "var(--bg-surface)", borderBottom: "1px solid var(--border-subtle)" }}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-5 lg:px-8">
           <div className="flex items-stretch overflow-x-auto no-scrollbar divide-x" style={{ borderColor: "var(--border-subtle)" }}>
             {[
               { icon: <Clock className="w-4 h-4 text-[#ff5100]" />, label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
@@ -258,7 +258,7 @@ export default async function ExperiencePage({ params }: Props) {
               ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ icon: <Flag className="w-4 h-4 text-violet-400" />, label: "Base Camp", value: adventure.baseCamp }] : []),
               ...(adventure.type === "Biking" && adventure.startingPoint ? [{ icon: <Navigation className="w-4 h-4 text-emerald-400" />, label: "Starting Point", value: adventure.startingPoint }] : []),
             ].map(({ icon, label, value }, i) => (
-              <div key={i} className="flex items-center gap-3 px-6 py-4 shrink-0 first:pl-0">
+              <div key={i} className="flex items-center gap-3 px-4 lg:px-6 py-4 shrink-0">
                 {icon}
                 <div>
                   <div className="text-white/25 text-[9px] uppercase tracking-widest">{label}</div>
@@ -271,16 +271,16 @@ export default async function ExperiencePage({ params }: Props) {
       </section>
 
       {/* ── MAIN CONTENT ──────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 lg:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16">
+      <div className="max-w-7xl mx-auto px-5 lg:px-8 py-10 lg:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-14">
 
           {/* ── LEFT COLUMN ── */}
-          <div className="lg:col-span-2 space-y-12 lg:space-y-16">
+          <div className="lg:col-span-2 space-y-10 lg:space-y-14">
 
             {/* The Adventure */}
             <section>
               <SectionLabel>The Adventure</SectionLabel>
-              <p className="text-white/65 text-lg md:text-xl leading-relaxed font-light">
+              <p className="text-white/65 text-base md:text-lg leading-relaxed font-light">
                 {adventure.description}
               </p>
             </section>
@@ -289,7 +289,7 @@ export default async function ExperiencePage({ params }: Props) {
             <section>
               <SectionLabel>What Makes It Special</SectionLabel>
               <div
-                className="rounded-2xl p-7"
+                className="rounded-2xl p-5 lg:p-7"
                 style={{
                   background: "linear-gradient(135deg, rgba(255,81,0,0.07) 0%, rgba(255,81,0,0.02) 100%)",
                   borderLeft: "3px solid rgba(255,81,0,0.5)",
@@ -500,7 +500,7 @@ export default async function ExperiencePage({ params }: Props) {
           </div>
 
           {/* ── RIGHT SIDEBAR ── */}
-          <div className="space-y-4 lg:sticky lg:top-28 lg:self-start">
+          <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
 
             {/* At a Glance */}
             <div
@@ -561,7 +561,7 @@ export default async function ExperiencePage({ params }: Props) {
       {/* ── YOU MIGHT ALSO LIKE ───────────────────────────────── */}
       {(relatedByState.length > 0 || relatedByType.length > 0) && (
         <section
-          className="py-16 lg:py-24 px-6 lg:px-8"
+          className="py-14 lg:py-20 px-5 lg:px-8"
           style={{
             background: "var(--bg-surface)",
             borderTop: "1px solid var(--border-subtle)",

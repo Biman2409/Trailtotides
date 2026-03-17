@@ -52,23 +52,23 @@ export default function StoriesPage() {
       <Navbar />
 
       {/* Hero header */}
-      <section className="pt-32 pb-14 px-6 lg:px-8 t-bg-surface2">
+      <section className="pt-28 lg:pt-36 pb-10 lg:pb-14 px-6 lg:px-8 t-bg-surface2">
         <div className="max-w-7xl mx-auto">
-          <p className="text-[#ff5100] text-xs font-bold tracking-[0.25em] uppercase mb-5">From the Trails</p>
-          <h1 className="text-white text-5xl lg:text-7xl font-bold tracking-tight leading-[1.02] mb-6">
+          <p className="text-[#ff5100] text-xs font-bold tracking-[0.25em] uppercase mb-4">From the Trails</p>
+          <h1 className="text-white text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.02] mb-5">
             Voices from<br className="hidden lg:block" /> the Edge
           </h1>
-          <p className="text-white/45 text-lg md:text-xl max-w-2xl leading-relaxed">
+          <p className="text-white/45 text-base md:text-lg max-w-2xl leading-relaxed">
             Not travel bloggers. Not influencers. Real people who pushed past the edge — and had the guts to write it down.
           </p>
         </div>
       </section>
 
       {/* Featured story */}
-      <section className="px-6 lg:px-8 t-bg-surface2 pb-20 lg:pb-28">
+      <section className="px-6 lg:px-8 t-bg-surface2 pb-16 lg:pb-24">
         <div className="max-w-7xl mx-auto">
           <Link href={`/stories/${featured.slug}`} className="group block">
-            <div className="relative h-[420px] md:h-[500px] lg:h-[600px] rounded-2xl lg:rounded-3xl overflow-hidden ring-1 ring-white/10 group-hover:ring-[#ff5100]/40 transition-all duration-500 shadow-2xl">
+            <div className="relative h-[380px] md:h-[480px] lg:h-[580px] rounded-2xl lg:rounded-3xl overflow-hidden ring-1 ring-white/10 group-hover:ring-[#ff5100]/40 transition-all duration-500 shadow-2xl">
               <Image
                 src={featured.heroImage}
                 alt={featured.title}
@@ -137,17 +137,17 @@ export default function StoriesPage() {
       </section>
 
       {/* All stories grid */}
-      <section className="py-16 lg:py-24 px-6 lg:px-8">
+      <section className="py-14 lg:py-20 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-10 lg:mb-12">
+          <div className="flex items-center justify-between mb-8 lg:mb-10">
             <div className="flex items-center gap-3">
-              <h2 className="text-white text-2xl lg:text-3xl font-bold tracking-tight">All Voices</h2>
-              <span className="text-[#ff5100] text-sm font-semibold bg-[#ff5100]/8 border border-[#ff5100]/20 px-2.5 py-1 rounded-full">{rest.length}</span>
+              <h2 className="text-white text-xl lg:text-2xl font-bold tracking-tight">All Voices</h2>
+              <span className="text-[#ff5100] text-xs font-semibold bg-[#ff5100]/8 border border-[#ff5100]/20 px-2.5 py-1 rounded-full">{rest.length}</span>
             </div>
             <p className="text-white/25 text-sm hidden sm:block">{rest.length} {rest.length === 1 ? "story" : "stories"}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
             {rest.map((story) => (
               <Link
                 key={story.id}
@@ -208,9 +208,9 @@ export default function StoriesPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 lg:py-28 px-6 lg:px-8">
+      <section className="py-16 lg:py-24 px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
-          <div className="relative rounded-2xl lg:rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-br from-[#ff5100]/10 via-white/[0.02] to-transparent p-8 md:p-12 lg:p-16 text-center">
+          <div className="relative rounded-2xl lg:rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-br from-[#ff5100]/10 via-white/[0.02] to-transparent p-8 md:p-10 lg:p-14 text-center">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#ff5100/8_0%,_transparent_70%)]" />
             <div className="relative">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#ff5100]/15 border border-[#ff5100]/25 mb-6">

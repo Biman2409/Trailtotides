@@ -96,48 +96,47 @@ export default function HomePage() {
         {/* ── AI FINDER ────────────────────────────────────── */}
         <InlineChat />
 
-          {/* ── FEATURED ADVENTURES + COMPARE (shared context) ── */}
-        <section id="featured-adventures" className="py-20 lg:py-36 px-5 lg:px-8 t-bg-page">
+          {/* ── FEATURED ADVENTURES ── */}
+        <section id="featured-adventures" className="py-20 lg:py-28 px-5 lg:px-8 t-bg-page">
             <div className="max-w-7xl mx-auto">
-                    <div className="mb-12 lg:mb-16">
-                      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
-                        <BadgeCheck className="w-3.5 h-3.5" />
-                        EDITORS CHOICE
-                      </p>
-                    <div className="flex items-end justify-between gap-4">
-                    <div>
-                      <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
-                        Adventures of a Lifetime
-                      </h2>
-                      <div className="mt-4 lg:mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
-                    </div>
+              <div className="mb-10 lg:mb-14">
+                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
+                  <BadgeCheck className="w-3.5 h-3.5" />
+                  EDITORS CHOICE
+                </p>
+                <div className="flex items-end justify-between gap-4">
+                  <div>
+                    <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+                      Adventures of a Lifetime
+                    </h2>
+                    <div className="mt-4 w-12 h-0.5 bg-[#ff5100] rounded-full" />
+                  </div>
                   <span className="hidden sm:flex items-center gap-1.5 text-[#ff5100] text-sm font-semibold bg-[#ff5100]/8 border border-[#ff5100]/20 px-3 py-1.5 rounded-full mb-1">
                     {featuredAdventures.length} picks
                   </span>
                 </div>
               </div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+                {featuredAdventures.map((adventure) => (
+                  <AdventureCard key={adventure.id} adventure={adventure} size="default" />
+                ))}
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-7">
-              {featuredAdventures.map((adventure) => (
-                <AdventureCard key={adventure.id} adventure={adventure} size="default" />
-              ))}
+              <div className="mt-10 lg:mt-14 flex justify-center">
+                <Link
+                  href="/explore"
+                  className="bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-8 py-3.5 rounded-xl text-sm md:text-base flex items-center gap-2 group shadow-lg shadow-[#ff5100]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30 transition-all duration-200"
+                >
+                  View all adventures
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
             </div>
-
-            <div className="mt-14 lg:mt-16 flex justify-center">
-              <Link
-                href="/explore"
-                className="bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-10 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#ff5100]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30 transition-all duration-200"
-              >
-                View all adventures
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-          </div>
         </section>
 
         {/* ── MAP CTA ───────────────────────────────────────── */}
-        <section id="map-cta" className="relative py-20 lg:py-36 bg-[#1a2e20] px-5 lg:px-8 overflow-hidden">
+        <section id="map-cta" className="relative py-20 lg:py-28 bg-[#1a2e20] px-5 lg:px-8 overflow-hidden">
           <div className="absolute inset-0">
             <Image
               src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1200&q=100"
@@ -194,43 +193,43 @@ export default function HomePage() {
 
 
           {/* ── STORIES ──────────────────────────────────────── */}
-        <section id="stories" className="py-20 lg:py-36 px-5 lg:px-8 t-bg-surface border-t border-[var(--border-subtle)]">
-        <div className="max-w-7xl mx-auto">
-            <div className="flex items-end justify-between mb-12 lg:mb-14">
-                <div>
-                    <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3">
-                      FROM THE TRAILS
-                    </p>
-                          <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
-                              Voices from the Edge
-                            </h2>
-                <div className="mt-4 lg:mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
+        <section id="stories" className="py-20 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-[var(--border-subtle)]">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-end justify-between mb-10 lg:mb-14">
+              <div>
+                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
+                  From the Trails
+                </p>
+                <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+                  Voices from the Edge
+                </h2>
+                <div className="mt-4 w-12 h-0.5 bg-[#ff5100] rounded-full" />
               </div>
-            <Link
-              href="/stories"
-              className="hidden md:flex items-center gap-1.5 text-white/50 font-semibold hover:text-[#ff5100] transition-colors group text-sm"
-            >
-              All stories
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
+              <Link
+                href="/stories"
+                className="hidden md:flex items-center gap-1.5 text-white/40 font-medium hover:text-[#ff5100] transition-colors group text-sm"
+              >
+                All stories
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-7">
               {featuredStories.map((story) => (
                 <StoryCard key={story.id} story={story} />
               ))}
             </div>
 
-          <div className="mt-12 flex justify-center md:hidden">
-            <Link
-              href="/stories"
-              className="flex items-center gap-1.5 text-[#ff5100] font-semibold text-sm"
-            >
-              All stories <ChevronRight className="w-4 h-4" />
-            </Link>
+            <div className="mt-10 flex justify-center md:hidden">
+              <Link
+                href="/stories"
+                className="flex items-center gap-1.5 text-[#ff5100] font-semibold text-sm"
+              >
+                All stories <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
       <Footer />
       <ChatBubble />
