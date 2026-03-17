@@ -582,44 +582,49 @@ function ResultsScreen({
   const tierRank = RANKS.find(r => r.label === tier.label);
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-14 space-y-6 sm:space-y-8">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
 
-      {/* ── Section label ─────────────────────────────────────── */}
-      <div className="flex items-center justify-between">
-        <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase">Your ACE Profile</p>
-        <span className="text-white/20 text-[10px] font-mono">{totalScore} / 40 pts</span>
+      {/* ── 1. PAGE HEADER ───────────────────────────────────────────────────── */}
+      <div className="flex items-center justify-between mb-8 sm:mb-10">
+        <div>
+          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-1">Adventure Matchmaker</p>
+          <h2 className="text-white text-xl sm:text-2xl font-black tracking-tight">Your ACE Profile</h2>
+        </div>
+        <div className="text-right">
+          <p className="text-white/70 text-lg sm:text-xl font-black tabular-nums">{totalScore}<span className="text-white/30 text-sm font-medium"> / 40</span></p>
+          <p className="text-white/25 text-[10px] uppercase tracking-wider">Total Score</p>
+        </div>
       </div>
 
-      {/* ── Hero tier card ────────────────────────────────────── */}
+      {/* ── 2. TIER HERO CARD ────────────────────────────────────────────────── */}
       <div
-        className="rounded-2xl sm:rounded-3xl overflow-hidden border relative"
-        style={{ background: `linear-gradient(145deg, ${tier.color}12 0%, rgba(14,14,18,0) 55%)`, borderColor: `${tier.color}28` }}
+        className="rounded-2xl sm:rounded-3xl overflow-hidden border relative mb-6 sm:mb-8"
+        style={{ background: `linear-gradient(150deg, ${tier.color}14 0%, rgba(14,14,18,0.0) 60%)`, borderColor: `${tier.color}25` }}
       >
-        {/* Glow blob */}
-        <div className="absolute -top-10 -right-10 w-64 h-64 rounded-full opacity-10 blur-3xl pointer-events-none" style={{ background: tier.color }} />
+        <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.08] blur-3xl pointer-events-none" style={{ background: tier.color }} />
 
-        {/* Tier identity row */}
-        <div className="relative flex items-center gap-4 px-5 sm:px-7 pt-6 sm:pt-7 pb-5">
+        {/* Identity */}
+        <div className="relative flex items-center gap-4 sm:gap-5 px-5 sm:px-8 pt-6 sm:pt-8 pb-5 sm:pb-6">
           <div
-            className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shrink-0"
-            style={{ background: `${tier.color}1a`, color: tier.color, boxShadow: `0 0 28px ${tier.color}40`, border: `1px solid ${tier.color}30` }}
+            className="w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] rounded-2xl flex items-center justify-center shrink-0"
+            style={{ background: `${tier.color}18`, color: tier.color, boxShadow: `0 0 32px ${tier.color}38`, border: `1px solid ${tier.color}28` }}
           >
-            <div className="scale-[1.6] sm:scale-[1.8]">{tierRank?.icon}</div>
+            <div className="scale-[1.55] sm:scale-[1.75]">{tierRank?.icon}</div>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[9px] uppercase tracking-[0.2em] font-semibold text-white/30 mb-1">Adventure Tier</p>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-none" style={{ color: tier.color }}>{tier.label}</h1>
-            <div className="flex items-center gap-1 mt-2">
+            <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-1">Adventure Tier</p>
+            <h1 className="text-[26px] sm:text-[32px] font-black tracking-tight leading-none" style={{ color: tier.color }}>{tier.label}</h1>
+            <div className="flex items-center gap-[3px] mt-2.5">
               {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} className="text-sm" style={{ color: i < (tierRank?.stars ?? 0) ? tier.color : "rgba(255,255,255,0.1)" }}>★</span>
+                <span key={i} className="text-[13px] leading-none" style={{ color: i < (tierRank?.stars ?? 0) ? tier.color : "rgba(255,255,255,0.09)" }}>★</span>
               ))}
-              <span className="text-white/25 text-[10px] ml-1.5">Rank {tierRank?.stars ?? 0} of 5</span>
+              <span className="text-white/22 text-[10px] ml-2">Rank {tierRank?.stars ?? 0} of 5</span>
             </div>
           </div>
         </div>
 
-        {/* Thin divider */}
-        <div className="mx-5 sm:mx-7 h-px" style={{ background: `${tier.color}15` }} />
+        {/* Divider */}
+        <div className="mx-5 sm:mx-8 h-px" style={{ background: `${tier.color}14` }} />
 
         {/* Rank progression */}
         {(() => {
@@ -630,72 +635,76 @@ function ResultsScreen({
             ? Math.min(100, Math.round(((totalScore - RANKS[currentRankIndex].minScore) / (nextRank.minScore - RANKS[currentRankIndex].minScore)) * 100))
             : 100;
           return (
-            <div className="relative px-5 sm:px-7 pt-5 pb-6">
+            <div className="px-5 sm:px-8 pt-5 sm:pt-6 pb-6 sm:pb-7">
               {nextRank ? (
-                <div className="flex items-end justify-between mb-4">
+                <div className="flex items-end justify-between mb-5">
                   <div>
-                    <span className="text-4xl sm:text-5xl font-black tabular-nums tracking-tight leading-none" style={{ color: tier.color }}>
-                      {progressPct}<span className="text-xl sm:text-2xl font-bold opacity-60">%</span>
-                    </span>
-                    <p className="text-[10px] text-white/35 mt-1.5">to <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span></p>
+                    <div className="flex items-baseline gap-0.5 leading-none">
+                      <span className="text-[42px] sm:text-[52px] font-black tabular-nums tracking-tight" style={{ color: tier.color }}>{progressPct}</span>
+                      <span className="text-xl sm:text-2xl font-bold ml-0.5" style={{ color: `${tier.color}70` }}>%</span>
+                    </div>
+                    <p className="text-[11px] text-white/30 mt-1.5 leading-none">
+                      to reach <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span>
+                    </p>
                   </div>
-                  <div className="text-right pb-1">
-                    <p className="text-2xl sm:text-3xl font-black tabular-nums" style={{ color: "rgba(255,255,255,0.75)" }}>{nextRank.minScore - totalScore}</p>
-                    <p className="text-[10px] text-white/30 mt-0.5">pts needed</p>
+                  <div className="text-right pb-1.5">
+                    <p className="text-[28px] sm:text-[34px] font-black tabular-nums leading-none text-white/70">{nextRank.minScore - totalScore}</p>
+                    <p className="text-[11px] text-white/28 mt-1 leading-none">pts needed</p>
                   </div>
                 </div>
               ) : (
-                <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa] mb-4">Maximum Rank — Apex</p>
+                <div className="flex items-center gap-2 mb-5">
+                  <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
+                  <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">Maximum Rank Reached — Apex</p>
+                </div>
               )}
-              <div className="relative h-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+              {/* Bar */}
+              <div className="relative h-[10px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.055)" }}>
                 <div
                   className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
                   style={{
                     width: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
-                    background: `linear-gradient(to right, ${RANKS[1].color}cc, ${tier.color})`,
-                    boxShadow: `0 0 14px ${tier.color}55`,
+                    background: `linear-gradient(to right, ${RANKS[1].color}bb, ${tier.color})`,
+                    boxShadow: `0 0 16px ${tier.color}55`,
                   }}
                 />
                 {RANKS.slice(1, -1).map((rank, i) => (
-                  <div key={rank.label} className="absolute inset-y-0 w-px" style={{ left: `${((i + 1) / (totalRanks - 1)) * 100}%`, background: "rgba(14,14,18,0.7)" }} />
+                  <div key={rank.label} className="absolute inset-y-0 w-px bg-[rgba(14,14,18,0.65)]" style={{ left: `${((i + 1) / (totalRanks - 1)) * 100}%` }} />
                 ))}
                 <div
-                  className="absolute w-4 h-4 rounded-full border-2 transition-all duration-700"
+                  className="absolute w-[18px] h-[18px] rounded-full border-2 transition-all duration-700"
                   style={{
                     left: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
                     top: "50%",
                     transform: "translate(-50%, -50%)",
                     background: tier.color,
                     borderColor: "#0e0e12",
-                    boxShadow: `0 0 12px ${tier.color}`,
+                    boxShadow: `0 0 14px ${tier.color}`,
                   }}
                 />
               </div>
-              <div className="relative h-5 mt-1.5">
-                {RANKS.map((rank, i) => {
-                  const isCurrent = i === currentRankIndex;
-                  const isUnlocked = i < currentRankIndex;
-                  return (
-                    <span
-                      key={rank.label}
-                      className="absolute text-[7.5px] font-semibold leading-none whitespace-nowrap"
-                      style={{
-                        left: `${(i / (totalRanks - 1)) * 100}%`,
-                        transform: `translateX(-${(i / (totalRanks - 1)) * 100}%)`,
-                        color: isCurrent ? tier.color : isUnlocked ? `${rank.color}55` : "rgba(255,255,255,0.15)",
-                      }}
-                    >
-                      {rank.label}
-                    </span>
-                  );
-                })}
+              {/* Labels */}
+              <div className="relative h-[18px]">
+                {RANKS.map((rank, i) => (
+                  <span
+                    key={rank.label}
+                    className="absolute text-[7px] sm:text-[7.5px] font-semibold leading-none whitespace-nowrap top-0"
+                    style={{
+                      left: `${(i / (totalRanks - 1)) * 100}%`,
+                      transform: `translateX(-${(i / (totalRanks - 1)) * 100}%)`,
+                      color: i === currentRankIndex ? tier.color : i < currentRankIndex ? `${rank.color}50` : "rgba(255,255,255,0.13)",
+                    }}
+                  >
+                    {rank.label}
+                  </span>
+                ))}
               </div>
             </div>
           );
         })()}
       </div>
 
-      {/* ── ACE Radar + Strengths ─────────────────────────────── */}
+      {/* ── 3. ACE RADAR + STRENGTHS ─────────────────────────────────────────── */}
       {(() => {
         const axisEntries = Object.entries(userAxes).filter(([, v]) => v > 0);
         const sorted = [...axisEntries].sort(([, a], [, b]) => b - a);
@@ -716,47 +725,59 @@ function ResultsScreen({
           focus: "Sustained situational awareness",
         };
         return (
-          <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-            {/* Radar */}
-            <div
-              className="shrink-0 rounded-2xl flex items-center justify-center p-4 self-center sm:self-start"
-              style={{
-                background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, rgba(255,255,255,0.02) 70%)",
-                border: "1px solid rgba(255,255,255,0.07)",
-              }}
-            >
-              <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={196} showLabels />
+          <div
+            className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-6 sm:mb-8"
+            style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}
+          >
+            {/* Section header */}
+            <div className="px-5 sm:px-7 pt-5 sm:pt-6 pb-4 border-b border-white/[0.05]">
+              <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 mb-1">Capability Breakdown</p>
+              <h3 className="text-white font-bold text-base">ACE Profile Analysis</h3>
             </div>
-            {/* Strengths */}
-            <div className="flex-1 flex flex-col gap-2.5">
-              <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/25">Standout Strengths</p>
-              {strengths.map(([axis, val]) => {
-                const color = AXIS_COLORS[axis] ?? "#ff5100";
-                const icon = AXIS_ICONS[axis];
-                return (
-                  <div key={axis} className="rounded-xl p-3.5" style={{ background: `${color}0d`, border: `1px solid ${color}22` }}>
-                    <div className="flex items-center gap-2.5 mb-1.5">
-                      <div className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${color}20`, color }}>
-                        {icon}
+            {/* Content */}
+            <div className="flex flex-col sm:flex-row sm:items-start gap-0 sm:gap-5 p-4 sm:p-6">
+              {/* Radar */}
+              <div
+                className="shrink-0 rounded-xl sm:rounded-2xl flex items-center justify-center p-3 sm:p-4 self-center sm:self-start mb-4 sm:mb-0"
+                style={{
+                  background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, rgba(255,255,255,0.015) 70%)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                }}
+              >
+                <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={192} showLabels />
+              </div>
+              {/* Strengths list */}
+              <div className="flex-1 flex flex-col gap-2.5">
+                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22 mb-0.5">Standout Strengths</p>
+                {strengths.map(([axis, val]) => {
+                  const color = AXIS_COLORS[axis] ?? "#ff5100";
+                  const icon = AXIS_ICONS[axis];
+                  return (
+                    <div key={axis} className="rounded-xl p-3.5" style={{ background: `${color}0c`, border: `1px solid ${color}20` }}>
+                      <div className="flex items-center gap-2.5 mb-1.5">
+                        <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${color}1e`, color }}>
+                          <div className="scale-90">{icon}</div>
+                        </div>
+                        <span className="text-sm font-bold capitalize" style={{ color }}>{AXIS_LABELS[axis]}</span>
+                        <div className="flex gap-[3px] ml-auto">
+                          {Array.from({ length: 5 }).map((_, si) => (
+                            <div key={si} className="w-[9px] h-[7px] rounded-sm" style={{ background: si < val ? color : "rgba(255,255,255,0.07)" }} />
+                          ))}
+                        </div>
                       </div>
-                      <span className="text-sm font-semibold capitalize" style={{ color }}>{AXIS_LABELS[axis]}</span>
-                      <div className="flex gap-0.5 ml-auto">
-                        {Array.from({ length: 5 }).map((_, si) => (
-                          <div key={si} className="w-2.5 h-2 rounded-sm" style={{ background: si < val ? color : "rgba(255,255,255,0.08)" }} />
-                        ))}
-                      </div>
+                      <p className="text-[10px] text-white/32 leading-[1.55]">{AXIS_DESC[axis]}</p>
                     </div>
-                    <p className="text-[10px] text-white/35 leading-relaxed">{AXIS_DESC[axis]}</p>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
         );
       })()}
 
-      {/* ── Adventure sections ────────────────────────────────── */}
-      <div className="space-y-3">
+      {/* ── 4. ADVENTURE SECTIONS ────────────────────────────────────────────── */}
+      <div className="space-y-3 mb-6 sm:mb-8">
+        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 px-0.5 mb-3">Matched Adventures</p>
         <AdventureSection
           label="Ready Now"
           sublabel="Adventures within your current capability"
@@ -791,40 +812,38 @@ function ResultsScreen({
         )}
       </div>
 
-      {/* ── Training focus areas ──────────────────────────────── */}
+      {/* ── 5. TRAINING FOCUS AREAS ──────────────────────────────────────────── */}
       {trainingPlan.length > 0 && (() => {
         const prioritised = [...trainingPlan]
           .sort((a, b) => (b.required_level - b.current_level) - (a.required_level - a.current_level))
           .slice(0, 3);
         return (
           <div
-            className="rounded-2xl border overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}
+            className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-6 sm:mb-8"
+            style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}
           >
-            <div className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-white/[0.06]">
-              <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/25 mb-1.5">Focus Areas</p>
-              <h3 className="text-white font-bold text-base sm:text-lg leading-snug">How to unlock harder adventures</h3>
-              <p className="text-white/35 text-xs mt-1 leading-relaxed">These axes are holding you back the most — improve these first.</p>
+            <div className="px-5 sm:px-7 pt-5 sm:pt-6 pb-4 sm:pb-5 border-b border-white/[0.05]">
+              <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 mb-1.5">Training Plan</p>
+              <h3 className="text-white font-bold text-base sm:text-[17px] leading-tight">How to unlock harder adventures</h3>
+              <p className="text-white/32 text-[11px] mt-1.5 leading-relaxed">Improve these axes to expand your accessible adventure range.</p>
             </div>
-            <div className="px-5 sm:px-6 py-4 sm:py-5 space-y-3">
+            <div className="px-5 sm:px-7 py-5 space-y-3">
               {prioritised.map((item, i) => {
                 const color = AXIS_COLORS[item.axis] ?? "#ff5100";
                 const icon = AXIS_ICONS[item.axis];
                 const gap = item.required_level - item.current_level;
                 return (
-                  <div key={i} className="flex items-start gap-4 rounded-xl p-4" style={{ background: `${color}08`, border: `1px solid ${color}18` }}>
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${color}20`, color }}>
-                      {icon}
+                  <div key={i} className="flex items-start gap-3.5 sm:gap-4 rounded-xl p-4" style={{ background: `${color}08`, border: `1px solid ${color}16` }}>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${color}1e`, color }}>
+                      <div className="scale-90">{icon}</div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                        <span className="text-white font-semibold text-sm capitalize">{item.axis}</span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full font-bold" style={{ background: `${color}20`, color }}>
-                          +{gap} needed
-                        </span>
-                        <span className="text-white/25 text-[10px] ml-auto">Level {item.current_level} → {item.required_level}</span>
+                      <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <span className="text-white font-bold text-sm capitalize">{item.axis}</span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full font-bold" style={{ background: `${color}1e`, color }}>+{gap} needed</span>
+                        <span className="text-white/22 text-[10px] ml-auto font-mono">Lv {item.current_level} → {item.required_level}</span>
                       </div>
-                      <p className="text-white/45 text-xs leading-relaxed">{item.recommendation}</p>
+                      <p className="text-white/40 text-[11px] leading-[1.55]">{item.recommendation}</p>
                     </div>
                   </div>
                 );
@@ -834,20 +853,20 @@ function ResultsScreen({
         );
       })()}
 
-      {/* ── CTAs ──────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row gap-3 pt-2">
+      {/* ── 6. CTA BUTTONS ───────────────────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row gap-3">
         <Link
           href="/explore?ace=ready"
-          className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25"
-          style={{ background: "#ff5100" }}
+          className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 active:translate-y-0"
+          style={{ background: "linear-gradient(135deg, #ff5100, #ff7340)" }}
         >
           Explore matching adventures
           <ArrowRight className="w-4 h-4" />
         </Link>
         <button
           onClick={onReset}
-          className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border text-white/50 text-sm font-medium hover:text-white/80 hover:border-white/25 transition-all"
-          style={{ borderColor: "rgba(255,255,255,0.12)" }}
+          className="sm:w-auto flex items-center justify-center gap-2 px-6 py-4 rounded-xl border text-white/45 text-sm font-medium hover:text-white/75 hover:border-white/22 transition-all active:scale-[0.98]"
+          style={{ borderColor: "rgba(255,255,255,0.10)" }}
         >
           <RotateCcw className="w-3.5 h-3.5" />
           Retake assessment
@@ -877,82 +896,100 @@ function AdventureSection({
 
   return (
     <div
-      className="rounded-2xl border overflow-hidden"
-      style={{ borderColor: `${accentColor}25`, background: `${accentColor}05` }}
+      className="rounded-2xl overflow-hidden border"
+      style={{ borderColor: `${accentColor}22`, background: `linear-gradient(160deg, ${accentColor}06 0%, rgba(14,14,18,0) 60%)` }}
     >
-      {/* Header */}
+      {/* ── Accordion header ── */}
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-5 sm:px-6 py-4 sm:py-5 transition-colors hover:bg-white/[0.025]"
+        className="w-full flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 transition-colors hover:bg-white/[0.02] text-left"
       >
-        <div className="flex items-center gap-3.5">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${accentColor}20`, color: accentColor }}>
+        <div className="flex items-center gap-3">
+          <div
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0"
+            style={{ background: `${accentColor}18`, color: accentColor }}
+          >
             {icon}
           </div>
-          <div className="text-left">
-            <p className="text-white font-bold text-sm leading-snug">{label}</p>
-            <p className="text-white/35 text-[11px] mt-0.5 leading-snug">{sublabel}</p>
+          <div>
+            <p className="text-white font-bold text-[13px] sm:text-sm leading-snug">{label}</p>
+            <p className="text-white/30 text-[10px] sm:text-[11px] mt-0.5 leading-snug">{sublabel}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2.5 shrink-0 ml-4">
-          <span className="hidden sm:inline text-[10px] font-bold px-2.5 py-1 rounded-full" style={{ background: `${accentColor}18`, color: accentColor }}>
+        <div className="flex items-center gap-2 shrink-0 ml-3">
+          <span
+            className="text-[10px] font-bold px-2.5 py-[5px] rounded-full tabular-nums"
+            style={{ background: `${accentColor}16`, color: accentColor }}
+          >
             {totalCount ?? list.length}
           </span>
           <ChevronRight
-            className="w-4 h-4 transition-transform duration-200"
-            style={{ color: `${accentColor}80`, transform: open ? "rotate(90deg)" : "rotate(0deg)" }}
+            className="w-[15px] h-[15px] transition-transform duration-200 shrink-0"
+            style={{ color: `${accentColor}70`, transform: open ? "rotate(90deg)" : "none" }}
           />
         </div>
       </button>
 
+      {/* ── Expanded content ── */}
       {open && (
-        <div style={{ borderTop: `1px solid ${accentColor}15` }}>
-          <div className="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div style={{ borderTop: `1px solid ${accentColor}14` }}>
+          <div className="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
             {list.map(a => (
               <Link
                 key={a.slug}
                 href={`/experiences/${a.slug}`}
-                className="group rounded-xl overflow-hidden border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl"
-                style={{ borderColor: `${accentColor}20`, background: "rgba(255,255,255,0.03)" }}
+                className="group rounded-xl overflow-hidden border transition-all duration-200 hover:-translate-y-[2px] hover:shadow-lg"
+                style={{ borderColor: `${accentColor}18`, background: "rgba(255,255,255,0.025)" }}
               >
-                <div className="relative h-40 overflow-hidden">
-                  <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-3.5">
+                {/* Image */}
+                <div className="relative h-[150px] sm:h-[160px] overflow-hidden">
+                  <Image
+                    src={a.heroImage}
+                    alt={a.name}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 px-3.5 pb-3.5 pt-6">
                     <div className="flex items-center gap-1 mb-1">
-                      <MapPin className="w-3 h-3 shrink-0 opacity-70" style={{ color: accentColor }} />
-                      <span className="text-white/50 text-[10px] truncate">{a.state}</span>
+                      <MapPin className="w-2.5 h-2.5 shrink-0" style={{ color: `${accentColor}cc` }} />
+                      <span className="text-white/45 text-[9.5px] truncate">{a.state}</span>
                     </div>
-                    <h3 className="text-white font-bold text-sm leading-snug">{a.name}</h3>
+                    <h3 className="text-white font-bold text-[13px] sm:text-sm leading-snug">{a.name}</h3>
                   </div>
                 </div>
-                <div className="px-3.5 py-3">
-                  {a.requirements && <ACEBadge ace={a.requirements as unknown as Parameters<typeof ACEBadge>[0]["ace"]} size="sm" dark />}
+                {/* Meta */}
+                <div className="px-3.5 py-3 space-y-2">
+                  {a.requirements && (
+                    <ACEBadge ace={a.requirements as unknown as Parameters<typeof ACEBadge>[0]["ace"]} size="sm" dark />
+                  )}
                   {a.weakAxes.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-2">
+                    <div className="flex flex-wrap gap-1">
                       {a.weakAxes.slice(0, 3).map(ax => (
-                        <span key={ax} className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-md" style={{ background: `${AXIS_COLORS[ax] ?? "#fff"}18`, color: AXIS_COLORS[ax] ?? "#fff" }}>
-                          {AXIS_ICONS[ax]}<span className="ml-0.5">{ax}</span>
+                        <span
+                          key={ax}
+                          className="inline-flex items-center gap-[3px] text-[9px] font-bold uppercase tracking-wide px-1.5 py-[3px] rounded-md"
+                          style={{ background: `${AXIS_COLORS[ax] ?? "#fff"}15`, color: AXIS_COLORS[ax] ?? "#fff" }}
+                        >
+                          {AXIS_ICONS[ax]}<span>{ax}</span>
                         </span>
                       ))}
                     </div>
-                  )}
-                  {a.analysis && (
-                    <p className="text-white/30 text-[10px] leading-relaxed mt-2 line-clamp-2">{a.analysis}</p>
                   )}
                 </div>
               </Link>
             ))}
           </div>
 
+          {/* View all */}
           {hiddenCount > 0 && exploreUrl && (
-            <div className="px-4 sm:px-5 pb-4 sm:pb-5">
+            <div className="px-3 sm:px-4 pb-3 sm:pb-4">
               <Link
                 href={exploreUrl}
-                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-semibold transition-all hover:brightness-110"
-                style={{ background: `${accentColor}12`, color: accentColor, border: `1px solid ${accentColor}25` }}
+                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-[13px] font-semibold transition-all hover:brightness-110"
+                style={{ background: `${accentColor}10`, color: accentColor, border: `1px solid ${accentColor}22` }}
               >
-                Explore all {totalCount} adventures
+                View all {totalCount} adventures
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
