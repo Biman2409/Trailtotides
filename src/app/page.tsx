@@ -8,7 +8,6 @@ import Footer from "@/components/layout/Footer";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import HeroSlider from "@/components/ui/custom/HeroSlider";
 import FindYourFormat from "@/components/ui/custom/FindYourFormat";
-import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import ChatBubble from "@/components/ChatBubble";
 import InlineChat from "@/components/InlineChat";
 import StatsBar from "@/components/StatsBar";
@@ -193,8 +192,6 @@ export default function HomePage() {
         {/* ── ADVENTURE TYPES ──────────────────────────────── */}
         <FindYourFormat />
 
-          {/* ── COMPARE ADVENTURES ───────────────────────────── */}
-          <CompareAdventures />
 
           {/* ── STORIES ──────────────────────────────────────── */}
         <section id="stories" className="py-16 lg:py-32 px-5 lg:px-8 t-bg-surface border-t border-[var(--border-subtle)]">
