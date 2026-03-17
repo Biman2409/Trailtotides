@@ -248,7 +248,7 @@ export default function MatchmakerHomepageSection() {
             href="/explore?ace=ready"
             className="flex-1 inline-flex items-center justify-center gap-2 bg-[#ff5100] hover:bg-[#e04800] text-white font-semibold px-6 py-3 rounded-xl text-sm hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25 group transition-all duration-200"
           >
-            Explore matching adventures
+            All matching adventures
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link

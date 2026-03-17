@@ -866,7 +866,7 @@ function ResultsScreen({
           className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 active:translate-y-0"
           style={{ background: "linear-gradient(135deg, #ff5100, #ff7340)" }}
         >
-          Explore matching adventures
+          All adventures
           <ArrowRight className="w-4 h-4" />
         </Link>
         <button
