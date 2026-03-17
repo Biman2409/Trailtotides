@@ -585,15 +585,9 @@ function ResultsScreen({
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
 
       {/* ── 1. PAGE HEADER ───────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between mb-8 sm:mb-10">
-        <div>
-          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-1">Adventure Matchmaker</p>
-          <h2 className="text-white text-xl sm:text-2xl font-black tracking-tight">Your ACE Profile</h2>
-        </div>
-        <div className="text-right">
-          <p className="text-white/70 text-lg sm:text-xl font-black tabular-nums">{totalScore}<span className="text-white/30 text-sm font-medium"> / 40</span></p>
-          <p className="text-white/25 text-[10px] uppercase tracking-wider">Total Score</p>
-        </div>
+      <div className="mb-8 sm:mb-10">
+        <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-1">Adventure Matchmaker</p>
+        <h2 className="text-white text-xl sm:text-2xl font-black tracking-tight">Your ACE Profile</h2>
       </div>
 
       {/* ── 2. TIER HERO CARD ────────────────────────────────────────────────── */}
