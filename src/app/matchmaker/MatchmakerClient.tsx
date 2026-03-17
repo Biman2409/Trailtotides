@@ -582,238 +582,249 @@ function ResultsScreen({
   const tierRank = RANKS.find(r => r.label === tier.label);
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-14 space-y-6 sm:space-y-8">
 
-      {/* Capability profile card */}
-      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Your ACE Profile</p>
-      <div
-        className="rounded-2xl sm:rounded-3xl p-4 sm:p-7 mb-6 border relative overflow-hidden"
-        style={{ background: "rgba(255,255,255,0.04)", borderLeftWidth: "4px", borderLeftColor: tier.color, borderColor: `${tier.color}35` }}
-      >
-        <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-15 blur-3xl pointer-events-none" style={{ background: tier.color }} />
-        <div className="relative">
-          <div className="flex items-start justify-between gap-4 mb-6">
-            <div className="flex-1 min-w-0">
-              <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Adventure Tier</p>
-              <h1 className="text-3xl font-bold tracking-tight" style={{ color: tier.color }}>{tier.label}</h1>
-              <div className="flex items-center gap-1.5 mt-2">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <span key={i} className="text-base" style={{ color: i < (tierRank?.stars ?? 0) ? tier.color : "rgba(255,255,255,0.1)" }}>★</span>
-                ))}
-                <span className="text-white/30 text-xs ml-1">Rank {tierRank?.stars ?? 0} / 5</span>
-              </div>
-
-              {/* Rank progression bar */}
-              {(() => {
-                const currentRankIndex = tierRank ? RANKS.indexOf(tierRank) : 0;
-                const totalRanks = RANKS.length;
-                const nextRank = RANKS[currentRankIndex + 1] ?? null;
-                const progressPct = nextRank
-                  ? Math.min(100, Math.round(((totalScore - RANKS[currentRankIndex].minScore) / (nextRank.minScore - RANKS[currentRankIndex].minScore)) * 100))
-                  : 100;
-                return (
-                  <div className="mt-5 space-y-2">
-                    {nextRank ? (
-                      <div className="flex items-end justify-between mb-3">
-                        <div>
-                          <span className="text-4xl font-black tabular-nums tracking-tight leading-none" style={{ color: tier.color }}>{progressPct}<span className="text-xl font-bold opacity-70">%</span></span>
-                          <p className="text-[10px] text-white/35 mt-1">to <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span></p>
-                        </div>
-                        <div className="text-right pb-0.5">
-                          <p className="text-2xl font-bold tabular-nums text-white/80">{nextRank.minScore - totalScore}</p>
-                          <p className="text-[10px] text-white/30">pts needed</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa] mb-3">Maximum Rank — Apex</p>
-                    )}
-                    <div className="relative h-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
-                      <div
-                        className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
-                        style={{
-                          width: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
-                          background: `linear-gradient(to right, ${RANKS[1].color}cc, ${tier.color})`,
-                          boxShadow: `0 0 12px ${tier.color}50`,
-                        }}
-                      />
-                      {RANKS.slice(1, -1).map((rank, i) => (
-                        <div key={rank.label} className="absolute inset-y-0 w-px" style={{ left: `${((i + 1) / (totalRanks - 1)) * 100}%`, background: "rgba(14,14,18,0.7)" }} />
-                      ))}
-                      <div
-                        className="absolute w-4 h-4 rounded-full border-2 transition-all duration-700"
-                        style={{
-                          left: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
-                          top: "50%",
-                          transform: `translate(-50%, -50%)`,
-                          background: tier.color,
-                          borderColor: "#0e0e12",
-                          boxShadow: `0 0 10px ${tier.color}`,
-                        }}
-                      />
-                    </div>
-                    <div className="relative h-4 mt-1">
-                      {RANKS.map((rank, i) => {
-                        const isCurrent = i === currentRankIndex;
-                        const isUnlocked = i < currentRankIndex;
-                        return (
-                          <span
-                            key={rank.label}
-                            className="absolute text-[7.5px] font-semibold leading-none whitespace-nowrap"
-                            style={{
-                              left: `${(i / (totalRanks - 1)) * 100}%`,
-                              transform: `translateX(-${(i / (totalRanks - 1)) * 100}%)`,
-                              color: isCurrent ? tier.color : isUnlocked ? `${rank.color}55` : "rgba(255,255,255,0.15)",
-                            }}
-                          >
-                            {rank.label}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })()}
-            </div>
-            <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0"
-              style={{ background: `${tier.color}20`, color: tier.color, boxShadow: `0 0 24px ${tier.color}45`, border: `1px solid ${tier.color}35` }}
-            >
-              <div className="scale-150">
-                {tierRank?.icon}
-              </div>
-            </div>
-          </div>
-
-          {/* ACE Radar + Strengths side-by-side */}
-          {(() => {
-            const axisEntries = Object.entries(userAxes).filter(([, v]) => v > 0);
-            const sorted = [...axisEntries].sort(([, a], [, b]) => b - a);
-            const strengths = sorted.slice(0, 3);
-            const AXIS_LABELS: Record<string, string> = {
-              stamina: "Stamina", power: "Power", strength: "Strength",
-              agility: "Agility", water: "Water", altitude: "Altitude",
-              nerve: "Nerve", focus: "Focus",
-            };
-            const AXIS_DESC: Record<string, string> = {
-              stamina: "Sustained aerobic output over long durations",
-              power: "Explosive force and burst capacity",
-              strength: "Load-bearing and muscular endurance",
-              agility: "Terrain navigation and body control",
-              water: "Aquatic comfort and swim capability",
-              altitude: "High-altitude acclimatisation",
-              nerve: "Psychological exposure tolerance",
-              focus: "Sustained situational awareness",
-            };
-            return (
-              <div className="flex flex-col sm:flex-row sm:items-start gap-4 mb-6">
-                <div
-                  className="shrink-0 rounded-2xl flex items-center justify-center p-3 self-center sm:self-auto"
-                  style={{
-                    background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, rgba(255,255,255,0.02) 70%)",
-                    border: "1px solid rgba(255,255,255,0.07)",
-                  }}
-                >
-                  <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={200} showLabels />
-                </div>
-                <div className="flex-1 space-y-2.5">
-                  <p className="text-[9px] uppercase tracking-[0.18em] font-bold text-white/25 mb-3">Standout Strengths</p>
-                  {strengths.map(([axis, val]) => {
-                    const color = AXIS_COLORS[axis] ?? "#ff5100";
-                    const icon = AXIS_ICONS[axis];
-                    return (
-                      <div key={axis} className="rounded-xl p-3" style={{ background: `${color}10`, border: `1px solid ${color}25` }}>
-                        <div className="flex items-center gap-2 mb-1">
-                          <div className="w-5 h-5 rounded-md flex items-center justify-center shrink-0" style={{ background: `${color}20`, color }}>
-                            {icon}
-                          </div>
-                          <span className="text-xs font-semibold capitalize" style={{ color }}>{AXIS_LABELS[axis]}</span>
-                          <div className="flex gap-px ml-auto">
-                            {Array.from({ length: 5 }).map((_, si) => (
-                              <div key={si} className="w-2 h-2 rounded-sm" style={{ background: si < val ? color : "rgba(255,255,255,0.08)" }} />
-                            ))}
-                          </div>
-                        </div>
-                        <p className="text-[10px] text-white/35 leading-snug">{AXIS_DESC[axis]}</p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })()}
-
-        </div>
+      {/* ── Section label ─────────────────────────────────────── */}
+      <div className="flex items-center justify-between">
+        <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase">Your ACE Profile</p>
+        <span className="text-white/20 text-[10px] font-mono">{totalScore} / 40 pts</span>
       </div>
 
-      {/* Adventures */}
-      <AdventureSection
-        label="Ready Now"
-        sublabel="Adventures within your current capability"
-        icon={<CheckCircle2 className="w-4 h-4" />}
-        adventures={[...inZone].sort((a, b) => a.riskLevel - b.riskLevel).slice(0, 6)}
-        totalCount={inZone.length}
-        exploreUrl="/explore?ace=ready"
-        accentColor="#4ade80"
-        defaultOpen
-      />
-      {stretch.length > 0 && (
-        <AdventureSection
-          label="Stretch Challenge"
-          sublabel="Slightly above your current range — achievable with focused training"
-          icon={<TrendingUp className="w-4 h-4" />}
-          adventures={[...stretch].sort((a, b) => a.riskLevel - b.riskLevel).slice(0, 6)}
-          totalCount={stretch.length}
-          exploreUrl="/explore?ace=stretch"
-          accentColor="#f59e0b"
-        />
-      )}
-      {restricted.length > 0 && (
-        <AdventureSection
-          label="Currently Out of Range"
-          sublabel="Require capabilities significantly beyond your current profile"
-          icon={<Lock className="w-4 h-4" />}
-          adventures={[...restricted].sort((a, b) => a.riskLevel - b.riskLevel).slice(0, 6)}
-          totalCount={restricted.length}
-          exploreUrl="/explore?ace=out-of-range"
-          accentColor="#f43f5e"
-        />
-      )}
+      {/* ── Hero tier card ────────────────────────────────────── */}
+      <div
+        className="rounded-2xl sm:rounded-3xl overflow-hidden border relative"
+        style={{ background: `linear-gradient(145deg, ${tier.color}12 0%, rgba(14,14,18,0) 55%)`, borderColor: `${tier.color}28` }}
+      >
+        {/* Glow blob */}
+        <div className="absolute -top-10 -right-10 w-64 h-64 rounded-full opacity-10 blur-3xl pointer-events-none" style={{ background: tier.color }} />
 
-      {/* Training plan — top lagging axes only */}
+        {/* Tier identity row */}
+        <div className="relative flex items-center gap-4 px-5 sm:px-7 pt-6 sm:pt-7 pb-5">
+          <div
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shrink-0"
+            style={{ background: `${tier.color}1a`, color: tier.color, boxShadow: `0 0 28px ${tier.color}40`, border: `1px solid ${tier.color}30` }}
+          >
+            <div className="scale-[1.6] sm:scale-[1.8]">{tierRank?.icon}</div>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[9px] uppercase tracking-[0.2em] font-semibold text-white/30 mb-1">Adventure Tier</p>
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-none" style={{ color: tier.color }}>{tier.label}</h1>
+            <div className="flex items-center gap-1 mt-2">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <span key={i} className="text-sm" style={{ color: i < (tierRank?.stars ?? 0) ? tier.color : "rgba(255,255,255,0.1)" }}>★</span>
+              ))}
+              <span className="text-white/25 text-[10px] ml-1.5">Rank {tierRank?.stars ?? 0} of 5</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Thin divider */}
+        <div className="mx-5 sm:mx-7 h-px" style={{ background: `${tier.color}15` }} />
+
+        {/* Rank progression */}
+        {(() => {
+          const currentRankIndex = tierRank ? RANKS.indexOf(tierRank) : 0;
+          const totalRanks = RANKS.length;
+          const nextRank = RANKS[currentRankIndex + 1] ?? null;
+          const progressPct = nextRank
+            ? Math.min(100, Math.round(((totalScore - RANKS[currentRankIndex].minScore) / (nextRank.minScore - RANKS[currentRankIndex].minScore)) * 100))
+            : 100;
+          return (
+            <div className="relative px-5 sm:px-7 pt-5 pb-6">
+              {nextRank ? (
+                <div className="flex items-end justify-between mb-4">
+                  <div>
+                    <span className="text-4xl sm:text-5xl font-black tabular-nums tracking-tight leading-none" style={{ color: tier.color }}>
+                      {progressPct}<span className="text-xl sm:text-2xl font-bold opacity-60">%</span>
+                    </span>
+                    <p className="text-[10px] text-white/35 mt-1.5">to <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span></p>
+                  </div>
+                  <div className="text-right pb-1">
+                    <p className="text-2xl sm:text-3xl font-black tabular-nums" style={{ color: "rgba(255,255,255,0.75)" }}>{nextRank.minScore - totalScore}</p>
+                    <p className="text-[10px] text-white/30 mt-0.5">pts needed</p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa] mb-4">Maximum Rank — Apex</p>
+              )}
+              <div className="relative h-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+                <div
+                  className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
+                  style={{
+                    width: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
+                    background: `linear-gradient(to right, ${RANKS[1].color}cc, ${tier.color})`,
+                    boxShadow: `0 0 14px ${tier.color}55`,
+                  }}
+                />
+                {RANKS.slice(1, -1).map((rank, i) => (
+                  <div key={rank.label} className="absolute inset-y-0 w-px" style={{ left: `${((i + 1) / (totalRanks - 1)) * 100}%`, background: "rgba(14,14,18,0.7)" }} />
+                ))}
+                <div
+                  className="absolute w-4 h-4 rounded-full border-2 transition-all duration-700"
+                  style={{
+                    left: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                    background: tier.color,
+                    borderColor: "#0e0e12",
+                    boxShadow: `0 0 12px ${tier.color}`,
+                  }}
+                />
+              </div>
+              <div className="relative h-5 mt-1.5">
+                {RANKS.map((rank, i) => {
+                  const isCurrent = i === currentRankIndex;
+                  const isUnlocked = i < currentRankIndex;
+                  return (
+                    <span
+                      key={rank.label}
+                      className="absolute text-[7.5px] font-semibold leading-none whitespace-nowrap"
+                      style={{
+                        left: `${(i / (totalRanks - 1)) * 100}%`,
+                        transform: `translateX(-${(i / (totalRanks - 1)) * 100}%)`,
+                        color: isCurrent ? tier.color : isUnlocked ? `${rank.color}55` : "rgba(255,255,255,0.15)",
+                      }}
+                    >
+                      {rank.label}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
+      </div>
+
+      {/* ── ACE Radar + Strengths ─────────────────────────────── */}
+      {(() => {
+        const axisEntries = Object.entries(userAxes).filter(([, v]) => v > 0);
+        const sorted = [...axisEntries].sort(([, a], [, b]) => b - a);
+        const strengths = sorted.slice(0, 3);
+        const AXIS_LABELS: Record<string, string> = {
+          stamina: "Stamina", power: "Power", strength: "Strength",
+          agility: "Agility", water: "Water", altitude: "Altitude",
+          nerve: "Nerve", focus: "Focus",
+        };
+        const AXIS_DESC: Record<string, string> = {
+          stamina: "Sustained aerobic output over long durations",
+          power: "Explosive force and burst capacity",
+          strength: "Load-bearing and muscular endurance",
+          agility: "Terrain navigation and body control",
+          water: "Aquatic comfort and swim capability",
+          altitude: "High-altitude acclimatisation",
+          nerve: "Psychological exposure tolerance",
+          focus: "Sustained situational awareness",
+        };
+        return (
+          <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+            {/* Radar */}
+            <div
+              className="shrink-0 rounded-2xl flex items-center justify-center p-4 self-center sm:self-start"
+              style={{
+                background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, rgba(255,255,255,0.02) 70%)",
+                border: "1px solid rgba(255,255,255,0.07)",
+              }}
+            >
+              <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={196} showLabels />
+            </div>
+            {/* Strengths */}
+            <div className="flex-1 flex flex-col gap-2.5">
+              <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/25">Standout Strengths</p>
+              {strengths.map(([axis, val]) => {
+                const color = AXIS_COLORS[axis] ?? "#ff5100";
+                const icon = AXIS_ICONS[axis];
+                return (
+                  <div key={axis} className="rounded-xl p-3.5" style={{ background: `${color}0d`, border: `1px solid ${color}22` }}>
+                    <div className="flex items-center gap-2.5 mb-1.5">
+                      <div className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${color}20`, color }}>
+                        {icon}
+                      </div>
+                      <span className="text-sm font-semibold capitalize" style={{ color }}>{AXIS_LABELS[axis]}</span>
+                      <div className="flex gap-0.5 ml-auto">
+                        {Array.from({ length: 5 }).map((_, si) => (
+                          <div key={si} className="w-2.5 h-2 rounded-sm" style={{ background: si < val ? color : "rgba(255,255,255,0.08)" }} />
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-white/35 leading-relaxed">{AXIS_DESC[axis]}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* ── Adventure sections ────────────────────────────────── */}
+      <div className="space-y-3">
+        <AdventureSection
+          label="Ready Now"
+          sublabel="Adventures within your current capability"
+          icon={<CheckCircle2 className="w-4 h-4" />}
+          adventures={[...inZone].sort((a, b) => a.riskLevel - b.riskLevel).slice(0, 6)}
+          totalCount={inZone.length}
+          exploreUrl="/explore?ace=ready"
+          accentColor="#4ade80"
+          defaultOpen
+        />
+        {stretch.length > 0 && (
+          <AdventureSection
+            label="Stretch Challenge"
+            sublabel="Slightly above your current range — achievable with focused training"
+            icon={<TrendingUp className="w-4 h-4" />}
+            adventures={[...stretch].sort((a, b) => a.riskLevel - b.riskLevel).slice(0, 6)}
+            totalCount={stretch.length}
+            exploreUrl="/explore?ace=stretch"
+            accentColor="#f59e0b"
+          />
+        )}
+        {restricted.length > 0 && (
+          <AdventureSection
+            label="Currently Out of Range"
+            sublabel="Require capabilities significantly beyond your current profile"
+            icon={<Lock className="w-4 h-4" />}
+            adventures={[...restricted].sort((a, b) => a.riskLevel - b.riskLevel).slice(0, 6)}
+            totalCount={restricted.length}
+            exploreUrl="/explore?ace=out-of-range"
+            accentColor="#f43f5e"
+          />
+        )}
+      </div>
+
+      {/* ── Training focus areas ──────────────────────────────── */}
       {trainingPlan.length > 0 && (() => {
         const prioritised = [...trainingPlan]
           .sort((a, b) => (b.required_level - b.current_level) - (a.required_level - a.current_level))
           .slice(0, 3);
         return (
           <div
-            className="rounded-2xl p-6 mb-8 border"
-            style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}
+            className="rounded-2xl border overflow-hidden"
+            style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}
           >
-            <p className="text-white/30 text-[10px] uppercase tracking-widest mb-1">Focus Areas</p>
-            <h3 className="text-white font-semibold text-base mb-1">How to unlock harder adventures</h3>
-            <p className="text-white/35 text-xs mb-5">These are the axes holding you back the most. Improve these first.</p>
-            <div className="space-y-4">
+            <div className="px-5 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-white/[0.06]">
+              <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/25 mb-1.5">Focus Areas</p>
+              <h3 className="text-white font-bold text-base sm:text-lg leading-snug">How to unlock harder adventures</h3>
+              <p className="text-white/35 text-xs mt-1 leading-relaxed">These axes are holding you back the most — improve these first.</p>
+            </div>
+            <div className="px-5 sm:px-6 py-4 sm:py-5 space-y-3">
               {prioritised.map((item, i) => {
                 const color = AXIS_COLORS[item.axis] ?? "#ff5100";
                 const icon = AXIS_ICONS[item.axis];
                 const gap = item.required_level - item.current_level;
                 return (
-                  <div key={i} className="flex items-start gap-4 rounded-xl p-3.5" style={{ background: `${color}08`, border: `1px solid ${color}18` }}>
-                    <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
-                      style={{ background: `${color}20`, color }}
-                    >
+                  <div key={i} className="flex items-start gap-4 rounded-xl p-4" style={{ background: `${color}08`, border: `1px solid ${color}18` }}>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${color}20`, color }}>
                       {icon}
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                         <span className="text-white font-semibold text-sm capitalize">{item.axis}</span>
-                        <span className="text-[10px] px-1.5 py-px rounded-full font-medium" style={{ background: `${color}20`, color }}>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full font-bold" style={{ background: `${color}20`, color }}>
                           +{gap} needed
                         </span>
-                        <span className="text-white/25 text-xs ml-auto">Lv {item.current_level} → {item.required_level}</span>
+                        <span className="text-white/25 text-[10px] ml-auto">Level {item.current_level} → {item.required_level}</span>
                       </div>
-                      <p className="text-white/50 text-xs leading-snug">{item.recommendation}</p>
+                      <p className="text-white/45 text-xs leading-relaxed">{item.recommendation}</p>
                     </div>
                   </div>
                 );
@@ -823,19 +834,19 @@ function ResultsScreen({
         );
       })()}
 
-      {/* CTAs */}
-      <div className="flex flex-wrap gap-3 items-center">
+      {/* ── CTAs ──────────────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row gap-3 pt-2">
         <Link
-          href="/explore"
-          className="flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm text-white transition-all hover:brightness-110"
+          href="/explore?ace=ready"
+          className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25"
           style={{ background: "#ff5100" }}
         >
-          Browse all adventures
+          Explore matching adventures
           <ArrowRight className="w-4 h-4" />
         </Link>
         <button
           onClick={onReset}
-          className="flex items-center gap-2 px-5 py-3 rounded-full border text-white/60 text-sm font-medium hover:text-white transition-colors"
+          className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border text-white/50 text-sm font-medium hover:text-white/80 hover:border-white/25 transition-all"
           style={{ borderColor: "rgba(255,255,255,0.12)" }}
         >
           <RotateCcw className="w-3.5 h-3.5" />
@@ -866,78 +877,80 @@ function AdventureSection({
 
   return (
     <div
-      className="mb-3 rounded-2xl border overflow-hidden"
-      style={{ borderColor: `${accentColor}30`, borderLeftWidth: "3px", borderLeftColor: accentColor }}
+      className="rounded-2xl border overflow-hidden"
+      style={{ borderColor: `${accentColor}25`, background: `${accentColor}05` }}
     >
+      {/* Header */}
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-5 py-4 transition-colors hover:bg-white/[0.03]"
-        style={{ background: open ? `${accentColor}0a` : "rgba(255,255,255,0.02)" }}
+        className="w-full flex items-center justify-between px-5 sm:px-6 py-4 sm:py-5 transition-colors hover:bg-white/[0.025]"
       >
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${accentColor}20`, color: accentColor }}>
+        <div className="flex items-center gap-3.5">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${accentColor}20`, color: accentColor }}>
             {icon}
           </div>
           <div className="text-left">
-            <p className="text-white font-semibold text-sm mb-0.5">{label}</p>
-            <p className="text-white/35 text-xs">{sublabel}</p>
+            <p className="text-white font-bold text-sm leading-snug">{label}</p>
+            <p className="text-white/35 text-[11px] mt-0.5 leading-snug">{sublabel}</p>
           </div>
         </div>
-        <div className="flex items-center gap-3 shrink-0">
-          <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full" style={{ background: `${accentColor}18`, color: accentColor }}>
-            {totalCount ?? list.length} adventure{(totalCount ?? list.length) !== 1 ? "s" : ""}
+        <div className="flex items-center gap-2.5 shrink-0 ml-4">
+          <span className="hidden sm:inline text-[10px] font-bold px-2.5 py-1 rounded-full" style={{ background: `${accentColor}18`, color: accentColor }}>
+            {totalCount ?? list.length}
           </span>
-          <ChevronRight className="w-4 h-4 transition-transform duration-200" style={{ color: accentColor, transform: open ? "rotate(90deg)" : "rotate(0deg)" }} />
+          <ChevronRight
+            className="w-4 h-4 transition-transform duration-200"
+            style={{ color: `${accentColor}80`, transform: open ? "rotate(90deg)" : "rotate(0deg)" }}
+          />
         </div>
       </button>
 
       {open && (
-        <div style={{ borderTop: `1px solid ${accentColor}18` }}>
-          <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div style={{ borderTop: `1px solid ${accentColor}15` }}>
+          <div className="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
             {list.map(a => (
               <Link
                 key={a.slug}
                 href={`/experiences/${a.slug}`}
-                className="group rounded-xl overflow-hidden border transition-all hover:-translate-y-0.5 hover:shadow-lg duration-200"
-                style={{ borderColor: `${accentColor}25`, background: "rgba(255,255,255,0.03)" }}
+                className="group rounded-xl overflow-hidden border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl"
+                style={{ borderColor: `${accentColor}20`, background: "rgba(255,255,255,0.03)" }}
               >
-                <div className="relative h-36 overflow-hidden">
+                <div className="relative h-40 overflow-hidden">
                   <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-                  <div className="absolute bottom-3 left-3 right-3">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-3.5">
                     <div className="flex items-center gap-1 mb-1">
-                      <MapPin className="w-3 h-3 shrink-0" style={{ color: accentColor }} />
-                      <span className="text-white/55 text-[10px] truncate">{a.state}</span>
+                      <MapPin className="w-3 h-3 shrink-0 opacity-70" style={{ color: accentColor }} />
+                      <span className="text-white/50 text-[10px] truncate">{a.state}</span>
                     </div>
-                    <h3 className="text-white font-semibold text-sm leading-tight">{a.name}</h3>
+                    <h3 className="text-white font-bold text-sm leading-snug">{a.name}</h3>
                   </div>
                 </div>
-                <div className="px-3 py-2.5">
+                <div className="px-3.5 py-3">
                   {a.requirements && <ACEBadge ace={a.requirements as unknown as Parameters<typeof ACEBadge>[0]["ace"]} size="sm" dark />}
                   {a.weakAxes.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-2">
                       {a.weakAxes.slice(0, 3).map(ax => (
-                        <span key={ax} className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded" style={{ background: `${AXIS_COLORS[ax] ?? "#fff"}18`, color: AXIS_COLORS[ax] ?? "#fff" }}>
+                        <span key={ax} className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-md" style={{ background: `${AXIS_COLORS[ax] ?? "#fff"}18`, color: AXIS_COLORS[ax] ?? "#fff" }}>
                           {AXIS_ICONS[ax]}<span className="ml-0.5">{ax}</span>
                         </span>
                       ))}
                     </div>
                   )}
                   {a.analysis && (
-                    <p className="text-white/35 text-[10px] leading-relaxed mt-1.5 line-clamp-2">{a.analysis}</p>
+                    <p className="text-white/30 text-[10px] leading-relaxed mt-2 line-clamp-2">{a.analysis}</p>
                   )}
                 </div>
               </Link>
             ))}
           </div>
 
-          {/* View all button when there are hidden results */}
           {hiddenCount > 0 && exploreUrl && (
-            <div className="px-4 pb-4">
+            <div className="px-4 sm:px-5 pb-4 sm:pb-5">
               <Link
                 href={exploreUrl}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-semibold transition-all hover:brightness-110"
-                style={{ background: `${accentColor}15`, color: accentColor, border: `1px solid ${accentColor}30` }}
+                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-semibold transition-all hover:brightness-110"
+                style={{ background: `${accentColor}12`, color: accentColor, border: `1px solid ${accentColor}25` }}
               >
                 Explore all {totalCount} adventures
                 <ArrowRight className="w-3.5 h-3.5" />
