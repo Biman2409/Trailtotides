@@ -635,69 +635,73 @@ function ResultsScreen({
             ? Math.min(100, Math.round(((totalScore - RANKS[currentRankIndex].minScore) / (nextRank.minScore - RANKS[currentRankIndex].minScore)) * 100))
             : 100;
           return (
-            <div className="px-5 sm:px-8 pt-5 sm:pt-6 pb-6 sm:pb-7">
-              {nextRank ? (
-                <div className="flex items-end justify-between mb-5">
-                  <div>
-                    <div className="flex items-baseline gap-0.5 leading-none">
-                      <span className="text-[42px] sm:text-[52px] font-black tabular-nums tracking-tight" style={{ color: tier.color }}>{progressPct}</span>
-                      <span className="text-xl sm:text-2xl font-bold ml-0.5" style={{ color: `${tier.color}70` }}>%</span>
+            <div className="pt-5 sm:pt-6 pb-6 sm:pb-7">
+              {/* % + pts row — padded */}
+              <div className="px-5 sm:px-8">
+                {nextRank ? (
+                  <div className="flex items-end justify-between mb-5">
+                    <div>
+                      <div className="flex items-baseline gap-0.5 leading-none">
+                        <span className="text-[42px] sm:text-[52px] font-black tabular-nums tracking-tight" style={{ color: tier.color }}>{progressPct}</span>
+                        <span className="text-xl sm:text-2xl font-bold ml-0.5" style={{ color: `${tier.color}70` }}>%</span>
+                      </div>
+                      <p className="text-[11px] text-white/30 mt-1.5 leading-none">
+                        to reach <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span>
+                      </p>
                     </div>
-                    <p className="text-[11px] text-white/30 mt-1.5 leading-none">
-                      to reach <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span>
-                    </p>
+                    <div className="text-right pb-1.5">
+                      <p className="text-[28px] sm:text-[34px] font-black tabular-nums leading-none text-white/70">{nextRank.minScore - totalScore}</p>
+                      <p className="text-[11px] text-white/28 mt-1 leading-none">pts needed</p>
+                    </div>
                   </div>
-                  <div className="text-right pb-1.5">
-                    <p className="text-[28px] sm:text-[34px] font-black tabular-nums leading-none text-white/70">{nextRank.minScore - totalScore}</p>
-                    <p className="text-[11px] text-white/28 mt-1 leading-none">pts needed</p>
+                ) : (
+                  <div className="flex items-center gap-2 mb-5">
+                    <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
+                    <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">Maximum Rank Reached — Apex</p>
                   </div>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 mb-5">
-                  <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
-                  <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">Maximum Rank Reached — Apex</p>
-                </div>
-              )}
-              {/* Bar */}
-              <div className="relative h-[10px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.055)" }}>
-                <div
-                  className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
-                  style={{
-                    width: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
-                    background: `linear-gradient(to right, ${RANKS[1].color}bb, ${tier.color})`,
-                    boxShadow: `0 0 16px ${tier.color}55`,
-                  }}
-                />
-                {RANKS.slice(1, -1).map((rank, i) => (
-                  <div key={rank.label} className="absolute inset-y-0 w-px bg-[rgba(14,14,18,0.65)]" style={{ left: `${((i + 1) / (totalRanks - 1)) * 100}%` }} />
-                ))}
-                <div
-                  className="absolute w-[18px] h-[18px] rounded-full border-2 transition-all duration-700"
-                  style={{
-                    left: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
-                    top: "50%",
-                    transform: "translate(-50%, -50%)",
-                    background: tier.color,
-                    borderColor: "#0e0e12",
-                    boxShadow: `0 0 14px ${tier.color}`,
-                  }}
-                />
+                )}
               </div>
-              {/* Labels */}
-              <div className="relative h-[18px]">
-                {RANKS.map((rank, i) => (
-                  <span
-                    key={rank.label}
-                    className="absolute text-[7px] sm:text-[7.5px] font-semibold leading-none whitespace-nowrap top-0"
+              {/* Bar + labels — full width with px padding applied via mx */}
+              <div className="px-5 sm:px-8">
+                <div className="relative h-[10px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.055)" }}>
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
                     style={{
-                      left: `${(i / (totalRanks - 1)) * 100}%`,
-                      transform: `translateX(-${(i / (totalRanks - 1)) * 100}%)`,
-                      color: i === currentRankIndex ? tier.color : i < currentRankIndex ? `${rank.color}50` : "rgba(255,255,255,0.13)",
+                      width: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
+                      background: `linear-gradient(to right, ${RANKS[1].color}bb, ${tier.color})`,
+                      boxShadow: `0 0 16px ${tier.color}55`,
                     }}
-                  >
-                    {rank.label}
-                  </span>
-                ))}
+                  />
+                  {RANKS.slice(1, -1).map((rank, i) => (
+                    <div key={rank.label} className="absolute inset-y-0 w-px bg-[rgba(14,14,18,0.65)]" style={{ left: `${((i + 1) / (totalRanks - 1)) * 100}%` }} />
+                  ))}
+                  <div
+                    className="absolute w-[18px] h-[18px] rounded-full border-2 transition-all duration-700"
+                    style={{
+                      left: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
+                      top: "50%",
+                      transform: "translate(-50%, -50%)",
+                      background: tier.color,
+                      borderColor: "#0e0e12",
+                      boxShadow: `0 0 14px ${tier.color}`,
+                    }}
+                  />
+                </div>
+                <div className="relative h-[18px]">
+                  {RANKS.map((rank, i) => (
+                    <span
+                      key={rank.label}
+                      className="absolute text-[7px] sm:text-[7.5px] font-semibold leading-none whitespace-nowrap top-0"
+                      style={{
+                        left: `${(i / (totalRanks - 1)) * 100}%`,
+                        transform: `translateX(-${(i / (totalRanks - 1)) * 100}%)`,
+                        color: i === currentRankIndex ? tier.color : i < currentRankIndex ? `${rank.color}50` : "rgba(255,255,255,0.13)",
+                      }}
+                    >
+                      {rank.label}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           );
@@ -729,22 +733,23 @@ function ResultsScreen({
             className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-6 sm:mb-8"
             style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}
           >
-            {/* Section header */}
-            <div className="px-5 sm:px-7 pt-5 sm:pt-6 pb-4 border-b border-white/[0.05]">
-              <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 mb-1">Capability Breakdown</p>
-              <h3 className="text-white font-bold text-base">ACE Profile Analysis</h3>
-            </div>
             {/* Content */}
-            <div className="flex flex-col sm:flex-row sm:items-start gap-0 sm:gap-5 p-4 sm:p-6">
-              {/* Radar */}
-              <div
-                className="shrink-0 rounded-xl sm:rounded-2xl flex items-center justify-center p-3 sm:p-4 self-center sm:self-start mb-4 sm:mb-0"
-                style={{
-                  background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, rgba(255,255,255,0.015) 70%)",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                }}
-              >
-                <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={192} showLabels />
+            <div className="flex flex-col sm:flex-row sm:items-start gap-5 p-4 sm:p-6">
+              {/* Radar column — label sits above it */}
+              <div className="shrink-0 flex flex-col items-center gap-3 self-center sm:self-start">
+                <div className="text-center">
+                  <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 mb-0.5">Capability Breakdown</p>
+                  <p className="text-white font-bold text-sm">ACE Profile</p>
+                </div>
+                <div
+                  className="rounded-xl sm:rounded-2xl flex items-center justify-center p-3 sm:p-4"
+                  style={{
+                    background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, rgba(255,255,255,0.015) 70%)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                  }}
+                >
+                  <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={192} showLabels />
+                </div>
               </div>
               {/* Strengths list */}
               <div className="flex-1 flex flex-col gap-2.5">
@@ -759,11 +764,12 @@ function ResultsScreen({
                           <div className="scale-90">{icon}</div>
                         </div>
                         <span className="text-sm font-bold capitalize" style={{ color }}>{AXIS_LABELS[axis]}</span>
-                        <div className="flex gap-[3px] ml-auto">
-                          {Array.from({ length: 5 }).map((_, si) => (
-                            <div key={si} className="w-[9px] h-[7px] rounded-sm" style={{ background: si < val ? color : "rgba(255,255,255,0.07)" }} />
-                          ))}
-                        </div>
+                        <span
+                          className="ml-auto text-[11px] font-black tabular-nums px-2 py-0.5 rounded-md"
+                          style={{ background: `${color}20`, color }}
+                        >
+                          Lv {val}
+                        </span>
                       </div>
                       <p className="text-[10px] text-white/32 leading-[1.55]">{AXIS_DESC[axis]}</p>
                     </div>
