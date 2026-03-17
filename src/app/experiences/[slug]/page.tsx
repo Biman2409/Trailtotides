@@ -197,7 +197,7 @@ export default async function ExperiencePage({ params }: Props) {
       <Navbar />
 
       {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="relative h-[92vh] min-h-[640px] flex items-end overflow-hidden">
+      <section className="relative h-[88vh] min-h-[600px] max-h-[900px] flex items-end overflow-hidden">
         <Image
           src={adventure.heroImage}
           alt={adventure.name}
@@ -223,9 +223,9 @@ export default async function ExperiencePage({ params }: Props) {
         </Link>
 
         {/* Hero text */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pb-20 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pb-14 md:pb-20 w-full">
           <div className="max-w-3xl">
-            <div className="flex flex-wrap items-center gap-3 mb-6">
+            <div className="flex flex-wrap items-center gap-2.5 mb-5">
               <Pill type="type" value={adventure.type} />
               <Pill type="difficulty" value={adventure.difficulty} />
               <Link
@@ -236,10 +236,10 @@ export default async function ExperiencePage({ params }: Props) {
                 {adventure.state}
               </Link>
             </div>
-            <h1 className="text-5xl md:text-7xl font-semibold tracking-tight leading-[1.0] mb-5" style={{ color: "#f0ede8" }}>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.02] mb-5" style={{ color: "#f0ede8" }}>
               {adventure.name}
             </h1>
-            <p className="text-white/55 text-xl leading-relaxed max-w-xl font-light">
+            <p className="text-white/55 text-base md:text-xl leading-relaxed max-w-xl font-light">
               {adventure.tagline}
             </p>
           </div>
@@ -271,16 +271,16 @@ export default async function ExperiencePage({ params }: Props) {
       </section>
 
       {/* ── MAIN CONTENT ──────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16">
 
           {/* ── LEFT COLUMN ── */}
-          <div className="lg:col-span-2 space-y-16">
+          <div className="lg:col-span-2 space-y-12 lg:space-y-16">
 
             {/* The Adventure */}
             <section>
               <SectionLabel>The Adventure</SectionLabel>
-              <p className="text-white/65 text-xl leading-relaxed font-light">
+              <p className="text-white/65 text-lg md:text-xl leading-relaxed font-light">
                 {adventure.description}
               </p>
             </section>
@@ -500,7 +500,7 @@ export default async function ExperiencePage({ params }: Props) {
           </div>
 
           {/* ── RIGHT SIDEBAR ── */}
-          <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+          <div className="space-y-4 lg:sticky lg:top-28 lg:self-start">
 
             {/* At a Glance */}
             <div
@@ -561,7 +561,7 @@ export default async function ExperiencePage({ params }: Props) {
       {/* ── YOU MIGHT ALSO LIKE ───────────────────────────────── */}
       {(relatedByState.length > 0 || relatedByType.length > 0) && (
         <section
-          className="py-20 px-6 lg:px-8"
+          className="py-16 lg:py-24 px-6 lg:px-8"
           style={{
             background: "var(--bg-surface)",
             borderTop: "1px solid var(--border-subtle)",

@@ -52,23 +52,23 @@ export default function StoriesPage() {
       <Navbar />
 
       {/* Hero header */}
-      <section className="pt-32 pb-12 px-6 lg:px-8 t-bg-surface2">
+      <section className="pt-32 pb-14 px-6 lg:px-8 t-bg-surface2">
         <div className="max-w-7xl mx-auto">
           <p className="text-[#ff5100] text-xs font-bold tracking-[0.25em] uppercase mb-5">From the Trails</p>
-          <h1 className="text-white text-5xl lg:text-7xl font-bold tracking-tight leading-none mb-5">
+          <h1 className="text-white text-5xl lg:text-7xl font-bold tracking-tight leading-[1.02] mb-6">
             Voices from<br className="hidden lg:block" /> the Edge
           </h1>
-          <p className="text-white/45 text-lg max-w-2xl leading-relaxed">
+          <p className="text-white/45 text-lg md:text-xl max-w-2xl leading-relaxed">
             Not travel bloggers. Not influencers. Real people who pushed past the edge — and had the guts to write it down.
           </p>
         </div>
       </section>
 
       {/* Featured story */}
-      <section className="px-6 lg:px-8 t-bg-surface2 pb-20">
+      <section className="px-6 lg:px-8 t-bg-surface2 pb-20 lg:pb-28">
         <div className="max-w-7xl mx-auto">
           <Link href={`/stories/${featured.slug}`} className="group block">
-            <div className="relative h-[460px] lg:h-[580px] rounded-3xl overflow-hidden ring-1 ring-white/10 group-hover:ring-[#ff5100]/40 transition-all duration-500 shadow-2xl">
+            <div className="relative h-[420px] md:h-[500px] lg:h-[600px] rounded-2xl lg:rounded-3xl overflow-hidden ring-1 ring-white/10 group-hover:ring-[#ff5100]/40 transition-all duration-500 shadow-2xl">
               <Image
                 src={featured.heroImage}
                 alt={featured.title}
@@ -95,7 +95,7 @@ export default function StoriesPage() {
                 )}
               </div>
 
-              <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-12">
+              <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 lg:p-12">
                 {/* Content pills */}
                 <div className="flex items-center gap-2 mb-4 flex-wrap">
                   {(featured.pillTags ?? featured.tags.filter((t) => !BADGE_TAGS.includes(t)).slice(0, 2)).map((tag) => (
@@ -105,10 +105,10 @@ export default function StoriesPage() {
                   ))}
                 </div>
 
-                <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-3 max-w-2xl group-hover:text-[#ff5100] transition-colors duration-300">
+                <h2 className="text-white text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-3 max-w-2xl group-hover:text-[#ff5100] transition-colors duration-300">
                   {featured.title}
                 </h2>
-                <p className="text-white/60 text-base max-w-2xl leading-relaxed mb-6 hidden lg:block">
+                <p className="text-white/60 text-base max-w-2xl leading-relaxed mb-6 hidden md:block">
                   {featured.excerpt}
                 </p>
 
@@ -137,16 +137,17 @@ export default function StoriesPage() {
       </section>
 
       {/* All stories grid */}
-      <section className="py-20 px-6 lg:px-8">
+      <section className="py-16 lg:py-24 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center justify-between mb-10 lg:mb-12">
             <div className="flex items-center gap-3">
-              <h2 className="text-[#ff5100] text-2xl font-bold">All Voices from the Edge</h2>
+              <h2 className="text-white text-2xl lg:text-3xl font-bold tracking-tight">All Voices</h2>
+              <span className="text-[#ff5100] text-sm font-semibold bg-[#ff5100]/8 border border-[#ff5100]/20 px-2.5 py-1 rounded-full">{rest.length}</span>
             </div>
             <p className="text-white/25 text-sm hidden sm:block">{rest.length} {rest.length === 1 ? "story" : "stories"}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
             {rest.map((story) => (
               <Link
                 key={story.id}
@@ -154,7 +155,7 @@ export default function StoriesPage() {
                 className="group flex flex-col bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-[#ff5100]/40 hover:bg-white/[0.07] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30"
               >
                 {/* Image */}
-                <div className="relative h-52 overflow-hidden flex-shrink-0">
+                <div className="relative h-52 md:h-56 overflow-hidden flex-shrink-0">
                   <Image
                     src={story.heroImage}
                     alt={story.title}
@@ -173,8 +174,8 @@ export default function StoriesPage() {
                 </div>
 
                 {/* Content */}
-                <div className="flex flex-col flex-1 p-5">
-                  <h3 className="text-white text-lg font-bold leading-snug mb-2 group-hover:text-[#ff5100] transition-colors duration-200">
+                <div className="flex flex-col flex-1 p-5 lg:p-6">
+                  <h3 className="text-white text-lg font-bold leading-snug mb-2.5 group-hover:text-[#ff5100] transition-colors duration-200">
                     {story.title}
                   </h3>
                   <p className="text-white/45 text-sm leading-relaxed line-clamp-2 mb-4 flex-1">
@@ -183,7 +184,7 @@ export default function StoriesPage() {
 
                   {/* Footer */}
                   <div className="flex items-center justify-between pt-4 border-t border-white/8">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
                       <div className="w-7 h-7 rounded-full bg-[#ff5100]/20 border border-[#ff5100]/30 flex items-center justify-center text-xs font-bold text-[#ff5100]">
                         {story.author[0]}
                       </div>
@@ -207,9 +208,9 @@ export default function StoriesPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 px-6 lg:px-8">
+      <section className="py-20 lg:py-28 px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
-          <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-br from-[#ff5100]/10 via-white/[0.02] to-transparent p-10 lg:p-16 text-center">
+          <div className="relative rounded-2xl lg:rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-br from-[#ff5100]/10 via-white/[0.02] to-transparent p-8 md:p-12 lg:p-16 text-center">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#ff5100/8_0%,_transparent_70%)]" />
             <div className="relative">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#ff5100]/15 border border-[#ff5100]/25 mb-6">

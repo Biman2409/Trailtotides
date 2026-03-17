@@ -63,14 +63,14 @@ export default function FindByRegion() {
   });
 
     return (
-      <section id="regions" className="py-24 lg:py-32 t-bg-surface2 px-6 lg:px-8">
+      <section id="regions" className="py-20 lg:py-32 t-bg-surface2 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-            <div className="mb-12">
+            <div className="mb-12 lg:mb-14">
               <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
                 DISCOVER YOUR REGION
               </p>
-              <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
+              <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
                   Adventure Lives in Every Corner
                 </h2>
             <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />

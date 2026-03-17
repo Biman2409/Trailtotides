@@ -28,11 +28,11 @@ export default function Footer() {
       {/* Subtle Gradient Accent */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/20 to-transparent" />
       
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-20 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-40">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-14 lg:py-20 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-36">
 
             {/* Column 1: Identity, Platform, Legal */}
-            <div className="space-y-10 lg:space-y-16">
+            <div className="space-y-10 lg:space-y-14">
               {/* 1. Branding */}
               <div className="flex flex-col gap-6 group">
                 <div className="flex items-center gap-4">
@@ -99,7 +99,7 @@ export default function Footer() {
             </div>
 
             {/* Column 2: Narrative & Connect */}
-            <div className="space-y-10 lg:space-y-20">
+            <div className="space-y-10 lg:space-y-16">
               {/* 1. About Us */}
               <div className="space-y-6">
                 <h4 className="text-[11px] font-black uppercase tracking-[0.45em] text-[#ff5100] opacity-90">
@@ -155,7 +155,7 @@ export default function Footer() {
           </div>
 
         {/* Brand Bottom Bar */}
-        <div className="mt-12 lg:mt-20 pt-8 lg:pt-10 flex flex-col items-center justify-center gap-4 relative z-10 text-[10px] font-bold tracking-[0.15em] lg:tracking-[0.2em] uppercase text-center" style={{ borderTop: "1px solid var(--border-subtle)", color: "var(--text-muted)" }}>
+        <div className="mt-12 lg:mt-16 pt-7 lg:pt-9 flex flex-col items-center justify-center gap-4 relative z-10 text-[10px] font-bold tracking-[0.15em] lg:tracking-[0.2em] uppercase text-center" style={{ borderTop: "1px solid var(--border-subtle)", color: "var(--text-muted)" }}>
                 <p>© 2026 <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ff5100] to-[#ff8c47]">TRAIL</span> <span style={{fontFamily: "var(--font-cursive)"}} className="text-white/60 text-[13px] normal-case tracking-normal font-normal">to</span> <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#3b82f6] to-[#60a5fa]">TIDES</span>. DESIGNED FOR EXPLORERS BY EXPLORERS</p>
         </div>
       </div>

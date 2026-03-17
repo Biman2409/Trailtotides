@@ -97,9 +97,9 @@ export default function HomePage() {
         <InlineChat />
 
           {/* ── FEATURED ADVENTURES + COMPARE (shared context) ── */}
-        <section id="featured-adventures" className="py-16 lg:py-32 px-5 lg:px-8 t-bg-page">
+        <section id="featured-adventures" className="py-20 lg:py-36 px-5 lg:px-8 t-bg-page">
             <div className="max-w-7xl mx-auto">
-                    <div className="mb-10 lg:mb-14">
+                    <div className="mb-12 lg:mb-16">
                       <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
                         <BadgeCheck className="w-3.5 h-3.5" />
                         EDITORS CHOICE
@@ -118,16 +118,16 @@ export default function HomePage() {
               </div>
 
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-7">
               {featuredAdventures.map((adventure) => (
                 <AdventureCard key={adventure.id} adventure={adventure} size="default" />
               ))}
             </div>
 
-            <div className="mt-14 flex justify-center">
+            <div className="mt-14 lg:mt-16 flex justify-center">
               <Link
                 href="/explore"
-                className="bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-9 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#ff5100]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30 transition-all duration-200"
+                className="bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-10 py-4 rounded-xl text-base flex items-center gap-2 group shadow-lg shadow-[#ff5100]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30 transition-all duration-200"
               >
                 View all adventures
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -137,7 +137,7 @@ export default function HomePage() {
         </section>
 
         {/* ── MAP CTA ───────────────────────────────────────── */}
-        <section id="map-cta" className="relative py-16 lg:py-32 bg-[#1a2e20] px-5 lg:px-8 overflow-hidden">
+        <section id="map-cta" className="relative py-20 lg:py-36 bg-[#1a2e20] px-5 lg:px-8 overflow-hidden">
           <div className="absolute inset-0">
             <Image
               src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1200&q=100"
@@ -160,15 +160,15 @@ export default function HomePage() {
 
           <div className="max-w-7xl mx-auto relative z-10">
               <div className="max-w-2xl">
-                        <p className="text-[#7ec88a] text-xs font-black tracking-[0.25em] mb-4 uppercase">
+                        <p className="text-[#7ec88a] text-xs font-black tracking-[0.25em] mb-5 uppercase">
                           ADVENTURE MAP
                         </p>
-            <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+            <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-6">
                 India's Adventures,
                 <br />
                 <span className="text-[#7ec88a]">Mapped</span>
               </h2>
-                        <p className="text-white/72 text-base md:text-xl leading-relaxed mb-7 lg:mb-9 w-full">
+                        <p className="text-white/72 text-base md:text-xl leading-relaxed mb-8 lg:mb-10 w-full max-w-lg">
                           Every trail, summit, coast, and canyon — pinned, filtered, and ready to explore on one interactive map.
                         </p>
                   <Link
@@ -194,9 +194,9 @@ export default function HomePage() {
 
 
           {/* ── STORIES ──────────────────────────────────────── */}
-        <section id="stories" className="py-16 lg:py-32 px-5 lg:px-8 t-bg-surface border-t border-[var(--border-subtle)]">
+        <section id="stories" className="py-20 lg:py-36 px-5 lg:px-8 t-bg-surface border-t border-[var(--border-subtle)]">
         <div className="max-w-7xl mx-auto">
-            <div className="flex items-end justify-between mb-10 lg:mb-12">
+            <div className="flex items-end justify-between mb-12 lg:mb-14">
                 <div>
                     <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3">
                       FROM THE TRAILS
@@ -215,7 +215,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
               {featuredStories.map((story) => (
                 <StoryCard key={story.id} story={story} />
               ))}

@@ -94,14 +94,14 @@ export default function FindYourFormat() {
   const [openId, setOpenId] = useState<string | null>(null);
 
     return (
-      <section id="styles" className="py-24 lg:py-32 px-6 lg:px-8 t-bg-page">
+      <section id="styles" className="py-20 lg:py-32 px-6 lg:px-8 t-bg-page">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-            <div className="mb-12">
+            <div className="mb-12 lg:mb-14">
               <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
                 DISCOVER YOUR GENRE
               </p>
-                    <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
+                    <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
                     Adventure Lives in Every Element
                   </h2>
               <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />

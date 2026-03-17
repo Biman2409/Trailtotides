@@ -87,16 +87,16 @@ export default function MatchmakerHomepageSection() {
     : 100;
 
   return (
-    <section className="py-16 lg:py-32 px-5 lg:px-8 t-bg-surface border-t border-white/5">
+    <section className="py-20 lg:py-32 px-5 lg:px-8 t-bg-surface border-t border-white/5">
       <div className="max-w-7xl mx-auto">
-        <div className="max-w-2xl mb-10">
+        <div className="max-w-2xl mb-12 lg:mb-14">
           <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
           <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-3">Your adventure profile</h2>
-          <p className="text-white/55 text-sm">Based on your ACE assessment — here&apos;s what you&apos;re built for.</p>
+          <p className="text-white/55 text-base">Based on your ACE assessment — here&apos;s what you&apos;re built for.</p>
         </div>
 
         {/* Tier badge + radar side by side */}
-        <div className="flex flex-wrap items-stretch gap-6 mb-10">
+        <div className="flex flex-wrap items-stretch gap-6 mb-12">
           {/* Left: rank card */}
           <div
             className="flex flex-col flex-1 min-w-[260px] rounded-2xl overflow-hidden"
@@ -236,14 +236,14 @@ export default function MatchmakerHomepageSection() {
 
         {/* Matched adventures */}
         <p className="text-white/60 text-xs font-bold tracking-[0.2em] uppercase mb-4">Adventures suited for you</p>
-        <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
+        <div className="flex gap-3 overflow-x-auto pb-3 -mx-1 px-1 snap-x">
           {matches.length > 0
             ? matches.map((adv) => <MiniAdventureCard key={adv.id} adventure={adv} />)
             : <p className="text-white/30 text-sm italic">No matching adventures found.</p>}
         </div>
 
         {/* CTAs */}
-        <div className="flex flex-wrap items-center gap-3 mt-8">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-8">
           <Link
             href="/explore?ace=ready"
             className="flex-1 inline-flex items-center justify-center gap-2 bg-[#ff5100] hover:bg-[#e04800] text-white font-semibold px-6 py-3 rounded-xl text-sm hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25 group transition-all duration-200"
@@ -266,15 +266,15 @@ export default function MatchmakerHomepageSection() {
 
 function DefaultCTA() {
   return (
-    <section className="py-16 lg:py-32 px-5 lg:px-8 t-bg-surface border-t border-white/5">
+    <section className="py-20 lg:py-32 px-5 lg:px-8 t-bg-surface border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         <div className="max-w-2xl">
-          <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
-          <h2 className="text-white text-3xl lg:text-6xl font-bold tracking-tight leading-tight mb-4 lg:mb-5">
+          <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-5">Adventure Matchmaker</p>
+          <h2 className="text-white text-3xl lg:text-6xl font-bold tracking-tight leading-tight mb-5 lg:mb-6">
             Adventures built,<br />
             <span className="text-[#ff5100]">for your body</span>
           </h2>
-          <p className="text-white/72 text-base md:text-xl leading-relaxed mb-7 lg:mb-9">
+          <p className="text-white/72 text-base md:text-xl leading-relaxed mb-8 lg:mb-10">
             Answer 8 questions. Discover your{" "}
             <Link href="/ace" className="font-bold text-[#ff5100] underline decoration-[#ff5100]/30 underline-offset-2 hover:decoration-[#ff5100] transition-all">
               ACE

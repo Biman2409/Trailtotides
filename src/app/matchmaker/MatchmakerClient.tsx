@@ -436,12 +436,12 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
   ];
 
   return (
-    <div className="max-w-xl mx-auto px-6 py-24">
-      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Adventure Matchmaker</p>
-      <h1 className="text-white text-4xl font-bold tracking-tight leading-tight mb-3">
+    <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-28">
+      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-5">Adventure Matchmaker</p>
+      <h1 className="text-white text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4">
         Adventures built for your body
       </h1>
-      <p className="text-white/50 text-base leading-relaxed mb-8">
+      <p className="text-white/50 text-base leading-relaxed mb-9">
         Every adventure makes specific demands on your body. ACE breaks those demands into eight axes — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you know exactly what you&apos;re signing up for.
       </p>
 
@@ -582,12 +582,12 @@ function ResultsScreen({
   const tierRank = RANKS.find(r => r.label === tier.label);
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
 
       {/* ── 1. PAGE HEADER ───────────────────────────────────────────────────── */}
       <div className="mb-8 sm:mb-10">
-        <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-1">Adventure Matchmaker</p>
-        <h2 className="text-white text-xl sm:text-2xl font-black tracking-tight">Your ACE Profile</h2>
+        <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-2">Adventure Matchmaker</p>
+        <h2 className="text-white text-2xl sm:text-3xl font-black tracking-tight">Your ACE Profile</h2>
       </div>
 
       {/* ── 2. TIER HERO CARD ────────────────────────────────────────────────── */}
@@ -728,14 +728,12 @@ function ResultsScreen({
             style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}
           >
             {/* Content */}
-            <div className="flex flex-col sm:flex-row sm:items-start gap-5 p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-6 p-4 sm:p-7">
               {/* Radar column — label sits above it */}
-              <div className="shrink-0 flex flex-col items-start gap-3 self-center sm:self-start">
-                <div>
-                  <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25">Capability Breakdown</p>
-                </div>
+              <div className="shrink-0 flex flex-col items-center sm:items-start gap-3 w-full sm:w-auto">
+                <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 self-start">Capability Breakdown</p>
                 <div
-                  className="rounded-xl sm:rounded-2xl flex items-center justify-center p-3 sm:p-4"
+                  className="rounded-xl sm:rounded-2xl flex items-center justify-center p-3 sm:p-4 w-full sm:w-auto"
                   style={{
                     background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, rgba(255,255,255,0.015) 70%)",
                     border: "1px solid rgba(255,255,255,0.06)",
@@ -746,7 +744,7 @@ function ResultsScreen({
               </div>
               {/* Strengths list */}
               <div className="flex-1 flex flex-col gap-2.5">
-                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22 mb-0.5">Standout Strengths</p>
+                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22 mb-1">Standout Strengths</p>
                 {strengths.map(([axis, val]) => {
                   const color = AXIS_COLORS[axis] ?? "#ff5100";
                   const icon = AXIS_ICONS[axis];
@@ -1129,34 +1127,39 @@ export default function MatchmakerClient() {
   if (result) return <ResultsScreen result={result} onReset={reset} />;
 
   return (
-    <div className="max-w-xl mx-auto px-6 py-24">
+    <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-24">
       {/* Header */}
-      <div className="mb-8">
-        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Adventure Matchmaker</p>
-        <div className="flex items-center gap-2 mb-1">
-          <span style={{ color: AXIS_COLORS[currentQ.axis.toLowerCase()] ?? "#ff5100" }}>
+      <div className="mb-7">
+        <div className="flex items-center justify-between mb-5">
+          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">Adventure Matchmaker</p>
+          <span className="text-white/25 text-xs font-medium">{stepIndex + 1} / {QUESTIONS.length}</span>
+        </div>
+        <div className="flex items-center gap-2.5 mb-1.5">
+          <div
+            className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+            style={{ background: `${AXIS_COLORS[currentQ.axis.toLowerCase()] ?? "#ff5100"}20`, color: AXIS_COLORS[currentQ.axis.toLowerCase()] ?? "#ff5100" }}
+          >
             {AXIS_ICONS[currentQ.axis.toLowerCase()]}
-          </span>
+          </div>
           <h1 className="text-white text-2xl font-bold tracking-tight">{currentQ.axis}</h1>
         </div>
-        <p className="text-white/35 text-sm">Question {stepIndex + 1} of {QUESTIONS.length}</p>
       </div>
 
       {/* Progress */}
-      <div className="flex items-center gap-1.5 mb-10">
+      <div className="flex items-center gap-1.5 mb-9">
         {QUESTIONS.map((_, i) => (
           <div
             key={i}
             className="h-1 flex-1 rounded-full transition-all duration-300"
-            style={{ background: i <= stepIndex ? "#ff5100" : "rgba(255,255,255,0.1)" }}
+            style={{ background: i < stepIndex ? "#ff5100" : i === stepIndex ? "#ff5100cc" : "rgba(255,255,255,0.1)" }}
           />
         ))}
       </div>
 
       {/* Question */}
-      <div className="space-y-3">
-        <h2 className="text-white text-xl font-semibold mb-1">{currentQ.question}</h2>
-        {currentQ.hint && <p className="text-white/35 text-sm mb-5">{currentQ.hint}</p>}
+      <div className="space-y-2.5">
+        <h2 className="text-white text-xl sm:text-2xl font-semibold leading-snug mb-1.5">{currentQ.question}</h2>
+        {currentQ.hint && <p className="text-white/35 text-sm mb-5 leading-relaxed">{currentQ.hint}</p>}
         {currentQ.options.map(o => (
           <OptionBtn
             key={o.v}
@@ -1189,7 +1192,7 @@ export default function MatchmakerClient() {
       )}
 
       {/* Nav */}
-      <div className="flex items-center mt-10">
+      <div className="flex items-center mt-8">
         <button
           onClick={() => {
             if (stepIndex === 0) setStarted(false);
