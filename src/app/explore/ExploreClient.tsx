@@ -44,6 +44,8 @@ const seasons: { label: string; months: Month[] }[] = [
 ];
 
 
+const LAND_TYPES: AdventureType[] = ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"];
+
 export default function ExploreClient() {
   const searchParams = useSearchParams();
 
@@ -121,6 +123,7 @@ export default function ExploreClient() {
 
   const filtered = useMemo(() => {
     return adventures.filter((a) => {
+        if (!LAND_TYPES.includes(a.type)) return false;
         if (
           search &&
           !a.name.toLowerCase().includes(search.toLowerCase()) &&
@@ -476,20 +479,8 @@ export default function ExploreClient() {
                     {(() => {
                             const categories = [
                                 {
-                                  label: "Land", 
+                                  label: "Land",
                                   types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
-                                },
-                                {
-                                  label: "Water", 
-                                  types: ["Diving", "Kayaking"],
-                                },
-                                {
-                                  label: "Snow", 
-                                  types: ["Skiing"],
-                                },
-                                {
-                                  label: "Air", 
-                                  types: [] as string[],
                                 },
                             ];
                         return (
