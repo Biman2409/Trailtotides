@@ -97,3 +97,12 @@ Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
  ○ Compiling /matchmaker ...
  ✓ Compiled /matchmaker in 873ms
  GET /matchmaker 200 in 1005ms
+ GET /?_cb=1773793756117 200 in 262ms
+ ✓ Compiled /api/stories/views in 355ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 1062ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 1068ms
+ GET /?_cb=1773793884718 200 in 251ms
+ GET /?_cb=1773793885641 200 in 212ms
+ GET /?_cb=1773793886460 200 in 194ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 582ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 456ms
