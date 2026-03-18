@@ -91,14 +91,14 @@ export function computeACE(a: Adventure): ACE {
   const isTrekking = a.type === "Trekking";
 
   // ── Altitude (universal — rubric-aligned thresholds) ───────────────────────
-  // 1: any altitude up to 2,499m | 2: 2,500–3,499m | 3: 3,500–4,499m
-  // 4: 4,500–5,499m | 5: 5,500m+
+  // 1: Sea Level–2,499m | 2: 2,500–3,499m | 3: 3,500–4,199m
+  // 4: 4,200–4,999m    | 5: 5,000m+
   let altitude: number;
-  if (altM >= 5500)      altitude = 5;
-  else if (altM >= 4500) altitude = 4;
+  if (altM >= 5000)      altitude = 5;
+  else if (altM >= 4200) altitude = 4;
   else if (altM >= 3500) altitude = 3;
   else if (altM >= 2500) altitude = 2;
-  else if (altM >= 500)  altitude = 1;
+  else if (altM >= 1)    altitude = 1;
   else                   altitude = 0;
 
   // ── Trekking-specific computation (rubric-aligned) ─────────────────────────
