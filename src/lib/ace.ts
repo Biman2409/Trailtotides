@@ -122,13 +122,9 @@ export function computeACE(a: Adventure): ACE {
     // Expert 900–1400m→4 | Extreme 1400m+→5
     const strength = Math.min(5, diff);
 
-    // Power: anaerobic burst — Beginner=walking(1) → Extreme=technical(4)
-    // Pure trekking tops out at 4 (continuous scrambling); 5 = roped/technical
-    let power: number;
-    if (diff <= 1)      power = 1;
-    else if (diff === 2) power = 2;
-    else if (diff === 3) power = 3;
-    else                 power = Math.min(4, diff); // Expert/Extreme trek ≤ 4
+    // Power: anaerobic burst
+    // 1=walking | 2=obstacles | 3=scrambling | 4=continuous scrambling/snow | 5=roped/ice
+    const power = Math.min(5, diff);
 
     // Agility: terrain stability — Beginner=flat(1) → Extreme=ice/ridges(5)
     const agility = Math.min(5, diff);
