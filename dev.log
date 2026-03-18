@@ -72,3 +72,16 @@ Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
 Image with src "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_2383_Original-resized-1772334437445.jpeg?width=8000&height=8000&resize=contain" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
 Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
  GET / 200 in 5479ms
+ GET /?_cb=1773793086269 200 in 249ms
+ ✓ Compiled /api/stories/views in 463ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 1391ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 1395ms
+ GET /?_cb=1773793219823 200 in 264ms
+ GET /?_cb=1773793220753 200 in 214ms
+ GET /?_cb=1773793221623 200 in 194ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 642ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 654ms
+ ○ Compiling /explore ...
+ ✓ Compiled /explore in 1157ms
+ GET /explore 200 in 353ms
+ GET /explore 200 in 1275ms
