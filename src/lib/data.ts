@@ -738,7 +738,7 @@ export const adventures: Adventure[] = [
   {
     id: "csv-03", slug: "annapurna-circuit",
     ert: { e: 4, r: 2, t: 1 },
-    name: "Annapurna Circuit", tagline: "Cross the world's highest trekking pass through three climate zones",
+    name: "Annapurna Circuit Trek", tagline: "Cross the world's highest trekking pass through three climate zones",
     region: "Himalayas", state: "Nepal", type: "Trekking", difficulty: "Advanced",
     duration: "7+ days", durationDays: "15 days", durationRange: "15 Days",
     distance: "158km", distanceRange: "158 km", altitude: "5,416m",
