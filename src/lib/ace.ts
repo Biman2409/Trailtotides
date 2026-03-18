@@ -66,6 +66,12 @@ function parseDays(durationDays: string): number {
   return m ? parseInt(m[1], 10) : 5;
 }
 
+function parseTotalKm(dist?: string): number {
+  if (!dist) return 0;
+  const clean = dist.replace(/,/g, "").replace(/[^0-9.]/g, "");
+  return parseFloat(clean) || 0;
+}
+
 const DIFF_BASE: Record<Difficulty, number> = {
   Beginner:     1,
   Intermediate: 2,
@@ -82,6 +88,75 @@ export function computeACE(a: Adventure): ACE {
   const isMoto  = a.type === "Biking";
   const isMountaineering = a.type === "Mountaineering";
   const isClimbing = a.type === "Rock Climbing";
+  const isTrekking = a.type === "Trekking";
+
+  // ── Altitude (universal — rubric-aligned thresholds) ───────────────────────
+  // 1: any altitude up to 2,499m | 2: 2,500–3,499m | 3: 3,500–4,499m
+  // 4: 4,500–5,499m | 5: 5,500m+
+  let altitude: number;
+  if (altM >= 5500)      altitude = 5;
+  else if (altM >= 4500) altitude = 4;
+  else if (altM >= 3500) altitude = 3;
+  else if (altM >= 2500) altitude = 2;
+  else if (altM >= 500)  altitude = 1;
+  else                   altitude = 0;
+
+  // ── Trekking-specific computation (rubric-aligned) ─────────────────────────
+  if (isTrekking) {
+    const totalKm  = parseTotalKm(a.distance);
+    const dailyKm  = days > 0 && totalKm > 0 ? totalKm / days : 0;
+
+    // Stamina: daily distance (km/day) is primary; Expert/Extreme adds effort hrs
+    let stamina: number;
+    if (dailyKm >= 18)      stamina = 5;
+    else if (dailyKm >= 12) stamina = 4;
+    else if (dailyKm >= 8)  stamina = 3;
+    else if (dailyKm >= 5)  stamina = 2;
+    else if (dailyKm > 0)   stamina = 1;
+    else                    stamina = Math.max(1, diff - 1); // fallback
+    // Expert/Extreme = longer harder days → push stamina up
+    if (diff >= 4 && stamina < 5) stamina = Math.min(5, stamina + 1);
+
+    // Strength: daily elevation gain proxy from difficulty
+    // Beginner <200m→1 | Intermediate 200–500m→2 | Advanced 500–900m→3
+    // Expert 900–1400m→4 | Extreme 1400m+→5
+    const strength = Math.min(5, diff);
+
+    // Power: anaerobic burst — Beginner=walking(1) → Extreme=technical(4)
+    // Pure trekking tops out at 4 (continuous scrambling); 5 = roped/technical
+    let power: number;
+    if (diff <= 1)      power = 1;
+    else if (diff === 2) power = 2;
+    else if (diff === 3) power = 3;
+    else                 power = Math.min(4, diff); // Expert/Extreme trek ≤ 4
+
+    // Agility: terrain stability — Beginner=flat(1) → Extreme=ice/ridges(5)
+    const agility = Math.min(5, diff);
+
+    // Water: always 0 for trekking
+    const water = 0;
+
+    // Nerve: exposure — scaled by difficulty, amplified at very high altitude
+    let nerve: number;
+    if (diff <= 1)      nerve = 1;
+    else if (diff === 2) nerve = 2;
+    else if (diff === 3) nerve = 3;
+    else if (diff === 4) nerve = 4;
+    else                 nerve = 5;
+    if (altitude >= 4 && nerve < 4) nerve = Math.min(5, nerve + 1);
+
+    // Focus: consequence of error — matches difficulty closely
+    let focus: number;
+    if (diff <= 1)      focus = 1;
+    else if (diff === 2) focus = 2;
+    else if (diff === 3) focus = 3;
+    else if (diff === 4) focus = 4;
+    else                 focus = 5;
+
+    return { stamina, power, strength, agility, water, altitude, nerve, focus };
+  }
+
+  // ── Non-trekking computation ───────────────────────────────────────────────
 
   // ── Stamina ────────────────────────────────────────────────────────────────
   let stamina: number;
@@ -124,19 +199,10 @@ export function computeACE(a: Adventure): ACE {
   else water = 0;
   water = Math.min(5, water);
 
-  // ── Altitude ───────────────────────────────────────────────────────────────
-  let altitude: number;
-  if (altM >= 6000)       altitude = 5;
-  else if (altM >= 5000)  altitude = 4;
-  else if (altM >= 4000)  altitude = 3;
-  else if (altM >= 2500)  altitude = 2;
-  else if (altM >= 1500)  altitude = 1;
-  else                    altitude = 0;
-
   // ── Nerve ──────────────────────────────────────────────────────────────────
   let nerve: number;
   if (a.type === "Paragliding" || a.type === "Hot Air Balloon") nerve = 4;
-  else if (isMountaineering && altM > 5000) nerve = 5;
+  else if (isMountaineering && altM > 5500) nerve = 5;
   else if (isMountaineering) nerve = 4;
   else if (isClimbing) nerve = Math.max(3, diff);
   else if (a.type === "Caving" || a.type === "Diving") nerve = 3;

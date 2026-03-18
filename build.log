@@ -1,10 +1,4 @@
 $ next build
-⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
-Attention: Next.js now collects completely anonymous telemetry regarding usage.
-This information is used to shape Next.js' roadmap and prioritize features.
-You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
-https://nextjs.org/telemetry
-
    ▲ Next.js 15.5.9
    - Environments: .env.local
    - Experiments (use with caution):
@@ -12,7 +6,7 @@ https://nextjs.org/telemetry
 
    Creating an optimized production build ...
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (133kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
- ✓ Compiled successfully in 14.7s
+ ✓ Compiled successfully in 14.3s
    Skipping validation of types
    Skipping linting
    Collecting page data ...
@@ -42,11 +36,11 @@ Route (app)                                       Size  First Load JS
 ├ ƒ /api/stories/views                           170 B         102 kB
 ├ ○ /apple-icon                                  170 B         102 kB
 ├ ƒ /auth/callback                               170 B         102 kB
-├ ○ /auth/forgot-password                      2.33 kB         108 kB
+├ ○ /auth/forgot-password                      2.32 kB         108 kB
 ├ ○ /auth/login                                3.77 kB         110 kB
 ├ ƒ /auth/login-action                           170 B         102 kB
 ├ ○ /auth/reset-password                       2.64 kB         108 kB
-├ ○ /auth/signup                               12.2 kB         118 kB
+├ ○ /auth/signup                               12.1 kB         118 kB
 ├ ○ /contact                                    2.9 kB         171 kB
 ├ ● /experiences/[slug]                         7.7 kB         188 kB
 ├   ├ /experiences/stok-kangri
@@ -56,10 +50,10 @@ Route (app)                                       Size  First Load JS
 ├ ○ /explore                                   8.14 kB         234 kB
 ├ ○ /icon                                        170 B         102 kB
 ├ ○ /list                                      5.54 kB         174 kB
-├ ○ /map                                       8.38 kB         219 kB
+├ ○ /map                                       8.55 kB         219 kB
 ├ ○ /matchmaker                                11.9 kB         234 kB
 ├ ○ /privacy                                     891 B         169 kB
-├ ƒ /profile                                   3.72 kB         109 kB
+├ ƒ /profile                                   3.72 kB         110 kB
 ├ ○ /sitemap.xml                                 170 B         102 kB
 ├ ○ /stories                                     877 B         175 kB
 ├ ● /stories/[slug]                            2.41 kB         176 kB
