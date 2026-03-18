@@ -709,7 +709,7 @@ export const adventures: Adventure[] = [
   {
     id: "csv-02", slug: "annapurna-base-camp",
     ert: { e: 3, r: 2, t: 1 },
-    name: "Annapurna Base Camp", tagline: "A 360° amphitheatre of 7,000m+ giants deep in the Nepal Himalaya",
+    name: "Annapurna Base Camp Trek", tagline: "A 360° amphitheatre of 7,000m+ giants deep in the Nepal Himalaya",
     region: "Himalayas", state: "Nepal", type: "Trekking", difficulty: "Advanced",
     duration: "7+ days", durationDays: "10 days", durationRange: "9–11 Days",
     distance: "70km", distanceRange: "70 km", altitude: "4,130m",
