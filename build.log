@@ -6,7 +6,7 @@ $ next build
 
    Creating an optimized production build ...
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (133kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
- ✓ Compiled successfully in 15.2s
+ ✓ Compiled successfully in 13.2s
    Skipping validation of types
    Skipping linting
    Collecting page data ...
@@ -19,10 +19,10 @@ $ next build
    Collecting build traces ...
 
 Route (app)                                       Size  First Load JS
-┌ ○ /                                          17.6 kB         240 kB
+┌ ○ /                                          18.9 kB         239 kB
 ├ ○ /_not-found                                   1 kB         103 kB
 ├ ○ /about                                       206 B         174 kB
-├ ○ /ace                                         215 B         177 kB
+├ ○ /ace                                       2.51 kB         176 kB
 ├ ƒ /admin                                      230 kB         343 kB
 ├ ƒ /api/ace-profile                             170 B         102 kB
 ├ ƒ /api/auth/callback                           170 B         102 kB
@@ -36,24 +36,24 @@ Route (app)                                       Size  First Load JS
 ├ ƒ /api/stories/views                           170 B         102 kB
 ├ ○ /apple-icon                                  170 B         102 kB
 ├ ƒ /auth/callback                               170 B         102 kB
-├ ○ /auth/forgot-password                      2.33 kB         108 kB
+├ ○ /auth/forgot-password                      2.32 kB         108 kB
 ├ ○ /auth/login                                3.77 kB         110 kB
 ├ ƒ /auth/login-action                           170 B         102 kB
 ├ ○ /auth/reset-password                       2.64 kB         108 kB
-├ ○ /auth/signup                               12.2 kB         118 kB
+├ ○ /auth/signup                               12.1 kB         118 kB
 ├ ○ /contact                                    2.9 kB         171 kB
-├ ● /experiences/[slug]                        7.71 kB         188 kB
+├ ● /experiences/[slug]                        8.44 kB         187 kB
 ├   ├ /experiences/stok-kangri
 ├   ├ /experiences/chadar-trek
 ├   ├ /experiences/manali-leh-bike-expedition
 ├   └ [+54 more paths]
-├ ○ /explore                                   8.14 kB         234 kB
+├ ○ /explore                                   8.13 kB         233 kB
 ├ ○ /icon                                        170 B         102 kB
 ├ ○ /list                                      5.54 kB         174 kB
-├ ○ /map                                       8.53 kB         219 kB
-├ ○ /matchmaker                                11.9 kB         234 kB
+├ ○ /map                                       7.09 kB         218 kB
+├ ○ /matchmaker                                13.1 kB         233 kB
 ├ ○ /privacy                                     891 B         169 kB
-├ ƒ /profile                                   3.72 kB         110 kB
+├ ƒ /profile                                   3.72 kB         109 kB
 ├ ○ /sitemap.xml                                 170 B         102 kB
 ├ ○ /stories                                     877 B         175 kB
 ├ ● /stories/[slug]                            2.41 kB         176 kB
