@@ -179,6 +179,8 @@ export default async function ExperiencePage({ params }: Props) {
   const showAltitudeWarning = ace.altitude >= 5;
   const showIsolationWarning = ace.nerve >= 5 || ace.focus >= 5;
   const showTechnicalWarning = ace.strength >= 5 || ace.agility >= 5;
+  const showPowerWarning = ace.power >= 5;
+  const showStaminaWarning = ace.stamina >= 5;
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -368,11 +370,21 @@ export default async function ExperiencePage({ params }: Props) {
                 </div>
                 <div className="flex-1">
                   <p className="text-white/55 text-sm leading-relaxed">{adventure.safetyNotes}</p>
-                  {(showAltitudeWarning || showIsolationWarning || showTechnicalWarning) && (
+                  {(showAltitudeWarning || showIsolationWarning || showTechnicalWarning || showPowerWarning || showStaminaWarning) && (
                     <div className="flex flex-wrap gap-2 mt-4">
                       {showAltitudeWarning && (
                         <span className="inline-flex items-center gap-1.5 text-yellow-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(234,179,8,0.12)", border: "1px solid rgba(234,179,8,0.25)" }}>
                           ⚠ High Risk of Altitude Sickness
+                        </span>
+                      )}
+                      {showStaminaWarning && (
+                        <span className="inline-flex items-center gap-1.5 text-orange-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(251,146,60,0.1)", border: "1px solid rgba(251,146,60,0.25)" }}>
+                          ⚠ Extreme Endurance Demand
+                        </span>
+                      )}
+                      {showPowerWarning && (
+                        <span className="inline-flex items-center gap-1.5 text-yellow-300 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(253,224,71,0.1)", border: "1px solid rgba(253,224,71,0.25)" }}>
+                          ⚠ Technical Anaerobic Terrain
                         </span>
                       )}
                       {showIsolationWarning && (
@@ -398,6 +410,8 @@ export default async function ExperiencePage({ params }: Props) {
               showAltitudeWarning={showAltitudeWarning}
               showIsolationWarning={showIsolationWarning}
               showTechnicalWarning={showTechnicalWarning}
+              showPowerWarning={showPowerWarning}
+              showStaminaWarning={showStaminaWarning}
             />
 
             {/* Operators */}
