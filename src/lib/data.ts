@@ -1659,7 +1659,7 @@ export const adventures: Adventure[] = [
   {
     id: "csv-36", slug: "pangarchulla-peak",
     ert: { e: 3, r: 3, t: 3 },
-    name: "Pangarchulla Peak", tagline: "A summit climb above Auli with front-row views of Nanda Devi and the Kumaon giants",
+    name: "Pangarchulla Peak Trek", tagline: "A summit climb above Auli with front-row views of Nanda Devi and the Kumaon giants",
     region: "Himalayas", state: "Uttarakhand", type: "Trekking", difficulty: "Advanced",
     duration: "7+ days", durationDays: "7 days", durationRange: "7 Days",
     distance: "39km", distanceRange: "39 km", altitude: "4,593m",
