@@ -680,7 +680,7 @@ export const adventures: Adventure[] = [
   {
     id: "csv-01", slug: "ali-bedni-bugyal",
     ert: { e: 1, r: 2, t: 1 },
-    name: "Ali Bedni Bugyal", tagline: "Twin high-altitude meadows floating above the Himalayan treeline",
+    name: "Ali Bedni Bugyal Trek", tagline: "Twin high-altitude meadows floating above the Himalayan treeline",
     region: "Himalayas", state: "Uttarakhand", type: "Trekking", difficulty: "Intermediate",
     duration: "3–5 days", durationDays: "6 days", durationRange: "6 Days",
     distance: "31km", distanceRange: "31 km", altitude: "3,826m",
