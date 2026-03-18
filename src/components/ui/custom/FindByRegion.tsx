@@ -5,6 +5,9 @@ import Link from "next/link";
 import { ArrowRight, Sun, Mountain, Trees, Waves, Palmtree, Building2, Sunrise } from "lucide-react";
 import Image from "next/image";
 import { regions, adventures } from "@/lib/data";
+import type { AdventureType } from "@/lib/data";
+
+const LAND_TYPES: AdventureType[] = ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"];
 
 const regionSubRegions: Record<string, string[]> = {
   "Himalayas": ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
@@ -43,9 +46,9 @@ export default function FindByRegion() {
   const [openId, setOpenId] = useState<string | null>(null);
 
   const regionData = regions.map((region) => {
-    const regionAdventures = adventures.filter((a) => a.region === region.name);
+    const regionAdventures = adventures.filter((a) => a.region === region.name && LAND_TYPES.includes(a.type));
     const subRegions = regionSubRegions[region.name] || [];
-    
+
     const items = subRegions.map(sr => {
       const count = regionAdventures.filter(a => a.state.includes(sr)).length;
       return {
@@ -53,12 +56,13 @@ export default function FindByRegion() {
         count,
         icon: regionIcons[region.name] || "📍"
       };
-    });
+    }).filter(item => item.count > 0);
 
     return {
       ...region,
       id: region.name.toLowerCase().replace(/\s+/g, "-"),
       items,
+      totalCount: regionAdventures.length,
     };
   });
 
@@ -164,12 +168,12 @@ export default function FindByRegion() {
                     {!isOpen && (
                         <div className="py-3.5 flex items-center justify-between">
                           <span className="text-white/40 text-xs">
-                            {region.items.length} Categories
+                            {region.items.length} {region.items.length === 1 ? "Area" : "Areas"}
                           </span>
                           <span
                             className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#ff5100]/15 text-[#ff5100]"
                           >
-                            {region.adventureCount} Adventures
+                            {region.totalCount} Adventures
                           </span>
                         </div>
                     )}
