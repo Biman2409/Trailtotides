@@ -9,6 +9,7 @@ import Pill from "./Pill";
 interface AdventureCardProps {
   adventure: Adventure;
   size?: "default" | "large";
+  fromPage?: number;
 }
 
 const MONTHS: Month[] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -19,7 +20,7 @@ function formatSeasonShort(bestMonths: Month[]): string {
   return `${bestMonths[0]}–${bestMonths[bestMonths.length - 1]}`;
 }
 
-export default function AdventureCard({ adventure, size = "default" }: AdventureCardProps) {
+export default function AdventureCard({ adventure, size = "default", fromPage }: AdventureCardProps) {
   const isLarge = size === "large";
   const monthIndex = new Date().getMonth();
   const currentMonth = MONTHS[monthIndex];
@@ -48,7 +49,7 @@ export default function AdventureCard({ adventure, size = "default" }: Adventure
     >
       {/* Image area */}
       <div className="relative w-full overflow-hidden block group" style={{ aspectRatio: isLarge ? "16/9" : "4/3" }}>
-        <Link href={`/experiences/${adventure.slug}`} className="absolute inset-0 z-10" />
+        <Link href={`/experiences/${adventure.slug}${fromPage && fromPage > 1 ? `?from=${fromPage}` : ""}`} className="absolute inset-0 z-10" />
         <Image
           src={adventure.heroImage}
           alt={adventure.name}

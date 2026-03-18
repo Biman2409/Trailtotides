@@ -823,7 +823,7 @@ export default function ExploreClient() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
               {pagedResults.map((adventure) => (
-                <AdventureCard key={adventure.id} adventure={adventure} />
+                <AdventureCard key={adventure.id} adventure={adventure} fromPage={currentPage} />
               ))}
             </div>
 

@@ -34,6 +34,7 @@ import type { Adventure } from "@/lib/data";
 
 interface Props {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ from?: string }>;
 }
 
 type Operator = NonNullable<Adventure["operators"]>[number];
@@ -165,14 +166,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ExperiencePage({ params }: Props) {
+export default async function ExperiencePage({ params, searchParams }: Props) {
   const { slug } = await params;
+  const { from } = await searchParams;
   const adventure = adventures.find((a) => a.slug === slug);
   if (!adventure) notFound();
 
   const PAGE_SIZE = 12;
   const adventureIndex = adventures.findIndex((a) => a.slug === slug);
-  const explorePage = adventureIndex >= 0 ? Math.ceil((adventureIndex + 1) / PAGE_SIZE) : 1;
+  const fallbackPage = adventureIndex >= 0 ? Math.ceil((adventureIndex + 1) / PAGE_SIZE) : 1;
+  const fromPage = from ? parseInt(from, 10) : null;
+  const explorePage = fromPage && fromPage > 0 ? fromPage : fallbackPage;
 
   const ace = getACE(adventure);
   const altM = adventure.altitude ? parseFloat(adventure.altitude.replace(/[^0-9.]/g, "")) : 0;
