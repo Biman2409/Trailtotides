@@ -1,7 +1,7 @@
 $ next start
    ▲ Next.js 15.5.9
    - Local:        http://localhost:3000
-   - Network:      http://172.20.0.6:3000
+   - Network:      http://172.20.0.44:3000
 
  ✓ Starting...
- ✓ Ready in 404ms
+ ✓ Ready in 441ms
