@@ -106,16 +106,14 @@ export function computeACE(a: Adventure): ACE {
     const totalKm  = parseTotalKm(a.distance);
     const dailyKm  = days > 0 && totalKm > 0 ? totalKm / days : 0;
 
-    // Stamina: daily distance (km/day) is primary; Expert/Extreme adds effort hrs
+    // Stamina: daily distance (km/day)
     let stamina: number;
-    if (dailyKm >= 18)      stamina = 5;
+    if (dailyKm >= 15)      stamina = 5;
     else if (dailyKm >= 12) stamina = 4;
     else if (dailyKm >= 8)  stamina = 3;
     else if (dailyKm >= 5)  stamina = 2;
     else if (dailyKm > 0)   stamina = 1;
-    else                    stamina = Math.max(1, diff - 1); // fallback
-    // Expert/Extreme = longer harder days → push stamina up
-    if (diff >= 4 && stamina < 5) stamina = Math.min(5, stamina + 1);
+    else                    stamina = Math.max(1, diff - 1); // fallback when no distance data
 
     // Strength: daily elevation gain proxy from difficulty
     // Beginner <200m→1 | Intermediate 200–500m→2 | Advanced 500–900m→3
