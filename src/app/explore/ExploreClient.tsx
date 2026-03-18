@@ -181,24 +181,23 @@ export default function ExploreClient() {
       <Navbar />
 
       {/* Page header */}
-      <div className="t-bg-surface pt-28 pb-14 px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
-          Discover
-        </p>
-
-          <h1 className="text-white text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight mb-4">
+      <div className="t-bg-surface pt-24 lg:pt-28 pb-10 lg:pb-12 px-5 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+            Discover
+          </p>
+          <h1 className="text-white text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight mb-3">
             All Adventures
           </h1>
-              <p className="text-white/45 text-lg w-full">
-                Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
-              </p>
+          <p className="text-white/40 text-base lg:text-lg max-w-2xl leading-relaxed">
+            Handpicked adventures across the Indian Subcontinent — run by verified operators, mapped with precision.
+          </p>
         </div>
       </div>
 
       {/* Search + filter bar */}
       <div className="sticky top-16 lg:top-20 z-40 t-bg-page/96 backdrop-blur-lg border-b border-white/10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 py-3 flex items-center gap-3">
           {/* Search */}
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
@@ -737,7 +736,7 @@ export default function ExploreClient() {
 
       {/* Active filter chips */}
         {activeFilterCount > 0 && (
-          <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-6 flex flex-wrap gap-2">
+          <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-4 flex flex-wrap gap-2">
             {selectedTypes.map((t) => (
               <span
                 key={t}
@@ -814,9 +813,9 @@ export default function ExploreClient() {
 
 
       {/* Grid */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-5 lg:px-8 py-8 lg:py-10">
         {filtered.length === 0 ? (
-          <div className="text-center py-28">
+          <div className="text-center py-24">
               <div className="text-6xl mb-5">🗺️</div>
               <h3 className="text-white text-2xl font-bold mb-2 uppercase tracking-tight">No adventures found</h3>
               <p className="text-white/40 mb-7 max-w-xs mx-auto leading-relaxed">
@@ -831,7 +830,7 @@ export default function ExploreClient() {
             </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
               {pagedResults.map((adventure) => (
                 <AdventureCard key={adventure.id} adventure={adventure} />
               ))}
@@ -839,7 +838,7 @@ export default function ExploreClient() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="mt-12 flex items-center justify-center gap-2">
+              <div className="mt-10 flex items-center justify-center gap-2">
                 <button
                   onClick={() => { setCurrentPage((p) => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                   disabled={currentPage === 1}
@@ -897,16 +896,16 @@ export default function ExploreClient() {
         <CompareAdventures />
 
         {/* Map CTA Section */}
-          <div className="t-bg-surface mt-16 border-t border-white/5">
-            <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="t-bg-surface mt-12 lg:mt-16 border-t border-white/5">
+            <div className="max-w-7xl mx-auto px-5 lg:px-8 py-12 lg:py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
               <div>
-                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-2.5">
                   Explore the map
                 </p>
-                <h2 className="text-white text-4xl lg:text-5xl font-semibold tracking-tight">
+                <h2 className="text-white text-3xl lg:text-4xl font-semibold tracking-tight">
                   Adventures across India
                 </h2>
-                <p className="text-white/45 mt-3 text-base">
+                <p className="text-white/40 mt-2.5 text-sm lg:text-base">
                   View all {adventures.length} adventures pinned on an interactive map.
                 </p>
               </div>
