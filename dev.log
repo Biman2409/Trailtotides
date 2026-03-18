@@ -7,10 +7,15 @@ $ next dev --turbopack --port 3000
      · serverActions
 
  ✓ Starting...
- ✓ Compiled middleware in 364ms
- ✓ Ready in 1336ms
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+ ✓ Compiled middleware in 329ms
+ ✓ Ready in 1267ms
  ○ Compiling / ...
- ✓ Compiled / in 4.6s
+ ✓ Compiled / in 4.1s
 Image with src "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1280&q=100" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
 Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
 Image with src "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1280&q=100" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
@@ -71,20 +76,9 @@ Image with src "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image
 Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
 Image with src "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_2383_Original-resized-1772334437445.jpeg?width=8000&height=8000&resize=contain" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
 Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
- GET / 200 in 5479ms
- GET /?_cb=1773793086269 200 in 249ms
- ✓ Compiled /api/stories/views in 463ms
- GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 1391ms
- GET /api/stories/views?slug=riding-through-a-revolution 200 in 1395ms
- GET /?_cb=1773793219823 200 in 264ms
- GET /?_cb=1773793220753 200 in 214ms
- GET /?_cb=1773793221623 200 in 194ms
- GET /api/stories/views?slug=riding-through-a-revolution 200 in 642ms
- GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 654ms
+ GET / 200 in 4925ms
  ○ Compiling /explore ...
- ✓ Compiled /explore in 1157ms
- GET /explore 200 in 353ms
- GET /explore 200 in 1275ms
+ ✓ Compiled /explore in 1012ms
 Image with src "https://images.unsplash.com/photo-1638008302541-5f5a98159df5?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
 Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
 Image with src "https://images.unsplash.com/photo-1706021220078-2051d17b1576?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
@@ -99,193 +93,7 @@ Image with src "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image
 Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
 Image with src "/ali-bedni-bugyal.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
 Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
- GET /explore?_cb=1773793221623 200 in 190ms
- GET /explore?_cb=1773793250632 200 in 177ms
- GET /explore?_cb=1773793251565 200 in 193ms
- GET /explore?_cb=1773793252326 200 in 199ms
- GET / 200 in 92ms
- GET /?_cb=1773793252326 200 in 273ms
- GET / 200 in 159ms
- GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 593ms
- GET /api/stories/views?slug=riding-through-a-revolution 200 in 525ms
- GET /api/stories/views?slug=riding-through-a-revolution 200 in 640ms
- GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 503ms
- GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 312ms
- GET /api/stories/views?slug=riding-through-a-revolution 200 in 353ms
- ○ Compiling /experiences/[slug] ...
- ✓ Compiled /experiences/[slug] in 934ms
- GET /experiences/andaman-scuba-diving 200 in 1536ms
- GET /experiences/andaman-scuba-diving 200 in 397ms
- ○ Compiling /api/reviews ...
- ✓ Compiled /api/reviews in 1373ms
- GET /experiences/andaman-scuba-diving?_cb=1773793252326 200 in 1175ms
- GET /api/reviews?slug=andaman-scuba-diving 200 in 1764ms
- GET /api/reviews?slug=andaman-scuba-diving 200 in 1604ms
- GET /api/reviews?slug=andaman-scuba-diving 200 in 299ms
- GET / 200 in 101ms
- GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 313ms
- GET /?_cb=1773793252326 200 in 236ms
- GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 382ms
- GET /api/stories/views?slug=riding-through-a-revolution 200 in 402ms
- GET /api/stories/views?slug=riding-through-a-revolution 200 in 416ms
- GET /?_cb=1773793290239 200 in 156ms
- GET /?_cb=1773793291184 200 in 193ms
- GET /?_cb=1773793292125 200 in 196ms
- GET /api/stories/views?slug=riding-through-a-revolution 200 in 345ms
- GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 348ms
- ✓ Compiled in 168ms
- ✓ Compiled in 194ms
- ✓ Compiled in 153ms
- ✓ Compiled in 178ms
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/server/app/page/app-build-manifest.json'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/server/app/page/app-build-manifest.json'
-}
- ○ Compiling /_error ...
- ✓ Compiled /_error in 1181ms
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.939vicmnll5'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.939vicmnll5'
-}
-[Error: ENOENT: no such file or directory, open '/home/user/app/.next/server/app/page/app-build-manifest.json'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/server/app/page/app-build-manifest.json'
-}
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.lqfity8505'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.lqfity8505'
-}
-[Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.lze3pm7853q'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.lze3pm7853q'
-}
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/server/app/page/app-build-manifest.json'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/server/app/page/app-build-manifest.json'
-}
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.mdjcekcb3do'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.mdjcekcb3do'
-}
-[Error: ENOENT: no such file or directory, open '/home/user/app/.next/server/app/page/app-build-manifest.json'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/server/app/page/app-build-manifest.json'
-}
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.gvizebsb2w7'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.gvizebsb2w7'
-}
-[Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.fsgq3ar9w4m'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.fsgq3ar9w4m'
-}
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/server/app/page/app-build-manifest.json'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/server/app/page/app-build-manifest.json'
-}
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.x3ooflfu0zf'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.x3ooflfu0zf'
-}
-[Error: ENOENT: no such file or directory, open '/home/user/app/.next/server/app/page/app-build-manifest.json'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/server/app/page/app-build-manifest.json'
-}
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.4amlhe6lnk2'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.4amlhe6lnk2'
-}
-[Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.3ldfi0mnk4c'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.3ldfi0mnk4c'
-}
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/server/app/page/app-build-manifest.json'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/server/app/page/app-build-manifest.json'
-}
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.pxo9xlqzlg'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.pxo9xlqzlg'
-}
-[Error: ENOENT: no such file or directory, open '/home/user/app/.next/server/app/page/app-build-manifest.json'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/server/app/page/app-build-manifest.json'
-}
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.imrv8knadwo'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.imrv8knadwo'
-}
-[Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.crd14q8763f'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.crd14q8763f'
-}
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/server/app/page/app-build-manifest.json'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/server/app/page/app-build-manifest.json'
-}
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.8gwmrajto88'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.8gwmrajto88'
-}
-[Error: ENOENT: no such file or directory, open '/home/user/app/.next/server/app/page/app-build-manifest.json'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/server/app/page/app-build-manifest.json'
-}
- ⨯ [Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.z90gapdosy'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.z90gapdosy'
-}
-[Error: ENOENT: no such file or directory, open '/home/user/app/.next/static/development/_buildManifest.js.tmp.lxy2341z5nd'] {
-  errno: -2,
-  code: 'ENOENT',
-  syscall: 'open',
-  path: '/home/user/app/.next/static/development/_buildManifest.js.tmp.lxy2341z5nd'
-}
+ GET /explore 200 in 1197ms
+ ○ Compiling /matchmaker ...
+ ✓ Compiled /matchmaker in 873ms
+ GET /matchmaker 200 in 1005ms
