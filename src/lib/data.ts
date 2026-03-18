@@ -502,7 +502,7 @@ export const adventures: Adventure[] = [
   id: "16",
   slug: "kedarkantha-trek",
   ert: { e: 2, r: 2, t: 1 },
-  name: "Kedarkantha Summit",
+  name: "Kedarkantha Summit Trek",
   tagline: "A 12,500 ft winter summit that looks impossibly close — until it isn't",
   region: "Himalayas",
   state: "Uttarakhand",
