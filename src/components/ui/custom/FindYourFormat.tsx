@@ -42,12 +42,14 @@ const categories = [
     accentBorder: "rgba(255,81,0,0.35)",
     tagBg: "rgba(255,81,0,0.18)",
     tagText: "#ff5100",
-    items: [
-      { type: "Diving", count: 19 },
-      { type: "Kayaking", count: 24 },
-      { type: "Surfing", count: 12 },
-      { type: "River Rafting", count: 16 },
-      { type: "Snorkelling", count: 8 },
+    comingSoon: true,
+    items: [],
+    previewItems: [
+      { type: "Diving" },
+      { type: "Kayaking" },
+      { type: "Surfing" },
+      { type: "River Rafting" },
+      { type: "Snorkelling" },
     ],
   },
   {
@@ -61,11 +63,13 @@ const categories = [
     accentBorder: "rgba(255,81,0,0.35)",
     tagBg: "rgba(255,81,0,0.18)",
     tagText: "#ff5100",
-    items: [
-      { type: "Skiing", count: 8 },
-      { type: "Snowboarding", count: 5 },
-      { type: "Ice Climbing", count: 4 },
-      { type: "Snow Trekking", count: 22 },
+    comingSoon: true,
+    items: [],
+    previewItems: [
+      { type: "Skiing" },
+      { type: "Snowboarding" },
+      { type: "Ice Climbing" },
+      { type: "Snow Trekking" },
     ],
   },
     {
