@@ -373,22 +373,22 @@ export default async function ExperiencePage({ params }: Props) {
                     <div className="flex flex-wrap gap-2 mt-4">
                       {showAltitudeWarning && (
                         <span className="inline-flex items-center gap-1.5 text-yellow-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(234,179,8,0.12)", border: "1px solid rgba(234,179,8,0.25)" }}>
-                          ⚠ High Risk of Altitude Sickness
+                          ⚠ Acute Mountain Sickness Warning
                         </span>
                       )}
                       {showBurnoutWarning && (
                         <span className="inline-flex items-center gap-1.5 text-orange-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(251,146,60,0.1)", border: "1px solid rgba(251,146,60,0.25)" }}>
-                          ⚠ Burnout Corridor
+                          ⚠ Physical Exhaustion Risk
                         </span>
                       )}
                       {showIsolationWarning && (
                         <span className="inline-flex items-center gap-1.5 text-red-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)" }}>
-                          ⚠ Extreme Exposure Environment
+                          ⚠ Fatal Fall Risk
                         </span>
                       )}
                       {showTechnicalWarning && (
                         <span className="inline-flex items-center gap-1.5 text-violet-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.25)" }}>
-                          ⚠ Mountaineering Route
+                          ⚠ Technical Terrain Warning
                         </span>
                       )}
                     </div>
