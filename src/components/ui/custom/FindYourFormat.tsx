@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Wind, Mountain, Waves, Snowflake } from "lucide-react";
+import { adventures } from "@/lib/data";
 
 const categories = [
     {
@@ -19,16 +20,16 @@ const categories = [
         tagText: "#ff5100",
 
     items: [
-      { type: "Trekking", count: 94 },
-      { type: "Biking", count: 38 },
-      { type: "Cycling", count: 27 },
-      { type: "Mountaineering", count: 15 },
-      { type: "Rock Climbing", count: 18 },
-      { type: "Jeep Safari", count: 22 },
-      { type: "Camel Safari", count: 9 },
-      { type: "Caving", count: 7 },
-      { type: "Sandboarding", count: 5 },
-      { type: "Urban Adventure", count: 11 },
+      { type: "Trekking" },
+      { type: "Biking" },
+      { type: "Cycling" },
+      { type: "Mountaineering" },
+      { type: "Rock Climbing" },
+      { type: "Jeep Safari" },
+      { type: "Camel Safari" },
+      { type: "Caving" },
+      { type: "Sandboarding" },
+      { type: "Urban Adventure" },
     ],
   },
   {
@@ -118,7 +119,10 @@ export default function FindYourFormat() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
           {categories.map((cat) => {
             const isOpen = openId === cat.id;
-            const totalCount = cat.items.reduce((s, i) => s + i.count, 0);
+            const countByType = Object.fromEntries(
+              cat.items.map(({ type }) => [type, adventures.filter((a) => a.type === type).length])
+            );
+            const totalCount = Object.values(countByType).reduce((s, n) => s + n, 0);
 
             return (
               <div
@@ -259,7 +263,7 @@ export default function FindYourFormat() {
                       ) : (
                           <>
                             <div className="flex flex-col gap-0.5">
-                                {cat.items.map(({ type, count }) => (
+                                {cat.items.map(({ type }) => (
                                   <Link
                                     key={type}
                                     href={`/explore?type=${encodeURIComponent(type)}`}
@@ -282,7 +286,7 @@ export default function FindYourFormat() {
                                     className="text-xs font-semibold px-2 py-0.5 rounded-full"
                                     style={{ background: cat.tagBg, color: cat.tagText }}
                                   >
-                                    {count}
+                                    {countByType[type]}
                                   </span>
                                   <ArrowRight
                                     className="w-3 h-3 opacity-0 group-hover/row:opacity-100 -translate-x-1 group-hover/row:translate-x-0 transition-all duration-150"

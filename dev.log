@@ -85,3 +85,55 @@ Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
  ✓ Compiled /explore in 1157ms
  GET /explore 200 in 353ms
  GET /explore 200 in 1275ms
+Image with src "https://images.unsplash.com/photo-1638008302541-5f5a98159df5?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://images.unsplash.com/photo-1706021220078-2051d17b1576?w=1200&q=70" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "/kedarkantha.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "/sandakphu.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "/tarsar-marsar.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0182-resized-1772365162828.jpeg?width=8000&height=8000&resize=contain" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "/ali-bedni-bugyal.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+ GET /explore?_cb=1773793221623 200 in 190ms
+ GET /explore?_cb=1773793250632 200 in 177ms
+ GET /explore?_cb=1773793251565 200 in 193ms
+ GET /explore?_cb=1773793252326 200 in 199ms
+ GET / 200 in 92ms
+ GET /?_cb=1773793252326 200 in 273ms
+ GET / 200 in 159ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 593ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 525ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 640ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 503ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 312ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 353ms
+ ○ Compiling /experiences/[slug] ...
+ ✓ Compiled /experiences/[slug] in 934ms
+ GET /experiences/andaman-scuba-diving 200 in 1536ms
+ GET /experiences/andaman-scuba-diving 200 in 397ms
+ ○ Compiling /api/reviews ...
+ ✓ Compiled /api/reviews in 1373ms
+ GET /experiences/andaman-scuba-diving?_cb=1773793252326 200 in 1175ms
+ GET /api/reviews?slug=andaman-scuba-diving 200 in 1764ms
+ GET /api/reviews?slug=andaman-scuba-diving 200 in 1604ms
+ GET /api/reviews?slug=andaman-scuba-diving 200 in 299ms
+ GET / 200 in 101ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 313ms
+ GET /?_cb=1773793252326 200 in 236ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 382ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 402ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 416ms
+ GET /?_cb=1773793290239 200 in 156ms
+ GET /?_cb=1773793291184 200 in 193ms
+ GET /?_cb=1773793292125 200 in 196ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 345ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 348ms
+ ✓ Compiled in 168ms
+ ✓ Compiled in 194ms
+ ✓ Compiled in 153ms
+ ✓ Compiled in 178ms
