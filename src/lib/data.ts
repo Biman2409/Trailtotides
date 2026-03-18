@@ -412,7 +412,7 @@ export const adventures: Adventure[] = [
 {
         id: "11",
           slug: "ladakh-circuit",
-            name: "Ladakh Circuit",
+            name: "Ladakh Circuit Ride",
             tagline: "Nubra dunes, Pangong blue, Umling La at 19,024 ft— Ladakh's full fury on two wheels",
           region: "Himalayas",
           state: "Ladakh",
