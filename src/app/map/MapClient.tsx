@@ -203,12 +203,12 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
       const emoji = typeEmoji[adv.type] || "📍";
       const icon = leaflet.divIcon({
         className: "",
-        html: `<div style="width:40px;height:40px;border-radius:50% 50% 50% 0;background:${color};border:3px solid white;transform:rotate(-45deg);box-shadow:0 4px 12px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
-          <span style="transform:rotate(45deg);font-size:14px;line-height:1;">${emoji}</span>
+        html: `<div style="width:30px;height:30px;border-radius:50% 50% 50% 0;background:${color};border:2px solid white;transform:rotate(-45deg);box-shadow:0 3px 8px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;">
+          <span style="transform:rotate(45deg);font-size:11px;line-height:1;">${emoji}</span>
         </div>`,
-        iconSize: [40, 40],
-        iconAnchor: [20, 40],
-        popupAnchor: [0, -44],
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -34],
       });
 
       const popupHtml = `
