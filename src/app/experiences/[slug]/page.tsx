@@ -324,13 +324,18 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     </div>
                     <h3 className="font-semibold text-white/80 text-sm">Go if you&rsquo;re</h3>
                   </div>
-                  <ul className="space-y-2.5">
-                    {adventure.whoFor.split("·").map((item) => (
-                      <li key={item} className="flex items-start gap-2.5">
-                        <span className="text-emerald-400 mt-0.5 shrink-0 text-sm">✓</span>
-                        <span className="text-white/50 text-sm leading-snug">{item.trim()}</span>
-                      </li>
-                    ))}
+                  <ul className="space-y-2">
+                    {adventure.whoFor.split("·").map((item) => {
+                      const t = item.trim();
+                      if (!t) return null;
+                      const label = t.charAt(0).toUpperCase() + t.slice(1);
+                      return (
+                        <li key={t} className="flex items-center gap-2.5 rounded-xl px-3 py-2" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.10)" }}>
+                          <span className="text-emerald-400 shrink-0 text-xs">✓</span>
+                          <span className="text-white/70 text-sm leading-snug">{label}</span>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
                 <div
@@ -346,13 +351,18 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     </div>
                     <h3 className="font-semibold text-white/80 text-sm">Skip if you&rsquo;re</h3>
                   </div>
-                  <ul className="space-y-2.5">
-                    {adventure.whoNot.split("·").map((item) => (
-                      <li key={item} className="flex items-start gap-2.5">
-                        <span className="text-red-400 mt-0.5 shrink-0 text-sm">✕</span>
-                        <span className="text-white/50 text-sm leading-snug">{item.trim()}</span>
-                      </li>
-                    ))}
+                  <ul className="space-y-2">
+                    {adventure.whoNot.split("·").map((item) => {
+                      const t = item.trim();
+                      if (!t) return null;
+                      const label = t.charAt(0).toUpperCase() + t.slice(1);
+                      return (
+                        <li key={t} className="flex items-center gap-2.5 rounded-xl px-3 py-2" style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.10)" }}>
+                          <span className="text-red-400 shrink-0 text-xs">✕</span>
+                          <span className="text-white/70 text-sm leading-snug">{label}</span>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               </div>
