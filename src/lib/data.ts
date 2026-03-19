@@ -380,9 +380,9 @@ export const adventures: Adventure[] = [
         bestSeason: "Jun – Sep, Dec – Mar",
         bestMonths: ["Jun", "Jul", "Aug", "Sep", "Dec", "Jan", "Feb", "Mar"],
           groupSize: "Small group (2–6)",
-            heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/dzukou-valley-2.jpeg",
+            heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/dzukou-valley.jpeg",
       galleryImages: [
-        "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/dzukou-valley-2.jpeg"
+        "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/dzukou-valley.jpeg"
       ],
     lat: 25.5330,
     lng: 94.1009,
