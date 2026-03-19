@@ -14,3 +14,9 @@ $ next dev --turbopack --port 3000
  GET /experiences/chadar-trek?_cb=1773939818422 200 in 6228ms
  ✓ Compiled /api/reviews in 415ms
  GET /api/reviews?slug=chadar-trek 200 in 788ms
+ ✓ Compiled in 183ms
+ ✓ Compiled /experiences/[slug] in 19ms
+ GET /experiences/chadar-trek?_cb=1773939818422 200 in 325ms
+ ✓ Compiled in 204ms
+ ✓ Compiled /experiences/[slug] in 21ms
+ GET /experiences/chadar-trek?_cb=1773939818422 200 in 298ms

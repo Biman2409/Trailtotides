@@ -319,10 +319,10 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   }}
                 >
                   <div className="flex items-center gap-2.5 mb-4">
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(16,185,129,0.15)" }}>
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(16,185,129,0.18)" }}>
+                      <Flag className="w-4 h-4 text-emerald-400" fill="currentColor" />
                     </div>
-                    <h3 className="font-semibold text-white/80 text-sm">Go if you&rsquo;re</h3>
+                    <h3 className="font-semibold text-emerald-400 text-sm tracking-wide">Green Flag</h3>
                   </div>
                   <ul className="space-y-2">
                     {adventure.whoFor.split("·").map((item) => {
@@ -346,10 +346,10 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   }}
                 >
                   <div className="flex items-center gap-2.5 mb-4">
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(239,68,68,0.12)" }}>
-                      <XCircle className="w-4 h-4 text-red-400" />
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(239,68,68,0.15)" }}>
+                      <Flag className="w-4 h-4 text-red-400" fill="currentColor" />
                     </div>
-                    <h3 className="font-semibold text-white/80 text-sm">Skip if you&rsquo;re</h3>
+                    <h3 className="font-semibold text-red-400 text-sm tracking-wide">Red Flag</h3>
                   </div>
                   <ul className="space-y-2">
                     {adventure.whoNot.split("·").map((item) => {
