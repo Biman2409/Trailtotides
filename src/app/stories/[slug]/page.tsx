@@ -134,7 +134,7 @@ export default async function StoryPage({ params }: Props) {
       <Navbar />
 
       {/* Hero */}
-      <section className="relative h-[65vh] min-h-[480px] flex items-end overflow-hidden">
+      <section className="relative h-[55vh] md:h-[65vh] min-h-[400px] flex items-end overflow-hidden">
           <Image
             src={story.heroImage}
             alt={story.title}
@@ -152,13 +152,13 @@ export default async function StoryPage({ params }: Props) {
         {/* Back */}
         <Link
           href="/stories"
-          className="absolute top-24 right-6 lg:right-8 flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm font-medium bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full"
+          className="absolute top-20 right-4 lg:right-8 flex items-center gap-2 text-white/70 hover:text-white transition-colors text-sm font-medium bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full"
         >
           <ChevronLeft className="w-4 h-4" />
           All Stories
         </Link>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-6 lg:px-8 pb-14 w-full">
+        <div className="relative z-10 max-w-4xl mx-auto px-5 lg:px-8 pb-8 lg:pb-14 w-full">
           {/* Row 1: special badges */}
             <div className="flex items-center gap-3 mb-2 flex-wrap">
               {story.tags.includes("Featured") && (
@@ -182,10 +182,10 @@ export default async function StoryPage({ params }: Props) {
                   </span>
                 ))}
               </div>
-          <h1 className="text-white text-4xl md:text-6xl font-bold tracking-tight leading-tight mb-4 max-w-3xl">
+          <h1 className="text-white text-2xl md:text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-3 max-w-3xl">
             {story.title}
           </h1>
-          <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex items-center gap-3 flex-wrap">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-[#ff5100]/50 flex items-center justify-center text-sm font-bold text-white shadow-md shadow-[#ff5100]/20">
                 {story.author[0]}
@@ -215,16 +215,16 @@ export default async function StoryPage({ params }: Props) {
       </section>
 
       {/* Article */}
-      <article className="max-w-2xl mx-auto px-6 py-16 lg:py-24">
+      <article className="max-w-2xl mx-auto px-5 lg:px-6 py-10 lg:py-20">
         {/* Lede */}
-          <p className="text-white/80 text-xl lg:text-2xl font-light leading-relaxed mb-10 border-l-4 border-[#ff5100] pl-6">
+        <p className="text-white/80 text-lg lg:text-2xl font-light leading-relaxed mb-8 lg:mb-10 border-l-4 border-[#ff5100] pl-5">
           {story.excerpt}
         </p>
 
         {/* Body paragraphs */}
-        <div className="space-y-7">
+        <div className="space-y-6">
           {body.map((para, idx) => (
-              <p key={idx} className="text-white/65 text-lg leading-[1.85] font-light">
+            <p key={idx} className="text-white/65 text-base lg:text-lg leading-[1.85] font-light">
               {para}
             </p>
           ))}
@@ -268,26 +268,26 @@ export default async function StoryPage({ params }: Props) {
       </article>
 
       {/* More stories */}
-      <section className="t-bg-surface2 py-16 lg:py-24 px-6 lg:px-8">
+      <section className="t-bg-surface2 py-12 lg:py-24 px-5 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-10">
+          <div className="flex items-end justify-between mb-8 lg:mb-10">
             <div>
               <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
                 Keep Reading
               </p>
-              <h2 className="text-white text-3xl font-semibold tracking-tight">
+              <h2 className="text-white text-2xl lg:text-3xl font-semibold tracking-tight">
                 More from the trails
               </h2>
             </div>
             <Link
               href="/stories"
-              className="hidden md:flex items-center gap-1.5 text-white/50 hover:text-white text-sm font-medium transition-colors group"
+              className="flex items-center gap-1.5 text-white/50 hover:text-white text-xs lg:text-sm font-medium transition-colors group"
             >
               All stories
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
             {others.map((s) => (
               <Link key={s.id} href={`/stories/${s.slug}`} className="group block">
                 <div className="relative h-48 rounded-2xl overflow-hidden mb-4">

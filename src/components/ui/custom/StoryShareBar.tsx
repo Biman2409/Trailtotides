@@ -42,42 +42,44 @@ export default function StoryShareBar({ title, slug }: Props) {
   };
 
   return (
-    <div className="flex items-center gap-3 mt-8 pt-8 border-t border-white/10">
-      <span className="flex items-center gap-1.5 text-white/40 text-xs font-medium">
-        <Share2 className="w-3.5 h-3.5" />
-        Share
-      </span>
+    <div className="mt-8 pt-8 border-t border-white/10">
+      <div className="flex flex-wrap items-center gap-2.5">
+        <span className="flex items-center gap-1.5 text-white/40 text-xs font-medium mr-1">
+          <Share2 className="w-3.5 h-3.5" />
+          Share
+        </span>
 
-      {/* WhatsApp */}
-      <a
-        href={`https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center gap-1.5 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/25 text-[#25D366] text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
-      >
-        <WhatsAppIcon />
-        WhatsApp
-      </a>
+        {/* WhatsApp */}
+        <a
+          href={`https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/25 text-[#25D366] text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
+        >
+          <WhatsAppIcon />
+          WhatsApp
+        </a>
 
-      {/* X / Twitter */}
-      <a
-        href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center gap-1.5 bg-white/8 hover:bg-white/15 border border-white/15 text-white/70 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
-      >
-        <XIcon />
-        Post
-      </a>
+        {/* X / Twitter */}
+        <a
+          href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 bg-white/8 hover:bg-white/15 border border-white/15 text-white/70 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
+        >
+          <XIcon />
+          Post on X
+        </a>
 
-      {/* Copy link */}
-      <button
-        onClick={handleCopy}
-        className="flex items-center gap-1.5 bg-white/8 hover:bg-white/15 border border-white/15 text-white/70 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
-      >
-        {copied ? <Check className="w-3.5 h-3.5 text-[#ff5100]" /> : <Link2 className="w-3.5 h-3.5" />}
-        {copied ? "Copied!" : "Copy link"}
-      </button>
+        {/* Copy link */}
+        <button
+          onClick={handleCopy}
+          className="flex items-center gap-1.5 bg-white/8 hover:bg-white/15 border border-white/15 text-white/70 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
+        >
+          {copied ? <Check className="w-3.5 h-3.5 text-[#ff5100]" /> : <Link2 className="w-3.5 h-3.5" />}
+          {copied ? "Copied!" : "Copy link"}
+        </button>
+      </div>
     </div>
   );
 }
