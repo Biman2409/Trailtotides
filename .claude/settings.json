@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "statusMessage": "Processing adventure image for Supabase...",
+            "command": "node -e \"const chunks=[]; process.stdin.on('data',d=>chunks.push(d)); process.stdin.on('end',()=>{ const d=JSON.parse(chunks.join('')); const f=(d.tool_input&&d.tool_input.file_path)||''; if(/\\.orchids\\/files\\/.*\\.(jpeg|jpg|png|webp)$/.test(f)){ const path=require('path'); const dest=path.basename(f).replace(/^[0-9]+-/,'').replace(/-[0-9]+\\.(jpeg|jpg|png|webp)$/,'.jpeg'); const {execSync}=require('child_process'); try{ const out=execSync('node scripts/add-adventure-image.mjs '+JSON.stringify(f)+' '+JSON.stringify(dest),{encoding:'utf8'}); console.log(out.trim().split('\\n').slice(-3).join('\\n')); }catch(e){console.error(e.message);} } });\"" 
+          }
+        ]
+      }
+    ]
+  }
+}
