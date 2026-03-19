@@ -1,9 +1,10 @@
 /**
  * - Downloads Unsplash images for spiti-valley-cycling & zanskar-valley-bike
  * - Re-downloads old Supabase images from the legacy project
- * - Resizes everything to max 1280×960 (inside fit, no upscale)
+ * - Crops/scales everything to exactly 1280×960 (cover fit, centre gravity)
  * - Uploads to adventure-images bucket in the current Supabase project
  * - Prints a mapping of slug → new URL for data.ts
+ * NOTE: story-submissions images are NOT touched.
  */
 
 import { createClient } from "@supabase/supabase-js";
@@ -25,7 +26,7 @@ async function fetchBuf(url) {
 
 async function resize(buf) {
   return sharp(buf)
-    .resize(MAX_W, MAX_H, { fit: "inside", withoutEnlargement: true })
+    .resize(MAX_W, MAX_H, { fit: "cover", position: "centre" })
     .jpeg({ quality: 92, progressive: true, mozjpeg: true })
     .toBuffer();
 }
@@ -87,6 +88,11 @@ const IMAGES = [
     key:      "spiti-valley-bike",    // IMG_0182
     src:      "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0182-resized-1772365162828.jpeg",
     dest:     "spiti-valley-bike.jpeg",
+  },
+  {
+    key:      "photi-la",             // IMG_3620
+    src:      "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_3620_Original-resized-1772404370295.jpeg",
+    dest:     "photi-la.jpeg",
   },
 ];
 
