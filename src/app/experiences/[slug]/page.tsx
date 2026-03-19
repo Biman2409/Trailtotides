@@ -284,7 +284,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* The Adventure */}
             <section>
-              <SectionLabel>The Adventure</SectionLabel>
+              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-2">The Adventure</p>
               <p className="text-white/65 text-base md:text-lg leading-relaxed font-light">
                 {adventure.description}
               </p>
@@ -292,7 +292,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* What Makes It Special */}
             <section>
-              <SectionLabel>What Makes It Special</SectionLabel>
               <div
                 className="rounded-2xl p-5 lg:p-7"
                 style={{
@@ -303,13 +302,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   borderBottom: "1px solid rgba(255,81,0,0.05)",
                 }}
               >
-                <p className="text-white/75 text-lg leading-relaxed">{adventure.whatMakesSpecial}</p>
+                <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">What Makes It Special</p>
+                <p className="text-white/75 text-base md:text-lg leading-relaxed">{adventure.whatMakesSpecial}</p>
               </div>
             </section>
 
             {/* Is This For You? */}
             <section>
-              <SectionLabel>Is This For You?</SectionLabel>
+              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">Is This For You?</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div
                   className="rounded-2xl p-6"
@@ -322,7 +322,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(16,185,129,0.15)" }}>
                       <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                     </div>
-                    <h3 className="font-semibold text-white text-sm">Go if you have</h3>
+                    <h3 className="font-semibold text-white/80 text-sm">Go if you&rsquo;re</h3>
                   </div>
                   <ul className="space-y-2.5">
                     {adventure.whoFor.split("·").map((item) => (
@@ -344,7 +344,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(239,68,68,0.12)" }}>
                       <XCircle className="w-4 h-4 text-red-400" />
                     </div>
-                    <h3 className="font-semibold text-white text-sm">Skip if you have</h3>
+                    <h3 className="font-semibold text-white/80 text-sm">Skip if you&rsquo;re</h3>
                   </div>
                   <ul className="space-y-2.5">
                     {adventure.whoNot.split("·").map((item) => (
@@ -360,7 +360,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* Safety & Prep */}
             <section>
-              <SectionLabel>Safety &amp; Prep</SectionLabel>
               <div
                 className="rounded-2xl p-6 flex gap-4"
                 style={{
@@ -372,6 +371,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   <AlertTriangle className="w-4 h-4 text-amber-400" />
                 </div>
                 <div className="flex-1">
+                  <p className="text-amber-400/70 text-[10px] font-bold tracking-[0.22em] uppercase mb-2">Safety &amp; Prep</p>
                   <p className="text-white/55 text-sm leading-relaxed">{adventure.safetyNotes}</p>
                   {(showAltitudeWarning || showIsolationWarning || showTechnicalWarning || showBurnoutWarning) && (
                     <div className="flex flex-wrap gap-2 mt-4">
@@ -421,8 +421,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                       <BadgeCheck className="w-4 h-4 text-emerald-400" />
                     </div>
                     <div>
-                      <SectionLabel>Verified Operators</SectionLabel>
-                      <p className="text-white/35 text-xs -mt-3">ATOAI / PADI / IMF registered, vetted track record</p>
+                      <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1">Verified Operators</p>
+                      <p className="text-white/35 text-xs">ATOAI / PADI / IMF registered, vetted track record</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
