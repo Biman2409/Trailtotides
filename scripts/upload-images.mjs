@@ -27,7 +27,7 @@ async function fetchBuf(url) {
 async function resize(buf) {
   return sharp(buf)
     .resize(MAX_W, MAX_H, { fit: "cover", position: "centre" })
-    .jpeg({ quality: 92, progressive: true, mozjpeg: true })
+    .jpeg({ quality: 100, progressive: true, mozjpeg: true })
     .toBuffer();
 }
 
