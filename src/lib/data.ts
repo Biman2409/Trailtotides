@@ -152,9 +152,9 @@ export const adventures: Adventure[] = [
           bestMonths: ["Jul", "Aug", "Sep"],
           groupSize: "Small group (2–6)",
           baseCamp: "Mankorma",
-      heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0185-resized-1772367261216.jpeg?width=8000&height=8000&resize=contain",
+      heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/stok-kangri.jpeg",
         galleryImages: [
-          "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0185-resized-1772367261216.jpeg?width=8000&height=8000&resize=contain"
+          "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/stok-kangri.jpeg"
         ],
         lat: 33.9139,
         lng: 77.6285,
@@ -199,9 +199,9 @@ export const adventures: Adventure[] = [
             bestMonths: ["Jan", "Feb"],
             groupSize: "Small group (2–6)",
             baseCamp: "Tilad Sumdo",
-            heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0183-resized-1772365087456.jpeg?width=8000&height=8000&resize=contain",
+            heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/chadar-trek.jpeg",
           galleryImages: [
-            "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0183-resized-1772365087456.jpeg?width=8000&height=8000&resize=contain",
+            "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/chadar-trek.jpeg",
           ],
         lat: 34.1526,
         lng: 76.8571,
@@ -246,9 +246,9 @@ export const adventures: Adventure[] = [
         bestMonths: ["Jun", "Jul", "Aug", "Sep"],
         groupSize: "Large group (6+)",
           startingPoint: "Manali",
-          heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0180-resized-1772364569585.jpeg?width=8000&height=8000&resize=contain",
+          heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/manali-leh.jpeg",
           galleryImages: [
-            "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0180-resized-1772364569585.jpeg?width=8000&height=8000&resize=contain",
+            "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/manali-leh.jpeg",
           ],
       lat: 32.2396,
     lng: 77.1887,
@@ -290,9 +290,9 @@ export const adventures: Adventure[] = [
       bestSeason: "Nov – May",
       bestMonths: ["Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May"],
       groupSize: "Small group (2–6)",
-          heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0184-resized-1772365699244.jpeg?width=8000&height=8000&resize=contain",
+          heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/dzukou-valley.jpeg",
       galleryImages: [
-        "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0184-resized-1772365699244.jpeg?width=8000&height=8000&resize=contain",
+        "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/dzukou-valley.jpeg",
       ],
     lat: 11.7401,
     lng: 92.6586,
@@ -335,7 +335,7 @@ export const adventures: Adventure[] = [
       bestSeason: "Jun – Oct",
       bestMonths: ["Jun", "Jul", "Aug", "Sep", "Oct"],
       groupSize: "Small group (2–6)",
-        heroImage: "https://images.unsplash.com/photo-1638008302541-5f5a98159df5?w=1200&q=70",
+        heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/spiti-valley-cycling.jpeg",
     galleryImages: [],
     lat: 32.2473,
     lng: 78.0350,
@@ -380,9 +380,9 @@ export const adventures: Adventure[] = [
         bestSeason: "Jun – Sep, Dec – Mar",
         bestMonths: ["Jun", "Jul", "Aug", "Sep", "Dec", "Jan", "Feb", "Mar"],
           groupSize: "Small group (2–6)",
-            heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0181-resized-1772364881220.jpeg?width=8000&height=8000&resize=contain",
+            heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/dzukou-valley-2.jpeg",
       galleryImages: [
-        "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0181-resized-1772364881220.jpeg?width=8000&height=8000&resize=contain"
+        "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/dzukou-valley-2.jpeg"
       ],
     lat: 25.5330,
     lng: 94.1009,
@@ -426,7 +426,7 @@ export const adventures: Adventure[] = [
             bestMonths: ["Jun", "Jul", "Aug", "Sep"],
               groupSize: "Large group (6+)",
               startingPoint: "Leh",
-                    heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_2383_Original-resized-1772334437445.jpeg?width=8000&height=8000&resize=contain",
+                    heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/ladakh-circuit.jpeg",
           galleryImages: [],
       lat: 33.7782,
     lng: 78.6753,
@@ -470,7 +470,7 @@ export const adventures: Adventure[] = [
       bestMonths: ["Jul", "Aug", "Sep"],
         groupSize: "Small group (2–6)",
         startingPoint: "Leh / Manali / Kargil",
-          heroImage: "https://images.unsplash.com/photo-1706021220078-2051d17b1576?w=1200&q=70",
+          heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/zanskar-valley-bike.jpeg",
 
     galleryImages: [],
     lat: 33.4427,
@@ -646,9 +646,9 @@ export const adventures: Adventure[] = [
         bestMonths: ["Jun", "Jul", "Aug", "Sep", "Oct"],
           groupSize: "Small group (2–6)",
           startingPoint: "Manali / Shimla",
-          heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0182-resized-1772365162828.jpeg?width=8000&height=8000&resize=contain",
+          heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/spiti-valley-bike.jpeg",
       galleryImages: [
-        "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_0182-resized-1772365162828.jpeg?width=8000&height=8000&resize=contain"
+        "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/spiti-valley-bike.jpeg"
       ],
     lat: 32.2473,
     lng: 78.0350,
@@ -1929,7 +1929,7 @@ export const stories: Story[] = [
     authorRole: "Rider",
     authorBio: "Spends most of the year running a business. Once a year, the suit comes off, the saddle goes on, and he goes all in — no guided tours, no safety nets. Just one raw, unscripted adventure that most people only ever dream about.",
     pillTags: ["Ladakh", "Biking"],
-    heroImage: "https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/render/image/public/project-uploads/71778e38-df00-4ed2-869a-028f1f2862c1/IMG_3620_Original-resized-1772404370295.jpeg?width=8000&height=8000&resize=contain",
+    heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/photi-la.jpeg",
     readTime: "15 min read",
     tags: ["Featured", "TTT Original", "Ladakh", "Biking", "Motorcycle", "Umling La", "Himalayas", "High Altitude", "Road Trip", "Demchok", "Adventure Travel", "India"],
     region: "Himalayas",
