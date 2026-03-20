@@ -55,66 +55,6 @@ export const ACE_DOMAINS = [
 
 const BLANK_ACE: ACE = { stamina: 0, power: 0, strength: 0, agility: 0, water: 0, altitude: 0, focus: 0, nerve: 0 };
 
-// ─── Shared helpers ────────────────────────────────────────────────────────
-
-function parseMaxDays(a: Adventure): number {
-  const durStr = (a.durationDays ?? a.durationRange ?? "").replace(/[–—]/g, "-");
-  const nums = durStr.match(/\d+/g)?.map(Number) ?? [];
-  return nums.length ? Math.max(...nums) : 3;
-}
-
-function parseAltitudeM(alt?: string): number {
-  if (!alt) return 0;
-  const clean = alt.replace(/,/g, "").replace(/[^0-9.]/g, "");
-  return parseFloat(clean) || 0;
-}
-
-// ─── Stamina computation from duration + distance ──────────────────────────
-
-/** Derives the stamina ACE axis from an adventure's duration and distance fields. */
-export function computeStamina(a: Adventure): number {
-  const days = parseMaxDays(a);
-
-  // Duration score 1–5
-  const daysScore = days <= 1 ? 1 : days <= 3 ? 2 : days <= 6 ? 3 : days <= 10 ? 4 : 5;
-
-  // Distance score — type-aware thresholds (biking km/day >> trekking km/day)
-  const distStr = a.distance ?? a.distanceRange ?? "";
-  const kmMatch = distStr.match(/(\d+)/);
-  if (!kmMatch) return daysScore;
-
-  const km = parseInt(kmMatch[1]);
-  const kmPerDay = km / Math.max(days, 1);
-  const isBike = a.type === "Biking";
-
-  const distScore = isBike
-    ? (kmPerDay < 50 ? 1 : kmPerDay < 80 ? 2 : kmPerDay < 120 ? 3 : kmPerDay < 180 ? 4 : 5)
-    : (kmPerDay < 6  ? 1 : kmPerDay < 10 ? 2 : kmPerDay < 15 ? 3 : kmPerDay < 20 ? 4 : 5);
-
-  return Math.max(1, Math.min(5, Math.max(daysScore, Math.round((daysScore + distScore) / 2))));
-}
-
-// ─── Power computation from altitude + duration ────────────────────────────
-
-/**
- * Derives the power ACE axis from max altitude and duration.
- * Power = explosive short-burst effort — proxied by altitude gain per day.
- * Raw altitude also sets a floor (high camps demand power regardless of pace).
- */
-export function computePower(a: Adventure): number {
-  const altM = parseAltitudeM(a.altitude ?? a.depth);
-  const days = parseMaxDays(a);
-
-  // Altitude-per-day score (steepness proxy)
-  const altPerDay = altM / Math.max(days, 1);
-  const rateScore = altPerDay < 300 ? 1 : altPerDay < 600 ? 2 : altPerDay < 1000 ? 3 : altPerDay < 1500 ? 4 : 5;
-
-  // Raw altitude floor (just being at extreme altitude demands power)
-  const altFloor = altM < 2000 ? 1 : altM < 3500 ? 2 : altM < 4800 ? 3 : altM < 6000 ? 4 : 5;
-
-  return Math.max(1, Math.min(5, Math.max(rateScore, altFloor)));
-}
-
 // ─── Difficulty computation from ACE sum ──────────────────────────────────
 
 /** Derives the difficulty label from the total of all ACE axis scores. */
