@@ -127,12 +127,9 @@ export function computeDifficulty(ace: ACE): string {
   return "Extreme";
 }
 
-/** Returns the ACE profile with stamina and power always derived from adventure data. */
+/** Returns the ACE profile from manually entered data, or blank if not yet set. */
 export function getACE(a: Adventure): ACE {
-  const base: ACE = a.ace ? { ...(a.ace as ACE) } : { ...BLANK_ACE };
-  base.stamina = computeStamina(a);
-  base.power   = computePower(a);
-  return base;
+  return a.ace ? { ...(a.ace as ACE) } : { ...BLANK_ACE };
 }
 
 /** Generate a plain-English summary for an adventure's ACE profile */
