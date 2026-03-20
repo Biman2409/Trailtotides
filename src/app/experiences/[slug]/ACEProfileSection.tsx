@@ -17,6 +17,7 @@ interface Props {
   showExtremeIsolationWarning: boolean;
   showTechnicalWarning: boolean;
   showBurnoutWarning: boolean;
+  showWaterWarning: boolean;
 }
 
 
@@ -57,6 +58,7 @@ export default function ACEProfileSection({
   showExtremeIsolationWarning,
   showTechnicalWarning,
   showBurnoutWarning,
+  showWaterWarning,
 }: Props) {
   const [userAce, setUserAce] = useState<ACE | null>(null);
   const [userColor] = useState("#ffffff");

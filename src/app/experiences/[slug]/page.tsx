@@ -434,6 +434,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               showExtremeIsolationWarning={showExtremeIsolationWarning}
               showTechnicalWarning={showTechnicalWarning}
               showBurnoutWarning={showBurnoutWarning}
+              showWaterWarning={showWaterWarning}
             />
 
             {/* Operators */}
