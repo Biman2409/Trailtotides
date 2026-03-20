@@ -55,10 +55,51 @@ export const ACE_DOMAINS = [
 
 const BLANK_ACE: ACE = { stamina: 0, power: 0, strength: 0, agility: 0, water: 0, altitude: 0, focus: 0, nerve: 0 };
 
-/** Returns the manually stored ACE profile, or a blank profile if not yet assigned. */
+// ─── Stamina computation from duration + distance ──────────────────────────
+
+/** Derives the stamina ACE axis from an adventure's duration and distance fields. */
+export function computeStamina(a: Adventure): number {
+  // Parse max days (handles "5 days", "3–5 days", "12 days" etc.)
+  const durStr = (a.durationDays ?? a.durationRange ?? "").replace(/[–—]/g, "-");
+  const dayNums = durStr.match(/\d+/g)?.map(Number) ?? [];
+  const days = dayNums.length ? Math.max(...dayNums) : 3;
+
+  // Duration score 1–5
+  const daysScore = days <= 1 ? 1 : days <= 3 ? 2 : days <= 6 ? 3 : days <= 10 ? 4 : 5;
+
+  // Distance score — type-aware thresholds (biking km/day >> trekking km/day)
+  const distStr = a.distance ?? a.distanceRange ?? "";
+  const kmMatch = distStr.match(/(\d+)/);
+  if (!kmMatch) return daysScore;
+
+  const km = parseInt(kmMatch[1]);
+  const kmPerDay = km / Math.max(days, 1);
+  const isBike = a.type === "Biking";
+
+  const distScore = isBike
+    ? (kmPerDay < 50 ? 1 : kmPerDay < 80 ? 2 : kmPerDay < 120 ? 3 : kmPerDay < 180 ? 4 : 5)
+    : (kmPerDay < 6  ? 1 : kmPerDay < 10 ? 2 : kmPerDay < 15 ? 3 : kmPerDay < 20 ? 4 : 5);
+
+  return Math.max(1, Math.min(5, Math.max(daysScore, Math.round((daysScore + distScore) / 2))));
+}
+
+// ─── Difficulty computation from ACE sum ──────────────────────────────────
+
+/** Derives the difficulty label from the total of all ACE axis scores. */
+export function computeDifficulty(ace: ACE): string {
+  const total = Object.values(ace).reduce((a, b) => a + b, 0);
+  if (total <= 8)  return "Easy";
+  if (total <= 14) return "Moderate";
+  if (total <= 20) return "Intermediate";
+  if (total <= 26) return "Hard";
+  return "Extreme";
+}
+
+/** Returns the ACE profile with stamina always derived from duration + distance. */
 export function getACE(a: Adventure): ACE {
-  if (a.ace) return a.ace as ACE;
-  return BLANK_ACE;
+  const base: ACE = a.ace ? { ...(a.ace as ACE) } : { ...BLANK_ACE };
+  base.stamina = computeStamina(a);
+  return base;
 }
 
 /** Generate a plain-English summary for an adventure's ACE profile */

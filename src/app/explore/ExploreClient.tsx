@@ -11,7 +11,7 @@ import AdventureCard from "@/components/ui/custom/AdventureCard";
 import { adventures } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
 import { difficultyStyle } from "@/lib/styles";
-import { getACE } from "@/lib/ace";
+import { getACE, computeDifficulty } from "@/lib/ace";
 import type { AceAxis } from "@/lib/ace";
 import { loadProfile } from "@/lib/matchmaker";
 import type { StoredProfile } from "@/lib/matchmaker";
@@ -146,7 +146,7 @@ export default function ExploreClient() {
         if (selectedTypes.length && !selectedTypes.includes(a.type)) return false;
         if (selectedRegions.length && !selectedRegions.includes(a.region)) return false;
         if (selectedSubRegions.length && !selectedSubRegions.some(sr => a.state.includes(sr))) return false;
-      if (selectedDifficulties.length && !selectedDifficulties.includes(a.difficulty))
+      if (selectedDifficulties.length && !selectedDifficulties.includes(computeDifficulty(getACE(a)) as Difficulty))
         return false;
       if (selectedDurations.length && !selectedDurations.includes(a.duration)) return false;
       if (selectedMonths.length && !selectedMonths.some((m) => a.bestMonths.includes(m)))
@@ -628,7 +628,7 @@ export default function ExploreClient() {
                       <div className="col-span-2 lg:col-span-3">
                         <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">Difficulty</h3>
                         <div className="flex flex-wrap gap-2">
-                          {(["Beginner", "Intermediate", "Advanced", "Expert", "Extreme"] as Difficulty[]).map((val) => {
+                          {(["Easy", "Moderate", "Intermediate", "Hard", "Extreme"] as Difficulty[]).map((val) => {
                               const isSelected = selectedDifficulties.includes(val);
                               const activeClass = difficultyStyle[val] || "bg-[#ff5100] text-white";
                               return (

@@ -30,7 +30,7 @@ import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import ReviewSection from "@/components/ui/custom/ReviewSection";
 import { createClient } from "@/lib/supabase/server";
-import { getACE } from "@/lib/ace";
+import { getACE, computeDifficulty } from "@/lib/ace";
 import type { Adventure } from "@/lib/data";
 
 interface Props {
@@ -122,7 +122,7 @@ function RelatedSection({ title, items, exploreHref }: { title: string; items: A
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
               <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-20">
                 <Pill type="type" value={a.type} />
-                <Pill type="difficulty" value={a.difficulty} />
+                <Pill type="difficulty" value={computeDifficulty(getACE(a))} />
               </div>
             </div>
             <div className="p-5 flex-1">
@@ -150,10 +150,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!adventure) return {};
   return {
     title: `${adventure.name} — Trail to Tides`,
-    description: `${adventure.type} in ${adventure.state} · ${adventure.difficulty} · ${adventure.duration} days. ${adventure.tagline ?? "Discover this handpicked adventure on Trail to Tides."}`,
+    description: `${adventure.type} in ${adventure.state} · ${computeDifficulty(getACE(adventure))} · ${adventure.duration} days. ${adventure.tagline ?? "Discover this handpicked adventure on Trail to Tides."}`,
     openGraph: {
       title: `${adventure.name} — Trail to Tides`,
-      description: `${adventure.type} in ${adventure.state} · ${adventure.difficulty} · ${adventure.duration} days.`,
+      description: `${adventure.type} in ${adventure.state} · ${computeDifficulty(getACE(adventure))} · ${adventure.duration} days.`,
       url: `https://trailtotides.com/experiences/${slug}`,
       images: [{ url: adventure.heroImage, width: 1200, height: 630, alt: adventure.name }],
       type: "article",
@@ -180,6 +180,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
   const explorePage = fromPage && fromPage > 0 ? fromPage : fallbackPage;
 
   const ace = getACE(adventure);
+  const difficulty = computeDifficulty(ace);
   const altM = adventure.altitude ? parseFloat(adventure.altitude.replace(/[^0-9.]/g, "")) : 0;
   const showAltitudeWarning = ace.altitude >= 4;
   const showFatalFallWarning = ace.focus >= 5;
@@ -236,7 +237,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           <div className="max-w-3xl">
             <div className="flex flex-wrap items-center gap-2 mb-4">
               <Pill type="type" value={adventure.type} />
-              <Pill type="difficulty" value={adventure.difficulty} />
+              <Pill type="difficulty" value={difficulty} />
               <Link
                 href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
                 className="flex items-center gap-1.5 text-white/50 text-xs font-semibold tracking-tight hover:text-[#ff5100] transition-colors"
@@ -559,7 +560,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   ...((adventure.type === "Trekking" || adventure.type === "Biking")
                     ? [{ label: "Distance", value: adventure.distanceRange ?? adventure.distance ?? "Contact for route" }]
                     : adventure.distance ? [{ label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
-                  { label: "Difficulty", value: adventure.difficulty },
+                  { label: "Difficulty", value: difficulty },
                   { label: "Best Season", value: adventure.bestSeason },
                   ...(adventure.altitude ? [{ label: "Max Altitude", value: adventure.altitude }] : []),
                   ...(adventure.depth ? [{ label: "Max Depth", value: adventure.depth }] : []),

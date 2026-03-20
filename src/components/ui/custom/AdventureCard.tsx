@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, BadgeCheck } from "lucide-react";
 import type { Adventure, Month } from "@/lib/data";
+import { getACE, computeDifficulty } from "@/lib/ace";
 import Pill from "./Pill";
 
 interface AdventureCardProps {
@@ -22,6 +23,7 @@ function formatSeasonShort(bestMonths: Month[]): string {
 
 export default function AdventureCard({ adventure, size = "default", fromPage }: AdventureCardProps) {
   const isLarge = size === "large";
+  const difficulty = computeDifficulty(getACE(adventure));
   const monthIndex = new Date().getMonth();
   const currentMonth = MONTHS[monthIndex];
   const nextMonth = MONTHS[(monthIndex + 1) % 12];
@@ -69,7 +71,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         {/* Pills — top left */}
         <div className="absolute top-3 left-3 z-20 flex flex-wrap gap-1.5">
           <Pill type="type" value={adventure.type} />
-          <Pill type="difficulty" value={adventure.difficulty} />
+          <Pill type="difficulty" value={difficulty} />
         </div>
 
           {/* Season pill — top right */}
