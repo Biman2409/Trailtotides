@@ -4,6 +4,7 @@ export const typeStyle: Record<string, string> = {
   Biking:            "bg-[#ff5100] text-white",
   Cycling:           "bg-[#ff5100] text-white",
   "Rock Climbing":   "bg-[#ff5100] text-white",
+  Scrambling:        "bg-[#ff5100] text-white",
   Mountaineering:    "bg-[#ff5100] text-white",
   "Camel Safari":    "bg-[#ff5100] text-white",
   "Jeep Safari":     "bg-[#ff5100] text-white",

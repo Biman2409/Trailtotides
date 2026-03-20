@@ -41,6 +41,7 @@ const typeEmoji: Record<AdventureType, string> = {
   "Skiing": "⛷️",
   "Mountaineering": "🧗",
   "Rock Climbing": "🧱",
+  "Scrambling":    "🥾",
   "Jeep Safari": "🚙",
   "Camel Safari": "🐪",
   "Caving": "🪨",
@@ -460,7 +461,7 @@ export default function MapPage() {
                           const categories = [
                             {
                               label: "Land", 
-                              types: ["Trekking", "Mountaineering", "Rock Climbing", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
+                              types: ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Biking", "Cycling", "Jeep Safari", "Camel Safari", "Sandboarding", "Caving", "Urban Adventure"],
                             },
                             {
                               label: "Water", 

@@ -25,6 +25,7 @@ const categories = [
       { type: "Cycling" },
       { type: "Mountaineering" },
       { type: "Rock Climbing" },
+      { type: "Scrambling" },
       { type: "Jeep Safari" },
       { type: "Camel Safari" },
       { type: "Caving" },

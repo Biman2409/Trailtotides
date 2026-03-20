@@ -393,7 +393,7 @@ export default function ListPage() {
                       className="w-full t-bg-surface2 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
                     >
                       <option value="">Select type</option>
-                      {["Trekking","Biking","Cycling","Mountaineering","Rock Climbing","Jeep Safari","Camel Safari","Caving","Sandboarding","Urban Adventure","Diving","Kayaking","Skiing"].map(t => (
+                      {["Trekking","Biking","Cycling","Mountaineering","Rock Climbing","Scrambling","Jeep Safari","Camel Safari","Caving","Sandboarding","Urban Adventure","Diving","Kayaking","Skiing"].map(t => (
                         <option key={t} value={t}>{t}</option>
                       ))}
                     </select>
