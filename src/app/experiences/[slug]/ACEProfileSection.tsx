@@ -13,7 +13,8 @@ interface Props {
   ace: ACE;
   adventureName: string;
   showAltitudeWarning: boolean;
-  showIsolationWarning: boolean;
+  showFatalFallWarning: boolean;
+  showExtremeIsolationWarning: boolean;
   showTechnicalWarning: boolean;
   showBurnoutWarning: boolean;
 }
@@ -52,7 +53,8 @@ export default function ACEProfileSection({
   ace,
   adventureName,
   showAltitudeWarning,
-  showIsolationWarning,
+  showFatalFallWarning,
+  showExtremeIsolationWarning,
   showTechnicalWarning,
   showBurnoutWarning,
 }: Props) {

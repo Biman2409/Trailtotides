@@ -181,8 +181,9 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
   const ace = getACE(adventure);
   const altM = adventure.altitude ? parseFloat(adventure.altitude.replace(/[^0-9.]/g, "")) : 0;
-  const showAltitudeWarning = ace.altitude >= 5;
-  const showIsolationWarning = ace.focus >= 5 || ace.nerve >= 5;
+  const showAltitudeWarning = ace.altitude >= 4;
+  const showFatalFallWarning = ace.focus >= 5;
+  const showExtremeIsolationWarning = ace.nerve >= 5;
   const showTechnicalWarning = ace.strength >= 5 || ace.agility >= 5;
   const showBurnoutWarning = ace.stamina >= 5 || ace.power >= 5;
 
@@ -385,7 +386,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 <div className="flex-1">
                   <p className="text-amber-400/70 text-[10px] font-bold tracking-[0.22em] uppercase mb-2">Safety &amp; Prep</p>
                   <p className="text-white/55 text-sm leading-relaxed">{adventure.safetyNotes}</p>
-                  {(showAltitudeWarning || showIsolationWarning || showTechnicalWarning || showBurnoutWarning) && (
+                  {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showBurnoutWarning) && (
                     <div className="flex flex-wrap gap-2 mt-4">
                       {showAltitudeWarning && (
                         <span className="inline-flex items-center gap-1.5 text-yellow-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(234,179,8,0.12)", border: "1px solid rgba(234,179,8,0.25)" }}>
@@ -397,9 +398,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                           ⚠ Physical Exhaustion Risk
                         </span>
                       )}
-                      {showIsolationWarning && (
+                      {showFatalFallWarning && (
                         <span className="inline-flex items-center gap-1.5 text-red-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)" }}>
                           ⚠ Fatal Fall Risk
+                        </span>
+                      )}
+                      {showExtremeIsolationWarning && (
+                        <span className="inline-flex items-center gap-1.5 text-sky-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(56,189,248,0.1)", border: "1px solid rgba(56,189,248,0.25)" }}>
+                          ⚠ Extreme Isolation
                         </span>
                       )}
                       {showTechnicalWarning && (
@@ -418,7 +424,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               ace={ace}
               adventureName={adventure.name}
               showAltitudeWarning={showAltitudeWarning}
-              showIsolationWarning={showIsolationWarning}
+              showFatalFallWarning={showFatalFallWarning}
+              showExtremeIsolationWarning={showExtremeIsolationWarning}
               showTechnicalWarning={showTechnicalWarning}
               showBurnoutWarning={showBurnoutWarning}
             />
