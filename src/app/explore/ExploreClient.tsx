@@ -82,6 +82,7 @@ export default function ExploreClient() {
     return isNaN(p) || p < 1 ? 1 : p;
   });
   const PAGE_SIZE = 12;
+  const scrollToSlug = searchParams.get("scroll");
 
   // AI chat state
   type AiMessage = { role: "user" | "assistant"; content: string; cards?: Adventure[]; recommendations?: { slug: string; name: string; reason: string }[] };
@@ -92,6 +93,17 @@ export default function ExploreClient() {
   const AI_SUGGESTIONS = ["Easy Himalayan trek for beginners", "Scuba diving near islands", "Solo adventure in Northeast", "Extreme cycling in summer"];
 
   useEffect(() => { setUserProfile(loadProfile()); }, []);
+
+  useEffect(() => {
+    if (scrollToSlug) {
+      const el = document.getElementById(`card-${scrollToSlug}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "instant", block: "center" });
+      }
+    } else {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [scrollToSlug]);
 
   useEffect(() => { aiBottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [aiMessages]);
 
@@ -823,7 +835,9 @@ export default function ExploreClient() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
               {pagedResults.map((adventure) => (
-                <AdventureCard key={adventure.id} adventure={adventure} fromPage={currentPage} />
+                <div key={adventure.id} id={`card-${adventure.slug}`}>
+                  <AdventureCard adventure={adventure} fromPage={currentPage} />
+                </div>
               ))}
             </div>
 

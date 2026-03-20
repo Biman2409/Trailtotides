@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import MatchmakerClient from "./MatchmakerClient";
+import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 
 export const metadata: Metadata = {
   title: "Find Your Mountain",
@@ -24,6 +25,7 @@ export const metadata: Metadata = {
 export default function MatchmakerPage() {
   return (
     <>
+      <ScrollToTop />
       <Navbar />
       <main className="min-h-screen">
         <MatchmakerClient />

@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
 import ACEProfileSection from "./ACEProfileSection";
@@ -199,6 +200,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
+      <ScrollToTop />
       <Navbar />
 
       {/* ── HERO ──────────────────────────────────────────────── */}
@@ -219,7 +221,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
         {/* Back button */}
         <Link
-          href={`/explore?page=${explorePage}`}
+          href={`/explore?page=${explorePage}&scroll=${slug}`}
           className="absolute top-20 left-5 lg:left-8 z-20 flex items-center gap-2 text-white/60 hover:text-white transition-all text-sm font-medium backdrop-blur-md px-4 py-2 rounded-full"
           style={{ background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.12)" }}
         >
