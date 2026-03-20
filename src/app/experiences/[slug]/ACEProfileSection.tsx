@@ -16,7 +16,7 @@ interface Props {
   showFatalFallWarning: boolean;
   showExtremeIsolationWarning: boolean;
   showTechnicalWarning: boolean;
-  showBurnoutWarning: boolean;
+  showPhysicalExhaustionWarning: boolean;
   showWaterWarning: boolean;
 }
 
@@ -57,7 +57,7 @@ export default function ACEProfileSection({
   showFatalFallWarning,
   showExtremeIsolationWarning,
   showTechnicalWarning,
-  showBurnoutWarning,
+  showPhysicalExhaustionWarning,
   showWaterWarning,
 }: Props) {
   const [userAce, setUserAce] = useState<ACE | null>(null);

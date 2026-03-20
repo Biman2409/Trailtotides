@@ -186,7 +186,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
   const showFatalFallWarning = ace.focus >= 5;
   const showExtremeIsolationWarning = ace.nerve >= 5;
   const showTechnicalWarning = ace.strength >= 5 || ace.agility >= 5;
-  const showBurnoutWarning = ace.stamina >= 5 || ace.power >= 5;
+  const showPhysicalExhaustionWarning = ace.stamina >= 5 || ace.power >= 5;
   const showWaterWarning = ace.water >= 4;
 
   const supabase = await createClient();
@@ -388,21 +388,21 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 <div className="flex-1">
                   <p className="text-amber-400/70 text-[10px] font-bold tracking-[0.22em] uppercase mb-2">Safety &amp; Prep</p>
                   <p className="text-white/55 text-sm leading-relaxed">{adventure.safetyNotes}</p>
-                  {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showBurnoutWarning || showWaterWarning) && (
+                  {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
                     <div className="flex flex-wrap gap-2 mt-4">
                       {showAltitudeWarning && (
                         <span className="inline-flex items-center gap-1.5 text-yellow-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(234,179,8,0.12)", border: "1px solid rgba(234,179,8,0.25)" }}>
                           ⚠ Acute Mountain Sickness
                         </span>
                       )}
-                      {showBurnoutWarning && (
+                      {showPhysicalExhaustionWarning && (
                         <span className="inline-flex items-center gap-1.5 text-orange-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(251,146,60,0.1)", border: "1px solid rgba(251,146,60,0.25)" }}>
                           ⚠ Physical Exhaustion
                         </span>
                       )}
                       {showFatalFallWarning && (
                         <span className="inline-flex items-center gap-1.5 text-red-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)" }}>
-                          ⚠ Fatal Fall
+                          ⚠ Fatal Fall Risk
                         </span>
                       )}
                       {showExtremeIsolationWarning && (
@@ -434,7 +434,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               showFatalFallWarning={showFatalFallWarning}
               showExtremeIsolationWarning={showExtremeIsolationWarning}
               showTechnicalWarning={showTechnicalWarning}
-              showBurnoutWarning={showBurnoutWarning}
+              showPhysicalExhaustionWarning={showPhysicalExhaustionWarning}
               showWaterWarning={showWaterWarning}
             />
 
