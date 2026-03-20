@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, RotateCcw, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Brain } from "lucide-react";
+import { ArrowRight, RotateCcw, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind } from "lucide-react";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import GradingPill from "@/components/ui/custom/GradingPill";
 import { aceSummary, ACE_AXIS_COLORS, ACE_AXIS_LABELS } from "@/lib/ace";
@@ -27,7 +27,7 @@ const AXIS_ICONS: Record<string, React.ReactNode> = {
   water:    <Waves    className="w-3.5 h-3.5" />,
   altitude: <Mountain className="w-3.5 h-3.5" />,
   nerve:    <Shield   className="w-3.5 h-3.5" />,
-  focus:    <Brain    className="w-3.5 h-3.5" />,
+  tenacity: <Wind     className="w-3.5 h-3.5" />,
 };
 
 const TRAINING_TIPS: Record<string, string> = {
@@ -38,14 +38,14 @@ const TRAINING_TIPS: Record<string, string> = {
   water:    "Swim 2–3 times a week. Progress from pool to open water, then moving water.",
   altitude: "Spend nights above 3,000m before attempting higher objectives. Acclimatise gradually.",
   nerve:    "Exposure therapy on smaller heights — via ferrata and scrambling routes build tolerance.",
-  focus:    "Long mountain days with navigation challenges develop the sustained focus required.",
+  tenacity: "Build comfort in remote settings — overnight solo trips and wilderness navigation without phone support.",
 };
 
 const DOMAINS = [
   { label: "Engine",   color: "#f97316", axes: ["stamina", "power"]    as AceAxis[] },
   { label: "Chassis",  color: "#22d3ee", axes: ["strength", "agility"] as AceAxis[] },
   { label: "Elements", color: "#a78bfa", axes: ["water", "altitude"]   as AceAxis[] },
-  { label: "Mind",     color: "#10b981", axes: ["nerve", "focus"]      as AceAxis[] },
+  { label: "Mind",     color: "#10b981", axes: ["nerve", "tenacity"]   as AceAxis[] },
 ];
 
 export default function ACEProfileSection({

@@ -21,7 +21,7 @@ AXES
 5. Water
 6. Altitude
 7. Nerve
-8. Focus
+8. Tenacity
 
 SCORING SCALE
 
@@ -40,7 +40,7 @@ Q4 → Agility
 Q5 → Water
 Q6 → Altitude
 Q7 → Nerve
-Q8 → Focus
+Q8 → Tenacity
 
 RULES
 
@@ -61,7 +61,7 @@ OUTPUT SCHEMA
   "water":0,
   "altitude":0,
   "nerve":0,
-  "focus":0
+  "tenacity":0
  }
 }`;
 
@@ -82,7 +82,7 @@ Agility
 Water
 Altitude
 Nerve
-Focus
+Tenacity
 
 SCORING SCALE
 
@@ -102,7 +102,7 @@ Agility → balance, terrain navigation
 Water → swimming or aquatic survival
 Altitude → hypoxic exposure
 Nerve → panic control and fear tolerance
-Focus → sustained situational awareness
+Tenacity → self-reliance in remote, no-support terrain
 
 RISK LEVEL SCALE
 
@@ -141,7 +141,7 @@ OUTPUT SCHEMA
   "water":0,
   "altitude":0,
   "nerve":0,
-  "focus":0
+  "tenacity":0
  },
  "risk_level":0,
  "required_keys":[]

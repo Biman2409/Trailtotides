@@ -6,7 +6,7 @@ import Link from "next/link";
 import {
   ChevronRight, ChevronLeft, MapPin, ArrowRight, RotateCcw,
   Zap, Shield, Mountain, CheckCircle2, TrendingUp, Lock,
-  Compass, Dumbbell, Waves, Wind, Brain, Flame,
+  Compass, Dumbbell, Waves, Wind, Flame,
   AlertTriangle, Loader2,
 } from "lucide-react";
 import ACEBadge from "@/components/ui/custom/ACEBadge";
@@ -432,7 +432,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
     { icon: <Flame className="w-5 h-5" />,    name: "Engine",   color: "#f97316", desc: "Stamina + Power — sustained output and explosive effort. The fuel that keeps you moving." },
     { icon: <Dumbbell className="w-5 h-5" />, name: "Chassis",  color: "#22d3ee", desc: "Strength + Agility — load-bearing capacity and terrain navigation. How your body handles the ground." },
     { icon: <Waves className="w-5 h-5" />,    name: "Elements", color: "#a78bfa", desc: "Water + Altitude — aquatic survival and high-altitude physiology. Environmental exposure demands." },
-    { icon: <Brain className="w-5 h-5" />,    name: "Mind",     color: "#10b981", desc: "Nerve + Focus — psychological exposure tolerance and sustained situational awareness." },
+    { icon: <Wind className="w-5 h-5" />,      name: "Mind",     color: "#10b981", desc: "Nerve + Tenacity — psychological exposure tolerance and the grit to operate far from help." },
   ];
 
   return (
@@ -442,7 +442,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
         Adventures built for your body
       </h1>
       <p className="text-white/50 text-base leading-relaxed mb-9">
-        Every adventure makes specific demands on your body. ACE breaks those demands into eight axes — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Focus — so you know exactly what you&apos;re signing up for.
+        Every adventure makes specific demands on your body. ACE breaks those demands into eight axes — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Tenacity — so you know exactly what you&apos;re signing up for.
       </p>
 
       {!hasProfile && (
@@ -710,17 +710,17 @@ function ResultsScreen({
         const AXIS_LABELS: Record<string, string> = {
           stamina: "Stamina", power: "Power", strength: "Strength",
           agility: "Agility", water: "Water", altitude: "Altitude",
-          nerve: "Nerve", focus: "Focus",
+          nerve: "Nerve", tenacity: "Tenacity",
         };
         const AXIS_DESC: Record<string, string> = {
           stamina: "Sustained aerobic output over long durations",
-          power: "Explosive force and burst capacity",
-          strength: "Load-bearing and muscular endurance",
+          power: "Load-carrying capacity and climb endurance",
+          strength: "Sustained uphill and repeated steep climb ability",
           agility: "Terrain navigation and body control",
           water: "Aquatic comfort and swim capability",
-          altitude: "High-altitude acclimatisation",
-          nerve: "Psychological exposure tolerance",
-          focus: "Sustained situational awareness",
+          altitude: "High-altitude acclimatisation and overnight tolerance",
+          nerve: "Calm under exposure — drops, narrow paths, risk",
+          tenacity: "Self-reliance far from help in remote terrain",
         };
         return (
           <div
@@ -739,7 +739,7 @@ function ResultsScreen({
                     border: "1px solid rgba(255,255,255,0.06)",
                   }}
                 >
-                  <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; focus: number }} size={190} showLabels />
+                  <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; nerve: number; tenacity: number }} size={190} showLabels />
                 </div>
               </div>
               {/* Strengths list */}
@@ -1007,7 +1007,7 @@ const TRAINING_TIPS: Record<string, string> = {
   water:    "Swim 2–3 times a week. Progress from pool to open water, then moving water.",
   altitude: "Spend nights above 3,000m before attempting higher objectives. Acclimatise gradually.",
   nerve:    "Exposure therapy on smaller heights — via ferrata and scrambling routes build tolerance.",
-  focus:    "Long mountain days with navigation challenges develop the sustained focus required.",
+  tenacity: "Build comfort in remote settings — overnight solo trips and wilderness navigation without phone support.",
 };
 
 function buildResult(userAxes: Record<string, number>): AnalysisResult {
@@ -1085,7 +1085,7 @@ export default function MatchmakerClient() {
     const score = (key: string) => ({ A:1, B:2, C:3, D:4, E:5 }[finalAnswers[key] ?? "A"] ?? 1);
     const userAxes = {
       stamina: score("Q1"), power: score("Q2"), strength: score("Q3"), agility: score("Q4"),
-      water: score("Q5"), altitude: score("Q6"), nerve: score("Q7"), focus: score("Q8"),
+      water: score("Q5"), altitude: score("Q6"), nerve: score("Q7"), tenacity: score("Q8"),
     };
 
     const profile = { ace: userAxes };
