@@ -417,7 +417,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                       )}
                       {showWaterWarning && (
                         <span className="inline-flex items-center gap-1.5 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.25)" }}>
-                          ⚠ Open Water Hazard
+                          ⚠ Open Water
                         </span>
                       )}
                     </div>
