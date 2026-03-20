@@ -53,7 +53,7 @@ export interface ACEAxes {
   water:    number;
   altitude: number;
   nerve:    number;
-  focus:    number;
+  tenacity: number;
 }
 
 export interface Adventure {
