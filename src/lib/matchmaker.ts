@@ -106,8 +106,8 @@ function buildGapExplanation(axis: AceAxis, has: number, req: number): string {
     case "agility":  return `Terrain navigation complexity (${req}/5) exceeds your current agility (${has}/5). Exposed ridges, scree or technical footing may present real difficulty.`;
     case "water":    return `Aquatic competence required (${req}/5) exceeds your current level (${has}/5). Open water or current confidence is essential for this adventure.`;
     case "altitude": return `This adventure reaches altitude levels (${req}/5) beyond your current proven tolerance (${has}/5). Altitude sickness risk is significantly elevated.`;
-    case "nerve":    return `Psychological exposure (${req}/5) exceeds your comfort zone (${has}/5). Heights, void or danger-loaded environments are part of this experience.`;
-    case "tenacity": return `This adventure requires operating far from help (${req}/5) beyond your current comfort (${has}/5). Remote terrain with delayed rescue demands strong self-reliance.`;
+    case "focus":    return `Psychological exposure (${req}/5) exceeds your comfort zone (${has}/5). Heights, void or danger-loaded environments are part of this experience.`;
+    case "nerve": return `This adventure requires operating far from help (${req}/5) beyond your current comfort (${has}/5). Remote terrain with delayed rescue demands strong self-reliance.`;
   }
 }
 
@@ -143,8 +143,8 @@ function buildTrainingAction(axis: AceAxis, target: number): string {
     case "agility":  return `Train on uneven terrain — trail running, bouldering or scrambling routes to improve coordination.`;
     case "water":    return `Improve swimming confidence — open-water sessions or a basic safety swimming course.`;
     case "altitude": return `Gain altitude experience — sleep above ${target >= 4 ? "4,000m" : "3,000m"} for at least two nights before this trip.`;
-    case "nerve":    return `Build exposure tolerance progressively — start with moderate heights and work toward more exposed environments.`;
-    case "tenacity": return `Build comfort in remote and self-reliant situations — overnight solo trips, navigation without phone, or wilderness first aid training.`;
+    case "focus":    return `Build exposure tolerance progressively — start with moderate heights and work toward more exposed environments.`;
+    case "nerve": return `Build comfort in remote and self-reliant situations — overnight solo trips, navigation without phone, or wilderness first aid training.`;
   }
 }
 
@@ -162,7 +162,7 @@ export function getUpsells(userAce: ACE, adventureAce: ACE): Upsell[] {
   if (adventureAce.strength >= 4 && userAce.strength <= 2)
     upsells.push({ trigger: "Heavy load demand", recommendation: "Consider porter or mule support to carry your main bag on multi-day treks", icon: "🎒" });
 
-  if (adventureAce.nerve >= 4)
+  if (adventureAce.focus >= 4)
     upsells.push({ trigger: "High exposure environment", recommendation: "A satellite communicator for emergency contact in remote or dangerous terrain", icon: "📡" });
 
   return upsells;
@@ -191,7 +191,7 @@ export function loadProfile(): StoredProfile | null {
     // Migrate legacy ERT-only profiles
     if (!parsed.ace && parsed.ert) {
       const { e, r, t } = parsed.ert;
-      parsed.ace = { stamina: e, power: Math.max(1, e - 1), strength: e, agility: t, water: 1, altitude: r, nerve: t, tenacity: t };
+      parsed.ace = { stamina: e, power: Math.max(1, e - 1), strength: e, agility: t, water: 1, altitude: r, focus: t, nerve: t };
     }
     return parsed.ace ? parsed : null;
   } catch { return null; }

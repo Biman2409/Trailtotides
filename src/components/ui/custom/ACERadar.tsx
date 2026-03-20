@@ -13,7 +13,7 @@ interface Props {
 
 const AXIS_ORDER: AceAxis[] = [
   "stamina", "power", "strength", "agility",
-  "water", "altitude", "nerve", "tenacity",
+  "water", "altitude", "focus", "nerve",
 ];
 
 const AXIS_ABBR: Record<AceAxis, string> = {
@@ -23,8 +23,8 @@ const AXIS_ABBR: Record<AceAxis, string> = {
   agility:  "Agility",
   water:    "Water",
   altitude: "Altitude",
+  focus:    "Focus",
   nerve:    "Nerve",
-  tenacity: "Tenacity",
 };
 
 

@@ -28,8 +28,8 @@ const AXES = [
   { key: "agility",  icon: <Compass  className="w-5 h-5" />, color: "#22d3ee", label: "Agility",  desc: "Balance, coordination and terrain navigation — rock hopping, technical riding, snow and ice travel." },
   { key: "water",    icon: <Waves    className="w-5 h-5" />, color: "#3b82f6", label: "Water",    desc: "Swimming ability and aquatic survival — required for rafting, sea kayaking, scuba and river crossings." },
   { key: "altitude", icon: <Mountain className="w-5 h-5" />, color: "#a78bfa", label: "Altitude", desc: "Physiological tolerance to high elevation — the hypoxic stress of Himalayan trekking and 6,000m peaks." },
-  { key: "nerve",    icon: <Shield   className="w-5 h-5" />, color: "#f43f5e", label: "Nerve",    desc: "Psychological exposure tolerance — comfort on cliff edges, in caves, on extreme terrain or dangerous rapids." },
-  { key: "tenacity", icon: <Wind     className="w-5 h-5" />, color: "#10b981", label: "Tenacity", desc: "Mental resilience far from help — operating in remote terrain with no support, delayed rescue, and full self-reliance." },
+  { key: "focus",    icon: <Shield   className="w-5 h-5" />, color: "#f43f5e", label: "Focus",    desc: "Psychological exposure tolerance — comfort on cliff edges, in caves, on extreme terrain or dangerous rapids." },
+  { key: "nerve",    icon: <Wind     className="w-5 h-5" />, color: "#10b981", label: "Nerve",    desc: "Mental resilience far from help — operating in remote terrain with no support, delayed rescue, and full self-reliance." },
 ];
 
 const SCALE = [
@@ -83,7 +83,7 @@ export default function ACEPage() {
               </h1>
 
               <p className="text-white/55 text-base leading-relaxed mb-5">
-                Every adventure makes specific demands on your body. ACE breaks those demands into <span className="text-white font-semibold">eight axes</span> — Stamina, Power, Strength, Agility, Water, Altitude, Nerve and Tenacity — so you know exactly what you&apos;re signing up for.
+                Every adventure makes specific demands on your body. ACE breaks those demands into <span className="text-white font-semibold">eight axes</span> — Stamina, Power, Strength, Agility, Water, Altitude, Focus and Nerve — so you know exactly what you&apos;re signing up for.
               </p>
               <div className="flex flex-wrap gap-2 mb-10">
                 {[
@@ -93,8 +93,8 @@ export default function ACEPage() {
                   { abbr: "AGI", key: "agility",  color: "#22d3ee" },
                   { abbr: "WAT", key: "water",    color: "#3b82f6" },
                   { abbr: "ALT", key: "altitude", color: "#a78bfa" },
-                  { abbr: "NRV", key: "nerve",    color: "#f43f5e" },
-                  { abbr: "TEN", key: "tenacity", color: "#10b981" },
+                  { abbr: "FOC", key: "focus",   color: "#f43f5e" },
+                  { abbr: "NRV", key: "nerve",   color: "#10b981" },
                 ].map(({ abbr, color }) => (
                   <span
                     key={abbr}
@@ -114,7 +114,7 @@ export default function ACEPage() {
               <div className="absolute inset-0 rounded-full blur-3xl opacity-20 scale-75"
                 style={{ background: "conic-gradient(from 0deg, #f97316, #eab308, #84cc16, #22d3ee, #3b82f6, #a78bfa, #f43f5e, #10b981, #f97316)" }} />
               <ACERadar
-                ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, nerve: 4, tenacity: 3 }}
+                ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }}
                 size={280}
                 showLabels
               />
@@ -245,7 +245,7 @@ export default function ACEPage() {
               },
               {
                 label: "Apex",        color: "#a78bfa", stars: 5, range: "40",
-                desc: "Perfect score. Elite capability across every axis — stamina, strength, altitude, nerve. No adventure is out of reach.",
+                desc: "Perfect score. Elite capability across every axis — stamina, strength, altitude, focus. No adventure is out of reach.",
                 icon: <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7"><polygon points="12,1.5 15.5,9.5 24,10 17.8,16 19.8,24 12,19.8 4.2,24 6.2,16 0,10 8.5,9.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" fill="currentColor" fillOpacity="0.12"/><polygon points="12,6.5 14,11.5 19.5,12 15.3,15.8 16.7,21 12,18.2 7.3,21 8.7,15.8 4.5,12 10,11.5" fill="currentColor" fillOpacity="0.85"/></svg>,
               },
             ].map((rank, i) => (
