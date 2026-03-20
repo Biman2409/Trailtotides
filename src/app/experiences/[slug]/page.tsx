@@ -390,17 +390,17 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     <div className="flex flex-wrap gap-2 mt-4">
                       {showAltitudeWarning && (
                         <span className="inline-flex items-center gap-1.5 text-yellow-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(234,179,8,0.12)", border: "1px solid rgba(234,179,8,0.25)" }}>
-                          ⚠ Acute Mountain Sickness Warning
+                          ⚠ Acute Mountain Sickness
                         </span>
                       )}
                       {showBurnoutWarning && (
                         <span className="inline-flex items-center gap-1.5 text-orange-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(251,146,60,0.1)", border: "1px solid rgba(251,146,60,0.25)" }}>
-                          ⚠ Physical Exhaustion Risk
+                          ⚠ Physical Exhaustion
                         </span>
                       )}
                       {showFatalFallWarning && (
                         <span className="inline-flex items-center gap-1.5 text-red-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)" }}>
-                          ⚠ Fatal Fall Risk
+                          ⚠ Fatal Fall
                         </span>
                       )}
                       {showExtremeIsolationWarning && (
@@ -410,7 +410,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                       )}
                       {showTechnicalWarning && (
                         <span className="inline-flex items-center gap-1.5 text-violet-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.25)" }}>
-                          ⚠ Technical Terrain Warning
+                          ⚠ Technical Terrain
                         </span>
                       )}
                     </div>
