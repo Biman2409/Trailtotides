@@ -186,6 +186,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
   const showExtremeIsolationWarning = ace.nerve >= 5;
   const showTechnicalWarning = ace.strength >= 5 || ace.agility >= 5;
   const showBurnoutWarning = ace.stamina >= 5 || ace.power >= 5;
+  const showWaterWarning = ace.water >= 4;
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -386,7 +387,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 <div className="flex-1">
                   <p className="text-amber-400/70 text-[10px] font-bold tracking-[0.22em] uppercase mb-2">Safety &amp; Prep</p>
                   <p className="text-white/55 text-sm leading-relaxed">{adventure.safetyNotes}</p>
-                  {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showBurnoutWarning) && (
+                  {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showBurnoutWarning || showWaterWarning) && (
                     <div className="flex flex-wrap gap-2 mt-4">
                       {showAltitudeWarning && (
                         <span className="inline-flex items-center gap-1.5 text-yellow-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(234,179,8,0.12)", border: "1px solid rgba(234,179,8,0.25)" }}>
@@ -411,6 +412,11 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                       {showTechnicalWarning && (
                         <span className="inline-flex items-center gap-1.5 text-violet-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.25)" }}>
                           ⚠ Technical Terrain
+                        </span>
+                      )}
+                      {showWaterWarning && (
+                        <span className="inline-flex items-center gap-1.5 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.25)" }}>
+                          ⚠ Open Water Hazard
                         </span>
                       )}
                     </div>
