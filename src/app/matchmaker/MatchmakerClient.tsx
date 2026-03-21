@@ -569,15 +569,15 @@ function ResultsScreen({
   const stretch   = enriched.filter(a => a.status === "STRETCH");
   const restricted = enriched.filter(a => a.status === "RESTRICTED");
 
-  // Overall score
-  const axisValues = Object.values(userAxes).filter(v => v > 0);
-  const totalScore = axisValues.reduce((a, b) => a + b, 0);
+  // Overall score — sum all axes without filtering so 0s count correctly
+  const totalScore = Object.values(userAxes).reduce((a, b) => a + b, 0);
   const tier =
     totalScore >= 40 ? { label: "Apex",        color: "#a78bfa" } :
     totalScore >= 32 ? { label: "Vanguard",    color: "#f97316" } :
     totalScore >= 24 ? { label: "Trailblazer", color: "#f59e0b" } :
     totalScore >= 16 ? { label: "Navigator",   color: "#4ade80" } :
-                       { label: "Pathfinder",  color: "#22d3ee" };
+    totalScore >= 8  ? { label: "Pathfinder",  color: "#22d3ee" } :
+                       { label: "Uncharted",   color: "#6b7280" };
   const tierRank = RANKS.find(r => r.label === tier.label);
 
   return (
@@ -624,14 +624,27 @@ function ResultsScreen({
           const currentRankIndex = tierRank ? RANKS.indexOf(tierRank) : 0;
           const totalRanks = RANKS.length;
           const nextRank = RANKS[currentRankIndex + 1] ?? null;
-          const progressPct = nextRank
+          const rawPct = nextRank
             ? Math.min(100, Math.round(((totalScore - RANKS[currentRankIndex].minScore) / (nextRank.minScore - RANKS[currentRankIndex].minScore)) * 100))
             : 100;
+          const progressPct = Math.max(0, rawPct);
+          const justUnlocked = nextRank !== null && totalScore === RANKS[currentRankIndex].minScore && currentRankIndex > 0;
+          const ptsNeeded = nextRank ? nextRank.minScore - totalScore : 0;
           return (
             <div className="pt-4 sm:pt-5 pb-5 sm:pb-6">
               {/* % + pts row — padded */}
               <div className="px-5 sm:px-7">
                 {nextRank ? (
+                  justUnlocked ? (
+                    <div className="flex items-center gap-3 mb-4 py-1">
+                      <div className="flex flex-col">
+                        <span className="text-[13px] font-bold tracking-wide" style={{ color: tier.color }}>Rank just unlocked!</span>
+                        <p className="text-[11px] text-white/35 mt-0.5">
+                          Score <span className="font-semibold text-white/55">{ptsNeeded} more pts</span> to reach <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span>
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
                   <div className="flex items-end justify-between mb-4">
                     <div>
                       <div className="flex items-baseline gap-0.5 leading-none">
@@ -643,10 +656,11 @@ function ResultsScreen({
                       </p>
                     </div>
                     <div className="text-right pb-1">
-                      <p className="text-[24px] sm:text-[30px] font-black tabular-nums leading-none text-white/70">{nextRank.minScore - totalScore}</p>
+                      <p className="text-[24px] sm:text-[30px] font-black tabular-nums leading-none text-white/70">{ptsNeeded}</p>
                       <p className="text-[11px] text-white/28 mt-1 leading-none">pts needed</p>
                     </div>
                   </div>
+                  )
                 ) : (
                   <div className="flex items-center gap-2 mb-4">
                     <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />

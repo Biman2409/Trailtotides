@@ -52,9 +52,12 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
   const currentRankIndex = totalScore >= 40 ? 5 : totalScore >= 32 ? 4 : totalScore >= 24 ? 3 : totalScore >= 16 ? 2 : totalScore >= 8 ? 1 : 0;
   const currentRank = RANKS[currentRankIndex];
   const nextRank = RANKS[currentRankIndex + 1] ?? null;
-  const progressPct = nextRank
+  const rawPct = nextRank
     ? Math.min(100, Math.round(((totalScore - currentRank.minScore) / (nextRank.minScore - currentRank.minScore)) * 100))
     : 100;
+  const progressPct = Math.max(0, rawPct);
+  const justUnlocked = nextRank !== null && totalScore === currentRank.minScore && currentRankIndex > 0;
+  const ptsNeeded = nextRank ? nextRank.minScore - totalScore : 0;
 
   const totalRanks = RANKS.length;
   const filledFraction = totalRanks > 1
@@ -103,18 +106,26 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
         {nextRank ? (
           <div className="mt-3">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[9px] text-white/30">
-                <span className="text-white/40">Next: </span>
-                <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span>
-                <span className="text-white/25"> — {nextRank.minScore - totalScore} pts needed</span>
-              </span>
-              <span className="text-[9px] font-mono font-bold" style={{ color: currentRank.color }}>{progressPct}% there</span>
+              {justUnlocked ? (
+                <span className="text-[9px] font-semibold" style={{ color: currentRank.color }}>
+                  Rank just unlocked! — score {ptsNeeded} more pts to reach <span style={{ color: nextRank.color }}>{nextRank.label}</span>
+                </span>
+              ) : (
+                <>
+                  <span className="text-[9px] text-white/30">
+                    <span className="text-white/40">Next: </span>
+                    <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span>
+                    <span className="text-white/25"> — {ptsNeeded} pts needed</span>
+                  </span>
+                  <span className="text-[9px] font-mono font-bold" style={{ color: currentRank.color }}>{progressPct}% there</span>
+                </>
+              )}
             </div>
             <div className="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
               <div
                 className="h-full rounded-full"
                 style={{
-                  width: `${progressPct}%`,
+                  width: justUnlocked ? "3%" : `${progressPct}%`,
                   background: `linear-gradient(to right, ${currentRank.color}, ${nextRank.color})`,
                   boxShadow: `0 0 8px ${currentRank.color}50`,
                 }}
@@ -332,8 +343,14 @@ export default function ACEProfileSection() {
     );
   }
 
-  const tier = TIER_INFO[stored.label] ?? TIER_INFO["Pathfinder"];
   const totalScore = Object.values(stored.ace).reduce((a, b) => a + b, 0);
+  const derivedLabel =
+    totalScore >= 40 ? "Apex" :
+    totalScore >= 32 ? "Vanguard" :
+    totalScore >= 24 ? "Trailblazer" :
+    totalScore >= 16 ? "Navigator" :
+    totalScore >= 8  ? "Pathfinder" : "Uncharted";
+  const tier = TIER_INFO[derivedLabel] ?? TIER_INFO["Pathfinder"];
 
   return (
     <div className="rounded-3xl border border-white/10 overflow-hidden" style={{ background: "linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.02) 100%)" }}>
