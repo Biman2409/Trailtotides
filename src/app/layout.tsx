@@ -4,6 +4,8 @@ import "./globals.css";
 import { VisualEditsMessenger } from "orchids-visual-edits";
 import Script from "next/script";
 import CompareWrapper from "@/components/ui/custom/CompareWrapper";
+import NavigationScrollReset from "@/components/ui/custom/NavigationScrollReset";
+import { Suspense } from "react";
 
 const greatVibes = Great_Vibes({
   variable: "--font-cursive",
@@ -112,6 +114,9 @@ export default function RootLayout({
           strategy="afterInteractive"
           data-orchids-project-id="71778e38-df00-4ed2-869a-028f1f2862c1"
         />
+        <Suspense fallback={null}>
+          <NavigationScrollReset />
+        </Suspense>
         <CompareWrapper>
             {children}
             <VisualEditsMessenger />
