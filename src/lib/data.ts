@@ -365,54 +365,6 @@ export const adventures: Adventure[] = [
     ],
   },
 {
-    id: "7",
-    slug: "dzukou-valley-trek",
-
-    name: "Dzükou Valley Trek",
-    tagline: "The valley that the gods kept for themselves",
-    region: "Northeast",
-      state: "Nagaland / Manipur",
-        type: "Trekking",
-        difficulty: "Intermediate",
-          duration: "3–5 days",
-          durationDays: "3 days",
-          distance: "15km",
-        altitude: "2,452m",
-      baseCamp: "Viswema / Zakhama",
-        bestSeason: "Jun – Sep, Dec – Mar",
-        bestMonths: ["Jun", "Jul", "Aug", "Sep", "Dec", "Jan", "Feb", "Mar"],
-          groupSize: "Small group (2–6)",
-            heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/dzukou-valley.jpeg",
-      galleryImages: [
-        "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/dzukou-valley.jpeg"
-      ],
-    lat: 25.5330,
-    lng: 94.1009,
-    description:
-      "Dzükou Valley sits on the border of Nagaland and Manipur at over 2,400m, largely unknown to mainstream trekkers. In summer, the valley floor is carpeted with the rare Dzükou lily — found nowhere else on Earth. In winter, a layer of snow transforms it into complete silence.",
-    whatMakesSpecial:
-      "The endemic Dzükou lily blooms here and nowhere else. The valley feels genuinely undiscovered, a rare quality in 2024.",
-    whoFor: "2+ prior multi-day treks · Comfortable with 10–14km/day on mixed trail · Self-sufficient camping with 12kg pack · No permit bureaucracy — ILP for Nagaland required in advance",
-    whoNot: "Zero trekking background · Requiring fixed lodges or daily resupply · Visiting without Inner Line Permit · Expecting maintained trail markings or signage",
-    safetyNotes:
-      "Register at the Viswema check-post. Carry all your food and water. The trail can be slippery after rain. Download offline maps.",
-        ace: { stamina:3, power:3, strength:3, agility:2, water:1, altitude:2, focus:2, nerve:2 },
-    operators: [
-          { name: "Wild Hill Adventure", verified: true, priceFrom: "₹5,800", rating: 4.7, website: "https://wildhilladventure.com/dzukou-valley-tour-package" },
-          { name: "Wander Nagaland", verified: true, priceFrom: "₹6,500", rating: 4.6, website: "https://wandernagaland.com" },
-          { name: "Treks and Trails India", verified: true, priceFrom: "₹5,900", rating: 4.6, website: "https://www.treksandtrailsindia.com" },
-          { name: "Northeast Trails India", verified: false, priceFrom: "₹6,200", rating: 4.2, website: "https://www.northeasttrailsindia.com" },
-          { name: "Soma's Camps Nagaland", verified: false, priceFrom: "₹7,500", rating: 4.1, website: "https://www.somascamps.com" },
-        ],
-    tags: ["offbeat", "endemic flora", "Northeast", "rare", "solitude"],
-    featured: true,
-    seedReviews: [
-      { id: "sr-dzukou-1", username: "ira_northeast", rating: 5, body: "The valley in bloom (June–July) is absolutely surreal — a carpet of Dzükou lilies as far as you can see. Almost nobody from outside the region knows this place exists. The trail from Viswema side is more scenic; the Jakhama side is easier. Do both.", created_at: "2025-07-12T08:30:00Z", user_id: "" },
-      { id: "sr-dzukou-2", username: "mohan_n", rating: 5, body: "Stayed two nights at the valley campsite. Woke up to fog rolling through at 5am with the lilies swaying. No phone signal, no other trekkers — pure wilderness. One of the most peaceful 48 hours of my life.", created_at: "2025-07-28T11:00:00Z", user_id: "" },
-      { id: "sr-dzukou-3", username: "preethi_t", rating: 4, body: "Stunning but the trail conditions in monsoon can be slippery. Hire local Naga guides — they know every shortcut and are great company. Permit process is simple but do it in advance online. Highly recommend over the more crowded Himalayan treks.", created_at: "2025-08-05T09:45:00Z", user_id: "" },
-    ],
-  },
-{
         id: "11",
           slug: "ladakh-circuit",
             name: "Ladakh Circuit Ride",
