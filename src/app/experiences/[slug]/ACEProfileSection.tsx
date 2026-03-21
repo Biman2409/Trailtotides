@@ -43,12 +43,6 @@ const TRAINING_TIPS: Record<string, string> = {
   nerve: "Build comfort in remote settings — overnight solo trips and wilderness navigation without phone support.",
 };
 
-const DOMAINS = [
-  { label: "Engine",   color: "#f97316", axes: ["stamina", "power"]    as AceAxis[] },
-  { label: "Chassis",  color: "#22d3ee", axes: ["strength", "agility"] as AceAxis[] },
-  { label: "Elements", color: "#a78bfa", axes: ["water", "altitude"]   as AceAxis[] },
-  { label: "Mind",     color: "#10b981", axes: ["focus", "nerve"]   as AceAxis[] },
-];
 
 export default function ACEProfileSection({
   ace,
@@ -106,49 +100,78 @@ export default function ACEProfileSection({
             </div>
           </div>
 
-          {/* Domain capability strip — vertical, fills height */}
+          {/* Capability vs Requirement panel */}
           {userAce ? (
             <div className="flex flex-col flex-1 border-t md:border-t-0 md:border-l border-white/[0.06]">
-              <div className="px-3 py-2 border-b border-white/[0.06]">
+              {/* Header */}
+              <div className="px-4 py-2.5 border-b border-white/[0.06]">
                 <p className="text-[9px] uppercase tracking-widest font-bold text-white/30">Your Capability vs Trek Requirement</p>
               </div>
-              <div className="flex flex-col flex-1">
-                {DOMAINS.map(({ label: domainLabel, color: domainColor, axes }, di) => (
-                  <div key={domainLabel} className={`flex flex-col flex-1${di > 0 ? " border-t border-white/[0.05]" : ""}`}>
-                    {/* Domain header */}
-                    <div className="px-3 py-1.5 border-b border-white/[0.04]" style={{ background: `${domainColor}12` }}>
-                      <span className="text-[8px] uppercase tracking-widest font-bold" style={{ color: domainColor }}>{domainLabel}</span>
+
+              {/* Axes grid */}
+              <div className="grid grid-cols-2 gap-px bg-white/[0.04] flex-1">
+                {(Object.keys(ace) as AceAxis[]).map((axis) => {
+                  const color = ACE_AXIS_COLORS[axis];
+                  const trekVal = ace[axis];
+                  const userVal = (userAce as Record<string, number>)[axis] ?? 0;
+                  const meets = userVal >= trekVal;
+                  const pctUser = (userVal / 5) * 100;
+                  const pctTrek = (trekVal / 5) * 100;
+
+                  return (
+                    <div
+                      key={axis}
+                      className="flex flex-col gap-2 p-3"
+                      style={{ background: "#0d111e" }}
+                    >
+                      {/* Top row: icon + label + status badge */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <span style={{ color }} className="opacity-80">{AXIS_ICONS[axis]}</span>
+                          <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color }}>{ACE_AXIS_LABELS[axis]}</span>
+                        </div>
+                        <span
+                          className="text-[8px] font-bold px-1.5 py-px rounded-full whitespace-nowrap"
+                          style={{
+                            background: meets ? "#22c55e15" : "#ef444415",
+                            color: meets ? "#22c55e" : "#ef4444",
+                            border: `1px solid ${meets ? "#22c55e30" : "#ef444430"}`,
+                          }}
+                        >
+                          {meets ? "✓" : `+${trekVal - userVal}`}
+                        </span>
+                      </div>
+
+                      {/* Bar track */}
+                      <div className="relative h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                        {/* Trek requirement bar (background) */}
+                        <div
+                          className="absolute inset-y-0 left-0 rounded-full"
+                          style={{ width: `${pctTrek}%`, background: `${color}25` }}
+                        />
+                        {/* User capability bar */}
+                        <div
+                          className="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
+                          style={{
+                            width: `${pctUser}%`,
+                            background: meets ? color : "#ef4444",
+                            boxShadow: meets ? `0 0 6px ${color}60` : "0 0 6px #ef444460",
+                          }}
+                        />
+                      </div>
+
+                      {/* Score row */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-[9px] text-white/30">
+                          You <span className="font-bold" style={{ color: meets ? color : "#ef4444" }}>{userVal}</span>
+                        </span>
+                        <span className="text-[9px] text-white/25">
+                          Need <span className="font-semibold text-white/40">{trekVal}</span>
+                        </span>
+                      </div>
                     </div>
-                    {/* Axes — two on one line, stretch to fill remaining */}
-                    <div className="flex flex-1 divide-x divide-white/[0.05]">
-                      {axes.map((axis) => {
-                        const color = ACE_AXIS_COLORS[axis];
-                        const axisLabel = ACE_AXIS_LABELS[axis];
-                        const trekVal = ace[axis];
-                        const userVal = (userAce as Record<string, number>)[axis] ?? 0;
-                        const meets = userVal >= trekVal;
-                        return (
-                          <div key={axis} className="flex-1 flex items-center justify-between px-3">
-                            <p className="text-[8px] uppercase tracking-widest font-bold" style={{ color }}>{axisLabel}</p>
-                            <div className="flex items-center gap-1">
-                              <span className="text-[11px] font-black leading-none" style={{ color: userColor }}>{userVal}</span>
-                              <span className="text-[8px] text-white/25">/ {trekVal}</span>
-                              <div
-                                className="text-[7px] font-bold px-1.5 py-px rounded-full whitespace-nowrap"
-                                style={{
-                                  background: meets ? "#22c55e18" : "#ef444418",
-                                  color: meets ? "#22c55e" : "#ef4444",
-                                }}
-                              >
-                                {meets ? "✓ Ready" : `+${(trekVal - userVal).toFixed(1)} needed`}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ) : (
