@@ -31,11 +31,11 @@ export default function MatchmakerCard({ isLoggedIn }: { isLoggedIn: boolean }) 
     setProfile(loadProfile());
   }, []);
 
-  const tier = profile ? (TIER_INFO[profile.label] ?? TIER_INFO["Pathfinder"]) : null;
-
   // Next-level progress
   const totalScore = profile ? Object.values(profile.ace).reduce((a: number, b) => a + (b as number), 0) : 0;
   const rankIndex  = totalScore >= 40 ? 5 : totalScore >= 32 ? 4 : totalScore >= 24 ? 3 : totalScore >= 16 ? 2 : totalScore >= 8 ? 1 : 0;
+  const rankLabel  = RANKS[rankIndex]?.label ?? "Pathfinder";
+  const tier = profile ? (TIER_INFO[rankLabel] ?? TIER_INFO["Pathfinder"]) : null;
   const currentRank = RANKS[rankIndex] ?? RANKS[1];
   const nextRank    = RANKS[rankIndex + 1] ?? null;
   const progressPct = nextRank
@@ -70,7 +70,7 @@ export default function MatchmakerCard({ isLoggedIn }: { isLoggedIn: boolean }) 
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-white/30 text-[9px] uppercase tracking-widest">Adventure Tier</p>
-              <p className="font-bold text-base leading-tight" style={{ color: tier.color }}>{profile.label}</p>
+              <p className="font-bold text-base leading-tight" style={{ color: tier.color }}>{rankLabel}</p>
               <div className="flex gap-px mt-0.5">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <span key={i} className="text-[9px]" style={{ color: i < tier.stars ? tier.color : "rgba(255,255,255,0.1)" }}>★</span>
@@ -121,10 +121,6 @@ export default function MatchmakerCard({ isLoggedIn }: { isLoggedIn: boolean }) 
               <ACERadar ace={profile.ace} size={168} showLabels />
             </div>
           </div>
-
-          {profile.summary && (
-            <p className="text-white/40 text-xs leading-relaxed">{profile.summary}</p>
-          )}
 
           <Link
             href="/explore"

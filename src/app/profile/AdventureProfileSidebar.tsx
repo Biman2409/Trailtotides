@@ -44,9 +44,10 @@ export default function AdventureProfileSidebar() {
     );
   }
 
-  const tier = TIER_INFO[stored.label] ?? TIER_INFO["Pathfinder"];
   const totalScore = Object.values(stored.ace).reduce((a: number, b) => a + (b as number), 0);
   const rankIndex   = totalScore >= 40 ? 5 : totalScore >= 32 ? 4 : totalScore >= 24 ? 3 : totalScore >= 16 ? 2 : totalScore >= 8 ? 1 : 0;
+  const rankLabel   = RANKS[rankIndex]?.label ?? "Pathfinder";
+  const tier = TIER_INFO[rankLabel] ?? TIER_INFO["Pathfinder"];
   const currentRank = RANKS[rankIndex] ?? RANKS[1];
   const nextRank    = RANKS[rankIndex + 1] ?? null;
   const progressPct = nextRank
@@ -65,7 +66,7 @@ export default function AdventureProfileSidebar() {
           {tier.icon}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-bold text-xs leading-tight" style={{ color: tier.color }}>{stored.label}</p>
+          <p className="font-bold text-xs leading-tight" style={{ color: tier.color }}>{rankLabel}</p>
           <div className="flex items-center gap-0.5 mt-0.5">
             {Array.from({ length: 5 }).map((_, i) => (
               <span key={i} className="text-[9px]" style={{ color: i < tier.stars ? tier.color : "rgba(255,255,255,0.1)" }}>★</span>

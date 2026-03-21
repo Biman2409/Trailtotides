@@ -112,7 +112,7 @@ export default function ACEProfileSection({
                 {(Object.keys(ace) as AceAxis[]).map((axis) => {
                   const color = ACE_AXIS_COLORS[axis];
                   const trekVal = ace[axis];
-                  const userVal = (userAce as Record<string, number>)[axis] ?? 0;
+                  const userVal = (userAce as unknown as Record<string, number>)[axis] ?? 0;
                   const meets = userVal >= trekVal;
                   const pctUser = (userVal / 5) * 100;
                   const pctTrek = (trekVal / 5) * 100;
@@ -230,7 +230,7 @@ export default function ACEProfileSection({
       {/* Focus Areas — only when user has gaps on this trek */}
       {userAce && (() => {
         const gaps = (Object.keys(ace) as AceAxis[])
-          .map(ax => ({ ax, gap: ace[ax] - ((userAce as Record<string, number>)[ax] ?? 0) }))
+          .map(ax => ({ ax, gap: ace[ax] - ((userAce as unknown as Record<string, number>)[ax] ?? 0) }))
           .filter(({ gap }) => gap > 0)
           .sort((a, b) => b.gap - a.gap)
           .slice(0, 3);
@@ -247,7 +247,7 @@ export default function ACEProfileSection({
               {gaps.map(({ ax, gap }) => {
                 const color = ACE_AXIS_COLORS[ax];
                 const icon = AXIS_ICONS[ax];
-                const userVal = (userAce as Record<string, number>)[ax] ?? 0;
+                const userVal = (userAce as unknown as Record<string, number>)[ax] ?? 0;
                 const trekVal = ace[ax];
                 return (
                   <div key={ax} className="flex items-start gap-3 rounded-xl p-3.5" style={{ background: `${color}08`, border: `1px solid ${color}18` }}>

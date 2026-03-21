@@ -792,7 +792,7 @@ function ResultsScreen({
           label="Ready Now"
           sublabel="Adventures within your current capability"
           icon={<CheckCircle2 className="w-4 h-4" />}
-          adventures={[...inZone].sort((a, b) => a.riskLevel - b.riskLevel).slice(0, 6)}
+          adventures={[...inZone].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
           totalCount={inZone.length}
           exploreUrl="/explore?ace=ready"
           accentColor="#4ade80"
@@ -803,7 +803,7 @@ function ResultsScreen({
             label="Stretch Challenge"
             sublabel="Slightly above your current range — achievable with focused training"
             icon={<TrendingUp className="w-4 h-4" />}
-            adventures={[...stretch].sort((a, b) => a.riskLevel - b.riskLevel).slice(0, 6)}
+            adventures={[...stretch].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
             totalCount={stretch.length}
             exploreUrl="/explore?ace=stretch"
             accentColor="#f59e0b"
@@ -814,7 +814,7 @@ function ResultsScreen({
             label="Currently Out of Range"
             sublabel="Require capabilities significantly beyond your current profile"
             icon={<Lock className="w-4 h-4" />}
-            adventures={[...restricted].sort((a, b) => a.riskLevel - b.riskLevel).slice(0, 6)}
+            adventures={[...restricted].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
             totalCount={restricted.length}
             exploreUrl="/explore?ace=out-of-range"
             accentColor="#f43f5e"

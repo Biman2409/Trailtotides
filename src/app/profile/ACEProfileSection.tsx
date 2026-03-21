@@ -389,12 +389,6 @@ export default function ACEProfileSection() {
             <RankProgressionBar totalScore={totalScore} />
           </div>
 
-          {stored.summary && (
-            <p className="text-white/40 text-xs leading-relaxed border-l-2 border-white/10 pl-3">
-              {stored.summary}
-            </p>
-          )}
-
           <Link
             href="/matchmaker"
             className="inline-flex items-center gap-1.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all group w-fit mt-auto"

@@ -69,6 +69,9 @@ export default function RealityCheck({ adventure }: Props) {
   }
 
   const adventureAce = getACE(adventure);
+  const _totalScore = Object.values(profile.ace).reduce((a: number, b) => a + (b as number), 0);
+  const _rankIndex = _totalScore >= 40 ? 5 : _totalScore >= 32 ? 4 : _totalScore >= 24 ? 3 : _totalScore >= 16 ? 2 : _totalScore >= 8 ? 1 : 0;
+  const rankLabel = (["Uncharted","Pathfinder","Navigator","Trailblazer","Vanguard","Apex"] as const)[_rankIndex] ?? "Pathfinder";
   const gaps = getAceGaps(profile.ace, adventureAce);
   const isMatch = gaps.length === 0;
   const roadmap = isMatch ? [] : getUnlockRoadmap(profile.ace, adventureAce, allAdventures);
@@ -110,7 +113,7 @@ export default function RealityCheck({ adventure }: Props) {
             </div>
           </div>
           <p className="mt-3 text-white/25 text-xs">
-            <span className="text-white/40">{profile.label}</span> ·{" "}
+            <span className="text-white/40">{rankLabel}</span> ·{" "}
             <Link href="/matchmaker" className="hover:text-[#ff5100] transition-colors">Retake</Link>
           </p>
         </div>
@@ -162,7 +165,7 @@ export default function RealityCheck({ adventure }: Props) {
           </div>
           <div className="flex-1 pt-1">
             <p className="text-[10px] uppercase tracking-widest text-white/25 mb-1.5">Your tier</p>
-            <p className="text-white font-bold text-sm mb-2">{profile.label}</p>
+            <p className="text-white font-bold text-sm mb-2">{rankLabel}</p>
             <ACEBadge ace={profile.ace} size="sm" />
           </div>
         </div>
