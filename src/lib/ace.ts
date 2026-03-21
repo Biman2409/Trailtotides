@@ -62,8 +62,8 @@ export function computeDifficulty(ace: ACE): string {
   const total = Object.values(ace).reduce((a, b) => a + b, 0);
   if (total <= 8)  return "Easy";
   if (total <= 14) return "Moderate";
-  if (total <= 20) return "Intermediate";
-  if (total <= 26) return "Hard";
+  if (total <= 20) return "Hard";
+  if (total <= 26) return "Advanced";
   return "Extreme";
 }
 
