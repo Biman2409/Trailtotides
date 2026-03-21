@@ -9,7 +9,6 @@ import {
   Compass, Dumbbell, Waves, Wind, Flame,
   AlertTriangle, Loader2,
 } from "lucide-react";
-import ACEBadge from "@/components/ui/custom/ACEBadge";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import { saveProfile, loadProfile, clearProfile, saveProfileToServer, loadProfileFromServer } from "@/lib/matchmaker";
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
@@ -956,23 +955,18 @@ function AdventureSection({
                   </div>
                 </div>
                 {/* Meta */}
-                <div className="px-3.5 py-3 space-y-2">
-                  {a.requirements && (
-                    <ACEBadge ace={a.requirements as unknown as Parameters<typeof ACEBadge>[0]["ace"]} size="sm" dark />
-                  )}
-                  {a.weakAxes.length > 0 && (
-                    <div className="flex flex-wrap gap-1">
-                      {a.weakAxes.slice(0, 3).map(ax => (
-                        <span
-                          key={ax}
-                          className="inline-flex items-center gap-[3px] text-[9px] font-bold uppercase tracking-wide px-1.5 py-[3px] rounded-md"
-                          style={{ background: `${AXIS_COLORS[ax] ?? "#fff"}15`, color: AXIS_COLORS[ax] ?? "#fff" }}
-                        >
-                          {AXIS_ICONS[ax]}<span>{ax}</span>
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                <div className="px-3.5 py-3">
+                  <div className="flex flex-wrap gap-1.5">
+                    <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-md"
+                      style={{ background: "rgba(255,81,0,0.12)", color: "#ff7340" }}>
+                      {a.type}
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-md"
+                      style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.5)" }}>
+                      <MapPin className="w-2.5 h-2.5 shrink-0" />
+                      {a.state}
+                    </span>
+                  </div>
                 </div>
               </Link>
             ))}
