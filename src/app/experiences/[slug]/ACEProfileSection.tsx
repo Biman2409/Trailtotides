@@ -73,43 +73,42 @@ export default function ACEProfileSection({
         className="rounded-2xl mb-3 overflow-hidden"
         style={{
           background: "linear-gradient(135deg, #0c1020 0%, #0f1520 100%)",
-          border: "1px solid var(--border-subtle)",
+          border: "1px solid rgba(255,255,255,0.07)",
         }}
       >
-        {/* TOP — radar (left) + domain strip (right) */}
+        {/* ── RADAR ROW ─────────────────────────────────────────────────── */}
         <div className="flex flex-col md:flex-row items-stretch">
 
-          {/* Radar */}
-          <div className="flex flex-col items-center justify-center pt-6 px-5 pb-4 shrink-0">
-            <ACERadar ace={ace} userAce={userAce ?? undefined} userColor={userColor} size={240} showLabels />
-            <div className="flex items-center gap-5 mt-3">
+          {/* Radar panel */}
+          <div className="flex flex-col items-center justify-center py-6 px-6 shrink-0 md:border-r border-b md:border-b-0 border-white/[0.06]">
+            <ACERadar ace={ace} userAce={userAce ?? undefined} userColor={userColor} size={220} showLabels />
+            {/* Legend */}
+            <div className="flex items-center gap-4 mt-4">
               <div className="flex items-center gap-1.5">
-                <div className="w-3 h-0.5 rounded-full bg-[#ff5100]" />
-                <span className="text-[9px] text-white/30 uppercase tracking-wide">Trek Requirements</span>
+                <div className="w-4 h-[2px] rounded-full bg-[#ff5100]" />
+                <span className="text-[9px] text-white/35 uppercase tracking-widest">Required</span>
               </div>
               {userAce && (
                 <div className="flex items-center gap-1.5">
-                  <svg width="14" height="4" viewBox="0 0 14 4">
-                    <line x1="0" y1="2" x2="14" y2="2" stroke={userColor} strokeWidth="1.5" strokeDasharray="4 2.5" />
+                  <svg width="16" height="4" viewBox="0 0 16 4">
+                    <line x1="0" y1="2" x2="16" y2="2" stroke={userColor} strokeWidth="1.8" strokeDasharray="4 3" />
                   </svg>
-                  <span className="text-[9px] uppercase tracking-wide font-semibold" style={{ color: userColor }}>
-                    Your Capability
-                  </span>
+                  <span className="text-[9px] text-white/55 uppercase tracking-widest font-semibold">You</span>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Capability vs Requirement panel */}
+          {/* ── CAPABILITY PANEL ────────────────────────────────────────── */}
           {userAce ? (
-            <div className="flex flex-col flex-1 border-t md:border-t-0 md:border-l border-white/[0.06]">
-              {/* Header */}
-              <div className="px-4 py-2.5 border-b border-white/[0.06]">
-                <p className="text-[9px] uppercase tracking-widest font-bold text-white/30">Your Capability vs Trek Requirement</p>
+            <div className="flex flex-col flex-1 min-w-0">
+              {/* Section label */}
+              <div className="px-4 pt-4 pb-3">
+                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/25">Your Capability vs Requirement</p>
               </div>
 
-              {/* Axes grid */}
-              <div className="grid grid-cols-2 gap-px bg-white/[0.04] flex-1">
+              {/* 2-col axis grid */}
+              <div className="grid grid-cols-2 gap-2 px-3 pb-4">
                 {(Object.keys(ace) as AceAxis[]).map((axis) => {
                   const color = ACE_AXIS_COLORS[axis];
                   const trekVal = ace[axis];
@@ -121,52 +120,63 @@ export default function ACEProfileSection({
                   return (
                     <div
                       key={axis}
-                      className="flex flex-col gap-2 p-3"
-                      style={{ background: "#0d111e" }}
+                      className="rounded-xl p-3 flex flex-col gap-2"
+                      style={{
+                        background: meets ? `${color}08` : "rgba(239,68,68,0.05)",
+                        border: `1px solid ${meets ? `${color}20` : "rgba(239,68,68,0.18)"}`,
+                      }}
                     >
-                      {/* Top row: icon + label + status badge */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1.5">
-                          <span style={{ color }} className="opacity-80">{AXIS_ICONS[axis]}</span>
-                          <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color }}>{ACE_AXIS_LABELS[axis]}</span>
+                      {/* Label row */}
+                      <div className="flex items-center justify-between gap-1">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <span style={{ color: meets ? color : "#ef4444" }} className="shrink-0 opacity-90">
+                            {AXIS_ICONS[axis]}
+                          </span>
+                          <span
+                            className="text-[10px] font-bold uppercase tracking-wide truncate"
+                            style={{ color: meets ? color : "#ef4444" }}
+                          >
+                            {ACE_AXIS_LABELS[axis]}
+                          </span>
                         </div>
                         <span
-                          className="text-[8px] font-bold px-1.5 py-px rounded-full whitespace-nowrap"
+                          className="text-[8px] font-bold px-1.5 py-0.5 rounded-full shrink-0"
                           style={{
-                            background: meets ? "#22c55e15" : "#ef444415",
-                            color: meets ? "#22c55e" : "#ef4444",
-                            border: `1px solid ${meets ? "#22c55e30" : "#ef444430"}`,
+                            background: meets ? "#22c55e18" : "#ef444418",
+                            color: meets ? "#4ade80" : "#f87171",
                           }}
                         >
-                          {meets ? "✓" : `+${trekVal - userVal}`}
+                          {meets ? "✓ Ready" : `−${trekVal - userVal}`}
                         </span>
                       </div>
 
-                      {/* Bar track */}
-                      <div className="relative h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
-                        {/* Trek requirement bar (background) */}
+                      {/* Dual bar */}
+                      <div className="relative h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.05)" }}>
+                        {/* Requirement ghost */}
                         <div
                           className="absolute inset-y-0 left-0 rounded-full"
-                          style={{ width: `${pctTrek}%`, background: `${color}25` }}
+                          style={{ width: `${pctTrek}%`, background: `${color}22` }}
                         />
-                        {/* User capability bar */}
+                        {/* User fill */}
                         <div
                           className="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
                           style={{
                             width: `${pctUser}%`,
-                            background: meets ? color : "#ef4444",
-                            boxShadow: meets ? `0 0 6px ${color}60` : "0 0 6px #ef444460",
+                            background: meets
+                              ? `linear-gradient(to right, ${color}cc, ${color})`
+                              : "linear-gradient(to right, #ef4444cc, #ef4444)",
+                            boxShadow: meets ? `0 0 8px ${color}50` : "0 0 8px #ef444450",
                           }}
                         />
                       </div>
 
-                      {/* Score row */}
+                      {/* Score */}
                       <div className="flex items-center justify-between">
-                        <span className="text-[9px] text-white/30">
-                          You <span className="font-bold" style={{ color: meets ? color : "#ef4444" }}>{userVal}</span>
+                        <span className="text-[9px] font-semibold" style={{ color: meets ? color : "#f87171" }}>
+                          {userVal} / 5
                         </span>
                         <span className="text-[9px] text-white/25">
-                          Need <span className="font-semibold text-white/40">{trekVal}</span>
+                          need <span className="text-white/40 font-medium">{trekVal}</span>
                         </span>
                       </div>
                     </div>
@@ -175,20 +185,20 @@ export default function ACEProfileSection({
               </div>
             </div>
           ) : (
-            <div className="flex-1 flex items-center p-6">
+            <div className="flex-1 flex items-center justify-center p-6">
               <div
-                className="rounded-xl px-4 py-4 flex flex-col gap-3 w-full"
-                style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.15)" }}
+                className="rounded-2xl px-5 py-5 flex flex-col gap-4 w-full max-w-sm"
+                style={{ background: "rgba(255,81,0,0.05)", border: "1px solid rgba(255,81,0,0.15)" }}
               >
                 <div>
-                  <p className="text-white/80 font-semibold text-sm">See how you compare</p>
-                  <p className="text-white/35 text-xs mt-1 leading-relaxed">
-                    Take the ACE assessment to overlay your profile on this radar.
+                  <p className="text-white font-semibold text-sm mb-1">See how you compare</p>
+                  <p className="text-white/35 text-xs leading-relaxed">
+                    Take the 3-min ACE assessment to overlay your profile onto this radar and see where you stand.
                   </p>
                 </div>
                 <Link
                   href="/matchmaker"
-                  className="flex items-center gap-1.5 w-fit text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-all hover:brightness-110 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 w-fit text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-all hover:brightness-110 hover:-translate-y-0.5"
                   style={{ background: "#ff5100" }}
                 >
                   Take Assessment
@@ -199,19 +209,19 @@ export default function ACEProfileSection({
           )}
         </div>
 
-        {/* BOTTOM — description + retake */}
-        <div className="px-6 py-4 border-t border-white/[0.06]">
-          <p className="text-xs leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+        {/* ── BOTTOM — summary + retake ──────────────────────────────────── */}
+        <div className="px-5 py-4 border-t border-white/[0.06] flex flex-col sm:flex-row sm:items-center gap-3">
+          <p className="text-xs leading-relaxed text-white/35 flex-1">
             {aceSummary(ace, adventureName)}
           </p>
           {userAce && (
             <Link
               href="/matchmaker"
-              className="inline-flex items-center gap-1.5 mt-3 text-xs font-semibold px-3 py-2 rounded-lg transition-all hover:brightness-110"
+              className="inline-flex items-center gap-1.5 shrink-0 text-xs font-semibold px-3 py-2 rounded-lg transition-all hover:brightness-110 whitespace-nowrap"
               style={{ background: "rgba(255,81,0,0.1)", border: "1px solid rgba(255,81,0,0.2)", color: "#ff5100" }}
             >
-              Retake Assessment
               <RotateCcw className="w-3 h-3" />
+              Retake Assessment
             </Link>
           )}
         </div>
