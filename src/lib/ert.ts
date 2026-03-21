@@ -66,8 +66,8 @@ function parseDays(durationDays: string): number {
 const DIFF_RISK: Record<Difficulty, number> = {
   Easy: 1,
   Moderate: 2,
-  Intermediate: 3,
-  Hard: 4,
+  Hard: 3,
+  Advanced: 4,
   Extreme: 5,
 };
 
@@ -84,7 +84,7 @@ export function computeERT(a: Adventure): ERT {
   else e = 5;
   // Floor by difficulty
   if (a.difficulty === "Extreme") e = Math.max(e, 5);
-  if (a.difficulty === "Hard") e = Math.max(e, 4);
+  if (a.difficulty === "Advanced") e = Math.max(e, 4);
 
   // Risk: maps from difficulty tier
   const r = DIFF_RISK[a.difficulty] ?? 3;
@@ -95,9 +95,9 @@ export function computeERT(a: Adventure): ERT {
     t = 1;
   } else if (a.difficulty === "Moderate") {
     t = altM > 4000 ? 2 : 1;
-  } else if (a.difficulty === "Intermediate") {
-    t = altM > 4800 ? 3 : 2;
   } else if (a.difficulty === "Hard") {
+    t = altM > 4800 ? 3 : 2;
+  } else if (a.difficulty === "Advanced") {
     t = a.type === "Mountaineering" ? 5 : 4;
   } else {
     // Extreme

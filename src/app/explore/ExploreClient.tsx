@@ -628,7 +628,7 @@ export default function ExploreClient() {
                       <div className="col-span-2 lg:col-span-3">
                         <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">Difficulty</h3>
                         <div className="flex flex-wrap gap-2">
-                          {(["Easy", "Moderate", "Intermediate", "Hard", "Extreme"] as Difficulty[]).map((val) => {
+                          {(["Easy", "Moderate", "Hard", "Advanced", "Extreme"] as Difficulty[]).map((val) => {
                               const isSelected = selectedDifficulties.includes(val);
                               const activeClass = difficultyStyle[val] || "bg-[#ff5100] text-white";
                               return (

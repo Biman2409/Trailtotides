@@ -434,7 +434,7 @@ export default function ListPage() {
                       className="w-full t-bg-surface2 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
                     >
                       <option value="">Select difficulty</option>
-                      {["Beginner","Intermediate","Advanced","Expert","Extreme"].map(d => (
+                      {["Easy","Moderate","Hard","Advanced","Extreme"].map(d => (
                         <option key={d} value={d}>{d}</option>
                       ))}
                     </select>

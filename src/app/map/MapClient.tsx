@@ -54,8 +54,8 @@ const typeEmoji: Record<AdventureType, string> = {
 const difficultyColor: Record<string, string> = {
   Easy:         "#10b981",  // emerald
   Moderate:     "#0ea5e9",  // sky blue
-  Intermediate: "#6366f1",  // indigo
-  Hard:         "#ff5100",  // brand orange
+  Hard:         "#6366f1",  // indigo
+  Advanced:     "#ff5100",  // brand orange
   Extreme:      "#ef4444",  // red
 };
 
@@ -651,10 +651,10 @@ export default function MapPage() {
                     <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-[#9a9590] mb-3">Difficulty</h3>
                     <div className="flex flex-wrap gap-2">
                       {([
-                        { val: "Beginner",     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                        { val: "Intermediate", idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "Easy",         idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "Moderate",     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
+                        { val: "Hard",         idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
                         { val: "Advanced",     idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                        { val: "Expert",       idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
                         { val: "Extreme",      idle: "bg-zinc-50 border-zinc-200 text-zinc-700 hover:bg-zinc-100 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
                         ] as { val: Difficulty; idle: string; active: string }[]).map(({ val, idle, active }) => (
                           <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
