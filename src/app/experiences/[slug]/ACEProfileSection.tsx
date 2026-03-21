@@ -146,7 +146,7 @@ export default function ACEProfileSection({
                             color: meets ? "#4ade80" : "#f87171",
                           }}
                         >
-                          {meets ? "✓ Ready" : `−${trekVal - userVal}`}
+                          {meets ? "✓ Ready" : `You: ${userVal}`}
                         </span>
                       </div>
 
