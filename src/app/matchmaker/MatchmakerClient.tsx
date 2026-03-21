@@ -23,7 +23,7 @@ const QUESTIONS = [
     axis: "Stamina",
     icon: <Flame className="w-4 h-4" />,
     question: "How many hours can you continuously move before needing to stop for the day?",
-    hint: "5–10 minute breaks allowed.",
+    hint: "Count active moving time — short rest stops are fine.",
     options: [
       { v: "A", l: "Under 2 hours" },
       { v: "B", l: "2–4 hours" },
@@ -37,7 +37,7 @@ const QUESTIONS = [
     axis: "Power",
     icon: <Zap className="w-4 h-4" />,
     question: "What weight can you comfortably carry over extended periods without significant fatigue or pain?",
-    hint: "Think of a loaded pack on a multi-day trek.",
+    hint: "Across a full trekking day, not just a short walk.",
     options: [
       { v: "A", l: "Under 5 kg" },
       { v: "B", l: "5–8 kg" },
@@ -51,7 +51,7 @@ const QUESTIONS = [
     axis: "Strength",
     icon: <Dumbbell className="w-4 h-4" />,
     question: "How do you typically handle long, continuous uphill sections?",
-    hint: "Think of sustained ascent across a full day.",
+    hint: "Not a single climb — think repeated ascents over hours.",
     options: [
       { v: "A", l: "Avoid steep or prolonged climbs" },
       { v: "B", l: "Need frequent short breaks" },
@@ -65,7 +65,7 @@ const QUESTIONS = [
     axis: "Agility",
     icon: <Compass className="w-4 h-4" />,
     question: "What type of terrain are you confident moving through?",
-    hint: "Be honest — this directly affects your safety.",
+    hint: "Pick the hardest terrain you can move through safely and steadily.",
     options: [
       { v: "A", l: "Flat, paved, or well-maintained paths" },
       { v: "B", l: "Dirt trails with minor obstacles" },
@@ -79,7 +79,7 @@ const QUESTIONS = [
     axis: "Water",
     icon: <Waves className="w-4 h-4" />,
     question: "What level of water conditions are you comfortable handling?",
-    hint: "Open water, rivers, sea — not just a calm pool.",
+    hint: "Think rivers, sea, or open water — not a controlled pool setting.",
     options: [
       { v: "A", l: "No water exposure" },
       { v: "B", l: "Shallow, calm water" },
@@ -93,7 +93,7 @@ const QUESTIONS = [
     axis: "Altitude",
     icon: <Mountain className="w-4 h-4" />,
     question: "At what altitude have you remained physically active without significant discomfort?",
-    hint: "Active altitude counts — not just passing through.",
+    hint: "Where you've trekked or camped — not just driven or flown through.",
     options: [
       { v: "A", l: "Below 1,500 m" },
       { v: "B", l: "1,500–2,500 m" },
@@ -107,7 +107,7 @@ const QUESTIONS = [
     axis: "Focus",
     icon: <Shield className="w-4 h-4" />,
     question: "How comfortable are you on narrow paths with steep drop-offs?",
-    hint: "Narrow trails, exposed sections, long hours with drop-offs below.",
+    hint: "Paths where a misstep matters — not a momentary ledge crossing.",
     options: [
       { v: "A", l: "Not comfortable; prefer wide paths" },
       { v: "B", l: "Slight discomfort but manageable" },
@@ -121,7 +121,7 @@ const QUESTIONS = [
     axis: "Nerve",
     icon: <Wind className="w-4 h-4" />,
     question: "If you're stuck in a remote area without signal or immediate help, how do you respond?",
-    hint: "No network, delayed rescue, fully remote terrain.",
+    hint: "No phone signal, hours from the nearest town, no guarantee of rescue.",
     options: [
       { v: "A", l: "Prefer to stay within quick reach of help" },
       { v: "B", l: "Comfortable on known routes with people nearby" },
