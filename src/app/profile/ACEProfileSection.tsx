@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Compass, ArrowRight, RotateCcw, Lock } from "lucide-react";
+import { ArrowRight, RotateCcw, Lock } from "lucide-react";
 import { loadProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
 
@@ -254,23 +254,79 @@ export default function ACEProfileSection() {
 
   if (!mounted) return null;
 
+  const UNCHARTED = RANKS[0];
+
   if (!stored) {
     return (
-      <div className="rounded-3xl p-6 md:p-8 border border-white/10 bg-white/5">
-        <h2 className="text-lg font-bold text-white mb-1">ACE Profile</h2>
-        <p className="text-white/40 text-sm mb-6">Take the assessment to map your physical capability profile across 8 axes.</p>
-        <div className="flex flex-col items-center py-6 gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center justify-center">
-            <Compass className="w-7 h-7 text-[#ff5100]/50" />
+      <div
+        className="rounded-3xl border overflow-hidden"
+        style={{ background: `linear-gradient(145deg, ${UNCHARTED.color}10 0%, rgba(14,14,18,0) 60%)`, borderColor: `${UNCHARTED.color}25` }}
+      >
+        {/* Header bar */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.07]">
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-4 rounded-full bg-[#ff5100]" />
+            <h2 className="text-sm font-bold tracking-wide text-white uppercase" style={{ letterSpacing: "0.12em" }}>Capability Profile</h2>
           </div>
-          <p className="text-white/30 text-sm">No assessment taken yet</p>
-          <Link
-            href="/matchmaker"
-            className="inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-6 py-3 rounded-xl text-sm transition-all group"
+          <span
+            className="text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full"
+            style={{ background: `${UNCHARTED.color}18`, color: UNCHARTED.color, border: `1px solid ${UNCHARTED.color}30` }}
           >
-            Take Assessment
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
+            Unassessed
+          </span>
+        </div>
+
+        <div className="p-6 flex flex-col sm:flex-row items-center gap-6">
+          {/* Rank badge */}
+          <div className="shrink-0 flex flex-col items-center gap-3">
+            <div
+              className="w-20 h-20 rounded-2xl flex items-center justify-center"
+              style={{ background: `${UNCHARTED.color}18`, color: UNCHARTED.color, border: `1px solid ${UNCHARTED.color}30`, boxShadow: `0 0 28px ${UNCHARTED.color}20` }}
+            >
+              <div className="scale-[2]">{UNCHARTED.icon}</div>
+            </div>
+            <div className="text-center">
+              <p className="text-[9px] uppercase tracking-[0.18em] text-white/25 mb-0.5">Current Rank</p>
+              <p className="font-bold text-base" style={{ color: UNCHARTED.color }}>{UNCHARTED.label}</p>
+              <div className="flex gap-0.5 justify-center mt-1">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <span key={i} className="text-xs" style={{ color: "rgba(255,255,255,0.08)" }}>★</span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right: info + CTA */}
+          <div className="flex-1 flex flex-col gap-3">
+            <div>
+              <p className="text-white font-semibold text-base mb-1">Your capability is unknown</p>
+              <p className="text-white/40 text-sm leading-relaxed">
+                Take the 8-question ACE assessment to map your physical profile across Stamina, Strength, Altitude, and more — then see exactly which adventures you&apos;re built for.
+              </p>
+            </div>
+
+            {/* Rank preview pills */}
+            <div className="flex flex-wrap gap-1.5">
+              {RANKS.slice(1).map((r) => (
+                <span
+                  key={r.label}
+                  className="text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-full"
+                  style={{ background: `${r.color}12`, color: `${r.color}80`, border: `1px solid ${r.color}20` }}
+                >
+                  {r.label}
+                </span>
+              ))}
+            </div>
+
+            <Link
+              href="/matchmaker"
+              className="inline-flex items-center gap-2 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-all hover:brightness-110 hover:-translate-y-0.5 w-fit"
+              style={{ background: "#ff5100" }}
+            >
+              Take Assessment — 3 mins
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
       </div>
     );
