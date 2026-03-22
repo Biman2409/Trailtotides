@@ -38,8 +38,8 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
     icon:        "Flame",
   },
   power: {
-    id:          "pack-mule",
-    name:        "Pack Mule",
+    id:          "iron-sherpa",
+    name:        "Iron Sherpa",
     description: "Carries 15+ kg across a full trekking day with ease",
     color:       "#eab308",
     icon:        "Zap",
@@ -80,8 +80,8 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
     icon:        "Shield",
   },
   nerve: {
-    id:          "ghost-mode",
-    name:        "Ghost Mode",
+    id:          "off-grid",
+    name:        "Off Grid",
     description: "Completely self-sufficient — no signal, no help, no problem",
     color:       "#10b981",
     icon:        "Wind",
