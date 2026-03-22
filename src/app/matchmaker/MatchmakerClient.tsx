@@ -568,8 +568,8 @@ function StrengthsSection({ sorted, sectionLabel, axisLabels, axisDesc, axisColo
   userAxes: { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; focus: number; nerve: number };
 }) {
   const [showAll, setShowAll] = useState(false);
-  const visible = showAll ? sorted : sorted.slice(0, 3);
-  const hasMore = sorted.length > 3;
+  const visible = showAll ? sorted : sorted.slice(0, 4);
+  const hasMore = sorted.length > 4;
 
   return (
     <div className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-5 sm:mb-7"
@@ -596,7 +596,7 @@ function StrengthsSection({ sorted, sectionLabel, axisLabels, axisDesc, axisColo
               <button onClick={() => setShowAll(v => !v)}
                 className="text-[9px] font-semibold transition-colors"
                 style={{ color: "rgba(255,255,255,0.3)" }}>
-                {showAll ? "Show less" : `+${sorted.length - 3} more`}
+                {showAll ? "Show less" : `+${sorted.length - 4} more`}
               </button>
             )}
           </div>
