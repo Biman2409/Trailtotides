@@ -787,9 +787,17 @@ function ResultsScreen({
                   const icon = AXIS_ICONS[axis];
                   return (
                     <div key={axis} className="rounded-xl p-3" style={{ background: `${color}0c`, border: `1px solid ${color}1c` }}>
-                      <div className="flex items-center gap-2 mb-1">
-                        <div className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${color}1e`, color }}>
-                          <div className="scale-90">{icon}</div>
+                      <div className="flex items-center gap-2.5 mb-1">
+                        <div
+                          className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                          style={{
+                            background: `${color}14`,
+                            border: `1.5px solid ${color}28`,
+                            boxShadow: `0 0 10px ${color}20`,
+                            color,
+                          }}
+                        >
+                          {icon}
                         </div>
                         <span className="text-sm font-bold capitalize" style={{ color }}>{AXIS_LABELS[axis]}</span>
                         <span
