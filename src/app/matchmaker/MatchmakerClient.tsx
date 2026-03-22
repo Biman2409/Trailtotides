@@ -897,15 +897,15 @@ function ResultsScreen({
           focus: "Focus", nerve: "Nerve",
         };
         const AXIS_DESC_BY_LEVEL: Record<string, string[]> = {
-          //                  Lv1                                   Lv2                                      Lv3                                        Lv4                                       Lv5
-          stamina:  ["Gets going, needs frequent breaks.",  "Manages moderate days with rest.",      "Holds steady through a full day.",        "Hours of movement without burning out.",  "Outlasts almost everyone on the trail."],
-          power:    ["Carries a light pack comfortably.",   "Handles a loaded pack on short days.",  "Manages weight across varied terrain.",   "Carries heavy loads all day without slowing.", "A human pack mule — load doesn't slow you."],
-          strength: ["Handles gentle inclines fine.",       "Tackles steady climbs with effort.",    "Pushes through tough ascents reliably.",  "Pushes up steep climbs without losing pace.", "Powers up relentless climbs like a machine."],
-          agility:  ["Comfortable on clear, even paths.",   "Manages mild loose terrain carefully.", "Moves well on rocky and uneven ground.",  "Confident on loose rock, scree and technical ground.", "Nimble on any surface — nothing slows you."],
-          water:    ["Comfortable in calm, shallow water.", "Handles gentle currents with care.",    "Manages open water and mild conditions.", "At ease in open water, currents and aquatic terrain.", "Strong swimmer in demanding aquatic terrain."],
-          altitude: ["Feels altitude above 2,500m.",        "Adapts to 3,000m with acclimatisation.","Handles 3,500m with manageable symptoms.", "Stays strong above 4,000m in thin air.",  "Thrives at extreme altitude — minimal impact."],
-          focus:    ["Prefers wide, well-marked paths.",    "Manages mild exposure with caution.",   "Holds steady on most exposed sections.",  "Sharp and controlled on exposed ridges and drops.", "Ice-calm on the most exposed terrain."],
-          nerve:    ["Prefers guided, supported trips.",    "Manages with a partner and clear plan.", "Comfortable with some uncertainty.",     "Operates alone, far from help, without hesitation.", "Built for self-sufficiency in remote wilderness."],
+          //                  Lv1                                          Lv2                                         Lv3                                           Lv4                                              Lv5
+          stamina:  ["A solid start — you're out there moving.",  "You hold your own on moderate days.",      "You keep a strong pace when others fade.",    "You keep moving for hours without burning out.", "Rare endurance — you outlast almost everyone."],
+          power:    ["You carry your kit without a fuss.",        "You handle a loaded pack on the go.",      "You manage real weight across tough terrain.", "You haul heavy loads all day and still deliver.", "Exceptional — no load slows you down."],
+          strength: ["You take on gentle climbs with ease.",      "You tackle steady ascents without drama.",  "You push through hard climbs and come out strong.", "You power up steep terrain without losing a beat.", "Elite climbing engine — relentless and unstoppable."],
+          agility:  ["You move confidently on solid ground.",     "You handle mild loose terrain well.",       "You navigate rocky and uneven ground with ease.", "You're sure-footed on scree, rock and technical trail.", "Exceptional — no terrain rattles you."],
+          water:    ["You're comfortable in calm open water.",    "You handle gentle currents with ease.",     "You're solid in open water and mild conditions.", "You thrive in currents and challenging aquatic terrain.", "Rare water ability — you're at home in any conditions."],
+          altitude: ["You're adapting well to elevation.",        "You acclimatise better than most.",         "You handle altitude without it holding you back.", "You stay strong and sharp above 4,000m.",        "Exceptional — thin air doesn't touch you."],
+          focus:    ["You stay composed on exposed sections.",    "You hold steady where it gets serious.",    "You're calm and precise on technical ground.",   "You stay sharp on exposed ridges where it counts.", "Ice-cool — nothing rattles you on the edge."],
+          nerve:    ["You're building confidence in the wild.",   "You hold it together when plans change.",   "You're comfortable operating with uncertainty.",  "You thrive alone, far from help, without flinching.", "Rare self-reliance — built for the deep wilderness."],
         };
         const AXIS_DESC: Record<string, string> = Object.fromEntries(
           Object.entries(AXIS_DESC_BY_LEVEL).map(([axis, levels]) => {
