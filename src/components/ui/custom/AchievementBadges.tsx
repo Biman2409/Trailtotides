@@ -168,14 +168,14 @@ function TrophyCard({ badge, index, small = false }: { badge: Achievement; index
       <div
         className="relative flex items-center justify-center rounded-xl mb-1.5 transition-transform duration-150 hover:scale-110"
         style={{
-          width:  small ? 40 : isApex ? 64 : isDomain ? 56 : 48,
-          height: small ? 40 : isApex ? 64 : isDomain ? 56 : 48,
-          background: isApex
-            ? `linear-gradient(145deg, ${badge.color}30 0%, ${badge.color}12 100%)`
+          width:  small ? 40 : 52,
+          height: small ? 40 : 52,
+          background: isSpecial
+            ? `linear-gradient(145deg, ${badge.color}28 0%, ${badge.color}10 100%)`
             : `${badge.color}14`,
-          border: `1.5px solid ${badge.color}${isApex ? "55" : isDomain ? "38" : "28"}`,
-          boxShadow: isApex
-            ? `0 0 24px ${badge.color}40, 0 0 8px ${badge.color}20`
+          border: `1.5px solid ${badge.color}${isSpecial ? "50" : isDomain ? "38" : "28"}`,
+          boxShadow: isSpecial
+            ? `0 0 20px ${badge.color}45, 0 0 8px ${badge.color}25`
             : isDomain
             ? `0 0 12px ${badge.color}25`
             : `0 0 6px ${badge.color}15`,
@@ -188,10 +188,10 @@ function TrophyCard({ badge, index, small = false }: { badge: Achievement; index
           }
         </span>
 
-        {/* Apex pulse ring */}
-        {isApex && (
+        {/* Pulse ring for all special badges */}
+        {isSpecial && (
           <span
-            className="absolute inset-0 rounded-2xl animate-ping opacity-20"
+            className="absolute inset-0 rounded-xl animate-ping opacity-20"
             style={{ border: `2px solid ${badge.color}` }}
           />
         )}
@@ -201,10 +201,9 @@ function TrophyCard({ badge, index, small = false }: { badge: Achievement; index
       <p
         className="leading-tight font-bold w-full text-center"
         style={{
-          color:    badge.color,
-          fontSize: small ? "8px" : isApex ? "11px" : isDomain ? "10px" : "9.5px",
+          color:     badge.color,
+          fontSize:  small ? "8px" : "10px",
           wordBreak: "break-word",
-          whiteSpace: small ? "normal" : "nowrap",
           lineHeight: 1.2,
         }}
       >
@@ -239,12 +238,23 @@ export default function AchievementBadges({ ace, heading }: Props) {
         </p>
       )}
 
-      {/* All trophies — 4 per row, uniform grid */}
-      <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
-        {achievements.map((b, i) => (
-          <TrophyCard key={b.id} badge={b} index={i} small={b.tier === "axis"} />
-        ))}
-      </div>
+      {/* Special + domain — large, 4 per row */}
+      {(apex.length > 0 || domains.length > 0) && (
+        <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+          {[...apex, ...domains].map((b, i) => (
+            <TrophyCard key={b.id} badge={b} index={i} small={false} />
+          ))}
+        </div>
+      )}
+
+      {/* Axis badges — smaller, 4 per row, separate block */}
+      {axes.length > 0 && (
+        <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+          {axes.map((b, i) => (
+            <TrophyCard key={b.id} badge={b} index={(apex.length + domains.length) + i} small />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
