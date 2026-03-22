@@ -896,16 +896,23 @@ function ResultsScreen({
           agility: "Agility", water: "Water", altitude: "Altitude",
           focus: "Focus", nerve: "Nerve",
         };
-        const AXIS_DESC: Record<string, string> = {
-          stamina: "Hours of movement without burning out.",
-          power: "Carries heavy loads all day without slowing.",
-          strength: "Pushes up steep climbs without losing pace.",
-          agility: "Confident on loose rock, scree and technical ground.",
-          water: "At ease in open water, currents and aquatic terrain.",
-          altitude: "Stays strong above 4,000m in thin air.",
-          focus: "Sharp and controlled on exposed ridges and drops.",
-          nerve: "Operates alone, far from help, without hesitation.",
+        const AXIS_DESC_BY_LEVEL: Record<string, string[]> = {
+          //                  Lv1                                   Lv2                                      Lv3                                        Lv4                                       Lv5
+          stamina:  ["Gets going, needs frequent breaks.",  "Manages moderate days with rest.",      "Holds steady through a full day.",        "Hours of movement without burning out.",  "Outlasts almost everyone on the trail."],
+          power:    ["Carries a light pack comfortably.",   "Handles a loaded pack on short days.",  "Manages weight across varied terrain.",   "Carries heavy loads all day without slowing.", "A human pack mule — load doesn't slow you."],
+          strength: ["Handles gentle inclines fine.",       "Tackles steady climbs with effort.",    "Pushes through tough ascents reliably.",  "Pushes up steep climbs without losing pace.", "Powers up relentless climbs like a machine."],
+          agility:  ["Comfortable on clear, even paths.",   "Manages mild loose terrain carefully.", "Moves well on rocky and uneven ground.",  "Confident on loose rock, scree and technical ground.", "Nimble on any surface — nothing slows you."],
+          water:    ["Comfortable in calm, shallow water.", "Handles gentle currents with care.",    "Manages open water and mild conditions.", "At ease in open water, currents and aquatic terrain.", "Strong swimmer in demanding aquatic terrain."],
+          altitude: ["Feels altitude above 2,500m.",        "Adapts to 3,000m with acclimatisation.","Handles 3,500m with manageable symptoms.", "Stays strong above 4,000m in thin air.",  "Thrives at extreme altitude — minimal impact."],
+          focus:    ["Prefers wide, well-marked paths.",    "Manages mild exposure with caution.",   "Holds steady on most exposed sections.",  "Sharp and controlled on exposed ridges and drops.", "Ice-calm on the most exposed terrain."],
+          nerve:    ["Prefers guided, supported trips.",    "Manages with a partner and clear plan.", "Comfortable with some uncertainty.",     "Operates alone, far from help, without hesitation.", "Built for self-sufficiency in remote wilderness."],
         };
+        const AXIS_DESC: Record<string, string> = Object.fromEntries(
+          Object.entries(AXIS_DESC_BY_LEVEL).map(([axis, levels]) => {
+            const lv = (userAxes as Record<string, number>)[axis] ?? 1;
+            return [axis, levels[Math.min(Math.max(lv, 1), 5) - 1]];
+          })
+        );
         return (
           <StrengthsSection
             sorted={sorted}
