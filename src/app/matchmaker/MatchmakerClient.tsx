@@ -589,8 +589,8 @@ function StrengthsSection({ sorted, sectionLabel, axisLabels, axisDesc, axisColo
         <div className="hidden sm:block w-px self-stretch" style={{ background: "rgba(255,255,255,0.07)" }} />
 
         {/* Strengths */}
-        <div className="flex-1 flex flex-col gap-1 min-w-0 p-4 sm:p-5">
-          <div className="flex items-center justify-between mb-0.5">
+        <div className="flex-1 flex flex-col min-w-0 p-4 sm:p-5">
+          <div className="flex items-center justify-between mb-1.5">
             <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22">{sectionLabel}</p>
             {hasMore && (
               <button onClick={() => setShowAll(v => !v)}
@@ -601,24 +601,24 @@ function StrengthsSection({ sorted, sectionLabel, axisLabels, axisDesc, axisColo
             )}
           </div>
 
-          {visible.map(([axis, val]) => {
-            const color = axisColors[axis] ?? "#ff5100";
-            const icon  = axisIcons[axis];
-            return (
-              <div key={axis} className="rounded-md px-2 py-1.5" style={{ background: `${color}0c`, border: `1px solid ${color}1c` }}>
-                <div className="flex items-center gap-2">
+          <div className="flex-1 flex flex-col gap-1">
+            {visible.map(([axis, val]) => {
+              const color = axisColors[axis] ?? "#ff5100";
+              const icon  = axisIcons[axis];
+              return (
+                <div key={axis} className="flex-1 flex items-center rounded-md px-2 gap-2" style={{ background: `${color}0c`, border: `1px solid ${color}1c` }}>
                   <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0 [&>svg]:w-3 [&>svg]:h-3"
                     style={{ background: `${color}14`, border: `1.5px solid ${color}28`, boxShadow: `0 0 6px ${color}20`, color }}>
                     {icon}
                   </div>
                   <span className="text-[11px] font-bold capitalize" style={{ color }}>{axisLabels[axis]}</span>
                   <span className="text-[9px] text-white/28 truncate flex-1">{axisDesc[axis]}</span>
-                  <span className="ml-auto text-[10px] font-black tabular-nums px-1.5 py-0.5 rounded shrink-0"
+                  <span className="text-[10px] font-black tabular-nums px-1.5 py-0.5 rounded shrink-0"
                     style={{ background: `${color}20`, color }}>Lv {val}</span>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
