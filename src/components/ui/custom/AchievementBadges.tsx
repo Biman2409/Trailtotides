@@ -8,8 +8,25 @@ import {
 import { getAchievements, type Achievement } from "@/lib/achievements";
 import type { ACE } from "@/lib/ace";
 
-// ─── Icon map — add new icons here if you add new badges ──────────────────────
-const ICON_MAP: Record<string, React.ReactNode> = {
+// ─── Icon map — two sizes: "sm" for axis badges, "md" for domain/special ──────
+const ICON_MAP_SM: Record<string, React.ReactNode> = {
+  Flame:    <Flame    className="w-4 h-4" />,
+  Zap:      <Zap      className="w-4 h-4" />,
+  Dumbbell: <Dumbbell className="w-4 h-4" />,
+  Compass:  <Compass  className="w-4 h-4" />,
+  Waves:    <Waves    className="w-4 h-4" />,
+  Mountain: <Mountain className="w-4 h-4" />,
+  Shield:   <Shield   className="w-4 h-4" />,
+  Wind:     <Wind     className="w-4 h-4" />,
+  Trophy:   <Trophy   className="w-4 h-4" />,
+  Crown:    <Crown    className="w-4 h-4" />,
+  Gauge:    <Gauge    className="w-4 h-4" />,
+  Layers:   <Layers   className="w-4 h-4" />,
+  Globe:    <Globe    className="w-4 h-4" />,
+  Brain:    <Brain    className="w-4 h-4" />,
+};
+
+const ICON_MAP_MD: Record<string, React.ReactNode> = {
   Flame:    <Flame    className="w-5 h-5" />,
   Zap:      <Zap      className="w-5 h-5" />,
   Dumbbell: <Dumbbell className="w-5 h-5" />,
@@ -80,7 +97,7 @@ function Tooltip({ badge, visible }: { badge: Achievement; visible: boolean }) {
 
 // ─── Trophy card ──────────────────────────────────────────────────────────────
 
-function TrophyCard({ badge, index }: { badge: Achievement; index: number }) {
+function TrophyCard({ badge, index, small = false }: { badge: Achievement; index: number; small?: boolean }) {
   const [visible, setVisible]   = useState(false);
   const [tooltip, setTooltip]   = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -117,10 +134,10 @@ function TrophyCard({ badge, index }: { badge: Achievement; index: number }) {
 
       {/* Trophy body */}
       <div
-        className="relative flex items-center justify-center rounded-2xl mb-2 transition-transform duration-150 hover:scale-110"
+        className="relative flex items-center justify-center rounded-xl mb-1.5 transition-transform duration-150 hover:scale-110"
         style={{
-          width:  isApex ? 64 : isDomain ? 56 : 48,
-          height: isApex ? 64 : isDomain ? 56 : 48,
+          width:  small ? 40 : isApex ? 64 : isDomain ? 56 : 48,
+          height: small ? 40 : isApex ? 64 : isDomain ? 56 : 48,
           background: isApex
             ? `linear-gradient(145deg, ${badge.color}30 0%, ${badge.color}12 100%)`
             : `${badge.color}14`,
@@ -133,7 +150,10 @@ function TrophyCard({ badge, index }: { badge: Achievement; index: number }) {
         }}
       >
         <span style={{ color: badge.color }}>
-          {ICON_MAP[badge.icon] ?? <Trophy className="w-5 h-5" />}
+          {small
+            ? (ICON_MAP_SM[badge.icon] ?? <Trophy className="w-4 h-4" />)
+            : (ICON_MAP_MD[badge.icon] ?? <Trophy className="w-5 h-5" />)
+          }
         </span>
 
         {/* Apex pulse ring */}
@@ -147,10 +167,13 @@ function TrophyCard({ badge, index }: { badge: Achievement; index: number }) {
 
       {/* Label */}
       <p
-        className="leading-tight font-bold whitespace-nowrap"
+        className="leading-tight font-bold w-full text-center"
         style={{
           color:    badge.color,
-          fontSize: isApex ? "11px" : isDomain ? "10px" : "9.5px",
+          fontSize: small ? "8px" : isApex ? "11px" : isDomain ? "10px" : "9.5px",
+          wordBreak: "break-word",
+          whiteSpace: small ? "normal" : "nowrap",
+          lineHeight: 1.2,
         }}
       >
         {badge.name}
@@ -193,11 +216,11 @@ export default function AchievementBadges({ ace, heading }: Props) {
         </div>
       )}
 
-      {/* Per-axis trophies — smaller grid */}
+      {/* Per-axis trophies — 6-col grid so all fit on one line */}
       {axes.length > 0 && (
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-6 gap-1.5">
           {axes.map((b, i) => (
-            <TrophyCard key={b.id} badge={b} index={(apex.length + domains.length) + i} />
+            <TrophyCard key={b.id} badge={b} index={(apex.length + domains.length) + i} small />
           ))}
         </div>
       )}
