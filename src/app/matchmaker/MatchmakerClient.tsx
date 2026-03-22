@@ -586,7 +586,7 @@ function StrengthsSection({ sorted, axisLabels, axisDesc, axisColors, axisIcons,
         {/* Strengths */}
         <div className="flex-1 flex flex-col gap-2 min-w-0">
           <div className="flex items-center justify-between mb-0.5">
-            <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22">Your Top Strengths</p>
+            <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22">Standout Strengths</p>
             {hasMore && (
               <button onClick={() => setShowAll(v => !v)}
                 className="text-[9px] font-semibold transition-colors"
@@ -876,8 +876,10 @@ function ResultsScreen({
 
       {/* ── 3. ACE RADAR + STRENGTHS ─────────────────────────────────────────── */}
       {(() => {
-        const axisEntries = Object.entries(userAxes).filter(([, v]) => v > 0);
-        const sorted = [...axisEntries].sort(([, a], [, b]) => b - a);
+        const allEntries = Object.entries(userAxes).sort(([, a], [, b]) => b - a);
+        // Standout = top score or score >= 4; at minimum show top 1 if nothing reaches 4
+        const threshold = allEntries.some(([, v]) => v >= 4) ? 4 : (allEntries[0]?.[1] ?? 0);
+        const sorted = allEntries.filter(([, v]) => v >= threshold);
         const AXIS_LABELS: Record<string, string> = {
           stamina: "Stamina", power: "Power", strength: "Strength",
           agility: "Agility", water: "Water", altitude: "Altitude",
