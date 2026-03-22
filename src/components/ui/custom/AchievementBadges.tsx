@@ -223,6 +223,8 @@ interface Props {
 }
 
 export default function AchievementBadges({ ace, heading }: Props) {
+  const [expanded, setExpanded] = useState(false);
+
   const achievements = getAchievements(ace);
   if (achievements.length === 0) return null;
 
@@ -230,29 +232,64 @@ export default function AchievementBadges({ ace, heading }: Props) {
   const domains = achievements.filter((a) => a.tier === "domain");
   const axes    = achievements.filter((a) => a.tier === "axis");
 
+  // First row: rarest first — special → domain → axis, up to 4
+  const firstRow = [...apex, ...domains, ...axes].slice(0, 4);
+  const hasMore  = achievements.length > 4;
+
   return (
     <div className="space-y-3" style={{ minWidth: 0 }}>
-      {heading !== false && (
-        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/30">
-          {heading ?? "Achievements"}
-        </p>
-      )}
+      {/* Heading + toggle */}
+      <div className="flex items-center justify-between gap-2">
+        {heading !== false && (
+          <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/30">
+            {heading ?? "Achievements"}
+          </p>
+        )}
+        {hasMore && (
+          <button
+            onClick={() => setExpanded((v) => !v)}
+            className="text-[9px] font-semibold transition-colors whitespace-nowrap"
+            style={{ color: "rgba(255,255,255,0.35)" }}
+          >
+            {expanded ? "Show less" : `+${achievements.length - 4} more`}
+          </button>
+        )}
+      </div>
 
-      {/* Special + domain — large, 4 per row */}
-      {(apex.length > 0 || domains.length > 0) && (
-        <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
-          {[...apex, ...domains].map((b, i) => (
-            <TrophyCard key={b.id} badge={b} index={i} small={false} />
-          ))}
-        </div>
-      )}
+      {/* First row — always visible, rarest first */}
+      <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+        {firstRow.map((b, i) => (
+          <TrophyCard key={b.id} badge={b} index={i} small={b.tier === "axis"} />
+        ))}
+      </div>
 
-      {/* Axis badges — smaller, 4 per row, separate block */}
-      {axes.length > 0 && (
-        <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
-          {axes.map((b, i) => (
-            <TrophyCard key={b.id} badge={b} index={(apex.length + domains.length) + i} small />
-          ))}
+      {/* Expanded rows */}
+      {expanded && (
+        <div className="space-y-3">
+          {/* Remaining special+domain if any didn't fit */}
+          {(() => {
+            const remaining = [...apex, ...domains, ...axes].slice(4);
+            const remDomainSpecial = remaining.filter((b) => b.tier !== "axis");
+            const remAxes          = remaining.filter((b) => b.tier === "axis");
+            return (
+              <>
+                {remDomainSpecial.length > 0 && (
+                  <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+                    {remDomainSpecial.map((b, i) => (
+                      <TrophyCard key={b.id} badge={b} index={4 + i} small={false} />
+                    ))}
+                  </div>
+                )}
+                {remAxes.length > 0 && (
+                  <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+                    {remAxes.map((b, i) => (
+                      <TrophyCard key={b.id} badge={b} index={4 + remDomainSpecial.length + i} small />
+                    ))}
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
       )}
     </div>
