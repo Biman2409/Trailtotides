@@ -50,16 +50,16 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
       }}
     >
       {/* Image area */}
-      <div className="relative w-full overflow-hidden block group" style={{ aspectRatio: isLarge ? "16/9" : "4/3" }}>
+      <div className={`relative w-full overflow-hidden block group ${isLarge ? "aspect-video" : "aspect-[4/3]"}`}>
         <Link href={`/experiences/${adventure.slug}${fromPage && fromPage > 1 ? `?from=${fromPage}` : ""}`} className="absolute inset-0 z-10" />
         <Image
           src={adventure.heroImage}
           alt={adventure.name}
           fill
-          quality={100}
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          quality={90}
+          className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
           style={{ filter: "brightness(1.02) contrast(1) saturate(0.95)" }}
-          sizes="1280px"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
 
         {/* Cinematic colour-grade overlay — unifies tone across all images */}
