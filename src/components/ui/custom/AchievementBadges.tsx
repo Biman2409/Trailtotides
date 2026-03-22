@@ -232,25 +232,25 @@ export default function AchievementBadges({ ace, heading }: Props) {
   const axes    = achievements.filter((a) => a.tier === "axis");
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3" style={{ minWidth: 0 }}>
       {heading !== false && (
         <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/30">
           {heading ?? "Achievements"}
         </p>
       )}
 
-      {/* Special + domain trophies — larger, on their own row */}
+      {/* Special + domain trophies */}
       {(apex.length > 0 || domains.length > 0) && (
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-row flex-wrap gap-3">
           {[...apex, ...domains].map((b, i) => (
             <TrophyCard key={b.id} badge={b} index={i} />
           ))}
         </div>
       )}
 
-      {/* Per-axis trophies — 6-col grid so all fit on one line */}
+      {/* Per-axis trophies — always 8 cells, 4 per row */}
       {axes.length > 0 && (
-        <div className="grid grid-cols-6 gap-1.5">
+        <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(4, 40px)" }}>
           {axes.map((b, i) => (
             <TrophyCard key={b.id} badge={b} index={(apex.length + domains.length) + i} small />
           ))}

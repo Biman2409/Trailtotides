@@ -625,8 +625,8 @@ function ResultsScreen({
           {/* Achievements — right side, only when earned */}
           {achievements.length > 0 && (
             <div
-              className="hidden sm:block shrink-0 pl-4 border-l self-stretch"
-              style={{ borderColor: `${tier.color}18` }}
+              className="hidden sm:flex shrink-0 pl-4 border-l self-stretch items-start"
+              style={{ borderColor: `${tier.color}18`, minWidth: 0 }}
             >
               <AchievementBadges ace={resultAce} heading="Achievements" />
             </div>
