@@ -558,8 +558,9 @@ function LoadingScreen() {
 
 // ─── Strengths section (collapsible) ─────────────────────────────────────────
 
-function StrengthsSection({ sorted, axisLabels, axisDesc, axisColors, axisIcons, userAxes }: {
+function StrengthsSection({ sorted, sectionLabel, axisLabels, axisDesc, axisColors, axisIcons, userAxes }: {
   sorted: [string, number][];
+  sectionLabel: string;
   axisLabels: Record<string, string>;
   axisDesc: Record<string, string>;
   axisColors: Record<string, string>;
@@ -590,7 +591,7 @@ function StrengthsSection({ sorted, axisLabels, axisDesc, axisColors, axisIcons,
         {/* Strengths */}
         <div className="flex-1 flex flex-col gap-1.5 min-w-0 p-4 sm:p-5">
           <div className="flex items-center justify-between mb-0.5">
-            <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22">Standout Strengths</p>
+            <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22">{sectionLabel}</p>
             {hasMore && (
               <button onClick={() => setShowAll(v => !v)}
                 className="text-[9px] font-semibold transition-colors"
@@ -881,9 +882,15 @@ function ResultsScreen({
       {/* ── 3. ACE RADAR + STRENGTHS ─────────────────────────────────────────── */}
       {(() => {
         const allEntries = Object.entries(userAxes).sort(([, a], [, b]) => b - a);
-        // Standout = score >= 4 (genuinely high); fall back to top score if nothing qualifies
-        const threshold = allEntries.some(([, v]) => v >= 4) ? 4 : (allEntries[0]?.[1] ?? 0);
-        const sorted = allEntries.filter(([, v]) => v >= threshold);
+        // Tiered standout: 4-5 = strong, 3 = decent (if no 4+), else show top 2 best axes
+        const hasStandout = allEntries.some(([, v]) => v >= 4);
+        const hasDecent   = allEntries.some(([, v]) => v >= 3);
+        const sorted = (() => {
+          if (hasStandout) return allEntries.filter(([, v]) => v >= 4);
+          if (hasDecent)   return allEntries.filter(([, v]) => v >= 3);
+          return allEntries.slice(0, 2).filter(([, v]) => v > 0);
+        })();
+        const sectionLabel = hasStandout ? "Standout Strengths" : hasDecent ? "Top Strengths" : "Best Axes";
         const AXIS_LABELS: Record<string, string> = {
           stamina: "Stamina", power: "Power", strength: "Strength",
           agility: "Agility", water: "Water", altitude: "Altitude",
@@ -902,6 +909,7 @@ function ResultsScreen({
         return (
           <StrengthsSection
             sorted={sorted}
+            sectionLabel={sectionLabel}
             axisLabels={AXIS_LABELS}
             axisDesc={AXIS_DESC}
             axisColors={AXIS_COLORS}
