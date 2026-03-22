@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, RotateCcw, Lock } from "lucide-react";
 import { loadProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
+import AchievementBadges from "@/components/ui/custom/AchievementBadges";
 
 const RANKS = [
   {
@@ -388,6 +389,9 @@ export default function ACEProfileSection() {
           <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-4">
             <RankProgressionBar totalScore={totalScore} />
           </div>
+
+          {/* Achievements */}
+          <AchievementBadges ace={stored.ace} />
 
           <Link
             href="/matchmaker"

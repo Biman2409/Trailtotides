@@ -10,9 +10,11 @@ import {
   AlertTriangle, Loader2,
 } from "lucide-react";
 import ACERadar from "@/components/ui/custom/ACERadar";
+import AchievementBadges from "@/components/ui/custom/AchievementBadges";
 import { saveProfile, loadProfile, clearProfile, saveProfileToServer, loadProfileFromServer } from "@/lib/matchmaker";
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
 import { getACE } from "@/lib/ace";
+import { getAchievements } from "@/lib/achievements";
 
 // ─── Question definitions (Q1–Q8 map to 8 bio axes) ──────────────────────────
 
@@ -571,6 +573,8 @@ function ResultsScreen({
 
   // Overall score — sum all axes without filtering so 0s count correctly
   const totalScore = Object.values(userAxes).reduce((a, b) => a + b, 0);
+  const resultAce = { stamina: userAxes.stamina ?? 0, power: userAxes.power ?? 0, strength: userAxes.strength ?? 0, agility: userAxes.agility ?? 0, water: userAxes.water ?? 0, altitude: userAxes.altitude ?? 0, focus: userAxes.focus ?? 0, nerve: userAxes.nerve ?? 0 };
+  const achievements = getAchievements(resultAce);
   const tier =
     totalScore >= 40 ? { label: "Apex",        color: "#a78bfa" } :
     totalScore >= 32 ? { label: "Vanguard",    color: "#f97316" } :
@@ -714,6 +718,16 @@ function ResultsScreen({
           );
         })()}
       </div>
+
+      {/* ── 2b. ACHIEVEMENTS ─────────────────────────────────────────────────── */}
+      {achievements.length > 0 && (
+        <div
+          className="rounded-2xl sm:rounded-3xl border px-5 sm:px-7 py-5 mb-5 sm:mb-7"
+          style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}
+        >
+          <AchievementBadges ace={resultAce} heading="Achievements Unlocked" />
+        </div>
+      )}
 
       {/* ── 3. ACE RADAR + STRENGTHS ─────────────────────────────────────────── */}
       {(() => {
