@@ -600,14 +600,17 @@ function ResultsScreen({
       >
         <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: tier.color }} />
 
-        {/* Identity */}
-        <div className="relative flex items-center gap-4 sm:gap-5 px-5 sm:px-7 pt-5 sm:pt-7 pb-4 sm:pb-5">
+        {/* Identity + Achievements row */}
+        <div className="relative flex items-start gap-4 sm:gap-5 px-5 sm:px-7 pt-5 sm:pt-7 pb-4 sm:pb-5">
+          {/* Tier icon */}
           <div
             className="w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] rounded-2xl flex items-center justify-center shrink-0"
             style={{ background: `${tier.color}18`, color: tier.color, boxShadow: `0 0 32px ${tier.color}38`, border: `1px solid ${tier.color}28` }}
           >
             <div className="scale-[1.55] sm:scale-[1.75]">{tierRank?.icon}</div>
           </div>
+
+          {/* Tier label */}
           <div className="flex-1 min-w-0">
             <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-1">Adventure Tier</p>
             <h1 className="text-[26px] sm:text-[32px] font-black tracking-tight leading-none" style={{ color: tier.color }}>{tier.label}</h1>
@@ -618,7 +621,24 @@ function ResultsScreen({
               <span className="text-white/22 text-[10px] ml-2">Rank {tierRank?.stars ?? 0} of 5</span>
             </div>
           </div>
+
+          {/* Achievements — right side, only when earned */}
+          {achievements.length > 0 && (
+            <div
+              className="hidden sm:block shrink-0 pl-4 border-l self-stretch"
+              style={{ borderColor: `${tier.color}18` }}
+            >
+              <AchievementBadges ace={resultAce} heading="Achievements" />
+            </div>
+          )}
         </div>
+
+        {/* Achievements — mobile: below identity, above divider */}
+        {achievements.length > 0 && (
+          <div className="sm:hidden px-5 pb-4">
+            <AchievementBadges ace={resultAce} heading="Achievements" />
+          </div>
+        )}
 
         {/* Divider */}
         <div className="mx-5 sm:mx-7 h-px" style={{ background: `${tier.color}14` }} />
@@ -718,16 +738,6 @@ function ResultsScreen({
           );
         })()}
       </div>
-
-      {/* ── 2b. ACHIEVEMENTS ─────────────────────────────────────────────────── */}
-      {achievements.length > 0 && (
-        <div
-          className="rounded-2xl sm:rounded-3xl border px-5 sm:px-7 py-5 mb-5 sm:mb-7"
-          style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}
-        >
-          <AchievementBadges ace={resultAce} heading="Achievements Unlocked" />
-        </div>
-      )}
 
       {/* ── 3. ACE RADAR + STRENGTHS ─────────────────────────────────────────── */}
       {(() => {
