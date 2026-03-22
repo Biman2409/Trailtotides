@@ -573,9 +573,9 @@ function StrengthsSection({ sorted, axisLabels, axisDesc, axisColors, axisIcons,
   return (
     <div className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-5 sm:mb-7"
       style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
-      <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-5 p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-stretch">
         {/* Radar */}
-        <div className="shrink-0 flex flex-col items-center sm:items-start gap-2.5 w-full sm:w-auto">
+        <div className="shrink-0 flex flex-col items-center sm:items-start gap-2.5 p-4 sm:p-5 w-full sm:w-auto">
           <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 self-start">Capability Breakdown</p>
           <div className="rounded-xl sm:rounded-2xl flex items-center justify-center p-3 sm:p-4 w-full sm:w-auto"
             style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, rgba(255,255,255,0.015) 70%)", border: "1px solid rgba(255,255,255,0.06)" }}>
@@ -583,8 +583,12 @@ function StrengthsSection({ sorted, axisLabels, axisDesc, axisColors, axisIcons,
           </div>
         </div>
 
+        {/* Divider — horizontal on mobile, vertical on sm+ */}
+        <div className="sm:hidden h-px mx-4" style={{ background: "rgba(255,255,255,0.07)" }} />
+        <div className="hidden sm:block w-px self-stretch" style={{ background: "rgba(255,255,255,0.07)" }} />
+
         {/* Strengths */}
-        <div className="flex-1 flex flex-col gap-2 min-w-0">
+        <div className="flex-1 flex flex-col gap-1.5 min-w-0 p-4 sm:p-5">
           <div className="flex items-center justify-between mb-0.5">
             <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22">Standout Strengths</p>
             {hasMore && (
@@ -600,17 +604,17 @@ function StrengthsSection({ sorted, axisLabels, axisDesc, axisColors, axisIcons,
             const color = axisColors[axis] ?? "#ff5100";
             const icon  = axisIcons[axis];
             return (
-              <div key={axis} className="rounded-xl p-3" style={{ background: `${color}0c`, border: `1px solid ${color}1c` }}>
-                <div className="flex items-center gap-2.5 mb-1">
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: `${color}14`, border: `1.5px solid ${color}28`, boxShadow: `0 0 10px ${color}20`, color }}>
+              <div key={axis} className="rounded-lg sm:rounded-xl p-2 sm:p-2.5" style={{ background: `${color}0c`, border: `1px solid ${color}1c` }}>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 [&>svg]:w-3.5 [&>svg]:h-3.5 sm:[&>svg]:w-4 sm:[&>svg]:h-4"
+                    style={{ background: `${color}14`, border: `1.5px solid ${color}28`, boxShadow: `0 0 8px ${color}20`, color }}>
                     {icon}
                   </div>
-                  <span className="text-sm font-bold capitalize" style={{ color }}>{axisLabels[axis]}</span>
-                  <span className="ml-auto text-[11px] font-black tabular-nums px-2 py-0.5 rounded-md"
+                  <span className="text-[11px] sm:text-xs font-bold capitalize" style={{ color }}>{axisLabels[axis]}</span>
+                  <span className="ml-auto text-[10px] font-black tabular-nums px-1.5 py-0.5 rounded"
                     style={{ background: `${color}20`, color }}>Lv {val}</span>
                 </div>
-                <p className="text-[10px] text-white/30 leading-[1.55]">{axisDesc[axis]}</p>
+                <p className="text-[9px] sm:text-[10px] text-white/30 leading-[1.5] pl-9 sm:pl-10">{axisDesc[axis]}</p>
               </div>
             );
           })}
