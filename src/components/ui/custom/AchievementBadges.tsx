@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind,
   Trophy, Crown, Gauge, Layers, Globe, Brain,
@@ -43,83 +44,85 @@ const ICON_MAP_MD: Record<string, React.ReactNode> = {
   Brain:    <Brain    className="w-5 h-5" />,
 };
 
-// ─── Tooltip ──────────────────────────────────────────────────────────────────
+// ─── Tooltip — rendered via portal so it's never clipped ─────────────────────
 
-const TOOLTIP_W = 180;
-const EDGE_PAD  = 8; // min px from screen edge
+const TOOLTIP_W = 176;
+const EDGE_PAD  = 10;
 
-function Tooltip({ badge, visible, anchorRef }: { badge: Achievement; visible: boolean; anchorRef: React.RefObject<HTMLDivElement | null> }) {
-  const tierLabel =
-    badge.id === "full-apex" ? "Legendary" :
-    badge.tier === "special" ? "Special" :
-    badge.tier === "domain"  ? "Domain Mastery" : "Elite Axis";
+function Tooltip({ badge, visible, anchorRef }: {
+  badge: Achievement;
+  visible: boolean;
+  anchorRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  const [pos, setPos] = useState<{ left: number; top: number; arrowLeft: number } | null>(null);
 
-  // Compute horizontal offset so tooltip stays within viewport
-  let shiftX = 0;
-  let arrowX = "50%";
-  if (visible && anchorRef.current) {
+  useEffect(() => {
+    if (!visible || !anchorRef.current) { setPos(null); return; }
     const rect = anchorRef.current.getBoundingClientRect();
     const cardCenterX = rect.left + rect.width / 2;
-    // Default: tooltip centered on card
-    let tipLeft = cardCenterX - TOOLTIP_W / 2;
-    const tipRight = tipLeft + TOOLTIP_W;
     const vw = window.innerWidth;
 
-    if (tipLeft < EDGE_PAD) {
-      const overflow = EDGE_PAD - tipLeft;
-      shiftX = overflow;
-      // move arrow back so it still points at card center
-      arrowX = `${Math.max(12, TOOLTIP_W / 2 - overflow)}px`;
-    } else if (tipRight > vw - EDGE_PAD) {
-      const overflow = tipRight - (vw - EDGE_PAD);
-      shiftX = -overflow;
-      arrowX = `${Math.min(TOOLTIP_W - 12, TOOLTIP_W / 2 + overflow)}px`;
-    }
-  }
+    let left = cardCenterX - TOOLTIP_W / 2;
+    let arrowLeft = TOOLTIP_W / 2;
 
-  return (
+    if (left < EDGE_PAD) {
+      arrowLeft = arrowLeft - (EDGE_PAD - left);
+      left = EDGE_PAD;
+    } else if (left + TOOLTIP_W > vw - EDGE_PAD) {
+      const shift = (left + TOOLTIP_W) - (vw - EDGE_PAD);
+      arrowLeft = arrowLeft + shift;
+      left = left - shift;
+    }
+
+    // Place above the card, account for scroll
+    const top = rect.top + window.scrollY - 8;
+    setPos({ left, top, arrowLeft: Math.max(12, Math.min(TOOLTIP_W - 12, arrowLeft)) });
+  }, [visible, anchorRef]);
+
+  if (!pos) return null;
+
+  return createPortal(
     <div
-      className="absolute bottom-full mb-2.5 z-50 pointer-events-none transition-all duration-200"
+      className="pointer-events-none transition-all duration-200"
       style={{
-        left: "50%",
-        transform: `translateX(calc(-50% + ${shiftX}px)) translateY(${visible ? 0 : 4}px)`,
-        opacity: visible ? 1 : 0,
-        width: TOOLTIP_W,
+        position:  "absolute",
+        top:       pos.top,
+        left:      pos.left,
+        width:     TOOLTIP_W,
+        transform: `translateY(${visible ? -100 : "calc(-100% + 6px)"})`,
+        opacity:   visible ? 1 : 0,
+        zIndex:    9999,
       }}
     >
       <div
         className="rounded-xl px-3.5 py-3 text-left"
         style={{
-          background: "rgba(14,14,18,0.97)",
-          border: `1px solid ${badge.color}35`,
-          boxShadow: `0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)`,
+          background: "rgba(14,14,18,0.98)",
+          border:     `1px solid ${badge.color}40`,
+          boxShadow:  `0 8px 32px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)`,
         }}
       >
-        <p className="font-bold text-[11px] leading-tight mb-1" style={{ color: badge.color }}>
+        <p className="font-bold text-[11px] leading-tight mb-1.5" style={{ color: badge.color }}>
           {badge.name}
         </p>
-        <p className="text-white/50 text-[10px] leading-snug mb-2">
+        <p className="text-white/55 text-[10px] leading-snug">
           {badge.description}
         </p>
-        <span
-          className="text-[8px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full"
-          style={{ background: `${badge.color}18`, color: `${badge.color}cc` }}
-        >
-          {tierLabel}
-        </span>
       </div>
-      {/* Arrow — tracks card center */}
+      {/* Arrow */}
       <div
-        className="absolute -bottom-[5px] w-2.5 h-2.5"
+        className="absolute w-2.5 h-2.5"
         style={{
-          left: arrowX,
-          transform: "translateX(-50%) rotate(45deg)",
-          background: "rgba(14,14,18,0.97)",
-          borderRight: `1px solid ${badge.color}35`,
-          borderBottom: `1px solid ${badge.color}35`,
+          bottom:     -5,
+          left:       pos.arrowLeft,
+          transform:  "translateX(-50%) rotate(45deg)",
+          background: "rgba(14,14,18,0.98)",
+          borderRight:`1px solid ${badge.color}40`,
+          borderBottom:`1px solid ${badge.color}40`,
         }}
       />
-    </div>
+    </div>,
+    document.body
   );
 }
 
