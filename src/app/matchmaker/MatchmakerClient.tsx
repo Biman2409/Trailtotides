@@ -589,7 +589,7 @@ function StrengthsSection({ sorted, sectionLabel, axisLabels, axisDesc, axisColo
         <div className="hidden sm:block w-px self-stretch" style={{ background: "rgba(255,255,255,0.07)" }} />
 
         {/* Strengths */}
-        <div className="flex-1 flex flex-col gap-1.5 min-w-0 p-4 sm:p-5">
+        <div className="flex-1 flex flex-col gap-1 min-w-0 p-4 sm:p-5">
           <div className="flex items-center justify-between mb-0.5">
             <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22">{sectionLabel}</p>
             {hasMore && (
@@ -605,17 +605,17 @@ function StrengthsSection({ sorted, sectionLabel, axisLabels, axisDesc, axisColo
             const color = axisColors[axis] ?? "#ff5100";
             const icon  = axisIcons[axis];
             return (
-              <div key={axis} className="rounded-lg sm:rounded-xl p-2 sm:p-2.5" style={{ background: `${color}0c`, border: `1px solid ${color}1c` }}>
-                <div className="flex items-center gap-2 mb-0.5">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 [&>svg]:w-3.5 [&>svg]:h-3.5 sm:[&>svg]:w-4 sm:[&>svg]:h-4"
-                    style={{ background: `${color}14`, border: `1.5px solid ${color}28`, boxShadow: `0 0 8px ${color}20`, color }}>
+              <div key={axis} className="rounded-md px-2 py-1.5" style={{ background: `${color}0c`, border: `1px solid ${color}1c` }}>
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0 [&>svg]:w-3 [&>svg]:h-3"
+                    style={{ background: `${color}14`, border: `1.5px solid ${color}28`, boxShadow: `0 0 6px ${color}20`, color }}>
                     {icon}
                   </div>
-                  <span className="text-[11px] sm:text-xs font-bold capitalize" style={{ color }}>{axisLabels[axis]}</span>
-                  <span className="ml-auto text-[10px] font-black tabular-nums px-1.5 py-0.5 rounded"
+                  <span className="text-[11px] font-bold capitalize" style={{ color }}>{axisLabels[axis]}</span>
+                  <span className="text-[9px] text-white/28 truncate flex-1">{axisDesc[axis]}</span>
+                  <span className="ml-auto text-[10px] font-black tabular-nums px-1.5 py-0.5 rounded shrink-0"
                     style={{ background: `${color}20`, color }}>Lv {val}</span>
                 </div>
-                <p className="text-[9px] sm:text-[10px] text-white/28 leading-[1.5] truncate pl-9 sm:pl-10">{axisDesc[axis]}</p>
               </div>
             );
           })}
