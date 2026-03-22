@@ -239,23 +239,12 @@ export default function AchievementBadges({ ace, heading }: Props) {
         </p>
       )}
 
-      {/* Special + domain trophies */}
-      {(apex.length > 0 || domains.length > 0) && (
-        <div className="flex flex-row flex-wrap gap-3">
-          {[...apex, ...domains].map((b, i) => (
-            <TrophyCard key={b.id} badge={b} index={i} />
-          ))}
-        </div>
-      )}
-
-      {/* Per-axis trophies — always 8 cells, 4 per row */}
-      {axes.length > 0 && (
-        <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(4, 40px)" }}>
-          {axes.map((b, i) => (
-            <TrophyCard key={b.id} badge={b} index={(apex.length + domains.length) + i} small />
-          ))}
-        </div>
-      )}
+      {/* All trophies — 4 per row, uniform grid */}
+      <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+        {achievements.map((b, i) => (
+          <TrophyCard key={b.id} badge={b} index={i} small={b.tier === "axis"} />
+        ))}
+      </div>
     </div>
   );
 }
