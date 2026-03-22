@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind,
   Trophy, Crown, Gauge, Layers, Globe, Brain,
@@ -26,32 +26,98 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   Brain:    <Brain    className="w-5 h-5" />,
 };
 
+// ─── Tooltip ──────────────────────────────────────────────────────────────────
+
+function Tooltip({ badge, visible }: { badge: Achievement; visible: boolean }) {
+  const tierLabel =
+    badge.id === "full-apex" ? "Legendary" :
+    badge.tier === "special" ? "Special" :
+    badge.tier === "domain"  ? "Domain Mastery" : "Elite Axis";
+
+  return (
+    <div
+      className="absolute bottom-full left-1/2 mb-2.5 z-50 pointer-events-none transition-all duration-200"
+      style={{
+        transform: `translateX(-50%) translateY(${visible ? 0 : 4}px)`,
+        opacity: visible ? 1 : 0,
+        width: 180,
+      }}
+    >
+      <div
+        className="rounded-xl px-3.5 py-3 text-left"
+        style={{
+          background: "rgba(14,14,18,0.97)",
+          border: `1px solid ${badge.color}35`,
+          boxShadow: `0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)`,
+        }}
+      >
+        <p className="font-bold text-[11px] leading-tight mb-1" style={{ color: badge.color }}>
+          {badge.name}
+        </p>
+        <p className="text-white/50 text-[10px] leading-snug mb-2">
+          {badge.description}
+        </p>
+        <span
+          className="text-[8px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full"
+          style={{ background: `${badge.color}18`, color: `${badge.color}cc` }}
+        >
+          {tierLabel}
+        </span>
+      </div>
+      {/* Arrow */}
+      <div
+        className="absolute left-1/2 -bottom-[5px] w-2.5 h-2.5 rotate-45"
+        style={{
+          transform: "translateX(-50%) rotate(45deg)",
+          background: "rgba(14,14,18,0.97)",
+          borderRight: `1px solid ${badge.color}35`,
+          borderBottom: `1px solid ${badge.color}35`,
+        }}
+      />
+    </div>
+  );
+}
+
 // ─── Trophy card ──────────────────────────────────────────────────────────────
 
 function TrophyCard({ badge, index }: { badge: Achievement; index: number }) {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible]   = useState(false);
+  const [tooltip, setTooltip]   = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), index * 70);
     return () => clearTimeout(t);
   }, [index]);
 
-  const isApex   = badge.id === "full-apex";
-  const isDomain = badge.tier === "domain";
+  // Close tooltip after a delay (allows moving into tooltip on desktop)
+  const startClose = () => {
+    closeTimer.current = setTimeout(() => setTooltip(false), 120);
+  };
+  const cancelClose = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+  };
+
+  const isApex    = badge.id === "full-apex";
+  const isDomain  = badge.tier === "domain";
   const isSpecial = badge.tier === "special";
 
   return (
     <div
-      className="flex flex-col items-center text-center transition-all duration-500 select-none"
+      className="relative flex flex-col items-center text-center transition-all duration-500 select-none cursor-pointer"
       style={{
-        opacity: visible ? 1 : 0,
+        opacity:   visible ? 1 : 0,
         transform: visible ? "translateY(0) scale(1)" : "translateY(10px) scale(0.95)",
       }}
-      title={badge.description}
+      onMouseEnter={() => { cancelClose(); setTooltip(true); }}
+      onMouseLeave={startClose}
+      onClick={() => setTooltip((v) => !v)}
     >
+      <Tooltip badge={badge} visible={tooltip} />
+
       {/* Trophy body */}
       <div
-        className="relative flex items-center justify-center rounded-2xl mb-2"
+        className="relative flex items-center justify-center rounded-2xl mb-2 transition-transform duration-150 hover:scale-110"
         style={{
           width:  isApex ? 64 : isDomain ? 56 : 48,
           height: isApex ? 64 : isDomain ? 56 : 48,
