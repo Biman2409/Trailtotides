@@ -556,6 +556,141 @@ function LoadingScreen() {
   );
 }
 
+// ─── Strengths section (collapsible) ─────────────────────────────────────────
+
+function StrengthsSection({ sorted, axisLabels, axisDesc, axisColors, axisIcons, userAxes }: {
+  sorted: [string, number][];
+  axisLabels: Record<string, string>;
+  axisDesc: Record<string, string>;
+  axisColors: Record<string, string>;
+  axisIcons: Record<string, React.ReactNode>;
+  userAxes: { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; focus: number; nerve: number };
+}) {
+  const [showAll, setShowAll] = useState(false);
+  const visible = showAll ? sorted : sorted.slice(0, 3);
+  const hasMore = sorted.length > 3;
+
+  return (
+    <div className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-5 sm:mb-7"
+      style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
+      <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-5 p-4 sm:p-6">
+        {/* Radar */}
+        <div className="shrink-0 flex flex-col items-center sm:items-start gap-2.5 w-full sm:w-auto">
+          <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 self-start">Capability Breakdown</p>
+          <div className="rounded-xl sm:rounded-2xl flex items-center justify-center p-3 sm:p-4 w-full sm:w-auto"
+            style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, rgba(255,255,255,0.015) 70%)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <ACERadar ace={userAxes} size={190} showLabels />
+          </div>
+        </div>
+
+        {/* Strengths */}
+        <div className="flex-1 flex flex-col gap-2 min-w-0">
+          <div className="flex items-center justify-between mb-0.5">
+            <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22">Your Top Strengths</p>
+            {hasMore && (
+              <button onClick={() => setShowAll(v => !v)}
+                className="text-[9px] font-semibold transition-colors"
+                style={{ color: "rgba(255,255,255,0.3)" }}>
+                {showAll ? "Show less" : `+${sorted.length - 3} more`}
+              </button>
+            )}
+          </div>
+
+          {visible.map(([axis, val]) => {
+            const color = axisColors[axis] ?? "#ff5100";
+            const icon  = axisIcons[axis];
+            return (
+              <div key={axis} className="rounded-xl p-3" style={{ background: `${color}0c`, border: `1px solid ${color}1c` }}>
+                <div className="flex items-center gap-2.5 mb-1">
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                    style={{ background: `${color}14`, border: `1.5px solid ${color}28`, boxShadow: `0 0 10px ${color}20`, color }}>
+                    {icon}
+                  </div>
+                  <span className="text-sm font-bold capitalize" style={{ color }}>{axisLabels[axis]}</span>
+                  <span className="ml-auto text-[11px] font-black tabular-nums px-2 py-0.5 rounded-md"
+                    style={{ background: `${color}20`, color }}>Lv {val}</span>
+                </div>
+                <p className="text-[10px] text-white/30 leading-[1.55]">{axisDesc[axis]}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Training section (collapsible) ──────────────────────────────────────────
+
+interface TrainingItem { axis: string; current_level: number; required_level: number; recommendation: string; }
+
+function TrainingSection({ trainingPlan, axisColors, axisIcons }: {
+  trainingPlan: TrainingItem[];
+  axisColors: Record<string, string>;
+  axisIcons: Record<string, React.ReactNode>;
+}) {
+  const [showAll, setShowAll] = useState(false);
+  const sorted = [...trainingPlan].sort((a, b) =>
+    (b.required_level - b.current_level) - (a.required_level - a.current_level));
+  const visible  = showAll ? sorted : sorted.slice(0, 3);
+  const hasMore  = sorted.length > 3;
+
+  return (
+    <div className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-5 sm:mb-7"
+      style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
+
+      {/* Header */}
+      <div className="px-4 sm:px-6 pt-4 sm:pt-5 pb-3.5 sm:pb-4 border-b border-white/[0.05]">
+        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 mb-1">What to train next</p>
+        <h3 className="text-white font-bold text-base leading-tight">Unlock harder adventures</h3>
+        <p className="text-white/35 text-[11px] mt-1">Build these up and more adventures open up for you.</p>
+      </div>
+
+      {/* Items */}
+      <div className="px-4 sm:px-6 py-4 space-y-2.5">
+        {visible.map((item, i) => {
+          const color = axisColors[item.axis] ?? "#ff5100";
+          const icon  = axisIcons[item.axis];
+          const gap   = item.required_level - item.current_level;
+          return (
+            <div key={i} className="flex items-start gap-3 rounded-xl p-3.5"
+              style={{ background: `${color}08`, border: `1px solid ${color}16` }}>
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                style={{ background: `${color}14`, border: `1.5px solid ${color}28`, boxShadow: `0 0 8px ${color}20`, color }}>
+                {icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <span className="text-white font-bold text-sm capitalize">{item.axis}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
+                    style={{ background: `${color}18`, color }}>
+                    +{gap} level{gap > 1 ? "s" : ""} to go
+                  </span>
+                  <span className="text-white/22 text-[10px] ml-auto font-mono">
+                    {item.current_level} → {item.required_level}
+                  </span>
+                </div>
+                <p className="text-white/40 text-[11px] leading-[1.55]">{item.recommendation}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Expand toggle */}
+      {hasMore && (
+        <div className="px-4 sm:px-6 pb-4 -mt-1">
+          <button onClick={() => setShowAll(v => !v)}
+            className="w-full py-2 rounded-xl text-[11px] font-semibold transition-all"
+            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.35)" }}>
+            {showAll ? "Show less" : `Show ${sorted.length - 3} more areas`}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Results screen ───────────────────────────────────────────────────────────
 
 function ResultsScreen({
@@ -743,7 +878,6 @@ function ResultsScreen({
       {(() => {
         const axisEntries = Object.entries(userAxes).filter(([, v]) => v > 0);
         const sorted = [...axisEntries].sort(([, a], [, b]) => b - a);
-        const strengths = sorted.slice(0, 3);
         const AXIS_LABELS: Record<string, string> = {
           stamina: "Stamina", power: "Power", strength: "Strength",
           agility: "Agility", water: "Water", altitude: "Altitude",
@@ -760,60 +894,14 @@ function ResultsScreen({
           nerve: "You're comfortable operating alone, far from help, with no guarantees.",
         };
         return (
-          <div
-            className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-5 sm:mb-7"
-            style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}
-          >
-            {/* Content */}
-            <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-5 p-4 sm:p-6">
-              {/* Radar column — label sits above it */}
-              <div className="shrink-0 flex flex-col items-center sm:items-start gap-2.5 w-full sm:w-auto">
-                <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 self-start">Capability Breakdown</p>
-                <div
-                  className="rounded-xl sm:rounded-2xl flex items-center justify-center p-3 sm:p-4 w-full sm:w-auto"
-                  style={{
-                    background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, rgba(255,255,255,0.015) 70%)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                  }}
-                >
-                  <ACERadar ace={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; focus: number; nerve: number }} size={190} showLabels />
-                </div>
-              </div>
-              {/* Strengths list */}
-              <div className="flex-1 flex flex-col gap-2">
-                <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22 mb-0.5">Standout Strengths</p>
-                {strengths.map(([axis, val]) => {
-                  const color = AXIS_COLORS[axis] ?? "#ff5100";
-                  const icon = AXIS_ICONS[axis];
-                  return (
-                    <div key={axis} className="rounded-xl p-3" style={{ background: `${color}0c`, border: `1px solid ${color}1c` }}>
-                      <div className="flex items-center gap-2.5 mb-1">
-                        <div
-                          className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                          style={{
-                            background: `${color}14`,
-                            border: `1.5px solid ${color}28`,
-                            boxShadow: `0 0 10px ${color}20`,
-                            color,
-                          }}
-                        >
-                          {icon}
-                        </div>
-                        <span className="text-sm font-bold capitalize" style={{ color }}>{AXIS_LABELS[axis]}</span>
-                        <span
-                          className="ml-auto text-[11px] font-black tabular-nums px-2 py-0.5 rounded-md"
-                          style={{ background: `${color}20`, color }}
-                        >
-                          Lv {val}
-                        </span>
-                      </div>
-                      <p className="text-[10px] text-white/30 leading-[1.55]">{AXIS_DESC[axis]}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+          <StrengthsSection
+            sorted={sorted}
+            axisLabels={AXIS_LABELS}
+            axisDesc={AXIS_DESC}
+            axisColors={AXIS_COLORS}
+            axisIcons={AXIS_ICONS}
+            userAxes={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; focus: number; nerve: number }}
+          />
         );
       })()}
 
@@ -855,45 +943,13 @@ function ResultsScreen({
       </div>
 
       {/* ── 5. TRAINING FOCUS AREAS ──────────────────────────────────────────── */}
-      {trainingPlan.length > 0 && (() => {
-        const prioritised = [...trainingPlan]
-          .sort((a, b) => (b.required_level - b.current_level) - (a.required_level - a.current_level))
-          .slice(0, 3);
-        return (
-          <div
-            className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-5 sm:mb-7"
-            style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}
-          >
-            <div className="px-4 sm:px-6 pt-4 sm:pt-5 pb-3.5 sm:pb-4 border-b border-white/[0.05]">
-              <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 mb-1">Training Plan</p>
-              <h3 className="text-white font-bold text-base leading-tight">How to unlock harder adventures</h3>
-              <p className="text-white/30 text-[11px] mt-1 leading-relaxed">Improve these axes to expand your accessible adventure range.</p>
-            </div>
-            <div className="px-4 sm:px-6 py-4 space-y-2.5">
-              {prioritised.map((item, i) => {
-                const color = AXIS_COLORS[item.axis] ?? "#ff5100";
-                const icon = AXIS_ICONS[item.axis];
-                const gap = item.required_level - item.current_level;
-                return (
-                  <div key={i} className="flex items-start gap-3 rounded-xl p-3.5" style={{ background: `${color}08`, border: `1px solid ${color}16` }}>
-                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${color}1e`, color }}>
-                      <div className="scale-90">{icon}</div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                        <span className="text-white font-bold text-sm capitalize">{item.axis}</span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full font-bold" style={{ background: `${color}1e`, color }}>+{gap} needed</span>
-                        <span className="text-white/22 text-[10px] ml-auto font-mono">Lv {item.current_level} → {item.required_level}</span>
-                      </div>
-                      <p className="text-white/38 text-[11px] leading-[1.55]">{item.recommendation}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })()}
+      {trainingPlan.length > 0 && (
+        <TrainingSection
+          trainingPlan={trainingPlan}
+          axisColors={AXIS_COLORS}
+          axisIcons={AXIS_ICONS}
+        />
+      )}
 
       {/* ── 6. CTA BUTTONS ───────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row gap-3 pt-1">
