@@ -614,7 +614,7 @@ function StrengthsSection({ sorted, axisLabels, axisDesc, axisColors, axisIcons,
                   <span className="ml-auto text-[10px] font-black tabular-nums px-1.5 py-0.5 rounded"
                     style={{ background: `${color}20`, color }}>Lv {val}</span>
                 </div>
-                <p className="text-[9px] sm:text-[10px] text-white/30 leading-[1.5] pl-9 sm:pl-10">{axisDesc[axis]}</p>
+                <p className="text-[9px] sm:text-[10px] text-white/28 leading-[1.5] truncate pl-9 sm:pl-10">{axisDesc[axis]}</p>
               </div>
             );
           })}
@@ -881,7 +881,7 @@ function ResultsScreen({
       {/* ── 3. ACE RADAR + STRENGTHS ─────────────────────────────────────────── */}
       {(() => {
         const allEntries = Object.entries(userAxes).sort(([, a], [, b]) => b - a);
-        // Standout = top score or score >= 4; at minimum show top 1 if nothing reaches 4
+        // Standout = score >= 4 (genuinely high); fall back to top score if nothing qualifies
         const threshold = allEntries.some(([, v]) => v >= 4) ? 4 : (allEntries[0]?.[1] ?? 0);
         const sorted = allEntries.filter(([, v]) => v >= threshold);
         const AXIS_LABELS: Record<string, string> = {
@@ -890,14 +890,14 @@ function ResultsScreen({
           focus: "Focus", nerve: "Nerve",
         };
         const AXIS_DESC: Record<string, string> = {
-          stamina: "You can keep moving for hours without burning out — ideal for long multi-day treks.",
-          power: "You carry heavy loads all day without slowing down — no porter needed.",
-          strength: "You push up steep, relentless climbs without losing your pace.",
-          agility: "You move confidently on loose rock, scree, and technical ground.",
-          water: "You're comfortable in open water, currents, and aquatic conditions.",
-          altitude: "Your body handles thin air well — you stay strong above 4,000m.",
-          focus: "You stay sharp and controlled on exposed ridges and narrow drop-off paths.",
-          nerve: "You're comfortable operating alone, far from help, with no guarantees.",
+          stamina: "Hours of movement without burning out.",
+          power: "Carries heavy loads all day without slowing.",
+          strength: "Pushes up steep climbs without losing pace.",
+          agility: "Confident on loose rock, scree and technical ground.",
+          water: "At ease in open water, currents and aquatic terrain.",
+          altitude: "Stays strong above 4,000m in thin air.",
+          focus: "Sharp and controlled on exposed ridges and drops.",
+          nerve: "Operates alone, far from help, without hesitation.",
         };
         return (
           <StrengthsSection
