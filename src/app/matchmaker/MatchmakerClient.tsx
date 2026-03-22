@@ -882,13 +882,22 @@ function ResultsScreen({
       {/* ── 3. ACE RADAR + STRENGTHS ─────────────────────────────────────────── */}
       {(() => {
         const allEntries = Object.entries(userAxes).sort(([, a], [, b]) => b - a);
-        // Standout = axes strictly above the mean
-        // If all equal (or fewer than 4 above avg), just show top 4 with no dropdown
         const values = allEntries.map(([, v]) => v);
         const mean = values.reduce((s, v) => s + v, 0) / values.length;
+        const allEqual = values.every(v => v === values[0]);
         const aboveAvg = allEntries.filter(([, v]) => v > mean);
-        // Only enable dropdown if there are MORE than 4 standout axes; otherwise cap at 4
-        const sorted = aboveAvg.length > 4 ? aboveAvg : allEntries.slice(0, 4).filter(([, v]) => v > 0);
+        // Rules:
+        // - All equal + avg >= 4 → show all 8 (4 visible + 4 in dropdown)
+        // - All equal + avg < 4  → show only top 4, no dropdown
+        // - Above avg > 4        → show top 4, rest in dropdown
+        // - Above avg <= 4       → show only those, no dropdown
+        const sorted = (allEqual && mean >= 4)
+          ? allEntries
+          : aboveAvg.length > 4
+            ? aboveAvg
+            : aboveAvg.length > 0
+              ? aboveAvg
+              : allEntries.slice(0, 4).filter(([, v]) => v > 0);
         const sectionLabel = "Standout Strengths";
         const AXIS_LABELS: Record<string, string> = {
           stamina: "Stamina", power: "Power", strength: "Strength",
