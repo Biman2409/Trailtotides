@@ -882,15 +882,12 @@ function ResultsScreen({
       {/* ── 3. ACE RADAR + STRENGTHS ─────────────────────────────────────────── */}
       {(() => {
         const allEntries = Object.entries(userAxes).sort(([, a], [, b]) => b - a);
-        // Tiered standout: 4-5 = strong, 3 = decent (if no 4+), else show top 2 best axes
-        const hasStandout = allEntries.some(([, v]) => v >= 4);
-        const hasDecent   = allEntries.some(([, v]) => v >= 3);
-        const sorted = (() => {
-          if (hasStandout) return allEntries.filter(([, v]) => v >= 4);
-          if (hasDecent)   return allEntries.filter(([, v]) => v >= 3);
-          return allEntries.slice(0, 2).filter(([, v]) => v > 0);
-        })();
-        const sectionLabel = hasStandout ? "Standout Strengths" : hasDecent ? "Top Strengths" : "Best Axes";
+        // Standout = axes strictly above the mean; fall back to top 2 if all are equal
+        const values = allEntries.map(([, v]) => v);
+        const mean = values.reduce((s, v) => s + v, 0) / values.length;
+        const aboveAvg = allEntries.filter(([, v]) => v > mean);
+        const sorted = aboveAvg.length > 0 ? aboveAvg : allEntries.slice(0, 2).filter(([, v]) => v > 0);
+        const sectionLabel = "Standout Strengths";
         const AXIS_LABELS: Record<string, string> = {
           stamina: "Stamina", power: "Power", strength: "Strength",
           agility: "Agility", water: "Water", altitude: "Altitude",
