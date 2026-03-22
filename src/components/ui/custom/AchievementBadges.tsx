@@ -45,19 +45,46 @@ const ICON_MAP_MD: Record<string, React.ReactNode> = {
 
 // ─── Tooltip ──────────────────────────────────────────────────────────────────
 
-function Tooltip({ badge, visible }: { badge: Achievement; visible: boolean }) {
+const TOOLTIP_W = 180;
+const EDGE_PAD  = 8; // min px from screen edge
+
+function Tooltip({ badge, visible, anchorRef }: { badge: Achievement; visible: boolean; anchorRef: React.RefObject<HTMLDivElement | null> }) {
   const tierLabel =
     badge.id === "full-apex" ? "Legendary" :
     badge.tier === "special" ? "Special" :
     badge.tier === "domain"  ? "Domain Mastery" : "Elite Axis";
 
+  // Compute horizontal offset so tooltip stays within viewport
+  let shiftX = 0;
+  let arrowX = "50%";
+  if (visible && anchorRef.current) {
+    const rect = anchorRef.current.getBoundingClientRect();
+    const cardCenterX = rect.left + rect.width / 2;
+    // Default: tooltip centered on card
+    let tipLeft = cardCenterX - TOOLTIP_W / 2;
+    const tipRight = tipLeft + TOOLTIP_W;
+    const vw = window.innerWidth;
+
+    if (tipLeft < EDGE_PAD) {
+      const overflow = EDGE_PAD - tipLeft;
+      shiftX = overflow;
+      // move arrow back so it still points at card center
+      arrowX = `${Math.max(12, TOOLTIP_W / 2 - overflow)}px`;
+    } else if (tipRight > vw - EDGE_PAD) {
+      const overflow = tipRight - (vw - EDGE_PAD);
+      shiftX = -overflow;
+      arrowX = `${Math.min(TOOLTIP_W - 12, TOOLTIP_W / 2 + overflow)}px`;
+    }
+  }
+
   return (
     <div
-      className="absolute bottom-full left-1/2 mb-2.5 z-50 pointer-events-none transition-all duration-200"
+      className="absolute bottom-full mb-2.5 z-50 pointer-events-none transition-all duration-200"
       style={{
-        transform: `translateX(-50%) translateY(${visible ? 0 : 4}px)`,
+        left: "50%",
+        transform: `translateX(calc(-50% + ${shiftX}px)) translateY(${visible ? 0 : 4}px)`,
         opacity: visible ? 1 : 0,
-        width: 180,
+        width: TOOLTIP_W,
       }}
     >
       <div
@@ -81,10 +108,11 @@ function Tooltip({ badge, visible }: { badge: Achievement; visible: boolean }) {
           {tierLabel}
         </span>
       </div>
-      {/* Arrow */}
+      {/* Arrow — tracks card center */}
       <div
-        className="absolute left-1/2 -bottom-[5px] w-2.5 h-2.5 rotate-45"
+        className="absolute -bottom-[5px] w-2.5 h-2.5"
         style={{
+          left: arrowX,
           transform: "translateX(-50%) rotate(45deg)",
           background: "rgba(14,14,18,0.97)",
           borderRight: `1px solid ${badge.color}35`,
@@ -101,6 +129,7 @@ function TrophyCard({ badge, index, small = false }: { badge: Achievement; index
   const [visible, setVisible]   = useState(false);
   const [tooltip, setTooltip]   = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cardRef    = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), index * 70);
@@ -121,6 +150,7 @@ function TrophyCard({ badge, index, small = false }: { badge: Achievement; index
 
   return (
     <div
+      ref={cardRef}
       className="relative flex flex-col items-center text-center transition-all duration-500 select-none cursor-pointer"
       style={{
         opacity:   visible ? 1 : 0,
@@ -130,7 +160,7 @@ function TrophyCard({ badge, index, small = false }: { badge: Achievement; index
       onMouseLeave={startClose}
       onClick={() => setTooltip((v) => !v)}
     >
-      <Tooltip badge={badge} visible={tooltip} />
+      <Tooltip badge={badge} visible={tooltip} anchorRef={cardRef} />
 
       {/* Trophy body */}
       <div
