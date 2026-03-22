@@ -54,7 +54,7 @@ function Tooltip({ badge, visible, anchorRef }: {
   visible: boolean;
   anchorRef: React.RefObject<HTMLDivElement | null>;
 }) {
-  const [pos, setPos] = useState<{ left: number; top: number; arrowLeft: number } | null>(null);
+  const [pos, setPos] = useState<{ left: number; bottom: number; arrowLeft: number } | null>(null);
 
   useEffect(() => {
     if (!visible || !anchorRef.current) { setPos(null); return; }
@@ -74,9 +74,9 @@ function Tooltip({ badge, visible, anchorRef }: {
       left = left - shift;
     }
 
-    // Place above the card, account for scroll
-    const top = rect.top + window.scrollY - 8;
-    setPos({ left, top, arrowLeft: Math.max(12, Math.min(TOOLTIP_W - 12, arrowLeft)) });
+    // bottom of tooltip = top of card - gap (fixed coords, no scroll needed)
+    const bottom = window.innerHeight - rect.top + 8;
+    setPos({ left, bottom, arrowLeft: Math.max(12, Math.min(TOOLTIP_W - 12, arrowLeft)) });
   }, [visible, anchorRef]);
 
   if (!pos) return null;
@@ -85,13 +85,12 @@ function Tooltip({ badge, visible, anchorRef }: {
     <div
       className="pointer-events-none transition-all duration-200"
       style={{
-        position:  "absolute",
-        top:       pos.top,
-        left:      pos.left,
-        width:     TOOLTIP_W,
-        transform: `translateY(${visible ? -100 : "calc(-100% + 6px)"})`,
-        opacity:   visible ? 1 : 0,
-        zIndex:    9999,
+        position: "fixed",
+        bottom:   pos.bottom + (visible ? 0 : -4),
+        left:     pos.left,
+        width:    TOOLTIP_W,
+        opacity:  visible ? 1 : 0,
+        zIndex:   9999,
       }}
     >
       <div
