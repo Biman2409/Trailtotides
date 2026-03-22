@@ -156,10 +156,6 @@ function TrophyCard({ badge, index }: { badge: Achievement; index: number }) {
         {badge.name}
       </p>
 
-      {/* Tier label */}
-      <p className="text-white/20 mt-0.5" style={{ fontSize: "8px" }}>
-        {isApex ? "LEGENDARY" : isSpecial ? "SPECIAL" : isDomain ? "DOMAIN" : "ELITE"}
-      </p>
     </div>
   );
 }
