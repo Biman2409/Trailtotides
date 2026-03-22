@@ -750,14 +750,14 @@ function ResultsScreen({
           focus: "Focus", nerve: "Nerve",
         };
         const AXIS_DESC: Record<string, string> = {
-          stamina: "Sustained aerobic output over long durations",
-          power: "Load-carrying capacity and climb endurance",
-          strength: "Sustained uphill and repeated steep climb ability",
-          agility: "Terrain navigation and body control",
-          water: "Aquatic comfort and swim capability",
-          altitude: "High-altitude acclimatisation and overnight tolerance",
-          focus: "Calm under exposure — drops, narrow paths, risk",
-          nerve: "Self-reliance far from help in remote terrain",
+          stamina: "You can keep moving for hours without burning out — ideal for long multi-day treks.",
+          power: "You carry heavy loads all day without slowing down — no porter needed.",
+          strength: "You push up steep, relentless climbs without losing your pace.",
+          agility: "You move confidently on loose rock, scree, and technical ground.",
+          water: "You're comfortable in open water, currents, and aquatic conditions.",
+          altitude: "Your body handles thin air well — you stay strong above 4,000m.",
+          focus: "You stay sharp and controlled on exposed ridges and narrow drop-off paths.",
+          nerve: "You're comfortable operating alone, far from help, with no guarantees.",
         };
         return (
           <div
