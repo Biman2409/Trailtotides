@@ -8,7 +8,7 @@ export type ACE = ACEAxes;
 
 export const ACE_AXES = [
   "stamina", "power", "strength", "agility",
-  "water", "altitude", "focus", "nerve",
+  "water", "altitude", "focus", "mettle",
 ] as const;
 
 export type AceAxis = typeof ACE_AXES[number];
@@ -21,7 +21,7 @@ export const ACE_AXIS_LABELS: Record<AceAxis, string> = {
   water:    "Water",
   altitude: "Altitude",
   focus:    "Focus",
-  nerve:    "Nerve",
+  mettle:    "Mettle",
 };
 
 export const ACE_AXIS_COLORS: Record<AceAxis, string> = {
@@ -32,7 +32,7 @@ export const ACE_AXIS_COLORS: Record<AceAxis, string> = {
   water:    "#3b82f6",
   altitude: "#a78bfa",
   focus:    "#f43f5e",
-  nerve: "#10b981",
+  mettle: "#10b981",
 };
 
 export const ACE_SCALE_LABELS: Record<number, string> = {
@@ -50,10 +50,10 @@ export const ACE_DOMAINS = [
   { name: "Engine",    axes: ["stamina", "power"] as AceAxis[],          color: "#f97316", desc: "The physical engine — sustained output and explosive effort." },
   { name: "Chassis",   axes: ["strength", "agility"] as AceAxis[],       color: "#22d3ee", desc: "Load-bearing capability and terrain navigation." },
   { name: "Elements",  axes: ["water", "altitude"] as AceAxis[],         color: "#a78bfa", desc: "Environmental exposure — aquatic and high-altitude demands." },
-  { name: "Mind",      axes: ["focus", "nerve"] as AceAxis[],          color: "#10b981", desc: "Psychological resilience and the grit to operate far from help." },
+  { name: "Mind",      axes: ["focus", "mettle"] as AceAxis[],          color: "#10b981", desc: "Psychological resilience and the grit to operate far from help." },
 ];
 
-const BLANK_ACE: ACE = { stamina: 0, power: 0, strength: 0, agility: 0, water: 0, altitude: 0, focus: 0, nerve: 0 };
+const BLANK_ACE: ACE = { stamina: 0, power: 0, strength: 0, agility: 0, water: 0, altitude: 0, focus: 0, mettle: 0 };
 
 // ─── Difficulty computation from ACE sum ──────────────────────────────────
 
@@ -106,7 +106,7 @@ export function aceSummary(ace: ACE, adventureName: string): string {
     parts.push("Significant psychological exposure — comfort with heights, void, or dangerous environments is critical.");
 
   // Tenacity
-  if (ace.nerve >= 4)
+  if (ace.mettle >= 4)
     parts.push("Remote or isolated terrain demands strong self-reliance — you'll be far from support for extended periods.");
 
   return parts.join(" ");
@@ -133,7 +133,7 @@ export function aceCardLabels(ace: ACE): string[] {
   if (techLabel >= 5) labels.push("Technical Mountaineering");
   else if (techLabel === 4) labels.push("Technical Terrain");
 
-  if (ace.nerve >= 4) labels.push("Remote Self-Reliance");
+  if (ace.mettle >= 4) labels.push("Remote Self-Reliance");
 
   return labels.slice(0, 4);
 }

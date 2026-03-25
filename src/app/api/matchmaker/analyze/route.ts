@@ -61,7 +61,7 @@ OUTPUT SCHEMA
   "water":0,
   "altitude":0,
   "focus":0,
-  "nerve":0
+  "mettle":0
  }
 }`;
 
@@ -141,7 +141,7 @@ OUTPUT SCHEMA
   "water":0,
   "altitude":0,
   "focus":0,
-  "nerve":0
+  "mettle":0
  },
  "risk_level":0,
  "required_keys":[]

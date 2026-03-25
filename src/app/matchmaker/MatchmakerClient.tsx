@@ -119,7 +119,7 @@ const QUESTIONS = [
   },
   {
     key: "Q8",
-    axis: "Nerve",
+    axis: "Mettle",
     icon: <Wind className="w-4 h-4" />,
     question: "If you're stuck in a remote area without signal or immediate help, how do you respond?",
     hint: "No phone signal, hours from the nearest town, no guarantee of rescue.",
@@ -145,7 +145,7 @@ const AXIS_COLORS: Record<string, string> = {
   water:    "#3b82f6",
   altitude: "#a78bfa",
   focus:    "#f43f5e",
-  nerve: "#10b981",
+  mettle: "#10b981",
 };
 
 const AXIS_ICONS: Record<string, React.ReactNode> = {
@@ -156,7 +156,7 @@ const AXIS_ICONS: Record<string, React.ReactNode> = {
   water:    <Waves    className="w-3.5 h-3.5" />,
   altitude: <Mountain className="w-3.5 h-3.5" />,
   focus:    <Shield   className="w-3.5 h-3.5" />,
-  nerve: <Wind     className="w-3.5 h-3.5" />,
+  mettle: <Wind     className="w-3.5 h-3.5" />,
 };
 
 // ─── Types from API ───────────────────────────────────────────────────────────
@@ -565,7 +565,7 @@ function StrengthsSection({ sorted, sectionLabel, axisLabels, axisDesc, axisColo
   axisDesc: Record<string, string>;
   axisColors: Record<string, string>;
   axisIcons: Record<string, React.ReactNode>;
-  userAxes: { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; focus: number; nerve: number };
+  userAxes: { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; focus: number; mettle: number };
 }) {
   const [showAll, setShowAll] = useState(false);
   const visible = showAll ? sorted : sorted.slice(0, 4);
@@ -713,7 +713,7 @@ function ResultsScreen({
 
   // Overall score — sum all axes without filtering so 0s count correctly
   const totalScore = Object.values(userAxes).reduce((a, b) => a + b, 0);
-  const resultAce = { stamina: userAxes.stamina ?? 0, power: userAxes.power ?? 0, strength: userAxes.strength ?? 0, agility: userAxes.agility ?? 0, water: userAxes.water ?? 0, altitude: userAxes.altitude ?? 0, focus: userAxes.focus ?? 0, nerve: userAxes.nerve ?? 0 };
+  const resultAce = { stamina: userAxes.stamina ?? 0, power: userAxes.power ?? 0, strength: userAxes.strength ?? 0, agility: userAxes.agility ?? 0, water: userAxes.water ?? 0, altitude: userAxes.altitude ?? 0, focus: userAxes.focus ?? 0, mettle: userAxes.mettle ?? 0 };
   const achievements = getAchievements(resultAce);
   const tier =
     totalScore >= 40 ? { label: "Apex",        color: "#a78bfa" } :
@@ -902,7 +902,7 @@ function ResultsScreen({
         const AXIS_LABELS: Record<string, string> = {
           stamina: "Stamina", power: "Power", strength: "Strength",
           agility: "Agility", water: "Water", altitude: "Altitude",
-          focus: "Focus", nerve: "Nerve",
+          focus: "Focus", mettle: "Mettle",
         };
         const AXIS_DESC_BY_LEVEL: Record<string, string[]> = {
           //                  Lv1                                          Lv2                                         Lv3                                           Lv4                                              Lv5
@@ -913,7 +913,7 @@ function ResultsScreen({
           water:    ["You're comfortable in calm open water.",    "You handle gentle currents with ease.",     "You're solid in open water and mild conditions.", "You thrive in currents and challenging aquatic terrain.", "Rare water ability — you're at home in any conditions."],
           altitude: ["You're adapting well to elevation.",        "You acclimatise better than most.",         "You handle altitude without it holding you back.", "You stay strong and sharp above 4,000m.",        "Exceptional — thin air doesn't touch you."],
           focus:    ["You stay composed on exposed sections.",    "You hold steady where it gets serious.",    "You're calm and precise on technical ground.",   "You stay sharp on exposed ridges where it counts.", "Ice-cool — nothing rattles you on the edge."],
-          nerve:    ["You're building confidence in the wild.",   "You hold it together when plans change.",   "You're comfortable operating with uncertainty.",  "You thrive alone, far from help, without flinching.", "Rare self-reliance — built for the deep wilderness."],
+          mettle:    ["You're building confidence in the wild.",   "You hold it together when plans change.",   "You're comfortable operating with uncertainty.",  "You thrive alone, far from help, without flinching.", "Rare self-reliance — built for the deep wilderness."],
         };
         const AXIS_DESC: Record<string, string> = Object.fromEntries(
           Object.entries(AXIS_DESC_BY_LEVEL).map(([axis, levels]) => {
@@ -929,7 +929,7 @@ function ResultsScreen({
             axisDesc={AXIS_DESC}
             axisColors={AXIS_COLORS}
             axisIcons={AXIS_ICONS}
-            userAxes={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; focus: number; nerve: number }}
+            userAxes={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; focus: number; mettle: number }}
           />
         );
       })()}
@@ -1132,7 +1132,7 @@ const TRAINING_TIPS: Record<string, string> = {
   water:    "Swim 2–3 times a week. Progress from pool to open water, then moving water.",
   altitude: "Spend nights above 3,000m before attempting higher objectives. Acclimatise gradually.",
   focus:    "Exposure therapy on smaller heights — via ferrata and scrambling routes build tolerance.",
-  nerve: "Build comfort in remote settings — overnight solo trips and wilderness navigation without phone support.",
+  mettle: "Build comfort in remote settings — overnight solo trips and wilderness navigation without phone support.",
 };
 
 function buildResult(userAxes: Record<string, number>): AnalysisResult {
@@ -1210,7 +1210,7 @@ export default function MatchmakerClient() {
     const score = (key: string) => ({ A:1, B:2, C:3, D:4, E:5 }[finalAnswers[key] ?? "A"] ?? 1);
     const userAxes = {
       stamina: score("Q1"), power: score("Q2"), strength: score("Q3"), agility: score("Q4"),
-      water: score("Q5"), altitude: score("Q6"), focus: score("Q7"), nerve: score("Q8"),
+      water: score("Q5"), altitude: score("Q6"), focus: score("Q7"), mettle: score("Q8"),
     };
 
     const profile = { ace: userAxes };

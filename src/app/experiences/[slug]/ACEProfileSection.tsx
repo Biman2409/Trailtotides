@@ -29,7 +29,7 @@ const AXIS_ICONS: Record<string, React.ReactNode> = {
   water:    <Waves    className="w-3.5 h-3.5" />,
   altitude: <Mountain className="w-3.5 h-3.5" />,
   focus:    <Shield   className="w-3.5 h-3.5" />,
-  nerve: <Wind     className="w-3.5 h-3.5" />,
+  mettle: <Wind     className="w-3.5 h-3.5" />,
 };
 
 const TRAINING_TIPS: Record<string, string> = {
@@ -40,7 +40,7 @@ const TRAINING_TIPS: Record<string, string> = {
   water:    "Swim 2–3 times a week. Progress from pool to open water, then moving water.",
   altitude: "Spend nights above 3,000m before attempting higher objectives. Acclimatise gradually.",
   focus:    "Exposure therapy on smaller heights — via ferrata and scrambling routes build tolerance.",
-  nerve: "Build comfort in remote settings — overnight solo trips and wilderness navigation without phone support.",
+  mettle: "Build comfort in remote settings — overnight solo trips and wilderness navigation without phone support.",
 };
 
 

@@ -79,7 +79,7 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
     color:       "#f43f5e",
     icon:        "Shield",
   },
-  nerve: {
+  mettle: {
     id:          "off-grid",
     name:        "Off Grid",
     description: "No signal, no rescue, no problem. Fully self-sufficient in the wild.",
@@ -125,7 +125,7 @@ export const DOMAIN_BADGES = [
     color:       "#10b981",
     icon:        "Brain",
     tier:        "domain" as const,
-    axes:        ["focus", "nerve"] as (keyof ACE)[],
+    axes:        ["focus", "mettle"] as (keyof ACE)[],
   },
 ];
 

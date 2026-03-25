@@ -54,7 +54,7 @@ export interface ACEAxes {
   water:    number;
   altitude: number;
   focus:    number;
-  nerve: number;
+  mettle: number;
 }
 
 export interface Adventure {
@@ -214,7 +214,7 @@ export const adventures: Adventure[] = [
         whoNot: "No previous sub-zero camping · Respiratory or cardiac conditions · Arriving from sea level without 3+ acclimatisation days · Expecting reliable resupply or evacuation access",
         safetyNotes:
           "Carry emergency bivouac gear, layered thermals, and micro-spike crampons. River ice can crack unexpectedly. Always trek with a certified local guide.",
-          ace: { stamina:4, power:2, strength:4, agility:5, water:3, altitude:3, focus:5, nerve:4 },
+          ace: { stamina:4, power:2, strength:4, agility:5, water:3, altitude:3, focus:5, mettle:4 },
     operators: [
               { name: "Indiahikes", verified: true, priceFrom: "₹25,000", rating: 4.9, website: "https://indiahikes.com/chadar-trek" },
               { name: "Rimo Expeditions", verified: true, priceFrom: "₹28,000", rating: 4.9, website: "https://www.rimoexpeditions.com" },
@@ -439,7 +439,7 @@ export const adventures: Adventure[] = [
   whoNot: "Expecting a walk in the park (summit day gains 900m) · Visiting without proper winter gear · Arriving in peak summer (no snow, less scenic) · Those with acute vertigo on open ridgelines",
   safetyNotes:
     "Start summit push by 4am to reach top by 9am before clouds build. Carry microspikes in January–February. Turn back from the summit cone in high wind.",
-  ace: { stamina:3, power:2, strength:3, agility:3, water:1, altitude:3, focus:2, nerve:2 },
+  ace: { stamina:3, power:2, strength:3, agility:3, water:1, altitude:3, focus:2, mettle:2 },
     operators: [
     { name: "Indiahikes", verified: true, priceFrom: "₹11,000", rating: 4.9, website: "https://indiahikes.com/kedarkantha-trek" },
     { name: "Trek The Himalayas", verified: true, priceFrom: "₹10,900", rating: 4.8, website: "https://trekthehimalayas.com/kedarkantha-trek" },
@@ -485,7 +485,7 @@ export const adventures: Adventure[] = [
   whoNot: "Expecting technical challenge (this is a ridge walk) · Visiting during heavy monsoon June–August · Those who dislike altitude nights without acclimatisation days · Non-walkers expecting a drive to the summit',",
   safetyNotes:
     "The Indian side requires a permit from the Darjeeling DFO. Nepal side checkposts require passport copies. The ridge path can be icy December–January — carry microspikes.",
-  ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
+  ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, mettle:2 },
     operators: [
     { name: "Indiahikes", verified: true, priceFrom: "₹13,000", rating: 4.9, website: "https://indiahikes.com/sandakphu-phalut-trek" },
     { name: "Trek The Himalayas", verified: true, priceFrom: "₹13,900", rating: 4.8, website: "https://trekthehimalayas.com/sandakphu-trek" },
@@ -529,7 +529,7 @@ export const adventures: Adventure[] = [
   whoNot: "Those visiting September–June (trail access unreliable) · Expecting trekking in solitude in August (Kashmir Great Lakes draws crowds but this doesn't) · No prior multi-day camping experience',",
   safetyNotes:
     "Aru requires Pahalgam-area permits for foreigners. The pass between Tarsar and Marsar is steep and can be snowy in July. Register at the Forest Department checkpost at Aru before starting.",
-  ace: { stamina:3, power:2, strength:3, agility:2, water:2, altitude:4, focus:2, nerve:2 },
+  ace: { stamina:3, power:2, strength:3, agility:2, water:2, altitude:4, focus:2, mettle:2 },
     operators: [
     { name: "Indiahikes", verified: true, priceFrom: "₹16,000", rating: 4.9, website: "https://indiahikes.com/tarsar-marsar-trek" },
     { name: "Trek The Himalayas", verified: true, priceFrom: "₹17,000", rating: 4.8, website: "https://trekthehimalayas.com/tarsar-marsar-trek" },
@@ -608,7 +608,7 @@ export const adventures: Adventure[] = [
     whoFor: "Basic trekking fitness with 6–8km/day experience · Comfortable on moderate inclines for 5–6hrs · Suitable for first-time Himalayan trekkers · No technical skill required",
     whoNot: "No prior hiking experience at any altitude · Knee or joint issues on descent · Expecting summit-level challenge or technical terrain",
     safetyNotes: "Carry warm layers — nights drop sharply even in summer. Leeches on trail May–Jun; wear gaiters.",
-    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
+    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, mettle:2 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹11,950", rating: 4.8, website: "https://indiahikes.com/ali-bedni-bugyal-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹9,800", rating: 4.7, website: "https://trekthehimalayas.com/ali-bedni-bugyal-trek" },
@@ -638,7 +638,7 @@ export const adventures: Adventure[] = [
     whoFor: "Comfortable trekking 15–18km/day for 8–9 consecutive days · Prior experience at 3,000m+ altitude · Moderate fitness with loaded pack",
     whoNot: "No multi-day trekking experience · AMS history above 3,500m without medical clearance · Travelling during monsoon without flexibility",
     safetyNotes: "Altitude sickness risk above 3,500m. Acclimatise at Chhomrong. Avalanche risk on upper section in heavy snowfall.",
-    ace: { stamina:4, power:2, strength:3, agility:3, water:1, altitude:4, focus:2, nerve:2 },
+    ace: { stamina:4, power:2, strength:3, agility:3, water:1, altitude:4, focus:2, mettle:2 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹35,000", rating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/Annapurna-Base-Camp-Trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹37,500", rating: 4.7, website: "https://trekthehimalayas.com/annapurna-base-camp-trek" },
@@ -668,7 +668,7 @@ export const adventures: Adventure[] = [
     whoFor: "Strong aerobic fitness for 15–20km/day over 15 days · Experience above 4,000m · Interest in Tibetan Buddhist culture · Self-sufficient with teahouse accommodation",
     whoNot: "First-time high-altitude trekkers · Tight itineraries with no flex days · Travellers without TIMS and ACAP permits",
     safetyNotes: "Thorong La (5,416m) crossing should begin by 4am. Acclimatise 2 nights at Manang. Descend immediately at first AMS symptoms.",
-    ace: { stamina:5, power:2, strength:4, agility:3, water:1, altitude:5, focus:3, nerve:3 },
+    ace: { stamina:5, power:2, strength:4, agility:3, water:1, altitude:5, focus:3, mettle:3 },
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹75,000", rating: 4.8, website: "https://trekthehimalayas.com/annapurna-circuit-trek" },
     ],
@@ -696,7 +696,7 @@ export const adventures: Adventure[] = [
     whoFor: "Comfortable on boulder fields and moraine terrain · Prior experience above 4,000m essential · Full camping self-sufficiency · Strong navigation instinct on unmarked trails",
     whoNot: "No experience on rocky uneven terrain · Expecting teahouse facilities · Travellers in July–August (monsoon closes route)",
     safetyNotes: "No teahouses — full camping gear required. Glacier moraines are loose near the snout. Go with an experienced local guide from Pipalkoti.",
-    ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:4, focus:4, nerve:3 },
+    ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:4, focus:4, mettle:3 },
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹14,800", rating: 4.7, website: "https://trekthehimalayas.com/bagini-glacier-and-changbang-base-camp" },
     ],
@@ -724,7 +724,7 @@ export const adventures: Adventure[] = [
     whoFor: "Prior experience on snow/ice terrain above 4,500m · Stable footing on steep scree and snow fields · 10–12hr high-altitude day stamina · Basic crampon experience recommended",
     whoNot: "First Himalayan trek · No experience on snow or glaciated passes · Poorly acclimatised before the crossing day",
     safetyNotes: "Bali Pass crossing involves snow slopes up to 40°. Crampons and rope may be needed early season. Leave pass camp by 4am on crossing day.",
-    ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:5, focus:4, nerve:4 },
+    ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:5, focus:4, mettle:4 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹21,500", rating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/bali-pass-trek" },
       { name: "Indiahikes", verified: true, priceFrom: "₹22,000", rating: 4.8, website: "https://indiahikes.com/bali-pass-trek" },
@@ -755,7 +755,7 @@ export const adventures: Adventure[] = [
     whoFor: "Prior pass trekking above 4,500m · Comfortable with rope-assisted rappel on steep snow · Strong core and lower body for technical descent",
     whoNot: "No experience on steep snow or ropes · Expecting a standard walk-up pass · No previous Himalayan trekking background",
     safetyNotes: "Rappel section requires fixed ropes — only cross with guides and certified ropes. Snow depth varies by season.",
-    ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:4, focus:4, nerve:4 },
+    ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:4, focus:4, mettle:4 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹16,000", rating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/buran-ghati-trek" },
       { name: "Indiahikes", verified: true, priceFrom: "₹16,000", rating: 4.8, website: "https://indiahikes.com/buran-ghati-trek" },
@@ -788,7 +788,7 @@ export const adventures: Adventure[] = [
     whoFor: "First-time Himalayan trekkers with basic fitness · Comfortable walking 6–8km/day on moderate terrain · Families with teenagers · Suitable for acclimatisation before harder treks",
     whoNot: "No walking fitness at all · Expecting technical terrain or summit challenge · Monsoon trekkers without rain gear",
     safetyNotes: "Solang Valley to Dhundi road sometimes closed in heavy rain. Stay on trail near the kund — loose moraine underfoot.",
-    ace: { stamina:2, power:2, strength:2, agility:3, water:2, altitude:3, focus:3, nerve:2 },
+    ace: { stamina:2, power:2, strength:2, agility:3, water:2, altitude:3, focus:3, mettle:2 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹8,000", rating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/beas-kund-trek" },
       { name: "Indiahikes", verified: true, priceFrom: "₹8,000", rating: 4.8, website: "https://indiahikes.com/beas-kund-trek" },
@@ -818,7 +818,7 @@ export const adventures: Adventure[] = [
     whoFor: "Basic fitness for 8–10km/day on moderate alpine terrain · First visit to high altitude (gradual ascent from Manali) · Comfortable with basic camping · Photography and landscape trekkers",
     whoNot: "Zero fitness baseline · AMS-prone individuals without prior high-altitude experience · Expecting technical or route-finding challenge",
     safetyNotes: "Altitude gain from Manali (2,050m) to lake (4,267m) is steep — take the ascent slowly. Afternoon thunderstorms common in July–August.",
-    ace: { stamina:3, power:2, strength:3, agility:3, water:1, altitude:4, focus:2, nerve:2 },
+    ace: { stamina:3, power:2, strength:3, agility:3, water:1, altitude:4, focus:2, mettle:2 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹7,000", rating: 4.8, website: "https://indiahikes.com/bhrigu-lake-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹7,500", rating: 4.7, website: "https://trekthehimalayas.com/bhrigu-lake-trek" },
@@ -848,7 +848,7 @@ export const adventures: Adventure[] = [
     whoFor: "Basic trekking fitness comfortable in sub-zero temperatures · No prior snow experience needed · Comfortable camping at -10°C with provided gear · First-time winter trekkers welcome",
     whoNot: "Cold intolerant with no sub-zero experience · Expecting summer conditions or bare trail · Cardiac issues or altitude sensitivity",
     safetyNotes: "Carry good-quality sleeping bag rated to -15°C. Summit ridge can be icy — microspikes provided by operators. Leeches absent (winter), but frostbite risk on exposed skin.",
-    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
+    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, mettle:2 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹10,000", rating: 4.8, website: "https://indiahikes.com/brahmatal-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹10,900", rating: 4.7, website: "https://trekthehimalayas.com/brahmatal-trek" },
@@ -878,7 +878,7 @@ export const adventures: Adventure[] = [
     whoFor: "Beginners and intermediate trekkers comfortable with 7–9km/day · No technical skills required · Families and solo travellers · Year-round accessibility for different experiences",
     whoNot: "Expecting technical passes or high summits · No fitness at all · Looking for a remote off-trail experience",
     safetyNotes: "Trail is well-marked from Raithal. Afternoon clouds build quickly — reach bugyal campsite by 2pm. Stick to designated camping zones.",
-    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
+    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, mettle:2 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹7,000", rating: 4.8, website: "https://indiahikes.com/dayara-bugyal-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹10,500", rating: 4.7, website: "https://trekthehimalayas.com/dayara-bugyal-trek" },
@@ -908,7 +908,7 @@ export const adventures: Adventure[] = [
     whoFor: "Intermediate trekkers comfortable with 3,900m+ altitude · 5–7km/day walking fitness · Interest in Hindu pilgrimage culture (Tungnath temple en route) · Spring or autumn trekking",
     whoNot: "No prior trekking experience · Altitude-sensitive individuals without acclimatisation · July–August monsoon travel without experience of wet trails",
     safetyNotes: "Chandrashila summit (3,962m) can be windy and cold even in April. Start summit attempt by 5am for clear views before cloud builds.",
-    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
+    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, mettle:2 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹10,000", rating: 4.8, website: "https://indiahikes.com/deoriatal-chandrashila-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹9,500", rating: 4.7, website: "https://trekthehimalayas.com/deoriatal-chandrashila-trek" },
@@ -938,7 +938,7 @@ export const adventures: Adventure[] = [
     whoFor: "Strong cardiovascular fitness for 10–15km/day over 13+ days · Prior experience above 3,500m · Ability to tolerate thin air at 5,364m · Mentally prepared for high-altitude fatigue",
     whoNot: "No previous multi-day trekking experience · AMS history above 4,000m · Unrealistic timelines that skip acclimatisation days",
     safetyNotes: "Acclimatise at Namche (2 nights) and Dingboche (2 nights). Descend immediately at any AMS symptoms. Khumbu Icefall debris occasionally affects BC area — stay aware.",
-    ace: { stamina:5, power:3, strength:4, agility:3, water:1, altitude:5, focus:4, nerve:3 },
+    ace: { stamina:5, power:3, strength:4, agility:3, water:1, altitude:5, focus:4, mettle:3 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹85,000", rating: 4.9, website: "https://www.bikatadventures.com/Home/Itinerary/Everest-Base-Camp-Trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹75,500", rating: 4.8, website: "https://trekthehimalayas.com/everest-base-camp-trek" },
@@ -970,7 +970,7 @@ export const adventures: Adventure[] = [
     whoFor: "Prior experience above 4,000m essential · Confident on glacial moraines and boulder fields · Strong cardiovascular fitness for sustained altitude · Spiritual significance adds to the experience",
     whoNot: "No previous experience on glaciers or moraines · Poor ankle stability on loose rock · Travelling during peak monsoon (trail washed out in July)",
     safetyNotes: "Gangotri Glacier moraine is loose and slippery. Gaumukh section requires careful footing — no fixed trail on the glacier. Trek with an experienced guide.",
-    ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:4, focus:4, nerve:3 },
+    ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:4, focus:4, mettle:3 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹17,000", rating: 4.8, website: "https://indiahikes.com/gaumukh-tapovan-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹17,000", rating: 4.7, website: "https://trekthehimalayas.com/gaumukh-tapovan-trek" },
@@ -1000,7 +1000,7 @@ export const adventures: Adventure[] = [
     whoFor: "11-day consecutive trekking stamina at altitude · Prior experience above 4,000m · Comfortable with basic teahouse to camping transition · Valid inner-line permits for Kanchendzonga NP",
     whoNot: "No prior high-altitude or multi-week trekking · Travellers without Sikkim permits · Monsoon travel (June–August closes the route)",
     safetyNotes: "All trekkers must have inner-line permits for Kanchendzonga NP (arrange in Gangtok or Yuksom). Go with a licensed Sikkim guide — mandatory. No solo trekking permitted.",
-    ace: { stamina:5, power:3, strength:4, agility:3, water:1, altitude:5, focus:4, nerve:3 },
+    ace: { stamina:5, power:3, strength:4, agility:3, water:1, altitude:5, focus:4, mettle:3 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹20,000", rating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/goechala-trek" },
       { name: "Indiahikes", verified: true, priceFrom: "₹20,000", rating: 4.8, website: "https://indiahikes.com/goechala-trek" },
@@ -1031,7 +1031,7 @@ export const adventures: Adventure[] = [
     whoFor: "Moderate fitness for 5–7km/day on mixed terrain · First pass-crossing experience (well-supported) · Comfortable crossing snow and stream crossings · Manali as easy access point",
     whoNot: "No trekking fitness at all · Afraid of stream crossings (mandatory on Kullu side) · Expecting easy walk — day 3 snow crossing is demanding",
     safetyNotes: "Stream crossings on Jobra side are knee-deep in monsoon — use trekking poles. Snow on pass even in August — carry extra layers. Check pass conditions with local operators before departure.",
-    ace: { stamina:3, power:3, strength:3, agility:3, water:3, altitude:4, focus:3, nerve:2 },
+    ace: { stamina:3, power:3, strength:3, agility:3, water:3, altitude:4, focus:3, mettle:2 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹14,000", rating: 4.8, website: "https://indiahikes.com/hampta-pass-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹12,500", rating: 4.7, website: "https://trekthehimalayas.com/hampta-pass-trek" },
@@ -1061,7 +1061,7 @@ export const adventures: Adventure[] = [
     whoFor: "Intermediate trekkers comfortable with 7–10km/day · Interest in Himalayan culture and ancient temples · Suitable for autumn and spring without snow experience · Long season makes it accessible most of the year",
     whoNot: "Expecting technical challenge or high pass crossing · No walking fitness above flat terrain",
     safetyNotes: "Trail is well-defined. River crossings on log bridges — check stability. Forest sections can be confusing — stay on main trail.",
-    ace: { stamina:4, power:2, strength:4, agility:3, water:1, altitude:3, focus:3, nerve:2 },
+    ace: { stamina:4, power:2, strength:4, agility:3, water:1, altitude:3, focus:3, mettle:2 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹14,000", rating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/har-ki-dun-trek" },
       { name: "Indiahikes", verified: true, priceFrom: "₹15,000", rating: 4.8, website: "https://indiahikes.com/har-ki-dun-trek" },
@@ -1092,7 +1092,7 @@ export const adventures: Adventure[] = [
     whoFor: "Prior experience on multi-day Himalayan treks above 4,000m · Confident on high-altitude passes with snow · Strong fitness for 10–15km/day for 7–8 days · Valid permits for restricted zones",
     whoNot: "No experience at altitude or on snow passes · June or September travel (route closed) · Travellers without proper permits",
     safetyNotes: "Gadsar Pass (4,191m) involves snow even in August — carry microspikes. The route requires permits from authorities in Srinagar/Sonamarg. Go with a registered Kashmiri guide.",
-    ace: { stamina:4, power:3, strength:4, agility:3, water:2, altitude:4, focus:3, nerve:3 },
+    ace: { stamina:4, power:3, strength:4, agility:3, water:2, altitude:4, focus:3, mettle:3 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹20,000", rating: 4.9, website: "https://indiahikes.com/kashmir-great-lakes-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹21,000", rating: 4.8, website: "https://trekthehimalayas.com/kashmir-great-lakes-trek" },
@@ -1120,7 +1120,7 @@ export const adventures: Adventure[] = [
     whoFor: "High fitness for steep boulder terrain · Prior experience above 4,500m is essential · Comfortable camping in sub-zero temperatures · Strong navigation on boulder moraines",
     whoNot: "No experience above 4,000m · Poor scrambling ability on unstable boulders · Expecting a gradual approach trail",
     safetyNotes: "Trail involves Class 2 scrambling on loose boulders above Kedarkharak. No rescue access. Go with experienced local guide from Gangotri.",
-    ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:4, focus:4, nerve:4 },
+    ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:4, focus:4, mettle:4 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹15,000", rating: 4.8, website: "https://indiahikes.com/kedar-tal-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹16,000", rating: 4.7, website: "https://trekthehimalayas.com/kedar-tal-trek" },
@@ -1150,7 +1150,7 @@ export const adventures: Adventure[] = [
     whoFor: "Moderate fitness for 8–10km/day · Comfortable with basic snow trekking in winter · No technical skills required · Excellent first winter Himalayan trek",
     whoNot: "Expecting a summer green trek (best done in snow season) · No cold-weather camping experience with sub-zero nights",
     safetyNotes: "Winter nights drop to -15°C. Carry proper sleeping gear. Trail is well-managed but snow can be deep — go with an operator who carries avalanche safety basics.",
-    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
+    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, mettle:2 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹10,500", rating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/Kuari-pass-trek" },
       { name: "Indiahikes", verified: true, priceFrom: "₹12,000", rating: 4.8, website: "https://indiahikes.com/kuari-pass-trek" },
@@ -1181,7 +1181,7 @@ export const adventures: Adventure[] = [
     whoFor: "Prior high-altitude trekking above 4,500m essential · Comfortable with river crossings (some require wading) · Strong fitness for sustained altitude · Ladakh acclimatisation days in Leh required",
     whoNot: "No previous 4,000m+ trekking · Arriving without 3 days acclimatisation in Leh · Fear of river crossings or remote isolation",
     safetyNotes: "River crossings at Chilling and Skiu can be thigh-deep in July — use poles. Acclimatise minimum 3 nights in Leh before starting. Kongmaru La (5,200m) is serious altitude.",
-    ace: { stamina:4, power:2, strength:4, agility:3, water:3, altitude:5, focus:3, nerve:2 },
+    ace: { stamina:4, power:2, strength:4, agility:3, water:3, altitude:5, focus:3, mettle:2 },
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹22,500", rating: 4.8, website: "https://trekthehimalayas.com/markha-valley-trek" },
     ],
@@ -1209,7 +1209,7 @@ export const adventures: Adventure[] = [
     whoFor: "Prior experience on glaciers or high snow passes above 5,000m · Crampon and rope competence essential · 10–14hr summit day capacity · Only for very experienced Himalayan trekkers",
     whoNot: "No prior glacier or high snow pass experience · Intermediate trekkers on their first challenging route · July travel without confirmed snow bridges",
     safetyNotes: "Glacier crossing requires crampons, ropes, and ice axes. Crevasse risk is real — never cross without a rope team. Book with an operator who employs certified mountain guides.",
-    ace: { stamina:5, power:4, strength:5, agility:5, water:4, altitude:5, focus:5, nerve:5 },
+    ace: { stamina:5, power:4, strength:5, agility:5, water:4, altitude:5, focus:5, mettle:5 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹40,000", rating: 4.8, website: "" },
       { name: "Indiahikes", verified: true, priceFrom: "₹40,000", rating: 4.8, website: "https://indiahikes.com/pin-parvati-pass-trek" },
@@ -1240,7 +1240,7 @@ export const adventures: Adventure[] = [
     whoFor: "Prior experience above 4,000m · Confident on steep gully climbs and snow slopes · 10–12hr pass day capacity · Good altitude tolerance",
     whoNot: "No previous Himalayan trekking experience · Poor knee condition (steep descent to Sangla) · Expecting easy trail conditions throughout",
     safetyNotes: "Pass gully is 45°+ in early season — crampons may be needed. Waterfall campsite is cold and wet — waterproof gear essential.",
-    ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:4, focus:4, nerve:4 },
+    ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:4, focus:4, mettle:4 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹16,650", rating: 4.8, website: "https://www.bikatadventures.com/Home/Itinerary/rupin-pass-trek" },
       { name: "Indiahikes", verified: true, priceFrom: "₹16,000", rating: 4.8, website: "https://indiahikes.com/rupin-pass-trek" },
@@ -1271,7 +1271,7 @@ export const adventures: Adventure[] = [
     whoFor: "Moderate fitness for 8–10km/day · Comfortable with steep stair ascent to Hemkund · Family-friendly up to Valley of Flowers (Hemkund adds difficulty) · Nature and botanical trekkers",
     whoNot: "Avoiding monsoon entirely (July–August is the only season) · Very poor knee condition (steep Hemkund stairs) · Expecting dry trail conditions",
     safetyNotes: "Hemkund staircase is steep and relentless. Take it slow — the thin air at 4,329m compounds the effort. Valley of Flowers closed November–April.",
-    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:4, focus:2, nerve:2 },
+    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:4, focus:2, mettle:2 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹11,000", rating: 4.8, website: "https://indiahikes.com/valley-of-flowers-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹11,800", rating: 4.7, website: "https://trekthehimalayas.com/valley-of-flowers-trek" },
@@ -1301,7 +1301,7 @@ export const adventures: Adventure[] = [
     whoFor: "Trekkers seeking a quiet alternative to crowded Sikkim trails · Comfortable with cold winter camping · Interest in Sikkimese village culture and monasteries · Moderate fitness for 5-day itinerary",
     whoNot: "Expecting high-drama technical terrain · Not comfortable in sub-zero night temperatures · Preferring spring flower season",
     safetyNotes: "Winter temperatures can drop sharply at night — quality sleeping bag essential. Trail can be icy in January and February. Carry a local guide from Yuksom.",
-    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
+    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, mettle:2 },
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹12,600", rating: 4.7, website: "https://trekthehimalayas.com/bajre-dara-trek" },
     ],
@@ -1328,7 +1328,7 @@ export const adventures: Adventure[] = [
     whoFor: "Trekkers interested in Himalayan culture alongside scenery · Comfortable with steep ascent over one day · Suitable for first-time mountain trekkers with basic fitness",
     whoNot: "No interest in cultural stops or village exploration · Expecting high-altitude glacier terrain",
     safetyNotes: "Malana has strict cultural customs — follow all local rules about touching village structures or entering certain areas. Pass can be foggy in July–August monsoon. Carry extra rain gear.",
-    ace: { stamina:3, power:2, strength:3, agility:3, water:1, altitude:3, focus:3, nerve:3 },
+    ace: { stamina:3, power:2, strength:3, agility:3, water:1, altitude:3, focus:3, mettle:3 },
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹11,200", rating: 4.7, website: "https://trekthehimalayas.com/chandrakhani-pass-trek" },
     ],
@@ -1355,7 +1355,7 @@ export const adventures: Adventure[] = [
     whoFor: "Trekkers who enjoy forest walks and high passes combined · Comfortable with 6–8km per day over mixed terrain · Interest in Himalayan mythology and sacred sites",
     whoNot: "Expecting glaciated terrain or technical climbing · Discomfort with river crossings on wooden bridges",
     safetyNotes: "Darwa Pass can hold snow until late May. Dodital gets crowded during pilgrim season — camp early to secure a good spot. Trail well-marked but forest sections can be confusing.",
-    ace: { stamina:3, power:2, strength:3, agility:2, water:2, altitude:4, focus:2, nerve:2 },
+    ace: { stamina:3, power:2, strength:3, agility:2, water:2, altitude:4, focus:2, mettle:2 },
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹11,500", rating: 4.7, website: "https://trekthehimalayas.com/dodital-darwa-pass-trek" },
     ],
@@ -1408,7 +1408,7 @@ export const adventures: Adventure[] = [
     whoFor: "Experienced trekkers with prior high-altitude acclimatization · Those wanting an alternative to the EBC corridor · Strong fitness for 17-day itinerary · Comfortable above 5,000m",
     whoNot: "First-time Nepal trekkers without prior acclimatization experience · No fitness for sustained high-altitude days",
     safetyNotes: "Altitude sickness risk above 4,000m — strict acclimatization schedule essential. Ngozumpa Glacier crossing to reach higher lakes is crevassed — do not attempt solo. Nepal trekking permits required.",
-    ace: { stamina:4, power:3, strength:4, agility:3, water:1, altitude:5, focus:4, nerve:3 },
+    ace: { stamina:4, power:3, strength:4, agility:3, water:1, altitude:5, focus:4, mettle:3 },
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹97,000", rating: 4.8, website: "https://trekthehimalayas.com/everest-base-camp-via-gokyo-ri" },
     ],
@@ -1434,7 +1434,7 @@ export const adventures: Adventure[] = [
     whoFor: "Trekkers seeking Gangotri group views without the commitment of Kedartal · Good fitness for one high-altitude day · Suitable April–May for rhododendron bloom · September–October for clear sky views",
     whoNot: "Expecting glacier terrain · Looking for multi-week high-altitude challenge",
     safetyNotes: "Trail can be slippery after rain in monsoon shoulder months. Night temperatures drop sharply at 4,000m even in summer — sleeping bag essential.",
-    ace: { stamina:2, power:2, strength:2, agility:2, water:1, altitude:3, focus:2, nerve:2 },
+    ace: { stamina:2, power:2, strength:2, agility:2, water:1, altitude:3, focus:2, mettle:2 },
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹10,900", rating: 4.7, website: "https://trekthehimalayas.com/gulabi-kantha-trek" },
     ],
@@ -1460,7 +1460,7 @@ export const adventures: Adventure[] = [
     whoFor: "First-time mountain trekkers looking for a proper lake destination · Based in or near Dharamshala/McLeod Ganj · 4-day window with moderate fitness · Families with older children",
     whoNot: "Experienced trekkers seeking technical challenge or high altitude · Expecting glacier crossing",
     safetyNotes: "River crossings above Kareri village can be challenging in June snowmelt — check conditions. Campsite at the lake is exposed — cold nights even in September.",
-    ace: { stamina:3, power:2, strength:3, agility:3, water:2, altitude:3, focus:2, nerve:2 },
+    ace: { stamina:3, power:2, strength:3, agility:3, water:2, altitude:3, focus:2, mettle:2 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹8,000", rating: 4.7, website: "https://www.bikatadventures.com/Home/Itinerary/kareri-lake-trek" },
       { name: "Indiahikes", verified: true, priceFrom: "₹8,000", rating: 4.8, website: "https://indiahikes.com/kareri-lake-trek" },
@@ -1489,7 +1489,7 @@ export const adventures: Adventure[] = [
     whoFor: "Nepal trekkers wanting Annapurna views without circuit crowds · Comfortable with 9-day teahouse trek · Good fitness for sustained uphill days · April spring bloom or October clarity seekers",
     whoNot: "Expecting the full Annapurna or EBC-style established infrastructure · No fitness for sustained multi-day ascent",
     safetyNotes: "ACAP permit required. Some sections above Swanta are poorly marked — guide recommended. Cold nights at ridge camp even in April.",
-    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
+    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, mettle:2 },
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹40,000", rating: 4.7, website: "https://trekthehimalayas.com/khopra-ridge" },
     ],
@@ -1540,7 +1540,7 @@ export const adventures: Adventure[] = [
     whoFor: "Experienced trekkers who've completed Annapurna or EBC · Seeking a quieter, more remote Nepal experience · Strong fitness for 14-day sustained high-altitude itinerary · Interested in Tibetan culture villages",
     whoNot: "First-time Nepal trekkers · No experience above 4,500m · Preferring well-developed teahouse infrastructure",
     safetyNotes: "Restricted area permit required (MCAP + MRAP). Must trek with registered guide — no independent trekking permitted. Larke Pass crossing requires early morning start. Altitude illness risk above 4,500m.",
-    ace: { stamina:5, power:3, strength:4, agility:3, water:1, altitude:5, focus:4, nerve:3 },
+    ace: { stamina:5, power:3, strength:4, agility:3, water:1, altitude:5, focus:4, mettle:3 },
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹88,000", rating: 4.8, website: "https://trekthehimalayas.com/manaslu-circuit-trek" },
     ],
@@ -1591,7 +1591,7 @@ export const adventures: Adventure[] = [
     whoFor: "Trekkers with interest in Himalayan spirituality and culture · Good fitness for 12-day sustained trekking · Comfortable with variable terrain including steep forest and rocky approaches",
     whoNot: "Expecting purely scenic trekking without religious context · Limited time window",
     safetyNotes: "Temples close by late October — verify opening dates before booking. Some sections between Rudranath and Kalpeshwar are poorly marked. Local guide strongly recommended for the full circuit.",
-    ace: { stamina:5, power:3, strength:4, agility:3, water:1, altitude:4, focus:4, nerve:3 },
+    ace: { stamina:5, power:3, strength:4, agility:3, water:1, altitude:4, focus:4, mettle:3 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹60,000", rating: 4.8, website: "https://indiahikes.com/panch-kedar-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹64,500", rating: 4.7, website: "https://trekthehimalayas.com/panchkedar-trek" },
@@ -1619,7 +1619,7 @@ export const adventures: Adventure[] = [
     whoFor: "Experienced trekkers comfortable with basic crampon use on snow · March–April window is essential for full snow experience · Prior experience above 4,000m recommended · Short 7-day commitment",
     whoNot: "No prior snow trekking experience · Post-May when snow has melted reduces the summit experience · Expecting full mountaineering challenge",
     safetyNotes: "Snow conditions vary year to year — check with operators for March snowpack. Summit push in pre-dawn conditions requires headlamp and warm layers. Crampon training provided by operators on approach days.",
-    ace: { stamina:4, power:3, strength:4, agility:4, water:1, altitude:4, focus:4, nerve:3 },
+    ace: { stamina:4, power:3, strength:4, agility:4, water:1, altitude:4, focus:4, mettle:3 },
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹13,250", rating: 4.7, website: "https://trekthehimalayas.com/pangarchulla-peak-trek" },
     ],
@@ -1645,7 +1645,7 @@ export const adventures: Adventure[] = [
     whoFor: "Trekkers who love open meadow camping · Good fitness for 6-day itinerary · Spring for wildflowers, autumn for crisp clarity · Seeking Uttarakhand without the crowds of Kedarnath/Chopta",
     whoNot: "Expecting high-pass drama or glacier terrain · Wanting well-developed teahouse infrastructure",
     safetyNotes: "Trail is not well marked beyond Ghuttu — local guide essential. Meadow camp is completely exposed — carry quality tent and sleeping bag. Water sources limited in autumn.",
-    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
+    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, mettle:2 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹14,000", rating: 4.7, website: "https://www.bikatadventures.com/Home/Itinerary/panwali-kantha-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹14,500", rating: 4.7, website: "https://trekthehimalayas.com/panwali-kantha" },
@@ -1672,7 +1672,7 @@ export const adventures: Adventure[] = [
     whoFor: "Trekkers who prioritise open views and ridgeline walking over dense forest or valley routes · Good fitness for 3,700m altitude · Sankri is the same basecamp as Kedarkantha — easy to combine",
     whoNot: "Wanting lush forest or river valley scenery · Preferring established heavily-trafficked trails",
     safetyNotes: "Ridgeline fully exposed to weather — strong wind and sudden cloud common. Carry waterproofs at all times. Snow possible in late October-November. Forest sections below ridge can be confusing.",
-    ace: { stamina:3, power:2, strength:3, agility:3, water:1, altitude:3, focus:2, nerve:3 },
+    ace: { stamina:3, power:2, strength:3, agility:3, water:1, altitude:3, focus:2, mettle:3 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹9,000", rating: 4.8, website: "https://indiahikes.com/phulara-ridge-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹9,500", rating: 4.7, website: "https://trekthehimalayas.com/phulara-ridge-trek" },
@@ -1700,7 +1700,7 @@ export const adventures: Adventure[] = [
     whoFor: "Experienced trekkers comfortable with 4,900m passes · Interest in the Himachal-to-Spiti cultural and geographical transition · Good fitness for multi-day glaciated terrain · July–September window only",
     whoNot: "No prior experience on snow or scree passes · Expecting green lush scenery on the Spiti side",
     safetyNotes: "Pass can hold snowfields even in August — crampons or micro-spikes recommended. Spiti side descent is steep scree. River crossings in Bhaba Valley can be challenging in July snowmelt.",
-    ace: { stamina:5, power:3, strength:4, agility:4, water:2, altitude:5, focus:4, nerve:3 },
+    ace: { stamina:5, power:3, strength:4, agility:4, water:2, altitude:5, focus:4, mettle:3 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹18,000", rating: 4.8, website: "https://indiahikes.com/pin-bhaba-pass-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹17,900", rating: 4.7, website: "https://trekthehimalayas.com/pin-bhaba-pass-trek" },
@@ -1728,7 +1728,7 @@ export const adventures: Adventure[] = [
     whoFor: "Trekkers wanting a proper glacier destination without high technical difficulty · Good fitness for 6-day return journey · Kumaon forest and wildlife enthusiasts · Suitable for experienced families",
     whoNot: "Expecting glacier walking (approach only, not on glacier itself) · Wanting very high altitude (max 3,650m)",
     safetyNotes: "Trail is well-maintained and marked. River crossings near Dwali can be strong in June. Black bear habitat — make noise on trail in forest sections. Carry sufficient cash as no ATMs beyond Song.",
-    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, nerve:2 },
+    ace: { stamina:3, power:2, strength:3, agility:2, water:1, altitude:3, focus:2, mettle:2 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹14,000", rating: 4.8, website: "https://indiahikes.com/pindari-glacier-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹14,500", rating: 4.7, website: "https://trekthehimalayas.com/pindari-glacier-trek" },
@@ -1781,7 +1781,7 @@ export const adventures: Adventure[] = [
     whoFor: "Experienced trekkers comfortable above 4,500m · Strong fitness for 8-day high-altitude itinerary · Fascinated by Himalayan mystery and mythology · Ali Bedni Bugyal meadow enthusiasts (the route is excellent regardless of the lake)",
     whoNot: "No prior experience above 4,000m · Uncomfortable with cold and unpredictable high-altitude weather',",
     safetyNotes: "Roopkund has had a controversial trekking ban — verify current permit status before booking. Ali Bedni route is fine regardless. Weather above Bhagwabasa can deteriorate extremely rapidly. Crampons essential on final approach.",
-    ace: { stamina:4, power:3, strength:4, agility:3, water:1, altitude:5, focus:4, nerve:3 },
+    ace: { stamina:4, power:3, strength:4, agility:3, water:1, altitude:5, focus:4, mettle:3 },
     operators: [
       { name: "Indiahikes", verified: true, priceFrom: "₹18,000", rating: 4.8, website: "https://indiahikes.com/roopkund-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹18,000", rating: 4.7, website: "https://trekthehimalayas.com/roopkund-trek" },
@@ -1809,7 +1809,7 @@ export const adventures: Adventure[] = [
     whoFor: "First-time or early-stage mountain trekkers · Comfortable with one high snow-pass crossing · May–June window essential for snow conditions · Kasol-based travellers wanting proper mountain time",
     whoNot: "Expecting remote wilderness (trail is popular and managed) · Post-June when snow has melted reduces the iconic descent',",
     safetyNotes: "Sar Pass is managed by YHAI — most trekkers go with their organised groups. Snow conditions vary year to year — call ahead for May snowpack. High pass crossing requires warm layers even in June.",
-    ace: { stamina:4, power:2, strength:3, agility:3, water:2, altitude:4, focus:3, nerve:2 },
+    ace: { stamina:4, power:2, strength:3, agility:3, water:2, altitude:4, focus:3, mettle:2 },
     operators: [
       { name: "Bikat Adventures", verified: true, priceFrom: "₹12,000", rating: 4.7, website: "https://www.bikatadventures.com/Home/Itinerary/Sar-Pass-Trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹11,300", rating: 4.7, website: "https://trekthehimalayas.com/sar-pass-trek" },
@@ -1836,7 +1836,7 @@ export const adventures: Adventure[] = [
     whoFor: "Experienced trekkers comfortable above 4,500m · Interest in sacred Himalayan geography · Comfortable with river gorge and glacier-moraine approach terrain · May or October for optimal clarity',",
     whoNot: "No prior experience above 4,000m · Expecting well-marked trails (navigation skills needed) · Limited to 3-4 day windows',",
     safetyNotes: "Trail involves boulder scrambling above Vasundhara Falls and glacier moraine navigation. River crossings can be dangerous in snowmelt. No rescue access beyond Badrinath. Go with an experienced local guide.",
-    ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:5, focus:4, nerve:3 },
+    ace: { stamina:4, power:3, strength:4, agility:4, water:2, altitude:5, focus:4, mettle:3 },
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹22,500", rating: 4.7, website: "https://trekthehimalayas.com/satopanth-lake-trek" },
     ],
