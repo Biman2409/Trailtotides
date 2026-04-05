@@ -132,9 +132,6 @@ function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { titl
               </div>
             </div>
             <div className="p-5 flex-1">
-              <div className="mb-2">
-                <Pill type="subRegion" value={a.state} />
-              </div>
               <h3 className="text-white font-semibold text-base leading-snug mb-1 group-hover:text-[#ff5100] transition-colors">{a.name}</h3>
               <p className="text-white/35 text-xs line-clamp-2 leading-relaxed">{a.tagline}</p>
             </div>
