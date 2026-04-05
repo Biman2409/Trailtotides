@@ -34,17 +34,45 @@ export default function WishlistPage() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  /* ── Not logged in ── */
+  // ── Loading / hydrating ──────────────────────────────────────
+  if (loggedIn === null || loading) {
+    return (
+      <main className="min-h-screen px-5 lg:px-8 py-16 lg:py-20" style={{ background: "var(--bg-base)" }}>
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-10">
+            <div className="flex items-center gap-2.5 mb-2">
+              <div className="w-4 h-4 rounded-full bg-white/10 animate-pulse" />
+              <div className="h-2.5 w-28 rounded bg-white/10 animate-pulse" />
+            </div>
+            <div className="h-9 w-52 rounded-xl bg-white/6 animate-pulse mb-2" />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {[1,2,3,4].map(i => (
+              <div key={i} className="rounded-2xl overflow-hidden animate-pulse" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div className="aspect-[4/3] bg-white/5" />
+                <div className="p-3 space-y-2">
+                  <div className="h-3 bg-white/5 rounded w-3/4" />
+                  <div className="h-3 bg-white/5 rounded w-1/2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // ── Not logged in ────────────────────────────────────────────
   if (loggedIn === false) {
     return (
       <main className="min-h-screen flex items-center justify-center px-5" style={{ background: "var(--bg-base)" }}>
         <div
           className="max-w-md w-full rounded-3xl p-10 flex flex-col items-center text-center gap-6"
-          style={{ background: "rgba(244,63,94,0.06)", border: "1px solid rgba(244,63,94,0.14)" }}
+          style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.14)" }}
         >
           <div className="w-16 h-16 rounded-2xl flex items-center justify-center"
-            style={{ background: "rgba(244,63,94,0.12)", border: "1px solid rgba(244,63,94,0.2)" }}>
-            <Heart className="w-7 h-7 text-rose-400" />
+            style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.2)" }}>
+            <Heart className="w-7 h-7" style={{ color: "#ff5100" }} />
           </div>
           <div>
             <h1 className="text-white text-2xl font-bold tracking-tight mb-2">Your Wishlist</h1>
@@ -65,55 +93,44 @@ export default function WishlistPage() {
     );
   }
 
+  // ── Logged in ────────────────────────────────────────────────
   const savedList = adventures.filter(a => saved.has(a.slug));
 
   return (
     <main className="min-h-screen px-5 lg:px-8 py-16 lg:py-20" style={{ background: "var(--bg-base)" }}>
       <div className="max-w-7xl mx-auto">
+
         {/* Header */}
         <div className="mb-10">
           <div className="flex items-center gap-2.5 mb-2">
-            <Heart className="w-4 h-4 text-rose-400 fill-rose-400" />
-            <p className="text-[10px] font-bold tracking-[0.22em] uppercase text-rose-400/70">Saved Adventures</p>
+            <Heart className="w-4 h-4 fill-[#ff5100]" style={{ color: "#ff5100" }} />
+            <p className="text-[10px] font-bold tracking-[0.22em] uppercase" style={{ color: "rgba(255,81,0,0.7)" }}>Saved Adventures</p>
           </div>
           <h1 className="text-white text-3xl lg:text-4xl font-bold tracking-tight">Your Wishlist</h1>
-          {!loading && savedList.length > 0 && (
+          {savedList.length > 0 && (
             <p className="text-white/40 text-sm mt-2">{savedList.length} adventure{savedList.length !== 1 ? "s" : ""} saved</p>
           )}
         </div>
 
-        {/* Loading — waiting for auth or wishlist */}
-        {(loading || loggedIn === null) && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {[1,2,3,4].map(i => (
-              <div key={i} className="rounded-2xl overflow-hidden animate-pulse" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <div className="aspect-[4/3] bg-white/5" />
-                <div className="p-3 space-y-2">
-                  <div className="h-3 bg-white/5 rounded w-3/4" />
-                  <div className="h-3 bg-white/5 rounded w-1/2" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Empty */}
-        {!loading && loggedIn && savedList.length === 0 && (
+        {/* Empty state */}
+        {savedList.length === 0 && (
           <div
-            className="rounded-3xl p-12 flex flex-col items-center text-center gap-5"
-            style={{ background: "rgba(255,255,255,0.03)", border: "1px dashed rgba(255,255,255,0.1)" }}
+            className="rounded-3xl p-14 flex flex-col items-center text-center gap-5"
+            style={{ background: "rgba(255,255,255,0.02)", border: "1px dashed rgba(255,255,255,0.08)" }}
           >
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center"
-              style={{ background: "rgba(244,63,94,0.08)", border: "1px solid rgba(244,63,94,0.15)" }}>
-              <Heart className="w-6 h-6 text-rose-400/60" />
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center"
+              style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.15)" }}>
+              <Heart className="w-7 h-7 text-white/20" />
             </div>
             <div>
-              <p className="text-white/60 font-semibold text-base mb-1">Nothing saved yet</p>
-              <p className="text-white/30 text-sm">Hit the <Heart className="w-3.5 h-3.5 inline text-rose-400" /> on any adventure to save it here.</p>
+              <p className="text-white/60 font-semibold text-base mb-1.5">Nothing saved yet</p>
+              <p className="text-white/30 text-sm">
+                Hit the <Heart className="w-3.5 h-3.5 inline" style={{ color: "#ff5100" }} /> on any adventure card to save it here.
+              </p>
             </div>
             <Link
               href="/explore"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:-translate-y-0.5 mt-1"
               style={{ background: "#ff5100", boxShadow: "0 4px 14px rgba(255,81,0,0.25)" }}
             >
               Explore adventures
@@ -121,8 +138,8 @@ export default function WishlistPage() {
           </div>
         )}
 
-        {/* Grid */}
-        {!loading && savedList.length > 0 && (
+        {/* Cards grid */}
+        {savedList.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {savedList.map((a) => {
               const difficulty = computeDifficulty(getACE(a));
@@ -146,7 +163,6 @@ export default function WishlistPage() {
                   className="group relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1.5"
                   style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 4px 20px rgba(0,0,0,0.2)" }}
                 >
-                  {/* Image */}
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
                     <Image src={a.heroImage} alt={a.name} fill quality={90} className="object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -173,7 +189,7 @@ export default function WishlistPage() {
                       <SaveButton slug={a.slug} variant="card" />
                     </div>
 
-                    {/* Bottom overlay: type + location + name */}
+                    {/* Bottom overlay */}
                     <div className="absolute bottom-0 left-0 right-0 p-4 z-20 pointer-events-none">
                       <div className="flex items-center gap-2 mb-1.5 pointer-events-auto">
                         <Pill type="type" value={a.type} />
@@ -192,7 +208,7 @@ export default function WishlistPage() {
                         <span className="text-white/40">
                           <span className="text-white/65 font-semibold">{displayCount}</span> operators
                           {lowestPrice && (
-                            <><span className="text-white/20 mx-1">·</span><span className="text-[#ff5100]/85 font-semibold">₹{lowestPrice.toLocaleString("en-IN")} onwards</span></>
+                            <><span className="text-white/20 mx-1">·</span><span className="font-semibold" style={{ color: "rgba(255,81,0,0.85)" }}>₹{lowestPrice.toLocaleString("en-IN")} onwards</span></>
                           )}
                         </span>
                       </div>

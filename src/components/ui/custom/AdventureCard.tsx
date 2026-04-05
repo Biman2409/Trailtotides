@@ -132,12 +132,11 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
             onClick={handleCompare}
             disabled={!inCompare && isFull}
             aria-label={inCompare ? "Remove from compare" : "Compare"}
-            className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm disabled:opacity-40 disabled:cursor-not-allowed ${
-              inCompare
-                ? "bg-[#ff5100]/90 text-white"
-                : "bg-black/50 text-white/70 hover:bg-black/70 hover:text-white"
-            }`}
-            style={{ boxShadow: inCompare ? "0 0 0 1px rgba(255,81,0,0.5)" : "0 0 0 1px rgba(255,255,255,0.1)" }}
+            className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm disabled:opacity-40 disabled:cursor-not-allowed"
+            style={inCompare
+              ? { background: "rgba(255,81,0,0.9)", color: "#fff", boxShadow: "0 0 0 1px rgba(255,81,0,0.5), 0 0 10px rgba(255,81,0,0.35)" }
+              : { background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.7)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }
+            }
           >
             <GitCompare className="w-3.5 h-3.5" />
           </button>

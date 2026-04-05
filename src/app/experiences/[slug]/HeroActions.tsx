@@ -64,15 +64,11 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
         onClick={handleCompare}
         disabled={!inCompare && isFull}
         aria-label={inCompare ? "Remove from compare" : "Compare"}
-        className={`${btnBase} disabled:opacity-40 disabled:cursor-not-allowed ${
-          inCompare
-            ? "text-emerald-300 border border-emerald-500/40"
-            : "text-white/70 border border-white/15 hover:text-white hover:border-white/30"
-        }`}
-        style={{
-          background: inCompare ? "rgba(16,185,129,0.15)" : "rgba(0,0,0,0.45)",
-          boxShadow: inCompare ? "0 0 0 1px rgba(16,185,129,0.25)" : undefined,
-        }}
+        className={`${btnBase} disabled:opacity-40 disabled:cursor-not-allowed`}
+        style={inCompare
+          ? { background: "rgba(255,81,0,0.18)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)", boxShadow: "0 0 12px rgba(255,81,0,0.2)" }
+          : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }
+        }
       >
         {inCompare
           ? <><CheckCheck className="w-3.5 h-3.5" />Added to compare</>
@@ -80,23 +76,19 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
         }
       </button>
 
-      {/* ── Save (second) ── */}
+      {/* ── Wishlist (second) ── */}
       <button
         onClick={handleSave}
-        aria-label={saved ? "Remove from wishlist" : "Save adventure"}
-        className={`${btnBase} ${
-          saved
-            ? "text-rose-300 border border-rose-500/40"
-            : "text-white/70 border border-white/15 hover:text-white hover:border-white/30"
-        }`}
-        style={{
-          background: saved ? "rgba(244,63,94,0.15)" : "rgba(0,0,0,0.45)",
-          boxShadow: saved ? "0 0 0 1px rgba(244,63,94,0.25)" : undefined,
-        }}
+        aria-label={saved ? "Remove from wishlist" : "Add to wishlist"}
+        className={`${btnBase}`}
+        style={saved
+          ? { background: "rgba(255,81,0,0.18)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)", boxShadow: "0 0 12px rgba(255,81,0,0.2)" }
+          : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }
+        }
       >
         {loggedIn === false
           ? <><LogIn className="w-3.5 h-3.5" />Wishlist</>
-          : <><Heart className={`w-3.5 h-3.5 ${saved ? "fill-rose-300" : ""}`} />{saved ? "Wishlisted" : "Wishlist"}</>
+          : <><Heart className={`w-3.5 h-3.5 ${saved ? "fill-[#ff7d47]" : ""}`} />{saved ? "Wishlisted" : "Wishlist"}</>
         }
       </button>
 

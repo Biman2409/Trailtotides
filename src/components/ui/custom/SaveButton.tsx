@@ -21,12 +21,8 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setLoggedIn(!!session?.user);
-    });
-    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
-      setLoggedIn(!!session?.user);
-    });
+    supabase.auth.getSession().then(({ data: { session } }) => setLoggedIn(!!session?.user));
+    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => setLoggedIn(!!session?.user));
     return () => listener.subscription.unsubscribe();
   }, []);
 
@@ -48,7 +44,6 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
 
   /* ── PAGE variant ─────────────────────────────────────────── */
   if (variant === "page") {
-    // Not logged in — show "Login to save" button
     if (loggedIn === false) {
       return (
         <button
@@ -65,27 +60,26 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
       <button
         onClick={handleClick}
         aria-label={saved ? "Remove from wishlist" : "Add to wishlist"}
-        className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
-          saved
-            ? "bg-rose-500/15 text-rose-400 border border-rose-500/30 hover:bg-rose-500/25"
-            : "bg-white/5 text-white/60 border border-white/10 hover:bg-white/10 hover:text-white"
-        } ${className}`}
+        className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${className}`}
+        style={saved
+          ? { background: "rgba(255,81,0,0.15)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.35)", boxShadow: "0 0 12px rgba(255,81,0,0.15)" }
+          : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.1)" }
+        }
       >
-        <Heart className={`w-4 h-4 transition-all duration-200 ${saved ? "fill-rose-400" : ""}`} />
+        <Heart className={`w-4 h-4 transition-all duration-200 ${saved ? "fill-[#ff7d47]" : ""}`} />
         Wishlist
       </button>
     );
   }
 
   /* ── CARD variant ─────────────────────────────────────────── */
-  // Not logged in — show login hint icon
   if (loggedIn === false) {
     return (
       <button
         onClick={handleClick}
-        aria-label="Login to save"
-        className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 bg-black/50 text-white/50 hover:bg-black/70 hover:text-white backdrop-blur-sm ${className}`}
-        style={{ boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }}
+        aria-label="Log in to save"
+        className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm ${className}`}
+        style={{ background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.5)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }}
       >
         <Heart className="w-3.5 h-3.5" />
       </button>
@@ -96,12 +90,11 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
     <button
       onClick={handleClick}
       aria-label={saved ? "Remove from wishlist" : "Save adventure"}
-      className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 ${
-        saved
-          ? "bg-rose-500/90 text-white"
-          : "bg-black/50 text-white/70 hover:bg-black/70 hover:text-white"
-      } backdrop-blur-sm ${className}`}
-      style={{ boxShadow: saved ? "0 0 0 1px rgba(244,63,94,0.4)" : "0 0 0 1px rgba(255,255,255,0.1)" }}
+      className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm ${className}`}
+      style={saved
+        ? { background: "rgba(255,81,0,0.9)", color: "#fff", boxShadow: "0 0 0 1px rgba(255,81,0,0.5), 0 0 10px rgba(255,81,0,0.3)" }
+        : { background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.7)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }
+      }
     >
       <Heart className={`w-3.5 h-3.5 transition-all duration-200 ${saved ? "fill-white" : ""}`} />
     </button>
