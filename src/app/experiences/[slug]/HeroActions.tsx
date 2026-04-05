@@ -99,8 +99,8 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
         }}
       >
         {loggedIn === false
-          ? <><LogIn className="w-3.5 h-3.5" />Save</>
-          : <><Heart className={`w-3.5 h-3.5 ${saved ? "fill-rose-300" : ""}`} />{saved ? "Saved" : "Save"}</>
+          ? <><LogIn className="w-3.5 h-3.5" />Wishlist</>
+          : <><Heart className={`w-3.5 h-3.5 ${saved ? "fill-rose-300" : ""}`} />{saved ? "Wishlisted" : "Wishlist"}</>
         }
       </button>
 
