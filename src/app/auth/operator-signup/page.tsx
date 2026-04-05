@@ -6,11 +6,14 @@ import Link from "next/link";
 import { Eye, EyeOff, ArrowLeft, Building2, Globe, Mail, Lock, User } from "lucide-react";
 import countries from "@/lib/countries.json";
 import Logo from "@/components/ui/custom/Logo";
+import TermsModal from "@/components/ui/custom/TermsModal";
 
 export default function OperatorSignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -29,6 +32,12 @@ export default function OperatorSignupPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex overflow-hidden">
+      {showTermsModal && (
+        <TermsModal
+          onAccept={() => setTermsAccepted(true)}
+          onClose={() => setShowTermsModal(false)}
+        />
+      )}
       {/* Left panel */}
       <div
         className="hidden lg:flex lg:w-1/2 relative bg-cover bg-center"
@@ -224,9 +233,44 @@ export default function OperatorSignupPage() {
               </div>
             </div>
 
+            <div className="flex items-start gap-3 py-0.5">
+              <div className="flex items-center h-5 mt-0.5 shrink-0">
+                <input
+                  id="terms"
+                  name="terms"
+                  type="checkbox"
+                  required
+                  checked={termsAccepted}
+                  onChange={() => {
+                    if (!termsAccepted) setShowTermsModal(true);
+                    else setTermsAccepted(false);
+                  }}
+                  className="w-4 h-4 rounded-lg border-white/10 bg-white/5 text-[#ff5100] focus:ring-[#ff5100]/20 transition-all cursor-pointer accent-[#ff5100]"
+                />
+              </div>
+              <label className="text-[11px] text-white/40 leading-snug font-medium">
+                I agree to the{" "}
+                <button
+                  type="button"
+                  onClick={() => setShowTermsModal(true)}
+                  className="text-[#ff5100]/70 hover:text-[#ff5100] transition-colors underline underline-offset-2"
+                >
+                  Terms
+                </button>
+                {" "}and{" "}
+                <button
+                  type="button"
+                  onClick={() => setShowTermsModal(true)}
+                  className="text-[#ff5100]/70 hover:text-[#ff5100] transition-colors underline underline-offset-2"
+                >
+                  Privacy Policy
+                </button>
+              </label>
+            </div>
+
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !termsAccepted}
               className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-3 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 text-sm mt-1"
             >
               {loading ? "Submitting application…" : "Register as Operator"}
