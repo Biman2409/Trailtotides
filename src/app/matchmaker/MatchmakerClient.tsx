@@ -10,6 +10,7 @@ import {
   AlertTriangle, Loader2,
 } from "lucide-react";
 import ACERadar from "@/components/ui/custom/ACERadar";
+import Pill from "@/components/ui/custom/Pill";
 import AchievementBadges from "@/components/ui/custom/AchievementBadges";
 import { saveProfile, loadProfile, clearProfile, saveProfileToServer, loadProfileFromServer } from "@/lib/matchmaker";
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
@@ -1088,15 +1089,8 @@ function AdventureSection({
                 {/* Meta */}
                 <div className="px-3.5 py-3">
                   <div className="flex flex-wrap gap-1.5">
-                    <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-md"
-                      style={{ background: "rgba(255,81,0,0.12)", color: "#ff7340" }}>
-                      {a.type}
-                    </span>
-                    <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-md"
-                      style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.5)" }}>
-                      <MapPin className="w-2.5 h-2.5 shrink-0" />
-                      {a.state}
-                    </span>
+                    <Pill type="type" value={a.type} />
+                    <Pill type="subRegion" value={a.state} />
                   </div>
                 </div>
               </Link>
