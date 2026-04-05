@@ -96,7 +96,7 @@ export default function OperatorSignupPage() {
               <span className="text-[#ff5100]">company.</span>
             </h1>
             <p className="text-white/40 text-xs font-medium">
-              Create your operator account. Admin approval required within 24 hours.
+              Create your operator account and start listing adventures instantly.
             </p>
           </div>
 
@@ -210,8 +210,7 @@ export default function OperatorSignupPage() {
 
             <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl px-4 py-3 mt-1">
               <p className="text-[11px] text-white/35 leading-relaxed">
-                After registration, our team will review your application within <strong className="text-white/60">24 hours</strong>.
-                You'll be notified once approved and can start managing your listings.
+                Your account is activated immediately after registration. Each adventure listing is reviewed by our admin team before going live.
               </p>
             </div>
 

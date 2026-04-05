@@ -59,7 +59,6 @@ export default function OperatorDashboardClient({
   const [submitting, setSubmitting] = useState(false);
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
 
-  const isApproved = true; // All operators are auto-approved on signup
 
   const filteredAdventures = useMemo(() => {
     if (!search.trim()) return adventures;
@@ -236,11 +235,10 @@ export default function OperatorDashboardClient({
             </div>
 
             {/* Quick action */}
-            {isApproved && (
-              <button
-                onClick={() => setActiveView("browse")}
-                className="w-full flex items-center justify-between bg-[#ff5100]/8 hover:bg-[#ff5100]/12 border border-[#ff5100]/20 hover:border-[#ff5100]/40 rounded-2xl p-5 transition-all group"
-              >
+            <button
+              onClick={() => setActiveView("browse")}
+              className="w-full flex items-center justify-between bg-[#ff5100]/8 hover:bg-[#ff5100]/12 border border-[#ff5100]/20 hover:border-[#ff5100]/40 rounded-2xl p-5 transition-all group"
+            >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl bg-[#ff5100]/15 flex items-center justify-center">
                     <Plus className="w-5 h-5 text-[#ff7d47]" />
@@ -251,8 +249,7 @@ export default function OperatorDashboardClient({
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-[#ff7d47] group-hover:translate-x-1 transition-all" />
-              </button>
-            )}
+            </button>
 
             {/* Submissions list */}
             <div>
@@ -378,11 +375,10 @@ export default function OperatorDashboardClient({
                     </div>
                     <button
                       onClick={() => openSubmitForm(adv)}
-                      disabled={!isApproved}
-                      className="w-full flex items-center justify-center gap-2 bg-[#ff5100]/10 hover:bg-[#ff5100]/20 border border-[#ff5100]/20 hover:border-[#ff5100]/40 text-[#ff7d47] text-[12px] font-bold rounded-xl py-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                      className="w-full flex items-center justify-center gap-2 bg-[#ff5100]/10 hover:bg-[#ff5100]/20 border border-[#ff5100]/20 hover:border-[#ff5100]/40 text-[#ff7d47] text-[12px] font-bold rounded-xl py-2 transition-all"
                     >
                       <Plus className="w-3.5 h-3.5" />
-                      {isApproved ? "Submit Update" : "Approval Required"}
+                      Submit Listing
                     </button>
                   </div>
                 </div>
