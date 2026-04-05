@@ -217,6 +217,15 @@ function LoginForm() {
           Create account
         </Link>
       </p>
+
+      <div className="mt-4 pt-4 border-t border-white/[0.06]">
+        <p className="text-center text-white/20 text-xs font-medium">
+          Adventure operator?{" "}
+          <Link href="/auth/operator-signup" className="text-white/40 hover:text-[#ff7d47] transition-colors font-semibold">
+            Register your company →
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

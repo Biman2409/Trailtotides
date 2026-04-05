@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { updateUserRole, deleteUser } from "./actions";
+import { approveOperatorAccount, rejectOperatorAccount, approveOperatorSubmission, rejectOperatorSubmission } from "@/app/auth/operator-actions";
 import { logout } from "@/app/auth/actions";
 import {
   Mountain,
@@ -25,6 +26,12 @@ import {
   Clock,
   Phone,
   Mail,
+  Building2,
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  Globe,
+  FileText,
 } from "lucide-react";
 import Link from "next/link";
 import * as XLSX from "xlsx";
@@ -63,6 +70,32 @@ type Message = {
   created_at: string;
 };
 
+type OperatorProfile = {
+  id: string;
+  user_id: string;
+  contact_name: string;
+  company_name: string;
+  email: string;
+  phone: string;
+  website: string | null;
+  status: "pending" | "approved" | "rejected";
+  created_at: string;
+};
+
+type OperatorSubmission = {
+  id: string;
+  operator_id: string;
+  adventure_slug: string;
+  operator_name: string;
+  price_from: string;
+  exact_dates: string[];
+  notes: string | null;
+  status: "pending" | "approved" | "rejected";
+  reviewed_at: string | null;
+  created_at: string;
+  operator_profiles?: { company_name: string; contact_name: string; email: string } | null;
+};
+
 type StorySubmission = {
   id: string;
   title: string;
@@ -88,11 +121,15 @@ export default function AdminDashboardClient({
   currentUserId,
   messages = [],
   storySubmissions = [],
+  operatorProfiles = [],
+  operatorSubmissions = [],
 }: {
   profiles: Profile[];
   currentUserId: string;
   messages?: Message[];
   storySubmissions?: StorySubmission[];
+  operatorProfiles?: OperatorProfile[];
+  operatorSubmissions?: OperatorSubmission[];
 }) {
   const [activeTab, setActiveTab] = useState("users");
   const [search, setSearch] = useState("");
@@ -100,6 +137,8 @@ export default function AdminDashboardClient({
   const [dateRange, setDateRange] = useState("all");
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [localProfiles, setLocalProfiles] = useState<Profile[]>(profiles);
+  const [localOperatorProfiles, setLocalOperatorProfiles] = useState<OperatorProfile[]>(operatorProfiles);
+  const [localOperatorSubmissions, setLocalOperatorSubmissions] = useState<OperatorSubmission[]>(operatorSubmissions);
 
   const filtered = useMemo(() => {
     return localProfiles.filter((p) => {
@@ -154,6 +193,32 @@ export default function AdminDashboardClient({
   const totalUsers = localProfiles.filter((p) => p.role === "user").length;
   const totalAdmins = localProfiles.filter((p) => p.role === "admin").length;
   const newToday = analyticsData.growthData[29]?.count || 0;
+  const pendingOperators = localOperatorProfiles.filter((p) => p.status === "pending").length;
+  const pendingOperatorSubmissions = localOperatorSubmissions.filter((s) => s.status === "pending").length;
+
+  async function handleOperatorAccountAction(opId: string, action: "approve" | "reject") {
+    setLoadingId(opId);
+    if (action === "approve") {
+      await approveOperatorAccount(opId);
+      setLocalOperatorProfiles((prev) => prev.map((p) => p.id === opId ? { ...p, status: "approved" } : p));
+    } else {
+      await rejectOperatorAccount(opId);
+      setLocalOperatorProfiles((prev) => prev.map((p) => p.id === opId ? { ...p, status: "rejected" } : p));
+    }
+    setLoadingId(null);
+  }
+
+  async function handleOperatorSubmissionAction(subId: string, action: "approve" | "reject") {
+    setLoadingId(subId);
+    if (action === "approve") {
+      await approveOperatorSubmission(subId);
+      setLocalOperatorSubmissions((prev) => prev.map((s) => s.id === subId ? { ...s, status: "approved" } : s));
+    } else {
+      await rejectOperatorSubmission(subId);
+      setLocalOperatorSubmissions((prev) => prev.map((s) => s.id === subId ? { ...s, status: "rejected" } : s));
+    }
+    setLoadingId(null);
+  }
 
   async function handleRoleChange(userId: string, newRole: string) {
     setLoadingId(userId);
@@ -248,6 +313,7 @@ export default function AdminDashboardClient({
                 { value: "users", icon: Users, label: "Users" },
                 { value: "messages", icon: MessageSquare, label: "Messages", badge: messages.length },
                 { value: "stories", icon: BookOpen, label: "Stories", badge: storySubmissions.filter(s => s.status === "pending").length },
+                { value: "operators", icon: Building2, label: "Operators", badge: pendingOperators + pendingOperatorSubmissions },
                 { value: "analytics", icon: BarChart3, label: "Analytics" },
               ].map(({ value, icon: Icon, label, badge }) => (
                 <Tabs.Trigger
@@ -273,7 +339,7 @@ export default function AdminDashboardClient({
         </div>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-10">
+        <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 mb-10">
           {[
             {
               label: "Total Users",
@@ -324,6 +390,16 @@ export default function AdminDashboardClient({
               bg: "bg-amber-500/10",
               glow: "bg-amber-500/20",
               subColor: "text-amber-400",
+            },
+            {
+              label: "Operators",
+              value: localOperatorProfiles.length,
+              sub: `${pendingOperators} pending approval`,
+              icon: Building2,
+              color: "#06b6d4",
+              bg: "bg-cyan-500/10",
+              glow: "bg-cyan-500/20",
+              subColor: "text-cyan-400",
             },
           ].map(({ label, value, sub, icon: Icon, bg, glow, subColor }) => (
             <div
@@ -659,6 +735,223 @@ export default function AdminDashboardClient({
             <p className="text-center text-[10px] font-bold uppercase tracking-[0.15em] text-white/20 py-2">
               {storySubmissions.length} {storySubmissions.length === 1 ? "submission" : "submissions"} total
             </p>
+          </Tabs.Content>
+
+          {/* ── OPERATORS TAB ── */}
+          <Tabs.Content value="operators" className="outline-none space-y-8">
+
+            {/* Operator Accounts */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Building2 className="w-4 h-4 text-white/30" />
+                <h2 className="text-base font-bold">Operator Accounts</h2>
+                {pendingOperators > 0 && (
+                  <span className="bg-amber-500/20 text-amber-400 text-[9px] font-black px-2 py-0.5 rounded-full">
+                    {pendingOperators} pending
+                  </span>
+                )}
+              </div>
+              {localOperatorProfiles.length === 0 ? (
+                <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-10 text-center">
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mx-auto mb-3">
+                    <Building2 className="w-6 h-6 text-white/20" />
+                  </div>
+                  <p className="text-white/30 text-sm font-semibold">No operator accounts yet</p>
+                  <p className="text-white/20 text-xs mt-1">Operators register at /auth/operator-signup</p>
+                </div>
+              ) : (
+                <div className="border border-white/[0.07] rounded-2xl overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-white/[0.06] bg-white/[0.02]">
+                        <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Company</th>
+                        <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30 hidden md:table-cell">Contact</th>
+                        <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30 hidden sm:table-cell">Website</th>
+                        <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Status</th>
+                        <th className="text-right px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {localOperatorProfiles.map((op) => (
+                        <tr key={op.id} className="border-b border-white/[0.04] hover:bg-white/[0.03] last:border-0 transition-colors">
+                          <td className="px-5 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/15 flex items-center justify-center text-cyan-400 font-black text-sm shrink-0">
+                                {op.company_name[0]?.toUpperCase() ?? "?"}
+                              </div>
+                              <div>
+                                <p className="font-semibold text-white/90 text-[13px] leading-tight">{op.company_name}</p>
+                                <p className="text-white/35 text-[10px] font-mono mt-0.5">{op.email}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-5 py-4 hidden md:table-cell">
+                            <p className="text-white/60 text-[12px]">{op.contact_name}</p>
+                            <p className="text-white/30 text-[10px] font-mono mt-0.5">{op.phone}</p>
+                          </td>
+                          <td className="px-5 py-4 hidden sm:table-cell">
+                            {op.website ? (
+                              <a href={op.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[#ff7d47]/70 hover:text-[#ff7d47] text-[11px] transition-colors">
+                                <Globe className="w-3 h-3" />
+                                {op.website.replace(/^https?:\/\//, "")}
+                              </a>
+                            ) : (
+                              <span className="text-white/25 text-[11px]">—</span>
+                            )}
+                          </td>
+                          <td className="px-5 py-4">
+                            {op.status === "approved" ? (
+                              <span className="inline-flex items-center gap-1 bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg">
+                                <CheckCircle2 className="w-2.5 h-2.5" />Approved
+                              </span>
+                            ) : op.status === "rejected" ? (
+                              <span className="inline-flex items-center gap-1 bg-red-500/15 text-red-400 border border-red-500/25 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg">
+                                <XCircle className="w-2.5 h-2.5" />Rejected
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 bg-amber-500/15 text-amber-400 border border-amber-500/25 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg">
+                                <Clock className="w-2.5 h-2.5" />Pending
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-5 py-4">
+                            <div className="flex items-center justify-end gap-1.5">
+                              {op.status !== "approved" && (
+                                <button
+                                  onClick={() => handleOperatorAccountAction(op.id, "approve")}
+                                  disabled={loadingId === op.id}
+                                  className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-emerald-500/25 text-emerald-400/80 hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all disabled:opacity-40"
+                                >
+                                  {loadingId === op.id ? <Loader2 className="w-3 h-3 animate-spin" /> : "Approve"}
+                                </button>
+                              )}
+                              {op.status !== "rejected" && (
+                                <button
+                                  onClick={() => handleOperatorAccountAction(op.id, "reject")}
+                                  disabled={loadingId === op.id}
+                                  className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-red-500/20 text-red-400/70 hover:bg-red-500/10 hover:border-red-500/35 transition-all disabled:opacity-40"
+                                >
+                                  {loadingId === op.id ? <Loader2 className="w-3 h-3 animate-spin" /> : "Reject"}
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            {/* Operator Price/Date Submissions */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <FileText className="w-4 h-4 text-white/30" />
+                <h2 className="text-base font-bold">Price & Date Submissions</h2>
+                {pendingOperatorSubmissions > 0 && (
+                  <span className="bg-amber-500/20 text-amber-400 text-[9px] font-black px-2 py-0.5 rounded-full">
+                    {pendingOperatorSubmissions} pending
+                  </span>
+                )}
+              </div>
+              {localOperatorSubmissions.length === 0 ? (
+                <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-10 text-center">
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mx-auto mb-3">
+                    <FileText className="w-6 h-6 text-white/20" />
+                  </div>
+                  <p className="text-white/30 text-sm font-semibold">No submissions yet</p>
+                  <p className="text-white/20 text-xs mt-1">Approved operators submit price/date updates from their dashboard</p>
+                </div>
+              ) : (
+                <div className="border border-white/[0.07] rounded-2xl overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-white/[0.06] bg-white/[0.02]">
+                        <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Operator</th>
+                        <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Adventure</th>
+                        <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30 hidden sm:table-cell">Price From</th>
+                        <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30 hidden md:table-cell">Dates</th>
+                        <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Status</th>
+                        <th className="text-right px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {localOperatorSubmissions.map((sub) => (
+                        <tr key={sub.id} className="border-b border-white/[0.04] hover:bg-white/[0.03] last:border-0 transition-colors">
+                          <td className="px-5 py-4">
+                            <p className="font-semibold text-white/90 text-[12px] leading-tight">
+                              {sub.operator_profiles?.company_name ?? sub.operator_name}
+                            </p>
+                            {sub.operator_profiles?.email && (
+                              <p className="text-white/30 text-[10px] font-mono mt-0.5">{sub.operator_profiles.email}</p>
+                            )}
+                          </td>
+                          <td className="px-5 py-4">
+                            <p className="text-white/80 text-[12px] font-semibold">{sub.adventure_slug}</p>
+                            <p className="text-white/30 text-[10px] mt-0.5 font-medium">{sub.operator_name}</p>
+                          </td>
+                          <td className="px-5 py-4 hidden sm:table-cell">
+                            <span className="text-[#ff7d47] font-bold text-[13px]">₹{sub.price_from}</span>
+                          </td>
+                          <td className="px-5 py-4 hidden md:table-cell">
+                            {sub.exact_dates && sub.exact_dates.length > 0 ? (
+                              <div className="flex flex-wrap gap-1">
+                                {sub.exact_dates.slice(0, 2).map((d, i) => (
+                                  <span key={i} className="bg-white/5 border border-white/8 text-white/50 text-[10px] px-2 py-0.5 rounded-lg font-mono">{d}</span>
+                                ))}
+                                {sub.exact_dates.length > 2 && (
+                                  <span className="text-white/25 text-[10px] py-0.5">+{sub.exact_dates.length - 2}</span>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="text-white/25 text-[11px]">—</span>
+                            )}
+                          </td>
+                          <td className="px-5 py-4">
+                            {sub.status === "approved" ? (
+                              <span className="inline-flex items-center gap-1 bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg">
+                                <CheckCircle2 className="w-2.5 h-2.5" />Approved
+                              </span>
+                            ) : sub.status === "rejected" ? (
+                              <span className="inline-flex items-center gap-1 bg-red-500/15 text-red-400 border border-red-500/25 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg">
+                                <XCircle className="w-2.5 h-2.5" />Rejected
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 bg-amber-500/15 text-amber-400 border border-amber-500/25 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg">
+                                <Clock className="w-2.5 h-2.5" />Pending
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-5 py-4">
+                            <div className="flex items-center justify-end gap-1.5">
+                              {sub.status === "pending" && (
+                                <>
+                                  <button
+                                    onClick={() => handleOperatorSubmissionAction(sub.id, "approve")}
+                                    disabled={loadingId === sub.id}
+                                    className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-emerald-500/25 text-emerald-400/80 hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all disabled:opacity-40"
+                                  >
+                                    {loadingId === sub.id ? <Loader2 className="w-3 h-3 animate-spin" /> : "Approve"}
+                                  </button>
+                                  <button
+                                    onClick={() => handleOperatorSubmissionAction(sub.id, "reject")}
+                                    disabled={loadingId === sub.id}
+                                    className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-red-500/20 text-red-400/70 hover:bg-red-500/10 hover:border-red-500/35 transition-all disabled:opacity-40"
+                                  >
+                                    {loadingId === sub.id ? <Loader2 className="w-3 h-3 animate-spin" /> : "Reject"}
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
           </Tabs.Content>
 
           {/* ── ANALYTICS TAB ── */}
