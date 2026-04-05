@@ -78,9 +78,6 @@ export default function FindByRegion() {
             Adventure Lives in Every Corner
           </h2>
           <div className="mt-4 w-12 h-0.5 bg-[#ff5100] rounded-full" />
-          <p className="mt-3 text-white/50 text-sm lg:text-base max-w-xl">
-            Pick a region, and let the journey begin.
-          </p>
         </div>
 
         {/* Grid */}
