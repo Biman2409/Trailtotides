@@ -265,11 +265,6 @@ export default function CompareAdventures() {
           </div>
         )}
 
-        {selected.length < 2 && (
-          <p className="text-center text-white/20 text-sm py-4">
-            {selected.length === 0 ? "Select at least 2 adventures to see the comparison" : "Select one more adventure to compare"}
-          </p>
-        )}
       </div>
     </section>
   );
