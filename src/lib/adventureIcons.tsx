@@ -20,6 +20,7 @@ import {
   MountainSnow,
   Pickaxe,
 
+  Tent,
   Bike,
   Motorbike,
   Car,
@@ -41,10 +42,10 @@ import {
 } from "lucide-react";
 
 export const ADVENTURE_TYPE_ICONS: Record<string, (size?: number) => React.ReactNode> = {
-  Trekking:          (s = 14) => <Footprints    style={{ width: s, height: s }} />,
+  Trekking:          (s = 14) => <Tent          style={{ width: s, height: s }} />,
   Mountaineering:    (s = 14) => <MountainSnow  style={{ width: s, height: s }} />,
   "Rock Climbing":   (s = 14) => <Pickaxe       style={{ width: s, height: s }} />,
-  Scrambling:        (s = 14) => <SportShoe size={s} />,
+  Scrambling:        (s = 14) => <Footprints    style={{ width: s, height: s }} />,
   Biking:            (s = 14) => <Motorbike     style={{ width: s, height: s }} />,
   Cycling:           (s = 14) => <Bike          style={{ width: s, height: s }} />,
   "Jeep Safari":     (s = 14) => <Car           style={{ width: s, height: s }} />,
