@@ -68,10 +68,10 @@ export default function Pill({ type, value, className = "", clickable = true }: 
   const isSnow = ["Skiing", "Snowboarding", "Ice Climbing"].includes(value);
 
   const baseClasses = [
-    "inline-flex items-center leading-none rounded-full",
+    "inline-flex items-center leading-none rounded-full h-5",
     "text-[10px] font-bold tracking-tight",
     "shadow-sm transition-all duration-300",
-    hasIcon ? "pl-0.5 pr-2.5 py-0.5" : "px-2.5 py-1",
+    hasIcon ? "pl-0.5 pr-2.5" : "px-2.5",
     styleClass,
     className,
   ].join(" ");
@@ -80,7 +80,7 @@ export default function Pill({ type, value, className = "", clickable = true }: 
     <span
       className={[
         "flex items-center justify-center rounded-full mr-1.5 shrink-0",
-        "w-[18px] h-[18px]",
+        "w-4 h-4",
         circleBg,
         isSnow ? "text-gray-700" : "text-white",
       ].join(" ")}
