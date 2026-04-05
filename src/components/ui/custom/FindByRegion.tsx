@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Sun, Mountain, Trees, Waves, Palmtree, Building2, Sunrise } from "lucide-react";
+import { ArrowRight, Sun, Mountain, MountainSnow, Trees, Waves, Palmtree, Building2, Sunrise } from "lucide-react";
 import Image from "next/image";
 import { regions, adventures } from "@/lib/data";
 import type { AdventureType } from "@/lib/data";
@@ -21,7 +21,7 @@ const regionSubRegions: Record<string, string[]> = {
 };
 
 const regionIcons: Record<string, React.ReactNode> = {
-  "Himalayas": <Mountain className="w-5 h-5" />,
+  "Himalayas": <MountainSnow className="w-5 h-5" />,
   "Western Ghats": <Trees className="w-5 h-5" />,
   "Eastern Ghats": <Mountain className="w-5 h-5" />,
   "Desert": <Sun className="w-5 h-5" />,
