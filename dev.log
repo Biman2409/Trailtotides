@@ -500,3 +500,4 @@ Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
  GET /?_cb=1775400214722 200 in 187ms
  GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 403ms
  GET /api/stories/views?slug=riding-through-a-revolution 200 in 409ms
+ ✓ Compiled in 268ms
