@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Wind, Mountain, Waves, Snowflake } from "lucide-react";
 import { adventures } from "@/lib/data";
+import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 
 const categories = [
     {
@@ -239,6 +240,9 @@ export default function FindYourFormat() {
                                     key={type}
                                     className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl"
                                   >
+                                    <span className="text-white/50 flex-shrink-0">
+                                      {ADVENTURE_TYPE_ICONS[type]?.(13)}
+                                    </span>
                                     <span className="text-white/70 text-sm font-medium">{type}</span>
                                   </div>
                                 ))}
@@ -275,6 +279,9 @@ export default function FindYourFormat() {
                                     }}
                                   >
                                     <div className="flex items-center gap-2.5">
+                                      <span className="text-white/35 group-hover/row:text-[#ff5100] transition-colors duration-150 flex-shrink-0">
+                                        {ADVENTURE_TYPE_ICONS[type]?.(13)}
+                                      </span>
                                       <span className="text-white/70 group-hover/row:text-white text-sm font-medium transition-colors duration-150">
                                         {type}
                                       </span>

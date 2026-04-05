@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users, ChevronLeft } from "lucide-react";
+import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
@@ -545,11 +546,14 @@ export default function ExploreClient() {
                                             key={type}
                                             onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
                                             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                                              isSelected 
-                                                ? "bg-[#ff5100] text-white" 
+                                              isSelected
+                                                ? "bg-[#ff5100] text-white"
                                                 : "bg-white/10 text-white/70 hover:bg-white/20"
                                             }`}
                                           >
+                                            <span className="flex-shrink-0 opacity-80">
+                                              {ADVENTURE_TYPE_ICONS[type]?.(11)}
+                                            </span>
                                             {type}
                                           </button>
                                       );
@@ -746,6 +750,7 @@ export default function ExploreClient() {
                 onClick={() => toggle(selectedTypes, t, setSelectedTypes)}
                 className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
               >
+                <span className="flex-shrink-0">{ADVENTURE_TYPE_ICONS[t]?.(11)}</span>
                 {t} <X className="w-3 h-3" />
               </span>
             ))}
