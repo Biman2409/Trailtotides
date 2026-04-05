@@ -32,7 +32,7 @@ export default function Pill({ type, value, className = "", clickable = true }: 
 
   const icon = type === "type" ? ADVENTURE_TYPE_ICONS[value]?.(10) : null;
 
-  const baseClasses = "text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight shadow-sm transition-all duration-300 inline-flex items-center gap-1";
+  const baseClasses = "text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight shadow-sm transition-all duration-300 inline-flex items-center leading-none gap-1 [&>svg]:shrink-0 [&>svg]:self-center";
   const finalClass = `${baseClasses} ${styleClass} ${className}`;
 
   const content = (
