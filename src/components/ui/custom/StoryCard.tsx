@@ -48,8 +48,8 @@ export default function StoryCard({ story }: { story: Story }) {
           <div className="flex items-center gap-1.5 rounded-full py-0 pl-0 pr-2.5"
             style={{ background: "rgba(10,10,10,0.75)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", border: "1px solid rgba(255,81,0,0.35)", boxShadow: "0 0 12px rgba(255,81,0,0.15)" }}>
             <span className="w-[22px] h-[22px] rounded-full flex items-center justify-center shrink-0"
-              style={{ background: "linear-gradient(135deg,#ff5100,#ff7d47)", boxShadow: "0 0 6px rgba(255,81,0,0.5)" }}>
-              <Crown className="w-3 h-3 text-white" />
+              style={{ background: "#ff5100", boxShadow: "0 0 6px rgba(255,81,0,0.5)" }}>
+              <Crown className="w-3 h-3 text-black" />
             </span>
             <span className="text-[10px] font-bold leading-none tracking-wide" style={{ color: "#ff5100" }}>Featured</span>
           </div>
@@ -58,8 +58,8 @@ export default function StoryCard({ story }: { story: Story }) {
           <div className="flex items-center gap-1.5 rounded-full py-0 pl-0 pr-2.5"
             style={{ background: "linear-gradient(135deg,rgba(255,81,0,0.95),rgba(220,50,0,0.9))", border: "1px solid rgba(255,255,255,0.18)", boxShadow: "0 0 14px rgba(255,81,0,0.35)" }}>
             <span className="w-[22px] h-[22px] rounded-full flex items-center justify-center shrink-0"
-              style={{ background: "rgba(0,0,0,0.22)", border: "1px solid rgba(255,255,255,0.22)" }}>
-              <Mountain className="w-3 h-3 text-white" />
+              style={{ background: "#000" }}>
+              <Mountain className="w-3 h-3" style={{ color: "#ff5100" }} />
             </span>
             <span className="text-[10px] font-bold leading-none tracking-wide text-white">TTT Original</span>
           </div>
