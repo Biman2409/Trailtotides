@@ -208,12 +208,6 @@ export default function OperatorSignupPage() {
               </div>
             </div>
 
-            <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl px-4 py-3 mt-1">
-              <p className="text-[11px] text-white/35 leading-relaxed">
-                Your account is activated immediately after registration. Each adventure listing is reviewed by our admin team before going live.
-              </p>
-            </div>
-
             <button
               type="submit"
               disabled={loading}
