@@ -87,24 +87,18 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
 
-        {/* Top-left: difficulty + season pill */}
+        {/* Top-left: type + location */}
         <div className="absolute top-3 left-3 z-20 flex flex-wrap items-center gap-1.5">
-          <DifficultyMeter difficulty={difficulty} />
-          {isSeasonActive ? (
-            <span className="pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
-              Season Active
-            </span>
-          ) : isSeasonUpcoming ? (
-            <span className="pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
-              Upcoming
-            </span>
-          ) : seasonLabel ? (
-            <span className="pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.85)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }}>
-              {seasonLabel}
-            </span>
-          ) : null}
+          <Pill type="type" value={adventure.type} />
+          <Link
+            href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1 h-5 pl-1.5 pr-2.5 rounded-full text-[10px] font-semibold tracking-wide transition-all duration-200 hover:brightness-125 z-30"
+            style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.85)", border: "1px solid rgba(255,255,255,0.18)", backdropFilter: "blur(6px)" }}
+          >
+            <MapPin className="w-2.5 h-2.5 text-[#ff5100] shrink-0" />
+            {adventure.state}
+          </Link>
         </div>
 
         {/* Top-right: Compare + Save buttons */}
@@ -127,18 +121,24 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
 
         {/* Bottom content over image */}
         <div className="absolute bottom-0 left-0 right-0 p-4 z-20 pointer-events-none">
-          {/* Type pill + location on same row */}
-          <div className="flex items-center gap-2 mb-1.5 pointer-events-auto">
-            <Pill type="type" value={adventure.type} />
-            <Link
-              href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 h-5 pl-1.5 pr-2.5 rounded-full text-[10px] font-semibold tracking-wide transition-all duration-200 hover:brightness-125 z-30"
-              style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.85)", border: "1px solid rgba(255,255,255,0.18)", backdropFilter: "blur(6px)" }}
-            >
-              <MapPin className="w-2.5 h-2.5 text-[#ff5100] shrink-0" />
-              {adventure.state}
-            </Link>
+          {/* Difficulty + season row */}
+          <div className="flex items-center gap-1.5 mb-1.5 pointer-events-auto">
+            <DifficultyMeter difficulty={difficulty} />
+            {isSeasonActive ? (
+              <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+                Season Active
+              </span>
+            ) : isSeasonUpcoming ? (
+              <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }}>
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
+                Upcoming
+              </span>
+            ) : seasonLabel ? (
+              <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.85)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }}>
+                {seasonLabel}
+              </span>
+            ) : null}
           </div>
           <h3 className="text-white font-bold text-lg leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors pointer-events-none">
             {adventure.name}
