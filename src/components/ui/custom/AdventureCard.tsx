@@ -33,7 +33,7 @@ function DifficultyMeter({ difficulty }: { difficulty: string }) {
   const cfg = DIFFICULTY_CONFIG[difficulty] ?? { level: 1, color: "#10b981", glow: "#10b98155", label: difficulty };
   return (
     <div
-      className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full"
+      className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-tight shadow-sm"
       style={{
         background: "rgba(0,0,0,0.6)",
         backdropFilter: "blur(8px)",
@@ -43,7 +43,7 @@ function DifficultyMeter({ difficulty }: { difficulty: string }) {
     >
       {/* Label */}
       <span
-        className="text-[10px] font-semibold tracking-wide leading-none"
+        className="font-bold leading-none"
         style={{ color: cfg.color, textShadow: `0 0 8px ${cfg.glow}` }}
       >
         {cfg.label}
