@@ -28,6 +28,7 @@ import Pill from "@/components/ui/custom/Pill";
 import ACEProfileSection from "./ACEProfileSection";
 import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
+import SaveButton from "@/components/ui/custom/SaveButton";
 import ReviewSection from "@/components/ui/custom/ReviewSection";
 import { createClient } from "@/lib/supabase/server";
 import { getACE, computeDifficulty } from "@/lib/ace";
@@ -252,6 +253,9 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <p className="text-white/55 text-sm md:text-lg leading-relaxed max-w-xl font-light">
               {adventure.tagline}
             </p>
+            <div className="mt-5">
+              <SaveButton slug={adventure.slug} variant="page" />
+            </div>
           </div>
         </div>
       </section>

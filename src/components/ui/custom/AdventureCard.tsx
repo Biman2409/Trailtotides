@@ -7,6 +7,7 @@ import type { Adventure, Month } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import Pill from "./Pill";
 import DifficultyMeter from "./DifficultyMeter";
+import SaveButton from "./SaveButton";
 
 interface AdventureCardProps {
   adventure: Adventure;
@@ -113,6 +114,11 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
           </p>
         </div>
       </div>
+
+        {/* Save button — bottom right over image */}
+        <div className="absolute bottom-3 right-3 z-20">
+          <SaveButton slug={adventure.slug} variant="card" />
+        </div>
 
         {/* Dashboard — duration left, operators right */}
         <div className="px-3 py-2.5 flex items-center justify-between gap-2">
