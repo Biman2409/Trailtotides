@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, BadgeCheck } from "lucide-react";
+import { MapPin, BadgeCheck, GitCompare } from "lucide-react";
 import type { Adventure, Month } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import Pill from "./Pill";
 import DifficultyMeter from "./DifficultyMeter";
 import SaveButton from "./SaveButton";
+import { useCompare } from "@/contexts/CompareContext";
 
 interface AdventureCardProps {
   adventure: Adventure;
@@ -27,6 +28,14 @@ function formatSeasonShort(bestMonths: Month[]): string {
 export default function AdventureCard({ adventure, size = "default", fromPage }: AdventureCardProps) {
   const isLarge = size === "large";
   const difficulty = computeDifficulty(getACE(adventure));
+  const { isSelected, add, remove, isFull } = useCompare();
+  const inCompare = isSelected(adventure.id);
+
+  function handleCompare(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    inCompare ? remove(adventure.id) : add(adventure);
+  }
   const monthIndex = new Date().getMonth();
   const currentMonth = MONTHS[monthIndex];
   const nextMonth = MONTHS[(monthIndex + 1) % 12];
@@ -71,28 +80,44 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
 
-        {/* Pills — top left */}
+        {/* Top-left: type + difficulty + season pill */}
         <div className="absolute top-3 left-3 z-20 flex flex-wrap items-center gap-1.5">
           <Pill type="type" value={adventure.type} />
           <DifficultyMeter difficulty={difficulty} />
-        </div>
-
-          {/* Season pill — top right */}
           {isSeasonActive ? (
-            <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>
+            <span className="pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
               Season Active
             </span>
           ) : isSeasonUpcoming ? (
-            <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }}>
+            <span className="pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
               Upcoming
             </span>
           ) : seasonLabel ? (
-            <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.85)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }}>
+            <span className="pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.85)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }}>
               {seasonLabel}
             </span>
           ) : null}
+        </div>
+
+        {/* Top-right: Compare + Save buttons */}
+        <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5">
+          <button
+            onClick={handleCompare}
+            disabled={!inCompare && isFull}
+            aria-label={inCompare ? "Remove from compare" : "Compare"}
+            className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm disabled:opacity-40 disabled:cursor-not-allowed ${
+              inCompare
+                ? "bg-[#ff5100]/90 text-white"
+                : "bg-black/50 text-white/70 hover:bg-black/70 hover:text-white"
+            }`}
+            style={{ boxShadow: inCompare ? "0 0 0 1px rgba(255,81,0,0.5)" : "0 0 0 1px rgba(255,255,255,0.1)" }}
+          >
+            <GitCompare className="w-3.5 h-3.5" />
+          </button>
+          <SaveButton slug={adventure.slug} variant="card" />
+        </div>
 
         {/* Bottom content over image */}
         <div className="absolute bottom-0 left-0 right-0 p-4 z-20 pointer-events-none">
@@ -114,11 +139,6 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
           </p>
         </div>
       </div>
-
-        {/* Save button — bottom right over image */}
-        <div className="absolute bottom-3 right-3 z-20">
-          <SaveButton slug={adventure.slug} variant="card" />
-        </div>
 
         {/* Dashboard — duration left, operators right */}
         <div className="px-3 py-2.5 flex items-center justify-between gap-2">
