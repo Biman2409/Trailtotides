@@ -103,8 +103,7 @@ export default function SignUpPage() {
 
             <div className="mb-4">
               <h1 className="text-3xl font-black text-white mb-1 tracking-tight leading-tight">
-                Wild is calling,<br />
-                <span className="text-[#ff5100]">answer it.</span>
+                Wild is calling, <span className="text-[#ff5100]">answer it.</span>
               </h1>
               <p className="text-white/40 text-xs font-medium">
                 Create your explorer account.
