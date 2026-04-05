@@ -7,7 +7,7 @@ import Image from "next/image";
 import { regions, adventures } from "@/lib/data";
 import type { AdventureType } from "@/lib/data";
 
-const LAND_TYPES: AdventureType[] = ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Biking", "Cycling", "Jeep Safari", "Sandboarding", "Caving", "Urban Adventure"];
+const LAND_TYPES: AdventureType[] = ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Biking", "Cycling", "Jeep Safari", "Caving", "Urban Adventure"];
 
 const regionSubRegions: Record<string, string[]> = {
   "Himalayas": ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],

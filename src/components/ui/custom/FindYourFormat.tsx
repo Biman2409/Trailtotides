@@ -29,7 +29,6 @@ const categories = [
       { type: "Scrambling" },
       { type: "Jeep Safari" },
       { type: "Caving" },
-      { type: "Sandboarding" },
       { type: "Urban Adventure" },
     ],
   },

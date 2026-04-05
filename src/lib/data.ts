@@ -10,7 +10,6 @@ export type AdventureType =
   | "Scrambling"
   | "Jeep Safari"
   | "Caving"
-  | "Sandboarding"
   | "Urban Adventure"
   | "Paragliding"
   | "Hot Air Balloon";
@@ -1966,7 +1965,6 @@ export const adventureTypes = [
   { type: "Rock Climbing" as AdventureType, count: 0 },
   { type: "Jeep Safari" as AdventureType, count: 0 },
   { type: "Caving" as AdventureType, count: 0 },
-  { type: "Sandboarding" as AdventureType, count: 0 },
   { type: "Urban Adventure" as AdventureType, count: 0 },
   { type: "Diving" as AdventureType, count: 1 },
   { type: "Kayaking" as AdventureType, count: 0 },
