@@ -103,7 +103,8 @@ export default function OperatorDashboardClient({
       setLocalSubmissions((prev) => [
         {
           id: Date.now().toString(),
-          operator_id: operatorProfile.id,
+          operator_id: operatorProfile.user_id,
+          company_name: operatorProfile.company_name,
           adventure_slug: selectedAdventure!.slug,
           operator_name: operatorName,
           price_from: priceFrom,

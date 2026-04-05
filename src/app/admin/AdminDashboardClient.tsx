@@ -879,11 +879,9 @@ export default function AdminDashboardClient({
                         <tr key={sub.id} className="border-b border-white/[0.04] hover:bg-white/[0.03] last:border-0 transition-colors">
                           <td className="px-5 py-4">
                             <p className="font-semibold text-white/90 text-[12px] leading-tight">
-                              {sub.operator_profiles?.company_name ?? sub.operator_name}
+                              {sub.company_name ?? sub.operator_name}
                             </p>
-                            {sub.operator_profiles?.email && (
-                              <p className="text-white/30 text-[10px] font-mono mt-0.5">{sub.operator_profiles.email}</p>
-                            )}
+                            <p className="text-white/30 text-[10px] font-mono mt-0.5">{sub.operator_id}</p>
                           </td>
                           <td className="px-5 py-4">
                             <p className="text-white/80 text-[12px] font-semibold">{sub.adventure_slug}</p>
