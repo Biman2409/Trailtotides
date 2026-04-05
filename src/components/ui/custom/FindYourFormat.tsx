@@ -28,7 +28,6 @@ const categories = [
       { type: "Rock Climbing" },
       { type: "Scrambling" },
       { type: "Jeep Safari" },
-      { type: "Camel Safari" },
       { type: "Caving" },
       { type: "Sandboarding" },
       { type: "Urban Adventure" },
