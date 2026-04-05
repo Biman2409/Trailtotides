@@ -26,35 +26,31 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
 
   function handleCompare() {
     if (loggedIn === false) {
-      toast("Login to compare adventures", {
-        description: "Create a free account to use the compare feature.",
-        action: { label: "Log in", onClick: () => router.push("/auth/login") },
-      });
+      toast.error("Log in to compare adventures.");
       return;
     }
     if (inCompare) {
       remove(adventure.id);
       toast("Removed from compare");
-    } else if (!isFull) {
+    } else if (isFull) {
+      toast.error("Remove an adventure to add another.");
+    } else {
       add(adventure);
-      toast.success("Added to compare", { description: "Open the compare panel to see side-by-side." });
+      toast.success("Added to compare");
     }
   }
 
   async function handleSave() {
     if (loggedIn === false) {
-      toast("Login to save this adventure", {
-        description: "Create a free account to build your wishlist.",
-        action: { label: "Log in", onClick: () => router.push("/auth/login") },
-      });
+      toast.error("Log in to save adventures.");
       return;
     }
     const wasSaved = saved;
     await toggle(adventure.slug);
     if (wasSaved) {
-      toast("Removed from saved adventures");
+      toast("Removed from wishlist");
     } else {
-      toast.success("Adventure saved!", { description: "Find it anytime in your wishlist." });
+      toast.success("Adventure saved to wishlist ♥");
     }
   }
 

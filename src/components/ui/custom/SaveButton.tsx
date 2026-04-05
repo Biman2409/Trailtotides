@@ -40,7 +40,7 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
     const wasSaved = saved;
     await toggle(slug);
     if (wasSaved) {
-      toast("Removed from saved.");
+      toast("Removed from wishlist");
     } else {
       toast.success("Adventure saved to wishlist ♥");
     }

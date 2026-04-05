@@ -59,7 +59,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
       toast.error("Remove an adventure to add another.");
     } else {
       add(adventure);
-      toast.success(`Added to compare — ${adventure.name}`);
+      toast.success("Added to compare");
     }
   }
   const monthIndex = new Date().getMonth();
