@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { signUpOperator } from "@/app/auth/operator-actions";
 import Link from "next/link";
-import { Eye, EyeOff, ArrowLeft, Building2, Globe, Phone as PhoneIcon, Mail, Lock, User } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft, Building2, Globe, Mail, Lock, User } from "lucide-react";
+import countries from "@/lib/countries.json";
 import Logo from "@/components/ui/custom/Logo";
 
 export default function OperatorSignupPage() {
@@ -153,15 +154,35 @@ export default function OperatorSignupPage() {
 
             {/* Phone */}
             <div>
-              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Phone</label>
-              <div className="relative">
-                <PhoneIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
+              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Phone Number</label>
+              <div className="flex gap-2">
+                <div className="relative">
+                  <select
+                    name="country_code"
+                    defaultValue="+91"
+                    className="h-full bg-white/[0.03] border border-white/10 rounded-2xl pl-5 pr-10 py-2.5 text-white text-sm focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all appearance-none cursor-pointer min-w-[100px]"
+                  >
+                    {[
+                      ...countries.filter(c => c.code === "IN"),
+                      ...countries.filter(c => c.code !== "IN").sort((a, b) => a.name.localeCompare(b.name))
+                    ].map((country) => (
+                      <option key={`${country.code}-${country.dial_code}`} value={country.dial_code} className="bg-[#0a0a0a] text-white">
+                        {country.flag} {country.dial_code}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/20">
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                      <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                    </svg>
+                  </div>
+                </div>
                 <input
                   name="phone"
                   type="tel"
                   required
-                  placeholder="+91 98765 43210"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl pl-11 pr-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  placeholder="9876543210"
+                  className="flex-1 bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
               </div>
             </div>
