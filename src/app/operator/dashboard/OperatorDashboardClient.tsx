@@ -164,7 +164,9 @@ export default function OperatorDashboardClient({
           <div className="hidden sm:flex items-center gap-2 text-[11px] text-white/40 font-semibold">
             <span>{operatorProfile.company_name}</span>
             <div className="h-3 w-px bg-white/10" />
-            {statusBadge(operatorProfile.status)}
+            <span className="inline-flex items-center gap-1 bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg">
+              <BadgeCheck className="w-2.5 h-2.5" />Verified
+            </span>
           </div>
           <form action={logout}>
             <button

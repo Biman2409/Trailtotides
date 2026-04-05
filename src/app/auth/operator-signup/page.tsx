@@ -27,6 +27,7 @@ export default function OperatorSignupPage() {
     } else if (result?.success) {
       setMessage({ type: "success", text: result.success });
       (e.target as HTMLFormElement).reset();
+      setTermsAccepted(false);
     }
   }
 

@@ -16,7 +16,7 @@ export type OperatorProfile = {
   email: string;
   phone: string;
   website: string | null;
-  status: "pending" | "approved" | "rejected";
+  status: "approved";
   created_at: string;
 };
 
@@ -110,7 +110,9 @@ export async function signUpOperator(formData: FormData) {
   const contact_name = formData.get("contact_name") as string;
   const company_name = formData.get("company_name") as string;
   const email = formData.get("email") as string;
-  const phone = formData.get("phone") as string;
+  const country_code = (formData.get("country_code") as string) || "+91";
+  const phone_number = formData.get("phone") as string;
+  const phone = `${country_code}${phone_number}`;
   const website = (formData.get("website") as string) || null;
   const password = formData.get("password") as string;
 
@@ -185,42 +187,6 @@ export async function submitOperatorUpdate(formData: FormData) {
 
   await writeJsonFile(adminClient, "operator-submissions", `${id}.json`, submission);
   return { success: "Update submitted for admin review." };
-}
-
-export async function approveOperatorAccount(userId: string) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not authenticated." };
-
-  const adminClient = await createAdminClient();
-  const profile = await getOperatorProfile(userId);
-  if (!profile) return { error: "Profile not found." };
-
-  await writeJsonFile(adminClient, "operator-profiles", `${userId}.json`, {
-    ...profile,
-    status: "approved",
-  });
-  return { success: "Approved." };
-}
-
-export async function rejectOperatorAccount(userId: string) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not authenticated." };
-
-  const adminClient = await createAdminClient();
-  const profile = await getOperatorProfile(userId);
-  if (!profile) return { error: "Profile not found." };
-
-  await writeJsonFile(adminClient, "operator-profiles", `${userId}.json`, {
-    ...profile,
-    status: "rejected",
-  });
-  return { success: "Rejected." };
 }
 
 export async function approveOperatorSubmission(submissionId: string) {
