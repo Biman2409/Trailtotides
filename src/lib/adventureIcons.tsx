@@ -28,7 +28,7 @@ import {
 
 export const ADVENTURE_TYPE_ICONS: Record<string, (size?: number) => React.ReactNode> = {
   Trekking:          (s = 14) => <Footprints    style={{ width: s, height: s }} />,
-  Mountaineering:    (s = 14) => <Mountain      style={{ width: s, height: s }} />,
+  Mountaineering:    (s = 14) => <MountainSnow  style={{ width: s, height: s }} />,
   "Rock Climbing":   (s = 14) => <Pickaxe       style={{ width: s, height: s }} />,
   Scrambling:        (s = 14) => <Grip          style={{ width: s, height: s }} />,
   Biking:            (s = 14) => <Motorbike     style={{ width: s, height: s }} />,
