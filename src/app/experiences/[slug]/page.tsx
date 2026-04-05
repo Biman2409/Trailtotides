@@ -19,13 +19,13 @@ import {
   BadgeCheck,
   Flag,
   Navigation,
+  Gauge,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
-import DifficultyMeter from "@/components/ui/custom/DifficultyMeter";
 import ACEProfileSection from "./ACEProfileSection";
 import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
@@ -277,7 +277,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             ))}
             {/* Difficulty stat */}
             <div className="flex items-center gap-3 px-4 lg:px-6 py-4 shrink-0">
-              <DifficultyMeter difficulty={difficulty} />
+              <Gauge className="w-4 h-4 text-rose-400" />
               <div>
                 <div className="text-white/25 text-[9px] uppercase tracking-widest">Difficulty</div>
                 <div className="text-white font-medium text-sm whitespace-nowrap">{difficulty}</div>
