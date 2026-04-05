@@ -25,6 +25,7 @@ import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
+import DifficultyMeter from "@/components/ui/custom/DifficultyMeter";
 import ACEProfileSection from "./ACEProfileSection";
 import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
@@ -239,14 +240,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           <div className="max-w-3xl">
             <div className="flex flex-wrap items-center gap-2 mb-4">
               <Pill type="type" value={adventure.type} />
-              <Pill type="difficulty" value={difficulty} />
-              <Link
-                href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
-                className="flex items-center gap-1.5 text-white/50 text-xs font-semibold tracking-tight hover:text-[#ff5100] transition-colors"
-              >
-                <MapPin className="w-3.5 h-3.5 text-[#ff5100]" />
-                {adventure.state}
-              </Link>
+              <Pill type="subRegion" value={adventure.state} />
             </div>
             <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.02] mb-4" style={{ color: "#f0ede8" }}>
               {adventure.name}
@@ -279,6 +273,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 </div>
               </div>
             ))}
+            {/* Difficulty stat */}
+            <div className="flex items-center gap-3 px-4 lg:px-6 py-4 shrink-0">
+              <DifficultyMeter difficulty={difficulty} />
+              <div>
+                <div className="text-white/25 text-[9px] uppercase tracking-widest">Difficulty</div>
+                <div className="text-white font-medium text-sm whitespace-nowrap">{difficulty}</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
