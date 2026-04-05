@@ -119,3 +119,7 @@ Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
 Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/annapurna-base-camp.jpeg" is using quality "90" which is not configured in images.qualities. This config will be required starting in Next.js 16.
 Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
  GET /explore?_cb=1775398926739 200 in 1186ms
+ GET /explore?_cb=1775398960273 200 in 149ms
+ GET /explore?_cb=1775398961948 200 in 174ms
+ ⚠ Cross origin request detected from 3000-6a8d9a8b-c027-4fbe-a697-25e719212894.orchids.cloud to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
