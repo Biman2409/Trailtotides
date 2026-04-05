@@ -220,10 +220,10 @@ export default function OperatorSignupPage() {
           </p>
 
           <div className="mt-4 pt-4 border-t border-white/[0.06]">
-            <p className="text-center text-white/20 text-[10px] font-medium">
+            <p className="text-center text-white/20 text-xs font-medium">
               Are you an explorer?{" "}
-              <Link href="/auth/signup" className="text-white/40 hover:text-white/70 transition-colors underline underline-offset-2">
-                Create an explorer account
+              <Link href="/auth/signup" className="text-white/40 hover:text-[#ff7d47] transition-colors font-semibold">
+                Create an explorer account →
               </Link>
             </p>
           </div>
