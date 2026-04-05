@@ -7,6 +7,7 @@ import { adventures } from "@/lib/data";
 import { getACE, ACE_AXIS_COLORS, ACE_DOMAINS } from "@/lib/ace";
 import ACEBadge from "@/components/ui/custom/ACEBadge";
 import ACERadar from "@/components/ui/custom/ACERadar";
+import Pill from "@/components/ui/custom/Pill";
 
 export const metadata = {
   title: "ACE Rating System — Trail to Tides",
@@ -331,7 +332,7 @@ export default function ACEPage() {
                     <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
                     <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(15,20,32,0.1) 0%, rgba(15,20,32,0.9) 100%)" }} />
                     <div className="absolute bottom-3 left-4 right-4">
-                      <p className="text-white/45 text-[10px] uppercase tracking-widest mb-0.5">{a.state}</p>
+                      <div className="mb-1"><Pill type="subRegion" value={a.state} /></div>
                       <h3 className="text-white font-bold text-base leading-tight">{a.name}</h3>
                     </div>
                   </div>

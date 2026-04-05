@@ -4,7 +4,7 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { adventures } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, ArrowRight, MapPin, LogIn } from "lucide-react";
+import { Heart, ArrowRight, LogIn } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -137,9 +137,8 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
                   </div>
                 </div>
                 <div className="p-3.5 flex-1">
-                  <div className="flex items-center gap-1 mb-1">
-                    <MapPin className="w-2.5 h-2.5 text-[#ff5100] shrink-0" />
-                    <span className="text-white/35 text-[10px]">{a.state}</span>
+                  <div className="mb-1.5">
+                    <Pill type="subRegion" value={a.state} />
                   </div>
                   <h3 className="text-white font-semibold text-sm leading-snug group-hover:text-[#ff5100] transition-colors">{a.name}</h3>
                   <p className="text-white/35 text-[11px] mt-1 line-clamp-2 leading-relaxed">{a.tagline}</p>

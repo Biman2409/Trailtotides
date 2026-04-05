@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, BadgeCheck, GitCompare } from "lucide-react";
+import { BadgeCheck, GitCompare } from "lucide-react";
 import { toast } from "sonner";
 import type { Adventure, Month } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
@@ -107,15 +107,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         {/* Top-left: type + location */}
         <div className="absolute top-3 left-3 z-20 flex flex-wrap items-center gap-1.5">
           <Pill type="type" value={adventure.type} />
-          <Link
-            href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
-            onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center gap-1 h-5 pl-1.5 pr-2.5 rounded-full text-[10px] font-semibold tracking-wide transition-all duration-200 hover:brightness-125 z-30"
-            style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.85)", border: "1px solid rgba(255,255,255,0.18)", backdropFilter: "blur(6px)" }}
-          >
-            <MapPin className="w-2.5 h-2.5 text-[#ff5100] shrink-0" />
-            {adventure.state}
-          </Link>
+          <Pill type="subRegion" value={adventure.state} />
         </div>
 
         {/* Top-right: Compare + Save buttons */}
