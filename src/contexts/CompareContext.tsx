@@ -9,6 +9,7 @@ interface CompareContextValue {
   selected: Adventure[];
   add: (a: Adventure) => void;
   remove: (id: string) => void;
+  clear: () => void;
   isSelected: (id: string) => boolean;
   isFull: boolean;
 }
@@ -43,13 +44,17 @@ export function CompareProvider({ children }: { children: ReactNode }) {
     });
   }
 
+  function clear() {
+    setSelected([]);
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  }
+
   function isSelected(id: string) {
     return selected.some((a) => a.id === id);
   }
 
-
   return (
-    <CompareContext.Provider value={{ selected, add, remove, isSelected, isFull: selected.length >= MAX }}>
+    <CompareContext.Provider value={{ selected, add, remove, clear, isSelected, isFull: selected.length >= MAX }}>
       {children}
     </CompareContext.Provider>
   );
@@ -59,6 +64,7 @@ const NO_OP: CompareContextValue = {
   selected: [],
   add: () => {},
   remove: () => {},
+  clear: () => {},
   isSelected: () => false,
   isFull: false,
 };

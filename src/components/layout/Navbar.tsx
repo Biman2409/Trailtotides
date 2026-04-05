@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, Mountain, LogOut, Shield, User, ChevronDown, GitCompareArrows, Compass, Heart } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { useCompare } from "@/contexts/CompareContext";
+import { useCompare, MAX } from "@/contexts/CompareContext";
 
 const navLinks = [
   { href: "/explore", label: "Explore" },
@@ -24,7 +24,7 @@ export default function Navbar() {
   const isHome = pathname === "/";
   const menuRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const { selected, remove } = useCompare();
+  const { selected, remove, clear } = useCompare();
   const [compareOpen, setCompareOpen] = useState(false);
   const compareRef = useRef<HTMLDivElement>(null);
 
@@ -201,15 +201,20 @@ export default function Navbar() {
                 {compareOpen && (
                   <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl shadow-2xl overflow-hidden z-50" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}>
                     <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-                      <span className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Comparing {selected.length}/6</span>
+                      <span className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Comparing {selected.length}/{MAX}</span>
                       <button
                         onClick={() => {
                           setCompareOpen(false);
-                          document.getElementById("compare-section")?.scrollIntoView({ behavior: "smooth" });
+                          const section = document.getElementById("compare-section");
+                          if (section) {
+                            section.scrollIntoView({ behavior: "smooth" });
+                          } else {
+                            router.push("/explore#compare-section");
+                          }
                         }}
                         className="text-[#ff5100] text-xs font-semibold hover:underline"
                       >
-                        View comparison
+                        View comparison →
                       </button>
                     </div>
                     <div className="divide-y" style={{ borderColor: "var(--border-subtle)" }}>
@@ -222,13 +227,21 @@ export default function Navbar() {
                           <span className="text-sm font-medium flex-1 truncate" style={{ color: "var(--text-secondary)" }}>{a.name}</span>
                           <button
                             onClick={() => remove(a.id)}
-                            className="transition-colors flex-shrink-0"
+                            className="transition-colors flex-shrink-0 hover:text-red-400"
                             style={{ color: "var(--text-muted)" }}
                           >
                             <X className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       ))}
+                    </div>
+                    <div className="px-4 py-2.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                      <button
+                        onClick={() => { clear(); setCompareOpen(false); }}
+                        className="text-xs text-white/30 hover:text-red-400 transition-colors"
+                      >
+                        Clear all
+                      </button>
                     </div>
                   </div>
                 )}

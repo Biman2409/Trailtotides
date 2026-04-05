@@ -35,12 +35,34 @@ function lsSet(s: Set<string>) {
   try { localStorage.setItem(LS_KEY, JSON.stringify([...s])); } catch {}
 }
 
+// ── Storage helpers ────────────────────────────────────────────
+async function storageLoad(userId: string): Promise<Set<string>> {
+  const supabase = createClient();
+  const { data, error } = await supabase.storage
+    .from("wishlists")
+    .download(`${userId}.json`);
+  if (error || !data) return new Set();
+  try {
+    const text = await data.text();
+    const arr = JSON.parse(text) as string[];
+    return new Set(arr);
+  } catch { return new Set(); }
+}
+
+async function storageSave(userId: string, slugs: Set<string>): Promise<void> {
+  const supabase = createClient();
+  const blob = new Blob([JSON.stringify([...slugs])], { type: "application/json" });
+  await supabase.storage
+    .from("wishlists")
+    .upload(`${userId}.json`, blob, { upsert: true, contentType: "application/json" });
+}
+
+// ── Provider ───────────────────────────────────────────────────
 export function WishlistProvider({ children }: { children: React.ReactNode }) {
   const [saved, setSaved] = useState<Set<string>>(new Set());
   const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Resolve auth state and load saved adventures
   useEffect(() => {
     const supabase = createClient();
 
@@ -48,13 +70,16 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       const { data: { session } } = await supabase.auth.getSession();
       const uid = session?.user?.id ?? null;
       setUserId(uid);
-
       if (uid) {
-        const { data } = await supabase
-          .from("saved_adventures")
-          .select("slug")
-          .eq("user_id", uid);
-        setSaved(new Set((data ?? []).map((r: { slug: string }) => r.slug)));
+        const remote = await storageLoad(uid);
+        // Merge any local guest saves into remote
+        const local = lsGet();
+        const merged = new Set([...remote, ...local]);
+        setSaved(merged);
+        if (local.size > 0) {
+          await storageSave(uid, merged);
+          localStorage.removeItem(LS_KEY);
+        }
       } else {
         setSaved(lsGet());
       }
@@ -67,11 +92,14 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       const uid = session?.user?.id ?? null;
       setUserId(uid);
       if (uid) {
-        const { data } = await supabase
-          .from("saved_adventures")
-          .select("slug")
-          .eq("user_id", uid);
-        setSaved(new Set((data ?? []).map((r: { slug: string }) => r.slug)));
+        const remote = await storageLoad(uid);
+        const local = lsGet();
+        const merged = new Set([...remote, ...local]);
+        setSaved(merged);
+        if (local.size > 0) {
+          await storageSave(uid, merged);
+          localStorage.removeItem(LS_KEY);
+        }
       } else {
         setSaved(lsGet());
       }
@@ -81,23 +109,20 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const toggle = useCallback(async (slug: string) => {
-    const supabase = createClient();
     const isNowSaved = !saved.has(slug);
 
     // Optimistic update
     setSaved(prev => {
       const next = new Set(prev);
       if (isNowSaved) next.add(slug); else next.delete(slug);
-      if (!userId) lsSet(next); // persist guest saves immediately
+      if (!userId) lsSet(next);
       return next;
     });
 
     if (userId) {
-      if (isNowSaved) {
-        await supabase.from("saved_adventures").insert({ user_id: userId, slug });
-      } else {
-        await supabase.from("saved_adventures").delete().eq("user_id", userId).eq("slug", slug);
-      }
+      const next = new Set(saved);
+      if (isNowSaved) next.add(slug); else next.delete(slug);
+      await storageSave(userId, next);
     }
   }, [saved, userId]);
 
