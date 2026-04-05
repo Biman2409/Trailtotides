@@ -107,7 +107,7 @@ export default function CompareAdventures() {
             <div className="flex-1 text-center sm:text-left">
               <p className="text-white font-semibold text-base mb-1">Compare adventures side by side</p>
               <p className="text-white/40 text-sm leading-relaxed">
-                Log in to compare up to {MAX} adventures — stats, pricing, ACE profiles and more.
+                Log in to select at least 2 adventures to see the comparison — stats, pricing, ACE profiles and more.
               </p>
             </div>
             <button
