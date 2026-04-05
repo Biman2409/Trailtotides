@@ -72,10 +72,10 @@ export default function Pill({ type, value, className = "", clickable = true }: 
     href = `/explore?subRegion=${encodeURIComponent(value)}`;
     // Render the location pill with MapPin icon — frosted glass style matching adventure cards
     const locClasses = `inline-flex items-center gap-1 leading-none rounded-full h-5 pl-1.5 pr-2.5 text-[10px] font-bold tracking-tight shadow-sm transition-all duration-300 ${className}`;
-    const locStyle = { background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.85)", border: "1px solid rgba(255,255,255,0.18)", backdropFilter: "blur(6px)" };
+    const locStyle = { background: "rgba(255,81,0,0.85)", color: "#fff", border: "1px solid rgba(255,81,0,0.6)" };
     const locContent = (
       <>
-        <MapPin className="w-2.5 h-2.5 text-[#ff5100] shrink-0" />
+        <MapPin className="w-2.5 h-2.5 text-white shrink-0" />
         {value}
       </>
     );
