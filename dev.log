@@ -501,3 +501,69 @@ Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
  GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 403ms
  GET /api/stories/views?slug=riding-through-a-revolution 200 in 409ms
  ✓ Compiled in 268ms
+Image with src "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1280&q=100" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1280&q=100" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=1280&q=100" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1280&q=100" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1280&q=100" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://images.unsplash.com/photo-1669255664788-61c668bd6fe8?w=1280&q=100" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1280&q=100" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://images.unsplash.com/photo-1592208128295-5aaa34f1d72b?w=1280&q=100" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://images.unsplash.com/photo-1668936132313-2c3105eef631?w=1280&q=100" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://images.unsplash.com/photo-1590898428406-7b9f44b33c22?w=1280&q=100" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/stok-kangri.jpeg" is using quality "90" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/region-himalayas.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/region-western-ghats.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/region-eastern-ghats.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/region-desert.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/region-coast.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/region-islands.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/region-northeast.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/region-urban.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/element-earth.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/element-water.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/element-snow.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/element-air.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/story-submissions/photi-la.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/story-submissions/riding-through-revolution-hero.jpeg" is using quality "100" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/chadar-trek.jpeg" is using quality "90" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/manali-leh.jpeg" is using quality "90" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/ladakh-circuit.jpeg" is using quality "90" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/kedarkantha.jpeg" is using quality "90" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/sandakphu.jpeg" is using quality "90" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+ GET /?_cb=1775400377986 200 in 539ms
+ GET /?_cb=1775400380232 200 in 208ms
+ GET /?_cb=1775400381733 200 in 197ms
+ GET /?_cb=1775400383118 200 in 195ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 775ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 792ms
