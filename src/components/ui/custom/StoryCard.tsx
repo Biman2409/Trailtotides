@@ -45,15 +45,19 @@ export default function StoryCard({ story }: { story: Story }) {
 
       <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
         {isFeatured && (
-          <div className="flex items-center gap-1.5 bg-black/70 backdrop-blur-sm text-[#ff5100] rounded-full px-2.5 py-1 shadow-md border border-[#ff5100]/30">
-            <Crown className="w-3 h-3 flex-shrink-0" />
-            <span className="text-[10px] font-bold tracking-wide">Featured</span>
+          <div className="flex items-center gap-1.5 bg-black/70 backdrop-blur-sm text-[#ff5100] rounded-full pl-1 pr-2.5 py-1 shadow-md border border-[#ff5100]/30">
+            <span className="w-4 h-4 rounded-full bg-[#ff5100]/20 border border-[#ff5100]/40 flex items-center justify-center shrink-0">
+              <Crown className="w-2.5 h-2.5" />
+            </span>
+            <span className="text-[10px] font-bold tracking-wide leading-none">Featured</span>
           </div>
         )}
         {isTTTOriginal && (
-          <div className="flex items-center gap-1.5 bg-[#ff5100] text-white rounded-full px-2.5 py-1 shadow-md">
-            <Mountain className="w-3 h-3 flex-shrink-0" />
-            <span className="text-[10px] font-bold tracking-wide">TTT Original</span>
+          <div className="flex items-center gap-1.5 bg-[#ff5100] text-white rounded-full pl-1 pr-2.5 py-1 shadow-md">
+            <span className="w-4 h-4 rounded-full bg-black/20 border border-white/30 flex items-center justify-center shrink-0">
+              <Mountain className="w-2.5 h-2.5" />
+            </span>
+            <span className="text-[10px] font-bold tracking-wide leading-none">TTT Original</span>
           </div>
         )}
       </div>
