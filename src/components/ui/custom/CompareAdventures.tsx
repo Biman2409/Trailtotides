@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { X, ArrowRight, GitCompareArrows } from "lucide-react";
+import { X, ArrowRight, GitCompareArrows, LogIn, GitCompare } from "lucide-react";
 import { useState, useEffect } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 import { Adventure } from "@/lib/data";
 import DifficultyMeter from "@/components/ui/custom/DifficultyMeter";
 import { useCompare, MAX } from "@/contexts/CompareContext";
@@ -56,6 +58,8 @@ export default function CompareAdventures() {
   const { selected, remove } = useCompare();
   const [userAce, setUserAce] = useState<ACE | null>(null);
   const [userLabel, setUserLabel] = useState<string>("Your Body");
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const p = loadProfile();
@@ -65,6 +69,10 @@ export default function CompareAdventures() {
       const rank = total >= 40 ? "Apex" : total >= 32 ? "Vanguard" : total >= 24 ? "Trailblazer" : total >= 16 ? "Navigator" : total >= 8 ? "Pathfinder" : "Uncharted";
       setUserLabel(rank);
     }
+    const supabase = createClient();
+    supabase.auth.getSession().then(({ data: { session } }) => setLoggedIn(!!session?.user));
+    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => setLoggedIn(!!session?.user));
+    return () => listener.subscription.unsubscribe();
   }, []);
 
   return (
@@ -86,60 +94,73 @@ export default function CompareAdventures() {
           </p>
         </div>
 
-        {/* Selected slots preview */}
-          {selected.length > 0 ? (
+        {/* Not logged in — CTA */}
+        {loggedIn === false && selected.length === 0 ? (
+          <div
+            className="rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6 mb-8"
+            style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.15)" }}
+          >
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
+              style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.2)" }}>
+              <GitCompare className="w-5 h-5 text-[#ff7d47]" />
+            </div>
+            <div className="flex-1 text-center sm:text-left">
+              <p className="text-white font-semibold text-base mb-1">Compare adventures side by side</p>
+              <p className="text-white/40 text-sm leading-relaxed">
+                Log in to compare up to {MAX} adventures — stats, pricing, ACE profiles and more.
+              </p>
+            </div>
+            <button
+              onClick={() => router.push("/auth/login")}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:-translate-y-0.5 shrink-0"
+              style={{ background: "#ff5100", boxShadow: "0 4px 14px rgba(255,81,0,0.35)" }}
+            >
+              <LogIn className="w-4 h-4" />
+              Log in to compare
+            </button>
+          </div>
+        ) : (
+          /* Selected slots grid */
+          selected.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
               {selected.map((adventure) => (
-              <div
-                key={adventure.id}
-                className="relative rounded-xl overflow-hidden border border-[#ff5100]/35 bg-[#ff5100]/5 shadow-[0_0_24px_rgba(255,81,0,0.1)]"
-              >
-                <div className="relative h-28">
-                  <Image
-                    src={adventure.heroImage}
-                    alt={adventure.name}
-                    fill
-                    className="object-cover opacity-70"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                </div>
-                <div className="px-3 py-2.5 flex items-center justify-between gap-2">
-                  <div className="min-w-0">
-                    <p className="text-white text-sm font-semibold truncate">{adventure.name}</p>
-                    <p className="text-white/45 text-[11px] truncate">{adventure.state}</p>
+                <div
+                  key={adventure.id}
+                  className="relative rounded-xl overflow-hidden border border-[#ff5100]/35 bg-[#ff5100]/5 shadow-[0_0_24px_rgba(255,81,0,0.1)]"
+                >
+                  <div className="relative h-28">
+                    <Image src={adventure.heroImage} alt={adventure.name} fill className="object-cover opacity-70" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                   </div>
-                  <button
-                    onClick={() => remove(adventure.id)}
-                    className="shrink-0 w-6 h-6 rounded-full bg-white/10 hover:bg-red-500/30 flex items-center justify-center transition-colors"
-                    aria-label="Remove"
-                  >
-                    <X className="w-3 h-3 text-white/70" />
-                  </button>
+                  <div className="px-3 py-2.5 flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-white text-sm font-semibold truncate">{adventure.name}</p>
+                      <p className="text-white/45 text-[11px] truncate">{adventure.state}</p>
+                    </div>
+                    <button
+                      onClick={() => remove(adventure.id)}
+                      className="shrink-0 w-6 h-6 rounded-full bg-white/10 hover:bg-red-500/30 flex items-center justify-center transition-colors"
+                      aria-label="Remove"
+                    >
+                      <X className="w-3 h-3 text-white/70" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-
-            {/* Empty slot placeholder(s) */}
-            {Array.from({ length: MAX - selected.length }).map((_, i) => (
-              <div
-                key={`empty-${i}`}
-                className="rounded-xl border border-dashed border-white/15 bg-white/2 flex items-center justify-center min-h-[112px] text-white/20 text-sm"
-              >
-                + Add from cards above
-              </div>
-            ))}
-          </div>
+              ))}
+              {Array.from({ length: MAX - selected.length }).map((_, i) => (
+                <div
+                  key={`empty-${i}`}
+                  className="rounded-xl border border-dashed border-white/15 bg-white/2 flex items-center justify-center min-h-[112px] text-white/20 text-sm"
+                >
+                  + Add from cards above
+                </div>
+              ))}
+            </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-            {Array.from({ length: MAX }).map((_, i) => (
-              <div
-                key={i}
-                className="rounded-xl border border-dashed border-white/12 bg-white/2 flex items-center justify-center min-h-[112px] text-white/20 text-sm"
-              >
-                + Add from cards above
-              </div>
-            ))}
-          </div>
+            <div className="rounded-2xl border border-dashed border-white/10 flex items-center justify-center min-h-[100px] mb-8">
+              <p className="text-white/25 text-sm">Use the <span className="text-white/50 font-semibold">compare</span> button on any adventure card to add it here</p>
+            </div>
+          )
         )}
 
         {/* Comparison table — only show when ≥2 selected */}
