@@ -55,7 +55,9 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
     if (inCompare) {
       remove(adventure.id);
       toast("Removed from compare");
-    } else if (!isFull) {
+    } else if (isFull) {
+      toast.error("Remove an adventure to add another.");
+    } else {
       add(adventure);
       toast.success(`Added to compare — ${adventure.name}`);
     }
@@ -104,10 +106,24 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
 
-        {/* Top-left: type + location */}
+        {/* Top-left: difficulty + season */}
         <div className="absolute top-3 left-3 z-20 flex flex-wrap items-center gap-1.5">
-          <Pill type="type" value={adventure.type} />
-          <Pill type="subRegion" value={adventure.state} />
+          <DifficultyMeter difficulty={difficulty} />
+          {isSeasonActive ? (
+            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+              Season Active
+            </span>
+          ) : isSeasonUpcoming ? (
+            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
+              Upcoming
+            </span>
+          ) : seasonLabel ? (
+            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.85)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }}>
+              {seasonLabel}
+            </span>
+          ) : null}
         </div>
 
         {/* Top-right: Compare + Save buttons */}
@@ -130,24 +146,10 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
 
         {/* Bottom content over image */}
         <div className="absolute bottom-0 left-0 right-0 p-4 z-20 pointer-events-none">
-          {/* Difficulty + season row */}
+          {/* Type + location pills above name */}
           <div className="flex items-center gap-1.5 mb-1.5 pointer-events-auto">
-            <DifficultyMeter difficulty={difficulty} />
-            {isSeasonActive ? (
-              <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
-                Season Active
-              </span>
-            ) : isSeasonUpcoming ? (
-              <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }}>
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
-                Upcoming
-              </span>
-            ) : seasonLabel ? (
-              <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.85)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }}>
-                {seasonLabel}
-              </span>
-            ) : null}
+            <Pill type="type" value={adventure.type} />
+            <Pill type="subRegion" value={adventure.state} />
           </div>
           <h3 className="text-white font-bold text-lg leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors pointer-events-none">
             {adventure.name}

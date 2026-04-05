@@ -56,14 +56,25 @@ function getValue(a: Adventure, key: keyof Adventure | "price" | "rating" | "ope
 }
 
 function WishlistPicker({ onSelect }: { onSelect: (a: Adventure) => void }) {
-  const { saved } = useWishlist();
-  const { selected } = useCompare();
+  const { saved, loading } = useWishlist();
+  const { selected, isFull } = useCompare();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const wishlistAdventures = adventures.filter(
     a => saved.has(a.slug) && !selected.find(s => s.id === a.id)
   );
+
+  // Don't render until wishlist is loaded
+  if (loading) {
+    return (
+      <div className="rounded-xl border border-dashed border-white/10 bg-white/2 flex items-center justify-center min-h-[112px] animate-pulse">
+        <span className="text-white/15 text-xs">Loading wishlist…</span>
+      </div>
+    );
+  }
+
+  if (isFull) return null;
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -164,8 +175,8 @@ export default function CompareAdventures() {
           </p>
         </div>
 
-        {/* Not logged in — CTA */}
-        {loggedIn === false && selected.length === 0 ? (
+        {/* Not logged in, nothing selected — CTA */}
+        {loggedIn === false && selected.length === 0 && (
           <div
             className="rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6 mb-8"
             style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.15)" }}
@@ -189,10 +200,12 @@ export default function CompareAdventures() {
               Log in to compare
             </button>
           </div>
-        ) : (
-          /* Selected slots grid */
+        )}
+
+        {/* Selected slots grid — shown once anything is selected, or logged-in user */}
+        {(selected.length > 0 || loggedIn === true) && (
           selected.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
               {selected.map((adventure) => (
                 <div
                   key={adventure.id}
@@ -219,11 +232,12 @@ export default function CompareAdventures() {
               ))}
               {Array.from({ length: MAX - selected.length }).map((_, i) => (
                 <div key={`empty-${i}`}>
-                  {loggedIn ? (
+                  {loggedIn === true ? (
                     <WishlistPicker onSelect={(a) => add(a)} />
                   ) : (
-                    <div className="rounded-xl border border-dashed border-white/15 bg-white/2 flex items-center justify-center min-h-[112px] text-white/20 text-sm">
-                      + Add from cards above
+                    <div className="rounded-xl border border-dashed border-white/15 bg-white/2 flex flex-col items-center justify-center min-h-[112px] gap-1.5 text-white/20 text-xs">
+                      <Plus className="w-4 h-4 opacity-40" />
+                      <span>Add from cards above</span>
                     </div>
                   )}
                 </div>

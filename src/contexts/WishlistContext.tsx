@@ -88,6 +88,7 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
     setSaved(prev => {
       const next = new Set(prev);
       if (isNowSaved) next.add(slug); else next.delete(slug);
+      if (!userId) lsSet(next); // persist guest saves immediately
       return next;
     });
 
@@ -97,12 +98,6 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       } else {
         await supabase.from("saved_adventures").delete().eq("user_id", userId).eq("slug", slug);
       }
-    } else {
-      // Persist to localStorage for guests
-      setSaved(prev => { lsSet(prev); return prev; });
-      const updated = new Set(saved);
-      if (isNowSaved) updated.add(slug); else updated.delete(slug);
-      lsSet(updated);
     }
   }, [saved, userId]);
 

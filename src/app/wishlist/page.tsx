@@ -34,8 +34,6 @@ export default function WishlistPage() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  const savedList = adventures.filter(a => saved.has(a.slug));
-
   /* ── Not logged in ── */
   if (loggedIn === false) {
     return (
@@ -67,6 +65,8 @@ export default function WishlistPage() {
     );
   }
 
+  const savedList = adventures.filter(a => saved.has(a.slug));
+
   return (
     <main className="min-h-screen px-5 lg:px-8 py-16 lg:py-20" style={{ background: "var(--bg-base)" }}>
       <div className="max-w-7xl mx-auto">
@@ -82,7 +82,7 @@ export default function WishlistPage() {
           )}
         </div>
 
-        {/* Loading */}
+        {/* Loading — waiting for auth or wishlist */}
         {(loading || loggedIn === null) && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {[1,2,3,4].map(i => (

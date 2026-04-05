@@ -33,8 +33,33 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  // Don't render until auth + wishlist resolved
-  if (loggedIn === null || loading) return null;
+  // Show skeleton until auth + wishlist resolved (avoids layout shift)
+  if (loggedIn === null || loading) {
+    return (
+      <section
+        className="py-12 lg:py-16 px-5 lg:px-8"
+        style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-3 mb-7">
+            <div className="w-4 h-4 rounded-full bg-white/10 animate-pulse" />
+            <div className="h-2.5 w-32 rounded bg-white/10 animate-pulse" />
+          </div>
+          <div className="flex gap-4 overflow-hidden">
+            {[1,2,3].map(i => (
+              <div key={i} className="flex-none w-72 rounded-2xl overflow-hidden animate-pulse" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <div className="aspect-[4/3] bg-white/5" />
+                <div className="p-3 space-y-2">
+                  <div className="h-3 bg-white/5 rounded w-3/4" />
+                  <div className="h-3 bg-white/5 rounded w-1/2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   /* ── Not logged in ── */
   if (!loggedIn) {
