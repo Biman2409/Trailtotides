@@ -80,9 +80,8 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
 
-        {/* Top-left: type + difficulty + season pill */}
+        {/* Top-left: difficulty + season pill */}
         <div className="absolute top-3 left-3 z-20 flex flex-wrap items-center gap-1.5">
-          <Pill type="type" value={adventure.type} />
           <DifficultyMeter difficulty={difficulty} />
           {isSeasonActive ? (
             <span className="pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>
@@ -121,15 +120,19 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
 
         {/* Bottom content over image */}
         <div className="absolute bottom-0 left-0 right-0 p-4 z-20 pointer-events-none">
-          <div className="flex items-center gap-1.5 mb-1 opacity-80 pointer-events-auto">
-            <MapPin className="w-3 h-3 text-[#ff5100]" />
-            <Link
-              href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
-              onClick={(e) => e.stopPropagation()}
-              className="text-white text-[10px] font-medium tracking-wide hover:text-[#ff5100] transition-colors"
-            >
-              {adventure.state}
-            </Link>
+          {/* Type pill + location on same row */}
+          <div className="flex items-center gap-2 mb-1.5 pointer-events-auto">
+            <Pill type="type" value={adventure.type} />
+            <div className="flex items-center gap-1 opacity-80">
+              <MapPin className="w-3 h-3 text-[#ff5100] shrink-0" />
+              <Link
+                href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
+                onClick={(e) => e.stopPropagation()}
+                className="text-white text-[10px] font-medium tracking-wide hover:text-[#ff5100] transition-colors"
+              >
+                {adventure.state}
+              </Link>
+            </div>
           </div>
           <h3 className="text-white font-bold text-lg leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors pointer-events-none">
             {adventure.name}
