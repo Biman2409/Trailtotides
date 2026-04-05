@@ -138,16 +138,13 @@ export async function signUpOperator(formData: FormData) {
     email,
     phone,
     website,
-    status: "pending",
+    status: "approved",
     created_at: new Date().toISOString(),
   };
 
   await writeJsonFile(adminClient, "operator-profiles", `${userId}.json`, profile);
 
-  return {
-    success:
-      "Application submitted! Our team will review and approve your account within 24 hours.",
-  };
+  return { success: "Account created! You can now log in and start listing adventures." };
 }
 
 export async function submitOperatorUpdate(formData: FormData) {
@@ -160,8 +157,6 @@ export async function submitOperatorUpdate(formData: FormData) {
   const adminClient = await createAdminClient();
   const profile = await getOperatorProfile(user.id);
   if (!profile) return { error: "Operator profile not found." };
-  if (profile.status !== "approved")
-    return { error: "Your account is pending admin approval." };
 
   const adventure_slug = formData.get("adventure_slug") as string;
   const operator_name = formData.get("operator_name") as string;

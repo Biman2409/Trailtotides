@@ -60,7 +60,7 @@ export default function OperatorDashboardClient({
   const [submitting, setSubmitting] = useState(false);
   const [formMsg, setFormMsg] = useState<{ type: "error" | "success"; text: string } | null>(null);
 
-  const isApproved = operatorProfile.status === "approved";
+  const isApproved = true; // All operators are auto-approved on signup
 
   const filteredAdventures = useMemo(() => {
     if (!search.trim()) return adventures;
