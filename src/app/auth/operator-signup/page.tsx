@@ -88,8 +88,7 @@ export default function OperatorSignupPage() {
 
           <div className="mb-6">
             <h1 className="text-3xl font-black text-white mb-1 tracking-tight leading-tight">
-              List your<br />
-              <span className="text-[#ff5100]">adventures.</span>
+              Register your <span className="text-[#ff5100]">Company</span>
             </h1>
             <p className="text-white/40 text-xs font-medium">
               Create your operator account and start listing adventures instantly.
