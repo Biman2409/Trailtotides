@@ -91,3 +91,13 @@ Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/publi
 Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
  GET / 200 in 4480ms
  GET /?_cb=1775398688638 200 in 5499ms
+ GET /?_cb=1775398709330 200 in 219ms
+ GET /?_cb=1775398716091 200 in 240ms
+ GET /?_cb=1775398720480 200 in 211ms
+ GET /?_cb=1775398761162 200 in 217ms
+ GET /?_cb=1775398763429 200 in 222ms
+ GET /?_cb=1775398765695 200 in 182ms
+ GET /?_cb=1775398767804 200 in 174ms
+ ✓ Compiled /api/stories/views in 383ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 1013ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 1067ms
