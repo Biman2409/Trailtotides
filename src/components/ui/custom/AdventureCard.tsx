@@ -49,9 +49,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
     e.preventDefault();
     e.stopPropagation();
     if (loggedIn === false) {
-      toast("Login to compare adventures", {
-        action: { label: "Log in", onClick: () => router.push("/auth/login") },
-      });
+      toast.error("Log in to compare adventures.");
       return;
     }
     if (inCompare) {

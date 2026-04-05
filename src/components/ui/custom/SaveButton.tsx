@@ -34,20 +34,15 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
     e.preventDefault();
     e.stopPropagation();
     if (loggedIn === false) {
-      toast("Login to save this adventure", {
-        description: "Create a free account to build your wishlist.",
-        action: { label: "Log in", onClick: () => router.push("/auth/login") },
-      });
+      toast.error("Log in to save adventures.");
       return;
     }
     const wasSaved = saved;
     await toggle(slug);
     if (wasSaved) {
-      toast("Removed from saved adventures");
+      toast("Removed from saved.");
     } else {
-      toast.success("Adventure saved!", {
-        description: "Find it anytime in your wishlist.",
-      });
+      toast.success("Adventure saved to wishlist ♥");
     }
   }
 
