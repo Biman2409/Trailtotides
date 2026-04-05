@@ -248,3 +248,6 @@ Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
  GET /?_cb=1775399170974 200 in 204ms
  GET /?_cb=1775399173740 200 in 260ms
  GET /?_cb=1775399203105 200 in 230ms
+ GET / 200 in 209ms
+ GET / 200 in 176ms
+ GET /explore?_cb=1775399203105 200 in 200ms
