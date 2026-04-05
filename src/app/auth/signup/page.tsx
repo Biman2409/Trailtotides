@@ -106,7 +106,7 @@ export default function SignUpPage() {
                 Wild is calling, <span className="text-[#ff5100]">answer it.</span>
               </h1>
               <p className="text-white/40 text-xs font-medium">
-                Create your explorer account.
+                Create your explorer account. Save adventures, track wishlist & book verified operators.
               </p>
             </div>
   
