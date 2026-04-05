@@ -222,7 +222,7 @@ function LoginForm() {
         <p className="text-center text-white/20 text-xs font-medium">
           Adventure operator?{" "}
           <Link href="/auth/operator-signup" className="text-white/40 hover:text-[#ff7d47] transition-colors font-semibold">
-            List your adventures →
+            Register your company →
           </Link>
         </p>
       </div>
