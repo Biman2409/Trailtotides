@@ -4,12 +4,22 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { adventures } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, ArrowRight, LogIn } from "lucide-react";
+import { Heart, ArrowRight, LogIn, BadgeCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Pill from "./Pill";
+import DifficultyMeter from "./DifficultyMeter";
+import SaveButton from "./SaveButton";
 import { getACE, computeDifficulty } from "@/lib/ace";
+import type { Month } from "@/lib/data";
+
+const MONTHS: Month[] = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function formatSeasonShort(bestMonths: Month[]): string {
+  if (!bestMonths?.length) return "";
+  if (bestMonths.length === 1) return bestMonths[0];
+  return `${bestMonths[0]}–${bestMonths[bestMonths.length - 1]}`;
+}
 
 export default function SavedAdventuresSection({ currentSlug }: { currentSlug: string }) {
   const { saved, loading } = useWishlist();
@@ -116,32 +126,78 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
         <div className="flex gap-4 overflow-x-auto pb-3 -mx-2 px-2 snap-x snap-mandatory no-scrollbar">
           {savedList.map((a) => {
             const difficulty = computeDifficulty(getACE(a));
+            const monthIndex = new Date().getMonth();
+            const currentMonth = MONTHS[monthIndex];
+            const nextMonth = MONTHS[(monthIndex + 1) % 12];
+            const isSeasonActive = a.bestMonths?.includes(currentMonth);
+            const isSeasonUpcoming = !isSeasonActive && a.bestMonths?.includes(nextMonth);
+            const seasonLabel = formatSeasonShort(a.bestMonths ?? []);
+            const operatorCount = a.operators?.length ?? 0;
+            const verifiedCount = a.operators?.filter(o => o.verified).length ?? 0;
+            const lowestPrice = a.operators?.reduce<number | null>((min, o) => {
+              const p = parseInt(o.priceFrom.replace(/[^\d]/g, ""), 10);
+              return isNaN(p) ? min : min === null ? p : Math.min(min, p);
+            }, null) ?? null;
+            const displayCount = verifiedCount > 0 ? verifiedCount : operatorCount;
+
             return (
               <div
                 key={a.slug}
-                className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-64 snap-start transition-all duration-300 hover:-translate-y-1"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+                className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-72 snap-start transition-all duration-300 hover:-translate-y-1.5"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 4px 20px rgba(0,0,0,0.2)" }}
               >
-                <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
-                <div className="relative h-40 overflow-hidden">
-                  <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                  <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1 z-20">
-                    <Pill type="type" value={a.type} />
+                {/* Image area */}
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
+                  <Image src={a.heroImage} alt={a.name} fill quality={90} className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <div className="absolute inset-0 z-10 pointer-events-none" style={{ background: "linear-gradient(160deg,rgba(30,60,110,0.10) 0%,rgba(10,30,60,0.06) 50%,rgba(80,30,10,0.08) 100%)", mixBlendMode: "multiply" }} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
+
+                  {/* Top-left: difficulty + season */}
+                  <div className="absolute top-3 left-3 z-20 flex flex-wrap items-center gap-1.5">
+                    <DifficultyMeter difficulty={difficulty} />
+                    {isSeasonActive ? (
+                      <span className="pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />Season Active
+                      </span>
+                    ) : isSeasonUpcoming ? (
+                      <span className="pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />Upcoming
+                      </span>
+                    ) : seasonLabel ? (
+                      <span className="pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.85)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }}>{seasonLabel}</span>
+                    ) : null}
                   </div>
-                  <div
-                    className="absolute bottom-2.5 right-2.5 z-20 text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                    style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.1)" }}
-                  >
-                    {difficulty}
+
+                  {/* Top-right: save button */}
+                  <div className="absolute top-3 right-3 z-20">
+                    <SaveButton slug={a.slug} variant="card" />
+                  </div>
+
+                  {/* Bottom: type + location + name */}
+                  <div className="absolute bottom-0 left-0 right-0 p-4 z-20 pointer-events-none">
+                    <div className="flex items-center gap-2 mb-1.5 pointer-events-auto">
+                      <Pill type="type" value={a.type} />
+                      <Pill type="subRegion" value={a.state} />
+                    </div>
+                    <h3 className="text-white font-bold text-base leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors">{a.name}</h3>
                   </div>
                 </div>
-                <div className="p-3.5 flex-1">
-                  <div className="mb-1.5">
-                    <Pill type="subRegion" value={a.state} />
-                  </div>
-                  <h3 className="text-white font-semibold text-sm leading-snug group-hover:text-[#ff5100] transition-colors">{a.name}</h3>
-                  <p className="text-white/35 text-[11px] mt-1 line-clamp-2 leading-relaxed">{a.tagline}</p>
+
+                {/* Price strip */}
+                <div className="px-3 py-2.5 flex items-center justify-between gap-2">
+                  <span className="text-white/50 text-[10px] font-medium leading-none">{a.durationDays}</span>
+                  {operatorCount > 0 && (
+                    <div className="flex items-center gap-1 text-[10px] leading-none">
+                      <BadgeCheck className="w-3 h-3 text-emerald-400/80 shrink-0" />
+                      <span className="text-white/40">
+                        <span className="text-white/65 font-semibold">{displayCount}</span> operators
+                        {lowestPrice && (
+                          <><span className="text-white/20 mx-1">·</span><span className="text-[#ff5100]/85 font-semibold">₹{lowestPrice.toLocaleString("en-IN")} onwards</span></>
+                        )}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             );
