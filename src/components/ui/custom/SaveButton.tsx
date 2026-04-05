@@ -56,7 +56,7 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
           className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-white/5 text-white/50 border border-white/10 hover:bg-white/10 hover:text-white ${className}`}
         >
           <LogIn className="w-4 h-4" />
-          Login to save
+          Wishlist
         </button>
       );
     }
@@ -64,7 +64,7 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
     return (
       <button
         onClick={handleClick}
-        aria-label={saved ? "Remove from wishlist" : "Save adventure"}
+        aria-label={saved ? "Remove from wishlist" : "Add to wishlist"}
         className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
           saved
             ? "bg-rose-500/15 text-rose-400 border border-rose-500/30 hover:bg-rose-500/25"
@@ -72,7 +72,7 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
         } ${className}`}
       >
         <Heart className={`w-4 h-4 transition-all duration-200 ${saved ? "fill-rose-400" : ""}`} />
-        {saved ? "Adventure saved" : "Save adventure"}
+        Wishlist
       </button>
     );
   }
