@@ -5,7 +5,7 @@ import Link from "next/link";
 import { X, ArrowRight, GitCompareArrows } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Adventure } from "@/lib/data";
-import { difficultyStyle } from "@/lib/styles";
+import DifficultyMeter from "@/components/ui/custom/DifficultyMeter";
 import { useCompare, MAX } from "@/contexts/CompareContext";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import { getACE } from "@/lib/ace";
@@ -175,9 +175,7 @@ export default function CompareAdventures() {
                       return (
                         <td key={a.id} className="px-4 py-3">
                           {isDifficulty ? (
-                            <span className={`inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight text-white ${difficultyStyle[a.difficulty]}`}>
-                              {val}
-                            </span>
+                            <DifficultyMeter difficulty={String(val)} />
                           ) : (
                             <span className="text-white/80 text-sm">{val}</span>
                           )}

@@ -2,8 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
-import { typeStyle, difficultyStyle } from "@/lib/styles";
+import { typeStyle } from "@/lib/styles";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
+import DifficultyMeter from "./DifficultyMeter";
 
 // Per-type icon circle bg — slightly lighter/darker than the pill bg
 const iconCircleStyle: Record<string, string> = {
@@ -44,15 +45,25 @@ interface PillProps {
 }
 
 export default function Pill({ type, value, className = "", clickable = true }: PillProps) {
+  // Difficulty always renders as a meter
+  if (type === "difficulty") {
+    const href = `/explore?difficulty=${encodeURIComponent(value)}`;
+    if (clickable) {
+      return (
+        <a href={href} onClick={(e) => e.stopPropagation()} className="z-30 hover:scale-105 active:scale-95 transition-transform">
+          <DifficultyMeter difficulty={value} className={className} />
+        </a>
+      );
+    }
+    return <DifficultyMeter difficulty={value} className={className} />;
+  }
+
   let styleClass = "";
   let href = "/explore";
 
   if (type === "type") {
     styleClass = typeStyle[value] || "bg-gray-500 text-white";
     href = `/explore?type=${encodeURIComponent(value)}`;
-  } else if (type === "difficulty") {
-    styleClass = difficultyStyle[value] || "bg-gray-500 text-white";
-    href = `/explore?difficulty=${encodeURIComponent(value)}`;
   } else if (type === "region") {
     styleClass = "bg-[#ff5100] text-white";
     href = `/explore?region=${encodeURIComponent(value)}`;
