@@ -5,6 +5,7 @@ import { VisualEditsMessenger } from "orchids-visual-edits";
 import Script from "next/script";
 import CompareWrapper from "@/components/ui/custom/CompareWrapper";
 import NavigationScrollReset from "@/components/ui/custom/NavigationScrollReset";
+import { Toaster } from "@/components/ui/sonner";
 import { Suspense } from "react";
 
 const greatVibes = Great_Vibes({
@@ -121,6 +122,7 @@ export default function RootLayout({
             {children}
             <VisualEditsMessenger />
           </CompareWrapper>
+          <Toaster position="bottom-center" richColors />
       </body>
     </html>
   );

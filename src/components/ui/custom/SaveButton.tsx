@@ -5,6 +5,7 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface SaveButtonProps {
   slug: string;
@@ -33,7 +34,15 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
       router.push("/auth/login");
       return;
     }
+    const wasSaved = saved;
     await toggle(slug);
+    if (variant === "card") {
+      if (wasSaved) {
+        toast("Removed from saved");
+      } else {
+        toast.success("Adventure saved to wishlist ♥");
+      }
+    }
   }
 
   if (variant === "page") {

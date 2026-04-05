@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, BadgeCheck, GitCompare } from "lucide-react";
+import { toast } from "sonner";
 import type { Adventure, Month } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import Pill from "./Pill";
@@ -34,7 +35,13 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
   function handleCompare(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    inCompare ? remove(adventure.id) : add(adventure);
+    if (inCompare) {
+      remove(adventure.id);
+      toast(`Removed from compare`);
+    } else {
+      add(adventure);
+      toast.success(`Added to compare — ${adventure.name}`);
+    }
   }
   const monthIndex = new Date().getMonth();
   const currentMonth = MONTHS[monthIndex];
