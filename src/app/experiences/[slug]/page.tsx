@@ -102,7 +102,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-function RelatedSection({ title, items, exploreHref }: { title: string; items: Adventure[]; exploreHref: string }) {
+function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { title: string; items: Adventure[]; exploreHref: string; pillMode?: "type" | "region" }) {
   if (items.length === 0) return null;
   return (
     <div>
@@ -124,8 +124,11 @@ function RelatedSection({ title, items, exploreHref }: { title: string; items: A
               <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
               <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-20">
-                <Pill type="type" value={a.type} />
-                <Pill type="difficulty" value={computeDifficulty(getACE(a))} />
+                {pillMode === "region" ? (
+                  <Pill type="subRegion" value={a.state} />
+                ) : (
+                  <Pill type="type" value={a.type} />
+                )}
               </div>
             </div>
             <div className="p-5 flex-1">
@@ -617,11 +620,13 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               title={`More in ${adventure.state}`}
               items={relatedByState}
               exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
+              pillMode="type"
             />
             <RelatedSection
               title={`More in ${adventure.type}`}
               items={relatedByType}
               exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`}
+              pillMode="region"
             />
           </div>
         </section>
