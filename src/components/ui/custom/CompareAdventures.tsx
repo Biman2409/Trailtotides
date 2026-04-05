@@ -2,13 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { X, ArrowRight, GitCompareArrows, LogIn, GitCompare } from "lucide-react";
-import { useState, useEffect } from "react";
+import { X, ArrowRight, GitCompareArrows, LogIn, GitCompare, Heart, Plus, ChevronDown } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { Adventure } from "@/lib/data";
+import { Adventure, adventures } from "@/lib/data";
 import DifficultyMeter from "@/components/ui/custom/DifficultyMeter";
 import { useCompare, MAX } from "@/contexts/CompareContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import { getACE } from "@/lib/ace";
 import type { ACE } from "@/lib/ace";
@@ -54,8 +55,77 @@ function getValue(a: Adventure, key: keyof Adventure | "price" | "rating" | "ope
   return val === undefined || val === null ? "–" : String(val);
 }
 
+function WishlistPicker({ onSelect }: { onSelect: (a: Adventure) => void }) {
+  const { saved } = useWishlist();
+  const { selected } = useCompare();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const wishlistAdventures = adventures.filter(
+    a => saved.has(a.slug) && !selected.find(s => s.id === a.id)
+  );
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  if (wishlistAdventures.length === 0) {
+    return (
+      <div className="rounded-xl border border-dashed border-white/15 bg-white/2 flex flex-col items-center justify-center min-h-[112px] gap-2 text-white/25 text-xs px-3 text-center">
+        <Plus className="w-4 h-4 opacity-40" />
+        <span>Add from cards above</span>
+      </div>
+    );
+  }
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full rounded-xl border border-dashed border-white/20 bg-white/2 hover:border-[#ff5100]/40 hover:bg-[#ff5100]/5 flex flex-col items-center justify-center min-h-[112px] gap-2 transition-all group"
+      >
+        <div className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+          style={{ background: "rgba(244,63,94,0.1)", border: "1px solid rgba(244,63,94,0.2)" }}>
+          <Heart className="w-3.5 h-3.5 text-rose-400" />
+        </div>
+        <span className="text-white/40 text-xs font-medium group-hover:text-white/60 transition-colors">
+          Add from Wishlist
+        </span>
+        <ChevronDown className={`w-3 h-3 text-white/25 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open && (
+        <div
+          className="absolute top-full mt-2 left-0 right-0 z-50 rounded-xl overflow-hidden shadow-2xl"
+          style={{ background: "#0d1520", border: "1px solid rgba(255,255,255,0.1)", maxHeight: "240px", overflowY: "auto" }}
+        >
+          {wishlistAdventures.map(a => (
+            <button
+              key={a.slug}
+              onClick={() => { onSelect(a); setOpen(false); }}
+              className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 transition-colors text-left"
+            >
+              <div className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0">
+                <Image src={a.heroImage} alt={a.name} fill className="object-cover" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-white text-xs font-semibold truncate">{a.name}</p>
+                <p className="text-white/35 text-[10px] truncate">{a.state}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function CompareAdventures() {
-  const { selected, remove } = useCompare();
+  const { selected, remove, add } = useCompare();
   const [userAce, setUserAce] = useState<ACE | null>(null);
   const [userLabel, setUserLabel] = useState<string>("Your Body");
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
@@ -148,11 +218,14 @@ export default function CompareAdventures() {
                 </div>
               ))}
               {Array.from({ length: MAX - selected.length }).map((_, i) => (
-                <div
-                  key={`empty-${i}`}
-                  className="rounded-xl border border-dashed border-white/15 bg-white/2 flex items-center justify-center min-h-[112px] text-white/20 text-sm"
-                >
-                  + Add from cards above
+                <div key={`empty-${i}`}>
+                  {loggedIn ? (
+                    <WishlistPicker onSelect={(a) => add(a)} />
+                  ) : (
+                    <div className="rounded-xl border border-dashed border-white/15 bg-white/2 flex items-center justify-center min-h-[112px] text-white/20 text-sm">
+                      + Add from cards above
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
