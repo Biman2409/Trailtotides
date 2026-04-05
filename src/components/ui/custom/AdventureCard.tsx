@@ -130,16 +130,15 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
           {/* Type pill + location on same row */}
           <div className="flex items-center gap-2 mb-1.5 pointer-events-auto">
             <Pill type="type" value={adventure.type} />
-            <div className="flex items-center gap-1 opacity-80">
-              <MapPin className="w-3 h-3 text-[#ff5100] shrink-0" />
-              <Link
-                href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
-                onClick={(e) => e.stopPropagation()}
-                className="text-white text-[10px] font-medium tracking-wide hover:text-[#ff5100] transition-colors"
-              >
-                {adventure.state}
-              </Link>
-            </div>
+            <Link
+              href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 h-5 pl-1.5 pr-2.5 rounded-full text-[10px] font-semibold tracking-wide transition-all duration-200 hover:brightness-125 z-30"
+              style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.85)", border: "1px solid rgba(255,255,255,0.18)", backdropFilter: "blur(6px)" }}
+            >
+              <MapPin className="w-2.5 h-2.5 text-[#ff5100] shrink-0" />
+              {adventure.state}
+            </Link>
           </div>
           <h3 className="text-white font-bold text-lg leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors pointer-events-none">
             {adventure.name}
