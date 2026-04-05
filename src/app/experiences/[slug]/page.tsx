@@ -29,6 +29,7 @@ import ACEProfileSection from "./ACEProfileSection";
 import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import SaveButton from "@/components/ui/custom/SaveButton";
+import SavedAdventuresSection from "@/components/ui/custom/SavedAdventuresSection";
 import ReviewSection from "@/components/ui/custom/ReviewSection";
 import { createClient } from "@/lib/supabase/server";
 import { getACE, computeDifficulty } from "@/lib/ace";
@@ -625,6 +626,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       )}
 
       <CompareAdventures />
+      <SavedAdventuresSection currentSlug={adventure.slug} />
       <Footer />
     </div>
   );
