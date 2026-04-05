@@ -38,7 +38,7 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
     if (wasSaved) {
       toast("Removed from wishlist");
     } else {
-      toast.success("Adventure saved to wishlist ♥");
+      toast.success("Added to wishlist ♥");
     }
   }
 
