@@ -24,6 +24,23 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
     return () => listener.subscription.unsubscribe();
   }, []);
 
+  function handleCompare() {
+    if (loggedIn === false) {
+      toast("Login to compare adventures", {
+        description: "Create a free account to use the compare feature.",
+        action: { label: "Log in", onClick: () => router.push("/auth/login") },
+      });
+      return;
+    }
+    if (inCompare) {
+      remove(adventure.id);
+      toast("Removed from compare");
+    } else if (!isFull) {
+      add(adventure);
+      toast.success("Added to compare", { description: "Open the compare panel to see side-by-side." });
+    }
+  }
+
   async function handleSave() {
     if (loggedIn === false) {
       toast("Login to save this adventure", {
@@ -41,54 +58,49 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
     }
   }
 
-  function handleCompare() {
-    if (inCompare) {
-      remove(adventure.id);
-    } else if (!isFull) {
-      add(adventure);
-      toast("Added to compare", { description: "Open the compare panel to see side-by-side." });
-    }
-  }
+  const btnBase = "inline-flex items-center gap-2 h-9 px-3.5 rounded-xl text-xs font-semibold transition-all duration-200 backdrop-blur-md";
 
   return (
-    <div className="mt-5 flex flex-wrap items-center gap-2.5">
+    <div className="absolute top-20 right-5 lg:right-8 z-20 flex items-center gap-2">
 
-      {/* ── Save ── */}
-      {loggedIn === false ? (
-        <button
-          onClick={handleSave}
-          className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-semibold transition-all duration-200 bg-white/6 text-white/55 border border-white/12 hover:bg-white/10 hover:text-white"
-        >
-          <LogIn className="w-4 h-4" />
-          Login to save
-        </button>
-      ) : (
-        <button
-          onClick={handleSave}
-          className={`inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-semibold transition-all duration-200 ${
-            saved
-              ? "bg-rose-500/15 text-rose-400 border border-rose-500/30 hover:bg-rose-500/22"
-              : "bg-white/6 text-white/60 border border-white/12 hover:bg-white/10 hover:text-white"
-          }`}
-        >
-          <Heart className={`w-4 h-4 transition-all ${saved ? "fill-rose-400 text-rose-400" : ""}`} />
-          {saved ? "Adventure saved" : "Save adventure"}
-        </button>
-      )}
-
-      {/* ── Compare ── */}
+      {/* ── Compare (first) ── */}
       <button
         onClick={handleCompare}
         disabled={!inCompare && isFull}
-        className={`inline-flex items-center gap-2 h-10 px-4 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed ${
+        aria-label={inCompare ? "Remove from compare" : "Compare"}
+        className={`${btnBase} disabled:opacity-40 disabled:cursor-not-allowed ${
           inCompare
-            ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/22"
-            : "bg-white/6 text-white/60 border border-white/12 hover:bg-white/10 hover:text-white"
+            ? "text-emerald-300 border border-emerald-500/40"
+            : "text-white/70 border border-white/15 hover:text-white hover:border-white/30"
         }`}
+        style={{
+          background: inCompare ? "rgba(16,185,129,0.15)" : "rgba(0,0,0,0.45)",
+          boxShadow: inCompare ? "0 0 0 1px rgba(16,185,129,0.25)" : undefined,
+        }}
       >
         {inCompare
-          ? <><CheckCheck className="w-4 h-4" /> Added to compare</>
-          : <><GitCompareArrows className="w-4 h-4" /> {isFull ? "Compare full" : "Compare"}</>
+          ? <><CheckCheck className="w-3.5 h-3.5" />Added to compare</>
+          : <><GitCompareArrows className="w-3.5 h-3.5" />{isFull ? "Compare full" : "Compare"}</>
+        }
+      </button>
+
+      {/* ── Save (second) ── */}
+      <button
+        onClick={handleSave}
+        aria-label={saved ? "Remove from wishlist" : "Save adventure"}
+        className={`${btnBase} ${
+          saved
+            ? "text-rose-300 border border-rose-500/40"
+            : "text-white/70 border border-white/15 hover:text-white hover:border-white/30"
+        }`}
+        style={{
+          background: saved ? "rgba(244,63,94,0.15)" : "rgba(0,0,0,0.45)",
+          boxShadow: saved ? "0 0 0 1px rgba(244,63,94,0.25)" : undefined,
+        }}
+      >
+        {loggedIn === false
+          ? <><LogIn className="w-3.5 h-3.5" />Save</>
+          : <><Heart className={`w-3.5 h-3.5 ${saved ? "fill-rose-300" : ""}`} />{saved ? "Saved" : "Save"}</>
         }
       </button>
 

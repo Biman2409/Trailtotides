@@ -10,6 +10,8 @@ import Pill from "./Pill";
 import DifficultyMeter from "./DifficultyMeter";
 import SaveButton from "./SaveButton";
 import { useCompare } from "@/contexts/CompareContext";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface AdventureCardProps {
   adventure: Adventure;
@@ -31,14 +33,31 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
   const difficulty = computeDifficulty(getACE(adventure));
   const { isSelected, add, remove, isFull } = useCompare();
   const inCompare = isSelected(adventure.id);
+  const router = useRouter();
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    import("@/lib/supabase/client").then(({ createClient }) => {
+      const supabase = createClient();
+      supabase.auth.getSession().then(({ data: { session } }) => setLoggedIn(!!session?.user));
+      const { data: listener } = supabase.auth.onAuthStateChange((_, session) => setLoggedIn(!!session?.user));
+      return () => listener.subscription.unsubscribe();
+    });
+  }, []);
 
   function handleCompare(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (loggedIn === false) {
+      toast("Login to compare adventures", {
+        action: { label: "Log in", onClick: () => router.push("/auth/login") },
+      });
+      return;
+    }
     if (inCompare) {
       remove(adventure.id);
-      toast(`Removed from compare`);
-    } else {
+      toast("Removed from compare");
+    } else if (!isFull) {
       add(adventure);
       toast.success(`Added to compare — ${adventure.name}`);
     }

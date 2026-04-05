@@ -248,9 +248,11 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <p className="text-white/55 text-sm md:text-lg leading-relaxed max-w-xl font-light">
               {adventure.tagline}
             </p>
-            <HeroActions adventure={adventure} />
           </div>
         </div>
+
+        {/* Top-right: Compare + Save with labels */}
+        <HeroActions adventure={adventure} />
       </section>
 
       {/* ── STATS STRIP ───────────────────────────────────────── */}
