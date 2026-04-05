@@ -61,17 +61,17 @@ function OperatorCard({ op, verified }: { op: Operator; verified: boolean }) {
     >
       <div className="flex items-start justify-between gap-2">
         <div>
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="font-semibold text-sm leading-snug" style={{ color: "var(--text-primary)" }}>{op.name}</span>
+          <div className="flex flex-col gap-1">
             {verified ? (
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.12)", color: "#34d399", border: "1px solid rgba(16,185,129,0.2)" }}>
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full w-fit" style={{ background: "rgba(16,185,129,0.12)", color: "#34d399", border: "1px solid rgba(16,185,129,0.2)" }}>
                 <ShieldCheck className="w-3 h-3" />Verified
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(245,158,11,0.1)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.2)" }}>
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full w-fit" style={{ background: "rgba(245,158,11,0.1)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.2)" }}>
                 <AlertTriangle className="w-3 h-3" />Unverified
               </span>
             )}
+            <span className="font-semibold text-sm leading-snug" style={{ color: "var(--text-primary)" }}>{op.name}</span>
           </div>
           <div className="flex items-center gap-1 mt-1.5">
             {[1, 2, 3, 4, 5].map((s) => (
