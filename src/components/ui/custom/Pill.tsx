@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { MapPin } from "lucide-react";
 import { typeStyle } from "@/lib/styles";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import DifficultyMeter from "./DifficultyMeter";
@@ -68,8 +69,24 @@ export default function Pill({ type, value, className = "", clickable = true }: 
     styleClass = "bg-[#ff5100] text-white";
     href = `/explore?region=${encodeURIComponent(value)}`;
   } else if (type === "subRegion") {
-    styleClass = "bg-white/15 text-white backdrop-blur-sm";
     href = `/explore?subRegion=${encodeURIComponent(value)}`;
+    // Render the location pill with MapPin icon — frosted glass style matching adventure cards
+    const locClasses = `inline-flex items-center gap-1 leading-none rounded-full h-5 pl-1.5 pr-2.5 text-[10px] font-bold tracking-tight shadow-sm transition-all duration-300 ${className}`;
+    const locStyle = { background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.85)", border: "1px solid rgba(255,255,255,0.18)", backdropFilter: "blur(6px)" };
+    const locContent = (
+      <>
+        <MapPin className="w-2.5 h-2.5 text-[#ff5100] shrink-0" />
+        {value}
+      </>
+    );
+    if (clickable) {
+      return (
+        <Link href={href} onClick={(e) => e.stopPropagation()} className={`${locClasses} hover:scale-105 active:scale-95 cursor-pointer z-30`} style={locStyle}>
+          {locContent}
+        </Link>
+      );
+    }
+    return <span className={locClasses} style={locStyle}>{locContent}</span>;
   }
 
   const hasIcon = type === "type" && !!ADVENTURE_TYPE_ICONS[value];
