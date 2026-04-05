@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { updateUserRole, deleteUser } from "./actions";
-import { approveOperatorAccount, rejectOperatorAccount, approveOperatorSubmission, rejectOperatorSubmission, type OperatorProfile, type OperatorSubmission } from "@/app/auth/operator-actions";
+import { approveOperatorSubmission, rejectOperatorSubmission, type OperatorProfile, type OperatorSubmission } from "@/app/auth/operator-actions";
 import { logout } from "@/app/auth/actions";
 import {
   Mountain,
@@ -170,20 +170,7 @@ export default function AdminDashboardClient({
   const totalUsers = localProfiles.filter((p) => p.role === "user").length;
   const totalAdmins = localProfiles.filter((p) => p.role === "admin").length;
   const newToday = analyticsData.growthData[29]?.count || 0;
-  const pendingOperators = localOperatorProfiles.filter((p) => p.status === "pending").length;
   const pendingOperatorSubmissions = localOperatorSubmissions.filter((s) => s.status === "pending").length;
-
-  async function handleOperatorAccountAction(userId: string, action: "approve" | "reject") {
-    setLoadingId(userId);
-    if (action === "approve") {
-      await approveOperatorAccount(userId);
-      setLocalOperatorProfiles((prev) => prev.map((p) => p.user_id === userId ? { ...p, status: "approved" } : p));
-    } else {
-      await rejectOperatorAccount(userId);
-      setLocalOperatorProfiles((prev) => prev.map((p) => p.user_id === userId ? { ...p, status: "rejected" } : p));
-    }
-    setLoadingId(null);
-  }
 
   async function handleOperatorSubmissionAction(subId: string, action: "approve" | "reject") {
     setLoadingId(subId);
@@ -290,7 +277,7 @@ export default function AdminDashboardClient({
                 { value: "users", icon: Users, label: "Users" },
                 { value: "messages", icon: MessageSquare, label: "Messages", badge: messages.length },
                 { value: "stories", icon: BookOpen, label: "Stories", badge: storySubmissions.filter(s => s.status === "pending").length },
-                { value: "operators", icon: Building2, label: "Operators", badge: pendingOperators + pendingOperatorSubmissions },
+                { value: "operators", icon: Building2, label: "Operators", badge: pendingOperatorSubmissions },
                 { value: "analytics", icon: BarChart3, label: "Analytics" },
               ].map(({ value, icon: Icon, label, badge }) => (
                 <Tabs.Trigger
@@ -371,7 +358,7 @@ export default function AdminDashboardClient({
             {
               label: "Operators",
               value: localOperatorProfiles.length,
-              sub: `${pendingOperators} pending approval`,
+              sub: `${pendingOperatorSubmissions} pending submissions`,
               icon: Building2,
               color: "#06b6d4",
               bg: "bg-cyan-500/10",
@@ -742,12 +729,10 @@ export default function AdminDashboardClient({
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Building2 className="w-4 h-4 text-white/30" />
-                <h2 className="text-base font-bold">Operator Accounts</h2>
-                {pendingOperators > 0 && (
-                  <span className="bg-amber-500/20 text-amber-400 text-[9px] font-black px-2 py-0.5 rounded-full">
-                    {pendingOperators} pending
-                  </span>
-                )}
+                <h2 className="text-base font-bold">Registered Operators</h2>
+                <span className="bg-white/8 text-white/40 text-[9px] font-black px-2 py-0.5 rounded-full">
+                  {localOperatorProfiles.length} total
+                </span>
               </div>
               {localOperatorProfiles.length === 0 ? (
                 <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-10 text-center">
@@ -765,8 +750,7 @@ export default function AdminDashboardClient({
                         <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Company</th>
                         <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30 hidden md:table-cell">Contact</th>
                         <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30 hidden sm:table-cell">Website</th>
-                        <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Status</th>
-                        <th className="text-right px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Actions</th>
+                        <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Joined</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -797,42 +781,8 @@ export default function AdminDashboardClient({
                               <span className="text-white/25 text-[11px]">—</span>
                             )}
                           </td>
-                          <td className="px-5 py-4">
-                            {op.status === "approved" ? (
-                              <span className="inline-flex items-center gap-1 bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg">
-                                <CheckCircle2 className="w-2.5 h-2.5" />Approved
-                              </span>
-                            ) : op.status === "rejected" ? (
-                              <span className="inline-flex items-center gap-1 bg-red-500/15 text-red-400 border border-red-500/25 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg">
-                                <XCircle className="w-2.5 h-2.5" />Rejected
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 bg-amber-500/15 text-amber-400 border border-amber-500/25 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg">
-                                <Clock className="w-2.5 h-2.5" />Pending
-                              </span>
-                            )}
-                          </td>
-                          <td className="px-5 py-4">
-                            <div className="flex items-center justify-end gap-1.5">
-                              {op.status !== "approved" && (
-                                <button
-                                  onClick={() => handleOperatorAccountAction(op.user_id, "approve")}
-                                  disabled={loadingId === op.user_id}
-                                  className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-emerald-500/25 text-emerald-400/80 hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all disabled:opacity-40"
-                                >
-                                  {loadingId === op.user_id ? <Loader2 className="w-3 h-3 animate-spin" /> : "Approve"}
-                                </button>
-                              )}
-                              {op.status !== "rejected" && (
-                                <button
-                                  onClick={() => handleOperatorAccountAction(op.user_id, "reject")}
-                                  disabled={loadingId === op.user_id}
-                                  className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-red-500/20 text-red-400/70 hover:bg-red-500/10 hover:border-red-500/35 transition-all disabled:opacity-40"
-                                >
-                                  {loadingId === op.user_id ? <Loader2 className="w-3 h-3 animate-spin" /> : "Reject"}
-                                </button>
-                              )}
-                            </div>
+                          <td className="px-5 py-4 text-white/30 text-[11px]">
+                            {new Date(op.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                           </td>
                         </tr>
                       ))}

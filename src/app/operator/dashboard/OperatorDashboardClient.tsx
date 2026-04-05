@@ -14,7 +14,6 @@ import {
   X,
   Calendar,
   DollarSign,
-  MapPin,
   Loader2,
   AlertCircle,
   BadgeCheck,
@@ -182,49 +181,18 @@ export default function OperatorDashboardClient({
 
       <div className="max-w-5xl mx-auto px-6 py-10">
 
-        {/* Account status banner */}
-        {operatorProfile.status === "pending" && (
-          <div className="mb-8 flex items-start gap-4 bg-amber-500/8 border border-amber-500/20 rounded-2xl p-5">
-            <div className="w-9 h-9 rounded-xl bg-amber-500/15 flex items-center justify-center shrink-0 mt-0.5">
-              <Clock className="w-4.5 h-4.5 text-amber-400" style={{ width: 18, height: 18 }} />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-amber-300 mb-1">Account Pending Review</p>
-              <p className="text-[12px] text-white/50 leading-relaxed">
-                Your operator application is under review. Our team typically approves within 24 hours.
-                You can browse adventures below, but submission will be enabled once approved.
-              </p>
-            </div>
+        {/* Welcome banner */}
+        <div className="mb-8 flex items-start gap-4 bg-emerald-500/8 border border-emerald-500/20 rounded-2xl p-5">
+          <div className="w-9 h-9 rounded-xl bg-emerald-500/15 flex items-center justify-center shrink-0 mt-0.5">
+            <BadgeCheck className="w-4.5 h-4.5 text-emerald-400" style={{ width: 18, height: 18 }} />
           </div>
-        )}
-        {operatorProfile.status === "rejected" && (
-          <div className="mb-8 flex items-start gap-4 bg-red-500/8 border border-red-500/20 rounded-2xl p-5">
-            <div className="w-9 h-9 rounded-xl bg-red-500/15 flex items-center justify-center shrink-0 mt-0.5">
-              <XCircle className="w-4.5 h-4.5 text-red-400" style={{ width: 18, height: 18 }} />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-red-300 mb-1">Application Not Approved</p>
-              <p className="text-[12px] text-white/50 leading-relaxed">
-                Your application was not approved. Please contact{" "}
-                <a href="mailto:hello@trailtotides.com" className="text-[#ff7d47] hover:underline">hello@trailtotides.com</a>{" "}
-                for more information.
-              </p>
-            </div>
+          <div>
+            <p className="text-sm font-bold text-emerald-300 mb-1">Welcome, {operatorProfile.company_name}</p>
+            <p className="text-[12px] text-white/50 leading-relaxed">
+              Browse adventures and submit your pricing or departure dates. Each listing goes live after a quick admin review.
+            </p>
           </div>
-        )}
-        {operatorProfile.status === "approved" && (
-          <div className="mb-8 flex items-start gap-4 bg-emerald-500/8 border border-emerald-500/20 rounded-2xl p-5">
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/15 flex items-center justify-center shrink-0 mt-0.5">
-              <BadgeCheck className="w-4.5 h-4.5 text-emerald-400" style={{ width: 18, height: 18 }} />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-emerald-300 mb-1">Verified Operator</p>
-              <p className="text-[12px] text-white/50 leading-relaxed">
-                Your account is approved. Browse adventures and submit price/date updates — they'll go live after admin review.
-              </p>
-            </div>
-          </div>
-        )}
+        </div>
 
         {/* Nav tabs */}
         {activeView !== "submit" && (
