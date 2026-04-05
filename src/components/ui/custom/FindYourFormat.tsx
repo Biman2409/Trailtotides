@@ -70,7 +70,6 @@ const categories = [
       { type: "Skiing" },
       { type: "Snowboarding" },
       { type: "Ice Climbing" },
-      { type: "Snow Trekking" },
     ],
   },
     {

@@ -61,7 +61,7 @@ export const ADVENTURE_TYPE_ICONS: Record<string, (size?: number) => React.React
   Skiing:            (s = 14) => <Snowflake     style={{ width: s, height: s }} />,
   Snowboarding:      (s = 14) => <CloudSnow     style={{ width: s, height: s }} />,
   "Ice Climbing":    (s = 14) => <Zap           style={{ width: s, height: s }} />,
-  "Snow Trekking":   (s = 14) => <MountainSnow  style={{ width: s, height: s }} />,
+
   Skydiving:         (s = 14) => <PlaneLanding  style={{ width: s, height: s }} />,
   "Hang Gliding":    (s = 14) => <Triangle      style={{ width: s, height: s }} />,
 };
