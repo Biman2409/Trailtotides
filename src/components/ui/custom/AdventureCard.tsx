@@ -21,35 +21,53 @@ function formatSeasonShort(bestMonths: Month[]): string {
   return `${bestMonths[0]}–${bestMonths[bestMonths.length - 1]}`;
 }
 
-const DIFFICULTY_CONFIG: Record<string, { level: number; color: string; label: string }> = {
-  Easy:     { level: 1, color: "#10b981", label: "Easy" },
-  Moderate: { level: 2, color: "#38bdf8", label: "Moderate" },
-  Hard:     { level: 3, color: "#818cf8", label: "Hard" },
-  Advanced: { level: 4, color: "#ff5100", label: "Advanced" },
-  Extreme:  { level: 5, color: "#ef4444", label: "Extreme" },
+const DIFFICULTY_CONFIG: Record<string, { level: number; color: string; glow: string; label: string }> = {
+  Easy:     { level: 1, color: "#10b981", glow: "#10b98155", label: "Easy" },
+  Moderate: { level: 2, color: "#38bdf8", glow: "#38bdf855", label: "Moderate" },
+  Hard:     { level: 3, color: "#a78bfa", glow: "#a78bfa55", label: "Hard" },
+  Advanced: { level: 4, color: "#ff5100", glow: "#ff510055", label: "Advanced" },
+  Extreme:  { level: 5, color: "#ef4444", glow: "#ef444455", label: "Extreme" },
 };
 
 function DifficultyMeter({ difficulty }: { difficulty: string }) {
-  const cfg = DIFFICULTY_CONFIG[difficulty] ?? { level: 1, color: "#10b981", label: difficulty };
+  const cfg = DIFFICULTY_CONFIG[difficulty] ?? { level: 1, color: "#10b981", glow: "#10b98155", label: difficulty };
   return (
     <div
-      className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-bold tracking-tight"
-      style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }}
+      className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full"
+      style={{
+        background: "rgba(0,0,0,0.6)",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
+        boxShadow: `0 0 0 1px rgba(255,255,255,0.1), inset 0 1px 0 rgba(255,255,255,0.06)`,
+      }}
     >
-      <span style={{ color: cfg.color }}>{cfg.label}</span>
+      {/* Label */}
+      <span
+        className="text-[10px] font-semibold tracking-wide leading-none"
+        style={{ color: cfg.color, textShadow: `0 0 8px ${cfg.glow}` }}
+      >
+        {cfg.label}
+      </span>
+
+      {/* Segmented bar */}
       <div className="flex items-center gap-[3px]">
-        {[1, 2, 3, 4, 5].map((i) => (
-          <span
-            key={i}
-            className="rounded-full"
-            style={{
-              width: 5,
-              height: 5,
-              background: i <= cfg.level ? cfg.color : "rgba(255,255,255,0.15)",
-              boxShadow: i <= cfg.level ? `0 0 4px ${cfg.color}99` : "none",
-            }}
-          />
-        ))}
+        {[1, 2, 3, 4, 5].map((i) => {
+          const filled = i <= cfg.level;
+          const isLast = i === cfg.level;
+          return (
+            <div
+              key={i}
+              style={{
+                width: i === cfg.level ? 14 : 5,
+                height: 3,
+                borderRadius: 99,
+                background: filled ? cfg.color : "rgba(255,255,255,0.12)",
+                boxShadow: filled && isLast ? `0 0 6px ${cfg.color}, 0 0 12px ${cfg.glow}` : "none",
+                transition: "all 0.2s ease",
+              }}
+            />
+          );
+        })}
       </div>
     </div>
   );

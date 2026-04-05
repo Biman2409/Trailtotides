@@ -101,3 +101,21 @@ Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
  ✓ Compiled /api/stories/views in 383ms
  GET /api/stories/views?slug=riding-through-a-revolution 200 in 1013ms
  GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 1067ms
+ GET /?_cb=1775398922437 200 in 244ms
+ GET /?_cb=1775398924458 200 in 222ms
+ GET /?_cb=1775398926739 200 in 197ms
+ ○ Compiling /explore ...
+ ✓ Compiled /explore in 954ms
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/spiti-valley-cycling.jpeg" is using quality "90" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/zanskar-valley-bike.jpeg" is using quality "90" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/tarsar-marsar.jpeg" is using quality "90" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/spiti-valley-bike.jpeg" is using quality "90" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/ali-bedni-bugyal.jpeg" is using quality "90" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+Image with src "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/annapurna-base-camp.jpeg" is using quality "90" which is not configured in images.qualities. This config will be required starting in Next.js 16.
+Read more: https://nextjs.org/docs/messages/next-image-unconfigured-qualities
+ GET /explore?_cb=1775398926739 200 in 1186ms
