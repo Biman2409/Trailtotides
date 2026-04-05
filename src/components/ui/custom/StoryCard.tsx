@@ -45,19 +45,35 @@ export default function StoryCard({ story }: { story: Story }) {
 
       <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
         {isFeatured && (
-          <div className="flex items-center gap-1.5 bg-black/70 backdrop-blur-sm text-[#ff5100] rounded-full pl-1 pr-2.5 py-1 shadow-md border border-[#ff5100]/30">
-            <span className="w-4 h-4 rounded-full bg-[#ff5100]/20 border border-[#ff5100]/40 flex items-center justify-center shrink-0">
-              <Crown className="w-2.5 h-2.5" />
+          <div className="flex items-center gap-1.5 rounded-full pl-1 pr-2.5 py-1"
+            style={{
+              background: "rgba(10,10,10,0.75)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              border: "1px solid rgba(255,81,0,0.35)",
+              boxShadow: "0 0 12px rgba(255,81,0,0.15), inset 0 1px 0 rgba(255,255,255,0.06)",
+            }}>
+            <span className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+              style={{ background: "linear-gradient(135deg,#ff5100,#ff7d47)", boxShadow: "0 0 6px rgba(255,81,0,0.5)" }}>
+              <Crown className="w-2.5 h-2.5 text-white" />
             </span>
-            <span className="text-[10px] font-bold tracking-wide leading-none">Featured</span>
+            <span className="text-[10px] font-bold tracking-wider leading-none uppercase"
+              style={{ color: "#ff5100", letterSpacing: "0.08em" }}>Featured</span>
           </div>
         )}
         {isTTTOriginal && (
-          <div className="flex items-center gap-1.5 bg-[#ff5100] text-white rounded-full pl-1 pr-2.5 py-1 shadow-md">
-            <span className="w-4 h-4 rounded-full bg-black/20 border border-white/30 flex items-center justify-center shrink-0">
-              <Mountain className="w-2.5 h-2.5" />
+          <div className="flex items-center gap-1.5 rounded-full pl-1 pr-2.5 py-1"
+            style={{
+              background: "linear-gradient(135deg, rgba(255,81,0,0.95), rgba(255,60,0,0.9))",
+              border: "1px solid rgba(255,255,255,0.2)",
+              boxShadow: "0 0 14px rgba(255,81,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15)",
+            }}>
+            <span className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+              style={{ background: "rgba(0,0,0,0.25)", border: "1px solid rgba(255,255,255,0.25)" }}>
+              <Mountain className="w-2.5 h-2.5 text-white" />
             </span>
-            <span className="text-[10px] font-bold tracking-wide leading-none">TTT Original</span>
+            <span className="text-[10px] font-bold tracking-wider leading-none uppercase text-white"
+              style={{ letterSpacing: "0.08em" }}>TTT Original</span>
           </div>
         )}
       </div>
