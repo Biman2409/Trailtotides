@@ -21,6 +21,40 @@ function formatSeasonShort(bestMonths: Month[]): string {
   return `${bestMonths[0]}–${bestMonths[bestMonths.length - 1]}`;
 }
 
+const DIFFICULTY_CONFIG: Record<string, { level: number; color: string; label: string }> = {
+  Easy:     { level: 1, color: "#10b981", label: "Easy" },
+  Moderate: { level: 2, color: "#38bdf8", label: "Moderate" },
+  Hard:     { level: 3, color: "#818cf8", label: "Hard" },
+  Advanced: { level: 4, color: "#ff5100", label: "Advanced" },
+  Extreme:  { level: 5, color: "#ef4444", label: "Extreme" },
+};
+
+function DifficultyMeter({ difficulty }: { difficulty: string }) {
+  const cfg = DIFFICULTY_CONFIG[difficulty] ?? { level: 1, color: "#10b981", label: difficulty };
+  return (
+    <div
+      className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-bold tracking-tight"
+      style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }}
+    >
+      <span style={{ color: cfg.color }}>{cfg.label}</span>
+      <div className="flex items-center gap-[3px]">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <span
+            key={i}
+            className="rounded-full"
+            style={{
+              width: 5,
+              height: 5,
+              background: i <= cfg.level ? cfg.color : "rgba(255,255,255,0.15)",
+              boxShadow: i <= cfg.level ? `0 0 4px ${cfg.color}99` : "none",
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function AdventureCard({ adventure, size = "default", fromPage }: AdventureCardProps) {
   const isLarge = size === "large";
   const difficulty = computeDifficulty(getACE(adventure));
@@ -69,9 +103,9 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
 
         {/* Pills — top left */}
-        <div className="absolute top-3 left-3 z-20 flex flex-wrap gap-1.5">
+        <div className="absolute top-3 left-3 z-20 flex flex-wrap items-center gap-1.5">
           <Pill type="type" value={adventure.type} />
-          <Pill type="difficulty" value={difficulty} />
+          <DifficultyMeter difficulty={difficulty} />
         </div>
 
           {/* Season pill — top right */}
