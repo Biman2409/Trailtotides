@@ -87,10 +87,6 @@ export default function OperatorSignupPage() {
           </Link>
 
           <div className="mb-6">
-            <div className="inline-flex items-center gap-2 bg-[#ff5100]/10 border border-[#ff5100]/20 rounded-full px-3 py-1 mb-3">
-              <Building2 className="w-3 h-3 text-[#ff7d47]" />
-              <span className="text-[10px] font-bold text-[#ff7d47] uppercase tracking-widest">Operator Portal</span>
-            </div>
             <h1 className="text-3xl font-black text-white mb-1 tracking-tight leading-tight">
               List your<br />
               <span className="text-[#ff5100]">adventures.</span>
