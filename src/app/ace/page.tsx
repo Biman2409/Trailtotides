@@ -30,7 +30,7 @@ const AXES = [
   { key: "water",    icon: <Waves    className="w-5 h-5" />, color: "#3b82f6", label: "Water",    desc: "Swimming ability and aquatic survival — required for rafting, sea kayaking, scuba and river crossings." },
   { key: "altitude", icon: <Mountain className="w-5 h-5" />, color: "#a78bfa", label: "Altitude", desc: "Physiological tolerance to high elevation — the hypoxic stress of Himalayan trekking and 6,000m peaks." },
   { key: "focus",    icon: <Shield   className="w-5 h-5" />, color: "#f43f5e", label: "Focus",    desc: "Psychological exposure tolerance — comfort on cliff edges, in caves, on extreme terrain or dangerous rapids." },
-  { key: "mettle",    icon: <Wind     className="w-5 h-5" />, color: "#10b981", label: "Mettle",    desc: "Mental resilience far from help — operating in remote terrain with no support, delayed rescue, and full self-reliance." },
+  { key: "nerve",    icon: <Wind     className="w-5 h-5" />, color: "#10b981", label: "Nerve",    desc: "Mental resilience far from help — operating in remote terrain with no support, delayed rescue, and full self-reliance." },
 ];
 
 const SCALE = [
@@ -95,7 +95,7 @@ export default function ACEPage() {
                   { abbr: "WAT", key: "water",    color: "#3b82f6" },
                   { abbr: "ALT", key: "altitude", color: "#a78bfa" },
                   { abbr: "FOC", key: "focus",   color: "#f43f5e" },
-                  { abbr: "MTL", key: "mettle",   color: "#10b981" },
+                  { abbr: "NRV", key: "nerve",   color: "#10b981" },
                 ].map(({ abbr, color }) => (
                   <span
                     key={abbr}
@@ -115,7 +115,7 @@ export default function ACEPage() {
               <div className="absolute inset-0 rounded-full blur-3xl opacity-20 scale-75"
                 style={{ background: "conic-gradient(from 0deg, #f97316, #eab308, #84cc16, #22d3ee, #3b82f6, #a78bfa, #f43f5e, #10b981, #f97316)" }} />
               <ACERadar
-                ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, mettle: 3 }}
+                ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }}
                 size={280}
                 showLabels
               />

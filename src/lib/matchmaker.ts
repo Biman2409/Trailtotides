@@ -107,7 +107,7 @@ function buildGapExplanation(axis: AceAxis, has: number, req: number): string {
     case "water":    return `Aquatic competence required (${req}/5) exceeds your current level (${has}/5). Open water or current confidence is essential for this adventure.`;
     case "altitude": return `This adventure reaches altitude levels (${req}/5) beyond your current proven tolerance (${has}/5). Altitude sickness risk is significantly elevated.`;
     case "focus":    return `Psychological exposure (${req}/5) exceeds your comfort zone (${has}/5). Heights, void or danger-loaded environments are part of this experience.`;
-    case "mettle": return `This adventure requires operating far from help (${req}/5) beyond your current comfort (${has}/5). Remote terrain with delayed rescue demands strong self-reliance.`;
+    case "nerve": return `This adventure requires operating far from help (${req}/5) beyond your current comfort (${has}/5). Remote terrain with delayed rescue demands strong self-reliance.`;
   }
 }
 
@@ -144,7 +144,7 @@ function buildTrainingAction(axis: AceAxis, target: number): string {
     case "water":    return `Improve swimming confidence — open-water sessions or a basic safety swimming course.`;
     case "altitude": return `Gain altitude experience — sleep above ${target >= 4 ? "4,000m" : "3,000m"} for at least two nights before this trip.`;
     case "focus":    return `Build exposure tolerance progressively — start with moderate heights and work toward more exposed environments.`;
-    case "mettle": return `Build comfort in remote and self-reliant situations — overnight solo trips, navigation without phone, or wilderness first aid training.`;
+    case "nerve": return `Build comfort in remote and self-reliant situations — overnight solo trips, navigation without phone, or wilderness first aid training.`;
   }
 }
 
@@ -191,7 +191,7 @@ export function loadProfile(): StoredProfile | null {
     // Migrate legacy ERT-only profiles
     if (!parsed.ace && parsed.ert) {
       const { e, r, t } = parsed.ert;
-      parsed.ace = { stamina: e, power: Math.max(1, e - 1), strength: e, agility: t, water: 1, altitude: r, focus: t, mettle: t };
+      parsed.ace = { stamina: e, power: Math.max(1, e - 1), strength: e, agility: t, water: 1, altitude: r, focus: t, nerve: t };
     }
     return parsed.ace ? parsed : null;
   } catch { return null; }
