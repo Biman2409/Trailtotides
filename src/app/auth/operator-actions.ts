@@ -54,6 +54,9 @@ export async function signUpOperator(formData: FormData) {
   if (profileError) {
     // Clean up auth user if profile insert fails
     await adminClient.auth.admin.deleteUser(userId);
+    if (profileError.code === "PGRST205" || profileError.message?.includes("schema cache")) {
+      return { error: "Database not configured yet. Please ask an admin to run OPERATOR_SETUP.sql in the Supabase Dashboard." };
+    }
     return { error: "Failed to create operator profile. Please try again." };
   }
 

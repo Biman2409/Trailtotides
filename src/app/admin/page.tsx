@@ -61,12 +61,16 @@ export default async function AdminPage() {
   // Fetch operator profiles (pending/approved/rejected)
   let operatorProfiles: OperatorProfile[] = [];
   let operatorSubmissions: OperatorSubmission[] = [];
+  let operatorTablesExist = false;
   try {
-    const { data: opProfiles } = await adminClient
+    const { data: opProfiles, error: opError } = await adminClient
       .from("operator_profiles")
       .select("*")
       .order("created_at", { ascending: false });
-    operatorProfiles = (opProfiles ?? []) as OperatorProfile[];
+    if (!opError) {
+      operatorProfiles = (opProfiles ?? []) as OperatorProfile[];
+      operatorTablesExist = true;
+    }
 
     const { data: opSubs } = await adminClient
       .from("operator_submissions")
@@ -104,5 +108,5 @@ export default async function AdminPage() {
     // bucket may not exist yet
   }
 
-  return <AdminDashboardClient profiles={profiles ?? []} currentUserId={user.id} messages={messages ?? []} storySubmissions={storySubmissions as never} operatorProfiles={operatorProfiles} operatorSubmissions={operatorSubmissions} />;
+  return <AdminDashboardClient profiles={profiles ?? []} currentUserId={user.id} messages={messages ?? []} storySubmissions={storySubmissions as never} operatorProfiles={operatorProfiles} operatorSubmissions={operatorSubmissions} operatorTablesExist={operatorTablesExist} />;
 }

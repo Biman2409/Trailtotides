@@ -28,6 +28,7 @@ import {
   Mail,
   Building2,
   CheckCircle2,
+  AlertCircle,
   XCircle,
   Loader2,
   Globe,
@@ -123,6 +124,7 @@ export default function AdminDashboardClient({
   storySubmissions = [],
   operatorProfiles = [],
   operatorSubmissions = [],
+  operatorTablesExist = false,
 }: {
   profiles: Profile[];
   currentUserId: string;
@@ -130,6 +132,7 @@ export default function AdminDashboardClient({
   storySubmissions?: StorySubmission[];
   operatorProfiles?: OperatorProfile[];
   operatorSubmissions?: OperatorSubmission[];
+  operatorTablesExist?: boolean;
 }) {
   const [activeTab, setActiveTab] = useState("users");
   const [search, setSearch] = useState("");
@@ -739,6 +742,27 @@ export default function AdminDashboardClient({
 
           {/* ── OPERATORS TAB ── */}
           <Tabs.Content value="operators" className="outline-none space-y-8">
+
+            {/* Setup banner when tables don't exist */}
+            {!operatorTablesExist && (
+              <div className="flex items-start gap-4 bg-amber-500/8 border border-amber-500/25 rounded-2xl p-5">
+                <div className="w-9 h-9 rounded-xl bg-amber-500/15 flex items-center justify-center shrink-0 mt-0.5">
+                  <AlertCircle className="w-4.5 h-4.5 text-amber-400" style={{ width: 18, height: 18 }} />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-amber-300 mb-1">Database Tables Not Set Up</p>
+                  <p className="text-[12px] text-white/50 leading-relaxed mb-3">
+                    The operator tables don't exist in Supabase yet. Run <code className="text-[#ff7d47] font-mono bg-white/5 px-1.5 py-0.5 rounded">OPERATOR_SETUP.sql</code> in your Supabase Dashboard → SQL Editor to enable the operator system.
+                  </p>
+                  <div className="bg-black/30 rounded-xl p-3 text-xs text-white/40 font-mono leading-relaxed">
+                    1. Open Supabase Dashboard → SQL Editor<br />
+                    2. Click "New query"<br />
+                    3. Paste and run <span className="text-amber-400">OPERATOR_SETUP.sql</span> from the project root<br />
+                    4. Refresh this page
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Operator Accounts */}
             <div>
