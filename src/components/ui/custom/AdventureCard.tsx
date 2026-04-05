@@ -33,7 +33,7 @@ function DifficultyMeter({ difficulty }: { difficulty: string }) {
   const cfg = DIFFICULTY_CONFIG[difficulty] ?? { level: 1, color: "#10b981", glow: "#10b98155", label: difficulty };
   return (
     <div
-      className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-tight shadow-sm"
+      className="inline-flex items-center gap-2 px-2.5 h-5 rounded-full text-[10px] font-bold tracking-tight shadow-sm"
       style={{
         background: "rgba(0,0,0,0.6)",
         backdropFilter: "blur(8px)",
@@ -128,17 +128,17 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
 
           {/* Season pill — top right */}
           {isSeasonActive ? (
-            <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>
+            <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
               Season Active
             </span>
           ) : isSeasonUpcoming ? (
-            <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight flex items-center gap-1" style={{ background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }}>
+            <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
               Upcoming
             </span>
           ) : seasonLabel ? (
-            <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 py-1 rounded-full tracking-tight" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.85)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }}>
+            <span className="absolute top-3 right-3 z-20 pointer-events-none text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.85)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }}>
               {seasonLabel}
             </span>
           ) : null}
