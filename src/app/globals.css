@@ -54,9 +54,9 @@
   --color-dark-overlay: rgba(15, 20, 30, 0.55);
 }
 
-/* ── DARK THEME (default / prefers dark) ─────────────────── */
+/* ── DARK THEME (always) ─────────────────────────────────── */
 :root {
-  color-scheme: dark light;
+  color-scheme: dark;
   --radius: 0.5rem;
 
   /* Surfaces */
@@ -118,70 +118,6 @@
   --sidebar-ring: #5ba3c9;
 }
 
-/* ── LIGHT THEME (responds to OS preference) ─────────────── */
-@media (prefers-color-scheme: light) {
-  :root {
-    color-scheme: light dark;
-
-    /* Surfaces */
-    --bg-page:        #f5f2ed;
-    --bg-surface:     #ffffff;
-    --bg-surface-2:   #f0ece5;
-    --bg-card:        rgba(0,0,0,0.03);
-    --bg-card-hover:  rgba(0,0,0,0.06);
-    --bg-overlay:     rgba(245,242,237,0.92);
-
-    /* Text */
-    --text-primary:   #1a1a1a;
-    --text-secondary: rgba(26,26,26,0.65);
-    --text-tertiary:  rgba(26,26,26,0.4);
-    --text-muted:     rgba(26,26,26,0.25);
-
-    /* Borders */
-    --border-subtle:  rgba(0,0,0,0.06);
-    --border-default: rgba(0,0,0,0.12);
-    --border-strong:  rgba(0,0,0,0.22);
-
-    /* Nav */
-    --nav-bg:         rgba(255,252,248,0.97);
-    --nav-border:     rgba(0,0,0,0.08);
-    --nav-text:       rgba(26,26,26,0.6);
-    --nav-text-hover: #1a1a1a;
-    --nav-active-bg:  rgba(0,0,0,0.06);
-
-    /* Scrollbar */
-    --scrollbar-track: #e8e4dd;
-    --scrollbar-thumb: #c5bfb5;
-
-    /* Shared */
-    --background: #f5f2ed;
-    --foreground: #1a1a1a;
-    --card: #ffffff;
-    --card-foreground: #1a1a1a;
-    --popover: #ffffff;
-    --popover-foreground: #1a1a1a;
-    --primary: #ff5100;
-    --primary-foreground: #ffffff;
-    --secondary: rgba(0,0,0,0.05);
-    --secondary-foreground: #1a1a1a;
-    --muted: rgba(0,0,0,0.04);
-    --muted-foreground: rgba(26,26,26,0.5);
-    --accent: #ff5100;
-    --accent-foreground: #ffffff;
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: rgba(0,0,0,0.1);
-    --input: rgba(0,0,0,0.1);
-    --ring: #ff5100;
-    --sidebar: #ffffff;
-    --sidebar-foreground: #1a1a1a;
-    --sidebar-primary: #ff5100;
-    --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: rgba(0,0,0,0.04);
-    --sidebar-accent-foreground: #1a1a1a;
-    --sidebar-border: rgba(0,0,0,0.08);
-    --sidebar-ring: #5ba3c9;
-  }
-}
 
 @layer base {
   * {
