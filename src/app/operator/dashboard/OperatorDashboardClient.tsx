@@ -24,32 +24,8 @@ import {
 import Link from "next/link";
 import { logout } from "@/app/auth/actions";
 import Logo from "@/components/ui/custom/Logo";
-import { submitOperatorUpdate } from "@/app/auth/operator-actions";
+import { submitOperatorUpdate, type OperatorProfile, type OperatorSubmission as Submission } from "@/app/auth/operator-actions";
 import { format, parseISO } from "date-fns";
-
-type OperatorProfile = {
-  id: string;
-  user_id: string;
-  contact_name: string;
-  company_name: string;
-  email: string;
-  phone: string;
-  website: string | null;
-  status: "pending" | "approved" | "rejected";
-  created_at: string;
-};
-
-type Submission = {
-  id: string;
-  operator_id: string;
-  adventure_slug: string;
-  operator_name: string;
-  price_from: string;
-  exact_dates: string[];
-  notes: string | null;
-  status: "pending" | "approved" | "rejected";
-  created_at: string;
-};
 
 type AdventureItem = {
   slug: string;

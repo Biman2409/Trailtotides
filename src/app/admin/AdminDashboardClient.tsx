@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { updateUserRole, deleteUser } from "./actions";
-import { approveOperatorAccount, rejectOperatorAccount, approveOperatorSubmission, rejectOperatorSubmission } from "@/app/auth/operator-actions";
+import { approveOperatorAccount, rejectOperatorAccount, approveOperatorSubmission, rejectOperatorSubmission, type OperatorProfile, type OperatorSubmission } from "@/app/auth/operator-actions";
 import { logout } from "@/app/auth/actions";
 import {
   Mountain,
@@ -69,32 +69,6 @@ type Message = {
   name: string | null;
   message: string;
   created_at: string;
-};
-
-type OperatorProfile = {
-  id: string;
-  user_id: string;
-  contact_name: string;
-  company_name: string;
-  email: string;
-  phone: string;
-  website: string | null;
-  status: "pending" | "approved" | "rejected";
-  created_at: string;
-};
-
-type OperatorSubmission = {
-  id: string;
-  operator_id: string;
-  adventure_slug: string;
-  operator_name: string;
-  price_from: string;
-  exact_dates: string[];
-  notes: string | null;
-  status: "pending" | "approved" | "rejected";
-  reviewed_at: string | null;
-  created_at: string;
-  operator_profiles?: { company_name: string; contact_name: string; email: string } | null;
 };
 
 type StorySubmission = {
@@ -199,14 +173,14 @@ export default function AdminDashboardClient({
   const pendingOperators = localOperatorProfiles.filter((p) => p.status === "pending").length;
   const pendingOperatorSubmissions = localOperatorSubmissions.filter((s) => s.status === "pending").length;
 
-  async function handleOperatorAccountAction(opId: string, action: "approve" | "reject") {
-    setLoadingId(opId);
+  async function handleOperatorAccountAction(userId: string, action: "approve" | "reject") {
+    setLoadingId(userId);
     if (action === "approve") {
-      await approveOperatorAccount(opId);
-      setLocalOperatorProfiles((prev) => prev.map((p) => p.id === opId ? { ...p, status: "approved" } : p));
+      await approveOperatorAccount(userId);
+      setLocalOperatorProfiles((prev) => prev.map((p) => p.user_id === userId ? { ...p, status: "approved" } : p));
     } else {
-      await rejectOperatorAccount(opId);
-      setLocalOperatorProfiles((prev) => prev.map((p) => p.id === opId ? { ...p, status: "rejected" } : p));
+      await rejectOperatorAccount(userId);
+      setLocalOperatorProfiles((prev) => prev.map((p) => p.user_id === userId ? { ...p, status: "rejected" } : p));
     }
     setLoadingId(null);
   }
@@ -797,7 +771,7 @@ export default function AdminDashboardClient({
                     </thead>
                     <tbody>
                       {localOperatorProfiles.map((op) => (
-                        <tr key={op.id} className="border-b border-white/[0.04] hover:bg-white/[0.03] last:border-0 transition-colors">
+                        <tr key={op.user_id} className="border-b border-white/[0.04] hover:bg-white/[0.03] last:border-0 transition-colors">
                           <td className="px-5 py-4">
                             <div className="flex items-center gap-3">
                               <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/15 flex items-center justify-center text-cyan-400 font-black text-sm shrink-0">
@@ -842,20 +816,20 @@ export default function AdminDashboardClient({
                             <div className="flex items-center justify-end gap-1.5">
                               {op.status !== "approved" && (
                                 <button
-                                  onClick={() => handleOperatorAccountAction(op.id, "approve")}
-                                  disabled={loadingId === op.id}
+                                  onClick={() => handleOperatorAccountAction(op.user_id, "approve")}
+                                  disabled={loadingId === op.user_id}
                                   className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-emerald-500/25 text-emerald-400/80 hover:bg-emerald-500/10 hover:border-emerald-500/40 transition-all disabled:opacity-40"
                                 >
-                                  {loadingId === op.id ? <Loader2 className="w-3 h-3 animate-spin" /> : "Approve"}
+                                  {loadingId === op.user_id ? <Loader2 className="w-3 h-3 animate-spin" /> : "Approve"}
                                 </button>
                               )}
                               {op.status !== "rejected" && (
                                 <button
-                                  onClick={() => handleOperatorAccountAction(op.id, "reject")}
-                                  disabled={loadingId === op.id}
+                                  onClick={() => handleOperatorAccountAction(op.user_id, "reject")}
+                                  disabled={loadingId === op.user_id}
                                   className="text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-red-500/20 text-red-400/70 hover:bg-red-500/10 hover:border-red-500/35 transition-all disabled:opacity-40"
                                 >
-                                  {loadingId === op.id ? <Loader2 className="w-3 h-3 animate-spin" /> : "Reject"}
+                                  {loadingId === op.user_id ? <Loader2 className="w-3 h-3 animate-spin" /> : "Reject"}
                                 </button>
                               )}
                             </div>

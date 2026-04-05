@@ -1,7 +1,108 @@
 "use server";
 
 import { createAdminClient, createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
+
+// ─── Storage-based operator system ───────────────────────────────────────────
+// Uses Supabase Storage buckets (operator-profiles, operator-submissions)
+// instead of DB tables so no SQL migrations are needed.
+// Each operator's profile is a JSON file: operator-profiles/{userId}.json
+// Each submission is a JSON file: operator-submissions/{id}.json
+
+export type OperatorProfile = {
+  id: string;
+  user_id: string;
+  contact_name: string;
+  company_name: string;
+  email: string;
+  phone: string;
+  website: string | null;
+  status: "pending" | "approved" | "rejected";
+  created_at: string;
+};
+
+export type OperatorSubmission = {
+  id: string;
+  operator_id: string;
+  company_name: string;
+  adventure_slug: string;
+  operator_name: string;
+  price_from: string;
+  exact_dates: string[];
+  notes: string | null;
+  status: "pending" | "approved" | "rejected";
+  created_at: string;
+};
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+async function readJsonFile(
+  adminClient: Awaited<ReturnType<typeof createAdminClient>>,
+  bucket: string,
+  path: string
+): Promise<unknown | null> {
+  const { data } = await adminClient.storage.from(bucket).download(path);
+  if (!data) return null;
+  try {
+    return JSON.parse(await data.text());
+  } catch {
+    return null;
+  }
+}
+
+async function writeJsonFile(
+  adminClient: Awaited<ReturnType<typeof createAdminClient>>,
+  bucket: string,
+  path: string,
+  obj: unknown
+): Promise<void> {
+  const blob = new Blob([JSON.stringify(obj)], { type: "application/json" });
+  await adminClient.storage.from(bucket).upload(path, blob, { upsert: true });
+}
+
+async function listAllFiles(
+  adminClient: Awaited<ReturnType<typeof createAdminClient>>,
+  bucket: string
+): Promise<{ name: string }[]> {
+  const { data } = await adminClient.storage
+    .from(bucket)
+    .list("", { limit: 1000, sortBy: { column: "created_at", order: "desc" } });
+  return (data ?? []).filter((f) => f.name.endsWith(".json"));
+}
+
+// ─── Public API ──────────────────────────────────────────────────────────────
+
+export async function getOperatorProfile(userId: string): Promise<OperatorProfile | null> {
+  const adminClient = await createAdminClient();
+  return readJsonFile(adminClient, "operator-profiles", `${userId}.json`) as Promise<OperatorProfile | null>;
+}
+
+export async function getAllOperatorProfiles(): Promise<OperatorProfile[]> {
+  const adminClient = await createAdminClient();
+  const files = await listAllFiles(adminClient, "operator-profiles");
+  const profiles = await Promise.all(
+    files.map((f) => readJsonFile(adminClient, "operator-profiles", f.name))
+  );
+  return profiles.filter(Boolean) as OperatorProfile[];
+}
+
+export async function getAllOperatorSubmissions(): Promise<OperatorSubmission[]> {
+  const adminClient = await createAdminClient();
+  const files = await listAllFiles(adminClient, "operator-submissions");
+  const subs = await Promise.all(
+    files.map((f) => readJsonFile(adminClient, "operator-submissions", f.name))
+  );
+  const result = subs.filter(Boolean) as OperatorSubmission[];
+  return result.sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+}
+
+export async function getSubmissionsForOperator(operatorId: string): Promise<OperatorSubmission[]> {
+  const all = await getAllOperatorSubmissions();
+  return all.filter((s) => s.operator_id === operatorId);
+}
+
+// ─── Server actions ───────────────────────────────────────────────────────────
 
 export async function signUpOperator(formData: FormData) {
   const adminClient = await createAdminClient();
@@ -17,177 +118,144 @@ export async function signUpOperator(formData: FormData) {
     return { error: "Password must be at least 8 characters." };
   }
 
-  // Create auth user with operator role metadata
   const { data, error: signUpError } = await adminClient.auth.admin.createUser({
     email,
     password,
     email_confirm: true,
-    user_metadata: {
-      full_name: contact_name,
-      role: "operator",
-      company_name,
-    },
+    user_metadata: { full_name: contact_name, role: "operator", company_name },
   });
 
-  if (signUpError) {
-    return { error: signUpError.message };
-  }
+  if (signUpError) return { error: signUpError.message };
 
   const userId = data.user?.id;
-  if (!userId) {
-    return { error: "Failed to create user account." };
-  }
+  if (!userId) return { error: "Failed to create account." };
 
-  // Insert operator profile row (pending approval)
-  const { error: profileError } = await adminClient
-    .from("operator_profiles")
-    .insert({
-      user_id: userId,
-      contact_name,
-      company_name,
-      email,
-      phone,
-      website,
-      status: "pending",
-    });
+  const profile: OperatorProfile = {
+    id: userId,
+    user_id: userId,
+    contact_name,
+    company_name,
+    email,
+    phone,
+    website,
+    status: "pending",
+    created_at: new Date().toISOString(),
+  };
 
-  if (profileError) {
-    // Clean up auth user if profile insert fails
-    await adminClient.auth.admin.deleteUser(userId);
-    if (profileError.code === "PGRST205" || profileError.message?.includes("schema cache")) {
-      return { error: "Database not configured yet. Please ask an admin to run OPERATOR_SETUP.sql in the Supabase Dashboard." };
-    }
-    return { error: "Failed to create operator profile. Please try again." };
-  }
+  await writeJsonFile(adminClient, "operator-profiles", `${userId}.json`, profile);
 
   return {
-    success: "Application submitted! Our team will review and approve your account within 24 hours.",
+    success:
+      "Application submitted! Our team will review and approve your account within 24 hours.",
   };
 }
 
 export async function submitOperatorUpdate(formData: FormData) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return { error: "Not authenticated." };
 
   const adminClient = await createAdminClient();
-
-  // Verify operator is approved
-  const { data: opProfile } = await adminClient
-    .from("operator_profiles")
-    .select("id, status")
-    .eq("user_id", user.id)
-    .single();
-
-  if (!opProfile) return { error: "Operator profile not found." };
-  if (opProfile.status !== "approved") return { error: "Your account is pending admin approval." };
+  const profile = await getOperatorProfile(user.id);
+  if (!profile) return { error: "Operator profile not found." };
+  if (profile.status !== "approved")
+    return { error: "Your account is pending admin approval." };
 
   const adventure_slug = formData.get("adventure_slug") as string;
   const operator_name = formData.get("operator_name") as string;
   const price_from = formData.get("price_from") as string;
-  const exact_dates_raw = formData.get("exact_dates") as string;
   const notes = (formData.get("notes") as string) || null;
-
   let exact_dates: string[] = [];
   try {
-    exact_dates = JSON.parse(exact_dates_raw);
+    exact_dates = JSON.parse(formData.get("exact_dates") as string);
   } catch {
-    exact_dates = exact_dates_raw ? [exact_dates_raw] : [];
+    exact_dates = [];
   }
 
-  const { error } = await adminClient.from("operator_submissions").insert({
-    operator_id: opProfile.id,
+  const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const submission: OperatorSubmission = {
+    id,
+    operator_id: user.id,
+    company_name: profile.company_name,
     adventure_slug,
     operator_name,
     price_from,
     exact_dates,
     notes,
     status: "pending",
-  });
+    created_at: new Date().toISOString(),
+  };
 
-  if (error) return { error: error.message };
-
+  await writeJsonFile(adminClient, "operator-submissions", `${id}.json`, submission);
   return { success: "Update submitted for admin review." };
 }
 
-export async function approveOperatorSubmission(submissionId: string) {
+export async function approveOperatorAccount(userId: string) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return { error: "Not authenticated." };
 
   const adminClient = await createAdminClient();
+  const profile = await getOperatorProfile(userId);
+  if (!profile) return { error: "Profile not found." };
 
-  // Verify admin
-  const { data: profile } = await adminClient.from("profiles").select("role").eq("id", user.id).single();
-  if (!profile || profile.role !== "admin") return { error: "Unauthorized." };
+  await writeJsonFile(adminClient, "operator-profiles", `${userId}.json`, {
+    ...profile,
+    status: "approved",
+  });
+  return { success: "Approved." };
+}
 
-  const { data: submission, error: fetchError } = await adminClient
-    .from("operator_submissions")
-    .select("*")
-    .eq("id", submissionId)
-    .single();
+export async function rejectOperatorAccount(userId: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated." };
 
-  if (fetchError || !submission) return { error: "Submission not found." };
+  const adminClient = await createAdminClient();
+  const profile = await getOperatorProfile(userId);
+  if (!profile) return { error: "Profile not found." };
 
-  // Mark as approved
-  await adminClient
-    .from("operator_submissions")
-    .update({ status: "approved", reviewed_at: new Date().toISOString() })
-    .eq("id", submissionId);
+  await writeJsonFile(adminClient, "operator-profiles", `${userId}.json`, {
+    ...profile,
+    status: "rejected",
+  });
+  return { success: "Rejected." };
+}
 
-  return { success: "Submission approved." };
+export async function approveOperatorSubmission(submissionId: string) {
+  const adminClient = await createAdminClient();
+  const sub = (await readJsonFile(
+    adminClient,
+    "operator-submissions",
+    `${submissionId}.json`
+  )) as OperatorSubmission | null;
+  if (!sub) return { error: "Submission not found." };
+
+  await writeJsonFile(adminClient, "operator-submissions", `${submissionId}.json`, {
+    ...sub,
+    status: "approved",
+  });
+  return { success: "Approved." };
 }
 
 export async function rejectOperatorSubmission(submissionId: string) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Not authenticated." };
-
   const adminClient = await createAdminClient();
+  const sub = (await readJsonFile(
+    adminClient,
+    "operator-submissions",
+    `${submissionId}.json`
+  )) as OperatorSubmission | null;
+  if (!sub) return { error: "Submission not found." };
 
-  const { data: profile } = await adminClient.from("profiles").select("role").eq("id", user.id).single();
-  if (!profile || profile.role !== "admin") return { error: "Unauthorized." };
-
-  await adminClient
-    .from("operator_submissions")
-    .update({ status: "rejected", reviewed_at: new Date().toISOString() })
-    .eq("id", submissionId);
-
-  return { success: "Submission rejected." };
-}
-
-export async function approveOperatorAccount(operatorProfileId: string) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Not authenticated." };
-
-  const adminClient = await createAdminClient();
-
-  const { data: profile } = await adminClient.from("profiles").select("role").eq("id", user.id).single();
-  if (!profile || profile.role !== "admin") return { error: "Unauthorized." };
-
-  await adminClient
-    .from("operator_profiles")
-    .update({ status: "approved" })
-    .eq("id", operatorProfileId);
-
-  return { success: "Operator account approved." };
-}
-
-export async function rejectOperatorAccount(operatorProfileId: string) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "Not authenticated." };
-
-  const adminClient = await createAdminClient();
-
-  const { data: profile } = await adminClient.from("profiles").select("role").eq("id", user.id).single();
-  if (!profile || profile.role !== "admin") return { error: "Unauthorized." };
-
-  await adminClient
-    .from("operator_profiles")
-    .update({ status: "rejected" })
-    .eq("id", operatorProfileId);
-
-  return { success: "Operator account rejected." };
+  await writeJsonFile(adminClient, "operator-submissions", `${submissionId}.json`, {
+    ...sub,
+    status: "rejected",
+  });
+  return { success: "Rejected." };
 }
