@@ -285,7 +285,7 @@ export default function TrophyCabinet() {
       <div style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0.012) 0%, rgba(0,0,0,0.08) 100%)" }}>
 
         {/* ── Shelf 1 — Tier 1 Pinnacle ── */}
-        <Shelf lightColor="#fbbf24" label="Tier 1" sublabel="To the absolute pinnacle" count={t1Earned} total={TIER1_ALL.length}>
+        <Shelf lightColor="#fbbf24" label="Tier 1" sublabel="The absolute pinnacle" count={t1Earned} total={TIER1_ALL.length}>
           <div className="flex gap-5 items-end justify-center flex-wrap">
             {TIER1_ALL.map(b => cell(b, 68, true))}
           </div>
