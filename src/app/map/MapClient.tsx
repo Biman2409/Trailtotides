@@ -239,45 +239,49 @@ function UnifiedSearch({
 
 // ── Map View ──────────────────────────────────────────────────────────────────
 
-const TILE_LAYERS = {
-  // OpenTopoMap — detailed contours, hillshading, ridges, peaks, trails. No key.
+// Base layer — always on
+const BASE_TILE = {
+  url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  maxZoom: 19,
+};
+
+// Overlay layers — toggled on top independently
+const OVERLAY_LAYERS = {
   terrain: {
-    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
-    maxZoom: 17,
+    // ESRI World Hillshade — elevation shading + contour detail, semi-transparent overlay
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Hillshade &copy; Esri, NASA, USGS",
+    maxZoom: 16,
+    opacity: 0.45,
   },
-  // ESRI World Imagery — high-res satellite. No key.
   satellite: {
+    // ESRI World Imagery — high-res satellite
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    attribution: "Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics",
+    attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics",
     maxZoom: 19,
-  },
-  // CartoDB Voyager — clean street/label map.
-  standard: {
-    url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    maxZoom: 19,
+    opacity: 0.82,
   },
 } as const;
 
-type TileMode = keyof typeof TILE_LAYERS;
+type OverlayKey = keyof typeof OVERLAY_LAYERS;
 
 function MapView({
   adventures: advs,
   flyToRef,
   openPinRef,
-  tileMode,
+  overlays,
 }: {
   adventures: Adventure[];
   flyToRef: React.MutableRefObject<((lat: number, lng: number) => void) | null>;
   openPinRef: React.MutableRefObject<((slug: string) => void) | null>;
-  tileMode: TileMode;
+  overlays: Set<OverlayKey>;
 }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const markerMapRef = useRef<Map<string, L.Marker>>(new Map());
-  const tileLayerRef = useRef<L.TileLayer | null>(null);
+  const overlayLayerRefs = useRef<Partial<Record<OverlayKey, L.TileLayer>>>({});
 
   useEffect(() => {
     flyToRef.current = (lat, lng) => {
@@ -401,9 +405,8 @@ function MapView({
         scrollWheelZoom: true,
       });
 
-      const { url, attribution, maxZoom } = TILE_LAYERS[tileMode];
-      tileLayerRef.current = leaflet.tileLayer(url, { maxZoom, attribution });
-      tileLayerRef.current.addTo(map);
+      // Base layer — always present, always at bottom
+      leaflet.tileLayer(BASE_TILE.url, { maxZoom: BASE_TILE.maxZoom, attribution: BASE_TILE.attribution }).addTo(map);
 
       // Zoom control — bottom right
       leaflet.control.zoom({ position: "bottomright" }).addTo(map);
@@ -451,19 +454,34 @@ function MapView({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [advs]);
 
-  // Swap tile layer when tileMode changes
+  // Sync overlay layers when `overlays` set changes
   useEffect(() => {
     if (!mapInstanceRef.current) return;
     loadLeaflet().then(leaflet => {
       const map = mapInstanceRef.current;
       if (!map) return;
-      if (tileLayerRef.current) { map.removeLayer(tileLayerRef.current); }
-      const { url, attribution, maxZoom } = TILE_LAYERS[tileMode];
-      tileLayerRef.current = leaflet.tileLayer(url, { maxZoom, attribution });
-      tileLayerRef.current.addTo(map);
-      tileLayerRef.current.bringToBack();
+      (Object.keys(OVERLAY_LAYERS) as OverlayKey[]).forEach(key => {
+        const cfg = OVERLAY_LAYERS[key];
+        if (overlays.has(key)) {
+          // Add if not already present
+          if (!overlayLayerRefs.current[key]) {
+            overlayLayerRefs.current[key] = leaflet.tileLayer(cfg.url, {
+              maxZoom: cfg.maxZoom,
+              attribution: cfg.attribution,
+              opacity: cfg.opacity,
+            });
+            overlayLayerRefs.current[key]!.addTo(map);
+          }
+        } else {
+          // Remove if present
+          if (overlayLayerRefs.current[key]) {
+            map.removeLayer(overlayLayerRefs.current[key]!);
+            delete overlayLayerRefs.current[key];
+          }
+        }
+      });
     });
-  }, [tileMode]);
+  }, [overlays]);
 
   return <div ref={mapRef} className="w-full h-full" />;
 }
@@ -483,7 +501,15 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 export default function MapPage() {
   const [mounted, setMounted] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [tileMode, setTileMode] = useState<TileMode>("standard");
+  const [overlays, setOverlays] = useState<Set<OverlayKey>>(new Set());
+
+  function toggleOverlay(key: OverlayKey) {
+    setOverlays(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key); else next.add(key);
+      return next;
+    });
+  }
   const flyToRef = useRef<((lat: number, lng: number) => void) | null>(null);
   const openPinRef = useRef<((slug: string) => void) | null>(null);
   const [nearMe, setNearMe] = useState<{ lat: number; lng: number } | null>(null);
@@ -576,27 +602,24 @@ export default function MapPage() {
             onAdventurePin={adv => openPinRef.current?.(adv.slug)}
           />
 
-          {/* Tile toggle — 3-way pill: Map (default) | Topo | Satellite */}
-          <div className="flex items-center rounded-xl overflow-hidden shrink-0" style={{ border: "1px solid #e8dfc8" }}>
-            {(["standard", "terrain", "satellite"] as TileMode[]).map((mode, i) => {
-              const labels: Record<TileMode, string> = { standard: "Map", terrain: "Topo", satellite: "Satellite" };
-              const active = tileMode === mode;
-              return (
-                <button
-                  key={mode}
-                  onClick={() => setTileMode(mode)}
-                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-all"
-                  style={{
-                    background: active ? "#1e3d2f" : "#f5f0e8",
-                    color: active ? "white" : "#4a4540",
-                    borderRight: i < 2 ? "1px solid #e8dfc8" : "none",
-                  }}
-                >
-                  {i === 0 && <Layers className="w-3.5 h-3.5" />}
-                  <span className="hidden sm:inline">{labels[mode]}</span>
-                </button>
-              );
-            })}
+          {/* Overlay toggles — Terrain & Satellite on top of base map */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              onClick={() => toggleOverlay("terrain")}
+              title="Toggle terrain hillshade"
+              className={`${btnBase} ${overlays.has("terrain") ? btnActive : btnIdle}`}
+            >
+              <Layers className="w-4 h-4" />
+              <span className="hidden sm:inline">Terrain</span>
+            </button>
+            <button
+              onClick={() => toggleOverlay("satellite")}
+              title="Toggle satellite imagery"
+              className={`${btnBase} ${overlays.has("satellite") ? "bg-[#1e3d2f] text-white" : btnIdle}`}
+            >
+              <MapIcon className="w-4 h-4" />
+              <span className="hidden sm:inline">Satellite</span>
+            </button>
           </div>
 
           <button onClick={handleNearMe} title={nearMe ? "Clear Near Me" : "Adventures Near Me"}
@@ -876,7 +899,7 @@ export default function MapPage() {
       {/* ── Map ─────────────────────────────────────────────────── */}
       <div className="flex-1 relative overflow-hidden">
         {mounted ? (
-          <MapView adventures={sortedAdventures} flyToRef={flyToRef} openPinRef={openPinRef} tileMode={tileMode} />
+          <MapView adventures={sortedAdventures} flyToRef={flyToRef} openPinRef={openPinRef} overlays={overlays} />
         ) : (
           <div className="w-full h-full bg-[#f5f0e8] flex items-center justify-center">
             <Loader2 className="w-6 h-6 text-[#b8b0a5] animate-spin" />
