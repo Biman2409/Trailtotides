@@ -4,6 +4,7 @@ import { Calendar, Shield, Camera, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import ProfileForm from "./ProfileForm";
+import TripLogSection from "./TripLogSection";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -124,7 +125,7 @@ export default async function ProfilePage() {
               username: user.user_metadata?.username || profile.username || null,
               phone: profile.phone || user.user_metadata?.phone || null,
             }} />
-
+            <TripLogSection />
           </div>
         </div>
       </div>

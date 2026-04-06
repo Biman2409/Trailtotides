@@ -9,6 +9,7 @@ import { getACE, computeDifficulty } from "@/lib/ace";
 import Pill from "./Pill";
 import DifficultyMeter from "./DifficultyMeter";
 import SaveButton from "./SaveButton";
+import CheckInButton from "./CheckInButton";
 import { useCompare } from "@/contexts/CompareContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -126,7 +127,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
           ) : null}
         </div>
 
-        {/* Top-right: Compare + Save buttons */}
+        {/* Top-right: Compare + Save + CheckIn buttons */}
         <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5">
           <button
             onClick={handleCompare}
@@ -141,6 +142,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
             <GitCompare className="w-3.5 h-3.5" />
           </button>
           <SaveButton slug={adventure.slug} variant="card" />
+          <CheckInButton slug={adventure.slug} variant="card" />
         </div>
 
         {/* Bottom content over image */}

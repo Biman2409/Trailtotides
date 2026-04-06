@@ -121,41 +121,39 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { title: string; items: Adventure[]; exploreHref: string; pillMode?: "type" | "region" }) {
+function RelatedSection({ title, items, exploreHref }: { title: string; items: Adventure[]; exploreHref: string; pillMode?: "type" | "region" }) {
   if (items.length === 0) return null;
   return (
     <div>
-      <div className="flex items-end justify-between mb-8">
-        <div>
-          <SectionLabel>You Might Also Like</SectionLabel>
-          <h2 className="text-white text-3xl font-semibold tracking-tight">{title}</h2>
-        </div>
+      <div className="flex items-end justify-between mb-6">
+        <h2 className="text-white text-xl font-semibold tracking-tight">{title}</h2>
         <Link href={exploreHref} className="hidden md:flex items-center gap-1.5 text-white/40 text-sm font-medium hover:text-[#ff5100] transition-colors group">
           Explore all
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
-      <div className="flex gap-5 overflow-x-auto pb-4 -mx-2 px-2 snap-x snap-mandatory no-scrollbar">
-        {items.map((a) => (
-          <div key={a.id} className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-72 snap-start transition-all duration-300 hover:-translate-y-1.5" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
-            <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
-            <div className="relative h-48 overflow-hidden">
-              <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-              <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-20">
-                {pillMode === "region" ? (
-                  <Pill type="subRegion" value={a.state} />
-                ) : (
+      <div className="flex gap-4 overflow-x-auto pb-4 -mx-2 px-2 snap-x snap-mandatory no-scrollbar">
+        {items.map((a) => {
+          const diff = computeDifficulty(getACE(a));
+          return (
+            <Link key={a.id} href={`/experiences/${a.slug}`} className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-64 snap-start transition-all duration-300 hover:-translate-y-1" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
+              <div className="relative h-40 overflow-hidden">
+                <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+                <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 z-10">
                   <Pill type="type" value={a.type} />
-                )}
+                </div>
               </div>
-            </div>
-            <div className="p-5 flex-1">
-              <h3 className="text-white font-semibold text-base leading-snug mb-1 group-hover:text-[#ff5100] transition-colors">{a.name}</h3>
-              <p className="text-white/35 text-xs line-clamp-2 leading-relaxed">{a.tagline}</p>
-            </div>
-          </div>
-        ))}
+              <div className="p-4 flex-1 flex flex-col gap-1.5">
+                <h3 className="text-white font-semibold text-sm leading-snug group-hover:text-[#ff5100] transition-colors line-clamp-2">{a.name}</h3>
+                <div className="flex items-center gap-2 mt-auto pt-1">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.45)" }}>{diff}</span>
+                  <span className="text-[10px] text-white/30">{a.state}</span>
+                </div>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
@@ -225,11 +223,16 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
   const relatedByState = adventures
     .filter((a) => a.id !== adventure.id && a.state === adventure.state)
-    .slice(0, 6);
+    .slice(0, 8);
   const relatedByStateIds = new Set(relatedByState.map((a) => a.id));
   const relatedByType = adventures
     .filter((a) => a.id !== adventure.id && a.type === adventure.type && !relatedByStateIds.has(a.id))
-    .slice(0, 6);
+    .slice(0, 8);
+  const relatedByTypeIds = new Set(relatedByType.map((a) => a.id));
+  const adventureDifficulty = computeDifficulty(getACE(adventure));
+  const relatedByDifficulty = adventures
+    .filter((a) => a.id !== adventure.id && computeDifficulty(getACE(a)) === adventureDifficulty && !relatedByStateIds.has(a.id) && !relatedByTypeIds.has(a.id))
+    .slice(0, 8);
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
@@ -631,27 +634,22 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       </div>
 
       {/* ── YOU MIGHT ALSO LIKE ───────────────────────────────── */}
-      {(relatedByState.length > 0 || relatedByType.length > 0) && (
+      {(relatedByState.length > 0 || relatedByType.length > 0 || relatedByDifficulty.length > 0) && (
         <section
           className="py-14 lg:py-20 px-5 lg:px-8"
-          style={{
-            background: "var(--bg-surface)",
-            borderTop: "1px solid var(--border-subtle)",
-          }}
+          style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)" }}
         >
-          <div className="max-w-7xl mx-auto space-y-16">
-            <RelatedSection
-              title={`More in ${adventure.state}`}
-              items={relatedByState}
-              exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
-              pillMode="type"
-            />
-            <RelatedSection
-              title={`More in ${adventure.type}`}
-              items={relatedByType}
-              exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`}
-              pillMode="region"
-            />
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10">
+              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-2">Discover More</p>
+              <h2 className="text-white text-3xl font-bold tracking-tight">You Might Also Like</h2>
+              <div className="mt-3 w-10 h-0.5 bg-[#ff5100] rounded-full" />
+            </div>
+            <div className="space-y-12">
+              <RelatedSection title={`More in ${adventure.state}`} items={relatedByState} exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} />
+              <RelatedSection title={`More ${adventure.type}`} items={relatedByType} exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`} />
+              <RelatedSection title={`Same Difficulty · ${adventureDifficulty}`} items={relatedByDifficulty} exploreHref={`/explore?difficulty=${encodeURIComponent(adventureDifficulty)}`} />
+            </div>
           </div>
         </section>
       )}

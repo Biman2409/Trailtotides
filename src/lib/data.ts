@@ -93,6 +93,8 @@ export interface Adventure {
   ert?: ERT;
   /** ACE Rating — 8-axis biological capability profile, auto-computed if omitted */
   ace?: ACEAxes;
+  /** Optional route polyline: array of [lat, lng] waypoints for map overlay */
+  routePoints?: [number, number][];
 }
 
 export interface Operator {
@@ -223,6 +225,7 @@ export const adventures: Adventure[] = [
             ],
       tags: ["frozen river", "winter", "Ladakh", "extreme cold", "iconic"],
       featured: true,
+      routePoints: [[33.9139, 77.6285],[33.9500, 77.5800],[34.0200, 77.5000],[34.0800, 77.4200],[34.1526, 77.3500]],
       seedReviews: [
         { id: "sr-chadar-1", username: "rohan_trek", rating: 5, body: "Walked on a frozen river for four days. That sentence still sounds unreal. The silence out there is unlike anything in the world. Incredibly cold (-25°C at night) but the operators had excellent sleeping gear. A life-defining experience.", created_at: "2025-02-10T06:30:00Z", user_id: "" },
         { id: "sr-chadar-2", username: "deepika_w", rating: 4, body: "Physically demanding but not technically difficult — it's the cold that gets you. Do NOT skip the acclimatisation days in Leh. I saw two people turn back on day one from altitude sickness because they flew straight from Delhi and ignored advice. Otherwise flawless trip.", created_at: "2025-01-25T14:15:00Z", user_id: "" },

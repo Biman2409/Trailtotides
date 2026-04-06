@@ -2,7 +2,8 @@
 
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users, ChevronLeft } from "lucide-react";
+import Image from "next/image";
+import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users, ChevronLeft, Heart } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import Link from "next/link";
@@ -83,6 +84,16 @@ export default function ExploreClient() {
     return isNaN(p) || p < 1 ? 1 : p;
   });
   const PAGE_SIZE = 12;
+
+  // Shared wishlist banner — ?saved=slug1,slug2,...
+  const sharedSlugs = useMemo(() => {
+    const raw = searchParams.get("saved");
+    if (!raw) return null;
+    return raw.split(",").filter(Boolean);
+  }, [searchParams]);
+  const sharedAdventures = useMemo(() =>
+    sharedSlugs ? adventures.filter(a => sharedSlugs.includes(a.slug)) : null,
+  [sharedSlugs]);
   const scrollToSlug = searchParams.get("scroll");
 
   // AI chat state
@@ -819,6 +830,32 @@ export default function ExploreClient() {
           </div>
         )}
 
+
+      {/* Shared wishlist banner */}
+      {sharedAdventures && sharedAdventures.length > 0 && (
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-8">
+          <div className="rounded-2xl p-5 mb-2" style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.25)" }}>
+            <div className="flex items-center gap-3 mb-4">
+              <Heart className="w-4 h-4 fill-[#ff5100] text-[#ff5100]" />
+              <span className="text-[#ff5100] text-sm font-semibold">Shared Wishlist — {sharedAdventures.length} adventure{sharedAdventures.length !== 1 ? "s" : ""}</span>
+            </div>
+            <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar">
+              {sharedAdventures.map(a => (
+                <Link key={a.id} href={`/experiences/${a.slug}`} className="group flex-none w-48 rounded-xl overflow-hidden transition-transform hover:-translate-y-0.5" style={{ border: "1px solid rgba(255,81,0,0.2)" }}>
+                  <div className="relative h-28">
+                    <Image src={a.heroImage} alt={a.name} fill className="object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  </div>
+                  <div className="p-2.5" style={{ background: "rgba(255,81,0,0.06)" }}>
+                    <p className="text-white text-xs font-semibold leading-snug line-clamp-1 group-hover:text-[#ff5100] transition-colors">{a.name}</p>
+                    <p className="text-white/40 text-[10px] mt-0.5">{a.type} · {a.state}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Grid */}
       <div className="max-w-7xl mx-auto px-5 lg:px-8 py-8 lg:py-10">

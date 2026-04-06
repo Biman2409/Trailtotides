@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import {
   Map as MapIcon, Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
-  Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users, ArrowRight
+  Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users, ArrowRight,
+  LocateFixed,
 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
@@ -63,26 +64,41 @@ type NominatimResult = {
 
 declare global { interface Window { L: typeof L } }
 
+function loadScript(src: string): Promise<void> {
+  return new Promise((resolve) => {
+    if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+    const s = document.createElement("script");
+    s.src = src;
+    s.onload = () => resolve();
+    document.head.appendChild(s);
+  });
+}
+
 function loadLeaflet(): Promise<typeof L> {
   return new Promise((resolve) => {
     if (typeof window === "undefined") return;
-    if (window.L) { resolve(window.L); return; }
-    if (!document.querySelector('link[href*="leaflet"]')) {
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
+    if (!document.querySelector('link[href*="leaflet.css"]')) {
+      const link = document.createElement("link"); link.rel = "stylesheet";
       link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
       document.head.appendChild(link);
     }
-    if (!document.querySelector('script[src*="leaflet"]')) {
-      const script = document.createElement("script");
-      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
-      script.onload = () => resolve(window.L);
-      document.head.appendChild(script);
-    } else {
-      const poll = setInterval(() => {
-        if (window.L) { clearInterval(poll); resolve(window.L); }
-      }, 50);
+    if (!document.querySelector('link[href*="MarkerCluster"]')) {
+      const lc = document.createElement("link"); lc.rel = "stylesheet";
+      lc.href = "https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css";
+      document.head.appendChild(lc);
+      const ld = document.createElement("link"); ld.rel = "stylesheet";
+      ld.href = "https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css";
+      document.head.appendChild(ld);
     }
+    if (window.L) {
+      // Leaflet loaded but maybe cluster not yet
+      loadScript("https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js")
+        .then(() => resolve(window.L));
+      return;
+    }
+    loadScript("https://unpkg.com/leaflet@1.9.4/dist/leaflet.js")
+      .then(() => loadScript("https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"))
+      .then(() => resolve(window.L));
   });
 }
 
@@ -241,6 +257,22 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
     });
   }
 
+  function addRouteOverlays(leaflet: typeof L, map: L.Map, list: Adventure[]) {
+    list.forEach((adv) => {
+      if (!adv.routePoints || adv.routePoints.length < 2) return;
+      const diffColor = difficultyColor[adv.difficulty] ?? "#6366f1";
+      leaflet.polyline(adv.routePoints, {
+        color: diffColor,
+        weight: 3,
+        opacity: 0.6,
+        dashArray: "6 5",
+        lineCap: "round",
+        lineJoin: "round",
+        interactive: false,
+      }).addTo(map);
+    });
+  }
+
   function addIndiaBorder(leaflet: typeof L, map: L.Map) {
     // Official India boundary — Survey of India composite (includes J&K, Aksai Chin, Arunachal Pradesh)
     fetch("/india-boundary.geojson")
@@ -280,8 +312,24 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
         maxZoom: 19, attribution: '&copy; OpenStreetMap contributors',
       }).addTo(map);
       mapInstanceRef.current = map;
-      markersLayerRef.current = leaflet.layerGroup().addTo(map);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const MCG = (leaflet as any).markerClusterGroup({
+        maxClusterRadius: 50,
+        spiderfyOnMaxZoom: true,
+        showCoverageOnHover: false,
+        iconCreateFunction: (cluster: any) => {
+          const count = cluster.getChildCount();
+          return leaflet.divIcon({
+            html: `<div style="width:38px;height:38px;border-radius:50%;background:#ff5100;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(255,81,0,0.5);border:2px solid rgba(255,255,255,0.9)">${count}</div>`,
+            className: "",
+            iconSize: [38, 38],
+          });
+        },
+      });
+      map.addLayer(MCG);
+      markersLayerRef.current = MCG;
       addMarkers(leaflet, advs);
+      addRouteOverlays(leaflet, map, advs);
       addIndiaBorder(leaflet, map);
     });
     return () => {
@@ -309,10 +357,20 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
     return <div ref={mapRef} className="w-full h-full" />;
 }
 
+function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 export default function MapPage() {
   const [mounted, setMounted] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const flyToRef = useRef<((lat: number, lng: number) => void) | null>(null);
+  const [nearMe, setNearMe] = useState<{ lat: number; lng: number } | null>(null);
+  const [nearMeLoading, setNearMeLoading] = useState(false);
 
   const [search, setSearch] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<AdventureType[]>([]);
@@ -380,6 +438,27 @@ export default function MapPage() {
     return true;
   });
 
+  // Sort by distance when Near Me is active
+  const sortedAdventures = nearMe
+    ? [...visibleAdventures].sort((a, b) =>
+        haversineKm(nearMe.lat, nearMe.lng, a.lat, a.lng) - haversineKm(nearMe.lat, nearMe.lng, b.lat, b.lng)
+      )
+    : visibleAdventures;
+
+  function handleNearMe() {
+    if (nearMe) { setNearMe(null); return; }
+    setNearMeLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setNearMe({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        flyToRef.current?.(pos.coords.latitude, pos.coords.longitude);
+        setNearMeLoading(false);
+      },
+      () => setNearMeLoading(false),
+      { timeout: 8000 }
+    );
+  }
+
   return (
     <div className="flex flex-col" style={{ height: "100dvh" }}>
       <Navbar />
@@ -402,6 +481,16 @@ export default function MapPage() {
 
             {/* Place search */}
             <PlaceSearch onSelect={(lat, lng) => flyToRef.current?.(lat, lng)} />
+
+            {/* Near Me */}
+            <button
+              onClick={handleNearMe}
+              title={nearMe ? "Clear Near Me" : "Adventures Near Me"}
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all shrink-0 ${nearMe ? "bg-[#ff5100] text-white" : "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#e8dfc8]"}`}
+            >
+              {nearMeLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <LocateFixed className="w-4 h-4" />}
+              <span className="hidden sm:inline">Near Me</span>
+            </button>
 
           {/* Filters toggle */}
           <button
@@ -816,7 +905,7 @@ export default function MapPage() {
       {/* Map — fills remaining height */}
       <div className="flex-1 relative overflow-hidden">
         {mounted ? (
-            <MapView adventures={visibleAdventures} flyToRef={flyToRef} />
+            <MapView adventures={sortedAdventures} flyToRef={flyToRef} />
         ) : (
           <div className="w-full h-full t-bg-surface2 flex items-center justify-center">
             <div className="text-white/40 text-sm">Loading map…</div>

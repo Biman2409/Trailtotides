@@ -3,6 +3,7 @@
 import { Heart, LogIn, GitCompareArrows, CheckCheck } from "lucide-react";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCompare } from "@/contexts/CompareContext";
+import CheckInButton from "@/components/ui/custom/CheckInButton";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
@@ -91,6 +92,9 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
           : <><Heart className={`w-3.5 h-3.5 ${saved ? "fill-[#ff7d47]" : ""}`} />{saved ? "Wishlisted" : "Wishlist"}</>
         }
       </button>
+
+      {/* ── Been There (third) ── */}
+      <CheckInButton slug={adventure.slug} variant="page" className={btnBase} />
 
     </div>
   );

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, Mountain, LogOut, Shield, User, ChevronDown, GitCompareArrows, Compass, Heart } from "lucide-react";
+import { Menu, X, Mountain, LogOut, Shield, User, ChevronDown, GitCompareArrows, Compass, Heart, Share2, Check } from "lucide-react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { useCompare, MAX } from "@/contexts/CompareContext";
@@ -13,6 +13,8 @@ import { adventures } from "@/lib/data";
 const navLinks = [
   { href: "/explore", label: "Explore" },
   { href: "/map", label: "Map" },
+  { href: "/calendar", label: "Calendar" },
+  { href: "/planner", label: "Planner" },
   { href: "/matchmaker", label: "Matchmaker" },
   { href: "/stories", label: "Stories" },
 ];
@@ -35,6 +37,7 @@ export default function Navbar() {
   const { saved, toggle, clearAll } = useWishlist();
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const wishlistRef = useRef<HTMLDivElement>(null);
+  const [wishlistCopied, setWishlistCopied] = useState(false);
   const savedList = adventures.filter(a => saved.has(a.slug));
 
   // Auth state
@@ -245,9 +248,23 @@ export default function Navbar() {
                         </div>
                       ))}
                     </div>
-                    <div className="px-4 py-2.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                    <div className="px-4 py-2.5 flex items-center justify-between" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                       <button onClick={() => { clearAll(); setWishlistOpen(false); }} className="text-xs text-white/30 hover:text-red-400 transition-colors">
                         Clear all
+                      </button>
+                      <button
+                        onClick={() => {
+                          const slugs = savedList.map(a => a.slug).join(",");
+                          const url = `${window.location.origin}/explore?saved=${slugs}`;
+                          navigator.clipboard.writeText(url).then(() => {
+                            setWishlistCopied(true);
+                            setTimeout(() => setWishlistCopied(false), 2000);
+                          });
+                        }}
+                        className="flex items-center gap-1 text-xs text-white/30 hover:text-[#ff5100] transition-colors"
+                      >
+                        {wishlistCopied ? <Check className="w-3 h-3 text-[#ff5100]" /> : <Share2 className="w-3 h-3" />}
+                        {wishlistCopied ? "Copied!" : "Share list"}
                       </button>
                     </div>
                   </div>
