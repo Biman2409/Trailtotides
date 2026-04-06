@@ -143,9 +143,6 @@ export default async function OperatorsPage() {
                         </div>
                         <div className="min-w-0">
                           <h2 className="text-white/90 font-semibold text-sm leading-tight truncate">{op.company_name}</h2>
-                          {op.contact_name && (
-                            <p className="text-white/30 text-[11px] mt-0.5 truncate">{op.contact_name}</p>
-                          )}
                         </div>
                       </div>
                       {op.website && (
