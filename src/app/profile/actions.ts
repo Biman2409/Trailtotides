@@ -28,7 +28,7 @@ export async function updateProfile(formData: FormData) {
   }
 
   // Update auth user (email + metadata)
-  await adminClient.auth.admin.updateUser(user.id, {
+  await adminClient.auth.admin.updateUserById(user.id, {
     ...(newEmail && newEmail !== user.email ? { email: newEmail, email_confirm: true } : {}),
     user_metadata: {
       ...user.user_metadata,

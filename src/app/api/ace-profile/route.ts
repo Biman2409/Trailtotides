@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
-  await admin.auth.admin.updateUser(user.id, {
+  await admin.auth.admin.updateUserById(user.id, {
     user_metadata: {
       ...user.user_metadata,
       ace_profile: body,
