@@ -271,6 +271,45 @@ export async function updateOperatorSubmission(formData: FormData) {
   return { success: "Changes submitted for review." };
 }
 
+export async function updateOperatorProfile(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated." };
+
+  const adminClient = await createAdminClient();
+  const existing = await getOperatorProfile(user.id);
+  if (!existing) return { error: "Operator profile not found." };
+
+  const contact_name = (formData.get("contact_name") as string).trim();
+  const company_name = (formData.get("company_name") as string).trim();
+  const email = (formData.get("email") as string).trim();
+  const phone = (formData.get("phone") as string).trim();
+  const website = (formData.get("website") as string).trim() || null;
+
+  const updated: OperatorProfile = {
+    ...existing,
+    contact_name,
+    company_name,
+    email,
+    phone,
+    website,
+  };
+
+  await writeJsonFile(adminClient, "operator-profiles", `${user.id}.json`, updated);
+
+  // Keep auth user metadata in sync
+  await adminClient.auth.admin.updateUserById(user.id, {
+    ...(email !== user.email ? { email, email_confirm: true } : {}),
+    user_metadata: {
+      ...user.user_metadata,
+      full_name: contact_name,
+      company_name,
+    },
+  });
+
+  return { success: "Profile updated." };
+}
+
 export async function approveOperatorSubmission(submissionId: string) {
   const adminClient = await createAdminClient();
   const sub = (await readJsonFile(
