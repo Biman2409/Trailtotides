@@ -207,8 +207,8 @@ export default async function OperatorsPage() {
                                   {op.prices[adv.slug] && (
                                     <>
                                       <span className="w-px h-2.5 bg-white/10" />
-                                      <span className="text-[10px] font-semibold" style={{ color: "rgba(255,125,71,0.8)" }}>
-                                        {op.prices[adv.slug]}
+                                      <span className="text-[10px] font-semibold text-emerald-400">
+                                        {op.prices[adv.slug]} onwards
                                       </span>
                                     </>
                                   )}
