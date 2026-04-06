@@ -104,7 +104,7 @@ export default async function OperatorsPage() {
           <div>
             <p className="text-[#ff5100] text-xs font-bold tracking-[0.25em] uppercase mb-4">Operators Directory</p>
             <h1 className="text-white text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.02]">
-              Guided by<br className="hidden sm:block" /> the Best
+              Guided by the Best
             </h1>
             <p className="text-white/45 text-base mt-4 max-w-lg leading-relaxed font-light">
               Vetted companies running adventures across India&apos;s wildest terrain — from Ladakh passes to Andaman reefs.
