@@ -41,123 +41,154 @@ function AdventureSearch({
 }) {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    setTimeout(() => inputRef.current?.focus(), 60);
+    function handleKey(e: KeyboardEvent) { if (e.key === "Escape") onClose(); }
     function handleClick(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) onClose();
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) onClose();
     }
+    document.addEventListener("keydown", handleKey);
     document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+      document.removeEventListener("mousedown", handleClick);
+    };
   }, [onClose]);
 
   const results = adventures
     .filter(a => !excludeIds.has(a.id) && (!query || a.name.toLowerCase().includes(query.toLowerCase())))
-    .slice(0, 7);
+    .slice(0, 8);
 
   return (
-    <div
-      ref={containerRef}
-      className="absolute inset-0 z-30 rounded-xl overflow-hidden flex flex-col"
-      style={{ background: "rgba(13,16,24,0.98)", border: "1px solid rgba(255,81,0,0.25)", backdropFilter: "blur(12px)" }}
-    >
-      {/* Search input */}
-      <div className="flex items-center gap-2 px-3 py-2.5 border-b" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
-        <Search className="w-3.5 h-3.5 text-white/30 shrink-0" />
-        <input
-          ref={inputRef}
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          placeholder="Search adventures…"
-          className="flex-1 bg-transparent text-white text-xs placeholder-white/25 outline-none"
-        />
-        <button onClick={onClose} className="text-white/30 hover:text-white/60 transition-colors">
-          <X className="w-3.5 h-3.5" />
-        </button>
-      </div>
-      {/* Results */}
-      <div className="overflow-y-auto flex-1">
-        {results.length === 0 ? (
-          <p className="text-white/25 text-xs text-center py-5">No adventures found</p>
-        ) : results.map(a => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4" style={{ background: "rgba(0,0,0,0.72)", backdropFilter: "blur(8px)" }}>
+      <div
+        ref={panelRef}
+        className="w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl"
+        style={{ background: "rgba(11,13,20,0.99)", border: "1px solid rgba(255,255,255,0.09)" }}
+      >
+        {/* Search bar */}
+        <div className="flex items-center gap-3 px-4 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+          <Search className="w-4 h-4 shrink-0" style={{ color: "#ff5100" }} />
+          <input
+            ref={inputRef}
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder="Search any adventure to compare…"
+            className="flex-1 bg-transparent text-white text-sm placeholder-white/20 outline-none"
+          />
           <button
-            key={a.id}
-            onClick={() => { onSelect(a); onClose(); }}
-            className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 transition-colors text-left"
+            onClick={onClose}
+            className="w-7 h-7 rounded-lg flex items-center justify-center transition-all hover:bg-white/8 shrink-0"
+            style={{ color: "rgba(255,255,255,0.25)" }}
           >
-            <div className="w-9 h-9 rounded-lg overflow-hidden shrink-0 relative">
-              <Image src={a.heroImage} alt={a.name} fill quality={60} className="object-cover" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white text-xs font-semibold leading-tight truncate">{a.name}</p>
-              <p className="text-white/35 text-[10px] mt-0.5 truncate">{a.type} · {a.state}</p>
-            </div>
+            <X className="w-3.5 h-3.5" />
           </button>
-        ))}
+        </div>
+
+        {/* Results */}
+        <div className="overflow-y-auto" style={{ maxHeight: "360px" }}>
+          {results.length === 0 ? (
+            <div className="flex flex-col items-center py-12 gap-3">
+              <Search className="w-6 h-6 text-white/10" />
+              <p className="text-white/20 text-sm">No adventures found</p>
+            </div>
+          ) : results.map((a, idx) => (
+            <button
+              key={a.id}
+              onClick={() => { onSelect(a); onClose(); }}
+              className="w-full flex items-center gap-4 px-4 py-3 text-left transition-colors"
+              style={{ borderBottom: idx < results.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none" }}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,81,0,0.07)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+            >
+              {/* Thumbnail */}
+              <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 relative">
+                <Image src={a.heroImage} alt={a.name} fill quality={70} className="object-cover" />
+              </div>
+              {/* Text */}
+              <div className="flex-1 min-w-0">
+                <p className="text-white text-sm font-semibold leading-snug truncate">{a.name}</p>
+                <p className="text-white/35 text-xs mt-0.5 truncate">{a.type} · {a.state}</p>
+              </div>
+              {/* Difficulty */}
+              <div className="shrink-0 opacity-70">
+                <DifficultyMeter difficulty={computeDifficulty(getACE(a))} />
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="px-4 py-2.5 flex items-center justify-between" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+          <p className="text-white/15 text-[10px]">{results.length} result{results.length !== 1 ? "s" : ""}</p>
+          <p className="text-white/15 text-[10px]">Esc to close</p>
+        </div>
       </div>
     </div>
   );
 }
 
-// ─── Compare tray (slim bar at top of wishlist section) ───────────────────────
+// ─── Compare tray ─────────────────────────────────────────────────────────────
 function CompareTray({ onCompareClick }: { onCompareClick: () => void }) {
-  const { selected, remove, add, isFull, isSelected } = useCompare();
-  const [searchSlotIndex, setSearchSlotIndex] = useState<number | null>(null);
+  const { selected, remove, add, isFull } = useCompare();
+  const [searchOpen, setSearchOpen] = useState(false);
   const excludeIds = new Set(selected.map(a => a.id));
-
   const slots = Array.from({ length: MAX }, (_, i) => selected[i] ?? null);
 
   function handleSelect(a: Adventure) {
-    if (isFull) { toast.error("Remove an adventure first."); return; }
     add(a);
-    setSearchSlotIndex(null);
+    setSearchOpen(false);
     toast.success(`${a.name} added to compare`);
   }
 
   return (
-    <div
-      className="rounded-2xl p-4 mb-10"
-      style={{ background: "rgba(255,81,0,0.04)", border: "1px solid rgba(255,81,0,0.12)" }}
-    >
-      {/* Label row */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <GitCompare className="w-3.5 h-3.5" style={{ color: "#ff5100" }} />
-          <span className="text-white/60 text-xs font-semibold tracking-wide">Compare Adventures</span>
-          {selected.length > 0 && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full font-bold" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>
-              {selected.length}/{MAX}
-            </span>
+    <>
+      {searchOpen && (
+        <AdventureSearch
+          excludeIds={excludeIds}
+          onSelect={handleSelect}
+          onClose={() => setSearchOpen(false)}
+        />
+      )}
+
+      <div
+        className="rounded-2xl p-4 mb-10"
+        style={{ background: "rgba(255,81,0,0.04)", border: "1px solid rgba(255,81,0,0.12)" }}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <GitCompare className="w-3.5 h-3.5" style={{ color: "#ff5100" }} />
+            <span className="text-white/60 text-xs font-semibold tracking-wide">Compare Adventures</span>
+            {selected.length > 0 && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full font-bold" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>
+                {selected.length}/{MAX}
+              </span>
+            )}
+          </div>
+          {selected.length >= 2 && (
+            <button
+              onClick={onCompareClick}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[11px] font-semibold text-white transition-all hover:-translate-y-0.5"
+              style={{ background: "#ff5100", boxShadow: "0 3px 10px rgba(255,81,0,0.35)" }}
+            >
+              <GitCompare className="w-3 h-3" />
+              Compare now
+            </button>
           )}
         </div>
-        {selected.length >= 2 && (
-          <button
-            onClick={onCompareClick}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[11px] font-semibold text-white transition-all hover:-translate-y-0.5"
-            style={{ background: "#ff5100", boxShadow: "0 3px 10px rgba(255,81,0,0.35)" }}
-          >
-            <GitCompare className="w-3 h-3" />
-            Compare now
-          </button>
-        )}
-      </div>
 
-      {/* Slots */}
-      <div className="grid grid-cols-3 gap-3">
-        {slots.map((adventure, i) => (
-          <div key={i} className="relative" style={{ minHeight: "52px" }}>
-            {searchSlotIndex === i ? (
-              <AdventureSearch
-                excludeIds={excludeIds}
-                onSelect={handleSelect}
-                onClose={() => setSearchSlotIndex(null)}
-              />
-            ) : adventure ? (
+        {/* Slots */}
+        <div className="grid grid-cols-3 gap-3">
+          {slots.map((adventure, i) =>
+            adventure ? (
               /* Filled slot */
               <div
-                className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 h-full"
-                style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.25)" }}
+                key={i}
+                className="flex items-center gap-2.5 rounded-xl px-3 py-2.5"
+                style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.25)", minHeight: "52px" }}
               >
                 <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 relative">
                   <Image src={adventure.heroImage} alt={adventure.name} fill quality={60} className="object-cover" />
@@ -177,25 +208,26 @@ function CompareTray({ onCompareClick }: { onCompareClick: () => void }) {
             ) : (
               /* Empty slot */
               <button
-                onClick={() => setSearchSlotIndex(i)}
+                key={i}
+                onClick={() => !isFull && setSearchOpen(true)}
                 disabled={isFull}
-                className="w-full h-full rounded-xl flex items-center justify-center gap-2 transition-all hover:border-white/20 disabled:opacity-40 disabled:cursor-not-allowed group"
+                className="rounded-xl flex items-center justify-center gap-2 transition-all hover:border-white/20 disabled:opacity-30 disabled:cursor-not-allowed group"
                 style={{ border: "1px dashed rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.02)", minHeight: "52px" }}
               >
-                <Search className="w-3 h-3 text-white/20 group-hover:text-white/40 transition-colors" />
-                <span className="text-white/25 text-[11px] group-hover:text-white/40 transition-colors">Add adventure</span>
+                <Search className="w-3 h-3 text-white/20 group-hover:text-[#ff5100] transition-colors" />
+                <span className="text-white/25 text-[11px] group-hover:text-white/50 transition-colors">Add adventure</span>
               </button>
-            )}
-          </div>
-        ))}
-      </div>
+            )
+          )}
+        </div>
 
-      {selected.length === 0 && (
-        <p className="text-white/25 text-[11px] mt-3 text-center">
-          Select up to {MAX} adventures from your wishlist below, or search for any adventure
-        </p>
-      )}
-    </div>
+        {selected.length === 0 && (
+          <p className="text-white/20 text-[10px] mt-3 text-center">
+            Select adventures from your wishlist below, or click a slot to search
+          </p>
+        )}
+      </div>
+    </>
   );
 }
 
