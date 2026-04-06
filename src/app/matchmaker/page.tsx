@@ -3,7 +3,6 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import MatchmakerClient from "./MatchmakerClient";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
-import { Mountain } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Find Your Mountain",
@@ -30,12 +29,6 @@ export default function MatchmakerPage() {
       <Navbar />
       <main className="min-h-screen relative">
         <MatchmakerClient />
-        <div className="fixed bottom-4 right-4 z-[100] backdrop-blur-md rounded-xl border border-white/10 px-4 py-3 shadow-xl" style={{ background: "rgba(15,15,20,0.85)" }}>
-          <div className="flex items-center gap-2 text-white/40 text-xs">
-            <Mountain className="w-3.5 h-3.5" />
-            <span>TRAIL TO TIDES · Adventure Matchmaker</span>
-          </div>
-        </div>
       </main>
       <Footer />
     </>
