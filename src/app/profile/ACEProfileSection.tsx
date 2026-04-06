@@ -48,28 +48,50 @@ export default function ACEProfileSection() {
 
   if (!mounted) return null;
 
+  // ── Empty state ────────────────────────────────────────────────────────────
   if (!stored) {
     const U = RANKS[0];
     return (
-      <div className="rounded-2xl overflow-hidden" style={{ background: `linear-gradient(160deg, ${U.color}0e 0%, rgba(14,14,18,0) 60%)`, border: `1px solid ${U.color}22` }}>
-        <div className="flex items-center justify-between px-5 pt-5 pb-4">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0" style={{ background: `${U.color}20`, color: U.color }}>
-              <div className="scale-[1.4]">{U.icon}</div>
-            </div>
-            <div>
-              <p className="text-[9px] uppercase tracking-[0.18em] font-semibold text-white/30 mb-0.5">Adventure Tier</p>
-              <p className="text-lg font-bold leading-none" style={{ color: U.color }}>Uncharted</p>
+      <div
+        className="rounded-2xl sm:rounded-3xl overflow-hidden border relative"
+        style={{ background: `linear-gradient(150deg, ${U.color}14 0%, rgba(14,14,18,0.0) 60%)`, borderColor: `${U.color}25` }}
+      >
+        <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: U.color }} />
+
+        {/* Identity row */}
+        <div className="relative flex items-start gap-4 sm:gap-5 px-5 sm:px-7 pt-5 sm:pt-7 pb-4 sm:pb-5">
+          <div
+            className="w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] rounded-2xl flex items-center justify-center shrink-0"
+            style={{ background: `${U.color}18`, color: U.color, boxShadow: `0 0 32px ${U.color}38`, border: `1px solid ${U.color}28` }}
+          >
+            <div className="scale-[1.55] sm:scale-[1.75]">{U.icon}</div>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-1">Adventure Tier</p>
+            <h1 className="text-[26px] sm:text-[32px] font-black tracking-tight leading-none" style={{ color: U.color }}>Uncharted</h1>
+            <div className="flex items-center gap-[3px] mt-2.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <span key={i} className="text-[13px] leading-none" style={{ color: "rgba(255,255,255,0.09)" }}>★</span>
+              ))}
+              <span className="text-white/22 text-[10px] ml-2">Rank 0 of 5</span>
             </div>
           </div>
         </div>
-        <div className="mx-5 h-px" style={{ background: `${U.color}18` }} />
-        <div className="px-5 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+
+        {/* Divider */}
+        <div className="mx-5 sm:mx-7 h-px" style={{ background: `${U.color}14` }} />
+
+        {/* CTA */}
+        <div className="px-5 sm:px-7 pt-4 pb-5 sm:pb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <p className="text-white/60 text-sm font-medium mb-1">Your capability is unassessed</p>
             <p className="text-white/35 text-xs leading-relaxed max-w-sm">Take the 8-question ACE assessment to map your physical profile and unlock your adventure rank.</p>
           </div>
-          <Link href="/matchmaker" className="shrink-0 inline-flex items-center gap-2 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-all hover:brightness-110 hover:-translate-y-0.5" style={{ background: "#ff5100" }}>
+          <Link
+            href="/matchmaker"
+            className="shrink-0 inline-flex items-center gap-2 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-all hover:brightness-110 hover:-translate-y-0.5"
+            style={{ background: "#ff5100" }}
+          >
             Take Assessment
           </Link>
         </div>
@@ -77,157 +99,158 @@ export default function ACEProfileSection() {
     );
   }
 
+  // ── Ranked state ────────────────────────────────────────────────────────────
   const totalScore = Object.values(stored.ace).reduce((a, b) => a + b, 0);
   const currentRankIndex = totalScore >= 40 ? 5 : totalScore >= 32 ? 4 : totalScore >= 24 ? 3 : totalScore >= 16 ? 2 : totalScore >= 8 ? 1 : 0;
   const currentRank = RANKS[currentRankIndex];
   const nextRank = RANKS[currentRankIndex + 1] ?? null;
-  const progressPct = nextRank
+  const totalRanks = RANKS.length;
+  const rawPct = nextRank
     ? Math.min(100, Math.round(((totalScore - currentRank.minScore) / (nextRank.minScore - currentRank.minScore)) * 100))
     : 100;
-  const totalRanks = RANKS.length;
+  const progressPct = Math.max(0, rawPct);
   const ptsNeeded = nextRank ? nextRank.minScore - totalScore : 0;
+  const justUnlocked = nextRank !== null && totalScore === currentRank.minScore && currentRankIndex > 0;
 
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ background: `linear-gradient(160deg, ${currentRank.color}0e 0%, rgba(14,14,18,0) 60%)`, border: `1px solid ${currentRank.color}22` }}>
+    <div
+      className="rounded-2xl sm:rounded-3xl overflow-hidden border relative"
+      style={{ background: `linear-gradient(150deg, ${currentRank.color}14 0%, rgba(14,14,18,0.0) 60%)`, borderColor: `${currentRank.color}25` }}
+    >
+      <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: currentRank.color }} />
 
-      {/* ── Two-column layout: radar left | rank right ── */}
-      <div className="flex flex-col sm:flex-row">
-
-        {/* Left: ACE Radar */}
+      {/* ── Identity + Radar row ── */}
+      <div className="relative flex items-start gap-4 sm:gap-5 px-5 sm:px-7 pt-5 sm:pt-7 pb-4 sm:pb-5">
+        {/* Tier icon */}
         <div
-          className="flex flex-col items-center gap-3 p-5 sm:p-6 shrink-0"
-          style={{ borderRight: "1px solid rgba(255,255,255,0.05)", background: "radial-gradient(ellipse at center, rgba(255,81,0,0.05) 0%, transparent 70%)" }}
+          className="w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] rounded-2xl flex items-center justify-center shrink-0"
+          style={{ background: `${currentRank.color}18`, color: currentRank.color, boxShadow: `0 0 32px ${currentRank.color}38`, border: `1px solid ${currentRank.color}28` }}
         >
-          <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/30 self-start">Capability Breakdown</p>
-          <ACERadar ace={stored.ace} size={200} showLabels />
+          <div className="scale-[1.55] sm:scale-[1.75]">{currentRank.icon}</div>
         </div>
 
-        {/* Right: tier header + progress */}
-        <div className="flex-1 min-w-0 flex flex-col">
-
-          {/* Tier header */}
-          <div className="flex items-center justify-between px-5 pt-5 pb-4">
-            <div className="flex items-center gap-3">
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                style={{ background: `${currentRank.color}20`, color: currentRank.color, boxShadow: `0 0 20px ${currentRank.color}40` }}
-              >
-                <div className="scale-[1.3]">{currentRank.icon}</div>
-              </div>
-              <div>
-                <p className="text-[9px] uppercase tracking-[0.18em] font-semibold text-white/30 mb-0.5">Adventure Tier</p>
-                <p className="text-lg font-bold leading-none" style={{ color: currentRank.color }}>{currentRank.label}</p>
-              </div>
-            </div>
-            <div className="flex flex-col items-end gap-1">
-              <div className="flex gap-0.5">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <span key={i} className="text-sm" style={{ color: i < currentRank.stars ? currentRank.color : "rgba(255,255,255,0.08)" }}>★</span>
-                ))}
-              </div>
-              <span className="text-[9px] font-semibold text-white/25">Rank {currentRank.stars} / 5</span>
-            </div>
+        {/* Tier label */}
+        <div className="flex-1 min-w-0">
+          <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-1">Adventure Tier</p>
+          <h1 className="text-[26px] sm:text-[32px] font-black tracking-tight leading-none" style={{ color: currentRank.color }}>{currentRank.label}</h1>
+          <div className="flex items-center gap-[3px] mt-2.5">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <span key={i} className="text-[13px] leading-none" style={{ color: i < currentRank.stars ? currentRank.color : "rgba(255,255,255,0.09)" }}>★</span>
+            ))}
+            <span className="text-white/22 text-[10px] ml-2">Rank {currentRank.stars} of 5</span>
           </div>
+        </div>
 
-          {/* Divider */}
-          <div className="mx-5 h-px" style={{ background: `${currentRank.color}18` }} />
+        {/* ACE Radar — right side on sm+ */}
+        <div
+          className="hidden sm:flex shrink-0 pl-4 border-l self-stretch items-start flex-col gap-2"
+          style={{ borderColor: `${currentRank.color}18` }}
+        >
+          <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/30">Capability Breakdown</p>
+          <ACERadar ace={stored.ace} size={170} showLabels />
+        </div>
+      </div>
 
-          {/* Progress */}
-          <div className="px-5 pt-4 pb-5 flex flex-col gap-3 flex-1 justify-center">
-            {nextRank ? (
-              <>
-                <div className="flex items-end justify-between">
-                  <div>
-                    <span className="text-4xl font-black tabular-nums tracking-tight leading-none" style={{ color: currentRank.color }}>
-                      {progressPct}<span className="text-xl font-bold opacity-70">%</span>
-                    </span>
-                    <p className="text-[10px] text-white/35 mt-1">
-                      to <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span>
-                    </p>
-                  </div>
-                  <div className="text-right pb-0.5">
-                    <p className="text-2xl font-bold tabular-nums text-white/80">{ptsNeeded}</p>
-                    <p className="text-[10px] text-white/30">pts needed</p>
-                  </div>
+      {/* ACE Radar — mobile: below identity */}
+      <div className="sm:hidden px-5 pb-4 flex flex-col items-center gap-2">
+        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/30 self-start">Capability Breakdown</p>
+        <ACERadar ace={stored.ace} size={190} showLabels />
+      </div>
+
+      {/* Divider */}
+      <div className="mx-5 sm:mx-7 h-px" style={{ background: `${currentRank.color}14` }} />
+
+      {/* ── Rank progression ── */}
+      <div className="pt-4 sm:pt-5 pb-5 sm:pb-6">
+        <div className="px-5 sm:px-7">
+          {nextRank ? (
+            justUnlocked ? (
+              <div className="flex items-center gap-3 mb-4 py-1">
+                <div className="flex flex-col">
+                  <span className="text-[13px] font-bold tracking-wide" style={{ color: currentRank.color }}>Rank just unlocked!</span>
+                  <p className="text-[11px] text-white/35 mt-0.5">
+                    Score <span className="font-semibold text-white/55">{ptsNeeded} more pts</span> to reach <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span>
+                  </p>
                 </div>
-                <div className="flex flex-col gap-2.5">
-                  {/* Bar */}
-                  <div className="relative h-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
-                    <div
-                      className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
-                      style={{
-                        width: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
-                        background: `linear-gradient(to right, ${RANKS[1].color}cc, ${currentRank.color})`,
-                        boxShadow: `0 0 12px ${currentRank.color}50`,
-                      }}
-                    />
-                    {RANKS.slice(1, -1).map((rank, i) => (
-                      <div key={rank.label} className="absolute inset-y-0 w-px" style={{ left: `${((i + 1) / (totalRanks - 1)) * 100}%`, background: "rgba(14,14,18,0.7)" }} />
-                    ))}
-                    <div
-                      className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 transition-all duration-700"
-                      style={{
-                        left: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
-                        background: currentRank.color,
-                        borderColor: "#0e0e12",
-                        boxShadow: `0 0 10px ${currentRank.color}`,
-                      }}
-                    />
-                  </div>
-                  {/* Rank labels below bar */}
-                  <div className="relative h-5">
-                    {RANKS.map((rank, i) => {
-                      const isCurrent = i === currentRankIndex;
-                      const isUnlocked = i < currentRankIndex;
-                      const pct = (i / (totalRanks - 1)) * 100;
-                      return (
-                        <div
-                          key={rank.label}
-                          className="absolute flex flex-col items-center gap-0.5"
-                          style={{
-                            left: `${pct}%`,
-                            transform: i === 0 ? "none" : i === totalRanks - 1 ? "translateX(-100%)" : "translateX(-50%)",
-                          }}
-                        >
-                          <span
-                            className="text-[7.5px] font-semibold leading-none whitespace-nowrap"
-                            style={{
-                              color: isCurrent ? currentRank.color : isUnlocked ? `${rank.color}60` : "rgba(255,255,255,0.18)",
-                            }}
-                          >
-                            {rank.label}
-                          </span>
-                          {isCurrent && (
-                            <span
-                              className="text-[6px] font-bold leading-none whitespace-nowrap uppercase tracking-wide"
-                              style={{ color: `${currentRank.color}80` }}
-                            >
-                              you
-                            </span>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </>
+              </div>
             ) : (
-              <div className="flex flex-col gap-3 py-2">
-                <div className="w-full h-2.5 rounded-full" style={{ background: `linear-gradient(to right, ${RANKS[1].color}, #a78bfa)`, boxShadow: "0 0 14px #a78bfa50" }} />
-                <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">The absolute pinnacle</p>
+              <div className="flex items-end justify-between mb-4">
+                <div>
+                  <div className="flex items-baseline gap-0.5 leading-none">
+                    <span className="text-[38px] sm:text-[48px] font-black tabular-nums tracking-tight" style={{ color: currentRank.color }}>{progressPct}</span>
+                    <span className="text-lg sm:text-xl font-bold ml-0.5" style={{ color: `${currentRank.color}70` }}>%</span>
+                  </div>
+                  <p className="text-[11px] text-white/30 mt-1 leading-none">
+                    to reach <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span>
+                  </p>
+                </div>
+                <div className="text-right pb-1">
+                  <p className="text-[24px] sm:text-[30px] font-black tabular-nums leading-none text-white/70">{ptsNeeded}</p>
+                  <p className="text-[11px] text-white/28 mt-1 leading-none">pts needed</p>
+                </div>
               </div>
-            )}
+            )
+          ) : (
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
+              <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">The absolute pinnacle</p>
+            </div>
+          )}
+        </div>
 
-            <Link
-              href="/matchmaker"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:brightness-110 mt-1 w-fit"
-              style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.18)", color: "#ff7d47" }}
-            >
-              <RotateCcw className="w-3 h-3" />
-              Retake Assessment
-            </Link>
+        {/* Bar + labels */}
+        <div className="px-5 sm:px-7">
+          <div className="relative h-[10px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.055)" }}>
+            <div
+              className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
+              style={{
+                width: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
+                background: `linear-gradient(to right, ${RANKS[1].color}bb, ${currentRank.color})`,
+                boxShadow: `0 0 16px ${currentRank.color}55`,
+              }}
+            />
+            {RANKS.slice(1, -1).map((rank, i) => (
+              <div key={rank.label} className="absolute inset-y-0 w-px bg-[rgba(14,14,18,0.65)]" style={{ left: `${((i + 1) / (totalRanks - 1)) * 100}%` }} />
+            ))}
+            <div
+              className="absolute w-[18px] h-[18px] rounded-full border-2 transition-all duration-700"
+              style={{
+                left: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+                background: currentRank.color,
+                borderColor: "#0e0e12",
+                boxShadow: `0 0 14px ${currentRank.color}`,
+              }}
+            />
           </div>
+          <div className="relative h-[18px] overflow-hidden">
+            {RANKS.map((rank, i) => (
+              <span
+                key={rank.label}
+                className="absolute text-[7px] sm:text-[7.5px] font-semibold leading-none whitespace-nowrap top-0"
+                style={{
+                  left: `${(i / (totalRanks - 1)) * 100}%`,
+                  transform: i === 0 ? "none" : i === totalRanks - 1 ? "translateX(-100%)" : "translateX(-50%)",
+                  color: i === currentRankIndex ? currentRank.color : i < currentRankIndex ? `${rank.color}50` : "rgba(255,255,255,0.13)",
+                }}
+              >
+                {rank.label}
+              </span>
+            ))}
+          </div>
+        </div>
 
+        {/* Retake button */}
+        <div className="px-5 sm:px-7 mt-4">
+          <Link
+            href="/matchmaker"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:brightness-110 w-fit"
+            style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.18)", color: "#ff7d47" }}
+          >
+            <RotateCcw className="w-3 h-3" />
+            Retake Assessment
+          </Link>
         </div>
       </div>
     </div>
