@@ -13,6 +13,8 @@ import DifficultyMeter from "@/components/ui/custom/DifficultyMeter";
 import SaveButton from "@/components/ui/custom/SaveButton";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import type { Month } from "@/lib/data";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 const MONTHS: Month[] = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
@@ -37,59 +39,67 @@ export default function WishlistPage() {
   // ── Loading / hydrating ──────────────────────────────────────
   if (loggedIn === null || loading) {
     return (
-      <main className="min-h-screen px-5 lg:px-8 py-16 lg:py-20" style={{ background: "var(--bg-base)" }}>
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-10">
-            <div className="flex items-center gap-2.5 mb-2">
-              <div className="w-4 h-4 rounded-full bg-white/10 animate-pulse" />
-              <div className="h-2.5 w-28 rounded bg-white/10 animate-pulse" />
-            </div>
-            <div className="h-9 w-52 rounded-xl bg-white/6 animate-pulse mb-2" />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {[1,2,3,4].map(i => (
-              <div key={i} className="rounded-2xl overflow-hidden animate-pulse" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <div className="aspect-[4/3] bg-white/5" />
-                <div className="p-3 space-y-2">
-                  <div className="h-3 bg-white/5 rounded w-3/4" />
-                  <div className="h-3 bg-white/5 rounded w-1/2" />
-                </div>
+      <>
+        <Navbar />
+        <main className="min-h-screen px-5 lg:px-8 py-16 lg:py-20" style={{ background: "var(--bg-base)" }}>
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-10">
+              <div className="flex items-center gap-2.5 mb-2">
+                <div className="w-4 h-4 rounded-full bg-white/10 animate-pulse" />
+                <div className="h-2.5 w-28 rounded bg-white/10 animate-pulse" />
               </div>
-            ))}
+              <div className="h-9 w-52 rounded-xl bg-white/6 animate-pulse mb-2" />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              {[1,2,3,4].map(i => (
+                <div key={i} className="rounded-2xl overflow-hidden animate-pulse" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div className="aspect-[4/3] bg-white/5" />
+                  <div className="p-3 space-y-2">
+                    <div className="h-3 bg-white/5 rounded w-3/4" />
+                    <div className="h-3 bg-white/5 rounded w-1/2" />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+        <Footer />
+      </>
     );
   }
 
   // ── Not logged in ────────────────────────────────────────────
   if (loggedIn === false) {
     return (
-      <main className="min-h-screen flex items-center justify-center px-5" style={{ background: "var(--bg-base)" }}>
-        <div
-          className="max-w-md w-full rounded-3xl p-10 flex flex-col items-center text-center gap-6"
-          style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.14)" }}
-        >
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center"
-            style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.2)" }}>
-            <Heart className="w-7 h-7" style={{ color: "#ff5100" }} />
-          </div>
-          <div>
-            <h1 className="text-white text-2xl font-bold tracking-tight mb-2">Your Wishlist</h1>
-            <p className="text-white/40 text-sm leading-relaxed">
-              Log in to save adventures and access your wishlist from anywhere.
-            </p>
-          </div>
-          <button
-            onClick={() => router.push("/auth/login")}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:-translate-y-0.5"
-            style={{ background: "#ff5100", boxShadow: "0 4px 14px rgba(255,81,0,0.35)" }}
+      <>
+        <Navbar />
+        <main className="min-h-screen flex items-center justify-center px-5" style={{ background: "var(--bg-base)" }}>
+          <div
+            className="max-w-md w-full rounded-3xl p-10 flex flex-col items-center text-center gap-6"
+            style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.14)" }}
           >
-            <LogIn className="w-4 h-4" />
-            Log in to view wishlist
-          </button>
-        </div>
-      </main>
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center"
+              style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.2)" }}>
+              <Heart className="w-7 h-7" style={{ color: "#ff5100" }} />
+            </div>
+            <div>
+              <h1 className="text-white text-2xl font-bold tracking-tight mb-2">Your Wishlist</h1>
+              <p className="text-white/40 text-sm leading-relaxed">
+                Log in to save adventures and access your wishlist from anywhere.
+              </p>
+            </div>
+            <button
+              onClick={() => router.push("/auth/login")}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:-translate-y-0.5"
+              style={{ background: "#ff5100", boxShadow: "0 4px 14px rgba(255,81,0,0.35)" }}
+            >
+              <LogIn className="w-4 h-4" />
+              Log in to view wishlist
+            </button>
+          </div>
+        </main>
+        <Footer />
+      </>
     );
   }
 
@@ -97,6 +107,8 @@ export default function WishlistPage() {
   const savedList = adventures.filter(a => saved.has(a.slug));
 
   return (
+    <>
+    <Navbar />
     <main className="min-h-screen px-5 lg:px-8 py-16 lg:py-20" style={{ background: "var(--bg-base)" }}>
       <div className="max-w-7xl mx-auto">
 
@@ -221,5 +233,7 @@ export default function WishlistPage() {
         )}
       </div>
     </main>
+    <Footer />
+    </>
   );
 }
