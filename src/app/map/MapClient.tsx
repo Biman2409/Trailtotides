@@ -249,22 +249,22 @@ const BASE_TILE = {
 // Overlay layers — toggled on top independently
 const OVERLAY_LAYERS = {
   terrain: {
-    // OpenTopoMap — full topo: 10m contours, named peaks, glaciers, rivers,
-    // forest cover, trails, passes, huts. The gold standard for adventurers.
-    // At high opacity it visually replaces the base map; stacked with satellite
-    // it renders topo lines over real imagery.
-    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-    attribution: 'Map &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA), data &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>, <a href="http://viewfinderpanoramas.org">SRTM</a>',
-    maxZoom: 17,
-    // High opacity so terrain features are legible; satellite shows through underneath
-    opacity: 0.92,
+    // ESRI World Topo Map — fast global CDN, no key needed.
+    // Shows: elevation contours, named peaks, glaciers (cyan), perennial rivers,
+    // forest cover, passes, ridgelines, and spot elevations. Renders at all zoom levels.
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Topo &copy; Esri, DeLorme, NAVTEQ, TomTom, USGS, NGA, EPA",
+    maxZoom: 19,
+    opacityAlone: 1,      // full replace when only terrain is on
+    opacityWithSat: 0.6,  // semi-transparent over satellite so imagery shows through
   },
   satellite: {
-    // ESRI World Imagery — high-res satellite. Rendered first so topo can sit on top.
+    // ESRI World Imagery — same CDN, consistent fast load.
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics",
     maxZoom: 19,
-    opacity: 1,
+    opacityAlone: 1,
+    opacityWithSat: 1,
   },
 } as const;
 
@@ -458,37 +458,40 @@ function MapView({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [advs]);
 
-  // Sync overlay layers when `overlays` set changes.
-  // Insertion order matters: satellite first (below), terrain on top.
-  // When both active, terrain opacity drops to 0.55 so satellite imagery shows through.
+  // Sync overlay layers. Create each layer once, then only add/remove from map.
+  // Satellite sits below terrain — insertion order: satellite first, terrain on top.
   useEffect(() => {
     if (!mapInstanceRef.current) return;
     loadLeaflet().then(leaflet => {
       const map = mapInstanceRef.current;
       if (!map) return;
-
       const bothActive = overlays.has("terrain") && overlays.has("satellite");
 
-      // Remove all overlays first, then re-add in correct order
       (["satellite", "terrain"] as OverlayKey[]).forEach(key => {
-        if (overlayLayerRefs.current[key]) {
-          map.removeLayer(overlayLayerRefs.current[key]!);
-          delete overlayLayerRefs.current[key];
-        }
-      });
-
-      // Re-add active overlays: satellite first, terrain on top
-      (["satellite", "terrain"] as OverlayKey[]).forEach(key => {
-        if (!overlays.has(key)) return;
         const cfg = OVERLAY_LAYERS[key];
-        // When both on: terrain at 0.55 opacity so satellite imagery bleeds through
-        const opacity = (key === "terrain" && bothActive) ? 0.55 : cfg.opacity;
-        overlayLayerRefs.current[key] = leaflet.tileLayer(cfg.url, {
-          maxZoom: cfg.maxZoom,
-          attribution: cfg.attribution,
-          opacity,
-        });
-        overlayLayerRefs.current[key]!.addTo(map);
+        const wantOn = overlays.has(key);
+        const opacity = key === "terrain" && bothActive ? cfg.opacityWithSat : cfg.opacityAlone;
+
+        if (wantOn) {
+          if (!overlayLayerRefs.current[key]) {
+            // Create layer once
+            overlayLayerRefs.current[key] = leaflet.tileLayer(cfg.url, {
+              maxZoom: cfg.maxZoom,
+              attribution: cfg.attribution,
+              opacity,
+              keepBuffer: 4,
+            });
+          } else {
+            overlayLayerRefs.current[key]!.setOpacity(opacity);
+          }
+          if (!map.hasLayer(overlayLayerRefs.current[key]!)) {
+            overlayLayerRefs.current[key]!.addTo(map);
+          }
+        } else {
+          if (overlayLayerRefs.current[key] && map.hasLayer(overlayLayerRefs.current[key]!)) {
+            map.removeLayer(overlayLayerRefs.current[key]!);
+          }
+        }
       });
     });
   }, [overlays]);
