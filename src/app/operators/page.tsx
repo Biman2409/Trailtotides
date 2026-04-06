@@ -188,17 +188,10 @@ export default async function OperatorsPage() {
                                     {adv.type}
                                   </span>
                                   <span className="w-px h-2.5 bg-white/10" />
-                                  <span className="text-[10px] text-white/25">{adv.region}</span>
+                                  <span className="text-[10px] text-white/25">{adv.state}</span>
                                 </div>
                               </div>
 
-                              {/* State pill */}
-                              <span
-                                className="text-[10px] font-medium px-2 py-0.5 rounded-full shrink-0"
-                                style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.3)" }}
-                              >
-                                {adv.state}
-                              </span>
                             </Link>
                           ))}
                           {listedAdventures.length > 5 && (
