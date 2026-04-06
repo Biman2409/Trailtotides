@@ -2,31 +2,41 @@
 
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { Lock, Trophy, Crown } from "lucide-react";
 import {
-  Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind,
+  Lock, Trophy, Crown,
+  Flame, Activity, PackageOpen, TrendingUp, Footprints,
+  Waves, Mountain, Crosshair, WifiOff,
   Gauge, Layers, Globe, Brain,
 } from "lucide-react";
 import { getAchievements, AXIS_BADGES, DOMAIN_BADGES, SPECIAL_BADGES } from "@/lib/achievements";
 import type { Achievement } from "@/lib/achievements";
 import { loadProfile } from "@/lib/matchmaker";
 
-// ─── Icon maps by size ────────────────────────────────────────────────────────
-const ICON: Record<string, (sz: number) => React.ReactNode> = {
-  Flame:    sz => <Flame    style={{ width: sz, height: sz }} />,
-  Zap:      sz => <Zap      style={{ width: sz, height: sz }} />,
-  Dumbbell: sz => <Dumbbell style={{ width: sz, height: sz }} />,
-  Compass:  sz => <Compass  style={{ width: sz, height: sz }} />,
-  Waves:    sz => <Waves    style={{ width: sz, height: sz }} />,
-  Mountain: sz => <Mountain style={{ width: sz, height: sz }} />,
-  Shield:   sz => <Shield   style={{ width: sz, height: sz }} />,
-  Wind:     sz => <Wind     style={{ width: sz, height: sz }} />,
-  Trophy:   sz => <Trophy   style={{ width: sz, height: sz }} />,
-  Crown:    sz => <Crown    style={{ width: sz, height: sz }} />,
-  Gauge:    sz => <Gauge    style={{ width: sz, height: sz }} />,
-  Layers:   sz => <Layers   style={{ width: sz, height: sz }} />,
-  Globe:    sz => <Globe    style={{ width: sz, height: sz }} />,
-  Brain:    sz => <Brain    style={{ width: sz, height: sz }} />,
+// ─── Icon overrides per badge ID (Tier 3 uses more relatable icons) ───────────
+const BADGE_ICON: Record<string, React.ReactNode> = {
+  // Tier 1
+  "full-apex":          <Crown    className="w-7 h-7" />,
+  "multi-domain-elite": <Trophy   className="w-6 h-6" />,
+  // Tier 2
+  "engine-master":   <Gauge  className="w-5 h-5" />,
+  "chassis-master":  <Layers className="w-5 h-5" />,
+  "elements-master": <Globe  className="w-5 h-5" />,
+  "mind-master":     <Brain  className="w-5 h-5" />,
+  // Tier 3 — relatable per axis
+  "iron-lung":    <Activity    className="w-4 h-4" />,  // stamina → heartbeat/activity
+  "iron-sherpa":  <PackageOpen className="w-4 h-4" />,  // power   → carrying a pack
+  "summit-legs":  <TrendingUp  className="w-4 h-4" />,  // strength → ascending
+  "goat-path":    <Footprints  className="w-4 h-4" />,  // agility → terrain footing
+  "open-water":   <Waves       className="w-4 h-4" />,  // water   → waves
+  "thin-air":     <Mountain    className="w-4 h-4" />,  // altitude → mountain
+  "steel-eyes":   <Crosshair   className="w-4 h-4" />,  // focus   → precision
+  "off-grid":     <WifiOff     className="w-4 h-4" />,  // nerve   → no signal
+};
+
+// Scaled versions for Tier 1 hero
+const BADGE_ICON_XL: Record<string, React.ReactNode> = {
+  "full-apex":          <Crown  className="w-9 h-9" />,
+  "multi-domain-elite": <Trophy className="w-8 h-8" />,
 };
 
 const TIER1_ALL: Achievement[] = SPECIAL_BADGES.map(b => ({ ...b }));
@@ -35,26 +45,18 @@ const TIER3_ALL: Achievement[] = Object.values(AXIS_BADGES).map(b => ({ ...b, ti
 
 // ─── Tooltip ──────────────────────────────────────────────────────────────────
 const TT_W = 172;
-
-function Tooltip({ badge, visible, anchorRef }: {
-  badge: Achievement | null;
-  visible: boolean;
-  anchorRef: React.RefObject<HTMLDivElement | null>;
-}) {
+function Tooltip({ badge, visible, anchorRef }: { badge: Achievement | null; visible: boolean; anchorRef: React.RefObject<HTMLDivElement | null> }) {
   const [pos, setPos] = useState<{ left: number; bottom: number; arrowLeft: number } | null>(null);
-
   useEffect(() => {
     if (!visible || !anchorRef.current || !badge) { setPos(null); return; }
     const r = anchorRef.current.getBoundingClientRect();
     const cx = r.left + r.width / 2;
     const vw = window.innerWidth;
-    let left = cx - TT_W / 2;
-    let arrowLeft = TT_W / 2;
+    let left = cx - TT_W / 2, arrowLeft = TT_W / 2;
     if (left < 10) { arrowLeft -= 10 - left; left = 10; }
     else if (left + TT_W > vw - 10) { const s = left + TT_W - (vw - 10); arrowLeft += s; left -= s; }
     setPos({ left, bottom: window.innerHeight - r.top + 8, arrowLeft: Math.max(12, Math.min(TT_W - 12, arrowLeft)) });
   }, [visible, anchorRef, badge]);
-
   if (!pos || !badge) return null;
   return createPortal(
     <div className="pointer-events-none transition-all duration-200" style={{ position: "fixed", bottom: pos.bottom + (visible ? 0 : -4), left: pos.left, width: TT_W, opacity: visible ? 1 : 0, zIndex: 9999 }}>
@@ -68,28 +70,21 @@ function Tooltip({ badge, visible, anchorRef }: {
   );
 }
 
-// ─── Single trophy cell ───────────────────────────────────────────────────────
-function Trophy_({ badge, earned, boxSize, iconSize }: {
-  badge: Achievement;
-  earned: boolean;
-  boxSize: number;
-  iconSize: number;
-}) {
+// ─── Trophy cell ──────────────────────────────────────────────────────────────
+function TrophyCell({ badge, earned, boxSize, xl = false }: { badge: Achievement; earned: boolean; boxSize: number; xl?: boolean }) {
   const [tip, setTip] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const ref = useRef<HTMLDivElement>(null);
+  const ref   = useRef<HTMLDivElement>(null);
+  const icon  = xl ? (BADGE_ICON_XL[badge.id] ?? BADGE_ICON[badge.id]) : BADGE_ICON[badge.id];
   const isSpecial = badge.tier === "special";
-
-  const startClose = () => { timer.current = setTimeout(() => setTip(false), 120); };
-  const cancelClose = () => { if (timer.current) clearTimeout(timer.current); };
 
   if (!earned) {
     return (
-      <div className="flex flex-col items-center gap-1 select-none" style={{ opacity: 0.22 }}>
-        <div className="rounded-xl flex items-center justify-center" style={{ width: boxSize, height: boxSize, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-          <Lock style={{ width: iconSize - 4, height: iconSize - 4 }} className="text-white/25" />
+      <div className="flex flex-col items-center gap-1.5 select-none" style={{ opacity: 0.2 }}>
+        <div className="rounded-2xl flex items-center justify-center" style={{ width: boxSize, height: boxSize, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+          <Lock className="w-3.5 h-3.5 text-white/30" />
         </div>
-        <p className="text-center font-medium text-white/20 leading-tight" style={{ fontSize: 7, maxWidth: boxSize + 6, wordBreak: "break-word" }}>{badge.name}</p>
+        <p className="text-center font-medium text-white/25 leading-tight" style={{ fontSize: 7.5, maxWidth: boxSize + 8, wordBreak: "break-word" }}>{badge.name}</p>
       </div>
     );
   }
@@ -97,26 +92,45 @@ function Trophy_({ badge, earned, boxSize, iconSize }: {
   return (
     <div
       ref={ref}
-      className="flex flex-col items-center gap-1 cursor-pointer"
-      onMouseEnter={() => { cancelClose(); setTip(true); }}
-      onMouseLeave={startClose}
+      className="flex flex-col items-center gap-1.5 cursor-pointer"
+      onMouseEnter={() => { if (timer.current) clearTimeout(timer.current); setTip(true); }}
+      onMouseLeave={() => { timer.current = setTimeout(() => setTip(false), 120); }}
       onClick={() => setTip(v => !v)}
     >
       <Tooltip badge={badge} visible={tip} anchorRef={ref} />
       <div
-        className="relative rounded-xl flex items-center justify-center transition-transform duration-150 hover:scale-110"
+        className="relative rounded-2xl flex items-center justify-center transition-transform duration-150 hover:scale-105"
         style={{
           width: boxSize, height: boxSize,
-          background: isSpecial ? `linear-gradient(145deg, ${badge.color}30 0%, ${badge.color}12 100%)` : `${badge.color}14`,
-          border: `1.5px solid ${badge.color}${isSpecial ? "55" : "30"}`,
-          boxShadow: isSpecial ? `0 0 18px ${badge.color}50, 0 0 6px ${badge.color}25` : `0 0 8px ${badge.color}20`,
+          background: isSpecial
+            ? `linear-gradient(145deg, ${badge.color}32 0%, ${badge.color}14 100%)`
+            : `${badge.color}16`,
+          border: `1.5px solid ${badge.color}${isSpecial ? "60" : "32"}`,
+          boxShadow: isSpecial
+            ? `0 0 28px ${badge.color}55, 0 0 10px ${badge.color}28, inset 0 1px 0 ${badge.color}25`
+            : `0 0 12px ${badge.color}25, inset 0 1px 0 ${badge.color}18`,
           color: badge.color,
         }}
       >
-        {(ICON[badge.icon] ?? ICON["Trophy"])(iconSize)}
-        {isSpecial && <span className="absolute inset-0 rounded-xl animate-ping opacity-15" style={{ border: `2px solid ${badge.color}` }} />}
+        {icon}
+        {isSpecial && <span className="absolute inset-0 rounded-2xl animate-ping opacity-10" style={{ border: `2px solid ${badge.color}` }} />}
       </div>
-      <p className="font-bold text-center leading-tight" style={{ color: badge.color, fontSize: 7.5, maxWidth: boxSize + 6, wordBreak: "break-word" }}>{badge.name}</p>
+      <p className="font-semibold text-center leading-tight" style={{ color: badge.color, fontSize: xl ? 9 : 7.5, maxWidth: boxSize + 10, wordBreak: "break-word" }}>{badge.name}</p>
+    </div>
+  );
+}
+
+// ─── Tier label row ───────────────────────────────────────────────────────────
+function TierLabel({ tier, label, color, earned, total }: { tier: string; label: string; color: string; earned: number; total: number }) {
+  return (
+    <div className="flex items-center gap-2 mb-3.5">
+      <span className="text-[9px] font-black uppercase tracking-[0.22em]" style={{ color }}>{tier}</span>
+      <span className="text-[9px] text-white/25 font-medium">{label}</span>
+      {earned > 0 && (
+        <span className="ml-auto text-[8px] font-bold px-1.5 py-px rounded-full" style={{ background: `${color}12`, color, border: `1px solid ${color}25` }}>
+          {earned}/{total}
+        </span>
+      )}
     </div>
   );
 }
@@ -136,7 +150,7 @@ export default function TrophyCabinet() {
 
   if (!stored) {
     return (
-      <div className="rounded-2xl p-5 flex items-center gap-4 relative overflow-hidden" style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.05) 0%, rgba(167,139,250,0.02) 100%)", border: "1px dashed rgba(167,139,250,0.18)" }}>
+      <div className="rounded-2xl p-5 flex items-center gap-4" style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.05) 0%, rgba(167,139,250,0.02) 100%)", border: "1px dashed rgba(167,139,250,0.18)" }}>
         <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 relative" style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
           <Trophy className="w-4 h-4 text-violet-400/50" />
           <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full flex items-center justify-center" style={{ background: "rgba(167,139,250,0.15)", border: "1px solid rgba(167,139,250,0.3)" }}>
@@ -156,72 +170,47 @@ export default function TrophyCabinet() {
   const totalEarned = earnedIds.size;
   const totalPossible = TIER1_ALL.length + TIER2_ALL.length + TIER3_ALL.length;
 
+  const t1Earned = TIER1_ALL.filter(b => earnedIds.has(b.id)).length;
+  const t2Earned = TIER2_ALL.filter(b => earnedIds.has(b.id)).length;
+  const t3Earned = TIER3_ALL.filter(b => earnedIds.has(b.id)).length;
+
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)", background: "linear-gradient(160deg, rgba(255,255,255,0.025) 0%, rgba(14,14,18,0) 60%)" }}>
+    <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.015)" }}>
 
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-        <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/25">All Trophies</p>
-        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: totalEarned > 0 ? "rgba(251,191,36,0.1)" : "rgba(255,255,255,0.05)", color: totalEarned > 0 ? "#fbbf24" : "rgba(255,255,255,0.2)", border: totalEarned > 0 ? "1px solid rgba(251,191,36,0.2)" : "1px solid rgba(255,255,255,0.07)" }}>
-          {totalEarned} / {totalPossible}
+      <div className="flex items-center justify-between px-5 py-3 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25">Trophy Cabinet</p>
+        <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={totalEarned > 0 ? { background: "rgba(251,191,36,0.1)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.2)" } : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.07)" }}>
+          {totalEarned} / {totalPossible} unlocked
         </span>
       </div>
 
-      {/* Row 1: Tier I + Tier II combined */}
-      <div className="px-4 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-        <div className="flex items-start gap-0">
+      {/* Row 1 — Tier 1 + Tier 2 */}
+      <div className="flex items-stretch border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
 
-          {/* Tier I block */}
-          <div className="shrink-0">
-            <div className="flex items-center gap-1.5 mb-3">
-              <span className="text-[8px] font-black uppercase tracking-[0.18em]" style={{ color: "#fbbf24" }}>I</span>
-              <span className="text-[8px] text-white/22">Apex</span>
-              {TIER1_ALL.filter(b => earnedIds.has(b.id)).length > 0 && (
-                <span className="text-[7px] font-bold px-1.5 py-px rounded-full" style={{ background: "rgba(251,191,36,0.1)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.2)" }}>
-                  {TIER1_ALL.filter(b => earnedIds.has(b.id)).length}/{TIER1_ALL.length}
-                </span>
-              )}
-            </div>
-            <div className="flex gap-3">
-              {TIER1_ALL.map(b => <Trophy_ key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={46} iconSize={20} />)}
-            </div>
+        {/* Tier 1 — Apex (larger, prominent) */}
+        <div className="px-5 py-5 shrink-0" style={{ background: "linear-gradient(160deg, rgba(251,191,36,0.07) 0%, transparent 70%)", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
+          <TierLabel tier="Tier 1" label="Apex — The absolute pinnacle" color="#fbbf24" earned={t1Earned} total={TIER1_ALL.length} />
+          <div className="flex gap-5 items-start">
+            {TIER1_ALL.map(b => <TrophyCell key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={64} xl />)}
           </div>
-
-          {/* Divider */}
-          <div className="mx-4 self-stretch w-px shrink-0" style={{ background: "rgba(255,255,255,0.07)" }} />
-
-          {/* Tier II block */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1.5 mb-3">
-              <span className="text-[8px] font-black uppercase tracking-[0.18em]" style={{ color: "#f97316" }}>II</span>
-              <span className="text-[8px] text-white/22">Domain Mastery</span>
-              {TIER2_ALL.filter(b => earnedIds.has(b.id)).length > 0 && (
-                <span className="text-[7px] font-bold px-1.5 py-px rounded-full" style={{ background: "rgba(249,115,22,0.1)", color: "#f97316", border: "1px solid rgba(249,115,22,0.2)" }}>
-                  {TIER2_ALL.filter(b => earnedIds.has(b.id)).length}/{TIER2_ALL.length}
-                </span>
-              )}
-            </div>
-            <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(4, minmax(0, 1fr))" }}>
-              {TIER2_ALL.map(b => <Trophy_ key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={38} iconSize={15} />)}
-            </div>
-          </div>
-
         </div>
+
+        {/* Tier 2 — Domain */}
+        <div className="flex-1 px-5 py-5">
+          <TierLabel tier="Tier 2" label="Domain mastery — Two axes maxed" color="#f97316" earned={t2Earned} total={TIER2_ALL.length} />
+          <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(4, minmax(0, 1fr))" }}>
+            {TIER2_ALL.map(b => <TrophyCell key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={42} />)}
+          </div>
+        </div>
+
       </div>
 
-      {/* Row 2: Tier III */}
-      <div className="px-4 py-4">
-        <div className="flex items-center gap-1.5 mb-3">
-          <span className="text-[8px] font-black uppercase tracking-[0.18em]" style={{ color: "#60a5fa" }}>III</span>
-          <span className="text-[8px] text-white/22">Elite Axis</span>
-          {TIER3_ALL.filter(b => earnedIds.has(b.id)).length > 0 && (
-            <span className="text-[7px] font-bold px-1.5 py-px rounded-full" style={{ background: "rgba(96,165,250,0.1)", color: "#60a5fa", border: "1px solid rgba(96,165,250,0.2)" }}>
-              {TIER3_ALL.filter(b => earnedIds.has(b.id)).length}/{TIER3_ALL.length}
-            </span>
-          )}
-        </div>
-        <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(8, minmax(0, 1fr))" }}>
-          {TIER3_ALL.map(b => <Trophy_ key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={34} iconSize={13} />)}
+      {/* Row 2 — Tier 3 */}
+      <div className="px-5 py-5">
+        <TierLabel tier="Tier 3" label="Elite axis — Single capability maxed" color="#60a5fa" earned={t3Earned} total={TIER3_ALL.length} />
+        <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(8, minmax(0, 1fr))" }}>
+          {TIER3_ALL.map(b => <TrophyCell key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={36} />)}
         </div>
       </div>
 
