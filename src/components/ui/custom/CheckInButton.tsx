@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CheckCircle2, Circle, LogIn } from "lucide-react";
+import { Trophy, LogIn } from "lucide-react";
 import { useTripLog } from "@/contexts/TripLogContext";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
@@ -63,15 +63,15 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
           onClick={handleToggle}
           className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${className}`}
           style={done
-            ? { background: "rgba(16,185,129,0.15)", color: "#6ee7b7", border: "1px solid rgba(16,185,129,0.35)" }
+            ? { background: "rgba(251,191,36,0.15)", color: "#fcd34d", border: "1px solid rgba(251,191,36,0.4)", boxShadow: "0 0 12px rgba(251,191,36,0.15)" }
             : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }
           }
         >
           {loggedIn === false
             ? <><LogIn className="w-4 h-4" />Done it</>
             : done
-              ? <><CheckCircle2 className="w-4 h-4" />Been There</>
-              : <><Circle className="w-4 h-4" />Mark as Done</>
+              ? <><Trophy className="w-4 h-4 fill-current" />Been There</>
+              : <><Trophy className="w-4 h-4" />Mark as Done</>
           }
         </button>
         {showPicker && (
@@ -101,11 +101,11 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
       title={done ? "Been there!" : "Mark as done"}
       className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm ${className}`}
       style={done
-        ? { background: "rgba(16,185,129,0.9)", color: "#fff", boxShadow: "0 0 0 1px rgba(16,185,129,0.5)" }
+        ? { background: "rgba(251,191,36,0.9)", color: "#fff", boxShadow: "0 0 0 1px rgba(251,191,36,0.6), 0 0 10px rgba(251,191,36,0.3)" }
         : { background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.5)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }
       }
     >
-      {done ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Circle className="w-3.5 h-3.5" />}
+      <Trophy className={`w-3.5 h-3.5 ${done ? "fill-white" : ""}`} />
     </button>
   );
 }
