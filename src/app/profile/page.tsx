@@ -6,6 +6,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import ProfileForm from "./ProfileForm";
 import TripLogSection from "./TripLogSection";
+import ACEProfileSection from "./ACEProfileSection";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -124,12 +125,13 @@ export default async function ProfilePage() {
           </div>
 
           {/* Main Content / Form */}
-          <div className="flex-1">
+          <div className="flex-1 space-y-8">
             <ProfileForm profile={{
               ...profile,
               username: user.user_metadata?.username || profile.username || null,
               phone: profile.phone || user.user_metadata?.phone || null,
             }} />
+            <ACEProfileSection />
             <TripLogSection />
           </div>
         </div>

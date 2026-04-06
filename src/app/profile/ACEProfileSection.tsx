@@ -260,8 +260,13 @@ export default function ACEProfileSection() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setStored(loadProfile());
-    setMounted(true);
+    // Try server first (logged-in users), fall back to localStorage
+    import("@/lib/matchmaker").then(({ loadProfileFromServer }) => {
+      loadProfileFromServer().then((profile) => {
+        setStored(profile);
+        setMounted(true);
+      });
+    });
   }, []);
 
   if (!mounted) return null;
