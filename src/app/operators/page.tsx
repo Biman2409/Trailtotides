@@ -125,7 +125,7 @@ export default async function OperatorsPage() {
                 style={{ background: "#ff5100", color: "white" }}
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                My Dashboard
+                My Profile
               </Link>
             ) : isLoggedIn ? (
               // Logged in as explorer — offer operator signup

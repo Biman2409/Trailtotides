@@ -9,7 +9,7 @@ import { adventures } from "@/lib/data";
 import DashboardClient from "./DashboardClient";
 
 export const metadata: Metadata = {
-  title: "Operator Dashboard — Trail to Tides",
+  title: "Operator Profile — Trail to Tides",
 };
 
 export const dynamic = "force-dynamic";
@@ -48,7 +48,7 @@ export default async function OperatorDashboardPage() {
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <p className="text-[#ff5100] text-xs font-bold tracking-[0.25em] uppercase mb-3">Operator Dashboard</p>
+            <p className="text-[#ff5100] text-xs font-bold tracking-[0.25em] uppercase mb-3">Operator Profile</p>
             <h1 className="text-white text-3xl sm:text-4xl font-bold tracking-tight">
               Manage Your Listings
             </h1>
