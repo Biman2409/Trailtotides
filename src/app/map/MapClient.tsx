@@ -33,15 +33,6 @@ function classifyAdventure(userAce: StoredProfile["ace"], adventureAce: ReturnTy
 }
 import type L from "leaflet";
 
-// Type colours used for marker background
-const typeBgColor: Record<string, string> = {
-  Trekking: "#cc4000", Biking: "#cc4000", Cycling: "#cc4000",
-  "Rock Climbing": "#cc4000", Scrambling: "#cc4000", Mountaineering: "#cc4000",
-  "Jeep Safari": "#cc4000", Caving: "#cc4000", "Urban Adventure": "#cc4000",
-  Diving: "#1d4ed8", Kayaking: "#1d4ed8",
-  Skiing: "#6b7280",
-  Paragliding: "#7e22ce", "Hot Air Balloon": "#7e22ce",
-};
 
 const difficultyColor: Record<string, string> = {
   Easy:         "#10b981",  // emerald
@@ -193,17 +184,16 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
   function addMarkers(leaflet: typeof L, list: Adventure[]) {
     list.forEach((adv) => {
       const diffColor = difficultyColor[adv.difficulty] ?? "#6366f1";
-      const bgColor = typeBgColor[adv.type as AdventureType] ?? "#ff5100";
       const svgIcon = typeIconSvg(adv.type, 13, "white");
       const icon = leaflet.divIcon({
         className: "",
         html: `<div style="position:relative;width:32px;height:38px;">
-          <!-- pin body -->
-          <div style="width:32px;height:32px;border-radius:50% 50% 50% 0;background:${bgColor};transform:rotate(-45deg);box-shadow:0 3px 10px rgba(0,0,0,0.45);border:2px solid rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;">
+          <!-- pin body — colour = difficulty -->
+          <div style="width:32px;height:32px;border-radius:50% 50% 50% 0;background:${diffColor};transform:rotate(-45deg);box-shadow:0 3px 10px rgba(0,0,0,0.45);border:2px solid rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;">
             <div style="transform:rotate(45deg);display:flex;align-items:center;justify-content:center;">${svgIcon}</div>
           </div>
-          <!-- difficulty dot -->
-          <div style="position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:${diffColor};border:1.5px solid white;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>
+          <!-- location dot — same difficulty colour -->
+          <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:${diffColor};border:1.5px solid white;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>
         </div>`,
         iconSize: [32, 38],
         iconAnchor: [16, 38],
