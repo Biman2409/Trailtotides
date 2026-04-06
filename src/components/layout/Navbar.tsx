@@ -4,8 +4,11 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, Mountain, LogOut, Shield, User, ChevronDown, GitCompareArrows, Compass, Heart } from "lucide-react";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { useCompare, MAX } from "@/contexts/CompareContext";
+import { useWishlist } from "@/contexts/WishlistContext";
+import { adventures } from "@/lib/data";
 
 const navLinks = [
   { href: "/explore", label: "Explore" },
@@ -24,15 +27,20 @@ export default function Navbar() {
   const isHome = pathname === "/";
   const menuRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
+
   const { selected, remove, clear } = useCompare();
   const [compareOpen, setCompareOpen] = useState(false);
   const compareRef = useRef<HTMLDivElement>(null);
 
-  // Fetch auth state
+  const { saved, toggle } = useWishlist();
+  const [wishlistOpen, setWishlistOpen] = useState(false);
+  const wishlistRef = useRef<HTMLDivElement>(null);
+  const savedList = adventures.filter(a => saved.has(a.slug));
+
+  // Auth state
   useEffect(() => {
     const supabase = createClient();
     async function fetchUser() {
-      // Use getSession() for immediate local read, then verify with getUser()
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) { setUser(null); return; }
       const authUser = session.user;
@@ -48,7 +56,7 @@ export default function Navbar() {
       });
     }
     fetchUser();
-    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
       if (session?.user) {
         const authUser = session.user;
         supabase.from("profiles").select("full_name, role").eq("id", authUser.id).single()
@@ -69,41 +77,39 @@ export default function Navbar() {
   useEffect(() => { setMenuOpen(false); setUserMenuOpen(false); }, [pathname]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      // Immediate response as soon as scroll starts
-      const isScrolled = window.scrollY > 0;
-      setScrolled(isScrolled);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 0);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Outside-click handlers
   useEffect(() => {
     if (!menuOpen) return;
-    function handler(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
-    }
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    function h(e: MouseEvent) { if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false); }
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
   }, [menuOpen]);
 
   useEffect(() => {
     if (!userMenuOpen) return;
-    function handler(e: MouseEvent) {
-      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) setUserMenuOpen(false);
-    }
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    function h(e: MouseEvent) { if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) setUserMenuOpen(false); }
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
   }, [userMenuOpen]);
 
   useEffect(() => {
     if (!compareOpen) return;
-    function handler(e: MouseEvent) {
-      if (compareRef.current && !compareRef.current.contains(e.target as Node)) setCompareOpen(false);
-    }
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    function h(e: MouseEvent) { if (compareRef.current && !compareRef.current.contains(e.target as Node)) setCompareOpen(false); }
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
   }, [compareOpen]);
+
+  useEffect(() => {
+    if (!wishlistOpen) return;
+    function h(e: MouseEvent) { if (wishlistRef.current && !wishlistRef.current.contains(e.target as Node)) setWishlistOpen(false); }
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, [wishlistOpen]);
 
   async function handleLogout() {
     const supabase = createClient();
@@ -115,8 +121,8 @@ export default function Navbar() {
 
   const isTransparent = isHome && !scrolled && !menuOpen;
 
-    return (
-      <nav
+  return (
+    <nav
       ref={menuRef}
       className="fixed top-0 left-0 right-0 z-[1002] transition-all duration-200"
       style={
@@ -124,44 +130,26 @@ export default function Navbar() {
           ? { background: "transparent", borderBottom: "none" }
           : { background: "var(--nav-bg)", backdropFilter: "blur(16px)", borderBottom: "1px solid var(--nav-border)", boxShadow: "0 4px 24px rgba(0,0,0,0.12)" }
       }
-      >
-      
-
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+    >
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         <div className="flex items-center justify-between h-16 lg:h-20">
 
-                {/* Logo */}
-                <Link href="/" className="flex items-center gap-2 group">
-                    <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-md shadow-[#ff5100]/30">
-                      <Mountain className="w-4 h-4 text-white" strokeWidth={2.5} />
-                    </div>
-                        <span className="text-base leading-none tracking-tight" style={{ color: "var(--text-primary)" }}>
-                          <span className="font-black uppercase">TRAIL</span>
-                          <span style={{fontFamily: "var(--font-cursive)", color: "var(--text-tertiary)"}} className="text-[15px] normal-case tracking-normal font-normal mx-1">to</span>
-                          <span className="font-black uppercase">TIDES</span>
-                        </span>
-                </Link>
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-md shadow-[#ff5100]/30">
+              <Mountain className="w-4 h-4 text-white" strokeWidth={2.5} />
+            </div>
+            <span className="text-base leading-none tracking-tight" style={{ color: "var(--text-primary)" }}>
+              <span className="font-black uppercase">TRAIL</span>
+              <span style={{ fontFamily: "var(--font-cursive)", color: "var(--text-tertiary)" }} className="text-[15px] normal-case tracking-normal font-normal mx-1">to</span>
+              <span className="font-black uppercase">TIDES</span>
+            </span>
+          </Link>
 
-
-          {/* Desktop nav */}
+          {/* Desktop nav links */}
           <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
-              if ((link as { highlight?: boolean }).highlight) {
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 ml-1"
-                    style={{
-                      background: isActive ? "#ff5100" : "rgba(255,81,0,0.15)",
-                      color: isActive ? "white" : "#ff5100",
-                    }}
-                  >
-                    {link.label}
-                  </Link>
-                );
-              }
               return (
                 <Link
                   key={link.href}
@@ -181,14 +169,91 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* Desktop CTA */}
-          <div className="hidden lg:flex items-center gap-3">
+          {/* Desktop right side */}
+          <div className="hidden lg:flex items-center gap-2">
 
-            {/* Compare tray */}
+            {/* ── Wishlist tray ── */}
+            {savedList.length > 0 && (
+              <div className="relative" ref={wishlistRef}>
+                <button
+                  onClick={() => { setWishlistOpen(o => !o); setCompareOpen(false); setUserMenuOpen(false); }}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl transition-all"
+                  style={{ background: "rgba(255,81,0,0.10)", border: "1px solid rgba(255,81,0,0.22)" }}
+                >
+                  <Heart className="w-4 h-4 fill-[#ff5100]" style={{ color: "#ff5100" }} />
+                  <span className="text-[#ff5100] text-sm font-semibold">Wishlist</span>
+                  <span className="w-5 h-5 rounded-full bg-[#ff5100] text-white text-[11px] font-bold flex items-center justify-center leading-none">
+                    {savedList.length}
+                  </span>
+                </button>
+
+                {wishlistOpen && (
+                  <div
+                    className="absolute right-0 top-full mt-2 w-80 rounded-2xl shadow-2xl overflow-hidden z-50"
+                    style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}
+                  >
+                    {/* Header */}
+                    <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+                      <div className="flex items-center gap-2">
+                        <Heart className="w-3.5 h-3.5 fill-[#ff5100]" style={{ color: "#ff5100" }} />
+                        <span className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+                          Saved · {savedList.length}
+                        </span>
+                      </div>
+                      <Link
+                        href="/explore"
+                        onClick={() => setWishlistOpen(false)}
+                        className="text-[#ff5100] text-xs font-semibold hover:underline"
+                      >
+                        Explore more →
+                      </Link>
+                    </div>
+
+                    {/* Saved items */}
+                    <div className="overflow-y-auto" style={{ maxHeight: "320px" }}>
+                      {savedList.map((a) => (
+                        <div
+                          key={a.slug}
+                          className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white/4"
+                          style={{ borderBottom: "1px solid var(--border-subtle)" }}
+                        >
+                          <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 relative">
+                            <Image src={a.heroImage} alt={a.name} fill quality={60} className="object-cover" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <Link
+                              href={`/experiences/${a.slug}`}
+                              onClick={() => setWishlistOpen(false)}
+                              className="text-sm font-medium leading-tight truncate block hover:text-[#ff5100] transition-colors"
+                              style={{ color: "var(--text-secondary)" }}
+                            >
+                              {a.name}
+                            </Link>
+                            <p className="text-[10px] mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>
+                              {a.type} · {a.state}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => toggle(a.slug)}
+                            className="shrink-0 transition-colors hover:text-red-400"
+                            style={{ color: "var(--text-muted)" }}
+                            aria-label="Remove from wishlist"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ── Compare tray ── */}
             {selected.length > 0 && (
               <div className="relative" ref={compareRef}>
                 <button
-                  onClick={() => setCompareOpen(!compareOpen)}
+                  onClick={() => { setCompareOpen(o => !o); setWishlistOpen(false); setUserMenuOpen(false); }}
                   className="flex items-center gap-2 px-3 py-2 rounded-xl transition-colors"
                   style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.25)" }}
                 >
@@ -198,6 +263,7 @@ export default function Navbar() {
                     {selected.length}
                   </span>
                 </button>
+
                 {compareOpen && (
                   <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl shadow-2xl overflow-hidden z-50" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}>
                     <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
@@ -206,11 +272,8 @@ export default function Navbar() {
                         onClick={() => {
                           setCompareOpen(false);
                           const section = document.getElementById("compare-section");
-                          if (section) {
-                            section.scrollIntoView({ behavior: "smooth" });
-                          } else {
-                            router.push("/explore#compare-section");
-                          }
+                          if (section) section.scrollIntoView({ behavior: "smooth" });
+                          else router.push("/explore#compare-section");
                         }}
                         className="text-[#ff5100] text-xs font-semibold hover:underline"
                       >
@@ -220,26 +283,18 @@ export default function Navbar() {
                     <div className="divide-y" style={{ borderColor: "var(--border-subtle)" }}>
                       {selected.map((a) => (
                         <div key={a.id} className="flex items-center gap-3 px-4 py-2.5">
-                          <div className="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <div className="w-9 h-9 rounded-lg overflow-hidden shrink-0">
                             <img src={a.heroImage} alt={a.name} className="w-full h-full object-cover" />
                           </div>
                           <span className="text-sm font-medium flex-1 truncate" style={{ color: "var(--text-secondary)" }}>{a.name}</span>
-                          <button
-                            onClick={() => remove(a.id)}
-                            className="transition-colors flex-shrink-0 hover:text-red-400"
-                            style={{ color: "var(--text-muted)" }}
-                          >
+                          <button onClick={() => remove(a.id)} className="transition-colors shrink-0 hover:text-red-400" style={{ color: "var(--text-muted)" }}>
                             <X className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       ))}
                     </div>
                     <div className="px-4 py-2.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                      <button
-                        onClick={() => { clear(); setCompareOpen(false); }}
-                        className="text-xs text-white/30 hover:text-red-400 transition-colors"
-                      >
+                      <button onClick={() => { clear(); setCompareOpen(false); }} className="text-xs text-white/30 hover:text-red-400 transition-colors">
                         Clear all
                       </button>
                     </div>
@@ -247,10 +302,12 @@ export default function Navbar() {
                 )}
               </div>
             )}
+
+            {/* ── User menu ── */}
             {user ? (
               <div className="relative" ref={userMenuRef}>
                 <button
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  onClick={() => { setUserMenuOpen(o => !o); setCompareOpen(false); setWishlistOpen(false); }}
                   className="flex items-center gap-2 px-3 py-2 rounded-xl transition-colors"
                   style={{ color: "var(--text-primary)" }}
                 >
@@ -260,6 +317,7 @@ export default function Navbar() {
                   <span className="text-sm font-medium max-w-[120px] truncate" style={{ color: "var(--text-secondary)" }}>{user.name}</span>
                   <ChevronDown className={`w-3.5 h-3.5 transition-transform ${userMenuOpen ? "rotate-180" : ""}`} style={{ color: "var(--text-muted)" }} />
                 </button>
+
                 {userMenuOpen && (
                   <div className="absolute right-0 top-full mt-2 w-52 rounded-2xl shadow-xl overflow-hidden z-50" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}>
                     <div className="px-4 py-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
@@ -275,10 +333,6 @@ export default function Navbar() {
                     <Link href="/matchmaker?results=1" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5" style={{ color: "var(--text-secondary)" }}>
                       <Compass className="w-4 h-4" />
                       Profile
-                    </Link>
-                    <Link href="/wishlist" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5" style={{ color: "var(--text-secondary)" }}>
-                      <Heart className="w-4 h-4" />
-                      Wishlist
                     </Link>
                     <Link href="/profile" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5" style={{ color: "var(--text-secondary)" }}>
                       <User className="w-4 h-4" />
@@ -297,31 +351,22 @@ export default function Navbar() {
               </div>
             ) : (
               <>
-                <Link
-                  href="/auth/login"
-                  className="text-sm font-medium px-4 py-2 rounded-lg transition-colors duration-200"
-                  style={{ color: "var(--nav-text)" }}
-                >
+                <Link href="/auth/login" className="text-sm font-medium px-4 py-2 rounded-lg transition-colors duration-200" style={{ color: "var(--nav-text)" }}>
                   Log In
                 </Link>
-                <Link
-                  href="/auth/signup"
-                  className="bg-[#ff5100] hover:bg-[#ff7d47] text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:-translate-y-0.5 transition-all duration-200"
-                  style={{ boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}
-                >
+                <Link href="/auth/signup" className="bg-[#ff5100] hover:bg-[#ff7d47] text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:-translate-y-0.5 transition-all duration-200" style={{ boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}>
                   Sign Up
                 </Link>
               </>
             )}
           </div>
 
-          {/* Mobile menu toggle */}
+          {/* Mobile toggle */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="lg:hidden p-2 rounded-lg transition-colors"
             style={{ color: "var(--text-primary)" }}
             aria-label="Toggle menu"
-            aria-expanded={menuOpen}
           >
             <span className="block transition-all duration-300" style={{ transform: menuOpen ? "rotate(90deg)" : "rotate(0deg)" }}>
               {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -332,9 +377,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div
-        className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          menuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-        }`}
+        className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${menuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"}`}
       >
         <div className="px-6 py-4 space-y-1" style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)" }}>
           {navLinks.map((link) => (
@@ -351,6 +394,19 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+
+          {/* Mobile wishlist row */}
+          {savedList.length > 0 && (
+            <div className="flex items-center gap-2 py-3 px-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+              <Heart className="w-4 h-4 fill-[#ff5100] shrink-0" style={{ color: "#ff5100" }} />
+              <span className="text-sm font-medium flex-1" style={{ color: "var(--text-secondary)" }}>
+                Wishlist
+              </span>
+              <span className="w-5 h-5 rounded-full bg-[#ff5100] text-white text-[11px] font-bold flex items-center justify-center">
+                {savedList.length}
+              </span>
+            </div>
+          )}
 
           {user ? (
             <div className="pt-2 space-y-1">
@@ -370,9 +426,6 @@ export default function Navbar() {
               )}
               <Link href="/matchmaker?results=1" className="flex items-center gap-2 py-3 px-3 text-sm font-medium rounded-xl transition-colors" style={{ color: "var(--text-secondary)" }}>
                 <Compass className="w-4 h-4" />Profile
-              </Link>
-              <Link href="/wishlist" className="flex items-center gap-2 py-3 px-3 text-sm font-medium rounded-xl transition-colors" style={{ color: "var(--text-secondary)" }}>
-                <Heart className="w-4 h-4" />Wishlist
               </Link>
               <Link href="/profile" className="flex items-center gap-2 py-3 px-3 text-sm font-medium rounded-xl transition-colors" style={{ color: "var(--text-secondary)" }}>
                 <User className="w-4 h-4" />Settings
