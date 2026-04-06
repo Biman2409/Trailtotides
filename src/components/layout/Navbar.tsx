@@ -13,6 +13,7 @@ import { adventures } from "@/lib/data";
 const navLinks = [
   { href: "/explore", label: "Explore" },
   { href: "/map", label: "Map" },
+  { href: "/compass", label: "Compass AI" },
   { href: "/planner", label: "Planner" },
   { href: "/operators", label: "Operators" },
   { href: "/matchmaker", label: "Matchmaker" },
