@@ -27,6 +27,7 @@ export type OperatorSubmission = {
   adventure_slug: string;
   operator_name: string;
   price_from: string;
+  website: string | null;
   exact_dates: string[];
   notes: string | null;
   status: "pending" | "approved" | "rejected";
@@ -179,6 +180,7 @@ export async function submitOperatorUpdate(formData: FormData) {
     adventure_slug,
     operator_name,
     price_from,
+    website: profile.website ?? null,
     exact_dates,
     notes,
     status: "pending",
@@ -187,6 +189,55 @@ export async function submitOperatorUpdate(formData: FormData) {
 
   await writeJsonFile(adminClient, "operator-submissions", `${id}.json`, submission);
   return { success: "Update submitted for admin review." };
+}
+
+export type LiveOperator = {
+  name: string;
+  verified: boolean;
+  priceFrom: string;
+  rating: number;
+  website?: string;
+  departureDates?: string[];
+  notes?: string | null;
+};
+
+/**
+ * Returns all approved operator submissions for a given adventure slug,
+ * shaped as LiveOperator records ready to render on the experience page.
+ */
+export async function getApprovedOperatorsForAdventure(adventureSlug: string): Promise<LiveOperator[]> {
+  const all = await getAllOperatorSubmissions();
+  const approved = all.filter(
+    (s) => s.adventure_slug === adventureSlug && s.status === "approved"
+  );
+
+  const adminClient = await createAdminClient();
+
+  return Promise.all(
+    approved.map(async (sub) => {
+      // Try to get website from the operator's profile
+      const profile = (await readJsonFile(
+        adminClient,
+        "operator-profiles",
+        `${sub.operator_id}.json`
+      )) as OperatorProfile | null;
+
+      const priceNum = parseInt(sub.price_from.replace(/[^\d]/g, ""), 10);
+      const priceFrom = isNaN(priceNum)
+        ? sub.price_from
+        : `₹${priceNum.toLocaleString("en-IN")}`;
+
+      return {
+        name: sub.operator_name,
+        verified: true,
+        priceFrom,
+        rating: 0,
+        website: sub.website ?? profile?.website ?? undefined,
+        departureDates: sub.exact_dates ?? [],
+        notes: sub.notes,
+      } satisfies LiveOperator;
+    })
+  );
 }
 
 export async function approveOperatorSubmission(submissionId: string) {

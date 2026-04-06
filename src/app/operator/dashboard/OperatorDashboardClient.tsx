@@ -106,6 +106,7 @@ export default function OperatorDashboardClient({
           adventure_slug: selectedAdventure!.slug,
           operator_name: operatorName,
           price_from: priceFrom,
+          website: operatorProfile.website ?? null,
           exact_dates: dates.filter(Boolean),
           notes: notes || null,
           status: "pending",

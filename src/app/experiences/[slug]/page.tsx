@@ -35,13 +35,17 @@ import ReviewSection from "@/components/ui/custom/ReviewSection";
 import { createClient } from "@/lib/supabase/server";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import type { Adventure } from "@/lib/data";
+import { getApprovedOperatorsForAdventure } from "@/app/auth/operator-actions";
 
 interface Props {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ from?: string }>;
 }
 
-type Operator = NonNullable<Adventure["operators"]>[number];
+type Operator = NonNullable<Adventure["operators"]>[number] & {
+  departureDates?: string[];
+  notes?: string | null;
+};
 
 function OperatorCard({ op, verified }: { op: Operator; verified: boolean }) {
   return (
@@ -85,6 +89,21 @@ function OperatorCard({ op, verified }: { op: Operator; verified: boolean }) {
           <div className="font-bold text-base" style={{ color: "var(--text-primary)" }}>{op.priceFrom}</div>
         </div>
       </div>
+      {op.departureDates && op.departureDates.length > 0 && (
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/30 mb-1.5">Departure Dates</p>
+          <div className="flex flex-wrap gap-1.5">
+            {op.departureDates.map((d, i) => (
+              <span key={i} className="text-[10px] font-mono px-2 py-0.5 rounded-lg" style={{ background: "rgba(255,81,0,0.08)", color: "rgba(255,125,71,0.9)", border: "1px solid rgba(255,81,0,0.18)" }}>
+                {d}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+      {op.notes && (
+        <p className="text-white/35 text-xs leading-relaxed border-t border-white/6 pt-3">{op.notes}</p>
+      )}
       <OperatorButton
         website={op.website ?? ""}
         label={verified ? "Get Details" : "Visit Website"}
@@ -146,6 +165,9 @@ export async function generateStaticParams() {
   return adventures.map((a) => ({ slug: a.slug }));
 }
 
+// Always re-render to pick up newly approved operator submissions
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const adventure = adventures.find((a) => a.slug === slug);
@@ -174,6 +196,12 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
   const { from } = await searchParams;
   const adventure = adventures.find((a) => a.slug === slug);
   if (!adventure) notFound();
+
+  // Merge approved operator submissions (de-dupe by name)
+  const approvedOps = await getApprovedOperatorsForAdventure(slug);
+  const existingNames = new Set(adventure.operators.map((o) => o.name.toLowerCase()));
+  const newOps = approvedOps.filter((o) => !existingNames.has(o.name.toLowerCase()));
+  const allOperators: Operator[] = [...adventure.operators, ...newOps];
 
   const PAGE_SIZE = 12;
   const adventureIndex = adventures.findIndex((a) => a.slug === slug);
@@ -447,7 +475,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* Operators */}
             <section>
               {/* Verified */}
-              {adventure.operators.some((op) => op.verified) && (
+              {allOperators.some((op) => op.verified) && (
                 <div className="mb-10">
                   <div className="flex items-center gap-3 mb-5">
                     <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(16,185,129,0.12)" }}>
@@ -459,7 +487,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {adventure.operators.filter((op) => op.verified).map((op) => (
+                    {allOperators.filter((op) => op.verified).map((op) => (
                       <OperatorCard key={op.name} op={op} verified />
                     ))}
                   </div>
@@ -500,7 +528,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
 
               {/* Unverified */}
-              {adventure.operators.some((op) => !op.verified) && (
+              {allOperators.some((op) => !op.verified) && (
                 <div>
                   <div className="flex items-center gap-3 mb-5">
                     <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(245,158,11,0.1)" }}>
@@ -512,7 +540,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {adventure.operators.filter((op) => !op.verified).map((op) => (
+                    {allOperators.filter((op) => !op.verified).map((op) => (
                       <OperatorCard key={op.name} op={op} verified={false} />
                     ))}
                   </div>
