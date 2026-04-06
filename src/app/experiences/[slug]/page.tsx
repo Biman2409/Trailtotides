@@ -230,10 +230,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
     .filter((a) => a.id !== adventure.id && a.type === adventure.type && !relatedByStateIds.has(a.id))
     .slice(0, 8);
   const relatedByTypeIds = new Set(relatedByType.map((a) => a.id));
-  const adventureDifficulty = computeDifficulty(getACE(adventure));
-  const relatedByDifficulty = adventures
-    .filter((a) => a.id !== adventure.id && computeDifficulty(getACE(a)) === adventureDifficulty && !relatedByStateIds.has(a.id) && !relatedByTypeIds.has(a.id))
-    .slice(0, 8);
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
@@ -638,7 +634,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       </div>
 
       {/* ── YOU MIGHT ALSO LIKE ───────────────────────────────── */}
-      {(relatedByState.length > 0 || relatedByType.length > 0 || relatedByDifficulty.length > 0) && (
+      {(relatedByState.length > 0 || relatedByType.length > 0) && (
         <section
           className="py-14 lg:py-20 px-5 lg:px-8"
           style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)" }}
@@ -652,7 +648,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <div className="space-y-12">
               <RelatedSection title={`More in ${adventure.state}`} items={relatedByState} exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} />
               <RelatedSection title={`More ${adventure.type}`} items={relatedByType} exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`} />
-              <RelatedSection title={`Same Difficulty · ${adventureDifficulty}`} items={relatedByDifficulty} exploreHref={`/explore?difficulty=${encodeURIComponent(adventureDifficulty)}`} />
             </div>
           </div>
         </section>
