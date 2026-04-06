@@ -101,16 +101,8 @@ function TrophyCard({ badge, index, small = false }: { badge: Achievement; index
   }, [index]);
 
   const isSpecial = badge.tier === "special";
-  const isDomain  = badge.tier === "domain";
-
-  // Shape per tier: circle = special (pinnacle), diamond = domain, square = axis
-  const shapeStyle = isSpecial
-    ? { borderRadius: "50%" }
-    : isDomain
-      ? { borderRadius: "8px", transform: "rotate(45deg)" }
-      : { borderRadius: "8px" };
-
   const sz = small ? 40 : 52;
+  const borderRadius = "10px";
 
   return (
     <div
@@ -123,21 +115,38 @@ function TrophyCard({ badge, index, small = false }: { badge: Achievement; index
     >
       <Tooltip badge={badge} visible={tooltip} anchorRef={cardRef} />
       <div
-        className="relative flex items-center justify-center mb-1.5 transition-transform duration-150 hover:scale-110"
+        className="relative flex items-center justify-center mb-1.5 transition-transform duration-150 hover:scale-110 overflow-hidden"
         style={{
           width: sz,
           height: sz,
-          background: isSpecial ? `linear-gradient(145deg, ${badge.color}28 0%, ${badge.color}10 100%)` : `${badge.color}14`,
-          border: `1.5px solid ${badge.color}${isSpecial ? "50" : isDomain ? "38" : "28"}`,
-          boxShadow: isSpecial ? `0 0 20px ${badge.color}45, 0 0 8px ${badge.color}25` : isDomain ? `0 0 12px ${badge.color}25` : `0 0 6px ${badge.color}15`,
-          ...shapeStyle,
+          borderRadius,
+          background: isSpecial
+            ? `linear-gradient(145deg, ${badge.color}32 0%, ${badge.color}14 100%)`
+            : `${badge.color}16`,
+          border: `1.5px solid ${badge.color}${isSpecial ? "60" : "32"}`,
+          boxShadow: isSpecial
+            ? `0 0 20px ${badge.color}50, 0 0 8px ${badge.color}28`
+            : `0 0 8px ${badge.color}20`,
         }}
       >
-        {/* Counter-rotate icon inside diamond so it stays upright */}
-        <span style={{ color: badge.color, display: "flex", transform: isDomain ? "rotate(-45deg)" : undefined }}>
+        <span style={{ color: badge.color, display: "flex" }}>
           {small ? (ICON_SM[badge.icon] ?? <Trophy className="w-4 h-4" />) : (ICON_MD[badge.icon] ?? <Trophy className="w-5 h-5" />)}
         </span>
-        {isSpecial && <span className="absolute inset-0 animate-ping opacity-20" style={{ border: `2px solid ${badge.color}`, borderRadius: "50%" }} />}
+        {/* Sweeping shine — Tier 1 only */}
+        {isSpecial && (
+          <span
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.18) 50%, transparent 75%)",
+              backgroundSize: "200% 100%",
+              animation: "trophy-shine 3.5s ease-in-out infinite",
+            }}
+          />
+        )}
+        {/* Pulse ring — Tier 1 only */}
+        {isSpecial && (
+          <span className="absolute inset-0 animate-ping opacity-12" style={{ borderRadius, border: `2px solid ${badge.color}` }} />
+        )}
       </div>
       <p className="leading-tight font-bold w-full text-center" style={{ color: badge.color, fontSize: small ? "8px" : "10px", wordBreak: "break-word", lineHeight: 1.2 }}>
         {badge.name}
@@ -173,6 +182,7 @@ export default function AchievementBadges({ ace, heading }: Props) {
 
   return (
     <div className="space-y-3" style={{ minWidth: 0 }}>
+      <style>{`@keyframes trophy-shine{0%{background-position:200% center}60%{background-position:-200% center}100%{background-position:-200% center}}`}</style>
       {/* Heading + expand toggle */}
       <div className="flex items-center justify-between gap-2">
         {heading !== false && (

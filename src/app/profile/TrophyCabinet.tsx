@@ -66,8 +66,7 @@ function Tooltip({ badge, visible, anchorRef }: { badge: Achievement | null; vis
 }
 
 // ─── Trophy cell ──────────────────────────────────────────────────────────────
-// shape: "circle" (Tier1) | "diamond" (Tier2) | "square" (Tier3)
-function TrophyCell({ badge, earned, boxSize, xl = false, shape = "square" }: {
+function TrophyCell({ badge, earned, boxSize, xl = false, shape: _shape = "square" }: {
   badge: Achievement; earned: boolean; boxSize: number; xl?: boolean; shape?: "circle" | "diamond" | "square";
 }) {
   const [tip, setTip] = useState(false);
@@ -75,30 +74,13 @@ function TrophyCell({ badge, earned, boxSize, xl = false, shape = "square" }: {
   const ref   = useRef<HTMLDivElement>(null);
   const iconSize = xl ? Math.round(boxSize * 0.45) : Math.round(boxSize * 0.40);
   const isSpecial = badge.tier === "special";
-
-  const borderRadius =
-    shape === "circle"  ? "50%" :
-    shape === "diamond" ? "10px" :
-    "8px";
-
-  const shapeStyle: React.CSSProperties =
-    shape === "diamond"
-      ? { transform: "rotate(45deg)" }
-      : {};
-
-  const iconStyle: React.CSSProperties =
-    shape === "diamond"
-      ? { transform: "rotate(-45deg)" }
-      : {};
+  const borderRadius = "10px";
 
   if (!earned) {
     return (
       <div className="flex flex-col items-center gap-1.5 select-none" style={{ opacity: 0.18 }}>
-        {/* Extra wrapper to keep layout box square for diamond */}
-        <div style={{ width: boxSize, height: boxSize, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div style={{ width: boxSize, height: boxSize, borderRadius, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center", ...shapeStyle }}>
-            <div style={iconStyle}><Lock style={{ width: Math.round(boxSize * 0.35), height: Math.round(boxSize * 0.35) }} className="text-white/25" /></div>
-          </div>
+        <div style={{ width: boxSize, height: boxSize, borderRadius, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Lock style={{ width: Math.round(boxSize * 0.35), height: Math.round(boxSize * 0.35) }} className="text-white/25" />
         </div>
         <p className="text-center font-medium text-white/20 leading-tight" style={{ fontSize: 7.5, maxWidth: boxSize + 10, wordBreak: "break-word" }}>{badge.name}</p>
       </div>
@@ -114,48 +96,39 @@ function TrophyCell({ badge, earned, boxSize, xl = false, shape = "square" }: {
       onClick={() => setTip(v => !v)}
     >
       <Tooltip badge={badge} visible={tip} anchorRef={ref} />
+      <div
+        className="relative flex items-center justify-center transition-transform duration-150 hover:scale-110 overflow-hidden"
+        style={{
+          width: boxSize, height: boxSize,
+          borderRadius,
+          background: isSpecial
+            ? `linear-gradient(145deg, ${badge.color}32 0%, ${badge.color}14 100%)`
+            : `${badge.color}16`,
+          border: `1.5px solid ${badge.color}${isSpecial ? "60" : "32"}`,
+          boxShadow: isSpecial
+            ? `0 0 28px ${badge.color}55, 0 0 10px ${badge.color}28`
+            : `0 0 10px ${badge.color}22`,
+          color: badge.color,
+        }}
+      >
+        {ICON(badge.icon, iconSize)}
 
-      {/* Layout wrapper keeps the outer footprint consistent for diamond rotation */}
-      <div style={{ width: boxSize, height: boxSize, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-        <div
-          className="relative flex items-center justify-center transition-transform duration-150 hover:scale-110 overflow-hidden"
-          style={{
-            width: boxSize, height: boxSize,
-            borderRadius,
-            background: isSpecial
-              ? `linear-gradient(145deg, ${badge.color}32 0%, ${badge.color}14 100%)`
-              : `${badge.color}16`,
-            border: `1.5px solid ${badge.color}${isSpecial ? "60" : "32"}`,
-            boxShadow: isSpecial
-              ? `0 0 28px ${badge.color}55, 0 0 10px ${badge.color}28`
-              : shape === "diamond"
-              ? `0 0 14px ${badge.color}30`
-              : `0 0 10px ${badge.color}22`,
-            color: badge.color,
-            ...shapeStyle,
-          }}
-        >
-          {/* Icon — counter-rotated for diamond so it stays upright */}
-          <div style={iconStyle}>{ICON(badge.icon, iconSize)}</div>
-
-          {/* Sweeping shine on earned Tier 1 */}
-          {isSpecial && xl && (
-            <span
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: "linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%)",
-                backgroundSize: "200% 100%",
-                animation: "trophy-shine 3.5s ease-in-out infinite",
-              }}
-            />
-          )}
-          {/* Pulse ring for Tier 1 */}
-          {isSpecial && (
-            <span className="absolute inset-0 animate-ping opacity-10" style={{ borderRadius, border: `2px solid ${badge.color}` }} />
-          )}
-        </div>
+        {/* Sweeping shine — Tier 1 only */}
+        {isSpecial && (
+          <span
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.18) 50%, transparent 75%)",
+              backgroundSize: "200% 100%",
+              animation: "trophy-shine 3.5s ease-in-out infinite",
+            }}
+          />
+        )}
+        {/* Pulse ring — Tier 1 only */}
+        {isSpecial && (
+          <span className="absolute inset-0 animate-ping opacity-10" style={{ borderRadius, border: `2px solid ${badge.color}` }} />
+        )}
       </div>
-
       <p className="font-semibold text-center leading-tight" style={{ color: badge.color, fontSize: xl ? 9 : 7.5, maxWidth: boxSize + 12, wordBreak: "break-word" }}>{badge.name}</p>
     </div>
   );
@@ -240,7 +213,7 @@ export default function TrophyCabinet() {
         <div className="px-5 py-5 shrink-0" style={{ background: "linear-gradient(160deg, rgba(251,191,36,0.07) 0%, transparent 70%)", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
           <TierLabel tier="Tier 1" label="Only the absolute pinnacle" color="#fbbf24" earned={t1Earned} total={TIER1_ALL.length} />
           <div className="flex gap-5 items-start">
-            {TIER1_ALL.map(b => <TrophyCell key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={64} xl shape="circle" />)}
+            {TIER1_ALL.map(b => <TrophyCell key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={64} xl shape="square" />)}
           </div>
         </div>
 
@@ -248,7 +221,7 @@ export default function TrophyCabinet() {
         <div className="flex-1 px-5 py-5">
           <TierLabel tier="Tier 2" label="The domain master" color="#f97316" earned={t2Earned} total={TIER2_ALL.length} />
           <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(4, minmax(0, 1fr))" }}>
-            {TIER2_ALL.map(b => <TrophyCell key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={42} shape="diamond" />)}
+            {TIER2_ALL.map(b => <TrophyCell key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={42} shape="square" />)}
           </div>
         </div>
 
