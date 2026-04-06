@@ -76,7 +76,7 @@ export default async function OperatorsPage() {
       <section className="pt-28 lg:pt-36 pb-10 px-5 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div>
-            <p className="text-[#ff5100] text-xs font-bold tracking-[0.25em] uppercase mb-4">Directory</p>
+            <p className="text-[#ff5100] text-xs font-bold tracking-[0.25em] uppercase mb-4">Operators Directory</p>
             <h1 className="text-white text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.02]">
               Operators
             </h1>
