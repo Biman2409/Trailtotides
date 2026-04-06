@@ -148,7 +148,7 @@ function PlaceSearch({ onSelect }: { onSelect: (lat: number, lng: number, name: 
   }
 
   return (
-    <div ref={wrapperRef} className="relative w-full max-w-xs">
+    <div ref={wrapperRef} className="relative w-48 lg:w-64 shrink-0">
       <div className="relative">
         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#ff5100]" />
         {loading && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#9a9590] animate-spin" />}
@@ -469,7 +469,7 @@ export default function MapPage() {
       <div className="z-[1001] bg-white/95 backdrop-blur-md border-b border-[#e0d8cc] shadow-sm shrink-0">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-3 flex items-center gap-3">
             {/* Adventure search */}
-            <div className="relative flex-1 max-w-xs">
+            <div className="relative flex-1 min-w-0">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9a9590]" />
               <input
                 value={search}
