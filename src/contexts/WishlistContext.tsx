@@ -8,6 +8,7 @@ interface WishlistCtx {
   saved: Set<string>;
   isSaved: (slug: string) => boolean;
   toggle: (slug: string) => Promise<void>;
+  clearAll: () => Promise<void>;
   loading: boolean;
 }
 
@@ -15,6 +16,7 @@ const WishlistContext = createContext<WishlistCtx>({
   saved: new Set(),
   isSaved: () => false,
   toggle: async () => {},
+  clearAll: async () => {},
   loading: true,
 });
 
@@ -78,23 +80,20 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
 
   const toggle = useCallback(async (slug: string) => {
     const isNowSaved = !saved.has(slug);
-
-    // Build next set
     const next = new Set(saved);
     if (isNowSaved) next.add(slug); else next.delete(slug);
-
-    // Optimistic UI update
     setSaved(next);
-
-    if (userId) {
-      await saveWishlist([...next]);
-    } else {
-      lsSet(next);
-    }
+    if (userId) { await saveWishlist([...next]); } else { lsSet(next); }
   }, [saved, userId]);
 
+  const clearAll = useCallback(async () => {
+    const empty = new Set<string>();
+    setSaved(empty);
+    if (userId) { await saveWishlist([]); } else { lsSet(empty); }
+  }, [userId]);
+
   return (
-    <WishlistContext.Provider value={{ saved, isSaved: (s) => saved.has(s), toggle, loading }}>
+    <WishlistContext.Provider value={{ saved, isSaved: (s) => saved.has(s), toggle, clearAll, loading }}>
       {children}
     </WishlistContext.Provider>
   );

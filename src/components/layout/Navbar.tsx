@@ -32,7 +32,7 @@ export default function Navbar() {
   const [compareOpen, setCompareOpen] = useState(false);
   const compareRef = useRef<HTMLDivElement>(null);
 
-  const { saved, toggle } = useWishlist();
+  const { saved, toggle, clearAll } = useWishlist();
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const wishlistRef = useRef<HTMLDivElement>(null);
   const savedList = adventures.filter(a => saved.has(a.slug));
@@ -217,22 +217,23 @@ export default function Navbar() {
                           className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white/4"
                           style={{ borderBottom: "1px solid var(--border-subtle)" }}
                         >
-                          <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 relative">
-                            <Image src={a.heroImage} alt={a.name} fill quality={60} className="object-cover" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <Link
-                              href={`/experiences/${a.slug}`}
-                              onClick={() => setWishlistOpen(false)}
-                              className="text-sm font-medium leading-tight truncate block hover:text-[#ff5100] transition-colors"
-                              style={{ color: "var(--text-secondary)" }}
-                            >
-                              {a.name}
-                            </Link>
-                            <p className="text-[10px] mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>
-                              {a.type} · {a.state}
-                            </p>
-                          </div>
+                          <Link
+                            href={`/experiences/${a.slug}`}
+                            onClick={() => setWishlistOpen(false)}
+                            className="flex items-center gap-3 flex-1 min-w-0"
+                          >
+                            <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 relative">
+                              <Image src={a.heroImage} alt={a.name} fill quality={60} className="object-cover" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium leading-tight truncate hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-secondary)" }}>
+                                {a.name}
+                              </p>
+                              <p className="text-[10px] mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>
+                                {a.type} · {a.state}
+                              </p>
+                            </div>
+                          </Link>
                           <button
                             onClick={() => toggle(a.slug)}
                             className="shrink-0 transition-colors hover:text-red-400"
@@ -243,6 +244,11 @@ export default function Navbar() {
                           </button>
                         </div>
                       ))}
+                    </div>
+                    <div className="px-4 py-2.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                      <button onClick={() => { clearAll(); setWishlistOpen(false); }} className="text-xs text-white/30 hover:text-red-400 transition-colors">
+                        Clear all
+                      </button>
                     </div>
                   </div>
                 )}
@@ -288,22 +294,23 @@ export default function Navbar() {
                     <div className="overflow-y-auto" style={{ maxHeight: "320px" }}>
                       {selected.map((a) => (
                         <div key={a.id} className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white/4" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-                          <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 relative">
-                            <Image src={a.heroImage} alt={a.name} fill quality={60} className="object-cover" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <Link
-                              href={`/experiences/${a.slug}`}
-                              onClick={() => setCompareOpen(false)}
-                              className="text-sm font-medium leading-tight truncate block hover:text-[#ff5100] transition-colors"
-                              style={{ color: "var(--text-secondary)" }}
-                            >
-                              {a.name}
-                            </Link>
-                            <p className="text-[10px] mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>
-                              {a.type} · {a.state}
-                            </p>
-                          </div>
+                          <Link
+                            href={`/experiences/${a.slug}`}
+                            onClick={() => setCompareOpen(false)}
+                            className="flex items-center gap-3 flex-1 min-w-0"
+                          >
+                            <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 relative">
+                              <Image src={a.heroImage} alt={a.name} fill quality={60} className="object-cover" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium leading-tight truncate hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-secondary)" }}>
+                                {a.name}
+                              </p>
+                              <p className="text-[10px] mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>
+                                {a.type} · {a.state}
+                              </p>
+                            </div>
+                          </Link>
                           <button onClick={() => remove(a.id)} className="transition-colors shrink-0 hover:text-red-400" style={{ color: "var(--text-muted)" }}>
                             <X className="w-3.5 h-3.5" />
                           </button>
