@@ -517,6 +517,7 @@ export default function MapPage() {
   const openPinRef = useRef<((slug: string) => void) | null>(null);
   const [nearMe, setNearMe] = useState<{ lat: number; lng: number } | null>(null);
   const [nearMeLoading, setNearMeLoading] = useState(false);
+  const [nearMeError, setNearMeError] = useState(false);
 
   const [search, setSearch] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<AdventureType[]>([]);
@@ -577,12 +578,18 @@ export default function MapPage() {
     : visibleAdventures;
 
   function handleNearMe() {
-    if (nearMe) { setNearMe(null); return; }
+    if (nearMe) { setNearMe(null); setNearMeError(false); return; }
+    if (!navigator.geolocation) { setNearMeError(true); return; }
     setNearMeLoading(true);
+    setNearMeError(false);
     navigator.geolocation.getCurrentPosition(
-      pos => { setNearMe({ lat: pos.coords.latitude, lng: pos.coords.longitude }); flyToRef.current?.(pos.coords.latitude, pos.coords.longitude); setNearMeLoading(false); },
-      () => setNearMeLoading(false),
-      { timeout: 8000 }
+      pos => {
+        setNearMe({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        flyToRef.current?.(pos.coords.latitude, pos.coords.longitude);
+        setNearMeLoading(false);
+      },
+      () => { setNearMeLoading(false); setNearMeError(true); },
+      { timeout: 8000, enableHighAccuracy: false }
     );
   }
 
@@ -634,11 +641,16 @@ export default function MapPage() {
             </button>
           </div>
 
-          <button onClick={handleNearMe} title={nearMe ? "Clear Near Me" : "Adventures Near Me"}
-            className={`${btnBase} ${nearMe ? "bg-[#ff5100] text-white" : btnIdle}`}>
-            {nearMeLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <LocateFixed className="w-4 h-4" />}
-            <span className="hidden sm:inline">{nearMe ? "Near Me ✓" : "Near Me"}</span>
-          </button>
+          <div className="flex flex-col items-center shrink-0">
+            <button onClick={handleNearMe} title={nearMe ? "Clear Near Me" : "Adventures Near Me"}
+              className={`${btnBase} ${nearMe ? "bg-[#ff5100] text-white" : nearMeError ? "bg-red-50 text-red-500 border border-red-200" : btnIdle}`}>
+              {nearMeLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <LocateFixed className="w-4 h-4" />}
+              <span className="hidden sm:inline">{nearMe ? "Near Me ✓" : "Near Me"}</span>
+            </button>
+            {nearMeError && (
+              <span className="text-[10px] text-red-400 font-medium mt-0.5 whitespace-nowrap">Location denied</span>
+            )}
+          </div>
 
           <button onClick={() => setFiltersOpen(!filtersOpen)}
             className={`${btnBase} ${filtersOpen || activeFilterCount > 0 ? btnActive : btnIdle}`}>
@@ -667,7 +679,19 @@ export default function MapPage() {
         {/* Filter panel */}
         {filtersOpen && (
           <div className="border-t border-[#e8dfc8] bg-[#fdfcfb] px-4 lg:px-6 py-6 max-h-[60vh] overflow-y-auto">
-            <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="max-w-7xl mx-auto">
+            {activeFilterCount > 0 && (
+              <div className="flex justify-end mb-5">
+                <button
+                  onClick={clearAll}
+                  className="flex items-center gap-1.5 text-sm font-semibold text-[#ff5100] hover:text-[#e04800] transition-colors"
+                >
+                  <X className="w-3.5 h-3.5" />
+                  Clear all filters
+                </button>
+              </div>
+            )}
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-8">
 
               {/* Adventure Type */}
               <div className="col-span-2 lg:col-span-3">
@@ -882,6 +906,7 @@ export default function MapPage() {
                   </div>
                 )}
               </div>
+            </div>
             </div>
           </div>
         )}
