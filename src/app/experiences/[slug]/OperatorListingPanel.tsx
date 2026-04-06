@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { submitOperatorUpdate } from "@/app/auth/operator-actions";
 import { getOperatorProfile } from "@/app/auth/operator-actions";
-import { Building2, CalendarDays, ChevronDown, ChevronUp, Plus, X, ShieldCheck, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
+import { Building2, ChevronDown, ChevronUp, Plus, Minus, X, ShieldCheck, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 
 interface Props {
@@ -24,8 +24,7 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
   const [operatorName, setOperatorName] = useState("");
   const [priceFrom, setPriceFrom] = useState("");
   const [notes, setNotes] = useState("");
-  const [dates, setDates] = useState<string[]>([]);
-  const [dateInput, setDateInput] = useState("");
+  const [batches, setBatches] = useState<string[]>([""]);
 
   useEffect(() => {
     const supabase = createClient();
@@ -39,9 +38,20 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
     });
   }, []);
 
+  const batchesFilled = batches.every(b => b.trim() !== "");
+
+  function setBatchCount(n: number) {
+    const clamped = Math.max(1, Math.min(12, n));
+    setBatches(prev => Array.from({ length: clamped }, (_, i) => prev[i] ?? ""));
+  }
+
+  function setBatchDate(i: number, val: string) {
+    setBatches(prev => { const next = [...prev]; next[i] = val; return next; });
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!operatorName || !priceFrom) return;
+    if (!operatorName || !priceFrom || !batchesFilled) return;
     setSubmitting(true);
     setResult(null);
     const fd = new FormData();
@@ -49,7 +59,7 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
     fd.set("operator_name", operatorName);
     fd.set("price_from", priceFrom);
     fd.set("notes", notes);
-    fd.set("exact_dates", JSON.stringify(dates));
+    fd.set("exact_dates", JSON.stringify(batches));
     const res = await submitOperatorUpdate(fd);
     setSubmitting(false);
     if (res?.error) {
@@ -57,14 +67,8 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
     } else {
       setResult({ type: "success", text: "Listing submitted! Our team will review and approve it shortly." });
       setOpen(false);
-      setPriceFrom(""); setNotes(""); setDates([]);
+      setPriceFrom(""); setNotes(""); setBatches([""]);
     }
-  }
-
-  function addDate() {
-    const d = dateInput.trim();
-    if (d && !dates.includes(d)) setDates((prev) => [...prev, d]);
-    setDateInput("");
   }
 
   if (loading) return null;
@@ -186,45 +190,39 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
             />
           </div>
 
-          {/* Departure Dates */}
-          <div>
-            <label className="block text-[10px] font-bold text-white/35 uppercase tracking-[0.18em] mb-1.5">
-              <CalendarDays className="inline w-3 h-3 mr-1 -mt-0.5" />
-              Departure Dates <span className="normal-case tracking-normal text-white/20">(optional)</span>
-            </label>
-            <div className="flex gap-2 mb-2">
-              <input
-                value={dateInput}
-                onChange={(e) => setDateInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addDate(); }}}
-                placeholder="e.g. 15 Jan 2026"
-                className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl px-4 py-2 text-white text-xs placeholder-white/20 focus:outline-none focus:border-emerald-500/40 transition-all"
-              />
-              <button
-                type="button"
-                onClick={addDate}
-                className="px-3 py-2 rounded-xl text-emerald-400 transition-colors hover:bg-emerald-400/10"
-                style={{ border: "1px solid rgba(16,185,129,0.2)" }}
-              >
-                <Plus className="w-4 h-4" />
-              </button>
-            </div>
-            {dates.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
-                {dates.map((d) => (
-                  <span
-                    key={d}
-                    className="flex items-center gap-1.5 text-[10px] font-mono px-2 py-1 rounded-lg"
-                    style={{ background: "rgba(255,81,0,0.08)", color: "rgba(255,125,71,0.9)", border: "1px solid rgba(255,81,0,0.18)" }}
-                  >
-                    {d}
-                    <button type="button" onClick={() => setDates((prev) => prev.filter((x) => x !== d))}>
-                      <X className="w-2.5 h-2.5 opacity-60 hover:opacity-100" />
-                    </button>
-                  </span>
-                ))}
+          {/* Batch departure dates */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-[10px] font-bold text-white/35 uppercase tracking-[0.18em]">
+                Departure Batches
+              </label>
+              <div className="flex items-center gap-0 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+                <button type="button" onClick={() => setBatchCount(batches.length - 1)} disabled={batches.length <= 1}
+                  className="w-7 h-7 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/[0.06] transition-all disabled:opacity-25">
+                  <Minus className="w-3 h-3" />
+                </button>
+                <span className="w-7 text-center text-xs font-bold text-white">{batches.length}</span>
+                <button type="button" onClick={() => setBatchCount(batches.length + 1)} disabled={batches.length >= 12}
+                  className="w-7 h-7 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/[0.06] transition-all disabled:opacity-25">
+                  <Plus className="w-3 h-3" />
+                </button>
               </div>
-            )}
+            </div>
+            <div className="space-y-2">
+              {batches.map((val, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-white/25 w-12 shrink-0">Batch {i + 1}</span>
+                  <input
+                    type="date"
+                    value={val}
+                    onChange={e => setBatchDate(i, e.target.value)}
+                    required
+                    className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2 text-white text-xs focus:outline-none focus:border-emerald-500/40 transition-all"
+                    style={{ colorScheme: "dark" }}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Notes */}
@@ -247,7 +245,7 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
 
           <button
             type="submit"
-            disabled={submitting}
+            disabled={submitting || !batchesFilled}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-50"
             style={{ background: "linear-gradient(135deg, #10b981, #059669)" }}
           >
