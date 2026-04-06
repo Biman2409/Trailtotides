@@ -7,7 +7,6 @@ import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { Adventure, adventures } from "@/lib/data";
-import DifficultyMeter from "@/components/ui/custom/DifficultyMeter";
 import { useCompare, MAX } from "@/contexts/CompareContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import ACERadar from "@/components/ui/custom/ACERadar";
@@ -277,19 +276,11 @@ export default function CompareAdventures() {
                     <td className="px-4 py-3 text-white/40 text-[11px] font-semibold tracking-wide uppercase whitespace-nowrap">
                       {field.label}
                     </td>
-                    {selected.map((a) => {
-                      const val = getValue(a, field.key);
-                      const isDifficulty = field.key === "difficulty";
-                      return (
-                        <td key={a.id} className="px-4 py-3">
-                          {isDifficulty ? (
-                            <DifficultyMeter difficulty={String(val)} />
-                          ) : (
-                            <span className="text-white/80 text-sm">{val}</span>
-                          )}
-                        </td>
-                      );
-                    })}
+                    {selected.map((a) => (
+                      <td key={a.id} className="px-4 py-3">
+                        <span className="text-white/80 text-sm">{getValue(a, field.key)}</span>
+                      </td>
+                    ))}
                   </tr>
                 ))}
 
