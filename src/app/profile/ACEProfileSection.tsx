@@ -147,6 +147,9 @@ export default function ACEProfileSection() {
             </div>
           </div>
 
+          {/* Divider */}
+          <div className="h-px -mx-1" style={{ background: `${currentRank.color}18` }} />
+
           {/* Progress numbers */}
           {nextRank ? (
             <div className="flex items-end justify-between">
