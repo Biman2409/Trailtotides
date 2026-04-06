@@ -104,7 +104,7 @@ export default function MatchmakerCard({ isLoggedIn }: { isLoggedIn: boolean }) 
           ) : (
             <div className="flex items-center gap-2">
               <div className="h-1.5 flex-1 rounded-full" style={{ background: `linear-gradient(to right, #22d3ee, #a78bfa)`, boxShadow: "0 0 8px #a78bfa40" }} />
-              <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa]">Max Rank</span>
+              <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa]">The absolute pinnacle</span>
             </div>
           )}
 

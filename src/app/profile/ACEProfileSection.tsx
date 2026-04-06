@@ -198,7 +198,7 @@ export default function ACEProfileSection() {
             ) : (
               <div className="flex flex-col gap-3 py-2">
                 <div className="w-full h-2.5 rounded-full" style={{ background: `linear-gradient(to right, ${RANKS[1].color}, #a78bfa)`, boxShadow: "0 0 14px #a78bfa50" }} />
-                <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">Maximum Rank — Apex</p>
+                <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">The absolute pinnacle</p>
               </div>
             )}
 

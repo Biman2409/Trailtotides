@@ -363,7 +363,7 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
         ) : (
           <div className="flex flex-col items-center gap-3 py-2">
             <div className="w-full h-2.5 rounded-full" style={{ background: `linear-gradient(to right, ${RANKS[1].color}, #a78bfa)`, boxShadow: "0 0 14px #a78bfa50" }} />
-            <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">Maximum Rank — Apex</p>
+            <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">The absolute pinnacle</p>
           </div>
         )}
       </div>
@@ -829,7 +829,7 @@ function ResultsScreen({
                 ) : (
                   <div className="flex items-center gap-2 mb-4">
                     <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
-                    <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">Maximum Rank Reached — Apex</p>
+                    <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">The absolute pinnacle</p>
                   </div>
                 )}
               </div>
