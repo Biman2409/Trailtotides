@@ -103,6 +103,15 @@ function TrophyCard({ badge, index, small = false }: { badge: Achievement; index
   const isSpecial = badge.tier === "special";
   const isDomain  = badge.tier === "domain";
 
+  // Shape per tier: circle = special (pinnacle), diamond = domain, square = axis
+  const shapeStyle = isSpecial
+    ? { borderRadius: "50%" }
+    : isDomain
+      ? { borderRadius: "8px", transform: "rotate(45deg)" }
+      : { borderRadius: "8px" };
+
+  const sz = small ? 40 : 52;
+
   return (
     <div
       ref={cardRef}
@@ -114,19 +123,21 @@ function TrophyCard({ badge, index, small = false }: { badge: Achievement; index
     >
       <Tooltip badge={badge} visible={tooltip} anchorRef={cardRef} />
       <div
-        className="relative flex items-center justify-center rounded-xl mb-1.5 transition-transform duration-150 hover:scale-110"
+        className="relative flex items-center justify-center mb-1.5 transition-transform duration-150 hover:scale-110"
         style={{
-          width:  small ? 40 : 52,
-          height: small ? 40 : 52,
+          width: sz,
+          height: sz,
           background: isSpecial ? `linear-gradient(145deg, ${badge.color}28 0%, ${badge.color}10 100%)` : `${badge.color}14`,
           border: `1.5px solid ${badge.color}${isSpecial ? "50" : isDomain ? "38" : "28"}`,
           boxShadow: isSpecial ? `0 0 20px ${badge.color}45, 0 0 8px ${badge.color}25` : isDomain ? `0 0 12px ${badge.color}25` : `0 0 6px ${badge.color}15`,
+          ...shapeStyle,
         }}
       >
-        <span style={{ color: badge.color }}>
+        {/* Counter-rotate icon inside diamond so it stays upright */}
+        <span style={{ color: badge.color, display: "flex", transform: isDomain ? "rotate(-45deg)" : undefined }}>
           {small ? (ICON_SM[badge.icon] ?? <Trophy className="w-4 h-4" />) : (ICON_MD[badge.icon] ?? <Trophy className="w-5 h-5" />)}
         </span>
-        {isSpecial && <span className="absolute inset-0 rounded-xl animate-ping opacity-20" style={{ border: `2px solid ${badge.color}` }} />}
+        {isSpecial && <span className="absolute inset-0 animate-ping opacity-20" style={{ border: `2px solid ${badge.color}`, borderRadius: "50%" }} />}
       </div>
       <p className="leading-tight font-bold w-full text-center" style={{ color: badge.color, fontSize: small ? "8px" : "10px", wordBreak: "break-word", lineHeight: 1.2 }}>
         {badge.name}
