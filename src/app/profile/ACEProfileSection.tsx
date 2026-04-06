@@ -173,17 +173,18 @@ export default function ACEProfileSection() {
                       }}
                     />
                   </div>
-                  <div className="relative h-4">
+                  <div className="relative h-4 overflow-hidden">
                     {RANKS.map((rank, i) => {
                       const isCurrent = i === currentRankIndex;
                       const isUnlocked = i < currentRankIndex;
+                      const pct = (i / (totalRanks - 1)) * 100;
                       return (
                         <span
                           key={rank.label}
                           className="absolute text-[7.5px] font-semibold leading-none whitespace-nowrap top-0"
                           style={{
-                            left: `${(i / (totalRanks - 1)) * 100}%`,
-                            transform: `translateX(-${(i / (totalRanks - 1)) * 100}%)`,
+                            left: `${pct}%`,
+                            transform: i === 0 ? "none" : i === totalRanks - 1 ? "translateX(-100%)" : "translateX(-50%)",
                             color: isCurrent ? currentRank.color : isUnlocked ? `${rank.color}55` : "rgba(255,255,255,0.15)",
                           }}
                         >
