@@ -48,10 +48,6 @@ export default function OperatorSignupPage() {
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
           <Logo size="lg" />
           <div className="max-w-md">
-            <div className="inline-flex items-center gap-2 bg-[#ff5100]/10 border border-[#ff5100]/20 rounded-full px-4 py-1.5 mb-6">
-              <Building2 className="w-3.5 h-3.5 text-[#ff7d47]" />
-              <span className="text-[11px] font-bold text-[#ff7d47] uppercase tracking-widest">Operator Portal</span>
-            </div>
             <h2 className="text-5xl font-black text-white leading-[1.1] mb-6 tracking-tight">
               Grow your<br />
               <span className="text-[#ff5100]">adventure business.</span>
@@ -59,18 +55,6 @@ export default function OperatorSignupPage() {
             <p className="text-white/60 text-base font-medium leading-relaxed max-w-sm">
               List your treks, update prices, manage dates, and connect with thousands of adventure seekers across India.
             </p>
-            <div className="mt-8 grid grid-cols-3 gap-4">
-              {[
-                { value: "50K+", label: "Monthly visitors" },
-                { value: "200+", label: "Adventures listed" },
-                { value: "98%", label: "Operator retention" },
-              ].map(({ value, label }) => (
-                <div key={label} className="bg-white/5 rounded-2xl p-4 border border-white/8">
-                  <p className="text-2xl font-black text-[#ff5100]">{value}</p>
-                  <p className="text-[10px] text-white/40 font-semibold mt-1 leading-tight">{label}</p>
-                </div>
-              ))}
-            </div>
           </div>
           <div className="flex items-center gap-6 text-white/30 text-[11px] font-bold uppercase tracking-[0.15em]">
             <span>© 2026 TRAIL TO TIDES</span>
