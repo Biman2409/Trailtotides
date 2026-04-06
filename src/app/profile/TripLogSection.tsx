@@ -28,7 +28,7 @@ export default function TripLogSection() {
 
       {entries.length === 0 ? (
         <div className="rounded-2xl p-8 text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-          <div className="flex justify-center mb-3"><Tent className="w-8 h-8 text-white/20" /></div>
+          <div className="flex justify-center mb-3"><Image src="/logo.svg" alt="Trail to Tides" width={32} height={32} className="opacity-20" /></div>
           <p className="text-white/40 text-sm">No adventures logged yet.</p>
           <p className="text-white/25 text-xs mt-1">Mark adventures as done from their page or card.</p>
         </div>
