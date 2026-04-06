@@ -204,8 +204,8 @@ export default function FindYourFormat() {
                       <div className="py-3.5 flex items-center justify-between">
                         <span className="text-white/40 text-xs">
                           {cat.comingSoon
-                            ? `${cat.previewItems?.length ?? 0} adventure types`
-                            : `${cat.items.length} adventure types`}
+                            ? `${cat.previewItems?.length ?? 0} types`
+                            : `${cat.items.length} types`}
                         </span>
                         {!cat.comingSoon && (
                           <span
