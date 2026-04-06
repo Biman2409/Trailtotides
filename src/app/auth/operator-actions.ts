@@ -240,6 +240,37 @@ export async function getApprovedOperatorsForAdventure(adventureSlug: string): P
   );
 }
 
+export async function updateOperatorSubmission(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Not authenticated." };
+
+  const adminClient = await createAdminClient();
+  const submissionId = formData.get("submission_id") as string;
+
+  const existing = (await readJsonFile(
+    adminClient, "operator-submissions", `${submissionId}.json`
+  )) as OperatorSubmission | null;
+
+  if (!existing) return { error: "Submission not found." };
+  if (existing.operator_id !== user.id) return { error: "Not authorised." };
+
+  const price_from = formData.get("price_from") as string;
+  const notes = (formData.get("notes") as string) || null;
+  let exact_dates: string[] = [];
+  try { exact_dates = JSON.parse(formData.get("exact_dates") as string); } catch { exact_dates = []; }
+
+  await writeJsonFile(adminClient, "operator-submissions", `${submissionId}.json`, {
+    ...existing,
+    price_from,
+    notes,
+    exact_dates,
+    status: "pending", // re-submit for review on any edit
+  });
+
+  return { success: "Changes submitted for review." };
+}
+
 export async function approveOperatorSubmission(submissionId: string) {
   const adminClient = await createAdminClient();
   const sub = (await readJsonFile(
