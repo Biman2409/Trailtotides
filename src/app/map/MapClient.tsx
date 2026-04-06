@@ -66,10 +66,16 @@ declare global { interface Window { L: typeof L } }
 
 function loadScript(src: string): Promise<void> {
   return new Promise((resolve) => {
-    if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+    const existing = document.querySelector(`script[src="${src}"]`);
+    if (existing) {
+      // Tag exists but may not have finished executing — wait for load if still pending
+      if ((existing as HTMLScriptElement).dataset.loaded) { resolve(); return; }
+      existing.addEventListener("load", () => resolve(), { once: true });
+      return;
+    }
     const s = document.createElement("script");
     s.src = src;
-    s.onload = () => resolve();
+    s.onload = () => { s.dataset.loaded = "1"; resolve(); };
     document.head.appendChild(s);
   });
 }
@@ -90,12 +96,8 @@ function loadLeaflet(): Promise<typeof L> {
       ld.href = "https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css";
       document.head.appendChild(ld);
     }
-    if (window.L) {
-      // Leaflet loaded but maybe cluster not yet
-      loadScript("https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js")
-        .then(() => resolve(window.L));
-      return;
-    }
+    // Always load both scripts in sequence — loadScript is idempotent and
+    // waits for the tag to finish executing before resolving.
     loadScript("https://unpkg.com/leaflet@1.9.4/dist/leaflet.js")
       .then(() => loadScript("https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"))
       .then(() => resolve(window.L));
