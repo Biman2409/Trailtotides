@@ -119,20 +119,13 @@ export default function ACEProfileSection() {
                 <p className="text-lg font-bold leading-none" style={{ color: currentRank.color }}>{currentRank.label}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col items-end gap-1">
               <div className="flex gap-0.5">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <span key={i} className="text-sm" style={{ color: i < currentRank.stars ? currentRank.color : "rgba(255,255,255,0.08)" }}>★</span>
                 ))}
               </div>
-              <Link
-                href="/matchmaker"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:brightness-110"
-                style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.18)", color: "#ff7d47" }}
-              >
-                <RotateCcw className="w-3 h-3" />
-                Retake
-              </Link>
+              <span className="text-[9px] font-semibold text-white/25">Rank {currentRank.stars} / 5</span>
             </div>
           </div>
 
@@ -207,6 +200,15 @@ export default function ACEProfileSection() {
                 <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">Maximum Rank — Apex</p>
               </div>
             )}
+
+            <Link
+              href="/matchmaker"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:brightness-110 mt-1 w-fit"
+              style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.18)", color: "#ff7d47" }}
+            >
+              <RotateCcw className="w-3 h-3" />
+              Retake Assessment
+            </Link>
           </div>
 
         </div>
