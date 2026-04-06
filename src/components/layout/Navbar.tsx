@@ -265,9 +265,14 @@ export default function Navbar() {
                 </button>
 
                 {compareOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl shadow-2xl overflow-hidden z-50" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}>
+                  <div className="absolute right-0 top-full mt-2 w-80 rounded-2xl shadow-2xl overflow-hidden z-50" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}>
                     <div className="px-4 py-3 flex items-center justify-between" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-                      <span className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Comparing {selected.length}/{MAX}</span>
+                      <div className="flex items-center gap-2">
+                        <GitCompareArrows className="w-3.5 h-3.5 text-[#ff5100]" />
+                        <span className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+                          Comparing · {selected.length}/{MAX}
+                        </span>
+                      </div>
                       <button
                         onClick={() => {
                           setCompareOpen(false);
@@ -277,16 +282,28 @@ export default function Navbar() {
                         }}
                         className="text-[#ff5100] text-xs font-semibold hover:underline"
                       >
-                        View comparison →
+                        View →
                       </button>
                     </div>
-                    <div className="divide-y" style={{ borderColor: "var(--border-subtle)" }}>
+                    <div className="overflow-y-auto" style={{ maxHeight: "320px" }}>
                       {selected.map((a) => (
-                        <div key={a.id} className="flex items-center gap-3 px-4 py-2.5">
-                          <div className="w-9 h-9 rounded-lg overflow-hidden shrink-0">
-                            <img src={a.heroImage} alt={a.name} className="w-full h-full object-cover" />
+                        <div key={a.id} className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white/4" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+                          <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 relative">
+                            <Image src={a.heroImage} alt={a.name} fill quality={60} className="object-cover" />
                           </div>
-                          <span className="text-sm font-medium flex-1 truncate" style={{ color: "var(--text-secondary)" }}>{a.name}</span>
+                          <div className="flex-1 min-w-0">
+                            <Link
+                              href={`/experiences/${a.slug}`}
+                              onClick={() => setCompareOpen(false)}
+                              className="text-sm font-medium leading-tight truncate block hover:text-[#ff5100] transition-colors"
+                              style={{ color: "var(--text-secondary)" }}
+                            >
+                              {a.name}
+                            </Link>
+                            <p className="text-[10px] mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>
+                              {a.type} · {a.state}
+                            </p>
+                          </div>
                           <button onClick={() => remove(a.id)} className="transition-colors shrink-0 hover:text-red-400" style={{ color: "var(--text-muted)" }}>
                             <X className="w-3.5 h-3.5" />
                           </button>
