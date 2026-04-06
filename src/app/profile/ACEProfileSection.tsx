@@ -104,13 +104,15 @@ export default function ACEProfileSection() {
   const currentRankIndex = totalScore >= 40 ? 5 : totalScore >= 32 ? 4 : totalScore >= 24 ? 3 : totalScore >= 16 ? 2 : totalScore >= 8 ? 1 : 0;
   const currentRank = RANKS[currentRankIndex];
   const nextRank = RANKS[currentRankIndex + 1] ?? null;
-  const totalRanks = RANKS.length;
-  const rawPct = nextRank
-    ? Math.min(100, Math.round(((totalScore - currentRank.minScore) / (nextRank.minScore - currentRank.minScore)) * 100))
+  // progressPct = % through current rank's segment toward the next
+  const progressPct = nextRank
+    ? Math.min(100, Math.max(0, Math.round(((totalScore - currentRank.minScore) / (nextRank.minScore - currentRank.minScore)) * 100)))
     : 100;
-  const progressPct = Math.max(0, rawPct);
   const ptsNeeded = nextRank ? nextRank.minScore - totalScore : 0;
-  const justUnlocked = nextRank !== null && totalScore === currentRank.minScore && currentRankIndex > 0;
+  // barPct = position along the full bar (0–100%). Each rank = 1/(N-1) of total width.
+  const N = RANKS.length; // 6
+  const segmentWidth = 100 / (N - 1); // 20% per rank
+  const barPct = nextRank === null ? 100 : Math.min(100, currentRankIndex * segmentWidth + (progressPct / 100) * segmentWidth);
 
   return (
     <div
@@ -164,32 +166,21 @@ export default function ACEProfileSection() {
       <div className="pt-4 sm:pt-5 pb-5 sm:pb-6">
         <div className="px-5 sm:px-7">
           {nextRank ? (
-            justUnlocked ? (
-              <div className="flex items-center gap-3 mb-4 py-1">
-                <div className="flex flex-col">
-                  <span className="text-[13px] font-bold tracking-wide" style={{ color: currentRank.color }}>Rank just unlocked!</span>
-                  <p className="text-[11px] text-white/35 mt-0.5">
-                    Score <span className="font-semibold text-white/55">{ptsNeeded} more pts</span> to reach <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span>
-                  </p>
+            <div className="flex items-end justify-between mb-4">
+              <div>
+                <div className="flex items-baseline gap-0.5 leading-none">
+                  <span className="text-[38px] sm:text-[48px] font-black tabular-nums tracking-tight" style={{ color: currentRank.color }}>{progressPct}</span>
+                  <span className="text-lg sm:text-xl font-bold ml-0.5" style={{ color: `${currentRank.color}70` }}>%</span>
                 </div>
+                <p className="text-[11px] text-white/30 mt-1 leading-none">
+                  to reach <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span>
+                </p>
               </div>
-            ) : (
-              <div className="flex items-end justify-between mb-4">
-                <div>
-                  <div className="flex items-baseline gap-0.5 leading-none">
-                    <span className="text-[38px] sm:text-[48px] font-black tabular-nums tracking-tight" style={{ color: currentRank.color }}>{progressPct}</span>
-                    <span className="text-lg sm:text-xl font-bold ml-0.5" style={{ color: `${currentRank.color}70` }}>%</span>
-                  </div>
-                  <p className="text-[11px] text-white/30 mt-1 leading-none">
-                    to reach <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span>
-                  </p>
-                </div>
-                <div className="text-right pb-1">
-                  <p className="text-[24px] sm:text-[30px] font-black tabular-nums leading-none text-white/70">{ptsNeeded}</p>
-                  <p className="text-[11px] text-white/28 mt-1 leading-none">pts needed</p>
-                </div>
+              <div className="text-right pb-1">
+                <p className="text-[24px] sm:text-[30px] font-black tabular-nums leading-none text-white/70">{ptsNeeded}</p>
+                <p className="text-[11px] text-white/28 mt-1 leading-none">pts needed</p>
               </div>
-            )
+            </div>
           ) : (
             <div className="flex items-center gap-2 mb-4">
               <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
@@ -201,21 +192,24 @@ export default function ACEProfileSection() {
         {/* Bar + labels */}
         <div className="px-5 sm:px-7">
           <div className="relative h-[10px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.055)" }}>
+            {/* Fill */}
             <div
               className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
               style={{
-                width: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
+                width: `${barPct}%`,
                 background: `linear-gradient(to right, ${RANKS[1].color}bb, ${currentRank.color})`,
                 boxShadow: `0 0 16px ${currentRank.color}55`,
               }}
             />
+            {/* Tick marks at each rank boundary */}
             {RANKS.slice(1, -1).map((rank, i) => (
-              <div key={rank.label} className="absolute inset-y-0 w-px bg-[rgba(14,14,18,0.65)]" style={{ left: `${((i + 1) / (totalRanks - 1)) * 100}%` }} />
+              <div key={rank.label} className="absolute inset-y-0 w-px bg-[rgba(14,14,18,0.65)]" style={{ left: `${(i + 1) * segmentWidth}%` }} />
             ))}
+            {/* Glowing dot */}
             <div
               className="absolute w-[18px] h-[18px] rounded-full border-2 transition-all duration-700"
               style={{
-                left: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
+                left: `${barPct}%`,
                 top: "50%",
                 transform: "translate(-50%, -50%)",
                 background: currentRank.color,
@@ -230,8 +224,8 @@ export default function ACEProfileSection() {
                 key={rank.label}
                 className="absolute text-[7px] sm:text-[7.5px] font-semibold leading-none whitespace-nowrap top-0"
                 style={{
-                  left: `${(i / (totalRanks - 1)) * 100}%`,
-                  transform: i === 0 ? "none" : i === totalRanks - 1 ? "translateX(-100%)" : "translateX(-50%)",
+                  left: `${i * segmentWidth}%`,
+                  transform: i === 0 ? "none" : i === N - 1 ? "translateX(-100%)" : "translateX(-50%)",
                   color: i === currentRankIndex ? currentRank.color : i < currentRankIndex ? `${rank.color}50` : "rgba(255,255,255,0.13)",
                 }}
               >
