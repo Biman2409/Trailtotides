@@ -31,10 +31,16 @@ export default async function OperatorsPage() {
     website: string | null;
     email: string;
     adventureSlugs: string[];
+    prices: Record<string, string>; // slug → formatted price
   };
 
   const cards: OperatorCard[] = profiles.map((p) => {
     const opSubs = approvedSubs.filter((s) => s.operator_id === p.user_id);
+    const prices: Record<string, string> = {};
+    opSubs.forEach((s) => {
+      const n = parseInt(s.price_from.replace(/[^\d]/g, ""), 10);
+      prices[s.adventure_slug] = isNaN(n) ? s.price_from : `₹${n.toLocaleString("en-IN")}`;
+    });
     return {
       id: p.user_id,
       company_name: p.company_name,
@@ -42,6 +48,7 @@ export default async function OperatorsPage() {
       website: p.website,
       email: p.email,
       adventureSlugs: [...new Set(opSubs.map((s) => s.adventure_slug))],
+      prices,
     };
   });
 
@@ -51,6 +58,13 @@ export default async function OperatorsPage() {
     adv.operators.filter((op) => op.verified).forEach((op) => {
       if (!staticVerifiedNames.has(op.name)) {
         staticVerifiedNames.add(op.name);
+        const prices: Record<string, string> = {};
+        adventures
+          .filter((a) => a.operators.some((o) => o.name === op.name))
+          .forEach((a) => {
+            const match = a.operators.find((o) => o.name === op.name);
+            if (match?.priceFrom) prices[a.slug] = match.priceFrom;
+          });
         staticCards.push({
           id: `static-${op.name}`,
           company_name: op.name,
@@ -60,6 +74,7 @@ export default async function OperatorsPage() {
           adventureSlugs: adventures
             .filter((a) => a.operators.some((o) => o.name === op.name))
             .map((a) => a.slug),
+          prices,
         });
       }
     });
@@ -189,6 +204,14 @@ export default async function OperatorsPage() {
                                   </span>
                                   <span className="w-px h-2.5 bg-white/10" />
                                   <span className="text-[10px] text-white/25">{adv.state}</span>
+                                  {op.prices[adv.slug] && (
+                                    <>
+                                      <span className="w-px h-2.5 bg-white/10" />
+                                      <span className="text-[10px] font-semibold" style={{ color: "rgba(255,125,71,0.8)" }}>
+                                        {op.prices[adv.slug]}
+                                      </span>
+                                    </>
+                                  )}
                                 </div>
                               </div>
 
