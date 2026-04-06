@@ -808,7 +808,7 @@ function ResultsScreen({
           const justUnlocked = nextRank !== null && totalScore === RANKS[currentRankIndex].minScore && currentRankIndex > 0;
           const ptsNeeded = nextRank ? nextRank.minScore - totalScore : 0;
           return (
-            <div className="pt-4 sm:pt-5 pb-5 sm:pb-6">
+            <div className="pt-4 sm:pt-5 pb-7 sm:pb-8">
               {/* % + pts row — padded */}
               <div className="px-5 sm:px-7">
                 {nextRank ? (
@@ -847,7 +847,7 @@ function ResultsScreen({
               </div>
               {/* Bar + labels — full width with px padding applied via mx */}
               <div className="px-5 sm:px-7">
-                <div className="relative h-[10px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.055)" }}>
+                <div className="relative h-[10px] rounded-full mb-2" style={{ background: "rgba(255,255,255,0.055)" }}>
                   <div
                     className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
                     style={{
@@ -871,7 +871,7 @@ function ResultsScreen({
                     }}
                   />
                 </div>
-                <div className="relative h-[18px] overflow-hidden">
+                <div className="relative h-5 mt-1">
                   {RANKS.map((rank, i) => (
                     <span
                       key={rank.label}
