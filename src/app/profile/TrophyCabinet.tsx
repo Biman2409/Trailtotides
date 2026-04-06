@@ -232,7 +232,7 @@ export default function TrophyCabinet() {
 
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-3 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25">Trophy Cabinet</p>
+        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25">All Trophies</p>
         <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={totalEarned > 0 ? { background: "rgba(251,191,36,0.1)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.2)" } : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.07)" }}>
           {totalEarned} / {totalPossible} unlocked
         </span>
