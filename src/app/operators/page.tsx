@@ -97,7 +97,7 @@ export default async function OperatorsPage() {
               The People Who<br className="hidden sm:block" /> Take You There
             </h1>
             <p className="text-white/45 text-base mt-4 max-w-lg leading-relaxed font-light">
-              {allCards.length} vetted companies running {totalAdventures} adventures across India&apos;s wildest terrain — from Ladakh passes to Andaman reefs.
+              Vetted companies running adventures across India&apos;s wildest terrain — from Ladakh passes to Andaman reefs.
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
