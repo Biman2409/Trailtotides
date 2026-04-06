@@ -83,25 +83,21 @@ function AdventureSearchDropdown({
       className="absolute top-full left-0 right-0 mt-1.5 rounded-xl overflow-hidden z-50 shadow-2xl"
       style={{ background: "rgba(18,18,24,0.98)", border: "1px solid rgba(255,255,255,0.1)" }}
     >
-      {results.map(a => {
-        const diff = computeDifficulty(getACE(a));
-        return (
-          <button
-            key={a.id}
-            onClick={() => onSelect(a)}
-            className="w-full flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-white/5 text-left"
-          >
-            <div className="w-10 h-10 rounded-lg overflow-hidden shrink-0 relative">
-              <Image src={a.heroImage} alt={a.name} fill quality={60} className="object-cover" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white text-xs font-semibold leading-tight truncate">{a.name}</p>
-              <p className="text-white/40 text-[10px] mt-0.5">{a.state} · {a.durationDays}</p>
-            </div>
-            <DifficultyMeter difficulty={diff} />
-          </button>
-        );
-      })}
+      {results.map(a => (
+        <button
+          key={a.id}
+          onClick={() => onSelect(a)}
+          className="w-full flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-white/5 text-left"
+        >
+          <div className="w-9 h-9 rounded-lg overflow-hidden shrink-0 relative">
+            <Image src={a.heroImage} alt={a.name} fill quality={60} className="object-cover" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-white text-xs font-semibold leading-tight truncate">{a.name}</p>
+            <p className="text-white/35 text-[10px] mt-0.5 truncate">{a.type} · {a.state}</p>
+          </div>
+        </button>
+      ))}
     </div>
   );
 }
