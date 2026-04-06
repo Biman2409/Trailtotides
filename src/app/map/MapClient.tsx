@@ -458,31 +458,25 @@ function MapView({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [advs]);
 
-  // Sync overlay layers. Create each layer once, then only add/remove from map.
-  // Satellite sits below terrain — insertion order: satellite first, terrain on top.
+  // Sync overlay layer — only one active at a time. Create each layer once, reuse on re-toggle.
   useEffect(() => {
     if (!mapInstanceRef.current) return;
     loadLeaflet().then(leaflet => {
       const map = mapInstanceRef.current;
       if (!map) return;
-      const bothActive = overlays.has("terrain") && overlays.has("satellite");
 
-      (["satellite", "terrain"] as OverlayKey[]).forEach(key => {
+      (Object.keys(OVERLAY_LAYERS) as OverlayKey[]).forEach(key => {
         const cfg = OVERLAY_LAYERS[key];
         const wantOn = overlays.has(key);
-        const opacity = key === "terrain" && bothActive ? cfg.opacityWithSat : cfg.opacityAlone;
 
         if (wantOn) {
           if (!overlayLayerRefs.current[key]) {
-            // Create layer once
             overlayLayerRefs.current[key] = leaflet.tileLayer(cfg.url, {
               maxZoom: cfg.maxZoom,
               attribution: cfg.attribution,
-              opacity,
+              opacity: cfg.opacityAlone,
               keepBuffer: 4,
             });
-          } else {
-            overlayLayerRefs.current[key]!.setOpacity(opacity);
           }
           if (!map.hasLayer(overlayLayerRefs.current[key]!)) {
             overlayLayerRefs.current[key]!.addTo(map);
@@ -514,14 +508,10 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 export default function MapPage() {
   const [mounted, setMounted] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [overlays, setOverlays] = useState<Set<OverlayKey>>(new Set());
+  const [activeOverlay, setActiveOverlay] = useState<OverlayKey | null>(null);
 
   function toggleOverlay(key: OverlayKey) {
-    setOverlays(prev => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key); else next.add(key);
-      return next;
-    });
+    setActiveOverlay(prev => prev === key ? null : key);
   }
   const flyToRef = useRef<((lat: number, lng: number) => void) | null>(null);
   const openPinRef = useRef<((slug: string) => void) | null>(null);
@@ -615,20 +605,29 @@ export default function MapPage() {
             onAdventurePin={adv => openPinRef.current?.(adv.slug)}
           />
 
-          {/* Overlay toggles — Terrain & Satellite on top of base map */}
-          <div className="flex items-center gap-1.5 shrink-0">
+          {/* Overlay toggles — mutually exclusive, one at a time */}
+          <div className="flex items-center rounded-xl overflow-hidden shrink-0" style={{ border: "1px solid #e8dfc8" }}>
             <button
               onClick={() => toggleOverlay("terrain")}
-              title="Toggle terrain hillshade"
-              className={`${btnBase} ${overlays.has("terrain") ? btnActive : btnIdle}`}
+              title="Terrain / topo layer"
+              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-all"
+              style={{
+                background: activeOverlay === "terrain" ? "#1e3d2f" : "#f5f0e8",
+                color: activeOverlay === "terrain" ? "white" : "#4a4540",
+                borderRight: "1px solid #e8dfc8",
+              }}
             >
               <Layers className="w-4 h-4" />
               <span className="hidden sm:inline">Terrain</span>
             </button>
             <button
               onClick={() => toggleOverlay("satellite")}
-              title="Toggle satellite imagery"
-              className={`${btnBase} ${overlays.has("satellite") ? "bg-[#1e3d2f] text-white" : btnIdle}`}
+              title="Satellite imagery"
+              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-all"
+              style={{
+                background: activeOverlay === "satellite" ? "#1e3d2f" : "#f5f0e8",
+                color: activeOverlay === "satellite" ? "white" : "#4a4540",
+              }}
             >
               <MapIcon className="w-4 h-4" />
               <span className="hidden sm:inline">Satellite</span>
@@ -912,7 +911,7 @@ export default function MapPage() {
       {/* ── Map ─────────────────────────────────────────────────── */}
       <div className="flex-1 relative overflow-hidden">
         {mounted ? (
-          <MapView adventures={sortedAdventures} flyToRef={flyToRef} openPinRef={openPinRef} overlays={overlays} />
+          <MapView adventures={sortedAdventures} flyToRef={flyToRef} openPinRef={openPinRef} overlays={activeOverlay ? new Set([activeOverlay]) : new Set()} />
         ) : (
           <div className="w-full h-full bg-[#f5f0e8] flex items-center justify-center">
             <Loader2 className="w-6 h-6 text-[#b8b0a5] animate-spin" />
