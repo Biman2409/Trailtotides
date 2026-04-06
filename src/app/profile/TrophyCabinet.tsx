@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import {
   Lock, Trophy, Crown,
-  Flame, Activity, PackageOpen, TrendingUp, Footprints,
+  Activity, PackageOpen, TrendingUp, Footprints,
   Waves, Mountain, Crosshair, WifiOff,
   Gauge, Layers, Globe, Brain,
 } from "lucide-react";
@@ -12,31 +12,26 @@ import { getAchievements, AXIS_BADGES, DOMAIN_BADGES, SPECIAL_BADGES } from "@/l
 import type { Achievement } from "@/lib/achievements";
 import { loadProfile } from "@/lib/matchmaker";
 
-// ─── Icon overrides per badge ID (Tier 3 uses more relatable icons) ───────────
-const BADGE_ICON: Record<string, React.ReactNode> = {
-  // Tier 1
-  "full-apex":          <Crown    className="w-7 h-7" />,
-  "multi-domain-elite": <Trophy   className="w-6 h-6" />,
-  // Tier 2
-  "engine-master":   <Gauge  className="w-5 h-5" />,
-  "chassis-master":  <Layers className="w-5 h-5" />,
-  "elements-master": <Globe  className="w-5 h-5" />,
-  "mind-master":     <Brain  className="w-5 h-5" />,
-  // Tier 3 — relatable per axis
-  "iron-lung":    <Activity    className="w-4 h-4" />,  // stamina → heartbeat/activity
-  "iron-sherpa":  <PackageOpen className="w-4 h-4" />,  // power   → carrying a pack
-  "summit-legs":  <TrendingUp  className="w-4 h-4" />,  // strength → ascending
-  "goat-path":    <Footprints  className="w-4 h-4" />,  // agility → terrain footing
-  "open-water":   <Waves       className="w-4 h-4" />,  // water   → waves
-  "thin-air":     <Mountain    className="w-4 h-4" />,  // altitude → mountain
-  "steel-eyes":   <Crosshair   className="w-4 h-4" />,  // focus   → precision
-  "off-grid":     <WifiOff     className="w-4 h-4" />,  // nerve   → no signal
-};
-
-// Scaled versions for Tier 1 hero
-const BADGE_ICON_XL: Record<string, React.ReactNode> = {
-  "full-apex":          <Crown  className="w-9 h-9" />,
-  "multi-domain-elite": <Trophy className="w-8 h-8" />,
+// Single icon map keyed by the icon string stored on each badge
+const ICON = (name: string, size: number): React.ReactNode => {
+  const s = { width: size, height: size } as React.CSSProperties;
+  const map: Record<string, React.ReactNode> = {
+    Crown:       <Crown       style={s} />,
+    Trophy:      <Trophy      style={s} />,
+    Gauge:       <Gauge       style={s} />,
+    Layers:      <Layers      style={s} />,
+    Globe:       <Globe       style={s} />,
+    Brain:       <Brain       style={s} />,
+    Activity:    <Activity    style={s} />,
+    PackageOpen: <PackageOpen style={s} />,
+    TrendingUp:  <TrendingUp  style={s} />,
+    Footprints:  <Footprints  style={s} />,
+    Waves:       <Waves       style={s} />,
+    Mountain:    <Mountain    style={s} />,
+    Crosshair:   <Crosshair   style={s} />,
+    WifiOff:     <WifiOff     style={s} />,
+  };
+  return map[name] ?? <Trophy style={s} />;
 };
 
 const TIER1_ALL: Achievement[] = SPECIAL_BADGES.map(b => ({ ...b }));
@@ -75,7 +70,7 @@ function TrophyCell({ badge, earned, boxSize, xl = false }: { badge: Achievement
   const [tip, setTip] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const ref   = useRef<HTMLDivElement>(null);
-  const icon  = xl ? (BADGE_ICON_XL[badge.id] ?? BADGE_ICON[badge.id]) : BADGE_ICON[badge.id];
+  const iconSize = xl ? Math.round(boxSize * 0.52) : Math.round(boxSize * 0.42);
   const isSpecial = badge.tier === "special";
 
   if (!earned) {
@@ -112,7 +107,7 @@ function TrophyCell({ badge, earned, boxSize, xl = false }: { badge: Achievement
           color: badge.color,
         }}
       >
-        {icon}
+        {ICON(badge.icon, iconSize)}
         {isSpecial && <span className="absolute inset-0 rounded-2xl animate-ping opacity-10" style={{ border: `2px solid ${badge.color}` }} />}
       </div>
       <p className="font-semibold text-center leading-tight" style={{ color: badge.color, fontSize: xl ? 9 : 7.5, maxWidth: boxSize + 10, wordBreak: "break-word" }}>{badge.name}</p>
