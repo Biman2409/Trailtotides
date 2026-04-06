@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { CheckCircle2, Circle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { CheckCircle2, Circle, LogIn } from "lucide-react";
 import { useTripLog } from "@/contexts/TripLogContext";
+import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface Props {
   slug: string;
@@ -16,10 +18,25 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
   const done = isDone(slug);
   const [showPicker, setShowPicker] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getSession().then(({ data: { session } }) => setLoggedIn(!!session?.user));
+    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => setLoggedIn(!!session?.user));
+    return () => listener.subscription.unsubscribe();
+  }, []);
 
   async function handleToggle(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
+    if (loggedIn === false) {
+      toast.error("Log in to mark adventures as done.", {
+        action: { label: "Log in", onClick: () => router.push("/auth/login") },
+      });
+      return;
+    }
     if (done) {
       await unmark(slug);
       toast("Removed from your trip log");
@@ -47,11 +64,15 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
           className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${className}`}
           style={done
             ? { background: "rgba(16,185,129,0.15)", color: "#6ee7b7", border: "1px solid rgba(16,185,129,0.35)" }
-            : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.55)", border: "1px solid rgba(255,255,255,0.1)" }
+            : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }
           }
         >
-          {done ? <CheckCircle2 className="w-4 h-4" /> : <Circle className="w-4 h-4" />}
-          {done ? "Been There" : "Mark as Done"}
+          {loggedIn === false
+            ? <><LogIn className="w-4 h-4" />Done it</>
+            : done
+              ? <><CheckCircle2 className="w-4 h-4" />Been There</>
+              : <><Circle className="w-4 h-4" />Mark as Done</>
+          }
         </button>
         {showPicker && (
           <div className="absolute top-full mt-2 left-0 z-50 rounded-xl p-4 shadow-2xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)", minWidth: "220px" }}>
