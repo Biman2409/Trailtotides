@@ -9,6 +9,7 @@ import type { Adventure, Month } from "@/lib/data";
 import {
   Search, X, Plus, CalendarDays, MapPin, Clock,
   Trash2, GripVertical, Printer, ChevronDown, ChevronUp,
+  Mountain, CloudRain, Route,
 } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 
@@ -174,7 +175,7 @@ export default function PlannerPage() {
                     <p className="text-white/25 text-xs">Type to search adventures</p>
                     {entries.length === 0 && (
                       <div className="mt-6">
-                        <div className="text-3xl mb-2">🗓️</div>
+                        <CalendarDays className="w-5 h-5 text-white/15 mx-auto mb-2" />
                         <p className="text-white/30 text-xs leading-relaxed">
                           Search or use the <span className="text-[#ff5100]/60">Season Guide</span> tab<br />to build your itinerary
                         </p>
@@ -257,7 +258,7 @@ export default function PlannerPage() {
               <div className="flex-1 overflow-y-auto p-2">
                 {inSeason.length === 0 ? (
                   <div className="text-center py-10">
-                    <div className="text-3xl mb-3">🌧️</div>
+                    <CloudRain className="w-5 h-5 text-white/15 mx-auto mb-2" />
                     <p className="text-white/35 text-xs">No adventures in peak season this month.</p>
                   </div>
                 ) : (
@@ -333,7 +334,7 @@ export default function PlannerPage() {
           {/* Empty state */}
           {entries.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center text-center px-6">
-              <div className="text-6xl mb-5">🏔️</div>
+              <Mountain className="w-10 h-10 text-white/10 mb-5" />
               <h2 className="text-white text-2xl font-bold mb-2">Your itinerary is empty</h2>
               <p className="text-white/35 text-sm max-w-xs leading-relaxed">
                 Search for adventures or browse the{" "}
