@@ -121,52 +121,35 @@ export default function ACEProfileSection() {
     >
       <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: currentRank.color }} />
 
-      {/* ── Identity + Radar row ── */}
-      <div className="relative flex items-start gap-4 sm:gap-5 px-5 sm:px-7 pt-5 sm:pt-7 pb-4 sm:pb-5">
-        {/* Tier icon */}
-        <div
-          className="w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] rounded-2xl flex items-center justify-center shrink-0"
-          style={{ background: `${currentRank.color}18`, color: currentRank.color, boxShadow: `0 0 32px ${currentRank.color}38`, border: `1px solid ${currentRank.color}28` }}
-        >
-          <div className="scale-[1.55] sm:scale-[1.75]">{currentRank.icon}</div>
-        </div>
+      {/* ── Main body: left = tier identity + rank progression | right = radar ── */}
+      <div className="relative flex items-stretch gap-0">
 
-        {/* Tier label */}
-        <div className="flex-1 min-w-0">
-          <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-1">Adventure Tier</p>
-          <h1 className="text-[26px] sm:text-[32px] font-black tracking-tight leading-none" style={{ color: currentRank.color }}>{currentRank.label}</h1>
-          <div className="flex items-center gap-[3px] mt-2.5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <span key={i} className="text-[13px] leading-none" style={{ color: i < currentRank.stars ? currentRank.color : "rgba(255,255,255,0.09)" }}>★</span>
-            ))}
-            <span className="text-white/22 text-[10px] ml-2">Rank {currentRank.stars} of 5</span>
+        {/* Left column: identity + progression */}
+        <div className="flex-1 min-w-0 flex flex-col px-5 sm:px-7 pt-5 sm:pt-7 pb-5 sm:pb-6 gap-5">
+
+          {/* Identity row */}
+          <div className="flex items-start gap-4">
+            <div
+              className="w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] rounded-2xl flex items-center justify-center shrink-0"
+              style={{ background: `${currentRank.color}18`, color: currentRank.color, boxShadow: `0 0 32px ${currentRank.color}38`, border: `1px solid ${currentRank.color}28` }}
+            >
+              <div className="scale-[1.55] sm:scale-[1.75]">{currentRank.icon}</div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-1">Adventure Tier</p>
+              <h1 className="text-[26px] sm:text-[32px] font-black tracking-tight leading-none" style={{ color: currentRank.color }}>{currentRank.label}</h1>
+              <div className="flex items-center gap-[3px] mt-2.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <span key={i} className="text-[13px] leading-none" style={{ color: i < currentRank.stars ? currentRank.color : "rgba(255,255,255,0.09)" }}>★</span>
+                ))}
+                <span className="text-white/22 text-[10px] ml-2">Rank {currentRank.stars} of 5</span>
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* ACE Radar — right side on sm+ */}
-        <div
-          className="hidden sm:flex shrink-0 pl-4 border-l self-stretch items-start flex-col gap-2"
-          style={{ borderColor: `${currentRank.color}18` }}
-        >
-          <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/30">Capability Breakdown</p>
-          <ACERadar ace={stored.ace} size={170} showLabels />
-        </div>
-      </div>
-
-      {/* ACE Radar — mobile: below identity */}
-      <div className="sm:hidden px-5 pb-4 flex flex-col items-center gap-2">
-        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/30 self-start">Capability Breakdown</p>
-        <ACERadar ace={stored.ace} size={190} showLabels />
-      </div>
-
-      {/* Divider */}
-      <div className="mx-5 sm:mx-7 h-px" style={{ background: `${currentRank.color}14` }} />
-
-      {/* ── Rank progression ── */}
-      <div className="pt-4 sm:pt-5 pb-5 sm:pb-6">
-        <div className="px-5 sm:px-7">
+          {/* Progress numbers */}
           {nextRank ? (
-            <div className="flex items-end justify-between mb-4">
+            <div className="flex items-end justify-between">
               <div>
                 <div className="flex items-baseline gap-0.5 leading-none">
                   <span className="text-[38px] sm:text-[48px] font-black tabular-nums tracking-tight" style={{ color: currentRank.color }}>{progressPct}</span>
@@ -182,61 +165,56 @@ export default function ACEProfileSection() {
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
               <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">The absolute pinnacle</p>
             </div>
           )}
-        </div>
 
-        {/* Bar + labels */}
-        <div className="px-5 sm:px-7">
-          <div className="relative h-[10px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.055)" }}>
-            {/* Fill */}
-            <div
-              className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
-              style={{
-                width: `${barPct}%`,
-                background: `linear-gradient(to right, ${RANKS[1].color}bb, ${currentRank.color})`,
-                boxShadow: `0 0 16px ${currentRank.color}55`,
-              }}
-            />
-            {/* Tick marks at each rank boundary */}
-            {RANKS.slice(1, -1).map((rank, i) => (
-              <div key={rank.label} className="absolute inset-y-0 w-px bg-[rgba(14,14,18,0.65)]" style={{ left: `${(i + 1) * segmentWidth}%` }} />
-            ))}
-            {/* Glowing dot */}
-            <div
-              className="absolute w-[18px] h-[18px] rounded-full border-2 transition-all duration-700"
-              style={{
-                left: `${barPct}%`,
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-                background: currentRank.color,
-                borderColor: "#0e0e12",
-                boxShadow: `0 0 14px ${currentRank.color}`,
-              }}
-            />
-          </div>
-          <div className="relative h-[18px] overflow-hidden">
-            {RANKS.map((rank, i) => (
-              <span
-                key={rank.label}
-                className="absolute text-[7px] sm:text-[7.5px] font-semibold leading-none whitespace-nowrap top-0"
+          {/* Progress bar */}
+          <div>
+            <div className="relative h-[10px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.055)" }}>
+              <div
+                className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
                 style={{
-                  left: `${i * segmentWidth}%`,
-                  transform: i === 0 ? "none" : i === N - 1 ? "translateX(-100%)" : "translateX(-50%)",
-                  color: i === currentRankIndex ? currentRank.color : i < currentRankIndex ? `${rank.color}50` : "rgba(255,255,255,0.13)",
+                  width: `${barPct}%`,
+                  background: `linear-gradient(to right, ${RANKS[1].color}bb, ${currentRank.color})`,
+                  boxShadow: `0 0 16px ${currentRank.color}55`,
                 }}
-              >
-                {rank.label}
-              </span>
-            ))}
+              />
+              {RANKS.slice(1, -1).map((rank, i) => (
+                <div key={rank.label} className="absolute inset-y-0 w-px bg-[rgba(14,14,18,0.65)]" style={{ left: `${(i + 1) * segmentWidth}%` }} />
+              ))}
+              <div
+                className="absolute w-[18px] h-[18px] rounded-full border-2 transition-all duration-700"
+                style={{
+                  left: `${barPct}%`,
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                  background: currentRank.color,
+                  borderColor: "#0e0e12",
+                  boxShadow: `0 0 14px ${currentRank.color}`,
+                }}
+              />
+            </div>
+            <div className="relative h-[18px]">
+              {RANKS.map((rank, i) => (
+                <span
+                  key={rank.label}
+                  className="absolute text-[7px] sm:text-[7.5px] font-semibold leading-none whitespace-nowrap top-0"
+                  style={{
+                    left: `${i * segmentWidth}%`,
+                    transform: i === 0 ? "none" : i === N - 1 ? "translateX(-100%)" : "translateX(-50%)",
+                    color: i === currentRankIndex ? currentRank.color : i < currentRankIndex ? `${rank.color}50` : "rgba(255,255,255,0.13)",
+                  }}
+                >
+                  {rank.label}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Retake button */}
-        <div className="px-5 sm:px-7 mt-4">
+          {/* Retake button */}
           <Link
             href="/matchmaker"
             className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:brightness-110 w-fit"
@@ -246,6 +224,21 @@ export default function ACEProfileSection() {
             Retake Assessment
           </Link>
         </div>
+
+        {/* Right column: radar — desktop only */}
+        <div
+          className="hidden sm:flex shrink-0 flex-col gap-3 px-6 pt-6 pb-6 border-l"
+          style={{ borderColor: `${currentRank.color}18`, background: "rgba(255,255,255,0.012)" }}
+        >
+          <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/30">Capability Breakdown</p>
+          <ACERadar ace={stored.ace} size={240} showLabels />
+        </div>
+      </div>
+
+      {/* ACE Radar — mobile: below everything */}
+      <div className="sm:hidden px-5 pb-5 flex flex-col gap-2" style={{ borderTop: `1px solid ${currentRank.color}14` }}>
+        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/30 pt-4">Capability Breakdown</p>
+        <ACERadar ace={stored.ace} size={260} showLabels />
       </div>
     </div>
   );
