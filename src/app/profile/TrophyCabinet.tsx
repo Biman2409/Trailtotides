@@ -211,7 +211,7 @@ export default function TrophyCabinet() {
 
         {/* Tier 1 — Apex (larger, prominent) */}
         <div className="px-5 py-5 shrink-0" style={{ background: "linear-gradient(160deg, rgba(251,191,36,0.07) 0%, transparent 70%)", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
-          <TierLabel tier="Tier 1" label="Only the absolute pinnacle" color="#fbbf24" earned={t1Earned} total={TIER1_ALL.length} />
+          <TierLabel tier="Tier 1" label="To the absolute pinnacle" color="#fbbf24" earned={t1Earned} total={TIER1_ALL.length} />
           <div className="flex gap-5 items-start">
             {TIER1_ALL.map(b => <TrophyCell key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={64} xl shape="square" />)}
           </div>
