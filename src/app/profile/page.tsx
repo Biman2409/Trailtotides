@@ -1,5 +1,6 @@
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { getOperatorProfile } from "@/app/auth/operator-actions";
 import { Calendar, Shield, Camera, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -13,8 +14,12 @@ export default async function ProfilePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect("/auth/login");
+  if (!user) redirect("/auth/login");
+
+  // Operators have their own profile — the dashboard
+  if (user.user_metadata?.role === "operator") {
+    const opProfile = await getOperatorProfile(user.id);
+    if (opProfile) redirect("/auth/operator-dashboard");
   }
 
   // Fetch profile
