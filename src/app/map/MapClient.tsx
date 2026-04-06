@@ -249,18 +249,22 @@ const BASE_TILE = {
 // Overlay layers — toggled on top independently
 const OVERLAY_LAYERS = {
   terrain: {
-    // ESRI World Hillshade — elevation shading + contour detail, semi-transparent overlay
-    url: "https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}",
-    attribution: "Hillshade &copy; Esri, NASA, USGS",
-    maxZoom: 16,
-    opacity: 0.45,
+    // OpenTopoMap — full topo: 10m contours, named peaks, glaciers, rivers,
+    // forest cover, trails, passes, huts. The gold standard for adventurers.
+    // At high opacity it visually replaces the base map; stacked with satellite
+    // it renders topo lines over real imagery.
+    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+    attribution: 'Map &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA), data &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>, <a href="http://viewfinderpanoramas.org">SRTM</a>',
+    maxZoom: 17,
+    // High opacity so terrain features are legible; satellite shows through underneath
+    opacity: 0.92,
   },
   satellite: {
-    // ESRI World Imagery — high-res satellite
+    // ESRI World Imagery — high-res satellite. Rendered first so topo can sit on top.
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics",
     maxZoom: 19,
-    opacity: 0.82,
+    opacity: 1,
   },
 } as const;
 
@@ -454,31 +458,37 @@ function MapView({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [advs]);
 
-  // Sync overlay layers when `overlays` set changes
+  // Sync overlay layers when `overlays` set changes.
+  // Insertion order matters: satellite first (below), terrain on top.
+  // When both active, terrain opacity drops to 0.55 so satellite imagery shows through.
   useEffect(() => {
     if (!mapInstanceRef.current) return;
     loadLeaflet().then(leaflet => {
       const map = mapInstanceRef.current;
       if (!map) return;
-      (Object.keys(OVERLAY_LAYERS) as OverlayKey[]).forEach(key => {
-        const cfg = OVERLAY_LAYERS[key];
-        if (overlays.has(key)) {
-          // Add if not already present
-          if (!overlayLayerRefs.current[key]) {
-            overlayLayerRefs.current[key] = leaflet.tileLayer(cfg.url, {
-              maxZoom: cfg.maxZoom,
-              attribution: cfg.attribution,
-              opacity: cfg.opacity,
-            });
-            overlayLayerRefs.current[key]!.addTo(map);
-          }
-        } else {
-          // Remove if present
-          if (overlayLayerRefs.current[key]) {
-            map.removeLayer(overlayLayerRefs.current[key]!);
-            delete overlayLayerRefs.current[key];
-          }
+
+      const bothActive = overlays.has("terrain") && overlays.has("satellite");
+
+      // Remove all overlays first, then re-add in correct order
+      (["satellite", "terrain"] as OverlayKey[]).forEach(key => {
+        if (overlayLayerRefs.current[key]) {
+          map.removeLayer(overlayLayerRefs.current[key]!);
+          delete overlayLayerRefs.current[key];
         }
+      });
+
+      // Re-add active overlays: satellite first, terrain on top
+      (["satellite", "terrain"] as OverlayKey[]).forEach(key => {
+        if (!overlays.has(key)) return;
+        const cfg = OVERLAY_LAYERS[key];
+        // When both on: terrain at 0.55 opacity so satellite imagery bleeds through
+        const opacity = (key === "terrain" && bothActive) ? 0.55 : cfg.opacity;
+        overlayLayerRefs.current[key] = leaflet.tileLayer(cfg.url, {
+          maxZoom: cfg.maxZoom,
+          attribution: cfg.attribution,
+          opacity,
+        });
+        overlayLayerRefs.current[key]!.addTo(map);
       });
     });
   }, [overlays]);
