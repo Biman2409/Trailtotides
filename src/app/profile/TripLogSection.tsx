@@ -4,7 +4,7 @@ import { useTripLog } from "@/contexts/TripLogContext";
 import { adventures } from "@/lib/data";
 import Link from "next/link";
 import Image from "next/image";
-import { X, MapPin } from "lucide-react";
+import { X, MapPin, Tent, CheckCircle2 } from "lucide-react";
 
 export default function TripLogSection() {
   const { log, unmark, loading } = useTripLog();
@@ -28,7 +28,7 @@ export default function TripLogSection() {
 
       {entries.length === 0 ? (
         <div className="rounded-2xl p-8 text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-          <div className="text-4xl mb-3">🏕️</div>
+          <div className="flex justify-center mb-3"><Tent className="w-8 h-8 text-white/20" /></div>
           <p className="text-white/40 text-sm">No adventures logged yet.</p>
           <p className="text-white/25 text-xs mt-1">Mark adventures as done from their page or card.</p>
         </div>
@@ -51,8 +51,9 @@ export default function TripLogSection() {
                   <span className="text-white/20 text-[10px]">·</span>
                   <span className="text-[10px] text-white/35">{a!.type}</span>
                 </div>
-                <p className="text-emerald-400/70 text-[10px] mt-1 font-medium">
-                  ✓ Done · {new Date(entry.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                <p className="flex items-center gap-1 text-emerald-400/70 text-[10px] mt-1 font-medium">
+                  <CheckCircle2 className="w-3 h-3" />
+                  Done · {new Date(entry.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                 </p>
               </div>
               <button
