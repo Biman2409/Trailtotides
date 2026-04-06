@@ -94,10 +94,10 @@ export default async function OperatorsPage() {
           <div>
             <p className="text-[#ff5100] text-xs font-bold tracking-[0.25em] uppercase mb-4">Operators Directory</p>
             <h1 className="text-white text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.02]">
-              Operators
+              The People Who<br className="hidden sm:block" /> Take You There
             </h1>
-            <p className="text-white/40 text-base mt-4 leading-relaxed">
-              {allCards.length} companies · {totalAdventures} adventures listed across India.
+            <p className="text-white/45 text-base mt-4 max-w-lg leading-relaxed font-light">
+              {allCards.length} vetted companies running {totalAdventures} adventures across India&apos;s wildest terrain — from Ladakh passes to Andaman reefs.
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
