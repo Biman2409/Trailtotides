@@ -242,21 +242,20 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
   }
 
   function addIndiaBorder(leaflet: typeof L, map: L.Map) {
-    // Official India Boundary GeoJSON (Composite)
-    // Source: Datameet / Hindustan Times Labs (Verified official boundaries)
-    fetch("https://raw.githubusercontent.com/HindustanTimesLabs/shapefiles/master/india/india-composite.json")
+    // Official India boundary — Survey of India composite (includes J&K, Aksai Chin, Arunachal Pradesh)
+    fetch("/india-boundary.geojson")
       .then(res => res.json())
       .then(data => {
         leaflet.geoJSON(data, {
           style: {
             color: "#ff5100",
-            weight: 2,
-            opacity: 0.6,
+            weight: 2.5,
+            opacity: 0.85,
             fillColor: "#ff5100",
-            fillOpacity: 0.03,
-            dashArray: "5, 5"
+            fillOpacity: 0.04,
+            dashArray: undefined,
           },
-          interactive: false
+          interactive: false,
         }).addTo(map);
       })
       .catch(err => console.error("Failed to load India border:", err));
