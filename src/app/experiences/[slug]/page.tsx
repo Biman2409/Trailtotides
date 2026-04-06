@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import OperatorButton from "./OperatorButton";
+import OperatorCard, { type OperatorCardData } from "./OperatorCard";
 import {
   MapPin,
   Clock,
@@ -41,77 +42,6 @@ import OperatorListingPanel from "./OperatorListingPanel";
 interface Props {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ from?: string }>;
-}
-
-type Operator = NonNullable<Adventure["operators"]>[number] & {
-  departureDates?: string[];
-  notes?: string | null;
-};
-
-function OperatorCard({ op, verified }: { op: Operator; verified: boolean }) {
-  return (
-    <div
-      className="rounded-2xl p-5 flex flex-col gap-4 transition-all duration-200"
-      style={
-        verified
-          ? {
-              background: "linear-gradient(135deg, rgba(16,185,129,0.07) 0%, rgba(5,150,105,0.03) 100%)",
-              border: "1px solid rgba(16,185,129,0.18)",
-            }
-          : {
-              background: "var(--bg-card)",
-              border: "1px solid var(--border-subtle)",
-            }
-      }
-    >
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <div className="flex flex-col gap-1">
-            {verified ? (
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full w-fit" style={{ background: "rgba(16,185,129,0.12)", color: "#34d399", border: "1px solid rgba(16,185,129,0.2)" }}>
-                <ShieldCheck className="w-3 h-3" />Verified
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full w-fit" style={{ background: "rgba(245,158,11,0.1)", color: "#fbbf24", border: "1px solid rgba(245,158,11,0.2)" }}>
-                <AlertTriangle className="w-3 h-3" />Unverified
-              </span>
-            )}
-            <span className="font-semibold text-sm leading-snug" style={{ color: "var(--text-primary)" }}>{op.name}</span>
-          </div>
-          <div className="flex items-center gap-1 mt-1.5">
-            {[1, 2, 3, 4, 5].map((s) => (
-              <Star key={s} className={`w-3 h-3 ${s <= Math.round(op.rating) ? "text-amber-400 fill-amber-400" : "text-white/10 fill-white/10"}`} />
-            ))}
-            <span className="text-white/35 text-xs ml-1">{op.rating}</span>
-          </div>
-        </div>
-        <div className="text-right shrink-0">
-          <div className="text-[10px] uppercase tracking-wide" style={{ color: "var(--text-muted)" }}>From</div>
-          <div className="font-bold text-base" style={{ color: "var(--text-primary)" }}>{op.priceFrom}</div>
-        </div>
-      </div>
-      {op.departureDates && op.departureDates.length > 0 && (
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/30 mb-1.5">Departure Dates</p>
-          <div className="flex flex-wrap gap-1.5">
-            {op.departureDates.map((d, i) => (
-              <span key={i} className="text-[10px] font-mono px-2 py-0.5 rounded-lg" style={{ background: "rgba(255,81,0,0.08)", color: "rgba(255,125,71,0.9)", border: "1px solid rgba(255,81,0,0.18)" }}>
-                {d}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-      {op.notes && (
-        <p className="text-white/35 text-xs leading-relaxed border-t border-white/6 pt-3">{op.notes}</p>
-      )}
-      <OperatorButton
-        website={op.website ?? ""}
-        label={verified ? "Get Details" : "Visit Website"}
-        variant={verified ? "primary" : "secondary"}
-      />
-    </div>
-  );
 }
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -200,7 +130,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
   const approvedOps = await getApprovedOperatorsForAdventure(slug);
   const existingNames = new Set(adventure.operators.map((o) => o.name.toLowerCase()));
   const newOps = approvedOps.filter((o) => !existingNames.has(o.name.toLowerCase()));
-  const allOperators: Operator[] = [...adventure.operators, ...newOps];
+  const allOperators: OperatorCardData[] = [...adventure.operators, ...newOps];
 
   const PAGE_SIZE = 12;
   const adventureIndex = adventures.findIndex((a) => a.slug === slug);

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { submitOperatorUpdate } from "@/app/auth/operator-actions";
 import { getOperatorProfile } from "@/app/auth/operator-actions";
-import { Building2, ChevronDown, ChevronUp, Plus, Minus, X, ShieldCheck, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
+import { Building2, ChevronDown, ChevronUp, Plus, Minus, ShieldCheck, ArrowRight, Loader2, CheckCircle2, Briefcase, Package } from "lucide-react";
 import Link from "next/link";
 
 interface Props {
@@ -25,6 +25,10 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
   const [priceFrom, setPriceFrom] = useState("");
   const [notes, setNotes] = useState("");
   const [batches, setBatches] = useState<string[]>([""]);
+  const [cloakroom, setCloakroom] = useState(false);
+  const [cloakroomCharge, setCloakroomCharge] = useState("");
+  const [offloading, setOffloading] = useState(false);
+  const [offloadingCharge, setOffloadingCharge] = useState("");
 
   useEffect(() => {
     const supabase = createClient();
@@ -60,6 +64,10 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
     fd.set("price_from", priceFrom);
     fd.set("notes", notes);
     fd.set("exact_dates", JSON.stringify(batches));
+    fd.set("cloakroom", String(cloakroom));
+    fd.set("cloakroom_charge", cloakroomCharge);
+    fd.set("offloading", String(offloading));
+    fd.set("offloading_charge", offloadingCharge);
     const res = await submitOperatorUpdate(fd);
     setSubmitting(false);
     if (res?.error) {
@@ -68,6 +76,8 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
       setResult({ type: "success", text: "Listing submitted! Our team will review and approve it shortly." });
       setOpen(false);
       setPriceFrom(""); setNotes(""); setBatches([""]);
+      setCloakroom(false); setCloakroomCharge("");
+      setOffloading(false); setOffloadingCharge("");
     }
   }
 
@@ -222,6 +232,71 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
                   />
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Facilities */}
+          <div className="space-y-3">
+            <label className="block text-[10px] font-bold text-white/35 uppercase tracking-[0.18em]">Facilities Offered</label>
+
+            {/* Cloakroom */}
+            <div className="rounded-xl border border-white/10 overflow-hidden">
+              <button
+                type="button"
+                onClick={() => setCloakroom(v => !v)}
+                className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/[0.03] transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Briefcase className="w-3.5 h-3.5 text-white/40" />
+                  <span className="text-sm text-white/70 font-medium">Cloakroom / Luggage Storage</span>
+                </div>
+                <div className={`w-9 h-5 rounded-full transition-colors relative shrink-0 ${cloakroom ? "bg-emerald-500" : "bg-white/10"}`}>
+                  <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${cloakroom ? "translate-x-4" : "translate-x-0.5"}`} />
+                </div>
+              </button>
+              {cloakroom && (
+                <div className="px-4 pb-3 border-t border-white/6">
+                  <label className="block text-[10px] font-bold text-white/30 uppercase tracking-[0.15em] mt-2.5 mb-1.5">Charge (₹) — leave blank if free</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={cloakroomCharge}
+                    onChange={e => setCloakroomCharge(e.target.value)}
+                    placeholder="e.g. 200 or leave blank for free"
+                    className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2 text-white text-xs placeholder-white/20 focus:outline-none focus:border-emerald-500/40 transition-all"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Offloading */}
+            <div className="rounded-xl border border-white/10 overflow-hidden">
+              <button
+                type="button"
+                onClick={() => setOffloading(v => !v)}
+                className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/[0.03] transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Package className="w-3.5 h-3.5 text-white/40" />
+                  <span className="text-sm text-white/70 font-medium">Porter / Offloading Service</span>
+                </div>
+                <div className={`w-9 h-5 rounded-full transition-colors relative shrink-0 ${offloading ? "bg-emerald-500" : "bg-white/10"}`}>
+                  <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${offloading ? "translate-x-4" : "translate-x-0.5"}`} />
+                </div>
+              </button>
+              {offloading && (
+                <div className="px-4 pb-3 border-t border-white/6">
+                  <label className="block text-[10px] font-bold text-white/30 uppercase tracking-[0.15em] mt-2.5 mb-1.5">Charge per KG (₹) — leave blank if included</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={offloadingCharge}
+                    onChange={e => setOffloadingCharge(e.target.value)}
+                    placeholder="e.g. 150 per kg or leave blank if included"
+                    className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2 text-white text-xs placeholder-white/20 focus:outline-none focus:border-emerald-500/40 transition-all"
+                  />
+                </div>
+              )}
             </div>
           </div>
 

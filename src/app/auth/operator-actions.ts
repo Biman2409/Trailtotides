@@ -30,6 +30,10 @@ export type OperatorSubmission = {
   website: string | null;
   exact_dates: string[];
   notes: string | null;
+  cloakroom: boolean;
+  cloakroom_charge: string | null;
+  offloading: boolean;
+  offloading_charge: string | null;
   status: "pending" | "approved" | "rejected";
   created_at: string;
 };
@@ -165,6 +169,10 @@ export async function submitOperatorUpdate(formData: FormData) {
   const operator_name = formData.get("operator_name") as string;
   const price_from = formData.get("price_from") as string;
   const notes = (formData.get("notes") as string) || null;
+  const cloakroom = formData.get("cloakroom") === "true";
+  const cloakroom_charge = (formData.get("cloakroom_charge") as string) || null;
+  const offloading = formData.get("offloading") === "true";
+  const offloading_charge = (formData.get("offloading_charge") as string) || null;
   let exact_dates: string[] = [];
   try {
     exact_dates = JSON.parse(formData.get("exact_dates") as string);
@@ -183,6 +191,10 @@ export async function submitOperatorUpdate(formData: FormData) {
     website: profile.website ?? null,
     exact_dates,
     notes,
+    cloakroom,
+    cloakroom_charge,
+    offloading,
+    offloading_charge,
     status: "pending",
     created_at: new Date().toISOString(),
   };
@@ -199,6 +211,10 @@ export type LiveOperator = {
   website?: string;
   departureDates?: string[];
   notes?: string | null;
+  cloakroom?: boolean;
+  cloakroom_charge?: string | null;
+  offloading?: boolean;
+  offloading_charge?: string | null;
 };
 
 /**
@@ -235,6 +251,10 @@ export async function getApprovedOperatorsForAdventure(adventureSlug: string): P
         website: sub.website ?? profile?.website ?? undefined,
         departureDates: sub.exact_dates ?? [],
         notes: sub.notes,
+        cloakroom: sub.cloakroom ?? false,
+        cloakroom_charge: sub.cloakroom_charge ?? null,
+        offloading: sub.offloading ?? false,
+        offloading_charge: sub.offloading_charge ?? null,
       } satisfies LiveOperator;
     })
   );
