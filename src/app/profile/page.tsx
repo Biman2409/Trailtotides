@@ -1,27 +1,21 @@
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { getOperatorProfile } from "@/app/auth/operator-actions";
-import { Calendar, Shield, Camera, ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { Calendar, Shield, Camera, Trophy, MapPin, Zap } from "lucide-react";
 import { format } from "date-fns";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import ProfileForm from "./ProfileForm";
 import TripLogSection from "./TripLogSection";
 import ACEProfileSection from "./ACEProfileSection";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProfilePage() {
   const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) redirect("/auth/login");
-
-  // Operators have their own profile — the dashboard
-  if (user.user_metadata?.role === "operator") {
-    const opProfile = await getOperatorProfile(user.id);
-    if (opProfile) redirect("/auth/operator-dashboard");
-  }
 
   // Fetch profile
   let { data: profile } = await supabase
@@ -30,7 +24,7 @@ export default async function ProfilePage() {
     .eq("id", user.id)
     .single();
 
-  // If profile is missing (should be rare due to trigger), create it on the fly
+  // Create on the fly if missing
   if (!profile) {
     const adminClient = await createAdminClient();
     const { data: newProfile, error: createError } = await adminClient
@@ -44,98 +38,136 @@ export default async function ProfilePage() {
       .select()
       .single();
 
-    if (createError) {
-      console.error("Error creating profile:", createError);
-      // Fallback object to allow page to render
-      profile = {
-        id: user.id,
-        email: user.email,
-        full_name: user.user_metadata?.full_name || "Adventurer",
-        role: "user",
-        created_at: new Date().toISOString(),
-        phone: null,
-      };
-    } else {
-      profile = newProfile;
-    }
+    profile = createError
+      ? { id: user.id, email: user.email, full_name: user.user_metadata?.full_name || "Adventurer", role: "user", created_at: new Date().toISOString(), phone: null }
+      : newProfile;
   }
 
+  const displayName = profile.full_name || user.user_metadata?.company_name || "Adventurer";
+  const initial = displayName?.[0]?.toUpperCase() ?? "?";
+  const username = user.user_metadata?.username || profile.username;
+
   return (
-    <div className="min-h-screen">
-      <div className="max-w-4xl mx-auto px-6 py-12 md:py-20">
-        <Link 
-          href="/" 
-          className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors mb-8 group"
-        >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span>Back to Home</span>
-        </Link>
+    <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
+      <ScrollToTop />
+      <Navbar />
 
-        <div className="flex flex-col md:flex-row gap-12">
-          {/* Sidebar / Info */}
-          <div className="md:w-1/3 space-y-8">
-            <div className="relative group">
-              <div className="w-32 h-32 rounded-3xl bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center justify-center text-[#ff7d47] text-4xl font-bold shadow-2xl shadow-[#ff5100]/5 relative overflow-hidden">
-                {(profile.full_name?.[0] ?? profile.email?.[0] ?? "?").toUpperCase()}
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                  <Camera className="w-6 h-6 text-white" />
-                </div>
-              </div>
-            </div>
+      {/* ── Hero banner ─────────────────────────────────────────── */}
+      <div
+        className="relative pt-32 pb-16 px-5 lg:px-8 overflow-hidden"
+        style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+      >
+        {/* Subtle radial glow behind avatar */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-3xl opacity-10 pointer-events-none" style={{ background: "radial-gradient(ellipse, #ff5100 0%, transparent 70%)" }} />
 
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">{profile.full_name || "Guest User"}</h1>
-              {(user.user_metadata?.username || profile.username) && (
-                <p className="text-[#ff5100]/70 text-sm font-medium mt-0.5">@{user.user_metadata?.username || profile.username}</p>
-              )}
-              <p className="text-white/40 text-sm mt-1">{profile.email}</p>
-            </div>
+        <div className="max-w-4xl mx-auto relative">
+          <div className="flex flex-col sm:flex-row items-start sm:items-end gap-6">
 
-            <div className="space-y-4 pt-4 border-t border-white/5">
-              <div className="flex items-center gap-3 text-sm text-white/60">
-                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
-                  <Shield className="w-4 h-4 text-purple-400" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[10px] uppercase tracking-wider font-bold text-white/30">Account Role</span>
-                  <span className="capitalize">{profile.role}</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 text-sm text-white/60">
-                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
-                  <Calendar className="w-4 h-4 text-[#ff7d47]" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[10px] uppercase tracking-wider font-bold text-white/30">Member Since</span>
-                  <span>{profile.created_at ? format(new Date(profile.created_at), "MMMM d, yyyy") : "Recently Joined"}</span>
-                </div>
-              </div>
-            </div>
-
-            {profile.role === "admin" && (
-              <Link
-                href="/admin"
-                className="block w-full text-center py-3 rounded-xl bg-purple-600/10 border border-purple-600/20 text-purple-400 text-sm font-bold uppercase tracking-wider hover:bg-purple-600/20 transition-all active:scale-[0.98]"
+            {/* Avatar */}
+            <div className="relative group shrink-0">
+              <div
+                className="w-24 h-24 rounded-3xl flex items-center justify-center text-3xl font-black relative overflow-hidden"
+                style={{ background: "linear-gradient(135deg, rgba(255,81,0,0.2) 0%, rgba(255,81,0,0.08) 100%)", border: "1.5px solid rgba(255,81,0,0.25)", boxShadow: "0 0 40px rgba(255,81,0,0.12)" }}
               >
-                Access Admin Panel
-              </Link>
-            )}
+                <span style={{ color: "#ff7d47" }}>{initial}</span>
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-3xl">
+                  <Camera className="w-5 h-5 text-white/70" />
+                </div>
+              </div>
+              {/* Role badge */}
+              <div
+                className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider"
+                style={
+                  profile.role === "admin"
+                    ? { background: "rgba(139,92,246,0.2)", color: "#a78bfa", border: "1px solid rgba(139,92,246,0.3)" }
+                    : profile.role === "operator"
+                    ? { background: "rgba(16,185,129,0.15)", color: "#34d399", border: "1px solid rgba(16,185,129,0.25)" }
+                    : { background: "rgba(255,81,0,0.12)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }
+                }
+              >
+                {profile.role}
+              </div>
+            </div>
 
-          </div>
+            {/* Name + meta */}
+            <div className="flex-1 min-w-0 pb-1">
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight truncate">
+                {displayName}
+              </h1>
+              {username && (
+                <p className="text-[#ff5100]/70 text-sm font-medium mt-0.5">@{username}</p>
+              )}
+              <div className="flex flex-wrap items-center gap-4 mt-3">
+                <span className="flex items-center gap-1.5 text-xs text-white/35">
+                  <Calendar className="w-3.5 h-3.5" />
+                  Joined {profile.created_at ? format(new Date(profile.created_at), "MMMM yyyy") : "Recently"}
+                </span>
+                <span className="flex items-center gap-1.5 text-xs text-white/35">
+                  <Shield className="w-3.5 h-3.5" />
+                  {profile.email}
+                </span>
+              </div>
+            </div>
 
-          {/* Main Content / Form */}
-          <div className="flex-1 space-y-8">
-            <ProfileForm profile={{
-              ...profile,
-              username: user.user_metadata?.username || profile.username || null,
-              phone: profile.phone || user.user_metadata?.phone || null,
-            }} />
-            <ACEProfileSection />
-            <TripLogSection />
+            {/* Quick-link chips */}
+            <div className="flex items-center gap-2 shrink-0">
+              {profile.role === "admin" && (
+                <a
+                  href="/admin"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all hover:brightness-110"
+                  style={{ background: "rgba(139,92,246,0.12)", color: "#a78bfa", border: "1px solid rgba(139,92,246,0.25)" }}
+                >
+                  <Shield className="w-3.5 h-3.5" /> Admin
+                </a>
+              )}
+              {profile.role === "operator" && (
+                <a
+                  href="/auth/operator-dashboard"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all hover:brightness-110"
+                  style={{ background: "rgba(16,185,129,0.1)", color: "#34d399", border: "1px solid rgba(16,185,129,0.2)" }}
+                >
+                  <Zap className="w-3.5 h-3.5" /> Dashboard
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* ── Main content ────────────────────────────────────────── */}
+      <section className="py-14 px-5 lg:px-8">
+        <div className="max-w-4xl mx-auto space-y-10">
+
+          {/* Account details + password */}
+          <ProfileForm profile={{
+            ...profile,
+            username: user.user_metadata?.username || profile.username || null,
+            phone: profile.phone || user.user_metadata?.phone || null,
+          }} />
+
+          {/* ACE Capability profile */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-1.5 h-5 rounded-full bg-[#ff5100]" />
+              <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>Capability Profile</h2>
+            </div>
+            <ACEProfileSection />
+          </div>
+
+          {/* Trip log */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-1.5 h-5 rounded-full" style={{ background: "#fbbf24" }} />
+              <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>My Adventures</h2>
+              <Trophy className="w-4 h-4 text-amber-400/60 ml-1" />
+            </div>
+            <TripLogSection />
+          </div>
+
+        </div>
+      </section>
+
+      <Footer />
     </div>
   );
 }

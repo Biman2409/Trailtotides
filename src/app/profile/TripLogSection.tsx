@@ -4,7 +4,7 @@ import { useTripLog } from "@/contexts/TripLogContext";
 import { adventures } from "@/lib/data";
 import Link from "next/link";
 import Image from "next/image";
-import { CheckCircle2, X, MapPin } from "lucide-react";
+import { X, MapPin } from "lucide-react";
 
 export default function TripLogSection() {
   const { log, unmark, loading } = useTripLog();
@@ -17,16 +17,14 @@ export default function TripLogSection() {
   if (loading) return null;
 
   return (
-    <div className="mt-10 pt-10 border-t border-white/8">
-      <div className="flex items-center gap-2 mb-6">
-        <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-        <h2 className="text-white font-semibold text-lg">My Adventures</h2>
-        {entries.length > 0 && (
-          <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.15)", color: "#6ee7b7" }}>
+    <div>
+      {entries.length > 0 && (
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(251,191,36,0.15)", color: "#fcd34d" }}>
             {entries.length} done
           </span>
-        )}
-      </div>
+        </div>
+      )}
 
       {entries.length === 0 ? (
         <div className="rounded-2xl p-8 text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
