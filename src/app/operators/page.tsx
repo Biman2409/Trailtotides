@@ -7,6 +7,7 @@ import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import { getAllOperatorProfiles, getAllOperatorSubmissions } from "@/app/auth/operator-actions";
 import { adventures } from "@/lib/data";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 
 export const metadata: Metadata = {
   title: "Operators — Trail to Tides",
@@ -159,26 +160,49 @@ export default async function OperatorsPage() {
 
                     {/* Adventures */}
                     {listedAdventures.length > 0 ? (
-                      <div className="flex-1 flex flex-col gap-2">
+                      <div className="flex-1 flex flex-col gap-3">
                         <p className="text-white/20 text-[10px] uppercase tracking-[0.14em] font-semibold">
                           {listedAdventures.length} {listedAdventures.length === 1 ? "adventure" : "adventures"}
                         </p>
-                        <div className="space-y-1">
+                        <div className="space-y-1.5">
                           {listedAdventures.slice(0, 5).map((adv) => (
                             <Link
                               key={adv.slug}
                               href={`/experiences/${adv.slug}`}
-                              className="flex items-center gap-2.5 rounded-md px-1.5 py-1.5 -mx-1.5 transition-colors hover:bg-white/[0.05] group/row"
+                              className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-white/[0.05] group/row"
+                              style={{ border: "1px solid rgba(255,255,255,0.05)" }}
                             >
-                              <div className="relative w-7 h-7 rounded-md shrink-0 overflow-hidden">
+                              {/* Thumbnail */}
+                              <div className="relative w-10 h-10 rounded-lg shrink-0 overflow-hidden">
                                 <Image src={adv.heroImage} alt={adv.name} fill className="object-cover" />
                               </div>
-                              <p className="text-white/50 text-xs truncate group-hover/row:text-white/80 transition-colors">{adv.name}</p>
-                              <span className="text-white/20 text-[10px] shrink-0 ml-auto">{adv.state}</span>
+
+                              {/* Text */}
+                              <div className="flex-1 min-w-0">
+                                <p className="text-white/70 text-xs font-medium truncate group-hover/row:text-white transition-colors leading-snug">
+                                  {adv.name}
+                                </p>
+                                <div className="flex items-center gap-1.5 mt-1">
+                                  <span className="flex items-center gap-1 text-[10px] text-white/30">
+                                    {ADVENTURE_TYPE_ICONS[adv.type]?.(9)}
+                                    {adv.type}
+                                  </span>
+                                  <span className="w-px h-2.5 bg-white/10" />
+                                  <span className="text-[10px] text-white/25">{adv.region}</span>
+                                </div>
+                              </div>
+
+                              {/* State pill */}
+                              <span
+                                className="text-[10px] font-medium px-2 py-0.5 rounded-full shrink-0"
+                                style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.3)" }}
+                              >
+                                {adv.state}
+                              </span>
                             </Link>
                           ))}
                           {listedAdventures.length > 5 && (
-                            <p className="text-white/20 text-[10px] pl-1.5 pt-0.5">+{listedAdventures.length - 5} more</p>
+                            <p className="text-white/20 text-[10px] pt-1 pl-1">+{listedAdventures.length - 5} more</p>
                           )}
                         </div>
                       </div>
