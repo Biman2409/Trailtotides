@@ -346,39 +346,7 @@ function MapView({
     });
   }
 
-  const routeLayerGroupRef = useRef<L.LayerGroup | null>(null);
-
-  function addRouteOverlays(leaflet: typeof L, map: L.Map, list: Adventure[]) {
-    if (routeLayerGroupRef.current) {
-      routeLayerGroupRef.current.clearLayers();
-    } else {
-      routeLayerGroupRef.current = leaflet.layerGroup().addTo(map);
-    }
-    list.forEach(adv => {
-      if (!adv.routePoints || adv.routePoints.length < 2) return;
-      const color = difficultyColor[adv.difficulty] ?? "#6366f1";
-      // Glow / shadow underneath
-      leaflet.polyline(adv.routePoints, {
-        color: "#000", weight: 6, opacity: 0.12,
-        lineCap: "round", lineJoin: "round", interactive: false,
-      }).addTo(routeLayerGroupRef.current!);
-      // Main dashed trail line
-      leaflet.polyline(adv.routePoints, {
-        color,
-        weight: 3.5, opacity: 0.82, dashArray: "8 5",
-        lineCap: "round", lineJoin: "round", interactive: false,
-      }).addTo(routeLayerGroupRef.current!);
-      // Start dot
-      leaflet.circleMarker(adv.routePoints[0], {
-        radius: 4, color: "white", weight: 2, fillColor: color, fillOpacity: 1, interactive: false,
-      }).addTo(routeLayerGroupRef.current!);
-      // End dot
-      const last = adv.routePoints[adv.routePoints.length - 1];
-      leaflet.circleMarker(last, {
-        radius: 4, color: "white", weight: 2, fillColor: color, fillOpacity: 1, interactive: false,
-      }).addTo(routeLayerGroupRef.current!);
-    });
-  }
+  // Route overlays removed
 
   function addIndiaBorder(leaflet: typeof L, map: L.Map) {
     fetch("/india-boundary.geojson")
@@ -459,7 +427,6 @@ function MapView({
       map.addLayer(MCG);
       markersLayerRef.current = MCG;
       addMarkers(leaflet, advs);
-      addRouteOverlays(leaflet, map, advs);
       addIndiaBorder(leaflet, map);
     });
     return () => {
@@ -480,7 +447,6 @@ function MapView({
       if (!markersLayerRef.current || !mapInstanceRef.current) return;
       markersLayerRef.current.clearLayers();
       addMarkers(leaflet, advs);
-      addRouteOverlays(leaflet, mapInstanceRef.current, advs);
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [advs]);
