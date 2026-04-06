@@ -102,37 +102,55 @@ function loadLeaflet(): Promise<typeof L> {
   });
 }
 
-function PlaceSearch({ onSelect }: { onSelect: (lat: number, lng: number, name: string) => void }) {
+function UnifiedSearch({
+  onAdventureSearch,
+  onPlaceSelect,
+}: {
+  onAdventureSearch: (q: string) => void;
+  onPlaceSelect: (lat: number, lng: number, name: string) => void;
+}) {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<NominatimResult[]>([]);
+  const [placeResults, setPlaceResults] = useState<NominatimResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const search = useCallback((q: string) => {
-    if (!q.trim() || q.length < 2) { setResults([]); setOpen(false); return; }
+  // Adventures matching the query
+  const adventureMatches = query.trim().length >= 2
+    ? adventures.filter(a =>
+        a.name.toLowerCase().includes(query.toLowerCase()) ||
+        a.state.toLowerCase().includes(query.toLowerCase()) ||
+        a.type.toLowerCase().includes(query.toLowerCase())
+      ).slice(0, 4)
+    : [];
+
+  const fetchPlaces = useCallback((q: string) => {
+    if (!q.trim() || q.length < 2) { setPlaceResults([]); return; }
     setLoading(true);
     fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=6&countrycodes=in&addressdetails=0`,
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=4&countrycodes=in&addressdetails=0`,
       { headers: { "Accept-Language": "en" } }
     )
       .then((r) => r.json())
-      .then((data: NominatimResult[]) => {
-        setResults(data);
-        setOpen(data.length > 0);
-      })
-      .catch(() => setResults([]))
+      .then((data: NominatimResult[]) => setPlaceResults(data))
+      .catch(() => setPlaceResults([]))
       .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
+    onAdventureSearch(query);
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => search(query), 400);
+    debounceRef.current = setTimeout(() => fetchPlaces(query), 400);
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
-  }, [query, search]);
+  }, [query, fetchPlaces, onAdventureSearch]);
 
-  // Close on outside click
+  const hasResults = adventureMatches.length > 0 || placeResults.length > 0;
+
+  useEffect(() => {
+    setOpen(query.trim().length >= 2 && hasResults);
+  }, [query, hasResults]);
+
   useEffect(() => {
     function handle(e: MouseEvent) {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) setOpen(false);
@@ -141,44 +159,78 @@ function PlaceSearch({ onSelect }: { onSelect: (lat: number, lng: number, name: 
     return () => document.removeEventListener("mousedown", handle);
   }, []);
 
-  function handleSelect(r: NominatimResult) {
-    onSelect(parseFloat(r.lat), parseFloat(r.lon), r.display_name.split(",")[0]);
-    setQuery(r.display_name.split(",")[0]);
-    setOpen(false);
+  function handleClear() {
+    setQuery(""); setPlaceResults([]); setOpen(false); onAdventureSearch("");
+  }
+
+  function handlePlaceSelect(r: NominatimResult) {
+    const name = r.display_name.split(",")[0];
+    onPlaceSelect(parseFloat(r.lat), parseFloat(r.lon), name);
+    setQuery(name); setOpen(false);
   }
 
   return (
-    <div ref={wrapperRef} className="relative w-48 lg:w-64 shrink-0">
+    <div ref={wrapperRef} className="relative flex-1 min-w-0">
       <div className="relative">
-        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#ff5100]" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9a9590]" />
         {loading && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#9a9590] animate-spin" />}
         {!loading && query && (
-          <button onClick={() => { setQuery(""); setResults([]); setOpen(false); }} className="absolute right-3 top-1/2 -translate-y-1/2">
+          <button onClick={handleClear} className="absolute right-3 top-1/2 -translate-y-1/2">
             <X className="w-3.5 h-3.5 text-[#9a9590] hover:text-[#1a1f2e]" />
           </button>
         )}
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          onFocus={() => results.length > 0 && setOpen(true)}
-          placeholder="Go to a place…"
-          className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#f5f0e8] text-[#1a1f2e] text-sm placeholder-[#9a9590] border border-transparent focus:outline-none focus:border-[#ff5100] transition-colors"
+          onFocus={() => hasResults && setOpen(true)}
+          placeholder="Search adventures or places…"
+          className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#f5f0e8] text-[#1a1f2e] text-sm placeholder-[#9a9590] border border-transparent focus:outline-none focus:border-[#1e3d2f] transition-colors"
         />
       </div>
+
       {open && (
-        <ul className="absolute z-[2000] top-full mt-1 w-full bg-white rounded-xl shadow-xl border border-[#e0d8cc] overflow-hidden text-sm">
-          {results.map((r) => (
-            <li key={r.place_id}>
-              <button
-                onMouseDown={() => handleSelect(r)}
-                className="w-full text-left px-3 py-2.5 hover:bg-[#f5f0e8] flex items-start gap-2"
-              >
-                <MapPin className="w-3.5 h-3.5 text-[#ff5100] mt-0.5 shrink-0" />
-                <span className="text-[#1a1f2e] leading-snug line-clamp-2">{r.display_name}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div className="absolute z-[2000] top-full mt-1 w-full bg-white rounded-xl shadow-xl border border-[#e0d8cc] overflow-hidden text-sm min-w-[280px]">
+          {/* Adventure results */}
+          {adventureMatches.length > 0 && (
+            <>
+              <p className="px-3 pt-2.5 pb-1 text-[10px] font-bold uppercase tracking-widest text-[#9a9590]">Adventures</p>
+              {adventureMatches.map((a) => (
+                <button
+                  key={a.id}
+                  onMouseDown={() => { setOpen(false); }}
+                  className="w-full text-left px-3 py-2 hover:bg-[#f5f0e8] flex items-center gap-2.5"
+                >
+                  <div className="w-7 h-7 rounded-md overflow-hidden relative shrink-0">
+                    <img src={a.heroImage} alt={a.name} className="object-cover w-full h-full" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[#1a1f2e] font-medium truncate">{a.name}</p>
+                    <p className="text-[#9a9590] text-[10px]">{a.type} · {a.state}</p>
+                  </div>
+                </button>
+              ))}
+            </>
+          )}
+
+          {/* Place results */}
+          {placeResults.length > 0 && (
+            <>
+              <p className={`px-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-[#9a9590] ${adventureMatches.length > 0 ? "pt-2 border-t border-[#f0ece4]" : "pt-2.5"}`}>
+                Places
+              </p>
+              {placeResults.map((r) => (
+                <button
+                  key={r.place_id}
+                  onMouseDown={() => handlePlaceSelect(r)}
+                  className="w-full text-left px-3 py-2 hover:bg-[#f5f0e8] flex items-start gap-2"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-[#ff5100] mt-0.5 shrink-0" />
+                  <span className="text-[#1a1f2e] leading-snug line-clamp-1">{r.display_name}</span>
+                </button>
+              ))}
+            </>
+          )}
+        </div>
       )}
     </div>
   );
@@ -468,19 +520,11 @@ export default function MapPage() {
       {/* Filter bar */}
       <div className="z-[1001] bg-white/95 backdrop-blur-md border-b border-[#e0d8cc] shadow-sm shrink-0">
         <div className="max-w-7xl mx-auto px-4 lg:px-8 py-3 flex items-center gap-3">
-            {/* Adventure search */}
-            <div className="relative flex-1 min-w-0">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9a9590]" />
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search adventures..."
-                className="w-full pl-9 pr-4 py-2 rounded-xl bg-[#f5f0e8] text-[#1a1f2e] text-sm placeholder-[#9a9590] border border-transparent focus:outline-none focus:border-[#1e3d2f] transition-colors"
-              />
-            </div>
-
-            {/* Place search */}
-            <PlaceSearch onSelect={(lat, lng) => flyToRef.current?.(lat, lng)} />
+            {/* Unified search */}
+            <UnifiedSearch
+              onAdventureSearch={setSearch}
+              onPlaceSelect={(lat, lng) => flyToRef.current?.(lat, lng)}
+            />
 
             {/* Near Me */}
             <button
