@@ -36,6 +36,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import type { Adventure } from "@/lib/data";
 import { getApprovedOperatorsForAdventure } from "@/app/auth/operator-actions";
+import OperatorListingPanel from "./OperatorListingPanel";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -613,6 +614,9 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* Compare CTA */}
             <CompareCTA adventure={adventure} />
+
+            {/* Operator Registration Panel */}
+            <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
 
             {/* Explore links */}
             <Link
