@@ -34,12 +34,13 @@ function classifyAdventure(userAce: StoredProfile["ace"], adventureAce: ReturnTy
 import type L from "leaflet";
 
 
+// Matches DIFFICULTY_CONFIG colors in DifficultyMeter.tsx
 const difficultyColor: Record<string, string> = {
-  Easy:         "#10b981",  // emerald
-  Moderate:     "#0ea5e9",  // sky blue
-  Hard:         "#6366f1",  // indigo
-  Advanced:     "#ff5100",  // brand orange
-  Extreme:      "#ef4444",  // red
+  Easy:     "#10b981",  // emerald
+  Moderate: "#38bdf8",  // sky blue
+  Hard:     "#a78bfa",  // violet
+  Advanced: "#ff5100",  // brand orange
+  Extreme:  "#ef4444",  // red
 };
 
 const seasons: { label: string; months: Month[] }[] = [
