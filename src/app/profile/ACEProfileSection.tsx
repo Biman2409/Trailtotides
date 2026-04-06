@@ -95,9 +95,10 @@ export default function ACEProfileSection() {
 
         {/* Left: ACE Radar */}
         <div
-          className="flex items-center justify-center p-5 sm:p-6 shrink-0"
+          className="flex flex-col items-center gap-3 p-5 sm:p-6 shrink-0"
           style={{ borderRight: "1px solid rgba(255,255,255,0.05)", background: "radial-gradient(ellipse at center, rgba(255,81,0,0.05) 0%, transparent 70%)" }}
         >
+          <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/30 self-start">Capability Breakdown</p>
           <ACERadar ace={stored.ace} size={200} showLabels />
         </div>
 
