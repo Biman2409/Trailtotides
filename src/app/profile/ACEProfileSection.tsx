@@ -150,7 +150,8 @@ export default function ACEProfileSection() {
                     <p className="text-[10px] text-white/30">pts needed</p>
                   </div>
                 </div>
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2.5">
+                  {/* Bar */}
                   <div className="relative h-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
                     <div
                       className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
@@ -173,23 +174,38 @@ export default function ACEProfileSection() {
                       }}
                     />
                   </div>
-                  <div className="relative h-4 overflow-hidden">
+                  {/* Rank labels below bar */}
+                  <div className="relative h-5">
                     {RANKS.map((rank, i) => {
                       const isCurrent = i === currentRankIndex;
                       const isUnlocked = i < currentRankIndex;
                       const pct = (i / (totalRanks - 1)) * 100;
                       return (
-                        <span
+                        <div
                           key={rank.label}
-                          className="absolute text-[7.5px] font-semibold leading-none whitespace-nowrap top-0"
+                          className="absolute flex flex-col items-center gap-0.5"
                           style={{
                             left: `${pct}%`,
                             transform: i === 0 ? "none" : i === totalRanks - 1 ? "translateX(-100%)" : "translateX(-50%)",
-                            color: isCurrent ? currentRank.color : isUnlocked ? `${rank.color}55` : "rgba(255,255,255,0.15)",
                           }}
                         >
-                          {rank.label}
-                        </span>
+                          <span
+                            className="text-[7.5px] font-semibold leading-none whitespace-nowrap"
+                            style={{
+                              color: isCurrent ? currentRank.color : isUnlocked ? `${rank.color}60` : "rgba(255,255,255,0.18)",
+                            }}
+                          >
+                            {rank.label}
+                          </span>
+                          {isCurrent && (
+                            <span
+                              className="text-[6px] font-bold leading-none whitespace-nowrap uppercase tracking-wide"
+                              style={{ color: `${currentRank.color}80` }}
+                            >
+                              you
+                            </span>
+                          )}
+                        </div>
                       );
                     })}
                   </div>

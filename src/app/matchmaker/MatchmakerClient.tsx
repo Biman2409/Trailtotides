@@ -339,22 +339,34 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
                   }}
                 />
               </div>
-              <div className="relative h-4 mt-1">
+              <div className="relative h-5">
                 {RANKS.map((rank, i) => {
                   const isCurrent = i === currentRankIndex;
                   const isUnlocked = i < currentRankIndex;
+                  const pct = (i / (totalRanks - 1)) * 100;
                   return (
-                    <span
+                    <div
                       key={rank.label}
-                      className="absolute text-[7.5px] font-semibold leading-none whitespace-nowrap"
+                      className="absolute flex flex-col items-center gap-0.5"
                       style={{
-                        left: `${(i / (totalRanks - 1)) * 100}%`,
-                        transform: `translateX(-${(i / (totalRanks - 1)) * 100}%)`,
-                        color: isCurrent ? currentRank.color : isUnlocked ? `${rank.color}55` : "rgba(255,255,255,0.15)",
+                        left: `${pct}%`,
+                        transform: i === 0 ? "none" : i === totalRanks - 1 ? "translateX(-100%)" : "translateX(-50%)",
                       }}
                     >
-                      {rank.label}
-                    </span>
+                      <span
+                        className="text-[7.5px] font-semibold leading-none whitespace-nowrap"
+                        style={{
+                          color: isCurrent ? currentRank.color : isUnlocked ? `${rank.color}55` : "rgba(255,255,255,0.15)",
+                        }}
+                      >
+                        {rank.label}
+                      </span>
+                      {isCurrent && (
+                        <span className="text-[6px] font-bold leading-none uppercase tracking-wide" style={{ color: `${currentRank.color}80` }}>
+                          you
+                        </span>
+                      )}
+                    </div>
                   );
                 })}
               </div>
@@ -859,14 +871,14 @@ function ResultsScreen({
                     }}
                   />
                 </div>
-                <div className="relative h-[18px]">
+                <div className="relative h-[18px] overflow-hidden">
                   {RANKS.map((rank, i) => (
                     <span
                       key={rank.label}
                       className="absolute text-[7px] sm:text-[7.5px] font-semibold leading-none whitespace-nowrap top-0"
                       style={{
                         left: `${(i / (totalRanks - 1)) * 100}%`,
-                        transform: `translateX(-${(i / (totalRanks - 1)) * 100}%)`,
+                        transform: i === 0 ? "none" : i === totalRanks - 1 ? "translateX(-100%)" : "translateX(-50%)",
                         color: i === currentRankIndex ? tier.color : i < currentRankIndex ? `${rank.color}50` : "rgba(255,255,255,0.13)",
                       }}
                     >
