@@ -98,13 +98,13 @@ export default function ContactPage() {
             <div>
               <h3 className="text-white font-semibold text-base mb-4">Follow us</h3>
               <div className="flex items-center gap-4">
-                <a href="#" className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 transition-all">
+                <a href="https://instagram.com/trailtotides" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 transition-all">
                   <Instagram className="w-4 h-4" />
                 </a>
-                <a href="#" className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 transition-all">
+                <a href="https://youtube.com/@trailtotides" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 transition-all">
                   <Youtube className="w-4 h-4" />
                 </a>
-                <a href="#" className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 transition-all">
+                <a href="https://twitter.com/trailtotides" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 transition-all">
                   <Twitter className="w-4 h-4" />
                 </a>
               </div>

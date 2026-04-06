@@ -140,7 +140,7 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
             <h2 className="text-white text-2xl lg:text-3xl font-semibold tracking-tight">Your Wishlist</h2>
           </div>
           <Link
-            href="/wishlist"
+            href="/explore"
             className="hidden sm:flex items-center gap-1.5 text-white/40 text-sm font-medium hover:text-[#ff5100] transition-colors group"
           >
             View all

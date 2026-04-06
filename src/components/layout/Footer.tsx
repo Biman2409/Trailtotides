@@ -59,11 +59,13 @@ export default function Footer() {
                     {[
                       { label: "Explore", href: "/explore" },
                       { label: "Map", href: "/map" },
+                      { label: "Planner", href: "/planner" },
                       { label: "Matchmaker", href: "/matchmaker" },
                       { label: "Stories", href: "/stories" },
+                      { label: "Operators", href: "/operators" },
                     ].map((link) => (
                       <li key={link.label}>
-                        <Link 
+                        <Link
                           href={link.href}
                           className="text-[14px] font-bold hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]" style={{ color: "var(--text-tertiary)" }}
                         >
@@ -74,18 +76,21 @@ export default function Footer() {
                   </ul>
                 </div>
 
-                {/* 3. Legal */}
+                {/* 3. Company + Legal */}
                 <div className="space-y-5">
                   <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff5100] opacity-90">
-                    Legal
+                    Company
                   </h4>
                   <ul className="space-y-4">
                     {[
+                      { label: "About", href: "/about" },
+                      { label: "Contact", href: "/contact" },
+                      { label: "List with Us", href: "/list" },
                       { label: "Terms of Service", href: "/terms" },
                       { label: "Privacy Policy", href: "/privacy" },
                     ].map((link) => (
                       <li key={link.label}>
-                        <Link 
+                        <Link
                           href={link.href}
                           className="text-[14px] font-bold hover:text-[#ff5100] transition-colors duration-300 tracking-[0.1em]" style={{ color: "var(--text-tertiary)" }}
                         >
