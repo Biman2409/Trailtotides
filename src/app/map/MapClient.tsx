@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
   Zap, Activity, ShieldAlert, Trophy, Flame, CalendarRange, User, Users, ArrowRight,
-  LocateFixed, Map as MapIcon,
+  LocateFixed, Map as MapIcon, Layers,
 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
@@ -239,19 +239,39 @@ function UnifiedSearch({
 
 // ── Map View ──────────────────────────────────────────────────────────────────
 
+const TILE_LAYERS = {
+  terrain: {
+    url: "https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=a7e6f2e9ce8140b7b254f6b8e1c8b6ed",
+    // fallback to ESRI topo (no key needed)
+    fallback: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Tiles &copy; Esri",
+    maxZoom: 19,
+  },
+  standard: {
+    url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    maxZoom: 19,
+  },
+} as const;
+
+type TileMode = keyof typeof TILE_LAYERS;
+
 function MapView({
   adventures: advs,
   flyToRef,
   openPinRef,
+  tileMode,
 }: {
   adventures: Adventure[];
   flyToRef: React.MutableRefObject<((lat: number, lng: number) => void) | null>;
   openPinRef: React.MutableRefObject<((slug: string) => void) | null>;
+  tileMode: TileMode;
 }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const markerMapRef = useRef<Map<string, L.Marker>>(new Map());
+  const tileLayerRef = useRef<L.TileLayer | null>(null);
 
   useEffect(() => {
     flyToRef.current = (lat, lng) => {
@@ -326,14 +346,37 @@ function MapView({
     });
   }
 
+  const routeLayerGroupRef = useRef<L.LayerGroup | null>(null);
+
   function addRouteOverlays(leaflet: typeof L, map: L.Map, list: Adventure[]) {
+    if (routeLayerGroupRef.current) {
+      routeLayerGroupRef.current.clearLayers();
+    } else {
+      routeLayerGroupRef.current = leaflet.layerGroup().addTo(map);
+    }
     list.forEach(adv => {
       if (!adv.routePoints || adv.routePoints.length < 2) return;
+      const color = difficultyColor[adv.difficulty] ?? "#6366f1";
+      // Glow / shadow underneath
       leaflet.polyline(adv.routePoints, {
-        color: difficultyColor[adv.difficulty] ?? "#6366f1",
-        weight: 3, opacity: 0.65, dashArray: "6 5",
+        color: "#000", weight: 6, opacity: 0.12,
         lineCap: "round", lineJoin: "round", interactive: false,
-      }).addTo(map);
+      }).addTo(routeLayerGroupRef.current!);
+      // Main dashed trail line
+      leaflet.polyline(adv.routePoints, {
+        color,
+        weight: 3.5, opacity: 0.82, dashArray: "8 5",
+        lineCap: "round", lineJoin: "round", interactive: false,
+      }).addTo(routeLayerGroupRef.current!);
+      // Start dot
+      leaflet.circleMarker(adv.routePoints[0], {
+        radius: 4, color: "white", weight: 2, fillColor: color, fillOpacity: 1, interactive: false,
+      }).addTo(routeLayerGroupRef.current!);
+      // End dot
+      const last = adv.routePoints[adv.routePoints.length - 1];
+      leaflet.circleMarker(last, {
+        radius: 4, color: "white", weight: 2, fillColor: color, fillOpacity: 1, interactive: false,
+      }).addTo(routeLayerGroupRef.current!);
     });
   }
 
@@ -384,11 +427,15 @@ function MapView({
         scrollWheelZoom: true,
       });
 
-      // Crisper light tile
-      leaflet.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      }).addTo(map);
+      // Tile layer — ESRI World Topo (physical terrain, no API key)
+      const tileUrl = tileMode === "terrain"
+        ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
+        : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+      const tileAttr = tileMode === "terrain"
+        ? "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ"
+        : '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+      tileLayerRef.current = leaflet.tileLayer(tileUrl, { maxZoom: 19, attribution: tileAttr });
+      tileLayerRef.current.addTo(map);
 
       // Zoom control — bottom right
       leaflet.control.zoom({ position: "bottomright" }).addTo(map);
@@ -430,11 +477,33 @@ function MapView({
   useEffect(() => {
     if (!mapInstanceRef.current || !markersLayerRef.current) return;
     loadLeaflet().then(leaflet => {
-      if (!markersLayerRef.current) return;
+      if (!markersLayerRef.current || !mapInstanceRef.current) return;
       markersLayerRef.current.clearLayers();
       addMarkers(leaflet, advs);
+      addRouteOverlays(leaflet, mapInstanceRef.current, advs);
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [advs]);
+
+  // Swap tile layer when tileMode changes
+  useEffect(() => {
+    if (!mapInstanceRef.current) return;
+    loadLeaflet().then(leaflet => {
+      const map = mapInstanceRef.current;
+      if (!map) return;
+      if (tileLayerRef.current) { map.removeLayer(tileLayerRef.current); }
+      const tileUrl = tileMode === "terrain"
+        ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
+        : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+      const tileAttr = tileMode === "terrain"
+        ? "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ"
+        : '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+      tileLayerRef.current = leaflet.tileLayer(tileUrl, { maxZoom: 19, attribution: tileAttr });
+      tileLayerRef.current.addTo(map);
+      // Push tile layer below markers
+      tileLayerRef.current.bringToBack();
+    });
+  }, [tileMode]);
 
   return <div ref={mapRef} className="w-full h-full" />;
 }
@@ -454,6 +523,7 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 export default function MapPage() {
   const [mounted, setMounted] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [tileMode, setTileMode] = useState<TileMode>("terrain");
   const flyToRef = useRef<((lat: number, lng: number) => void) | null>(null);
   const openPinRef = useRef<((slug: string) => void) | null>(null);
   const [nearMe, setNearMe] = useState<{ lat: number; lng: number } | null>(null);
@@ -545,6 +615,16 @@ export default function MapPage() {
             onPlaceSelect={(lat, lng) => flyToRef.current?.(lat, lng)}
             onAdventurePin={adv => openPinRef.current?.(adv.slug)}
           />
+
+          {/* Tile toggle */}
+          <button
+            onClick={() => setTileMode(m => m === "terrain" ? "standard" : "terrain")}
+            title={tileMode === "terrain" ? "Switch to Standard map" : "Switch to Terrain map"}
+            className={`${btnBase} ${tileMode === "terrain" ? btnActive : btnIdle}`}
+          >
+            <Layers className="w-4 h-4" />
+            <span className="hidden sm:inline">{tileMode === "terrain" ? "Terrain" : "Standard"}</span>
+          </button>
 
           <button onClick={handleNearMe} title={nearMe ? "Clear Near Me" : "Adventures Near Me"}
             className={`${btnBase} ${nearMe ? "bg-[#ff5100] text-white" : btnIdle}`}>
@@ -823,7 +903,7 @@ export default function MapPage() {
       {/* ── Map ─────────────────────────────────────────────────── */}
       <div className="flex-1 relative overflow-hidden">
         {mounted ? (
-          <MapView adventures={sortedAdventures} flyToRef={flyToRef} openPinRef={openPinRef} />
+          <MapView adventures={sortedAdventures} flyToRef={flyToRef} openPinRef={openPinRef} tileMode={tileMode} />
         ) : (
           <div className="w-full h-full bg-[#f5f0e8] flex items-center justify-center">
             <Loader2 className="w-6 h-6 text-[#b8b0a5] animate-spin" />
