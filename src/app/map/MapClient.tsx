@@ -249,10 +249,10 @@ function MapView({ adventures: advs, flyToRef }: { adventures: Adventure[]; flyT
         leaflet.geoJSON(data, {
           style: {
             color: "#ff5100",
-            weight: 2.5,
-            opacity: 0.85,
+            weight: 1.5,
+            opacity: 0.25,
             fillColor: "#ff5100",
-            fillOpacity: 0.04,
+            fillOpacity: 0.02,
             dashArray: undefined,
           },
           interactive: false,
