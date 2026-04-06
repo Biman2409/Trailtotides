@@ -4,8 +4,9 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import { getAllOperatorProfiles, getAllOperatorSubmissions } from "@/app/auth/operator-actions";
+import { createClient } from "@/lib/supabase/server";
 import { adventures } from "@/lib/data";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import OperatorsClient, { OperatorCardData } from "./OperatorsClient";
 
 export const metadata: Metadata = {
@@ -16,6 +17,11 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function OperatorsPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const isOperator = user?.user_metadata?.role === "operator";
+  const isLoggedIn = !!user;
+
   const [profiles, submissions] = await Promise.all([
     getAllOperatorProfiles(),
     getAllOperatorSubmissions(),
@@ -111,21 +117,46 @@ export default async function OperatorsPage() {
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <Link
-              href="/auth/login?role=operator"
-              className="px-4 py-2.5 rounded-xl text-sm font-medium transition-colors"
-              style={{ color: "rgba(255,255,255,0.45)", border: "1px solid rgba(255,255,255,0.1)" }}
-            >
-              Log in
-            </Link>
-            <Link
-              href="/auth/operator-signup"
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
-              style={{ background: "#ff5100", color: "white" }}
-            >
-              List your company
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+            {isOperator ? (
+              // Logged in as operator — show their dashboard link
+              <Link
+                href="/auth/operator-dashboard"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                style={{ background: "#ff5100", color: "white" }}
+              >
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                My Dashboard
+              </Link>
+            ) : isLoggedIn ? (
+              // Logged in as explorer — offer operator signup
+              <Link
+                href="/auth/operator-signup"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                style={{ background: "#ff5100", color: "white" }}
+              >
+                List your company
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            ) : (
+              // Not logged in — show both login + signup
+              <>
+                <Link
+                  href="/auth/login?role=operator"
+                  className="px-4 py-2.5 rounded-xl text-sm font-medium transition-colors"
+                  style={{ color: "rgba(255,255,255,0.45)", border: "1px solid rgba(255,255,255,0.1)" }}
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/auth/operator-signup"
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                  style={{ background: "#ff5100", color: "white" }}
+                >
+                  List your company
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </section>
