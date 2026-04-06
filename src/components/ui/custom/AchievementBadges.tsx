@@ -175,7 +175,7 @@ export default function AchievementBadges({ ace, heading }: Props) {
             className="text-[9px] font-semibold transition-colors whitespace-nowrap"
             style={{ color: "rgba(255,255,255,0.35)" }}
           >
-            {expanded ? "Show less" : `+${secondary.length} axis`}
+            {expanded ? "Show less" : `+${secondary.length} more`}
           </button>
         )}
       </div>
