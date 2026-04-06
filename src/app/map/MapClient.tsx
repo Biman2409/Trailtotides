@@ -240,13 +240,19 @@ function UnifiedSearch({
 // ── Map View ──────────────────────────────────────────────────────────────────
 
 const TILE_LAYERS = {
+  // OpenTopoMap — detailed contours, hillshading, ridges, peaks, trails. No key.
   terrain: {
-    url: "https://tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=a7e6f2e9ce8140b7b254f6b8e1c8b6ed",
-    // fallback to ESRI topo (no key needed)
-    fallback: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
-    attribution: "Tiles &copy; Esri",
+    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
+    maxZoom: 17,
+  },
+  // ESRI World Imagery — high-res satellite. No key.
+  satellite: {
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics",
     maxZoom: 19,
   },
+  // CartoDB Voyager — clean street/label map.
   standard: {
     url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -395,14 +401,8 @@ function MapView({
         scrollWheelZoom: true,
       });
 
-      // Tile layer — ESRI World Topo (physical terrain, no API key)
-      const tileUrl = tileMode === "terrain"
-        ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
-        : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
-      const tileAttr = tileMode === "terrain"
-        ? "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ"
-        : '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
-      tileLayerRef.current = leaflet.tileLayer(tileUrl, { maxZoom: 19, attribution: tileAttr });
+      const { url, attribution, maxZoom } = TILE_LAYERS[tileMode];
+      tileLayerRef.current = leaflet.tileLayer(url, { maxZoom, attribution });
       tileLayerRef.current.addTo(map);
 
       // Zoom control — bottom right
@@ -458,15 +458,9 @@ function MapView({
       const map = mapInstanceRef.current;
       if (!map) return;
       if (tileLayerRef.current) { map.removeLayer(tileLayerRef.current); }
-      const tileUrl = tileMode === "terrain"
-        ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}"
-        : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
-      const tileAttr = tileMode === "terrain"
-        ? "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ"
-        : '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
-      tileLayerRef.current = leaflet.tileLayer(tileUrl, { maxZoom: 19, attribution: tileAttr });
+      const { url, attribution, maxZoom } = TILE_LAYERS[tileMode];
+      tileLayerRef.current = leaflet.tileLayer(url, { maxZoom, attribution });
       tileLayerRef.current.addTo(map);
-      // Push tile layer below markers
       tileLayerRef.current.bringToBack();
     });
   }, [tileMode]);
@@ -582,15 +576,28 @@ export default function MapPage() {
             onAdventurePin={adv => openPinRef.current?.(adv.slug)}
           />
 
-          {/* Tile toggle */}
-          <button
-            onClick={() => setTileMode(m => m === "terrain" ? "standard" : "terrain")}
-            title={tileMode === "terrain" ? "Switch to Standard map" : "Switch to Terrain map"}
-            className={`${btnBase} ${tileMode === "terrain" ? btnActive : btnIdle}`}
-          >
-            <Layers className="w-4 h-4" />
-            <span className="hidden sm:inline">{tileMode === "terrain" ? "Terrain" : "Standard"}</span>
-          </button>
+          {/* Tile toggle — 3-way pill */}
+          <div className="flex items-center rounded-xl overflow-hidden shrink-0" style={{ border: "1px solid #e8dfc8" }}>
+            {(["terrain", "satellite", "standard"] as TileMode[]).map((mode, i) => {
+              const labels: Record<TileMode, string> = { terrain: "Topo", satellite: "Satellite", standard: "Map" };
+              const active = tileMode === mode;
+              return (
+                <button
+                  key={mode}
+                  onClick={() => setTileMode(mode)}
+                  className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-all"
+                  style={{
+                    background: active ? "#1e3d2f" : "#f5f0e8",
+                    color: active ? "white" : "#4a4540",
+                    borderRight: i < 2 ? "1px solid #e8dfc8" : "none",
+                  }}
+                >
+                  {i === 0 && <Layers className="w-3.5 h-3.5" />}
+                  <span className="hidden sm:inline">{labels[mode]}</span>
+                </button>
+              );
+            })}
+          </div>
 
           <button onClick={handleNearMe} title={nearMe ? "Clear Near Me" : "Adventures Near Me"}
             className={`${btnBase} ${nearMe ? "bg-[#ff5100] text-white" : btnIdle}`}>
