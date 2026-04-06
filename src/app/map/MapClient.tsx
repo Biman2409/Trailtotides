@@ -483,7 +483,7 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 export default function MapPage() {
   const [mounted, setMounted] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [tileMode, setTileMode] = useState<TileMode>("terrain");
+  const [tileMode, setTileMode] = useState<TileMode>("standard");
   const flyToRef = useRef<((lat: number, lng: number) => void) | null>(null);
   const openPinRef = useRef<((slug: string) => void) | null>(null);
   const [nearMe, setNearMe] = useState<{ lat: number; lng: number } | null>(null);
@@ -576,10 +576,10 @@ export default function MapPage() {
             onAdventurePin={adv => openPinRef.current?.(adv.slug)}
           />
 
-          {/* Tile toggle — 3-way pill */}
+          {/* Tile toggle — 3-way pill: Map (default) | Topo | Satellite */}
           <div className="flex items-center rounded-xl overflow-hidden shrink-0" style={{ border: "1px solid #e8dfc8" }}>
-            {(["terrain", "satellite", "standard"] as TileMode[]).map((mode, i) => {
-              const labels: Record<TileMode, string> = { terrain: "Topo", satellite: "Satellite", standard: "Map" };
+            {(["standard", "terrain", "satellite"] as TileMode[]).map((mode, i) => {
+              const labels: Record<TileMode, string> = { standard: "Map", terrain: "Topo", satellite: "Satellite" };
               const active = tileMode === mode;
               return (
                 <button
