@@ -241,6 +241,10 @@ function AddListingForm({
       website: profile.website,
       exact_dates: batches,
       notes: notes || null,
+      cloakroom: false,
+      cloakroom_charge: null,
+      offloading: false,
+      offloading_charge: null,
       status: "pending",
       created_at: new Date().toISOString(),
     };
