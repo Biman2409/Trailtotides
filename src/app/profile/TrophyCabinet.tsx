@@ -94,7 +94,7 @@ function TrophyCell({ badge, earned, boxSize, xl = false }: { badge: Achievement
     >
       <Tooltip badge={badge} visible={tip} anchorRef={ref} />
       <div
-        className="relative rounded-2xl flex items-center justify-center transition-transform duration-150 hover:scale-105"
+        className="relative rounded-2xl flex items-center justify-center transition-transform duration-150 hover:scale-105 overflow-hidden"
         style={{
           width: boxSize, height: boxSize,
           background: isSpecial
@@ -108,6 +108,17 @@ function TrophyCell({ badge, earned, boxSize, xl = false }: { badge: Achievement
         }}
       >
         {ICON(badge.icon, iconSize)}
+        {/* Subtle sweeping shine on Tier 1 */}
+        {isSpecial && xl && (
+          <span
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%)",
+              backgroundSize: "200% 100%",
+              animation: "trophy-shine 3.5s ease-in-out infinite",
+            }}
+          />
+        )}
         {isSpecial && <span className="absolute inset-0 rounded-2xl animate-ping opacity-10" style={{ border: `2px solid ${badge.color}` }} />}
       </div>
       <p className="font-semibold text-center leading-tight" style={{ color: badge.color, fontSize: xl ? 9 : 7.5, maxWidth: boxSize + 10, wordBreak: "break-word" }}>{badge.name}</p>
@@ -171,6 +182,13 @@ export default function TrophyCabinet() {
 
   return (
     <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.015)" }}>
+      <style>{`
+        @keyframes trophy-shine {
+          0%   { background-position: 200% center; }
+          60%  { background-position: -200% center; }
+          100% { background-position: -200% center; }
+        }
+      `}</style>
 
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-3 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
@@ -185,7 +203,7 @@ export default function TrophyCabinet() {
 
         {/* Tier 1 — Apex (larger, prominent) */}
         <div className="px-5 py-5 shrink-0" style={{ background: "linear-gradient(160deg, rgba(251,191,36,0.07) 0%, transparent 70%)", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
-          <TierLabel tier="Tier 1" label="Apex — The absolute pinnacle" color="#fbbf24" earned={t1Earned} total={TIER1_ALL.length} />
+          <TierLabel tier="Tier 1" label="Only the absolute pinnacle" color="#fbbf24" earned={t1Earned} total={TIER1_ALL.length} />
           <div className="flex gap-5 items-start">
             {TIER1_ALL.map(b => <TrophyCell key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={64} xl />)}
           </div>
@@ -193,7 +211,7 @@ export default function TrophyCabinet() {
 
         {/* Tier 2 — Domain */}
         <div className="flex-1 px-5 py-5">
-          <TierLabel tier="Tier 2" label="Domain mastery — Two axes maxed" color="#f97316" earned={t2Earned} total={TIER2_ALL.length} />
+          <TierLabel tier="Tier 2" label="The domain master" color="#f97316" earned={t2Earned} total={TIER2_ALL.length} />
           <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(4, minmax(0, 1fr))" }}>
             {TIER2_ALL.map(b => <TrophyCell key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={42} />)}
           </div>
@@ -203,7 +221,7 @@ export default function TrophyCabinet() {
 
       {/* Row 2 — Tier 3 */}
       <div className="px-5 py-5">
-        <TierLabel tier="Tier 3" label="Elite axis — Single capability maxed" color="#60a5fa" earned={t3Earned} total={TIER3_ALL.length} />
+        <TierLabel tier="Tier 3" label="The capability elite" color="#60a5fa" earned={t3Earned} total={TIER3_ALL.length} />
         <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(8, minmax(0, 1fr))" }}>
           {TIER3_ALL.map(b => <TrophyCell key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={36} />)}
         </div>

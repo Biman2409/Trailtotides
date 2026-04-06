@@ -117,15 +117,6 @@ export const DOMAIN_BADGES = [
 
 export const SPECIAL_BADGES = [
   {
-    id:           "multi-domain-elite",
-    name:         "Multi-Domain Elite",
-    description:  "Elite across 4 or more axes. A rare all-round expedition-grade profile.",
-    color:        "#f59e0b",
-    icon:         "Trophy",
-    tier:         "special" as const,
-    minEliteAxes: 4,
-  },
-  {
     id:           "full-apex",
     name:         "Full Apex",
     description:  "All 8 axes maxed. The complete adventurer — nothing is out of reach.",
@@ -133,6 +124,15 @@ export const SPECIAL_BADGES = [
     icon:         "Crown",
     tier:         "special" as const,
     minEliteAxes: 8,
+  },
+  {
+    id:           "multi-domain-elite",
+    name:         "Multi-Domain Elite",
+    description:  "Elite across 4 or more axes. A rare all-round expedition-grade profile.",
+    color:        "#f59e0b",
+    icon:         "Trophy",
+    tier:         "special" as const,
+    minEliteAxes: 4,
   },
 ];
 
@@ -144,8 +144,8 @@ export function getAchievements(ace: ACE): Achievement[] {
   const axes = Object.keys(ace) as (keyof ACE)[];
   const eliteCount = axes.filter((ax) => ace[ax] >= 5).length;
 
-  // Special — ordered highest first (Full Apex before Multi-Domain Elite)
-  for (const badge of [...SPECIAL_BADGES].reverse()) {
+  // Special — Full Apex first, then Multi-Domain Elite
+  for (const badge of SPECIAL_BADGES) {
     if (eliteCount >= badge.minEliteAxes) {
       earned.push({ ...badge });
     }
