@@ -121,10 +121,8 @@ export default async function OperatorsPage() {
                 return (
                   <div
                     key={op.id}
-                    className="flex flex-col p-6 transition-colors duration-150"
+                    className="flex flex-col p-6 transition-colors duration-150 hover:bg-white/[0.03]"
                     style={{ background: "var(--bg-surface)" }}
-                    onMouseEnter={e => (e.currentTarget.style.background = "var(--bg-card)")}
-                    onMouseLeave={e => (e.currentTarget.style.background = "var(--bg-surface)")}
                   >
                     {/* Top row */}
                     <div className="flex items-start justify-between gap-3 mb-4">
