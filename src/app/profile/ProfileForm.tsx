@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, } from "react";
 import Link from "next/link";
 import {
   User, Mail, Phone, Save, Loader2, CheckCircle2, AtSign,
@@ -8,8 +8,6 @@ import {
 } from "lucide-react";
 import { updateProfile, changePassword } from "./actions";
 import { AVATARS, LS_KEY } from "@/lib/avatars";
-import { getTierLabel, getTier } from "@/lib/tiers";
-import { loadProfile } from "@/lib/matchmaker";
 import { AvatarPickerModal } from "./AvatarPicker";
 
 type Profile = {
@@ -274,20 +272,25 @@ function ChangePasswordSection() {
 
 function AvatarSection() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [open, setOpen] = useState(false);
   const [rankName, setRankName] = useState("Uncharted");
   const [rankColor, setRankColor] = useState("#6b7280");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem(LS_KEY);
     if (stored) setSelectedId(Number(stored));
-    const p = loadProfile();
-    if (p?.ace) {
-      const total = Object.values(p.ace).reduce((s: number, v) => s + (v as number), 0);
-      const label = getTierLabel(total);
-      setRankName(label);
-      setRankColor(getTier(label).color);
-    }
+    // Dynamically load to avoid circular dependency with matchmaker
+    import("@/lib/matchmaker").then(({ loadProfile }) => {
+      import("@/lib/tiers").then(({ getTierLabel, getTier }) => {
+        const p = loadProfile();
+        if (p?.ace) {
+          const total = Object.values(p.ace).reduce((s: number, v) => s + (v as number), 0);
+          const label = getTierLabel(total);
+          setRankName(label);
+          setRankColor(getTier(label).color);
+        }
+      });
+    });
   }, []);
 
   const selected = selectedId !== null ? AVATARS.find(a => a.id === selectedId) ?? null : null;
@@ -301,26 +304,18 @@ function AvatarSection() {
   return (
     <Section title="Profile Picture" subtitle="Choose a character or display your ACE adventure rank.">
       <div className="flex items-center gap-5">
-        {/* Preview */}
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="group w-20 h-20 rounded-2xl relative overflow-hidden shrink-0 focus:outline-none"
+          className="group w-[72px] h-[72px] rounded-2xl relative overflow-hidden shrink-0 focus:outline-none"
           style={{
-            border: `1.5px solid ${selected ? "rgba(255,255,255,0.1)" : rankColor + "35"}`,
-            background: selected ? "transparent" : `linear-gradient(135deg,${rankColor}28,${rankColor}0c)`,
+            border: `1.5px solid ${selected ? "rgba(255,255,255,0.09)" : rankColor + "30"}`,
+            background: selected ? "transparent" : `linear-gradient(145deg,${rankColor}1a,${rankColor}08)`,
           }}
         >
-          {selected ? (
-            <span className="block w-full h-full">{selected.svg}</span>
-          ) : (
-            <span className="flex flex-col items-center justify-center w-full h-full gap-1.5">
-              <span className="text-[10px] font-black uppercase tracking-widest leading-none" style={{ color: rankColor }}>{rankName}</span>
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: rankColor, opacity: 0.85 }} />
-            </span>
-          )}
-          <span className="absolute inset-0 bg-black/55 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
-            <svg className="w-5 h-5 text-white/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <span className="block w-full h-full">{selected ? selected.svg : null}</span>
+          <span className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
+            <svg className="w-4 h-4 text-white/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
               <circle cx="12" cy="13" r="4"/>
             </svg>
@@ -328,17 +323,17 @@ function AvatarSection() {
         </button>
 
         <div className="flex-1">
-          <p className="text-white/70 text-sm font-medium">
-            {selected ? selected.label : "ACE Rank (default)"}
+          <p className="text-white/75 text-sm font-semibold">
+            {selected ? selected.label : `${rankName} — ACE Rank`}
           </p>
-          <p className="text-white/30 text-xs mt-0.5 mb-3">
-            {selected ? "Custom character selected" : "Your rank is shown when no character is chosen"}
+          <p className="text-white/28 text-xs mt-0.5 mb-3">
+            {selected ? "Custom character" : "Tier badge displayed by default"}
           </p>
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="text-xs font-bold px-4 py-2 rounded-xl transition-all hover:brightness-110"
-            style={{ background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }}
+            className="text-xs font-bold px-4 py-2 rounded-xl transition-all hover:brightness-110 active:scale-95"
+            style={{ background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.18)" }}
           >
             Change picture
           </button>
