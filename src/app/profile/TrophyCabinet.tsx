@@ -202,7 +202,7 @@ export default function TrophyCabinet() {
       {/* Row 1 — Tier 1 + Tier 2 */}
       <div className="flex items-stretch border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
         <div className="px-4 py-4 shrink-0" style={{ background: "linear-gradient(160deg,rgba(251,191,36,0.06) 0%,transparent 70%)", borderRight: "1px solid rgba(255,255,255,0.05)" }}>
-          <TierLabel tier="Tier 1" label="Only the absolute pinnacle" color="#fbbf24" earned={t1Earned} total={TIER1_ALL.length} />
+          <TierLabel tier="Tier 1" label="The absolute pinnacle" color="#fbbf24" earned={t1Earned} total={TIER1_ALL.length} />
           <div className="flex gap-4 items-start">
             {TIER1_ALL.map(b => cell(b, 56, true))}
           </div>
