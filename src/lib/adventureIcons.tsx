@@ -1,5 +1,18 @@
 import React from "react";
 
+// Mask + snorkel icon for Diving
+const MaskSnorkel = ({ size = 14 }: { size?: number }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M13.5 14a2 2 0 0 1-1.4-.6l-.7-.8c-.8-.8-2-.8-2.8 0l-.7.8a2 2 0 0 1-1.4.6H6a4 4 0 0 1 0-8h8a4 4 0 0 1 0 8Z"/>
+    <path d="M12 18a2 2 0 0 1-4 0"/>
+    <path d="M10 20a2 2 0 0 0 2 2h4c3.3 0 6-2.7 6-6V2h-4v14a2 2 0 0 1-2 2"/>
+    <path d="M18 10h4"/>
+    <circle cx="4.5" cy="21.5" r=".5"/>
+    <path d="M3 17.5h.01"/>
+  </svg>
+);
+
 // Custom sport-shoe SVG for Scrambling (no Lucide equivalent)
 const SportShoe = ({ size = 14 }: { size?: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={size} height={size}
@@ -29,7 +42,6 @@ import {
   Building2,
   Wind,
   Sunrise,
-  Anchor,
   Kayak,
   Waves,
   Ship,
@@ -53,7 +65,7 @@ export const ADVENTURE_TYPE_ICONS: Record<string, (size?: number) => React.React
   "Urban Adventure": (s = 14) => <Building2     style={{ width: s, height: s }} />,
   Paragliding:       (s = 14) => <Wind          style={{ width: s, height: s }} />,
   "Hot Air Balloon": (s = 14) => <Sunrise       style={{ width: s, height: s }} />,
-  Diving:            (s = 14) => <Anchor        style={{ width: s, height: s }} />,
+  Diving:            (s = 14) => <MaskSnorkel   size={s} />,
   Kayaking:          (s = 14) => <Kayak         style={{ width: s, height: s }} />,
   Surfing:           (s = 14) => <Waves         style={{ width: s, height: s }} />,
   "River Rafting":   (s = 14) => <Ship          style={{ width: s, height: s }} />,
