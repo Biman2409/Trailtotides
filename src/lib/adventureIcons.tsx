@@ -12,6 +12,19 @@ const DivingHelmet = ({ size = 14 }: { size?: number }) => (
   </svg>
 );
 
+// Skis icon for Skiing
+const Skis = ({ size = 14 }: { size?: number }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="m2 4 3-1"/>
+    <path d="m3 2 7 20"/>
+    <path d="M10 2 3 22"/>
+    <path d="m2 20 3 1"/>
+    <path d="M22 22V6c0-2.2-2-4-2-4s-2 1.8-2 4c0-2.2-2-4-2-4s-2 1.8-2 4v16Z"/>
+    <path d="M18 6v16"/>
+  </svg>
+);
+
 // Surfboard icon for Surfing
 const Surfboard = ({ size = 14 }: { size?: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
@@ -66,7 +79,6 @@ import {
   Sunrise,
   Kayak,
   Ship,
-  Snowflake,
   CloudSnow,
   Zap,
   PlaneLanding,
@@ -90,7 +102,7 @@ export const ADVENTURE_TYPE_ICONS: Record<string, (size?: number) => React.React
   Surfing:           (s = 14) => <Surfboard      size={s} />,
   "River Rafting":   (s = 14) => <Ship          style={{ width: s, height: s }} />,
   Snorkelling:       (s = 14) => <MaskSnorkel   size={s} />,
-  Skiing:            (s = 14) => <Snowflake     style={{ width: s, height: s }} />,
+  Skiing:            (s = 14) => <Skis           size={s} />,
   Snowboarding:      (s = 14) => <CloudSnow     style={{ width: s, height: s }} />,
   "Ice Climbing":    (s = 14) => <Zap           style={{ width: s, height: s }} />,
 
