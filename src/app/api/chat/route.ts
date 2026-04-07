@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
+import Anthropic from "@anthropic-ai/sdk";
 import { adventures } from "@/lib/data";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const client = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+  baseURL: process.env.ANTHROPIC_BASE_URL,
+});
 
 const ADVENTURE_SUMMARY = adventures.map((a) => ({
   id: a.id,
@@ -24,7 +27,7 @@ const ADVENTURE_SUMMARY = adventures.map((a) => ({
   description: a.description.slice(0, 200),
 }));
 
-const SYSTEM_PROMPT = `You are an expert Indian adventure travel advisor for an adventure discovery platform. 
+const SYSTEM_PROMPT = `You are an expert Indian adventure travel advisor for an adventure discovery platform.
 You help users find the perfect adventure from the following list of adventures.
 
 Available adventures (JSON):
@@ -52,17 +55,28 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
-      temperature: 0.7,
-      max_tokens: 800,
+    // Convert messages to Anthropic format (user/assistant only, no system)
+    const anthropicMessages: Anthropic.MessageParam[] = messages.map(
+      (m: { role: string; content: string }) => ({
+        role: m.role === "user" ? "user" : "assistant",
+        content: m.content,
+      })
+    );
+
+    const response = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 1024,
+      system: SYSTEM_PROMPT,
+      messages: anthropicMessages,
     });
 
-    const content = response.choices[0].message.content ?? "";
+    const content =
+      response.content[0].type === "text" ? response.content[0].text : "";
 
     // Parse recommendations out of the response
-    const recMatch = content.match(/<recommendations>([\s\S]*?)<\/recommendations>/);
+    const recMatch = content.match(
+      /<recommendations>([\s\S]*?)<\/recommendations>/
+    );
     let recommendations: { slug: string; name: string; reason: string }[] = [];
     if (recMatch) {
       try {
@@ -73,7 +87,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Strip the JSON block from the conversational text
-    const text = content.replace(/<recommendations>[\s\S]*?<\/recommendations>/, "").trim();
+    const text = content
+      .replace(/<recommendations>[\s\S]*?<\/recommendations>/, "")
+      .trim();
 
     // Attach full adventure cards for matching slugs
     const cards = recommendations
