@@ -47,7 +47,7 @@ function TrophyCell({ badge, earned, boxSize, xl = false, isActive, onToggle }: 
         <div style={{ width: boxSize, height: boxSize, borderRadius: 8, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <Lock style={{ width: Math.round(boxSize * 0.33), height: Math.round(boxSize * 0.33) }} className="text-white/20" />
         </div>
-        <p className="text-center font-medium text-white/18 leading-tight truncate" style={{ fontSize: 7, width: boxSize + 8 }}>{badge.name}</p>
+        <p className="text-center font-medium text-white/18 leading-tight" style={{ fontSize: 7, width: boxSize + 8 }}>{badge.name}</p>
       </div>
     );
   }
@@ -84,7 +84,7 @@ function TrophyCell({ badge, earned, boxSize, xl = false, isActive, onToggle }: 
           />
         )}
       </div>
-      <p className="font-semibold text-center leading-tight truncate" style={{ color: isActive ? badge.color : `${badge.color}99`, fontSize: xl ? 8.5 : 7, width: boxSize + 8 }}>{badge.name}</p>
+      <p className="font-semibold text-center leading-tight" style={{ color: isActive ? badge.color : `${badge.color}99`, fontSize: xl ? 8.5 : 7, width: boxSize + 8 }}>{badge.name}</p>
     </button>
   );
 }
