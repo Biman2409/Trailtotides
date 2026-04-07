@@ -217,7 +217,7 @@ export default function TrophyCabinet() {
 
       {/* Row 2 — Tier 3 */}
       <div className="px-4 py-4">
-        <TierLabel tier="Tier 3" label="The capability elite" color="#60a5fa" earned={t3Earned} total={TIER3_ALL.length} />
+        <TierLabel tier="Tier 3" label="The axis elite" color="#60a5fa" earned={t3Earned} total={TIER3_ALL.length} />
         <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(8, minmax(0,1fr))" }}>
           {TIER3_ALL.map(b => cell(b, 32))}
         </div>
