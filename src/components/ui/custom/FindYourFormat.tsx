@@ -256,7 +256,7 @@ export default function FindYourFormat() {
                               Coming Soon
                             </p>
                             <p className="text-white/35 text-xs mt-0.5 leading-snug">
-                              Air adventures launching soon
+                              {cat.label} adventures launching soon
                             </p>
                           </div>
                         </>
