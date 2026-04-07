@@ -7,7 +7,7 @@ import { getTierLabel, getTier } from "@/lib/tiers";
 import { loadProfile } from "@/lib/matchmaker";
 
 // ─── ACE rank icons (mirrors ACEProfileSection RANKS) ────────────────────────
-const RANK_ICONS: Record<string, React.ReactNode> = {
+export const RANK_ICONS: Record<string, React.ReactNode> = {
   Uncharted: (
     <svg viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" strokeDasharray="3 2.5" fill="currentColor" fillOpacity="0.06"/>
@@ -172,8 +172,6 @@ export function AvatarPickerModal({
   }, [onClose]);
 
   const choose = (id: number | null) => { onSelect(id); onClose(); };
-  const males   = AVATARS.filter(a => a.gender === "m");
-  const females = AVATARS.filter(a => a.gender === "f");
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.8)", backdropFilter: "blur(10px)" }}>
@@ -217,15 +215,11 @@ export function AvatarPickerModal({
             </button>
           </div>
 
-          {/* Characters */}
+          {/* Characters — 2 rows × 5 cols */}
           <div>
             <p className="text-[9px] uppercase tracking-widest text-white/20 font-bold mb-2.5">Characters</p>
-            <div className="grid grid-cols-5 gap-2.5 mb-2.5">
-              {males.map(av => <AvatarCell key={av.id} av={av} active={selectedId === av.id} onPick={() => choose(av.id)} />)}
-            </div>
             <div className="grid grid-cols-5 gap-2.5">
-              {females.map(av => <AvatarCell key={av.id} av={av} active={selectedId === av.id} onPick={() => choose(av.id)} />)}
-              {Array.from({ length: 5 - females.length }).map((_, i) => <span key={`sp${i}`} />)}
+              {AVATARS.map(av => <AvatarCell key={av.id} av={av} active={selectedId === av.id} onPick={() => choose(av.id)} />)}
             </div>
           </div>
         </div>

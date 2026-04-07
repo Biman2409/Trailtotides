@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { updateProfile, changePassword } from "./actions";
 import { AVATARS, LS_KEY } from "@/lib/avatars";
-import { AvatarPickerModal } from "./AvatarPicker";
+import { AvatarPickerModal, RANK_ICONS } from "./AvatarPicker";
 
 type Profile = {
   id: string;
@@ -313,7 +313,13 @@ function AvatarSection() {
             background: selected ? "transparent" : `linear-gradient(145deg,${rankColor}1a,${rankColor}08)`,
           }}
         >
-          <span className="block w-full h-full">{selected ? selected.svg : null}</span>
+          {selected
+            ? <span className="block w-full h-full">{selected.svg}</span>
+            : <span className="flex flex-col items-center justify-center w-full h-full gap-1" style={{ color: rankColor }}>
+                <span style={{ width: 28, height: 28, display: "block" }}>{RANK_ICONS[rankName] ?? RANK_ICONS["Uncharted"]}</span>
+                <span className="font-black uppercase tracking-widest leading-none" style={{ fontSize: 7, letterSpacing: "0.16em" }}>{rankName}</span>
+              </span>
+          }
           <span className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
             <svg className="w-4 h-4 text-white/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
