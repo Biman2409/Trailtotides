@@ -4,7 +4,7 @@ import { adventures } from "@/lib/data";
 
 const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-// Slim summary — only what the model needs to match
+// Slim summary with exact slugs the model must use
 const ADVENTURE_LIST = JSON.stringify(
   adventures.map((a) => ({
     slug: a.slug,
@@ -23,15 +23,29 @@ function buildPrompt(messages: { role: string; content: string }[]): string {
     .map((m) => m.content)
     .join(" ");
 
-  return `Available adventures (JSON): ${ADVENTURE_LIST}
+  return `You are an Indian adventure travel advisor. Pick 1–3 best matching adventures for the user from the list below. Use ONLY the exact slugs from the list — do not invent new ones.
 
-User is looking for: ${userQuery}
+Adventure list (JSON):
+${ADVENTURE_LIST}
 
-Respond ONLY in this exact format:
+User query: "${userQuery}"
+
+Respond EXACTLY in this format and nothing else before the tag:
 <recommendations>
-[{"slug":"...","name":"...","reason":"one sentence why it matches"}]
+[{"slug":"exact-slug-from-list","name":"exact name","reason":"one sentence why it matches"}]
 </recommendations>
-Then write one short sentence of advice.`;
+Then write one short helpful sentence.`;
+}
+
+// Fuzzy slug resolver — handles minor hallucinations
+function resolveSlug(slug: string): string {
+  if (adventures.find((a) => a.slug === slug)) return slug;
+  // Try partial match
+  const partial = adventures.find(
+    (a) => a.slug.includes(slug) || slug.includes(a.slug) ||
+           a.name.toLowerCase().replace(/\s+/g, "-") === slug
+  );
+  return partial ? partial.slug : slug;
 }
 
 export async function POST(req: NextRequest) {
@@ -51,7 +65,11 @@ export async function POST(req: NextRequest) {
     let recommendations: { slug: string; name: string; reason: string }[] = [];
     if (recMatch) {
       try {
-        recommendations = JSON.parse(recMatch[1].trim());
+        const parsed = JSON.parse(recMatch[1].trim());
+        recommendations = parsed.map((r: { slug: string; name: string; reason: string }) => ({
+          ...r,
+          slug: resolveSlug(r.slug),
+        }));
       } catch {
         recommendations = [];
       }
