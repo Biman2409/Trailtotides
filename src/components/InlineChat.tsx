@@ -301,10 +301,6 @@ export default function InlineChat() {
           </div>
         </div>
 
-        {/* Powered-by note */}
-        <p className="text-center mt-4 text-[10px] t-text-3 tracking-wide">
-          Powered by Groq · llama-3.1 · Free tier
-        </p>
 
       </div>
     </section>
