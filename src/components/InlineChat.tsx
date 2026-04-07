@@ -287,9 +287,6 @@ export default function InlineChat() {
                 style={{ color: "var(--text-primary)" }}
               />
             </div>
-            <span className="hidden sm:block text-[9px] font-semibold tracking-widest uppercase shrink-0" style={{ color: "var(--text-tertiary)" }}>
-              Powered by Groq
-            </span>
             <button
               onClick={() => send()}
               disabled={!input.trim() || loading}
@@ -304,6 +301,10 @@ export default function InlineChat() {
           </div>
         </div>
 
+
+        <p className="text-center mt-3 text-[10px] tracking-wide" style={{ color: "var(--text-tertiary)" }}>
+          Powered by <span className="font-semibold">Groq</span> · Llama 3.1 8B
+        </p>
 
       </div>
     </section>
