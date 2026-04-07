@@ -2,7 +2,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Wind, Gauge } from "lucide-react";
+import { ArrowRight, Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost, Gauge } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { getACE, ACE_AXIS_COLORS, ACE_DOMAINS } from "@/lib/ace";
 import ACEBadge from "@/components/ui/custom/ACEBadge";
@@ -30,7 +30,7 @@ const AXES = [
   { key: "water",    icon: <Waves    className="w-5 h-5" />, color: "#3b82f6", label: "Water",    desc: "Swimming ability and aquatic survival — required for rafting, sea kayaking, scuba and river crossings." },
   { key: "altitude", icon: <Mountain className="w-5 h-5" />, color: "#a78bfa", label: "Altitude", desc: "Physiological tolerance to high elevation — the hypoxic stress of Himalayan trekking and 6,000m peaks." },
   { key: "focus",    icon: <ScanEye  className="w-5 h-5" />, color: "#f43f5e", label: "Focus",    desc: "Psychological exposure tolerance — comfort on cliff edges, in caves, on extreme terrain or dangerous rapids." },
-  { key: "nerve",    icon: <Wind     className="w-5 h-5" />, color: "#10b981", label: "Nerve",    desc: "Mental resilience far from help — operating in remote terrain with no support, delayed rescue, and full self-reliance." },
+  { key: "nerve",    icon: <Ghost    className="w-5 h-5" />, color: "#10b981", label: "Nerve",    desc: "Mental resilience far from help — operating in remote terrain with no support, delayed rescue, and full self-reliance." },
 ];
 
 const SCALE = [
@@ -48,7 +48,7 @@ const DOMAIN_ICONS: Record<string, React.ReactNode> = {
   Engine:   <Gauge    className="w-5 h-5" />,
   Chassis:  <Dumbbell className="w-5 h-5" />,
   Elements: <Waves    className="w-5 h-5" />,
-  Mind:     <Wind     className="w-5 h-5" />,
+  Mind:     <Ghost    className="w-5 h-5" />,
 };
 
 export default function ACEPage() {
