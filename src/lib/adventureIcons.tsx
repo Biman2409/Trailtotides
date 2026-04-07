@@ -1,5 +1,15 @@
 import React from "react";
 
+// Balloon icon for Hot Air Balloon
+const Balloon = ({ size = 14 }: { size?: number }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 16v1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v1"/>
+    <path d="M12 6a2 2 0 0 1 2 2"/>
+    <path d="M18 8c0 4-3.5 8-6 8s-6-4-6-8a6 6 0 0 1 12 0"/>
+  </svg>
+);
+
 // Ice skate icon for Ice Skating
 const IceSkate = ({ size = 14 }: { size?: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
@@ -107,7 +117,6 @@ import {
   Flashlight,
   Building2,
   Wind,
-  Sunrise,
   Kayak,
   Ship,
   PlaneLanding,
@@ -125,7 +134,7 @@ export const ADVENTURE_TYPE_ICONS: Record<string, (size?: number) => React.React
   Caving:            (s = 14) => <Flashlight    style={{ width: s, height: s }} />,
   "Urban Adventure": (s = 14) => <Building2     style={{ width: s, height: s }} />,
   Paragliding:       (s = 14) => <Wind          style={{ width: s, height: s }} />,
-  "Hot Air Balloon": (s = 14) => <Sunrise       style={{ width: s, height: s }} />,
+  "Hot Air Balloon": (s = 14) => <Balloon       size={s} />,
   Diving:            (s = 14) => <DivingHelmet  size={s} />,
   Kayaking:          (s = 14) => <Kayak         style={{ width: s, height: s }} />,
   Surfing:           (s = 14) => <Surfboard      size={s} />,
