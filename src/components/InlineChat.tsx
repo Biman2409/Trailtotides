@@ -72,7 +72,7 @@ export default function InlineChat() {
   return (
     <section
       id="ai-finder"
-      className="relative overflow-hidden pt-20 pb-12 lg:pt-28 lg:pb-16"
+      className="relative overflow-hidden pt-20 pb-6 lg:pt-28 lg:pb-8"
       style={{ background: "var(--bg-page)" }}
     >
       {/* Background accents */}
