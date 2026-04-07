@@ -59,13 +59,18 @@ function useAvatarState() {
   useEffect(() => {
     const stored = localStorage.getItem(LS_KEY);
     if (stored) setSelectedId(Number(stored));
-    const p = loadProfile();
-    if (p?.ace) {
+    // Try localStorage first for instant render, then sync from server
+    const applyProfile = (p: ReturnType<typeof loadProfile>) => {
+      if (!p?.ace) return;
       const total = Object.values(p.ace).reduce((s: number, v) => s + (v as number), 0);
       const label = getTierLabel(total);
       setRankName(label);
       setRankColor(getTier(label).color);
-    }
+    };
+    applyProfile(loadProfile());
+    import("@/lib/matchmaker").then(({ loadProfileFromServer }) => {
+      loadProfileFromServer().then(applyProfile);
+    });
   }, []);
 
   const saveSelection = (id: number | null) => {
@@ -77,22 +82,13 @@ function useAvatarState() {
   return { selectedId, rankName, rankColor, saveSelection };
 }
 
-// ─── ACE tier badge — used as default avatar display ─────────────────────────
+// ─── ACE tier badge — icon only, no label ────────────────────────────────────
 function AceBadge({ rankName, rankColor, size = 96 }: { rankName: string; rankColor: string; size?: number }) {
   const icon = RANK_ICONS[rankName] ?? RANK_ICONS.Uncharted;
-  const iconPx = Math.round(size * 0.42);
+  const iconPx = Math.round(size * 0.52);
   return (
-    <span
-      className="flex flex-col items-center justify-center w-full h-full gap-1"
-      style={{ color: rankColor }}
-    >
+    <span className="flex items-center justify-center w-full h-full" style={{ color: rankColor }}>
       <span style={{ width: iconPx, height: iconPx, display: "block" }}>{icon}</span>
-      <span
-        className="font-black uppercase tracking-widest leading-none"
-        style={{ fontSize: Math.round(size * 0.095), color: rankColor, letterSpacing: "0.18em" }}
-      >
-        {rankName}
-      </span>
     </span>
   );
 }

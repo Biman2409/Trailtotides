@@ -279,16 +279,17 @@ function AvatarSection() {
   useEffect(() => {
     const stored = localStorage.getItem(LS_KEY);
     if (stored) setSelectedId(Number(stored));
-    // Dynamically load to avoid circular dependency with matchmaker
-    import("@/lib/matchmaker").then(({ loadProfile }) => {
+    import("@/lib/matchmaker").then(({ loadProfile, loadProfileFromServer }) => {
       import("@/lib/tiers").then(({ getTierLabel, getTier }) => {
-        const p = loadProfile();
-        if (p?.ace) {
+        const apply = (p: ReturnType<typeof loadProfile>) => {
+          if (!p?.ace) return;
           const total = Object.values(p.ace).reduce((s: number, v) => s + (v as number), 0);
           const label = getTierLabel(total);
           setRankName(label);
           setRankColor(getTier(label).color);
-        }
+        };
+        apply(loadProfile());
+        loadProfileFromServer().then(apply);
       });
     });
   }, []);
@@ -315,9 +316,8 @@ function AvatarSection() {
         >
           {selected
             ? <span className="block w-full h-full">{selected.svg}</span>
-            : <span className="flex flex-col items-center justify-center w-full h-full gap-1" style={{ color: rankColor }}>
-                <span style={{ width: 28, height: 28, display: "block" }}>{RANK_ICONS[rankName] ?? RANK_ICONS["Uncharted"]}</span>
-                <span className="font-black uppercase tracking-widest leading-none" style={{ fontSize: 7, letterSpacing: "0.16em" }}>{rankName}</span>
+            : <span className="flex items-center justify-center w-full h-full" style={{ color: rankColor }}>
+                <span style={{ width: 34, height: 34, display: "block" }}>{RANK_ICONS[rankName] ?? RANK_ICONS["Uncharted"]}</span>
               </span>
           }
           <span className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
