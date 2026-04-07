@@ -80,7 +80,17 @@ export async function POST(req: NextRequest) {
     const suggestAce = shouldSuggestAce(messages, userMessageCount);
 
     if (suggestAce) {
-      return NextResponse.json({ text: "", recommendations: [], cards: [], suggestAce: true });
+      const isUnsure = UNSURE_SIGNALS.some((s) =>
+        messages
+          .filter((m) => m.role === "user")
+          .map((m) => m.content.toLowerCase())
+          .join(" ")
+          .includes(s)
+      );
+      const aceText = isUnsure
+        ? "It sounds like you're still figuring out where to start — that's completely normal."
+        : `You've asked a few questions and are still exploring — it seems like you haven't found the right fit yet. Rather than guessing, your ACE profile will tell us exactly what adventures match your body and experience level.`;
+      return NextResponse.json({ text: aceText, recommendations: [], cards: [], suggestAce: true });
     }
 
     const response = await client.chat.completions.create({
