@@ -16,24 +16,34 @@ const ADVENTURE_LIST = JSON.stringify(
   }))
 );
 
-function buildPrompt(messages: { role: string; content: string }[]): string {
+function buildPrompt(
+  messages: { role: string; content: string }[],
+  userMessageCount: number
+): string {
   const userQuery = messages
     .filter((m) => m.role === "user")
     .map((m) => m.content)
     .join(" ");
 
-  return `You are an Indian adventure travel advisor. Your job:
-1. If the user seems unsure, doesn't know their fitness level, or asks what's right for them — respond with <suggest_ace/> and one encouraging sentence suggesting they take the ACE assessment to discover their adventure profile. Do NOT include <recommendations> in this case.
-2. Otherwise, pick 1–3 best matching adventures from the list. Use ONLY exact slugs.
+  const forceAce = userMessageCount >= 3;
+
+  const aceConditions = forceAce
+    ? `The user has sent ${userMessageCount} messages — you MUST suggest the ACE assessment.`
+    : `Suggest ACE ONLY if the user explicitly says they are a beginner/first-timer with no experience, OR says they don't know what suits them or what level they are.`;
+
+  return `You are an Indian adventure travel advisor.
+
+RULE: ${aceConditions}
+In all other cases — even vague queries — pick matching adventures from the list.
 
 Adventure list (JSON):
 ${ADVENTURE_LIST}
 
 User query: "${userQuery}"
 
-If suggesting ACE assessment, respond like:
+If and ONLY if ACE rule above applies, respond EXACTLY like:
 <suggest_ace/>
-One encouraging sentence about taking the ACE assessment.
+One warm sentence about taking the ACE assessment.
 
 Otherwise respond EXACTLY like:
 <recommendations>
@@ -58,17 +68,21 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
 
+    const userMessageCount = messages.filter(
+      (m: { role: string }) => m.role === "user"
+    ).length;
+
     const response = await client.chat.completions.create({
       model: "llama-3.1-8b-instant",
-      messages: [{ role: "user", content: buildPrompt(messages) }],
+      messages: [{ role: "user", content: buildPrompt(messages, userMessageCount) }],
       temperature: 0.6,
       max_tokens: 512,
     });
 
     const content = response.choices[0].message.content ?? "";
 
-    // Check if AI is suggesting the ACE assessment
-    const suggestAce = /<suggest_ace\s*\/>/.test(content);
+    // Check if AI is suggesting ACE, or force it after 3+ user messages
+    const suggestAce = /<suggest_ace\s*\/>/.test(content) || userMessageCount >= 3;
 
     const recMatch = content.match(/<recommendations>([\s\S]*?)<\/recommendations>/);
     let recommendations: { slug: string; name: string; reason: string }[] = [];
