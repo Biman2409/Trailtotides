@@ -134,7 +134,7 @@ export const SPECIAL_BADGES = [
     icon:          "Trophy",
     tier:          "special" as const,
     minEliteAxes:  4,
-    suppressIfAll: true,  // hidden when One Above All is earned
+    suppressIfAll: false,
   },
 ];
 
