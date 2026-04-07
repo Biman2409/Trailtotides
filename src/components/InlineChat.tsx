@@ -226,6 +226,9 @@ export default function InlineChat() {
                                     <span className="px-2 py-0.5 rounded-full bg-[#ff5100] text-white text-[9px] font-black uppercase tracking-wider">
                                       {card.type}
                                     </span>
+                                    <span className="px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-sm text-white/90 text-[9px] font-semibold flex items-center gap-0.5 border border-white/10">
+                                      <MapPin className="w-2 h-2" />{card.state}
+                                    </span>
                                   </div>
                                 </div>
 
@@ -235,9 +238,6 @@ export default function InlineChat() {
                                     {card.name}
                                   </h4>
                                   <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                                    <span className="flex items-center gap-1 text-[10px] t-text-3">
-                                      <MapPin className="w-2.5 h-2.5" />{card.state}
-                                    </span>
                                     <span className="flex items-center gap-1 text-[10px] t-text-3">
                                       <BarChart2 className="w-2.5 h-2.5" />{card.difficulty}
                                     </span>
