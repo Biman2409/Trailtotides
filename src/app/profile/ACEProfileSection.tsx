@@ -38,12 +38,13 @@ export default function ACEProfileSection() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
     import("@/lib/matchmaker").then(({ loadProfileFromServer }) => {
       loadProfileFromServer().then((profile) => {
-        setStored(profile);
-        setMounted(true);
+        if (!cancelled) { setStored(profile); setMounted(true); }
       });
     });
+    return () => { cancelled = true; };
   }, []);
 
   if (!mounted) return null;

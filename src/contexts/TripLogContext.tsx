@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { loadTripLog, saveTripLog } from "@/app/triplog/actions";
 import type { TripEntry } from "@/app/triplog/actions";
@@ -31,8 +31,12 @@ function lsSet(e: TripEntry[]) { try { localStorage.setItem(LS_KEY, JSON.stringi
 
 export function TripLogProvider({ children }: { children: React.ReactNode }) {
   const [log, setLog] = useState<TripEntry[]>([]);
+  const logRef = useRef<TripEntry[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Keep ref in sync so callbacks can read latest log without stale closure
+  useEffect(() => { logRef.current = log; }, [log]);
 
   useEffect(() => {
     const supabase = createClient();
@@ -62,19 +66,18 @@ export function TripLogProvider({ children }: { children: React.ReactNode }) {
 
   const markDone = useCallback(async (slug: string, date?: string, note?: string) => {
     const entry: TripEntry = { slug, date: date ?? new Date().toISOString().slice(0, 10), note };
-    setLog(prev => {
-      const next = prev.find(e => e.slug === slug) ? prev.map(e => e.slug === slug ? entry : e) : [...prev, entry];
-      if (userId) saveTripLog(next); else lsSet(next);
-      return next;
-    });
+    const current = logRef.current;
+    const next = current.find(e => e.slug === slug)
+      ? current.map(e => e.slug === slug ? entry : e)
+      : [...current, entry];
+    setLog(next);
+    if (userId) saveTripLog(next); else lsSet(next);
   }, [userId]);
 
   const unmark = useCallback(async (slug: string) => {
-    setLog(prev => {
-      const next = prev.filter(e => e.slug !== slug);
-      if (userId) saveTripLog(next); else lsSet(next);
-      return next;
-    });
+    const next = logRef.current.filter(e => e.slug !== slug);
+    setLog(next);
+    if (userId) saveTripLog(next); else lsSet(next);
   }, [userId]);
 
   return (

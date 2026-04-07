@@ -527,12 +527,12 @@ function LoadingScreen() {
   ];
   const [step, setStep] = useState(0);
 
-  useState(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       setStep(s => (s < steps.length - 1 ? s + 1 : s));
     }, 2200);
     return () => clearInterval(interval);
-  });
+  }, [steps.length]);
 
   return (
     <div className="max-w-xl mx-auto px-6 py-32 text-center">

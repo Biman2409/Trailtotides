@@ -66,8 +66,8 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     }
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      init(session?.user?.id ?? null);
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      init(user?.id ?? null);
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange(async (_, session) => {

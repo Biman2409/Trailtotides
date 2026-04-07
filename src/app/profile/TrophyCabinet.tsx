@@ -149,9 +149,11 @@ export default function TrophyCabinet() {
   const handleToggle = useCallback((badge: Achievement | null) => setActive(badge), []);
 
   useEffect(() => {
+    let cancelled = false;
     import("@/lib/matchmaker").then(({ loadProfileFromServer }) => {
-      loadProfileFromServer().then(p => { setStored(p); setMounted(true); });
+      loadProfileFromServer().then(p => { if (!cancelled) { setStored(p); setMounted(true); } });
     });
+    return () => { cancelled = true; };
   }, []);
 
   if (!mounted) return null;
