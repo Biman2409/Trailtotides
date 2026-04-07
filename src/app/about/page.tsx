@@ -98,7 +98,7 @@ export default function AboutPage() {
               Designed by Explorers for Explorers
             </h1>
             <p className="text-white/60 text-xl leading-relaxed max-w-2xl">
-              Discover and compare epic adventures across Indian Subcontinent — handpicked by explorers, run by verified operators, mapped with precision — for you.
+              Find, assess, and book India&apos;s finest adventures — matched to your body, guided by AI, run by verified operators.
             </p>
         </div>
       </section>

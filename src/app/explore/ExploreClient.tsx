@@ -217,7 +217,7 @@ export default function ExploreClient() {
             All Adventures
           </h1>
           <p className="text-white/40 text-base lg:text-lg max-w-2xl leading-relaxed">
-            Handpicked adventures across the Indian Subcontinent — run by verified operators, mapped with precision.
+            ACE-matched adventures across India — AI-powered discovery, run by verified operators.
           </p>
         </div>
       </div>
