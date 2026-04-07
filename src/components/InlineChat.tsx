@@ -287,6 +287,9 @@ export default function InlineChat() {
                 style={{ color: "var(--text-primary)" }}
               />
             </div>
+            <span className="hidden sm:block text-[9px] font-semibold tracking-widest uppercase shrink-0" style={{ color: "var(--text-tertiary)" }}>
+              Powered by Groq
+            </span>
             <button
               onClick={() => send()}
               disabled={!input.trim() || loading}
