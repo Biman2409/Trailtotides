@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
       );
       const aceText = isUnsure
         ? "It sounds like you're still figuring out where to start — that's completely normal."
-        : `You've asked a few questions and are still exploring — it seems like you haven't found the right fit yet. Rather than guessing, your ACE profile will tell us exactly what adventures match your body and experience level.`;
+        : `You've asked a few questions and still haven't found the right fit — your ACE profile will match adventures to your exact body and experience level.`;
       return NextResponse.json({ text: aceText, recommendations: [], cards: [], suggestAce: true });
     }
 
