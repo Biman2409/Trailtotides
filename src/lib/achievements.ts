@@ -11,82 +11,82 @@ export interface Achievement {
   tier: "axis" | "domain" | "special";
 }
 
-// ─── Per-axis badges (awarded when axis === 5) ────────────────────────────────
+// ─── Tier 3 — Axis badges (awarded when axis === 5) ──────────────────────────
 
 export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
   stamina: {
-    id:          "iron-lung",
-    name:        "Iron Lung",
+    id:          "run-forrest-run",
+    name:        "Run, Forrest, Run!",
     description: "Moves for 8+ hours without stopping. Built for back-to-back days in the mountains.",
     color:       "#f97316",
-    icon:        "Activity",     // heartbeat = endurance
+    icon:        "Activity",
   },
   power: {
-    id:          "iron-sherpa",
-    name:        "Iron Sherpa",
-    description: "Carries a 15kg+ pack all day without slowing down. A human cargo vessel.",
-    color:       "#eab308",
-    icon:        "PackageOpen",  // heavy pack
+    id:          "incredible-hulk",
+    name:        "Incredible Hulk",
+    description: "Raw power that levels terrain. Carries impossible loads without breaking stride.",
+    color:       "#84cc16",
+    icon:        "PackageOpen",
   },
   strength: {
-    id:          "summit-legs",
-    name:        "Summit Legs",
+    id:          "hero-hercules",
+    name:        "Hero Hercules",
     description: "Powers up sustained steep ascents without losing pace. Legs that never quit.",
-    color:       "#84cc16",
-    icon:        "TrendingUp",   // uphill climbing
+    color:       "#eab308",
+    icon:        "TrendingUp",
   },
   agility: {
-    id:          "goat-path",
-    name:        "Goat Path",
+    id:          "spidey-sense",
+    name:        "Spidey-Sense",
     description: "At home on glaciers and exposed rock. Moves confidently where others hesitate.",
     color:       "#22d3ee",
-    icon:        "Footprints",   // terrain footing
+    icon:        "Footprints",
   },
   water: {
-    id:          "open-water",
-    name:        "Open Water",
+    id:          "little-mermaid",
+    name:        "Little Mermaid",
     description: "Handles strong currents and rough conditions. Water holds no fear.",
     color:       "#3b82f6",
     icon:        "Waves",
   },
   altitude: {
-    id:          "thin-air",
-    name:        "Thin Air",
+    id:          "abominable-snowman",
+    name:        "Abominable Snowman",
     description: "Stays active above 4,200m. The altitude works for you, not against you.",
     color:       "#a78bfa",
     icon:        "Mountain",
   },
   focus: {
-    id:          "steel-eyes",
-    name:        "Steel Eyes",
+    id:          "master-yoda",
+    name:        "Master Yoda",
     description: "Calm and precise on fatal drop-offs. Exposure doesn't break focus.",
     color:       "#f43f5e",
-    icon:        "Crosshair",    // precision/focus
+    icon:        "Crosshair",
   },
   nerve: {
-    id:          "off-grid",
-    name:        "Off Grid",
+    id:          "john-rambo",
+    name:        "John Rambo",
     description: "No signal, no rescue, no problem. Fully self-sufficient in the wild.",
     color:       "#10b981",
-    icon:        "WifiOff",      // no signal
+    icon:        "WifiOff",
   },
 };
 
-// ─── Domain mastery badges (both axes in a domain === 5) ─────────────────────
+// ─── Tier 2 — Domain badges (both axes in a domain === 5) ────────────────────
 
 export const DOMAIN_BADGES = [
   {
-    id:          "engine-master",
-    name:        "Engine Master",
-    description: "Stamina and Power both maxed. The human engine running at full capacity.",
+    id:          "terminator-core",
+    name:        "Terminator Core",
+    description: "Stamina and Power both maxed. An unstoppable human engine that never shuts down.",
     color:       "#f97316",
     icon:        "Gauge",
     tier:        "domain" as const,
     axes:        ["stamina", "power"] as (keyof ACE)[],
   },
   {
-    id:          "chassis-master",
-    name:        "Chassis Master",
+    id:          "iron-sherpa",
+    name:        "Iron Sherpa",
     description: "Strength and Agility both maxed. Total command over any terrain.",
     color:       "#22d3ee",
     icon:        "Layers",
@@ -94,18 +94,18 @@ export const DOMAIN_BADGES = [
     axes:        ["strength", "agility"] as (keyof ACE)[],
   },
   {
-    id:          "elements-master",
-    name:        "Elements Master",
-    description: "Water and Altitude both maxed. Nature's extremes are your playground.",
+    id:          "the-avatar",
+    name:        "The Avatar",
+    description: "Water and Altitude both maxed. Master of nature's two most unforgiving elements.",
     color:       "#a78bfa",
     icon:        "Globe",
     tier:        "domain" as const,
     axes:        ["water", "altitude"] as (keyof ACE)[],
   },
   {
-    id:          "mind-master",
-    name:        "Mind Master",
-    description: "Focus and Nerve both maxed. An unbreakable mind built for the wilderness.",
+    id:          "awakened-buddha",
+    name:        "Awakened Buddha",
+    description: "Focus and Nerve both maxed. An unbreakable mind forged in the wilderness.",
     color:       "#10b981",
     icon:        "Brain",
     tier:        "domain" as const,
@@ -113,26 +113,28 @@ export const DOMAIN_BADGES = [
   },
 ];
 
-// ─── Special badges ───────────────────────────────────────────────────────────
+// ─── Tier 1 — Apex badges ─────────────────────────────────────────────────────
 
 export const SPECIAL_BADGES = [
   {
-    id:           "full-apex",
+    id:           "one-above-all",
     name:         "One Above All",
     description:  "All 8 axes maxed. The complete adventurer — nothing is out of reach.",
     color:        "#fbbf24",
     icon:         "Crown",
     tier:         "special" as const,
     minEliteAxes: 8,
+    suppressIfAll: false,
   },
   {
-    id:           "multi-domain-elite",
-    name:         "Avatar",
-    description:  "Elite across 4 or more axes. A rare all-round expedition-grade profile.",
-    color:        "#f59e0b",
-    icon:         "Trophy",
-    tier:         "special" as const,
-    minEliteAxes: 4,
+    id:            "gandalf-the-grey",
+    name:          "Gandalf the Grey",
+    description:   "Elite across 4 or more axes. A rare all-round expedition-grade profile.",
+    color:         "#f59e0b",
+    icon:          "Trophy",
+    tier:          "special" as const,
+    minEliteAxes:  4,
+    suppressIfAll: true,  // hidden when One Above All is earned
   },
 ];
 
@@ -143,22 +145,24 @@ export function getAchievements(ace: ACE): Achievement[] {
 
   const axes = Object.keys(ace) as (keyof ACE)[];
   const eliteCount = axes.filter((ax) => ace[ax] >= 5).length;
+  const hasAll = eliteCount >= 8;
 
-  // Special — Full Apex first, then Multi-Domain Elite
+  // Tier 1 — Apex
   for (const badge of SPECIAL_BADGES) {
+    if (badge.suppressIfAll && hasAll) continue;
     if (eliteCount >= badge.minEliteAxes) {
       earned.push({ ...badge });
     }
   }
 
-  // Domain
+  // Tier 2 — Domain
   for (const badge of DOMAIN_BADGES) {
     if (badge.axes.every((ax) => ace[ax] >= 5)) {
       earned.push({ ...badge });
     }
   }
 
-  // Per-axis
+  // Tier 3 — Axis
   for (const ax of axes) {
     if (ace[ax] >= 5) {
       earned.push({ ...AXIS_BADGES[ax], tier: "axis" });
