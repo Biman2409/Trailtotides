@@ -118,7 +118,7 @@ export const DOMAIN_BADGES = [
 export const SPECIAL_BADGES = [
   {
     id:           "full-apex",
-    name:         "Full Apex",
+    name:         "The One Above All",
     description:  "All 8 axes maxed. The complete adventurer — nothing is out of reach.",
     color:        "#fbbf24",
     icon:         "Crown",
@@ -127,7 +127,7 @@ export const SPECIAL_BADGES = [
   },
   {
     id:           "multi-domain-elite",
-    name:         "Multi-Domain Elite",
+    name:         "The Avatar",
     description:  "Elite across 4 or more axes. A rare all-round expedition-grade profile.",
     color:        "#f59e0b",
     icon:         "Trophy",
