@@ -16,40 +16,44 @@ const ADVENTURE_LIST = JSON.stringify(
   }))
 );
 
-function buildPrompt(
-  messages: { role: string; content: string }[],
-  userMessageCount: number
-): string {
+// Deterministic ACE trigger — no AI judgment needed for this
+const UNSURE_SIGNALS = [
+  "don't know", "dont know", "not sure", "unsure", "confused",
+  "no idea", "never trekked", "never hiked", "never done",
+  "first time", "first trek", "no experience", "no prior",
+  "what should i", "what suits me", "help me decide",
+  "where do i start", "where should i start",
+];
+
+function shouldSuggestAce(messages: { role: string; content: string }[], userMessageCount: number): boolean {
+  // Rule 1: 3 or more back-and-forth exchanges
+  if (userMessageCount >= 3) return true;
+  // Rule 2: user explicitly signals uncertainty or no experience
+  const allUserText = messages
+    .filter((m) => m.role === "user")
+    .map((m) => m.content.toLowerCase())
+    .join(" ");
+  return UNSURE_SIGNALS.some((signal) => allUserText.includes(signal));
+}
+
+function buildPrompt(messages: { role: string; content: string }[]): string {
   const userQuery = messages
     .filter((m) => m.role === "user")
     .map((m) => m.content)
     .join(" ");
 
-  const forceAce = userMessageCount >= 3;
-
-  const aceConditions = forceAce
-    ? `The user has sent ${userMessageCount} messages — you MUST suggest the ACE assessment (use <suggest_ace/>). Do NOT output <recommendations>.`
-    : `Use <suggest_ace/> ONLY if the user says they have NO experience at all, OR explicitly says they don't know their fitness level, OR says they don't know what is suitable for them.
-IMPORTANT: If the user asks for a "beginner trek" or "easy adventure" — that is a difficulty filter, NOT uncertainty. Recommend matching adventures normally.`;
-
-  return `You are an Indian adventure travel advisor.
-
-RULE: ${aceConditions}
+  return `You are an Indian adventure travel advisor. Pick 1–3 best matching adventures for the user. Use ONLY exact slugs from the list.
 
 Adventure list (JSON):
 ${ADVENTURE_LIST}
 
 User query: "${userQuery}"
 
-If the ACE rule applies, respond EXACTLY like:
-<suggest_ace/>
-One warm sentence about the ACE assessment.
-
-Otherwise respond EXACTLY like:
+Respond EXACTLY like this:
 <recommendations>
 [{"slug":"exact-slug","name":"exact name","reason":"one sentence why it matches"}]
 </recommendations>
-One short helpful sentence. Do NOT mention ACE in this case.`;
+One short helpful sentence.`;
 }
 
 // Fuzzy slug resolver — handles minor hallucinations
@@ -72,21 +76,27 @@ export async function POST(req: NextRequest) {
       (m: { role: string }) => m.role === "user"
     ).length;
 
+    // Check ACE trigger before calling the model
+    const suggestAce = shouldSuggestAce(messages, userMessageCount);
+
+    if (suggestAce) {
+      return NextResponse.json({ text: "", recommendations: [], cards: [], suggestAce: true });
+    }
+
     const response = await client.chat.completions.create({
       model: "llama-3.1-8b-instant",
-      messages: [{ role: "user", content: buildPrompt(messages, userMessageCount) }],
+      messages: [{ role: "user", content: buildPrompt(messages) }],
       temperature: 0.6,
       max_tokens: 512,
     });
 
     const content = response.choices[0].message.content ?? "";
 
-    // Check if AI is suggesting ACE, or force it after 3+ user messages
-    const suggestAce = /<suggest_ace\s*\/>/.test(content) || userMessageCount >= 3;
+    const suggestAceFallback = false;
 
     const recMatch = content.match(/<recommendations>([\s\S]*?)<\/recommendations>/);
     let recommendations: { slug: string; name: string; reason: string }[] = [];
-    if (!suggestAce && recMatch) {
+    if (recMatch) {
       try {
         const parsed = JSON.parse(recMatch[1].trim());
         recommendations = parsed.map(
@@ -109,7 +119,7 @@ export async function POST(req: NextRequest) {
       .map((r) => adventures.find((a) => a.slug === r.slug))
       .filter(Boolean);
 
-    return NextResponse.json({ text, recommendations, cards, suggestAce });
+    return NextResponse.json({ text, recommendations, cards, suggestAce: suggestAceFallback });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
