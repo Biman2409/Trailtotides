@@ -21,6 +21,7 @@ export const typeStyle: Record<string, string> = {
   Skiing:            "bg-white text-gray-900 border border-gray-100",
   Snowboarding:      "bg-white text-gray-900 border border-gray-100",
   "Ice Climbing":    "bg-white text-gray-900 border border-gray-100",
+  "Ice Skating":     "bg-white text-gray-900 border border-gray-100",
   
   // Air — purple
   Paragliding:       "bg-purple-600 text-white",

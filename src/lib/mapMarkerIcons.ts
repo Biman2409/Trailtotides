@@ -149,6 +149,17 @@ export const TYPE_ICON_DEFS: Record<string, IconDef> = {
       "M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z",
     ],
   },
+  // Ice skate icon
+  "Ice Skating": {
+    paths: [
+      "M11 2v9",
+      "M11 7 8 8",
+      "M11 3 4 5v11a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2 3.08 3.08 0 0 0-1.8-2.8L11 11l-3 1",
+      "M7 18v4",
+      "M15 18v4",
+      "M4 22h12c2.1 0 3.9-1.1 5-2.7",
+    ],
+  },
   // PlaneLanding icon
   Skydiving: {
     paths: [

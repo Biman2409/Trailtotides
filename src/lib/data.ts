@@ -12,7 +12,8 @@ export type AdventureType =
   | "Caving"
   | "Urban Adventure"
   | "Paragliding"
-  | "Hot Air Balloon";
+  | "Hot Air Balloon"
+  | "Ice Skating";
 
 export type Region =
   | "Himalayas"

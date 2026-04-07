@@ -31,6 +31,7 @@ const iconCircleStyle: Record<string, string> = {
   Skiing:            "bg-gray-200",
   Snowboarding:      "bg-gray-200",
   "Ice Climbing":    "bg-gray-200",
+  "Ice Skating":     "bg-gray-200",
   // Air — deeper purple
   Paragliding:       "bg-purple-800",
   Skydiving:         "bg-purple-800",
@@ -93,7 +94,7 @@ export default function Pill({ type, value, className = "", clickable = true }: 
   const circleBg = iconCircleStyle[value] ?? "bg-black/20";
 
   // Snow pills have dark icon color
-  const isSnow = ["Skiing", "Snowboarding", "Ice Climbing"].includes(value);
+  const isSnow = ["Skiing", "Snowboarding", "Ice Climbing", "Ice Skating"].includes(value);
 
   const baseClasses = [
     "inline-flex items-center leading-none rounded-full h-5",

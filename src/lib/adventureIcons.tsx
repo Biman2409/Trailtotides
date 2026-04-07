@@ -1,5 +1,18 @@
 import React from "react";
 
+// Ice skate icon for Ice Skating
+const IceSkate = ({ size = 14 }: { size?: number }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 2v9"/>
+    <path d="M11 7 8 8"/>
+    <path d="M11 3 4 5v11a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2 3.08 3.08 0 0 0-1.8-2.8L11 11l-3 1"/>
+    <path d="M7 18v4"/>
+    <path d="M15 18v4"/>
+    <path d="M4 22h12c2.1 0 3.9-1.1 5-2.7"/>
+  </svg>
+);
+
 // Ice axe/pickaxe icon for Ice Climbing
 const IceAxe = ({ size = 14 }: { size?: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
@@ -123,6 +136,7 @@ export const ADVENTURE_TYPE_ICONS: Record<string, (size?: number) => React.React
   Skiing:            (s = 14) => <Skis           size={s} />,
   Snowboarding:      (s = 14) => <Snowboard      size={s} />,
   "Ice Climbing":    (s = 14) => <IceAxe        size={s} />,
+  "Ice Skating":     (s = 14) => <IceSkate     size={s} />,
 
   Skydiving:         (s = 14) => <PlaneLanding  style={{ width: s, height: s }} />,
   "Hang Gliding":    (s = 14) => <Triangle      style={{ width: s, height: s }} />,
