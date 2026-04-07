@@ -61,7 +61,7 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
     name:        "Master Yoda",
     description: "Calm and precise on fatal drop-offs. Exposure doesn't break focus.",
     color:       "#f43f5e",
-    icon:        "Crosshair",
+    icon:        "ScanEye",
   },
   nerve: {
     id:          "john-rambo",

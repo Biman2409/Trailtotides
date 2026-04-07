@@ -7,7 +7,7 @@ import {
   Trophy, Crown, Gauge, Layers, Globe, Brain,
   // Tier 3 — relatable per axis
   Activity, PackageOpen, TrendingUp, Footprints,
-  Waves, Mountain, Crosshair, WifiOff,
+  Waves, Mountain, ScanEye, WifiOff,
 } from "lucide-react";
 import { getAchievements, type Achievement } from "@/lib/achievements";
 import type { ACE } from "@/lib/ace";
@@ -25,7 +25,7 @@ const ICON_SM: Record<string, React.ReactNode> = {
   Footprints:  <Footprints  className="w-4 h-4" />,
   Waves:       <Waves       className="w-4 h-4" />,
   Mountain:    <Mountain    className="w-4 h-4" />,
-  Crosshair:   <Crosshair   className="w-4 h-4" />,
+  ScanEye:     <ScanEye     className="w-4 h-4" />,
   WifiOff:     <WifiOff     className="w-4 h-4" />,
 };
 
@@ -42,7 +42,7 @@ const ICON_MD: Record<string, React.ReactNode> = {
   Footprints:  <Footprints  className="w-5 h-5" />,
   Waves:       <Waves       className="w-5 h-5" />,
   Mountain:    <Mountain    className="w-5 h-5" />,
-  Crosshair:   <Crosshair   className="w-5 h-5" />,
+  ScanEye:     <ScanEye     className="w-5 h-5" />,
   WifiOff:     <WifiOff     className="w-5 h-5" />,
 };
 

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import {
   Lock, Trophy, Crown,
   Activity, PackageOpen, TrendingUp, Footprints,
-  Waves, Mountain, Crosshair, WifiOff,
+  Waves, Mountain, ScanEye, WifiOff,
   Gauge, Layers, Globe, Brain, X,
 } from "lucide-react";
 import { getAchievements, AXIS_BADGES, DOMAIN_BADGES, SPECIAL_BADGES } from "@/lib/achievements";
@@ -20,7 +20,7 @@ const ICON = (name: string, size: number): React.ReactNode => {
     Activity: <Activity style={s} />, PackageOpen: <PackageOpen style={s} />,
     TrendingUp: <TrendingUp style={s} />, Footprints: <Footprints style={s} />,
     Waves: <Waves style={s} />, Mountain: <Mountain style={s} />,
-    Crosshair: <Crosshair style={s} />, WifiOff: <WifiOff style={s} />,
+    ScanEye: <ScanEye style={s} />, WifiOff: <WifiOff style={s} />,
   };
   return map[name] ?? <Trophy style={s} />;
 };
