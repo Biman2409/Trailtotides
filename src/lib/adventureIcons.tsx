@@ -1,15 +1,14 @@
 import React from "react";
 
-// Scuba tank icon for Diving
-const ScubaTank = ({ size = 14 }: { size?: number }) => (
+// Diving helmet icon for Diving
+const DivingHelmet = ({ size = 14 }: { size?: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
     fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M15 6.5V3a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v3.5"/>
-    <path d="M9 18h8"/>
-    <path d="M18 3h-3"/>
-    <path d="M11 3a6 6 0 0 0-6 6v11"/>
-    <path d="M5 13h4"/>
-    <path d="M17 10a4 4 0 0 0-8 0v10a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2Z"/>
+    <path d="M16 17.9c1.5-.9 2.7-2.2 3.4-3.9h.8c.4 0 .8-.4.8-1V9c0-.6-.4-1-.8-1h-.8A7.92 7.92 0 0 0 15 3.6v-.8c0-.4-.4-.8-1-.8h-4c-.6 0-1 .4-1 .8v.8A7.92 7.92 0 0 0 4.6 8h-.8c-.4 0-.8.4-.8 1v4c0 .6.4 1 .8 1h.8c.7 1.7 1.9 3 3.4 3.9"/>
+    <circle cx="12" cy="11" r="4"/>
+    <path d="M8 11h8"/>
+    <path d="M12 7v8"/>
+    <path d="M6.7 17c-1 .6-1.7 1.2-1.7 2 0 1.7 3.1 3 7 3s7-1.3 7-3c0-.8-.7-1.4-1.7-2"/>
   </svg>
 );
 
@@ -86,7 +85,7 @@ export const ADVENTURE_TYPE_ICONS: Record<string, (size?: number) => React.React
   "Urban Adventure": (s = 14) => <Building2     style={{ width: s, height: s }} />,
   Paragliding:       (s = 14) => <Wind          style={{ width: s, height: s }} />,
   "Hot Air Balloon": (s = 14) => <Sunrise       style={{ width: s, height: s }} />,
-  Diving:            (s = 14) => <ScubaTank     size={s} />,
+  Diving:            (s = 14) => <DivingHelmet  size={s} />,
   Kayaking:          (s = 14) => <Kayak         style={{ width: s, height: s }} />,
   Surfing:           (s = 14) => <Surfboard      size={s} />,
   "River Rafting":   (s = 14) => <Ship          style={{ width: s, height: s }} />,
