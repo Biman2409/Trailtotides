@@ -93,7 +93,7 @@ export default function InlineChat() {
             </h2>
           </div>
           <p className="text-sm lg:text-base" style={{ color: "var(--text-secondary)" }}>
-            Describe what you&apos;re looking for — we&apos;ll find your adventure.
+            Describe your escape. We&apos;ll find the adventure.
           </p>
         </div>
 
@@ -275,7 +275,7 @@ export default function InlineChat() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && send()}
-                placeholder="e.g. 5-day trek in Uttarakhand for beginners…"
+                placeholder="Ask Compass.AI…"
                 className="flex-1 bg-transparent text-sm py-2.5 px-3 rounded-xl outline-none border transition-all duration-200 focus:border-[#ff5100]/50 placeholder-opacity-40"
                 style={{
                   borderColor: "var(--border-default)",
