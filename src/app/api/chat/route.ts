@@ -16,44 +16,68 @@ const ADVENTURE_LIST = JSON.stringify(
   }))
 );
 
-// Deterministic ACE trigger — no AI judgment needed for this
-const UNSURE_SIGNALS = [
-  "don't know", "dont know", "not sure", "unsure", "confused",
-  "no idea", "never trekked", "never hiked", "never done",
-  "first time", "first trek", "no experience", "no prior",
-  "what should i", "what suits me", "help me decide",
-  "where do i start", "where should i start",
+// If the user's message contains a clear destination or activity, they know what
+// they want — skip ACE judgment and go straight to recommendations.
+const CLEAR_INTENT_SIGNALS = [
+  "trek", "trekking", "hike", "hiking", "bike", "cycling", "motorcycle",
+  "climb", "climbing", "kayak", "raft", "surf", "dive", "scuba",
+  "himachal", "ladakh", "uttarakhand", "kashmir", "rajasthan", "sikkim",
+  "andaman", "kerala", "goa", "spiti", "manali", "leh", "zanskar",
+  "easy", "moderate", "hard", "advanced", "difficult",
+  "days", "weekend", "summit", "peak", "pass", "glacier", "lake",
 ];
 
-function shouldSuggestAce(messages: { role: string; content: string }[], userMessageCount: number): boolean {
-  // Rule 1: 3 or more back-and-forth exchanges
-  if (userMessageCount >= 3) return true;
-  // Rule 2: user explicitly signals uncertainty or no experience
-  const allUserText = messages
+function hasCleanIntent(messages: { role: string; content: string }[]): boolean {
+  const text = messages
     .filter((m) => m.role === "user")
     .map((m) => m.content.toLowerCase())
     .join(" ");
-  return UNSURE_SIGNALS.some((signal) => allUserText.includes(signal));
+  return CLEAR_INTENT_SIGNALS.some((s) => text.includes(s));
 }
 
-function buildPrompt(messages: { role: string; content: string }[]): string {
+function buildRecommendationsPrompt(messages: { role: string; content: string }[]): string {
   const userQuery = messages
     .filter((m) => m.role === "user")
     .map((m) => m.content)
     .join(" ");
 
-  return `You are an Indian adventure travel advisor. Pick 1–3 best matching adventures for the user. Use ONLY exact slugs from the list.
+  return `You are an Indian adventure travel advisor. Pick 1–3 best matching adventures. Use ONLY exact slugs.
 
 Adventure list (JSON):
 ${ADVENTURE_LIST}
 
 User query: "${userQuery}"
 
-Respond EXACTLY like this:
+Respond EXACTLY with ONLY these three fields per item:
 <recommendations>
 [{"slug":"exact-slug","name":"exact name","reason":"one sentence why it matches"}]
 </recommendations>
 One short helpful sentence.`;
+}
+
+function buildAceJudgmentPrompt(messages: { role: string; content: string }[]): string {
+  const conversation = messages
+    .map((m) => `${m.role === "user" ? "User" : "Assistant"}: ${m.content}`)
+    .join("\n");
+
+  return `You are an Indian adventure travel advisor. The user has sent a message that is not clearly about a specific adventure. Judge if they need the ACE assessment.
+
+Suggest ACE if: user has no experience, doesn't know their fitness level, is overwhelmed or confused, doesn't know what's suitable for them.
+Do NOT suggest ACE if: user asks for recommendations in general (like "what's good in Ladakh?").
+
+Conversation:
+${conversation}
+
+Respond with ONLY one of these two options:
+Option 1 (needs ACE): <suggest_ace/>
+Option 2 (give recommendations):
+<recommendations>
+[{"slug":"exact-slug","name":"exact name","reason":"one sentence"}]
+</recommendations>
+One short sentence.
+
+Adventure list for Option 2:
+${ADVENTURE_LIST}`;
 }
 
 // Fuzzy slug resolver — handles minor hallucinations
@@ -68,6 +92,21 @@ function resolveSlug(slug: string): string {
   return partial ? partial.slug : slug;
 }
 
+function parseRecommendations(content: string) {
+  const recMatch = content.match(/<recommendations>([\s\S]*?)<\/recommendations>/);
+  if (!recMatch) return [];
+  try {
+    const parsed = JSON.parse(recMatch[1].trim());
+    return parsed.map((r: { slug: string; name: string; reason: string }) => ({
+      slug: resolveSlug(r.slug),
+      name: r.name,
+      reason: r.reason ?? "",
+    }));
+  } catch {
+    return [];
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
@@ -76,60 +115,49 @@ export async function POST(req: NextRequest) {
       (m: { role: string }) => m.role === "user"
     ).length;
 
-    // Check ACE trigger before calling the model
-    const suggestAce = shouldSuggestAce(messages, userMessageCount);
-
-    if (suggestAce) {
-      const isUnsure = UNSURE_SIGNALS.some((s) =>
-        messages
-          .filter((m) => m.role === "user")
-          .map((m) => m.content.toLowerCase())
-          .join(" ")
-          .includes(s)
-      );
-      const aceText = isUnsure
-        ? "It sounds like you're still figuring out where to start — that's completely normal."
-        : `You've asked a few questions and still haven't found the right fit — your ACE profile will match adventures to your exact body and experience level.`;
-      return NextResponse.json({ text: aceText, recommendations: [], cards: [], suggestAce: true });
+    // Hard rule 1: 3+ exchanges — always suggest ACE
+    if (userMessageCount >= 3) {
+      return NextResponse.json({
+        text: "You've asked a few questions and still haven't found the right fit — your ACE profile will match adventures to your exact body and experience level.",
+        recommendations: [],
+        cards: [],
+        suggestAce: true,
+      });
     }
+
+    // Clear intent (specific destination / activity / difficulty) → skip ACE judgment
+    const prompt = hasCleanIntent(messages)
+      ? buildRecommendationsPrompt(messages)
+      : buildAceJudgmentPrompt(messages);
 
     const response = await client.chat.completions.create({
       model: "llama-3.1-8b-instant",
-      messages: [{ role: "user", content: buildPrompt(messages) }],
-      temperature: 0.6,
-      max_tokens: 512,
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.5,
+      max_tokens: 768,
     });
 
     const content = response.choices[0].message.content ?? "";
 
-    const suggestAceFallback = false;
-
-    const recMatch = content.match(/<recommendations>([\s\S]*?)<\/recommendations>/);
-    let recommendations: { slug: string; name: string; reason: string }[] = [];
-    if (recMatch) {
-      try {
-        const parsed = JSON.parse(recMatch[1].trim());
-        recommendations = parsed.map(
-          (r: { slug: string; name: string; reason: string }) => ({
-            ...r,
-            slug: resolveSlug(r.slug),
-          })
-        );
-      } catch {
-        recommendations = [];
-      }
+    // Groq decided to suggest ACE
+    if (/<suggest_ace\s*\/>/.test(content)) {
+      return NextResponse.json({
+        text: "It sounds like you're still figuring out where to start — that's completely normal.",
+        recommendations: [],
+        cards: [],
+        suggestAce: true,
+      });
     }
 
+    const recommendations = parseRecommendations(content);
     const text = content
       .replace(/<recommendations>[\s\S]*?<\/recommendations>/, "")
-      .replace(/<suggest_ace\s*\/>/, "")
       .trim();
-
     const cards = recommendations
-      .map((r) => adventures.find((a) => a.slug === r.slug))
+      .map((r: { slug: string }) => adventures.find((a) => a.slug === r.slug))
       .filter(Boolean);
 
-    return NextResponse.json({ text, recommendations, cards, suggestAce: suggestAceFallback });
+    return NextResponse.json({ text, recommendations, cards, suggestAce: false });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
