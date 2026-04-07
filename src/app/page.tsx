@@ -64,7 +64,7 @@ export default function HomePage() {
             className="text-white/82 text-base md:text-xl w-full mx-auto leading-relaxed mb-8"
             style={{ textShadow: "0 1px 10px rgba(0,0,0,0.85)" }}
           >
-            Find, assess, and book India&apos;s finest adventures — matched to your body, guided by AI, run by verified operators.
+            Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.
           </p>
 
           {/* CTAs */}

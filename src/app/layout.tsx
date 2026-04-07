@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s — Trail to Tides",
   },
   description:
-    "Find, assess, and book India's finest adventures — ACE-matched to your body, guided by AI, run by verified operators.",
+    "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
   metadataBase: new URL(BASE_URL),
   icons: {
     icon: [
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Trail to Tides — India's Adventure Discovery Platform",
     description:
-      "Find, assess, and book India's finest adventures — ACE-matched to your body, guided by AI, run by verified operators.",
+      "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
     type: "website",
     url: BASE_URL,
     siteName: "Trail to Tides",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     site: "@trailtotides",
     title: "Trail to Tides — India's Adventure Discovery Platform",
     description:
-      "Find, assess, and book India's finest adventures — ACE-matched to your body, guided by AI, run by verified operators.",
+      "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
     images: ["https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90"],
   },
   robots: {
@@ -90,7 +90,7 @@ export default function RootLayout({
                 logo: `${BASE_URL}/logo.svg`,
                 sameAs: [],
                 description:
-                  "India's adventure intelligence platform — ACE-matched trails, AI-powered discovery, and verified operators across the subcontinent.",
+                  "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
               },
               {
                 "@context": "https://schema.org",
