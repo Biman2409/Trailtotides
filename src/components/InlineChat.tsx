@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Loader2, Compass, ArrowRight, Search } from "lucide-react";
+import { Loader2, Compass, ArrowRight, Send, MapPin, Clock, BarChart2 } from "lucide-react";
 import Link from "next/link";
 import type { Adventure } from "@/lib/data";
 
@@ -12,23 +12,35 @@ interface Message {
   recommendations?: { slug: string; name: string; reason: string }[];
 }
 
+const PROMPTS = [
+  "Beginner trek in Himachal Pradesh",
+  "Ladakh bike trip in summer",
+  "Easy weekend trek near Delhi",
+];
+
 export default function InlineChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const chatRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Scroll only within the chat container, not the whole page
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (messages.length === 0) return;
+    const el = chatRef.current;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
+  }, [messages, loading]);
 
   async function send(text?: string) {
     const msg = (text ?? input).trim();
     if (!msg || loading) return;
     setInput("");
     const userMsg: Message = { role: "user", content: msg };
-    setMessages((prev) => [...prev, userMsg]);
+    const next = [...messages, userMsg];
+    setMessages(next);
     setLoading(true);
 
     try {
@@ -36,10 +48,7 @@ export default function InlineChat() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: [...messages, userMsg].map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
+          messages: next.map((m) => ({ role: m.role, content: m.content })),
         }),
       });
       const data = await res.json();
@@ -47,9 +56,9 @@ export default function InlineChat() {
         ...prev,
         {
           role: "assistant",
-          content: data.text || data.error || "Sorry, something went wrong.",
-          cards: data.cards,
-          recommendations: data.recommendations,
+          content: data.text || (data.error ? "Sorry, something went wrong." : ""),
+          cards: data.cards ?? [],
+          recommendations: data.recommendations ?? [],
         },
       ]);
     } catch {
@@ -63,193 +72,226 @@ export default function InlineChat() {
   }
 
   return (
-      <section id="ai-finder" className="relative overflow-hidden bg-[#0a0e14] border-y border-white/[0.03] py-14 lg:py-20">
-        {/* Deep atmospheric backgrounds */}
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
-        
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 opacity-[0.02] pointer-events-none" 
-          style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+    <section
+      id="ai-finder"
+      className="relative overflow-hidden py-16 lg:py-24"
+      style={{ background: "var(--bg-page)" }}
+    >
+      {/* Ambient glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-[#ff5100]/[0.04] blur-[100px] rounded-full pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 relative z-10">
+      <div className="max-w-3xl mx-auto px-5 lg:px-8 relative z-10">
 
-          {/* Header */}
-          <div className="flex flex-col items-center text-center mb-8 lg:mb-10 space-y-3">
-            <div className="flex flex-col items-center gap-4 lg:gap-6">
-              <p className="text-white/15 text-[10px] font-black tracking-[0.4em] uppercase">
-                Looking for something specific?
-              </p>
-              <div className="flex items-center gap-3 justify-center">
-                <div className="w-9 h-9 lg:w-12 lg:h-12 rounded-xl bg-[#ff5100] flex items-center justify-center">
-                  <Compass className="w-4 h-4 lg:w-6 lg:h-6 text-white" strokeWidth={2.5} />
-                </div>
-                <h2 className="text-white text-2xl lg:text-5xl font-black tracking-[-0.03em] leading-none bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/40">
-                  Compass.AI
-                </h2>
-              </div>
+        {/* Header */}
+        <div className="flex flex-col items-center text-center mb-8 space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#ff5100] flex items-center justify-center shadow-lg shadow-[#ff5100]/30">
+              <Compass className="w-5 h-5 text-white" strokeWidth={2.5} />
             </div>
-            <p className="text-white/40 text-sm lg:text-lg font-medium tracking-tight max-w-xl leading-relaxed">
-              Describe your escape. <span className="text-white">We&apos;ll map the adventure.</span>
-            </p>
+            <h2 className="text-2xl lg:text-4xl font-black tracking-tight" style={{ color: "var(--text-primary)" }}>
+              Compass<span className="text-[#ff5100]">.AI</span>
+            </h2>
           </div>
+          <p className="text-sm lg:text-base" style={{ color: "var(--text-secondary)" }}>
+            Describe what you&apos;re looking for — we&apos;ll find your adventure.
+          </p>
+        </div>
 
-          {/* Interface */}
-          <div className="max-w-5xl mx-auto">
-            <div className="relative group">
-              <div className="absolute -inset-2 bg-gradient-to-r from-[#ff5100]/30 to-[#ff5100]/0 rounded-[3rem] blur-2xl opacity-20 group-hover:opacity-40 transition duration-1000" />
-
-              <div className="relative bg-[#11161d]/90 backdrop-blur-2xl border border-white/[0.08] rounded-2xl lg:rounded-[2rem] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] overflow-hidden">
-
-                {/* Header bar */}
-                <div className="px-5 lg:px-8 py-4 border-b border-white/[0.05] flex items-center justify-center bg-white/[0.01]">
-                  <span className="text-[9px] lg:text-[10px] text-white/40 font-black uppercase tracking-[0.2em] lg:tracking-[0.25em]">Recommended Starting Vectors</span>
+        {/* Chat card */}
+        <div
+          className="rounded-2xl border overflow-hidden shadow-2xl"
+          style={{
+            background: "var(--bg-surface)",
+            borderColor: "var(--border-subtle)",
+          }}
+        >
+          {/* Messages area */}
+          <div
+            ref={chatRef}
+            className="overflow-y-auto transition-all duration-300"
+            style={{ minHeight: 80, maxHeight: messages.length > 0 ? 480 : "auto" }}
+          >
+            {/* Empty state — prompt chips */}
+            {messages.length === 0 && (
+              <div className="px-5 py-8 flex flex-col items-center gap-4">
+                <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
+                  Try asking
+                </p>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {PROMPTS.map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => send(p)}
+                      className="px-4 py-2 rounded-full text-xs font-medium border transition-all duration-200 hover:border-[#ff5100]/50 hover:text-[#ff5100]"
+                      style={{
+                        background: "var(--bg-elevated)",
+                        borderColor: "var(--border-default)",
+                        color: "var(--text-secondary)",
+                      }}
+                    >
+                      {p}
+                    </button>
+                  ))}
                 </div>
+              </div>
+            )}
 
-                {/* Terminal */}
-                <div className={`min-h-[90px] ${messages.length > 0 ? 'max-h-[460px]' : 'h-auto'} overflow-y-auto custom-scrollbar bg-black/20`}>
-                  {messages.length === 0 && (
-                    <div className="px-4 lg:px-8 py-6 lg:py-10 flex flex-wrap sm:flex-nowrap gap-2.5 justify-center overflow-x-auto no-scrollbar">
-                      {[
-                        "Ladakh bike trip under 20k",
-                        "Dzukou Valley trek in monsoon",
-                        "Scuba diving in Andaman"
-                      ].map((v) => (
-                        <button
-                          key={v}
-                          onClick={() => send(v)}
-                          className="px-4 py-2 rounded-full bg-white/[0.03] border border-white/[0.08] text-[11px] lg:text-[12px] text-white/70 font-medium whitespace-nowrap hover:bg-[#ff5100]/10 hover:text-[#ff5100] hover:border-[#ff5100]/30 transition-all duration-300 shadow-lg flex-shrink-0"
+            {/* Message list */}
+            {messages.length > 0 && (
+              <div className="p-4 lg:p-5 space-y-5">
+                {messages.map((msg, i) => (
+                  <div
+                    key={i}
+                    className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                  >
+                    <div className={`space-y-3 ${msg.role === "assistant" ? "w-full" : "max-w-[80%]"}`}>
+
+                      {/* Bubble */}
+                      {msg.content && (
+                        <div
+                          className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                            msg.role === "user"
+                              ? "text-white rounded-tr-sm font-medium"
+                              : "rounded-tl-sm font-normal border"
+                          }`}
+                          style={
+                            msg.role === "user"
+                              ? { background: "#ff5100" }
+                              : {
+                                  background: "var(--bg-elevated)",
+                                  borderColor: "var(--border-subtle)",
+                                  color: "var(--text-primary)",
+                                }
+                          }
                         >
-                          {v}
-                        </button>
-                      ))}
+                          {msg.content}
+                        </div>
+                      )}
+
+                      {/* Adventure cards */}
+                      {msg.cards && msg.cards.length > 0 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {msg.cards.map((card, ci) => {
+                            const rec = msg.recommendations?.find((r) => r.slug === card.slug);
+                            return (
+                              <Link
+                                key={ci}
+                                href={`/experiences/${card.slug}`}
+                                className="group flex flex-col rounded-xl overflow-hidden border transition-all duration-300 hover:border-[#ff5100]/40 hover:shadow-lg hover:shadow-[#ff5100]/5"
+                                style={{
+                                  background: "var(--bg-page)",
+                                  borderColor: "var(--border-subtle)",
+                                }}
+                              >
+                                {/* Image */}
+                                <div className="relative h-32 overflow-hidden">
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img
+                                    src={card.heroImage}
+                                    alt={card.name}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                  />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                  <span className="absolute bottom-2 left-3 px-2 py-0.5 bg-[#ff5100] text-white text-[9px] font-black uppercase tracking-wider rounded-full">
+                                    {card.type}
+                                  </span>
+                                </div>
+
+                                {/* Info */}
+                                <div className="p-3 space-y-2 flex-1">
+                                  <h4 className="text-sm font-bold leading-snug group-hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-primary)" }}>
+                                    {card.name}
+                                  </h4>
+                                  <div className="flex items-center gap-3 text-[10px] font-medium" style={{ color: "var(--text-tertiary)" }}>
+                                    <span className="flex items-center gap-1">
+                                      <MapPin className="w-3 h-3" />
+                                      {card.state}
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                      <BarChart2 className="w-3 h-3" />
+                                      {card.difficulty}
+                                    </span>
+                                    {card.durationDays && (
+                                      <span className="flex items-center gap-1">
+                                        <Clock className="w-3 h-3" />
+                                        {card.durationDays}
+                                      </span>
+                                    )}
+                                  </div>
+                                  {rec?.reason && (
+                                    <p className="text-[11px] leading-relaxed italic border-t pt-2" style={{ color: "var(--text-tertiary)", borderColor: "var(--border-subtle)" }}>
+                                      {rec.reason}
+                                    </p>
+                                  )}
+                                </div>
+
+                                {/* Footer CTA */}
+                                <div
+                                  className="px-3 py-2 border-t flex items-center justify-between"
+                                  style={{ borderColor: "var(--border-subtle)" }}
+                                >
+                                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[#ff5100]">
+                                    View details
+                                  </span>
+                                  <ArrowRight className="w-3 h-3 text-[#ff5100] group-hover:translate-x-0.5 transition-transform" />
+                                </div>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
+                ))}
 
-                {messages.length > 0 && (
-                  <div className="p-4 lg:p-6 space-y-4 lg:space-y-5">
-                    {messages.map((msg, i) => (
-                      <div
-                        key={i}
-                        className={`flex ${msg.role === "user" ? "justify-end" : "justify-start animate-in fade-in slide-in-from-bottom-4 duration-700"}`}
-                      >
-                        <div className={`max-w-[90%] space-y-4 ${msg.role === "assistant" ? "w-full" : ""}`}>
-                          {msg.content && (
-                            <div
-                              className={`px-6 py-4 rounded-[1.5rem] text-base leading-relaxed shadow-2xl ${
-                                msg.role === "user"
-                                  ? "text-white rounded-tr-none shadow-[#ff5100]/20 font-bold"
-                                  : "bg-white/[0.03] border border-white/[0.07] text-white/90 rounded-tl-none font-light backdrop-blur-md"
-                              }`}
-                              style={msg.role === "user" ? { background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)" } : {}}
-                            >
-                              {msg.content}
-                            </div>
-                          )}
-
-                          {msg.cards && msg.cards.length > 0 && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                              {msg.cards.map((card, ci) => {
-                                const rec = msg.recommendations?.find((r) => r.slug === card.slug);
-                                return (
-                                  <Link
-                                    key={ci}
-                                    href={`/experiences/${card.slug}`}
-                                    className="flex flex-col bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.05] hover:border-[#ff5100]/50 rounded-[1.5rem] overflow-hidden transition-all duration-700 group shadow-2xl relative"
-                                  >
-                                    <div className="relative h-36 w-full overflow-hidden">
-                                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                                      <img
-                                        src={card.heroImage}
-                                        alt={card.name}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
-                                      />
-                                      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e14] via-black/20 to-transparent" />
-                                      <div className="absolute bottom-3 left-4">
-                                        <div className="px-2 py-0.5 rounded-full bg-[#ff5100] text-white text-[8px] font-black uppercase tracking-[0.2em] shadow-lg">
-                                          {card.type}
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="p-5 flex-1 space-y-3">
-                                      <div>
-                                        <h4 className="text-white font-bold text-lg leading-tight group-hover:text-[#ff5100] transition-colors duration-300">
-                                          {card.name}
-                                        </h4>
-                                        <div className="flex items-center gap-2 mt-1.5 text-white/30 text-[10px] font-bold uppercase tracking-widest">
-                                          <span>{card.state}</span>
-                                          <span className="w-1 h-1 rounded-full bg-white/20" />
-                                          <span className="text-[#ff5100]/60">{card.difficulty}</span>
-                                        </div>
-                                      </div>
-                                      {rec?.reason && (
-                                        <div className="pt-3 border-t border-white/[0.05]">
-                                          <p className="text-white/50 text-[11px] leading-relaxed font-light italic">
-                                            &quot;{rec.reason}&quot;
-                                          </p>
-                                        </div>
-                                      )}
-                                    </div>
-                                    <div className="px-5 py-3 bg-white/[0.01] border-t border-white/[0.03] flex items-center justify-end">
-                                      <div className="flex items-center gap-1.5 text-[#ff5100] text-[10px] font-bold uppercase tracking-widest group-hover:translate-x-1 transition-transform">
-                                        View details
-                                        <ArrowRight className="w-3 h-3" />
-                                      </div>
-                                    </div>
-                                  </Link>
-                                );
-                              })}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-
-                    {loading && (
-                      <div className="flex justify-start animate-in fade-in duration-500">
-                        <div className="bg-white/[0.03] border border-white/[0.08] px-6 py-4 rounded-[1.5rem] rounded-tl-none flex items-center gap-3 backdrop-blur-sm">
-                          <Loader2 className="w-4 h-4 text-[#ff5100] animate-spin" />
-                          <span className="text-white/30 text-sm font-light tracking-wide italic">Thinking…</span>
-                        </div>
-                      </div>
-                    )}
-                    <div ref={bottomRef} />
+                {/* Loading indicator */}
+                {loading && (
+                  <div className="flex justify-start">
+                    <div
+                      className="flex items-center gap-2 px-4 py-3 rounded-2xl rounded-tl-sm text-sm border"
+                      style={{
+                        background: "var(--bg-elevated)",
+                        borderColor: "var(--border-subtle)",
+                        color: "var(--text-tertiary)",
+                      }}
+                    >
+                      <Loader2 className="w-3.5 h-3.5 text-[#ff5100] animate-spin" />
+                      <span>Finding adventures…</span>
+                    </div>
                   </div>
                 )}
               </div>
+            )}
+          </div>
 
-              {/* Input Area */}
-              <div className="p-3.5 lg:p-5 bg-white/[0.02] border-t border-white/[0.06]">
-                <div className="relative flex items-center">
-                  <div className="absolute left-4 text-[#ff5100]/40 pointer-events-none">
-                    <Search className="w-4 h-4" />
-                  </div>
-                  <input
-                    ref={inputRef}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && send()}
-                    placeholder="Ask Compass.AI..."
-                    className="w-full bg-white/[0.03] border border-white/[0.07] text-white placeholder-white/10 text-sm lg:text-base py-3.5 lg:py-4 pl-10 lg:pl-12 pr-14 rounded-xl lg:rounded-2xl outline-none focus:bg-white/[0.05] focus:border-[#ff5100]/50 focus:ring-4 focus:ring-[#ff5100]/5 transition-all duration-500 font-light"
-                  />
-                  <button
-                    onClick={() => send()}
-                    disabled={!input.trim() || loading}
-                    className="absolute right-2 p-2.5 lg:p-3 rounded-lg lg:rounded-xl bg-[#ff5100] text-white disabled:opacity-20 disabled:grayscale hover:bg-[#ff7d47] active:scale-95 transition-all duration-300 shadow-lg shadow-[#ff5100]/30 group"
-                  >
-                    {loading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    )}
-                  </button>
-                </div>
-              </div>
-
+          {/* Input bar */}
+          <div
+            className="p-3 border-t"
+            style={{ borderColor: "var(--border-subtle)" }}
+          >
+            <div className="flex items-center gap-2">
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && send()}
+                placeholder="e.g. 5-day trek in Uttarakhand for beginners…"
+                className="flex-1 bg-transparent text-sm py-2.5 px-3 rounded-xl outline-none border transition-all duration-200 focus:border-[#ff5100]/50 placeholder-opacity-40"
+                style={{
+                  borderColor: "var(--border-default)",
+                  color: "var(--text-primary)",
+                }}
+              />
+              <button
+                onClick={() => send()}
+                disabled={!input.trim() || loading}
+                className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl bg-[#ff5100] text-white disabled:opacity-30 hover:bg-[#ff7d47] active:scale-95 transition-all duration-200 shadow-md shadow-[#ff5100]/20"
+              >
+                <Send className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>
-
 
       </div>
     </section>

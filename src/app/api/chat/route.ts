@@ -12,7 +12,7 @@ const ADVENTURE_LIST = JSON.stringify(
     state: a.state,
     type: a.type,
     difficulty: a.difficulty,
-    durationDays: a.durationDays,
+    duration: a.durationDays,
     tags: (a.tags ?? []).slice(0, 4),
   }))
 );
