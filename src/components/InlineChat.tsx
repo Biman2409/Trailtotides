@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Loader2, Compass, ArrowRight, Send, MapPin, Clock, BarChart2, Sparkles } from "lucide-react";
+import { Loader2, Compass, ArrowRight, Send, MapPin, Clock, BarChart2, Sparkles, Zap } from "lucide-react";
 import Link from "next/link";
 import type { Adventure } from "@/lib/data";
 
@@ -10,6 +10,7 @@ interface Message {
   content: string;
   cards?: Adventure[];
   recommendations?: { slug: string; name: string; reason: string }[];
+  suggestAce?: boolean;
 }
 
 const PROMPTS = [
@@ -57,6 +58,7 @@ export default function InlineChat() {
           content: data.text || (data.error ? "Sorry, something went wrong." : ""),
           cards: data.cards ?? [],
           recommendations: data.recommendations ?? [],
+          suggestAce: data.suggestAce ?? false,
         },
       ]);
     } catch {
@@ -176,6 +178,24 @@ export default function InlineChat() {
                         >
                           {msg.content}
                         </div>
+                      )}
+
+                      {/* ACE assessment suggestion */}
+                      {msg.suggestAce && (
+                        <Link
+                          href="/ace"
+                          className="group flex items-center gap-4 p-4 rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ff5100]/40 hover:shadow-lg hover:shadow-[#ff5100]/5"
+                          style={{ background: "var(--bg-page)", borderColor: "var(--border-subtle)" }}
+                        >
+                          <div className="shrink-0 w-10 h-10 rounded-xl bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center justify-center">
+                            <Zap className="w-4 h-4 text-[#ff5100]" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold t-text group-hover:text-[#ff5100] transition-colors">Take the ACE Assessment</p>
+                            <p className="text-[11px] t-text-3 mt-0.5 leading-relaxed">Discover your adventure profile — strength, endurance, skill &amp; more.</p>
+                          </div>
+                          <ArrowRight className="w-4 h-4 text-[#ff5100] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                        </Link>
                       )}
 
                       {/* Adventure cards grid */}
