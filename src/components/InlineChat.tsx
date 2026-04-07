@@ -192,7 +192,7 @@ export default function InlineChat() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-bold t-text group-hover:text-[#ff5100] transition-colors">Take the ACE Assessment</p>
-                            <p className="text-[11px] t-text-3 mt-0.5 leading-relaxed">Discover your adventure profile — strength, endurance, skill &amp; more.</p>
+                            <p className="text-[11px] t-text-3 mt-0.5 leading-relaxed">Discover your ACE profile and find the adventures you&apos;re truly ready for.</p>
                           </div>
                           <ArrowRight className="w-4 h-4 text-[#ff5100] shrink-0 group-hover:translate-x-0.5 transition-transform" />
                         </Link>
