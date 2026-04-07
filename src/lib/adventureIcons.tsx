@@ -1,5 +1,18 @@
 import React from "react";
 
+// Scuba tank icon for Diving
+const ScubaTank = ({ size = 14 }: { size?: number }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M15 6.5V3a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v3.5"/>
+    <path d="M9 18h8"/>
+    <path d="M18 3h-3"/>
+    <path d="M11 3a6 6 0 0 0-6 6v11"/>
+    <path d="M5 13h4"/>
+    <path d="M17 10a4 4 0 0 0-8 0v10a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2Z"/>
+  </svg>
+);
+
 // Surfboard icon for Surfing
 const Surfboard = ({ size = 14 }: { size?: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
@@ -73,7 +86,7 @@ export const ADVENTURE_TYPE_ICONS: Record<string, (size?: number) => React.React
   "Urban Adventure": (s = 14) => <Building2     style={{ width: s, height: s }} />,
   Paragliding:       (s = 14) => <Wind          style={{ width: s, height: s }} />,
   "Hot Air Balloon": (s = 14) => <Sunrise       style={{ width: s, height: s }} />,
-  Diving:            (s = 14) => <MaskSnorkel   size={s} />,
+  Diving:            (s = 14) => <ScubaTank     size={s} />,
   Kayaking:          (s = 14) => <Kayak         style={{ width: s, height: s }} />,
   Surfing:           (s = 14) => <Surfboard      size={s} />,
   "River Rafting":   (s = 14) => <Ship          style={{ width: s, height: s }} />,
