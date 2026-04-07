@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Instagram, Youtube, Twitter, Mail, Linkedin, Mountain } from "lucide-react";
+import { Instagram, Youtube, Twitter, Mail, Linkedin } from "lucide-react";
+import { Mountain } from "@/lib/localIcons";
 import { createClient } from "@/lib/supabase/client";
 import MessageModal from "./MessageModal";
 

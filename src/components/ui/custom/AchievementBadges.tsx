@@ -3,12 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
-  // Tier 1 & 2
   Trophy, Crown, Gauge, Layers, Globe, Brain,
-  // Tier 3 — relatable per axis
   Activity, PackageOpen, TrendingUp, Footprints,
   Waves, Mountain, ScanEye, WifiOff,
-} from "lucide-react";
+} from "@/lib/localIcons";
 import { getAchievements, type Achievement } from "@/lib/achievements";
 import type { ACE } from "@/lib/ace";
 

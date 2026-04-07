@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Wind, Mountain, Waves, Snowflake } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { Wind, Mountain, Waves, Snowflake } from "@/lib/localIcons";
 import { adventures } from "@/lib/data";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 

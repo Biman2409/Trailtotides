@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mountain } from "lucide-react";
+import { Mountain } from "@/lib/localIcons";
 
 interface LogoProps {
   size?: "sm" | "md" | "lg";

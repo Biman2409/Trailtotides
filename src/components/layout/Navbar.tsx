@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, Mountain, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings } from "lucide-react";
+import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings } from "lucide-react";
+import { Mountain } from "@/lib/localIcons";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { useCompare, MAX } from "@/contexts/CompareContext";

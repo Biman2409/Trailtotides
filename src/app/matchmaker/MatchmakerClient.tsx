@@ -5,10 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ChevronRight, ChevronLeft, MapPin, ArrowRight, RotateCcw,
-  Zap, Shield, Mountain, CheckCircle2, TrendingUp, Lock,
-  Compass, Dumbbell, Waves, Ghost, Flame, ScanEye,
-  AlertTriangle, Loader2,
+  Shield, CheckCircle2, AlertTriangle, Loader2,
 } from "lucide-react";
+import { Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost, TrendingUp, Lock } from "@/lib/localIcons";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import Pill from "@/components/ui/custom/Pill";
 import AchievementBadges from "@/components/ui/custom/AchievementBadges";
@@ -121,7 +120,7 @@ const QUESTIONS = [
   {
     key: "Q8",
     axis: "Nerve",
-    icon: <Wind className="w-4 h-4" />,
+    icon: <Ghost className="w-4 h-4" />,
     question: "If you're stuck in a remote area without signal or immediate help, how do you respond?",
     hint: "No phone signal, hours from the nearest town, no guarantee of rescue.",
     options: [
@@ -446,7 +445,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
     { icon: <Flame className="w-5 h-5" />,    name: "Engine",   color: "#f97316", desc: "Stamina + Power — sustained output and explosive effort. The fuel that keeps you moving." },
     { icon: <Dumbbell className="w-5 h-5" />, name: "Chassis",  color: "#22d3ee", desc: "Strength + Agility — load-bearing capacity and terrain navigation. How your body handles the ground." },
     { icon: <Waves className="w-5 h-5" />,    name: "Elements", color: "#a78bfa", desc: "Water + Altitude — aquatic survival and high-altitude physiology. Environmental exposure demands." },
-    { icon: <Wind className="w-5 h-5" />,      name: "Mind",     color: "#10b981", desc: "Focus + Nerve — psychological exposure tolerance and the grit to operate far from help." },
+    { icon: <Ghost className="w-5 h-5" />,      name: "Mind",     color: "#10b981", desc: "Focus + Nerve — psychological exposure tolerance and the grit to operate far from help." },
   ];
 
   return (

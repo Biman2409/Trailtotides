@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { X } from "lucide-react";
 import {
   Lock, Trophy, Crown,
   Activity, PackageOpen, TrendingUp, Footprints,
   Waves, Mountain, ScanEye, WifiOff,
-  Gauge, Layers, Globe, Brain, X,
-} from "lucide-react";
+  Gauge, Layers, Globe, Brain,
+} from "@/lib/localIcons";
 import { getAchievements, AXIS_BADGES, DOMAIN_BADGES, SPECIAL_BADGES } from "@/lib/achievements";
 import type { Achievement } from "@/lib/achievements";
 import { loadProfile } from "@/lib/matchmaker";
