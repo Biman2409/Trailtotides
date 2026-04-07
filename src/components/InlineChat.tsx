@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Loader2, Compass, ArrowRight, Send, MapPin, Clock, BarChart2 } from "lucide-react";
+import { Loader2, Compass, ArrowRight, Send, MapPin, Clock, BarChart2, Sparkles } from "lucide-react";
 import Link from "next/link";
 import type { Adventure } from "@/lib/data";
 
@@ -16,6 +16,7 @@ const PROMPTS = [
   "Beginner trek in Himachal Pradesh",
   "Ladakh bike trip in summer",
   "Easy weekend trek near Delhi",
+  "Scuba diving in Andaman",
 ];
 
 export default function InlineChat() {
@@ -25,13 +26,11 @@ export default function InlineChat() {
   const chatRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Scroll only within the chat container, not the whole page
+  // Scroll only within the chat container — never hijacks the page
   useEffect(() => {
     if (messages.length === 0) return;
     const el = chatRef.current;
-    if (el) {
-      el.scrollTop = el.scrollHeight;
-    }
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages, loading]);
 
   async function send(text?: string) {
@@ -42,7 +41,6 @@ export default function InlineChat() {
     const next = [...messages, userMsg];
     setMessages(next);
     setLoading(true);
-
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -74,57 +72,67 @@ export default function InlineChat() {
   return (
     <section
       id="ai-finder"
-      className="relative overflow-hidden py-16 lg:py-24"
+      className="relative overflow-hidden py-20 lg:py-28"
       style={{ background: "var(--bg-page)" }}
     >
-      {/* Ambient glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-[#ff5100]/[0.04] blur-[100px] rounded-full pointer-events-none" />
+      {/* Background accents */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1px] bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1px] bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full bg-[#ff5100]/[0.04] blur-[80px]" />
+      </div>
 
-      <div className="max-w-3xl mx-auto px-5 lg:px-8 relative z-10">
+      <div className="max-w-4xl mx-auto px-5 lg:px-8 relative z-10">
 
-        {/* Header */}
-        <div className="flex flex-col items-center text-center mb-8 space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#ff5100] flex items-center justify-center shadow-lg shadow-[#ff5100]/30">
+        {/* Section label */}
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <div className="h-px w-8 bg-[#ff5100]/40" />
+          <span className="text-[#ff5100] text-[10px] font-black tracking-[0.3em] uppercase">
+            AI-Powered Discovery
+          </span>
+          <div className="h-px w-8 bg-[#ff5100]/40" />
+        </div>
+
+        {/* Heading */}
+        <div className="text-center mb-10 space-y-3">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="w-11 h-11 rounded-2xl bg-[#ff5100] flex items-center justify-center shadow-xl shadow-[#ff5100]/30">
               <Compass className="w-5 h-5 text-white" strokeWidth={2.5} />
             </div>
-            <h2 className="text-2xl lg:text-4xl font-black tracking-tight" style={{ color: "var(--text-primary)" }}>
+            <h2 className="text-4xl lg:text-5xl font-black tracking-[-0.03em] t-text">
               Compass<span className="text-[#ff5100]">.AI</span>
             </h2>
           </div>
-          <p className="text-sm lg:text-base" style={{ color: "var(--text-secondary)" }}>
-            Describe your escape. We&apos;ll find the adventure.
+          <p className="text-base lg:text-lg t-text-2 max-w-lg mx-auto leading-relaxed">
+            Describe your escape.{" "}
+            <span className="t-text font-semibold">We&apos;ll find the adventure.</span>
           </p>
         </div>
 
-        {/* Chat card */}
-        <div
-          className="rounded-2xl border overflow-hidden shadow-2xl"
-          style={{
-            background: "var(--bg-surface)",
-            borderColor: "var(--border-subtle)",
-          }}
-        >
-          {/* Messages area */}
+        {/* Chat shell */}
+        <div className="rounded-2xl overflow-hidden shadow-[0_0_60px_-10px_rgba(0,0,0,0.6)] border" style={{ borderColor: "var(--border-subtle)", background: "var(--bg-surface)" }}>
+
+          {/* Conversation area */}
           <div
             ref={chatRef}
-            className="overflow-y-auto transition-all duration-300"
-            style={{ minHeight: 80, maxHeight: messages.length > 0 ? 480 : "auto" }}
+            className="overflow-y-auto"
+            style={{ minHeight: 120, maxHeight: messages.length > 0 ? 500 : "auto" }}
           >
-            {/* Empty state — prompt chips */}
+            {/* Empty state */}
             {messages.length === 0 && (
-              <div className="px-5 py-8 flex flex-col items-center gap-4">
-                <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
-                  Try asking
-                </p>
-                <div className="flex flex-wrap gap-2 justify-center">
+              <div className="px-6 py-10 flex flex-col items-center gap-5 text-center">
+                <div className="flex items-center gap-2 t-text-3">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.2em]">Try asking</span>
+                </div>
+                <div className="flex flex-wrap gap-2 justify-center max-w-xl">
                   {PROMPTS.map((p) => (
                     <button
                       key={p}
                       onClick={() => send(p)}
-                      className="px-4 py-2 rounded-full text-xs font-medium border transition-all duration-200 hover:border-[#ff5100]/50 hover:text-[#ff5100]"
+                      className="px-4 py-2 rounded-full text-[12px] font-medium border transition-all duration-200 hover:border-[#ff5100]/50 hover:text-[#ff5100] hover:bg-[#ff5100]/5"
                       style={{
-                        background: "var(--bg-elevated)",
+                        background: "var(--bg-elevated, #141b28)",
                         borderColor: "var(--border-default)",
                         color: "var(--text-secondary)",
                       }}
@@ -136,103 +144,99 @@ export default function InlineChat() {
               </div>
             )}
 
-            {/* Message list */}
+            {/* Messages */}
             {messages.length > 0 && (
-              <div className="p-4 lg:p-5 space-y-5">
+              <div className="p-5 space-y-6">
                 {messages.map((msg, i) => (
                   <div
                     key={i}
-                    className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                    className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                   >
-                    <div className={`space-y-3 ${msg.role === "assistant" ? "w-full" : "max-w-[80%]"}`}>
+                    {/* AI avatar */}
+                    {msg.role === "assistant" && (
+                      <div className="shrink-0 w-7 h-7 rounded-lg bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center justify-center mt-0.5">
+                        <Compass className="w-3.5 h-3.5 text-[#ff5100]" strokeWidth={2} />
+                      </div>
+                    )}
 
-                      {/* Bubble */}
+                    <div className={`space-y-3 ${msg.role === "assistant" ? "flex-1 min-w-0" : "max-w-[75%]"}`}>
+                      {/* Text bubble */}
                       {msg.content && (
                         <div
                           className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                             msg.role === "user"
-                              ? "text-white rounded-tr-sm font-medium"
-                              : "rounded-tl-sm font-normal border"
+                              ? "text-white font-medium rounded-tr-sm"
+                              : "rounded-tl-sm t-text border"
                           }`}
                           style={
                             msg.role === "user"
                               ? { background: "#ff5100" }
-                              : {
-                                  background: "var(--bg-elevated)",
-                                  borderColor: "var(--border-subtle)",
-                                  color: "var(--text-primary)",
-                                }
+                              : { background: "var(--bg-surface-2, #141b28)", borderColor: "var(--border-subtle)" }
                           }
                         >
                           {msg.content}
                         </div>
                       )}
 
-                      {/* Adventure cards */}
+                      {/* Adventure cards grid */}
                       {msg.cards && msg.cards.length > 0 && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                           {msg.cards.map((card, ci) => {
                             const rec = msg.recommendations?.find((r) => r.slug === card.slug);
                             return (
                               <Link
                                 key={ci}
                                 href={`/experiences/${card.slug}`}
-                                className="group flex flex-col rounded-xl overflow-hidden border transition-all duration-300 hover:border-[#ff5100]/40 hover:shadow-lg hover:shadow-[#ff5100]/5"
+                                className="group flex flex-col rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ff5100]/30 hover:shadow-xl hover:shadow-[#ff5100]/5"
                                 style={{
                                   background: "var(--bg-page)",
                                   borderColor: "var(--border-subtle)",
                                 }}
                               >
-                                {/* Image */}
-                                <div className="relative h-32 overflow-hidden">
+                                {/* Hero image */}
+                                <div className="relative h-28 overflow-hidden">
                                   {/* eslint-disable-next-line @next/next/no-img-element */}
                                   <img
                                     src={card.heroImage}
                                     alt={card.name}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                                   />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                                  <span className="absolute bottom-2 left-3 px-2 py-0.5 bg-[#ff5100] text-white text-[9px] font-black uppercase tracking-wider rounded-full">
-                                    {card.type}
-                                  </span>
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                                  <div className="absolute bottom-2 left-2.5 flex items-center gap-1.5">
+                                    <span className="px-2 py-0.5 rounded-full bg-[#ff5100] text-white text-[9px] font-black uppercase tracking-wider">
+                                      {card.type}
+                                    </span>
+                                  </div>
                                 </div>
 
-                                {/* Info */}
-                                <div className="p-3 space-y-2 flex-1">
-                                  <h4 className="text-sm font-bold leading-snug group-hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-primary)" }}>
+                                {/* Body */}
+                                <div className="p-3 flex-1 space-y-1.5">
+                                  <h4 className="text-[13px] font-bold leading-snug group-hover:text-[#ff5100] transition-colors duration-200 t-text line-clamp-2">
                                     {card.name}
                                   </h4>
-                                  <div className="flex items-center gap-3 text-[10px] font-medium" style={{ color: "var(--text-tertiary)" }}>
-                                    <span className="flex items-center gap-1">
-                                      <MapPin className="w-3 h-3" />
-                                      {card.state}
+                                  <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                                    <span className="flex items-center gap-1 text-[10px] t-text-3">
+                                      <MapPin className="w-2.5 h-2.5" />{card.state}
                                     </span>
-                                    <span className="flex items-center gap-1">
-                                      <BarChart2 className="w-3 h-3" />
-                                      {card.difficulty}
+                                    <span className="flex items-center gap-1 text-[10px] t-text-3">
+                                      <BarChart2 className="w-2.5 h-2.5" />{card.difficulty}
                                     </span>
                                     {card.durationDays && (
-                                      <span className="flex items-center gap-1">
-                                        <Clock className="w-3 h-3" />
-                                        {card.durationDays}
+                                      <span className="flex items-center gap-1 text-[10px] t-text-3">
+                                        <Clock className="w-2.5 h-2.5" />{card.durationDays}
                                       </span>
                                     )}
                                   </div>
                                   {rec?.reason && (
-                                    <p className="text-[11px] leading-relaxed italic border-t pt-2" style={{ color: "var(--text-tertiary)", borderColor: "var(--border-subtle)" }}>
+                                    <p className="text-[10px] leading-relaxed t-text-3 italic pt-1.5 border-t" style={{ borderColor: "var(--border-subtle)" }}>
                                       {rec.reason}
                                     </p>
                                   )}
                                 </div>
 
-                                {/* Footer CTA */}
-                                <div
-                                  className="px-3 py-2 border-t flex items-center justify-between"
-                                  style={{ borderColor: "var(--border-subtle)" }}
-                                >
-                                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[#ff5100]">
-                                    View details
-                                  </span>
+                                {/* Footer */}
+                                <div className="px-3 py-2 border-t flex items-center justify-between" style={{ borderColor: "var(--border-subtle)" }}>
+                                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff5100]">View</span>
                                   <ArrowRight className="w-3 h-3 text-[#ff5100] group-hover:translate-x-0.5 transition-transform" />
                                 </div>
                               </Link>
@@ -244,19 +248,20 @@ export default function InlineChat() {
                   </div>
                 ))}
 
-                {/* Loading indicator */}
+                {/* Typing dots */}
                 {loading && (
-                  <div className="flex justify-start">
-                    <div
-                      className="flex items-center gap-2 px-4 py-3 rounded-2xl rounded-tl-sm text-sm border"
-                      style={{
-                        background: "var(--bg-elevated)",
-                        borderColor: "var(--border-subtle)",
-                        color: "var(--text-tertiary)",
-                      }}
-                    >
-                      <Loader2 className="w-3.5 h-3.5 text-[#ff5100] animate-spin" />
-                      <span>Finding adventures…</span>
+                  <div className="flex gap-3 justify-start">
+                    <div className="shrink-0 w-7 h-7 rounded-lg bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center justify-center">
+                      <Compass className="w-3.5 h-3.5 text-[#ff5100]" strokeWidth={2} />
+                    </div>
+                    <div className="flex items-center gap-1.5 px-4 py-3 rounded-2xl rounded-tl-sm border" style={{ background: "var(--bg-surface-2, #141b28)", borderColor: "var(--border-subtle)" }}>
+                      {[0, 1, 2].map((d) => (
+                        <span
+                          key={d}
+                          className="w-1.5 h-1.5 rounded-full bg-[#ff5100]/60 animate-bounce"
+                          style={{ animationDelay: `${d * 0.15}s`, animationDuration: "0.8s" }}
+                        />
+                      ))}
                     </div>
                   </div>
                 )}
@@ -264,34 +269,42 @@ export default function InlineChat() {
             )}
           </div>
 
+          {/* Divider */}
+          <div className="h-px" style={{ background: "var(--border-subtle)" }} />
+
           {/* Input bar */}
-          <div
-            className="p-3 border-t"
-            style={{ borderColor: "var(--border-subtle)" }}
-          >
-            <div className="flex items-center gap-2">
+          <div className="p-3 flex items-center gap-2.5" style={{ background: "var(--bg-surface)" }}>
+            <div className="flex items-center gap-2 flex-1 rounded-xl px-3.5 border transition-all duration-200 focus-within:border-[#ff5100]/40"
+              style={{ background: "var(--bg-page)", borderColor: "var(--border-default)" }}>
+              <Compass className="w-3.5 h-3.5 text-[#ff5100]/50 shrink-0" />
               <input
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && send()}
                 placeholder="Ask Compass.AI…"
-                className="flex-1 bg-transparent text-sm py-2.5 px-3 rounded-xl outline-none border transition-all duration-200 focus:border-[#ff5100]/50 placeholder-opacity-40"
-                style={{
-                  borderColor: "var(--border-default)",
-                  color: "var(--text-primary)",
-                }}
+                className="flex-1 bg-transparent text-sm py-3 outline-none t-text placeholder:t-text-3"
+                style={{ color: "var(--text-primary)" }}
               />
-              <button
-                onClick={() => send()}
-                disabled={!input.trim() || loading}
-                className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl bg-[#ff5100] text-white disabled:opacity-30 hover:bg-[#ff7d47] active:scale-95 transition-all duration-200 shadow-md shadow-[#ff5100]/20"
-              >
-                <Send className="w-4 h-4" />
-              </button>
             </div>
+            <button
+              onClick={() => send()}
+              disabled={!input.trim() || loading}
+              className="shrink-0 h-10 w-10 flex items-center justify-center rounded-xl bg-[#ff5100] text-white disabled:opacity-25 hover:bg-[#ff7d47] active:scale-95 transition-all duration-200 shadow-lg shadow-[#ff5100]/20"
+            >
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Send className="w-4 h-4" />
+              )}
+            </button>
           </div>
         </div>
+
+        {/* Powered-by note */}
+        <p className="text-center mt-4 text-[10px] t-text-3 tracking-wide">
+          Powered by Groq · llama-3.1 · Free tier
+        </p>
 
       </div>
     </section>
