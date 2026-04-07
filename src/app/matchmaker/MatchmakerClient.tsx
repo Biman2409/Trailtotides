@@ -6,7 +6,7 @@ import Link from "next/link";
 import {
   ChevronRight, ChevronLeft, MapPin, ArrowRight, RotateCcw,
   Zap, Shield, Mountain, CheckCircle2, TrendingUp, Lock,
-  Compass, Dumbbell, Waves, Wind, Flame,
+  Compass, Dumbbell, Waves, Wind, Flame, ScanEye,
   AlertTriangle, Loader2,
 } from "lucide-react";
 import ACERadar from "@/components/ui/custom/ACERadar";
@@ -156,7 +156,7 @@ const AXIS_ICONS: Record<string, React.ReactNode> = {
   agility:  <Compass  className="w-3.5 h-3.5" />,
   water:    <Waves    className="w-3.5 h-3.5" />,
   altitude: <Mountain className="w-3.5 h-3.5" />,
-  focus:    <Shield   className="w-3.5 h-3.5" />,
+  focus:    <ScanEye  className="w-3.5 h-3.5" />,
   nerve: <Wind     className="w-3.5 h-3.5" />,
 };
 
