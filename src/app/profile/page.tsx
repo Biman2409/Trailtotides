@@ -1,12 +1,13 @@
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { Calendar, Shield, Camera, Trophy, MapPin, Zap, Lock, Package } from "lucide-react";
+import { Calendar, Shield, Trophy, MapPin, Zap, Lock, Package } from "lucide-react";
 import { format } from "date-fns";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import TripLogSection from "./TripLogSection";
 import ACEProfileSection from "./ACEProfileSection";
+import AvatarPicker from "./AvatarPicker";
 import TrophyCabinet from "./TrophyCabinet";
 import { getOperatorProfile, getSubmissionsForOperator } from "@/app/auth/operator-actions";
 import { adventures } from "@/lib/data";
@@ -71,7 +72,6 @@ export default async function ProfilePage() {
   }
 
   const displayName = profile.full_name || user.user_metadata?.company_name || "Adventurer";
-  const initial = displayName?.[0]?.toUpperCase() ?? "?";
   const username = user.user_metadata?.username || profile.username;
 
   return (
@@ -90,16 +90,8 @@ export default async function ProfilePage() {
           <div className="flex flex-col sm:flex-row items-start sm:items-end gap-6">
 
             {/* Avatar */}
-            <div className="relative group shrink-0">
-              <div
-                className="w-24 h-24 rounded-3xl flex items-center justify-center text-3xl font-black relative overflow-hidden"
-                style={{ background: "linear-gradient(135deg, rgba(255,81,0,0.2) 0%, rgba(255,81,0,0.08) 100%)", border: "1.5px solid rgba(255,81,0,0.25)", boxShadow: "0 0 40px rgba(255,81,0,0.12)" }}
-              >
-                <span style={{ color: "#ff7d47" }}>{initial}</span>
-                <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-3xl">
-                  <Camera className="w-5 h-5 text-white/70" />
-                </div>
-              </div>
+            <div className="relative shrink-0">
+              <AvatarPicker />
               {/* Role badge */}
               <div
                 className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider"
