@@ -28,28 +28,28 @@ function buildPrompt(
   const forceAce = userMessageCount >= 3;
 
   const aceConditions = forceAce
-    ? `The user has sent ${userMessageCount} messages — you MUST suggest the ACE assessment.`
-    : `Suggest ACE ONLY if the user explicitly says they are a beginner/first-timer with no experience, OR says they don't know what suits them or what level they are.`;
+    ? `The user has sent ${userMessageCount} messages — you MUST suggest the ACE assessment (use <suggest_ace/>). Do NOT output <recommendations>.`
+    : `Use <suggest_ace/> ONLY if the user says they have NO experience at all, OR explicitly says they don't know their fitness level, OR says they don't know what is suitable for them.
+IMPORTANT: If the user asks for a "beginner trek" or "easy adventure" — that is a difficulty filter, NOT uncertainty. Recommend matching adventures normally.`;
 
   return `You are an Indian adventure travel advisor.
 
 RULE: ${aceConditions}
-In all other cases — even vague queries — pick matching adventures from the list.
 
 Adventure list (JSON):
 ${ADVENTURE_LIST}
 
 User query: "${userQuery}"
 
-If and ONLY if ACE rule above applies, respond EXACTLY like:
+If the ACE rule applies, respond EXACTLY like:
 <suggest_ace/>
-One warm sentence about taking the ACE assessment.
+One warm sentence about the ACE assessment.
 
 Otherwise respond EXACTLY like:
 <recommendations>
 [{"slug":"exact-slug","name":"exact name","reason":"one sentence why it matches"}]
 </recommendations>
-One short helpful sentence.`;
+One short helpful sentence. Do NOT mention ACE in this case.`;
 }
 
 // Fuzzy slug resolver — handles minor hallucinations
