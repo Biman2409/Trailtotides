@@ -66,8 +66,8 @@ function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { titl
         {items.map((a) => {
           const diff = computeDifficulty(getACE(a));
           return (
-            <Link key={a.id} href={`/experiences/${a.slug}`} className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-60 snap-start transition-all duration-300 hover:-translate-y-1" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
-              <div className="relative h-36 overflow-hidden">
+            <Link key={a.id} href={`/experiences/${a.slug}`} className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-56 snap-start transition-all duration-300 hover:-translate-y-1" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
+              <div className="relative h-36 shrink-0 overflow-hidden">
                 <Image src={a.heroImage} alt={a.name} fill loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
                 <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 z-10">
@@ -77,9 +77,9 @@ function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { titl
                   }
                 </div>
               </div>
-              <div className="p-3 flex-1 flex flex-col gap-1.5">
-                <h3 className="text-white font-semibold text-sm leading-snug group-hover:text-[#ff5100] transition-colors line-clamp-2">{a.name}</h3>
-                <div className="flex items-center gap-1.5 mt-auto pt-1 text-[10px] text-white/35">
+              <div className="p-3 h-16 flex flex-col justify-between">
+                <h3 className="text-white font-semibold text-xs leading-snug group-hover:text-[#ff5100] transition-colors line-clamp-2">{a.name}</h3>
+                <div className="flex items-center gap-1.5 text-[10px] text-white/35">
                   <span className="font-semibold text-white/50">{diff}</span>
                   <span className="text-white/20">·</span>
                   <span>{a.durationDays}</span>
