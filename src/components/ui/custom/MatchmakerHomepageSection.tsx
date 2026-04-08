@@ -100,6 +100,7 @@ export default function MatchmakerHomepageSection() {
         <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-5">Adventure Matchmaker</p>
 
         {/* ── Two-column layout: left (tier + adventures) | right (radar) ── */}
+        <div className="flex flex-col gap-4">
         <div className="flex flex-col lg:flex-row gap-4">
 
           {/* Left column */}
@@ -205,31 +206,34 @@ export default function MatchmakerHomepageSection() {
               </div>
             </div>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/explore?ace=ready"
-                className="flex-1 inline-flex items-center justify-center gap-2 font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 px-6 py-3 rounded-xl"
-                style={{ background: "linear-gradient(135deg, #ff5100, #ff7340)" }}>
-                All matching adventures
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link href="/matchmaker"
-                className="flex-1 inline-flex items-center justify-center gap-2 text-white/45 hover:text-white/75 font-semibold px-6 py-3 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all">
-                <BarChart2 className="w-3.5 h-3.5" />
-                View detailed results
-              </Link>
-            </div>
           </div>
 
           {/* Right column: ACE Radar */}
-          <div className="shrink-0 flex flex-col items-center rounded-2xl border p-5"
+          <div className="shrink-0 lg:self-stretch flex flex-col items-center rounded-2xl border p-5"
             style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
             <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 self-start mb-3">ACE Profile</p>
-            <div className="flex-1 flex items-center justify-center rounded-xl p-4"
+            <div className="flex-1 flex items-center justify-center rounded-xl p-4 w-full"
               style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, rgba(255,255,255,0.01) 70%)", border: "1px solid rgba(255,255,255,0.06)" }}>
               <ACERadar ace={profile.ace} size={240} showLabels />
             </div>
           </div>
+
+        </div>
+
+        {/* CTAs — full width below both columns */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Link href="/explore?ace=ready"
+            className="flex-1 inline-flex items-center justify-center gap-2 font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 px-6 py-3 rounded-xl"
+            style={{ background: "linear-gradient(135deg, #ff5100, #ff7340)" }}>
+            All matching adventures
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+          <Link href="/matchmaker"
+            className="flex-1 inline-flex items-center justify-center gap-2 text-white/45 hover:text-white/75 font-semibold px-6 py-3 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all">
+            <BarChart2 className="w-3.5 h-3.5" />
+            View detailed results
+          </Link>
+        </div>
 
         </div>
       </div>
