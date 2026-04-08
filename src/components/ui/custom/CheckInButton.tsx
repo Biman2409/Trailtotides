@@ -48,17 +48,17 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
     return (
       <button
         onClick={handleToggle}
-        className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${className}`}
+        className={`inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight transition-all duration-200 active:scale-95 ${className}`}
         style={done
-          ? { background: "rgba(251,191,36,0.15)", color: "#fcd34d", border: "1px solid rgba(251,191,36,0.4)", boxShadow: "0 0 12px rgba(251,191,36,0.15)" }
-          : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }
+          ? { background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }
+          : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.5)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }
         }
       >
         {loggedIn === false
-          ? <><LogIn className="w-4 h-4" />Done it</>
+          ? <><LogIn className="w-2.5 h-2.5" />Done it</>
           : done
-            ? <><Trophy className="w-4 h-4 fill-current" />Been There</>
-            : <><Trophy className="w-4 h-4" />Mark as Done</>
+            ? <><Trophy className="w-2.5 h-2.5" />Done</>
+            : <><Trophy className="w-2.5 h-2.5" />Done it</>
         }
       </button>
     );
