@@ -1073,29 +1073,31 @@ export default function ExploreClient() {
         <ExploreMatchmakerSection />
 
         {/* Map CTA Section */}
-          <div className="t-bg-surface mt-12 lg:mt-16 border-t border-white/5">
-            <div className="max-w-7xl mx-auto px-5 lg:px-8 py-12 lg:py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-              <div>
-                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-2.5">
-                  Adventure Map
-                </p>
-                <h2 className="text-white text-3xl lg:text-4xl font-semibold tracking-tight">
+        <div className="mt-12 lg:mt-16 border-t border-white/5" style={{ background: "var(--bg-surface)" }}>
+          <div className="max-w-7xl mx-auto px-5 lg:px-8 py-12 lg:py-16">
+            <div className="relative rounded-2xl overflow-hidden px-8 py-10 flex flex-col md:flex-row md:items-center gap-8"
+              style={{ background: "linear-gradient(135deg, rgba(255,81,0,0.08) 0%, rgba(255,255,255,0.02) 60%)", border: "1px solid rgba(255,81,0,0.15)" }}>
+              <span className="pointer-events-none select-none absolute right-6 top-4 text-[80px] font-black text-white/[0.025] leading-none hidden lg:block">MAP</span>
+              <div className="flex-1">
+                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Adventure Map</p>
+                <h2 className="text-white text-2xl lg:text-3xl font-bold tracking-tight mb-3">
                   Adventures across India
                 </h2>
-                <p className="text-white/40 mt-2.5 text-sm lg:text-base max-w-lg">
+                <p className="text-white/45 text-sm lg:text-base leading-relaxed max-w-md">
                   Every trail, summit, coast, and canyon — pinned on one map. Cluster by region, filter by type, and tap any pin to explore.
                 </p>
               </div>
               <Link
                 href="/map"
-                className="inline-flex items-center justify-center gap-2.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap min-w-[220px]"
+                className="inline-flex items-center justify-center gap-2.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/25 whitespace-nowrap min-w-[220px]"
               >
                 <MapIcon className="w-4 h-4" />
-                  Explore the Map
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+                Explore the Map
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
+        </div>
 
         <Footer />
       </div>
