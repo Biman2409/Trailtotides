@@ -96,7 +96,7 @@ function WishlistPicker({ onSelect }: { onSelect: (a: Adventure) => void }) {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full rounded-xl border border-dashed border-white/20 bg-white/2 hover:border-[#ff5100]/40 hover:bg-[#ff5100]/5 flex flex-col items-center justify-center min-h-[112px] gap-2 transition-all group"
+        className="w-full rounded-xl border border-dashed border-white/20 bg-white/2 hover:border-[#ff5100]/40 hover:bg-[#ff5100]/5 flex flex-col items-center justify-center min-h-[88px] gap-1.5 transition-all group"
       >
         <div className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
           style={{ background: "rgba(244,63,94,0.1)", border: "1px solid rgba(244,63,94,0.2)" }}>
@@ -156,75 +156,58 @@ export default function CompareAdventures() {
   }, []);
 
   return (
-    <section id="compare-section" className="py-16 lg:py-20 px-6 lg:px-8 bg-[#0d1520] border-t border-white/6">
+    <section id="compare-section" className="py-10 px-5 lg:px-8 bg-[#0d1520] border-t border-white/6">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
-        <div className="mb-10">
-          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
-            <GitCompareArrows className="w-3.5 h-3.5" />
-            Side by Side
-          </p>
-            <h2 className="text-white text-4xl lg:text-5xl font-bold tracking-tight">
-              Compare Adventures
-            </h2>
-            <div className="mt-5 w-14 h-0.5 bg-[#ff5100] rounded-full" />
-            <p className="mt-4 text-white/50 text-base">
-            Select up to {MAX} adventures to compare them side by side
-          </p>
+        <div className="mb-6">
+          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1.5">Side by Side</p>
+          <div className="flex items-end justify-between gap-4">
+            <h2 className="text-white text-xl font-semibold tracking-tight">Compare Adventures</h2>
+            <p className="text-white/30 text-xs hidden sm:block">Select up to {MAX} adventures</p>
+          </div>
         </div>
 
         {/* Not logged in, nothing selected — CTA */}
         {loggedIn === false && selected.length === 0 && (
           <div
-            className="rounded-2xl p-8 flex flex-col sm:flex-row items-center gap-6 mb-8"
-            style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.15)" }}
+            className="rounded-xl p-4 flex items-center gap-4 mb-5"
+            style={{ background: "rgba(255,81,0,0.05)", border: "1px solid rgba(255,81,0,0.12)" }}
           >
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0"
-              style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.2)" }}>
-              <GitCompare className="w-5 h-5 text-[#ff7d47]" />
-            </div>
-            <div className="flex-1 text-center sm:text-left">
-              <p className="text-white font-semibold text-base mb-1">Compare adventures side by side</p>
-              <p className="text-white/40 text-sm leading-relaxed">
-                Log in to select at least 2 adventures to see the comparison — stats, pricing, ACE profiles and more.
-              </p>
+            <div className="flex-1">
+              <p className="text-white/60 text-xs leading-relaxed">Log in to compare adventures side by side — stats, pricing, ACE profiles and more.</p>
             </div>
             <button
               onClick={() => router.push("/auth/login")}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:-translate-y-0.5 shrink-0"
-              style={{ background: "#ff5100", boxShadow: "0 4px 14px rgba(255,81,0,0.35)" }}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white shrink-0 transition-all hover:-translate-y-0.5"
+              style={{ background: "#ff5100" }}
             >
-              <LogIn className="w-4 h-4" />
-              Log in to compare
+              <LogIn className="w-3.5 h-3.5" />
+              Log in
             </button>
           </div>
         )}
 
-        {/* Selected slots grid — shown once anything is selected, or logged-in user */}
+        {/* Selected slots grid */}
         {(selected.length > 0 || loggedIn === true) && (
           selected.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-3 gap-3 mb-5">
               {selected.map((adventure) => (
                 <div
                   key={adventure.id}
-                  className="relative rounded-xl overflow-hidden border border-[#ff5100]/35 bg-[#ff5100]/5 shadow-[0_0_24px_rgba(255,81,0,0.1)]"
+                  className="relative rounded-xl overflow-hidden border border-[#ff5100]/30 bg-[#ff5100]/5"
                 >
-                  <div className="relative h-28">
+                  <div className="relative h-20">
                     <Image src={adventure.heroImage} alt={adventure.name} fill className="object-cover opacity-70" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                   </div>
-                  <div className="px-3 py-2.5 flex items-center justify-between gap-2">
+                  <div className="px-2.5 py-2 flex items-center justify-between gap-2">
                     <div className="min-w-0">
-                      <p className="text-white text-sm font-semibold truncate">{adventure.name}</p>
-                      <p className="text-white/45 text-[11px] truncate">{adventure.state}</p>
+                      <p className="text-white text-xs font-semibold truncate">{adventure.name}</p>
+                      <p className="text-white/40 text-[10px] truncate">{adventure.state}</p>
                     </div>
-                    <button
-                      onClick={() => remove(adventure.id)}
-                      className="shrink-0 w-6 h-6 rounded-full bg-white/10 hover:bg-red-500/30 flex items-center justify-center transition-colors"
-                      aria-label="Remove"
-                    >
-                      <X className="w-3 h-3 text-white/70" />
+                    <button onClick={() => remove(adventure.id)} className="shrink-0 w-5 h-5 rounded-full bg-white/10 hover:bg-red-500/30 flex items-center justify-center transition-colors" aria-label="Remove">
+                      <X className="w-2.5 h-2.5 text-white/70" />
                     </button>
                   </div>
                 </div>
@@ -234,8 +217,8 @@ export default function CompareAdventures() {
                   {loggedIn === true ? (
                     <WishlistPicker onSelect={(a) => add(a)} />
                   ) : (
-                    <div className="rounded-xl border border-dashed border-white/15 bg-white/2 flex flex-col items-center justify-center min-h-[112px] gap-1.5 text-white/20 text-xs">
-                      <Plus className="w-4 h-4 opacity-40" />
+                    <div className="rounded-xl border border-dashed border-white/10 flex flex-col items-center justify-center min-h-[88px] gap-1.5 text-white/20 text-xs">
+                      <Plus className="w-3.5 h-3.5 opacity-40" />
                       <span>Add from cards above</span>
                     </div>
                   )}
@@ -243,36 +226,26 @@ export default function CompareAdventures() {
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-white/10 flex flex-col sm:flex-row items-center justify-center gap-4 min-h-[100px] mb-8 px-6 py-6">
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="text-white/30 text-sm">Tap the</span>
-                {/* Mini replica of the compare button pill */}
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[11px] font-semibold"
-                  style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.8)", border: "1px solid rgba(255,255,255,0.13)" }}>
-                  <GitCompare className="w-3 h-3" />
-                  Compare
-                </span>
-                <span className="text-white/30 text-sm">button on any adventure card above</span>
-              </div>
+            <div className="rounded-xl border border-dashed border-white/10 flex items-center justify-center gap-2 h-16 mb-5 px-4">
+              <span className="text-white/25 text-xs">Tap</span>
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-semibold" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.12)" }}>
+                <GitCompare className="w-2.5 h-2.5" />Compare
+              </span>
+              <span className="text-white/25 text-xs">on any card to start</span>
             </div>
           )
         )}
 
-        {/* Comparison table — only show when ≥2 selected */}
+        {/* Comparison table */}
         {selected.length >= 2 && (
           <div className="overflow-x-auto rounded-xl border border-white/8">
-            <table className="w-full text-sm">
+            <table className="w-full">
               <thead>
                 <tr className="border-b border-white/8">
-                  <th className="text-left text-white/35 text-[11px] font-semibold tracking-widest uppercase px-4 py-3 w-44">
-                    Attribute
-                  </th>
+                  <th className="text-left text-white/30 text-[10px] font-bold tracking-widest uppercase px-3 py-2.5 w-32">Attribute</th>
                   {selected.map((a) => (
-                    <th key={a.id} className="text-left px-4 py-3">
-                      <Link
-                        href={`/experiences/${a.slug}`}
-                        className="text-white font-semibold hover:text-[#ff5100] transition-colors text-sm leading-tight line-clamp-2"
-                      >
+                    <th key={a.id} className="text-left px-3 py-2.5">
+                      <Link href={`/experiences/${a.slug}`} className="text-white text-xs font-semibold hover:text-[#ff5100] transition-colors line-clamp-2 leading-snug">
                         {a.name}
                       </Link>
                     </th>
@@ -281,13 +254,11 @@ export default function CompareAdventures() {
               </thead>
               <tbody>
                 {FIELDS.map((field, fi) => (
-                  <tr key={field.key} className={fi % 2 === 0 ? "bg-white/2" : "bg-transparent"}>
-                    <td className="px-4 py-3 text-white/40 text-[11px] font-semibold tracking-wide uppercase whitespace-nowrap">
-                      {field.label}
-                    </td>
+                  <tr key={field.key} className={fi % 2 === 0 ? "bg-white/[0.02]" : ""}>
+                    <td className="px-3 py-2 text-white/35 text-[10px] font-semibold tracking-wide uppercase whitespace-nowrap">{field.label}</td>
                     {selected.map((a) => (
-                      <td key={a.id} className="px-4 py-3">
-                        <span className="text-white/80 text-sm">{getValue(a, field.key)}</span>
+                      <td key={a.id} className="px-3 py-2">
+                        <span className="text-white/70 text-xs">{getValue(a, field.key)}</span>
                       </td>
                     ))}
                   </tr>
@@ -295,54 +266,38 @@ export default function CompareAdventures() {
 
                 {/* ACE label row */}
                 <tr className="border-t border-white/8">
-                  <td colSpan={selected.length + 1} className="px-4 pt-4 pb-1">
-                    <p className="text-[10px] uppercase tracking-widest font-bold text-white/30">ACE Profile</p>
+                  <td colSpan={selected.length + 1} className="px-3 pt-3 pb-1">
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-white/25">ACE Profile</p>
                   </td>
                 </tr>
 
-                {/* ACE Radar row — Your Body + trek profiles */}
+                {/* ACE Radar row */}
                 <tr className="bg-white/[0.01]">
-                  {/* Your Body cell */}
-                  <td className="px-4 pb-4 align-top">
+                  <td className="px-3 pb-3 align-top">
                     {userAce ? (
-                      <div
-                        className="inline-flex flex-col items-center rounded-xl overflow-hidden"
-                        style={{ border: "1px solid rgba(255,255,255,0.10)", background: "radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 75%)" }}
-                      >
-                        <div className="p-2">
-                          <ACERadar ace={userAce} size={160} showLabels />
-                        </div>
+                      <div className="inline-flex rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, transparent 75%)" }}>
+                        <div className="p-1.5"><ACERadar ace={userAce} size={130} showLabels /></div>
                       </div>
                     ) : (
-                      <p className="text-white/25 text-xs">No profile yet</p>
+                      <p className="text-white/20 text-xs">No profile yet</p>
                     )}
                   </td>
                   {selected.map((a) => (
-                    <td key={a.id} className="px-4 pb-4 align-top">
-                      <div
-                        className="rounded-xl p-2 inline-block"
-                        style={{
-                          background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, rgba(255,255,255,0.02) 75%)",
-                          border: "1px solid rgba(255,255,255,0.07)",
-                        }}
-                      >
-                        <ACERadar ace={getACE(a)} size={160} showLabels />
+                    <td key={a.id} className="px-3 pb-3 align-top">
+                      <div className="rounded-xl p-1.5 inline-block" style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, transparent 75%)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                        <ACERadar ace={getACE(a)} size={130} showLabels />
                       </div>
                     </td>
                   ))}
                 </tr>
 
-                {/* View detail links row */}
+                {/* View links row */}
                 <tr className="border-t border-white/8">
-                  <td className="px-4 py-4" />
+                  <td className="px-3 py-3" />
                   {selected.map((a) => (
-                    <td key={a.id} className="px-4 py-4">
-                      <Link
-                        href={`/experiences/${a.slug}`}
-                        className="inline-flex items-center gap-1.5 text-[#ff5100] text-sm font-semibold hover:gap-2.5 transition-all group/link"
-                      >
-                        View details
-                        <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
+                    <td key={a.id} className="px-3 py-3">
+                      <Link href={`/experiences/${a.slug}`} className="inline-flex items-center gap-1 text-[#ff5100] text-xs font-semibold hover:gap-2 transition-all group/link">
+                        View details <ArrowRight className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform" />
                       </Link>
                     </td>
                   ))}
