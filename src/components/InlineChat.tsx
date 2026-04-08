@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import {
   Loader2, Compass, ArrowRight, Send, MapPin, Clock,
-  BarChart2, Sparkles, Zap, RotateCcw, WifiOff,
+  BarChart2, Sparkles, Zap, RotateCcw, WifiOff, RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
 import type { Adventure } from "@/lib/data";
@@ -18,65 +18,57 @@ interface Message {
   rateLimited?: boolean;
 }
 
-// Quick-start prompts shown in empty state
+// Starter prompts — only live adventure types
 const STARTER_PROMPTS = [
   "Beginner trek in Himachal Pradesh",
   "Ladakh bike expedition",
   "Hard trek with summit views",
   "Multi-day trek in Kashmir",
   "Weekend adventure near Delhi",
-  "Diving in the Andamans",
+  "Kayaking in Northeast India",
 ];
 
-// Derive contextual follow-up chips from the last AI response + cards
+// Derive contextual chips from the AI response
 function deriveChips(msg: Message, roundCount: number): string[] {
+  // Rate-limited — offer a retry chip
+  if (msg.rateLimited) return ["Try again"];
+
   const cards = msg.cards ?? [];
   const text = (msg.content ?? "").toLowerCase();
   const chips: string[] = [];
 
-  // If cards were shown — offer refinement chips relative to those cards
   if (cards.length > 0) {
     const diff = cards[0].difficulty;
-    if (diff === "Hard" || diff === "Advanced" || diff === "Extreme") {
-      chips.push("Something easier");
-    } else if (diff === "Easy" || diff === "Moderate") {
-      chips.push("Something harder");
-    }
-
-    const state = cards[0].state;
-    chips.push(`More in ${state}`);
-
-    const type = cards[0].type;
-    chips.push(`Other ${type.toLowerCase()} options`);
-
+    if (diff === "Hard" || diff === "Advanced" || diff === "Extreme") chips.push("Something easier");
+    else if (diff === "Easy" || diff === "Moderate") chips.push("Something harder");
+    chips.push(`More in ${cards[0].state}`);
+    chips.push(`Other ${cards[0].type.toLowerCase()} options`);
     if (cards.length === 1) chips.push("Show more options");
-
-    chips.push("Shorter duration");
+    else chips.push("Shorter duration");
   }
 
-  // If AI asked a question — surface likely answers
-  if (text.includes("mountain") || text.includes("coast") || text.includes("region")) {
-    chips.push("Mountains", "Coast", "Northeast");
+  // Surface answers to AI questions
+  if (text.includes("mountain") || text.includes("coast") || text.includes("prefer")) {
+    chips.push("Mountains", "Coastal", "Northeast");
   }
-  if (text.includes("how many days") || text.includes("duration") || text.includes("how long")) {
+  if (text.includes("how many days") || text.includes("how long") || text.includes("duration")) {
     chips.push("Weekend (2–3 days)", "4–6 days", "7+ days");
   }
-  if (text.includes("difficulty") || text.includes("experience") || text.includes("fitness")) {
-    chips.push("I'm a beginner", "Intermediate", "I'm very fit");
+  if (text.includes("difficulty") || text.includes("experience") || text.includes("fitness") || text.includes("level")) {
+    chips.push("I'm a beginner", "Moderate fitness", "Very fit");
   }
-  if (text.includes("type") || text.includes("activity") || text.includes("kind of")) {
-    chips.push("Trekking", "Biking", "Water sports");
+  if (text.includes("type") || text.includes("activity") || text.includes("kind")) {
+    chips.push("Trekking", "Biking", "Kayaking");
   }
-  if (text.includes("solo") || text.includes("group") || text.includes("who")) {
-    chips.push("Solo trip", "With friends", "Family-friendly");
+  if (text.includes("solo") || text.includes("group") || text.includes("travel with")) {
+    chips.push("Solo", "With friends", "Family trip");
   }
 
-  // Late-stage fallbacks based on round count
+  // Late-stage fallbacks
   if (chips.length < 2 && roundCount >= 2) {
-    chips.push("Show something remote", "Best for summer", "High altitude options");
+    chips.push("Show remote options", "Best for summer", "High altitude");
   }
 
-  // Deduplicate and limit
   return [...new Set(chips)].slice(0, 4);
 }
 
@@ -89,19 +81,19 @@ export default function InlineChat() {
   const chatRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Scroll to bottom inside the chat container only
+  // Scroll to bottom of chat area only
   useEffect(() => {
     if (messages.length === 0) return;
     const el = chatRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages, loading]);
 
-  // Animate chips in after AI reply
+  // Delay chip reveal slightly for smoothness
   useEffect(() => {
     if (loading) { setChipsVisible(false); return; }
     const last = messages[messages.length - 1];
     if (last?.role === "assistant") {
-      const t = setTimeout(() => setChipsVisible(true), 300);
+      const t = setTimeout(() => setChipsVisible(true), 320);
       return () => clearTimeout(t);
     }
   }, [messages, loading]);
@@ -117,6 +109,18 @@ export default function InlineChat() {
   async function send(text?: string) {
     const msg = (text ?? input).trim();
     if (!msg || loading) return;
+
+    // If chip was "Try again", resend the last user message
+    if (msg === "Try again") {
+      const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
+      if (lastUserMsg) {
+        // Strip the failed assistant message first
+        setMessages((prev) => prev.slice(0, -1));
+        await send(lastUserMsg.content);
+        return;
+      }
+    }
+
     setInput("");
     setChipsVisible(false);
     const userMsg: Message = { role: "user", content: msg };
@@ -136,8 +140,8 @@ export default function InlineChat() {
       const newRound = roundCount + 1;
       const assistantMsg: Message = {
         role: "assistant",
-        content: data.rateLimited ? "" : (data.text || (data.error ? "Sorry, something went wrong. Please try again." : "")),
-        cards: data.cards ?? [],
+        content: data.rateLimited ? "" : (data.text || (data.error ? "Something went wrong — please try again." : "")),
+        cards: (data.cards ?? []) as Adventure[],
         recommendations: data.recommendations ?? [],
         suggestAce: data.suggestAce ?? false,
         rateLimited: data.rateLimited ?? false,
@@ -146,10 +150,9 @@ export default function InlineChat() {
       setMessages((prev) => [...prev, assistantMsg]);
       setRoundCount(newRound);
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "", rateLimited: true },
-      ]);
+      const errMsg: Message = { role: "assistant", content: "", rateLimited: true };
+      errMsg.chips = ["Try again"];
+      setMessages((prev) => [...prev, errMsg]);
     } finally {
       setLoading(false);
     }
@@ -165,7 +168,7 @@ export default function InlineChat() {
       className="relative overflow-hidden pt-20 pb-6 lg:pt-28 lg:pb-8"
       style={{ background: "var(--bg-page)" }}
     >
-      {/* Background accents */}
+      {/* Background glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1px] bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1px] bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
@@ -184,7 +187,7 @@ export default function InlineChat() {
         </div>
 
         {/* Heading */}
-        <div className="text-center mb-10 space-y-3">
+        <div className="text-center mb-10">
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="w-11 h-11 rounded-2xl bg-[#ff5100] flex items-center justify-center shadow-xl shadow-[#ff5100]/30">
               <Compass className="w-5 h-5 text-white" strokeWidth={2.5} />
@@ -204,8 +207,7 @@ export default function InlineChat() {
           className="rounded-2xl overflow-hidden shadow-[0_0_60px_-10px_rgba(0,0,0,0.6)] border"
           style={{ borderColor: "var(--border-subtle)", background: "var(--bg-surface)" }}
         >
-
-          {/* Header — shown once conversation starts */}
+          {/* Header bar — only when conversation is active */}
           {messages.length > 0 && (
             <div
               className="flex items-center justify-between px-4 py-2.5 border-b"
@@ -219,6 +221,7 @@ export default function InlineChat() {
               </div>
               <button
                 onClick={reset}
+                aria-label="Start new conversation"
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all duration-200 hover:bg-white/5"
                 style={{ color: "var(--text-tertiary)" }}
               >
@@ -231,7 +234,7 @@ export default function InlineChat() {
           {/* Conversation area */}
           <div
             ref={chatRef}
-            className="overflow-y-auto transition-all duration-300"
+            className="overflow-y-auto"
             style={{ minHeight: 120, maxHeight: messages.length > 0 ? 560 : "auto" }}
           >
             {/* Empty state */}
@@ -260,7 +263,7 @@ export default function InlineChat() {
               </div>
             )}
 
-            {/* Messages */}
+            {/* Message thread */}
             {messages.length > 0 && (
               <div className="p-5 space-y-5">
                 {messages.map((msg, i) => (
@@ -276,6 +279,7 @@ export default function InlineChat() {
                     )}
 
                     <div className={`space-y-3 ${msg.role === "assistant" ? "flex-1 min-w-0" : "max-w-[78%]"}`}>
+
                       {/* Text bubble */}
                       {msg.content && (
                         <div
@@ -294,23 +298,29 @@ export default function InlineChat() {
                         </div>
                       )}
 
-                      {/* Rate-limited notice */}
+                      {/* Rate-limited / error state */}
                       {msg.rateLimited && (
                         <div
-                          className="flex items-start gap-3 px-4 py-3 rounded-2xl rounded-tl-sm border"
+                          className="flex items-center gap-3 px-4 py-3 rounded-2xl rounded-tl-sm border"
                           style={{ background: "var(--bg-surface-2, #141b28)", borderColor: "var(--border-subtle)" }}
                         >
-                          <WifiOff className="w-4 h-4 shrink-0 mt-0.5 opacity-40" style={{ color: "var(--text-secondary)" }} />
-                          <div className="space-y-0.5">
+                          <WifiOff className="w-4 h-4 shrink-0 opacity-30" style={{ color: "var(--text-secondary)" }} />
+                          <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium t-text">Compass is taking a breather</p>
-                            <p className="text-[11px] t-text-3 leading-relaxed">
-                              High demand right now — please try again in a few minutes.
-                            </p>
+                            <p className="text-[11px] t-text-3 mt-0.5">High demand right now — try again in a moment.</p>
                           </div>
+                          <button
+                            onClick={() => send("Try again")}
+                            className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold border transition-all hover:border-[#ff5100]/50 hover:text-[#ff5100]"
+                            style={{ borderColor: "var(--border-default)", color: "var(--text-tertiary)" }}
+                          >
+                            <RefreshCw className="w-3 h-3" />
+                            Retry
+                          </button>
                         </div>
                       )}
 
-                      {/* ACE card */}
+                      {/* ACE assessment card */}
                       {msg.suggestAce && (
                         <Link
                           href="/ace"
@@ -324,7 +334,9 @@ export default function InlineChat() {
                             </div>
                             <div className="flex-1 min-w-0">
                               <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#ff5100]">Personalised for you</span>
-                              <p className="text-sm font-bold t-text group-hover:text-[#ff5100] transition-colors mt-0.5">Take the ACE Assessment</p>
+                              <p className="text-sm font-bold t-text group-hover:text-[#ff5100] transition-colors mt-0.5">
+                                Take the ACE Assessment
+                              </p>
                               <p className="text-[11px] t-text-3 mt-1 leading-relaxed">
                                 Your Adventure Capability Engine profile matches you to adventures based on actual fitness, skills, and risk tolerance — not guesswork.
                               </p>
@@ -373,11 +385,11 @@ export default function InlineChat() {
             )}
           </div>
 
-          {/* Context-aware follow-up chips — animate in after reply */}
+          {/* Contextual follow-up chips — slides in after reply */}
           <div
             className="overflow-hidden transition-all duration-300 ease-out"
             style={{
-              maxHeight: showChips ? 56 : 0,
+              maxHeight: showChips ? 52 : 0,
               opacity: showChips ? 1 : 0,
               borderTop: showChips ? "1px solid var(--border-subtle)" : "none",
             }}
@@ -387,22 +399,20 @@ export default function InlineChat() {
               style={{ background: "var(--bg-page)", scrollbarWidth: "none" }}
             >
               <span
-                className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.15em] pr-1"
-                style={{ color: "var(--text-tertiary)" }}
+                className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.15em] mr-1 opacity-50 t-text"
               >
                 Refine
               </span>
-              <div className="w-px h-3 shrink-0 opacity-20" style={{ background: "var(--text-tertiary)" }} />
-              {activeChips.map((chip, idx) => (
+              <div className="w-px h-3 shrink-0 opacity-10 bg-white" />
+              {activeChips.map((chip) => (
                 <button
                   key={chip}
                   onClick={() => send(chip)}
-                  className="shrink-0 px-3 py-1 rounded-full text-[11px] font-medium border transition-all duration-200 hover:border-[#ff5100]/60 hover:text-[#ff5100] hover:bg-[#ff5100]/8 whitespace-nowrap"
+                  className="shrink-0 px-3 py-1 rounded-full text-[11px] font-medium border transition-all duration-200 hover:border-[#ff5100]/60 hover:text-[#ff5100] hover:bg-[#ff5100]/5 whitespace-nowrap"
                   style={{
                     borderColor: "var(--border-subtle)",
                     color: "var(--text-secondary)",
                     background: "transparent",
-                    animationDelay: `${idx * 60}ms`,
                   }}
                 >
                   {chip}
@@ -425,7 +435,7 @@ export default function InlineChat() {
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && send()}
+                onKeyDown={(e) => e.key === "Enter" && !loading && send()}
                 placeholder={messages.length > 0 ? "Refine or ask something new…" : "Ask Compass.AI…"}
                 className="flex-1 bg-transparent text-sm py-3 outline-none t-text placeholder:t-text-3"
                 style={{ color: "var(--text-primary)" }}
@@ -434,6 +444,7 @@ export default function InlineChat() {
             <button
               onClick={() => send()}
               disabled={!input.trim() || loading}
+              aria-label="Send message"
               className="shrink-0 h-10 w-10 flex items-center justify-center rounded-xl bg-[#ff5100] text-white disabled:opacity-25 hover:bg-[#ff7d47] active:scale-95 transition-all duration-200 shadow-lg shadow-[#ff5100]/20"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
@@ -460,7 +471,7 @@ function AdventureCards({
 }) {
   const colClass =
     cards.length === 1
-      ? "grid-cols-1 max-w-xs"
+      ? "grid-cols-1 max-w-sm"
       : cards.length === 2
       ? "grid-cols-2"
       : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
@@ -476,7 +487,7 @@ function AdventureCards({
             className="group flex flex-col rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ff5100]/30 hover:shadow-xl hover:shadow-[#ff5100]/5"
             style={{ background: "var(--bg-page)", borderColor: "var(--border-subtle)" }}
           >
-            {/* Hero image — always on top */}
+            {/* Hero image */}
             <div className="relative h-32 overflow-hidden shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -517,7 +528,7 @@ function AdventureCards({
               )}
             </div>
 
-            {/* Footer */}
+            {/* Footer CTA */}
             <div className="px-3 py-2 border-t flex items-center justify-between" style={{ borderColor: "var(--border-subtle)" }}>
               <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff5100]">View</span>
               <ArrowRight className="w-3 h-3 text-[#ff5100] group-hover:translate-x-0.5 transition-transform" />

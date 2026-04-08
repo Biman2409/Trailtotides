@@ -49,9 +49,10 @@ ${CATALOG_STR}
 ## Response rules:
 
 **Specific request** (place / activity / difficulty / duration mentioned):
-→ Reply in 1–2 friendly sentences, then end with exactly:
+→ Reply in 1 sentence max, then immediately follow with:
 <recommendations>[{"slug":"exact-slug","name":"Exact Name","reason":"why it fits in one sentence"}]</recommendations>
 → Recommend 1–3 adventures. ONLY use exact slugs from the catalog.
+→ Do NOT write more than one sentence before the recommendations block.
 
 **Vague request** ("something fun", "I want a trip", "recommend anything"):
 → Ask ONE focused question: "Mountains or coast?" / "How many days?" / "Trek, bike, or something else?"
@@ -223,15 +224,16 @@ function fallbackReason(adventure: typeof adventures[0], query: string): string 
 
 function detectIndecision(messages: { role: string; content: string }[]): boolean {
   const userMessages = messages.filter((m) => m.role === "user");
-  if (userMessages.length >= 4) return true;
 
+  // Only signal-based detection — never force ACE just because of round count
   if (userMessages.length >= 2) {
-    const recentText = userMessages.slice(-2).map((m) => m.content.toLowerCase()).join(" ");
+    const recentText = userMessages.slice(-3).map((m) => m.content.toLowerCase()).join(" ");
     const signals = [
       "don't know", "not sure", "no idea", "can't decide", "hard to choose",
       "help me decide", "overwhelmed", "confused", "am i ready",
       "fit enough", "what level", "my fitness", "not fit", "first time",
       "complete beginner", "total beginner", "which one", "can't choose",
+      "too many options", "so many choices",
     ];
     if (signals.some((s) => recentText.includes(s))) return true;
   }
@@ -243,8 +245,8 @@ function detectIndecision(messages: { role: string; content: string }[]): boolea
 function isComingSoonQuery(query: string): boolean {
   const q = query.toLowerCase();
   return COMING_SOON_TYPES.some((t) => q.includes(t.toLowerCase())) ||
-    // Common aliases
-    ["scuba", "dive", "diving", "paraglide", "balloon", "ice skate", "scramble"].some((w) => q.includes(w));
+    ["scuba", "dive", "diving", "paraglide", "paragliding", "balloon", "hot air",
+      "ice skate", "ice skating", "scramble", "scrambling"].some((w) => q.includes(w));
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
