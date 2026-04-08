@@ -1093,13 +1093,13 @@ export default function ExploreClient() {
             <div className="max-w-7xl mx-auto px-5 lg:px-8 py-12 lg:py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
               <div>
                 <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-2.5">
-                  Explore the map
+                  Adventure Map
                 </p>
                 <h2 className="text-white text-3xl lg:text-4xl font-semibold tracking-tight">
                   Adventures across India
                 </h2>
-                <p className="text-white/40 mt-2.5 text-sm lg:text-base">
-                  View all {adventures.length} adventures pinned on an interactive map.
+                <p className="text-white/40 mt-2.5 text-sm lg:text-base max-w-lg">
+                  View all adventures pinned on an interactive map — cluster by region, filter by type, and tap any pin to preview details.
                 </p>
               </div>
               <Link
@@ -1107,7 +1107,7 @@ export default function ExploreClient() {
                 className="inline-flex items-center justify-center gap-2.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap min-w-[220px]"
               >
                 <MapIcon className="w-4 h-4" />
-                  Open Map
+                  Explore the Map
                   <ArrowRight className="w-4 h-4" />
                 </Link>
             </div>
