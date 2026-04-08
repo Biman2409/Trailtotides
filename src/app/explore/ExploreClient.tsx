@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, ChevronLeft, Heart } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, ChevronLeft, Heart, RotateCcw, MapPin, Clock, BarChart2 } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import Link from "next/link";
@@ -105,7 +105,8 @@ export default function ExploreClient() {
   const [aiInput, setAiInput] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const aiBottomRef = useRef<HTMLDivElement>(null);
-  const AI_SUGGESTIONS = ["Easy Himalayan trek for beginners", "Scuba diving near islands", "Solo adventure in Northeast", "Extreme cycling in summer"];
+  const aiChatRef = useRef<HTMLDivElement>(null);
+  const AI_SUGGESTIONS = ["Easy Himalayan trek for beginners", "Ladakh bike expedition", "Solo adventure in Northeast", "Extreme cycling in summer"];
 
   useEffect(() => { setUserProfile(loadProfile()); }, []);
 
@@ -120,7 +121,9 @@ export default function ExploreClient() {
     }
   }, [scrollToSlug]);
 
-  useEffect(() => { aiBottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [aiMessages]);
+  useEffect(() => {
+    if (aiChatRef.current) aiChatRef.current.scrollTop = aiChatRef.current.scrollHeight;
+  }, [aiMessages, aiLoading]);
 
   async function sendAi(text?: string) {
     const msg = (text ?? aiInput).trim();
@@ -304,104 +307,139 @@ export default function ExploreClient() {
 
           {/* Compass.AI panel */}
           {aiOpen && (
-            <div className="border-t border-white/10 bg-[#141920] px-6 lg:px-8 py-5">
-              <div className="max-w-7xl mx-auto">
-                  <div className="border border-white/8 rounded-2xl overflow-hidden">
+            <div className="border-t border-white/10" style={{ background: "var(--bg-page)" }}>
+              <div className="max-w-4xl mx-auto px-5 lg:px-8 py-4">
+                <div
+                  className="rounded-2xl overflow-hidden shadow-[0_0_40px_-8px_rgba(0,0,0,0.5)] border"
+                  style={{ borderColor: "var(--border-subtle)", background: "var(--bg-surface)" }}
+                >
+                  {/* Header */}
+                  <div
+                    className="flex items-center justify-between px-4 py-2.5 border-b"
+                    style={{ borderColor: "var(--border-subtle)" }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <Compass className="w-3.5 h-3.5 text-[#ff5100]" strokeWidth={2} />
+                      <span className="text-[11px] font-bold tracking-wide" style={{ color: "var(--text-secondary)" }}>
+                        Compass.AI
+                      </span>
+                    </div>
                     {aiMessages.length > 0 && (
-                      <div className="max-h-[280px] overflow-y-auto p-4 space-y-3 bg-white/2">
+                      <button
+                        onClick={() => { setAiMessages([]); setAiInput(""); }}
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all hover:bg-white/5"
+                        style={{ color: "var(--text-tertiary)" }}
+                      >
+                        <RotateCcw className="w-3 h-3" />
+                        New chat
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Conversation */}
+                  <div
+                    ref={aiChatRef}
+                    className="overflow-y-auto"
+                    style={{ minHeight: 80, maxHeight: aiMessages.length > 0 ? 420 : "auto" }}
+                  >
+                    {/* Empty state */}
+                    {aiMessages.length === 0 && (
+                      <div className="px-5 py-6 flex flex-col gap-3">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--text-tertiary)" }}>
+                          Try asking
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {AI_SUGGESTIONS.map((s) => (
+                            <button
+                              key={s}
+                              onClick={() => sendAi(s)}
+                              className="px-3.5 py-1.5 rounded-full text-[12px] font-medium border transition-all hover:border-[#ff5100]/50 hover:text-[#ff5100] hover:bg-[#ff5100]/5"
+                              style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)", background: "var(--bg-page)" }}
+                            >
+                              {s}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Messages */}
+                    {aiMessages.length > 0 && (
+                      <div className="p-4 space-y-4">
                         {aiMessages.map((msg, i) => (
-                          <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                            <div className="max-w-[85%] space-y-2">
+                          <div key={i} className={`flex gap-2.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                            {msg.role === "assistant" && (
+                              <div className="shrink-0 w-6 h-6 rounded-lg bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center justify-center mt-0.5">
+                                <Compass className="w-3 h-3 text-[#ff5100]" strokeWidth={2} />
+                              </div>
+                            )}
+                            <div className={`space-y-2.5 ${msg.role === "assistant" ? "flex-1 min-w-0" : "max-w-[75%]"}`}>
                               {msg.content && (
                                 <div
-                                    className={`px-4 py-2.5 rounded-xl text-sm leading-relaxed ${
-                                      msg.role === "user"
-                                        ? "text-white rounded-br-sm"
-                                        : "bg-white/6 border border-white/8 text-white/80 rounded-bl-sm"
-                                    }`}
-                                    style={msg.role === "user" ? { background: "#ff5100" } : {}}
-                                  >
-                                    {msg.content}
-                                  </div>
-                                )}
-                                {msg.cards && msg.cards.length > 0 && (
-                                  <div className="grid gap-2">
-                                    {msg.cards.map((card: Adventure, ci: number) => {
-                                      const rec = msg.recommendations?.find((r) => r.slug === card.slug);
-                                      return (
-                                        <Link
-                                          key={ci}
-                                          href={`/adventure/${card.slug}`}
-                                          className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-white/16 rounded-xl overflow-hidden transition-all group"
-                                        >
-                                            <div className="relative w-16 h-16 flex-shrink-0">
-                                              <Image src={card.heroImage} alt={card.name} fill className="object-cover" sizes="64px" unoptimized />
-                                            </div>
-                                            <div className="p-3 flex-1 min-w-0">
-                                              <p className="text-white text-xs font-semibold tracking-tight uppercase">{card.name}</p>
-                                              <p className="text-white/40 text-xs mt-0.5 tracking-wide uppercase">{card.state} · {card.type} · {card.difficulty}</p>
-                                              {rec?.reason && <p className="text-[#ff5100] text-xs mt-1 line-clamp-1">{rec.reason}</p>}
-                                            </div>
-                                          <div className="flex items-center pr-3">
-                                            <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#ff5100] transition-colors" />
-                                          </div>
-                                        </Link>
-                                      );
-                                    })}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                          {aiLoading && (
-                            <div className="flex justify-start">
-                              <div className="bg-white/6 border border-white/8 px-4 py-2.5 rounded-xl rounded-bl-sm flex items-center gap-2">
-                                  <Loader2 className="w-3.5 h-3.5 text-[#ff5100] animate-spin" />
-                                    <span className="text-white/50 text-sm">Compass.AI is finding adventures…</span>
-                                    </div>
-                                  </div>
-                                )}
-      
-                              <div ref={aiBottomRef} />
-                            </div>
-                          )}
-                          {aiMessages.length === 0 && (
-                            <div className="px-4 pt-4 pb-3 bg-white/2">
-                              <p className="text-white/20 text-[10px] uppercase tracking-widest mb-3 font-semibold">Try asking Compass.AI</p>
-    
-                            <div className="flex flex-wrap gap-2">
-                              {AI_SUGGESTIONS.map((s) => (
-                                <button
-                                  key={s}
-                                  onClick={() => sendAi(s)}
-                                  className="text-xs border border-white/10 text-white/50 hover:text-white hover:border-[#ff5100]/50 hover:bg-[#ff5100]/5 px-3 py-1.5 rounded-full transition-all"
+                                  className={`px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                                    msg.role === "user" ? "text-white font-medium rounded-tr-sm" : "rounded-tl-sm border"
+                                  }`}
+                                  style={
+                                    msg.role === "user"
+                                      ? { background: "#ff5100" }
+                                      : { background: "var(--bg-surface-2,#141b28)", borderColor: "var(--border-subtle)", color: "var(--text-primary)" }
+                                  }
                                 >
-                                  {s}
-                                </button>
+                                  {msg.content}
+                                </div>
+                              )}
+                              {msg.cards && msg.cards.length > 0 && (
+                                <ExploreAiCards cards={msg.cards} recommendations={msg.recommendations} />
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                        {aiLoading && (
+                          <div className="flex gap-2.5 justify-start">
+                            <div className="shrink-0 w-6 h-6 rounded-lg bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center justify-center">
+                              <Compass className="w-3 h-3 text-[#ff5100]" strokeWidth={2} />
+                            </div>
+                            <div
+                              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl rounded-tl-sm border"
+                              style={{ background: "var(--bg-surface-2,#141b28)", borderColor: "var(--border-subtle)" }}
+                            >
+                              {[0,1,2].map((d) => (
+                                <span key={d} className="w-1.5 h-1.5 rounded-full bg-[#ff5100]/60 animate-bounce"
+                                  style={{ animationDelay: `${d * 0.15}s`, animationDuration: "0.8s" }} />
                               ))}
                             </div>
                           </div>
                         )}
-                          <div className="border-t border-white/8 p-3 flex gap-3 bg-white/3">
-                                <input
-                                  value={aiInput}
-                                  onChange={(e) => setAiInput(e.target.value)}
-                                  onKeyDown={(e) => e.key === "Enter" && sendAi()}
-                                  placeholder="Ask Compass.AI..."
-                                  className="flex-1 bg-white/6 border border-white/8 text-white placeholder-white/30 text-sm px-4 py-2.5 rounded-xl outline-none focus:border-[#ff5100]/50 transition-all"
-                                />
+                        <div ref={aiBottomRef} />
+                      </div>
+                    )}
+                  </div>
 
-                      <button
-                        onClick={() => sendAi()}
-                        disabled={!aiInput.trim() || aiLoading}
-                        className="disabled:opacity-30 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all hover:-translate-y-0.5"
-                        style={{ background: "#ff5100" }}
-                      >
-                        <Send className="w-4 h-4" />
-                        <span className="hidden sm:inline uppercase tracking-wider">Search</span>
-                      </button>
+                  {/* Input */}
+                  <div className="border-t p-3 flex items-center gap-2" style={{ borderColor: "var(--border-subtle)", background: "var(--bg-surface)" }}>
+                    <div
+                      className="flex items-center gap-2 flex-1 rounded-xl px-3.5 border transition-all focus-within:border-[#ff5100]/40"
+                      style={{ background: "var(--bg-page)", borderColor: "var(--border-default)" }}
+                    >
+                      <Compass className="w-3.5 h-3.5 text-[#ff5100]/50 shrink-0" />
+                      <input
+                        value={aiInput}
+                        onChange={(e) => setAiInput(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && !aiLoading && sendAi()}
+                        placeholder={aiMessages.length > 0 ? "Refine or ask something new…" : "Ask Compass.AI…"}
+                        className="flex-1 bg-transparent text-sm py-2.5 outline-none"
+                        style={{ color: "var(--text-primary)" }}
+                      />
                     </div>
-
+                    <button
+                      onClick={() => sendAi()}
+                      disabled={!aiInput.trim() || aiLoading}
+                      className="shrink-0 h-9 w-9 flex items-center justify-center rounded-xl bg-[#ff5100] text-white disabled:opacity-25 hover:bg-[#ff7d47] active:scale-95 transition-all shadow-lg shadow-[#ff5100]/20"
+                    >
+                      {aiLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1052,5 +1090,87 @@ export default function ExploreClient() {
 
         <Footer />
       </div>
+  );
+}
+
+// ─── Compass.AI adventure cards (explore panel) ────────────────────────────────
+
+function ExploreAiCards({
+  cards,
+  recommendations,
+}: {
+  cards: Adventure[];
+  recommendations?: { slug: string; name: string; reason: string }[];
+}) {
+  const colClass =
+    cards.length === 1
+      ? "grid-cols-1 max-w-xs"
+      : cards.length === 2
+      ? "grid-cols-2"
+      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+
+  return (
+    <div className={`grid gap-2.5 ${colClass}`}>
+      {cards.map((card, ci) => {
+        const rec = recommendations?.find((r) => r.slug === card.slug);
+        return (
+          <Link
+            key={ci}
+            href={`/experiences/${card.slug}`}
+            className="group flex flex-col rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ff5100]/30 hover:shadow-xl hover:shadow-[#ff5100]/5"
+            style={{ background: "var(--bg-page)", borderColor: "var(--border-subtle)" }}
+          >
+            {/* Hero image */}
+            <div className="relative h-28 overflow-hidden shrink-0">
+              <Image
+                src={card.heroImage}
+                alt={card.name}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                sizes="(max-width: 640px) 100vw, 300px"
+                unoptimized
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+              <div className="absolute bottom-2 left-2.5 flex items-center gap-1.5">
+                <span className="px-2 py-0.5 rounded-full bg-[#ff5100] text-white text-[9px] font-black uppercase tracking-wider">
+                  {card.type}
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-sm text-white/90 text-[9px] font-semibold flex items-center gap-0.5 border border-white/10">
+                  <MapPin className="w-2 h-2" />{card.state}
+                </span>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div className="p-2.5 flex-1 flex flex-col gap-1.5">
+              <h4 className="text-[12px] font-bold leading-snug group-hover:text-[#ff5100] transition-colors t-text line-clamp-2">
+                {card.name}
+              </h4>
+              <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                <span className="flex items-center gap-1 text-[10px] t-text-3">
+                  <BarChart2 className="w-2.5 h-2.5" />{card.difficulty}
+                </span>
+                {card.durationDays && (
+                  <span className="flex items-center gap-1 text-[10px] t-text-3">
+                    <Clock className="w-2.5 h-2.5" />{card.durationDays}
+                  </span>
+                )}
+              </div>
+              {rec?.reason && (
+                <p className="text-[10px] leading-relaxed t-text-3 italic pt-1.5 border-t mt-auto" style={{ borderColor: "var(--border-subtle)" }}>
+                  {rec.reason}
+                </p>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="px-2.5 py-2 border-t flex items-center justify-between" style={{ borderColor: "var(--border-subtle)" }}>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff5100]">View</span>
+              <ArrowRight className="w-3 h-3 text-[#ff5100] group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </Link>
+        );
+      })}
+    </div>
   );
 }
