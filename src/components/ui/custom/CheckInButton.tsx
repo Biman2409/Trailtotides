@@ -55,10 +55,10 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
         }
       >
         {loggedIn === false
-          ? <><LogIn className="w-2.5 h-2.5" />Done it</>
+          ? <><Trophy className="w-2.5 h-2.5" />Mark completed</>
           : done
-            ? <><Trophy className="w-2.5 h-2.5" />Done</>
-            : <><Trophy className="w-2.5 h-2.5" />Done it</>
+            ? <><Trophy className="w-2.5 h-2.5" />Completed</>
+            : <><Trophy className="w-2.5 h-2.5" />Mark completed</>
         }
       </button>
     );
