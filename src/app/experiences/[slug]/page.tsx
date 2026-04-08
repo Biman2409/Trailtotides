@@ -436,7 +436,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </AccordionSection>
 
             {/* Safety & Prep */}
-            <AccordionSection label="Preparation" title="Safety &amp; Prep" defaultOpen={true}>
+            <AccordionSection label="Safety &amp; Prep" title="" defaultOpen={true}>
               <div
                 className="rounded-2xl p-6 flex gap-4"
                 style={{
