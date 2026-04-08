@@ -595,9 +595,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </div>
 
-            {/* Compare CTA */}
-            <CompareCTA adventure={adventure} />
-
             {/* Operator Registration Panel */}
             <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
 
