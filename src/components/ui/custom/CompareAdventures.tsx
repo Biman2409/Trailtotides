@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { X, ArrowRight, GitCompareArrows, LogIn, GitCompare, Heart, Plus, ChevronDown } from "lucide-react";
+import { X, ArrowRight, GitCompareArrows, LogIn, GitCompare, Heart, Plus, ChevronDown, Search } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -124,10 +124,85 @@ function WishlistPicker({ onSelect }: { onSelect: (a: Adventure) => void }) {
               </div>
               <div className="min-w-0">
                 <p className="text-white text-xs font-semibold truncate">{a.name}</p>
-                <p className="text-white/35 text-[10px] truncate">{a.state}</p>
+                <p className="text-white/35 text-[10px] truncate">{a.type}{a.state ? ` · ${a.state}` : ""}</p>
               </div>
             </button>
           ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SearchPicker({ onSelect }: { onSelect: (a: Adventure) => void }) {
+  const { selected } = useCompare();
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const ref = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const results = adventures
+    .filter(a => !selected.find(s => s.id === a.id))
+    .filter(a => a.name.toLowerCase().includes(query.toLowerCase()) || (a.state ?? "").toLowerCase().includes(query.toLowerCase()))
+    .slice(0, 8);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) { setOpen(false); setQuery(""); }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const handleOpen = () => { setOpen(true); setTimeout(() => inputRef.current?.focus(), 50); };
+
+  return (
+    <div ref={ref} className="relative">
+      {!open ? (
+        <button
+          onClick={handleOpen}
+          className="w-full rounded-xl border border-dashed border-white/15 bg-white/2 hover:border-[#ff5100]/40 hover:bg-[#ff5100]/5 flex flex-col items-center justify-center min-h-[88px] gap-1.5 transition-all group"
+        >
+          <div className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+            style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.15)" }}>
+            <Plus className="w-3.5 h-3.5 text-[#ff5100]/60" />
+          </div>
+          <span className="text-white/35 text-xs font-medium group-hover:text-white/55 transition-colors">Add adventure</span>
+        </button>
+      ) : (
+        <div className="rounded-xl border border-[#ff5100]/30 overflow-hidden" style={{ background: "#0d1520" }}>
+          <div className="flex items-center gap-2 px-3 py-2.5 border-b border-white/8">
+            <Search className="w-3.5 h-3.5 text-white/30 shrink-0" />
+            <input
+              ref={inputRef}
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Search adventures…"
+              className="flex-1 bg-transparent text-white text-xs placeholder:text-white/25 outline-none"
+            />
+            <button onClick={() => { setOpen(false); setQuery(""); }} className="text-white/30 hover:text-white/60 transition-colors">
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          <div style={{ maxHeight: "200px", overflowY: "auto" }}>
+            {results.length === 0 ? (
+              <p className="text-white/25 text-xs text-center py-4">No adventures found</p>
+            ) : results.map(a => (
+              <button
+                key={a.slug}
+                onClick={() => { onSelect(a); setOpen(false); setQuery(""); }}
+                className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 transition-colors text-left"
+              >
+                <div className="relative w-9 h-9 rounded-lg overflow-hidden shrink-0">
+                  <Image src={a.heroImage} alt={a.name} fill className="object-cover" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-white text-xs font-semibold truncate">{a.name}</p>
+                  <p className="text-white/35 text-[10px] truncate">{a.type}{a.state ? ` · ${a.state}` : ""}</p>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -204,7 +279,7 @@ export default function CompareAdventures() {
                   <div className="px-2.5 py-2 flex items-center justify-between gap-2">
                     <div className="min-w-0">
                       <p className="text-white text-xs font-semibold truncate">{adventure.name}</p>
-                      <p className="text-white/40 text-[10px] truncate">{adventure.state}</p>
+                      <p className="text-white/40 text-[10px] truncate">{adventure.type}{adventure.state ? ` · ${adventure.state}` : ""}</p>
                     </div>
                     <button onClick={() => remove(adventure.id)} className="shrink-0 w-5 h-5 rounded-full bg-white/10 hover:bg-red-500/30 flex items-center justify-center transition-colors" aria-label="Remove">
                       <X className="w-2.5 h-2.5 text-white/70" />
@@ -217,10 +292,7 @@ export default function CompareAdventures() {
                   {loggedIn === true ? (
                     <WishlistPicker onSelect={(a) => add(a)} />
                   ) : (
-                    <div className="rounded-xl border border-dashed border-white/10 flex flex-col items-center justify-center min-h-[88px] gap-1.5 text-white/20 text-xs">
-                      <Plus className="w-3.5 h-3.5 opacity-40" />
-                      <span>Add from cards above</span>
-                    </div>
+                    <SearchPicker onSelect={(a) => add(a)} />
                   )}
                 </div>
               ))}
