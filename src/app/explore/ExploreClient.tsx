@@ -234,7 +234,7 @@ export default function ExploreClient() {
             All Adventures
           </h1>
           <p className="text-white/40 text-base lg:text-lg max-w-2xl leading-relaxed">
-            Every adventure across India — search, filter, and find what fits you.
+            Every adventure across the Indian subcontinent — search, filter, and find what fits you.
           </p>
         </div>
       </div>
