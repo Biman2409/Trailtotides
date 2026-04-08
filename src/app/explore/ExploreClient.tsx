@@ -106,7 +106,7 @@ export default function ExploreClient() {
   const [aiLoading, setAiLoading] = useState(false);
   const aiBottomRef = useRef<HTMLDivElement>(null);
   const aiChatRef = useRef<HTMLDivElement>(null);
-  const AI_SUGGESTIONS = ["Easy Himalayan trek for beginners", "Ladakh bike expedition", "Solo adventure in Northeast", "Extreme cycling in summer"];
+  const AI_SUGGESTIONS = ["Easy Himalayan trek for beginners", "Ladakh bike expedition", "Solo adventure in Northeast"];
 
   useEffect(() => { setUserProfile(loadProfile()); }, []);
 
@@ -323,6 +323,9 @@ export default function ExploreClient() {
                       <Compass className="w-3.5 h-3.5 text-[#ff5100]" strokeWidth={2} />
                       <span className="text-[11px] font-bold tracking-wide" style={{ color: "var(--text-secondary)" }}>
                         Compass.AI
+                      </span>
+                      <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-md" style={{ color: "var(--text-tertiary)", background: "var(--bg-page)", border: "1px solid var(--border-subtle)" }}>
+                        Powered by Groq
                       </span>
                     </div>
                     {aiMessages.length > 0 && (
