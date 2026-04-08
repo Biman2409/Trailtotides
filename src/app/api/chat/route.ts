@@ -5,116 +5,125 @@ import type { AdventureType } from "@/lib/data";
 
 const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-// ─── Dynamically derive available vs coming-soon types from the actual data ───
+// ─── Dynamically derive available vs coming-soon types ────────────────────────
 
-// All types the platform supports (defined in the type system)
 const ALL_TYPES: AdventureType[] = [
   "Trekking", "Biking", "Cycling", "Diving", "Kayaking", "Skiing",
   "Mountaineering", "Rock Climbing", "Scrambling", "Jeep Safari", "Caving",
   "Urban Adventure", "Paragliding", "Hot Air Balloon", "Ice Skating",
 ];
 
-// Types that have at least one real adventure in the catalog
 const AVAILABLE_TYPES = [...new Set(adventures.map((a) => a.type))];
-
-// Types that are defined but have no live adventures yet
 const COMING_SOON_TYPES = ALL_TYPES.filter((t) => !AVAILABLE_TYPES.includes(t));
 
-// Compact adventure list for context window efficiency
-const ADVENTURE_LIST = adventures.map((a) => ({
+// ─── Slim catalog: only what the model needs for lookup ──────────────────────
+// Exclude long free-text fields (description, tagline, etc.) to save tokens
+
+const CATALOG = adventures.map((a) => ({
   slug: a.slug,
   name: a.name,
   state: a.state,
   type: a.type,
   difficulty: a.difficulty,
-  duration: a.durationDays,
-  altitude: a.altitude ?? null,
+  days: a.durationDays,
   region: a.region,
-  tags: (a.tags ?? []).slice(0, 6),
+  altitude: a.altitude ?? undefined,
+  tags: (a.tags ?? []).slice(0, 4),
   season: a.bestSeason,
 }));
 
-const ADVENTURE_LIST_STR = JSON.stringify(ADVENTURE_LIST);
+const CATALOG_STR = JSON.stringify(CATALOG);
 
-const SYSTEM_PROMPT = `You are Compass.AI — a friendly, knowledgeable Indian adventure travel advisor for Trail to Tides (trailtotides.com).
+// ─── System prompt ────────────────────────────────────────────────────────────
 
-You help users find their perfect adventure in India. You're conversational, warm, and genuinely enthusiastic about the outdoors.
+const SYSTEM_PROMPT = `You are Compass.AI — a warm, knowledgeable Indian adventure travel advisor for Trail to Tides.
 
-## Live adventure catalog (JSON):
-${ADVENTURE_LIST_STR}
+## Live catalog (JSON — use ONLY these slugs):
+${CATALOG_STR}
 
-## Adventure types currently LIVE on Trail to Tides:
-${AVAILABLE_TYPES.join(", ")}
+## LIVE types: ${AVAILABLE_TYPES.join(", ")}
+## COMING SOON (no live adventures yet): ${COMING_SOON_TYPES.join(", ")}
 
-## Adventure types COMING SOON (not yet available):
-${COMING_SOON_TYPES.join(", ")}
+---
 
-## How to respond:
+## Response rules:
 
-**For clear requests** (place / activity / difficulty / duration / season specified):
-- Write 1–3 natural sentences responding to the user.
-- Then embed a JSON recommendations block at the END of your message:
-<recommendations>[{"slug":"exact-slug","name":"Exact Name","reason":"one concise sentence why this fits them"}]</recommendations>
-- Pick 1–3 adventures that best match. Use ONLY exact slugs from the catalog above.
+**Specific request** (place / activity / difficulty / duration mentioned):
+→ Reply in 1–2 friendly sentences, then end with exactly:
+<recommendations>[{"slug":"exact-slug","name":"Exact Name","reason":"why it fits in one sentence"}]</recommendations>
+→ Recommend 1–3 adventures. ONLY use exact slugs from the catalog.
 
-**For coming-soon adventure types** (e.g. Diving, Paragliding, Hot Air Balloon, Ice Skating, Scrambling):
-- Warmly let the user know that type is coming soon to Trail to Tides.
-- Be specific and enthusiastic — mention the kinds of locations or experiences being planned if you can (e.g. for Diving: Andamans, Lakshadweep; for Paragliding: Bir Billing, Manali; for Hot Air Balloon: Rajasthan).
-- Ask if they'd like to explore something from what's currently available.
-- Do NOT recommend unrelated adventures without asking first.
-- Do NOT embed a <recommendations> block unless they explicitly say yes.
+**Vague request** ("something fun", "I want a trip", "recommend anything"):
+→ Ask ONE focused question: "Mountains or coast?" / "How many days?" / "Trek, bike, or something else?"
+→ No recommendations yet.
 
-**For vague or open-ended requests** (e.g. "something adventurous", "I want a trip", "recommend anything"):
-- Ask ONE focused follow-up question to narrow it down. Examples: "Mountains or coast?" / "How many days do you have?" / "What activity sounds most exciting — trek, bike, or something else?"
-- Do NOT embed recommendations yet.
+**Refinement** ("something easier", "different state", "shorter"):
+→ Acknowledge briefly, give new recommendations.
 
-**For follow-ups and refinements** (e.g. "something easier", "closer to Delhi", "shorter"):
-- Acknowledge naturally, then give updated recommendations referencing what came before.
+**Coming-soon type** (Diving, Paragliding, Hot Air Balloon, Ice Skating, Scrambling):
+→ Say it's coming soon, name exciting planned locations (Diving→Andamans/Lakshadweep; Paragliding→Bir Billing/Kullu; HotAirBalloon→Rajasthan; IceSkating→Shimla/Manali).
+→ Ask if they want to explore what's live instead.
+→ No <recommendations> block yet.
 
-**For off-topic or general travel chat** (e.g. "what's the weather in Ladakh", "best time to visit Spiti", "tell me about Kashmir"):
-- Engage warmly and helpfully with general knowledge, then steer back to finding an adventure.
+**General travel chat** (weather, best time, about a place):
+→ Answer warmly with general knowledge, then offer to find an adventure there.
 
-**For ACE suggestion** — suggest the ACE assessment when ANY of these apply:
-- User has gone back and forth (3+ exchanges) without settling.
-- User expresses confusion about their fitness: "not sure if I can", "am I ready for", "what level am I".
-- User is overwhelmed: "I don't know", "too many options", "can't decide".
-- User asks what suits their fitness or experience level.
-When suggesting ACE: include <suggest_ace/> AND write 1–2 warm sentences explaining what it is. You CAN still include recommendations alongside ACE.
+**User confused / indecisive** (fitness doubts, "I don't know", "can't decide"):
+→ Include <suggest_ace/> + 1 sentence about what ACE does.
+→ Still give recommendations if you can make a reasonable guess.
 
-## Rules:
-- Use ONLY slugs from the live catalog. Never invent slugs.
-- Keep conversational text under 3 sentences before the recommendations block.
-- Don't repeat already-recommended adventures unless asked.
-- Speak naturally — you're Compass, not a chatbot.
-- If nothing in the catalog fits, say so honestly and ask a clarifying question.`;
+## Hard rules:
+- ONLY use slugs from the catalog above. Never invent slugs.
+- Never recommend a coming-soon type — say it's coming soon instead.
+- Keep text responses concise (1–3 sentences max before any recommendations).
+- Don't say "I" awkwardly. Speak as Compass, not a generic bot.`;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function resolveSlug(slug: string): string {
+function resolveSlug(raw: string): string | null {
+  const slug = raw?.trim();
+  if (!slug) return null;
+
+  // Exact match
   if (adventures.find((a) => a.slug === slug)) return slug;
-  const clean = slug.toLowerCase().trim();
-  const partial = adventures.find(
-    (a) =>
-      a.slug.includes(clean) ||
-      clean.includes(a.slug) ||
-      a.name.toLowerCase().replace(/\s+/g, "-") === clean ||
-      a.name.toLowerCase() === clean.replace(/-/g, " ")
-  );
-  return partial ? partial.slug : slug;
+
+  const clean = slug.toLowerCase();
+  const nameFromSlug = clean.replace(/-/g, " ");
+
+  // Try various fuzzy matches
+  const match = adventures.find((a) => {
+    const aSlug = a.slug.toLowerCase();
+    const aName = a.name.toLowerCase();
+    return (
+      aSlug === clean ||
+      aName === nameFromSlug ||
+      aName.replace(/\s+/g, "-") === clean ||
+      aSlug.includes(clean) ||
+      clean.includes(aSlug) ||
+      aName.includes(nameFromSlug) ||
+      nameFromSlug.includes(aName)
+    );
+  });
+
+  return match ? match.slug : null;
 }
 
 function parseRecommendations(content: string) {
   const recMatch = content.match(/<recommendations>([\s\S]*?)<\/recommendations>/);
   if (!recMatch) return [];
   try {
-    const parsed = JSON.parse(recMatch[1].trim());
+    const raw = recMatch[1].trim();
+    const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
+
     return parsed
-      .map((r: Record<string, string>) => ({
-        slug: resolveSlug(r.slug ?? ""),
-        name: r.name ?? "",
-        reason: r.reason ?? "",
-      }))
+      .map((r: Record<string, string>) => {
+        const resolvedSlug = resolveSlug(r.slug ?? "");
+        return resolvedSlug
+          ? { slug: resolvedSlug, name: r.name ?? "", reason: r.reason ?? "" }
+          : null;
+      })
+      .filter((r): r is { slug: string; name: string; reason: string } => r !== null)
       .filter((r) => adventures.find((a) => a.slug === r.slug));
   } catch {
     return [];
@@ -128,30 +137,39 @@ function cleanText(content: string): string {
     .trim();
 }
 
+// ─── Keyword fallback ─────────────────────────────────────────────────────────
+
 function keywordSearch(query: string, limit = 3) {
   const q = query.toLowerCase();
   const words = q.split(/\s+/).filter((w) => w.length > 2);
 
   const synonyms: Record<string, string[]> = {
-    beginner: ["beginner-friendly", "Easy", "Moderate"],
-    easy: ["beginner-friendly", "Easy", "Moderate"],
+    beginner: ["Easy", "Moderate", "beginner"],
+    easy: ["Easy", "Moderate", "beginner"],
     hard: ["Hard", "Advanced", "Extreme"],
     difficult: ["Hard", "Advanced"],
     challenging: ["Hard", "Advanced"],
-    bike: ["Biking", "motorcycle"],
+    extreme: ["Extreme", "Advanced"],
+    bike: ["Biking"],
+    biking: ["Biking"],
     motorbike: ["Biking"],
     motorcycle: ["Biking"],
     cycle: ["Cycling"],
     cycling: ["Cycling"],
     climb: ["Mountaineering", "Rock Climbing"],
     mountaineering: ["Mountaineering"],
-    snow: ["glacier", "winter", "skiing"],
+    snow: ["glacier", "winter", "skiing", "snow"],
     skiing: ["Skiing"],
+    kayak: ["Kayaking"],
     kayaking: ["Kayaking"],
-    andaman: ["Islands"],
-    kerala: ["Malabar", "Western Ghats"],
-    kashmir: ["Jammu & Kashmir"],
-    himachal: ["Himachal Pradesh"],
+    cave: ["Caving"],
+    caving: ["Caving"],
+    jeep: ["Jeep Safari"],
+    safari: ["Jeep Safari"],
+    andaman: ["andaman"],
+    kerala: ["Kerala", "Western Ghats"],
+    kashmir: ["Kashmir", "Jammu"],
+    himachal: ["Himachal"],
     ladakh: ["Ladakh"],
     uttarakhand: ["Uttarakhand"],
     sikkim: ["Sikkim"],
@@ -159,13 +177,13 @@ function keywordSearch(query: string, limit = 3) {
     spiti: ["Spiti"],
     weekend: ["2 days", "3 days"],
     summit: ["summit", "peak", "Mountaineering"],
-    lake: ["lake", "lakes"],
+    lake: ["lake"],
     glacier: ["glacier"],
     pass: ["pass"],
-    family: ["beginner-friendly", "Easy", "Moderate"],
-    solo: ["Solo"],
-    remote: ["remote", "isolation"],
-    scenic: ["scenic", "views", "viewpoint"],
+    family: ["Easy", "Moderate", "beginner"],
+    solo: ["solo"],
+    remote: ["remote"],
+    scenic: ["scenic", "views"],
   };
 
   const expandedTerms = [...words];
@@ -176,10 +194,7 @@ function keywordSearch(query: string, limit = 3) {
   const scored = adventures.map((a) => {
     const haystack = [
       a.name, a.state, a.type, a.difficulty ?? "", a.region ?? "",
-      ...(a.tags ?? []),
-      a.tagline ?? "",
-      a.description ?? "",
-      a.bestSeason ?? "",
+      ...(a.tags ?? []), a.tagline ?? "", a.description ?? "", a.bestSeason ?? "",
     ].join(" ").toLowerCase();
 
     let score = 0;
@@ -198,31 +213,38 @@ function keywordSearch(query: string, limit = 3) {
 
 function fallbackReason(adventure: typeof adventures[0], query: string): string {
   const q = query.toLowerCase();
-  if (q.includes(adventure.state.toLowerCase())) return `Located in ${adventure.state}, which matches your search.`;
-  if (q.includes(adventure.type.toLowerCase())) return `A popular ${adventure.type} adventure matching your interests.`;
-  if (adventure.difficulty === "Easy" || adventure.difficulty === "Moderate") return `Great for those new to ${adventure.type.toLowerCase()}.`;
-  return `One of the top-rated ${adventure.type} adventures in India.`;
+  if (q.includes(adventure.state.toLowerCase())) return `Located in ${adventure.state}, matching your region preference.`;
+  if (q.includes(adventure.type.toLowerCase())) return `A well-rated ${adventure.type} adventure in India.`;
+  if (adventure.difficulty === "Easy" || adventure.difficulty === "Moderate") return `Accessible for most fitness levels — a great starting point.`;
+  return `One of the top ${adventure.type} experiences on Trail to Tides.`;
 }
+
+// ─── Indecision detection ────────────────────────────────────────────────────
 
 function detectIndecision(messages: { role: string; content: string }[]): boolean {
   const userMessages = messages.filter((m) => m.role === "user");
-  const roundCount = userMessages.length;
+  if (userMessages.length >= 4) return true;
 
-  if (roundCount >= 3) {
-    const recentText = userMessages.slice(-3).map((m) => m.content.toLowerCase()).join(" ");
+  if (userMessages.length >= 2) {
+    const recentText = userMessages.slice(-2).map((m) => m.content.toLowerCase()).join(" ");
     const signals = [
       "don't know", "not sure", "no idea", "can't decide", "hard to choose",
-      "help me decide", "don't mind", "anything", "whatever", "too many",
-      "overwhelmed", "confused", "lost", "am i ready", "fit enough",
-      "what level", "my fitness", "my capability", "not fit", "never done",
-      "first time", "complete beginner", "total beginner", "which one",
-      "so many options", "can't choose",
+      "help me decide", "overwhelmed", "confused", "am i ready",
+      "fit enough", "what level", "my fitness", "not fit", "first time",
+      "complete beginner", "total beginner", "which one", "can't choose",
     ];
     if (signals.some((s) => recentText.includes(s))) return true;
   }
 
-  if (roundCount >= 4) return true;
   return false;
+}
+
+// Check if query is about a coming-soon type (to skip keyword fallback)
+function isComingSoonQuery(query: string): boolean {
+  const q = query.toLowerCase();
+  return COMING_SOON_TYPES.some((t) => q.includes(t.toLowerCase())) ||
+    // Common aliases
+    ["scuba", "dive", "diving", "paraglide", "balloon", "ice skate", "scramble"].some((w) => q.includes(w));
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -237,7 +259,7 @@ export async function POST(req: NextRequest) {
     const serverDetectedIndecision = detectIndecision(messages);
 
     const systemContent = serverDetectedIndecision
-      ? SYSTEM_PROMPT + "\n\n[HINT: User seems indecisive after several exchanges. Include <suggest_ace/> alongside any recommendations.]"
+      ? SYSTEM_PROMPT + "\n\n[HINT: User seems indecisive. Include <suggest_ace/> in your response alongside any recommendations.]"
       : SYSTEM_PROMPT;
 
     const groqMessages: { role: "user" | "assistant" | "system"; content: string }[] = [
@@ -248,16 +270,55 @@ export async function POST(req: NextRequest) {
       })),
     ];
 
-    const response = await client.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
-      messages: groqMessages,
-      temperature: 0.55,
-      max_tokens: 700,
-    });
+    let rawContent = "";
 
-    const rawContent = response.choices[0].message.content ?? "";
+    try {
+      const response = await client.chat.completions.create({
+        model: "llama-3.3-70b-versatile",
+        messages: groqMessages,
+        temperature: 0.5,
+        max_tokens: 500,
+      });
+      rawContent = response.choices[0].message.content ?? "";
+    } catch (groqErr: unknown) {
+      // Rate limit or API error — try lighter model as fallback
+      const errMsg = groqErr instanceof Error ? groqErr.message : String(groqErr);
+      const isRateLimit = errMsg.includes("429") || errMsg.includes("rate_limit") || errMsg.includes("Rate limit");
+
+      if (isRateLimit) {
+        try {
+          const fallbackResponse = await client.chat.completions.create({
+            model: "llama-3.1-8b-instant",
+            messages: groqMessages,
+            temperature: 0.5,
+            max_tokens: 500,
+          });
+          rawContent = fallbackResponse.choices[0].message.content ?? "";
+        } catch {
+          // Both models failed — use keyword search only
+          const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
+          const fallback = keywordSearch(lastQuery, 3);
+          if (fallback.length > 0) {
+            return NextResponse.json({
+              text: "Here are some adventures that match what you're looking for.",
+              recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery) })),
+              cards: fallback,
+              suggestAce: serverDetectedIndecision,
+            });
+          }
+          return NextResponse.json({
+            text: "Compass is a bit busy right now — please try again in a moment.",
+            recommendations: [],
+            cards: [],
+            suggestAce: false,
+          });
+        }
+      } else {
+        throw groqErr;
+      }
+    }
+
     const suggestAce = /<suggest_ace\s*\/>/.test(rawContent) || serverDetectedIndecision;
-
     const recommendations = parseRecommendations(rawContent);
     const cards = recommendations
       .map((r) => adventures.find((a) => a.slug === r.slug))
@@ -267,31 +328,24 @@ export async function POST(req: NextRequest) {
 
     if (!text && recommendations.length > 0) {
       const names = recommendations.map((r) => r.name);
-      if (names.length === 1) text = `Here's a great pick for you — ${names[0]}.`;
-      else text = `Here are ${names.length} adventures that match what you're looking for.`;
+      text = names.length === 1
+        ? `Here's a great pick — ${names[0]}.`
+        : `Here are ${names.length} adventures that match.`;
     }
 
     if (cards.length > 0) {
       return NextResponse.json({ text, recommendations, cards, suggestAce });
     }
 
-    // Keyword fallback — but skip if the model already gave a coming-soon / informational response
+    // Keyword fallback — skip if it's clearly a coming-soon query
     const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
-    const isComingSoonQuery = COMING_SOON_TYPES.some((t) =>
-      lastQuery.toLowerCase().includes(t.toLowerCase())
-    );
 
-    if (!isComingSoonQuery) {
-      const fallback = keywordSearch(lastQuery);
+    if (!isComingSoonQuery(lastQuery)) {
+      const fallback = keywordSearch(lastQuery, 3);
       if (fallback.length > 0) {
-        const fallbackRecs = fallback.map((a) => ({
-          slug: a.slug,
-          name: a.name,
-          reason: fallbackReason(a, lastQuery),
-        }));
         return NextResponse.json({
-          text: text || "Here are some adventures that might match what you're looking for.",
-          recommendations: fallbackRecs,
+          text: text || "Here are some adventures that might match.",
+          recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery) })),
           cards: fallback,
           suggestAce,
         });
@@ -299,7 +353,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({
-      text: text || "Could you tell me more about what you're looking for — region, activity type, or how many days you have?",
+      text: text || "Could you tell me a bit more — which region or type of adventure interests you?",
       recommendations: [],
       cards: [],
       suggestAce,
