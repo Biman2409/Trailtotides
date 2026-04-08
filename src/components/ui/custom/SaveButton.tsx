@@ -30,7 +30,9 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
     e.preventDefault();
     e.stopPropagation();
     if (loggedIn === false) {
-      toast.error("Log in to save adventures.");
+      toast.error("Log in to save adventures.", {
+        action: { label: "Log in", onClick: () => router.push("/auth/login") },
+      });
       return;
     }
     const wasSaved = saved;
