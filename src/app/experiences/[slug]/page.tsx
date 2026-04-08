@@ -434,6 +434,58 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </AccordionSection>
 
+            {/* Safety & Prep */}
+            <section>
+              <div
+                className="rounded-2xl p-6 flex gap-4"
+                style={{
+                  background: "linear-gradient(135deg, rgba(245,158,11,0.07) 0%, rgba(180,83,9,0.03) 100%)",
+                  border: "1px solid rgba(245,158,11,0.18)",
+                }}
+              >
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: "rgba(245,158,11,0.12)" }}>
+                  <AlertTriangle className="w-4 h-4 text-amber-400" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-white/55 text-sm leading-relaxed">{adventure.safetyNotes}</p>
+                  {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {showAltitudeWarning && (
+                        <span className="inline-flex items-center gap-1.5 text-yellow-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(234,179,8,0.12)", border: "1px solid rgba(234,179,8,0.25)" }}>
+                          ⚠ Acute Mountain Sickness
+                        </span>
+                      )}
+                      {showPhysicalExhaustionWarning && (
+                        <span className="inline-flex items-center gap-1.5 text-orange-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(251,146,60,0.1)", border: "1px solid rgba(251,146,60,0.25)" }}>
+                          ⚠ Physical Exhaustion
+                        </span>
+                      )}
+                      {showFatalFallWarning && (
+                        <span className="inline-flex items-center gap-1.5 text-red-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)" }}>
+                          ⚠ Fatal Fall Risk
+                        </span>
+                      )}
+                      {showExtremeIsolationWarning && (
+                        <span className="inline-flex items-center gap-1.5 text-sky-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(56,189,248,0.1)", border: "1px solid rgba(56,189,248,0.25)" }}>
+                          ⚠ Extreme Isolation
+                        </span>
+                      )}
+                      {showTechnicalWarning && (
+                        <span className="inline-flex items-center gap-1.5 text-violet-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.25)" }}>
+                          ⚠ Technical Terrain
+                        </span>
+                      )}
+                      {showWaterWarning && (
+                        <span className="inline-flex items-center gap-1.5 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.25)" }}>
+                          ⚠ Open Water
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+
             {/* ACE Profile */}
             <ACEProfileSection
               ace={ace}
