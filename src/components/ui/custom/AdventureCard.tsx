@@ -129,20 +129,8 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
           ) : null}
         </div>
 
-        {/* Top-right: Compare + Save + CheckIn buttons */}
+        {/* Top-right: Save + CheckIn buttons */}
         <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5">
-          <button
-            onClick={handleCompare}
-            disabled={!inCompare && isFull}
-            aria-label={inCompare ? "Remove from compare" : "Compare"}
-            className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm disabled:opacity-40 disabled:cursor-not-allowed"
-            style={inCompare
-              ? { background: "rgba(255,81,0,0.9)", color: "#fff", boxShadow: "0 0 0 1px rgba(255,81,0,0.5), 0 0 10px rgba(255,81,0,0.35)" }
-              : { background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.7)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }
-            }
-          >
-            <GitCompare className="w-3.5 h-3.5" />
-          </button>
           <SaveButton slug={adventure.slug} variant="card" />
           <CheckInButton slug={adventure.slug} variant="card" />
         </div>
@@ -163,24 +151,40 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         </div>
       </div>
 
-        {/* Dashboard — duration left, operators right */}
-        <div className="px-3 py-2.5 flex items-center justify-between gap-2">
-          <span className="text-white/50 text-[10px] font-medium leading-none">{adventure.durationDays}</span>
-
-          {operatorCount > 0 && (
-            <div className="flex items-center gap-1 text-[10px] leading-none">
-              <BadgeCheck className="w-3 h-3 text-emerald-400/80 shrink-0" />
-                <span className="text-white/40">
-                  <span className="text-white/65 font-semibold">{displayCount}</span> operators
+        {/* Dashboard — duration + operators, then compare button */}
+        <div className="px-3 pt-2.5 pb-2 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="text-white/50 text-[10px] font-medium leading-none shrink-0">{adventure.durationDays}</span>
+            {operatorCount > 0 && (
+              <div className="flex items-center gap-1 text-[10px] leading-none min-w-0">
+                <BadgeCheck className="w-3 h-3 text-emerald-400/80 shrink-0" />
+                <span className="text-white/40 truncate">
+                  <span className="text-white/65 font-semibold">{displayCount}</span> ops
                   {lowestPrice && (
                     <>
                       <span className="text-white/20 mx-1">·</span>
-                      <span className="text-[#ff5100]/85 font-semibold">₹{lowestPrice.toLocaleString("en-IN")} onwards</span>
+                      <span className="text-[#ff5100]/85 font-semibold">₹{lowestPrice.toLocaleString("en-IN")}+</span>
                     </>
                   )}
                 </span>
-            </div>
-          )}
+              </div>
+            )}
+          </div>
+
+          {/* Compare pill */}
+          <button
+            onClick={handleCompare}
+            disabled={!inCompare && isFull}
+            aria-label={inCompare ? "Remove from compare" : "Add to Compare"}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[11px] font-semibold transition-all duration-200 active:scale-95 shrink-0 disabled:opacity-35 disabled:cursor-not-allowed select-none"
+            style={inCompare
+              ? { background: "rgba(255,81,0,0.18)", color: "#ff7d47", boxShadow: "0 0 0 1.5px rgba(255,81,0,0.45)" }
+              : { background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.45)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }
+            }
+          >
+            <GitCompare className="w-3 h-3 shrink-0" />
+            {inCompare ? "Added" : "Compare"}
+          </button>
         </div>
     </div>
   );

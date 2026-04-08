@@ -243,8 +243,17 @@ export default function CompareAdventures() {
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-white/10 flex items-center justify-center min-h-[100px] mb-8">
-              <p className="text-white/25 text-sm">Use the <span className="text-white/50 font-semibold">compare</span> button on any adventure card to add it here</p>
+            <div className="rounded-2xl border border-dashed border-white/10 flex flex-col sm:flex-row items-center justify-center gap-4 min-h-[100px] mb-8 px-6 py-6">
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-white/30 text-sm">Tap the</span>
+                {/* Mini replica of the compare button pill */}
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[11px] font-semibold"
+                  style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.8)", border: "1px solid rgba(255,255,255,0.13)" }}>
+                  <GitCompare className="w-3 h-3" />
+                  Compare
+                </span>
+                <span className="text-white/30 text-sm">button on any adventure card above</span>
+              </div>
             </div>
           )
         )}
