@@ -65,7 +65,7 @@ export default function ACEProfileSection({
   return (
     <section>
       <div className="flex items-center justify-between mb-5">
-        <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase">completed</p>
+        <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase">ace profile</p>
         <GradingPill />
       </div>
 
