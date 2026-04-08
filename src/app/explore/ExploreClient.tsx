@@ -1077,7 +1077,6 @@ export default function ExploreClient() {
           <div className="max-w-7xl mx-auto px-5 lg:px-8 py-12 lg:py-16">
             <div className="relative rounded-2xl overflow-hidden px-8 py-10 flex flex-col md:flex-row md:items-center gap-8"
               style={{ background: "linear-gradient(135deg, rgba(255,81,0,0.08) 0%, rgba(255,255,255,0.02) 60%)", border: "1px solid rgba(255,81,0,0.15)" }}>
-              <span className="pointer-events-none select-none absolute right-6 top-4 text-[80px] font-black text-white/[0.025] leading-none hidden lg:block">MAP</span>
               <div className="flex-1">
                 <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Adventure Map</p>
                 <h2 className="text-white text-2xl lg:text-3xl font-bold tracking-tight mb-3">
