@@ -350,11 +350,11 @@ export default function ExploreClient() {
                   >
                     {/* Empty state */}
                     {aiMessages.length === 0 && (
-                      <div className="px-5 py-6 flex flex-col gap-3">
+                      <div className="px-5 py-6 flex flex-col items-center gap-3">
                         <p className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--text-tertiary)" }}>
                           Try asking
                         </p>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap justify-center gap-2">
                           {AI_SUGGESTIONS.map((s) => (
                             <button
                               key={s}
