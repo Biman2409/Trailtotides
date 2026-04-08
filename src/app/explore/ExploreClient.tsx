@@ -324,20 +324,22 @@ export default function ExploreClient() {
                       <span className="text-[11px] font-bold tracking-wide" style={{ color: "var(--text-secondary)" }}>
                         Compass.AI
                       </span>
+                    </div>
+                    <div className="flex items-center gap-2">
                       <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-md" style={{ color: "var(--text-tertiary)", background: "var(--bg-page)", border: "1px solid var(--border-subtle)" }}>
                         Powered by Groq
                       </span>
+                      {aiMessages.length > 0 && (
+                        <button
+                          onClick={() => { setAiMessages([]); setAiInput(""); }}
+                          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all hover:bg-white/5"
+                          style={{ color: "var(--text-tertiary)" }}
+                        >
+                          <RotateCcw className="w-3 h-3" />
+                          New chat
+                        </button>
+                      )}
                     </div>
-                    {aiMessages.length > 0 && (
-                      <button
-                        onClick={() => { setAiMessages([]); setAiInput(""); }}
-                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all hover:bg-white/5"
-                        style={{ color: "var(--text-tertiary)" }}
-                      >
-                        <RotateCcw className="w-3 h-3" />
-                        New chat
-                      </button>
-                    )}
                   </div>
 
                   {/* Conversation */}
