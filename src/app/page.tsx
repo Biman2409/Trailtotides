@@ -7,12 +7,12 @@ import MatchmakerHomepageSection from "@/components/ui/custom/MatchmakerHomepage
 export const metadata: Metadata = {
   title: "Trail to Tides — India's Adventure Discovery Platform",
   description:
-    "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
+    "Discover, compare, and book elite adventures — matched to your body, mapped with precision, guided by AI, and led by India's most trusted operators.",
   alternates: { canonical: "https://trailtotides.com" },
   openGraph: {
     title: "Trail to Tides — India's Adventure Discovery Platform",
     description:
-      "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
+      "Discover, compare, and book elite adventures — matched to your body, mapped with precision, guided by AI, and led by India's most trusted operators.",
     url: "https://trailtotides.com",
     type: "website",
   },
@@ -79,7 +79,7 @@ export default function HomePage() {
             className="text-white/82 text-base md:text-xl w-full mx-auto leading-relaxed mb-8"
             style={{ textShadow: "0 1px 10px rgba(0,0,0,0.85)" }}
           >
-            Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.
+            Discover, compare, and book elite adventures — matched to your body, mapped with precision, guided by AI, and led by India's most trusted operators.
           </p>
 
           {/* CTAs */}
