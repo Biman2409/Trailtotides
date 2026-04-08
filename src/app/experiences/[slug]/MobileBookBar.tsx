@@ -53,20 +53,21 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
           <div className="min-w-0">
             <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#ff5100]/80 mb-0.5">Book This Adventure</p>
             <p className="text-white font-semibold text-sm leading-snug truncate">{adventureName}</p>
-            <p className="text-white/35 text-[11px] mt-0.5 truncate">
-              {duration}
-              {difficulty && <> · <span className="text-white/45">{difficulty}</span></>}
-            </p>
+            {priceFrom && (
+              <p className="text-white/50 text-[11px] mt-1 whitespace-nowrap">
+                <span className="text-white/30">From </span>
+                <span className="text-white font-bold">{priceFrom}</span>
+              </p>
+            )}
           </div>
           <div className="text-right shrink-0">
             {operatorName && (
-              <p className="text-white/55 text-xs font-medium leading-none mb-1 truncate max-w-[120px]">{operatorName}</p>
+              <p className="text-[#ff5100] text-xs font-bold leading-none truncate max-w-[130px]">{operatorName}</p>
             )}
-            {priceFrom && (
-              <p className="text-white font-bold text-sm leading-none whitespace-nowrap">
-                <span className="text-white/40 font-normal">From </span>{priceFrom}
-              </p>
-            )}
+            <p className="text-white/30 text-[11px] mt-1 truncate">
+              {duration}
+              {difficulty && <> · <span className="text-white/40">{difficulty}</span></>}
+            </p>
           </div>
         </div>
 
