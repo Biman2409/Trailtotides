@@ -1074,7 +1074,7 @@ export default function ExploreClient() {
                 Find the adventure you're ready for
               </h2>
               <p className="text-white/40 mt-2.5 text-sm lg:text-base max-w-lg">
-                Tell us your fitness level. We'll match you to the hardest adventure your body can handle.
+                Tell us your fitness level. We'll match you to the perfect adventure your body can handle.
               </p>
             </div>
             <Link
