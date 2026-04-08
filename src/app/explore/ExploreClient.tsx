@@ -7,6 +7,7 @@ import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, 
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import ExploreMatchmakerSection from "@/components/ui/custom/ExploreMatchmakerSection";
+import SuitedAdventures from "@/components/ui/custom/SuitedAdventures";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -239,6 +240,9 @@ export default function ExploreClient() {
           </p>
         </div>
       </div>
+
+      {/* Adventures suited for you */}
+      <SuitedAdventures />
 
       {/* Search + filter bar */}
       <div className="sticky top-16 lg:top-20 z-40 t-bg-page/96 backdrop-blur-lg border-b border-white/10 shadow-sm">
