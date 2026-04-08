@@ -153,21 +153,20 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
 
         {/* Dashboard — duration + operators, then compare button */}
         <div className="px-3 pt-2.5 pb-2 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-white/50 text-[10px] font-medium leading-none shrink-0">{adventure.durationDays}</span>
+          <div className="flex items-center gap-1 text-[10px] leading-none min-w-0 truncate text-white/40">
+            <span className="text-white/60 font-medium shrink-0">{adventure.durationDays}</span>
             {operatorCount > 0 && (
-              <div className="flex items-center gap-1 text-[10px] leading-none min-w-0">
+              <>
+                <span className="text-white/20 mx-0.5">·</span>
                 <BadgeCheck className="w-3 h-3 text-emerald-400/80 shrink-0" />
-                <span className="text-white/40 truncate">
-                  <span className="text-white/65 font-semibold">{displayCount}</span> ops
-                  {lowestPrice && (
-                    <>
-                      <span className="text-white/20 mx-1">·</span>
-                      <span className="text-[#ff5100]/85 font-semibold">₹{lowestPrice.toLocaleString("en-IN")}+</span>
-                    </>
-                  )}
-                </span>
-              </div>
+                <span><span className="text-white/60 font-semibold">{displayCount}</span> {displayCount === 1 ? "operator" : "operators"}</span>
+                {lowestPrice && (
+                  <>
+                    <span className="text-white/20 mx-0.5">·</span>
+                    <span className="text-[#ff5100]/85 font-semibold shrink-0">₹{lowestPrice.toLocaleString("en-IN")} onwards</span>
+                  </>
+                )}
+              </>
             )}
           </div>
 
