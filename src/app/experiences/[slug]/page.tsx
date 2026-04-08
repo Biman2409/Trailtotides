@@ -337,96 +337,78 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       </section>
 
       {/* ── MAIN CONTENT ──────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-5 lg:px-8 py-10 lg:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-14">
+      <div className="max-w-7xl mx-auto px-5 lg:px-8 py-8 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
 
           {/* ── LEFT COLUMN ── */}
-          <div className="lg:col-span-2 space-y-0 lg:space-y-14">
+          <div className="lg:col-span-2 space-y-0 lg:space-y-8">
 
             {/* The Adventure */}
             <AccordionSection label="The Adventure" title="About This Adventure" defaultOpen={true}>
               <div
-                className="rounded-2xl p-5 lg:p-7"
+                className="rounded-xl p-4 lg:p-5"
                 style={{
-                  background: "linear-gradient(135deg, rgba(255,81,0,0.07) 0%, rgba(255,81,0,0.02) 100%)",
-                  borderLeft: "3px solid rgba(255,81,0,0.5)",
-                  borderTop: "1px solid rgba(255,81,0,0.08)",
-                  borderRight: "1px solid rgba(255,81,0,0.05)",
-                  borderBottom: "1px solid rgba(255,81,0,0.05)",
+                  background: "linear-gradient(135deg, rgba(255,81,0,0.06) 0%, rgba(255,81,0,0.02) 100%)",
+                  borderLeft: "2px solid rgba(255,81,0,0.4)",
+                  borderTop: "1px solid rgba(255,81,0,0.07)",
+                  borderRight: "1px solid rgba(255,81,0,0.04)",
+                  borderBottom: "1px solid rgba(255,81,0,0.04)",
                 }}
               >
-                <p className="text-white/75 text-base md:text-lg leading-relaxed font-light">{adventure.description}</p>
+                <p className="text-white/70 text-sm md:text-base leading-relaxed">{adventure.description}</p>
               </div>
             </AccordionSection>
 
             {/* What Makes It Special */}
             <AccordionSection label="Highlights" title="What Makes It Special" defaultOpen={true}>
               <div
-                className="rounded-2xl p-5 lg:p-7"
+                className="rounded-xl p-4 lg:p-5"
                 style={{
-                  background: "linear-gradient(135deg, rgba(255,81,0,0.07) 0%, rgba(255,81,0,0.02) 100%)",
-                  borderLeft: "3px solid rgba(255,81,0,0.5)",
-                  borderTop: "1px solid rgba(255,81,0,0.08)",
-                  borderRight: "1px solid rgba(255,81,0,0.05)",
-                  borderBottom: "1px solid rgba(255,81,0,0.05)",
+                  background: "linear-gradient(135deg, rgba(255,81,0,0.06) 0%, rgba(255,81,0,0.02) 100%)",
+                  borderLeft: "2px solid rgba(255,81,0,0.4)",
+                  borderTop: "1px solid rgba(255,81,0,0.07)",
+                  borderRight: "1px solid rgba(255,81,0,0.04)",
+                  borderBottom: "1px solid rgba(255,81,0,0.04)",
                 }}
               >
-                <p className="text-white/75 text-base md:text-lg leading-relaxed">{adventure.whatMakesSpecial}</p>
+                <p className="text-white/70 text-sm md:text-base leading-relaxed">{adventure.whatMakesSpecial}</p>
               </div>
             </AccordionSection>
 
             {/* Is This For You? */}
             <AccordionSection label="Suitability" title="Is This For You?" defaultOpen={true}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div
-                  className="rounded-2xl p-6"
-                  style={{
-                    background: "linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(5,150,105,0.03) 100%)",
-                    border: "1px solid rgba(16,185,129,0.15)",
-                  }}
+                  className="rounded-xl p-4"
+                  style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.12)" }}
                 >
-                  <div className="flex items-center gap-2.5 mb-4">
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(16,185,129,0.18)" }}>
-                      <Flag className="w-4 h-4 text-emerald-400" fill="currentColor" />
-                    </div>
-                    <h3 className="font-semibold text-emerald-400 text-sm tracking-wide">This is for you if…</h3>
-                  </div>
-                  <ul className="space-y-2">
+                  <h3 className="font-semibold text-emerald-400 text-xs tracking-wide uppercase mb-3">This is for you if…</h3>
+                  <ul className="space-y-1.5">
                     {adventure.whoFor.split("·").map((item) => {
                       const t = item.trim();
                       if (!t) return null;
-                      const label = t.charAt(0).toUpperCase() + t.slice(1);
                       return (
-                        <li key={t} className="flex items-center gap-2.5 rounded-xl px-3 py-2" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.10)" }}>
-                          <span className="text-emerald-400 shrink-0 text-xs">✓</span>
-                          <span className="text-white/70 text-sm leading-snug">{label}</span>
+                        <li key={t} className="flex items-start gap-2">
+                          <span className="text-emerald-400 shrink-0 text-xs mt-0.5">✓</span>
+                          <span className="text-white/60 text-xs leading-snug">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
                         </li>
                       );
                     })}
                   </ul>
                 </div>
                 <div
-                  className="rounded-2xl p-6"
-                  style={{
-                    background: "linear-gradient(135deg, rgba(239,68,68,0.07) 0%, rgba(185,28,28,0.03) 100%)",
-                    border: "1px solid rgba(239,68,68,0.15)",
-                  }}
+                  className="rounded-xl p-4"
+                  style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.12)" }}
                 >
-                  <div className="flex items-center gap-2.5 mb-4">
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(239,68,68,0.15)" }}>
-                      <Flag className="w-4 h-4 text-red-400" fill="currentColor" />
-                    </div>
-                    <h3 className="font-semibold text-red-400 text-sm tracking-wide">Skip this if…</h3>
-                  </div>
-                  <ul className="space-y-2">
+                  <h3 className="font-semibold text-red-400 text-xs tracking-wide uppercase mb-3">Skip this if…</h3>
+                  <ul className="space-y-1.5">
                     {adventure.whoNot.split("·").map((item) => {
                       const t = item.trim();
                       if (!t) return null;
-                      const label = t.charAt(0).toUpperCase() + t.slice(1);
                       return (
-                        <li key={t} className="flex items-center gap-2.5 rounded-xl px-3 py-2" style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.10)" }}>
-                          <span className="text-red-400 shrink-0 text-xs">✕</span>
-                          <span className="text-white/70 text-sm leading-snug">{label}</span>
+                        <li key={t} className="flex items-start gap-2">
+                          <span className="text-red-400 shrink-0 text-xs mt-0.5">✕</span>
+                          <span className="text-white/60 text-xs leading-snug">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
                         </li>
                       );
                     })}
@@ -438,17 +420,15 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* Safety & Prep */}
             <AccordionSection label="Safety &amp; Prep" title="" defaultOpen={true}>
               <div
-                className="rounded-2xl p-6 flex gap-4"
+                className="rounded-xl p-4 flex gap-3"
                 style={{
-                  background: "linear-gradient(135deg, rgba(245,158,11,0.07) 0%, rgba(180,83,9,0.03) 100%)",
-                  border: "1px solid rgba(245,158,11,0.18)",
+                  background: "rgba(245,158,11,0.05)",
+                  border: "1px solid rgba(245,158,11,0.15)",
                 }}
               >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: "rgba(245,158,11,0.12)" }}>
-                  <AlertTriangle className="w-4 h-4 text-amber-400" />
-                </div>
+                <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <p className="text-white/55 text-sm leading-relaxed">{adventure.safetyNotes}</p>
+                  <p className="text-white/60 text-xs leading-relaxed">{adventure.safetyNotes}</p>
                   {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
                     <div className="flex flex-wrap gap-2 mt-4">
                       {showAltitudeWarning && (
@@ -506,14 +486,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               {/* Verified */}
               {allOperators.some((op) => op.verified) && (
                 <div
-                  className="mb-8 rounded-2xl p-5"
-                  style={{ border: "1px solid rgba(16,185,129,0.18)", background: "rgba(16,185,129,0.03)" }}
+                  className="mb-4 rounded-xl p-4"
+                  style={{ border: "1px solid rgba(16,185,129,0.15)", background: "rgba(16,185,129,0.03)" }}
                 >
-                  <div className="flex items-center gap-2.5 mb-4">
-                    <BadgeCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <h3 className="text-emerald-400 text-sm font-bold tracking-wide">Verified Operators</h3>
+                  <div className="flex items-center gap-2 mb-3">
+                    <BadgeCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <h3 className="text-emerald-400 text-xs font-bold tracking-wide uppercase">Verified Operators</h3>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {allOperators.filter((op) => op.verified).map((op) => (
                       <OperatorCard key={op.name} op={op} verified />
                     ))}
@@ -531,14 +511,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               {/* Unverified */}
               {allOperators.some((op) => !op.verified) && (
                 <div
-                  className="rounded-2xl p-5"
-                  style={{ border: "1px solid rgba(245,158,11,0.16)", background: "rgba(245,158,11,0.03)" }}
+                  className="rounded-xl p-4"
+                  style={{ border: "1px solid rgba(245,158,11,0.13)", background: "rgba(245,158,11,0.02)" }}
                 >
-                  <div className="flex items-center gap-2.5 mb-4">
-                    <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
-                    <h3 className="text-white/60 text-sm font-bold tracking-wide">Other Operators</h3>
+                  <div className="flex items-center gap-2 mb-3">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <h3 className="text-white/50 text-xs font-bold tracking-wide uppercase">Other Operators</h3>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {allOperators.filter((op) => !op.verified).map((op) => (
                       <OperatorCard key={op.name} op={op} verified={false} />
                     ))}
@@ -574,20 +554,20 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           </div>
 
           {/* ── RIGHT SIDEBAR ── */}
-          <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
+          <div className="space-y-2.5 lg:sticky lg:top-24 lg:self-start">
 
             {/* At a Glance */}
             <div
-              className="rounded-2xl p-6"
+              className="rounded-xl p-4"
               style={{
                 background: "var(--bg-surface)",
                 border: "1px solid var(--border-subtle)",
               }}
             >
-              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-5">
+              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">
                 At a Glance
               </p>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {[
                   { label: "Type", value: adventure.type },
                   ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
@@ -602,9 +582,9 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   ...(adventure.depth ? [{ label: "Max Depth", value: adventure.depth }] : []),
                   { label: "Group Size", value: adventure.groupSize },
                 ].map(({ label, value }) => (
-                  <div key={label} className="flex items-start justify-between gap-4 pb-3 last:pb-0" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+                  <div key={label} className="flex items-start justify-between gap-3 pb-2 last:pb-0" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
                     <span className="text-white/30 text-xs shrink-0">{label}</span>
-                    <span className="text-white/70 text-xs text-right leading-snug">{value}</span>
+                    <span className="text-white/65 text-xs text-right leading-snug">{value}</span>
                   </div>
                 ))}
               </div>
@@ -619,14 +599,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* Explore links */}
             <Link
               href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
-              className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-white/50 hover:text-white text-sm font-medium transition-all duration-200 hover:bg-white/5"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-white/40 hover:text-white text-xs font-medium transition-all duration-200 hover:bg-white/5"
               style={{ border: "1px solid var(--border-subtle)" }}
             >
               More in {adventure.state}
             </Link>
             <Link
               href={`/explore?type=${encodeURIComponent(adventure.type)}`}
-              className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-white/50 hover:text-white text-sm font-medium transition-all duration-200 hover:bg-white/5"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-white/40 hover:text-white text-xs font-medium transition-all duration-200 hover:bg-white/5"
               style={{ border: "1px solid var(--border-subtle)" }}
             >
               More in {adventure.type}
@@ -638,14 +618,13 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       {/* ── YOU MIGHT ALSO LIKE ───────────────────────────────── */}
       {(relatedByState.length > 0 || relatedByType.length > 0) && (
         <section
-          className="py-14 lg:py-20 px-5 lg:px-8"
+          className="py-10 lg:py-14 px-5 lg:px-8"
           style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)" }}
         >
           <div className="max-w-7xl mx-auto">
-            <div className="mb-10">
-              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-2">Discover More</p>
-              <h2 className="text-white text-2xl lg:text-3xl font-bold tracking-tight">You Might Also Like</h2>
-              <div className="mt-3 w-10 h-0.5 bg-[#ff5100] rounded-full" />
+            <div className="mb-7">
+              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1.5">Discover More</p>
+              <h2 className="text-white text-xl lg:text-2xl font-semibold tracking-tight">You Might Also Like</h2>
             </div>
             <div className="space-y-12">
               <RelatedSection title={`More in ${adventure.state}`} items={relatedByState} exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} />
