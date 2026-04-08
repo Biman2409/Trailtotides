@@ -43,7 +43,7 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
 
   async function handleSave() {
     if (loggedIn === false) {
-      toast.error("Log in to save adventures.");
+      toast.error("Log in to wishlist this adventure.");
       return;
     }
     const wasSaved = saved;
