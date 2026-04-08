@@ -19,56 +19,56 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
     name:        "Run, Forrest, Run!",
     description: "Moves for 8+ hours without stopping. Built for back-to-back days in the mountains.",
     color:       "#f97316",
-    icon:        "Activity",
+    icon:        "Timer",       // stopwatch — relentless endurance
   },
   power: {
     id:          "incredible-hulk",
     name:        "Incredible Hulk",
     description: "Raw power that levels terrain. Carries impossible loads without breaking stride.",
     color:       "#84cc16",
-    icon:        "PackageOpen",
+    icon:        "Dumbbell",    // raw strength / weight lifting
   },
   strength: {
     id:          "hero-hercules",
     name:        "Hero Hercules",
     description: "Powers up sustained steep ascents without losing pace. Legs that never quit.",
     color:       "#eab308",
-    icon:        "TrendingUp",
+    icon:        "MountainSnow", // steep ascent — legs of Hercules
   },
   agility: {
     id:          "spidey-sense",
     name:        "Spidey-Sense",
     description: "At home on glaciers and exposed rock. Moves confidently where others hesitate.",
     color:       "#22d3ee",
-    icon:        "Footprints",
+    icon:        "Footprints",  // quick sure-footed movement
   },
   water: {
     id:          "little-mermaid",
     name:        "Little Mermaid",
     description: "Handles strong currents and rough conditions. Water holds no fear.",
     color:       "#3b82f6",
-    icon:        "Waves",
+    icon:        "Waves",       // water / ocean element
   },
   altitude: {
     id:          "abominable-snowman",
     name:        "Abominable Snowman",
     description: "Stays active above 4,200m. The altitude works for you, not against you.",
     color:       "#a78bfa",
-    icon:        "Mountain",
+    icon:        "Wind",        // thin cold high-altitude air
   },
   focus: {
     id:          "master-yoda",
     name:        "Master Yoda",
     description: "Calm and precise on fatal drop-offs. Exposure doesn't break focus.",
     color:       "#f43f5e",
-    icon:        "ScanEye",
+    icon:        "ScanEye",     // acute focus / precision perception
   },
   nerve: {
     id:          "john-rambo",
     name:        "John Rambo",
     description: "No signal, no rescue, no problem. Fully self-sufficient in the wild.",
     color:       "#10b981",
-    icon:        "WifiOff",
+    icon:        "Shield",      // self-reliance / survival armor
   },
 };
 
@@ -80,7 +80,7 @@ export const DOMAIN_BADGES = [
     name:        "Terminator Core",
     description: "Stamina and Power both maxed. An unstoppable human engine that never shuts down.",
     color:       "#f97316",
-    icon:        "Gauge",
+    icon:        "Zap",         // raw machine-like energy — terminator
     tier:        "domain" as const,
     axes:        ["stamina", "power"] as (keyof ACE)[],
   },
@@ -89,7 +89,7 @@ export const DOMAIN_BADGES = [
     name:        "Iron Sherpa",
     description: "Strength and Agility both maxed. Total command over any terrain.",
     color:       "#22d3ee",
-    icon:        "Layers",
+    icon:        "Pickaxe",     // the sherpa's tool — terrain mastery
     tier:        "domain" as const,
     axes:        ["strength", "agility"] as (keyof ACE)[],
   },
@@ -98,7 +98,7 @@ export const DOMAIN_BADGES = [
     name:        "The Avatar",
     description: "Water and Altitude both maxed. Master of nature's two most unforgiving elements.",
     color:       "#a78bfa",
-    icon:        "Globe",
+    icon:        "Globe",       // mastery of natural elements
     tier:        "domain" as const,
     axes:        ["water", "altitude"] as (keyof ACE)[],
   },
@@ -107,7 +107,7 @@ export const DOMAIN_BADGES = [
     name:        "Awakened Buddha",
     description: "Focus and Nerve both maxed. An unbreakable mind forged in the wilderness.",
     color:       "#10b981",
-    icon:        "Brain",
+    icon:        "Brain",       // mental mastery — the awakened mind
     tier:        "domain" as const,
     axes:        ["focus", "nerve"] as (keyof ACE)[],
   },
@@ -121,7 +121,7 @@ export const SPECIAL_BADGES = [
     name:         "One Above All",
     description:  "All 8 axes maxed. The complete adventurer — nothing is out of reach.",
     color:        "#fbbf24",
-    icon:         "Crown",
+    icon:         "Crown",      // ultimate royalty — pinnacle of achievement
     tier:         "special" as const,
     minEliteAxes: 8,
     suppressIfAll: false,
@@ -131,7 +131,7 @@ export const SPECIAL_BADGES = [
     name:          "Gandalf the Grey",
     description:   "Elite across 4 or more axes. A rare all-round expedition-grade profile.",
     color:         "#f59e0b",
-    icon:          "Trophy",
+    icon:          "Wand",      // Gandalf's staff — wizard-level adventurer
     tier:          "special" as const,
     minEliteAxes:  4,
     suppressIfAll: false,

@@ -3,10 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { X } from "lucide-react";
 import {
-  Lock, Trophy, Crown,
-  Activity, PackageOpen, TrendingUp, Footprints,
-  Waves, Mountain, ScanEye, WifiOff,
-  Gauge, Layers, Globe, Brain,
+  Lock, Trophy, Crown, Globe, Brain,
+  Footprints, Waves, ScanEye,
+  Timer, Dumbbell, MountainSnow, Wind, Shield,
+  Zap, Pickaxe, Wand,
 } from "@/lib/localIcons";
 import { getAchievements, AXIS_BADGES, DOMAIN_BADGES, SPECIAL_BADGES } from "@/lib/achievements";
 import type { Achievement } from "@/lib/achievements";
@@ -15,13 +15,21 @@ import { loadProfile } from "@/lib/matchmaker";
 const ICON = (name: string, size: number): React.ReactNode => {
   const s = { width: size, height: size } as React.CSSProperties;
   const map: Record<string, React.ReactNode> = {
-    Crown: <Crown style={s} />, Trophy: <Trophy style={s} />,
-    Gauge: <Gauge style={s} />, Layers: <Layers style={s} />,
-    Globe: <Globe style={s} />, Brain: <Brain style={s} />,
-    Activity: <Activity style={s} />, PackageOpen: <PackageOpen style={s} />,
-    TrendingUp: <TrendingUp style={s} />, Footprints: <Footprints style={s} />,
-    Waves: <Waves style={s} />, Mountain: <Mountain style={s} />,
-    ScanEye: <ScanEye style={s} />, WifiOff: <WifiOff style={s} />,
+    Crown:        <Crown        style={s} />,
+    Trophy:       <Trophy       style={s} />,
+    Globe:        <Globe        style={s} />,
+    Brain:        <Brain        style={s} />,
+    Footprints:   <Footprints   style={s} />,
+    Waves:        <Waves        style={s} />,
+    ScanEye:      <ScanEye      style={s} />,
+    Timer:        <Timer        style={s} />,
+    Dumbbell:     <Dumbbell     style={s} />,
+    MountainSnow: <MountainSnow style={s} />,
+    Wind:         <Wind         style={s} />,
+    Shield:       <Shield       style={s} />,
+    Zap:          <Zap          style={s} />,
+    Pickaxe:      <Pickaxe      style={s} />,
+    Wand:         <Wand         style={s} />,
   };
   return map[name] ?? <Trophy style={s} />;
 };
