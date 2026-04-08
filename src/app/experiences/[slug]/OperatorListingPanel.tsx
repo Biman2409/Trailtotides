@@ -90,10 +90,7 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
         className="rounded-2xl p-5"
         style={{ background: "rgba(255,81,0,0.04)", border: "1px solid rgba(255,81,0,0.12)" }}
       >
-        <div className="flex items-center gap-2.5 mb-3">
-          <Building2 className="w-4 h-4 text-[#ff5100]" />
-          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase">Are You an Operator?</p>
-        </div>
+        <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">Are You an Operator?</p>
         <p className="text-white/40 text-xs leading-relaxed mb-4">
           List <span className="text-white/60 font-medium">{adventureName}</span> on your operator profile and reach thousands of adventure seekers.
         </p>
