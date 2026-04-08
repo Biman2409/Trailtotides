@@ -1079,7 +1079,7 @@ export default function ExploreClient() {
             </div>
             <Link
               href="/matchmaker"
-              className="inline-flex items-center gap-2.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/25 whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-2.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/25 whitespace-nowrap min-w-[220px]"
             >
               <BarChart2 className="w-4 h-4" />
               Take the Assessment
@@ -1104,7 +1104,7 @@ export default function ExploreClient() {
               </div>
               <Link
                 href="/map"
-                className="inline-flex items-center gap-2.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap"
+                className="inline-flex items-center justify-center gap-2.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap min-w-[220px]"
               >
                 <MapIcon className="w-4 h-4" />
                   Open Map
