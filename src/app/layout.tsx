@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     template: "%s | Trail to Tides",
   },
   description:
-    "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
+    "Discover, compare, and book elite adventures — matched to your body, mapped with precision, guided by AI, and led by India's most trusted operators.",
   metadataBase: new URL(BASE_URL),
   keywords: [
     "adventure travel India",
@@ -38,7 +38,6 @@ export const metadata: Metadata = {
     "adventure discovery platform",
     "hiking India",
     "mountain biking India",
-    "scuba diving India",
     "Ladakh trek",
     "Himachal Pradesh trek",
     "Uttarakhand trek",
@@ -64,7 +63,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Trail to Tides — India's Adventure Discovery Platform",
     description:
-      "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
+      "Discover, compare, and book elite adventures — matched to your body, mapped with precision, guided by AI, and led by India's most trusted operators.",
     type: "website",
     url: BASE_URL,
     siteName: "Trail to Tides",
@@ -84,7 +83,7 @@ export const metadata: Metadata = {
     creator: "@trailtotides",
     title: "Trail to Tides — India's Adventure Discovery Platform",
     description:
-      "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
+      "Discover, compare, and book elite adventures — matched to your body, mapped with precision, guided by AI, and led by India's most trusted operators.",
     images: [OG_IMAGE],
   },
   robots: {
@@ -135,7 +134,7 @@ export default function RootLayout({
                 },
                 image: OG_IMAGE,
                 description:
-                  "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
+                  "Discover, compare, and book elite adventures — matched to your body, mapped with precision, guided by AI, and led by India's most trusted operators.",
                 email: "hello@trailtotides.com",
                 foundingDate: "2024",
                 areaServed: {

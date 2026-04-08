@@ -217,7 +217,7 @@ export default function ExploreClient() {
             All Adventures
           </h1>
           <p className="text-white/40 text-base lg:text-lg max-w-2xl leading-relaxed">
-            Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.
+            Every trail, ride, summit, and expedition across India — filtered, compared, and ready to book.
           </p>
         </div>
       </div>
