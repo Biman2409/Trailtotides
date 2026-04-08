@@ -63,8 +63,8 @@ export default function ACEProfileSection({
   }, []);
 
   return (
-    <section>
-      <div className="flex items-center justify-between mb-5">
+    <section className="lg:pt-8">
+      <div className="flex items-center justify-between mb-3">
         <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase">ace profile</p>
         <GradingPill />
       </div>

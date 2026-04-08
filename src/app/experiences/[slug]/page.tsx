@@ -320,7 +320,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ icon: <Flag className="w-4 h-4 text-violet-400" />, label: "Base Camp", value: adventure.baseCamp }] : []),
               ...(adventure.type === "Biking" && adventure.startingPoint ? [{ icon: <Navigation className="w-4 h-4 text-emerald-400" />, label: "Starting Point", value: adventure.startingPoint }] : []),
             ].map(({ icon, label, value }, i) => (
-              <div key={i} className="flex items-center gap-3 px-4 lg:px-6 py-4 shrink-0">
+              <div key={i} className="flex items-center gap-3 px-4 lg:px-5 py-3 shrink-0">
                 {icon}
                 <div>
                   <div className="text-white/25 text-[9px] uppercase tracking-widest">{label}</div>
@@ -329,7 +329,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             ))}
             {/* Difficulty stat */}
-            <div className="flex items-center gap-3 px-4 lg:px-6 py-4 shrink-0">
+            <div className="flex items-center gap-3 px-4 lg:px-5 py-3 shrink-0">
               <Gauge className="w-4 h-4 text-rose-400" />
               <div>
                 <div className="text-white/25 text-[9px] uppercase tracking-widest">Difficulty</div>
@@ -345,7 +345,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
 
           {/* ── LEFT COLUMN ── */}
-          <div className="lg:col-span-2 space-y-0 lg:space-y-8">
+          <div className="lg:col-span-2">
 
             {/* The Adventure */}
             <AccordionSection label="The Adventure" title="About This Adventure" defaultOpen={true}>
@@ -484,7 +484,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             />
 
             {/* Operators */}
-            <div id="book-this-adventure" />
+            <div id="book-this-adventure" className="hidden lg:block h-px" style={{ background: "rgba(255,255,255,0.05)" }} />
             <AccordionSection label="Book This Adventure" title="" defaultOpen={true}>
               <div id="operators-section">
               {/* Verified */}
@@ -537,12 +537,13 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </AccordionSection>
 
             {/* Reviews */}
-            <AccordionSection label="" title="" defaultOpen={true}>
+            <div className="lg:pt-8 pt-2">
+              <div className="hidden lg:block h-px mb-8" style={{ background: "rgba(255,255,255,0.05)" }} />
               <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
-            </AccordionSection>
+            </div>
 
             {/* Tags */}
-            <section>
+            <div className="pt-6 pb-2">
               <div className="flex flex-wrap gap-2">
                 {adventure.tags.map((tag) => (
                   <span
@@ -554,7 +555,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   </span>
                 ))}
               </div>
-            </section>
+            </div>
           </div>
 
           {/* ── RIGHT SIDEBAR ── */}

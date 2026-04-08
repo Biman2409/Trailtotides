@@ -16,7 +16,7 @@ export default function AccordionSection({ title, label, defaultOpen = false, ch
 
   return (
     <section id={id}>
-      {/* Mobile: collapsible header. Desktop: always open */}
+      {/* Mobile: collapsible header */}
       {(label || title) && (
         <button
           onClick={() => setOpen((o) => !o)}
@@ -35,15 +35,17 @@ export default function AccordionSection({ title, label, defaultOpen = false, ch
         </button>
       )}
 
-      {/* Desktop: always visible, no toggle */}
-      <div className="hidden lg:block">
-        {label && (
-          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-2">{label}</p>
-        )}
-        {title && !label && (
-          <h2 className="text-white font-semibold text-xl mb-4">{title}</h2>
-        )}
-      </div>
+      {/* Desktop: always visible header */}
+      {(label || title) && (
+        <div className="hidden lg:block mb-3">
+          {label && (
+            <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1.5">{label}</p>
+          )}
+          {title && (
+            <h2 className="text-white font-semibold text-base leading-snug">{title}</h2>
+          )}
+        </div>
+      )}
 
       {/* Content */}
       <div
@@ -51,8 +53,13 @@ export default function AccordionSection({ title, label, defaultOpen = false, ch
           (open || (!label && !title)) ? "max-h-[2000px] opacity-100" : "lg:max-h-none max-h-0 opacity-0 lg:opacity-100"
         }`}
       >
-        <div className="pb-2 lg:pb-0">{children}</div>
+        {children}
       </div>
+
+      {/* Desktop divider between sections */}
+      {(label || title) && (
+        <div className="hidden lg:block h-px mt-8" style={{ background: "rgba(255,255,255,0.05)" }} />
+      )}
 
       {/* Mobile divider */}
       {(label || title) && <div className="lg:hidden h-px mt-1" style={{ background: "var(--border-subtle)" }} />}
