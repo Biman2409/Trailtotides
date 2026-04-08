@@ -436,7 +436,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </AccordionSection>
 
             {/* Safety & Prep */}
-            <section>
+            <AccordionSection label="Preparation" title="Safety &amp; Prep" defaultOpen={true}>
               <div
                 className="rounded-2xl p-6 flex gap-4"
                 style={{
@@ -448,7 +448,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   <AlertTriangle className="w-4 h-4 text-amber-400" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-amber-400/80 text-[10px] font-bold tracking-[0.22em] uppercase mb-2">Safety &amp; Prep</p>
                   <p className="text-white/55 text-sm leading-relaxed">{adventure.safetyNotes}</p>
                   {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
                     <div className="flex flex-wrap gap-2 mt-4">
@@ -486,7 +485,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   )}
                 </div>
               </div>
-            </section>
+            </AccordionSection>
 
             {/* ACE Profile */}
             <ACEProfileSection
