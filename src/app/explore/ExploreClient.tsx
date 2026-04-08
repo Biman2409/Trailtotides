@@ -1099,7 +1099,7 @@ export default function ExploreClient() {
                   Adventures across India
                 </h2>
                 <p className="text-white/40 mt-2.5 text-sm lg:text-base max-w-lg">
-                  Every trail, summit, coast, and canyon — pinned, filtered, and ready to explore on one interactive map.
+                  Every trail, summit, coast, and canyon — pinned on one map. Cluster by region, filter by type, and tap any pin to explore.
                 </p>
               </div>
               <Link
