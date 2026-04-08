@@ -1071,7 +1071,7 @@ export default function ExploreClient() {
                 Adventure Matchmaker
               </p>
               <h2 className="text-white text-3xl lg:text-4xl font-semibold tracking-tight">
-                Find the adventure you're ready for
+                Adventures built for your body
               </h2>
               <p className="text-white/40 mt-2.5 text-sm lg:text-base max-w-lg">
                 Tell us your fitness level. We'll match you to the perfect adventure your body can handle.
