@@ -184,27 +184,22 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
   return (
     <section>
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <MessageSquare className="w-5 h-5 text-[#ff5100]" />
+      <div className="flex items-center justify-between mb-6">
         <div>
           <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-0.5">
             Reviews
           </p>
           <h2 className="text-white font-semibold text-base">What People Say</h2>
-          {avgRating !== null ? (
-            <div className="flex items-center gap-2 mt-0.5">
-              <StarRating value={Math.round(avgRating)} />
-              <span className="text-[#1a1f2e] text-sm font-semibold">
-                {avgRating.toFixed(1)}
-              </span>
-              <span className="text-[#9a9590] text-xs">
-                ({reviews.length} {reviews.length === 1 ? "review" : "reviews"})
-              </span>
-            </div>
-          ) : (
-            <p className="text-[#9a9590] text-sm mt-0.5">No reviews yet — be the first</p>
-          )}
         </div>
+        {avgRating !== null ? (
+          <div className="flex items-center gap-2">
+            <StarRating value={Math.round(avgRating)} />
+            <span className="text-white text-sm font-semibold">{avgRating.toFixed(1)}</span>
+            <span className="text-white/40 text-xs">({reviews.length})</span>
+          </div>
+        ) : (
+          <p className="text-white/30 text-xs">No reviews yet</p>
+        )}
       </div>
 
       {/* Write a review */}
