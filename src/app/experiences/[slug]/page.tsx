@@ -648,7 +648,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </div>
             <div className="space-y-12">
               <RelatedSection title={`More in ${adventure.state}`} items={relatedByState} exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} />
-              <RelatedSection title={`More ${adventure.type}`} items={relatedByType} exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`} />
+              <RelatedSection title={`More in ${adventure.type}`} items={relatedByType} exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`} />
             </div>
           </div>
         </section>
