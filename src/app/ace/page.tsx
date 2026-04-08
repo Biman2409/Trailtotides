@@ -18,7 +18,7 @@ export const metadata = {
     title: "ACE Rating System — Trail to Tides",
     description: "8-axis biological difficulty rating for every adventure. Know your adventure.",
     url: "https://trailtotides.com/ace",
-    images: [{ url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90", width: 1200, height: 630, alt: "ACE Rating" }],
+    images: [{ url: "https://images.unsplash.com/photo-1526139334526-f591a54b477c?w=1200&q=90", width: 1200, height: 630, alt: "ACE Rating System — Trail to Tides" }],
   },
   alternates: { canonical: "https://trailtotides.com/ace" },
 };

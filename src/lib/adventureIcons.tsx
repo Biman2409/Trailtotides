@@ -117,13 +117,11 @@ const SportShoe = ({ size = 14 }: { size?: number }) => (
 
 import {
   Footprints,
-  Mountain,
   MountainSnow,
   Tent,
   Bike,
   Motorbike,
   Car,
-  Sun,
   Flashlight,
   Building2,
   Kayak,

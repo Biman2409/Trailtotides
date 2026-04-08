@@ -2,7 +2,7 @@
 
 import { useCompare } from "@/contexts/CompareContext";
 import { Adventure } from "@/lib/data";
-import { GitCompareArrows, CheckCheck, ArrowRight } from "lucide-react";
+import { CheckCheck, ArrowRight } from "lucide-react";
 
 interface Props {
   adventure: Adventure;

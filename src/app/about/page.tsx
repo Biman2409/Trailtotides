@@ -13,13 +13,13 @@ export const metadata: Metadata = {
     title: "About Trail to Tides",
     description: "Built by explorers for explorers. Learn about our mission, values, and the team behind India's adventure discovery platform.",
     url: "https://trailtotides.com/about",
-    images: [{ url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90", width: 1200, height: 630, alt: "About Trail to Tides" }],
+    images: [{ url: "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=1200&q=90", width: 1200, height: 630, alt: "About Trail to Tides" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "About Trail to Tides",
     description: "Built by explorers for explorers — India's adventure discovery platform.",
-    images: ["https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90"],
+    images: ["https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=1200&q=90"],
   },
   alternates: { canonical: "https://trailtotides.com/about" },
 };
@@ -80,7 +80,7 @@ export default function AboutPage() {
       <section className="relative pt-32 pb-24 px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1551632811-561732d1e306?w=2000&q=80"
+            src="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=2000&q=80"
             alt="Adventure background"
             fill
             className="object-cover opacity-15"

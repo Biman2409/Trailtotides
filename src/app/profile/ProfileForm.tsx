@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useEffect, } from "react";
 import Link from "next/link";
 import {
   User, Mail, Phone, Save, Loader2, CheckCircle2, AtSign,
-  Eye, EyeOff, Lock, XCircle, ArrowRight,
+  Eye, EyeOff, Lock, XCircle,
 } from "lucide-react";
 import { updateProfile, changePassword } from "./actions";
 import { AVATARS, LS_KEY } from "@/lib/avatars";

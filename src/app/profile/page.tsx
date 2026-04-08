@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 import { redirect } from "next/navigation";
-import { Calendar, Shield, Trophy, MapPin, Zap, Lock, Package } from "lucide-react";
+import { Calendar, Shield, Trophy, Package } from "lucide-react";
 import { format } from "date-fns";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";

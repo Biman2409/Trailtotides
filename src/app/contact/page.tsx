@@ -9,13 +9,13 @@ export const metadata: Metadata = {
     title: "Contact — Trail to Tides",
     description: "Get in touch with Trail to Tides — for general enquiries, partnerships, press, or feedback.",
     url: "https://trailtotides.com/contact",
-    images: [{ url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90", width: 1200, height: 630, alt: "Contact Trail to Tides" }],
+    images: [{ url: "https://trailtotides.com/og-image.jpg", width: 1200, height: 630, alt: "Contact Trail to Tides" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Contact — Trail to Tides",
     description: "Get in touch — for enquiries, partnerships, press, or feedback.",
-    images: ["https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90"],
+    images: ["https://trailtotides.com/og-image.jpg"],
   },
   alternates: { canonical: "https://trailtotides.com/contact" },
 };

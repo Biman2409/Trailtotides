@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Map, ChevronRight, Star, BadgeCheck } from "lucide-react";
+import { ArrowRight, Map, ChevronRight, BadgeCheck } from "lucide-react";
 import MatchmakerHomepageSection from "@/components/ui/custom/MatchmakerHomepageSection";
 
 export const metadata: Metadata = {

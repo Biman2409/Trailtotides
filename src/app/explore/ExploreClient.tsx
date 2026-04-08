@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, Zap, Activity, ShieldAlert, Trophy, Flame, Calendar, CalendarRange, History, User, Users, ChevronLeft, Heart } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown, ArrowRight, Compass, Send, ChevronRight, Loader2, ChevronLeft, Heart } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import Link from "next/link";
@@ -320,8 +320,9 @@ export default function ExploreClient() {
                                           href={`/adventure/${card.slug}`}
                                           className="flex items-stretch bg-white/5 hover:bg-white/10 border border-white/8 hover:border-white/16 rounded-xl overflow-hidden transition-all group"
                                         >
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img src={card.heroImage} alt={card.name} className="w-16 h-16 object-cover flex-shrink-0" style={{ objectFit: "cover" }} />
+                                            <div className="relative w-16 h-16 flex-shrink-0">
+                                              <Image src={card.heroImage} alt={card.name} fill className="object-cover" sizes="64px" unoptimized />
+                                            </div>
                                             <div className="p-3 flex-1 min-w-0">
                                               <p className="text-white text-xs font-semibold tracking-tight uppercase">{card.name}</p>
                                               <p className="text-white/40 text-xs mt-0.5 tracking-wide uppercase">{card.state} · {card.type} · {card.difficulty}</p>

@@ -9,7 +9,7 @@ import type { Adventure, Month } from "@/lib/data";
 import {
   Search, X, Plus, CalendarDays, MapPin, Clock,
   Trash2, GripVertical, Printer, ChevronDown, ChevronUp,
-  Mountain, CloudRain, Route,
+  Mountain, CloudRain,
 } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 

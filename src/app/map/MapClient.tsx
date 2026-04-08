@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
-  Zap, Activity, ShieldAlert, Trophy, Flame, CalendarRange, User, Users, ArrowRight,
-  LocateFixed, Map as MapIcon, Layers,
+  ArrowRight, LocateFixed, Map as MapIcon, Layers,
 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
@@ -199,8 +199,8 @@ function UnifiedSearch({
                   onMouseDown={() => handleAdvSelect(a)}
                   className="w-full text-left px-4 py-2.5 hover:bg-[#f5f0e8] flex items-center gap-3 transition-colors"
                 >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0">
-                    <img src={a.heroImage} alt={a.name} className="object-cover w-full h-full" />
+                  <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 relative">
+                    <Image src={a.heroImage} alt={a.name} fill className="object-cover" sizes="32px" unoptimized />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[#1a1f2e] font-semibold text-sm truncate">{a.name}</p>

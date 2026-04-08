@@ -11,13 +11,13 @@ export const metadata: Metadata = {
     title: "Adventure Matchmaker — Trail to Tides",
     description: "Answer a few questions and discover the toughest adventure you're genuinely ready for.",
     url: "https://trailtotides.com/matchmaker",
-    images: [{ url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90", width: 1200, height: 630, alt: "Adventure Matchmaker — Trail to Tides" }],
+    images: [{ url: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=90", width: 1200, height: 630, alt: "Adventure Matchmaker — Trail to Tides" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Adventure Matchmaker — Trail to Tides",
     description: "Discover the toughest adventure you're genuinely ready for.",
-    images: ["https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90"],
+    images: ["https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=90"],
   },
   alternates: { canonical: "https://trailtotides.com/matchmaker" },
 };

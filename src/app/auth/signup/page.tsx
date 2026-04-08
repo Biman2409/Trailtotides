@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import { signUp } from "@/app/auth/actions";
 import Link from "next/link";
-import { Eye, EyeOff, Mountain, ArrowLeft, CheckCircle2, XCircle, Loader2, AtSign } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft, CheckCircle2, XCircle, Loader2, AtSign } from "lucide-react";
 import Logo from "@/components/ui/custom/Logo";
 import countries from "@/lib/countries.json";
 import TermsModal from "@/components/ui/custom/TermsModal";
@@ -59,7 +59,7 @@ export default function SignUpPage() {
       {/* Left panel — image */}
       <div
         className="hidden lg:flex lg:w-1/2 relative bg-cover bg-center"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1551632811-561732d1e306?w=2560&q=100')" }}
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2560&q=100')" }}
       >
         <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/20 to-transparent" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">

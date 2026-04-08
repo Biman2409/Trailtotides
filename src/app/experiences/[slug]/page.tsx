@@ -5,15 +5,12 @@ import Link from "next/link";
 import OperatorButton from "./OperatorButton";
 import OperatorCard, { type OperatorCardData } from "./OperatorCard";
 import {
-  MapPin,
   Clock,
   TrendingUp,
   Sun,
   ShieldCheck,
   ChevronLeft,
-  Star,
   CheckCircle2,
-  XCircle,
   AlertTriangle,
   ArrowRight,
   Route,
