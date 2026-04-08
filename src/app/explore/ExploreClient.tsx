@@ -217,7 +217,7 @@ export default function ExploreClient() {
             All Adventures
           </h1>
           <p className="text-white/40 text-base lg:text-lg max-w-2xl leading-relaxed">
-            Every trail, ride, summit, and expedition across India — filtered, compared, and ready to book.
+            Every adventure across India — search, filter, and find what fits you.
           </p>
         </div>
       </div>
