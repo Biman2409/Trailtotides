@@ -440,50 +440,15 @@ function AdventureCards({
   cards: Adventure[];
   recommendations?: { slug: string; name: string; reason: string }[];
 }) {
-  if (cards.length === 1) {
-    const card = cards[0];
-    const rec = recommendations?.find((r) => r.slug === card.slug);
-    return (
-      <Link
-        href={`/experiences/${card.slug}`}
-        className="group flex rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ff5100]/30 hover:shadow-xl hover:shadow-[#ff5100]/5"
-        style={{ background: "var(--bg-page)", borderColor: "var(--border-subtle)" }}
-      >
-        <div className="relative w-36 sm:w-44 shrink-0 overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={card.heroImage}
-            alt={card.name}
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/30" />
-        </div>
-        <div className="flex-1 p-4 flex flex-col gap-2 min-w-0">
-          <div className="flex flex-wrap gap-1.5">
-            <span className="px-2 py-0.5 rounded-full bg-[#ff5100] text-white text-[9px] font-black uppercase tracking-wider">{card.type}</span>
-            <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold flex items-center gap-0.5" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)" }}>
-              <MapPin className="w-2 h-2" />{card.state}
-            </span>
-          </div>
-          <h4 className="text-sm font-bold leading-snug group-hover:text-[#ff5100] transition-colors t-text line-clamp-2">{card.name}</h4>
-          <div className="flex items-center gap-3 mt-auto">
-            <span className="flex items-center gap-1 text-[10px] t-text-3"><BarChart2 className="w-2.5 h-2.5" />{card.difficulty}</span>
-            {card.durationDays && <span className="flex items-center gap-1 text-[10px] t-text-3"><Clock className="w-2.5 h-2.5" />{card.durationDays}</span>}
-          </div>
-          {rec?.reason && (
-            <p className="text-[10px] leading-relaxed t-text-3 italic pt-2 border-t" style={{ borderColor: "var(--border-subtle)" }}>{rec.reason}</p>
-          )}
-          <div className="flex items-center gap-1 mt-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff5100]">View adventure</span>
-            <ArrowRight className="w-3 h-3 text-[#ff5100] group-hover:translate-x-0.5 transition-transform" />
-          </div>
-        </div>
-      </Link>
-    );
-  }
+  const colClass =
+    cards.length === 1
+      ? "grid-cols-1 max-w-xs"
+      : cards.length === 2
+      ? "grid-cols-2"
+      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
 
   return (
-    <div className={`grid gap-3 ${cards.length === 2 ? "grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"}`}>
+    <div className={`grid gap-3 ${colClass}`}>
       {cards.map((card, ci) => {
         const rec = recommendations?.find((r) => r.slug === card.slug);
         return (
@@ -493,7 +458,8 @@ function AdventureCards({
             className="group flex flex-col rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ff5100]/30 hover:shadow-xl hover:shadow-[#ff5100]/5"
             style={{ background: "var(--bg-page)", borderColor: "var(--border-subtle)" }}
           >
-            <div className="relative h-28 overflow-hidden">
+            {/* Hero image — always on top */}
+            <div className="relative h-32 overflow-hidden shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={card.heroImage}
@@ -502,22 +468,38 @@ function AdventureCards({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
               <div className="absolute bottom-2 left-2.5 flex items-center gap-1.5">
-                <span className="px-2 py-0.5 rounded-full bg-[#ff5100] text-white text-[9px] font-black uppercase tracking-wider">{card.type}</span>
+                <span className="px-2 py-0.5 rounded-full bg-[#ff5100] text-white text-[9px] font-black uppercase tracking-wider">
+                  {card.type}
+                </span>
                 <span className="px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-sm text-white/90 text-[9px] font-semibold flex items-center gap-0.5 border border-white/10">
                   <MapPin className="w-2 h-2" />{card.state}
                 </span>
               </div>
             </div>
+
+            {/* Body */}
             <div className="p-3 flex-1 flex flex-col gap-1.5">
-              <h4 className="text-[13px] font-bold leading-snug group-hover:text-[#ff5100] transition-colors duration-200 t-text line-clamp-2">{card.name}</h4>
+              <h4 className="text-[13px] font-bold leading-snug group-hover:text-[#ff5100] transition-colors duration-200 t-text line-clamp-2">
+                {card.name}
+              </h4>
               <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                <span className="flex items-center gap-1 text-[10px] t-text-3"><BarChart2 className="w-2.5 h-2.5" />{card.difficulty}</span>
-                {card.durationDays && <span className="flex items-center gap-1 text-[10px] t-text-3"><Clock className="w-2.5 h-2.5" />{card.durationDays}</span>}
+                <span className="flex items-center gap-1 text-[10px] t-text-3">
+                  <BarChart2 className="w-2.5 h-2.5" />{card.difficulty}
+                </span>
+                {card.durationDays && (
+                  <span className="flex items-center gap-1 text-[10px] t-text-3">
+                    <Clock className="w-2.5 h-2.5" />{card.durationDays}
+                  </span>
+                )}
               </div>
               {rec?.reason && (
-                <p className="text-[10px] leading-relaxed t-text-3 italic pt-1.5 border-t mt-auto" style={{ borderColor: "var(--border-subtle)" }}>{rec.reason}</p>
+                <p className="text-[10px] leading-relaxed t-text-3 italic pt-1.5 border-t mt-auto" style={{ borderColor: "var(--border-subtle)" }}>
+                  {rec.reason}
+                </p>
               )}
             </div>
+
+            {/* Footer */}
             <div className="px-3 py-2 border-t flex items-center justify-between" style={{ borderColor: "var(--border-subtle)" }}>
               <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff5100]">View</span>
               <ArrowRight className="w-3 h-3 text-[#ff5100] group-hover:translate-x-0.5 transition-transform" />
