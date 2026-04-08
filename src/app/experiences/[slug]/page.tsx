@@ -471,7 +471,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </AccordionSection>
 
-            {/* ACE Profile */}
+            {/* ACE Profile — no extra pt, AccordionSection above already adds mt-8 divider */}
             <ACEProfileSection
               ace={ace}
               adventureName={adventure.name}
@@ -484,7 +484,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             />
 
             {/* Operators */}
-            <div id="book-this-adventure" className="hidden lg:block h-px" style={{ background: "rgba(255,255,255,0.05)" }} />
+            <div id="book-this-adventure" />
+            <div className="hidden lg:block h-px mt-8 mb-0" style={{ background: "rgba(255,255,255,0.05)" }} />
             <AccordionSection label="Book This Adventure" title="" defaultOpen={true}>
               <div id="operators-section">
               {/* Verified */}
@@ -540,8 +541,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
 
             {/* Reviews */}
-            <div className="lg:pt-8 pt-2">
-              <div className="hidden lg:block h-px mb-8" style={{ background: "rgba(255,255,255,0.05)" }} />
+            <div className="hidden lg:block h-px mt-8" style={{ background: "rgba(255,255,255,0.05)" }} />
+            <div className="pt-0 lg:pt-8">
               <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
             </div>
 
