@@ -288,8 +288,8 @@ function DefaultCTA() {
                 href="/matchmaker"
                 className="inline-flex items-center justify-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#ff7d47] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25 group transition-all duration-200"
               >
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 Take Assessment
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 href="/ace"
