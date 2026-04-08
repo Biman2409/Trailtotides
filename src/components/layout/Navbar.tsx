@@ -148,7 +148,7 @@ export default function Navbar() {
             </div>
             <span className="text-base leading-none tracking-tight" style={{ color: "var(--text-primary)" }}>
               <span className="font-black uppercase">TRAIL</span>
-              <span style={{ fontFamily: "var(--font-cursive)", color: "var(--text-tertiary)" }} className="text-[15px] normal-case tracking-normal font-normal mx-1">to</span>
+              <span style={{ fontFamily: "var(--font-cursive)", color: "rgba(255,255,255,0.6)" }} className="text-[15px] normal-case tracking-normal font-normal mx-1">to</span>
               <span className="font-black uppercase">TIDES</span>
             </span>
           </Link>

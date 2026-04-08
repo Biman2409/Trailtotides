@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { updatePassword } from "@/app/auth/actions";
 import Link from "next/link";
-import { Eye, EyeOff, Mountain, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft } from "lucide-react";
+import Logo from "@/components/ui/custom/Logo";
 
 export default function ResetPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,12 +36,7 @@ export default function ResetPasswordPage() {
       >
         <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/20 to-transparent" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-          <Link href="/" className="flex items-center gap-3 text-white font-bold text-xl tracking-tight hover:scale-[1.02] transition-transform origin-left group">
-            <div className="w-10 h-10 bg-[#ff5100] rounded-xl flex items-center justify-center shadow-lg shadow-[#ff5100]/20 group-hover:bg-[#ff7d47] transition-colors">
-              <Mountain className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-[#ff5100] font-black tracking-[-0.06em] text-[1.4rem] uppercase leading-none">TRAIL TO TIDES</span>
-          </Link>
+          <Logo size="lg" />
           
                 <div className="max-w-md">
                   <h2 className="text-6xl font-black text-white leading-[1.1] mb-6 tracking-tight">
@@ -69,12 +65,9 @@ export default function ResetPasswordPage() {
         
         <div className="max-w-md w-full mx-auto relative z-10">
             {/* Mobile logo */}
-            <Link href="/" className="flex items-center gap-2.5 mb-8 lg:hidden group">
-              <div className="w-8 h-8 bg-[#ff5100] rounded-lg flex items-center justify-center group-hover:bg-[#ff7d47] transition-colors">
-                <Mountain className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-[#ff5100] font-black tracking-[-0.06em] text-[1.1rem] uppercase leading-none">TRAIL TO TIDES</span>
-            </Link>
+            <div className="mb-8 lg:hidden">
+              <Logo size="sm" />
+            </div>
 
           <Link href="/auth/login" className="inline-flex items-center gap-1 text-white/40 hover:text-white/80 text-sm mb-8 transition-colors group">
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />

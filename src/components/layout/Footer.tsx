@@ -43,7 +43,7 @@ export default function Footer() {
                   <div className="flex flex-col">
                     <span className="font-semibold text-[1.5rem] leading-none antialiased tracking-tight transition-colors duration-500" style={{ color: "var(--text-primary)" }}>
                       <span className="font-black uppercase">TRAIL</span>
-                      <span style={{fontFamily: "var(--font-cursive)", color: "var(--text-tertiary)"}} className="mx-1 text-[1.2rem] normal-case tracking-normal font-normal">to</span>
+                      <span style={{fontFamily: "var(--font-cursive)", color: "rgba(255,255,255,0.6)"}} className="mx-1 text-[1.2rem] normal-case tracking-normal font-normal">to</span>
                       <span className="font-black uppercase">TIDES</span>
                     </span>
                   </div>
