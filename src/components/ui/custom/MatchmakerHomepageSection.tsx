@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, BarChart2 } from "lucide-react";
+import { ArrowRight, BarChart2, MapPin } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
@@ -56,9 +56,16 @@ function MiniAdventureCard({ adventure }: { adventure: (typeof adventures)[numbe
         <p className="text-white text-xs font-semibold leading-tight line-clamp-2 group-hover:text-[#ff5100] transition-colors">
           {adventure.name}
         </p>
-        {adventure.type && (
-          <span className="inline-block mt-1.5 px-1.5 py-0.5 rounded-md bg-[#ff5100]/15 text-[#ff5100]/80 text-[9px] font-medium">{adventure.type}</span>
-        )}
+        <div className="flex flex-wrap items-center gap-1 mt-1.5">
+          {adventure.type && (
+            <span className="px-1.5 py-0.5 rounded-md bg-[#ff5100]/15 text-[#ff5100]/80 text-[9px] font-medium">{adventure.type}</span>
+          )}
+          {adventure.state && (
+            <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-white/8 text-white/45 text-[9px] font-medium">
+              <MapPin className="w-2 h-2" />{adventure.state}
+            </span>
+          )}
+        </div>
       </div>
     </Link>
   );
@@ -87,174 +94,135 @@ export default function MatchmakerHomepageSection() {
     : 100;
 
   return (
-    <section className="py-20 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-white/5">
+    <section className="py-16 lg:py-24 px-5 lg:px-8 t-bg-surface border-t border-white/5">
       <div className="max-w-7xl mx-auto">
-        <div className="max-w-2xl mb-10 lg:mb-12">
-          <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-3">Adventure Matchmaker</p>
-          <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-2.5">Your adventure profile</h2>
-          <p className="text-white/50 text-sm lg:text-base">Based on your ACE assessment — here&apos;s what you&apos;re built for.</p>
-        </div>
 
-        {/* Tier badge + radar side by side */}
-        <div className="flex flex-wrap items-stretch gap-6 mb-12">
-          {/* Left: rank card */}
-          <div
-            className="flex flex-col flex-1 min-w-[260px] rounded-2xl overflow-hidden"
-            style={{ border: `1px solid ${tier.color}22`, background: `linear-gradient(160deg, ${tier.color}0e 0%, rgba(14,14,18,0) 60%)` }}
-          >
-            {/* Top: current tier identity */}
-            <div className="flex items-center justify-between px-5 pt-5 pb-4">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
-                  style={{ background: `${tier.color}20`, color: tier.color, boxShadow: `0 0 22px ${tier.color}45` }}>
-                  <div className="scale-[1.4]">{tier.icon}</div>
-                </div>
-                <div>
-                  <p className="text-[9px] uppercase tracking-[0.18em] font-semibold text-white/30 mb-0.5">Adventure Tier</p>
-                  <p className="text-lg font-bold leading-none" style={{ color: tier.color }}>{tier.label}</p>
-                </div>
+        {/* Section label */}
+        <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-6">Adventure Matchmaker</p>
+
+        {/* Main panel — tier + radar in one compact card */}
+        <div className="rounded-2xl overflow-hidden mb-8"
+          style={{ border: `1px solid ${tier.color}18`, background: `linear-gradient(135deg, ${tier.color}08 0%, rgba(255,255,255,0.02) 55%)` }}>
+
+          {/* Top bar: title + tier identity */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 px-6 pt-6 pb-5"
+            style={{ borderBottom: `1px solid ${tier.color}12` }}>
+            <div>
+              <h2 className="text-white text-xl lg:text-2xl font-bold tracking-tight">Your adventure profile</h2>
+              <p className="text-white/40 text-sm mt-1">Based on your ACE assessment — here's what you're built for.</p>
+            </div>
+            {/* Tier chip */}
+            <div className="flex items-center gap-3 shrink-0 px-4 py-2.5 rounded-xl self-start sm:self-auto"
+              style={{ background: `${tier.color}14`, border: `1px solid ${tier.color}28` }}>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center"
+                style={{ background: `${tier.color}22`, color: tier.color, boxShadow: `0 0 14px ${tier.color}40` }}>
+                <div className="scale-[1.2]">{tier.icon}</div>
               </div>
-              <div className="flex gap-0.5">
+              <div>
+                <p className="text-[9px] uppercase tracking-[0.15em] text-white/30 font-semibold leading-none mb-0.5">Tier</p>
+                <p className="text-sm font-bold leading-none" style={{ color: tier.color }}>{tier.label}</p>
+              </div>
+              <div className="flex gap-0.5 pl-1">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <span key={i} className="text-sm" style={{ color: i < tier.stars ? tier.color : "rgba(255,255,255,0.08)" }}>★</span>
+                  <span key={i} className="text-xs" style={{ color: i < tier.stars ? tier.color : "rgba(255,255,255,0.08)" }}>★</span>
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Divider */}
-            <div className="mx-5 h-px" style={{ background: `${tier.color}18` }} />
+          {/* Body: radar + progress */}
+          <div className="flex flex-col md:flex-row gap-0 divide-y md:divide-y-0 md:divide-x" style={{ borderColor: `${tier.color}10` }}>
 
-            {/* Progress section */}
-            <div className="px-5 pt-4 pb-5 flex flex-col gap-4">
+            {/* Radar */}
+            <div className="flex items-center justify-center p-6 md:w-[260px] shrink-0"
+              style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.05), transparent 70%)" }}>
+              <ACERadar ace={profile.ace} size={190} showLabels />
+            </div>
+
+            {/* Progress */}
+            <div className="flex-1 p-6 flex flex-col justify-between gap-5">
+              <p className="text-[10px] uppercase tracking-[0.18em] text-white/25 font-semibold">Score Progress</p>
               {nextRank ? (
                 <>
-                  {/* Stat row: big % + pts label */}
                   <div className="flex items-end justify-between">
                     <div>
-                      <span className="text-4xl font-black tabular-nums tracking-tight leading-none" style={{ color: tier.color }}>{progressPct}<span className="text-xl font-bold opacity-70">%</span></span>
+                      <span className="text-3xl font-black tabular-nums tracking-tight leading-none" style={{ color: tier.color }}>
+                        {progressPct}<span className="text-lg font-bold opacity-60">%</span>
+                      </span>
                       <p className="text-[10px] text-white/35 mt-1">to <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span></p>
                     </div>
-                    <div className="text-right pb-0.5">
-                      <p className="text-2xl font-bold tabular-nums text-white/80">{nextRank.minScore - totalScore}</p>
+                    <div className="text-right">
+                      <p className="text-xl font-bold tabular-nums text-white/70">{nextRank.minScore - totalScore}</p>
                       <p className="text-[10px] text-white/30">pts needed</p>
                     </div>
                   </div>
-
-                  {/* Segmented bar */}
-                  {(() => {
-                    const totalRanks = RANKS.length;
-                    return (
-                      <div className="space-y-2">
-                        {/* Bar */}
-                        <div className="relative h-2.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
-                          {/* Filled portion */}
-                          <div
-                            className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
-                            style={{
-                              width: `${((rankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
-                              background: `linear-gradient(to right, ${RANKS[1].color}cc, ${tier.color})`,
-                              boxShadow: `0 0 12px ${tier.color}50`,
-                            }}
-                          />
-                          {/* Segment dividers */}
-                          {RANKS.slice(1, -1).map((rank, i) => {
-                            const pct = ((i + 1) / (totalRanks - 1)) * 100;
-                            return (
-                              <div
-                                key={rank.label}
-                                className="absolute inset-y-0 w-px"
-                                style={{
-                                  left: `${pct}%`,
-                                  background: "rgba(14,14,18,0.7)",
-                                }}
-                              />
-                            );
-                          })}
-                          {/* Thumb */}
-                          <div
-                            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 transition-all duration-700"
-                            style={{
-                              left: `${((rankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
-                              background: tier.color,
-                              borderColor: "#0e0e12",
-                              boxShadow: `0 0 10px ${tier.color}`,
-                            }}
-                          />
-                        </div>
-                        {/* Rank name labels — pinned to tick positions */}
-                        <div className="relative h-4 mt-1">
-                          {RANKS.map((rank, i) => {
-                            const isCurrent = i === rankIndex;
-                            const isUnlocked = i < rankIndex;
-                            const pct = (i / (totalRanks - 1)) * 100;
-                            return (
-                              <span
-                                key={rank.label}
-                                className="absolute text-[7.5px] font-semibold leading-none whitespace-nowrap"
-                                style={{
-                                  left: `${pct}%`,
-                                  transform: `translateX(-${(i / (totalRanks - 1)) * 100}%)`,
-                                  color: isCurrent ? tier.color : isUnlocked ? `${rank.color}55` : "rgba(255,255,255,0.15)",
-                                }}
-                              >
-                                {rank.label}
-                              </span>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })()}
+                  {/* Bar */}
+                  <div className="space-y-2">
+                    <div className="relative h-2 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+                      <div className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
+                        style={{ width: `${((rankIndex + progressPct / 100) / (RANKS.length - 1)) * 100}%`,
+                          background: `linear-gradient(to right, ${RANKS[1].color}bb, ${tier.color})`,
+                          boxShadow: `0 0 10px ${tier.color}45` }} />
+                      {RANKS.slice(1, -1).map((r, i) => (
+                        <div key={r.label} className="absolute inset-y-0 w-px"
+                          style={{ left: `${((i + 1) / (RANKS.length - 1)) * 100}%`, background: "rgba(14,14,18,0.6)" }} />
+                      ))}
+                      <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 rounded-full border-2 transition-all duration-700"
+                        style={{ left: `${((rankIndex + progressPct / 100) / (RANKS.length - 1)) * 100}%`,
+                          background: tier.color, borderColor: "#0e0e12", boxShadow: `0 0 8px ${tier.color}` }} />
+                    </div>
+                    <div className="relative h-4">
+                      {RANKS.map((r, i) => (
+                        <span key={r.label} className="absolute text-[7px] font-semibold whitespace-nowrap leading-none"
+                          style={{ left: `${(i / (RANKS.length - 1)) * 100}%`, transform: `translateX(-${(i / (RANKS.length - 1)) * 100}%)`,
+                            color: i === rankIndex ? tier.color : i < rankIndex ? `${r.color}50` : "rgba(255,255,255,0.12)" }}>
+                          {r.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </>
               ) : (
-                <div className="flex flex-col items-center gap-3 py-2">
-                  <div className="w-full h-2.5 rounded-full" style={{ background: `linear-gradient(to right, ${RANKS[1].color}, #a78bfa)`, boxShadow: "0 0 14px #a78bfa50" }} />
+                <div className="flex flex-col gap-3">
+                  <div className="h-2 rounded-full" style={{ background: `linear-gradient(to right, ${RANKS[1].color}, #a78bfa)`, boxShadow: "0 0 12px #a78bfa45" }} />
                   <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">The absolute pinnacle</p>
                 </div>
               )}
-            </div>
-          </div>
 
-          {/* Right: radar */}
-          <div className="flex flex-col flex-1 min-w-[220px]">
-            <div
-              className="rounded-2xl overflow-hidden flex flex-col flex-1"
-              style={{
-                background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, rgba(255,255,255,0.02) 75%)",
-                border: "1px solid rgba(255,255,255,0.07)",
-              }}
-            >
-              <div className="px-4 pt-3 pb-1">
-                <p className="text-[10px] uppercase tracking-widest font-bold text-white/30">ACE Profile</p>
-              </div>
-              <div className="flex flex-1 items-center justify-center p-2">
-                <ACERadar ace={profile.ace} size={200} showLabels />
+              {/* Mini CTAs inside the card */}
+              <div className="flex gap-2 pt-1">
+                <Link href="/matchmaker"
+                  className="inline-flex items-center gap-1.5 text-white/40 hover:text-white/70 text-xs font-semibold border border-white/10 hover:border-white/20 px-3.5 py-2 rounded-lg transition-all">
+                  <BarChart2 className="w-3 h-3" />
+                  Full results
+                </Link>
+                <Link href="/explore?ace=ready"
+                  className="inline-flex items-center gap-1.5 text-[#ff5100] hover:text-[#ff7d47] text-xs font-semibold border border-[#ff5100]/25 hover:border-[#ff5100]/50 px-3.5 py-2 rounded-lg transition-all">
+                  My adventures
+                  <ArrowRight className="w-3 h-3" />
+                </Link>
               </div>
             </div>
           </div>
         </div>
 
         {/* Matched adventures */}
-        <p className="text-white/50 text-[10px] font-bold tracking-[0.2em] uppercase mb-3">Adventures suited for you</p>
-        <div className="flex gap-3 overflow-x-auto pb-3 -mx-1 px-1 snap-x">
+        <p className="text-white/35 text-[10px] font-bold tracking-[0.2em] uppercase mb-3">Adventures suited for you</p>
+        <div className="flex gap-3 overflow-x-auto pb-3 -mx-1 px-1 snap-x no-scrollbar">
           {matches.length > 0
             ? matches.map((adv) => <MiniAdventureCard key={adv.id} adventure={adv} />)
             : <p className="text-white/30 text-sm italic">No matching adventures found.</p>}
         </div>
 
         {/* CTAs */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-6">
-          <Link
-            href="/explore?ace=ready"
-            className="flex-1 inline-flex items-center justify-center gap-2 bg-[#ff5100] hover:bg-[#e04800] text-white font-semibold px-6 py-3 rounded-xl text-sm hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25 group transition-all duration-200"
-          >
+        <div className="flex flex-col sm:flex-row gap-3 mt-5">
+          <Link href="/explore?ace=ready"
+            className="flex-1 inline-flex items-center justify-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-6 py-3 rounded-xl text-sm hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/25 group transition-all duration-200">
             All matching adventures
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </Link>
-          <Link
-            href="/matchmaker"
-            className="flex-1 inline-flex items-center justify-center gap-2 text-white/50 hover:text-white/80 font-semibold px-6 py-3 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all duration-200"
-          >
+          <Link href="/matchmaker"
+            className="flex-1 inline-flex items-center justify-center gap-2 text-white/45 hover:text-white/75 font-semibold px-6 py-3 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all duration-200">
             <BarChart2 className="w-3.5 h-3.5" />
             View detailed results
           </Link>

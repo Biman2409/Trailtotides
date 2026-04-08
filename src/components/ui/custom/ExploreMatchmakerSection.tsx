@@ -33,18 +33,22 @@ function MatchCard({ adventure }: { adventure: (typeof adventures)[number] }) {
       <div className="relative h-24 w-full overflow-hidden">
         <Image src={adventure.heroImage ?? "/placeholder.jpg"} alt={adventure.name} fill
           className="object-cover group-hover:scale-105 transition-transform duration-300" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-        <span className="absolute bottom-1.5 left-2 flex items-center gap-0.5 text-[9px] text-white/70 font-medium">
-          <MapPin className="w-2.5 h-2.5" />{adventure.state}
-        </span>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
       </div>
       <div className="p-2.5">
         <p className="text-white text-[11px] font-semibold leading-tight line-clamp-2 group-hover:text-[#ff5100] transition-colors">
           {adventure.name}
         </p>
-        <span className="inline-block mt-1.5 px-1.5 py-0.5 rounded-md bg-[#ff5100]/15 text-[#ff5100]/80 text-[9px] font-medium">
-          {adventure.type}
-        </span>
+        <div className="flex flex-wrap items-center gap-1 mt-1.5">
+          <span className="px-1.5 py-0.5 rounded-md bg-[#ff5100]/15 text-[#ff5100]/80 text-[9px] font-medium">
+            {adventure.type}
+          </span>
+          {adventure.state && (
+            <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-white/8 text-white/45 text-[9px] font-medium">
+              <MapPin className="w-2 h-2" />{adventure.state}
+            </span>
+          )}
+        </div>
       </div>
     </Link>
   );
