@@ -67,6 +67,9 @@ export default function ExploreClient() {
   const [selectedDurations, setSelectedDurations] = useState<Duration[]>([]);
   const [selectedMonths, setSelectedMonths] = useState<Month[]>([]);
   const [selectedGroupSizes, setSelectedGroupSizes] = useState<GroupSize[]>([]);
+  const PRICE_MIN = 0;
+  const PRICE_MAX = 200000;
+  const [priceRange, setPriceRange] = useState<[number, number]>([PRICE_MIN, PRICE_MAX]);
   // ACE filters — initialise from ?ace= URL param if present
   const [aceCategory, setAceCategory] = useState<AceCategory | null>(() => {
     const p = searchParams.get("ace");
@@ -165,6 +168,14 @@ export default function ExploreClient() {
         return false;
       if (selectedGroupSizes.length && !selectedGroupSizes.includes(a.groupSize))
         return false;
+      // Price filter — use cheapest operator price for the adventure
+      if (priceRange[0] > PRICE_MIN || priceRange[1] < PRICE_MAX) {
+        const lowestPrice = a.operators?.reduce((min, o) => {
+          const p = parseInt(o.priceFrom.replace(/[^\d]/g, ""), 10);
+          return isNaN(p) ? min : Math.min(min, p);
+        }, Infinity) ?? Infinity;
+        if (lowestPrice === Infinity || lowestPrice < priceRange[0] || lowestPrice > priceRange[1]) return false;
+      }
       // ACE category filter
       if (aceCategory && userProfile) {
         const req = getACE(a);
@@ -173,14 +184,15 @@ export default function ExploreClient() {
       }
       return true;
     });
-    }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, aceCategory, userProfile]);
+    }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, priceRange, aceCategory, userProfile]);
 
   // Reset to page 1 whenever filters change
-  useEffect(() => { setCurrentPage(1); }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, aceCategory]);
+  useEffect(() => { setCurrentPage(1); }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, priceRange, aceCategory]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const pagedResults = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
+  const priceActive = priceRange[0] > PRICE_MIN || priceRange[1] < PRICE_MAX;
   const activeFilterCount =
     selectedTypes.length +
     selectedRegions.length +
@@ -189,6 +201,7 @@ export default function ExploreClient() {
     selectedDurations.length +
     selectedMonths.length +
     selectedGroupSizes.length +
+    (priceActive ? 1 : 0) +
     (aceCategory !== null ? 1 : 0);
 
   function clearAll() {
@@ -199,6 +212,7 @@ export default function ExploreClient() {
     setSelectedDurations([]);
     setSelectedMonths([]);
     setSelectedGroupSizes([]);
+    setPriceRange([PRICE_MIN, PRICE_MAX]);
     setAceCategory(null);
     setSearch("");
   }
@@ -698,6 +712,66 @@ export default function ExploreClient() {
                             </div>
                         </div>
 
+                        {/* Price Range */}
+                        <div className="col-span-2 lg:col-span-3">
+                          <div className="flex items-center justify-between mb-3">
+                            <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40">Price Range</h3>
+                            <span className="text-xs font-semibold text-[#ff5100]">
+                              {priceRange[0] === PRICE_MIN && priceRange[1] === PRICE_MAX
+                                ? "Any price"
+                                : `₹${(priceRange[0]/1000).toFixed(0)}k – ₹${(priceRange[1]/1000).toFixed(0)}k`}
+                            </span>
+                          </div>
+                          <div className="px-1">
+                            {/* Dual range slider — two stacked inputs */}
+                            <div className="relative h-5 flex items-center">
+                              {/* Track background */}
+                              <div className="absolute inset-x-0 h-1 rounded-full bg-white/10" />
+                              {/* Filled track */}
+                              <div
+                                className="absolute h-1 rounded-full bg-[#ff5100]"
+                                style={{
+                                  left: `${(priceRange[0] / PRICE_MAX) * 100}%`,
+                                  right: `${100 - (priceRange[1] / PRICE_MAX) * 100}%`,
+                                }}
+                              />
+                              <input
+                                type="range"
+                                min={PRICE_MIN}
+                                max={PRICE_MAX}
+                                step={5000}
+                                value={priceRange[0]}
+                                onChange={(e) => {
+                                  const v = Math.min(Number(e.target.value), priceRange[1] - 5000);
+                                  setPriceRange([v, priceRange[1]]);
+                                }}
+                                className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
+                                style={{ zIndex: priceRange[0] > PRICE_MAX * 0.9 ? 5 : 3 }}
+                              />
+                              <input
+                                type="range"
+                                min={PRICE_MIN}
+                                max={PRICE_MAX}
+                                step={5000}
+                                value={priceRange[1]}
+                                onChange={(e) => {
+                                  const v = Math.max(Number(e.target.value), priceRange[0] + 5000);
+                                  setPriceRange([priceRange[0], v]);
+                                }}
+                                className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
+                                style={{ zIndex: 4 }}
+                              />
+                            </div>
+                            <div className="flex justify-between mt-2 text-[10px] text-white/30 font-medium">
+                              <span>₹0</span>
+                              <span>₹50k</span>
+                              <span>₹1L</span>
+                              <span>₹1.5L</span>
+                              <span>₹2L+</span>
+                            </div>
+                          </div>
+                        </div>
+
                         {/* ACE Filters */}
                         <div className="col-span-2 lg:col-span-3">
                           <div className="flex items-center justify-between mb-3">
@@ -820,6 +894,14 @@ export default function ExploreClient() {
                 {g} <X className="w-3 h-3" />
               </span>
             ))}
+            {priceActive && (
+              <span
+                onClick={() => setPriceRange([PRICE_MIN, PRICE_MAX])}
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
+              >
+                ₹{(priceRange[0]/1000).toFixed(0)}k – ₹{(priceRange[1]/1000).toFixed(0)}k <X className="w-3 h-3" />
+              </span>
+            )}
             {aceCategory && (
               <span
                 onClick={() => setAceCategory(null)}
