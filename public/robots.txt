@@ -1,4 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /profile
+Disallow: /settings
+Disallow: /auth/
+Disallow: /api/
+
+# Allow crawling of public API routes
+Allow: /api/chat
 
 Sitemap: https://trailtotides.com/sitemap.xml

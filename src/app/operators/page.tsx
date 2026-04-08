@@ -10,8 +10,20 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import OperatorsClient, { OperatorCardData } from "./OperatorsClient";
 
 export const metadata: Metadata = {
-  title: "Operators — Trail to Tides",
-  description: "Browse adventure operators across India listed on Trail to Tides.",
+  title: "Verified Adventure Operators",
+  description: "Browse verified adventure operators across India — trekking guides, diving schools, biking tours, and more. Every operator reviewed and approved by Trail to Tides.",
+  openGraph: {
+    title: "Verified Adventure Operators — Trail to Tides",
+    description: "Discover trusted adventure operators across India — each verified by our team for safety, quality, and expertise.",
+    url: "https://trailtotides.com/operators",
+    images: [{ url: "https://trailtotides.com/og-image.jpg", width: 1200, height: 630, alt: "Verified Adventure Operators — Trail to Tides" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Verified Adventure Operators — Trail to Tides",
+    description: "Trusted operators for trekking, diving, biking, climbing, and more across India.",
+  },
+  alternates: { canonical: "https://trailtotides.com/operators" },
 };
 
 export const dynamic = "force-dynamic";

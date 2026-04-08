@@ -1,7 +1,22 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Map, ChevronRight, Star, BadgeCheck } from "lucide-react";
 import MatchmakerHomepageSection from "@/components/ui/custom/MatchmakerHomepageSection";
+
+export const metadata: Metadata = {
+  title: "Trail to Tides — India's Adventure Discovery Platform",
+  description:
+    "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
+  alternates: { canonical: "https://trailtotides.com" },
+  openGraph: {
+    title: "Trail to Tides — India's Adventure Discovery Platform",
+    description:
+      "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
+    url: "https://trailtotides.com",
+    type: "website",
+  },
+};
 
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";

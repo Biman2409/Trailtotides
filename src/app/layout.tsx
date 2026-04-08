@@ -21,15 +21,37 @@ const dmSans = DM_Sans({
 });
 
 const BASE_URL = "https://trailtotides.com";
+const OG_IMAGE = `${BASE_URL}/og-image.jpg`;
 
 export const metadata: Metadata = {
   title: {
     default: "Trail to Tides — India's Adventure Discovery Platform",
-    template: "%s — Trail to Tides",
+    template: "%s | Trail to Tides",
   },
   description:
     "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
   metadataBase: new URL(BASE_URL),
+  keywords: [
+    "adventure travel India",
+    "trekking India",
+    "Himalayan treks",
+    "adventure discovery platform",
+    "hiking India",
+    "mountain biking India",
+    "scuba diving India",
+    "Ladakh trek",
+    "Himachal Pradesh trek",
+    "Uttarakhand trek",
+    "adventure booking India",
+    "verified adventure operators",
+    "ACE adventure rating",
+    "Compass AI",
+    "Trail to Tides",
+  ],
+  authors: [{ name: "Trail to Tides", url: BASE_URL }],
+  creator: "Trail to Tides",
+  publisher: "Trail to Tides",
+  category: "Travel & Adventure",
   icons: {
     icon: [
       { url: "/logo.svg", type: "image/svg+xml" },
@@ -38,6 +60,7 @@ export const metadata: Metadata = {
     apple: "/logo.svg",
     shortcut: "/logo.svg",
   },
+  manifest: "/manifest.json",
   openGraph: {
     title: "Trail to Tides — India's Adventure Discovery Platform",
     description:
@@ -45,9 +68,10 @@ export const metadata: Metadata = {
     type: "website",
     url: BASE_URL,
     siteName: "Trail to Tides",
+    locale: "en_IN",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90",
+        url: OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Trail to Tides — India's Adventure Discovery Platform",
@@ -57,15 +81,30 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     site: "@trailtotides",
+    creator: "@trailtotides",
     title: "Trail to Tides — India's Adventure Discovery Platform",
     description:
       "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
-    images: ["https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=90"],
+    images: [OG_IMAGE],
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large" },
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
+  alternates: {
+    canonical: BASE_URL,
+  },
+  verification: {
+    google: "trail-to-tides-google-verification",
   },
 };
 
@@ -75,7 +114,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
+    <html lang="en-IN" className="dark" style={{ colorScheme: "dark" }}>
         <body className={`${dmSans.variable} ${greatVibes.variable} antialiased`} style={{ background: "var(--bg-page)", color: "var(--text-primary)" }}>
         <Script
           id="org-structured-data"
@@ -85,24 +124,64 @@ export default function RootLayout({
               {
                 "@context": "https://schema.org",
                 "@type": "Organization",
+                "@id": `${BASE_URL}/#organization`,
                 name: "Trail to Tides",
                 url: BASE_URL,
-                logo: `${BASE_URL}/logo.svg`,
-                sameAs: [],
+                logo: {
+                  "@type": "ImageObject",
+                  url: `${BASE_URL}/logo.svg`,
+                  width: 512,
+                  height: 512,
+                },
+                image: OG_IMAGE,
                 description:
                   "Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.",
+                email: "hello@trailtotides.com",
+                foundingDate: "2024",
+                areaServed: {
+                  "@type": "GeoShape",
+                  name: "Indian Subcontinent",
+                },
+                knowsAbout: [
+                  "Trekking",
+                  "Hiking",
+                  "Mountain Biking",
+                  "Scuba Diving",
+                  "Rock Climbing",
+                  "Adventure Travel",
+                  "India Travel",
+                ],
+                sameAs: [
+                  "https://instagram.com/trailtotides",
+                  "https://twitter.com/trailtotides",
+                  "https://youtube.com/@trailtotides",
+                  "https://linkedin.com/company/trailtotides",
+                ],
               },
               {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
+                "@id": `${BASE_URL}/#website`,
                 name: "Trail to Tides",
                 url: BASE_URL,
+                publisher: { "@id": `${BASE_URL}/#organization` },
+                inLanguage: "en-IN",
                 potentialAction: {
                   "@type": "SearchAction",
                   target: {
                     "@type": "EntryPoint",
                     urlTemplate: `${BASE_URL}/explore?q={search_term_string}`,
                   },
+                  "query-input": "required name=search_term_string",
+                },
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "SiteLinksSearchBox",
+                url: BASE_URL,
+                potentialAction: {
+                  "@type": "SearchAction",
+                  target: `${BASE_URL}/explore?q={search_term_string}`,
                   "query-input": "required name=search_term_string",
                 },
               },

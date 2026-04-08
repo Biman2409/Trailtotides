@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const story = stories.find((s) => s.slug === slug);
   if (!story) return {};
   return {
-    title: `${story.title} — Trail to Tides`,
+    title: story.title,
     description: story.excerpt,
     openGraph: {
       title: `${story.title} — Trail to Tides`,
@@ -33,10 +33,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `https://trailtotides.com/stories/${slug}`,
       images: [{ url: story.heroImage, width: 1200, height: 630, alt: story.title }],
       type: "article",
+      publishedTime: story.date,
+      authors: [story.author],
+      tags: story.tags ?? [],
     },
     twitter: {
       card: "summary_large_image",
       title: `${story.title} — Trail to Tides`,
+      description: story.excerpt,
       images: [story.heroImage],
     },
     alternates: { canonical: `https://trailtotides.com/stories/${slug}` },
@@ -128,8 +132,39 @@ export default async function StoryPage({ params }: Props) {
   const body = buildBody(story);
   const others = stories.filter((s) => s.id !== story.id).slice(0, 3);
 
+  const articleStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: story.title,
+    description: story.excerpt,
+    image: story.heroImage,
+    author: {
+      "@type": "Person",
+      name: story.author,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Trail to Tides",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://trailtotides.com/logo.svg",
+      },
+    },
+    datePublished: story.date,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://trailtotides.com/stories/${slug}`,
+    },
+    url: `https://trailtotides.com/stories/${slug}`,
+    keywords: (story.tags ?? []).join(", "),
+  };
+
   return (
     <div className="min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }}
+      />
       <ScrollToTop />
       <Navbar />
 

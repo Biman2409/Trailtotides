@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
+
+export const metadata: Metadata = {
+  title: "My Profile",
+  description: "Manage your Trail to Tides profile — view your ACE score, trip log, achievements, and adventure history.",
+  alternates: { canonical: "https://trailtotides.com/profile" },
+  robots: { index: false, follow: false },
+};
 import { redirect } from "next/navigation";
 import { Calendar, Shield, Trophy, MapPin, Zap, Lock, Package } from "lucide-react";
 import { format } from "date-fns";

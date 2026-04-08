@@ -101,12 +101,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const adventure = adventures.find((a) => a.slug === slug);
   if (!adventure) return {};
+  const difficulty = computeDifficulty(getACE(adventure));
+  const description = `${adventure.type} in ${adventure.state} · ${difficulty} · ${adventure.duration} days. ${adventure.tagline ?? "Discover this handpicked adventure on Trail to Tides."}`;
   return {
-    title: `${adventure.name} — Trail to Tides`,
-    description: `${adventure.type} in ${adventure.state} · ${computeDifficulty(getACE(adventure))} · ${adventure.duration} days. ${adventure.tagline ?? "Discover this handpicked adventure on Trail to Tides."}`,
+    title: adventure.name,
+    description,
+    keywords: [
+      adventure.name,
+      adventure.type,
+      adventure.state,
+      "adventure India",
+      "trekking India",
+      difficulty,
+      ...(adventure.tags ?? []),
+    ],
     openGraph: {
       title: `${adventure.name} — Trail to Tides`,
-      description: `${adventure.type} in ${adventure.state} · ${computeDifficulty(getACE(adventure))} · ${adventure.duration} days.`,
+      description: `${adventure.type} in ${adventure.state} · ${difficulty} · ${adventure.duration} days.`,
       url: `https://trailtotides.com/experiences/${slug}`,
       images: [{ url: adventure.heroImage, width: 1200, height: 630, alt: adventure.name }],
       type: "article",
@@ -114,6 +125,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: `${adventure.name} — Trail to Tides`,
+      description: `${adventure.type} in ${adventure.state} · ${difficulty} · ${adventure.duration} days.`,
       images: [adventure.heroImage],
     },
     alternates: { canonical: `https://trailtotides.com/experiences/${slug}` },
@@ -161,8 +173,40 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
     .slice(0, 8);
   const relatedByTypeIds = new Set(relatedByType.map((a) => a.id));
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "TouristAttraction",
+    name: adventure.name,
+    description: adventure.tagline ?? `${adventure.type} in ${adventure.state} — ${difficulty} · ${adventure.duration} days.`,
+    url: `https://trailtotides.com/experiences/${slug}`,
+    image: adventure.heroImage,
+    touristType: adventure.type,
+    geo: {
+      "@type": "GeoCoordinates",
+      addressCountry: "IN",
+      addressRegion: adventure.state,
+    },
+    additionalProperty: [
+      { "@type": "PropertyValue", name: "Duration", value: `${adventure.duration} days` },
+      { "@type": "PropertyValue", name: "Difficulty", value: difficulty },
+      { "@type": "PropertyValue", name: "Type", value: adventure.type },
+      ...(adventure.altitude ? [{ "@type": "PropertyValue", name: "Max Altitude", value: adventure.altitude }] : []),
+      ...(adventure.bestSeason ? [{ "@type": "PropertyValue", name: "Best Season", value: adventure.bestSeason }] : []),
+    ],
+    isAccessibleForFree: false,
+    provider: {
+      "@type": "Organization",
+      name: "Trail to Tides",
+      url: "https://trailtotides.com",
+    },
+  };
+
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <ScrollToTop />
       <Navbar />
 

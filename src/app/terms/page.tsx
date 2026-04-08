@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description: "Trail to Tides terms of service — the rules and guidelines for using India's adventure discovery platform.",
+  alternates: { canonical: "https://trailtotides.com/terms" },
+  robots: { index: true, follow: false },
+};
 
 const SECTIONS = [
   {

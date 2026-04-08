@@ -5,6 +5,34 @@ import path from "node:path";
 const loaderPath = require.resolve('orchids-visual-edits/loader.js');
 
 const nextConfig: NextConfig = {
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "X-Content-Type-Options",    value: "nosniff" },
+          { key: "X-Frame-Options",           value: "SAMEORIGIN" },
+          { key: "X-XSS-Protection",          value: "1; mode=block" },
+          { key: "Referrer-Policy",           value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy",        value: "camera=(), microphone=(), geolocation=(self)" },
+        ],
+      },
+      {
+        // Cache static adventure images aggressively
+        source: "/experiences/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=3600, stale-while-revalidate=86400" },
+        ],
+      },
+      {
+        // Sitemap and robots should be cached but refreshed periodically
+        source: "/(sitemap.xml|robots.txt|manifest.json)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=86400" },
+        ],
+      },
+    ];
+  },
   experimental: {
     serverActions: {
       allowedOrigins: [
