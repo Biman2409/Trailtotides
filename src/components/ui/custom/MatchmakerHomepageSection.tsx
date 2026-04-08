@@ -193,46 +193,13 @@ export default function MatchmakerHomepageSection() {
           </div>
         </div>
 
-        {/* ── ACE Radar + Axis Breakdown ── */}
-        <div className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-5"
+        {/* ── ACE Radar ── */}
+        <div className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-5 flex flex-col items-center p-4 sm:p-5"
           style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
-          <div className="flex flex-col sm:flex-row sm:items-stretch">
-            {/* Radar */}
-            <div className="shrink-0 flex flex-col items-center sm:items-start gap-2.5 p-4 sm:p-5">
-              <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 self-start">ACE Profile</p>
-              <div className="rounded-xl sm:rounded-2xl flex items-center justify-center p-3 sm:p-4 w-full sm:w-auto"
-                style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, rgba(255,255,255,0.015) 70%)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <ACERadar ace={profile.ace} size={190} showLabels />
-              </div>
-            </div>
-            <div className="sm:hidden h-px mx-4" style={{ background: "rgba(255,255,255,0.07)" }} />
-            <div className="hidden sm:block w-px self-stretch" style={{ background: "rgba(255,255,255,0.07)" }} />
-            {/* Axis bars */}
-            <div className="flex-1 flex flex-col min-w-0 p-4 sm:p-5">
-              <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22 mb-2">Capability Breakdown</p>
-              <div className="flex-1 flex flex-col gap-1">
-                {Object.entries(profile.ace).sort(([, a], [, b]) => (b as number) - (a as number)).map(([axis, val]) => {
-                  const color = AXIS_COLORS[axis] ?? "#ff5100";
-                  const icon = AXIS_ICONS[axis];
-                  return (
-                    <div key={axis} className="flex-1 flex items-center rounded-md px-2 gap-2 py-1"
-                      style={{ background: `${color}0c`, border: `1px solid ${color}1c` }}>
-                      <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0 [&>svg]:w-3 [&>svg]:h-3"
-                        style={{ background: `${color}14`, border: `1.5px solid ${color}28`, boxShadow: `0 0 6px ${color}20`, color }}>
-                        {icon}
-                      </div>
-                      <span className="text-[11px] font-bold capitalize w-14 shrink-0" style={{ color }}>{axis}</span>
-                      <div className="flex-1 h-1 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
-                        <div className="h-full rounded-full transition-all duration-500"
-                          style={{ width: `${((val as number) / 5) * 100}%`, background: color }} />
-                      </div>
-                      <span className="text-[10px] font-black tabular-nums px-1.5 py-0.5 rounded shrink-0"
-                        style={{ background: `${color}20`, color }}>Lv {val as number}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+          <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 self-start mb-2.5">ACE Profile</p>
+          <div className="rounded-xl sm:rounded-2xl flex items-center justify-center p-3 sm:p-4"
+            style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, rgba(255,255,255,0.015) 70%)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <ACERadar ace={profile.ace} size={190} showLabels />
           </div>
         </div>
 
