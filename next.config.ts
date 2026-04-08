@@ -53,14 +53,28 @@ const nextConfig: NextConfig = {
   images: {
     // Serve WebP (with AVIF fallback) for all Next.js Image components
     formats: ["image/webp", "image/avif"],
-    // Minimize layout shift with well-defined device sizes
-    deviceSizes: [390, 768, 1080, 1280, 1920],
-    imageSizes: [64, 128, 256, 384, 512],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     // Minimize revalidation overhead for static adventure images
     minimumCacheTTL: 86400,
     remotePatterns: [
-      { protocol: 'https', hostname: '**' },
-      { protocol: 'http',  hostname: '**' },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
     ],
   },
   // Compress responses
