@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import {
   Loader2, Compass, ArrowRight, Send, MapPin, Clock,
-  BarChart2, Sparkles, Zap, RotateCcw,
+  BarChart2, Sparkles, Zap, RotateCcw, WifiOff,
 } from "lucide-react";
 import Link from "next/link";
 import type { Adventure } from "@/lib/data";
@@ -15,6 +15,7 @@ interface Message {
   recommendations?: { slug: string; name: string; reason: string }[];
   suggestAce?: boolean;
   chips?: string[];
+  rateLimited?: boolean;
 }
 
 // Quick-start prompts shown in empty state
@@ -135,10 +136,11 @@ export default function InlineChat() {
       const newRound = roundCount + 1;
       const assistantMsg: Message = {
         role: "assistant",
-        content: data.text || (data.error ? "Sorry, something went wrong. Please try again." : ""),
+        content: data.rateLimited ? "" : (data.text || (data.error ? "Sorry, something went wrong. Please try again." : "")),
         cards: data.cards ?? [],
         recommendations: data.recommendations ?? [],
         suggestAce: data.suggestAce ?? false,
+        rateLimited: data.rateLimited ?? false,
       };
       assistantMsg.chips = deriveChips(assistantMsg, newRound);
       setMessages((prev) => [...prev, assistantMsg]);
@@ -146,7 +148,7 @@ export default function InlineChat() {
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Network error — please check your connection and try again." },
+        { role: "assistant", content: "", rateLimited: true },
       ]);
     } finally {
       setLoading(false);
@@ -289,6 +291,22 @@ export default function InlineChat() {
                           }
                         >
                           {msg.content}
+                        </div>
+                      )}
+
+                      {/* Rate-limited notice */}
+                      {msg.rateLimited && (
+                        <div
+                          className="flex items-start gap-3 px-4 py-3 rounded-2xl rounded-tl-sm border"
+                          style={{ background: "var(--bg-surface-2, #141b28)", borderColor: "var(--border-subtle)" }}
+                        >
+                          <WifiOff className="w-4 h-4 shrink-0 mt-0.5 opacity-40" style={{ color: "var(--text-secondary)" }} />
+                          <div className="space-y-0.5">
+                            <p className="text-sm font-medium t-text">Compass is taking a breather</p>
+                            <p className="text-[11px] t-text-3 leading-relaxed">
+                              High demand right now — please try again in a few minutes.
+                            </p>
+                          </div>
                         </div>
                       )}
 

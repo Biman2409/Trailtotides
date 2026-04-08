@@ -307,7 +307,8 @@ export async function POST(req: NextRequest) {
             });
           }
           return NextResponse.json({
-            text: "Compass is a bit busy right now — please try again in a moment.",
+            rateLimited: true,
+            text: "",
             recommendations: [],
             cards: [],
             suggestAce: false,
