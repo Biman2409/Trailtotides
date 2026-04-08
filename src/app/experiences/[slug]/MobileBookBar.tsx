@@ -56,15 +56,19 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
             <p className="text-white/35 text-[11px] mt-0.5 truncate">
               {duration}
               {difficulty && <> · <span className="text-white/45">{difficulty}</span></>}
-              {operatorName && <> · <span className="text-white/55">{operatorName}</span></>}
             </p>
           </div>
-          {priceFrom && (
-            <div className="text-right shrink-0">
-              <p className="text-white/30 text-[9px] uppercase tracking-wider leading-none mb-1">From</p>
-              <p className="text-white font-bold text-base leading-none">{priceFrom}</p>
-            </div>
-          )}
+          <div className="text-right shrink-0">
+            {operatorName && (
+              <p className="text-white/55 text-xs font-medium leading-none mb-1 truncate max-w-[120px]">{operatorName}</p>
+            )}
+            {priceFrom && (
+              <>
+                <p className="text-white/30 text-[9px] uppercase tracking-wider leading-none mb-0.5">From</p>
+                <p className="text-white font-bold text-base leading-none">{priceFrom}</p>
+              </>
+            )}
+          </div>
         </div>
 
         {/* CTA buttons */}
