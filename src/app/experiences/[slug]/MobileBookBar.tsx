@@ -63,10 +63,9 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
               <p className="text-white/55 text-xs font-medium leading-none mb-1 truncate max-w-[120px]">{operatorName}</p>
             )}
             {priceFrom && (
-              <>
-                <p className="text-white/30 text-[9px] uppercase tracking-wider leading-none mb-0.5">From</p>
-                <p className="text-white font-bold text-base leading-none">{priceFrom}</p>
-              </>
+              <p className="text-white font-bold text-sm leading-none whitespace-nowrap">
+                <span className="text-white/40 font-normal">From </span>{priceFrom}
+              </p>
             )}
           </div>
         </div>
