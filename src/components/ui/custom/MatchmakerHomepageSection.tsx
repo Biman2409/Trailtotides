@@ -264,14 +264,6 @@ export default function MatchmakerHomepageSection() {
 }
 
 function DefaultCTA() {
-  const axes = [
-    { label: "Cardio",      pct: 72 },
-    { label: "Strength",    pct: 55 },
-    { label: "Endurance",   pct: 80 },
-    { label: "Altitude",    pct: 45 },
-    { label: "Technical",   pct: 60 },
-  ];
-
   return (
     <section className="py-20 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-white/5">
       <div className="max-w-7xl mx-auto">
@@ -305,35 +297,6 @@ function DefaultCTA() {
               >
                 What is ACE?
               </Link>
-            </div>
-          </div>
-
-          {/* Right: visual preview */}
-          <div className="flex-1 max-w-sm lg:max-w-none">
-            <div className="rounded-2xl p-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-              <div className="flex items-center justify-between mb-5">
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 font-semibold">Sample ACE Profile</p>
-                  <p className="text-white font-semibold mt-0.5">Your axes, scored</p>
-                </div>
-                <div className="px-2.5 py-1 rounded-full text-[10px] font-bold" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100", border: "1px solid rgba(255,81,0,0.2)" }}>
-                  8 Axes
-                </div>
-              </div>
-              <div className="space-y-3">
-                {axes.map(({ label, pct }) => (
-                  <div key={label}>
-                    <div className="flex justify-between text-xs mb-1.5">
-                      <span className="text-white/50 font-medium">{label}</span>
-                      <span className="text-white/30 tabular-nums">?</span>
-                    </div>
-                    <div className="h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
-                      <div className="h-full rounded-full" style={{ width: `${pct}%`, background: "linear-gradient(to right, rgba(255,81,0,0.4), rgba(255,81,0,0.15))" }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <p className="text-center text-[10px] text-white/20 mt-5 italic">Take the assessment to reveal your real scores</p>
             </div>
           </div>
 
