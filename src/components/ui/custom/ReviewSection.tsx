@@ -187,10 +187,10 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
       <div className="flex items-center gap-3 mb-6">
         <MessageSquare className="w-5 h-5 text-[#ff5100]" />
         <div>
-          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">
+          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-0.5">
             Reviews
           </p>
-          <p className="text-white/60 text-[11px] mt-0.5">What People Say</p>
+          <h2 className="text-white font-semibold text-base">What People Say</h2>
           {avgRating !== null ? (
             <div className="flex items-center gap-2 mt-0.5">
               <StarRating value={Math.round(avgRating)} />
