@@ -1060,6 +1060,9 @@ export default function ExploreClient() {
         )}
       </div>
 
+        {/* Compare Adventures */}
+        <CompareAdventures />
+
         {/* Matchmaker CTA */}
         <div className="t-bg-surface mt-12 lg:mt-16 border-t border-white/5">
           <div className="max-w-7xl mx-auto px-5 lg:px-8 py-12 lg:py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
@@ -1084,9 +1087,6 @@ export default function ExploreClient() {
             </Link>
           </div>
         </div>
-
-        {/* Compare Adventures */}
-        <CompareAdventures />
 
         {/* Map CTA Section */}
           <div className="t-bg-surface mt-12 lg:mt-16 border-t border-white/5">
