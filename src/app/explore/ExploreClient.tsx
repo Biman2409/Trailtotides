@@ -1074,7 +1074,7 @@ export default function ExploreClient() {
                 Adventures built for your body
               </h2>
               <p className="text-white/40 mt-2.5 text-sm lg:text-base max-w-lg">
-                Tell us your fitness level. We'll match you to the perfect adventure your body can handle.
+                Answer 8 questions. Discover your ACE profile and find the adventures you're truly ready for.
               </p>
             </div>
             <Link
@@ -1099,7 +1099,7 @@ export default function ExploreClient() {
                   Adventures across India
                 </h2>
                 <p className="text-white/40 mt-2.5 text-sm lg:text-base max-w-lg">
-                  View all adventures pinned on an interactive map — cluster by region, filter by type, and tap any pin to preview details.
+                  Every trail, summit, coast, and canyon — pinned, filtered, and ready to explore on one interactive map.
                 </p>
               </div>
               <Link
