@@ -11,13 +11,13 @@ export const metadata: Metadata = {
     description:
       "Browse and filter handpicked adventures across India — trekking, biking, climbing, kayaking, and more.",
     url: "https://trailtotides.com/explore",
-    images: [{ url: "https://trailtotides.com/og-image.jpg", width: 1200, height: 630, alt: "Explore Adventures — Trail to Tides" }],
+    images: [{ url: "https://trailtotides.com/opengraph-image", width: 1200, height: 630, alt: "Explore Adventures — Trail to Tides" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Explore Adventures — Trail to Tides",
     description: "Browse and filter handpicked adventures across India — trekking, biking, climbing, kayaking, and more.",
-    images: ["https://trailtotides.com/og-image.jpg"],
+    images: ["https://trailtotides.com/opengraph-image"],
   },
   alternates: { canonical: "https://trailtotides.com/explore" },
 };

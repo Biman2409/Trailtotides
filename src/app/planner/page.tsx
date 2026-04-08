@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     title: "Adventure Trip Planner — Trail to Tides",
     description: "Build your perfect adventure itinerary across India — season-aware planning, route comparison, and expert-curated options.",
     url: "https://trailtotides.com/planner",
-    images: [{ url: "https://trailtotides.com/og-image.jpg", width: 1200, height: 630, alt: "Adventure Trip Planner — Trail to Tides" }],
+    images: [{ url: "https://trailtotides.com/opengraph-image", width: 1200, height: 630, alt: "Adventure Trip Planner — Trail to Tides" }],
   },
   twitter: {
     card: "summary_large_image",

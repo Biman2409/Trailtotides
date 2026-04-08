@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     title: "List Your Adventure — Trail to Tides",
     description: "Reach thousands of adventure seekers across India. Submit your trek, dive, ride, or climb for review and get listed on India's top adventure discovery platform.",
     url: "https://trailtotides.com/list",
-    images: [{ url: "https://trailtotides.com/og-image.jpg", width: 1200, height: 630, alt: "List Your Adventure — Trail to Tides" }],
+    images: [{ url: "https://trailtotides.com/opengraph-image", width: 1200, height: 630, alt: "List Your Adventure — Trail to Tides" }],
   },
   twitter: {
     card: "summary_large_image",

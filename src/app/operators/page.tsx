@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     title: "Verified Adventure Operators — Trail to Tides",
     description: "Discover trusted adventure operators across India — each verified by our team for safety, quality, and expertise.",
     url: "https://trailtotides.com/operators",
-    images: [{ url: "https://trailtotides.com/og-image.jpg", width: 1200, height: 630, alt: "Verified Adventure Operators — Trail to Tides" }],
+    images: [{ url: "https://trailtotides.com/opengraph-image", width: 1200, height: 630, alt: "Verified Adventure Operators — Trail to Tides" }],
   },
   twitter: {
     card: "summary_large_image",

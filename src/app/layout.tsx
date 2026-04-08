@@ -21,7 +21,7 @@ const dmSans = DM_Sans({
 });
 
 const BASE_URL = "https://trailtotides.com";
-const OG_IMAGE = `${BASE_URL}/og-image.jpg`;
+const OG_IMAGE = `${BASE_URL}/opengraph-image`;
 
 export const metadata: Metadata = {
   title: {
