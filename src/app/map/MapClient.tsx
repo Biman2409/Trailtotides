@@ -172,11 +172,11 @@ function UnifiedSearch({
   return (
     <div ref={wrapperRef} className="relative flex-1 min-w-0">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9a9590]" />
-        {loading && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#9a9590] animate-spin" />}
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#9a9590" }} />
+        {loading && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 animate-spin" style={{ color: "#9a9590" }} />}
         {!loading && query && (
-          <button onClick={handleClear} className="absolute right-3 top-1/2 -translate-y-1/2">
-            <X className="w-3.5 h-3.5 text-[#9a9590] hover:text-[#1a1f2e]" />
+          <button onClick={handleClear} className="absolute right-3 top-1/2 -translate-y-1/2 hover:opacity-70 transition-opacity">
+            <X className="w-3.5 h-3.5" style={{ color: "#9a9590" }} />
           </button>
         )}
         <input
@@ -184,52 +184,61 @@ function UnifiedSearch({
           onChange={e => setQuery(e.target.value)}
           onFocus={() => hasResults && setOpen(true)}
           placeholder="Search adventures or places…"
-          className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#f5f0e8] text-[#1a1f2e] text-sm placeholder-[#9a9590] border border-transparent focus:outline-none focus:border-[#1e3d2f] transition-colors"
+          className="w-full pl-9 pr-8 py-2.5 rounded-xl text-sm placeholder-[#a0998f] border border-transparent focus:outline-none focus:border-[#c8bfb0] transition-colors"
+          style={{ background: "#f0ebe0", color: "#1a1814" }}
         />
       </div>
 
       {open && (
-        <div className="absolute z-[2000] top-full mt-1.5 w-full bg-white rounded-2xl shadow-2xl border border-[#e8dfc8] overflow-hidden text-sm min-w-[300px]" style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
+        <div
+          className="absolute z-[2000] top-full mt-2 w-full rounded-2xl overflow-hidden text-sm min-w-[300px]"
+          style={{ background: "#fff", border: "1px solid #e8e0d0", boxShadow: "0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)" }}
+        >
           {adventureMatches.length > 0 && (
             <>
-              <p className="px-4 pt-3 pb-1.5 text-[10px] font-bold uppercase tracking-widest text-[#b8b0a5]">Adventures</p>
+              <p className="px-4 pt-3 pb-1.5 text-[9px] font-black uppercase tracking-[0.25em]" style={{ color: "#c0b8ad" }}>Adventures</p>
               {adventureMatches.map(a => (
                 <button
                   key={a.id}
                   onMouseDown={() => handleAdvSelect(a)}
-                  className="w-full text-left px-4 py-2.5 hover:bg-[#f5f0e8] flex items-center gap-3 transition-colors"
+                  className="w-full text-left px-4 py-2.5 flex items-center gap-3 transition-colors"
+                  style={{ color: "#1a1814" }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "#faf6ef")}
+                  onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 relative">
                     <Image src={a.heroImage} alt={a.name} fill className="object-cover" sizes="32px" unoptimized />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[#1a1f2e] font-semibold text-sm truncate">{a.name}</p>
-                    <p className="text-[#9a9590] text-[10px] mt-0.5">{a.type} · {a.state}</p>
+                    <p className="font-semibold text-[13px] truncate">{a.name}</p>
+                    <p className="text-[10px] mt-0.5 truncate" style={{ color: "#9a9590" }}>{a.type} · {a.state}</p>
                   </div>
-                  <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: difficultyColor[a.difficulty] }} />
+                  <div className="w-2 h-2 rounded-full shrink-0" style={{ background: difficultyColor[a.difficulty] }} />
                 </button>
               ))}
             </>
           )}
           {placeResults.length > 0 && (
             <>
-              <p className={`px-4 pb-1.5 text-[10px] font-bold uppercase tracking-widest text-[#b8b0a5] ${adventureMatches.length > 0 ? "pt-2.5 border-t border-[#f0ece4]" : "pt-3"}`}>
+              <p className={`px-4 pb-1.5 text-[9px] font-black uppercase tracking-[0.25em] ${adventureMatches.length > 0 ? "pt-2.5 border-t border-[#f0ece4]" : "pt-3"}`} style={{ color: "#c0b8ad" }}>
                 Places
               </p>
               {placeResults.map(r => (
                 <button
                   key={r.place_id}
                   onMouseDown={() => handlePlaceSelect(r)}
-                  className="w-full text-left px-4 py-2.5 hover:bg-[#f5f0e8] flex items-center gap-3 transition-colors"
+                  className="w-full text-left px-4 py-2.5 flex items-center gap-3 transition-colors"
+                  onMouseEnter={e => (e.currentTarget.style.background = "#faf6ef")}
+                  onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                 >
-                  <MapPin className="w-3.5 h-3.5 text-[#ff5100] shrink-0" />
-                  <span className="text-[#1a1f2e] line-clamp-1">{r.display_name}</span>
+                  <MapPin className="w-3.5 h-3.5 shrink-0" style={{ color: "#ff5100" }} />
+                  <span className="line-clamp-1 text-[13px]" style={{ color: "#1a1814" }}>{r.display_name}</span>
                 </button>
               ))}
             </>
           )}
-          <div className="px-4 py-2 border-t border-[#f5f0e8]">
-            <p className="text-[10px] text-[#c4bdb5]">Select an adventure to fly to its pin · Select a place to navigate</p>
+          <div className="px-4 py-2.5 border-t" style={{ borderColor: "#f0ece4" }}>
+            <p className="text-[9px]" style={{ color: "#c0b8ad" }}>Adventure → fly to pin · Place → navigate to location</p>
           </div>
         </div>
       )}
@@ -239,27 +248,21 @@ function UnifiedSearch({
 
 // ── Map View ──────────────────────────────────────────────────────────────────
 
-// Base layer — always on
 const BASE_TILE = {
   url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
   maxZoom: 19,
 };
 
-// Overlay layers — toggled on top independently
 const OVERLAY_LAYERS = {
   terrain: {
-    // ESRI World Topo Map — fast global CDN, no key needed.
-    // Shows: elevation contours, named peaks, glaciers (cyan), perennial rivers,
-    // forest cover, passes, ridgelines, and spot elevations. Renders at all zoom levels.
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
     attribution: "Topo &copy; Esri, DeLorme, NAVTEQ, TomTom, USGS, NGA, EPA",
     maxZoom: 19,
-    opacityAlone: 1,      // full replace when only terrain is on
-    opacityWithSat: 0.6,  // semi-transparent over satellite so imagery shows through
+    opacityAlone: 1,
+    opacityWithSat: 0.6,
   },
   satellite: {
-    // ESRI World Imagery — same CDN, consistent fast load.
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics",
     maxZoom: 19,
@@ -303,50 +306,65 @@ function MapView({
 
   function buildMarker(leaflet: typeof L, adv: Adventure) {
     const diffColor = difficultyColor[adv.difficulty] ?? "#6366f1";
-    const svgIcon = typeIconSvg(adv.type, 13, "white");
+    const svgIcon = typeIconSvg(adv.type, 11, "white");
+
+    // Crisp circular pin with a subtle drop shadow
     const icon = leaflet.divIcon({
       className: "",
-      html: `<div style="position:relative;width:32px;height:38px;">
-        <div style="width:32px;height:32px;border-radius:50% 50% 50% 0;background:${diffColor};transform:rotate(-45deg);box-shadow:0 3px 12px rgba(0,0,0,0.35);border:2px solid rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;">
+      html: `<div style="position:relative;width:30px;height:36px;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.32));">
+        <div style="width:30px;height:30px;border-radius:50% 50% 50% 0;background:${diffColor};transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,0.92);">
           <div style="transform:rotate(45deg);display:flex;align-items:center;justify-content:center;">${svgIcon}</div>
         </div>
-        <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:${diffColor};border:1.5px solid white;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>
       </div>`,
-      iconSize: [32, 38],
-      iconAnchor: [16, 38],
-      popupAnchor: [0, -42],
+      iconSize: [30, 36],
+      iconAnchor: [15, 36],
+      popupAnchor: [0, -40],
     });
 
     const priceFrom = adv.operators?.find(o => o.priceFrom)?.priceFrom;
+
+    // Crisp popup card — clean white, tight grid layout
     const popupHtml = `
-      <div style="width:268px;font-family:system-ui,-apple-system,sans-serif;">
-        <div style="position:relative;height:144px;border-radius:14px 14px 0 0;overflow:hidden;">
-          <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;" />
-          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0.1) 55%,transparent 100%);" />
-          <div style="position:absolute;bottom:10px;left:12px;right:12px;">
-            <div style="display:flex;gap:5px;margin-bottom:6px;">
-              <span style="background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);color:rgba(255,255,255,0.85);font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;">${adv.type}</span>
-              <span style="background:${diffColor}30;color:${diffColor};font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;border:1px solid ${diffColor}60;">${adv.difficulty}</span>
-            </div>
-            <div style="font-size:14px;font-weight:700;color:#fff;line-height:1.25;text-shadow:0 1px 4px rgba(0,0,0,0.5);">${adv.name}</div>
+      <div style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;">
+        <div style="position:relative;height:148px;">
+          <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.78) 0%,rgba(0,0,0,0.08) 55%,transparent 100%);" />
+          <div style="position:absolute;top:10px;left:10px;display:flex;gap:5px;">
+            <span style="background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:rgba(255,255,255,0.9);font-size:9.5px;font-weight:700;padding:2.5px 8px;border-radius:20px;letter-spacing:0.04em;text-transform:uppercase;">${adv.type}</span>
+            <span style="background:${diffColor}22;color:${diffColor};font-size:9.5px;font-weight:700;padding:2.5px 8px;border-radius:20px;border:1px solid ${diffColor}55;letter-spacing:0.04em;">${adv.difficulty}</span>
           </div>
+          <div style="position:absolute;bottom:10px;left:12px;right:12px;">
+            <div style="font-size:14.5px;font-weight:700;color:#fff;line-height:1.2;letter-spacing:-0.01em;">${adv.name}</div>
+            <div style="font-size:10.5px;color:rgba(255,255,255,0.6);margin-top:3px;">${adv.state}</div>
+          </div>
+          ${priceFrom ? `<div style="position:absolute;top:10px;right:10px;background:#10b981;color:white;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;">${priceFrom}</div>` : ""}
         </div>
         <div style="padding:12px 14px 14px;background:#fff;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-            <span style="font-size:11px;color:#9a9590;">${adv.state} · ${adv.durationDays} · ${adv.bestSeason}</span>
-            ${priceFrom ? `<span style="font-size:12px;font-weight:700;color:#10b981;">${priceFrom}</span>` : ""}
+          <div style="display:flex;gap:12px;margin-bottom:10px;">
+            <div style="text-align:center;flex:1;padding:6px 4px;border-radius:10px;background:#f8f5f0;">
+              <div style="font-size:10px;font-weight:700;color:#1a1814;line-height:1;">${adv.durationDays}</div>
+              <div style="font-size:9px;color:#9a9590;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em;">Duration</div>
+            </div>
+            <div style="text-align:center;flex:1;padding:6px 4px;border-radius:10px;background:#f8f5f0;">
+              <div style="font-size:10px;font-weight:700;color:#1a1814;line-height:1;">${adv.difficulty}</div>
+              <div style="font-size:9px;color:#9a9590;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em;">Difficulty</div>
+            </div>
+            <div style="text-align:center;flex:1;padding:6px 4px;border-radius:10px;background:#f8f5f0;">
+              <div style="font-size:10px;font-weight:700;color:#1a1814;line-height:1;">${adv.bestSeason}</div>
+              <div style="font-size:9px;color:#9a9590;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em;">Best Season</div>
+            </div>
           </div>
-          <p style="font-size:11.5px;color:#6b6560;line-height:1.55;margin:0 0 12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${adv.tagline}</p>
-          <a href="/experiences/${adv.slug}" style="display:flex;align-items:center;justify-content:center;gap:6px;background:#1e3d2f;color:white;padding:9px 12px;border-radius:10px;font-size:12px;font-weight:600;text-decoration:none;transition:background 0.15s;">
+          <p style="font-size:11px;color:#6b6560;line-height:1.5;margin:0 0 11px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${adv.tagline}</p>
+          <a href="/experiences/${adv.slug}" style="display:flex;align-items:center;justify-content:center;gap:6px;background:#ff5100;color:white;padding:9px 14px;border-radius:10px;font-size:12px;font-weight:600;text-decoration:none;letter-spacing:0.01em;">
             View Experience
-            <span style="font-size:14px;line-height:1;">→</span>
+            <span style="font-size:15px;line-height:1;margin-top:-1px;">→</span>
           </a>
         </div>
       </div>
     `;
 
     const marker = leaflet.marker([adv.lat, adv.lng], { icon })
-      .bindPopup(popupHtml, { maxWidth: 268, minWidth: 268, className: "ttt-popup" });
+      .bindPopup(popupHtml, { maxWidth: 280, minWidth: 280, className: "ttt-popup" });
 
     return marker;
   }
@@ -360,8 +378,6 @@ function MapView({
     });
   }
 
-  // Route overlays removed
-
   function addIndiaBorder(leaflet: typeof L, map: L.Map) {
     fetch("/india-boundary.geojson")
       .then(r => r.json())
@@ -374,15 +390,48 @@ function MapView({
       .catch(() => {});
   }
 
-  // Inject popup style once
+  // Inject popup + zoom control styles once
   useEffect(() => {
     if (document.getElementById("ttt-popup-style")) return;
     const s = document.createElement("style");
     s.id = "ttt-popup-style";
     s.textContent = `
-      .ttt-popup .leaflet-popup-content-wrapper { padding: 0; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.18); border: none; }
-      .ttt-popup .leaflet-popup-content { margin: 0; }
+      .ttt-popup .leaflet-popup-content-wrapper {
+        padding: 0;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
+        border: 1px solid rgba(0,0,0,0.06);
+      }
+      .ttt-popup .leaflet-popup-content { margin: 0; line-height: 1; }
       .ttt-popup .leaflet-popup-tip-container { display: none; }
+      .ttt-popup .leaflet-popup-close-button {
+        top: 8px !important; right: 8px !important;
+        width: 22px !important; height: 22px !important;
+        font-size: 16px !important; line-height: 22px !important;
+        background: rgba(0,0,0,0.45) !important;
+        border-radius: 50% !important;
+        color: rgba(255,255,255,0.85) !important;
+        display: flex !important; align-items: center !important; justify-content: center !important;
+      }
+      .leaflet-control-zoom {
+        border: none !important;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.12) !important;
+        border-radius: 10px !important;
+        overflow: hidden;
+      }
+      .leaflet-control-zoom a {
+        background: rgba(255,255,255,0.92) !important;
+        backdrop-filter: blur(8px) !important;
+        color: #1a1814 !important;
+        border: none !important;
+        font-size: 16px !important;
+        line-height: 28px !important;
+        width: 28px !important;
+        height: 28px !important;
+      }
+      .leaflet-control-zoom a:hover { background: white !important; }
+      .leaflet-control-zoom-in { border-bottom: 1px solid #e8e0d0 !important; }
     `;
     document.head.appendChild(s);
   }, []);
@@ -409,25 +458,24 @@ function MapView({
         scrollWheelZoom: true,
       });
 
-      // Base layer — always present, always at bottom
       leaflet.tileLayer(BASE_TILE.url, { maxZoom: BASE_TILE.maxZoom, attribution: BASE_TILE.attribution }).addTo(map);
-
-      // Zoom control — bottom right
       leaflet.control.zoom({ position: "bottomright" }).addTo(map);
 
       mapInstanceRef.current = map;
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const MCG = (leaflet as any).markerClusterGroup({
-        maxClusterRadius: 55,
+        maxClusterRadius: 52,
         spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
         iconCreateFunction: (cluster: any) => {
           const count = cluster.getChildCount();
+          const size = count >= 100 ? 44 : count >= 20 ? 40 : 36;
           return leaflet.divIcon({
-            html: `<div style="width:40px;height:40px;border-radius:50%;background:#ff5100;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(255,81,0,0.45);border:2.5px solid #fff;">${count}</div>`,
+            html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:#ff5100;color:#fff;font-size:${count >= 100 ? 11 : 12}px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2.5px solid #fff;box-shadow:0 3px 14px rgba(255,81,0,0.4);">${count}</div>`,
             className: "",
-            iconSize: [40, 40],
+            iconSize: [size, size],
+            iconAnchor: [size / 2, size / 2],
           });
         },
       });
@@ -458,7 +506,6 @@ function MapView({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [advs]);
 
-  // Sync overlay layer — only one active at a time. Create each layer once, reuse on re-toggle.
   useEffect(() => {
     if (!mapInstanceRef.current) return;
     loadLeaflet().then(leaflet => {
@@ -593,18 +640,25 @@ export default function MapPage() {
     );
   }
 
-  const btnBase = "flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all shrink-0";
-  const btnIdle = "bg-[#f5f0e8] text-[#1a1f2e] hover:bg-[#ede8de]";
-  const btnActive = "bg-[#1e3d2f] text-white";
+  // Toolbar button helpers
+  const tbBtn = (active: boolean, danger = false) =>
+    `flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 ${
+      active
+        ? danger ? "bg-[#ff5100] text-white" : "text-white"
+        : "text-[#4a4540] hover:bg-[#ede8de]"
+    }`;
 
   return (
     <div className="flex flex-col" style={{ height: "100dvh" }}>
       <Navbar />
       <div className="h-16 lg:h-20 shrink-0" />
 
-      {/* ── Toolbar ─────────────────────────────────────────────── */}
-      <div className="z-[1001] bg-white border-b border-[#e8dfc8] shrink-0" style={{ boxShadow: "0 1px 0 #e8dfc8" }}>
-        <div className="max-w-7xl mx-auto px-4 lg:px-6 py-2.5 flex items-center gap-2">
+      {/* ── Toolbar ────────────────────────────────────────────── */}
+      <div
+        className="z-[1001] shrink-0"
+        style={{ background: "rgba(255,253,248,0.97)", backdropFilter: "blur(12px)", borderBottom: "1px solid #e8e0d0", boxShadow: "0 1px 0 #e8e0d0" }}
+      >
+        <div className="max-w-7xl mx-auto px-3 lg:px-5 py-2 flex items-center gap-2">
 
           <UnifiedSearch
             onAdventureSearch={setSearch}
@@ -612,64 +666,76 @@ export default function MapPage() {
             onAdventurePin={adv => openPinRef.current?.(adv.slug)}
           />
 
-          {/* Overlay toggles — mutually exclusive, one at a time */}
-          <div className="flex items-center rounded-xl overflow-hidden shrink-0" style={{ border: "1px solid #e8dfc8" }}>
+          {/* Layer toggles */}
+          <div
+            className="flex items-center rounded-xl overflow-hidden shrink-0"
+            style={{ border: "1px solid #e0d8c8", background: "#f0ebe0" }}
+          >
             <button
               onClick={() => toggleOverlay("terrain")}
-              title="Terrain / topo layer"
-              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-all"
-              style={{
-                background: activeOverlay === "terrain" ? "#1e3d2f" : "#f5f0e8",
-                color: activeOverlay === "terrain" ? "white" : "#4a4540",
-                borderRight: "1px solid #e8dfc8",
-              }}
+              title="Terrain layer"
+              className={tbBtn(activeOverlay === "terrain")}
+              style={activeOverlay === "terrain" ? { background: "#1e3d2f" } : {}}
             >
-              <Layers className="w-4 h-4" />
+              <Layers className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Terrain</span>
             </button>
+            <div style={{ width: 1, alignSelf: "stretch", background: "#e0d8c8" }} />
             <button
               onClick={() => toggleOverlay("satellite")}
               title="Satellite imagery"
-              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-all"
-              style={{
-                background: activeOverlay === "satellite" ? "#1e3d2f" : "#f5f0e8",
-                color: activeOverlay === "satellite" ? "white" : "#4a4540",
-              }}
+              className={tbBtn(activeOverlay === "satellite")}
+              style={activeOverlay === "satellite" ? { background: "#1e3d2f" } : {}}
             >
-              <MapIcon className="w-4 h-4" />
+              <MapIcon className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Satellite</span>
             </button>
           </div>
 
-          <div className="flex flex-col items-center shrink-0">
-            <button onClick={handleNearMe} title={nearMe ? "Clear Near Me" : "Adventures Near Me"}
-              className={`${btnBase} ${nearMe ? "bg-[#ff5100] text-white" : nearMeError ? "bg-red-50 text-red-500 border border-red-200" : btnIdle}`}>
-              {nearMeLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <LocateFixed className="w-4 h-4" />}
+          {/* Near Me */}
+          <div className="relative shrink-0">
+            <button
+              onClick={handleNearMe}
+              title={nearMe ? "Clear Near Me" : "Adventures Near Me"}
+              className={tbBtn(nearMe !== null, nearMe !== null)}
+              style={nearMe ? { background: "#ff5100" } : nearMeError ? { background: "#fff0ee", color: "#ef4444", border: "1px solid #fca5a5" } : { background: "#f0ebe0", border: "1px solid #e0d8c8" }}
+            >
+              {nearMeLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LocateFixed className="w-3.5 h-3.5" />}
               <span className="hidden sm:inline">{nearMe ? "Near Me ✓" : "Near Me"}</span>
             </button>
             {nearMeError && (
-              <span className="text-[10px] text-red-400 font-medium mt-0.5 whitespace-nowrap">Location denied</span>
+              <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1 text-[9px] text-red-400 font-semibold whitespace-nowrap">Location denied</span>
             )}
           </div>
 
-          <button onClick={() => setFiltersOpen(!filtersOpen)}
-            className={`${btnBase} ${filtersOpen || activeFilterCount > 0 ? btnActive : btnIdle}`}>
-            <SlidersHorizontal className="w-4 h-4" />
+          {/* Filters */}
+          <button
+            onClick={() => setFiltersOpen(!filtersOpen)}
+            className={tbBtn(filtersOpen || activeFilterCount > 0)}
+            style={filtersOpen || activeFilterCount > 0 ? { background: "#1e3d2f" } : { background: "#f0ebe0", border: "1px solid #e0d8c8" }}
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5" />
             <span>Filters</span>
             {activeFilterCount > 0 && (
-              <span className="bg-[#ff5100] text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+              <span className="bg-[#ff5100] text-white text-[10px] font-bold w-4.5 h-4.5 rounded-full flex items-center justify-center leading-none px-1 py-0.5">
                 {activeFilterCount}
               </span>
             )}
-            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
+            <ChevronDown className={`w-3 h-3 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
           </button>
 
-          <span className="hidden lg:block text-xs text-[#b8b0a5] font-medium ml-2 shrink-0">
-            {visibleAdventures.length} / {adventures.length}
+          {/* Count */}
+          <span className="hidden lg:block text-[11px] font-medium shrink-0" style={{ color: "#a0998f" }}>
+            {visibleAdventures.length}<span className="opacity-50"> / {adventures.length}</span>
           </span>
 
+          {/* Clear */}
           {(activeFilterCount > 0 || search) && (
-            <button onClick={clearAll} className="flex items-center gap-1 text-sm text-[#ff5100] hover:text-[#e04800] font-semibold transition-colors shrink-0">
+            <button
+              onClick={clearAll}
+              className="flex items-center gap-1 text-xs font-semibold shrink-0 transition-colors"
+              style={{ color: "#ff5100" }}
+            >
               <X className="w-3.5 h-3.5" />
               Clear
             </button>
@@ -678,242 +744,272 @@ export default function MapPage() {
 
         {/* Filter panel */}
         {filtersOpen && (
-          <div className="border-t border-[#e8dfc8] bg-[#fdfcfb] px-4 lg:px-6 py-6 max-h-[60vh] overflow-y-auto">
+          <div
+            className="border-t px-3 lg:px-5 py-5 max-h-[58vh] overflow-y-auto"
+            style={{ borderColor: "#e8e0d0", background: "#fdfcfb" }}
+          >
             <div className="max-w-7xl mx-auto">
-            {activeFilterCount > 0 && (
-              <div className="flex justify-end mb-5">
-                <button
-                  onClick={clearAll}
-                  className="flex items-center gap-1.5 text-sm font-semibold text-[#ff5100] hover:text-[#e04800] transition-colors"
-                >
-                  <X className="w-3.5 h-3.5" />
-                  Clear all filters
-                </button>
-              </div>
-            )}
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-8">
+              {activeFilterCount > 0 && (
+                <div className="flex justify-end mb-4">
+                  <button
+                    onClick={clearAll}
+                    className="flex items-center gap-1.5 text-xs font-semibold transition-colors"
+                    style={{ color: "#ff5100" }}
+                  >
+                    <X className="w-3 h-3" />
+                    Clear all
+                  </button>
+                </div>
+              )}
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-7">
 
-              {/* Adventure Type */}
-              <div className="col-span-2 lg:col-span-3">
-                <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#b8b0a5] mb-3">Adventure Type</h3>
-                {(() => {
-                  const categories = [
-                    { label: "Land",  types: ["Trekking","Mountaineering","Rock Climbing","Scrambling","Biking","Cycling","Jeep Safari","Caving","Urban Adventure"] },
-                    { label: "Water", types: ["Diving","Kayaking"] },
-                    { label: "Snow",  types: ["Skiing"] },
-                    { label: "Air",   types: [] as string[] },
-                  ];
-                  return (
-                    <div className="flex flex-col gap-2">
-                      <div className="flex flex-wrap gap-2">
-                        {categories.map(cat => {
-                          const isExpanded = expandedCategory === cat.label;
-                          const hasSelected = cat.types.some(t => selectedTypes.includes(t as AdventureType));
-                          return (
-                            <button key={cat.label} onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
-                              className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? "bg-[#ff5100] text-white border-[#ff5100]" : "bg-white border-[#e8dfc8] text-[#4a4540] hover:bg-[#f5f0e8]"}`}>
-                              {cat.label}
-                              {hasSelected && <span className="bg-white/30 text-xs font-bold px-1.5 py-0.5 rounded-full leading-none">{cat.types.filter(t => selectedTypes.includes(t as AdventureType)).length}</span>}
-                              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                            </button>
-                          );
-                        })}
-                      </div>
-                      {expandedCategory && (() => {
-                        const cat = categories.find(c => c.label === expandedCategory)!;
-                        return (
-                          <div className="rounded-xl border border-[#e8dfc8] bg-white p-3">
-                            {cat.types.length === 0 ? <p className="text-xs text-[#ff5100]/60 italic">Coming soon</p> : (
-                              <div className="flex flex-wrap gap-2">
-                                {cat.types.map(type => (
-                                  <button key={type} onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
-                                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedTypes.includes(type as AdventureType) ? "bg-[#ff5100] text-white" : "bg-[#f5f0e8] text-[#4a4540] hover:bg-[#ede8de]"}`}>
-                                    {type}
-                                  </button>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })()}
-                    </div>
-                  );
-                })()}
-              </div>
-
-              {/* Region */}
-              <div className="col-span-2 lg:col-span-3">
-                <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#b8b0a5] mb-3">Region</h3>
-                {(() => {
-                  const regionGroups: { name: Region; subRegions: string[] }[] = [
-                    { name: "Himalayas",     subRegions: ["Ladakh","Jammu & Kashmir","Uttarakhand","Himachal Pradesh","Sikkim","Arunachal Pradesh"] },
-                    { name: "Western Ghats", subRegions: ["Kerala","Karnataka","Goa","Maharashtra"] },
-                    { name: "Eastern Ghats", subRegions: ["Odisha","Andhra Pradesh","Telangana","Tamil Nadu"] },
-                    { name: "Desert",        subRegions: ["Rajasthan","Gujarat"] },
-                    { name: "Coast",         subRegions: ["Maharashtra","Goa","Kerala","Karnataka","Odisha","Tamil Nadu","Andhra Pradesh"] },
-                    { name: "Islands",       subRegions: ["Andaman & Nicobar","Lakshadweep"] },
-                    { name: "Northeast",     subRegions: ["Nagaland","Manipur","Meghalaya","Mizoram","Assam","Arunachal Pradesh","Sikkim"] },
-                    { name: "Urban",         subRegions: ["Mumbai","Delhi","Bangalore","Chennai","Kolkata","Hyderabad","Pune"] },
-                  ];
-                  return (
-                    <div className="flex flex-col gap-2">
-                      <div className="flex flex-wrap gap-2">
-                        {regionGroups.map(rg => {
-                          const isExpanded = expandedRegion === rg.name;
-                          const subCount = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
-                          const hasSelected = selectedRegions.includes(rg.name) || subCount > 0;
-                          return (
-                            <button key={rg.name} onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
-                              className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? "bg-[#ff5100] text-white border-[#ff5100]" : "bg-white border-[#e8dfc8] text-[#4a4540] hover:bg-[#f5f0e8]"}`}>
-                              {rg.name}
-                              {subCount > 0 && <span className="bg-white/30 text-xs font-bold px-1.5 py-0.5 rounded-full leading-none">{subCount}</span>}
-                              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                            </button>
-                          );
-                        })}
-                      </div>
-                      {expandedRegion && (() => {
-                        const rg = regionGroups.find(r => r.name === expandedRegion)!;
-                        return (
-                          <div className="rounded-xl border border-[#e8dfc8] bg-white p-3">
-                            <div className="flex flex-wrap gap-2">
-                              {rg.subRegions.map(sr => (
-                                <button key={sr} onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
-                                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedSubRegions.includes(sr) ? "bg-[#ff5100] text-white" : "bg-[#f5f0e8] text-[#4a4540] hover:bg-[#ede8de]"}`}>
-                                  {sr}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        );
-                      })()}
-                    </div>
-                  );
-                })()}
-              </div>
-
-              {/* Season */}
-              <div className="col-span-2 lg:col-span-3">
-                <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#b8b0a5] mb-3">Best Season</h3>
-                <div className="flex flex-col gap-2">
-                  <div className="flex flex-wrap gap-2">
-                    {seasons.map(({ label, months: sMonths }) => {
-                      const isExpanded = expandedSeason === label;
-                      const count = sMonths.filter(m => selectedMonths.includes(m)).length;
-                      const hasSelected = count > 0;
-                      return (
-                        <button key={label} onClick={() => setExpandedSeason(isExpanded ? null : label)}
-                          className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isExpanded || hasSelected ? "bg-[#ff5100] text-white border-[#ff5100]" : "bg-white border-[#e8dfc8] text-[#4a4540] hover:bg-[#f5f0e8]"}`}>
-                          {label}
-                          {hasSelected && <span className="bg-white/30 text-xs font-bold px-1.5 py-0.5 rounded-full leading-none">{count}</span>}
-                          <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {expandedSeason && (() => {
-                    const season = seasons.find(s => s.label === expandedSeason)!;
+                {/* Adventure Type */}
+                <div className="col-span-2 lg:col-span-3">
+                  <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>Adventure Type</h3>
+                  {(() => {
+                    const categories = [
+                      { label: "Land",  types: ["Trekking","Mountaineering","Rock Climbing","Scrambling","Biking","Cycling","Jeep Safari","Caving","Urban Adventure"] },
+                      { label: "Water", types: ["Diving","Kayaking"] },
+                      { label: "Snow",  types: ["Skiing"] },
+                      { label: "Air",   types: [] as string[] },
+                    ];
                     return (
-                      <div className="rounded-xl border border-[#e8dfc8] bg-white p-3">
+                      <div className="flex flex-col gap-2">
                         <div className="flex flex-wrap gap-2">
-                          {season.months.map(m => (
-                            <button key={m} onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedMonths.includes(m) ? "bg-[#ff5100] text-white" : "bg-[#f5f0e8] text-[#4a4540] hover:bg-[#ede8de]"}`}>
-                              {m}
-                            </button>
-                          ))}
+                          {categories.map(cat => {
+                            const isExpanded = expandedCategory === cat.label;
+                            const hasSelected = cat.types.some(t => selectedTypes.includes(t as AdventureType));
+                            return (
+                              <button key={cat.label} onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
+                                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all"
+                                style={isExpanded || hasSelected
+                                  ? { background: "#ff5100", color: "white", borderColor: "#ff5100" }
+                                  : { background: "white", borderColor: "#e0d8c8", color: "#3a3530" }}>
+                                {cat.label}
+                                {hasSelected && <span className="bg-white/30 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{cat.types.filter(t => selectedTypes.includes(t as AdventureType)).length}</span>}
+                                <ChevronDown className={`w-3 h-3 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                              </button>
+                            );
+                          })}
                         </div>
+                        {expandedCategory && (() => {
+                          const cat = categories.find(c => c.label === expandedCategory)!;
+                          return (
+                            <div className="rounded-xl border p-3" style={{ background: "white", borderColor: "#e0d8c8" }}>
+                              {cat.types.length === 0 ? <p className="text-[11px] italic" style={{ color: "#ff5100", opacity: 0.5 }}>Coming soon</p> : (
+                                <div className="flex flex-wrap gap-1.5">
+                                  {cat.types.map(type => (
+                                    <button key={type} onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
+                                      className="px-3 py-1.5 rounded-full text-[11px] font-medium transition-all"
+                                      style={selectedTypes.includes(type as AdventureType)
+                                        ? { background: "#ff5100", color: "white" }
+                                        : { background: "#f0ebe0", color: "#3a3530" }}>
+                                      {type}
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })()}
                       </div>
                     );
                   })()}
                 </div>
-              </div>
 
-              {/* Difficulty */}
-              <div className="col-span-2 lg:col-span-3">
-                <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#b8b0a5] mb-3">Difficulty</h3>
-                <div className="flex flex-wrap gap-2">
-                  {(["Easy","Moderate","Hard","Advanced","Extreme"] as Difficulty[]).map(val => {
-                    const isSelected = selectedDifficulties.includes(val);
+                {/* Region */}
+                <div className="col-span-2 lg:col-span-3">
+                  <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>Region</h3>
+                  {(() => {
+                    const regionGroups: { name: Region; subRegions: string[] }[] = [
+                      { name: "Himalayas",     subRegions: ["Ladakh","Jammu & Kashmir","Uttarakhand","Himachal Pradesh","Sikkim","Arunachal Pradesh"] },
+                      { name: "Western Ghats", subRegions: ["Kerala","Karnataka","Goa","Maharashtra"] },
+                      { name: "Eastern Ghats", subRegions: ["Odisha","Andhra Pradesh","Telangana","Tamil Nadu"] },
+                      { name: "Desert",        subRegions: ["Rajasthan","Gujarat"] },
+                      { name: "Coast",         subRegions: ["Maharashtra","Goa","Kerala","Karnataka","Odisha","Tamil Nadu","Andhra Pradesh"] },
+                      { name: "Islands",       subRegions: ["Andaman & Nicobar","Lakshadweep"] },
+                      { name: "Northeast",     subRegions: ["Nagaland","Manipur","Meghalaya","Mizoram","Assam","Arunachal Pradesh","Sikkim"] },
+                      { name: "Urban",         subRegions: ["Mumbai","Delhi","Bangalore","Chennai","Kolkata","Hyderabad","Pune"] },
+                    ];
                     return (
-                      <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${isSelected ? "text-white border-transparent" : "bg-white border-[#e8dfc8] text-[#4a4540] hover:bg-[#f5f0e8]"}`}
-                        style={isSelected ? { background: difficultyColor[val], borderColor: difficultyColor[val] } : {}}>
-                        {isSelected && <span className="w-2 h-2 rounded-full bg-white/60 shrink-0" />}
-                        {val}
-                      </button>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex flex-wrap gap-2">
+                          {regionGroups.map(rg => {
+                            const isExpanded = expandedRegion === rg.name;
+                            const subCount = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
+                            const hasSelected = selectedRegions.includes(rg.name) || subCount > 0;
+                            return (
+                              <button key={rg.name} onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
+                                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all"
+                                style={isExpanded || hasSelected
+                                  ? { background: "#ff5100", color: "white", borderColor: "#ff5100" }
+                                  : { background: "white", borderColor: "#e0d8c8", color: "#3a3530" }}>
+                                {rg.name}
+                                {subCount > 0 && <span className="bg-white/30 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{subCount}</span>}
+                                <ChevronDown className={`w-3 h-3 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {expandedRegion && (() => {
+                          const rg = regionGroups.find(r => r.name === expandedRegion)!;
+                          return (
+                            <div className="rounded-xl border p-3" style={{ background: "white", borderColor: "#e0d8c8" }}>
+                              <div className="flex flex-wrap gap-1.5">
+                                {rg.subRegions.map(sr => (
+                                  <button key={sr} onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
+                                    className="px-3 py-1.5 rounded-full text-[11px] font-medium transition-all"
+                                    style={selectedSubRegions.includes(sr)
+                                      ? { background: "#ff5100", color: "white" }
+                                      : { background: "#f0ebe0", color: "#3a3530" }}>
+                                    {sr}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
                     );
-                  })}
+                  })()}
                 </div>
-              </div>
 
-              {/* Duration + Group Size */}
-              <div className="col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#b8b0a5] mb-3">Duration</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {(["Weekend","3–5 days","7+ days"] as Duration[]).map(val => (
-                      <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
-                        className={`px-4 py-2 rounded-xl border text-sm font-medium transition-all ${selectedDurations.includes(val) ? "bg-[#ff5100] text-white border-[#ff5100]" : "bg-white border-[#e8dfc8] text-[#4a4540] hover:bg-[#f5f0e8]"}`}>
-                        {val}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#b8b0a5] mb-3">Group Size</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {(["Solo","Small group (2–6)","Large group (6+)"] as GroupSize[]).map(val => (
-                      <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
-                        className={`px-4 py-2 rounded-xl border text-sm font-medium transition-all whitespace-nowrap ${selectedGroupSizes.includes(val) ? "bg-[#ff5100] text-white border-[#ff5100]" : "bg-white border-[#e8dfc8] text-[#4a4540] hover:bg-[#f5f0e8]"}`}>
-                        {val}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* ACE */}
-              <div className="col-span-2 lg:col-span-3">
-                <h3 className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#b8b0a5] mb-3">ACE Profile Match</h3>
-                {!userProfile ? (
-                  <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-white border border-[#e8dfc8]">
-                    <div>
-                      <p className="text-sm font-medium text-[#4a4540]">No ACE profile yet</p>
-                      <p className="text-xs text-[#9a9590] mt-0.5">Take the assessment to filter by capability</p>
+                {/* Season */}
+                <div className="col-span-2 lg:col-span-3">
+                  <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>Best Season</h3>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-wrap gap-2">
+                      {seasons.map(({ label, months: sMonths }) => {
+                        const isExpanded = expandedSeason === label;
+                        const count = sMonths.filter(m => selectedMonths.includes(m)).length;
+                        const hasSelected = count > 0;
+                        return (
+                          <button key={label} onClick={() => setExpandedSeason(isExpanded ? null : label)}
+                            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all"
+                            style={isExpanded || hasSelected
+                              ? { background: "#ff5100", color: "white", borderColor: "#ff5100" }
+                              : { background: "white", borderColor: "#e0d8c8", color: "#3a3530" }}>
+                            {label}
+                            {hasSelected && <span className="bg-white/30 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{count}</span>}
+                            <ChevronDown className={`w-3 h-3 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                          </button>
+                        );
+                      })}
                     </div>
-                    <Link href="/matchmaker" className="shrink-0 inline-flex items-center gap-1.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-3 py-2 rounded-xl text-xs transition-all">
-                      Take Assessment <ArrowRight className="w-3 h-3" />
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {([
-                      { key: "ready" as AceCategory,         label: "Ready Now",        desc: "Matches your current level",          color: "#1e3d2f", bg: "#1e3d2f12", border: "#1e3d2f35" },
-                      { key: "stretch" as AceCategory,       label: "Stretch Challenge", desc: "Slightly above your level",           color: "#b45309", bg: "#b4530912", border: "#b4530935" },
-                      { key: "out-of-range" as AceCategory,  label: "Out of Range",     desc: "Significantly beyond current ability", color: "#dc2626", bg: "#dc262612", border: "#dc262635" },
-                    ]).map(({ key, label, desc, color, bg, border }) => {
-                      const isActive = aceCategory === key;
+                    {expandedSeason && (() => {
+                      const season = seasons.find(s => s.label === expandedSeason)!;
                       return (
-                        <button key={key} onClick={() => setAceCategory(isActive ? null : key)}
-                          className="text-left p-3.5 rounded-xl border transition-all"
-                          style={{ background: isActive ? bg : "white", borderColor: isActive ? border : "#e8dfc8" }}>
-                          <p className="text-xs font-bold mb-0.5" style={{ color: isActive ? color : "#6b6560" }}>{label}</p>
-                          <p className="text-[11px] text-[#9a9590]">{desc}</p>
+                        <div className="rounded-xl border p-3" style={{ background: "white", borderColor: "#e0d8c8" }}>
+                          <div className="flex flex-wrap gap-1.5">
+                            {season.months.map(m => (
+                              <button key={m} onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
+                                className="px-3 py-1.5 rounded-full text-[11px] font-medium transition-all"
+                                style={selectedMonths.includes(m)
+                                  ? { background: "#ff5100", color: "white" }
+                                  : { background: "#f0ebe0", color: "#3a3530" }}>
+                                {m}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </div>
+
+                {/* Difficulty */}
+                <div className="col-span-2 lg:col-span-3">
+                  <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>Difficulty</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {(["Easy","Moderate","Hard","Advanced","Extreme"] as Difficulty[]).map(val => {
+                      const isSelected = selectedDifficulties.includes(val);
+                      return (
+                        <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
+                          className="flex items-center gap-2 px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all"
+                          style={isSelected
+                            ? { background: difficultyColor[val], color: "white", borderColor: difficultyColor[val] }
+                            : { background: "white", borderColor: "#e0d8c8", color: "#3a3530" }}>
+                          <span className="w-2 h-2 rounded-full shrink-0" style={{ background: isSelected ? "rgba(255,255,255,0.55)" : difficultyColor[val] }} />
+                          {val}
                         </button>
                       );
                     })}
                   </div>
-                )}
+                </div>
+
+                {/* Duration + Group Size */}
+                <div className="col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-7">
+                  <div>
+                    <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>Duration</h3>
+                    <div className="flex flex-wrap gap-1.5">
+                      {(["Weekend","3–5 days","7+ days"] as Duration[]).map(val => (
+                        <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
+                          className="px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all"
+                          style={selectedDurations.includes(val)
+                            ? { background: "#ff5100", color: "white", borderColor: "#ff5100" }
+                            : { background: "white", borderColor: "#e0d8c8", color: "#3a3530" }}>
+                          {val}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>Group Size</h3>
+                    <div className="flex flex-wrap gap-1.5">
+                      {(["Solo","Small group (2–6)","Large group (6+)"] as GroupSize[]).map(val => (
+                        <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
+                          className="px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all whitespace-nowrap"
+                          style={selectedGroupSizes.includes(val)
+                            ? { background: "#ff5100", color: "white", borderColor: "#ff5100" }
+                            : { background: "white", borderColor: "#e0d8c8", color: "#3a3530" }}>
+                          {val}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* ACE */}
+                <div className="col-span-2 lg:col-span-3">
+                  <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>ACE Profile Match</h3>
+                  {!userProfile ? (
+                    <div className="flex items-center justify-between gap-4 p-4 rounded-xl border" style={{ background: "white", borderColor: "#e0d8c8" }}>
+                      <div>
+                        <p className="text-xs font-semibold" style={{ color: "#3a3530" }}>No ACE profile yet</p>
+                        <p className="text-[11px] mt-0.5" style={{ color: "#9a9590" }}>Take the assessment to filter by capability</p>
+                      </div>
+                      <Link href="/matchmaker" className="shrink-0 inline-flex items-center gap-1.5 text-white font-semibold px-3 py-2 rounded-xl text-[11px] transition-all" style={{ background: "#ff5100" }}>
+                        Take Assessment <ArrowRight className="w-3 h-3" />
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                      {([
+                        { key: "ready" as AceCategory,        label: "Ready Now",        desc: "Matches your current level",          color: "#1e3d2f", bg: "#1e3d2f10", border: "#1e3d2f30" },
+                        { key: "stretch" as AceCategory,      label: "Stretch Challenge", desc: "Slightly above your level",           color: "#b45309", bg: "#b4530910", border: "#b4530930" },
+                        { key: "out-of-range" as AceCategory, label: "Out of Range",     desc: "Significantly beyond current ability", color: "#dc2626", bg: "#dc262610", border: "#dc262630" },
+                      ]).map(({ key, label, desc, color, bg, border }) => {
+                        const isActive = aceCategory === key;
+                        return (
+                          <button key={key} onClick={() => setAceCategory(isActive ? null : key)}
+                            className="text-left p-3 rounded-xl border transition-all"
+                            style={{ background: isActive ? bg : "white", borderColor: isActive ? border : "#e0d8c8" }}>
+                            <p className="text-[11px] font-bold mb-0.5" style={{ color: isActive ? color : "#5a5550" }}>{label}</p>
+                            <p className="text-[10px]" style={{ color: "#9a9590" }}>{desc}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
             </div>
           </div>
         )}
 
-        {/* Active chips */}
+        {/* Active filter chips */}
         {activeFilterCount > 0 && (
-          <div className="px-4 lg:px-6 py-2.5 flex flex-wrap gap-1.5 border-t border-[#e8dfc8] bg-white">
+          <div className="px-3 lg:px-5 py-2 flex flex-wrap gap-1.5 border-t" style={{ borderColor: "#e8e0d0", background: "#fff" }}>
             {[
               ...selectedTypes.map(t => ({ label: t, remove: () => toggle(selectedTypes, t, setSelectedTypes) })),
               ...selectedRegions.map(r => ({ label: r, remove: () => toggle(selectedRegions, r, setSelectedRegions) })),
@@ -924,9 +1020,15 @@ export default function MapPage() {
               ...selectedGroupSizes.map(g => ({ label: g, remove: () => toggle(selectedGroupSizes, g, setSelectedGroupSizes) })),
               ...(aceCategory ? [{ label: `ACE: ${aceCategory === "ready" ? "Ready" : aceCategory === "stretch" ? "Stretch" : "Out of Range"}`, remove: () => setAceCategory(null) }] : []),
             ].map(({ label, remove }) => (
-              <span key={label} onClick={remove}
-                className="flex items-center gap-1 bg-[#ff5100]/10 text-[#ff5100] px-2.5 py-1 rounded-full text-xs font-semibold cursor-pointer hover:bg-[#ff5100]/20 transition-colors">
-                {label} <X className="w-3 h-3" />
+              <span
+                key={label}
+                onClick={remove}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold cursor-pointer transition-colors"
+                style={{ background: "rgba(255,81,0,0.08)", color: "#ff5100" }}
+                onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,81,0,0.15)")}
+                onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,81,0,0.08)")}
+              >
+                {label} <X className="w-2.5 h-2.5" />
               </span>
             ))}
           </div>
@@ -936,40 +1038,63 @@ export default function MapPage() {
       {/* ── Map ─────────────────────────────────────────────────── */}
       <div className="flex-1 relative overflow-hidden">
         {mounted ? (
-          <MapView adventures={sortedAdventures} flyToRef={flyToRef} openPinRef={openPinRef} overlays={activeOverlay ? new Set([activeOverlay]) : new Set()} />
+          <MapView
+            adventures={sortedAdventures}
+            flyToRef={flyToRef}
+            openPinRef={openPinRef}
+            overlays={activeOverlay ? new Set([activeOverlay]) : new Set()}
+          />
         ) : (
-          <div className="w-full h-full bg-[#f5f0e8] flex items-center justify-center">
-            <Loader2 className="w-6 h-6 text-[#b8b0a5] animate-spin" />
+          <div className="w-full h-full flex items-center justify-center" style={{ background: "#f0ebe0" }}>
+            <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#b0a898" }} />
           </div>
         )}
 
-        {/* Difficulty legend */}
-        <div className="absolute bottom-5 left-4 z-[1000] bg-white/90 backdrop-blur-md rounded-2xl border border-[#e8dfc8] px-4 py-3 shadow-lg">
-          <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#b8b0a5] mb-2">Difficulty</p>
-          <div className="flex flex-col gap-1.5">
+        {/* Difficulty legend — glass card */}
+        <div
+          className="absolute bottom-5 left-4 z-[1000] rounded-2xl px-3.5 py-3"
+          style={{
+            background: "rgba(255,253,248,0.88)",
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(232,224,208,0.8)",
+            boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+          }}
+        >
+          <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2" style={{ color: "#b0a898" }}>Difficulty</p>
+          <div className="flex flex-col gap-1">
             {Object.entries(difficultyColor).map(([label, color]) => (
               <div key={label} className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: color }} />
-                <span className="text-[11px] font-medium text-[#4a4540]">{label}</span>
+                <div className="w-2 h-2 rounded-full shrink-0" style={{ background: color }} />
+                <span className="text-[11px] font-medium" style={{ color: "#3a3530" }}>{label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Branding chip */}
-        <div className="absolute bottom-5 right-4 z-[1000] bg-white/80 backdrop-blur-md rounded-xl border border-[#e8dfc8] px-3 py-1.5 shadow">
-          <div className="flex items-center gap-1.5 text-[#9a9590] text-[10px] font-semibold tracking-wide">
-            <MapIcon className="w-3 h-3" />
-            TRAIL TO TIDES
-          </div>
-        </div>
-
-        {/* Visible count badge (when filtered) */}
+        {/* Visible count pill — floats above map when filtered */}
         {(activeFilterCount > 0 || search) && (
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-[#1e3d2f] text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-lg">
-            {visibleAdventures.length} adventure{visibleAdventures.length !== 1 ? "s" : ""} visible
+          <div
+            className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] text-white text-[11px] font-semibold px-4 py-1.5 rounded-full shadow-lg"
+            style={{ background: "#1e3d2f", boxShadow: "0 4px 14px rgba(30,61,47,0.4)" }}
+          >
+            {visibleAdventures.length} adventure{visibleAdventures.length !== 1 ? "s" : ""} shown
           </div>
         )}
+
+        {/* Branding chip */}
+        <div
+          className="absolute bottom-5 right-4 z-[1000] rounded-xl px-2.5 py-1.5"
+          style={{
+            background: "rgba(255,253,248,0.82)",
+            backdropFilter: "blur(8px)",
+            border: "1px solid rgba(232,224,208,0.7)",
+          }}
+        >
+          <div className="flex items-center gap-1.5 text-[9px] font-bold tracking-widest uppercase" style={{ color: "#9a9590" }}>
+            <MapIcon className="w-2.5 h-2.5" />
+            Trail to Tides
+          </div>
+        </div>
       </div>
     </div>
   );
