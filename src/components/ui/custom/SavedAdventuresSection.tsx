@@ -71,7 +71,7 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
 
   return (
     <section className="py-10 px-5 lg:px-8" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="max-w-7xl mx-auto grid grid-cols-2 gap-4">
 
         {/* ── Wishlist panel ── */}
         <div className="p-4" style={PANEL_STYLE}>
