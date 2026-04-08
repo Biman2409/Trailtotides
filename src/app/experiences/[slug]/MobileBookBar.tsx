@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 
 interface Props {
   adventureName: string;
@@ -16,7 +16,6 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Show after user scrolls past the hero (≈ 80vh)
     const threshold = window.innerHeight * 0.8;
     const onScroll = () => setVisible(window.scrollY > threshold);
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -27,7 +26,6 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
     if (operatorWebsite) {
       window.open(operatorWebsite, "_blank", "noopener noreferrer");
     } else {
-      // Scroll to operators section
       const el = document.getElementById("operators-section");
       if (el) el.scrollIntoView({ behavior: "smooth" });
     }
@@ -35,32 +33,52 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
 
   return (
     <div
-      className={`lg:hidden fixed bottom-0 left-0 right-0 z-[999] transition-all duration-300 ${
+      className={`lg:hidden fixed bottom-0 left-0 right-0 z-[999] transition-all duration-500 ease-out ${
         visible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
       }`}
-      style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)" }}
     >
-      {/* Safe area padding for notch phones */}
-      <div className="px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] flex items-center gap-3">
-        <div className="flex-1 min-w-0">
-          <p className="text-white font-semibold text-sm truncate">{adventureName}</p>
-          <p className="text-white/40 text-xs mt-0.5">{duration} · {difficulty}{operatorName ? <> · <span className="text-white/55">{operatorName}</span></> : null}</p>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
+      {/* Blur backdrop */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "linear-gradient(to top, rgba(8,10,18,0.97) 60%, rgba(8,10,18,0.0) 100%)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+        }}
+      />
+
+      <div className="relative px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
+        {/* Top row — name + price */}
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="min-w-0">
+            <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#ff5100]/80 mb-0.5">Book This Adventure</p>
+            <p className="text-white font-semibold text-sm leading-snug truncate">{adventureName}</p>
+            <p className="text-white/35 text-[11px] mt-0.5 truncate">
+              {duration}
+              {difficulty && <> · <span className="text-white/45">{difficulty}</span></>}
+              {operatorName && <> · <span className="text-white/55">{operatorName}</span></>}
+            </p>
+          </div>
           {priceFrom && (
-            <div className="text-right">
-              <p className="text-white/30 text-[9px] uppercase tracking-wider">From</p>
-              <p className="text-white font-bold text-sm leading-none">{priceFrom}</p>
+            <div className="text-right shrink-0">
+              <p className="text-white/30 text-[9px] uppercase tracking-wider leading-none mb-1">From</p>
+              <p className="text-white font-bold text-base leading-none">{priceFrom}</p>
             </div>
           )}
-          <button
-            onClick={handleBook}
-            className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#ff5100] hover:bg-[#ff7d47] active:scale-95 text-white text-sm font-bold transition-all duration-200 shadow-lg shadow-[#ff5100]/30"
-          >
-            Book Now
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
         </div>
+
+        {/* CTA button — full width */}
+        <button
+          onClick={handleBook}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-white text-sm font-bold transition-all duration-200 active:scale-[0.98]"
+          style={{
+            background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)",
+            boxShadow: "0 4px 20px rgba(255,81,0,0.4), 0 0 0 1px rgba(255,81,0,0.2)",
+          }}
+        >
+          Book Now
+          <ChevronRight className="w-4 h-4" />
+        </button>
       </div>
     </div>
   );
