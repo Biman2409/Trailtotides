@@ -67,18 +67,30 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
           )}
         </div>
 
-        {/* CTA button — full width */}
-        <button
-          onClick={handleBook}
-          className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-white text-sm font-bold transition-all duration-200 active:scale-[0.98]"
-          style={{
-            background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)",
-            boxShadow: "0 4px 20px rgba(255,81,0,0.4), 0 0 0 1px rgba(255,81,0,0.2)",
-          }}
-        >
-          Book Now
-          <ChevronRight className="w-4 h-4" />
-        </button>
+        {/* CTA buttons */}
+        <div className="flex gap-2.5">
+          <button
+            onClick={() => {
+              const el = document.getElementById("operators-section");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-2xl text-sm font-semibold transition-all duration-200 active:scale-[0.98]"
+            style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.65)", border: "1px solid rgba(255,255,255,0.1)" }}
+          >
+            Browse Operators
+          </button>
+          <button
+            onClick={handleBook}
+            className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-2xl text-white text-sm font-bold transition-all duration-200 active:scale-[0.98]"
+            style={{
+              background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)",
+              boxShadow: "0 4px 20px rgba(255,81,0,0.4), 0 0 0 1px rgba(255,81,0,0.2)",
+            }}
+          >
+            Book Now
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </div>
   );
