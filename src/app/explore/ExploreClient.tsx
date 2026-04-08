@@ -1060,60 +1060,28 @@ export default function ExploreClient() {
         )}
       </div>
 
-        {/* ACE + Matchmaker banner */}
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 mt-12 lg:mt-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-            {/* ACE card */}
-            <Link
-              href="/ace"
-              className="group relative overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/10 hover:border-[#ff5100]/30"
-              style={{ background: "var(--bg-surface)", borderColor: "var(--border-subtle)" }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#ff5100]/8 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="relative p-5 flex items-start gap-4">
-                <div className="shrink-0 w-11 h-11 rounded-xl bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center justify-center group-hover:bg-[#ff5100] group-hover:border-[#ff5100] transition-all duration-300">
-                  <BarChart2 className="w-5 h-5 text-[#ff5100] group-hover:text-white transition-colors duration-300" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#ff5100] mb-1">Adventure Rating</p>
-                  <h3 className="text-white font-bold text-base leading-tight mb-1.5">How hard is it, really?</h3>
-                  <p className="text-white/40 text-xs leading-relaxed">
-                    ACE rates every adventure on 8 biological axes — stamina, strength, altitude and more. Know what your body needs before you go.
-                  </p>
-                </div>
-              </div>
-              <div className="relative px-5 pb-4 flex items-center gap-1.5 text-[#ff5100] text-xs font-semibold">
-                Explore ACE Ratings
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-              </div>
-            </Link>
-
-            {/* Matchmaker card */}
+        {/* Matchmaker CTA */}
+        <div className="t-bg-surface mt-12 lg:mt-16 border-t border-white/5">
+          <div className="max-w-7xl mx-auto px-5 lg:px-8 py-12 lg:py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div>
+              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-2.5">
+                Adventure Matchmaker
+              </p>
+              <h2 className="text-white text-3xl lg:text-4xl font-semibold tracking-tight">
+                Find the adventure you're ready for
+              </h2>
+              <p className="text-white/40 mt-2.5 text-sm lg:text-base max-w-lg">
+                Answer a few questions about your fitness and experience. We'll match you to the hardest adventure your body can handle — rated across 8 biological axes.
+              </p>
+            </div>
             <Link
               href="/matchmaker"
-              className="group relative overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#3b82f6]/10 hover:border-[#3b82f6]/30"
-              style={{ background: "var(--bg-surface)", borderColor: "var(--border-subtle)" }}
+              className="inline-flex items-center gap-2.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/25 whitespace-nowrap"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#3b82f6]/8 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="relative p-5 flex items-start gap-4">
-                <div className="shrink-0 w-11 h-11 rounded-xl bg-[#3b82f6]/10 border border-[#3b82f6]/20 flex items-center justify-center group-hover:bg-[#3b82f6] group-hover:border-[#3b82f6] transition-all duration-300">
-                  <Compass className="w-5 h-5 text-[#3b82f6] group-hover:text-white transition-colors duration-300" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#3b82f6] mb-1">Find Your Match</p>
-                  <h3 className="text-white font-bold text-base leading-tight mb-1.5">Which adventure fits you?</h3>
-                  <p className="text-white/40 text-xs leading-relaxed">
-                    Answer a few questions about your fitness, experience, and preferences. We'll find the toughest adventure you're genuinely ready for.
-                  </p>
-                </div>
-              </div>
-              <div className="relative px-5 pb-4 flex items-center gap-1.5 text-[#3b82f6] text-xs font-semibold">
-                Take the Assessment
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-              </div>
+              <BarChart2 className="w-4 h-4" />
+              Take the Assessment
+              <ArrowRight className="w-4 h-4" />
             </Link>
-
           </div>
         </div>
 
