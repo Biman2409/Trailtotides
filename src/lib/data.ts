@@ -137,54 +137,6 @@ export interface Story {
 
 export const adventures: Adventure[] = [
 {
-      id: "10",
-      slug: "stok-kangri",
-  ert: { e: 5, r: 4, t: 4 },
-      name: "Stok Kangri Summit",
-        tagline: "Stand on a 6,153m summit with all of Ladakh spread below you",
-      region: "Himalayas",
-      state: "Ladakh",
-      type: "Mountaineering",
-        difficulty: "Advanced",
-        duration: "7+ days",
-        durationDays: "8 days",
-        distance: "40km",
-      altitude: "6,153m",
-          bestSeason: "Jul – Sep",
-          bestMonths: ["Jul", "Aug", "Sep"],
-          groupSize: "Small group (2–6)",
-          baseCamp: "Mankorma",
-      heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/stok-kangri.jpeg",
-        galleryImages: [
-          "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/stok-kangri.jpeg"
-        ],
-        lat: 33.9139,
-        lng: 77.6285,
-        routePoints: [[34.0078,77.7184],[33.9850,77.7000],[33.9600,77.6800],[33.9350,77.6600],[33.9139,77.6285]],
-      description:
-        "Stok Kangri is one of the most accessible 6,000m peaks in the world — and one of the best introductory mountaineering expeditions in India. The summit ridge is a narrow blade of ice and rock with a 360° view of the entire Ladakh range. On a clear summit day, you can see K2.",
-      whatMakesSpecial:
-        "The jump from 5,000m trekking to 6,000m climbing is immense. This mountain teaches you what your body can do when it has no other option.",
-      whoFor: "5,000m+ trekking experience · Basic crampon & ice axe handling · Comfortable with 10–12hr summit day · Fit enough for 15km/day with 10kg pack",
-      whoNot: "No prior high-altitude trekking · Cardiac or pulmonary conditions · Arriving without acclimatisation days in Leh · Unable to handle sub-zero bivouac conditions",
-      safetyNotes:
-        "Acclimatise in Leh for minimum 3 days. Carry crampons, ice axe, helmet. Go with a certified mountaineering guide — the summit ridge crevasses are real.",
-          operators: [
-            { name: "Rimo Expeditions", verified: true, priceFrom: "₹32,000", rating: 4.9, website: "https://www.rimoexpeditions.com" },
-            { name: "Bikat Adventures", verified: true, priceFrom: "₹26,000", rating: 4.8, website: "https://www.bikatadventures.com" },
-            { name: "White Magic Adventure", verified: true, priceFrom: "₹28,500", rating: 4.7, website: "https://whitemagicadventures.com" },
-            { name: "Shikhar Travels", verified: false, priceFrom: "₹24,000", rating: 4.3, website: "https://www.shikhartravels.com" },
-            { name: "Trek The Himalayas Mountaineering", verified: false, priceFrom: "₹29,000", rating: 4.2, website: "https://trekthehimalayas.com" },
-          ],
-      tags: ["mountaineering", "6000m", "glaciers", "summit", "Ladakh"],
-      featured: true,
-      seedReviews: [
-        { id: "sr-stok-1", username: "ananya_m", rating: 5, body: "One of the hardest and most rewarding things I've done. Summit day is brutal — wind chill at 3am is no joke — but standing on top with all of Ladakh in sight is something I'll never forget. Go with a certified guide, acclimatise properly, and don't rush it.", created_at: "2025-09-14T07:22:00Z", user_id: "" },
-        { id: "sr-stok-2", username: "vikram_outdoors", rating: 4, body: "Incredible summit views. The base camp itself is spectacular enough. Only knocked a star because the scree on the descent destroyed my knees — bring trekking poles and take it slow. Would do it again in a heartbeat though.", created_at: "2025-08-28T11:45:00Z", user_id: "" },
-        { id: "sr-stok-3", username: "priya_s", rating: 5, body: "Summited in August and conditions were perfect. Our guide Tashi was phenomenal — read the weather better than any app. Highly recommend going with a local Ladakhi operator rather than a Delhi-based agency. Better food, better acclimatisation schedule.", created_at: "2025-08-02T09:10:00Z", user_id: "" },
-      ],
-    },
-{
         id: "1",
           slug: "chadar-trek",
           ert: { e: 2, r: 4, t: 3 },
