@@ -15,9 +15,9 @@ interface Message {
 
 const PROMPTS = [
   "Beginner trek in Himachal Pradesh",
-  "Ladakh bike trip in summer",
-  "Easy weekend trek near Delhi",
-  "Scuba diving in Andaman",
+  "Ladakh bike expedition",
+  "Hard trek with summit views",
+  "Multi-day trek in Kashmir",
 ];
 
 export default function InlineChat() {
