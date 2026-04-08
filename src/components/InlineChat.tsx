@@ -24,8 +24,6 @@ const STARTER_PROMPTS = [
   "Ladakh bike expedition",
   "Hard trek with summit views",
   "Multi-day trek in Kashmir",
-  "Weekend adventure near Delhi",
-  "Kayaking in Northeast India",
 ];
 
 // Derive contextual chips from the AI response
