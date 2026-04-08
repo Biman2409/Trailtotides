@@ -265,29 +265,79 @@ export default function MatchmakerHomepageSection() {
 }
 
 function DefaultCTA() {
+  const axes = [
+    { label: "Cardio",      pct: 72 },
+    { label: "Strength",    pct: 55 },
+    { label: "Endurance",   pct: 80 },
+    { label: "Altitude",    pct: 45 },
+    { label: "Technical",   pct: 60 },
+  ];
+
   return (
     <section className="py-20 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-white/5">
       <div className="max-w-7xl mx-auto">
-        <div className="max-w-2xl">
-          <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
-          <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-4 lg:mb-5">
-            Adventures built,<br />
-            <span className="text-[#ff5100]">for your body</span>
-          </h2>
-          <p className="text-white/65 text-base md:text-lg leading-relaxed mb-7 lg:mb-8">
-            Answer 8 questions. Discover your{" "}
-            <Link href="/ace" className="font-bold text-[#ff5100] underline decoration-[#ff5100]/30 underline-offset-2 hover:decoration-[#ff5100] transition-all">
-              ACE
-            </Link>{" "}
-            profile and find the adventures you&apos;re truly ready for.
-          </p>
-          <Link
-            href="/matchmaker"
-            className="inline-flex items-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#e04800] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/20 group transition-all duration-200"
-          >
-            Take Assessment
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
+        <div className="flex flex-col lg:flex-row lg:items-center gap-12 lg:gap-20">
+
+          {/* Left: copy */}
+          <div className="flex-1 max-w-xl">
+            <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
+            <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-4 lg:mb-5">
+              Adventures built,<br />
+              <span className="text-[#ff5100]">for your body</span>
+            </h2>
+            <p className="text-white/55 text-base md:text-lg leading-relaxed mb-8">
+              Answer 8 questions. Discover your{" "}
+              <Link href="/ace" className="font-bold text-[#ff5100] underline decoration-[#ff5100]/30 underline-offset-2 hover:decoration-[#ff5100] transition-all">
+                ACE
+              </Link>{" "}
+              profile and find the adventures you&apos;re truly ready for.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/matchmaker"
+                className="inline-flex items-center justify-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#ff7d47] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25 group transition-all duration-200"
+              >
+                Take Assessment
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link
+                href="/ace"
+                className="inline-flex items-center justify-center gap-2 text-white/45 hover:text-white/70 font-semibold px-6 py-4 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all duration-200"
+              >
+                What is ACE?
+              </Link>
+            </div>
+          </div>
+
+          {/* Right: visual preview */}
+          <div className="flex-1 max-w-sm lg:max-w-none">
+            <div className="rounded-2xl p-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-white/30 font-semibold">Sample ACE Profile</p>
+                  <p className="text-white font-semibold mt-0.5">Your axes, scored</p>
+                </div>
+                <div className="px-2.5 py-1 rounded-full text-[10px] font-bold" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100", border: "1px solid rgba(255,81,0,0.2)" }}>
+                  8 Axes
+                </div>
+              </div>
+              <div className="space-y-3">
+                {axes.map(({ label, pct }) => (
+                  <div key={label}>
+                    <div className="flex justify-between text-xs mb-1.5">
+                      <span className="text-white/50 font-medium">{label}</span>
+                      <span className="text-white/30 tabular-nums">?</span>
+                    </div>
+                    <div className="h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+                      <div className="h-full rounded-full" style={{ width: `${pct}%`, background: "linear-gradient(to right, rgba(255,81,0,0.4), rgba(255,81,0,0.15))" }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-center text-[10px] text-white/20 mt-5 italic">Take the assessment to reveal your real scores</p>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>

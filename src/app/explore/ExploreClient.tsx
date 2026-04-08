@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, ChevronLeft, Heart, RotateCcw, MapPin, Clock, BarChart2 } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
+import ExploreMatchmakerSection from "@/components/ui/custom/ExploreMatchmakerSection";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -1068,30 +1069,8 @@ export default function ExploreClient() {
         {/* Compare Adventures */}
         <CompareAdventures />
 
-        {/* Matchmaker CTA */}
-        <div className="t-bg-surface mt-12 lg:mt-16 border-t border-white/5">
-          <div className="max-w-7xl mx-auto px-5 lg:px-8 py-12 lg:py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div>
-              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-2.5">
-                Adventure Matchmaker
-              </p>
-              <h2 className="text-white text-3xl lg:text-4xl font-semibold tracking-tight">
-                Adventures built for your body
-              </h2>
-              <p className="text-white/40 mt-2.5 text-sm lg:text-base max-w-lg">
-                Answer 8 questions. Discover your ACE profile and find the adventures you're truly ready for.
-              </p>
-            </div>
-            <Link
-              href="/matchmaker"
-              className="inline-flex items-center justify-center gap-2.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/25 whitespace-nowrap min-w-[220px]"
-            >
-              <BarChart2 className="w-4 h-4" />
-              Take the Assessment
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
+        {/* Matchmaker CTA / Personalized section */}
+        <ExploreMatchmakerSection />
 
         {/* Map CTA Section */}
           <div className="t-bg-surface mt-12 lg:mt-16 border-t border-white/5">
