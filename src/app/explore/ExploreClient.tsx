@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { Search, SlidersHorizontal, X, ChevronDown, ArrowRight, Compass, Send, ChevronRight, Loader2, ChevronLeft, Heart } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, ChevronLeft, Heart } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import Link from "next/link";
