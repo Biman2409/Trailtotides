@@ -4,17 +4,56 @@ import { adventures } from "@/lib/data";
 
 const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-const ADVENTURE_LIST = JSON.stringify(
-  adventures.map((a) => ({
-    slug: a.slug,
-    name: a.name,
-    state: a.state,
-    type: a.type,
-    difficulty: a.difficulty,
-    duration: a.durationDays,
-    tags: (a.tags ?? []).slice(0, 5),
-  }))
-);
+// Compact adventure list for context window efficiency
+const ADVENTURE_LIST = adventures.map((a) => ({
+  slug: a.slug,
+  name: a.name,
+  state: a.state,
+  type: a.type,
+  difficulty: a.difficulty,
+  duration: a.durationDays,
+  altitude: a.altitude ?? null,
+  region: a.region,
+  tags: (a.tags ?? []).slice(0, 6),
+  season: a.bestSeason,
+}));
+
+const ADVENTURE_LIST_STR = JSON.stringify(ADVENTURE_LIST);
+
+const SYSTEM_PROMPT = `You are Compass.AI — a friendly, knowledgeable Indian adventure travel advisor for Trail to Tides (trailtotides.com).
+
+You help users find their perfect adventure in India. You're conversational, warm, and genuinely enthusiastic about the outdoors.
+
+## Your adventure catalog (JSON):
+${ADVENTURE_LIST_STR}
+
+## How to respond:
+
+**For clear requests** (place / activity / difficulty / duration / season specified):
+- Write 1–3 natural sentences responding to the user (e.g. "Great choice! Ladakh in summer is epic for biking...").
+- Then embed a JSON recommendations block at the END of your message, like this:
+<recommendations>[{"slug":"exact-slug","name":"Exact Name","reason":"one concise sentence why this fits them"}]</recommendations>
+- Pick 1–3 adventures that best match. Use ONLY exact slugs from the catalog above.
+
+**For vague or open-ended requests** (e.g. "something adventurous", "I want a trip", "recommend anything"):
+- Ask ONE focused follow-up question to narrow it down. Examples: "Are you looking for a trek, a bike ride, or something else?" / "Do you prefer mountains or coast?" / "How many days do you have?"
+- Do NOT embed recommendations yet.
+
+**For follow-ups and refinements** (e.g. "something easier", "closer to Delhi", "I prefer shorter"):
+- Acknowledge the refinement naturally, then give new recommendations.
+- Reference what they said before: "Since you want something easier than Hampta Pass..."
+
+**For ACE suggestion** (ONLY when user says they have absolutely no idea about fitness/experience AND asks for guidance):
+- Suggest they take the ACE assessment: include <suggest_ace/> in your response along with a conversational explanation.
+- This is rare — default to making recommendations.
+
+## Rules:
+- Use ONLY slugs from the catalog. Never invent slugs.
+- Keep your text conversational and under 3 sentences before the recommendations block.
+- Don't repeat adventures already recommended in this conversation unless the user asks.
+- Don't say "I" awkwardly — you're Compass, speak naturally.
+- Never break character. You only know about adventures on Trail to Tides.
+- If nothing fits: say so honestly and ask a clarifying question. Never recommend adventures that don't match.`;
 
 // Fuzzy slug resolver — handles minor model hallucinations
 function resolveSlug(slug: string): string {
@@ -48,13 +87,12 @@ function parseRecommendations(content: string) {
   }
 }
 
-// Generate a natural summary text from resolved adventure names
-function buildSummaryText(recs: { name: string }[]): string {
-  if (recs.length === 0) return "I couldn't find a perfect match — try describing what you're looking for in more detail.";
-  const names = recs.map((r) => r.name);
-  if (names.length === 1) return `Here's a great pick for you: ${names[0]}.`;
-  if (names.length === 2) return `Here are two great options: ${names[0]} and ${names[1]}.`;
-  return `Here are ${names.length} adventures that match what you're looking for.`;
+// Strip XML tags from text for display
+function cleanText(content: string): string {
+  return content
+    .replace(/<recommendations>[\s\S]*?<\/recommendations>/g, "")
+    .replace(/<suggest_ace\s*\/>/g, "")
+    .trim();
 }
 
 // Keyword-based fallback search across all adventure fields
@@ -62,12 +100,12 @@ function keywordSearch(query: string, limit = 3) {
   const q = query.toLowerCase();
   const words = q.split(/\s+/).filter((w) => w.length > 2);
 
-  // keyword → tag/type/state mappings
   const synonyms: Record<string, string[]> = {
-    beginner: ["beginner-friendly", "easy", "moderate", "Moderate"],
-    easy: ["beginner-friendly", "Moderate"],
-    hard: ["Hard", "Advanced"],
+    beginner: ["beginner-friendly", "Easy", "Moderate"],
+    easy: ["beginner-friendly", "Easy", "Moderate"],
+    hard: ["Hard", "Advanced", "Extreme"],
     difficult: ["Hard", "Advanced"],
+    challenging: ["Hard", "Advanced"],
     scuba: ["Diving", "diving", "underwater"],
     dive: ["Diving", "diving"],
     diving: ["Diving"],
@@ -78,6 +116,10 @@ function keywordSearch(query: string, limit = 3) {
     cycling: ["Cycling"],
     climb: ["Mountaineering", "Rock Climbing"],
     mountaineering: ["Mountaineering"],
+    snow: ["glacier", "winter", "skiing"],
+    skiing: ["Skiing"],
+    paragliding: ["Paragliding"],
+    kayaking: ["Kayaking"],
     andaman: ["Islands"],
     kerala: ["Malabar", "Western Ghats"],
     kashmir: ["Jammu & Kashmir"],
@@ -85,13 +127,17 @@ function keywordSearch(query: string, limit = 3) {
     ladakh: ["Ladakh"],
     uttarakhand: ["Uttarakhand"],
     sikkim: ["Sikkim"],
-    nepal: ["Nepal"],
+    northeast: ["Northeast"],
     spiti: ["Spiti"],
-    weekend: ["2 days", "3 days", "4 days", "Moderate"],
+    weekend: ["2 days", "3 days"],
     summit: ["summit", "peak", "Mountaineering"],
     lake: ["lake", "lakes"],
     glacier: ["glacier"],
     pass: ["pass"],
+    family: ["beginner-friendly", "Easy", "Moderate"],
+    solo: ["Solo"],
+    remote: ["remote", "isolation"],
+    scenic: ["scenic", "views", "viewpoint"],
   };
 
   const expandedTerms = [...words];
@@ -105,6 +151,7 @@ function keywordSearch(query: string, limit = 3) {
       ...(a.tags ?? []),
       a.tagline ?? "",
       a.description ?? "",
+      a.bestSeason ?? "",
     ].join(" ").toLowerCase();
 
     let score = 0;
@@ -121,41 +168,13 @@ function keywordSearch(query: string, limit = 3) {
     .map((s) => s.a);
 }
 
-const SYSTEM_PROMPT = `You are Compass.AI, an expert Indian adventure travel advisor for Trail to Tides.
-
-Your job: read the user's message and either:
-A) Recommend specific adventures from the provided list, OR
-B) Suggest the ACE assessment if the user is genuinely confused/lost (doesn't know their fitness level or what type of adventure suits them).
-
-Rules:
-- For ANY query about a place, type of activity, difficulty, duration, or season → give recommendations (Option A).
-- Only suggest ACE if the user is completely directionless — e.g., "I have no idea what to do", "I'm totally lost", "I don't know anything about adventures".
-- "I'm a beginner" is NOT enough to suggest ACE — still give recommendations for beginner-appropriate adventures.
-- ALWAYS pick from the adventure list. Use ONLY the exact slug values provided.
-- Return ONLY the JSON inside the XML tags. No extra fields. Just slug, name, reason.`;
-
-function buildPrompt(messages: { role: string; content: string }[]): string {
-  const history = messages
-    .map((m) => `${m.role === "user" ? "User" : "Compass.AI"}: ${m.content}`)
-    .join("\n");
-
-  return `${SYSTEM_PROMPT}
-
-Adventure list:
-${ADVENTURE_LIST}
-
-Conversation:
-${history}
-
-Respond with ONLY one of:
-
-Option A — Recommendations:
-<recommendations>
-[{"slug":"exact-slug-from-list","name":"Exact Adventure Name","reason":"one sentence why it fits"}]
-</recommendations>
-
-Option B — Needs ACE assessment:
-<suggest_ace/>`;
+// Generate contextual reason for fallback results
+function fallbackReason(adventure: typeof adventures[0], query: string): string {
+  const q = query.toLowerCase();
+  if (q.includes(adventure.state.toLowerCase())) return `Located in ${adventure.state}, which matches your search.`;
+  if (q.includes(adventure.type.toLowerCase())) return `A popular ${adventure.type} adventure matching your interests.`;
+  if (adventure.difficulty === "Easy" || adventure.difficulty === "Moderate") return `Great for those new to ${adventure.type.toLowerCase()}.`;
+  return `One of the top-rated ${adventure.type} adventures in India.`;
 }
 
 export async function POST(req: NextRequest) {
@@ -165,72 +184,81 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No messages provided" }, { status: 400 });
     }
 
-    const userMessages = messages.filter((m: { role: string }) => m.role === "user");
-    const userMessageCount = userMessages.length;
-
-    // After 3+ exchanges WITH no good result yet, gently suggest ACE alongside recommendations
-    const shouldNudgeAce = userMessageCount >= 3;
-
-    const prompt = buildPrompt(messages);
+    // Build proper multi-turn messages array for Groq
+    const groqMessages: { role: "user" | "assistant" | "system"; content: string }[] = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...messages.map((m: { role: string; content: string }) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      })),
+    ];
 
     const response = await client.chat.completions.create({
-      model: "llama-3.1-8b-instant",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.4,
-      max_tokens: 800,
+      model: "llama-3.3-70b-versatile",
+      messages: groqMessages,
+      temperature: 0.55,
+      max_tokens: 700,
     });
 
-    const content = response.choices[0].message.content ?? "";
+    const rawContent = response.choices[0].message.content ?? "";
 
-    // Model chose to suggest ACE
-    if (/<suggest_ace\s*\/>/.test(content)) {
-      return NextResponse.json({
-        text: "It sounds like you're still exploring what's right for you — that's totally fine. Your ACE profile will match adventures to your exact fitness level and experience.",
-        recommendations: [],
-        cards: [],
-        suggestAce: true,
-      });
-    }
+    // Check if model wants ACE assessment
+    const suggestAce = /<suggest_ace\s*\/>/.test(rawContent);
 
     // Parse recommendations
-    const recommendations = parseRecommendations(content);
+    const recommendations = parseRecommendations(rawContent);
     const cards = recommendations
       .map((r) => adventures.find((a) => a.slug === r.slug))
       .filter(Boolean);
 
-    // If model returned garbage / no valid slugs, fall back to keyword search
-    const lastQuery = userMessages[userMessages.length - 1]?.content ?? "";
-    if (cards.length === 0) {
-      const fallback = keywordSearch(lastQuery);
+    // Clean text for display (strip XML tags)
+    let text = cleanText(rawContent);
 
-      if (fallback.length > 0) {
-        const fallbackRecs = fallback.map((a) => ({
-          slug: a.slug,
-          name: a.name,
-          reason: "Matches based on your search.",
-        }));
-        return NextResponse.json({
-          text: buildSummaryText(fallbackRecs),
-          recommendations: fallbackRecs,
-          cards: fallback,
-          suggestAce: false,
-        });
-      }
+    // If model gave no text but gave recommendations, generate a brief summary
+    if (!text && recommendations.length > 0) {
+      const names = recommendations.map((r) => r.name);
+      if (names.length === 1) text = `Here's a great pick for you — ${names[0]}.`;
+      else text = `Here are ${names.length} adventures that match what you're looking for.`;
+    }
 
+    // If model returned valid recommendations, we're done
+    if (cards.length > 0) {
       return NextResponse.json({
-        text: "I couldn't find an exact match in our current listings. Try describing the region, type (trek/bike/dive), or difficulty you're looking for.",
-        recommendations: [],
-        cards: [],
-        suggestAce: shouldNudgeAce,
+        text,
+        recommendations,
+        cards,
+        suggestAce,
       });
     }
 
-    const text = buildSummaryText(recommendations);
+    // Model gave no valid cards — try keyword fallback
+    const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
+    const fallback = keywordSearch(lastQuery);
+
+    if (fallback.length > 0) {
+      const fallbackRecs = fallback.map((a) => ({
+        slug: a.slug,
+        name: a.name,
+        reason: fallbackReason(a, lastQuery),
+      }));
+
+      // Keep model's conversational text if it had something, otherwise generic
+      const fallbackText = text || `Here are some adventures that might match what you're looking for.`;
+
+      return NextResponse.json({
+        text: fallbackText,
+        recommendations: fallbackRecs,
+        cards: fallback,
+        suggestAce,
+      });
+    }
+
+    // Nothing found at all
     return NextResponse.json({
-      text,
-      recommendations,
-      cards,
-      suggestAce: shouldNudgeAce && cards.length === 0,
+      text: text || "I couldn't find a perfect match in our current listings. Could you tell me more — what region or type of adventure interests you?",
+      recommendations: [],
+      cards: [],
+      suggestAce,
     });
   } catch (err: unknown) {
     console.error("Compass.AI error:", err);
