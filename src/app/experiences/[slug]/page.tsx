@@ -169,11 +169,11 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
   const relatedByState = adventures
     .filter((a) => a.id !== adventure.id && a.state === adventure.state)
-    .slice(0, 8);
+    .slice(0, 6);
   const relatedByStateIds = new Set(relatedByState.map((a) => a.id));
   const relatedByType = adventures
     .filter((a) => a.id !== adventure.id && a.type === adventure.type && !relatedByStateIds.has(a.id))
-    .slice(0, 8);
+    .slice(0, 6);
   const relatedByTypeIds = new Set(relatedByType.map((a) => a.id));
 
   const firstVerifiedOp = allOperators.find((o) => o.verified);
