@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, BarChart2, MapPin } from "lucide-react";
+import { ArrowRight, BarChart2, MapPin, ChevronDown } from "lucide-react";
 import { Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost } from "@/lib/localIcons";
 import { adventures } from "@/lib/data";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
@@ -204,7 +204,14 @@ export default function MatchmakerHomepageSection() {
         </div>
 
         {/* ── Matched adventures ── */}
-        <p className="text-white/35 text-[10px] font-bold tracking-[0.2em] uppercase mb-3">Adventures suited for you</p>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-white/35 text-[10px] font-bold tracking-[0.2em] uppercase">Adventures suited for you</p>
+          {matches.length > 0 && (
+            <Link href="/explore?ace=ready" className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#ff5100]/70 hover:text-[#ff5100] transition-colors">
+              See all <ChevronDown className="w-3 h-3 -rotate-90" />
+            </Link>
+          )}
+        </div>
         <div className="flex gap-3 overflow-x-auto pb-3 -mx-1 px-1 snap-x no-scrollbar">
           {matches.length > 0
             ? matches.map((adv) => <MiniAdventureCard key={adv.id} adventure={adv} />)
