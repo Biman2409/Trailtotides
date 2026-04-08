@@ -390,7 +390,7 @@ export default function ExploreClient() {
                                 </div>
                               )}
                               {msg.cards && msg.cards.length > 0 && (
-                                <ExploreAiCards cards={msg.cards} recommendations={msg.recommendations} />
+                                <ExploreAiCards cards={msg.cards.slice(0, 2)} recommendations={msg.recommendations} />
                               )}
                             </div>
                           </div>
@@ -1102,12 +1102,7 @@ function ExploreAiCards({
   cards: Adventure[];
   recommendations?: { slug: string; name: string; reason: string }[];
 }) {
-  const colClass =
-    cards.length === 1
-      ? "grid-cols-1 max-w-xs"
-      : cards.length === 2
-      ? "grid-cols-2"
-      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+  const colClass = cards.length === 1 ? "grid-cols-1 max-w-xs" : "grid-cols-2";
 
   return (
     <div className={`grid gap-2.5 ${colClass}`}>
