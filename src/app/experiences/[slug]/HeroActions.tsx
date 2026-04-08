@@ -27,7 +27,9 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
 
   function handleCompare() {
     if (loggedIn === false) {
-      toast.error("Log in to compare adventures.");
+      toast.error("Log in to compare adventures.", {
+        action: { label: "Log in", onClick: () => router.push("/auth/login") },
+      });
       return;
     }
     if (inCompare) {
@@ -43,7 +45,9 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
 
   async function handleSave() {
     if (loggedIn === false) {
-      toast.error("Log in to wishlist this adventure.");
+      toast.error("Log in to wishlist this adventure.", {
+        action: { label: "Log in", onClick: () => router.push("/auth/login") },
+      });
       return;
     }
     const wasSaved = saved;

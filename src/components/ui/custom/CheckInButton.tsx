@@ -48,7 +48,7 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
     return (
       <button
         onClick={handleToggle}
-        className={`inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight transition-all duration-200 active:scale-95 ${className}`}
+        className={`inline-flex items-center gap-1.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${className}`}
         style={done
           ? { background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }
           : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.5)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }
