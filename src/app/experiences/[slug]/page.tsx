@@ -51,34 +51,38 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-function RelatedSection({ title, items, exploreHref }: { title: string; items: Adventure[]; exploreHref: string; pillMode?: "type" | "region" }) {
+function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { title: string; items: Adventure[]; exploreHref: string; pillMode?: "type" | "region" }) {
   if (items.length === 0) return null;
   return (
     <div>
-      <div className="flex items-end justify-between mb-6">
-        <h3 className="text-white text-xl font-semibold tracking-tight">{title}</h3>
-        <Link href={exploreHref} className="hidden md:flex items-center gap-1.5 text-white/40 text-sm font-medium hover:text-[#ff5100] transition-colors group">
+      <div className="flex items-end justify-between mb-5">
+        <h3 className="text-white text-lg font-semibold tracking-tight">{title}</h3>
+        <Link href={exploreHref} className="hidden md:flex items-center gap-1.5 text-white/40 text-xs font-medium hover:text-[#ff5100] transition-colors group">
           Explore all
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </Link>
       </div>
       <div className="flex gap-4 overflow-x-auto pb-4 -mx-2 px-2 snap-x snap-mandatory no-scrollbar">
         {items.map((a) => {
           const diff = computeDifficulty(getACE(a));
           return (
-            <Link key={a.id} href={`/experiences/${a.slug}`} className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-64 snap-start transition-all duration-300 hover:-translate-y-1" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
-              <div className="relative h-40 overflow-hidden">
+            <Link key={a.id} href={`/experiences/${a.slug}`} className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-60 snap-start transition-all duration-300 hover:-translate-y-1" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
+              <div className="relative h-36 overflow-hidden">
                 <Image src={a.heroImage} alt={a.name} fill loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
                 <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 z-10">
-                  <Pill type="type" value={a.type} />
+                  {pillMode === "type"
+                    ? <Pill type="type" value={a.type} />
+                    : <Pill type="subRegion" value={a.state} />
+                  }
                 </div>
               </div>
-              <div className="p-4 flex-1 flex flex-col gap-1.5">
+              <div className="p-3 flex-1 flex flex-col gap-1.5">
                 <h3 className="text-white font-semibold text-sm leading-snug group-hover:text-[#ff5100] transition-colors line-clamp-2">{a.name}</h3>
-                <div className="flex items-center gap-2 mt-auto pt-1">
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.45)" }}>{diff}</span>
-                  <span className="text-[10px] text-white/30">{a.state}</span>
+                <div className="flex items-center gap-1.5 mt-auto pt-1 text-[10px] text-white/35">
+                  <span className="font-semibold text-white/50">{diff}</span>
+                  <span className="text-white/20">·</span>
+                  <span>{a.durationDays}</span>
                 </div>
               </div>
             </Link>
@@ -627,8 +631,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               <h2 className="text-white text-xl lg:text-2xl font-semibold tracking-tight">You Might Also Like</h2>
             </div>
             <div className="space-y-12">
-              <RelatedSection title={`More in ${adventure.state}`} items={relatedByState} exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} />
-              <RelatedSection title={`More in ${adventure.type}`} items={relatedByType} exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`} />
+              <RelatedSection title={`More in ${adventure.state}`} items={relatedByState} exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} pillMode="type" />
+              <RelatedSection title={`More in ${adventure.type}`} items={relatedByType} exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`} pillMode="region" />
             </div>
           </div>
         </section>
