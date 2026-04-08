@@ -329,16 +329,17 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
                   />
                 ))}
                 <div
-                  className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 transition-all duration-700"
+                  className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 transition-all duration-700"
                   style={{
-                    left: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
+                    left: `clamp(8px, calc(${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%), calc(100% - 8px))`,
+                    transform: "translateY(-50%)",
                     background: currentRank.color,
                     borderColor: "#0e0e12",
                     boxShadow: `0 0 10px ${currentRank.color}`,
                   }}
                 />
               </div>
-              <div className="relative h-5">
+              <div className="relative h-5 overflow-hidden">
                 {RANKS.map((rank, i) => {
                   const isCurrent = i === currentRankIndex;
                   const isUnlocked = i < currentRankIndex;
@@ -348,8 +349,9 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
                       key={rank.label}
                       className="absolute flex flex-col items-center gap-0.5"
                       style={{
-                        left: `${pct}%`,
-                        transform: i === 0 ? "none" : i === totalRanks - 1 ? "translateX(-100%)" : "translateX(-50%)",
+                        left: i === 0 ? "0%" : i === totalRanks - 1 ? "auto" : `${pct}%`,
+                        right: i === totalRanks - 1 ? "0%" : "auto",
+                        transform: i === 0 || i === totalRanks - 1 ? "none" : "translateX(-50%)",
                       }}
                     >
                       <span

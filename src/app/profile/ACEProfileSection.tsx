@@ -192,7 +192,7 @@ export default function ACEProfileSection() {
               <div
                 className="absolute w-[18px] h-[18px] rounded-full border-2 transition-all duration-700"
                 style={{
-                  left: `${barPct}%`,
+                  left: `clamp(9px, calc(${barPct}%), calc(100% - 9px))`,
                   top: "50%",
                   transform: "translate(-50%, -50%)",
                   background: currentRank.color,
@@ -201,14 +201,15 @@ export default function ACEProfileSection() {
                 }}
               />
             </div>
-            <div className="relative h-[18px]">
+            <div className="relative h-[18px] overflow-hidden">
               {RANKS.map((rank, i) => (
                 <span
                   key={rank.label}
                   className="absolute text-[7px] sm:text-[7.5px] font-semibold leading-none whitespace-nowrap top-0"
                   style={{
-                    left: `${i * segmentWidth}%`,
-                    transform: i === 0 ? "none" : i === N - 1 ? "translateX(-100%)" : "translateX(-50%)",
+                    left: i === 0 ? "0%" : i === N - 1 ? "auto" : `${i * segmentWidth}%`,
+                    right: i === N - 1 ? "0%" : "auto",
+                    transform: i === 0 || i === N - 1 ? "none" : "translateX(-50%)",
                     color: i === currentRankIndex ? currentRank.color : i < currentRankIndex ? `${rank.color}50` : "rgba(255,255,255,0.13)",
                   }}
                 >
