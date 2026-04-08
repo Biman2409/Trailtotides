@@ -8,13 +8,14 @@ interface Props {
   label?: string;
   defaultOpen?: boolean;
   children: React.ReactNode;
+  id?: string;
 }
 
-export default function AccordionSection({ title, label, defaultOpen = false, children }: Props) {
+export default function AccordionSection({ title, label, defaultOpen = false, children, id }: Props) {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <section>
+    <section id={id}>
       {/* Mobile: collapsible header. Desktop: always open */}
       {(label || title) && (
         <button

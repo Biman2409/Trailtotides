@@ -75,7 +75,7 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
         <div className="flex gap-2.5">
           <button
             onClick={() => {
-              const el = document.getElementById("operators-section");
+              const el = document.getElementById("book-this-adventure");
               if (el) el.scrollIntoView({ behavior: "smooth" });
             }}
             className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-2xl text-sm font-semibold transition-all duration-200 active:scale-[0.98]"

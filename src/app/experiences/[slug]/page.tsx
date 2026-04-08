@@ -500,7 +500,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             />
 
             {/* Operators */}
-            <AccordionSection label="Book This Adventure" title="" defaultOpen={true}>
+            <AccordionSection label="Book This Adventure" title="" defaultOpen={true} id="book-this-adventure">
               <div id="operators-section">
               {/* Verified */}
               {allOperators.some((op) => op.verified) && (
