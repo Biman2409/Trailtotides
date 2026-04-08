@@ -48,26 +48,23 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
       />
 
       <div className="relative px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
-        {/* Top row — name + price */}
+        {/* Top row */}
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="min-w-0">
-            <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#ff5100]/80 mb-0.5">Book This Adventure</p>
             <p className="text-white font-semibold text-sm leading-snug truncate">{adventureName}</p>
-            {priceFrom && (
-              <p className="text-white/50 text-[11px] mt-1 whitespace-nowrap">
-                <span className="text-white/30">From </span>
-                <span className="text-white font-bold">{priceFrom}</span>
-              </p>
-            )}
+            <p className="text-white/35 text-[11px] mt-0.5 truncate">
+              {duration}{difficulty && <> · {difficulty}</>}
+            </p>
           </div>
           <div className="text-right shrink-0">
             {operatorName && (
-              <p className="text-[#ff5100] text-xs font-bold leading-none truncate max-w-[130px]">{operatorName}</p>
+              <p className="text-[#ff5100] text-xs font-bold leading-none mb-1 truncate max-w-[130px]">{operatorName}</p>
             )}
-            <p className="text-white/30 text-[11px] mt-1 truncate">
-              {duration}
-              {difficulty && <> · <span className="text-white/40">{difficulty}</span></>}
-            </p>
+            {priceFrom && (
+              <p className="text-white font-bold text-sm leading-none whitespace-nowrap">
+                <span className="text-white/30 font-normal text-[11px]">From </span>{priceFrom}
+              </p>
+            )}
           </div>
         </div>
 
