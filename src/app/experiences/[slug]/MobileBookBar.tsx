@@ -9,9 +9,10 @@ interface Props {
   difficulty: string;
   duration: string;
   operatorWebsite?: string;
+  operatorName?: string;
 }
 
-export default function MobileBookBar({ adventureName, priceFrom, difficulty, duration, operatorWebsite }: Props) {
+export default function MobileBookBar({ adventureName, priceFrom, difficulty, duration, operatorWebsite, operatorName }: Props) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
       <div className="px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] flex items-center gap-3">
         <div className="flex-1 min-w-0">
           <p className="text-white font-semibold text-sm truncate">{adventureName}</p>
-          <p className="text-white/40 text-xs mt-0.5">{duration} · {difficulty}</p>
+          <p className="text-white/40 text-xs mt-0.5">{duration} · {difficulty}{operatorName ? <> · <span className="text-white/55">{operatorName}</span></> : null}</p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {priceFrom && (

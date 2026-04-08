@@ -253,6 +253,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         difficulty={difficulty}
         duration={adventure.durationDays ?? adventure.duration}
         operatorWebsite={firstVerifiedOp?.website}
+        operatorName={firstVerifiedOp?.name}
       />
       <ScrollToTop />
       <Navbar />
