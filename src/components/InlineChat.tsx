@@ -238,17 +238,35 @@ export default function InlineChat() {
                       {msg.suggestAce && (
                         <Link
                           href="/ace"
-                          className="group flex items-center gap-4 p-4 rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ff5100]/40 hover:shadow-lg hover:shadow-[#ff5100]/5"
-                          style={{ background: "var(--bg-page)", borderColor: "var(--border-subtle)" }}
+                          className="group block rounded-2xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/10"
+                          style={{ borderColor: "rgba(255,81,0,0.3)", background: "var(--bg-page)" }}
                         >
-                          <div className="shrink-0 w-10 h-10 rounded-xl bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center justify-center">
-                            <Zap className="w-4 h-4 text-[#ff5100]" />
+                          {/* Top accent bar */}
+                          <div className="h-0.5 bg-gradient-to-r from-[#ff5100] via-[#ff7d47] to-transparent" />
+                          <div className="p-4 flex items-start gap-4">
+                            <div className="shrink-0 w-11 h-11 rounded-xl bg-[#ff5100] flex items-center justify-center shadow-lg shadow-[#ff5100]/30">
+                              <Zap className="w-5 h-5 text-white" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#ff5100]">Personalised for you</span>
+                              </div>
+                              <p className="text-sm font-bold t-text group-hover:text-[#ff5100] transition-colors">Take the ACE Assessment</p>
+                              <p className="text-[11px] t-text-3 mt-1 leading-relaxed">
+                                Your Adventure Capability Engine (ACE) profile matches you to adventures based on your actual fitness, skills, and risk tolerance — not just guesswork.
+                              </p>
+                            </div>
+                            <ArrowRight className="w-4 h-4 text-[#ff5100] shrink-0 mt-1 group-hover:translate-x-0.5 transition-transform" />
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold t-text group-hover:text-[#ff5100] transition-colors">Take the ACE Assessment</p>
-                            <p className="text-[11px] t-text-3 mt-0.5 leading-relaxed">Discover your adventure capability profile and find experiences you&apos;re truly ready for.</p>
+                          <div className="px-4 pb-3">
+                            <div className="flex items-center gap-2 text-[10px] font-semibold text-[#ff5100]">
+                              <span>Takes 2 minutes</span>
+                              <span className="opacity-40">·</span>
+                              <span>Free</span>
+                              <span className="opacity-40">·</span>
+                              <span>Instant results</span>
+                            </div>
                           </div>
-                          <ArrowRight className="w-4 h-4 text-[#ff5100] shrink-0 group-hover:translate-x-0.5 transition-transform" />
                         </Link>
                       )}
 

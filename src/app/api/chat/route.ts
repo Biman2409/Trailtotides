@@ -43,9 +43,12 @@ ${ADVENTURE_LIST_STR}
 - Acknowledge the refinement naturally, then give new recommendations.
 - Reference what they said before: "Since you want something easier than Hampta Pass..."
 
-**For ACE suggestion** (ONLY when user says they have absolutely no idea about fitness/experience AND asks for guidance):
-- Suggest they take the ACE assessment: include <suggest_ace/> in your response along with a conversational explanation.
-- This is rare — default to making recommendations.
+**For ACE suggestion** — suggest the ACE assessment when ANY of these apply:
+- User has been going back and forth (3+ exchanges) without finding something they like.
+- User expresses confusion about their fitness/capability: "not sure if I can", "don't know if I'm fit enough", "what level am I?", "am I ready for", "too hard?", "too easy?".
+- User is genuinely overwhelmed by choices after 2+ rounds: "I don't know", "hard to decide", "there are too many", "can't choose".
+- User asks what adventure suits their profile/fitness/experience level.
+When suggesting ACE: include <suggest_ace/> in your message AND write 1–2 warm sentences explaining what ACE is and why it'll help. You CAN still include recommendations alongside ACE — give both if you have a decent guess.
 
 ## Rules:
 - Use ONLY slugs from the catalog. Never invent slugs.
@@ -177,6 +180,37 @@ function fallbackReason(adventure: typeof adventures[0], query: string): string 
   return `One of the top-rated ${adventure.type} adventures in India.`;
 }
 
+// Detect indecision signals in the latest user messages
+function detectIndecision(messages: { role: string; content: string }[]): boolean {
+  const userMessages = messages.filter((m) => m.role === "user");
+  const roundCount = userMessages.length;
+
+  // After 3+ exchanges, check for indecision language
+  if (roundCount >= 3) {
+    const recentText = userMessages
+      .slice(-3)
+      .map((m) => m.content.toLowerCase())
+      .join(" ");
+
+    const indecisionSignals = [
+      "don't know", "not sure", "no idea", "can't decide", "hard to choose",
+      "help me decide", "don't mind", "anything", "whatever", "too many",
+      "overwhelmed", "confused", "lost", "don't understand", "am i ready",
+      "fit enough", "what level", "my fitness", "my capability", "not fit",
+      "never done", "first time", "complete beginner", "total beginner",
+      "which one", "so many options", "hard to decide", "can't choose",
+    ];
+
+    const matchCount = indecisionSignals.filter((s) => recentText.includes(s)).length;
+    if (matchCount >= 1) return true;
+  }
+
+  // Always nudge ACE after 4+ rounds regardless (user is clearly browsing/undecided)
+  if (roundCount >= 4) return true;
+
+  return false;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
@@ -184,9 +218,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No messages provided" }, { status: 400 });
     }
 
+    // Detect indecision before calling the model
+    const serverDetectedIndecision = detectIndecision(messages);
+
     // Build proper multi-turn messages array for Groq
+    // If server detected indecision, append a hint to the system message
+    const systemContent = serverDetectedIndecision
+      ? SYSTEM_PROMPT + "\n\n[HINT: The user has been going back and forth for a while or seems indecisive. Include <suggest_ace/> in your response alongside any recommendations you make.]"
+      : SYSTEM_PROMPT;
+
     const groqMessages: { role: "user" | "assistant" | "system"; content: string }[] = [
-      { role: "system", content: SYSTEM_PROMPT },
+      { role: "system", content: systemContent },
       ...messages.map((m: { role: string; content: string }) => ({
         role: m.role as "user" | "assistant",
         content: m.content,
@@ -202,8 +244,8 @@ export async function POST(req: NextRequest) {
 
     const rawContent = response.choices[0].message.content ?? "";
 
-    // Check if model wants ACE assessment
-    const suggestAce = /<suggest_ace\s*\/>/.test(rawContent);
+    // Check if model wants ACE assessment (model decision OR server-detected indecision)
+    const suggestAce = /<suggest_ace\s*\/>/.test(rawContent) || serverDetectedIndecision;
 
     // Parse recommendations
     const recommendations = parseRecommendations(rawContent);
