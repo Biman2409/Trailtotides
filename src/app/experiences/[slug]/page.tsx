@@ -536,6 +536,9 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </AccordionSection>
 
+            {/* Are You an Operator? */}
+            <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
+
             {/* Reviews */}
             <div className="lg:pt-8 pt-2">
               <div className="hidden lg:block h-px mb-8" style={{ background: "rgba(255,255,255,0.05)" }} />
@@ -594,9 +597,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 ))}
               </div>
             </div>
-
-            {/* Operator Registration Panel */}
-            <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
 
             {/* Explore links */}
             <Link
