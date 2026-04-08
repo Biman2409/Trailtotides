@@ -137,56 +137,6 @@ export interface Story {
 
 export const adventures: Adventure[] = [
 {
-        id: "1",
-          slug: "chadar-trek",
-          ert: { e: 2, r: 4, t: 3 },
-          name: "Chadar Trek",
-            tagline: "Walk a frozen river at -30°C — if it cracks, there's no trail back",
-          region: "Himalayas",
-          state: "Ladakh",
-          type: "Trekking",
-          difficulty: "Extreme",
-            duration: "7+ days",
-            durationDays: "9 days",
-            distance: "105km",
-            altitude: "3,450m",
-            bestSeason: "Jan-Feb",
-            bestMonths: ["Jan", "Feb"],
-            groupSize: "Small group (2–6)",
-            baseCamp: "Tilad Sumdo",
-            heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/chadar-trek.jpeg",
-          galleryImages: [
-            "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/chadar-trek.jpeg",
-          ],
-        lat: 34.1526,
-        lng: 76.8571,
-        routePoints: [[33.7782,76.5800],[33.8500,76.6500],[33.9500,76.7200],[34.0500,76.7900],[34.1526,76.8571]],
-        description:
-          "The Chadar Trek is one of the most extraordinary winter treks on Earth. Named after the thick sheet of ice that forms over the Zanskar River each January, this trek takes you through a frozen gorge carved over millennia — a place few humans ever witness. You walk, slip, camp, and survive on the river itself.",
-        whatMakesSpecial:
-          "There is no trail — the river IS the trail. Vertical cliff walls, frozen waterfalls, and temperatures that plunge to -30°C make this an expedition, not a walk. The silence is otherworldly.",
-        whoFor: "Prior cold-weather trekking above 4,000m · Sustained cold tolerance (-25°C nights) · Strong lower-body endurance for 8–12km/day on ice · Comfortable with microspike/crampon travel",
-        whoNot: "No previous sub-zero camping · Respiratory or cardiac conditions · Arriving from sea level without 3+ acclimatisation days · Expecting reliable resupply or evacuation access",
-        safetyNotes:
-          "Carry emergency bivouac gear, layered thermals, and micro-spike crampons. River ice can crack unexpectedly. Always trek with a certified local guide.",
-          ace: { stamina:4, power:2, strength:4, agility:5, water:3, altitude:3, focus:5, nerve:4 },
-    operators: [
-              { name: "Indiahikes", verified: true, priceFrom: "₹25,000", rating: 4.9, website: "https://indiahikes.com/chadar-trek" },
-              { name: "Rimo Expeditions", verified: true, priceFrom: "₹28,000", rating: 4.9, website: "https://www.rimoexpeditions.com" },
-              { name: "Dreamland Trek & Tour", verified: true, priceFrom: "₹22,000", rating: 4.8, website: "https://www.dreamladakh.com" },
-              { name: "Trek The Himalayas", verified: true, priceFrom: "₹26,500", rating: 4.8, website: "https://trekthehimalayas.com/chadar-trek" },
-              { name: "Altitude Adventure Ladakh", verified: false, priceFrom: "₹17,500", rating: 4.3, website: "https://www.altitudeadventureladakh.com" },
-              { name: "Overland Escape", verified: false, priceFrom: "₹21,000", rating: 4.2, website: "https://www.overlandescape.com" },
-            ],
-      tags: ["frozen river", "winter", "Ladakh", "extreme cold", "iconic"],
-      featured: true,
-      seedReviews: [
-        { id: "sr-chadar-1", username: "rohan_trek", rating: 5, body: "Walked on a frozen river for four days. That sentence still sounds unreal. The silence out there is unlike anything in the world. Incredibly cold (-25°C at night) but the operators had excellent sleeping gear. A life-defining experience.", created_at: "2025-02-10T06:30:00Z", user_id: "" },
-        { id: "sr-chadar-2", username: "deepika_w", rating: 4, body: "Physically demanding but not technically difficult — it's the cold that gets you. Do NOT skip the acclimatisation days in Leh. I saw two people turn back on day one from altitude sickness because they flew straight from Delhi and ignored advice. Otherwise flawless trip.", created_at: "2025-01-25T14:15:00Z", user_id: "" },
-        { id: "sr-chadar-3", username: "suresh_k", rating: 5, body: "Third time doing Chadar. The river changes every year — some years there are big ice caves, some years it's flat blue sheets. That unpredictability is half the beauty. Go in late January for the best ice conditions.", created_at: "2025-01-19T08:45:00Z", user_id: "" },
-      ],
-    },
-{
       id: "3",
       slug: "manali-leh-bike-expedition",
         name: "Manali–Leh Highway Ride",
