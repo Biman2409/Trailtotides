@@ -79,7 +79,7 @@ export default function HomePage() {
             className="text-white/82 text-base md:text-xl w-full mx-auto leading-relaxed mb-8"
             style={{ textShadow: "0 1px 10px rgba(0,0,0,0.85)" }}
           >
-            Discover, compare, and book elite adventures — matched to your body, mapped with precision, guided by AI, and led by India's most trusted operators.
+            Discover, compare, and book adventures — matched to your body, mapped with precision, guided by AI, and led by India's most trusted operators.
           </p>
 
           {/* CTAs */}
