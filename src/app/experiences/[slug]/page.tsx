@@ -449,7 +449,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   <div className="flex items-center gap-2.5 mb-4">
                     <BadgeCheck className="w-4 h-4 text-emerald-400 shrink-0" />
                     <h3 className="text-emerald-400 text-sm font-bold tracking-wide">Verified Operators</h3>
-                    <span className="text-white/30 text-xs">· ATOAI / PADI / IMF registered</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {allOperators.filter((op) => op.verified).map((op) => (
@@ -475,7 +474,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   <div className="flex items-center gap-2.5 mb-4">
                     <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
                     <h3 className="text-white/60 text-sm font-bold tracking-wide">Other Operators</h3>
-                    <span className="text-white/30 text-xs">· listed, not verified by us</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {allOperators.filter((op) => !op.verified).map((op) => (
