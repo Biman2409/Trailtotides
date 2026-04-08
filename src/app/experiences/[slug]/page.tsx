@@ -623,17 +623,22 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       {/* ── YOU MIGHT ALSO LIKE ───────────────────────────────── */}
       {(relatedByState.length > 0 || relatedByType.length > 0) && (
         <section
-          className="py-10 lg:py-14 px-5 lg:px-8"
+          className="py-8 px-5 lg:px-8"
           style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)" }}
         >
           <div className="max-w-7xl mx-auto">
-            <div className="mb-7">
-              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1.5">Discover More</p>
-              <h2 className="text-white text-xl lg:text-2xl font-semibold tracking-tight">You Might Also Like</h2>
-            </div>
-            <div className="space-y-12">
-              <RelatedSection title={`More in ${adventure.state}`} items={relatedByState} exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} pillMode="type" />
-              <RelatedSection title={`More in ${adventure.type}`} items={relatedByType} exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`} pillMode="region" />
+            <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-5">Discover More</p>
+            <div className="grid grid-cols-2 gap-4">
+              {relatedByState.length > 0 && (
+                <div className="p-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "1rem" }}>
+                  <RelatedSection title={`More in ${adventure.state}`} items={relatedByState} exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} pillMode="type" />
+                </div>
+              )}
+              {relatedByType.length > 0 && (
+                <div className="p-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "1rem" }}>
+                  <RelatedSection title={`More in ${adventure.type}`} items={relatedByType} exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`} pillMode="region" />
+                </div>
+              )}
             </div>
           </div>
         </section>
