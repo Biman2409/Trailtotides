@@ -10,7 +10,6 @@ import {
   Sun,
   ShieldCheck,
   ChevronLeft,
-  CheckCircle2,
   AlertTriangle,
   ArrowRight,
   Route,
@@ -25,6 +24,7 @@ import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
 import ACEProfileSection from "./ACEProfileSection";
+import VerifyDropdown from "./VerifyDropdown";
 import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import SavedAdventuresSection from "@/components/ui/custom/SavedAdventuresSection";
@@ -425,59 +425,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </AccordionSection>
 
-            {/* Safety & Prep */}
-            <AccordionSection label="Safety & Prep" title="Safety Notes">
-              <div
-                className="rounded-2xl p-6 flex gap-4"
-                style={{
-                  background: "linear-gradient(135deg, rgba(245,158,11,0.07) 0%, rgba(180,83,9,0.03) 100%)",
-                  border: "1px solid rgba(245,158,11,0.18)",
-                }}
-              >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5" style={{ background: "rgba(245,158,11,0.12)" }}>
-                  <AlertTriangle className="w-4 h-4 text-amber-400" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-amber-400/70 text-[10px] font-bold tracking-[0.22em] uppercase mb-2">Safety &amp; Prep</p>
-                  <p className="text-white/55 text-sm leading-relaxed">{adventure.safetyNotes}</p>
-                  {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {showAltitudeWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-yellow-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(234,179,8,0.12)", border: "1px solid rgba(234,179,8,0.25)" }}>
-                          ⚠ Acute Mountain Sickness
-                        </span>
-                      )}
-                      {showPhysicalExhaustionWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-orange-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(251,146,60,0.1)", border: "1px solid rgba(251,146,60,0.25)" }}>
-                          ⚠ Physical Exhaustion
-                        </span>
-                      )}
-                      {showFatalFallWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-red-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)" }}>
-                          ⚠ Fatal Fall Risk
-                        </span>
-                      )}
-                      {showExtremeIsolationWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-sky-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(56,189,248,0.1)", border: "1px solid rgba(56,189,248,0.25)" }}>
-                          ⚠ Extreme Isolation
-                        </span>
-                      )}
-                      {showTechnicalWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-violet-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.25)" }}>
-                          ⚠ Technical Terrain
-                        </span>
-                      )}
-                      {showWaterWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.25)" }}>
-                          ⚠ Open Water
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </AccordionSection>
-
             {/* ACE Profile */}
             <ACEProfileSection
               ace={ace}
@@ -491,19 +438,18 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             />
 
             {/* Operators */}
-            <AccordionSection label="Book This Adventure" title="Operators" defaultOpen={true}>
+            <AccordionSection label="Book This Adventure" title="" defaultOpen={true}>
               <div id="operators-section">
               {/* Verified */}
               {allOperators.some((op) => op.verified) && (
-                <div className="mb-10">
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(16,185,129,0.12)" }}>
-                      <BadgeCheck className="w-4 h-4 text-emerald-400" />
-                    </div>
-                    <div>
-                      <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1">Verified Operators</p>
-                      <p className="text-white/35 text-xs">ATOAI / PADI / IMF registered, vetted track record</p>
-                    </div>
+                <div
+                  className="mb-8 rounded-2xl p-5"
+                  style={{ border: "1px solid rgba(16,185,129,0.18)", background: "rgba(16,185,129,0.03)" }}
+                >
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <BadgeCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <h3 className="text-emerald-400 text-sm font-bold tracking-wide">Verified Operators</h3>
+                    <span className="text-white/30 text-xs">· ATOAI / PADI / IMF registered</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {allOperators.filter((op) => op.verified).map((op) => (
@@ -517,46 +463,19 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 </div>
               )}
 
-              {/* Verification criteria */}
-              <div
-                className="mb-10 rounded-2xl p-5"
-                style={{
-                  background: "rgba(16,185,129,0.04)",
-                  border: "1px solid rgba(16,185,129,0.12)",
-                }}
-              >
-                <div className="flex items-center gap-2 mb-3">
-                  <BadgeCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <p className="text-emerald-400/80 text-xs font-bold tracking-[0.15em] uppercase">How We Verify Operators</p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {[
-                    "Valid government permits & licenses",
-                    "ATOAI / IMF / PADI certification confirmed",
-                    "Certified & trained local guides on staff",
-                    "Safety gear & evacuation protocols in place",
-                    "Independently reviewed by our team on-ground",
-                    "Consistent track record over 2+ seasons",
-                  ].map((text) => (
-                    <div key={text} className="flex items-center gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400/60 shrink-0" />
-                      <span className="text-white/40 text-xs">{text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {/* How we verify — collapsible */}
+              <VerifyDropdown />
 
               {/* Unverified */}
               {allOperators.some((op) => !op.verified) && (
-                <div>
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(245,158,11,0.1)" }}>
-                      <AlertTriangle className="w-4 h-4 text-amber-400" />
-                    </div>
-                    <div>
-                      <p className="text-white/60 text-xs font-bold tracking-[0.2em] uppercase">Other Operators</p>
-                      <p className="text-white/30 text-xs mt-0.5">Listed by the community — not verified by us</p>
-                    </div>
+                <div
+                  className="rounded-2xl p-5"
+                  style={{ border: "1px solid rgba(245,158,11,0.16)", background: "rgba(245,158,11,0.03)" }}
+                >
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+                    <h3 className="text-white/60 text-sm font-bold tracking-wide">Other Operators</h3>
+                    <span className="text-white/30 text-xs">· listed, not verified by us</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {allOperators.filter((op) => !op.verified).map((op) => (
@@ -573,7 +492,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </AccordionSection>
 
             {/* Reviews */}
-            <AccordionSection label="Community" title="Reviews" defaultOpen={true}>
+            <AccordionSection label="" title="" defaultOpen={true}>
               <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
             </AccordionSection>
 
