@@ -9,6 +9,7 @@ export type OperatorCardData = {
   rating: number;
   priceFrom: string;
   website?: string;
+  verified?: boolean;
   departureDates?: string[];
   notes?: string | null;
   cloakroom?: boolean;

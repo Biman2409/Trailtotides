@@ -38,6 +38,8 @@ import { getACE, computeDifficulty } from "@/lib/ace";
 import type { Adventure } from "@/lib/data";
 import { getApprovedOperatorsForAdventure } from "@/app/auth/operator-actions";
 import OperatorListingPanel from "./OperatorListingPanel";
+import MobileBookBar from "./MobileBookBar";
+import AccordionSection from "./AccordionSection";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -57,7 +59,7 @@ function RelatedSection({ title, items, exploreHref }: { title: string; items: A
   return (
     <div>
       <div className="flex items-end justify-between mb-6">
-        <h2 className="text-white text-xl font-semibold tracking-tight">{title}</h2>
+        <h3 className="text-white text-xl font-semibold tracking-tight">{title}</h3>
         <Link href={exploreHref} className="hidden md:flex items-center gap-1.5 text-white/40 text-sm font-medium hover:text-[#ff5100] transition-colors group">
           Explore all
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -69,7 +71,7 @@ function RelatedSection({ title, items, exploreHref }: { title: string; items: A
           return (
             <Link key={a.id} href={`/experiences/${a.slug}`} className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-64 snap-start transition-all duration-300 hover:-translate-y-1" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
               <div className="relative h-40 overflow-hidden">
-                <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
+                <Image src={a.heroImage} alt={a.name} fill loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
                 <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 z-10">
                   <Pill type="type" value={a.type} />
@@ -173,39 +175,87 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
     .slice(0, 8);
   const relatedByTypeIds = new Set(relatedByType.map((a) => a.id));
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "TouristAttraction",
-    name: adventure.name,
-    description: adventure.tagline ?? `${adventure.type} in ${adventure.state} — ${difficulty} · ${adventure.duration} days.`,
-    url: `https://trailtotides.com/experiences/${slug}`,
-    image: adventure.heroImage,
-    touristType: adventure.type,
-    geo: {
-      "@type": "GeoCoordinates",
-      addressCountry: "IN",
-      addressRegion: adventure.state,
+  const firstVerifiedOp = allOperators.find((o) => o.verified);
+  const priceFrom = firstVerifiedOp?.priceFrom;
+
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "TouristAttraction",
+      name: adventure.name,
+      description: adventure.description ?? adventure.tagline ?? `${adventure.type} in ${adventure.state}.`,
+      url: `https://trailtotides.com/experiences/${slug}`,
+      image: adventure.heroImage,
+      touristType: adventure.type,
+      geo: {
+        "@type": "GeoCoordinates",
+        addressCountry: "IN",
+        addressRegion: adventure.state,
+      },
+      additionalProperty: [
+        { "@type": "PropertyValue", name: "Duration", value: adventure.durationDays },
+        { "@type": "PropertyValue", name: "Difficulty", value: difficulty },
+        { "@type": "PropertyValue", name: "Type", value: adventure.type },
+        ...(adventure.altitude ? [{ "@type": "PropertyValue", name: "Max Altitude", value: adventure.altitude }] : []),
+        ...(adventure.bestSeason ? [{ "@type": "PropertyValue", name: "Best Season", value: adventure.bestSeason }] : []),
+        ...(adventure.groupSize ? [{ "@type": "PropertyValue", name: "Group Size", value: adventure.groupSize }] : []),
+      ],
+      isAccessibleForFree: false,
+      provider: {
+        "@type": "Organization",
+        name: "Trail to Tides",
+        url: "https://trailtotides.com",
+      },
     },
-    additionalProperty: [
-      { "@type": "PropertyValue", name: "Duration", value: `${adventure.duration} days` },
-      { "@type": "PropertyValue", name: "Difficulty", value: difficulty },
-      { "@type": "PropertyValue", name: "Type", value: adventure.type },
-      ...(adventure.altitude ? [{ "@type": "PropertyValue", name: "Max Altitude", value: adventure.altitude }] : []),
-      ...(adventure.bestSeason ? [{ "@type": "PropertyValue", name: "Best Season", value: adventure.bestSeason }] : []),
-    ],
-    isAccessibleForFree: false,
-    provider: {
-      "@type": "Organization",
-      name: "Trail to Tides",
-      url: "https://trailtotides.com",
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: adventure.name,
+      description: adventure.tagline ?? adventure.description,
+      image: adventure.heroImage,
+      url: `https://trailtotides.com/experiences/${slug}`,
+      brand: {
+        "@type": "Brand",
+        name: "Trail to Tides",
+      },
+      category: adventure.type,
+      ...(priceFrom ? {
+        offers: {
+          "@type": "Offer",
+          priceCurrency: "INR",
+          price: priceFrom.replace(/[^0-9]/g, ""),
+          availability: "https://schema.org/InStock",
+          url: `https://trailtotides.com/experiences/${slug}`,
+          seller: {
+            "@type": "Organization",
+            name: "Trail to Tides",
+          },
+        },
+      } : {}),
+      ...(allOperators.some((o) => o.rating) ? {
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: (allOperators.reduce((sum, o) => sum + (o.rating ?? 0), 0) / allOperators.filter((o) => o.rating).length).toFixed(1),
+          reviewCount: allOperators.filter((o) => o.rating).length,
+          bestRating: 5,
+          worstRating: 1,
+        },
+      } : {}),
     },
-  };
+  ];
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <MobileBookBar
+        adventureName={adventure.name}
+        priceFrom={priceFrom}
+        difficulty={difficulty}
+        duration={adventure.durationDays ?? adventure.duration}
+        operatorWebsite={firstVerifiedOp?.website}
       />
       <ScrollToTop />
       <Navbar />
@@ -293,18 +343,17 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-14">
 
           {/* ── LEFT COLUMN ── */}
-          <div className="lg:col-span-2 space-y-10 lg:space-y-14">
+          <div className="lg:col-span-2 space-y-0 lg:space-y-14">
 
             {/* The Adventure */}
-            <section>
-              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-2">The Adventure</p>
+            <AccordionSection label="The Adventure" title="About This Adventure" defaultOpen={true}>
               <p className="text-white/65 text-base md:text-lg leading-relaxed font-light">
                 {adventure.description}
               </p>
-            </section>
+            </AccordionSection>
 
             {/* What Makes It Special */}
-            <section>
+            <AccordionSection label="Highlights" title="What Makes It Special" defaultOpen={true}>
               <div
                 className="rounded-2xl p-5 lg:p-7"
                 style={{
@@ -315,14 +364,12 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   borderBottom: "1px solid rgba(255,81,0,0.05)",
                 }}
               >
-                <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">What Makes It Special</p>
                 <p className="text-white/75 text-base md:text-lg leading-relaxed">{adventure.whatMakesSpecial}</p>
               </div>
-            </section>
+            </AccordionSection>
 
             {/* Is This For You? */}
-            <section>
-              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">Is This For You?</p>
+            <AccordionSection label="Suitability" title="Is This For You?" defaultOpen={true}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div
                   className="rounded-2xl p-6"
@@ -335,7 +382,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(16,185,129,0.18)" }}>
                       <Flag className="w-4 h-4 text-emerald-400" fill="currentColor" />
                     </div>
-                    <h3 className="font-semibold text-emerald-400 text-sm tracking-wide">Green Flag</h3>
+                    <h3 className="font-semibold text-emerald-400 text-sm tracking-wide">This is for you if…</h3>
                   </div>
                   <ul className="space-y-2">
                     {adventure.whoFor.split("·").map((item) => {
@@ -362,7 +409,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(239,68,68,0.15)" }}>
                       <Flag className="w-4 h-4 text-red-400" fill="currentColor" />
                     </div>
-                    <h3 className="font-semibold text-red-400 text-sm tracking-wide">Red Flag</h3>
+                    <h3 className="font-semibold text-red-400 text-sm tracking-wide">Skip this if…</h3>
                   </div>
                   <ul className="space-y-2">
                     {adventure.whoNot.split("·").map((item) => {
@@ -379,10 +426,10 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   </ul>
                 </div>
               </div>
-            </section>
+            </AccordionSection>
 
             {/* Safety & Prep */}
-            <section>
+            <AccordionSection label="Safety & Prep" title="Safety Notes">
               <div
                 className="rounded-2xl p-6 flex gap-4"
                 style={{
@@ -432,7 +479,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   )}
                 </div>
               </div>
-            </section>
+            </AccordionSection>
 
             {/* ACE Profile */}
             <ACEProfileSection
@@ -447,7 +494,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             />
 
             {/* Operators */}
-            <section>
+            <AccordionSection label="Book This Adventure" title="Operators" defaultOpen={true}>
+              <div id="operators-section">
               {/* Verified */}
               {allOperators.some((op) => op.verified) && (
                 <div className="mb-10">
@@ -524,10 +572,13 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   </p>
                 </div>
               )}
-            </section>
+              </div>
+            </AccordionSection>
 
             {/* Reviews */}
-            <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
+            <AccordionSection label="Community" title="Reviews" defaultOpen={true}>
+              <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
+            </AccordionSection>
 
             {/* Tags */}
             <section>
@@ -616,7 +667,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           <div className="max-w-7xl mx-auto">
             <div className="mb-10">
               <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-2">Discover More</p>
-              <h2 className="text-white text-3xl font-bold tracking-tight">You Might Also Like</h2>
+              <h2 className="text-white text-2xl lg:text-3xl font-bold tracking-tight">You Might Also Like</h2>
               <div className="mt-3 w-10 h-0.5 bg-[#ff5100] rounded-full" />
             </div>
             <div className="space-y-12">

@@ -51,17 +51,22 @@ const nextConfig: NextConfig = {
     }
   },
   images: {
+    // Serve WebP (with AVIF fallback) for all Next.js Image components
+    formats: ["image/webp", "image/avif"],
+    // Quality optimized for adventure photos — good balance of size/fidelity
+    qualities: [60, 75, 90],
+    // Minimize layout shift with well-defined device sizes
+    deviceSizes: [390, 768, 1080, 1280, 1920],
+    imageSizes: [64, 128, 256, 384, 512],
+    // Minimize revalidation overhead for static adventure images
+    minimumCacheTTL: 86400,
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-      {
-        protocol: 'http',
-        hostname: '**',
-      },
+      { protocol: 'https', hostname: '**' },
+      { protocol: 'http',  hostname: '**' },
     ],
   },
+  // Compress responses
+  compress: true,
   outputFileTracingRoot: path.resolve(__dirname, '../../'),
   typescript: {
     ignoreBuildErrors: true,
