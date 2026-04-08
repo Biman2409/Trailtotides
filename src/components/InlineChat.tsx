@@ -450,8 +450,8 @@ export default function InlineChat() {
           </div>
         </div>
 
-        <p className="text-center mt-3 text-[10px] tracking-wide" style={{ color: "var(--text-tertiary)" }}>
-          Powered by <span className="font-semibold">Groq</span> · Llama 3.3 70B
+        <p className="text-center mt-3 text-[10px] tracking-wide italic" style={{ color: "var(--text-tertiary)" }}>
+          Powered by <span className="font-semibold not-italic">Groq</span> · Llama 3.3 70B
         </p>
       </div>
     </section>
