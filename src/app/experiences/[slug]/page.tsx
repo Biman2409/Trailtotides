@@ -344,9 +344,18 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* The Adventure */}
             <AccordionSection label="The Adventure" title="About This Adventure" defaultOpen={true}>
-              <p className="text-white/65 text-base md:text-lg leading-relaxed font-light">
-                {adventure.description}
-              </p>
+              <div
+                className="rounded-2xl p-5 lg:p-7"
+                style={{
+                  background: "linear-gradient(135deg, rgba(255,81,0,0.07) 0%, rgba(255,81,0,0.02) 100%)",
+                  borderLeft: "3px solid rgba(255,81,0,0.5)",
+                  borderTop: "1px solid rgba(255,81,0,0.08)",
+                  borderRight: "1px solid rgba(255,81,0,0.05)",
+                  borderBottom: "1px solid rgba(255,81,0,0.05)",
+                }}
+              >
+                <p className="text-white/75 text-base md:text-lg leading-relaxed font-light">{adventure.description}</p>
+              </div>
             </AccordionSection>
 
             {/* What Makes It Special */}
