@@ -1,8 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import Groq from "groq-sdk";
 import { adventures } from "@/lib/data";
+import type { AdventureType } from "@/lib/data";
 
 const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+// ─── Dynamically derive available vs coming-soon types from the actual data ───
+
+// All types the platform supports (defined in the type system)
+const ALL_TYPES: AdventureType[] = [
+  "Trekking", "Biking", "Cycling", "Diving", "Kayaking", "Skiing",
+  "Mountaineering", "Rock Climbing", "Scrambling", "Jeep Safari", "Caving",
+  "Urban Adventure", "Paragliding", "Hot Air Balloon", "Ice Skating",
+];
+
+// Types that have at least one real adventure in the catalog
+const AVAILABLE_TYPES = [...new Set(adventures.map((a) => a.type))];
+
+// Types that are defined but have no live adventures yet
+const COMING_SOON_TYPES = ALL_TYPES.filter((t) => !AVAILABLE_TYPES.includes(t));
 
 // Compact adventure list for context window efficiency
 const ADVENTURE_LIST = adventures.map((a) => ({
@@ -24,42 +40,56 @@ const SYSTEM_PROMPT = `You are Compass.AI — a friendly, knowledgeable Indian a
 
 You help users find their perfect adventure in India. You're conversational, warm, and genuinely enthusiastic about the outdoors.
 
-## Your adventure catalog (JSON):
+## Live adventure catalog (JSON):
 ${ADVENTURE_LIST_STR}
+
+## Adventure types currently LIVE on Trail to Tides:
+${AVAILABLE_TYPES.join(", ")}
+
+## Adventure types COMING SOON (not yet available):
+${COMING_SOON_TYPES.join(", ")}
 
 ## How to respond:
 
 **For clear requests** (place / activity / difficulty / duration / season specified):
-- Write 1–3 natural sentences responding to the user (e.g. "Great choice! Ladakh in summer is epic for biking...").
-- Then embed a JSON recommendations block at the END of your message, like this:
+- Write 1–3 natural sentences responding to the user.
+- Then embed a JSON recommendations block at the END of your message:
 <recommendations>[{"slug":"exact-slug","name":"Exact Name","reason":"one concise sentence why this fits them"}]</recommendations>
 - Pick 1–3 adventures that best match. Use ONLY exact slugs from the catalog above.
 
+**For coming-soon adventure types** (e.g. Diving, Paragliding, Hot Air Balloon, Ice Skating, Scrambling):
+- Warmly let the user know that type is coming soon to Trail to Tides.
+- Be specific and enthusiastic — mention the kinds of locations or experiences being planned if you can (e.g. for Diving: Andamans, Lakshadweep; for Paragliding: Bir Billing, Manali; for Hot Air Balloon: Rajasthan).
+- Ask if they'd like to explore something from what's currently available.
+- Do NOT recommend unrelated adventures without asking first.
+- Do NOT embed a <recommendations> block unless they explicitly say yes.
+
 **For vague or open-ended requests** (e.g. "something adventurous", "I want a trip", "recommend anything"):
-- Ask ONE focused follow-up question to narrow it down. Examples: "Are you looking for a trek, a bike ride, or something else?" / "Do you prefer mountains or coast?" / "How many days do you have?"
+- Ask ONE focused follow-up question to narrow it down. Examples: "Mountains or coast?" / "How many days do you have?" / "What activity sounds most exciting — trek, bike, or something else?"
 - Do NOT embed recommendations yet.
 
-**For follow-ups and refinements** (e.g. "something easier", "closer to Delhi", "I prefer shorter"):
-- Acknowledge the refinement naturally, then give new recommendations.
-- Reference what they said before: "Since you want something easier than Hampta Pass..."
+**For follow-ups and refinements** (e.g. "something easier", "closer to Delhi", "shorter"):
+- Acknowledge naturally, then give updated recommendations referencing what came before.
+
+**For off-topic or general travel chat** (e.g. "what's the weather in Ladakh", "best time to visit Spiti", "tell me about Kashmir"):
+- Engage warmly and helpfully with general knowledge, then steer back to finding an adventure.
 
 **For ACE suggestion** — suggest the ACE assessment when ANY of these apply:
-- User has been going back and forth (3+ exchanges) without finding something they like.
-- User expresses confusion about their fitness/capability: "not sure if I can", "don't know if I'm fit enough", "what level am I?", "am I ready for", "too hard?", "too easy?".
-- User is genuinely overwhelmed by choices after 2+ rounds: "I don't know", "hard to decide", "there are too many", "can't choose".
-- User asks what adventure suits their profile/fitness/experience level.
-When suggesting ACE: include <suggest_ace/> in your message AND write 1–2 warm sentences explaining what ACE is and why it'll help. You CAN still include recommendations alongside ACE — give both if you have a decent guess.
+- User has gone back and forth (3+ exchanges) without settling.
+- User expresses confusion about their fitness: "not sure if I can", "am I ready for", "what level am I".
+- User is overwhelmed: "I don't know", "too many options", "can't decide".
+- User asks what suits their fitness or experience level.
+When suggesting ACE: include <suggest_ace/> AND write 1–2 warm sentences explaining what it is. You CAN still include recommendations alongside ACE.
 
 ## Rules:
-- Use ONLY slugs from the catalog. Never invent slugs.
-- Keep your text conversational and under 3 sentences before the recommendations block.
-- Don't repeat adventures already recommended in this conversation unless the user asks.
-- Don't say "I" awkwardly — you're Compass, speak naturally.
-- Never break character. You only know about adventures on Trail to Tides.
-- If nothing fits: say so honestly and ask a clarifying question. Never recommend adventures that don't match.
-- **Diving / Scuba**: There are currently NO diving adventures in the catalog. If the user asks about diving, scuba, or underwater experiences, say exactly this: "Diving adventures are coming soon to Trail to Tides — we're onboarding operators in the Andamans and Lakshadweep right now. Want me to suggest something else in the meantime?" Do NOT recommend non-diving adventures as a substitute without asking first.`;
+- Use ONLY slugs from the live catalog. Never invent slugs.
+- Keep conversational text under 3 sentences before the recommendations block.
+- Don't repeat already-recommended adventures unless asked.
+- Speak naturally — you're Compass, not a chatbot.
+- If nothing in the catalog fits, say so honestly and ask a clarifying question.`;
 
-// Fuzzy slug resolver — handles minor model hallucinations
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
 function resolveSlug(slug: string): string {
   if (adventures.find((a) => a.slug === slug)) return slug;
   const clean = slug.toLowerCase().trim();
@@ -91,7 +121,6 @@ function parseRecommendations(content: string) {
   }
 }
 
-// Strip XML tags from text for display
 function cleanText(content: string): string {
   return content
     .replace(/<recommendations>[\s\S]*?<\/recommendations>/g, "")
@@ -99,7 +128,6 @@ function cleanText(content: string): string {
     .trim();
 }
 
-// Keyword-based fallback search across all adventure fields
 function keywordSearch(query: string, limit = 3) {
   const q = query.toLowerCase();
   const words = q.split(/\s+/).filter((w) => w.length > 2);
@@ -110,9 +138,6 @@ function keywordSearch(query: string, limit = 3) {
     hard: ["Hard", "Advanced", "Extreme"],
     difficult: ["Hard", "Advanced"],
     challenging: ["Hard", "Advanced"],
-    scuba: ["Diving", "diving", "underwater"],
-    dive: ["Diving", "diving"],
-    diving: ["Diving"],
     bike: ["Biking", "motorcycle"],
     motorbike: ["Biking"],
     motorcycle: ["Biking"],
@@ -122,7 +147,6 @@ function keywordSearch(query: string, limit = 3) {
     mountaineering: ["Mountaineering"],
     snow: ["glacier", "winter", "skiing"],
     skiing: ["Skiing"],
-    paragliding: ["Paragliding"],
     kayaking: ["Kayaking"],
     andaman: ["Islands"],
     kerala: ["Malabar", "Western Ghats"],
@@ -172,7 +196,6 @@ function keywordSearch(query: string, limit = 3) {
     .map((s) => s.a);
 }
 
-// Generate contextual reason for fallback results
 function fallbackReason(adventure: typeof adventures[0], query: string): string {
   const q = query.toLowerCase();
   if (q.includes(adventure.state.toLowerCase())) return `Located in ${adventure.state}, which matches your search.`;
@@ -181,36 +204,28 @@ function fallbackReason(adventure: typeof adventures[0], query: string): string 
   return `One of the top-rated ${adventure.type} adventures in India.`;
 }
 
-// Detect indecision signals in the latest user messages
 function detectIndecision(messages: { role: string; content: string }[]): boolean {
   const userMessages = messages.filter((m) => m.role === "user");
   const roundCount = userMessages.length;
 
-  // After 3+ exchanges, check for indecision language
   if (roundCount >= 3) {
-    const recentText = userMessages
-      .slice(-3)
-      .map((m) => m.content.toLowerCase())
-      .join(" ");
-
-    const indecisionSignals = [
+    const recentText = userMessages.slice(-3).map((m) => m.content.toLowerCase()).join(" ");
+    const signals = [
       "don't know", "not sure", "no idea", "can't decide", "hard to choose",
       "help me decide", "don't mind", "anything", "whatever", "too many",
-      "overwhelmed", "confused", "lost", "don't understand", "am i ready",
-      "fit enough", "what level", "my fitness", "my capability", "not fit",
-      "never done", "first time", "complete beginner", "total beginner",
-      "which one", "so many options", "hard to decide", "can't choose",
+      "overwhelmed", "confused", "lost", "am i ready", "fit enough",
+      "what level", "my fitness", "my capability", "not fit", "never done",
+      "first time", "complete beginner", "total beginner", "which one",
+      "so many options", "can't choose",
     ];
-
-    const matchCount = indecisionSignals.filter((s) => recentText.includes(s)).length;
-    if (matchCount >= 1) return true;
+    if (signals.some((s) => recentText.includes(s))) return true;
   }
 
-  // Always nudge ACE after 4+ rounds regardless (user is clearly browsing/undecided)
   if (roundCount >= 4) return true;
-
   return false;
 }
+
+// ─── Route handler ────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
   try {
@@ -219,13 +234,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No messages provided" }, { status: 400 });
     }
 
-    // Detect indecision before calling the model
     const serverDetectedIndecision = detectIndecision(messages);
 
-    // Build proper multi-turn messages array for Groq
-    // If server detected indecision, append a hint to the system message
     const systemContent = serverDetectedIndecision
-      ? SYSTEM_PROMPT + "\n\n[HINT: The user has been going back and forth for a while or seems indecisive. Include <suggest_ace/> in your response alongside any recommendations you make.]"
+      ? SYSTEM_PROMPT + "\n\n[HINT: User seems indecisive after several exchanges. Include <suggest_ace/> alongside any recommendations.]"
       : SYSTEM_PROMPT;
 
     const groqMessages: { role: "user" | "assistant" | "system"; content: string }[] = [
@@ -244,61 +256,50 @@ export async function POST(req: NextRequest) {
     });
 
     const rawContent = response.choices[0].message.content ?? "";
-
-    // Check if model wants ACE assessment (model decision OR server-detected indecision)
     const suggestAce = /<suggest_ace\s*\/>/.test(rawContent) || serverDetectedIndecision;
 
-    // Parse recommendations
     const recommendations = parseRecommendations(rawContent);
     const cards = recommendations
       .map((r) => adventures.find((a) => a.slug === r.slug))
       .filter(Boolean);
 
-    // Clean text for display (strip XML tags)
     let text = cleanText(rawContent);
 
-    // If model gave no text but gave recommendations, generate a brief summary
     if (!text && recommendations.length > 0) {
       const names = recommendations.map((r) => r.name);
       if (names.length === 1) text = `Here's a great pick for you — ${names[0]}.`;
       else text = `Here are ${names.length} adventures that match what you're looking for.`;
     }
 
-    // If model returned valid recommendations, we're done
     if (cards.length > 0) {
-      return NextResponse.json({
-        text,
-        recommendations,
-        cards,
-        suggestAce,
-      });
+      return NextResponse.json({ text, recommendations, cards, suggestAce });
     }
 
-    // Model gave no valid cards — try keyword fallback
+    // Keyword fallback — but skip if the model already gave a coming-soon / informational response
     const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
-    const fallback = keywordSearch(lastQuery);
+    const isComingSoonQuery = COMING_SOON_TYPES.some((t) =>
+      lastQuery.toLowerCase().includes(t.toLowerCase())
+    );
 
-    if (fallback.length > 0) {
-      const fallbackRecs = fallback.map((a) => ({
-        slug: a.slug,
-        name: a.name,
-        reason: fallbackReason(a, lastQuery),
-      }));
-
-      // Keep model's conversational text if it had something, otherwise generic
-      const fallbackText = text || `Here are some adventures that might match what you're looking for.`;
-
-      return NextResponse.json({
-        text: fallbackText,
-        recommendations: fallbackRecs,
-        cards: fallback,
-        suggestAce,
-      });
+    if (!isComingSoonQuery) {
+      const fallback = keywordSearch(lastQuery);
+      if (fallback.length > 0) {
+        const fallbackRecs = fallback.map((a) => ({
+          slug: a.slug,
+          name: a.name,
+          reason: fallbackReason(a, lastQuery),
+        }));
+        return NextResponse.json({
+          text: text || "Here are some adventures that might match what you're looking for.",
+          recommendations: fallbackRecs,
+          cards: fallback,
+          suggestAce,
+        });
+      }
     }
 
-    // Nothing found at all
     return NextResponse.json({
-      text: text || "I couldn't find a perfect match in our current listings. Could you tell me more — what region or type of adventure interests you?",
+      text: text || "Could you tell me more about what you're looking for — region, activity type, or how many days you have?",
       recommendations: [],
       cards: [],
       suggestAce,
