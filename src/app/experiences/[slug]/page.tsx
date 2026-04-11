@@ -541,8 +541,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
 
             {/* Reviews */}
-            <div className="hidden lg:block h-px mt-8" style={{ background: "rgba(255,255,255,0.05)" }} />
-            <div className="pt-0 lg:pt-8">
+            <div className="h-px mt-12" style={{ background: "rgba(255,255,255,0.05)" }} />
+            <div className="pt-10">
               <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
             </div>
 
