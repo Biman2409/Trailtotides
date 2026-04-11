@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings } from "lucide-react";
-import { Mountain } from "@/lib/localIcons";
+import { MountainSnow } from "@/lib/localIcons";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { useCompare, MAX } from "@/contexts/CompareContext";
@@ -145,7 +145,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-md shadow-[#ff5100]/30">
-              <Mountain className="w-4 h-4 text-white" strokeWidth={2.5} />
+              <MountainSnow className="w-4 h-4 text-white" strokeWidth={2.5} />
             </div>
             <span className="text-base leading-none tracking-tight" style={{ color: "var(--text-primary)" }}>
               <span className="font-black uppercase">TRAIL</span>
