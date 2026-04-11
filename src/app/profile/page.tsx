@@ -17,6 +17,7 @@ import TripLogSection from "./TripLogSection";
 import ACEProfileSection from "./ACEProfileSection";
 import AvatarPicker from "./AvatarPicker";
 import TrophyCabinet from "./TrophyCabinet";
+import ProfileForm from "./ProfileForm";
 import { getOperatorProfile, getSubmissionsForOperator } from "@/app/auth/operator-actions";
 import { adventures } from "@/lib/data";
 import DashboardClient from "@/app/auth/operator-dashboard/DashboardClient";
@@ -217,6 +218,15 @@ export default async function ProfilePage() {
                   <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>My Adventures</h2>
                 </div>
                 <TripLogSection />
+              </div>
+
+              {/* Settings */}
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-1.5 h-5 rounded-full" style={{ background: "#94a3b8" }} />
+                  <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>Settings</h2>
+                </div>
+                <ProfileForm profile={profile} />
               </div>
             </>
           )}

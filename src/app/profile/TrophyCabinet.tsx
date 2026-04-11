@@ -280,16 +280,16 @@ export default function TrophyCabinet() {
       </div>
 
       {/* Row 1 — Tier 1 + Tier 2 */}
-      <div className="flex items-stretch border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-        <div className="px-4 py-4 shrink-0" style={{ background: "linear-gradient(160deg,rgba(251,191,36,0.06) 0%,transparent 70%)", borderRight: "1px solid rgba(255,255,255,0.05)" }}>
+      <div className="flex flex-col sm:flex-row sm:items-stretch border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
+        <div className="px-4 py-4 sm:shrink-0 border-b sm:border-b-0 sm:border-r" style={{ background: "linear-gradient(160deg,rgba(251,191,36,0.06) 0%,transparent 70%)", borderColor: "rgba(255,255,255,0.05)" }}>
           <TierLabel tier="Tier 1" label="The absolute pinnacle" color="#fbbf24" earned={t1Earned} total={TIER1_ALL.length} />
-          <div className="flex gap-4 items-start">
-            {TIER1_ALL.map(b => cell(b, 56, true))}
+          <div className="flex flex-wrap gap-3 items-start">
+            {TIER1_ALL.map(b => cell(b, 52, true))}
           </div>
         </div>
         <div className="flex-1 px-4 py-4">
           <TierLabel tier="Tier 2" label="The domain master" color="#f97316" earned={t2Earned} total={TIER2_ALL.length} />
-          <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(4, minmax(0,1fr))" }}>
+          <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(44px, 1fr))" }}>
             {TIER2_ALL.map(b => cell(b, 38))}
           </div>
         </div>
@@ -298,7 +298,7 @@ export default function TrophyCabinet() {
       {/* Row 2 — Tier 3 */}
       <div className="px-4 py-4 rounded-b-2xl">
         <TierLabel tier="Tier 3" label="The axis elite" color="#60a5fa" earned={t3Earned} total={TIER3_ALL.length} />
-        <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(8, minmax(0,1fr))" }}>
+        <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(36px, 1fr))" }}>
           {TIER3_ALL.map(b => cell(b, 32))}
         </div>
       </div>
