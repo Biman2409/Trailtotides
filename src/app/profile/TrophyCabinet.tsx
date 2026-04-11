@@ -39,34 +39,33 @@ const TIER2_ALL: Achievement[] = DOMAIN_BADGES.map(b => ({ ...b }));
 const TIER3_ALL: Achievement[] = Object.values(AXIS_BADGES).map(b => ({ ...b, tier: "axis" as const }));
 
 // ─── Popover ──────────────────────────────────────────────────────────────────
-function Popover({ badge, anchorRect, containerRect, onClose }: {
+function Popover({ badge, anchorRect, onClose }: {
   badge: Achievement;
   anchorRect: DOMRect;
-  containerRect: DOMRect;
   onClose: () => void;
 }) {
-  const popRef = useRef<HTMLDivElement>(null);
   const isSpecial = badge.tier === "special";
+  const POPOVER_W = 280;
+  const GAP = 10;
 
-  // Position: above the badge, centered on it, clamped within container
-  const POPOVER_W = 260;
-  const anchorCenterX = anchorRect.left - containerRect.left + anchorRect.width / 2;
+  const anchorCenterX = anchorRect.left + anchorRect.width / 2;
   const rawLeft = anchorCenterX - POPOVER_W / 2;
-  const clampedLeft = Math.max(8, Math.min(rawLeft, containerRect.width - POPOVER_W - 8));
-  const top = anchorRect.top - containerRect.top - 8; // above badge
+  const left = Math.max(8, Math.min(rawLeft, window.innerWidth - POPOVER_W - 8));
+  const top = anchorRect.top + window.scrollY - GAP;
+  const arrowLeft = anchorCenterX - left - 6;
 
   return (
     <div
-      ref={popRef}
-      className="absolute z-50"
-      style={{ left: clampedLeft, top, transform: "translateY(-100%)", width: POPOVER_W }}
+      className="fixed z-[9999]"
+      style={{ left, top, transform: "translateY(-100%)", width: POPOVER_W, pointerEvents: "none" }}
     >
       <div
-        className="rounded-xl p-3 shadow-2xl"
+        className="rounded-xl p-3.5 shadow-2xl"
         style={{
-          background: "#111827",
-          border: `1px solid ${badge.color}40`,
-          boxShadow: `0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px ${badge.color}20`,
+          pointerEvents: "auto",
+          background: "#0f1923",
+          border: `1px solid ${badge.color}35`,
+          boxShadow: `0 12px 40px rgba(0,0,0,0.7), 0 0 0 1px ${badge.color}15`,
         }}
       >
         <div className="flex items-start gap-3">
@@ -85,19 +84,8 @@ function Popover({ badge, anchorRect, containerRect, onClose }: {
             <X className="w-3 h-3" />
           </button>
         </div>
-        {/* Arrow */}
-        <div
-          className="absolute"
-          style={{
-            bottom: -6, left: anchorCenterX - clampedLeft - 6,
-            width: 12, height: 12,
-            background: "#111827",
-            border: `1px solid ${badge.color}40`,
-            borderTop: "none", borderLeft: "none",
-            transform: "rotate(45deg)",
-            clipPath: "polygon(0 0, 100% 0, 100% 100%)",
-          }}
-        />
+        {/* Arrow pointing down to badge */}
+        <div className="absolute" style={{ bottom: -5, left: Math.max(8, Math.min(arrowLeft, POPOVER_W - 20)), width: 10, height: 10, background: "#0f1923", border: `1px solid ${badge.color}35`, borderTop: "none", borderLeft: "none", transform: "rotate(45deg)" }} />
       </div>
     </div>
   );
@@ -258,8 +246,6 @@ export default function TrophyCabinet() {
   const t2Earned = TIER2_ALL.filter(b => earnedIds.has(b.id)).length;
   const t3Earned = TIER3_ALL.filter(b => earnedIds.has(b.id)).length;
 
-  const containerRect = containerRef.current?.getBoundingClientRect();
-
   const cell = (b: Achievement, size: number, xl = false) => (
     <TrophyCell key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={size} xl={xl} isActive={active?.id === b.id} onToggle={handleToggle} />
   );
@@ -304,9 +290,9 @@ export default function TrophyCabinet() {
       </div>
 
       {/* Popover — anchored to badge, above it */}
-      {active && anchorRect && containerRect && (
+      {active && anchorRect && (
         <div style={{ animation: "popover-in 0.15s ease forwards" }}>
-          <Popover badge={active} anchorRect={anchorRect} containerRect={containerRect} onClose={() => setActive(null)} />
+          <Popover badge={active} anchorRect={anchorRect} onClose={() => setActive(null)} />
         </div>
       )}
     </div>
