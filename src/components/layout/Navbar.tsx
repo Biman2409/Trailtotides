@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useCompare, MAX } from "@/contexts/CompareContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { adventures } from "@/lib/data";
+import NavAvatar from "@/components/ui/custom/NavAvatar";
 
 const navLinks = [
   { href: "/explore", label: "Explore" },
@@ -368,9 +369,7 @@ export default function Navbar() {
                   className="flex items-center gap-2 px-3 py-2 rounded-xl transition-colors"
                   style={{ color: "var(--text-primary)" }}
                 >
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center font-semibold text-xs" style={{ background: "rgba(255,81,0,0.2)", color: "#ff7d47" }}>
-                    {user.name[0].toUpperCase()}
-                  </div>
+                  <NavAvatar fallback={user.name[0].toUpperCase()} />
                   <span className="text-sm font-medium max-w-[120px] truncate" style={{ color: "var(--text-secondary)" }}>{user.name}</span>
                   <ChevronDown className={`w-3.5 h-3.5 transition-transform ${userMenuOpen ? "rotate-180" : ""}`} style={{ color: "var(--text-muted)" }} />
                 </button>
@@ -470,8 +469,8 @@ export default function Navbar() {
           {user ? (
             <div className="pt-2 space-y-1">
               <div className="flex items-center gap-3 px-3 py-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-                <div className="w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm" style={{ background: "rgba(255,81,0,0.2)", color: "#ff7d47" }}>
-                  {user.name[0].toUpperCase()}
+                <div className="w-8 h-8 shrink-0">
+                  <NavAvatar fallback={user.name[0].toUpperCase()} />
                 </div>
                 <div>
                   <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>{user.name}</p>
