@@ -221,7 +221,7 @@ export default async function ProfilePage() {
               </div>
 
               {/* Settings */}
-              <div>
+              <div id="settings">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-1.5 h-5 rounded-full" style={{ background: "#94a3b8" }} />
                   <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>Settings</h2>
