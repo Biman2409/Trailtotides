@@ -11,6 +11,7 @@ interface Review {
   body: string;
   created_at: string;
   user_id: string;
+  avatar_id?: number | null;
 }
 
 interface Props {
@@ -315,10 +316,10 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
               >
                 {/* Avatar + name + date */}
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 rounded-full t-bg-surface2 flex items-center justify-center shrink-0">
-                    <span className="text-white text-xs font-bold uppercase">
-                      {r.username.charAt(0)}
-                    </span>
+                  <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 t-bg-surface2">
+                    {r.avatar_id
+                      ? <img src={`/avatars/avatar-${r.avatar_id}.png`} alt={r.username} className="w-full h-full object-cover" />
+                      : <span className="w-full h-full flex items-center justify-center text-white text-xs font-bold uppercase">{r.username.charAt(0)}</span>}
                   </div>
                   <div className="min-w-0">
                     <p className="text-[#1a1f2e] font-semibold text-sm leading-none truncate">

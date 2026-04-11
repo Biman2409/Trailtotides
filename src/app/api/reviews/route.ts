@@ -30,10 +30,24 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  // Enrich DB reviews with avatar_id from user metadata
+  const dbReviews = data ?? [];
+  const uniqueUserIds = [...new Set(dbReviews.map((r) => r.user_id))];
+  const avatarMap: Record<string, number | null> = {};
+  if (uniqueUserIds.length > 0) {
+    const { data: { users } } = await admin.auth.admin.listUsers({ perPage: 1000 });
+    for (const u of users ?? []) {
+      if (uniqueUserIds.includes(u.id)) {
+        avatarMap[u.id] = u.user_metadata?.avatar_id ?? null;
+      }
+    }
+  }
+  const enrichedDb = dbReviews.map((r) => ({ ...r, avatar_id: avatarMap[r.user_id] ?? null }));
+
   // Merge: real DB reviews first, then seed reviews that don't duplicate
-  const dbIds = new Set((data ?? []).map((r) => r.id));
+  const dbIds = new Set(enrichedDb.map((r) => r.id));
   const merged = [
-    ...(data ?? []),
+    ...enrichedDb,
     ...seedReviews.filter((r) => !dbIds.has(r.id)),
   ];
 
@@ -59,6 +73,7 @@ export async function POST(req: NextRequest) {
     user.user_metadata?.full_name ||
     user.email?.split("@")[0] ||
     "Explorer";
+  const avatar_id: number | null = user.user_metadata?.avatar_id ?? null;
 
   // One review per user per adventure
   const { data: existing } = await admin
@@ -79,7 +94,7 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ review: data });
+  return NextResponse.json({ review: { ...data, avatar_id } });
 }
 
 // DELETE /api/reviews?id=<id>  — delete own review

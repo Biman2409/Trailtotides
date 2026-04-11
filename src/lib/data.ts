@@ -123,6 +123,7 @@ export interface Story {
   author: string;
   authorRole: string;
   authorBio?: string;
+  authorAvatar?: string;
   pillTags?: string[]; // subset shown as pills near title; falls back to first 2 non-badge tags
   heroImage: string;
   readTime: string;
@@ -1831,6 +1832,7 @@ export const stories: Story[] = [
     author: "Nishant Ingle",
     authorRole: "Rider",
     authorBio: "Spends most of the year running a business. Once a year, the suit comes off, the saddle goes on, and he goes all in — no guided tours, no safety nets. Just one raw, unscripted adventure that most people only ever dream about.",
+    authorAvatar: "/avatars/avatar-5.png",
     pillTags: ["Ladakh", "Biking"],
     heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/story-submissions/photi-la.jpeg",
     readTime: "15 min read",
@@ -1847,6 +1849,7 @@ export const stories: Story[] = [
     author: "Aditya Yadav",
     authorRole: "A jack of all trades",
     authorBio: "I read relentlessly and write poetry to ground myself. A mountaineer and skier at heart, I find joy navigating riverbeds on my Himalayan. Anchored by amazing friends, I keep chasing new extremes. Ultimately, my chief occupation is living a life of love. Everything else is fluff.",
+    authorAvatar: "/avatars/avatar-10.png",
     pillTags: ["Nepal", "Biking"],
     heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/story-submissions/riding-through-revolution-hero.jpeg",
     readTime: "8 min read",

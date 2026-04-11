@@ -121,8 +121,10 @@ export default function StoriesPage() {
                 </p>
 
                 <div className="flex items-center gap-3 flex-wrap">
-                  <div className="w-9 h-9 rounded-full bg-[#ff5100] flex items-center justify-center text-sm font-bold text-white flex-shrink-0 shadow-lg shadow-[#ff5100]/30">
-                    {featured.author[0]}
+                  <div className="w-9 h-9 rounded-full flex-shrink-0 overflow-hidden shadow-lg shadow-[#ff5100]/30" style={{ background: "rgba(255,81,0,0.2)" }}>
+                    {featured.authorAvatar
+                      ? <img src={featured.authorAvatar} alt={featured.author} className="w-full h-full object-cover" />
+                      : <span className="w-full h-full flex items-center justify-center text-sm font-bold text-white bg-[#ff5100]">{featured.author[0]}</span>}
                   </div>
                   <div className="mr-1">
                     <p className="text-white text-sm font-semibold">{featured.author}</p>
@@ -193,8 +195,10 @@ export default function StoriesPage() {
                   {/* Footer */}
                   <div className="flex items-center justify-between pt-4 border-t border-white/8">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full bg-[#ff5100]/20 border border-[#ff5100]/30 flex items-center justify-center text-xs font-bold text-[#ff5100]">
-                        {story.author[0]}
+                      <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 border border-[#ff5100]/30">
+                        {story.authorAvatar
+                          ? <img src={story.authorAvatar} alt={story.author} className="w-full h-full object-cover" />
+                          : <span className="w-full h-full flex items-center justify-center text-xs font-bold text-[#ff5100] bg-[#ff5100]/20">{story.author[0]}</span>}
                       </div>
                       <div>
                         <p className="text-white text-xs font-semibold leading-tight">{story.author}</p>

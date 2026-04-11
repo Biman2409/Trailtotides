@@ -101,8 +101,10 @@ export default function StoryCard({ story }: { story: Story }) {
 
         <div className="border-t border-white/10 pt-2.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#ff5100] to-[#ff7d47] flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
-              {story.author.charAt(0)}
+            <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0">
+              {story.authorAvatar
+                ? <img src={story.authorAvatar} alt={story.author} className="w-full h-full object-cover" />
+                : <span className="w-full h-full flex items-center justify-center text-[10px] font-bold text-white bg-gradient-to-br from-[#ff5100] to-[#ff7d47]">{story.author.charAt(0)}</span>}
             </div>
             <div>
               <p className="text-white text-[10px] font-semibold leading-tight">{story.author}</p>
