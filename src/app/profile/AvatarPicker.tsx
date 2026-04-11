@@ -113,7 +113,7 @@ export default function AvatarPicker() {
         aria-label="Change profile picture"
       >
         {selected
-          ? <span className="block w-full h-full rounded-[22px] overflow-hidden">{selected.svg}</span>
+          ? <img src={selected.src} alt={selected.label} className="block w-full h-full object-cover rounded-[22px]" />
           : <AceBadge rankName={rankName} rankColor={rankColor} />
         }
         <span className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl gap-1 pointer-events-none">
@@ -230,15 +230,15 @@ function AvatarCell({ av, active, onPick }: { av: (typeof AVATARS)[0]; active: b
       <span
         className="w-full aspect-square rounded-xl overflow-hidden block"
         style={{
-          border: `1.5px solid ${active ? av.accentColor : "rgba(255,255,255,0.07)"}`,
-          boxShadow: active ? `0 0 16px ${av.accentColor}40` : "none",
-          outline: active ? `1px solid ${av.accentColor}20` : "none",
+          border: `1.5px solid ${active ? "rgba(255,81,0,0.8)" : "rgba(255,255,255,0.07)"}`,
+          boxShadow: active ? "0 0 16px rgba(255,81,0,0.4)" : "none",
+          outline: active ? "1px solid rgba(255,81,0,0.2)" : "none",
           outlineOffset: "2px",
           transform: active ? "scale(1.06)" : "scale(1)",
           transition: "all 0.13s",
         }}
       >
-        {av.svg}
+        <img src={av.src} alt={av.label} className="w-full h-full object-cover" />
       </span>
       <span className="text-[7.5px] text-white/25 group-hover/av:text-white/55 transition-colors font-medium leading-none tracking-wide">
         {av.label}

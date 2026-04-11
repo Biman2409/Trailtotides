@@ -315,7 +315,7 @@ function AvatarSection() {
           }}
         >
           {selected
-            ? <span className="block w-full h-full">{selected.svg}</span>
+            ? <img src={selected.src} alt={selected.label} className="block w-full h-full object-cover" />
             : <span className="flex items-center justify-center w-full h-full" style={{ color: rankColor }}>
                 <span style={{ width: 34, height: 34, display: "block" }}>{RANK_ICONS[rankName] ?? RANK_ICONS["Uncharted"]}</span>
               </span>
