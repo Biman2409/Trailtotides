@@ -346,21 +346,6 @@ export default function Navbar() {
               </div>
             )}
 
-            {/* ── Settings button ── */}
-            {user && (
-              <Link
-                href="/settings"
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all"
-                style={{
-                  color: pathname === "/settings" ? "var(--text-primary)" : "var(--nav-text)",
-                  background: pathname === "/settings" ? "var(--nav-active-bg)" : "transparent",
-                }}
-              >
-                <Settings className="w-4 h-4" />
-                Settings
-              </Link>
-            )}
-
             {/* ── User menu ── */}
             {user ? (
               <div className="relative" ref={userMenuRef}>
