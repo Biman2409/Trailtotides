@@ -71,19 +71,6 @@ export const metadata: Metadata = {
   creator: "Trail to Tides",
   publisher: "Trail to Tides",
   category: "Travel & Adventure",
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "48x48" },
-      { url: "/icon-32.png", type: "image/png", sizes: "32x32" },
-      { url: "/icon-96.png", type: "image/png", sizes: "96x96" },
-      { url: "/icon-192x192.png", type: "image/png", sizes: "192x192" },
-      { url: "/logo.svg", type: "image/svg+xml" },
-    ],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180" },
-    ],
-    shortcut: "/favicon.ico",
-  },
   manifest: "/manifest.json",
   openGraph: {
     title: "Trail to Tides — India's Adventure Discovery Platform",
