@@ -51,15 +51,43 @@ export const RANK_ICONS: Record<string, React.ReactNode> = {
 };
 
 // ─── Hook — shared state loader ───────────────────────────────────────────────
+async function fetchServerAvatarId(): Promise<number | null> {
+  try {
+    const res = await fetch("/api/me");
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.avatar_id ?? null;
+  } catch { return null; }
+}
+
+async function saveServerAvatarId(id: number | null): Promise<void> {
+  try {
+    await fetch("/api/me", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ avatar_id: id }),
+    });
+  } catch { /* silent */ }
+}
+
 function useAvatarState() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [rankName, setRankName] = useState("Uncharted");
   const [rankColor, setRankColor] = useState("#6b7280");
 
   useEffect(() => {
+    // Load from localStorage immediately for instant render
     const stored = localStorage.getItem(LS_KEY);
     if (stored) setSelectedId(Number(stored));
-    // Try localStorage first for instant render, then sync from server
+
+    // Then sync from server (server wins for avatar_id)
+    fetchServerAvatarId().then(serverId => {
+      if (serverId !== null) {
+        setSelectedId(serverId);
+        localStorage.setItem(LS_KEY, String(serverId));
+      }
+    });
+
     const applyProfile = (p: ReturnType<typeof loadProfile>) => {
       if (!p?.ace) return;
       const total = Object.values(p.ace).reduce((s: number, v) => s + (v as number), 0);
@@ -77,6 +105,7 @@ function useAvatarState() {
     setSelectedId(id);
     if (id !== null) localStorage.setItem(LS_KEY, String(id));
     else localStorage.removeItem(LS_KEY);
+    saveServerAvatarId(id);
   };
 
   return { selectedId, rankName, rankColor, saveSelection };

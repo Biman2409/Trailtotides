@@ -16,6 +16,14 @@ export default function NavAvatar({ fallback }: { fallback: string }) {
     const stored = localStorage.getItem(LS_KEY);
     if (stored) setSelectedId(Number(stored));
 
+    // Sync avatar from server
+    fetch("/api/me").then(r => r.ok ? r.json() : null).then(data => {
+      if (data?.avatar_id != null) {
+        setSelectedId(data.avatar_id);
+        localStorage.setItem(LS_KEY, String(data.avatar_id));
+      }
+    }).catch(() => {});
+
     const apply = (p: ReturnType<typeof loadProfile>) => {
       if (!p?.ace) return;
       const total = Object.values(p.ace).reduce((s: number, v) => s + (v as number), 0);
