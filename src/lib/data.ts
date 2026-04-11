@@ -89,6 +89,7 @@ export interface Adventure {
   operators: Operator[];
   tags: string[];
   featured: boolean;
+  editorChoice?: boolean;
   seedReviews?: SeedReview[];
   /** ERT difficulty scores — auto-computed if omitted */
   ert?: ERT;
@@ -176,7 +177,7 @@ export const adventures: Adventure[] = [
           { name: "Extreme Tours India", verified: false, priceFrom: "₹32,000", rating: 4.1, website: "https://extremetoursindia.com" },
         ],
     tags: ["motorcycle", "high passes", "Ladakh", "iconic", "long ride"],
-    featured: true,
+    featured: true, editorChoice: true,
     seedReviews: [
       { id: "sr-manali-1", username: "kartik_r", rating: 5, body: "Did it on a Royal Enfield Himalayan. Tanglang La in rain is terrifying and spectacular at the same time. The camaraderie with other riders on the road is something you can't plan — just happens naturally. Do it before the road gets too crowded.", created_at: "2025-07-18T10:00:00Z", user_id: "" },
       { id: "sr-manali-2", username: "neha_rides", rating: 5, body: "First time on a high-altitude ride and it exceeded every expectation. Baralacha La sunrise was otherworldly. Make sure your bike is serviced the day before departure and carry extra engine oil. The roads after Keylong can be rough.", created_at: "2025-06-30T15:30:00Z", user_id: "" },
