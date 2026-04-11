@@ -51,14 +51,14 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
         {/* Top row */}
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="min-w-0">
-            <p className="text-white font-semibold text-sm leading-snug truncate">{adventureName}</p>
+            <p className="text-white font-semibold text-sm leading-snug">{adventureName}</p>
             <p className="text-white/35 text-[11px] mt-0.5 truncate">
               {duration}{difficulty && <> · {difficulty}</>}
             </p>
           </div>
           <div className="text-right shrink-0">
             {operatorName && (
-              <p className="text-[#ff5100] text-xs font-bold leading-none mb-1 truncate max-w-[130px]">{operatorName}</p>
+              <p className="text-[#ff5100] text-xs font-bold leading-none mb-1">{operatorName}</p>
             )}
             {priceFrom && (
               <p className="text-white font-bold text-sm leading-none whitespace-nowrap">
