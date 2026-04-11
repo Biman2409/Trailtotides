@@ -348,11 +348,11 @@ export default function Navbar() {
             {/* ── Settings button ── */}
             {user && (
               <Link
-                href="/profile#settings"
+                href="/settings"
                 className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-all"
                 style={{
-                  color: pathname === "/profile" ? "var(--text-primary)" : "var(--nav-text)",
-                  background: pathname === "/profile" ? "var(--nav-active-bg)" : "transparent",
+                  color: pathname === "/settings" ? "var(--text-primary)" : "var(--nav-text)",
+                  background: pathname === "/settings" ? "var(--nav-active-bg)" : "transparent",
                 }}
               >
                 <Settings className="w-4 h-4" />
@@ -486,7 +486,7 @@ export default function Navbar() {
               <Link href="/profile" className="flex items-center gap-2 py-3 px-3 text-sm font-medium rounded-xl transition-colors" style={{ color: "var(--text-secondary)" }}>
                 <User className="w-4 h-4" />Profile
               </Link>
-              <Link href="/profile#settings" className="flex items-center gap-2 py-3 px-3 text-sm font-medium rounded-xl transition-colors" style={{ color: "var(--text-secondary)" }}>
+              <Link href="/settings" className="flex items-center gap-2 py-3 px-3 text-sm font-medium rounded-xl transition-colors" style={{ color: "var(--text-secondary)" }}>
                 <Settings className="w-4 h-4" />Settings
               </Link>
               {user.role === "operator" && (
