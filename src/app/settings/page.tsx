@@ -1,15 +1,17 @@
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import ProfileForm from "@/app/profile/ProfileForm";
 
-export const dynamic = "force-dynamic";
-
-export const metadata = {
-  title: "Settings — Trail to Tides",
+export const metadata: Metadata = {
+  title: "Settings",
+  robots: { index: false, follow: false },
 };
+
+export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -47,14 +49,21 @@ export default async function SettingsPage() {
       <ScrollToTop />
       <Navbar />
 
-      <section className="pt-32 pb-20 px-5 lg:px-8">
-        <div className="max-w-2xl mx-auto">
-          <div className="mb-10">
-            <p className="text-[#ff5100] text-xs font-bold tracking-[0.25em] uppercase mb-2">Account</p>
-            <h1 className="text-white text-3xl font-black tracking-tight">Settings</h1>
-            <p className="text-white/40 text-sm mt-2">Manage your personal details and password.</p>
-          </div>
+      {/* Hero banner — matches profile page */}
+      <div
+        className="relative pt-32 pb-12 px-5 lg:px-8 overflow-hidden"
+        style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+      >
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[240px] rounded-full blur-3xl opacity-8 pointer-events-none" style={{ background: "radial-gradient(ellipse, #ff5100 0%, transparent 70%)" }} />
+        <div className="max-w-4xl mx-auto relative">
+          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.3em] uppercase mb-2">Account</p>
+          <h1 className="text-white text-3xl font-black tracking-tight">Settings</h1>
+          <p className="text-white/35 text-sm mt-2">Manage your profile picture, personal details and password.</p>
+        </div>
+      </div>
 
+      <section className="py-12 px-5 lg:px-8">
+        <div className="max-w-2xl mx-auto">
           <ProfileForm profile={{
             ...profile,
             username: user.user_metadata?.username || profile.username || null,

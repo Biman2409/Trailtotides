@@ -23,10 +23,10 @@ type Profile = {
 
 function Section({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl">
-      <div className="mb-6">
-        <h2 className="text-lg font-bold text-white">{title}</h2>
-        {subtitle && <p className="text-white/40 text-sm mt-0.5">{subtitle}</p>}
+    <div className="rounded-2xl p-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
+      <div className="mb-5">
+        <h2 className="text-base font-bold text-white">{title}</h2>
+        {subtitle && <p className="text-white/35 text-xs mt-0.5">{subtitle}</p>}
       </div>
       {children}
     </div>
@@ -261,7 +261,7 @@ function ChangePasswordSection() {
             {success && <p className="text-emerald-400 text-xs font-medium flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" />Password updated</p>}
           </div>
           <button type="submit" disabled={loading}
-            className="flex items-center gap-2 bg-white/8 hover:bg-white/14 border border-white/10 hover:border-white/20 disabled:opacity-40 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
+            className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-40 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
             {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Updating…</> : <><Lock className="w-4 h-4" />Update Password</>}
           </button>
         </div>
