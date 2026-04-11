@@ -73,11 +73,16 @@ export const metadata: Metadata = {
   category: "Travel & Adventure",
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/icon-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/icon-96.png", type: "image/png", sizes: "96x96" },
+      { url: "/icon-192x192.png", type: "image/png", sizes: "192x192" },
       { url: "/logo.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico" },
     ],
-    apple: "/logo.svg",
-    shortcut: "/logo.svg",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180" },
+    ],
+    shortcut: "/favicon.ico",
   },
   manifest: "/manifest.json",
   openGraph: {
@@ -148,7 +153,7 @@ export default function RootLayout({
                 url: BASE_URL,
                 logo: {
                   "@type": "ImageObject",
-                  url: `${BASE_URL}/logo.svg`,
+                  url: `${BASE_URL}/icon-512x512.png`,
                   width: 512,
                   height: 512,
                 },
