@@ -171,7 +171,7 @@ function AccountDetails({ profile }: { profile: Profile }) {
           <div className="flex items-center gap-2 ml-auto">
             {!editing ? (
               <button type="button" onClick={() => setEditing(true)}
-                className="flex items-center gap-2 border border-white/10 hover:border-white/20 text-white/70 hover:text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
+                className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95">
                 Update Details
               </button>
             ) : (
