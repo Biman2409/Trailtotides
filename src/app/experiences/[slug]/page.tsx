@@ -538,7 +538,10 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </AccordionSection>
 
             {/* Are You an Operator? */}
-            <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
+            <div className="h-px mt-12" style={{ background: "rgba(255,255,255,0.05)" }} />
+            <div className="pt-10">
+              <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
+            </div>
 
             {/* Reviews */}
             <div className="h-px mt-12" style={{ background: "rgba(255,255,255,0.05)" }} />
