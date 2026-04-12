@@ -25,3 +25,16 @@ https://nextjs.org/telemetry
  ○ Compiling /experiences/[slug] ...
  ✓ Compiled /experiences/[slug] in 1622ms
  GET /experiences/annapurna-circuit?_cb=1776023626288 200 in 4233ms
+ ⚠ Cross origin request detected from 3000-9b1fb166-479d-4e58-a28b-1ca1805e1f75.orchids.cloud to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ○ Compiling /api/photos ...
+ ✓ Compiled /api/photos in 680ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 1195ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 1197ms
+ GET /api/photos?slug=annapurna-circuit 200 in 1462ms
+ GET /api/photos?slug=annapurna-circuit 200 in 1461ms
+ GET /experiences/annapurna-circuit?_cb=1776023639911 200 in 540ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 474ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 425ms
+ GET /api/photos?slug=annapurna-circuit 200 in 624ms
+ GET /api/photos?slug=annapurna-circuit 200 in 738ms
