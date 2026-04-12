@@ -107,3 +107,16 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /api/photos?slug=annapurna-circuit 200 in 646ms
  GET /api/photos?slug=annapurna-circuit 200 in 596ms
  ✓ Compiled in 271ms
+ GET /experiences/annapurna-circuit?_cb=1776024129911 200 in 1074ms
+ GET /experiences/annapurna-circuit?_cb=1776024133375 200 in 535ms
+ GET /experiences/annapurna-circuit?_cb=1776024135994 200 in 444ms
+ GET /experiences/annapurna-circuit?_cb=1776024138594 200 in 497ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 364ms
+ GET /api/photos?slug=annapurna-circuit 200 in 646ms
+ GET /api/photos?slug=annapurna-circuit 200 in 693ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 504ms
+ GET /experiences/annapurna-circuit?_cb=1776024274873 200 in 982ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 515ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 405ms
+ GET /api/photos?slug=annapurna-circuit 200 in 613ms
+ GET /api/photos?slug=annapurna-circuit 200 in 724ms
