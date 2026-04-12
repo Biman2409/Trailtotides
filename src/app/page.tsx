@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Map, ChevronRight, BadgeCheck } from "lucide-react";
+import { ArrowRight, Map, ChevronRight, Star } from "lucide-react";
 import MatchmakerHomepageSection from "@/components/ui/custom/MatchmakerHomepageSection";
 import SuitedAdventures from "@/components/ui/custom/SuitedAdventures";
 
@@ -31,7 +31,7 @@ import StoryCard from "@/components/ui/custom/StoryCard";
 import FindByRegion from "@/components/ui/custom/FindByRegion";
 import { adventures, stories } from "@/lib/data";
 
-const featuredAdventures = adventures.filter((a) => a.featured).slice(0, 6);
+const featuredAdventures = adventures.filter((a) => a.editorChoice).slice(0, 9);
 const featuredStories = stories.slice(0, 3);
 
 export default function HomePage() {
@@ -117,8 +117,8 @@ export default function HomePage() {
             <div className="max-w-7xl mx-auto">
               <div className="mb-10 lg:mb-14">
                 <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
-                  <BadgeCheck className="w-3.5 h-3.5" />
-                  EDITORS CHOICE
+                  <Star className="w-3.5 h-3.5 fill-[#ff5100]" />
+                  EDITOR'S CHOICE
                 </p>
                 <div className="flex items-end justify-between gap-4">
                   <div>

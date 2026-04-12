@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { BadgeCheck, GitCompare } from "lucide-react";
+import { BadgeCheck, GitCompare, Star } from "lucide-react";
 import { toast } from "sonner";
 import type { Adventure, Month } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
@@ -109,8 +109,17 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
 
+        {/* Editor's Choice ribbon */}
+        {adventure.editorChoice && (
+          <div className="absolute top-0 left-0 z-20 flex items-center gap-1 pl-2.5 pr-3 py-1.5 rounded-br-xl"
+            style={{ background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)", boxShadow: "2px 2px 12px rgba(255,81,0,0.45)" }}>
+            <Star className="w-2.5 h-2.5 text-white fill-white" />
+            <span className="text-white text-[9px] font-black tracking-[0.18em] uppercase leading-none">Editor's Choice</span>
+          </div>
+        )}
+
         {/* Top-left: difficulty + season */}
-        <div className="absolute top-3 left-3 z-20 flex flex-wrap items-center gap-1.5">
+        <div className={`absolute z-20 flex flex-wrap items-center gap-1.5 ${adventure.editorChoice ? "top-9 left-3" : "top-3 left-3"}`}>
           <DifficultyMeter difficulty={difficulty} />
           {isSeasonActive ? (
             <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>

@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, ChevronLeft, Heart, RotateCcw, MapPin, Clock, BarChart2 } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, ChevronLeft, Heart, RotateCcw, MapPin, Clock, BarChart2, Star } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import ExploreMatchmakerSection from "@/components/ui/custom/ExploreMatchmakerSection";
@@ -79,6 +79,7 @@ export default function ExploreClient() {
     return null;
   });
   const [userProfile, setUserProfile] = useState<StoredProfile | null>(null);
+  const [editorOnly, setEditorOnly] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
@@ -156,6 +157,7 @@ export default function ExploreClient() {
   const filtered = useMemo(() => {
     return adventures.filter((a) => {
         if (!LAND_TYPES.includes(a.type)) return false;
+        if (editorOnly && !a.editorChoice) return false;
         if (
           search &&
           !a.name.toLowerCase().includes(search.toLowerCase()) &&
@@ -189,7 +191,7 @@ export default function ExploreClient() {
       }
       return true;
     });
-    }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, priceRange, aceCategory, userProfile]);
+    }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, priceRange, aceCategory, userProfile, editorOnly]);
 
   // Reset to page 1 whenever filters change
   useEffect(() => { setCurrentPage(1); }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, priceRange, aceCategory]);
@@ -292,6 +294,20 @@ export default function ExploreClient() {
                   </button>
 
 
+
+          {/* Editor's Choice quick filter */}
+          <button
+            onClick={() => setEditorOnly(!editorOnly)}
+            className={`hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
+              editorOnly
+                ? "text-white"
+                : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white/80"
+            }`}
+            style={editorOnly ? { background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)", boxShadow: "0 2px 12px rgba(255,81,0,0.35)" } : {}}
+          >
+            <Star className={`w-3 h-3 ${editorOnly ? "fill-white text-white" : ""}`} />
+            Editor's Choice
+          </button>
 
           {/* Result count */}
           <span className="hidden md:block text-sm text-white/40 ml-auto uppercase tracking-wider font-medium">

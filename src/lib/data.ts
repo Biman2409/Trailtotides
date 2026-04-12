@@ -585,7 +585,7 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹75,000", rating: 4.8, website: "https://trekthehimalayas.com/annapurna-circuit-trek" },
     ],
-    tags: ["Nepal", "Thorong La", "circumnavigation", "classic", "Tibetan culture"], featured: false,
+    tags: ["Nepal", "Thorong La", "circumnavigation", "classic", "Tibetan culture"], featured: false, editorChoice: true,
     seedReviews: [
       { id: "sr-ac-1", username: "preetam_c", rating: 5, body: "Thorong La at 5,416m — 4am start, -15°C, headtorch on. By 9am I was over and looking back at Manang below. Best decision of my life.", created_at: "2025-10-12T04:30:00Z", user_id: "" },
       { id: "sr-ac-2", username: "swathi_r", rating: 5, body: "The transition from Manang to Muktinath in a single day is emotionally overwhelming. This trek changes you.", created_at: "2025-04-28T11:00:00Z", user_id: "" },
@@ -866,7 +866,7 @@ export const adventures: Adventure[] = [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹75,500", rating: 4.8, website: "https://trekthehimalayas.com/everest-base-camp-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹80,000", rating: 4.4, website: "https://www.trekupindia.com/everest-base-camp-trek" },
     ],
-    tags: ["Nepal", "Everest", "iconic", "Khumbu", "high altitude"], featured: true,
+    tags: ["Nepal", "Everest", "iconic", "Khumbu", "high altitude"], featured: true, editorChoice: true,
     seedReviews: [
       { id: "sr-ebc-1", username: "nidhi_e", rating: 5, body: "14 days of building towards one moment — standing at EBC with Everest directly above. Namche Bazaar is a highlight in itself. Go in October for crystal-clear skies.", created_at: "2025-10-25T08:00:00Z", user_id: "" },
       { id: "sr-ebc-2", username: "kartik_ebc", rating: 5, body: "The Tengboche Monastery against Ama Dablam was my favourite moment — more than the base camp itself. This trek is about the whole journey, not just the destination.", created_at: "2025-04-18T06:30:00Z", user_id: "" },
@@ -931,7 +931,7 @@ export const adventures: Adventure[] = [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹21,000", rating: 4.7, website: "https://trekthehimalayas.com/goechala-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹20,000", rating: 4.3, website: "https://www.trekupindia.com/goechala-trek" },
     ],
-    tags: ["Sikkim", "Kangchenjunga", "Goechala", "rhododendron", "national park"], featured: false,
+    tags: ["Sikkim", "Kangchenjunga", "Goechala", "rhododendron", "national park"], featured: false, editorChoice: true,
     seedReviews: [
       { id: "sr-goechala-1", username: "binita_s", rating: 5, body: "Kangchenjunga from Goechala viewpoint 3 is something that no photo captures. It's not a mountain you see — it's a wall of ice you stand in front of.", created_at: "2025-10-18T06:00:00Z", user_id: "" },
       { id: "sr-goechala-2", username: "pankaj_trek", rating: 5, body: "The rhododendron forest in April is in full bloom and completely extraordinary. The whole trek is magnificent, not just the viewpoint.", created_at: "2025-04-25T09:00:00Z", user_id: "" },
@@ -1024,7 +1024,7 @@ export const adventures: Adventure[] = [
       { name: "Indiahikes", verified: true, priceFrom: "₹20,000", rating: 4.9, website: "https://indiahikes.com/kashmir-great-lakes-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹21,000", rating: 4.8, website: "https://trekthehimalayas.com/kashmir-great-lakes-trek" },
     ],
-    tags: ["Kashmir", "alpine lakes", "Gadsar Pass", "short season", "high altitude"], featured: true,
+    tags: ["Kashmir", "alpine lakes", "Gadsar Pass", "short season", "high altitude"], featured: true, editorChoice: true,
     seedReviews: [
       { id: "sr-kgl-1", username: "zara_k", rating: 5, body: "The colour of Vishansar Lake — an impossible shade of blue — at sunrise. This trek is genuinely one of the most beautiful things in India. Do it before it gets discovered.", created_at: "2025-08-05T06:30:00Z", user_id: "" },
       { id: "sr-kgl-2", username: "adnan_trek", rating: 5, body: "Seven lakes, seven sunsets, seven wildflower meadows. The Gadsar crossing in August had knee-deep snow — thrilling. The whole trek is world-class.", created_at: "2025-07-28T09:00:00Z", user_id: "" },
@@ -1114,7 +1114,7 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹22,500", rating: 4.8, website: "https://trekthehimalayas.com/markha-valley-trek" },
     ],
-    tags: ["Ladakh", "Markha Valley", "river crossings", "Kongmaru La", "remote"], featured: false,
+    tags: ["Ladakh", "Markha Valley", "river crossings", "Kongmaru La", "remote"], featured: false, editorChoice: true,
     seedReviews: [
       { id: "sr-markha-1", username: "kartik_ladakh", rating: 5, body: "Seven days walking through a Ladakhi painting. Hankar village, the Nimaling plateau with yak herders, Kongmaru La — each day better than the last.", created_at: "2025-08-20T08:00:00Z", user_id: "" },
       { id: "sr-markha-2", username: "divya_markha", rating: 5, body: "The river crossing at Chilling is exciting — thigh deep, fast current, absolutely thrilling. Poles essential. The valley after is perfect.", created_at: "2025-07-10T09:30:00Z", user_id: "" },
@@ -1146,7 +1146,7 @@ export const adventures: Adventure[] = [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹45,000", rating: 4.7, website: "https://trekthehimalayas.com/pin-parvati-pass-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹35,000", rating: 4.3, website: "https://www.trekupindia.com/pin-parvati-pass-trek" },
     ],
-    tags: ["Pin Parvati", "glacier", "Spiti", "Himachal Pradesh", "expert"], featured: false,
+    tags: ["Pin Parvati", "glacier", "Spiti", "Himachal Pradesh", "expert"], featured: false, editorChoice: true,
     seedReviews: [
       { id: "sr-pp-1", username: "nitin_glacier", rating: 5, body: "The glacier crossing is terrifying and magnificent. Nothing in my previous 15 Himalayan treks prepared me for the scale of Pin Parvati. This is the real thing.", created_at: "2025-07-25T07:00:00Z", user_id: "" },
       { id: "sr-pp-2", username: "kaveri_exp", rating: 5, body: "11 days to cross 110km with a glacier in the middle. Every day is different. The Pin Valley side is completely alien — orange and ochre and silent.", created_at: "2025-08-02T08:00:00Z", user_id: "" },
@@ -1209,7 +1209,7 @@ export const adventures: Adventure[] = [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹11,800", rating: 4.7, website: "https://trekthehimalayas.com/valley-of-flowers-trek" },
       { name: "Trekup India", verified: false, priceFrom: "₹11,000", rating: 4.3, website: "https://www.trekupindia.com/valley-of-flowers-trek" },
     ],
-    tags: ["Valley of Flowers", "UNESCO", "wildflowers", "Hemkund", "Uttarakhand"], featured: false,
+    tags: ["Valley of Flowers", "UNESCO", "wildflowers", "Hemkund", "Uttarakhand"], featured: false, editorChoice: true,
     seedReviews: [
       { id: "sr-vof-1", username: "flora_h", rating: 5, body: "August in the valley — every colour simultaneously. I'd never seen a Himalayan blue poppy before. After one morning here I understood why it has UNESCO status.", created_at: "2025-08-08T09:00:00Z", user_id: "" },
       { id: "sr-vof-2", username: "gurmeet_h", rating: 5, body: "Hemkund Sahib at dawn — the lake, the gurudwara, the snow peaks. A profoundly moving place regardless of your faith. The approach staircase is brutal but sacred.", created_at: "2025-08-15T05:30:00Z", user_id: "" },
@@ -1348,7 +1348,7 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹97,000", rating: 4.8, website: "https://trekthehimalayas.com/everest-base-camp-via-gokyo-ri" },
     ],
-    tags: ["Gokyo", "Nepal", "Khumbu", "Gokyo Ri", "glacial lakes"], featured: false,
+    tags: ["Gokyo", "Nepal", "Khumbu", "Gokyo Ri", "glacial lakes"], featured: false, editorChoice: true,
     seedReviews: [
       { id: "sr-gokyo-1", username: "meera_n", rating: 5, body: "Gokyo Ri at dawn with all four 8,000ers lit up — I had tears in my eyes. The lakes themselves are otherworldly. A better experience than EBC in my opinion.", created_at: "2025-10-20T06:00:00Z", user_id: "" },
       { id: "sr-gokyo-2", username: "siddharth_p", rating: 5, body: "Less crowded than the standard EBC trail and visually superior. The Gokyo valley has a peaceful, remote quality despite being in the popular Khumbu region.", created_at: "2025-04-18T07:30:00Z", user_id: "" },
@@ -1484,7 +1484,7 @@ export const adventures: Adventure[] = [
     operators: [
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹88,000", rating: 4.8, website: "https://trekthehimalayas.com/manaslu-circuit-trek" },
     ],
-    tags: ["Manaslu", "Nepal", "Larke Pass", "remote", "circuit"], featured: false,
+    tags: ["Manaslu", "Nepal", "Larke Pass", "remote", "circuit"], featured: false, editorChoice: true,
     seedReviews: [
       { id: "sr-manaslu-1", username: "sunil_t", rating: 5, body: "Manaslu Circuit is Nepal's finest long trek. The Larke Pass morning crossing with Manaslu and Himlung towering above — absolute magic. Far better than Annapurna Circuit these days.", created_at: "2025-10-22T07:00:00Z", user_id: "" },
       { id: "sr-manaslu-2", username: "kavya_n", rating: 5, body: "Remote villages, spectacular passes, the 8,000m face right there. We saw almost no other trekkers for 5 days. This is what Annapurna Circuit used to be.", created_at: "2025-04-28T08:00:00Z", user_id: "" },
@@ -1734,7 +1734,7 @@ export const adventures: Adventure[] = [
       { name: "Indiahikes", verified: true, priceFrom: "₹18,000", rating: 4.8, website: "https://indiahikes.com/roopkund-trek" },
       { name: "Trek The Himalayas", verified: true, priceFrom: "₹18,000", rating: 4.7, website: "https://trekthehimalayas.com/roopkund-trek" },
     ],
-    tags: ["Roopkund", "skeleton lake", "Trishul", "Ali Bedni", "Uttarakhand"], featured: false,
+    tags: ["Roopkund", "skeleton lake", "Trishul", "Ali Bedni", "Uttarakhand"], featured: false, editorChoice: true,
     seedReviews: [
       { id: "sr-roopkund-1", username: "arvind_r", rating: 5, body: "Standing at Roopkund in October with skeletons visible in the clear water and Trishul above — it's genuinely unsettling and utterly spectacular simultaneously. Nothing else like it.", created_at: "2025-09-28T09:00:00Z", user_id: "" },
       { id: "sr-roopkund-2", username: "meghna_t", rating: 4, body: "Even if you ignore the lake, the route via Ali Bedni Bugyal is exceptional. The meadow views alone justify the trek. The lake is the legend but the journey is the reward.", created_at: "2025-06-12T08:00:00Z", user_id: "" },
