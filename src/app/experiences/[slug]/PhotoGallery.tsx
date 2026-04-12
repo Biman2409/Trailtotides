@@ -96,7 +96,7 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
   async function handleDelete(id: string) {
     setDeleting(id);
     try {
-      const res = await fetch(`/api/photos?id=${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/photos?id=${id}&slug=${encodeURIComponent(slug)}`, { method: "DELETE" });
       if (res.ok) setPhotos((prev) => prev.filter((p) => p.id !== id));
     } finally {
       setDeleting(null);
