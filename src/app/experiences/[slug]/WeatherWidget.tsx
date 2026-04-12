@@ -93,7 +93,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
     url.searchParams.set("daily", "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum");
     url.searchParams.set("wind_speed_unit", "kmh");
     url.searchParams.set("forecast_days", "7");
-    url.searchParams.set("timezone", "Asia/Kolkata");
+    url.searchParams.set("timezone", "auto");
 
     fetch(url.toString())
       .then((r) => r.json())
