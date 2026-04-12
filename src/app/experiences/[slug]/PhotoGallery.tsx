@@ -114,6 +114,8 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
     <section>
       <div className="flex items-center justify-between mb-5">
         <h2 className="flex items-center gap-1.5 text-white font-semibold text-sm">
+          <Images className="w-3.5 h-3.5 text-white/40" />Photos
+        </h2>
         {photos.length > 0 && (
           <span className="text-white/30 text-xs">{photos.length} photo{photos.length !== 1 ? "s" : ""}</span>
         )}
