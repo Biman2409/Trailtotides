@@ -162,7 +162,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
 
   return (
     <section>
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center gap-2 mb-5">
         <Star className="w-4 h-4 text-white/30" />
         {avgRating !== null && (
           <div className="flex items-center gap-1.5">
