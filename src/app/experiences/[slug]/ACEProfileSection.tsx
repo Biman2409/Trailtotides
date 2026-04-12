@@ -80,8 +80,8 @@ export default function ACEProfileSection({
         <div className="flex flex-col md:flex-row items-stretch">
 
           {/* Radar panel */}
-          <div className="flex flex-col items-center justify-center py-6 px-6 shrink-0 md:border-r border-b md:border-b-0 border-white/[0.06]">
-            <ACERadar ace={ace} userAce={userAce ?? undefined} userColor={userColor} size={220} showLabels />
+          <div className="flex flex-col items-center justify-center py-8 px-8 shrink-0 md:border-r border-b md:border-b-0 border-white/[0.06]">
+            <ACERadar ace={ace} userAce={userAce ?? undefined} userColor={userColor} size={300} showLabels />
             {/* Legend */}
             <div className="flex items-center gap-4 mt-4">
               <div className="flex items-center gap-1.5">
