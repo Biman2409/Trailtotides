@@ -147,8 +147,8 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
 
             {/* Live weather + location */}
             <div className="flex items-center gap-2.5 pr-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <div className={`${color(w.weatherCode)} opacity-80`}>
-                <WeatherIcon code={w.weatherCode} isDay={w.isDay} className="w-3.5 h-3.5" />
+              <div className={color(w.weatherCode)}>
+                <WeatherIcon code={w.weatherCode} isDay={w.isDay} className="w-4 h-4" />
               </div>
               <div>
                 <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Live Weather</div>
@@ -164,31 +164,31 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
 
             {/* Feels like */}
             <div className="hidden sm:flex items-center gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <Thermometer className="w-3 h-3 text-orange-400/70 shrink-0" />
-              <span className="text-white/45 text-[11px]">Feels {w.apparent}°</span>
+              <Thermometer className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+              <span className="text-white/50 text-[11px]">Feels {w.apparent}°</span>
             </div>
 
             {/* Wind */}
             <div className="hidden md:flex items-center gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <Wind className="w-3 h-3 text-sky-400/70 shrink-0" />
-              <span className="text-white/45 text-[11px]">{w.wind} km/h</span>
+              <Wind className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+              <span className="text-white/50 text-[11px]">{w.wind} km/h</span>
             </div>
 
             {/* Humidity */}
             <div className="hidden md:flex items-center gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <Droplets className="w-3 h-3 text-blue-400/70 shrink-0" />
-              <span className="text-white/45 text-[11px]">{w.humidity}%</span>
+              <Droplets className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+              <span className="text-white/50 text-[11px]">{w.humidity}%</span>
             </div>
 
             {/* 3-day mini */}
             <div className="hidden lg:flex items-center gap-4 px-5 py-3.5 flex-1">
               {weather.daily.slice(1, 4).map((day, i) => (
                 <div key={day.date} className="flex items-center gap-1.5">
-                  <span className="text-white/20 text-[10px] font-medium">{dayLabel(day.date, i + 1).slice(0, 3)}</span>
-                  <div className={`${color(day.weatherCode)} opacity-70`}>
-                    <WeatherIcon code={day.weatherCode} className="w-3 h-3" />
+                  <span className="text-white/25 text-[10px] font-medium">{dayLabel(day.date, i + 1).slice(0, 3)}</span>
+                  <div className={color(day.weatherCode)}>
+                    <WeatherIcon code={day.weatherCode} className="w-3.5 h-3.5" />
                   </div>
-                  <span className="text-white/40 text-[10px] font-semibold">{day.tempMax}°</span>
+                  <span className="text-white/50 text-[10px] font-semibold">{day.tempMax}°</span>
                 </div>
               ))}
             </div>
@@ -214,8 +214,8 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
                   className={`flex flex-col items-center gap-1.5 py-3 rounded-xl ${i === 0 ? "bg-white/[0.04]" : ""}`}
                 >
                   <span className="text-white/25 text-[9px] font-semibold uppercase tracking-[0.12em]">{dayLabel(day.date, i)}</span>
-                  <div className={`${color(day.weatherCode)} mt-0.5 opacity-80`}>
-                    <WeatherIcon code={day.weatherCode} className="w-[18px] h-[18px]" />
+                  <div className={`${color(day.weatherCode)} mt-0.5`}>
+                    <WeatherIcon code={day.weatherCode} className="w-5 h-5" />
                   </div>
                   <div className="flex flex-col items-center gap-0.5 mt-0.5">
                     <span className="text-white/75 text-[11px] font-semibold">{day.tempMax}°</span>
