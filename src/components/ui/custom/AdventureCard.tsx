@@ -84,14 +84,25 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
   return (
     <div className="flex flex-col">
       {/* Fixed-height slot above every card — keeps grid rows aligned */}
-      <div className="h-6 flex items-center">
+      <div className="h-7 flex items-center">
         {adventure.editorChoice && (
           <div
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full"
-            style={{ background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)", boxShadow: "0 2px 8px rgba(255,81,0,0.4)" }}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full relative overflow-hidden"
+            style={{
+              background: "linear-gradient(105deg, #1a0a00 0%, #2d1200 40%, #1a0a00 100%)",
+              border: "1px solid rgba(255,81,0,0.35)",
+              boxShadow: "0 0 12px rgba(255,81,0,0.2), inset 0 1px 0 rgba(255,140,80,0.15)",
+            }}
           >
-            <Star className="w-2.5 h-2.5 text-white fill-white shrink-0" />
-            <span className="text-white text-[9px] font-black tracking-[0.18em] uppercase leading-none">Editor's Choice</span>
+            {/* shimmer line */}
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,120,60,0.08) 50%, transparent 70%)" }} />
+            <Star className="w-2.5 h-2.5 shrink-0" style={{ color: "#ff7d47", fill: "#ff7d47", filter: "drop-shadow(0 0 3px rgba(255,81,0,0.7))" }} />
+            <span
+              className="text-[9px] font-bold tracking-[0.22em] uppercase leading-none"
+              style={{ color: "#ffb38a", letterSpacing: "0.22em" }}
+            >
+              Editor's Choice
+            </span>
           </div>
         )}
       </div>
