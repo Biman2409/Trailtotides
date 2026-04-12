@@ -310,45 +310,45 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         <HeroActions adventure={adventure} />
       </section>
 
-      {/* ── STATS STRIP ───────────────────────────────────────── */}
-      <section style={{ background: "var(--bg-surface)", borderBottom: "1px solid var(--border-subtle)" }}>
+      {/* ── STATS + WEATHER ZONE ──────────────────────────────── */}
+      <div style={{ background: "var(--bg-surface)", borderBottom: "1px solid var(--border-subtle)" }}>
+
+        {/* Stats strip */}
         <div className="max-w-7xl mx-auto px-5 lg:px-8">
-          <div className="flex items-stretch overflow-x-auto no-scrollbar divide-x" style={{ borderColor: "var(--border-subtle)" }}>
+          <div className="flex items-stretch overflow-x-auto no-scrollbar" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
             {[
-              { icon: <Clock className="w-4 h-4 text-[#ff5100]" />, label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
-              ...(adventure.distance ? [{ icon: <Route className="w-4 h-4 text-emerald-400" />, label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
-              ...((adventure.altitude || adventure.depth) ? [{ icon: <TrendingUp className="w-4 h-4 text-sky-400" />, label: adventure.type === "Diving" ? "Max Depth" : "Max Altitude", value: adventure.depth ?? adventure.altitude }] : []),
-              { icon: <Sun className="w-4 h-4 text-amber-400" />, label: "Best Season", value: adventure.bestSeason },
-              ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ icon: <Flag className="w-4 h-4 text-violet-400" />, label: "Base Camp", value: adventure.baseCamp }] : []),
-              ...(adventure.type === "Biking" && adventure.startingPoint ? [{ icon: <Navigation className="w-4 h-4 text-emerald-400" />, label: "Starting Point", value: adventure.startingPoint }] : []),
-            ].map(({ icon, label, value }, i) => (
-              <div key={i} className="flex items-center gap-3 px-4 lg:px-5 py-3 shrink-0">
-                {icon}
+              { icon: <Clock className="w-3.5 h-3.5 text-[#ff5100]" />, label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
+              ...(adventure.distance ? [{ icon: <Route className="w-3.5 h-3.5 text-emerald-400" />, label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
+              ...((adventure.altitude || adventure.depth) ? [{ icon: <TrendingUp className="w-3.5 h-3.5 text-sky-400" />, label: adventure.type === "Diving" ? "Max Depth" : "Max Altitude", value: adventure.depth ?? adventure.altitude }] : []),
+              { icon: <Sun className="w-3.5 h-3.5 text-amber-400" />, label: "Best Season", value: adventure.bestSeason },
+              ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ icon: <Flag className="w-3.5 h-3.5 text-violet-400" />, label: "Base Camp", value: adventure.baseCamp }] : []),
+              ...(adventure.type === "Biking" && adventure.startingPoint ? [{ icon: <Navigation className="w-3.5 h-3.5 text-emerald-400" />, label: "Starting Point", value: adventure.startingPoint }] : []),
+              { icon: <Gauge className="w-3.5 h-3.5 text-rose-400" />, label: "Difficulty", value: difficulty },
+            ].map(({ icon, label, value }, i, arr) => (
+              <div
+                key={i}
+                className="flex items-center gap-3 px-5 lg:px-6 py-4 shrink-0"
+                style={i < arr.length - 1 ? { borderRight: "1px solid var(--border-subtle)" } : {}}
+              >
+                <div className="shrink-0 opacity-80">{icon}</div>
                 <div>
-                  <div className="text-white/25 text-[9px] uppercase tracking-widest">{label}</div>
-                  <div className="text-white font-medium text-sm whitespace-nowrap">{value}</div>
+                  <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">{label}</div>
+                  <div className="text-white/85 font-medium text-[13px] whitespace-nowrap leading-none">{value}</div>
                 </div>
               </div>
             ))}
-            {/* Difficulty stat */}
-            <div className="flex items-center gap-3 px-4 lg:px-5 py-3 shrink-0">
-              <Gauge className="w-4 h-4 text-rose-400" />
-              <div>
-                <div className="text-white/25 text-[9px] uppercase tracking-widest">Difficulty</div>
-                <div className="text-white font-medium text-sm whitespace-nowrap">{difficulty}</div>
-              </div>
-            </div>
           </div>
         </div>
-      </section>
 
-      {/* ── WEATHER STRIP ─────────────────────────────────────── */}
-      <WeatherWidget
-        lat={adventure.lat}
-        lng={adventure.lng}
-        locationName={adventure.baseCamp ?? adventure.state}
-        altitude={adventure.altitude}
-      />
+        {/* Weather strip — sits flush inside same surface */}
+        <WeatherWidget
+          lat={adventure.lat}
+          lng={adventure.lng}
+          locationName={adventure.baseCamp ?? adventure.state}
+          altitude={adventure.altitude}
+        />
+
+      </div>
 
       {/* ── MAIN CONTENT ──────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-5 lg:px-8 py-8 lg:py-12">
