@@ -164,6 +164,12 @@ nextjs-portal {
   display: none !important;
 }
 
+/* ── Shimmer ─────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
 /* ── Page-level transitions ─────────────────────────────── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(12px); }
