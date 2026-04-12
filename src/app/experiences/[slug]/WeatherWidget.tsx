@@ -154,14 +154,17 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
             </div>
 
             {/* Condition icon + label */}
-            <div className="flex items-center gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <div className={color(w.weatherCode)}>
+            {/* Condition */}
+            <div className="flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+              <div className={`${color(w.weatherCode)} drop-shadow-sm`}>
                 <WeatherIcon code={w.weatherCode} isDay={w.isDay} className="w-4 h-4" />
               </div>
-              <span className="text-white/50 text-[11px] leading-none">{desc(w.weatherCode)}</span>
+              <div>
+                <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Condition</div>
+                <div className="text-white/85 font-medium text-[13px] leading-none">{desc(w.weatherCode)}</div>
+              </div>
             </div>
 
-            {/* Temp stacked with feels like */}
             {/* Temperature */}
             <div className="flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
               <Thermometer className="w-3.5 h-3.5 text-orange-400 shrink-0" />
