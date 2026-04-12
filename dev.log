@@ -38,3 +38,41 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /api/reviews?slug=annapurna-circuit 200 in 425ms
  GET /api/photos?slug=annapurna-circuit 200 in 624ms
  GET /api/photos?slug=annapurna-circuit 200 in 738ms
+ ✓ Compiled in 359ms
+ ✓ Compiled /experiences/[slug] in 45ms
+ GET /experiences/annapurna-circuit?_cb=1776023639911 200 in 419ms
+ ✓ Compiled in 399ms
+ ✓ Compiled in 307ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 556ms
+ ✓ Compiled in 178ms
+ ✓ Compiled in 180ms
+ ✓ Compiled in 260ms
+ ✓ Compiled in 601ms
+ ✓ Compiled /experiences/[slug] in 37ms
+ GET /experiences/annapurna-circuit?_cb=1776023837083 200 in 1579ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 492ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 392ms
+ GET /api/photos?slug=annapurna-circuit 200 in 616ms
+ GET /api/photos?slug=annapurna-circuit 200 in 893ms
+ ✓ Compiled in 232ms
+ ✓ Compiled in 249ms
+ ⨯ ReferenceError: visibleReviews is not defined
+    at ReviewSection (.:107:46) {
+  digest: '3179816398'
+}
+ GET /experiences/annapurna-circuit?_cb=1776023857322 500 in 975ms
+ ⨯ ReferenceError: visibleReviews is not defined
+    at ReviewSection (.:107:46) {
+  digest: '3179816398'
+}
+ GET /experiences/annapurna-circuit?_cb=1776023859511 500 in 586ms
+ ⨯ ReferenceError: visibleReviews is not defined
+    at ReviewSection (.:107:46) {
+  digest: '3179816398'
+}
+ GET /experiences/annapurna-circuit?_cb=1776023861481 500 in 537ms
+ GET /experiences/annapurna-circuit?_cb=1776023863181 200 in 777ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 431ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 387ms
+ GET /api/photos?slug=annapurna-circuit 200 in 572ms
+ GET /api/photos?slug=annapurna-circuit 200 in 544ms

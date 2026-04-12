@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Star, Trash2, Loader2, ChevronDown, ChevronLeft, ChevronRight, Zap } from "lucide-react";
+import { Star, Trash2, Loader2, Zap } from "lucide-react";
 import { XP_REWARDS } from "@/lib/xp";
 import Link from "next/link";
 import { useXP } from "@/contexts/XPContext";
@@ -87,26 +87,20 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
   const [success, setSuccess] = useState(false);
   const [rating, setRating] = useState(0);
   const [body, setBody] = useState("");
-  const [showAll, setShowAll] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const INITIAL_COUNT = 3;
-  const visibleReviews = showAll ? reviews : reviews.slice(0, INITIAL_COUNT);
 
   function updateScrollState() {
     const el = scrollRef.current;
     if (!el) return;
     setCanScrollLeft(el.scrollLeft > 4);
     setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+    setActiveIndex(Math.round(el.scrollLeft / el.clientWidth));
   }
 
-  function scroll(dir: "left" | "right") {
-    scrollRef.current?.scrollBy({ left: dir === "left" ? -300 : 300, behavior: "smooth" });
-  }
-
-  useEffect(() => { updateScrollState(); }, [visibleReviews]);
+  useEffect(() => { updateScrollState(); }, [reviews]);
 
   const hasReviewed = currentUserId ? reviews.some((r) => r.user_id === currentUserId) : false;
   const avgRating = reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : null;
@@ -235,64 +229,46 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
         <p className="text-white/25 text-sm text-center py-8">No reviews yet. Be the first to share your experience!</p>
       ) : (
         <>
-          <div className="relative">
-            {canScrollLeft && (
-              <button onClick={() => scroll("left")} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-colors" style={{ background: "var(--bg-surface)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <ChevronLeft className="w-4 h-4 text-white/50" />
-              </button>
-            )}
-            {canScrollRight && (
-              <button onClick={() => scroll("right")} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-colors" style={{ background: "var(--bg-surface)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <ChevronRight className="w-4 h-4 text-white/50" />
-              </button>
-            )}
-            {canScrollRight && (
-              <div className="absolute right-0 top-0 bottom-2 w-16 pointer-events-none z-[5]" style={{ background: "linear-gradient(to left, var(--bg-main, #0f1117), transparent)" }} />
-            )}
-
-            <div ref={scrollRef} onScroll={updateScrollState} className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory no-scrollbar scroll-smooth">
-              {visibleReviews.map((r) => (
-                <div
-                  key={r.id}
-                  className="rounded-xl p-4 flex-none w-68 snap-start flex flex-col"
-                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", minWidth: "260px" }}
-                >
-                  <div className="flex items-center gap-2.5 mb-3">
-                    <div className="w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.2)" }}>
-                      {r.avatar_id
-                        ? <img src={`/avatars/avatar-${r.avatar_id}.png`} alt={r.username} className="w-full h-full object-cover" />
-                        : <span className="w-full h-full flex items-center justify-center text-white text-xs font-bold">{r.username.charAt(0).toUpperCase()}</span>}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-white/80 font-semibold text-xs leading-none truncate">{r.username}</p>
-                      <p className="text-white/25 text-[10px] mt-0.5">{timeAgo(r.created_at)}</p>
-                    </div>
-                    {currentUserId === r.user_id && (
-                      <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id} className="text-white/20 hover:text-red-400 transition-colors shrink-0">
-                        {deleting === r.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
-                      </button>
-                    )}
+          <div
+            ref={scrollRef}
+            onScroll={updateScrollState}
+            className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth"
+          >
+            {reviews.map((r) => (
+              <div key={r.id} className="flex-none w-full snap-start flex flex-col gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.2)" }}>
+                    {r.avatar_id
+                      ? <img src={`/avatars/avatar-${r.avatar_id}.png`} alt={r.username} className="w-full h-full object-cover" />
+                      : <span className="w-full h-full flex items-center justify-center text-white text-xs font-bold">{r.username.charAt(0).toUpperCase()}</span>}
                   </div>
-
-                  <StarRating value={r.rating} />
-
-                  <div className="h-px my-3" style={{ background: "rgba(255,255,255,0.06)" }} />
-
-                  <p className="text-white/55 text-xs leading-relaxed flex-1">{r.body}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-white/80 font-semibold text-xs leading-none truncate">{r.username}</p>
+                    <p className="text-white/25 text-[10px] mt-0.5">{timeAgo(r.created_at)}</p>
+                  </div>
+                  {currentUserId === r.user_id && (
+                    <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id} className="text-white/20 hover:text-red-400 transition-colors shrink-0">
+                      {deleting === r.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                    </button>
+                  )}
                 </div>
-              ))}
-            </div>
+                <StarRating value={r.rating} />
+                <p className="text-white/55 text-xs leading-relaxed">{r.body}</p>
+              </div>
+            ))}
           </div>
 
-          {reviews.length > INITIAL_COUNT && !showAll && (
-            <button
-              onClick={() => setShowAll(true)}
-              className="mt-4 w-full flex items-center justify-center gap-2 py-2.5 text-xs font-medium text-white/35 hover:text-white/60 rounded-xl transition-all"
-              style={{ border: "1px solid rgba(255,255,255,0.07)" }}
-            >
-              <ChevronDown className="w-3.5 h-3.5" />
-              Show all {reviews.length} reviews
-            </button>
+          {/* Dot indicators */}
+          {reviews.length > 1 && (
+            <div className="flex items-center justify-center gap-1.5 mt-4">
+              {reviews.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => scrollRef.current?.scrollTo({ left: i * scrollRef.current.clientWidth, behavior: "smooth" })}
+                  className={`rounded-full transition-all ${activeIndex === i ? "w-4 h-1.5 bg-amber-400" : "w-1.5 h-1.5 bg-white/20"}`}
+                />
+              ))}
+            </div>
           )}
         </>
       )}

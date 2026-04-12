@@ -533,7 +533,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               )}
 
               {/* Two sub-sections side by side */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
                 {/* Reviews card */}
                 <div className="rounded-xl overflow-hidden" style={{ background: "rgba(251,191,36,0.03)", border: "1px solid rgba(251,191,36,0.12)" }}>
                   <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />

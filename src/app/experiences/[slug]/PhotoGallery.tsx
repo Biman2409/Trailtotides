@@ -196,7 +196,9 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
           <p className="text-white/25 text-sm">No photos yet. Be the first to share.</p>
         </div>
       ) : (
-        <div className="columns-2 sm:columns-3 gap-2 space-y-2">
+        <>
+        <div className="overflow-y-auto no-scrollbar" style={{ maxHeight: "340px" }}>
+        <div className="columns-2 gap-2 space-y-2">
           {photos.map((photo) => (
             <div
               key={photo.id}
@@ -242,6 +244,11 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
             </div>
           ))}
         </div>
+        </div>
+        {photos.length > 1 && (
+          <p className="text-center text-white/25 text-[10px] mt-3">{photos.length} photos · scroll to see all</p>
+        )}
+        </>
       )}
 
       {/* Lightbox */}
