@@ -168,3 +168,9 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /?_cb=1776024872254 200 in 481ms
  GET /api/stories/views?slug=riding-through-a-revolution 200 in 502ms
  GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 613ms
+ GET /profile?_cb=1776024872254 307 in 160ms
+ GET /auth/login 200 in 131ms
+ GET /profile?_cb=1776024999327 307 in 207ms
+ GET /auth/login 200 in 117ms
+ GET /profile?_cb=1776025001308 307 in 129ms
+ GET /auth/login 200 in 126ms
