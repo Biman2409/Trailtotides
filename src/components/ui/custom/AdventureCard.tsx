@@ -90,6 +90,14 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
       }}
     >
+      {/* Editor's Choice label — sits outside the image, above the card */}
+      {adventure.editorChoice && (
+        <div className="flex items-center gap-1.5 px-3 py-1.5" style={{ background: "linear-gradient(90deg, rgba(255,81,0,0.15) 0%, transparent 100%)", borderBottom: "1px solid rgba(255,81,0,0.18)" }}>
+          <Star className="w-2.5 h-2.5 text-[#ff5100] fill-[#ff5100] shrink-0" />
+          <span className="text-[#ff7d47] text-[9px] font-black tracking-[0.2em] uppercase leading-none">Editor's Choice</span>
+        </div>
+      )}
+
       {/* Image area */}
       <div className={`relative w-full overflow-hidden block group ${isLarge ? "aspect-video" : "aspect-[4/3]"}`}>
         <Link href={`/experiences/${adventure.slug}${fromPage && fromPage > 1 ? `?from=${fromPage}` : ""}`} className="absolute inset-0 z-10" />
@@ -109,17 +117,8 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
 
-        {/* Editor's Choice ribbon */}
-        {adventure.editorChoice && (
-          <div className="absolute top-0 left-0 z-20 flex items-center gap-1 pl-2.5 pr-3 py-1.5 rounded-br-xl"
-            style={{ background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)", boxShadow: "2px 2px 12px rgba(255,81,0,0.45)" }}>
-            <Star className="w-2.5 h-2.5 text-white fill-white" />
-            <span className="text-white text-[9px] font-black tracking-[0.18em] uppercase leading-none">Editor's Choice</span>
-          </div>
-        )}
-
-        {/* Top-left: difficulty + season */}
-        <div className={`absolute z-20 flex flex-wrap items-center gap-1.5 ${adventure.editorChoice ? "top-9 left-3" : "top-3 left-3"}`}>
+        {/* Top-left: difficulty + season — always at top-3, no offset needed */}
+        <div className="absolute z-20 flex flex-wrap items-center gap-1.5 top-3 left-3">
           <DifficultyMeter difficulty={difficulty} />
           {isSeasonActive ? (
             <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>
