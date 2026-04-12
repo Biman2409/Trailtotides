@@ -121,7 +121,7 @@ export default function PhotoGallery({ slug, currentUserId, hideHeader }: Props)
           <div className="flex items-center justify-between mb-6">
             <div>
               <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1">Community</p>
-              <h2 className="text-white font-semibold text-base">Trail Photos</h2>
+              <h2 className="text-white font-semibold text-base">Photos</h2>
             </div>
             {photos.length > 0 && (
               <span className="text-white/30 text-xs">{photos.length} photo{photos.length !== 1 ? "s" : ""}</span>
@@ -132,7 +132,7 @@ export default function PhotoGallery({ slug, currentUserId, hideHeader }: Props)
 
       {hideHeader && (
         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-white font-semibold text-sm">Trail Photos</h3>
+          <h3 className="text-white font-semibold text-sm">Photos</h3>
           {photos.length > 0 && (
             <span className="text-white/30 text-xs">{photos.length} photo{photos.length !== 1 ? "s" : ""}</span>
           )}
