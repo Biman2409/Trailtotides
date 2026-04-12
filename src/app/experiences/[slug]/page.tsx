@@ -539,7 +539,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     <h3 className="text-amber-400 text-[10px] font-bold tracking-[0.18em] uppercase">Reviews</h3>
                   </div>
                   <div className="p-4">
-                    <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} hideHeader subSection />
+                    <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
                   </div>
                 </div>
 
@@ -550,7 +550,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     <h3 className="text-sky-400 text-[10px] font-bold tracking-[0.18em] uppercase">Trail Photos</h3>
                   </div>
                   <div className="p-4">
-                    <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} hideHeader />
+                    <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} />
                   </div>
                 </div>
               </div>

@@ -20,7 +20,6 @@ interface Photo {
 interface Props {
   slug: string;
   currentUserId?: string;
-  hideHeader?: boolean;
 }
 
 function timeAgo(dateStr: string): string {
@@ -37,7 +36,7 @@ function timeAgo(dateStr: string): string {
   return `${Math.floor(months / 12)}y ago`;
 }
 
-export default function PhotoGallery({ slug, currentUserId, hideHeader }: Props) {
+export default function PhotoGallery({ slug, currentUserId }: Props) {
   const { onPhoto } = useXP();
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -113,29 +112,15 @@ export default function PhotoGallery({ slug, currentUserId, hideHeader }: Props)
 
   return (
     <section>
-      {!hideHeader && (
-        <>
-          <div className="h-px mb-10" style={{ background: "rgba(255,255,255,0.05)" }} />
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="flex items-center gap-1.5 text-white font-semibold text-sm">
-              <Images className="w-3.5 h-3.5 text-white/40" />
-              Photos
-            </h2>
-            {photos.length > 0 && (
-              <span className="text-white/30 text-xs">{photos.length} photo{photos.length !== 1 ? "s" : ""}</span>
-            )}
-          </div>
-        </>
-      )}
-
-      {hideHeader && (
-        <div className="flex items-center justify-between mb-5">
-          <h3 className="flex items-center gap-1.5 text-white font-semibold text-sm"><Images className="w-3.5 h-3.5 text-white/40" />Photos</h3>
-          {photos.length > 0 && (
-            <span className="text-white/30 text-xs">{photos.length} photo{photos.length !== 1 ? "s" : ""}</span>
-          )}
-        </div>
-      )}
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="flex items-center gap-1.5 text-white font-semibold text-sm">
+          <Images className="w-3.5 h-3.5 text-white/40" />
+          Photos
+        </h2>
+        {photos.length > 0 && (
+          <span className="text-white/30 text-xs">{photos.length} photo{photos.length !== 1 ? "s" : ""}</span>
+        )}
+      </div>
 
       {/* Upload area — logged in only */}
       {currentUserId ? (
