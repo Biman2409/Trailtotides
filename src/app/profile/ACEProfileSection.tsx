@@ -177,44 +177,59 @@ export default function ACEProfileSection() {
 
           {/* Progress bar */}
           <div>
-            <div className="relative h-[10px] rounded-full mb-3" style={{ background: "rgba(255,255,255,0.055)" }}>
+            {/* Track */}
+            <div className="relative h-3 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+              {/* Filled */}
               <div
                 className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
                 style={{
                   width: `${barPct}%`,
-                  background: `linear-gradient(to right, ${RANKS[1].color}bb, ${currentRank.color})`,
-                  boxShadow: `0 0 16px ${currentRank.color}55`,
+                  background: `linear-gradient(90deg, ${RANKS[1].color}99, ${currentRank.color})`,
+                  boxShadow: `0 0 12px ${currentRank.color}60`,
                 }}
               />
-              {RANKS.slice(1, -1).map((rank, i) => (
-                <div key={rank.label} className="absolute inset-y-0 w-px bg-[rgba(14,14,18,0.65)]" style={{ left: `${(i + 1) * segmentWidth}%` }} />
+              {/* Segment tick marks */}
+              {RANKS.slice(1, -1).map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute inset-y-0 w-px"
+                  style={{ left: `${(i + 1) * segmentWidth}%`, background: "rgba(0,0,0,0.5)" }}
+                />
               ))}
+              {/* Thumb */}
               <div
-                className="absolute w-[18px] h-[18px] rounded-full border-2 transition-all duration-700"
+                className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 transition-all duration-700"
                 style={{
-                  left: `clamp(9px, calc(${barPct}%), calc(100% - 9px))`,
-                  top: "50%",
-                  transform: "translate(-50%, -50%)",
+                  left: `${barPct}%`,
+                  transform: `translateX(-50%) translateY(-50%)`,
                   background: currentRank.color,
                   borderColor: "#0e0e12",
-                  boxShadow: `0 0 14px ${currentRank.color}`,
+                  boxShadow: `0 0 10px ${currentRank.color}`,
                 }}
               />
             </div>
-            <div className="relative h-[18px] overflow-hidden">
+
+            {/* Rank labels under bar */}
+            <div className="relative flex mt-2">
               {RANKS.map((rank, i) => (
-                <span
+                <div
                   key={rank.label}
-                  className="absolute text-[7px] sm:text-[7.5px] font-semibold leading-none whitespace-nowrap top-0"
-                  style={{
-                    left: i === 0 ? "0%" : i === N - 1 ? "auto" : `${i * segmentWidth}%`,
-                    right: i === N - 1 ? "0%" : "auto",
-                    transform: i === 0 || i === N - 1 ? "none" : "translateX(-50%)",
-                    color: i === currentRankIndex ? currentRank.color : i < currentRankIndex ? `${rank.color}50` : "rgba(255,255,255,0.13)",
-                  }}
+                  className="flex-1 flex flex-col items-center"
+                  style={i === 0 ? { alignItems: "flex-start" } : i === N - 1 ? { alignItems: "flex-end" } : {}}
                 >
-                  {rank.label}
-                </span>
+                  <span
+                    className="text-[8px] font-semibold leading-none whitespace-nowrap"
+                    style={{
+                      color: i === currentRankIndex
+                        ? currentRank.color
+                        : i < currentRankIndex
+                        ? `${rank.color}55`
+                        : "rgba(255,255,255,0.15)",
+                    }}
+                  >
+                    {rank.label}
+                  </span>
+                </div>
               ))}
             </div>
           </div>
