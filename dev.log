@@ -385,3 +385,5 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /auth/login 200 in 142ms
  ✓ Compiled in 275ms
  ✓ Compiled in 327ms
+ GET /profile?_cb=1776028091930 307 in 440ms
+ GET /auth/login 200 in 132ms
