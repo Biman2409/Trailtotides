@@ -547,7 +547,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 <div className="rounded-xl overflow-hidden" style={{ background: "rgba(56,189,248,0.03)", border: "1px solid rgba(56,189,248,0.12)" }}>
                   <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: "1px solid rgba(56,189,248,0.08)", background: "rgba(56,189,248,0.04)" }}>
                     <span className="text-sky-400 text-xs">📷</span>
-                    <h3 className="text-sky-400 text-[10px] font-bold tracking-[0.18em] uppercase">Trail Photos</h3>
+                    <h3 className="text-sky-400 text-[10px] font-bold tracking-[0.18em] uppercase">Photos</h3>
                   </div>
                   <div className="p-4">
                     <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} />
