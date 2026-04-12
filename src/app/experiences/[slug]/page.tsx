@@ -536,13 +536,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                 {/* Reviews card */}
                 <div className="rounded-xl overflow-hidden" style={{ background: "rgba(251,191,36,0.03)", border: "1px solid rgba(251,191,36,0.12)" }}>
-                  <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: "1px solid rgba(251,191,36,0.08)", background: "rgba(251,191,36,0.04)" }}>
-                    <Star className="w-3.5 h-3.5 text-amber-400" />
-                    <h3 className="text-amber-400 text-[10px] font-bold tracking-[0.18em] uppercase">Reviews</h3>
-                  </div>
-                  <div className="p-4">
-                    <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
-                  </div>
+                  <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
                 </div>
 
                 {/* Photos card */}

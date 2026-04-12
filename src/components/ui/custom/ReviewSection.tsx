@@ -162,15 +162,21 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
 
   return (
     <section>
-      <div className="flex items-center gap-2 mb-5">
+      {/* Card header */}
+      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid rgba(251,191,36,0.08)", background: "rgba(251,191,36,0.04)" }}>
+        <div className="flex items-center gap-2">
+          <Star className="w-3.5 h-3.5 text-amber-400" />
+          <h3 className="text-amber-400 text-[10px] font-bold tracking-[0.18em] uppercase">Reviews</h3>
+        </div>
         {avgRating !== null && (
           <div className="flex items-center gap-2">
             <StarRating value={Math.round(avgRating)} />
-            <span className="text-white/70 text-sm font-semibold">{avgRating.toFixed(1)}</span>
+            <span className="text-white/70 text-xs font-semibold">{avgRating.toFixed(1)}</span>
             <span className="text-white/30 text-xs">({reviews.length})</span>
           </div>
         )}
       </div>
+      <div className="p-4">
 
       {/* Write / CTA */}
       {currentUserId ? (
@@ -290,6 +296,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
           )}
         </>
       )}
+      </div>
     </section>
   );
 }
