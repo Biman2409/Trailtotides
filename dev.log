@@ -203,3 +203,5 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  ✓ Compiled / in 53ms
  GET / 200 in 243ms
  GET /auth/login?_cb=1776025261763 200 in 246ms
+ GET /auth/login?_cb=1776025293628 200 in 325ms
+ GET /auth/login?_cb=1776025295248 200 in 113ms
