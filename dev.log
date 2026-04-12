@@ -268,3 +268,5 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /api/stories/views?slug=riding-through-a-revolution 200 in 438ms
  ✓ Compiled in 341ms
  GET /?_cb=1776026256918 200 in 126ms
+ GET /?_cb=1776026350182 200 in 243ms
+ GET /?_cb=1776026351597 200 in 211ms
