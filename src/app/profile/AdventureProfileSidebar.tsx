@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { loadProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
+import RankBar from "@/components/ui/custom/RankBar";
 
 const RANKS = [
   { label: "Uncharted",   color: "#6b7280", stars: 0, minScore: 0  },
@@ -85,20 +86,11 @@ export default function AdventureProfileSidebar() {
             </span>
             <span className="text-[9px] font-bold font-mono" style={{ color: currentRank.color }}>{progressPct}%</span>
           </div>
-          <div className="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
-            <div
-              className="h-full rounded-full"
-              style={{
-                width: `${progressPct}%`,
-                background: `linear-gradient(to right, ${currentRank.color}, ${nextRank.color})`,
-                boxShadow: `0 0 6px ${currentRank.color}50`,
-              }}
-            />
-          </div>
+          <RankBar totalScore={totalScore} trackH={7} showLabels={false} />
         </div>
       ) : (
-        <div className="flex items-center gap-2 px-0.5">
-          <div className="h-1.5 flex-1 rounded-full" style={{ background: `linear-gradient(to right, #22d3ee, #a78bfa)`, boxShadow: "0 0 6px #a78bfa40" }} />
+        <div className="flex flex-col gap-1.5">
+          <RankBar totalScore={totalScore} trackH={7} showLabels={false} />
           <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa]">Max</span>
         </div>
       )}

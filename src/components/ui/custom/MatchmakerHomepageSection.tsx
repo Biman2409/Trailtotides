@@ -7,6 +7,7 @@ import { ArrowRight, BarChart2, MapPin, ChevronDown } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
+import RankBar from "@/components/ui/custom/RankBar";
 
 const RANKS = [
   {
@@ -154,38 +155,7 @@ export default function MatchmakerHomepageSection() {
                 )}
 
                 {/* Progress bar */}
-                {(() => {
-                  const barPct = ((rankIndex + progressPct / 100) / (RANKS.length - 1)) * 100;
-                  const clampedPct = Math.min(Math.max(barPct, 0), 100);
-                  return (
-                    <>
-                      <div className="relative h-2 rounded-full" style={{ background: "rgba(255,255,255,0.055)" }}>
-                        <div className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
-                          style={{ width: `${clampedPct}%`, background: `linear-gradient(to right, ${RANKS[1].color}bb, ${tier.color})`, boxShadow: `0 0 12px ${tier.color}55` }} />
-                        {RANKS.slice(1, -1).map((r, i) => (
-                          <div key={r.label} className="absolute inset-y-0 w-px" style={{ left: `${((i + 1) / (RANKS.length - 1)) * 100}%`, background: "rgba(14,14,18,0.7)" }} />
-                        ))}
-                        <div className="absolute w-4 h-4 rounded-full border-2 transition-all duration-700"
-                          style={{ left: `clamp(8px, calc(${clampedPct}% - 0px), calc(100% - 8px))`,
-                            top: "50%", transform: "translateY(-50%)",
-                            background: tier.color, borderColor: "#0e0e12", boxShadow: `0 0 10px ${tier.color}` }} />
-                      </div>
-                      <div className="relative h-4 mt-1.5 overflow-hidden">
-                        {RANKS.map((r, i) => (
-                          <span key={r.label} className="absolute text-[7px] font-semibold leading-none whitespace-nowrap top-0"
-                            style={{
-                              left: i === 0 ? "0%" : i === RANKS.length - 1 ? "auto" : `${(i / (RANKS.length - 1)) * 100}%`,
-                              right: i === RANKS.length - 1 ? "0%" : "auto",
-                              transform: i === 0 || i === RANKS.length - 1 ? "none" : "translateX(-50%)",
-                              color: i === rankIndex ? tier.color : i < rankIndex ? `${r.color}50` : "rgba(255,255,255,0.13)"
-                            }}>
-                            {r.label}
-                          </span>
-                        ))}
-                      </div>
-                    </>
-                  );
-                })()}
+                <RankBar totalScore={totalScore} trackH={8} showLabels showYouTag />
               </div>
             </div>
 
