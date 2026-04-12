@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Star, Trash2, Loader2, ChevronDown, ChevronLeft, ChevronRight, Zap } from "lucide-react";
+import { Star, Trash2, Loader2, ChevronDown, ChevronLeft, ChevronRight, Zap, MessageSquare } from "lucide-react";
 import { XP_REWARDS } from "@/lib/xp";
 import Link from "next/link";
 import { useXP } from "@/contexts/XPContext";
@@ -187,7 +187,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
 
       {subSection && (
         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-white font-semibold text-sm">Reviews</h3>
+          <h3 className="flex items-center gap-1.5 text-white font-semibold text-sm"><MessageSquare className="w-3.5 h-3.5 text-white/40" />Reviews</h3>
           {avgRating !== null && (
             <div className="flex items-center gap-2">
               <StarRating value={Math.round(avgRating)} />

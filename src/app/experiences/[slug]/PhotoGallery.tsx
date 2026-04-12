@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Camera, Loader2, Trash2, X, ZoomIn, Upload, ImageOff } from "lucide-react";
+import { Camera, Loader2, Trash2, X, ZoomIn, Upload, ImageOff, Images } from "lucide-react";
 import Link from "next/link";
 import { useXP } from "@/contexts/XPContext";
 import { toast } from "sonner";
@@ -132,7 +132,7 @@ export default function PhotoGallery({ slug, currentUserId, hideHeader }: Props)
 
       {hideHeader && (
         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-white font-semibold text-sm">Photos</h3>
+          <h3 className="flex items-center gap-1.5 text-white font-semibold text-sm"><Images className="w-3.5 h-3.5 text-white/40" />Photos</h3>
           {photos.length > 0 && (
             <span className="text-white/30 text-xs">{photos.length} photo{photos.length !== 1 ? "s" : ""}</span>
           )}
