@@ -252,7 +252,10 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
 
                   {/* Precipitation */}
                   {day.precipitation > 0 && (
-                    <span className="text-sky-400/60 text-[8px] font-medium">{day.precipitation}mm</span>
+                    <div className="flex items-center justify-between w-full px-1">
+                      <span className="text-white/20 text-[8px] uppercase tracking-wide">Rain</span>
+                      <span className="text-sky-400/70 text-[11px] font-medium">{day.precipitation}mm</span>
+                    </div>
                   )}
                 </div>
               ))}
