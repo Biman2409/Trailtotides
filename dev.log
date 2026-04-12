@@ -280,3 +280,19 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /?_cb=1776026424212 200 in 223ms
  GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 403ms
  GET /api/stories/views?slug=riding-through-a-revolution 200 in 1088ms
+ ✓ Compiled in 197ms
+ ✓ Compiled / in 19ms
+ GET /?_cb=1776026424212 200 in 269ms
+ GET /?_cb=1776026424212 200 in 113ms
+ GET /?_cb=1776026424212 200 in 112ms
+ GET /?_cb=1776026424212 200 in 109ms
+ ✓ Compiled in 164ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 435ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 462ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 367ms
+ ✓ Compiled / in 45ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 455ms
+ GET /?_cb=1776026424212 200 in 293ms
+ GET /?_cb=1776026424212 200 in 107ms
+ GET /?_cb=1776026424212 200 in 104ms
+ GET /?_cb=1776026424212 200 in 84ms

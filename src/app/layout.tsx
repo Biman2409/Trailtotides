@@ -73,7 +73,6 @@ export const metadata: Metadata = {
   category: "Travel & Adventure",
   icons: {
     icon: [
-      { url: "/logo.svg", type: "image/svg+xml" },
       { url: "/favicon.ico", sizes: "any" },
       { url: "/icon-32.png", type: "image/png", sizes: "32x32" },
       { url: "/icon-96.png", type: "image/png", sizes: "96x96" },
@@ -84,9 +83,6 @@ export const metadata: Metadata = {
       { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
     shortcut: "/favicon.ico",
-    other: [
-      { rel: "mask-icon", url: "/logo.svg", color: "#ff5100" },
-    ],
   },
   manifest: "/manifest.json",
   openGraph: {
@@ -144,7 +140,6 @@ export default function RootLayout({
   return (
     <html lang="en-IN" className="dark" style={{ colorScheme: "dark" }}>
       <head>
-        <link rel="icon" type="image/svg+xml" href="/logo.svg" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
       </head>
         <body className={`${dmSans.variable} ${greatVibes.variable} antialiased`} style={{ background: "var(--bg-page)", color: "var(--text-primary)" }}>
