@@ -21,6 +21,8 @@ interface Props {
   currentUserId?: string;
   adventureType?: string;
   adventureName?: string;
+  hideHeader?: boolean;
+  subSection?: boolean;
 }
 
 const SUMMIT_KEYWORDS = /summit|peak/i;
@@ -77,7 +79,7 @@ function timeAgo(dateStr: string): string {
   return `${Math.floor(months / 12)}y ago`;
 }
 
-export default function ReviewSection({ slug, currentUserId, adventureType, adventureName }: Props) {
+export default function ReviewSection({ slug, currentUserId, adventureType, adventureName, hideHeader, subSection }: Props) {
   const { onReview } = useXP();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
@@ -162,23 +164,39 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
 
   return (
     <section>
-      {/* Section divider */}
-      <div className="h-px mb-10" style={{ background: "rgba(255,255,255,0.05)" }} />
-
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1">Community</p>
-          <h2 className="text-white font-semibold text-base">Reviews</h2>
-        </div>
-        {avgRating !== null && (
-          <div className="flex items-center gap-2">
-            <StarRating value={Math.round(avgRating)} />
-            <span className="text-white/70 text-sm font-semibold">{avgRating.toFixed(1)}</span>
-            <span className="text-white/30 text-xs">({reviews.length})</span>
+      {!hideHeader && (
+        <>
+          {/* Section divider */}
+          <div className="h-px mb-10" style={{ background: "rgba(255,255,255,0.05)" }} />
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1">Community</p>
+              <h2 className="text-white font-semibold text-base">Reviews</h2>
+            </div>
+            {avgRating !== null && (
+              <div className="flex items-center gap-2">
+                <StarRating value={Math.round(avgRating)} />
+                <span className="text-white/70 text-sm font-semibold">{avgRating.toFixed(1)}</span>
+                <span className="text-white/30 text-xs">({reviews.length})</span>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
+
+      {subSection && (
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="text-white font-semibold text-sm">Reviews</h3>
+          {avgRating !== null && (
+            <div className="flex items-center gap-2">
+              <StarRating value={Math.round(avgRating)} />
+              <span className="text-white/70 text-sm font-semibold">{avgRating.toFixed(1)}</span>
+              <span className="text-white/30 text-xs">({reviews.length})</span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Write / CTA */}
       {currentUserId ? (
