@@ -82,11 +82,10 @@ export default function XPLevelBar() {
         </div>
         <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.07)" }}>
           <div
-            className="h-full rounded-full transition-all duration-1000 ease-out relative overflow-hidden"
+            className="h-full transition-all duration-1000 ease-out relative overflow-hidden"
             style={{
-              width: `${progressPct}%`,
+              width: `${Math.min(100, progressPct)}%`,
               background: `linear-gradient(90deg, ${currentLevel.color}80, ${currentLevel.color})`,
-              boxShadow: `0 0 12px ${currentLevel.color}70`,
             }}
           >
             {/* shimmer */}
