@@ -145,27 +145,29 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
         <div className="max-w-7xl mx-auto px-5 lg:px-8">
           <div className="flex items-center overflow-x-auto no-scrollbar" style={{ borderTop: "1px solid var(--border-subtle)" }}>
 
-            {/* Live weather + location */}
-            <div className="flex items-center gap-2.5 px-5 lg:px-6 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <div className={color(w.weatherCode)}>
-                <WeatherIcon code={w.weatherCode} isDay={w.isDay} className="w-4 h-4" />
-              </div>
+            {/* Live weather label + location */}
+            <div className="flex items-center gap-2 px-5 lg:px-6 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
               <div>
                 <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Live Weather</div>
                 <div className="text-white/55 text-[13px] font-medium leading-none truncate max-w-[110px]">{locationName}</div>
               </div>
             </div>
 
-            {/* Temp + condition */}
-            <div className="flex items-baseline gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <span className="text-white/90 font-semibold text-[15px] leading-none">{w.temp}°C</span>
-              <span className="text-white/30 text-[11px] leading-none">{desc(w.weatherCode)}</span>
+            {/* Condition icon + label */}
+            <div className="flex items-center gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+              <div className={color(w.weatherCode)}>
+                <WeatherIcon code={w.weatherCode} isDay={w.isDay} className="w-4 h-4" />
+              </div>
+              <span className="text-white/50 text-[11px] leading-none">{desc(w.weatherCode)}</span>
             </div>
 
-            {/* Feels like */}
-            <div className="hidden sm:flex items-center gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <Thermometer className="w-3.5 h-3.5 text-orange-400 shrink-0" />
-              <span className="text-white/50 text-[11px]">Feels {w.apparent}°</span>
+            {/* Temp stacked with feels like */}
+            <div className="flex flex-col justify-center px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+              <span className="text-white/90 font-semibold text-[15px] leading-none mb-1">{w.temp}°C</span>
+              <div className="flex items-center gap-1">
+                <Thermometer className="w-3 h-3 text-orange-400 shrink-0" />
+                <span className="text-white/40 text-[10px]">Feels {w.apparent}°</span>
+              </div>
             </div>
 
             {/* Wind */}
