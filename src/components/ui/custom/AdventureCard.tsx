@@ -82,22 +82,26 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
   const displayCount = verifiedCount > 0 ? verifiedCount : operatorCount;
 
   return (
-    <div
-      className="rounded-2xl overflow-hidden flex flex-col transition-all duration-300"
-      style={{
-        background: "rgba(255,255,255,0.04)",
-        border: "1px solid rgba(255,255,255,0.08)",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
-      }}
-    >
-      {/* Editor's Choice label — sits outside the image, above the card */}
+    <div className="relative">
+      {/* Editor's Choice badge — floats above card, zero layout impact */}
       {adventure.editorChoice && (
-        <div className="flex items-center gap-1.5 px-3 py-1.5" style={{ background: "linear-gradient(90deg, rgba(255,81,0,0.15) 0%, transparent 100%)", borderBottom: "1px solid rgba(255,81,0,0.18)" }}>
-          <Star className="w-2.5 h-2.5 text-[#ff5100] fill-[#ff5100] shrink-0" />
-          <span className="text-[#ff7d47] text-[9px] font-black tracking-[0.2em] uppercase leading-none">Editor's Choice</span>
+        <div
+          className="absolute -top-2.5 left-3 z-30 flex items-center gap-1 px-2.5 py-1 rounded-full pointer-events-none"
+          style={{ background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)", boxShadow: "0 2px 10px rgba(255,81,0,0.5)" }}
+        >
+          <Star className="w-2.5 h-2.5 text-white fill-white shrink-0" />
+          <span className="text-white text-[9px] font-black tracking-[0.18em] uppercase leading-none">Editor's Choice</span>
         </div>
       )}
 
+      <div
+        className="rounded-2xl overflow-hidden flex flex-col transition-all duration-300"
+        style={{
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+        }}
+      >
       {/* Image area */}
       <div className={`relative w-full overflow-hidden block group ${isLarge ? "aspect-video" : "aspect-[4/3]"}`}>
         <Link href={`/experiences/${adventure.slug}${fromPage && fromPage > 1 ? `?from=${fromPage}` : ""}`} className="absolute inset-0 z-10" />
@@ -117,7 +121,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/10 z-10 pointer-events-none" />
 
-        {/* Top-left: difficulty + season — always at top-3, no offset needed */}
+        {/* Top-left: difficulty + season */}
         <div className="absolute z-20 flex flex-wrap items-center gap-1.5 top-3 left-3">
           <DifficultyMeter difficulty={difficulty} />
           {isSeasonActive ? (
@@ -193,6 +197,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
             {inCompare ? "Added" : "Compare"}
           </button>
         </div>
+      </div>
     </div>
   );
 }

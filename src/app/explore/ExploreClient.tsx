@@ -1022,7 +1022,7 @@ export default function ExploreClient() {
             </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5 pt-3">
               {pagedResults.map((adventure) => (
                 <div key={adventure.id} id={`card-${adventure.slug}`}>
                   <AdventureCard adventure={adventure} fromPage={currentPage} />
