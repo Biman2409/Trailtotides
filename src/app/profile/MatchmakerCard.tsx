@@ -5,6 +5,7 @@ import Link from "next/link";
 import { loadProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import { ArrowRight, RotateCcw } from "lucide-react";
+import RankBar from "@/components/ui/custom/RankBar";
 
 const RANKS = [
   { label: "Uncharted",   color: "#6b7280", stars: 0, minScore: 0  },
@@ -79,35 +80,8 @@ export default function MatchmakerCard({ isLoggedIn }: { isLoggedIn: boolean }) 
             </div>
           </div>
 
-          {/* Next level progress */}
-          {nextRank ? (
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[9px] text-white/30">
-                  <span className="text-white/40">Next: </span>
-                  <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span>
-                  <span className="text-white/25"> — {nextRank.minScore - totalScore} pts</span>
-                </span>
-                <span className="text-[9px] font-bold font-mono" style={{ color: currentRank.color }}>{progressPct}%</span>
-              </div>
-              <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.07)" }}>
-                <div
-                  className="h-full transition-all duration-700"
-                  style={{
-                    width: `${Math.min(100, progressPct)}%`,
-                    background: `linear-gradient(to right, ${currentRank.color}, ${nextRank.color})`,
-                  }}
-                />
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <div className="h-1.5 flex-1 rounded-full overflow-hidden">
-                <div className="h-full w-full" style={{ background: `linear-gradient(to right, #22d3ee, #a78bfa)` }} />
-              </div>
-              <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa]">The absolute pinnacle</span>
-            </div>
-          )}
+          {/* Rank progress */}
+          <RankBar totalScore={totalScore} trackH={8} showLabels />
 
           {/* Radar */}
           <div>

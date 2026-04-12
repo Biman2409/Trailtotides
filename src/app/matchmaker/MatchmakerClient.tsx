@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost, TrendingUp, Lock } from "@/lib/localIcons";
 import ACERadar from "@/components/ui/custom/ACERadar";
+import RankBar from "@/components/ui/custom/RankBar";
 import Pill from "@/components/ui/custom/Pill";
 import AchievementBadges from "@/components/ui/custom/AchievementBadges";
 import { saveProfile, loadProfile, clearProfile, saveProfileToServer, loadProfileFromServer } from "@/lib/matchmaker";
@@ -311,71 +312,12 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
                 <p className="text-[10px] text-white/30">pts needed</p>
               </div>
             </div>
-            <div className="space-y-1">
-              {/* Bar wrapper — relative for thumb, no overflow-hidden here */}
-              <div className="relative" style={{ paddingTop: 7, paddingBottom: 7 }}>
-                {/* Track — overflow-hidden clips fill + ticks cleanly */}
-                <div className="h-2.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.07)" }}>
-                  <div
-                    className="absolute inset-y-0 left-0 transition-all duration-700"
-                    style={{
-                      width: `${Math.min(100, ((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100)}%`,
-                      background: `linear-gradient(to right, ${RANKS[1].color}bb, ${currentRank.color})`,
-                    }}
-                  />
-                  {RANKS.slice(1, -1).map((rank, i) => (
-                    <div
-                      key={rank.label}
-                      className="absolute inset-y-0 w-px"
-                      style={{ left: `${((i + 1) / (totalRanks - 1)) * 100}%`, background: "rgba(0,0,0,0.55)" }}
-                    />
-                  ))}
-                </div>
-                {/* Thumb — sibling of track, floats above freely */}
-                <div
-                  className="absolute rounded-full border-2 transition-all duration-700 pointer-events-none"
-                  style={{
-                    width: 14, height: 14,
-                    top: "50%",
-                    left: `${Math.min(96, Math.max(4, ((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100))}%`,
-                    transform: "translate(-50%, -50%)",
-                    background: currentRank.color,
-                    borderColor: "#0a0e17",
-                  }}
-                />
-              </div>
-              {/* Rank labels */}
-              <div className="flex">
-                {RANKS.map((rank, i) => {
-                  const isCurrent = i === currentRankIndex;
-                  const isUnlocked = i < currentRankIndex;
-                  return (
-                    <div
-                      key={rank.label}
-                      className="flex-1 flex flex-col items-center gap-0.5"
-                      style={i === 0 ? { alignItems: "flex-start" } : i === totalRanks - 1 ? { alignItems: "flex-end" } : {}}
-                    >
-                      <span
-                        className="text-[7.5px] font-semibold leading-none whitespace-nowrap"
-                        style={{ color: isCurrent ? currentRank.color : isUnlocked ? `${rank.color}55` : "rgba(255,255,255,0.15)" }}
-                      >
-                        {rank.label}
-                      </span>
-                      {isCurrent && (
-                        <span className="text-[6px] font-bold leading-none uppercase tracking-wide" style={{ color: `${currentRank.color}80` }}>you</span>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            <RankBar totalScore={totalScore} trackH={10} showLabels showYouTag />
           </>
         ) : (
-          <div className="flex flex-col items-center gap-3 py-2">
-            <div className="w-full h-2.5 rounded-full overflow-hidden">
-              <div className="h-full w-full" style={{ background: `linear-gradient(to right, ${RANKS[1].color}, #a78bfa)` }} />
-            </div>
-            <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">The absolute pinnacle</p>
+          <div className="flex flex-col gap-2 py-2">
+            <RankBar totalScore={totalScore} trackH={10} showLabels={false} />
+            <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa] text-center">The absolute pinnacle</p>
           </div>
         )}
       </div>

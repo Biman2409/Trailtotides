@@ -5,6 +5,7 @@ import Link from "next/link";
 import { RotateCcw } from "lucide-react";
 import { loadProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
+import RankBar from "@/components/ui/custom/RankBar";
 
 const RANKS = [
   {
@@ -176,62 +177,7 @@ export default function ACEProfileSection() {
           )}
 
           {/* Progress bar */}
-          <div>
-            {/* Outer wrapper — relative so thumb can float over the track */}
-            <div className="relative" style={{ paddingTop: 7, paddingBottom: 7 }}>
-              {/* Track — overflow-hidden clips fill and ticks, nothing escapes */}
-              <div className="h-2.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.07)" }}>
-                {/* Fill — no border-radius, no box-shadow */}
-                <div
-                  className="absolute inset-y-0 left-0 transition-all duration-700"
-                  style={{
-                    width: `${Math.min(100, barPct)}%`,
-                    background: `linear-gradient(90deg, ${RANKS[1].color}bb, ${currentRank.color})`,
-                  }}
-                />
-                {/* Segment ticks */}
-                {RANKS.slice(1, -1).map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute inset-y-0 w-px"
-                    style={{ left: `${(i + 1) * segmentWidth}%`, background: "rgba(0,0,0,0.55)" }}
-                  />
-                ))}
-              </div>
-              {/* Thumb — sibling of track, NOT inside overflow-hidden */}
-              <div
-                className="absolute rounded-full border-2 transition-all duration-700 pointer-events-none"
-                style={{
-                  width: 14, height: 14,
-                  top: "50%",
-                  left: `${Math.min(96, Math.max(4, barPct))}%`,
-                  transform: "translate(-50%, -50%)",
-                  background: currentRank.color,
-                  borderColor: "#0a0e17",
-                }}
-              />
-            </div>
-
-            {/* Rank labels */}
-            <div className="flex mt-1">
-              {RANKS.map((rank, i) => (
-                <div
-                  key={rank.label}
-                  className="flex-1 flex"
-                  style={i === 0 ? { justifyContent: "flex-start" } : i === N - 1 ? { justifyContent: "flex-end" } : { justifyContent: "center" }}
-                >
-                  <span
-                    className="text-[7.5px] font-semibold whitespace-nowrap"
-                    style={{
-                      color: i === currentRankIndex ? currentRank.color : i < currentRankIndex ? `${rank.color}55` : "rgba(255,255,255,0.16)",
-                    }}
-                  >
-                    {rank.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <RankBar totalScore={totalScore} trackH={10} showLabels showYouTag={false} />
 
           {/* Retake button */}
           <Link
