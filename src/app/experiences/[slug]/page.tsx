@@ -530,12 +530,27 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               )}
 
               {/* Two sub-sections side by side */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                <div>
-                  <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} hideHeader subSection />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+                {/* Reviews card */}
+                <div className="rounded-xl overflow-hidden" style={{ background: "rgba(251,191,36,0.03)", border: "1px solid rgba(251,191,36,0.12)" }}>
+                  <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: "1px solid rgba(251,191,36,0.08)", background: "rgba(251,191,36,0.04)" }}>
+                    <span className="text-amber-400 text-xs">★</span>
+                    <h3 className="text-amber-400 text-[10px] font-bold tracking-[0.18em] uppercase">Reviews</h3>
+                  </div>
+                  <div className="p-4">
+                    <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} hideHeader subSection />
+                  </div>
                 </div>
-                <div>
-                  <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} hideHeader />
+
+                {/* Photos card */}
+                <div className="rounded-xl overflow-hidden" style={{ background: "rgba(56,189,248,0.03)", border: "1px solid rgba(56,189,248,0.12)" }}>
+                  <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: "1px solid rgba(56,189,248,0.08)", background: "rgba(56,189,248,0.04)" }}>
+                    <span className="text-sky-400 text-xs">📷</span>
+                    <h3 className="text-sky-400 text-[10px] font-bold tracking-[0.18em] uppercase">Trail Photos</h3>
+                  </div>
+                  <div className="p-4">
+                    <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} hideHeader />
+                  </div>
                 </div>
               </div>
             </div>
