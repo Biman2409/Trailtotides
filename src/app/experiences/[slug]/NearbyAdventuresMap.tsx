@@ -36,10 +36,29 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
   const mapInstanceRef = useRef<import("leaflet").Map | null>(null);
 
   useEffect(() => {
-    if (!mapRef.current || mapInstanceRef.current) return;
+    if (!mapRef.current) return;
+    let cancelled = false;
 
     import("leaflet").then((L) => {
-      // Fix default icon paths for Next.js
+      if (cancelled || !mapRef.current) return;
+
+      // Tear down any stale Leaflet instance left on the DOM node (StrictMode / HMR)
+      const container = mapRef.current as HTMLElement & { _leaflet_id?: number };
+      if (container._leaflet_id) {
+        mapInstanceRef.current?.remove();
+        mapInstanceRef.current = null;
+        container._leaflet_id = undefined;
+      }
+      if (mapInstanceRef.current) return;
+
+      // Inject Leaflet CSS once
+      if (!document.querySelector('link[href*="leaflet.css"]')) {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+        document.head.appendChild(link);
+      }
+
       delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
       L.Icon.Default.mergeOptions({
         iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
@@ -47,7 +66,7 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
       });
 
-      const map = L.map(mapRef.current!, {
+      const map = L.map(mapRef.current, {
         zoomControl: false,
         scrollWheelZoom: false,
         attributionControl: false,
@@ -129,9 +148,14 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
     });
 
     return () => {
+      cancelled = true;
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
+      }
+      // Clear the _leaflet_id stamp so next init doesn't complain
+      if (mapRef.current) {
+        (mapRef.current as HTMLElement & { _leaflet_id?: number })._leaflet_id = undefined;
       }
     };
   }, [current, nearby]);
