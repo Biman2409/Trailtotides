@@ -19,6 +19,19 @@ const TYPE_ICONS: Partial<Record<AdventureType, string>> = {
   Paragliding: "🪂",
 };
 
+const TYPE_COLORS: Partial<Record<AdventureType, string>> = {
+  Trekking: "#f97316",
+  Biking: "#eab308",
+  Cycling: "#84cc16",
+  Diving: "#3b82f6",
+  Kayaking: "#22d3ee",
+  Skiing: "#a78bfa",
+  Mountaineering: "#f43f5e",
+  "Rock Climbing": "#10b981",
+  Scrambling: "#f59e0b",
+  Paragliding: "#e879f9",
+};
+
 export default function TrekStreakCounter() {
   const { log, loading } = useTripLog();
 
@@ -152,22 +165,25 @@ export default function TrekStreakCounter() {
             {typeEntries.slice(0, 5).map(([type, count]) => {
               const pct = Math.round((count / stats.total) * 100);
               const emoji = TYPE_ICONS[type as AdventureType] ?? "⚡";
+              const color = TYPE_COLORS[type as AdventureType] ?? "#ff5100";
               return (
                 <div key={type} className="flex items-center gap-3">
-                  <span className="text-xs w-5 text-center flex-none">{emoji}</span>
-                  <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                  <div className="w-28 flex items-center gap-2 shrink-0">
                     <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${pct}%`,
-                        background: "linear-gradient(90deg, #ff5100, #ff7d47)",
-                      }}
+                      className="w-5 h-5 rounded flex items-center justify-center text-xs shrink-0"
+                      style={{ background: `${color}18`, border: `1px solid ${color}28` }}
+                    >
+                      {emoji}
+                    </div>
+                    <span className="text-white/50 text-[11px] truncate capitalize">{type}</span>
+                  </div>
+                  <div className="flex-1 h-1.5 rounded-full bg-white/[0.07]">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ width: `${pct}%`, background: color }}
                     />
                   </div>
-                  <div className="flex items-center gap-1.5 flex-none">
-                    <span className="text-white/40 text-[10px] w-14 truncate">{type}</span>
-                    <span className="text-white/25 text-[9px] tabular-nums">{count}×</span>
-                  </div>
+                  <span className="text-white/60 text-xs w-5 text-right font-mono shrink-0">{count}×</span>
                 </div>
               );
             })}
