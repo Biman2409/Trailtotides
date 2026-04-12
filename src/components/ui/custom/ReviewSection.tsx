@@ -252,7 +252,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
             className="shrink-0 text-white font-semibold py-2 px-4 rounded-xl text-xs transition-colors"
             style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)" }}
           >
-            Log in to review
+            Log in
           </Link>
         </div>
       )}
