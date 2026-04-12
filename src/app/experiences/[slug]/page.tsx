@@ -511,6 +511,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <div>
               {/* Section divider */}
               <div className="h-px mb-8" style={{ background: "rgba(255,255,255,0.05)" }} />
+              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4">Community</p>
 
               {/* Single login CTA — only when logged out */}
               {!currentUserId && (
