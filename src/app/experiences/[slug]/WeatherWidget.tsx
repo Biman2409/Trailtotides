@@ -146,7 +146,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
           <div className="flex items-center overflow-x-auto no-scrollbar" style={{ borderTop: "1px solid var(--border-subtle)" }}>
 
             {/* Live weather + location */}
-            <div className="flex items-center gap-2.5 pr-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+            <div className="flex items-center gap-2.5 px-5 lg:px-6 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
               <div className={color(w.weatherCode)}>
                 <WeatherIcon code={w.weatherCode} isDay={w.isDay} className="w-4 h-4" />
               </div>
