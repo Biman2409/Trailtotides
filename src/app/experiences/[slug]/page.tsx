@@ -38,6 +38,8 @@ import OperatorListingPanel from "./OperatorListingPanel";
 import MobileBookBar from "./MobileBookBar";
 import AccordionSection from "./AccordionSection";
 import WeatherWidget from "./WeatherWidget";
+import PhotoGallery from "./PhotoGallery";
+import NearbyAdventuresMap from "./NearbyAdventuresMap";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -176,6 +178,21 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
     .filter((a) => a.id !== adventure.id && a.type === adventure.type && !relatedByStateIds.has(a.id))
     .slice(0, 6);
   const relatedByTypeIds = new Set(relatedByType.map((a) => a.id));
+
+  // Nearby adventures — sorted by haversine distance, top 5
+  function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLng = ((lng2 - lng1) * Math.PI) / 180;
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLng / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+  const nearbyAdventures = adventures
+    .filter((a) => a.id !== adventure.id)
+    .map((a) => ({ ...a, _km: haversineKm(adventure.lat, adventure.lng, a.lat, a.lng) }))
+    .sort((a, b) => a._km - b._km)
+    .slice(0, 5)
+    .map(({ _km, ...a }) => a);
 
   const firstVerifiedOp = allOperators.find((o) => o.verified);
   const priceFrom = firstVerifiedOp?.priceFrom;
@@ -550,6 +567,12 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
             </div>
 
+            {/* Trail Photos */}
+            <div className="h-px mt-12" style={{ background: "rgba(255,255,255,0.05)" }} />
+            <div className="pt-10">
+              <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} />
+            </div>
+
             {/* Tags */}
             <div className="pt-6 pb-2">
               <div className="flex flex-wrap gap-2">
@@ -610,6 +633,11 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               locationName={adventure.baseCamp ?? adventure.state}
               altitude={adventure.altitude}
             />
+
+            {/* Nearby Adventures Map */}
+            {nearbyAdventures.length > 0 && (
+              <NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} />
+            )}
 
             {/* Explore links */}
             <Link
