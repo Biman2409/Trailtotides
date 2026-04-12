@@ -351,8 +351,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       </div>
 
       {/* ── MAIN CONTENT ──────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-5 lg:px-8 py-8 lg:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
+      <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-10 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
 
           {/* ── LEFT COLUMN ── */}
           <div className="lg:col-span-2">
@@ -495,7 +495,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* Operators */}
             <div id="book-this-adventure" />
-            <div className="hidden lg:block h-px mt-8 mb-0" style={{ background: "rgba(255,255,255,0.05)" }} />
             <AccordionSection label="Book This Adventure" title="" defaultOpen={true}>
               <div id="operators-section">
               {/* Verified */}
@@ -547,26 +546,20 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </AccordionSection>
 
-            {/* Are You an Operator? */}
-            <div className="h-px mt-12" style={{ background: "rgba(255,255,255,0.05)" }} />
-            <div className="pt-10">
-              <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
-            </div>
-
             {/* Reviews */}
-            <div className="h-px mt-12" style={{ background: "rgba(255,255,255,0.05)" }} />
-            <div className="pt-10">
+            <div className="h-px mt-10" style={{ background: "rgba(255,255,255,0.05)" }} />
+            <div className="mt-10">
               <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
             </div>
 
             {/* Trail Photos */}
-            <div className="h-px mt-12" style={{ background: "rgba(255,255,255,0.05)" }} />
-            <div className="pt-10">
+            <div className="h-px mt-10" style={{ background: "rgba(255,255,255,0.05)" }} />
+            <div className="mt-10">
               <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} />
             </div>
 
             {/* Tags */}
-            <div className="pt-6 pb-2">
+            <div className="pt-8 pb-2">
               <div className="flex flex-wrap gap-2">
                 {adventure.tags.map((tag) => (
                   <span
@@ -582,20 +575,17 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           </div>
 
           {/* ── RIGHT SIDEBAR ── */}
-          <div className="space-y-2.5 lg:sticky lg:top-24 lg:self-start">
+          <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
 
             {/* At a Glance */}
             <div
-              className="rounded-xl p-4"
-              style={{
-                background: "var(--bg-surface)",
-                border: "1px solid var(--border-subtle)",
-              }}
+              className="rounded-xl overflow-hidden"
+              style={{ border: "1px solid var(--border-subtle)" }}
             >
-              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">
-                At a Glance
-              </p>
-              <div className="space-y-2">
+              <div className="px-4 py-3" style={{ borderBottom: "1px solid var(--border-subtle)", background: "var(--bg-surface)" }}>
+                <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase">At a Glance</p>
+              </div>
+              <div style={{ background: "var(--bg-surface)" }}>
                 {[
                   { label: "Type", value: adventure.type },
                   ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
@@ -610,29 +600,34 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   ...(adventure.depth ? [{ label: "Max Depth", value: adventure.depth }] : []),
                   { label: "Group Size", value: adventure.groupSize },
                 ].map(({ label, value }) => (
-                  <div key={label} className="flex items-start justify-between gap-3 pb-2 last:pb-0" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-                    <span className="text-white/30 text-xs shrink-0">{label}</span>
-                    <span className="text-white/65 text-xs text-right leading-snug">{value}</span>
+                  <div key={label} className="flex items-center justify-between gap-4 px-4 py-2.5" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+                    <span className="text-white/30 text-[11px] shrink-0">{label}</span>
+                    <span className="text-white/70 text-[11px] text-right leading-snug font-medium">{value}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Explore links */}
-            <Link
-              href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-white/40 hover:text-white text-xs font-medium transition-all duration-200 hover:bg-white/5"
-              style={{ border: "1px solid var(--border-subtle)" }}
-            >
-              More in {adventure.state}
-            </Link>
-            <Link
-              href={`/explore?type=${encodeURIComponent(adventure.type)}`}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-white/40 hover:text-white text-xs font-medium transition-all duration-200 hover:bg-white/5"
-              style={{ border: "1px solid var(--border-subtle)" }}
-            >
-              More in {adventure.type}
-            </Link>
+            <div className="grid grid-cols-2 gap-2">
+              <Link
+                href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
+                className="flex items-center justify-center py-2.5 rounded-xl text-white/40 hover:text-white/70 text-[11px] font-medium transition-all hover:bg-white/5"
+                style={{ border: "1px solid var(--border-subtle)" }}
+              >
+                More in {adventure.state}
+              </Link>
+              <Link
+                href={`/explore?type=${encodeURIComponent(adventure.type)}`}
+                className="flex items-center justify-center py-2.5 rounded-xl text-white/40 hover:text-white/70 text-[11px] font-medium transition-all hover:bg-white/5"
+                style={{ border: "1px solid var(--border-subtle)" }}
+              >
+                More {adventure.type}
+              </Link>
+            </div>
+
+            {/* Operator panel */}
+            <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
           </div>
         </div>
       </div>

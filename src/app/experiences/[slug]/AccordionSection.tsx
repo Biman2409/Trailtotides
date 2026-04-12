@@ -56,13 +56,10 @@ export default function AccordionSection({ title, label, defaultOpen = false, ch
         {children}
       </div>
 
-      {/* Desktop divider between sections */}
+      {/* Divider */}
       {(label || title) && (
-        <div className="hidden lg:block h-px mt-8" style={{ background: "rgba(255,255,255,0.05)" }} />
+        <div className="h-px mt-10" style={{ background: "rgba(255,255,255,0.05)" }} />
       )}
-
-      {/* Mobile divider */}
-      {(label || title) && <div className="lg:hidden h-px mt-1" style={{ background: "var(--border-subtle)" }} />}
     </section>
   );
 }
