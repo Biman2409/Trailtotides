@@ -525,7 +525,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-1.5 mb-1">
                                   <span className="text-white/65 text-[11px] font-medium truncate">{op.name}</span>
-                                  {isCheapest && <span className="text-[8px] font-bold px-1.5 py-0.5 rounded flex-none" style={{ background: "rgba(16,185,129,0.12)", color: "#34d399", border: "1px solid rgba(16,185,129,0.2)" }}>BEST</span>}
                                   {op.verified && <span className="text-[8px] font-bold px-1.5 py-0.5 rounded flex-none" style={{ background: "rgba(99,102,241,0.12)", color: "#a5b4fc", border: "1px solid rgba(99,102,241,0.2)" }}>✓</span>}
                                 </div>
                                 <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
