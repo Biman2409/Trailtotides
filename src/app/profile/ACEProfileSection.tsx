@@ -178,14 +178,13 @@ export default function ACEProfileSection() {
           {/* Progress bar */}
           <div>
             {/* Track */}
-            <div className="relative h-3 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+            <div className="relative h-3 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
               {/* Filled */}
               <div
-                className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
+                className="absolute inset-y-0 left-0 transition-all duration-700"
                 style={{
-                  width: `${barPct}%`,
+                  width: `${Math.min(100, barPct)}%`,
                   background: `linear-gradient(90deg, ${RANKS[1].color}99, ${currentRank.color})`,
-                  boxShadow: `0 0 12px ${currentRank.color}60`,
                 }}
               />
               {/* Segment tick marks */}
@@ -196,12 +195,15 @@ export default function ACEProfileSection() {
                   style={{ left: `${(i + 1) * segmentWidth}%`, background: "rgba(0,0,0,0.5)" }}
                 />
               ))}
-              {/* Thumb */}
+            </div>
+            {/* Thumb — outside overflow-hidden track so it can float above */}
+            <div className="relative h-0">
               <div
-                className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 transition-all duration-700"
+                className="absolute w-4 h-4 rounded-full border-2 transition-all duration-700"
                 style={{
-                  left: `${barPct}%`,
-                  transform: `translateX(-50%) translateY(-50%)`,
+                  left: `clamp(8px, ${barPct}%, calc(100% - 8px))`,
+                  top: -9,
+                  transform: `translateX(-50%)`,
                   background: currentRank.color,
                   borderColor: "#0e0e12",
                   boxShadow: `0 0 10px ${currentRank.color}`,
