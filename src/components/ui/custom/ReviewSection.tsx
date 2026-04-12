@@ -165,10 +165,10 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
       <div className="flex items-center gap-2 mb-5">
         <Star className="w-4 h-4 text-white/30" />
         {avgRating !== null && (
-          <div className="flex items-center gap-1.5">
-            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+          <div className="flex items-center gap-2">
+            <StarRating value={Math.round(avgRating)} />
             <span className="text-white/70 text-sm font-semibold">{avgRating.toFixed(1)}</span>
-            <span className="text-white/30 text-xs">· {reviews.length}</span>
+            <span className="text-white/30 text-xs">({reviews.length})</span>
           </div>
         )}
       </div>
