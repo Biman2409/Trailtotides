@@ -218,25 +218,41 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
       </button>
 
       {/* ── EXPANDED PANEL ── */}
-      <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: open ? "320px" : "0px" }}>
+      <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: open ? "400px" : "0px" }}>
         <div style={{ borderTop: "1px solid var(--border-subtle)", background: "rgba(255,255,255,0.012)" }}>
           <div className="max-w-7xl mx-auto px-5 lg:px-8 py-5">
             <div className="grid grid-cols-7 gap-1.5">
               {weather.daily.map((day, i) => (
                 <div
                   key={day.date}
-                  className={`flex flex-col items-center gap-1.5 py-3 rounded-xl ${i === 0 ? "bg-white/[0.04]" : ""}`}
+                  className={`flex flex-col items-center gap-1.5 py-3 px-1 rounded-xl ${i === 0 ? "bg-white/[0.04]" : ""}`}
                 >
+                  {/* Day label */}
                   <span className="text-white/25 text-[9px] font-semibold uppercase tracking-[0.12em]">{dayLabel(day.date, i)}</span>
+
+                  {/* Condition icon */}
                   <div className={`${color(day.weatherCode)} mt-0.5`}>
                     <WeatherIcon code={day.weatherCode} className="w-5 h-5" />
                   </div>
-                  <div className="flex flex-col items-center gap-0.5 mt-0.5">
-                    <span className="text-white/75 text-[11px] font-semibold">{day.tempMax}°</span>
-                    <span className="text-white/20 text-[10px]">{day.tempMin}°</span>
+
+                  {/* Condition description */}
+                  <span className="text-white/30 text-[8px] text-center leading-tight">{desc(day.weatherCode)}</span>
+
+                  {/* Max / Min temps */}
+                  <div className="flex flex-col items-center gap-1 mt-0.5 w-full">
+                    <div className="flex items-center justify-between w-full px-1">
+                      <span className="text-white/20 text-[8px] uppercase tracking-wide">Max</span>
+                      <span className="text-white/75 text-[11px] font-semibold">{day.tempMax}°</span>
+                    </div>
+                    <div className="flex items-center justify-between w-full px-1">
+                      <span className="text-white/20 text-[8px] uppercase tracking-wide">Min</span>
+                      <span className="text-white/40 text-[11px] font-medium">{day.tempMin}°</span>
+                    </div>
                   </div>
+
+                  {/* Precipitation */}
                   {day.precipitation > 0 && (
-                    <span className="text-sky-400/50 text-[9px] font-medium">{day.precipitation}mm</span>
+                    <span className="text-sky-400/60 text-[8px] font-medium">{day.precipitation}mm</span>
                   )}
                 </div>
               ))}
