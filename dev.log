@@ -274,3 +274,9 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /?_cb=1776026354557 200 in 261ms
  GET /api/stories/views?slug=riding-through-a-revolution 200 in 399ms
  GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 375ms
+ GET /?_cb=1776026420157 200 in 248ms
+ GET /?_cb=1776026421390 200 in 234ms
+ GET /?_cb=1776026422836 200 in 217ms
+ GET /?_cb=1776026424212 200 in 223ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 403ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 1088ms
