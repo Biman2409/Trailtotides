@@ -162,24 +162,31 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
             </div>
 
             {/* Temp stacked with feels like */}
-            <div className="flex flex-col justify-center px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <span className="text-white/90 font-semibold text-[15px] leading-none mb-1">{w.temp}°C</span>
-              <div className="flex items-center gap-1">
-                <Thermometer className="w-3 h-3 text-orange-400 shrink-0" />
-                <span className="text-white/40 text-[10px]">Feels {w.apparent}°</span>
+            {/* Temperature */}
+            <div className="flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+              <Thermometer className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+              <div>
+                <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Temperature</div>
+                <div className="text-white/85 font-medium text-[13px] leading-none">{w.temp}°C <span className="text-white/35 text-[11px] font-normal">/ feels {w.apparent}°</span></div>
               </div>
             </div>
 
-            {/* Wind */}
-            <div className="hidden md:flex items-center gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+            {/* Wind Speed */}
+            <div className="hidden md:flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
               <Wind className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-              <span className="text-white/50 text-[11px]">{w.wind} km/h</span>
+              <div>
+                <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Wind Speed</div>
+                <div className="text-white/85 font-medium text-[13px] leading-none">{w.wind} <span className="text-white/35 text-[11px] font-normal">km/h</span></div>
+              </div>
             </div>
 
             {/* Humidity */}
-            <div className="hidden md:flex items-center gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+            <div className="hidden md:flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
               <Droplets className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-              <span className="text-white/50 text-[11px]">{w.humidity}%</span>
+              <div>
+                <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Humidity</div>
+                <div className="text-white/85 font-medium text-[13px] leading-none">{w.humidity}<span className="text-white/35 text-[11px] font-normal">%</span></div>
+              </div>
             </div>
 
             {/* 3-day mini */}
