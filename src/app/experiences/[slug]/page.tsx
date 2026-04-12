@@ -454,76 +454,61 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* Operators */}
             <div id="book-this-adventure" />
             <AccordionSection label="Book This Adventure" title="" defaultOpen={true}>
-              <div id="operators-section">
-              {/* Verified */}
-              {allOperators.some((op) => op.verified) && (
-                <div
-                  className="mb-4 rounded-xl p-4"
-                  style={{ border: "1px solid rgba(16,185,129,0.15)", background: "rgba(16,185,129,0.03)" }}
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <BadgeCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <h3 className="text-emerald-400 text-xs font-bold tracking-wide uppercase">Verified Operators</h3>
+              <div id="operators-section" className="space-y-3">
+                {allOperators.some((op) => op.verified) && (
+                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(16,185,129,0.12)" }}>
+                    <div className="flex items-center gap-2 px-4 py-3" style={{ background: "rgba(16,185,129,0.05)", borderBottom: "1px solid rgba(16,185,129,0.08)" }}>
+                      <BadgeCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <h3 className="text-emerald-400 text-[10px] font-bold tracking-[0.18em] uppercase">Verified Operators</h3>
+                    </div>
+                    <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {allOperators.filter((op) => op.verified).map((op) => (
+                        <OperatorCard key={op.name} op={op} verified />
+                      ))}
+                    </div>
+                    <div className="px-4 py-2.5 flex items-center gap-1.5" style={{ borderTop: "1px solid rgba(16,185,129,0.08)", background: "rgba(16,185,129,0.02)" }}>
+                      <ShieldCheck className="w-3 h-3 text-emerald-400/60 shrink-0" />
+                      <p className="text-white/25 text-[10px]">All verified operators hold valid permits, safety certifications and guide credentials.</p>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {allOperators.filter((op) => op.verified).map((op) => (
-                      <OperatorCard key={op.name} op={op} verified />
-                    ))}
-                  </div>
-                  <p className="mt-4 text-white/25 text-xs flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    All verified operators hold valid permits, safety certifications and guide credentials.
-                  </p>
-                </div>
-              )}
+                )}
 
-              {/* How we verify — collapsible */}
-              <VerifyDropdown />
+                <VerifyDropdown />
 
-              {/* Unverified */}
-              {allOperators.some((op) => !op.verified) && (
-                <div
-                  className="rounded-xl p-4"
-                  style={{ border: "1px solid rgba(245,158,11,0.13)", background: "rgba(245,158,11,0.02)" }}
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                    <h3 className="text-white/50 text-xs font-bold tracking-wide uppercase">Other Operators</h3>
+                {allOperators.some((op) => !op.verified) && (
+                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(245,158,11,0.1)" }}>
+                    <div className="flex items-center gap-2 px-4 py-3" style={{ background: "rgba(245,158,11,0.03)", borderBottom: "1px solid rgba(245,158,11,0.07)" }}>
+                      <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                      <h3 className="text-white/45 text-[10px] font-bold tracking-[0.18em] uppercase">Other Operators</h3>
+                    </div>
+                    <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {allOperators.filter((op) => !op.verified).map((op) => (
+                        <OperatorCard key={op.name} op={op} verified={false} />
+                      ))}
+                    </div>
+                    <div className="px-4 py-2.5 flex items-center gap-1.5" style={{ borderTop: "1px solid rgba(245,158,11,0.07)", background: "rgba(245,158,11,0.02)" }}>
+                      <AlertTriangle className="w-3 h-3 text-amber-400/50 shrink-0" />
+                      <p className="text-white/25 text-[10px]">Do your own research. Ask operators directly for permits and certifications.</p>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {allOperators.filter((op) => !op.verified).map((op) => (
-                      <OperatorCard key={op.name} op={op} verified={false} />
-                    ))}
-                  </div>
-                  <p className="mt-4 text-white/25 text-xs flex items-center gap-1.5">
-                    <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                    Do your own research. Ask operators directly for permits and certifications.
-                  </p>
-                </div>
-              )}
+                )}
               </div>
             </AccordionSection>
 
             {/* Reviews */}
-            <div className="h-px mt-10" style={{ background: "rgba(255,255,255,0.05)" }} />
-            <div className="mt-10">
-              <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
-            </div>
+            <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
 
             {/* Trail Photos */}
-            <div className="h-px mt-10" style={{ background: "rgba(255,255,255,0.05)" }} />
-            <div className="mt-10">
-              <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} />
-            </div>
+            <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} />
 
             {/* Tags */}
-            <div className="pt-8 pb-2">
+            <div className="pt-6 pb-2">
               <div className="flex flex-wrap gap-2">
                 {adventure.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-white/30 text-xs px-3 py-1.5 rounded-full transition-colors hover:text-white/50"
-                    style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}
+                    className="text-white/25 text-xs px-3 py-1.5 rounded-full transition-colors hover:text-white/50"
+                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
                   >
                     #{tag}
                   </span>
