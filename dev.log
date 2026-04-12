@@ -205,3 +205,16 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /auth/login?_cb=1776025261763 200 in 246ms
  GET /auth/login?_cb=1776025293628 200 in 325ms
  GET /auth/login?_cb=1776025295248 200 in 113ms
+ GET /auth/login?_cb=1776025296583 200 in 89ms
+ GET /auth/login?_cb=1776025297750 200 in 148ms
+ GET / 200 in 76ms
+ GET /?_cb=1776025297750 200 in 276ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 807ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 835ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 827ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 825ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 413ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 422ms
+ ✓ Compiled in 328ms
+ ✓ Compiled /experiences/[slug] in 41ms
+ GET /experiences/roopkund-trek?_cb=1776025297750 404 in 894ms

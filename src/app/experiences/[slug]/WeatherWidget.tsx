@@ -218,44 +218,61 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
       </button>
 
       {/* ── EXPANDED PANEL ── */}
-      <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: open ? "400px" : "0px" }}>
+      <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: open ? "420px" : "0px" }}>
         <div style={{ borderTop: "1px solid var(--border-subtle)", background: "rgba(255,255,255,0.012)" }}>
           <div className="max-w-7xl mx-auto px-5 lg:px-8 py-5">
-            <div className="grid grid-cols-7 gap-1.5">
+            <div className="grid grid-cols-7 gap-2.5">
               {weather.daily.map((day, i) => (
                 <div
                   key={day.date}
-                  className={`flex flex-col items-center gap-1.5 py-3 px-1 rounded-xl ${i === 0 ? "bg-white/[0.04]" : ""}`}
+                  className="flex flex-col items-center gap-2 py-3.5 px-2 rounded-xl"
+                  style={
+                    i === 0
+                      ? { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }
+                      : { background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)" }
+                  }
                 >
                   {/* Day label */}
-                  <span className="text-white/25 text-[9px] font-semibold uppercase tracking-[0.12em]">{dayLabel(day.date, i)}</span>
+                  <span
+                    className="text-[9px] font-bold uppercase tracking-[0.12em]"
+                    style={{ color: i === 0 ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.25)" }}
+                  >
+                    {dayLabel(day.date, i)}
+                  </span>
 
                   {/* Condition icon */}
-                  <div className={`${color(day.weatherCode)} mt-0.5`}>
+                  <div className={`${color(day.weatherCode)}`}>
                     <WeatherIcon code={day.weatherCode} className="w-5 h-5" />
                   </div>
 
                   {/* Condition description */}
-                  <span className="text-white/30 text-[8px] text-center leading-tight">{desc(day.weatherCode)}</span>
+                  <span className="text-white/30 text-[8px] text-center leading-tight min-h-[20px] flex items-center justify-center">
+                    {desc(day.weatherCode)}
+                  </span>
 
-                  {/* Max / Min temps */}
-                  <div className="flex flex-col items-center gap-1 mt-0.5 w-full">
-                    <div className="flex items-center justify-between w-full px-1">
-                      <span className="text-white/20 text-[8px] uppercase tracking-wide">Max</span>
-                      <span className="text-white/75 text-[11px] font-semibold">{day.tempMax}°</span>
-                    </div>
-                    <div className="flex items-center justify-between w-full px-1">
-                      <span className="text-white/20 text-[8px] uppercase tracking-wide">Min</span>
-                      <span className="text-white/40 text-[11px] font-medium">{day.tempMin}°</span>
-                    </div>
+                  {/* Divider */}
+                  <div className="w-full h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+
+                  {/* Max temp */}
+                  <div className="flex flex-col items-center gap-0.5">
+                    <span className="text-white/20 text-[7px] uppercase tracking-wide">High</span>
+                    <span className="text-white/80 text-[12px] font-bold leading-none">{day.tempMax}°</span>
+                  </div>
+
+                  {/* Min temp */}
+                  <div className="flex flex-col items-center gap-0.5">
+                    <span className="text-white/20 text-[7px] uppercase tracking-wide">Low</span>
+                    <span className="text-white/40 text-[11px] font-medium leading-none">{day.tempMin}°</span>
                   </div>
 
                   {/* Precipitation */}
-                  {day.precipitation > 0 && (
-                    <div className="flex items-center justify-between w-full px-1">
-                      <span className="text-white/20 text-[8px] uppercase tracking-wide">Rain</span>
-                      <span className="text-sky-400/70 text-[11px] font-medium">{day.precipitation}mm</span>
+                  {day.precipitation > 0 ? (
+                    <div className="flex flex-col items-center gap-0.5">
+                      <Droplets className="w-3 h-3 text-sky-400/50" />
+                      <span className="text-sky-400/70 text-[9px] font-semibold leading-none">{day.precipitation}mm</span>
                     </div>
+                  ) : (
+                    <div className="h-[26px]" />
                   )}
                 </div>
               ))}
