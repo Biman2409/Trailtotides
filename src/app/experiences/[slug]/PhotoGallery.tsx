@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Camera, Loader2, Trash2, X, ZoomIn, Upload, ImageOff, Images } from "lucide-react";
+import { Camera, Loader2, Trash2, X, ZoomIn, Upload, ImageOff } from "lucide-react";
 import Link from "next/link";
 import { useXP } from "@/contexts/XPContext";
 import { toast } from "sonner";
@@ -113,9 +113,6 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
   return (
     <section>
       <div className="flex items-center justify-between mb-5">
-        <h2 className="flex items-center gap-1.5 text-white font-semibold text-sm">
-          <Images className="w-3.5 h-3.5 text-white/40" />
-        </h2>
       </div>
 
       {/* Upload area — logged in only */}
