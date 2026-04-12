@@ -39,6 +39,9 @@ import MobileBookBar from "./MobileBookBar";
 import AccordionSection from "./AccordionSection";
 import WeatherWidget from "./WeatherWidget";
 import PhotoGallery from "./PhotoGallery";
+import ElevationProfile from "./ElevationProfile";
+import PackingList from "./PackingList";
+import ItinerarySection from "./ItinerarySection";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -364,6 +367,17 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </AccordionSection>
 
+            {/* Elevation Profile */}
+            {adventure.routePoints && adventure.routePoints.length >= 2 && (
+              <AccordionSection label="Route" title="Elevation Profile" defaultOpen={true}>
+                <ElevationProfile
+                  routePoints={adventure.routePoints}
+                  maxAltitude={adventure.altitude}
+                  adventureName={adventure.name}
+                />
+              </AccordionSection>
+            )}
+
             {/* What Makes It Special */}
             <AccordionSection label="Highlights" title="What Makes It Special" defaultOpen={true}>
               <div className="rounded-xl px-5 py-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
@@ -439,6 +453,18 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </AccordionSection>
 
+            {/* Day-by-Day Itinerary */}
+            <AccordionSection label="Itinerary" title="Day-by-Day Plan" defaultOpen={false}>
+              <ItinerarySection
+                adventureName={adventure.name}
+                adventureType={adventure.type}
+                durationDays={adventure.durationDays}
+                baseCamp={adventure.baseCamp}
+                startingPoint={adventure.startingPoint}
+                altitude={adventure.altitude}
+              />
+            </AccordionSection>
+
             {/* ACE Profile — no extra pt, AccordionSection above already adds mt-8 divider */}
             <ACEProfileSection
               ace={ace}
@@ -500,6 +526,11 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* Trail Photos */}
             <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} />
+
+            {/* Packing List */}
+            <AccordionSection label="Preparation" title="Packing List" defaultOpen={false}>
+              <PackingList adventureType={adventure.type} difficulty={difficulty} />
+            </AccordionSection>
 
             {/* Tags */}
             <div className="pt-6 pb-2">
@@ -568,6 +599,63 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 More {adventure.type}
               </Link>
             </div>
+
+            {/* Price Compare */}
+            {allOperators.length > 1 && (
+              <div
+                className="rounded-xl overflow-hidden"
+                style={{ border: "1px solid var(--border-subtle)" }}
+              >
+                <div className="px-4 py-3" style={{ borderBottom: "1px solid var(--border-subtle)", background: "var(--bg-surface)" }}>
+                  <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase">Compare Prices</p>
+                </div>
+                <div style={{ background: "var(--bg-surface)" }}>
+                  {allOperators
+                    .slice()
+                    .sort((a, b) => {
+                      const pa = parseInt(a.priceFrom.replace(/[^\d]/g, ""), 10) || 0;
+                      const pb = parseInt(b.priceFrom.replace(/[^\d]/g, ""), 10) || 0;
+                      return pa - pb;
+                    })
+                    .map((op, i, arr) => {
+                      const price = parseInt(op.priceFrom.replace(/[^\d]/g, ""), 10);
+                      const minPrice = parseInt(arr[0].priceFrom.replace(/[^\d]/g, ""), 10);
+                      const maxPrice = parseInt(arr[arr.length - 1].priceFrom.replace(/[^\d]/g, ""), 10);
+                      const pct = maxPrice === minPrice ? 100 : Math.round(((price - minPrice) / (maxPrice - minPrice)) * 60 + 20);
+                      const isCheapest = i === 0;
+                      return (
+                        <div
+                          key={op.name}
+                          className="flex items-center gap-3 px-4 py-2.5"
+                          style={{ borderBottom: i < arr.length - 1 ? "1px solid var(--border-subtle)" : "none" }}
+                        >
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5 mb-1">
+                              <span className="text-white/65 text-[11px] font-medium truncate">{op.name}</span>
+                              {isCheapest && (
+                                <span className="text-[8px] font-bold px-1.5 py-0.5 rounded flex-none" style={{ background: "rgba(16,185,129,0.12)", color: "#34d399", border: "1px solid rgba(16,185,129,0.2)" }}>BEST</span>
+                              )}
+                              {op.verified && (
+                                <span className="text-[8px] font-bold px-1.5 py-0.5 rounded flex-none" style={{ background: "rgba(99,102,241,0.12)", color: "#a5b4fc", border: "1px solid rgba(99,102,241,0.2)" }}>✓</span>
+                              )}
+                            </div>
+                            <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                              <div
+                                className="h-full rounded-full transition-all"
+                                style={{
+                                  width: `${pct}%`,
+                                  background: isCheapest ? "#10b981" : op.verified ? "#6366f1" : "rgba(255,255,255,0.2)",
+                                }}
+                              />
+                            </div>
+                          </div>
+                          <span className="text-white/70 text-[11px] font-bold tabular-nums flex-none">{op.priceFrom}</span>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
 
             {/* Operator panel */}
             <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />

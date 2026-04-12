@@ -80,6 +80,7 @@ export default function ExploreClient() {
   });
   const [userProfile, setUserProfile] = useState<StoredProfile | null>(null);
   const [editorOnly, setEditorOnly] = useState(false);
+  const [fitnessLevel, setFitnessLevel] = useState<string | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
@@ -189,12 +190,20 @@ export default function ExploreClient() {
         const cat = classifyAdventure(userProfile.ace, req);
         if (cat !== aceCategory) return false;
       }
+      // Fitness level quick filter (maps stamina+power axes to a beginner/intermediate/advanced bracket)
+      if (fitnessLevel) {
+        const ace = getACE(a);
+        const effort = (ace.stamina + ace.power) / 2;
+        if (fitnessLevel === "beginner" && effort > 2.5) return false;
+        if (fitnessLevel === "intermediate" && (effort < 2.5 || effort > 4)) return false;
+        if (fitnessLevel === "advanced" && effort < 4) return false;
+      }
       return true;
     });
-    }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, priceRange, aceCategory, userProfile, editorOnly]);
+    }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, priceRange, aceCategory, userProfile, editorOnly, fitnessLevel]);
 
   // Reset to page 1 whenever filters change
-  useEffect(() => { setCurrentPage(1); }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, priceRange, aceCategory]);
+  useEffect(() => { setCurrentPage(1); }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, priceRange, aceCategory, fitnessLevel]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const pagedResults = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -209,7 +218,8 @@ export default function ExploreClient() {
     selectedMonths.length +
     selectedGroupSizes.length +
     (priceActive ? 1 : 0) +
-    (aceCategory !== null ? 1 : 0);
+    (aceCategory !== null ? 1 : 0) +
+    (fitnessLevel !== null ? 1 : 0);
 
   function clearAll() {
     setSelectedTypes([]);
@@ -221,6 +231,7 @@ export default function ExploreClient() {
     setSelectedGroupSizes([]);
     setPriceRange([PRICE_MIN, PRICE_MAX]);
     setAceCategory(null);
+    setFitnessLevel(null);
     setSearch("");
   }
 
@@ -308,6 +319,31 @@ export default function ExploreClient() {
             <Star className={`w-3 h-3 ${editorOnly ? "fill-white text-white" : ""}`} />
             Editor's Choice
           </button>
+
+          {/* Fitness Level quick-filter */}
+          <div className="hidden sm:flex items-center gap-1.5">
+            {([
+              { key: "beginner", label: "🟢 Beginner" },
+              { key: "intermediate", label: "🟡 Intermediate" },
+              { key: "advanced", label: "🔴 Advanced" },
+            ] as { key: string; label: string }[]).map(({ key, label }) => {
+              const isActive = fitnessLevel === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => setFitnessLevel(isActive ? null : key)}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
+                    isActive
+                      ? "text-white"
+                      : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white/80"
+                  }`}
+                  style={isActive ? { background: "rgba(255,81,0,0.85)", boxShadow: "0 2px 12px rgba(255,81,0,0.3)" } : {}}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
 
           {/* Result count */}
           <span className="hidden md:block text-sm text-white/40 ml-auto uppercase tracking-wider font-medium">
@@ -972,6 +1008,14 @@ export default function ExploreClient() {
                 className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
               >
                 ACE: {aceCategory === "ready" ? "Ready Now" : aceCategory === "stretch" ? "Stretch" : "Out of Range"} <X className="w-3 h-3" />
+              </span>
+            )}
+            {fitnessLevel && (
+              <span
+                onClick={() => setFitnessLevel(null)}
+                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
+              >
+                Fitness: {fitnessLevel} <X className="w-3 h-3" />
               </span>
             )}
           </div>

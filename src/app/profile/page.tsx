@@ -14,6 +14,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import TripLogSection from "./TripLogSection";
+import TrekStreakCounter from "./TrekStreakCounter";
 import ACEProfileSection from "./ACEProfileSection";
 import AvatarPicker from "./AvatarPicker";
 import TrophyCabinet from "./TrophyCabinet";
@@ -226,7 +227,10 @@ export default async function ProfilePage() {
                   <div className="w-1.5 h-5 rounded-full" style={{ background: "#ff5100" }} />
                   <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>My Adventures</h2>
                 </div>
-                <TripLogSection />
+                <TrekStreakCounter />
+                <div className="mt-4">
+                  <TripLogSection />
+                </div>
               </div>
             </>
           )}
