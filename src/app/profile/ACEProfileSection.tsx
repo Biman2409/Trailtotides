@@ -175,48 +175,62 @@ export default function ACEProfileSection() {
             </div>
           )}
 
-          {/* Rank ladder */}
-          <div className="flex items-center gap-1.5">
-            {RANKS.map((rank, i) => {
-              const reached = i <= currentRankIndex;
-              const isCurrent = i === currentRankIndex;
-              return (
-                <div key={rank.label} className="flex items-center gap-1.5 flex-1 last:flex-none">
-                  {/* Node */}
-                  <div className="flex flex-col items-center gap-1 shrink-0">
-                    <div
-                      className="w-5 h-5 rounded-full flex items-center justify-center transition-all duration-300"
-                      style={
-                        isCurrent
-                          ? { background: rank.color, boxShadow: `0 0 10px ${rank.color}90`, transform: "scale(1.25)" }
-                          : reached
-                          ? { background: `${rank.color}30`, border: `1.5px solid ${rank.color}80` }
-                          : { background: "rgba(255,255,255,0.04)", border: "1.5px solid rgba(255,255,255,0.1)" }
-                      }
-                    >
-                      {reached && (
-                        <span style={{ color: isCurrent ? "#000" : rank.color, fontSize: 8, fontWeight: 900 }}>
-                          {rank.stars || "·"}
-                        </span>
-                      )}
-                    </div>
-                    <span
-                      className="text-[7px] font-semibold whitespace-nowrap leading-none"
-                      style={{ color: isCurrent ? rank.color : reached ? `${rank.color}60` : "rgba(255,255,255,0.18)" }}
-                    >
-                      {rank.label}
-                    </span>
-                  </div>
-                  {/* Connector line — not after last */}
-                  {i < RANKS.length - 1 && (
-                    <div
-                      className="flex-1 h-px mb-3.5 transition-all duration-700"
-                      style={{ background: i < currentRankIndex ? `${RANKS[i + 1].color}60` : "rgba(255,255,255,0.08)" }}
-                    />
-                  )}
+          {/* Progress bar */}
+          <div>
+            {/* Outer wrapper — relative so thumb can float over the track */}
+            <div className="relative" style={{ paddingTop: 7, paddingBottom: 7 }}>
+              {/* Track — overflow-hidden clips fill and ticks, nothing escapes */}
+              <div className="h-2.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.07)" }}>
+                {/* Fill — no border-radius, no box-shadow */}
+                <div
+                  className="absolute inset-y-0 left-0 transition-all duration-700"
+                  style={{
+                    width: `${Math.min(100, barPct)}%`,
+                    background: `linear-gradient(90deg, ${RANKS[1].color}bb, ${currentRank.color})`,
+                  }}
+                />
+                {/* Segment ticks */}
+                {RANKS.slice(1, -1).map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute inset-y-0 w-px"
+                    style={{ left: `${(i + 1) * segmentWidth}%`, background: "rgba(0,0,0,0.55)" }}
+                  />
+                ))}
+              </div>
+              {/* Thumb — sibling of track, NOT inside overflow-hidden */}
+              <div
+                className="absolute rounded-full border-2 transition-all duration-700 pointer-events-none"
+                style={{
+                  width: 14, height: 14,
+                  top: "50%",
+                  left: `${Math.min(96, Math.max(4, barPct))}%`,
+                  transform: "translate(-50%, -50%)",
+                  background: currentRank.color,
+                  borderColor: "#0a0e17",
+                }}
+              />
+            </div>
+
+            {/* Rank labels */}
+            <div className="flex mt-1">
+              {RANKS.map((rank, i) => (
+                <div
+                  key={rank.label}
+                  className="flex-1 flex"
+                  style={i === 0 ? { justifyContent: "flex-start" } : i === N - 1 ? { justifyContent: "flex-end" } : { justifyContent: "center" }}
+                >
+                  <span
+                    className="text-[7.5px] font-semibold whitespace-nowrap"
+                    style={{
+                      color: i === currentRankIndex ? currentRank.color : i < currentRankIndex ? `${rank.color}55` : "rgba(255,255,255,0.16)",
+                    }}
+                  >
+                    {rank.label}
+                  </span>
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
 
           {/* Retake button */}

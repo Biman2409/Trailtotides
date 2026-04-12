@@ -90,20 +90,21 @@ export default function MatchmakerCard({ isLoggedIn }: { isLoggedIn: boolean }) 
                 </span>
                 <span className="text-[9px] font-bold font-mono" style={{ color: currentRank.color }}>{progressPct}%</span>
               </div>
-              <div className="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
+              <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.07)" }}>
                 <div
-                  className="h-full rounded-full transition-all duration-700"
+                  className="h-full transition-all duration-700"
                   style={{
-                    width: `${progressPct}%`,
+                    width: `${Math.min(100, progressPct)}%`,
                     background: `linear-gradient(to right, ${currentRank.color}, ${nextRank.color})`,
-                    boxShadow: `0 0 6px ${currentRank.color}60`,
                   }}
                 />
               </div>
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <div className="h-1.5 flex-1 rounded-full" style={{ background: `linear-gradient(to right, #22d3ee, #a78bfa)`, boxShadow: "0 0 8px #a78bfa40" }} />
+              <div className="h-1.5 flex-1 rounded-full overflow-hidden">
+                <div className="h-full w-full" style={{ background: `linear-gradient(to right, #22d3ee, #a78bfa)` }} />
+              </div>
               <span className="text-[9px] uppercase tracking-widest font-bold text-[#a78bfa]">The absolute pinnacle</span>
             </div>
           )}
