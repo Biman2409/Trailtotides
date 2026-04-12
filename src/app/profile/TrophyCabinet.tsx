@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import {
   Lock, Trophy, Crown, Globe, Brain,
@@ -57,18 +58,18 @@ function Popover({ badge, anchorRect, onClose }: {
   const anchorCenterX = anchorRect.left + anchorRect.width / 2;
   const rawLeft = anchorCenterX - POPOVER_W / 2;
   const left = Math.max(8, Math.min(rawLeft, window.innerWidth - POPOVER_W - 8));
-  const top = anchorRect.top + window.scrollY - GAP;
+  // fixed = viewport coords only, no scrollY
+  const top = anchorRect.top - GAP;
   const arrowLeft = anchorCenterX - left - 6;
 
-  return (
+  return createPortal(
     <div
       className="fixed z-[9999]"
-      style={{ left, top, transform: "translateY(-100%)", width: POPOVER_W, pointerEvents: "none" }}
+      style={{ left, top, transform: "translateY(-100%)", width: POPOVER_W }}
     >
       <div
         className="rounded-xl p-3.5 shadow-2xl"
         style={{
-          pointerEvents: "auto",
           background: "#0f1923",
           border: `1px solid ${badge.color}35`,
           boxShadow: `0 12px 40px rgba(0,0,0,0.7), 0 0 0 1px ${badge.color}15`,
@@ -93,7 +94,8 @@ function Popover({ badge, anchorRect, onClose }: {
         {/* Arrow pointing down to badge */}
         <div className="absolute" style={{ bottom: -5, left: Math.max(8, Math.min(arrowLeft, POPOVER_W - 20)), width: 10, height: 10, background: "#0f1923", border: `1px solid ${badge.color}35`, borderTop: "none", borderLeft: "none", transform: "rotate(45deg)" }} />
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -207,13 +209,6 @@ export default function TrophyCabinet() {
     return () => document.removeEventListener("mousedown", handler);
   }, [active]);
 
-  // Close on scroll
-  useEffect(() => {
-    if (!active) return;
-    const handler = () => setActive(null);
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, [active]);
 
   const handleToggle = useCallback((badge: Achievement | null, rect: DOMRect | null) => {
     setActive(badge);
