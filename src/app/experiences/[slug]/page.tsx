@@ -37,6 +37,7 @@ import { getApprovedOperatorsForAdventure } from "@/app/auth/operator-actions";
 import OperatorListingPanel from "./OperatorListingPanel";
 import MobileBookBar from "./MobileBookBar";
 import AccordionSection from "./AccordionSection";
+import WeatherWidget from "./WeatherWidget";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -601,6 +602,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 ))}
               </div>
             </div>
+
+            {/* Weather Widget */}
+            <WeatherWidget
+              lat={adventure.lat}
+              lng={adventure.lng}
+              locationName={adventure.baseCamp ?? adventure.state}
+              altitude={adventure.altitude}
+            />
 
             {/* Explore links */}
             <Link
