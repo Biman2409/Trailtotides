@@ -115,14 +115,12 @@ export default function PhotoGallery({ slug, currentUserId, hideHeader }: Props)
     <section>
       {!hideHeader && (
         <>
-          {/* Section divider */}
           <div className="h-px mb-10" style={{ background: "rgba(255,255,255,0.05)" }} />
-          {/* Header */}
           <div className="flex items-center justify-between mb-6">
-            <div>
-              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1">Community</p>
-              <h2 className="text-white font-semibold text-base">Photos</h2>
-            </div>
+            <h2 className="flex items-center gap-1.5 text-white font-semibold text-sm">
+              <Images className="w-3.5 h-3.5 text-white/40" />
+              Photos
+            </h2>
             {photos.length > 0 && (
               <span className="text-white/30 text-xs">{photos.length} photo{photos.length !== 1 ? "s" : ""}</span>
             )}
