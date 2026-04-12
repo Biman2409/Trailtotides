@@ -164,7 +164,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
     <section>
       <div className="flex items-center justify-between mb-5">
         <h2 className="flex items-center gap-1.5 text-white font-semibold text-sm">
-          <MessageSquare className="w-3.5 h-3.5 text-white/40" />Reviews
+          <MessageSquare className="w-3.5 h-3.5 text-white/40" />
         </h2>
         {avgRating !== null && (
           <div className="flex items-center gap-1.5">
