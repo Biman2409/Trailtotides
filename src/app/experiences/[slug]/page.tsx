@@ -17,6 +17,8 @@ import {
   Flag,
   Navigation,
   Gauge,
+  Star,
+  Camera,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -535,7 +537,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 {/* Reviews card */}
                 <div className="rounded-xl overflow-hidden" style={{ background: "rgba(251,191,36,0.03)", border: "1px solid rgba(251,191,36,0.12)" }}>
                   <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: "1px solid rgba(251,191,36,0.08)", background: "rgba(251,191,36,0.04)" }}>
-                    <span className="text-amber-400 text-xs">★</span>
+                    <Star className="w-3.5 h-3.5 text-amber-400" />
                     <h3 className="text-amber-400 text-[10px] font-bold tracking-[0.18em] uppercase">Reviews</h3>
                   </div>
                   <div className="p-4">
@@ -546,7 +548,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 {/* Photos card */}
                 <div className="rounded-xl overflow-hidden" style={{ background: "rgba(56,189,248,0.03)", border: "1px solid rgba(56,189,248,0.12)" }}>
                   <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: "1px solid rgba(56,189,248,0.08)", background: "rgba(56,189,248,0.04)" }}>
-                    <span className="text-sky-400 text-xs">📷</span>
+                    <Camera className="w-3.5 h-3.5 text-sky-400" />
                     <h3 className="text-sky-400 text-[10px] font-bold tracking-[0.18em] uppercase">Photos</h3>
                   </div>
                   <div className="p-4">
