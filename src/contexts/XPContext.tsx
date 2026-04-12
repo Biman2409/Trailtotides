@@ -40,17 +40,22 @@ function fireLevelUpToast(level: Level) {
 
 const XPContext = createContext<XPContextValue | null>(null);
 
+const EMPTY_XP: XPState = { total: 0, checkIns: 0, reviews: 0, photos: 0, checkedSlugs: [], reviewedSlugs: [], photoSlugs: [] };
+
 export function XPProvider({ children }: { children: React.ReactNode }) {
-  const [xp, setXP] = useState<XPState>(() => loadXP());
+  // Start with empty state (SSR-safe), hydrate from localStorage after mount
+  const [xp, setXP] = useState<XPState>(EMPTY_XP);
 
   function refresh() {
     setXP(loadXP());
   }
 
-  // Keep in sync with localStorage changes (e.g. from other tabs)
   useEffect(() => {
+    // Hydrate on mount to avoid SSR/client mismatch
+    setXP(loadXP());
+
     const handler = (e: StorageEvent) => {
-      if (e.key === "ttt_xp") refresh();
+      if (e.key === "ttt_xp") setXP(loadXP());
     };
     window.addEventListener("storage", handler);
     return () => window.removeEventListener("storage", handler);
