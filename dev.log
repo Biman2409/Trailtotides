@@ -401,3 +401,9 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /auth/login 200 in 130ms
  GET /profile?_cb=1776028424659 307 in 139ms
  GET /auth/login 200 in 142ms
+ GET /profile?_cb=1776028547053 307 in 445ms
+ GET /auth/login 200 in 119ms
+ GET /profile?_cb=1776028680796 307 in 156ms
+ GET /auth/login 200 in 144ms
+ GET /profile?_cb=1776028682750 307 in 149ms
+ GET /auth/login 200 in 131ms
