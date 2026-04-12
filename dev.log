@@ -136,3 +136,35 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  ✓ Compiled /profile in 1292ms
  GET /profile?_cb=1776024409957 307 in 1491ms
  ○ Compiling /auth/login ...
+ ✓ Compiled /auth/login in 802ms
+ GET /auth/login 200 in 981ms
+ GET /profile?_cb=1776024601537 307 in 79ms
+ GET /auth/login 200 in 105ms
+ GET /profile?_cb=1776024603303 307 in 89ms
+ GET /auth/login 200 in 113ms
+ GET /profile?_cb=1776024605275 307 in 146ms
+ GET /auth/login 200 in 131ms
+ GET /profile?_cb=1776024608276 307 in 146ms
+ GET /auth/login 200 in 123ms
+ GET /profile?_cb=1776024743939 307 in 156ms
+ GET /auth/login 200 in 139ms
+ GET /profile?_cb=1776024746985 307 in 152ms
+ GET /auth/login 200 in 123ms
+ GET /profile?_cb=1776024749834 307 in 144ms
+ GET /auth/login 200 in 122ms
+ GET / 200 in 126ms
+ GET / 200 in 114ms
+ ✓ Compiled /api/stories/views in 180ms
+ GET /?_cb=1776024749834 200 in 290ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 756ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 1031ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 1043ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 790ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 391ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 355ms
+ GET /?_cb=1776024868421 200 in 259ms
+ GET /?_cb=1776024869158 200 in 193ms
+ GET /?_cb=1776024870359 200 in 432ms
+ GET /?_cb=1776024872254 200 in 481ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 502ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 613ms
