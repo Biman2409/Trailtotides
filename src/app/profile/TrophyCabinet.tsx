@@ -168,11 +168,10 @@ function TrophyCell({ badge, earned, boxSize, xl = false, isActive, onToggle }: 
 }
 
 // ─── Tier label ───────────────────────────────────────────────────────────────
-function TierLabel({ tier, label, color, earned, total }: { tier: string; label: string; color: string; earned: number; total: number }) {
+function TierLabel({ label, color, earned, total }: { tier?: string; label: string; color: string; earned: number; total: number }) {
   return (
     <div className="flex items-center gap-2 mb-3">
-      <span className="text-[8.5px] font-black uppercase tracking-[0.2em]" style={{ color }}>{tier}</span>
-      <span className="text-[8.5px] text-white/22 font-medium">{label}</span>
+      <span className="text-[8.5px] font-black uppercase tracking-[0.2em]" style={{ color }}>{label}</span>
       {earned > 0 && (
         <span className="ml-auto text-[7.5px] font-bold px-1.5 py-px rounded-full" style={{ background: `${color}10`, color, border: `1px solid ${color}22` }}>
           {earned}/{total}
