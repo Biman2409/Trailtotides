@@ -56,14 +56,16 @@ function WeatherIcon({ code, isDay = 1, className = "w-4 h-4" }: { code: number;
 }
 
 function color(code: number) {
-  if (code === 0 || code === 1) return "text-amber-400";
-  if (code === 2 || code === 3) return "text-slate-400";
-  if (code === 45 || code === 48) return "text-slate-500";
-  if (code >= 51 && code <= 65) return "text-sky-400";
-  if (code >= 71 && code <= 77) return "text-blue-300";
-  if (code >= 80 && code <= 86) return "text-sky-400";
-  if (code >= 95) return "text-violet-400";
-  return "text-slate-400";
+  if (code === 0 || code === 1) return "text-amber-400";   // clear / mainly clear — sun yellow
+  if (code === 2) return "text-sky-300";                    // partly cloudy — soft blue
+  if (code === 3) return "text-sky-400";                    // overcast — blue
+  if (code === 45 || code === 48) return "text-slate-300";  // fog — pale grey-white
+  if (code >= 51 && code <= 55) return "text-cyan-400";     // drizzle — cyan
+  if (code >= 61 && code <= 65) return "text-sky-400";      // rain — sky blue
+  if (code >= 71 && code <= 77) return "text-blue-200";     // snow — icy pale blue
+  if (code >= 80 && code <= 86) return "text-indigo-400";   // showers — indigo
+  if (code >= 95) return "text-violet-400";                 // thunderstorm — violet
+  return "text-sky-300";
 }
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
