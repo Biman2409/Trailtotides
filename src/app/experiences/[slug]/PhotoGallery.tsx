@@ -105,10 +105,13 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
 
   return (
     <section>
+      {/* Section divider */}
+      <div className="h-px mb-10" style={{ background: "rgba(255,255,255,0.05)" }} />
+
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-0.5">Community</p>
+          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1">Community</p>
           <h2 className="text-white font-semibold text-base">Trail Photos</h2>
         </div>
         {photos.length > 0 && (

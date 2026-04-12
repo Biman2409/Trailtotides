@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Star, Trash2, Loader2, MessageSquare, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, Trash2, Loader2, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 interface Review {
@@ -24,9 +24,7 @@ interface Props {
 const SUMMIT_KEYWORDS = /summit|peak/i;
 
 function ctaText(type?: string, name?: string): string {
-  if (type === "Trekking" && name && SUMMIT_KEYWORDS.test(name)) {
-    return "Done this summit? Tell others what to expect.";
-  }
+  if (type === "Trekking" && name && SUMMIT_KEYWORDS.test(name)) return "Done this summit? Tell others what to expect.";
   switch (type) {
     case "Trekking":       return "Done this trek? Tell others what to expect.";
     case "Mountaineering": return "Summited this peak? Share how it went.";
@@ -42,16 +40,10 @@ function ctaText(type?: string, name?: string): string {
   }
 }
 
-function StarRating({
-  value,
-  onChange,
-}: {
-  value: number;
-  onChange?: (v: number) => void;
-}) {
+function StarRating({ value, onChange }: { value: number; onChange?: (v: number) => void }) {
   const [hovered, setHovered] = useState(0);
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((s) => (
         <button
           key={s}
@@ -62,13 +54,7 @@ function StarRating({
           className={onChange ? "cursor-pointer" : "cursor-default"}
           disabled={!onChange}
         >
-          <Star
-            className={`w-5 h-5 transition-colors ${
-              s <= (hovered || value)
-                ? "text-amber-400 fill-amber-400"
-                : "text-gray-200 fill-gray-200"
-            }`}
-          />
+          <Star className={`w-4 h-4 transition-colors ${s <= (hovered || value) ? "text-amber-400 fill-amber-400" : "text-white/15 fill-white/15"}`} />
         </button>
       ))}
     </div>
@@ -92,12 +78,10 @@ function timeAgo(dateStr: string): string {
 export default function ReviewSection({ slug, currentUserId, adventureType, adventureName }: Props) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tableReady, setTableReady] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-
   const [rating, setRating] = useState(0);
   const [body, setBody] = useState("");
   const [showAll, setShowAll] = useState(false);
@@ -116,26 +100,18 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
   }
 
   function scroll(dir: "left" | "right") {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.scrollBy({ left: dir === "left" ? -300 : 300, behavior: "smooth" });
+    scrollRef.current?.scrollBy({ left: dir === "left" ? -300 : 300, behavior: "smooth" });
   }
 
-  useEffect(() => {
-    updateScrollState();
-  }, [visibleReviews]);
+  useEffect(() => { updateScrollState(); }, [visibleReviews]);
 
-  const hasReviewed = currentUserId
-    ? reviews.some((r) => r.user_id === currentUserId)
-    : false;
+  const hasReviewed = currentUserId ? reviews.some((r) => r.user_id === currentUserId) : false;
+  const avgRating = reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : null;
 
   useEffect(() => {
     fetch(`/api/reviews?slug=${encodeURIComponent(slug)}`)
       .then((r) => r.json())
-      .then((d) => {
-        setReviews(d.reviews ?? []);
-        setTableReady(d.tableReady !== false);
-      })
+      .then((d) => setReviews(d.reviews ?? []))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [slug]);
@@ -144,7 +120,6 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
     e.preventDefault();
     if (rating === 0) { setError("Please select a rating"); return; }
     if (!body.trim()) { setError("Please write a review"); return; }
-
     setSubmitting(true);
     setError("");
     try {
@@ -156,12 +131,11 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Something went wrong"); return; }
       setReviews((prev) => [data.review, ...prev]);
-      setRating(0);
-      setBody("");
+      setRating(0); setBody("");
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError("Something went wrong.");
     } finally {
       setSubmitting(false);
     }
@@ -177,44 +151,33 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
     }
   }
 
-  const avgRating =
-    reviews.length > 0
-      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-      : null;
-
   return (
     <section>
+      {/* Section divider */}
+      <div className="h-px mb-10" style={{ background: "rgba(255,255,255,0.05)" }} />
+
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-0.5">
-            Reviews
-          </p>
-          <h2 className="text-white font-semibold text-base">What People Say</h2>
+          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1">Community</p>
+          <h2 className="text-white font-semibold text-base">Reviews</h2>
         </div>
-        {avgRating !== null ? (
+        {avgRating !== null && (
           <div className="flex items-center gap-2">
             <StarRating value={Math.round(avgRating)} />
-            <span className="text-white text-sm font-semibold">{avgRating.toFixed(1)}</span>
-            <span className="text-white/40 text-xs">({reviews.length})</span>
+            <span className="text-white/70 text-sm font-semibold">{avgRating.toFixed(1)}</span>
+            <span className="text-white/30 text-xs">({reviews.length})</span>
           </div>
-        ) : (
-          <p className="text-white/30 text-xs">No reviews yet</p>
         )}
       </div>
 
-      {/* Write a review */}
+      {/* Write / CTA */}
       {currentUserId ? (
         !hasReviewed ? (
-          <form
-            onSubmit={handleSubmit}
-            className="bg-[#fafaf8] border border-[#e0d8cc] rounded-2xl p-5 mb-8"
-          >
-            <p className="text-[#1a1f2e] text-sm font-semibold mb-4">
-              Share your experience
-            </p>
+          <form onSubmit={handleSubmit} className="rounded-xl p-4 mb-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+            <p className="text-white/60 text-sm font-medium mb-4">{ctaText(adventureType, adventureName)}</p>
             <div className="mb-4">
-              <p className="text-[#9a9590] text-xs mb-2">Your rating</p>
+              <p className="text-white/30 text-[10px] uppercase tracking-widest mb-2">Your rating</p>
               <StarRating value={rating} onChange={setRating} />
             </div>
             <textarea
@@ -223,142 +186,110 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
               placeholder="What was it like? Tips for others?"
               rows={3}
               maxLength={600}
-              className="w-full bg-white border border-[#e0d8cc] rounded-xl p-3.5 text-sm text-[#1a1f2e] placeholder:text-[#9a9590]/60 resize-none focus:outline-none focus:ring-1 focus:ring-[#ff5100]/40 focus:border-[#ff5100]/40"
+              className="w-full rounded-xl p-3 text-sm text-white/70 placeholder:text-white/20 resize-none focus:outline-none focus:border-[#ff5100]/40 transition-colors"
+              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
             />
             <div className="flex items-center justify-between mt-3 gap-3">
-              <span className="text-[#9a9590] text-xs">{body.length}/600</span>
+              <span className="text-white/20 text-xs">{body.length}/600</span>
               <div className="flex items-center gap-3">
-                {error && (
-                  <p className="text-red-500 text-xs">{error}</p>
-                )}
-                {success && (
-                  <p className="text-emerald-600 text-xs font-medium">Review posted!</p>
-                )}
+                {error && <p className="text-red-400 text-xs">{error}</p>}
+                {success && <p className="text-emerald-400 text-xs font-medium">Posted!</p>}
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex items-center gap-2 bg-[#ff5100] hover:bg-[#e64800] disabled:opacity-50 text-white font-semibold py-2 px-5 rounded-xl text-sm transition-colors"
+                  className="flex items-center gap-2 text-white font-semibold py-2 px-5 rounded-xl text-sm transition-colors disabled:opacity-50"
+                  style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)" }}
                 >
                   {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  Post review
+                  Post Review
                 </button>
               </div>
             </div>
           </form>
         ) : (
-          <div className="bg-emerald-50 border border-emerald-100 rounded-xl px-5 py-3 mb-8 text-emerald-700 text-sm flex items-center gap-2">
-            <Star className="w-4 h-4 fill-emerald-400 text-emerald-400" />
-            You've already reviewed this adventure
+          <div className="rounded-xl px-4 py-3 mb-6 flex items-center gap-2" style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.12)" }}>
+            <Star className="w-3.5 h-3.5 fill-emerald-400 text-emerald-400" />
+            <span className="text-emerald-400 text-sm">You've already reviewed this adventure</span>
           </div>
         )
       ) : (
-        <div className="bg-[#fafaf8] border border-[#e0d8cc] rounded-2xl p-5 mb-8 flex items-center justify-between gap-4">
-          <p className="text-[#9a9590] text-sm">
-            {ctaText(adventureType, adventureName)}
-          </p>
-          <div className="flex gap-2 shrink-0">
-            <Link
-              href="/auth/login"
-              className="bg-[#ff5100] hover:bg-[#e64800] text-white font-semibold py-2 px-4 rounded-xl text-xs transition-colors"
-            >
-              Log in to review
-            </Link>
-          </div>
+        <div className="rounded-xl p-4 mb-6 flex items-center justify-between gap-4" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}>
+          <p className="text-white/35 text-sm">{ctaText(adventureType, adventureName)}</p>
+          <Link
+            href="/auth/login"
+            className="shrink-0 text-white font-semibold py-2 px-4 rounded-xl text-xs transition-colors"
+            style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)" }}
+          >
+            Log in to review
+          </Link>
         </div>
       )}
 
       {/* Reviews list */}
       {loading ? (
         <div className="flex justify-center py-8">
-          <Loader2 className="w-5 h-5 animate-spin text-[#9a9590]" />
+          <Loader2 className="w-5 h-5 animate-spin text-white/20" />
         </div>
       ) : reviews.length === 0 ? (
-        <p className="text-[#9a9590] text-sm text-center py-8">
-          No reviews yet. Be the first to share your experience!
-        </p>
+        <p className="text-white/25 text-sm text-center py-8">No reviews yet. Be the first to share your experience!</p>
       ) : (
         <>
           <div className="relative">
-            {/* Left arrow */}
             {canScrollLeft && (
-              <button
-                onClick={() => scroll("left")}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-8 h-8 rounded-full bg-white border border-[#e0d8cc] shadow-md flex items-center justify-center hover:border-[#1a1f2e]/30 transition-colors"
-              >
-                <ChevronLeft className="w-4 h-4 text-[#1a1f2e]" />
+              <button onClick={() => scroll("left")} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-colors" style={{ background: "var(--bg-surface)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <ChevronLeft className="w-4 h-4 text-white/50" />
               </button>
             )}
-
-            {/* Right arrow */}
             {canScrollRight && (
-              <button
-                onClick={() => scroll("right")}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-8 h-8 rounded-full bg-white border border-[#e0d8cc] shadow-md flex items-center justify-center hover:border-[#1a1f2e]/30 transition-colors"
-              >
-                <ChevronRight className="w-4 h-4 text-[#1a1f2e]" />
+              <button onClick={() => scroll("right")} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-colors" style={{ background: "var(--bg-surface)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <ChevronRight className="w-4 h-4 text-white/50" />
               </button>
             )}
-
-            {/* Right fade */}
             {canScrollRight && (
-              <div className="absolute right-0 top-0 bottom-2 w-12 bg-gradient-to-l from-[#fafaf8] to-transparent pointer-events-none z-[5]" />
+              <div className="absolute right-0 top-0 bottom-2 w-16 pointer-events-none z-[5]" style={{ background: "linear-gradient(to left, var(--bg-main, #0f1117), transparent)" }} />
             )}
 
-            <div
-              ref={scrollRef}
-              onScroll={updateScrollState}
-              className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory no-scrollbar scroll-smooth"
-            >
-            {visibleReviews.map((r) => (
-              <div
-                key={r.id}
-                className="bg-white border border-[#e0d8cc] rounded-2xl p-5 shadow-sm flex-none w-72 snap-start flex flex-col"
-              >
-                {/* Avatar + name + date */}
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 t-bg-surface2">
-                    {r.avatar_id
-                      ? <img src={`/avatars/avatar-${r.avatar_id}.png`} alt={r.username} className="w-full h-full object-cover" />
-                      : <span className="w-full h-full flex items-center justify-center text-white text-xs font-bold uppercase">{r.username.charAt(0)}</span>}
+            <div ref={scrollRef} onScroll={updateScrollState} className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory no-scrollbar scroll-smooth">
+              {visibleReviews.map((r) => (
+                <div
+                  key={r.id}
+                  className="rounded-xl p-4 flex-none w-68 snap-start flex flex-col"
+                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", minWidth: "260px" }}
+                >
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className="w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.2)" }}>
+                      {r.avatar_id
+                        ? <img src={`/avatars/avatar-${r.avatar_id}.png`} alt={r.username} className="w-full h-full object-cover" />
+                        : <span className="w-full h-full flex items-center justify-center text-white text-xs font-bold">{r.username.charAt(0).toUpperCase()}</span>}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-white/80 font-semibold text-xs leading-none truncate">{r.username}</p>
+                      <p className="text-white/25 text-[10px] mt-0.5">{timeAgo(r.created_at)}</p>
+                    </div>
+                    {currentUserId === r.user_id && (
+                      <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id} className="text-white/20 hover:text-red-400 transition-colors shrink-0">
+                        {deleting === r.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                      </button>
+                    )}
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-[#1a1f2e] font-semibold text-sm leading-none truncate">
-                      {r.username}
-                    </p>
-                    <p className="text-[#9a9590] text-xs mt-0.5">{timeAgo(r.created_at)}</p>
-                  </div>
-                  {currentUserId === r.user_id && (
-                    <button
-                      onClick={() => handleDelete(r.id)}
-                      disabled={deleting === r.id}
-                      className="ml-auto text-[#9a9590] hover:text-red-500 transition-colors disabled:opacity-40 shrink-0"
-                      title="Delete review"
-                    >
-                      {deleting === r.id ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      ) : (
-                        <Trash2 className="w-3.5 h-3.5" />
-                      )}
-                    </button>
-                  )}
+
+                  <StarRating value={r.rating} />
+
+                  <div className="h-px my-3" style={{ background: "rgba(255,255,255,0.06)" }} />
+
+                  <p className="text-white/55 text-xs leading-relaxed flex-1">{r.body}</p>
                 </div>
-
-                <StarRating value={r.rating} />
-
-                <div className="border-t border-[#f0ebe3] my-3" />
-
-                <p className="text-[#1a1f2e]/75 text-sm leading-relaxed flex-1">{r.body}</p>
-              </div>
-            ))}
+              ))}
             </div>
           </div>
 
           {reviews.length > INITIAL_COUNT && !showAll && (
             <button
               onClick={() => setShowAll(true)}
-              className="mt-4 w-full flex items-center justify-center gap-2 py-3 text-sm font-medium text-[#1a1f2e]/60 hover:text-[#1a1f2e] border border-[#e0d8cc] rounded-2xl hover:border-[#1a1f2e]/30 transition-all bg-white"
+              className="mt-4 w-full flex items-center justify-center gap-2 py-2.5 text-xs font-medium text-white/35 hover:text-white/60 rounded-xl transition-all"
+              style={{ border: "1px solid rgba(255,255,255,0.07)" }}
             >
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className="w-3.5 h-3.5" />
               Show all {reviews.length} reviews
             </button>
           )}
