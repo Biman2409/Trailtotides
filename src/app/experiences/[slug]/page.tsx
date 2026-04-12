@@ -358,6 +358,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         </div>
       </section>
 
+      {/* ── WEATHER STRIP ─────────────────────────────────────── */}
+      <WeatherWidget
+        lat={adventure.lat}
+        lng={adventure.lng}
+        locationName={adventure.baseCamp ?? adventure.state}
+        altitude={adventure.altitude}
+      />
+
       {/* ── MAIN CONTENT ──────────────────────────────────────── */}
       <div className="max-w-7xl mx-auto px-5 lg:px-8 py-8 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
@@ -625,14 +633,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 ))}
               </div>
             </div>
-
-            {/* Weather Widget */}
-            <WeatherWidget
-              lat={adventure.lat}
-              lng={adventure.lng}
-              locationName={adventure.baseCamp ?? adventure.state}
-              altitude={adventure.altitude}
-            />
 
             {/* Nearby Adventures Map */}
             {nearbyAdventures.length > 0 && (
