@@ -39,9 +39,7 @@ import MobileBookBar from "./MobileBookBar";
 import AccordionSection from "./AccordionSection";
 import WeatherWidget from "./WeatherWidget";
 import PhotoGallery from "./PhotoGallery";
-import ElevationProfile from "./ElevationProfile";
 import PackingList from "./PackingList";
-import ItinerarySection from "./ItinerarySection";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -367,17 +365,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </AccordionSection>
 
-            {/* Elevation Profile */}
-            {adventure.routePoints && adventure.routePoints.length >= 2 && (
-              <AccordionSection label="Route" title="Elevation Profile" defaultOpen={true}>
-                <ElevationProfile
-                  routePoints={adventure.routePoints}
-                  maxAltitude={adventure.altitude}
-                  adventureName={adventure.name}
-                />
-              </AccordionSection>
-            )}
-
             {/* What Makes It Special */}
             <AccordionSection label="Highlights" title="What Makes It Special" defaultOpen={true}>
               <div className="rounded-xl px-5 py-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
@@ -451,18 +438,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   </div>
                 )}
               </div>
-            </AccordionSection>
-
-            {/* Day-by-Day Itinerary */}
-            <AccordionSection label="Itinerary" title="Day-by-Day Plan" defaultOpen={false}>
-              <ItinerarySection
-                adventureName={adventure.name}
-                adventureType={adventure.type}
-                durationDays={adventure.durationDays}
-                baseCamp={adventure.baseCamp}
-                startingPoint={adventure.startingPoint}
-                altitude={adventure.altitude}
-              />
             </AccordionSection>
 
             {/* ACE Profile — no extra pt, AccordionSection above already adds mt-8 divider */}
