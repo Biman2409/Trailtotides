@@ -273,52 +273,64 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
 
   return (
     <div
-      className="flex flex-col rounded-2xl overflow-hidden"
-      style={{ border: `1px solid ${currentRank.color}22`, background: `linear-gradient(160deg, ${currentRank.color}0e 0%, rgba(14,14,18,0) 60%)` }}
+      className="rounded-2xl overflow-hidden border relative"
+      style={{ background: `linear-gradient(150deg, ${currentRank.color}14 0%, rgba(14,14,18,0) 60%)`, borderColor: `${currentRank.color}25` }}
     >
-      {/* Top: current tier identity */}
-      <div className="flex items-center justify-between px-5 pt-5 pb-4">
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0"
-            style={{ background: `${currentRank.color}20`, color: currentRank.color, boxShadow: `0 0 22px ${currentRank.color}45` }}>
-            <div className="scale-[1.4]">{currentRank.icon}</div>
+      <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: currentRank.color }} />
+
+      <div className="relative px-5 pt-5 pb-5 flex flex-col gap-5">
+
+        {/* Identity row */}
+        <div className="flex items-start gap-4">
+          <div
+            className="w-[60px] h-[60px] rounded-2xl flex items-center justify-center shrink-0"
+            style={{ background: `${currentRank.color}18`, color: currentRank.color, boxShadow: `0 0 32px ${currentRank.color}38`, border: `1px solid ${currentRank.color}28` }}
+          >
+            <div className="scale-[1.55]">{currentRank.icon}</div>
           </div>
-          <div>
-            <p className="text-[9px] uppercase tracking-[0.18em] font-semibold text-white/30 mb-0.5">Adventure Tier</p>
-            <p className="text-lg font-bold leading-none" style={{ color: currentRank.color }}>{currentRank.label}</p>
+          <div className="flex-1 min-w-0">
+            <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-1">Adventure Tier</p>
+            <h3 className="text-[26px] font-black tracking-tight leading-none" style={{ color: currentRank.color }}>{currentRank.label}</h3>
+            <div className="flex items-center gap-[3px] mt-2.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <span key={i} className="text-[13px] leading-none" style={{ color: i < currentRank.stars ? currentRank.color : "rgba(255,255,255,0.09)" }}>★</span>
+              ))}
+              <span className="text-white/22 text-[10px] ml-2">Rank {currentRank.stars} of 5</span>
+            </div>
           </div>
         </div>
-        <div className="flex gap-0.5">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <span key={i} className="text-sm" style={{ color: i < currentRank.stars ? currentRank.color : "rgba(255,255,255,0.08)" }}>★</span>
-          ))}
-        </div>
-      </div>
 
-      {/* Divider */}
-      <div className="mx-5 h-px" style={{ background: `${currentRank.color}18` }} />
+        {/* Divider */}
+        <div className="h-px" style={{ background: `${currentRank.color}18` }} />
 
-      {/* Progress section */}
-      <div className="px-5 pt-4 pb-5 flex flex-col gap-4">
+        {/* Progress numbers */}
         {nextRank ? (
           <>
             <div className="flex items-end justify-between">
               <div>
-                <span className="text-4xl font-black tabular-nums tracking-tight leading-none" style={{ color: currentRank.color }}>{progressPct}<span className="text-xl font-bold opacity-70">%</span></span>
-                <p className="text-[10px] text-white/35 mt-1">to <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span></p>
+                <div className="flex items-baseline gap-0.5 leading-none">
+                  <span className="text-[38px] font-black tabular-nums tracking-tight" style={{ color: currentRank.color }}>{progressPct}</span>
+                  <span className="text-lg font-bold ml-0.5" style={{ color: `${currentRank.color}70` }}>%</span>
+                </div>
+                <p className="text-[11px] text-white/30 mt-1 leading-none">
+                  to reach <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span>
+                </p>
               </div>
-              <div className="text-right pb-0.5">
-                <p className="text-2xl font-bold tabular-nums text-white/80">{nextRank.minScore - totalScore}</p>
-                <p className="text-[10px] text-white/30">pts needed</p>
+              <div className="text-right pb-1">
+                <p className="text-[24px] font-black tabular-nums leading-none text-white/70">{nextRank.minScore - totalScore}</p>
+                <p className="text-[11px] text-white/28 mt-1 leading-none">pts needed</p>
               </div>
             </div>
-            <RankBar totalScore={totalScore} trackH={10} showLabels showYouTag />
+            <RankBar totalScore={totalScore} trackH={10} showLabels showYouTag={false} />
           </>
         ) : (
-          <div className="flex flex-col gap-2 py-2">
-            <RankBar totalScore={totalScore} trackH={10} showLabels={false} />
-            <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa] text-center">The absolute pinnacle</p>
-          </div>
+          <>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
+              <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">The absolute pinnacle</p>
+            </div>
+            <RankBar totalScore={totalScore} trackH={10} showLabels showYouTag={false} />
+          </>
         )}
       </div>
     </div>
