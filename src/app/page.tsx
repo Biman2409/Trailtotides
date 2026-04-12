@@ -31,7 +31,7 @@ import StoryCard from "@/components/ui/custom/StoryCard";
 import FindByRegion from "@/components/ui/custom/FindByRegion";
 import { adventures, stories } from "@/lib/data";
 
-const featuredAdventures = adventures.filter((a) => a.editorChoice).slice(0, 9);
+const featuredAdventures = adventures.filter((a) => a.editorChoice).slice(0, 6);
 const featuredStories = stories.slice(0, 3);
 
 export default function HomePage() {
