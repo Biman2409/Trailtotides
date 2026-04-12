@@ -26,3 +26,16 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /api/reviews?slug=sandakphu-phalut-trek 200 in 940ms
  GET /api/photos?slug=sandakphu-phalut-trek 200 in 1142ms
  GET /api/photos?slug=sandakphu-phalut-trek 200 in 1306ms
+ GET /experiences/sandakphu-phalut-trek?_cb=1776018035472 200 in 879ms
+ GET /experiences/sandakphu-phalut-trek?_cb=1776018038044 200 in 540ms
+ GET /experiences/sandakphu-phalut-trek?_cb=1776018039901 200 in 586ms
+ GET /api/reviews?slug=sandakphu-phalut-trek 200 in 406ms
+ GET /api/reviews?slug=sandakphu-phalut-trek 200 in 485ms
+ GET /api/photos?slug=sandakphu-phalut-trek 200 in 692ms
+ GET /api/photos?slug=sandakphu-phalut-trek 200 in 749ms
+ ✓ Compiled in 409ms
+ ✓ Compiled /experiences/[slug] in 44ms
+ GET /experiences/sandakphu-phalut-trek?_cb=1776018039901 200 in 443ms
+ ✓ Compiled in 253ms
+ ✓ Compiled /experiences/[slug] in 38ms
+ GET /experiences/sandakphu-phalut-trek?_cb=1776018039901 200 in 368ms
