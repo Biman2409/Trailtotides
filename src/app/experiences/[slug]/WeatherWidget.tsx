@@ -123,15 +123,13 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
 
   const altM = altitude ? parseFloat(altitude.replace(/[^0-9.]/g, "")) : null;
 
-  // While loading — subtle skeleton strip
+  // While loading — skeleton row (parent owns outer border)
   if (loading) {
     return (
-      <div className="border-b" style={{ borderColor: "var(--border-subtle)", background: "var(--bg-surface)" }}>
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 py-3 flex items-center gap-3">
-          <div className="w-4 h-4 rounded-full bg-white/8 animate-pulse" />
-          <div className="w-24 h-3 rounded bg-white/8 animate-pulse" />
-          <div className="w-16 h-3 rounded bg-white/6 animate-pulse ml-2" />
-        </div>
+      <div className="max-w-7xl mx-auto px-5 lg:px-8 py-3.5 flex items-center gap-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+        <div className="w-3.5 h-3.5 rounded-full bg-white/8 animate-pulse" />
+        <div className="w-24 h-2.5 rounded bg-white/8 animate-pulse" />
+        <div className="w-16 h-2.5 rounded bg-white/6 animate-pulse ml-2" />
       </div>
     );
   }
@@ -141,69 +139,64 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
   const w = weather.current;
 
   return (
-    <div className="border-b" style={{ borderColor: "var(--border-subtle)", background: "var(--bg-surface)" }}>
-      {/* ── COLLAPSED ROW — always visible ── */}
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="w-full text-left"
-      >
+    <div>
+      {/* ── COLLAPSED ROW ── */}
+      <button onClick={() => setOpen((v) => !v)} className="w-full text-left hover:bg-white/[0.015] transition-colors">
         <div className="max-w-7xl mx-auto px-5 lg:px-8">
-          <div className="flex items-center gap-0 divide-x" style={{ borderColor: "var(--border-subtle)" }}>
+          <div className="flex items-center overflow-x-auto no-scrollbar" style={{ borderTop: "1px solid var(--border-subtle)" }}>
 
-            {/* Location + label */}
-            <div className="flex items-center gap-2 pr-4 py-3 shrink-0">
-              <div className={color(w.weatherCode)}>
-                <WeatherIcon code={w.weatherCode} isDay={w.isDay} className="w-4 h-4" />
+            {/* Live weather + location */}
+            <div className="flex items-center gap-2.5 pr-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+              <div className={`${color(w.weatherCode)} opacity-80`}>
+                <WeatherIcon code={w.weatherCode} isDay={w.isDay} className="w-3.5 h-3.5" />
               </div>
               <div>
-                <div className="text-white/25 text-[9px] uppercase tracking-widest leading-none mb-0.5">Live Weather</div>
-                <div className="text-white/50 text-[11px] leading-none truncate max-w-[120px]">{locationName}</div>
+                <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Live Weather</div>
+                <div className="text-white/55 text-[13px] font-medium leading-none truncate max-w-[110px]">{locationName}</div>
               </div>
             </div>
 
-            {/* Temp */}
-            <div className="flex items-center gap-2 px-4 py-3 shrink-0">
-              <span className="text-white font-bold text-base leading-none">{w.temp}°C</span>
-              <span className="text-white/35 text-xs leading-none">{desc(w.weatherCode)}</span>
+            {/* Temp + condition */}
+            <div className="flex items-baseline gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+              <span className="text-white/90 font-semibold text-[15px] leading-none">{w.temp}°C</span>
+              <span className="text-white/30 text-[11px] leading-none">{desc(w.weatherCode)}</span>
             </div>
 
             {/* Feels like */}
-            <div className="hidden sm:flex items-center gap-2 px-4 py-3 shrink-0">
-              <Thermometer className="w-3.5 h-3.5 text-white/20" />
-              <span className="text-white/35 text-xs">Feels {w.apparent}°</span>
+            <div className="hidden sm:flex items-center gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+              <Thermometer className="w-3 h-3 text-white/20 shrink-0" />
+              <span className="text-white/35 text-[11px]">Feels {w.apparent}°</span>
             </div>
 
             {/* Wind */}
-            <div className="hidden md:flex items-center gap-2 px-4 py-3 shrink-0">
-              <Wind className="w-3.5 h-3.5 text-white/20" />
-              <span className="text-white/35 text-xs">{w.wind} km/h</span>
+            <div className="hidden md:flex items-center gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+              <Wind className="w-3 h-3 text-white/20 shrink-0" />
+              <span className="text-white/35 text-[11px]">{w.wind} km/h</span>
             </div>
 
             {/* Humidity */}
-            <div className="hidden md:flex items-center gap-2 px-4 py-3 shrink-0">
-              <Droplets className="w-3.5 h-3.5 text-white/20" />
-              <span className="text-white/35 text-xs">{w.humidity}%</span>
+            <div className="hidden md:flex items-center gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+              <Droplets className="w-3 h-3 text-white/20 shrink-0" />
+              <span className="text-white/35 text-[11px]">{w.humidity}%</span>
             </div>
 
-            {/* 3-day mini preview */}
-            <div className="hidden lg:flex items-center gap-3 px-4 py-3 flex-1">
+            {/* 3-day mini */}
+            <div className="hidden lg:flex items-center gap-4 px-5 py-3.5 flex-1">
               {weather.daily.slice(1, 4).map((day, i) => (
                 <div key={day.date} className="flex items-center gap-1.5">
-                  <span className="text-white/20 text-[10px]">{dayLabel(day.date, i + 1).slice(0, 3)}</span>
-                  <div className={`${color(day.weatherCode)}`}>
+                  <span className="text-white/20 text-[10px] font-medium">{dayLabel(day.date, i + 1).slice(0, 3)}</span>
+                  <div className={`${color(day.weatherCode)} opacity-70`}>
                     <WeatherIcon code={day.weatherCode} className="w-3 h-3" />
                   </div>
-                  <span className="text-white/45 text-[10px] font-medium">{day.tempMax}°</span>
+                  <span className="text-white/40 text-[10px] font-semibold">{day.tempMax}°</span>
                 </div>
               ))}
             </div>
 
-            {/* Expand chevron */}
-            <div className="flex items-center gap-1.5 pl-4 py-3 ml-auto shrink-0">
-              <span className="text-white/25 text-[10px] hidden sm:block">7-day forecast</span>
-              <ChevronDown
-                className={`w-3.5 h-3.5 text-white/25 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-              />
+            {/* Chevron */}
+            <div className="flex items-center gap-1.5 px-5 py-3.5 ml-auto shrink-0">
+              <span className="text-white/20 text-[10px] hidden sm:block tracking-wide">7-day</span>
+              <ChevronDown className={`w-3.5 h-3.5 text-white/20 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
             </div>
 
           </div>
@@ -211,43 +204,37 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
       </button>
 
       {/* ── EXPANDED PANEL ── */}
-      <div
-        className="overflow-hidden transition-all duration-300 ease-in-out"
-        style={{ maxHeight: open ? "320px" : "0px" }}
-      >
-        <div className="border-t" style={{ borderColor: "var(--border-subtle)" }}>
+      <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: open ? "320px" : "0px" }}>
+        <div style={{ borderTop: "1px solid var(--border-subtle)", background: "rgba(255,255,255,0.012)" }}>
           <div className="max-w-7xl mx-auto px-5 lg:px-8 py-5">
-            <div className="grid grid-cols-7 gap-2">
+            <div className="grid grid-cols-7 gap-1.5">
               {weather.daily.map((day, i) => (
                 <div
                   key={day.date}
-                  className={`flex flex-col items-center gap-1.5 py-3 rounded-xl transition-colors ${i === 0 ? "bg-white/5" : ""}`}
+                  className={`flex flex-col items-center gap-1.5 py-3 rounded-xl ${i === 0 ? "bg-white/[0.04]" : ""}`}
                 >
-                  <span className="text-white/30 text-[9px] font-semibold uppercase tracking-wide">{dayLabel(day.date, i)}</span>
-                  <div className={`${color(day.weatherCode)} mt-0.5`}>
-                    <WeatherIcon code={day.weatherCode} className="w-5 h-5" />
+                  <span className="text-white/25 text-[9px] font-semibold uppercase tracking-[0.12em]">{dayLabel(day.date, i)}</span>
+                  <div className={`${color(day.weatherCode)} mt-0.5 opacity-80`}>
+                    <WeatherIcon code={day.weatherCode} className="w-[18px] h-[18px]" />
                   </div>
                   <div className="flex flex-col items-center gap-0.5 mt-0.5">
-                    <span className="text-white/80 text-xs font-bold">{day.tempMax}°</span>
-                    <span className="text-white/25 text-[10px]">{day.tempMin}°</span>
+                    <span className="text-white/75 text-[11px] font-semibold">{day.tempMax}°</span>
+                    <span className="text-white/20 text-[10px]">{day.tempMin}°</span>
                   </div>
                   {day.precipitation > 0 && (
-                    <span className="text-sky-400/60 text-[9px] font-medium">{day.precipitation}mm</span>
+                    <span className="text-sky-400/50 text-[9px] font-medium">{day.precipitation}mm</span>
                   )}
                 </div>
               ))}
             </div>
-
-            {/* Altitude note */}
-            {altM && altM >= 3500 && (
-              <p className="mt-4 text-white/25 text-[10px] flex items-center gap-1.5">
-                <Thermometer className="w-3 h-3 text-amber-400/50 shrink-0" />
-                At {altitude}, summit temperatures run 10–15°C colder than shown. Data reflects base-area conditions.
-                <span className="ml-auto text-white/15">Open-Meteo</span>
+            {altM && altM >= 3500 ? (
+              <p className="mt-4 text-white/20 text-[9px] flex items-center gap-1.5">
+                <Thermometer className="w-3 h-3 text-amber-400/40 shrink-0" />
+                At {altitude}, summit temps run 10–15°C colder. Data reflects base-area conditions.
+                <span className="ml-auto text-white/12">Open-Meteo</span>
               </p>
-            )}
-            {(!altM || altM < 3500) && (
-              <p className="mt-3 text-white/15 text-[9px] text-right">Open-Meteo · Updated now</p>
+            ) : (
+              <p className="mt-3 text-white/12 text-[9px] text-right">Open-Meteo · Updated now</p>
             )}
           </div>
         </div>
