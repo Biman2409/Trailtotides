@@ -507,13 +507,15 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               {/* Section divider */}
               <div className="h-px mb-10" style={{ background: "rgba(255,255,255,0.05)" }} />
               {/* Community header */}
-              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-8">Community</p>
-              {/* Reviews sub-section */}
-              <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} hideHeader subSection />
-              {/* Trail Photos sub-section */}
-              <div className="mt-10">
-                <div className="h-px mb-8" style={{ background: "rgba(255,255,255,0.05)" }} />
-                <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} hideHeader />
+              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-6">Community</p>
+              {/* Two sub-sections side by side */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                <div>
+                  <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} hideHeader subSection />
+                </div>
+                <div>
+                  <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} hideHeader />
+                </div>
               </div>
             </div>
 
