@@ -209,21 +209,7 @@ export default function PhotoGallery({ slug, currentUserId, hideHeader }: Props)
             </div>
           )}
         </div>
-      ) : (
-        <div
-          className="flex items-center justify-between gap-4 p-4 rounded-2xl mb-6"
-          style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}
-        >
-          <p className="text-white/35 text-sm">Been here? Share your photos with the community.</p>
-          <Link
-            href="/auth/login"
-            className="shrink-0 px-4 py-2 rounded-xl text-xs font-bold text-white transition-all"
-            style={{ background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)" }}
-          >
-            Log in
-          </Link>
-        </div>
-      )}
+      ) : null}
 
       {/* Gallery grid */}
       {loading ? (

@@ -507,7 +507,28 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               {/* Section divider */}
               <div className="h-px mb-10" style={{ background: "rgba(255,255,255,0.05)" }} />
               {/* Community header */}
-              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-6">Community</p>
+              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4">Community</p>
+
+              {/* Single login CTA — only when logged out */}
+              {!currentUserId && (
+                <div
+                  className="mb-6 rounded-2xl p-4 flex flex-col sm:flex-row items-center gap-4"
+                  style={{ background: "linear-gradient(135deg, rgba(255,81,0,0.07) 0%, rgba(255,81,0,0.03) 100%)", border: "1px solid rgba(255,81,0,0.18)" }}
+                >
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white/80 text-sm font-semibold leading-snug">Join the community</p>
+                    <p className="text-white/40 text-xs mt-0.5 leading-relaxed">Log in to write reviews, share trail photos, and earn XP.</p>
+                  </div>
+                  <Link
+                    href="/auth/login"
+                    className="shrink-0 flex items-center gap-2 text-white font-bold py-2.5 px-6 rounded-xl text-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/25"
+                    style={{ background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)" }}
+                  >
+                    Log in
+                  </Link>
+                </div>
+              )}
+
               {/* Two sub-sections side by side */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                 <div>

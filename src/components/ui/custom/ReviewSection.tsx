@@ -244,18 +244,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
             <span className="text-emerald-400 text-sm">You've already reviewed this adventure</span>
           </div>
         )
-      ) : (
-        <div className="rounded-xl p-4 mb-6 flex items-center justify-between gap-4" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}>
-          <p className="text-white/35 text-sm">{ctaText(adventureType, adventureName)}</p>
-          <Link
-            href="/auth/login"
-            className="shrink-0 text-white font-semibold py-2 px-4 rounded-xl text-xs transition-colors"
-            style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)" }}
-          >
-            Log in
-          </Link>
-        </div>
-      )}
+      ) : null}
 
       {/* Reviews list */}
       {loading ? (
