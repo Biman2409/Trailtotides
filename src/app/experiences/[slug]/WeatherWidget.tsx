@@ -164,20 +164,20 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
 
             {/* Feels like */}
             <div className="hidden sm:flex items-center gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <Thermometer className="w-3 h-3 text-white/20 shrink-0" />
-              <span className="text-white/35 text-[11px]">Feels {w.apparent}°</span>
+              <Thermometer className="w-3 h-3 text-orange-400/70 shrink-0" />
+              <span className="text-white/45 text-[11px]">Feels {w.apparent}°</span>
             </div>
 
             {/* Wind */}
             <div className="hidden md:flex items-center gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <Wind className="w-3 h-3 text-white/20 shrink-0" />
-              <span className="text-white/35 text-[11px]">{w.wind} km/h</span>
+              <Wind className="w-3 h-3 text-sky-400/70 shrink-0" />
+              <span className="text-white/45 text-[11px]">{w.wind} km/h</span>
             </div>
 
             {/* Humidity */}
             <div className="hidden md:flex items-center gap-2 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <Droplets className="w-3 h-3 text-white/20 shrink-0" />
-              <span className="text-white/35 text-[11px]">{w.humidity}%</span>
+              <Droplets className="w-3 h-3 text-blue-400/70 shrink-0" />
+              <span className="text-white/45 text-[11px]">{w.humidity}%</span>
             </div>
 
             {/* 3-day mini */}
