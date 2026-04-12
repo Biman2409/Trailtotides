@@ -359,70 +359,46 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* The Adventure */}
             <AccordionSection label="The Adventure" title="About This Adventure" defaultOpen={true}>
-              <div
-                className="rounded-xl p-4 lg:p-5"
-                style={{
-                  background: "linear-gradient(135deg, rgba(255,81,0,0.06) 0%, rgba(255,81,0,0.02) 100%)",
-                  borderLeft: "2px solid rgba(255,81,0,0.4)",
-                  borderTop: "1px solid rgba(255,81,0,0.07)",
-                  borderRight: "1px solid rgba(255,81,0,0.04)",
-                  borderBottom: "1px solid rgba(255,81,0,0.04)",
-                }}
-              >
-                <p className="text-white/70 text-sm md:text-base leading-relaxed">{adventure.description}</p>
+              <div className="rounded-xl px-5 py-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <p className="text-white/65 text-sm leading-relaxed">{adventure.description}</p>
               </div>
             </AccordionSection>
 
             {/* What Makes It Special */}
             <AccordionSection label="Highlights" title="What Makes It Special" defaultOpen={true}>
-              <div
-                className="rounded-xl p-4 lg:p-5"
-                style={{
-                  background: "linear-gradient(135deg, rgba(255,81,0,0.06) 0%, rgba(255,81,0,0.02) 100%)",
-                  borderLeft: "2px solid rgba(255,81,0,0.4)",
-                  borderTop: "1px solid rgba(255,81,0,0.07)",
-                  borderRight: "1px solid rgba(255,81,0,0.04)",
-                  borderBottom: "1px solid rgba(255,81,0,0.04)",
-                }}
-              >
-                <p className="text-white/70 text-sm md:text-base leading-relaxed">{adventure.whatMakesSpecial}</p>
+              <div className="rounded-xl px-5 py-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <p className="text-white/65 text-sm leading-relaxed">{adventure.whatMakesSpecial}</p>
               </div>
             </AccordionSection>
 
             {/* Is This For You? */}
             <AccordionSection label="Suitability" title="Is This For You?" defaultOpen={true}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div
-                  className="rounded-xl p-4"
-                  style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.12)" }}
-                >
-                  <h3 className="font-semibold text-emerald-400 text-xs tracking-wide uppercase mb-3">This is for you if…</h3>
-                  <ul className="space-y-1.5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="rounded-xl p-4" style={{ background: "rgba(16,185,129,0.04)", border: "1px solid rgba(16,185,129,0.1)" }}>
+                  <h3 className="text-emerald-400 text-[10px] font-bold tracking-[0.18em] uppercase mb-3">This is for you if…</h3>
+                  <ul className="space-y-2">
                     {adventure.whoFor.split("·").map((item) => {
                       const t = item.trim();
                       if (!t) return null;
                       return (
                         <li key={t} className="flex items-start gap-2">
-                          <span className="text-emerald-400 shrink-0 text-xs mt-0.5">✓</span>
-                          <span className="text-white/60 text-xs leading-snug">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                          <span className="text-emerald-500 shrink-0 text-xs mt-0.5">✓</span>
+                          <span className="text-white/55 text-xs leading-snug">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
                         </li>
                       );
                     })}
                   </ul>
                 </div>
-                <div
-                  className="rounded-xl p-4"
-                  style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.12)" }}
-                >
-                  <h3 className="font-semibold text-red-400 text-xs tracking-wide uppercase mb-3">Skip this if…</h3>
-                  <ul className="space-y-1.5">
+                <div className="rounded-xl p-4" style={{ background: "rgba(239,68,68,0.04)", border: "1px solid rgba(239,68,68,0.1)" }}>
+                  <h3 className="text-red-400 text-[10px] font-bold tracking-[0.18em] uppercase mb-3">Skip this if…</h3>
+                  <ul className="space-y-2">
                     {adventure.whoNot.split("·").map((item) => {
                       const t = item.trim();
                       if (!t) return null;
                       return (
                         <li key={t} className="flex items-start gap-2">
-                          <span className="text-red-400 shrink-0 text-xs mt-0.5">✕</span>
-                          <span className="text-white/60 text-xs leading-snug">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                          <span className="text-red-500 shrink-0 text-xs mt-0.5">✕</span>
+                          <span className="text-white/55 text-xs leading-snug">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
                         </li>
                       );
                     })}
@@ -433,51 +409,33 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* Safety & Prep */}
             <AccordionSection label="Safety &amp; Prep" title="" defaultOpen={true}>
-              <div
-                className="rounded-xl p-4 flex gap-3"
-                style={{
-                  background: "rgba(245,158,11,0.05)",
-                  border: "1px solid rgba(245,158,11,0.15)",
-                }}
-              >
-                <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <p className="text-white/60 text-xs leading-relaxed">{adventure.safetyNotes}</p>
-                  {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {showAltitudeWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-yellow-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(234,179,8,0.12)", border: "1px solid rgba(234,179,8,0.25)" }}>
-                          ⚠ Acute Mountain Sickness
-                        </span>
-                      )}
-                      {showPhysicalExhaustionWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-orange-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(251,146,60,0.1)", border: "1px solid rgba(251,146,60,0.25)" }}>
-                          ⚠ Physical Exhaustion
-                        </span>
-                      )}
-                      {showFatalFallWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-red-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)" }}>
-                          ⚠ Fatal Fall Risk
-                        </span>
-                      )}
-                      {showExtremeIsolationWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-sky-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(56,189,248,0.1)", border: "1px solid rgba(56,189,248,0.25)" }}>
-                          ⚠ Extreme Isolation
-                        </span>
-                      )}
-                      {showTechnicalWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-violet-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(139,92,246,0.1)", border: "1px solid rgba(139,92,246,0.25)" }}>
-                          ⚠ Technical Terrain
-                        </span>
-                      )}
-                      {showWaterWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-blue-400 text-[10px] font-bold px-2.5 py-1 rounded-lg" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.25)" }}>
-                          ⚠ Open Water
-                        </span>
-                      )}
-                    </div>
-                  )}
+              <div className="rounded-xl p-4" style={{ background: "rgba(245,158,11,0.03)", border: "1px solid rgba(245,158,11,0.1)" }}>
+                <div className="flex gap-3">
+                  <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <p className="text-white/55 text-xs leading-relaxed">{adventure.safetyNotes}</p>
                 </div>
+                {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
+                  <div className="flex flex-wrap gap-2 mt-4 pt-4" style={{ borderTop: "1px solid rgba(245,158,11,0.08)" }}>
+                    {showAltitudeWarning && (
+                      <span className="inline-flex items-center gap-1.5 text-yellow-400 text-[10px] font-semibold px-2.5 py-1 rounded-lg" style={{ background: "rgba(234,179,8,0.08)", border: "1px solid rgba(234,179,8,0.18)" }}>⚠ Altitude Sickness</span>
+                    )}
+                    {showPhysicalExhaustionWarning && (
+                      <span className="inline-flex items-center gap-1.5 text-orange-400 text-[10px] font-semibold px-2.5 py-1 rounded-lg" style={{ background: "rgba(251,146,60,0.08)", border: "1px solid rgba(251,146,60,0.18)" }}>⚠ Physical Exhaustion</span>
+                    )}
+                    {showFatalFallWarning && (
+                      <span className="inline-flex items-center gap-1.5 text-red-400 text-[10px] font-semibold px-2.5 py-1 rounded-lg" style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.18)" }}>⚠ Fatal Fall Risk</span>
+                    )}
+                    {showExtremeIsolationWarning && (
+                      <span className="inline-flex items-center gap-1.5 text-sky-400 text-[10px] font-semibold px-2.5 py-1 rounded-lg" style={{ background: "rgba(56,189,248,0.08)", border: "1px solid rgba(56,189,248,0.18)" }}>⚠ Extreme Isolation</span>
+                    )}
+                    {showTechnicalWarning && (
+                      <span className="inline-flex items-center gap-1.5 text-violet-400 text-[10px] font-semibold px-2.5 py-1 rounded-lg" style={{ background: "rgba(139,92,246,0.08)", border: "1px solid rgba(139,92,246,0.18)" }}>⚠ Technical Terrain</span>
+                    )}
+                    {showWaterWarning && (
+                      <span className="inline-flex items-center gap-1.5 text-blue-400 text-[10px] font-semibold px-2.5 py-1 rounded-lg" style={{ background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.18)" }}>⚠ Open Water</span>
+                    )}
+                  </div>
+                )}
               </div>
             </AccordionSection>
 
