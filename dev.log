@@ -182,3 +182,24 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /auth/login 200 in 144ms
  GET /profile?_cb=1776025143805 307 in 137ms
  GET /auth/login 200 in 123ms
+ ✓ Compiled in 250ms
+ ✓ Compiled /profile in 36ms
+ GET /profile?_cb=1776025143805 200 in 258ms
+ GET /profile?_cb=1776025143805 200 in 117ms
+ GET /profile?_cb=1776025143805 200 in 96ms
+ GET /profile?_cb=1776025143805 200 in 99ms
+ ✓ Compiled /auth/login in 24ms
+ GET /auth/login 200 in 112ms
+ GET /auth/login 200 in 87ms
+ GET /auth/login?_cb=1776025143805 200 in 123ms
+ GET /auth/login?_cb=1776025259082 200 in 140ms
+ GET /auth/login?_cb=1776025260443 200 in 117ms
+ GET /auth/login?_cb=1776025261763 200 in 131ms
+ ✓ Compiled in 167ms
+ ✓ Compiled /auth/login in 30ms
+ GET /auth/login?_cb=1776025261763 200 in 227ms
+ GET /auth/login?_cb=1776025261763 200 in 83ms
+ GET /auth/login?_cb=1776025261763 200 in 92ms
+ ✓ Compiled / in 53ms
+ GET / 200 in 243ms
+ GET /auth/login?_cb=1776025261763 200 in 246ms
