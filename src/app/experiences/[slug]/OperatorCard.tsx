@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Star, ShieldCheck, AlertTriangle, CalendarDays, Briefcase, Package, ChevronDown, RotateCcw } from "lucide-react";
+import { Star, ShieldCheck, AlertTriangle, CalendarDays, Briefcase, Package, ChevronDown } from "lucide-react";
 import OperatorButton from "./OperatorButton";
 
 export type OperatorCardData = {
@@ -129,26 +129,6 @@ export default function OperatorCard({ op, verified }: { op: OperatorCardData; v
         {op.notes && (
           <p className="text-white/35 text-xs leading-relaxed border-t border-white/6 pt-3">{op.notes}</p>
         )}
-
-        {/* Cancellation Policy */}
-        <div
-          className="flex items-start gap-2.5 px-3 py-2.5 rounded-xl"
-          style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
-        >
-          <RotateCcw className="w-3 h-3 text-white/25 shrink-0 mt-0.5" />
-          <div>
-            <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-white/25 mb-1">Cancellation Policy</p>
-            {verified ? (
-              <p className="text-white/40 text-[10px] leading-relaxed">
-                Full refund if cancelled 30+ days before departure · 50% refund within 15–30 days · No refund within 15 days.
-              </p>
-            ) : (
-              <p className="text-white/30 text-[10px] leading-relaxed">
-                Cancellation terms vary. Contact operator directly before booking.
-              </p>
-            )}
-          </div>
-        </div>
 
         <OperatorButton
           website={op.website ?? ""}

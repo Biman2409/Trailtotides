@@ -40,7 +40,6 @@ import AccordionSection from "./AccordionSection";
 import WeatherWidget from "./WeatherWidget";
 import PhotoGallery from "./PhotoGallery";
 import PackingList from "./PackingList";
-import ItinerarySection from "./ItinerarySection";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -407,18 +406,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   </ul>
                 </div>
               </div>
-            </AccordionSection>
-
-            {/* Itinerary */}
-            <AccordionSection label="Itinerary" title="Sample Itinerary" defaultOpen={true}>
-              <ItinerarySection
-                adventureName={adventure.name}
-                adventureType={adventure.type}
-                durationDays={adventure.durationDays ?? adventure.duration}
-                baseCamp={adventure.baseCamp}
-                startingPoint={adventure.startingPoint}
-                altitude={adventure.altitude}
-              />
             </AccordionSection>
 
             {/* Safety & Prep */}
