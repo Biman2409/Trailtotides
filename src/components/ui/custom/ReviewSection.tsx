@@ -167,10 +167,10 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
           <MessageSquare className="w-3.5 h-3.5 text-white/40" />Reviews
         </h2>
         {avgRating !== null && (
-          <div className="flex items-center gap-2">
-            <StarRating value={Math.round(avgRating)} />
+          <div className="flex items-center gap-1.5">
+            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
             <span className="text-white/70 text-sm font-semibold">{avgRating.toFixed(1)}</span>
-            <span className="text-white/30 text-xs">({reviews.length})</span>
+            <span className="text-white/30 text-xs">· {reviews.length}</span>
           </div>
         )}
       </div>
