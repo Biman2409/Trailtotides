@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Star, Trash2, Loader2, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, Trash2, Loader2, ChevronDown, ChevronLeft, ChevronRight, Zap } from "lucide-react";
+import { XP_REWARDS } from "@/lib/xp";
 import Link from "next/link";
+import { useXP } from "@/contexts/XPContext";
 
 interface Review {
   id: string;
@@ -76,6 +78,7 @@ function timeAgo(dateStr: string): string {
 }
 
 export default function ReviewSection({ slug, currentUserId, adventureType, adventureName }: Props) {
+  const { onReview } = useXP();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -134,6 +137,12 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
       setRating(0); setBody("");
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
+      const gained = onReview(slug);
+      if (gained > 0) {
+        import("sonner").then(({ toast }) =>
+          toast.success(`+${gained} XP — Review posted!`, { description: "Thanks for helping the community.", duration: 3000 })
+        );
+      }
     } catch {
       setError("Something went wrong.");
     } finally {
@@ -175,7 +184,12 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
       {currentUserId ? (
         !hasReviewed ? (
           <form onSubmit={handleSubmit} className="rounded-xl p-4 mb-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-            <p className="text-white/60 text-sm font-medium mb-4">{ctaText(adventureType, adventureName)}</p>
+            <div className="flex items-center justify-between mb-4">
+            <p className="text-white/60 text-sm font-medium">{ctaText(adventureType, adventureName)}</p>
+            <span className="shrink-0 ml-3 inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(96,165,250,0.1)", color: "#60a5fa", border: "1px solid rgba(96,165,250,0.2)" }}>
+              <Zap className="w-2.5 h-2.5" />+{XP_REWARDS.review} XP
+            </span>
+          </div>
             <div className="mb-4">
               <p className="text-white/30 text-[10px] uppercase tracking-widest mb-2">Your rating</p>
               <StarRating value={rating} onChange={setRating} />

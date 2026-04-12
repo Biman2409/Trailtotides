@@ -814,6 +814,22 @@ export const Wand = icon(
   </>
 );
 
+export const Camera = icon(
+  <>
+    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z" />
+    <circle cx="12" cy="13" r="3" />
+  </>
+);
+
+export const Images = icon(
+  <>
+    <path d="M18 22H4a2 2 0 0 1-2-2V6" />
+    <path d="m22 13-1.296-1.296a2.41 2.41 0 0 0-3.408 0L11 18" />
+    <circle cx="12" cy="8" r="2" />
+    <rect width="16" height="16" x="6" y="2" rx="2" />
+  </>
+);
+
 export const Palmtree = icon(
   <>
     <path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2l1-1 1 1h4" />

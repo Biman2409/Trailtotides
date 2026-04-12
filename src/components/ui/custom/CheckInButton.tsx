@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Trophy, LogIn } from "lucide-react";
+import { Trophy, Zap } from "lucide-react";
 import { useTripLog } from "@/contexts/TripLogContext";
+import { useXP } from "@/contexts/XPContext";
+import { getCurrentLevel, XP_REWARDS } from "@/lib/xp";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -15,6 +17,7 @@ interface Props {
 
 export default function CheckInButton({ slug, variant = "card", className = "" }: Props) {
   const { isDone, markDone, unmark } = useTripLog();
+  const { onCheckIn, onUncheckIn } = useXP();
   const done = isDone(slug);
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const router = useRouter();
@@ -37,30 +40,46 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
     }
     if (done) {
       await unmark(slug);
+      onUncheckIn(slug);
       toast("Removed from your trip log");
     } else {
       await markDone(slug);
-      toast.success("Added to your trip log 🏆");
+      const gained = onCheckIn(slug);
+      if (gained > 0) {
+        toast.success(`+${gained} XP — Adventure logged!`, {
+          description: "Keep exploring to level up.",
+          duration: 3000,
+        });
+      } else {
+        toast.success("Added to your trip log");
+      }
     }
   }
 
   if (variant === "page") {
     return (
-      <button
-        onClick={handleToggle}
-        className={`inline-flex items-center gap-1.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${className}`}
-        style={done
-          ? { background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }
-          : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.5)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }
-        }
-      >
-        {loggedIn === false
-          ? <><Trophy className="w-2.5 h-2.5" />Mark completed</>
-          : done
-            ? <><Trophy className="w-2.5 h-2.5" />Completed</>
-            : <><Trophy className="w-2.5 h-2.5" />Mark completed</>
-        }
-      </button>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={handleToggle}
+          className={`inline-flex items-center gap-1.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${className}`}
+          style={done
+            ? { background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }
+            : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.5)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }
+          }
+        >
+          {loggedIn === false
+            ? <><Trophy className="w-2.5 h-2.5" />Mark completed</>
+            : done
+              ? <><Trophy className="w-2.5 h-2.5" />Completed</>
+              : <><Trophy className="w-2.5 h-2.5" />Mark completed</>
+          }
+        </button>
+        {!done && loggedIn !== false && (
+          <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(251,191,36,0.1)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.2)" }}>
+            <Zap className="w-2.5 h-2.5" />+{XP_REWARDS.checkIn} XP
+          </span>
+        )}
+      </div>
     );
   }
 

@@ -6,30 +6,35 @@ import {
   Lock, Trophy, Crown, Globe, Brain,
   Footprints, Waves, ScanEye,
   Timer, Dumbbell, MountainSnow, Wind, Shield,
-  Zap, Pickaxe, Wand,
+  Zap, Pickaxe, Wand, Star, MessageSquare, Camera, Images,
 } from "@/lib/localIcons";
-import { getAchievements, AXIS_BADGES, DOMAIN_BADGES, SPECIAL_BADGES } from "@/lib/achievements";
+import { getAchievements, getActivityAchievements, AXIS_BADGES, DOMAIN_BADGES, SPECIAL_BADGES, ACTIVITY_BADGES } from "@/lib/achievements";
 import type { Achievement } from "@/lib/achievements";
 import { loadProfile } from "@/lib/matchmaker";
+import { loadXP } from "@/lib/xp";
 
 const ICON = (name: string, size: number): React.ReactNode => {
   const s = { width: size, height: size } as React.CSSProperties;
   const map: Record<string, React.ReactNode> = {
-    Crown:        <Crown        style={s} />,
-    Trophy:       <Trophy       style={s} />,
-    Globe:        <Globe        style={s} />,
-    Brain:        <Brain        style={s} />,
-    Footprints:   <Footprints   style={s} />,
-    Waves:        <Waves        style={s} />,
-    ScanEye:      <ScanEye      style={s} />,
-    Timer:        <Timer        style={s} />,
-    Dumbbell:     <Dumbbell     style={s} />,
-    MountainSnow: <MountainSnow style={s} />,
-    Wind:         <Wind         style={s} />,
-    Shield:       <Shield       style={s} />,
-    Zap:          <Zap          style={s} />,
-    Pickaxe:      <Pickaxe      style={s} />,
-    Wand:         <Wand         style={s} />,
+    Crown:          <Crown          style={s} />,
+    Trophy:         <Trophy         style={s} />,
+    Globe:          <Globe          style={s} />,
+    Brain:          <Brain          style={s} />,
+    Footprints:     <Footprints     style={s} />,
+    Waves:          <Waves          style={s} />,
+    ScanEye:        <ScanEye        style={s} />,
+    Timer:          <Timer          style={s} />,
+    Dumbbell:       <Dumbbell       style={s} />,
+    MountainSnow:   <MountainSnow   style={s} />,
+    Wind:           <Wind           style={s} />,
+    Shield:         <Shield         style={s} />,
+    Zap:            <Zap            style={s} />,
+    Pickaxe:        <Pickaxe        style={s} />,
+    Wand:           <Wand           style={s} />,
+    Star:           <Star           style={s} />,
+    MessageSquare:  <MessageSquare  style={s} />,
+    Camera:         <Camera         style={s} />,
+    Images:         <Images         style={s} />,
   };
   return map[name] ?? <Trophy style={s} />;
 };
@@ -37,6 +42,7 @@ const ICON = (name: string, size: number): React.ReactNode => {
 const TIER1_ALL: Achievement[] = SPECIAL_BADGES.map(b => ({ ...b }));
 const TIER2_ALL: Achievement[] = DOMAIN_BADGES.map(b => ({ ...b }));
 const TIER3_ALL: Achievement[] = Object.values(AXIS_BADGES).map(b => ({ ...b, tier: "axis" as const }));
+const TIER_ACTIVITY_ALL: Achievement[] = ACTIVITY_BADGES.map(b => ({ id: b.id, name: b.name, description: b.description, color: b.color, icon: b.icon, tier: "activity" as const }));
 
 // ─── Popover ──────────────────────────────────────────────────────────────────
 function Popover({ badge, anchorRect, onClose }: {
@@ -224,24 +230,51 @@ export default function TrophyCabinet() {
 
   if (!mounted) return null;
 
+  // Activity badges from XP (always available)
+  const xpState = loadXP();
+  const activityAchievements = getActivityAchievements(xpState);
+  const activityEarnedIds = new Set(activityAchievements.map(a => a.id));
+  const tActivityEarned = TIER_ACTIVITY_ALL.filter(b => activityEarnedIds.has(b.id)).length;
+
   if (!stored) {
+    // Show activity badges even without ACE profile
+    const totalPossibleNoACE = TIER_ACTIVITY_ALL.length;
     return (
-      <div className="rounded-2xl p-4 flex items-center gap-3" style={{ background: "linear-gradient(135deg,rgba(167,139,250,0.05),rgba(167,139,250,0.02))", border: "1px dashed rgba(167,139,250,0.18)" }}>
-        <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 relative" style={{ background: "rgba(167,139,250,0.1)", border: "1px solid rgba(167,139,250,0.2)" }}>
-          <Trophy className="w-3.5 h-3.5 text-violet-400/50" />
+      <div ref={containerRef} className="rounded-2xl overflow-visible relative" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.015)" }}>
+        <style>{`
+          @keyframes trophy-shine { 0%{background-position:200% center} 60%{background-position:-200% center} 100%{background-position:-200% center} }
+          @keyframes popover-in { from{opacity:0;transform:translateY(calc(-100% + 6px))} to{opacity:1;transform:translateY(-100%)} }
+        `}</style>
+        <div className="flex items-center justify-between px-4 py-2.5 border-b rounded-t-2xl" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+          <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold text-white/25">All Trophies</p>
+          <span className="text-[8px] font-bold px-2 py-0.5 rounded-full" style={tActivityEarned > 0 ? { background: "rgba(52,211,153,0.1)", color: "#34d399", border: "1px solid rgba(52,211,153,0.2)" } : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.07)" }}>
+            {tActivityEarned} / {totalPossibleNoACE} unlocked
+          </span>
         </div>
-        <div>
-          <p className="text-white/55 font-semibold text-sm">Trophies locked</p>
-          <p className="text-white/28 text-xs mt-0.5">Complete your ACE assessment to start earning</p>
+        <div className="px-4 py-4 rounded-b-2xl">
+          <TierLabel tier="Activity" label="Earned by exploring" color="#34d399" earned={tActivityEarned} total={TIER_ACTIVITY_ALL.length} />
+          <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(36px, 1fr))" }}>
+            {TIER_ACTIVITY_ALL.map(b => (
+              <TrophyCell key={b.id} badge={b} earned={activityEarnedIds.has(b.id)} boxSize={32} isActive={active?.id === b.id} onToggle={handleToggle} />
+            ))}
+          </div>
         </div>
+        <div className="px-4 py-3 rounded-b-2xl" style={{ borderTop: "1px solid rgba(255,255,255,0.05)", background: "rgba(255,255,255,0.01)" }}>
+          <p className="text-white/25 text-xs text-center">Complete your <a href="/ace" className="text-[#ff5100]/70 hover:text-[#ff5100] underline underline-offset-2 transition-colors">ACE assessment</a> to unlock skill trophies</p>
+        </div>
+        {active && anchorRect && (
+          <div style={{ animation: "popover-in 0.15s ease forwards" }}>
+            <Popover badge={active} anchorRect={anchorRect} onClose={() => setActive(null)} />
+          </div>
+        )}
       </div>
     );
   }
 
   const achievements = getAchievements(stored.ace);
-  const earnedIds = new Set(achievements.map(a => a.id));
+  const earnedIds = new Set([...achievements.map(a => a.id), ...activityAchievements.map(a => a.id)]);
   const totalEarned = earnedIds.size;
-  const totalPossible = TIER1_ALL.length + TIER2_ALL.length + TIER3_ALL.length;
+  const totalPossible = TIER1_ALL.length + TIER2_ALL.length + TIER3_ALL.length + TIER_ACTIVITY_ALL.length;
   const t1Earned = TIER1_ALL.filter(b => earnedIds.has(b.id)).length;
   const t2Earned = TIER2_ALL.filter(b => earnedIds.has(b.id)).length;
   const t3Earned = TIER3_ALL.filter(b => earnedIds.has(b.id)).length;
@@ -282,10 +315,18 @@ export default function TrophyCabinet() {
       </div>
 
       {/* Row 2 — Tier 3 */}
-      <div className="px-4 py-4 rounded-b-2xl">
+      <div className="px-4 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
         <TierLabel tier="Tier 3" label="The axis elite" color="#60a5fa" earned={t3Earned} total={TIER3_ALL.length} />
         <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(36px, 1fr))" }}>
           {TIER3_ALL.map(b => cell(b, 32))}
+        </div>
+      </div>
+
+      {/* Row 3 — Activity */}
+      <div className="px-4 py-4 rounded-b-2xl" style={{ background: "rgba(52,211,153,0.015)" }}>
+        <TierLabel tier="Activity" label="Earned by exploring" color="#34d399" earned={tActivityEarned} total={TIER_ACTIVITY_ALL.length} />
+        <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(36px, 1fr))" }}>
+          {TIER_ACTIVITY_ALL.map(b => cell(b, 32))}
         </div>
       </div>
 

@@ -1,4 +1,5 @@
 import type { ACE } from "./ace";
+import type { XPState } from "./xp";
 
 export interface Achievement {
   id: string;
@@ -7,8 +8,8 @@ export interface Achievement {
   color: string;
   /** Lucide icon name (string) — mapped in the component */
   icon: string;
-  /** "axis" = single-axis elite | "domain" = 2-axis domain | "special" = multi/full */
-  tier: "axis" | "domain" | "special";
+  /** "axis" = single-axis elite | "domain" = 2-axis domain | "special" = multi/full | "activity" = action-based */
+  tier: "axis" | "domain" | "special" | "activity";
 }
 
 // ─── Tier 3 — Axis badges (awarded when axis === 5) ──────────────────────────
@@ -138,6 +139,95 @@ export const SPECIAL_BADGES = [
   },
 ];
 
+// ─── Activity badges (earned through check-ins, reviews, photos) ─────────────
+
+export const ACTIVITY_BADGES: (Omit<Achievement, "tier"> & {
+  tier: "activity";
+  check: (xp: XPState) => boolean;
+})[] = [
+  {
+    id:          "first-step",
+    name:        "First Step",
+    description: "Marked your first adventure as done. The journey begins.",
+    color:       "#34d399",
+    icon:        "Footprints",
+    tier:        "activity",
+    check:       (xp) => xp.checkIns >= 1,
+  },
+  {
+    id:          "five-summits",
+    name:        "Five Summits",
+    description: "Completed 5 adventures. You're building a serious log.",
+    color:       "#f97316",
+    icon:        "MountainSnow",
+    tier:        "activity",
+    check:       (xp) => xp.checkIns >= 5,
+  },
+  {
+    id:          "ten-peaks",
+    name:        "Ten Peaks",
+    description: "Ten adventures done. Elite territory.",
+    color:       "#fbbf24",
+    icon:        "Crown",
+    tier:        "activity",
+    check:       (xp) => xp.checkIns >= 10,
+  },
+  {
+    id:          "voice-of-trails",
+    name:        "Voice of Trails",
+    description: "Left your first review. Others will find their way because of you.",
+    color:       "#60a5fa",
+    icon:        "Star",
+    tier:        "activity",
+    check:       (xp) => xp.reviews >= 1,
+  },
+  {
+    id:          "trail-critic",
+    name:        "Trail Critic",
+    description: "Reviewed 5 adventures. Your word shapes the community.",
+    color:       "#a78bfa",
+    icon:        "MessageSquare",
+    tier:        "activity",
+    check:       (xp) => xp.reviews >= 5,
+  },
+  {
+    id:          "trail-photographer",
+    name:        "Trail Photographer",
+    description: "Uploaded your first trail photo. Let others see what you saw.",
+    color:       "#f43f5e",
+    icon:        "Camera",
+    tier:        "activity",
+    check:       (xp) => xp.photos >= 1,
+  },
+  {
+    id:          "visual-storyteller",
+    name:        "Visual Storyteller",
+    description: "5 trail photos shared. You're painting the mountains for others.",
+    color:       "#e879f9",
+    icon:        "Images",
+    tier:        "activity",
+    check:       (xp) => xp.photos >= 5,
+  },
+  {
+    id:          "century-explorer",
+    name:        "Century Explorer",
+    description: "Earned 100 XP. You're no longer just passing through.",
+    color:       "#34d399",
+    icon:        "Zap",
+    tier:        "activity",
+    check:       (xp) => xp.total >= 100,
+  },
+  {
+    id:          "legend-in-making",
+    name:        "Legend in Making",
+    description: "Earned 500 XP. Your name is becoming legend on these trails.",
+    color:       "#fbbf24",
+    icon:        "Trophy",
+    tier:        "activity",
+    check:       (xp) => xp.total >= 500,
+  },
+];
+
 // ─── Core function ────────────────────────────────────────────────────────────
 
 export function getAchievements(ace: ACE): Achievement[] {
@@ -170,4 +260,15 @@ export function getAchievements(ace: ACE): Achievement[] {
   }
 
   return earned;
+}
+
+export function getActivityAchievements(xp: XPState): Achievement[] {
+  return ACTIVITY_BADGES.filter(b => b.check(xp)).map(b => ({
+    id: b.id,
+    name: b.name,
+    description: b.description,
+    color: b.color,
+    icon: b.icon,
+    tier: "activity" as const,
+  }));
 }
