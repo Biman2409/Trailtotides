@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { MapPin } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { Adventure } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
 
@@ -42,7 +42,6 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
     import("leaflet").then((L) => {
       if (cancelled || !mapRef.current) return;
 
-      // Tear down any stale Leaflet instance left on the DOM node (StrictMode / HMR)
       const container = mapRef.current as HTMLElement & { _leaflet_id?: number };
       if (container._leaflet_id) {
         mapInstanceRef.current?.remove();
@@ -51,7 +50,6 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
       }
       if (mapInstanceRef.current) return;
 
-      // Inject Leaflet CSS once
       if (!document.querySelector('link[href*="leaflet.css"]')) {
         const link = document.createElement("link");
         link.rel = "stylesheet";
@@ -77,43 +75,37 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         maxZoom: 18,
       }).addTo(map);
 
-      L.control.attribution({ prefix: false }).addTo(map);
-
-      // Current adventure marker (orange, larger)
-      const currentDiff = computeDifficulty(getACE(current));
-      const currentColor = DIFF_COLORS[currentDiff] ?? "#ff5100";
-
       function makeIcon(color: string, size: number, isActive = false) {
-        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size * 1.3}" viewBox="0 0 32 42">
-          <filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="${color}" flood-opacity="0.6"/></filter>
-          <circle cx="16" cy="16" r="${isActive ? 13 : 11}" fill="${color}" filter="url(#sh)" opacity="${isActive ? 1 : 0.85}"/>
-          ${isActive ? `<circle cx="16" cy="16" r="6" fill="white" opacity="0.9"/>` : `<circle cx="16" cy="16" r="5" fill="white" opacity="0.7"/>`}
-          <line x1="16" y1="${isActive ? 29 : 27}" x2="16" y2="40" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/>
+        const pulse = isActive
+          ? `<circle cx="16" cy="16" r="18" fill="${color}" opacity="0.15"/>`
+          : "";
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 32 32">
+          ${pulse}
+          <circle cx="16" cy="16" r="${isActive ? 9 : 7}" fill="${color}" opacity="${isActive ? 1 : 0.9}"/>
+          <circle cx="16" cy="16" r="${isActive ? 4 : 3}" fill="white" opacity="0.95"/>
         </svg>`;
         return L.divIcon({
           html: svg,
           className: "",
-          iconSize: [size, size * 1.3],
-          iconAnchor: [size / 2, size * 1.3],
-          popupAnchor: [0, -size],
+          iconSize: [size, size],
+          iconAnchor: [size / 2, size / 2],
+          popupAnchor: [0, -(size / 2) - 4],
         });
       }
 
-      // Current marker
       const currentMarker = L.marker([current.lat, current.lng], {
         icon: makeIcon("#ff5100", 36, true),
         zIndexOffset: 1000,
       }).addTo(map);
 
       currentMarker.bindPopup(
-        `<div style="font-family:sans-serif;min-width:140px;">
-          <p style="font-size:11px;color:#ff5100;font-weight:700;margin:0 0 3px;text-transform:uppercase;letter-spacing:0.08em;">You are here</p>
-          <p style="font-size:13px;font-weight:700;color:#1a1f2e;margin:0;">${current.name}</p>
+        `<div style="font-family:sans-serif;min-width:130px;padding:2px 0;">
+          <p style="font-size:9px;color:#ff5100;font-weight:800;margin:0 0 4px;text-transform:uppercase;letter-spacing:0.1em;">You are here</p>
+          <p style="font-size:12px;font-weight:700;color:#0f1117;margin:0;line-height:1.3;">${current.name}</p>
         </div>`,
-        { closeButton: false }
+        { closeButton: false, className: "leaflet-popup-clean" }
       );
 
-      // Nearby markers
       const allPoints: [number, number][] = [[current.lat, current.lng]];
 
       nearby.forEach((a) => {
@@ -121,14 +113,14 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         const color = DIFF_COLORS[diff] ?? "#38bdf8";
         const km = Math.round(haversineKm(current.lat, current.lng, a.lat, a.lng));
         const marker = L.marker([a.lat, a.lng], {
-          icon: makeIcon(color, 28),
+          icon: makeIcon(color, 26),
         }).addTo(map);
 
         marker.bindPopup(
-          `<div style="font-family:sans-serif;min-width:140px;">
-            <p style="font-size:10px;color:${color};font-weight:700;margin:0 0 3px;text-transform:uppercase;">${diff} · ${km}km away</p>
-            <p style="font-size:12px;font-weight:700;color:#1a1f2e;margin:0 0 6px;">${a.name}</p>
-            <a href="/experiences/${a.slug}" style="font-size:11px;color:#ff5100;font-weight:600;text-decoration:none;">View adventure →</a>
+          `<div style="font-family:sans-serif;min-width:130px;padding:2px 0;">
+            <p style="font-size:9px;color:${color};font-weight:800;margin:0 0 4px;text-transform:uppercase;letter-spacing:0.08em;">${diff} · ${km} km</p>
+            <p style="font-size:12px;font-weight:700;color:#0f1117;margin:0 0 6px;line-height:1.3;">${a.name}</p>
+            <a href="/experiences/${a.slug}" style="font-size:10px;color:#ff5100;font-weight:700;text-decoration:none;letter-spacing:0.03em;">View →</a>
           </div>`,
           { closeButton: false }
         );
@@ -136,14 +128,12 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         allPoints.push([a.lat, a.lng]);
       });
 
-      // Fit bounds to show all markers
       if (allPoints.length > 1) {
-        map.fitBounds(L.latLngBounds(allPoints), { padding: [32, 32], maxZoom: 10 });
+        map.fitBounds(L.latLngBounds(allPoints), { padding: [28, 28], maxZoom: 10 });
       } else {
         map.setView([current.lat, current.lng], 9);
       }
 
-      // Add zoom controls (bottom-right)
       L.control.zoom({ position: "bottomright" }).addTo(map);
     });
 
@@ -153,7 +143,6 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
-      // Clear the _leaflet_id stamp so next init doesn't complain
       if (mapRef.current) {
         (mapRef.current as HTMLElement & { _leaflet_id?: number })._leaflet_id = undefined;
       }
@@ -162,23 +151,23 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
 
   return (
     <div
-      className="rounded-2xl overflow-hidden"
-      style={{ border: "1px solid var(--border-subtle)" }}
+      className="rounded-xl overflow-hidden"
+      style={{ border: "1px solid var(--border-subtle)", background: "var(--bg-surface)" }}
     >
       {/* Header */}
-      <div className="px-4 py-3 flex items-center justify-between" style={{ background: "var(--bg-surface)" }}>
+      <div className="px-4 pt-4 pb-3 flex items-center justify-between">
         <div>
-          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase">Nearby Adventures</p>
-          <p className="text-white/35 text-xs mt-0.5">{nearby.length} within the region</p>
+          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase leading-none mb-1">Nearby</p>
+          <p className="text-white/60 text-xs font-semibold">{nearby.length} adventures in region</p>
         </div>
-        <MapPin className="w-4 h-4 text-white/20" />
+        <span className="text-white/15 text-[9px] font-medium uppercase tracking-widest">Map</span>
       </div>
 
       {/* Map */}
-      <div ref={mapRef} className="w-full h-56" style={{ background: "#0d1117" }} />
+      <div ref={mapRef} className="w-full h-44" style={{ background: "#0d1117" }} />
 
-      {/* Nearby list */}
-      <div style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)" }}>
+      {/* List */}
+      <div className="divide-y" style={{ borderTop: "1px solid var(--border-subtle)", borderColor: "var(--border-subtle)" }}>
         {nearby.slice(0, 4).map((a) => {
           const diff = computeDifficulty(getACE(a));
           const color = DIFF_COLORS[diff] ?? "#38bdf8";
@@ -187,18 +176,17 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
             <Link
               key={a.id}
               href={`/experiences/${a.slug}`}
-              className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/3 transition-colors group"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
+              className="flex items-center gap-2.5 px-4 py-2 hover:bg-white/[0.03] transition-colors group"
             >
-              <div
-                className="w-2 h-2 rounded-full shrink-0"
-                style={{ background: color }}
-              />
+              <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
               <div className="flex-1 min-w-0">
-                <p className="text-white/70 text-xs font-semibold group-hover:text-white transition-colors truncate">{a.name}</p>
-                <p className="text-white/25 text-[10px] mt-0.5">{diff} · {a.type}</p>
+                <p className="text-white/65 text-[11px] font-semibold group-hover:text-white/90 transition-colors truncate leading-none mb-0.5">{a.name}</p>
+                <p className="text-white/20 text-[9px] uppercase tracking-wide">{diff} · {a.type}</p>
               </div>
-              <span className="text-white/25 text-[10px] shrink-0">{km} km</span>
+              <div className="flex items-center gap-1 shrink-0">
+                <span className="text-white/30 text-[10px] tabular-nums">{km} km</span>
+                <ArrowRight className="w-3 h-3 text-white/15 group-hover:text-white/40 transition-colors" />
+              </div>
             </Link>
           );
         })}
