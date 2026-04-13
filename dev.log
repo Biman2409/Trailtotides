@@ -674,3 +674,5 @@ Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
  ✓ Compiled in 119ms
  GET /profile?_cb=1776112476004 307 in 348ms
  GET /auth/login 200 in 80ms
+ GET /profile?_cb=1776112590704 307 in 120ms
+ GET /auth/login 200 in 87ms
