@@ -148,31 +148,6 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         {/* Top-left: difficulty + season */}
         <div className="absolute z-20 flex flex-wrap items-center gap-1.5 top-3 left-3">
           <DifficultyMeter difficulty={difficulty} />
-          {matchScore !== null && (() => {
-            const pct = matchScore;
-            const color = pct >= 80 ? "#10b981" : pct >= 55 ? "#f59e0b" : "#f43f5e";
-            const bg   = pct >= 80 ? "rgba(16,185,129,0.22)" : pct >= 55 ? "rgba(245,158,11,0.18)" : "rgba(244,63,94,0.18)";
-            const ring = pct >= 80 ? "rgba(16,185,129,0.4)"  : pct >= 55 ? "rgba(245,158,11,0.35)" : "rgba(244,63,94,0.35)";
-            const label = pct >= 80 ? "Great fit" : pct >= 55 ? "Good fit" : "Tough fit";
-            // mini arc SVG
-            const r = 7, circ = 2 * Math.PI * r;
-            const dash = (pct / 100) * circ;
-            return (
-              <span
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold leading-none"
-                style={{ background: bg, color, boxShadow: `0 0 0 1px ${ring}` }}
-                title={`${pct}% match with your ACE profile`}
-              >
-                {/* mini progress arc */}
-                <svg width="14" height="14" viewBox="0 0 18 18" className="-rotate-90">
-                  <circle cx="9" cy="9" r={r} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2.5" />
-                  <circle cx="9" cy="9" r={r} fill="none" stroke={color} strokeWidth="2.5"
-                    strokeDasharray={`${dash} ${circ}`} strokeLinecap="round" />
-                </svg>
-                {pct}% · {label}
-              </span>
-            );
-          })()}
           {isSeasonActive ? (
             <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
@@ -246,6 +221,27 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
             {inCompare ? "Added" : "Compare"}
           </button>
         </div>
+
+        {/* ACE fit bar */}
+        {matchScore !== null && (() => {
+          const pct = matchScore;
+          const color = pct >= 80 ? "#10b981" : pct >= 55 ? "#f59e0b" : "#f43f5e";
+          const label = pct >= 80 ? "Great fit" : pct >= 55 ? "Good fit" : "Tough fit";
+          return (
+            <div className="px-3 pb-2.5 pt-0">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[9px] text-white/25 font-medium uppercase tracking-[0.12em]">ACE Fit</span>
+                <span className="text-[10px] font-bold" style={{ color }}>{pct}% · {label}</span>
+              </div>
+              <div className="h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                <div
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{ width: `${pct}%`, background: color }}
+                />
+              </div>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );

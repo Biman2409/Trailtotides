@@ -676,3 +676,5 @@ Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
  GET /auth/login 200 in 80ms
  GET /profile?_cb=1776112590704 307 in 120ms
  GET /auth/login 200 in 87ms
+ ✓ Compiled /explore in 476ms
+ GET /explore?_cb=1776112590704 200 in 762ms
