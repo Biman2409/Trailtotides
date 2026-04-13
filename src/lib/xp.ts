@@ -36,18 +36,24 @@ export interface XPTier {
   description: string;
 }
 
-// Gaps: 250 → 400 → 600 → 850 → 1150 → 1550 → 2000 → 3200 (strictly increasing, sum = 10 000)
 export const XP_TIERS: XPTier[] = [
-  { level: 1, name: "Toddler",      minXP: 0,     color: "#6b7280", description: "First steps into the wild." },
-  { level: 2, name: "Wanderer",     minXP: 250,   color: "#84cc16", description: "Curiosity is your compass." },
-  { level: 3, name: "Rover",        minXP: 650,   color: "#22d3ee", description: "Reading the terrain with ease." },
-  { level: 4, name: "Rambler",      minXP: 1250,  color: "#3b82f6", description: "Blazing new routes." },
-  { level: 5, name: "Expeditioner", minXP: 2100,  color: "#8b5cf6", description: "Leading the charge into the wild." },
-  { level: 6, name: "Summiteer",    minXP: 3250,  color: "#f59e0b", description: "At the peak of the pursuit." },
-  { level: 7, name: "Wildlander",   minXP: 4800,  color: "#f97316", description: "Built for the long haul." },
-  { level: 8, name: "Legend",       minXP: 6800,  color: "#ef4444", description: "Stories told around campfires." },
-  { level: 9, name: "Immortal",     minXP: 10000, color: "#fbbf24", description: "The mountain bows to you." },
+  { level: 1, name: "Toddler",      minXP: 0,    color: "#6b7280", description: "First steps into the wild." },
+  { level: 2, name: "Drifter",      minXP: 200,  color: "#84cc16", description: "Curiosity is your compass." },
+  { level: 3, name: "Wanderer",     minXP: 500,  color: "#22d3ee", description: "Finding your way." },
+  { level: 4, name: "Rambler",      minXP: 1000, color: "#3b82f6", description: "The open road calls." },
+  { level: 5, name: "Rover",        minXP: 1800, color: "#8b5cf6", description: "Reading terrain with ease." },
+  { level: 6, name: "Explorer",     minXP: 3000, color: "#f59e0b", description: "Charting the unknown." },
+  { level: 7, name: "Expeditioner", minXP: 4500, color: "#f97316", description: "Leading the charge." },
+  { level: 8, name: "Summiteer",    minXP: 6500, color: "#ef4444", description: "At the peak of the pursuit." },
+  { level: 9, name: "Legend",       minXP: 9000, color: "#ec4899", description: "Stories told around campfires." },
 ];
+
+export const OVER_9000_THRESHOLD = 9000;
+export const OVER_9000_COLOR = "#fbbf24";
+
+export function isOver9000(xp: number): boolean {
+  return xp >= OVER_9000_THRESHOLD;
+}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -59,6 +65,7 @@ export function getTier(xp: number): XPTier {
 }
 
 export function getNextTier(xp: number): XPTier | null {
+  if (xp >= OVER_9000_THRESHOLD) return null; // Legend+ — no next tier, XP is uncapped
   const current = getTier(xp);
   return XP_TIERS.find(t => t.level === current.level + 1) ?? null;
 }
