@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Trophy, Zap } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { useTripLog } from "@/contexts/TripLogContext";
-import { useXP } from "@/contexts/XPContext";
-import { getCurrentLevel, XP_REWARDS } from "@/lib/xp";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -17,7 +15,6 @@ interface Props {
 
 export default function CheckInButton({ slug, variant = "card", className = "" }: Props) {
   const { isDone, markDone, unmark } = useTripLog();
-  const { onCheckIn, onUncheckIn } = useXP();
   const done = isDone(slug);
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const router = useRouter();
@@ -40,19 +37,10 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
     }
     if (done) {
       await unmark(slug);
-      onUncheckIn(slug);
       toast("Removed from your trip log");
     } else {
       await markDone(slug);
-      const gained = onCheckIn(slug);
-      if (gained > 0) {
-        toast.success(`+${gained} XP — Adventure logged!`, {
-          description: "Keep exploring to level up.",
-          duration: 3000,
-        });
-      } else {
-        toast.success("Added to your trip log");
-      }
+      toast.success("Added to your trip log");
     }
   }
 
@@ -74,11 +62,6 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
               : <><Trophy className="w-2.5 h-2.5" />Mark completed</>
           }
         </button>
-        {!done && loggedIn !== false && (
-          <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(251,191,36,0.1)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.2)" }}>
-            <Zap className="w-2.5 h-2.5" />+{XP_REWARDS.checkIn} XP
-          </span>
-        )}
       </div>
     );
   }

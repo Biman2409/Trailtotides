@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Camera, Loader2, Trash2, X, ZoomIn, Upload, ImageOff } from "lucide-react";
 import Link from "next/link";
-import { useXP } from "@/contexts/XPContext";
 import { toast } from "sonner";
 
 interface Photo {
@@ -37,7 +36,6 @@ function timeAgo(dateStr: string): string {
 }
 
 export default function PhotoGallery({ slug, currentUserId }: Props) {
-  const { onPhoto } = useXP();
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -89,10 +87,7 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
       setFile(null);
       setPreview(null);
       setCaption("");
-      const gained = onPhoto(slug);
-      if (gained > 0) {
-        toast.success(`+${gained} XP — Photo shared!`, { description: "Your shot is live on the trail.", duration: 3000 });
-      }
+      toast.success("Photo shared!", { description: "Your shot is live on the trail.", duration: 3000 });
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
