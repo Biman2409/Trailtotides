@@ -89,3 +89,5 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /api/reviews?slug=manali-leh-bike-expedition 200 in 662ms
  GET /api/photos?slug=manali-leh-bike-expedition 200 in 940ms
  GET /api/photos?slug=manali-leh-bike-expedition 200 in 967ms
+ GET /experiences/manali-leh-bike-expedition?_cb=1776105165580 200 in 478ms
+ GET /experiences/manali-leh-bike-expedition?_cb=1776105166890 200 in 423ms
