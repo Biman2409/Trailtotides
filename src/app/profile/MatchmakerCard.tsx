@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { loadProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import { ArrowRight, RotateCcw } from "lucide-react";
@@ -26,6 +27,7 @@ const TIER_INFO: Record<string, { color: string; stars: number; icon: React.Reac
 };
 
 export default function MatchmakerCard({ isLoggedIn }: { isLoggedIn: boolean }) {
+  const router = useRouter();
   const [profile, setProfile] = useState<ReturnType<typeof loadProfile>>(null);
 
   useEffect(() => {
@@ -49,7 +51,7 @@ export default function MatchmakerCard({ isLoggedIn }: { isLoggedIn: boolean }) 
         <p className="text-white font-semibold text-sm">Adventure Profile</p>
         {profile && (
           <button
-            onClick={() => { localStorage.removeItem("ttt_matchmaker_profile"); setProfile(null); }}
+            onClick={() => { localStorage.removeItem("ttt_matchmaker_profile"); setProfile(null); router.push("/matchmaker?retake=1"); }}
             className="flex items-center gap-1.5 text-white/30 hover:text-white/60 text-xs transition-colors"
           >
             <RotateCcw className="w-3 h-3" />

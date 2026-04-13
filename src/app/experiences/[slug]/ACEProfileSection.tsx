@@ -216,7 +216,7 @@ export default function ACEProfileSection({
           </p>
           {userAce && (
             <Link
-              href="/matchmaker"
+              href="/matchmaker?retake=1"
               className="inline-flex items-center gap-1.5 shrink-0 text-xs font-semibold px-3 py-2 rounded-lg transition-all hover:brightness-110 whitespace-nowrap"
               style={{ background: "rgba(255,81,0,0.1)", border: "1px solid rgba(255,81,0,0.2)", color: "#ff5100" }}
             >

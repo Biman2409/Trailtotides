@@ -181,7 +181,7 @@ export default function ACEProfileSection() {
 
           {/* Retake button */}
           <Link
-            href="/matchmaker"
+            href="/matchmaker?retake=1"
             className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:brightness-110 w-fit"
             style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.18)", color: "#ff7d47" }}
           >

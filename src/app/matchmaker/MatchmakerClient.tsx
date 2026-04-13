@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -1138,7 +1139,8 @@ function buildResult(userAxes: Record<string, number>): AnalysisResult {
 }
 
 export default function MatchmakerClient() {
-  const [started, setStarted] = useState(false);
+  const searchParams = useSearchParams();
+  const [started, setStarted] = useState(() => searchParams.get("retake") === "1");
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [loading, setLoading] = useState(false);
