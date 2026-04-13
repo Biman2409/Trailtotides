@@ -11,7 +11,19 @@ import {
 import { getAchievements, type Achievement } from "@/lib/achievements";
 import type { ACE } from "@/lib/ace";
 
+function Flame9000Icon({ size }: { size: "sm" | "md" }) {
+  const cls = size === "sm" ? "w-4 h-4" : "w-5 h-5";
+  const fs = size === "sm" ? "5px" : "6px";
+  return (
+    <span className="relative inline-flex items-center justify-center">
+      <Zap className={cls} />
+      <span style={{ position: "absolute", bottom: -1, right: -3, fontSize: fs, fontWeight: 900, lineHeight: 1, color: "#ff3d00", textShadow: "0 0 4px #ff3d0099", letterSpacing: "-0.04em" }}>9K</span>
+    </span>
+  );
+}
+
 const ICON_SM: Record<string, React.ReactNode> = {
+  Flame9000:    <Flame9000Icon size="sm" />,
   Trophy:       <Trophy       className="w-4 h-4" />,
   Crown:        <Crown        className="w-4 h-4" />,
   Globe:        <Globe        className="w-4 h-4" />,
@@ -30,6 +42,7 @@ const ICON_SM: Record<string, React.ReactNode> = {
 };
 
 const ICON_MD: Record<string, React.ReactNode> = {
+  Flame9000:    <Flame9000Icon size="md" />,
   Trophy:       <Trophy       className="w-5 h-5" />,
   Crown:        <Crown        className="w-6 h-6" />,
   Globe:        <Globe        className="w-5 h-5" />,

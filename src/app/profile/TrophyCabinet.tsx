@@ -15,6 +15,15 @@ import { loadProfile } from "@/lib/matchmaker";
 
 const ICON = (name: string, size: number): React.ReactNode => {
   const s = { width: size, height: size } as React.CSSProperties;
+  if (name === "Flame9000") {
+    const fs = Math.round(size * 0.28);
+    return (
+      <span style={{ position: "relative", display: "inline-flex", ...s }}>
+        <Zap style={s} />
+        <span style={{ position: "absolute", bottom: 0, right: -2, fontSize: fs, fontWeight: 900, lineHeight: 1, color: "#ff3d00", textShadow: "0 0 6px #ff3d0088", letterSpacing: "-0.04em" }}>9K</span>
+      </span>
+    );
+  }
   const map: Record<string, React.ReactNode> = {
     Crown:          <Crown          style={s} />,
     Trophy:         <Trophy         style={s} />,
@@ -179,6 +188,7 @@ function TierLabel({ label, color, earned, total }: { tier?: string; label: stri
 export default function TrophyCabinet() {
   const [stored, setStored] = useState<ReturnType<typeof loadProfile>>(null);
   const [mounted, setMounted] = useState(false);
+  const [totalXP, setTotalXP] = useState(0);
   const [active, setActive] = useState<Achievement | null>(null);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -213,6 +223,9 @@ export default function TrophyCabinet() {
     import("@/lib/matchmaker").then(({ loadProfileFromServer }) => {
       loadProfileFromServer().then(p => { if (!cancelled) { setStored(p); setMounted(true); } });
     });
+    fetch("/api/xp").then(r => r.ok ? r.json() : null).then(data => {
+      if (!cancelled && data?.xp != null) setTotalXP(data.xp);
+    }).catch(() => {});
     return () => { cancelled = true; };
   }, []);
 
@@ -235,7 +248,7 @@ export default function TrophyCabinet() {
     );
   }
 
-  const achievements = getAchievements(stored.ace);
+  const achievements = getAchievements(stored.ace, totalXP);
   const earnedIds = new Set(achievements.map(a => a.id));
   const totalEarned = earnedIds.size;
   const totalPossible = TIER1_ALL.length + TIER2_ALL.length + TIER3_ALL.length;

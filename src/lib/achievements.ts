@@ -19,56 +19,56 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
     name:        "Run, Forrest, Run!",
     description: "Moves for 8+ hours without stopping. Built for back-to-back days in the mountains.",
     color:       "#f97316",
-    icon:        "Timer",       // stopwatch — relentless endurance
+    icon:        "Timer",
   },
   power: {
     id:          "incredible-hulk",
     name:        "Incredible Hulk",
     description: "Raw power that levels terrain. Carries impossible loads without breaking stride.",
     color:       "#84cc16",
-    icon:        "Dumbbell",    // raw strength / weight lifting
+    icon:        "Dumbbell",
   },
   strength: {
     id:          "hero-hercules",
     name:        "Hero Hercules",
     description: "Powers up sustained steep ascents without losing pace. Legs that never quit.",
     color:       "#eab308",
-    icon:        "MountainSnow", // steep ascent — legs of Hercules
+    icon:        "MountainSnow",
   },
   agility: {
     id:          "spidey-sense",
     name:        "Spidey-Sense",
     description: "At home on glaciers and exposed rock. Moves confidently where others hesitate.",
     color:       "#22d3ee",
-    icon:        "Footprints",  // quick sure-footed movement
+    icon:        "Footprints",
   },
   water: {
     id:          "little-mermaid",
     name:        "Little Mermaid",
     description: "Handles strong currents and rough conditions. Water holds no fear.",
     color:       "#3b82f6",
-    icon:        "Waves",       // water / ocean element
+    icon:        "Waves",
   },
   altitude: {
     id:          "abominable-snowman",
     name:        "Abominable Snowman",
     description: "Stays active above 4,200m. The altitude works for you, not against you.",
     color:       "#a78bfa",
-    icon:        "Wind",        // thin cold high-altitude air
+    icon:        "Wind",
   },
   focus: {
     id:          "master-yoda",
     name:        "Master Yoda",
     description: "Calm and precise on fatal drop-offs. Exposure doesn't break focus.",
     color:       "#f43f5e",
-    icon:        "ScanEye",     // acute focus / precision perception
+    icon:        "ScanEye",
   },
   nerve: {
     id:          "john-rambo",
     name:        "John Rambo",
     description: "No signal, no rescue, no problem. Fully self-sufficient in the wild.",
     color:       "#10b981",
-    icon:        "Shield",      // self-reliance / survival armor
+    icon:        "Shield",
   },
 };
 
@@ -80,7 +80,7 @@ export const DOMAIN_BADGES = [
     name:        "Terminator Core",
     description: "Stamina and Power both maxed. An unstoppable human engine that never shuts down.",
     color:       "#f97316",
-    icon:        "Zap",         // raw machine-like energy — terminator
+    icon:        "Zap",
     tier:        "domain" as const,
     axes:        ["stamina", "power"] as (keyof ACE)[],
   },
@@ -89,7 +89,7 @@ export const DOMAIN_BADGES = [
     name:        "Iron Sherpa",
     description: "Strength and Agility both maxed. Total command over any terrain.",
     color:       "#22d3ee",
-    icon:        "Pickaxe",     // the sherpa's tool — terrain mastery
+    icon:        "Pickaxe",
     tier:        "domain" as const,
     axes:        ["strength", "agility"] as (keyof ACE)[],
   },
@@ -98,7 +98,7 @@ export const DOMAIN_BADGES = [
     name:        "The Avatar",
     description: "Water and Altitude both maxed. Master of nature's two most unforgiving elements.",
     color:       "#a78bfa",
-    icon:        "Globe",       // mastery of natural elements
+    icon:        "Globe",
     tier:        "domain" as const,
     axes:        ["water", "altitude"] as (keyof ACE)[],
   },
@@ -107,51 +107,58 @@ export const DOMAIN_BADGES = [
     name:        "Awakened Buddha",
     description: "Focus and Nerve both maxed. An unbreakable mind forged in the wilderness.",
     color:       "#10b981",
-    icon:        "Brain",       // mental mastery — the awakened mind
+    icon:        "Brain",
     tier:        "domain" as const,
     axes:        ["focus", "nerve"] as (keyof ACE)[],
   },
 ];
 
-// ─── Tier 1 — Apex badges ─────────────────────────────────────────────────────
+// ─── Tier 1 — Apex / Special badges ──────────────────────────────────────────
 
 export const SPECIAL_BADGES = [
+  {
+    id:           "over-9000",
+    name:         "It's Over 9000!",
+    description:  "9,000+ XP earned. The scouter can't even measure this power level.",
+    color:        "#ff3d00",
+    icon:         "Flame9000",   // custom — mapped in components
+    tier:         "special" as const,
+    minXP:        9000,
+  },
   {
     id:           "one-above-all",
     name:         "One Above All",
     description:  "All 8 axes maxed. The complete adventurer — nothing is out of reach.",
     color:        "#fbbf24",
-    icon:         "Crown",      // ultimate royalty — pinnacle of achievement
+    icon:         "Crown",
     tier:         "special" as const,
     minEliteAxes: 8,
-    suppressIfAll: false,
   },
   {
     id:            "gandalf-the-grey",
     name:          "Gandalf the Grey",
     description:   "Elite across 4 or more axes. A rare all-round expedition-grade profile.",
     color:         "#f59e0b",
-    icon:          "Wand",      // Gandalf's staff — wizard-level adventurer
+    icon:          "Wand",
     tier:          "special" as const,
     minEliteAxes:  4,
-    suppressIfAll: false,
   },
 ];
 
 // ─── Core function ────────────────────────────────────────────────────────────
 
-export function getAchievements(ace: ACE): Achievement[] {
+export function getAchievements(ace: ACE, totalXP = 0): Achievement[] {
   const earned: Achievement[] = [];
 
   const axes = Object.keys(ace) as (keyof ACE)[];
   const eliteCount = axes.filter((ax) => ace[ax] >= 5).length;
-  const hasAll = eliteCount >= 8;
 
   // Tier 1 — Apex
   for (const badge of SPECIAL_BADGES) {
-    if (badge.suppressIfAll && hasAll) continue;
-    if (eliteCount >= badge.minEliteAxes) {
-      earned.push({ ...badge });
+    if ("minXP" in badge && badge.minXP !== undefined) {
+      if (totalXP >= badge.minXP) earned.push({ ...badge });
+    } else if ("minEliteAxes" in badge && badge.minEliteAxes !== undefined) {
+      if (eliteCount >= badge.minEliteAxes) earned.push({ ...badge });
     }
   }
 
@@ -171,4 +178,3 @@ export function getAchievements(ace: ACE): Achievement[] {
 
   return earned;
 }
-
