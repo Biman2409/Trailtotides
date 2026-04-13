@@ -198,7 +198,7 @@ export default async function ProfilePage() {
               <div>
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-1.5 h-5 rounded-full bg-[#ff5100]" />
-                  <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>ACE Profile</h2>
+                  <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>Adventure Capability Engine (ACE) Profile</h2>
                 </div>
                 <ACEProfileSection />
               </div>
@@ -207,7 +207,7 @@ export default async function ProfilePage() {
               <div>
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-1.5 h-5 rounded-full" style={{ background: "#34d399" }} />
-                  <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>Explorer Rank</h2>
+                  <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>Trail Tier</h2>
                 </div>
                 <XPLevelBar />
               </div>
