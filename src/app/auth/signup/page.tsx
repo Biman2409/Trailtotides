@@ -298,7 +298,7 @@ export default function SignUpPage() {
                         <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
                       </svg>
                     </span>
-                    <span className="flex-1 text-white/30 text-sm">Choose a character…</span>
+                    <span className="flex-1 text-white/30 text-sm">Select your avatar</span>
                     <ChevronDown className="w-4 h-4 shrink-0 text-white/20 transition-transform duration-200" style={{ transform: avatarDropdownOpen ? "rotate(180deg)" : "none" }} />
                   </>
                 )}
