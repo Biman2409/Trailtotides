@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { awardXP } from "@/lib/awardXP";
 
 interface SaveButtonProps {
   slug: string;
@@ -41,6 +42,7 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
       toast("Removed from wishlist");
     } else {
       toast.success("Added to wishlist ♥");
+      awardXP("wishlist", slug);
     }
   }
 

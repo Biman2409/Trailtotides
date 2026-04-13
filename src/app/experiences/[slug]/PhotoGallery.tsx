@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Camera, Loader2, Trash2, X, ZoomIn, Upload, ImageOff } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { awardXP } from "@/lib/awardXP";
 
 interface Photo {
   id: string;
@@ -88,6 +89,7 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
       setPreview(null);
       setCaption("");
       toast.success("Photo shared!", { description: "Your shot is live on the trail.", duration: 3000 });
+      awardXP("photo", slug);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {

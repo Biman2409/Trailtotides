@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Star, Trash2, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { awardXP } from "@/lib/awardXP";
 
 interface Review {
   id: string;
@@ -128,6 +129,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
       setRating(0); setBody("");
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
+      awardXP("review", slug);
     } catch {
       setError("Something went wrong.");
     } finally {

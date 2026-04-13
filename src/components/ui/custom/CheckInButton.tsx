@@ -6,6 +6,7 @@ import { useTripLog } from "@/contexts/TripLogContext";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { awardXP } from "@/lib/awardXP";
 
 interface Props {
   slug: string;
@@ -41,6 +42,7 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
     } else {
       await markDone(slug);
       toast.success("Added to your trip log");
+      awardXP("checkin", slug);
     }
   }
 

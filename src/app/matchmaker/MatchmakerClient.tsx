@@ -16,6 +16,7 @@ import { saveProfile, loadProfile, clearProfile, saveProfileToServer, loadProfil
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
 import { getACE } from "@/lib/ace";
 import { getAchievements } from "@/lib/achievements";
+import { awardXP } from "@/lib/awardXP";
 
 // ─── Question definitions (Q1–Q8 map to 8 bio axes) ──────────────────────────
 
@@ -1176,6 +1177,7 @@ export default function MatchmakerClient() {
     const profile = { ace: userAxes };
     saveProfile(profile);
     saveProfileToServer(profile); // persist for logged-in users
+    awardXP("ace_complete");
 
     setResult(buildResult(userAxes));
     setLoading(false);

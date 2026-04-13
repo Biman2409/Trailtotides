@@ -18,6 +18,7 @@ import TrekStreakCounter from "./TrekStreakCounter";
 import ACEProfileSection from "./ACEProfileSection";
 import AvatarPicker from "./AvatarPicker";
 import TrophyCabinet from "./TrophyCabinet";
+import ExpeditionProfile from "./ExpeditionProfile";
 import { getOperatorProfile, getSubmissionsForOperator } from "@/app/auth/operator-actions";
 import { adventures } from "@/lib/data";
 import DashboardClient from "@/app/auth/operator-dashboard/DashboardClient";
@@ -193,6 +194,15 @@ export default async function ProfilePage() {
           ) : (
             /* ── Explorer view ─────────────────────────────────── */
             <>
+              {/* Expedition Profile */}
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-1.5 h-5 rounded-full" style={{ background: "#ff5100" }} />
+                  <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>Expedition Profile</h2>
+                </div>
+                <ExpeditionProfile />
+              </div>
+
               {/* ACE Profile */}
               <div>
                 <div className="flex items-center gap-2 mb-4">

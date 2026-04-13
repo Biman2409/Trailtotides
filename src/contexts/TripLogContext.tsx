@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useRef, useState, useCallb
 import { createClient } from "@/lib/supabase/client";
 import { loadTripLog, saveTripLog } from "@/app/triplog/actions";
 import type { TripEntry } from "@/app/triplog/actions";
+import { awardXP } from "@/lib/awardXP";
 
 export type { TripEntry };
 
@@ -67,11 +68,11 @@ export function TripLogProvider({ children }: { children: React.ReactNode }) {
   const markDone = useCallback(async (slug: string, date?: string, note?: string) => {
     const entry: TripEntry = { slug, date: date ?? new Date().toISOString().slice(0, 10), note };
     const current = logRef.current;
-    const next = current.find(e => e.slug === slug)
-      ? current.map(e => e.slug === slug ? entry : e)
-      : [...current, entry];
+    const isNew = !current.find(e => e.slug === slug);
+    const next = isNew ? [...current, entry] : current.map(e => e.slug === slug ? entry : e);
     setLog(next);
     if (userId) saveTripLog(next); else lsSet(next);
+    if (isNew && userId) awardXP("trip_log", slug);
   }, [userId]);
 
   const unmark = useCallback(async (slug: string) => {

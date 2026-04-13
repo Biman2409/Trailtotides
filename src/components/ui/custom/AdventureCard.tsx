@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { BadgeCheck, GitCompare, Star } from "lucide-react";
 import { toast } from "sonner";
+import { awardXP } from "@/lib/awardXP";
 import type { Adventure, Month } from "@/lib/data";
 import { getACE, computeDifficulty, computeMatchScore } from "@/lib/ace";
 import { loadProfile } from "@/lib/matchmaker";
@@ -72,6 +73,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
     } else {
       add(adventure);
       toast.success("Added to compare");
+      awardXP("compare");
     }
   }
   const monthIndex = new Date().getMonth();
