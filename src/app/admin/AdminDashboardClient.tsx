@@ -250,72 +250,62 @@ function UserDetailPanel({
           {!isSelf && (
             <div className="space-y-3">
               <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20">Quick Actions</p>
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-wrap gap-1.5">
                 <button
                   onClick={() => profile.email && onAction("reset", profile.id, profile.email)}
                   disabled={loadingId === profile.id}
-                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[12px] font-semibold transition-all border border-white/8 hover:border-blue-500/35 hover:bg-blue-500/8 text-white/45 hover:text-blue-300 disabled:opacity-40"
+                  title="Send Password Reset"
+                  className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-white/8 hover:border-blue-500/35 hover:bg-blue-500/8 text-white/40 hover:text-blue-300 disabled:opacity-40"
                 >
-                  <KeyRound className="w-3.5 h-3.5 shrink-0" />
-                  Send Password Reset
+                  <KeyRound className="w-3.5 h-3.5" /> Reset
                 </button>
-                {/* Role change */}
-                {profile.role !== "operator" && (
-                  <button
-                    onClick={() => onAction("role", profile.id, "operator")}
-                    disabled={loadingId === profile.id}
-                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[12px] font-semibold transition-all border border-cyan-500/15 hover:border-cyan-500/35 hover:bg-cyan-500/8 text-white/35 hover:text-cyan-300 disabled:opacity-40"
-                  >
-                    <Building2 className="w-3.5 h-3.5 shrink-0" />
-                    Set as Operator
-                  </button>
-                )}
                 {profile.role !== "admin" && (
                   <button
                     onClick={() => onAction("role", profile.id, "admin")}
                     disabled={loadingId === profile.id}
-                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[12px] font-semibold transition-all border border-purple-500/15 hover:border-purple-500/35 hover:bg-purple-500/8 text-white/35 hover:text-purple-300 disabled:opacity-40"
+                    title="Promote to Admin"
+                    className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-purple-500/15 hover:border-purple-500/35 hover:bg-purple-500/8 text-white/35 hover:text-purple-300 disabled:opacity-40"
                   >
-                    <Shield className="w-3.5 h-3.5 shrink-0" />
-                    Set as Admin
+                    <Shield className="w-3.5 h-3.5" /> Admin
                   </button>
                 )}
                 {profile.role !== "user" && (
                   <button
                     onClick={() => onAction("role", profile.id, "user")}
                     disabled={loadingId === profile.id}
-                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[12px] font-semibold transition-all border border-white/8 hover:border-white/20 hover:bg-white/5 text-white/35 hover:text-white/65 disabled:opacity-40"
+                    title="Set as User"
+                    className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-white/8 hover:border-white/20 hover:bg-white/5 text-white/35 hover:text-white/65 disabled:opacity-40"
                   >
-                    <ArrowUpDown className="w-3.5 h-3.5 shrink-0" />
-                    Set as User
+                    <ArrowUpDown className="w-3.5 h-3.5" /> User
                   </button>
                 )}
+                <a
+                  href={`mailto:${profile.email}`}
+                  title="Email User"
+                  className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-white/8 hover:border-white/20 hover:bg-white/5 text-white/35 hover:text-white/70"
+                >
+                  <Mail className="w-3.5 h-3.5" /> Email
+                </a>
                 <button
                   onClick={() => onAction(profile.banned ? "unban" : "ban", profile.id)}
                   disabled={loadingId === profile.id}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[12px] font-semibold transition-all border disabled:opacity-40 ${
+                  title={profile.banned ? "Unban User" : "Ban User"}
+                  className={`flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border disabled:opacity-40 ${
                     profile.banned
                       ? "border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/8 text-emerald-400/70 hover:text-emerald-300"
                       : "border-amber-500/15 hover:border-amber-500/35 hover:bg-amber-500/8 text-white/35 hover:text-amber-300"
                   }`}
                 >
-                  {profile.banned ? <UserCheck className="w-3.5 h-3.5 shrink-0" /> : <UserX className="w-3.5 h-3.5 shrink-0" />}
-                  {profile.banned ? "Unban User" : "Ban User"}
+                  {profile.banned ? <UserCheck className="w-3.5 h-3.5" /> : <UserX className="w-3.5 h-3.5" />}
+                  {profile.banned ? "Unban" : "Ban"}
                 </button>
-                <a
-                  href={`mailto:${profile.email}`}
-                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[12px] font-semibold transition-all border border-white/8 hover:border-white/20 hover:bg-white/5 text-white/35 hover:text-white/70"
-                >
-                  <Mail className="w-3.5 h-3.5 shrink-0" />
-                  Email User
-                </a>
                 <button
                   onClick={() => onAction("delete", profile.id)}
                   disabled={loadingId === profile.id}
-                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[12px] font-semibold transition-all border border-red-500/10 hover:border-red-500/35 hover:bg-red-500/8 text-white/25 hover:text-red-400 disabled:opacity-40"
+                  title="Delete Account"
+                  className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-red-500/10 hover:border-red-500/35 hover:bg-red-500/8 text-white/25 hover:text-red-400 disabled:opacity-40"
                 >
-                  <Trash2 className="w-3.5 h-3.5 shrink-0" />
-                  Delete Account
+                  <Trash2 className="w-3.5 h-3.5" /> Delete
                 </button>
               </div>
             </div>
@@ -1285,6 +1275,7 @@ export default function AdminDashboardClient({
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-white/[0.05] bg-white/[0.015]">
+                        <th className="w-8 px-4 py-3" />
                         <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Company</th>
                         <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25 hidden md:table-cell">Contact</th>
                         <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25 hidden sm:table-cell">Website</th>
@@ -1297,43 +1288,126 @@ export default function AdminDashboardClient({
                         const op = localOperatorProfiles.find(o => o.user_id === p.id);
                         const subCount = localOperatorSubmissions.filter(s => s.operator_id === p.id).length;
                         const pendingSubs = localOperatorSubmissions.filter(s => s.operator_id === p.id && s.status === "pending").length;
+                        const isExpanded = expandedUserId === p.id;
                         return (
-                          <tr key={p.id} className="border-b border-white/[0.04] hover:bg-white/[0.025] last:border-0 transition-colors">
-                            <td className="px-5 py-4">
-                              <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/12 flex items-center justify-center text-cyan-400 font-black text-sm shrink-0">
-                                  {(op?.company_name?.[0] ?? p.full_name?.[0] ?? "?").toUpperCase()}
+                          <>
+                            <tr key={p.id} className={`border-b border-white/[0.04] last:border-0 transition-colors ${isExpanded ? "bg-white/[0.035]" : "hover:bg-white/[0.025]"}`}>
+                              <td className="pl-4 pr-2 py-3.5">
+                                <button onClick={() => setExpandedUserId(isExpanded ? null : p.id)}
+                                  className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors text-white/20 hover:text-white/50">
+                                  <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
+                                </button>
+                              </td>
+                              <td className="px-5 py-4">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/12 flex items-center justify-center text-cyan-400 font-black text-sm shrink-0">
+                                    {(op?.company_name?.[0] ?? p.full_name?.[0] ?? "?").toUpperCase()}
+                                  </div>
+                                  <div>
+                                    <p className="font-semibold text-white/85 text-[13px] leading-tight">{op?.company_name ?? p.full_name ?? "—"}</p>
+                                    <p className="text-white/25 text-[10px] font-mono mt-0.5">{p.email}</p>
+                                  </div>
                                 </div>
-                                <div>
-                                  <p className="font-semibold text-white/85 text-[13px] leading-tight">{op?.company_name ?? p.full_name ?? "—"}</p>
-                                  <p className="text-white/25 text-[10px] font-mono mt-0.5">{p.email}</p>
+                              </td>
+                              <td className="px-5 py-4 hidden md:table-cell">
+                                <p className="text-white/55 text-[12px]">{op?.contact_name ?? p.full_name ?? "—"}</p>
+                                {op?.phone && <p className="text-white/25 text-[10px] font-mono mt-0.5">{op.phone}</p>}
+                              </td>
+                              <td className="px-5 py-4 hidden sm:table-cell">
+                                {op?.website ? (
+                                  <a href={op.website} target="_blank" rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 text-[#ff7d47]/60 hover:text-[#ff7d47] text-[11px] transition-colors">
+                                    <Globe className="w-3 h-3" />{op.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                                  </a>
+                                ) : <span className="text-white/20 text-[11px]">—</span>}
+                              </td>
+                              <td className="px-5 py-4 hidden lg:table-cell">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-[12px] font-semibold text-white/50">{subCount}</span>
+                                  {pendingSubs > 0 && (
+                                    <span className="bg-amber-500/15 text-amber-400 text-[9px] font-black px-1.5 py-0.5 rounded-full">{pendingSubs} pending</span>
+                                  )}
                                 </div>
-                              </div>
-                            </td>
-                            <td className="px-5 py-4 hidden md:table-cell">
-                              <p className="text-white/55 text-[12px]">{op?.contact_name ?? p.full_name ?? "—"}</p>
-                              {op?.phone && <p className="text-white/25 text-[10px] font-mono mt-0.5">{op.phone}</p>}
-                            </td>
-                            <td className="px-5 py-4 hidden sm:table-cell">
-                              {op?.website ? (
-                                <a href={op.website} target="_blank" rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1 text-[#ff7d47]/60 hover:text-[#ff7d47] text-[11px] transition-colors">
-                                  <Globe className="w-3 h-3" />{op.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
-                                </a>
-                              ) : <span className="text-white/20 text-[11px]">—</span>}
-                            </td>
-                            <td className="px-5 py-4 hidden lg:table-cell">
-                              <div className="flex items-center gap-1.5">
-                                <span className="text-[12px] font-semibold text-white/50">{subCount}</span>
-                                {pendingSubs > 0 && (
-                                  <span className="bg-amber-500/15 text-amber-400 text-[9px] font-black px-1.5 py-0.5 rounded-full">{pendingSubs} pending</span>
-                                )}
-                              </div>
-                            </td>
-                            <td className="px-5 py-4 text-white/25 text-[11px]">
-                              {format(parseISO(p.created_at), "MMM d, yyyy")}
-                            </td>
-                          </tr>
+                              </td>
+                              <td className="px-5 py-4 text-white/25 text-[11px]">
+                                {format(parseISO(p.created_at), "MMM d, yyyy")}
+                              </td>
+                            </tr>
+                            {isExpanded && (
+                              <tr>
+                                <td colSpan={6} className="px-0 py-0">
+                                  <div className="mx-3 mb-2 rounded-2xl border p-4 grid grid-cols-1 md:grid-cols-2 gap-5"
+                                    style={{ background: "rgba(255,255,255,0.018)", borderColor: "rgba(255,255,255,0.07)" }}>
+                                    {/* Identity */}
+                                    <div className="space-y-2">
+                                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20">Identity</p>
+                                      <div className="flex items-center gap-2">
+                                        <Mail className="w-3 h-3 text-white/20 shrink-0" />
+                                        <span className="text-[12px] font-mono text-white/65 truncate">{p.email ?? "—"}</span>
+                                        {p.email && <CopyBtn text={p.email} />}
+                                      </div>
+                                      {op?.phone && (
+                                        <div className="flex items-center gap-2">
+                                          <Phone className="w-3 h-3 text-white/20 shrink-0" />
+                                          <span className="text-[12px] font-mono text-white/65">{op.phone}</span>
+                                          <CopyBtn text={op.phone} />
+                                        </div>
+                                      )}
+                                      <div className="flex items-center gap-2">
+                                        <Calendar className="w-3 h-3 text-white/20 shrink-0" />
+                                        <span className="text-[11px] text-white/40">Joined {format(parseISO(p.created_at), "MMM d, yyyy")}</span>
+                                      </div>
+                                      <div className="flex items-center gap-2 pt-1">
+                                        <div className="w-3 h-3 shrink-0" />
+                                        <span className="text-[9px] font-mono text-white/20 truncate">{p.id}</span>
+                                        <CopyBtn text={p.id} />
+                                      </div>
+                                    </div>
+                                    {/* Quick Actions */}
+                                    <div className="space-y-2">
+                                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20">Quick Actions</p>
+                                      <div className="flex flex-wrap gap-1.5">
+                                        <button
+                                          onClick={() => p.email && handleUserAction("reset", p.id, p.email)}
+                                          disabled={loadingId === p.id}
+                                          title="Send Password Reset"
+                                          className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-white/8 hover:border-blue-500/35 hover:bg-blue-500/8 text-white/40 hover:text-blue-300 disabled:opacity-40"
+                                        >
+                                          <KeyRound className="w-3.5 h-3.5" /> Reset
+                                        </button>
+                                        <a href={`mailto:${p.email}`}
+                                          className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-white/8 hover:border-white/20 hover:bg-white/5 text-white/35 hover:text-white/70">
+                                          <Mail className="w-3.5 h-3.5" /> Email
+                                        </a>
+                                        <button
+                                          onClick={() => handleUserAction(p.banned ? "unban" : "ban", p.id)}
+                                          disabled={loadingId === p.id}
+                                          title={p.banned ? "Unban" : "Ban"}
+                                          className={`flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border disabled:opacity-40 ${
+                                            p.banned
+                                              ? "border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/8 text-emerald-400/70 hover:text-emerald-300"
+                                              : "border-amber-500/15 hover:border-amber-500/35 hover:bg-amber-500/8 text-white/35 hover:text-amber-300"
+                                          }`}
+                                        >
+                                          {p.banned ? <UserCheck className="w-3.5 h-3.5" /> : <UserX className="w-3.5 h-3.5" />}
+                                          {p.banned ? "Unban" : "Ban"}
+                                        </button>
+                                        <button
+                                          onClick={() => handleUserAction("delete", p.id)}
+                                          disabled={loadingId === p.id}
+                                          title="Delete Account"
+                                          className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-red-500/10 hover:border-red-500/35 hover:bg-red-500/8 text-white/25 hover:text-red-400 disabled:opacity-40"
+                                        >
+                                          {loadingId === p.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                                          Delete
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            )}
+                          </>
                         );
                       })}
                     </tbody>
