@@ -714,3 +714,10 @@ Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
  ✓ Compiled /profile in 17ms
  GET /profile?_cb=1776113502287 307 in 375ms
  GET /auth/login 200 in 357ms
+ GET /profile?_cb=1776113604443 307 in 101ms
+ GET /auth/login 200 in 74ms
+ GET /profile?_cb=1776113605498 307 in 97ms
+ GET /auth/login 200 in 80ms
+ GET /profile?_cb=1776113606687 307 in 94ms
+ GET /auth/login 200 in 78ms
+ GET /profile?_cb=1776113607851 307 in 108ms
