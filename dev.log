@@ -625,3 +625,32 @@ Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
  GET /auth/login 200 in 74ms
  GET /profile?_cb=1776111306627 307 in 77ms
  GET /auth/login 200 in 66ms
+ ✓ Compiled /api/xp in 85ms
+ GET /api/xp 200 in 333ms
+ POST /api/xp 401 in 241ms
+ ✓ Compiled middleware in 0ms
+ ✓ Compiled in 53ms
+ GET /profile?_cb=1776111306627 200 in 191ms
+ GET /profile?_cb=1776111306627 200 in 66ms
+ GET /profile?_cb=1776111306627 200 in 48ms
+ GET /profile?_cb=1776111306627 200 in 56ms
+ GET /auth/login 200 in 187ms
+ GET /auth/login 200 in 187ms
+ GET /auth/login?_cb=1776111306627 200 in 198ms
+ GET /auth/login?_cb=1776111487862 200 in 75ms
+ GET /auth/login?_cb=1776111488928 200 in 80ms
+ ✓ Compiled /api/setup-xp-table in 69ms
+ POST /api/setup-xp-table 500 in 480ms
+ GET /auth/login?_cb=1776111489799 200 in 69ms
+ GET /auth/login?_cb=1776111620052 200 in 98ms
+ GET /auth/login?_cb=1776111621197 200 in 106ms
+ GET /auth/login?_cb=1776111622222 200 in 85ms
+ GET /auth/login?_cb=1776111751577 200 in 112ms
+ GET /auth/login?_cb=1776111752772 200 in 102ms
+ GET /auth/login?_cb=1776111753673 200 in 156ms
+ GET /api/xp 200 in 297ms
+ POST /api/xp 401 in 240ms
+ ✓ Compiled middleware in 1ms
+ GET /auth/login?_cb=1776111753673 200 in 167ms
+ GET /auth/login?_cb=1776111753673 200 in 59ms
+ GET /profile 307 in 255ms

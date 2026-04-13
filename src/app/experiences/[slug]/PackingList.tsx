@@ -18,7 +18,7 @@ interface Item {
   condition?: string;
 }
 
-type LucideIcon = React.ComponentType<{ className?: string }>;
+type LucideIcon = React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
 
 interface Category {
   name: string;

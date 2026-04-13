@@ -8,44 +8,68 @@ const admin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// ─── Ensure table exists ──────────────────────────────────────────────────────
+const BUCKET = "user-data";
+const xpPath = (userId: string) => `xp/${userId}.json`;
 
-async function ensureTable() {
-  await admin.rpc("exec_sql", {
-    sql: `
-      CREATE TABLE IF NOT EXISTS xp_events (
-        id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-        user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-        action text NOT NULL,
-        adventure_slug text,
-        xp integer NOT NULL,
-        created_at timestamptz DEFAULT now()
-      );
-      CREATE INDEX IF NOT EXISTS xp_events_user_id_idx ON xp_events(user_id);
-    `,
-  }).catch(() => {}); // silently ignore if rpc unavailable
+interface XPEvent {
+  action: string;
+  adventure_slug: string;
+  xp: number;
+  created_at: string;
 }
 
-// ─── GET /api/xp — fetch user total ──────────────────────────────────────────
+// ─── Storage helpers ──────────────────────────────────────────────────────────
+
+async function ensureBucket() {
+  const { data: buckets } = await admin.storage.listBuckets();
+  if (!buckets?.find(b => b.name === BUCKET)) {
+    await admin.storage.createBucket(BUCKET, { public: false });
+  }
+}
+
+async function readEvents(userId: string): Promise<XPEvent[]> {
+  const { data } = await admin.storage.from(BUCKET).download(xpPath(userId));
+  if (!data) return [];
+  try {
+    const parsed = JSON.parse(await data.text());
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+async function writeEvents(userId: string, events: XPEvent[]): Promise<boolean> {
+  const blob = new Blob([JSON.stringify(events)], { type: "application/json" });
+  const { error } = await admin.storage
+    .from(BUCKET)
+    .upload(xpPath(userId), blob, { upsert: true });
+  if (error) {
+    // Bucket might not exist — create it and retry
+    await ensureBucket();
+    const { error: err2 } = await admin.storage
+      .from(BUCKET)
+      .upload(xpPath(userId), blob, { upsert: true });
+    if (err2) return false;
+  }
+  return true;
+}
+
+// ─── GET /api/xp ─────────────────────────────────────────────────────────────
 
 export async function GET() {
   const supabase = await createServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ xp: 0, events: [] });
 
-  const { data, error } = await admin
-    .from("xp_events")
-    .select("action, adventure_slug, xp, created_at")
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false });
-
-  if (error) return NextResponse.json({ xp: 0, events: [] });
-
-  const total = (data ?? []).reduce((sum, e) => sum + e.xp, 0);
-  return NextResponse.json({ xp: total, events: data ?? [] });
+  const events = await readEvents(user.id);
+  const total = events.reduce((sum, e) => sum + (e.xp ?? 0), 0);
+  const sorted = [...events].sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+  return NextResponse.json({ xp: total, events: sorted });
 }
 
-// ─── POST /api/xp — award XP ─────────────────────────────────────────────────
+// ─── POST /api/xp ────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
   const supabase = await createServerClient();
@@ -54,72 +78,53 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json();
   const action = body.action as XPAction;
-  const slug: string | null = body.slug ?? null;
+  const slug: string = body.slug ?? "";
 
   if (!action || !(action in XP_REWARDS)) {
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   }
 
   const xp = XP_REWARDS[action];
+  const events = await readEvents(user.id);
 
-  // ── Dedup rules ──────────────────────────────────────────────────────────────
-  const { data: existing } = await admin
-    .from("xp_events")
-    .select("id")
-    .eq("user_id", user.id)
-    .eq("action", action)
-    .eq("adventure_slug", slug ?? "")
-    .limit(1);
+  const matchSlug = (e: XPEvent) => e.adventure_slug === slug;
+  const matchAction = (e: XPEvent) => e.action === action;
 
   // One-time global actions
-  if (["ace_complete", "wishlist", "compare"].includes(action) && existing && existing.length > 0) {
-    return NextResponse.json({ awarded: false, reason: "already_awarded" });
+  if (action === "ace_complete") {
+    if (events.some(matchAction)) {
+      return NextResponse.json({ awarded: false, reason: "already_awarded" });
+    }
   }
 
   // Per-adventure once actions
-  if (["checkin", "review", "trip_log"].includes(action) && slug && existing && existing.length > 0) {
-    return NextResponse.json({ awarded: false, reason: "already_awarded" });
+  if (["wishlist", "compare", "checkin", "review", "trip_log"].includes(action)) {
+    if (events.some(e => matchAction(e) && matchSlug(e))) {
+      return NextResponse.json({ awarded: false, reason: "already_awarded" });
+    }
   }
 
   // Photo cap: max 3 per adventure
   if (action === "photo" && slug) {
-    const { count } = await admin
-      .from("xp_events")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id)
-      .eq("action", "photo")
-      .eq("adventure_slug", slug);
-    if ((count ?? 0) >= 3) {
+    const photoCount = events.filter(
+      e => e.action === "photo" && e.adventure_slug === slug
+    ).length;
+    if (photoCount >= 3) {
       return NextResponse.json({ awarded: false, reason: "photo_cap_reached" });
     }
   }
 
-  // Insert event
-  const { error } = await admin.from("xp_events").insert({
-    user_id: user.id,
+  const newEvent: XPEvent = {
     action,
-    adventure_slug: slug ?? "",
+    adventure_slug: slug,
     xp,
-  });
+    created_at: new Date().toISOString(),
+  };
 
-  if (error) {
-    // Try to create table and retry once
-    await ensureTable();
-    const { error: err2 } = await admin.from("xp_events").insert({
-      user_id: user.id,
-      action,
-      adventure_slug: slug ?? "",
-      xp,
-    });
-    if (err2) return NextResponse.json({ error: err2.message }, { status: 500 });
-  }
+  const updated = [...events, newEvent];
+  const ok = await writeEvents(user.id, updated);
+  if (!ok) return NextResponse.json({ error: "Failed to save XP" }, { status: 500 });
 
-  // Return new total
-  const { data: allEvents } = await admin
-    .from("xp_events")
-    .select("xp")
-    .eq("user_id", user.id);
-
-  const newTotal = (allEvents ?? []).reduce((s, e) => s + e.xp, 0);
+  const newTotal = updated.reduce((s, e) => s + (e.xp ?? 0), 0);
   return NextResponse.json({ awarded: true, xp, newTotal });
 }
