@@ -214,17 +214,24 @@ export async function saveProfileToServer(profile: StoredProfile): Promise<void>
   } catch {}
 }
 
-/** Load profile from Supabase, falling back to localStorage */
+/** Load profile from Supabase, falling back to localStorage.
+ *  Bidirectional sync: if server has no profile but localStorage does, push it up. */
 export async function loadProfileFromServer(): Promise<StoredProfile | null> {
   try {
     const res = await fetch("/api/ace-profile");
     if (!res.ok) return loadProfile();
     const { profile } = await res.json();
     if (profile?.ace) {
-      // Sync to localStorage so offline reads work
+      // Server has data — sync down to localStorage
       saveProfile(profile as StoredProfile);
       return profile as StoredProfile;
     }
+    // Server has no data — if localStorage has data, push it up
+    const local = loadProfile();
+    if (local?.ace) {
+      saveProfileToServer(local); // fire-and-forget
+    }
+    return local;
   } catch {}
   return loadProfile();
 }
