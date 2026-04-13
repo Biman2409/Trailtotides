@@ -11,6 +11,7 @@ export type OperatorCardData = {
   company_name: string;
   website: string | null;
   email: string;
+  logo_url?: string | null;
   adventureSlugs: string[];
   prices: Record<string, string>;
   verified: boolean;
@@ -251,10 +252,13 @@ export default function OperatorsClient({ cards, allTypes, allStates }: Props) {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <div
-                        className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 text-sm font-black"
-                        style={{ background: "rgba(255,81,0,0.09)", color: "#ff6b2b" }}
+                        className="w-9 h-9 rounded-lg overflow-hidden shrink-0 flex items-center justify-center text-sm font-black"
+                        style={op.logo_url ? { background: "#fff", border: "1px solid rgba(255,255,255,0.1)" } : { background: "rgba(255,81,0,0.09)", color: "#ff6b2b" }}
                       >
-                        {initial}
+                        {op.logo_url
+                          ? <img src={op.logo_url} alt={op.company_name} className="w-full h-full object-contain p-0.5" />
+                          : initial
+                        }
                       </div>
                       <div className="min-w-0">
                         <h2 className="text-white/90 font-semibold text-sm leading-tight truncate">{op.company_name}</h2>

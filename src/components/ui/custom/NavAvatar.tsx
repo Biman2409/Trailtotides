@@ -6,13 +6,32 @@ import { getTierLabel, getTier } from "@/lib/tiers";
 import { loadProfile } from "@/lib/matchmaker";
 import { RANK_ICONS } from "@/app/profile/AvatarPicker";
 
-export default function NavAvatar({ fallback }: { fallback: string }) {
+const OPERATOR_LOGO_KEY = "ttt_operator_logo";
+
+export default function NavAvatar({ fallback, role }: { fallback: string; role?: string }) {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [rankName, setRankName] = useState("Uncharted");
   const [rankColor, setRankColor] = useState("#6b7280");
+  const [operatorLogo, setOperatorLogo] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    if (role === "operator") {
+      // Load operator logo from cache first, then sync from server
+      const cached = localStorage.getItem(OPERATOR_LOGO_KEY);
+      if (cached) setOperatorLogo(cached);
+
+      fetch("/api/operator-profile").then(r => r.ok ? r.json() : null).then(data => {
+        const url = data?.logo_url ?? null;
+        setOperatorLogo(url);
+        if (url) localStorage.setItem(OPERATOR_LOGO_KEY, url);
+        else localStorage.removeItem(OPERATOR_LOGO_KEY);
+      }).catch(() => {});
+
+      setReady(true);
+      return;
+    }
+
     const stored = localStorage.getItem(LS_KEY);
     if (stored) setSelectedId(Number(stored));
 
@@ -23,7 +42,6 @@ export default function NavAvatar({ fallback }: { fallback: string }) {
         setSelectedId(data.avatar_id);
         localStorage.setItem(LS_KEY, String(data.avatar_id));
       } else if (localRaw) {
-        // Push local selection to server (selected before login or server lost it)
         fetch("/api/me", {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -44,18 +62,42 @@ export default function NavAvatar({ fallback }: { fallback: string }) {
       loadProfileFromServer().then(apply);
     });
     setReady(true);
-  }, []);
+  }, [role]);
 
-  const selected = selectedId !== null ? AVATARS.find(a => a.id === selectedId) ?? null : null;
+  // ── Operator: show company logo or building icon fallback ──────────────────
+  if (role === "operator") {
+    if (!ready) {
+      return (
+        <div className="w-7 h-7 rounded-lg flex items-center justify-center font-semibold text-xs shrink-0" style={{ background: "rgba(255,81,0,0.2)", color: "#ff7d47" }}>
+          {fallback}
+        </div>
+      );
+    }
+    if (operatorLogo) {
+      return (
+        <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0 bg-white flex items-center justify-center" style={{ border: "1.5px solid rgba(255,255,255,0.12)" }}>
+          <img src={operatorLogo} alt="Company logo" className="w-full h-full object-contain p-0.5" />
+        </div>
+      );
+    }
+    // No logo yet — show initial letter in a square (operator style)
+    return (
+      <div className="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0" style={{ background: "rgba(255,81,0,0.15)", border: "1.5px solid rgba(255,81,0,0.3)", color: "#ff7d47" }}>
+        {fallback}
+      </div>
+    );
+  }
 
+  // ── Explorer ───────────────────────────────────────────────────────────────
   if (!ready) {
-    // SSR / first paint: show initial letter
     return (
       <div className="w-7 h-7 rounded-full flex items-center justify-center font-semibold text-xs shrink-0" style={{ background: "rgba(255,81,0,0.2)", color: "#ff7d47" }}>
         {fallback}
       </div>
     );
   }
+
+  const selected = selectedId !== null ? AVATARS.find(a => a.id === selectedId) ?? null : null;
 
   if (selected) {
     return (

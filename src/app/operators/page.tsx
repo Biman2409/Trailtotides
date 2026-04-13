@@ -55,6 +55,7 @@ export default async function OperatorsPage() {
       company_name: p.company_name,
       website: p.website,
       email: p.email,
+      logo_url: p.logo_url ?? null,
       adventureSlugs: slugs,
       prices,
       verified: false,
