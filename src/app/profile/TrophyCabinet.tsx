@@ -7,7 +7,7 @@ import {
   Lock, Trophy, Crown, Globe, Brain,
   Footprints, Waves, ScanEye,
   Timer, Dumbbell, MountainSnow, Wind, Shield,
-  Zap, Pickaxe, Wand, Star, MessageSquare, Camera, Images,
+  Zap, Pickaxe, Wand,
 } from "@/lib/localIcons";
 import { getAchievements, AXIS_BADGES, DOMAIN_BADGES, SPECIAL_BADGES } from "@/lib/achievements";
 import type { Achievement } from "@/lib/achievements";
@@ -31,10 +31,6 @@ const ICON = (name: string, size: number): React.ReactNode => {
     Zap:            <Zap            style={s} />,
     Pickaxe:        <Pickaxe        style={s} />,
     Wand:           <Wand           style={s} />,
-    Star:           <Star           style={s} />,
-    MessageSquare:  <MessageSquare  style={s} />,
-    Camera:         <Camera         style={s} />,
-    Images:         <Images         style={s} />,
   };
   return map[name] ?? <Trophy style={s} />;
 };
