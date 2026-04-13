@@ -123,3 +123,105 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /api/reviews?slug=annapurna-circuit 200 in 483ms
  GET /api/photos?slug=annapurna-circuit 200 in 558ms
  GET /api/photos?slug=annapurna-circuit 200 in 574ms
+ GET /experiences/annapurna-circuit?_cb=1776105443088 200 in 563ms
+ GET /experiences/annapurna-circuit?_cb=1776105444595 200 in 430ms
+ GET /experiences/annapurna-circuit?_cb=1776105446037 200 in 510ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 437ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 506ms
+ GET /api/photos?slug=annapurna-circuit 200 in 671ms
+ GET /api/photos?slug=annapurna-circuit 200 in 621ms
+ GET /experiences/annapurna-circuit?_cb=1776105577691 200 in 574ms
+ GET /experiences/annapurna-circuit?_cb=1776105579333 200 in 418ms
+ GET /experiences/annapurna-circuit?_cb=1776105580769 200 in 455ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 426ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 470ms
+ GET /api/photos?slug=annapurna-circuit 200 in 655ms
+ GET /api/photos?slug=annapurna-circuit 200 in 673ms
+ ✓ Compiled in 235ms
+ ✓ Compiled in 155ms
+ ✓ Compiled in 217ms
+ ✓ Compiled in 139ms
+ ✓ Compiled in 196ms
+ ✓ Compiled in 194ms
+ ✓ Compiled in 144ms
+ ✓ Compiled in 166ms
+ ✓ Compiled in 139ms
+ ✓ Compiled in 131ms
+ ✓ Compiled in 131ms
+ ✓ Compiled in 184ms
+ ✓ Compiled in 159ms
+ ✓ Compiled in 189ms
+ ✓ Compiled in 154ms
+ ✓ Compiled in 166ms
+ ✓ Compiled in 128ms
+ ✓ Compiled in 155ms
+ ✓ Compiled in 148ms
+ ✓ Compiled in 146ms
+ ✓ Compiled in 158ms
+ ✓ Compiled in 186ms
+ ✓ Compiled in 159ms
+ GET /experiences/annapurna-circuit?_cb=1776105749931 200 in 857ms
+ GET /experiences/annapurna-circuit?_cb=1776105751718 200 in 422ms
+ GET /experiences/annapurna-circuit?_cb=1776105752972 200 in 380ms
+ GET /experiences/annapurna-circuit?_cb=1776105754146 200 in 396ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 370ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 424ms
+ GET /api/photos?slug=annapurna-circuit 200 in 665ms
+ GET /api/photos?slug=annapurna-circuit 200 in 724ms
+ GET /experiences/annapurna-circuit?_cb=1776105760309 200 in 760ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 542ms
+ GET /api/photos?slug=annapurna-circuit 200 in 596ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 600ms
+ GET /api/photos?slug=annapurna-circuit 200 in 773ms
+ ✓ Compiled in 137ms
+ GET /experiences/annapurna-circuit?_cb=1776105817375 200 in 984ms
+ GET /experiences/annapurna-circuit?_cb=1776105820545 200 in 750ms
+ GET /experiences/annapurna-circuit?_cb=1776105823312 200 in 424ms
+ GET /experiences/annapurna-circuit?_cb=1776105826247 200 in 547ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 449ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 394ms
+ GET /api/photos?slug=annapurna-circuit 200 in 600ms
+ GET /api/photos?slug=annapurna-circuit 200 in 664ms
+ ✓ Compiled in 151ms
+ ✓ Compiled in 141ms
+ ⨯ ReferenceError: tips is not defined
+    at buildSmartAddons (.:445:5)
+    at PackingList (.:521:37) {
+  digest: '1310579532'
+}
+ GET /experiences/annapurna-circuit?_cb=1776105873863 500 in 896ms
+ ⨯ ReferenceError: tips is not defined
+    at buildSmartAddons (.:445:5)
+    at PackingList (.:521:37) {
+  digest: '1310579532'
+}
+ GET /experiences/annapurna-circuit?_cb=1776105876750 500 in 415ms
+ ⨯ ReferenceError: tips is not defined
+    at buildSmartAddons (.:438:5)
+    at PackingList (.:514:37) {
+  digest: '2809853422'
+}
+ GET /experiences/annapurna-circuit?_cb=1776105878977 500 in 803ms
+ ⨯ ReferenceError: tips is not defined
+    at buildSmartAddons (.:438:5)
+    at PackingList (.:514:37) {
+  digest: '2809853422'
+}
+ GET /experiences/annapurna-circuit?_cb=1776105881989 500 in 507ms
+ ⨯ ReferenceError: tips is not defined
+    at buildSmartAddons (.:412:5)
+    at PackingList (.:488:37) {
+  digest: '18323361'
+}
+ GET /experiences/annapurna-circuit?_cb=1776105891139 500 in 799ms
+ ⨯ ReferenceError: tips is not defined
+    at buildSmartAddons (.:419:30)
+    at PackingList (.:474:37) {
+  digest: '2468509740'
+}
+ GET /experiences/annapurna-circuit?_cb=1776105896926 500 in 781ms
+ GET /experiences/annapurna-circuit?_cb=1776105901623 200 in 758ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 431ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 462ms
+ GET /api/photos?slug=annapurna-circuit 200 in 657ms
+ GET /api/photos?slug=annapurna-circuit 200 in 698ms

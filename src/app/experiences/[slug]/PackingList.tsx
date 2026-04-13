@@ -1,7 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Backpack, Check, ChevronDown, Sparkles, AlertTriangle, Lightbulb } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import {
+  Backpack, Check, ChevronDown, Sparkles, IdCard, HeartPulse,
+  Shirt, Pickaxe, Bike, Waves, Mountain,
+  Snowflake, Zap, Satellite, Smartphone, Thermometer, CloudRain,
+  Anchor, Wind,
+} from "lucide-react";
 import type { AdventureType } from "@/lib/data";
 import { loadProfile } from "@/lib/matchmaker";
 import type { ACE } from "@/lib/ace";
@@ -13,9 +18,11 @@ interface Item {
   condition?: string;
 }
 
+type LucideIcon = React.ComponentType<{ className?: string }>;
+
 interface Category {
   name: string;
-  icon: string;
+  Icon: LucideIcon;
   items: Item[];
 }
 
@@ -24,7 +31,7 @@ interface Category {
 const BASE_GEAR: Category[] = [
   {
     name: "Documents & Money",
-    icon: "🪪",
+    Icon: IdCard,
     items: [
       { label: "Government ID / Aadhaar", essential: true },
       { label: "Emergency contact card", essential: true },
@@ -35,7 +42,7 @@ const BASE_GEAR: Category[] = [
   },
   {
     name: "First Aid",
-    icon: "🩹",
+    Icon: HeartPulse,
     items: [
       { label: "Personal medications", essential: true },
       { label: "Blister plasters", essential: true },
@@ -53,7 +60,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
   Trekking: [
     {
       name: "Trek Gear",
-      icon: "🥾",
+      Icon: Backpack,
       items: [
         { label: "Trekking boots (broken in)", essential: true },
         { label: "Trekking poles", essential: true },
@@ -70,7 +77,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
     },
     {
       name: "Clothing",
-      icon: "🧥",
+      Icon: Shirt,
       items: [
         { label: "Moisture-wicking base layers", essential: true },
         { label: "Warm mid layer / fleece", essential: true },
@@ -86,7 +93,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
   Mountaineering: [
     {
       name: "Climbing Gear",
-      icon: "⛏️",
+      Icon: Pickaxe,
       items: [
         { label: "Mountaineering boots (double insulated)", essential: true },
         { label: "Crampons + ice axe", essential: true },
@@ -101,7 +108,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
     },
     {
       name: "Clothing",
-      icon: "🧥",
+      Icon: Shirt,
       items: [
         { label: "Down suit / high-altitude outfit", essential: true },
         { label: "Expedition-weight base layers", essential: true },
@@ -115,7 +122,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
   Biking: [
     {
       name: "Riding Gear",
-      icon: "🏍️",
+      Icon: Bike,
       items: [
         { label: "Full-face helmet (certified)", essential: true },
         { label: "Riding gloves (armoured)", essential: true },
@@ -131,7 +138,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
     },
     {
       name: "Clothing",
-      icon: "🧥",
+      Icon: Shirt,
       items: [
         { label: "Waterproof riding pants", essential: true },
         { label: "Thermal base layers", essential: true },
@@ -144,7 +151,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
   Cycling: [
     {
       name: "Cycling Gear",
-      icon: "🚵",
+      Icon: Bike,
       items: [
         { label: "Cycling helmet", essential: true },
         { label: "Padded cycling shorts", essential: true },
@@ -159,7 +166,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
     },
     {
       name: "Clothing",
-      icon: "🧥",
+      Icon: Shirt,
       items: [
         { label: "Windproof cycling jacket", essential: true },
         { label: "Thermal cycling tights", essential: true },
@@ -171,7 +178,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
   Diving: [
     {
       name: "Dive Equipment",
-      icon: "🤿",
+      Icon: Anchor,
       items: [
         { label: "PADI / CMAS certification card", essential: true },
         { label: "Personal mask & fins", essential: true },
@@ -187,7 +194,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
   Kayaking: [
     {
       name: "Water Gear",
-      icon: "🛶",
+      Icon: Waves,
       items: [
         { label: "PFD (life jacket, ISAF rated)", essential: true },
         { label: "Paddle", essential: true },
@@ -202,7 +209,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
   Skiing: [
     {
       name: "Ski Gear",
-      icon: "⛷️",
+      Icon: Snowflake,
       items: [
         { label: "Ski boots (properly fitted)", essential: true },
         { label: "Ski poles", essential: true },
@@ -217,7 +224,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
     },
     {
       name: "Clothing",
-      icon: "🧥",
+      Icon: Shirt,
       items: [
         { label: "Insulated ski jacket", essential: true },
         { label: "Ski pants (waterproof)", essential: true },
@@ -229,7 +236,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
   "Rock Climbing": [
     {
       name: "Climbing Gear",
-      icon: "🧗",
+      Icon: Mountain,
       items: [
         { label: "Climbing shoes", essential: true },
         { label: "Harness + belay device", essential: true },
@@ -246,7 +253,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
   Scrambling: [
     {
       name: "Scramble Gear",
-      icon: "🏔️",
+      Icon: Mountain,
       items: [
         { label: "Approach shoes with sticky rubber", essential: true },
         { label: "Helmet", essential: true },
@@ -259,7 +266,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
   Paragliding: [
     {
       name: "Flight Gear",
-      icon: "🪂",
+      Icon: Wind,
       items: [
         { label: "Paragliding wing (certified instructor provides)", essential: true },
         { label: "Harness + reserve parachute", essential: true },
@@ -275,7 +282,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
 const FALLBACK_PACK: Category[] = [
   {
     name: "Adventure Essentials",
-    icon: "🎒",
+    Icon: Backpack,
     items: [
       { label: "Suitable footwear for activity", essential: true },
       { label: "Activity-specific protective gear", essential: true },
@@ -294,9 +301,8 @@ function buildSmartAddons(
   bestSeason: string,
   userAce: ACE | null,
   adventureAce: ACE,
-): { categories: Category[]; tips: { text: string; color: string; icon: "warn" | "tip" }[] } {
+): { categories: Category[] } {
   const cats: Category[] = [];
-  const tips: { text: string; color: string; icon: "warn" | "tip" }[] = [];
 
   const isHighAlt = altitudeM >= 3500;
   const isVeryHighAlt = altitudeM >= 4500;
@@ -312,7 +318,7 @@ function buildSmartAddons(
   if (isHighAlt) {
     cats.push({
       name: "High Altitude Essentials",
-      icon: "🏔️",
+      Icon: Mountain,
       items: [
         { label: "Diamox (altitude sickness tablets)", essential: true },
         { label: "Pulse oximeter", essential: true },
@@ -323,18 +329,13 @@ function buildSmartAddons(
         { label: "High-altitude sunscreen SPF 70+", essential: true },
       ],
     });
-    tips.push({
-      text: `Max altitude is ${altitudeM.toLocaleString()}m — acclimatise for at least 1 day before summit push.`,
-      color: "#a78bfa",
-      icon: "warn",
-    });
   }
 
   // Cold weather / snow
   if ((isHighAlt && isTrekkingType) || isSnowSeason) {
     cats.push({
       name: "Cold Weather Gear",
-      icon: "🧊",
+      Icon: Thermometer,
       items: [
         { label: "Down jacket (600+ fill power)", essential: true },
         { label: "Balaclava", essential: true },
@@ -351,7 +352,7 @@ function buildSmartAddons(
   if (isMonsoon || adventureType === "Trekking") {
     cats.push({
       name: "Rain & Waterproofing",
-      icon: "🌧️",
+      Icon: CloudRain,
       items: [
         { label: "Pack rain cover (fits your backpack)", essential: true },
         { label: "Dry bags for electronics & clothes", essential: true },
@@ -360,13 +361,6 @@ function buildSmartAddons(
         ...(isMonsoon ? [{ label: "Leech socks (for jungle / monsoon treks)", essential: true }] : []),
       ],
     });
-    if (isMonsoon) {
-      tips.push({
-        text: "Monsoon season — trails can be slippery and leeches are common. Pack leech socks and an extra set of dry clothes in a sealed bag.",
-        color: "#38bdf8",
-        icon: "warn",
-      });
-    }
   }
 
   // ACE-gap tips (personalised)
@@ -379,14 +373,9 @@ function buildSmartAddons(
     });
 
     if (gaps.includes("stamina")) {
-      tips.push({
-        text: "Your stamina score is below the adventure's requirement. Pack extra high-energy snacks and electrolytes to compensate.",
-        color: "#f97316",
-        icon: "tip",
-      });
       cats.push({
         name: "Energy & Nutrition",
-        icon: "⚡",
+        Icon: Zap,
         items: [
           { label: "High-calorie energy bars (10+)", essential: true },
           { label: "Electrolyte powder / tabs", essential: true },
@@ -397,31 +386,10 @@ function buildSmartAddons(
       });
     }
 
-    if (gaps.includes("altitude")) {
-      tips.push({
-        text: "Low altitude acclimatisation score — spend an extra day at base camp and take Diamox as a precaution.",
-        color: "#a78bfa",
-        icon: "warn",
-      });
-    }
-
-    if (gaps.includes("water")) {
-      tips.push({
-        text: "Limited water experience — stay close to your guide near water crossings. Pack a throw bag if the type allows it.",
-        color: "#3b82f6",
-        icon: "warn",
-      });
-    }
-
     if (gaps.includes("nerve")) {
-      tips.push({
-        text: "Isolated terrain expected. Pack a personal GPS beacon (SPOT / Garmin inReach) for emergency signalling.",
-        color: "#10b981",
-        icon: "tip",
-      });
       cats.push({
         name: "Emergency & Navigation",
-        icon: "🛰️",
+        Icon: Satellite,
         items: [
           { label: "Personal GPS satellite communicator (SPOT / inReach)", essential: true },
           { label: "Whistle + signal mirror", essential: true },
@@ -432,26 +400,12 @@ function buildSmartAddons(
       });
     }
 
-    if (gaps.includes("focus") || gaps.includes("agility")) {
-      tips.push({
-        text: "Technical terrain ahead. Take your time on exposed sections — trekking poles add stability.",
-        color: "#22d3ee",
-        icon: "tip",
-      });
-    }
-  } else {
-    // No profile — general tip
-    tips.push({
-      text: "Take the ACE assessment to get personalised packing tips based on your fitness profile.",
-      color: "#ff5100",
-      icon: "tip",
-    });
   }
 
   // Tech & connectivity always useful
   cats.push({
     name: "Tech & Connectivity",
-    icon: "📱",
+    Icon: Smartphone,
     items: [
       { label: "Portable power bank (20,000+ mAh)", essential: true },
       { label: "Universal charging cable (USB-C)", essential: true },
@@ -462,7 +416,7 @@ function buildSmartAddons(
     ],
   });
 
-  return { categories: cats, tips };
+  return { categories: cats };
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -485,7 +439,6 @@ export default function PackingList({
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [open, setOpen] = useState(false);
   const [userAce, setUserAce] = useState<ACE | null>(null);
-  const [activeTab, setActiveTab] = useState<"gear" | "tips">("gear");
 
   // Load user ACE profile
   useEffect(() => {
@@ -518,7 +471,7 @@ export default function PackingList({
   }
 
   const typeCats: Category[] = TYPE_PACKS[adventureType] ?? FALLBACK_PACK;
-  const { categories: smartCats, tips } = buildSmartAddons(
+  const { categories: smartCats } = buildSmartAddons(
     adventureType, difficulty, altitudeM, bestSeason, userAce, adventureAce
   );
 
@@ -544,7 +497,7 @@ export default function PackingList({
           <div className="text-left">
             <div className="flex items-center gap-1.5">
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/50">
-                Smart Packing List
+                Packing List
               </p>
               {userAce && (
                 <span
@@ -557,7 +510,7 @@ export default function PackingList({
               )}
             </div>
             <p className="text-white/30 text-[10px] mt-0.5">
-              {checkedCount}/{allItems.length} packed · {essentialCount} essentials · {tips.length} tip{tips.length !== 1 ? "s" : ""}
+              {checkedCount}/{allItems.length} packed · {essentialCount} essentials
             </p>
           </div>
         </div>
@@ -598,48 +551,24 @@ export default function PackingList({
       {/* ── Body ── */}
       {open && (
         <>
-          {/* Tab bar */}
-          <div className="flex items-center gap-1 px-4 pt-3 pb-0">
-            <button
-              onClick={() => setActiveTab("gear")}
-              className="px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors"
-              style={
-                activeTab === "gear"
-                  ? { background: "rgba(255,81,0,0.12)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }
-                  : { background: "transparent", color: "rgba(255,255,255,0.3)", border: "1px solid transparent" }
-              }
-            >
-              Gear List
-            </button>
-            <button
-              onClick={() => setActiveTab("tips")}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-colors"
-              style={
-                activeTab === "tips"
-                  ? { background: "rgba(251,191,36,0.1)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.2)" }
-                  : { background: "transparent", color: "rgba(255,255,255,0.3)", border: "1px solid transparent" }
-              }
-            >
-              <Lightbulb className="w-2.5 h-2.5" />
-              Smart Tips {tips.length > 0 && <span className="ml-0.5 bg-amber-400/20 text-amber-300 rounded-full px-1 text-[8px]">{tips.length}</span>}
-            </button>
-            {checkedCount > 0 && (
+          {checkedCount > 0 && (
+            <div className="flex justify-end px-4 pt-3">
               <button
                 onClick={resetAll}
-                className="ml-auto text-[9px] text-white/20 hover:text-white/40 transition-colors"
+                className="text-[9px] text-white/20 hover:text-white/40 transition-colors"
               >
                 Reset
               </button>
-            )}
-          </div>
+            </div>
+          )}
 
-          {/* ── Gear tab ── */}
-          {activeTab === "gear" && (
-            <div className="divide-y mt-2" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-              {allCats.map((cat) => (
+          <div className="divide-y mt-2" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
+            {allCats.map((cat) => {
+              const CatIcon = cat.Icon;
+              return (
                 <div key={cat.name} className="px-4 py-3">
                   <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/25 mb-2.5 flex items-center gap-1.5">
-                    <span>{cat.icon}</span>
+                    <CatIcon className="w-3 h-3" />
                     {cat.name}
                   </p>
                   <div className="space-y-1.5">
@@ -683,46 +612,9 @@ export default function PackingList({
                     })}
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-
-          {/* ── Tips tab ── */}
-          {activeTab === "tips" && (
-            <div className="px-4 py-3 space-y-2.5 mt-1">
-              {tips.length === 0 ? (
-                <p className="text-white/25 text-xs text-center py-4">No tips for this adventure.</p>
-              ) : tips.map((tip, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-2.5 rounded-xl px-3 py-2.5"
-                  style={{ background: `${tip.color}09`, border: `1px solid ${tip.color}20` }}
-                >
-                  {tip.icon === "warn"
-                    ? <AlertTriangle className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: tip.color }} />
-                    : <Lightbulb className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: tip.color }} />
-                  }
-                  <p className="text-xs leading-relaxed" style={{ color: `${tip.color}cc` }}>{tip.text}</p>
-                </div>
-              ))}
-
-              {!userAce && (
-                <div
-                  className="flex items-center justify-between rounded-xl px-3 py-2.5 mt-1"
-                  style={{ background: "rgba(255,81,0,0.05)", border: "1px solid rgba(255,81,0,0.15)" }}
-                >
-                  <p className="text-white/40 text-xs">Unlock personalised tips</p>
-                  <a
-                    href="/ace"
-                    className="text-[10px] font-bold px-2.5 py-1 rounded-lg transition-all hover:brightness-110"
-                    style={{ background: "#ff5100", color: "#fff" }}
-                  >
-                    Take ACE →
-                  </a>
-                </div>
-              )}
-            </div>
-          )}
+              );
+            })}
+          </div>
 
           {/* Footer — complete */}
           {isComplete && (
