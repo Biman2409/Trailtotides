@@ -232,14 +232,14 @@ function UserDetailPanel({
                   title="Send Password Reset"
                   className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-white/8 hover:border-blue-500/35 hover:bg-blue-500/8 text-white/40 hover:text-blue-300 disabled:opacity-40"
                 >
-                  <KeyRound className="w-3.5 h-3.5" /> Reset
+                  <RotateCcw className="w-3.5 h-3.5" /> Reset
                 </button>
                 <a
                   href={`mailto:${profile.email}`}
                   title="Email User"
                   className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-white/8 hover:border-white/20 hover:bg-white/5 text-white/35 hover:text-white/70"
                 >
-                  <Mail className="w-3.5 h-3.5" /> Email
+                  <Send className="w-3.5 h-3.5" /> Email
                 </a>
                 <button
                   onClick={() => onAction(profile.banned ? "unban" : "ban", profile.id)}
@@ -1338,11 +1338,11 @@ export default function AdminDashboardClient({
                                           title="Send Password Reset"
                                           className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-white/8 hover:border-blue-500/35 hover:bg-blue-500/8 text-white/40 hover:text-blue-300 disabled:opacity-40"
                                         >
-                                          <KeyRound className="w-3.5 h-3.5" /> Reset
+                                          <RotateCcw className="w-3.5 h-3.5" /> Reset
                                         </button>
                                         <a href={`mailto:${p.email}`}
                                           className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-white/8 hover:border-white/20 hover:bg-white/5 text-white/35 hover:text-white/70">
-                                          <Mail className="w-3.5 h-3.5" /> Email
+                                          <Send className="w-3.5 h-3.5" /> Email
                                         </a>
                                         <button
                                           onClick={() => handleUserAction(p.banned ? "unban" : "ban", p.id)}
