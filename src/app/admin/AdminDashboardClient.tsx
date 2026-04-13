@@ -214,35 +214,14 @@ function UserDetailPanel({
           <div className="space-y-3">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20">ACE Profile</p>
             {ace ? (
-              <>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-black" style={{ color: rankColor }}>{rank}</span>
-                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: `${rankColor}18`, color: rankColor }}>
-                    {Object.values(ace).reduce((a,b) => a+b, 0)} / 40
-                  </span>
-                </div>
-                <div className="space-y-1.5">
-                  {Object.entries(ace).map(([axis, val]) => (
-                    <div key={axis} className="flex items-center gap-2">
-                      <span className="text-[9px] text-white/30 w-14 capitalize shrink-0">{axis}</span>
-                      <div className="flex-1 h-1.5 rounded-full bg-white/[0.06]">
-                        <div className="h-full rounded-full" style={{ width: `${(val/5)*100}%`, background: rankColor }} />
-                      </div>
-                      <span className="text-[9px] font-black w-3 text-right" style={{ color: rankColor + "99" }}>{val}</span>
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className="flex items-center gap-3 py-2">
-                <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center">
-                  <BarChart3 className="w-4 h-4 text-white/15" />
-                </div>
-                <div>
-                  <p className="text-[11px] text-white/30 font-semibold">No assessment taken</p>
-                  <p className="text-[10px] text-white/15">User hasn't completed ACE quiz</p>
-                </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-black" style={{ color: rankColor }}>{rank}</span>
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: `${rankColor}18`, color: rankColor }}>
+                  {Object.values(ace).reduce((a,b) => a+b, 0)} / 40
+                </span>
               </div>
+            ) : (
+              <p className="text-[11px] text-white/25 font-semibold">No assessment taken</p>
             )}
           </div>
 
