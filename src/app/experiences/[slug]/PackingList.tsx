@@ -439,6 +439,7 @@ export default function PackingList({
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [open, setOpen] = useState(false);
   const [userAce, setUserAce] = useState<ACE | null>(null);
+  const [activeTab, setActiveTab] = useState(0);
 
   // Load user ACE profile
   useEffect(() => {
@@ -549,85 +550,136 @@ export default function PackingList({
       </div>
 
       {/* ── Body ── */}
-      {open && (
-        <>
-          {checkedCount > 0 && (
-            <div className="flex justify-end px-4 pt-3">
-              <button
-                onClick={resetAll}
-                className="text-[9px] text-white/20 hover:text-white/40 transition-colors"
-              >
-                Reset
-              </button>
-            </div>
-          )}
+      {open && (() => {
+        const safeTab = Math.min(activeTab, allCats.length - 1);
+        const cat = allCats[safeTab];
+        const CatIcon = cat.Icon;
+        const catChecked = cat.items.filter(i => checked.has(`${cat.name}::${i.label}`)).length;
+        const catPct = cat.items.length > 0 ? Math.round((catChecked / cat.items.length) * 100) : 0;
 
-          <div className="divide-y mt-2" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-            {allCats.map((cat) => {
-              const CatIcon = cat.Icon;
-              return (
-                <div key={cat.name} className="px-4 py-3">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/25 mb-2.5 flex items-center gap-1.5">
-                    <CatIcon className="w-3 h-3" />
-                    {cat.name}
-                  </p>
-                  <div className="space-y-1.5">
-                    {cat.items.map((item) => {
-                      const key = `${cat.name}::${item.label}`;
-                      const isDone = checked.has(key);
-                      return (
-                        <button
-                          key={key}
-                          onClick={() => toggle(key)}
-                          className="w-full flex items-center gap-3 group text-left"
-                        >
-                          <div
-                            className="flex-none w-4 h-4 rounded flex items-center justify-center transition-all"
-                            style={{
-                              background: isDone ? "rgba(16,185,129,0.15)" : "rgba(255,255,255,0.04)",
-                              border: isDone ? "1px solid rgba(16,185,129,0.35)" : "1px solid rgba(255,255,255,0.1)",
-                            }}
-                          >
-                            {isDone && <Check className="w-2.5 h-2.5 text-emerald-400" />}
-                          </div>
-                          <span
-                            className="text-xs transition-colors flex-1"
-                            style={{
-                              color: isDone ? "rgba(255,255,255,0.25)" : item.essential ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.40)",
-                              textDecoration: isDone ? "line-through" : "none",
-                            }}
-                          >
-                            {item.label}
-                          </span>
-                          {item.essential && !isDone && (
-                            <span
-                              className="flex-none text-[8px] font-bold px-1.5 py-0.5 rounded"
-                              style={{ background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }}
-                            >
-                              MUST
-                            </span>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Footer — complete */}
-          {isComplete && (
+        return (
+          <>
+            {/* ── Tab bar (scrollable) ── */}
             <div
-              className="px-4 py-3 flex items-center gap-2"
-              style={{ borderTop: "1px solid rgba(16,185,129,0.1)", background: "rgba(16,185,129,0.04)" }}
+              className="flex gap-1 px-3 pt-3 pb-0 overflow-x-auto no-scrollbar"
+              style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}
             >
-              <Check className="w-4 h-4 text-emerald-400" />
-              <p className="text-emerald-400 text-xs font-semibold">All packed. You&apos;re ready to go!</p>
+              {allCats.map((c, i) => {
+                const TabIcon = c.Icon;
+                const tabChecked = c.items.filter(it => checked.has(`${c.name}::${it.label}`)).length;
+                const tabDone = tabChecked === c.items.length;
+                const isActive = i === safeTab;
+                return (
+                  <button
+                    key={c.name}
+                    onClick={() => setActiveTab(i)}
+                    className="flex items-center gap-1.5 px-2.5 py-2 rounded-t-lg text-[10px] font-bold whitespace-nowrap shrink-0 transition-all relative"
+                    style={isActive
+                      ? { color: "#ff7d47", background: "rgba(255,81,0,0.08)", borderBottom: "2px solid #ff5100" }
+                      : { color: "rgba(255,255,255,0.3)", background: "transparent", borderBottom: "2px solid transparent" }
+                    }
+                  >
+                    <TabIcon className="w-3 h-3 shrink-0" />
+                    <span className="hidden sm:inline">{c.name}</span>
+                    {/* dot indicator */}
+                    {tabDone
+                      ? <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "#10b981" }} />
+                      : tabChecked > 0
+                        ? <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "#ff5100" }} />
+                        : null
+                    }
+                  </button>
+                );
+              })}
+              {checkedCount > 0 && (
+                <button
+                  onClick={resetAll}
+                  className="ml-auto text-[9px] text-white/20 hover:text-white/40 transition-colors px-2 py-2 shrink-0"
+                >
+                  Reset
+                </button>
+              )}
             </div>
-          )}
-        </>
-      )}
+
+            {/* ── Active tab header ── */}
+            <div className="flex items-center justify-between px-4 pt-3 pb-1">
+              <div className="flex items-center gap-2">
+                <CatIcon className="w-3.5 h-3.5" style={{ color: catPct === 100 ? "#10b981" : "#ff7d47" }} />
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: catPct === 100 ? "#10b981" : "rgba(255,255,255,0.4)" }}>
+                  {cat.name}
+                </p>
+              </div>
+              <span className="text-[9px] font-semibold" style={{ color: catPct === 100 ? "#10b981" : "rgba(255,255,255,0.25)" }}>
+                {catChecked}/{cat.items.length}
+              </span>
+            </div>
+
+            {/* ── Item list ── */}
+            <div className="px-4 pb-3 space-y-1.5 pt-1">
+              {cat.items.map((item) => {
+                const key = `${cat.name}::${item.label}`;
+                const isDone = checked.has(key);
+                return (
+                  <button
+                    key={key}
+                    onClick={() => toggle(key)}
+                    className="w-full flex items-center gap-3 text-left"
+                  >
+                    <div
+                      className="flex-none w-4 h-4 rounded flex items-center justify-center transition-all"
+                      style={{
+                        background: isDone ? "rgba(16,185,129,0.15)" : "rgba(255,255,255,0.04)",
+                        border: isDone ? "1px solid rgba(16,185,129,0.35)" : "1px solid rgba(255,255,255,0.1)",
+                      }}
+                    >
+                      {isDone && <Check className="w-2.5 h-2.5 text-emerald-400" />}
+                    </div>
+                    <span
+                      className="text-xs transition-colors flex-1"
+                      style={{
+                        color: isDone ? "rgba(255,255,255,0.22)" : item.essential ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.42)",
+                        textDecoration: isDone ? "line-through" : "none",
+                      }}
+                    >
+                      {item.label}
+                    </span>
+                    {item.essential && !isDone && (
+                      <span
+                        className="flex-none text-[8px] font-bold px-1.5 py-0.5 rounded"
+                        style={{ background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }}
+                      >
+                        MUST
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* ── Tab complete banner ── */}
+            {catPct === 100 && !isComplete && (
+              <div
+                className="mx-4 mb-3 px-3 py-2 rounded-lg flex items-center gap-2"
+                style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}
+              >
+                <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <p className="text-emerald-400/80 text-[10px] font-semibold">{cat.name} packed!</p>
+              </div>
+            )}
+
+            {/* ── All complete footer ── */}
+            {isComplete && (
+              <div
+                className="px-4 py-3 flex items-center gap-2"
+                style={{ borderTop: "1px solid rgba(16,185,129,0.1)", background: "rgba(16,185,129,0.04)" }}
+              >
+                <Check className="w-4 h-4 text-emerald-400" />
+                <p className="text-emerald-400 text-xs font-semibold">All packed. You&apos;re ready to go!</p>
+              </div>
+            )}
+          </>
+        );
+      })()}
     </div>
   );
 }

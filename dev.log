@@ -228,3 +228,15 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /experiences/annapurna-circuit?_cb=1776105933164 200 in 504ms
  GET /experiences/annapurna-circuit?_cb=1776105934604 200 in 413ms
  GET /experiences/annapurna-circuit?_cb=1776105935968 200 in 436ms
+ GET /experiences/annapurna-circuit?_cb=1776105937433 200 in 390ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 436ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 520ms
+ GET /api/photos?slug=annapurna-circuit 200 in 642ms
+ GET /api/photos?slug=annapurna-circuit 200 in 671ms
+ ✓ Compiled in 131ms
+ ✓ Compiled in 212ms
+ GET /experiences/manali-leh-bike-expedition 200 in 916ms
+ GET /experiences/manali-leh-bike-expedition?_cb=1776105937433 200 in 440ms
+ GET /experiences/manali-leh-bike-expedition?_cb=1776106014181 200 in 368ms
+ GET /experiences/manali-leh-bike-expedition?_cb=1776106015422 200 in 395ms
+ GET /experiences/manali-leh-bike-expedition?_cb=1776106016772 200 in 375ms
