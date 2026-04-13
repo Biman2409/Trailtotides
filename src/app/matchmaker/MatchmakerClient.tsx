@@ -1148,6 +1148,13 @@ export default function MatchmakerClient() {
   const [savedResult, setSavedResult] = useState<AnalysisResult | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
 
+  // Scroll to top when arriving via retake link
+  useEffect(() => {
+    if (searchParams.get("retake") === "1") {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [searchParams]);
+
   // Load previous result on mount — always show results if profile exists
   const autoShown = useRef(false);
   useEffect(() => {
