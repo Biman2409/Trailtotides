@@ -6,8 +6,6 @@ import Image from "next/image";
 import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, ChevronLeft, Heart, RotateCcw, MapPin, Clock, BarChart2, Star } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
-import ExploreMatchmakerSection from "@/components/ui/custom/ExploreMatchmakerSection";
-import SuitedAdventures from "@/components/ui/custom/SuitedAdventures";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -242,9 +240,6 @@ export default function ExploreClient() {
           </p>
         </div>
       </div>
-
-      {/* Adventures suited for you */}
-      <SuitedAdventures />
 
       {/* Search + filter bar */}
       <div className="sticky top-16 lg:top-20 z-40 t-bg-page/96 backdrop-blur-lg border-b border-white/10 shadow-sm">
@@ -1088,9 +1083,6 @@ export default function ExploreClient() {
 
         {/* Compare Adventures */}
         <CompareAdventures />
-
-        {/* Matchmaker CTA / Personalized section */}
-        <ExploreMatchmakerSection />
 
         {/* Map CTA Section */}
         <div className="mt-12 lg:mt-16 border-t border-white/5" style={{ background: "var(--bg-surface)" }}>
