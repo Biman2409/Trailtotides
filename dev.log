@@ -805,3 +805,9 @@ Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
  GET /auth/login 200 in 154ms
  GET /profile?_cb=1776116811784 307 in 117ms
  GET /auth/login 200 in 83ms
+ GET /profile?_cb=1776116941431 307 in 135ms
+ GET /auth/login 200 in 91ms
+ GET /profile?_cb=1776116943463 307 in 92ms
+ GET /auth/login 200 in 84ms
+ ✓ Compiled in 136ms
+ ✓ Compiled in 115ms

@@ -90,15 +90,15 @@ export async function POST(req: NextRequest) {
   const matchSlug = (e: XPEvent) => e.adventure_slug === slug;
   const matchAction = (e: XPEvent) => e.action === action;
 
-  // One-time global actions
-  if (action === "ace_complete") {
+  // One-time global actions (first time ever, regardless of slug)
+  if (["ace_complete", "wishlist", "compare"].includes(action)) {
     if (events.some(matchAction)) {
       return NextResponse.json({ awarded: false, reason: "already_awarded" });
     }
   }
 
   // Per-adventure once actions
-  if (["wishlist", "compare", "checkin", "review", "trip_log"].includes(action)) {
+  if (["review", "trip_log"].includes(action)) {
     if (events.some(e => matchAction(e) && matchSlug(e))) {
       return NextResponse.json({ awarded: false, reason: "already_awarded" });
     }
