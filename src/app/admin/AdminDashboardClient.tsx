@@ -1394,6 +1394,158 @@ export default function AdminDashboardClient({
             </div>
           </Tabs.Content>
 
+          {/* ── CONTENT TAB (Reviews & Photos) ── */}
+          <Tabs.Content value="content" className="outline-none space-y-4">
+
+            {/* Toggle */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1 bg-white/[0.03] border border-white/[0.06] p-1 rounded-xl">
+                <button onClick={() => setContentView("reviews")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[12px] font-semibold transition-all ${contentView === "reviews" ? "bg-[#ff5100] text-white shadow-md shadow-[#ff5100]/20" : "text-white/35 hover:text-white/70 hover:bg-white/5"}`}>
+                  <StarOff className="w-3.5 h-3.5" />
+                  Reviews
+                  <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full ${contentView === "reviews" ? "bg-white/20 text-white" : "bg-white/10 text-white/40"}`}>{localReviews.length}</span>
+                </button>
+                <button onClick={() => setContentView("photos")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[12px] font-semibold transition-all ${contentView === "photos" ? "bg-[#ff5100] text-white shadow-md shadow-[#ff5100]/20" : "text-white/35 hover:text-white/70 hover:bg-white/5"}`}>
+                  <Image className="w-3.5 h-3.5" />
+                  Photos
+                  <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full ${contentView === "photos" ? "bg-white/20 text-white" : "bg-white/10 text-white/40"}`}>{localPhotos.length}</span>
+                </button>
+              </div>
+              <div className="relative flex-1 max-w-xs">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/25" />
+                <input
+                  type="text"
+                  placeholder={contentView === "reviews" ? "Search reviews…" : "Search photos…"}
+                  value={contentView === "reviews" ? reviewSearch : photoSearch}
+                  onChange={e => contentView === "reviews" ? setReviewSearch(e.target.value) : setPhotoSearch(e.target.value)}
+                  className="w-full bg-white/[0.04] border border-white/[0.07] rounded-xl pl-9 pr-4 py-2.5 text-white text-[13px] placeholder-white/20 focus:outline-none focus:border-[#ff5100]/40 transition-all"
+                />
+              </div>
+              <span className="text-[11px] text-white/20 font-semibold ml-auto">
+                {contentView === "reviews" ? `${filteredReviews.length} reviews` : `${filteredPhotos.length} photos`}
+              </span>
+            </div>
+
+            {/* ── REVIEWS ── */}
+            {contentView === "reviews" && (
+              filteredReviews.length === 0 ? (
+                <div className="border border-white/[0.06] rounded-2xl p-16 text-center">
+                  <div className="flex flex-col items-center gap-3 text-white/20">
+                    <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center"><StarOff className="w-6 h-6" /></div>
+                    <p className="text-sm font-semibold">{localReviews.length === 0 ? "No reviews yet" : "No reviews match search"}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="border border-white/[0.06] rounded-2xl overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-white/[0.05] bg-white/[0.015]">
+                        <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">User</th>
+                        <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25 hidden sm:table-cell">Adventure</th>
+                        <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Rating</th>
+                        <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25 hidden md:table-cell">Review</th>
+                        <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25 hidden lg:table-cell">Date</th>
+                        <th className="text-right px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredReviews.map(review => (
+                        <tr key={review.id} className="border-b border-white/[0.04] last:border-0 hover:bg-white/[0.02] transition-colors group">
+                          <td className="px-5 py-4">
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#ff5100]/15 to-[#ff5100]/5 border border-[#ff5100]/10 flex items-center justify-center text-[#ff7d47] font-black text-xs shrink-0">
+                                {review.username[0]?.toUpperCase() ?? "?"}
+                              </div>
+                              <span className="text-[12px] font-semibold text-white/75">{review.username}</span>
+                            </div>
+                          </td>
+                          <td className="px-5 py-4 hidden sm:table-cell">
+                            <span className="text-[11px] font-mono text-white/40 bg-white/5 border border-white/[0.06] px-2 py-0.5 rounded-lg">{review.adventure_slug}</span>
+                          </td>
+                          <td className="px-5 py-4">
+                            <div className="flex items-center gap-0.5">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <Star key={i} className={`w-3 h-3 ${i < review.rating ? "text-amber-400 fill-amber-400" : "text-white/15"}`} />
+                              ))}
+                            </div>
+                          </td>
+                          <td className="px-5 py-4 hidden md:table-cell max-w-xs">
+                            <p className="text-[12px] text-white/45 line-clamp-2 leading-relaxed">{review.body}</p>
+                          </td>
+                          <td className="px-5 py-4 hidden lg:table-cell">
+                            <span className="text-[11px] text-white/25">{format(parseISO(review.created_at), "MMM d, yyyy")}</span>
+                          </td>
+                          <td className="px-5 py-4">
+                            <div className="flex justify-end">
+                              <button
+                                onClick={() => handleDeleteReview(review.id)}
+                                disabled={loadingId === review.id}
+                                className="p-1.5 text-white/15 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all disabled:opacity-40"
+                                title="Delete review"
+                              >
+                                {loadingId === review.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )
+            )}
+
+            {/* ── PHOTOS ── */}
+            {contentView === "photos" && (
+              filteredPhotos.length === 0 ? (
+                <div className="border border-white/[0.06] rounded-2xl p-16 text-center">
+                  <div className="flex flex-col items-center gap-3 text-white/20">
+                    <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center"><Image className="w-6 h-6" /></div>
+                    <p className="text-sm font-semibold">{localPhotos.length === 0 ? "No photos yet" : "No photos match search"}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {filteredPhotos.map(photo => (
+                    <div key={photo.id} className="group relative rounded-2xl overflow-hidden border border-white/[0.06] hover:border-white/[0.12] transition-all bg-white/[0.02]">
+                      {/* Image */}
+                      <div className="aspect-square relative overflow-hidden bg-white/[0.03]">
+                        <img
+                          src={photo.url}
+                          alt={photo.caption || "Adventure photo"}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                        />
+                        {/* Delete overlay */}
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex items-center justify-center">
+                          <button
+                            onClick={() => handleDeletePhoto(photo)}
+                            disabled={loadingId === photo.id}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5 text-[11px] font-bold px-3 py-2 rounded-xl bg-red-500/90 hover:bg-red-500 text-white disabled:opacity-40"
+                          >
+                            {loadingId === photo.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                      {/* Meta */}
+                      <div className="p-3">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <span className="text-[11px] font-mono text-white/35 bg-white/5 border border-white/[0.05] px-1.5 py-0.5 rounded truncate">{photo.slug}</span>
+                        </div>
+                        <p className="text-[11px] font-semibold text-white/60 truncate">{photo.username}</p>
+                        {photo.caption && <p className="text-[10px] text-white/30 mt-0.5 line-clamp-1">{photo.caption}</p>}
+                        <p className="text-[10px] text-white/20 mt-1">{format(parseISO(photo.created_at), "MMM d, yyyy")}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
+            )}
+          </Tabs.Content>
+
           {/* ── ANALYTICS TAB ── */}
           <Tabs.Content value="analytics" className="outline-none space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
