@@ -518,50 +518,50 @@ export default function PackingList({
           </div>
         </div>
         <div className="flex items-center gap-3">
-          {/* Progress ring */}
-          <div className="relative w-8 h-8">
-            <svg viewBox="0 0 32 32" className="w-full h-full -rotate-90">
-              <circle cx="16" cy="16" r="12" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="3" />
-              <circle
-                cx="16" cy="16" r="12" fill="none"
-                stroke={isComplete ? "#10b981" : "#ff5100"}
-                strokeWidth="3"
-                strokeDasharray={`${(pct / 100) * 75.4} 75.4`}
-                strokeLinecap="round"
-              />
-            </svg>
-            <span
-              className="absolute inset-0 flex items-center justify-center text-[8px] font-bold"
-              style={{ color: isComplete ? "#10b981" : "rgba(255,255,255,0.5)" }}
+          {loggedIn ? (
+            <>
+              {/* Progress ring */}
+              <div className="relative w-8 h-8">
+                <svg viewBox="0 0 32 32" className="w-full h-full -rotate-90">
+                  <circle cx="16" cy="16" r="12" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="3" />
+                  <circle
+                    cx="16" cy="16" r="12" fill="none"
+                    stroke={isComplete ? "#10b981" : "#ff5100"}
+                    strokeWidth="3"
+                    strokeDasharray={`${(pct / 100) * 75.4} 75.4`}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <span
+                  className="absolute inset-0 flex items-center justify-center text-[8px] font-bold"
+                  style={{ color: isComplete ? "#10b981" : "rgba(255,255,255,0.5)" }}
+                >
+                  {pct}%
+                </span>
+              </div>
+              <ChevronDown className={`w-4 h-4 text-white/25 transition-transform ${open ? "rotate-180" : ""}`} />
+            </>
+          ) : (
+            <a
+              href="/auth/login"
+              onClick={e => e.stopPropagation()}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-white transition-all hover:-translate-y-0.5"
+              style={{ background: "#ff5100" }}
             >
-              {pct}%
-            </span>
-          </div>
-          {loggedIn && (
-            <ChevronDown className={`w-4 h-4 text-white/25 transition-transform ${open ? "rotate-180" : ""}`} />
+              <LogIn className="w-3 h-3" />
+              Log in
+            </a>
           )}
         </div>
       </button>
 
-      {/* Progress bar */}
-      <div className="h-0.5 mx-4" style={{ background: "rgba(255,255,255,0.05)" }}>
-        <div
-          className="h-full transition-all duration-500 rounded-full"
-          style={{ width: `${pct}%`, background: isComplete ? "#10b981" : "#ff5100" }}
-        />
-      </div>
-
-      {/* ── Login gate ── */}
-      {!loggedIn && (
-        <div className="px-4 py-3">
-          <a
-            href="/auth/login"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-white transition-all hover:-translate-y-0.5"
-            style={{ background: "#ff5100" }}
-          >
-            <LogIn className="w-3 h-3" />
-            Log in
-          </a>
+      {/* Progress bar — logged in only */}
+      {loggedIn && (
+        <div className="h-0.5 mx-4" style={{ background: "rgba(255,255,255,0.05)" }}>
+          <div
+            className="h-full transition-all duration-500 rounded-full"
+            style={{ width: `${pct}%`, background: isComplete ? "#10b981" : "#ff5100" }}
+          />
         </div>
       )}
 
