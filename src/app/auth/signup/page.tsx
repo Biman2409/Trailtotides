@@ -7,6 +7,7 @@ import { Eye, EyeOff, ArrowLeft, CheckCircle2, XCircle, Loader2, AtSign } from "
 import Logo from "@/components/ui/custom/Logo";
 import countries from "@/lib/countries.json";
 import TermsModal from "@/components/ui/custom/TermsModal";
+import { AVATARS } from "@/lib/avatars";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +17,7 @@ export default function SignUpPage() {
   const [usernameState, setUsernameState] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [selectedAvatarId, setSelectedAvatarId] = useState<number | null>(null);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const checkUsername = useCallback((value: string) => {
@@ -35,14 +37,19 @@ export default function SignUpPage() {
     setLoading(true);
     setMessage(null);
     const formData = new FormData(e.currentTarget);
+    if (selectedAvatarId !== null) {
+      formData.set("avatar_id", String(selectedAvatarId));
+    }
     const result = await signUp(formData);
-    
+
     if (result?.error) {
       setLoading(false);
       setMessage({ type: "error", text: result.error });
     } else if (result?.success) {
+      if (selectedAvatarId !== null) {
+        localStorage.setItem("ttt_avatar_id", String(selectedAvatarId));
+      }
       setMessage({ type: "success", text: result.success });
-      // Clear form on success
       (e.target as HTMLFormElement).reset();
       setLoading(false);
     }
@@ -64,16 +71,16 @@ export default function SignUpPage() {
         <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/20 to-transparent" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
           <Logo size="lg" />
-          
-                <div className="max-w-md">
-                  <h2 className="text-6xl font-black text-white leading-[1.1] mb-6 tracking-tight">
-                    Wild is calling, <br />
-                    <span className="text-[#ff5100] font-black">answer it.</span>
-                  </h2>
-                  <p className="text-white/70 text-lg font-medium leading-relaxed max-w-sm">
-                    Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
-                  </p>
-                </div>
+
+          <div className="max-w-md">
+            <h2 className="text-6xl font-black text-white leading-[1.1] mb-6 tracking-tight">
+              Wild is calling, <br />
+              <span className="text-[#ff5100] font-black">answer it.</span>
+            </h2>
+            <p className="text-white/70 text-lg font-medium leading-relaxed max-w-sm">
+              Join our community of explorers and get access to exclusive trails, expert advice, and verified operators.
+            </p>
+          </div>
 
           <div className="flex items-center gap-6 text-white/30 text-[11px] font-bold uppercase tracking-[0.15em]">
             <span>© 2026 TRAIL TO TIDES</span>
@@ -85,110 +92,108 @@ export default function SignUpPage() {
         </div>
       </div>
 
-        {/* Right panel — form */}
-        <div className="flex-1 flex flex-col justify-center px-6 py-4 lg:px-16 xl:px-24 bg-[#0a0a0a] relative overflow-y-auto">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
-          
-          <div className="max-w-md w-full mx-auto relative z-10">
-            {/* Mobile logo */}
-            <div className="mb-4 lg:hidden">
-              <Logo size="sm" />
+      {/* Right panel — form */}
+      <div className="flex-1 flex flex-col justify-center px-6 py-4 lg:px-16 xl:px-24 bg-[#0a0a0a] relative overflow-y-auto">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#ff5100]/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
+
+        <div className="max-w-md w-full mx-auto relative z-10">
+          {/* Mobile logo */}
+          <div className="mb-4 lg:hidden">
+            <Logo size="sm" />
+          </div>
+
+          <Link href="/" className="hidden lg:inline-flex items-center gap-1 text-white/40 hover:text-white/80 text-sm mb-4 transition-colors group">
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Back to home
+          </Link>
+
+          <div className="mb-4">
+            <h1 className="text-3xl font-black text-white mb-1 tracking-tight leading-tight">
+              Wild is calling, <span className="text-[#ff5100]">answer it.</span>
+            </h1>
+            <p className="text-white/40 text-xs font-medium">
+              Create your explorer account. Save adventures, track wishlist &amp; book verified operators.
+            </p>
+          </div>
+
+          {message && (
+            <div className={`mb-3 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
+              message.type === "error"
+                ? "bg-red-500/10 border border-red-500/20 text-red-400"
+                : "bg-green-500/10 border border-green-500/20 text-green-400"
+            }`}>
+              {message.text}
             </div>
-  
-            <Link href="/" className="hidden lg:inline-flex items-center gap-1 text-white/40 hover:text-white/80 text-sm mb-4 transition-colors group">
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              Back to home
-            </Link>
+          )}
 
-            <div className="mb-4">
-              <h1 className="text-3xl font-black text-white mb-1 tracking-tight leading-tight">
-                Wild is calling, <span className="text-[#ff5100]">answer it.</span>
-              </h1>
-              <p className="text-white/40 text-xs font-medium">
-                Create your explorer account. Save adventures, track wishlist & book verified operators.
-              </p>
+          <form onSubmit={handleSubmit} className="space-y-2.5">
+
+            <div>
+              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Full Name</label>
+              <input
+                name="full_name"
+                type="text"
+                required
+                placeholder="Rahul Sharma"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+              />
             </div>
-  
-  
-            {message && (
-              <div className={`mb-3 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
-                message.type === "error"
-                  ? "bg-red-500/10 border border-red-500/20 text-red-400"
-                  : "bg-green-500/10 border border-green-500/20 text-green-400"
-              }`}>
-                {message.text}
-              </div>
-            )}
 
-            <form onSubmit={handleSubmit} className="space-y-2.5">
-
-              <div>
-                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Full Name</label>
+            <div>
+              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Username</label>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20">
+                  <AtSign className="w-4 h-4" />
+                </div>
                 <input
-                  name="full_name"
+                  name="username"
                   type="text"
                   required
-                  placeholder="Rahul Sharma"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+                  value={username}
+                  onChange={(e) => {
+                    const val = e.target.value.toLowerCase();
+                    setUsername(val);
+                    checkUsername(val);
+                  }}
+                  placeholder="rahul_explorer"
+                  className={`w-full bg-white/[0.03] border rounded-2xl pl-10 pr-10 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:bg-white/[0.06] transition-all ${
+                    usernameState === "available" ? "border-emerald-500/50 focus:border-emerald-500" :
+                    usernameState === "taken" || usernameState === "invalid" ? "border-red-500/40 focus:border-red-500/60" :
+                    "border-white/10 focus:border-[#ff5100]/50"
+                  }`}
                 />
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Username</label>
-                <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20">
-                    <AtSign className="w-4 h-4" />
-                  </div>
-                  <input
-                    name="username"
-                    type="text"
-                    required
-                    value={username}
-                    onChange={(e) => {
-                      const val = e.target.value.toLowerCase();
-                      setUsername(val);
-                      checkUsername(val);
-                    }}
-                    placeholder="rahul_explorer"
-                    className={`w-full bg-white/[0.03] border rounded-2xl pl-10 pr-10 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:bg-white/[0.06] transition-all ${
-                      usernameState === "available" ? "border-emerald-500/50 focus:border-emerald-500" :
-                      usernameState === "taken" || usernameState === "invalid" ? "border-red-500/40 focus:border-red-500/60" :
-                      "border-white/10 focus:border-[#ff5100]/50"
-                    }`}
-                  />
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                    {usernameState === "checking" && <Loader2 className="w-4 h-4 text-white/30 animate-spin" />}
-                    {usernameState === "available" && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
-                    {(usernameState === "taken" || usernameState === "invalid") && <XCircle className="w-4 h-4 text-red-400" />}
-                  </div>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                  {usernameState === "checking" && <Loader2 className="w-4 h-4 text-white/30 animate-spin" />}
+                  {usernameState === "available" && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
+                  {(usernameState === "taken" || usernameState === "invalid") && <XCircle className="w-4 h-4 text-red-400" />}
                 </div>
-                {usernameState !== "idle" && (
-                  <p className={`mt-1.5 ml-1 text-[10px] font-medium transition-colors ${
-                    usernameState === "available" ? "text-emerald-500" :
-                    usernameState === "taken" ? "text-red-400" :
-                    usernameState === "invalid" ? "text-amber-400" :
-                    "text-white/25"
-                  }`}>
-                    {usernameState === "checking" && "Checking availability…"}
-                    {usernameState === "available" && `@${username} is available`}
-                    {usernameState === "taken" && `@${username} is already taken`}
-                    {usernameState === "invalid" && "Username must be between 3 and 20 characters"}
-                  </p>
-                )}
               </div>
+              {usernameState !== "idle" && (
+                <p className={`mt-1.5 ml-1 text-[10px] font-medium transition-colors ${
+                  usernameState === "available" ? "text-emerald-500" :
+                  usernameState === "taken" ? "text-red-400" :
+                  usernameState === "invalid" ? "text-amber-400" :
+                  "text-white/25"
+                }`}>
+                  {usernameState === "checking" && "Checking availability…"}
+                  {usernameState === "available" && `@${username} is available`}
+                  {usernameState === "taken" && `@${username} is already taken`}
+                  {usernameState === "invalid" && "Username must be between 3 and 20 characters"}
+                </p>
+              )}
+            </div>
 
-              <div>
-                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Email</label>
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  placeholder="rahul@email.com"
-                  className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
-                />
-              </div>
-
+            <div>
+              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Email</label>
+              <input
+                name="email"
+                type="email"
+                required
+                placeholder="rahul@email.com"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-2.5 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
+              />
+            </div>
 
             <div>
               <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">Phone Number</label>
@@ -243,6 +248,52 @@ export default function SignUpPage() {
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
+            </div>
+
+            {/* ── Avatar picker ─────────────────────────────────────── */}
+            <div className="rounded-2xl border p-3.5" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
+              <div className="flex items-center justify-between mb-2.5">
+                <label className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Profile Picture</label>
+                {selectedAvatarId !== null && (
+                  <button
+                    type="button"
+                    onClick={() => setSelectedAvatarId(null)}
+                    className="text-[9px] font-semibold text-white/25 hover:text-white/50 transition-colors"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+              <div className="grid grid-cols-5 gap-2">
+                {AVATARS.map(av => {
+                  const active = selectedAvatarId === av.id;
+                  return (
+                    <button
+                      key={av.id}
+                      type="button"
+                      onClick={() => setSelectedAvatarId(active ? null : av.id)}
+                      className="flex flex-col items-center gap-1 group/av focus:outline-none"
+                    >
+                      <span
+                        className="w-full aspect-square rounded-xl overflow-hidden block transition-all duration-150"
+                        style={{
+                          border: `1.5px solid ${active ? "rgba(255,81,0,0.8)" : "rgba(255,255,255,0.07)"}`,
+                          boxShadow: active ? "0 0 14px rgba(255,81,0,0.4)" : "none",
+                          transform: active ? "scale(1.06)" : "scale(1)",
+                        }}
+                      >
+                        <img src={av.src} alt={av.label} className="w-full h-full object-cover" />
+                      </span>
+                      <span className="text-[7px] text-white/25 group-hover/av:text-white/55 transition-colors font-medium leading-none tracking-wide truncate w-full text-center">
+                        {av.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              {selectedAvatarId === null && (
+                <p className="text-[9px] text-white/20 mt-2 text-center">Optional — defaults to your ACE adventure rank badge</p>
+              )}
             </div>
 
             <div className="flex items-start gap-3 py-0.5">

@@ -14,6 +14,8 @@ export async function signUp(formData: FormData) {
   const country_code = formData.get("country_code") as string;
   const phone_number = formData.get("phone") as string;
   const phone = `${country_code}${phone_number.replace(/\s+/g, "")}`;
+  const avatar_id_raw = formData.get("avatar_id");
+  const avatar_id = avatar_id_raw ? Number(avatar_id_raw) : null;
 
   // Validate username length
   if (username.length < 3 || username.length > 20) {
@@ -34,7 +36,7 @@ export async function signUp(formData: FormData) {
     email,
     password,
     email_confirm: true,
-    user_metadata: { full_name, username, phone },
+    user_metadata: { full_name, username, phone, ...(avatar_id !== null ? { avatar_id } : {}) },
   });
 
   if (signUpError) {
