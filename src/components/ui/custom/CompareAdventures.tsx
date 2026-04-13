@@ -338,26 +338,39 @@ export default function CompareAdventures() {
 
                 {/* ACE label row */}
                 <tr className="border-t border-white/8">
-                  <td colSpan={selected.length + 1} className="px-3 pt-3 pb-1">
-                    <p className="text-[10px] uppercase tracking-widest font-bold text-white/25">ACE Profile</p>
+                  <td colSpan={selected.length + 1} className="px-4 pt-5 pb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-4 rounded-full" style={{ background: "#ff5100" }} />
+                      <p className="text-[10px] uppercase tracking-widest font-black text-white/40">ACE Profile</p>
+                      <span className="text-[9px] text-white/20 font-medium">Adventure Capability Engine</span>
+                    </div>
                   </td>
                 </tr>
 
                 {/* ACE Radar row */}
                 <tr className="bg-white/[0.01]">
-                  <td className="px-3 pb-3 align-top">
+                  <td className="px-4 pb-6 align-top">
                     {userAce ? (
-                      <div className="inline-flex rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, transparent 75%)" }}>
-                        <div className="p-1.5"><ACERadar ace={userAce} size={130} showLabels /></div>
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)", background: "radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 70%)" }}>
+                          <div className="p-3"><ACERadar ace={userAce} size={210} showLabels /></div>
+                        </div>
+                        <p className="text-[10px] font-bold text-white/40 uppercase tracking-wider">Your Profile</p>
                       </div>
                     ) : (
-                      <p className="text-white/20 text-xs">No profile yet</p>
+                      <div className="flex flex-col items-center justify-center gap-2 rounded-2xl py-10 px-4 text-center" style={{ border: "1px dashed rgba(255,255,255,0.08)" }}>
+                        <p className="text-white/25 text-xs font-medium">No ACE profile</p>
+                        <a href="/ace" className="text-[#ff5100]/70 text-[10px] hover:text-[#ff5100] transition-colors underline underline-offset-2">Take assessment</a>
+                      </div>
                     )}
                   </td>
                   {selected.map((a) => (
-                    <td key={a.id} className="px-3 pb-3 align-top">
-                      <div className="rounded-xl p-1.5 inline-block" style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, transparent 75%)", border: "1px solid rgba(255,255,255,0.07)" }}>
-                        <ACERadar ace={getACE(a)} size={130} showLabels />
+                    <td key={a.id} className="px-4 pb-6 align-top">
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="rounded-2xl overflow-hidden" style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                          <div className="p-3"><ACERadar ace={getACE(a)} size={210} showLabels /></div>
+                        </div>
+                        <p className="text-[10px] font-bold text-white/40 uppercase tracking-wider truncate max-w-[200px]">{a.name}</p>
                       </div>
                     </td>
                   ))}
