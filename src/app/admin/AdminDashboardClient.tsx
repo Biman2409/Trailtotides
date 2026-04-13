@@ -259,26 +259,6 @@ function UserDetailPanel({
                 >
                   <KeyRound className="w-3.5 h-3.5" /> Reset
                 </button>
-                {profile.role !== "admin" && (
-                  <button
-                    onClick={() => onAction("role", profile.id, "admin")}
-                    disabled={loadingId === profile.id}
-                    title="Promote to Admin"
-                    className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-purple-500/15 hover:border-purple-500/35 hover:bg-purple-500/8 text-white/35 hover:text-purple-300 disabled:opacity-40"
-                  >
-                    <Shield className="w-3.5 h-3.5" /> Admin
-                  </button>
-                )}
-                {profile.role !== "user" && (
-                  <button
-                    onClick={() => onAction("role", profile.id, "user")}
-                    disabled={loadingId === profile.id}
-                    title="Set as User"
-                    className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-white/8 hover:border-white/20 hover:bg-white/5 text-white/35 hover:text-white/65 disabled:opacity-40"
-                  >
-                    <ArrowUpDown className="w-3.5 h-3.5" /> User
-                  </button>
-                )}
                 <a
                   href={`mailto:${profile.email}`}
                   title="Email User"
