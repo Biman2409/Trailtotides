@@ -15,7 +15,7 @@ import {
   CheckCircle2, AlertCircle, XCircle, Loader2, Globe, FileText,
   Ban, KeyRound, ChevronRight, Eye, Copy, Activity, Star, TrendingDown,
   Zap, UserCheck, UserX, RefreshCw, ChevronUp, Info, Package, DollarSign,
-  Image, StarOff,
+  Image, StarOff, ArrowUpDown,
 } from "lucide-react";
 import Link from "next/link";
 import * as XLSX from "xlsx";
@@ -259,6 +259,37 @@ function UserDetailPanel({
                   <KeyRound className="w-3.5 h-3.5 shrink-0" />
                   Send Password Reset
                 </button>
+                {/* Role change */}
+                {profile.role !== "operator" && (
+                  <button
+                    onClick={() => onAction("role", profile.id, "operator")}
+                    disabled={loadingId === profile.id}
+                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[12px] font-semibold transition-all border border-cyan-500/15 hover:border-cyan-500/35 hover:bg-cyan-500/8 text-white/35 hover:text-cyan-300 disabled:opacity-40"
+                  >
+                    <Building2 className="w-3.5 h-3.5 shrink-0" />
+                    Set as Operator
+                  </button>
+                )}
+                {profile.role !== "admin" && (
+                  <button
+                    onClick={() => onAction("role", profile.id, "admin")}
+                    disabled={loadingId === profile.id}
+                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[12px] font-semibold transition-all border border-purple-500/15 hover:border-purple-500/35 hover:bg-purple-500/8 text-white/35 hover:text-purple-300 disabled:opacity-40"
+                  >
+                    <Shield className="w-3.5 h-3.5 shrink-0" />
+                    Set as Admin
+                  </button>
+                )}
+                {profile.role !== "user" && (
+                  <button
+                    onClick={() => onAction("role", profile.id, "user")}
+                    disabled={loadingId === profile.id}
+                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[12px] font-semibold transition-all border border-white/8 hover:border-white/20 hover:bg-white/5 text-white/35 hover:text-white/65 disabled:opacity-40"
+                  >
+                    <ArrowUpDown className="w-3.5 h-3.5 shrink-0" />
+                    Set as User
+                  </button>
+                )}
                 <button
                   onClick={() => onAction(profile.banned ? "unban" : "ban", profile.id)}
                   disabled={loadingId === profile.id}
@@ -494,7 +525,8 @@ export default function AdminDashboardClient({
       if (type === "role") {
         await updateUserRole(userId, extra!);
         setLocalProfiles(prev => prev.map(p => p.id === userId ? { ...p, role: extra! } : p));
-        showToast("Role updated");
+        if (extra === "operator") setExpandedUserId(null);
+        showToast(`Role set to ${extra}`);
       } else if (type === "ban") {
         if (!confirm("Ban this user? They won't be able to sign in.")) return;
         await banUser(userId);
