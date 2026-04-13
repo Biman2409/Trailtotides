@@ -23,3 +23,12 @@
  GET /profile 307 in 929ms
  ✓ Compiled /_not-found/page in 181ms
  GET /experiences 404 in 277ms
+ GET /?_cb=1776103835168 200 in 176ms
+ ✓ Compiled /api/stories/views in 266ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 1193ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 1374ms
+ GET /?_cb=1776103966204 200 in 165ms
+ GET /?_cb=1776103967317 200 in 147ms
+ GET /?_cb=1776103968444 200 in 198ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 621ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 628ms
