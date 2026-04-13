@@ -142,7 +142,7 @@ export default function PlannerClient() {
                 {tab === "search" ? (
                   <><Search className="w-3.5 h-3.5" /> Add Adventures</>
                 ) : (
-                  <><CalendarDays className="w-3.5 h-3.5" /> Season Guide</>
+                  <><CalendarDays className="w-3.5 h-3.5" /> Season Calendar</>
                 )}
               </button>
             ))}
@@ -177,7 +177,7 @@ export default function PlannerClient() {
                       <div className="mt-6">
                         <CalendarDays className="w-5 h-5 text-white/15 mx-auto mb-2" />
                         <p className="text-white/30 text-xs leading-relaxed">
-                          Search or use the <span className="text-[#ff5100]/60">Season Guide</span> tab<br />to build your itinerary
+                          Search or use the <span className="text-[#ff5100]/60">Season Calendar</span> tab<br />to build your itinerary
                         </p>
                       </div>
                     )}
@@ -215,7 +215,7 @@ export default function PlannerClient() {
             </>
           )}
 
-          {/* ── Season Guide tab ────────────────────────────────────────────── */}
+          {/* ── Season Calendar tab ────────────────────────────────────────────── */}
           {sidebarTab === "season" && (
             <>
               {/* Month strip */}
@@ -339,7 +339,7 @@ export default function PlannerClient() {
               <p className="text-white/35 text-sm max-w-xs leading-relaxed">
                 Search for adventures or browse the{" "}
                 <button className="text-[#ff5100]/80 hover:text-[#ff5100] underline underline-offset-2" onClick={() => setSidebarTab("season")}>
-                  Season Guide
+                  Season Calendar
                 </button>{" "}
                 to find what&apos;s open right now.
               </p>
