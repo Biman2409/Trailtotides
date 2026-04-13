@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Zap, TrendingUp, Camera, Heart, GitCompare, Star, Trophy, CheckCircle2 } from "lucide-react";
+import { Zap, TrendingUp, Camera, Heart, GitCompare, Star, CheckCircle2 } from "lucide-react";
 import { getTier, getNextTier, getProgressPct, XP_TIERS, XP_LABELS, type XPAction } from "@/lib/xp";
 
 interface XPEvent {
@@ -13,7 +13,6 @@ interface XPEvent {
 
 const ACTION_ICON: Record<string, React.ReactNode> = {
   ace_complete: <Star className="w-3 h-3" />,
-  checkin:      <Trophy className="w-3 h-3" />,
   review:       <Star className="w-3 h-3" />,
   photo:        <Camera className="w-3 h-3" />,
   wishlist:     <Heart className="w-3 h-3" />,
@@ -22,12 +21,12 @@ const ACTION_ICON: Record<string, React.ReactNode> = {
 };
 
 const STATS = [
-  { action: "checkin"  as XPAction, label: "Check-ins", color: "#fbbf24" },
-  { action: "trip_log" as XPAction, label: "Trips",     color: "#10b981" },
+  { action: "trip_log" as XPAction, label: "Completed", color: "#10b981" },
   { action: "review"   as XPAction, label: "Reviews",   color: "#f97316" },
   { action: "photo"    as XPAction, label: "Photos",    color: "#3b82f6" },
   { action: "wishlist" as XPAction, label: "Saved",     color: "#f43f5e" },
   { action: "compare"  as XPAction, label: "Compared",  color: "#a78bfa" },
+  { action: "ace_complete" as XPAction, label: "ACE",   color: "#fbbf24" },
 ];
 
 export default function ExpeditionProfile() {

@@ -33,8 +33,8 @@ export default function TripLogSection() {
               <Mountain className="w-4 h-4 text-white" strokeWidth={2.5} />
             </div>
           </div>
-          <p className="text-white/40 text-sm">No adventures logged yet.</p>
-          <p className="text-white/25 text-xs mt-1">Mark adventures as done from their page or card.</p>
+          <p className="text-white/40 text-sm">No completed adventures yet.</p>
+          <p className="text-white/25 text-xs mt-1">Use "Mark as done" on any adventure card or page.</p>
         </div>
       ) : (
         <div className="space-y-3">

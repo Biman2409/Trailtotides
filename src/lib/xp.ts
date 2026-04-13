@@ -2,7 +2,6 @@
 
 export type XPAction =
   | "ace_complete"
-  | "checkin"
   | "review"
   | "photo"
   | "wishlist"
@@ -11,22 +10,20 @@ export type XPAction =
 
 export const XP_REWARDS: Record<XPAction, number> = {
   ace_complete: 100,
-  checkin:      20,
   review:       30,
   photo:        30,
   wishlist:     20,
   compare:      20,
-  trip_log:     20,
+  trip_log:     30,
 };
 
 export const XP_LABELS: Record<XPAction, string> = {
   ace_complete: "ACE Assessment",
-  checkin:      "Check-in",
   review:       "Review",
   photo:        "Photo upload",
   wishlist:     "Wishlist save",
   compare:      "Compare",
-  trip_log:     "Trip logged",
+  trip_log:     "Adventure completed",
 };
 
 // ─── Tiers ────────────────────────────────────────────────────────────────────

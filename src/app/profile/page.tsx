@@ -221,11 +221,11 @@ export default async function ProfilePage() {
                 <TrophyCabinet />
               </div>
 
-              {/* My Adventures */}
+              {/* Completed Adventures */}
               <div>
                 <div className="flex items-center gap-2 mb-4">
-                  <div className="w-1.5 h-5 rounded-full" style={{ background: "#ff5100" }} />
-                  <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>My Adventures</h2>
+                  <div className="w-1.5 h-5 rounded-full" style={{ background: "#10b981" }} />
+                  <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>Completed Adventures</h2>
                 </div>
                 <TrekStreakCounter />
                 <div className="mt-4">
