@@ -68,3 +68,24 @@
  GET /?_cb=1776104855631 200 in 143ms
  GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 502ms
  GET /api/stories/views?slug=riding-through-a-revolution 200 in 569ms
+ GET /?_cb=1776104985855 200 in 147ms
+ GET /?_cb=1776104986992 200 in 137ms
+ GET /?_cb=1776104988178 200 in 148ms
+ GET /api/stories/views?slug=riding-through-a-revolution 200 in 516ms
+ GET /api/stories/views?slug=the-night-photi-la-tested-us 200 in 641ms
+ ✓ Compiled in 200ms
+ ○ Compiling /experiences/[slug] ...
+ ✓ Compiled /experiences/[slug] in 1173ms
+ GET /experiences/manali-leh-biking 404 in 1706ms
+ GET /experiences/manali-leh-bike-expedition 200 in 2127ms
+ GET /experiences/manali-leh-bike-expedition?_cb=1776104988178 200 in 423ms
+ GET /experiences/manali-leh-bike-expedition?_cb=1776105146533 200 in 392ms
+ GET /experiences/manali-leh-bike-expedition?_cb=1776105147906 200 in 416ms
+ GET /experiences/manali-leh-bike-expedition?_cb=1776105149164 200 in 348ms
+ ⚠ Cross origin request detected from 3000-b0ccc175-5500-4003-b0f6-498ebfb05fd7.orchids.cloud to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ✓ Compiled /api/reviews in 232ms
+ GET /api/reviews?slug=manali-leh-bike-expedition 200 in 637ms
+ GET /api/reviews?slug=manali-leh-bike-expedition 200 in 662ms
+ GET /api/photos?slug=manali-leh-bike-expedition 200 in 940ms
+ GET /api/photos?slug=manali-leh-bike-expedition 200 in 967ms

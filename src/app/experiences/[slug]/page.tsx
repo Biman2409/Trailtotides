@@ -444,7 +444,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 </div>
 
                 {/* Packing list — nested within Safety & Prep */}
-                <PackingList adventureType={adventure.type} difficulty={difficulty} />
+                <PackingList
+                  adventureType={adventure.type}
+                  difficulty={difficulty}
+                  altitudeM={altM}
+                  bestSeason={adventure.bestSeason}
+                  adventureAce={ace}
+                  slug={adventure.slug}
+                />
               </div>
             </AccordionSection>
 
