@@ -112,6 +112,51 @@ export function aceSummary(ace: ACE, adventureName: string): string {
   return parts.join(" ");
 }
 
+/**
+ * Computes a 0–100 match score between a user's ACE profile and an adventure's ACE requirement.
+ *
+ * Logic:
+ * - Axes where the adventure requires 0 are ignored (not relevant).
+ * - For each relevant axis: if user meets or exceeds the requirement → full score for that axis.
+ * - Partial credit if the user is within 1 point below.
+ * - Heavy penalty if the user is 2+ below on any axis.
+ * - Returns a 0–100 integer.
+ */
+export function computeMatchScore(userAce: ACE, adventureAce: ACE): number {
+  const axes = Object.keys(adventureAce) as (keyof ACE)[];
+  const relevant = axes.filter((ax) => adventureAce[ax] > 0);
+  if (relevant.length === 0) return 100;
+
+  let totalWeight = 0;
+  let earnedWeight = 0;
+
+  for (const ax of relevant) {
+    const required = adventureAce[ax];
+    const has = userAce[ax];
+    const weight = required; // Higher requirement = more weight
+
+    totalWeight += weight;
+
+    if (has >= required) {
+      earnedWeight += weight;
+    } else {
+      const gap = required - has;
+      if (gap === 1) {
+        // Slightly under — 75% credit
+        earnedWeight += weight * 0.75;
+      } else if (gap === 2) {
+        // Notably under — 40% credit
+        earnedWeight += weight * 0.4;
+      } else {
+        // Far under — 10% credit (not zero — shows willingness)
+        earnedWeight += weight * 0.1;
+      }
+    }
+  }
+
+  return Math.round((earnedWeight / totalWeight) * 100);
+}
+
 /** Generate card labels (3–4 short highlight strings) for an adventure */
 export function aceCardLabels(ace: ACE): string[] {
   const labels: string[] = [];
