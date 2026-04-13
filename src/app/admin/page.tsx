@@ -2,6 +2,7 @@ import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import AdminDashboardClient from "./AdminDashboardClient";
 import { getAllOperatorProfiles, getAllOperatorSubmissions } from "@/app/auth/operator-actions";
+import { adminGetAllReviews, adminGetAllPhotos } from "./actions";
 
 export default async function AdminPage() {
   const supabase = await createClient();
@@ -43,9 +44,11 @@ export default async function AdminPage() {
   });
 
   // Operator data from storage buckets
-  const [operatorProfiles, operatorSubmissions] = await Promise.all([
+  const [operatorProfiles, operatorSubmissions, { reviews }, { photos }] = await Promise.all([
     getAllOperatorProfiles(),
     getAllOperatorSubmissions(),
+    adminGetAllReviews(),
+    adminGetAllPhotos(),
   ]);
 
   // Story submissions from Storage bucket — include file name for status updates
@@ -82,6 +85,8 @@ export default async function AdminPage() {
       operatorProfiles={operatorProfiles}
       operatorSubmissions={operatorSubmissions}
       operatorTablesExist={true}
+      reviews={reviews}
+      photos={photos}
     />
   );
 }

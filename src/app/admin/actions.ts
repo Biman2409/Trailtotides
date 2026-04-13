@@ -86,3 +86,79 @@ export async function deleteStory(fileName: string) {
   revalidatePath("/admin");
   return { success: true };
 }
+
+// ── Reviews ───────────────────────────────────────────────────────────────────
+
+export async function adminGetAllReviews() {
+  const admin = adminAuth();
+  const { data, error } = await admin
+    .from("reviews")
+    .select("id, adventure_slug, username, rating, body, created_at, user_id")
+    .order("created_at", { ascending: false });
+  if (error) return { reviews: [], error: error.message };
+  return { reviews: data ?? [] };
+}
+
+export async function adminDeleteReview(reviewId: string) {
+  const admin = adminAuth();
+  const { error } = await admin.from("reviews").delete().eq("id", reviewId);
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
+// ── Photos ────────────────────────────────────────────────────────────────────
+
+const PHOTO_BUCKET = "adventure-photos";
+
+interface PhotoMeta {
+  id: string;
+  slug: string;
+  user_id: string;
+  username: string;
+  avatar_id: number | null;
+  caption: string;
+  url: string;
+  path: string;
+  created_at: string;
+}
+
+export async function adminGetAllPhotos(): Promise<{ photos: PhotoMeta[] }> {
+  const admin = adminAuth();
+  // List all slug folders
+  const { data: folders } = await admin.storage.from(PHOTO_BUCKET).list("", { limit: 200 });
+  if (!folders) return { photos: [] };
+
+  const allPhotos: PhotoMeta[] = [];
+  await Promise.all(
+    folders.map(async (folder) => {
+      const { data } = await admin.storage.from(PHOTO_BUCKET).download(`${folder.name}/_index.json`);
+      if (!data) return;
+      try {
+        const text = await data.text();
+        const photos = JSON.parse(text) as PhotoMeta[];
+        allPhotos.push(...photos);
+      } catch {}
+    })
+  );
+  allPhotos.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  return { photos: allPhotos };
+}
+
+export async function adminDeletePhoto(photoId: string, slug: string, path: string) {
+  const admin = adminAuth();
+  // Delete the file
+  await admin.storage.from(PHOTO_BUCKET).remove([path]);
+  // Update the index
+  const { data } = await admin.storage.from(PHOTO_BUCKET).download(`${slug}/_index.json`);
+  if (data) {
+    try {
+      const text = await data.text();
+      const photos = (JSON.parse(text) as PhotoMeta[]).filter(p => p.id !== photoId);
+      const bytes = new TextEncoder().encode(JSON.stringify(photos));
+      await admin.storage.from(PHOTO_BUCKET).upload(`${slug}/_index.json`, bytes, {
+        contentType: "application/json", upsert: true,
+      });
+    } catch {}
+  }
+  return { success: true };
+}

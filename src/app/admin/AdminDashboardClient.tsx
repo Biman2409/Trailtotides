@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import {
   updateUserRole, deleteUser, banUser, unbanUser,
   sendPasswordReset, deleteMessage, updateStoryStatus, deleteStory,
+  adminDeleteReview, adminDeletePhoto,
 } from "./actions";
 import { approveOperatorSubmission, rejectOperatorSubmission, type OperatorProfile, type OperatorSubmission } from "@/app/auth/operator-actions";
 import { logout } from "@/app/auth/actions";
@@ -14,6 +15,7 @@ import {
   CheckCircle2, AlertCircle, XCircle, Loader2, Globe, FileText,
   Ban, KeyRound, ChevronRight, Eye, Copy, Activity, Star, TrendingDown,
   Zap, UserCheck, UserX, RefreshCw, ChevronUp, Info, Package, DollarSign,
+  Image, StarOff,
 } from "lucide-react";
 import Link from "next/link";
 import * as XLSX from "xlsx";
@@ -66,6 +68,28 @@ type StorySubmission = {
   read_time: string | null;
   hero_image_url: string | null;
   status: string;
+  created_at: string;
+};
+
+type Review = {
+  id: string;
+  adventure_slug: string;
+  user_id: string;
+  username: string;
+  rating: number;
+  body: string;
+  created_at: string;
+};
+
+type Photo = {
+  id: string;
+  slug: string;
+  user_id: string;
+  username: string;
+  avatar_id: number | null;
+  caption: string;
+  url: string;
+  path: string;
   created_at: string;
 };
 
@@ -327,6 +351,8 @@ export default function AdminDashboardClient({
   storySubmissions = [],
   operatorProfiles = [],
   operatorSubmissions = [],
+  reviews = [],
+  photos = [],
 }: {
   profiles: Profile[];
   currentUserId: string;
@@ -335,6 +361,8 @@ export default function AdminDashboardClient({
   operatorProfiles?: OperatorProfile[];
   operatorSubmissions?: OperatorSubmission[];
   operatorTablesExist?: boolean;
+  reviews?: Review[];
+  photos?: Photo[];
 }) {
   const [activeTab, setActiveTab] = useState("overview");
   const [search, setSearch] = useState("");
@@ -347,11 +375,16 @@ export default function AdminDashboardClient({
   const [localStories, setLocalStories] = useState<StorySubmission[]>(storySubmissions);
   const [localOperatorProfiles] = useState<OperatorProfile[]>(operatorProfiles);
   const [localOperatorSubmissions, setLocalOperatorSubmissions] = useState<OperatorSubmission[]>(operatorSubmissions);
+  const [localReviews, setLocalReviews] = useState<Review[]>(reviews);
+  const [localPhotos, setLocalPhotos] = useState<Photo[]>(photos);
   const [expandedStoryId, setExpandedStoryId] = useState<string | null>(null);
   const [expandedSubId, setExpandedSubId] = useState<string | null>(null);
   const [storyFilter, setStoryFilter] = useState<"all"|"pending"|"approved"|"rejected">("all");
   const [msgSearch, setMsgSearch] = useState("");
   const [storySearch, setStorySearch] = useState("");
+  const [reviewSearch, setReviewSearch] = useState("");
+  const [photoSearch, setPhotoSearch] = useState("");
+  const [contentView, setContentView] = useState<"reviews"|"photos">("reviews");
   const { toast, show: showToast } = useToast();
 
   // ── Derived counts ────────────────────────────────────────────────────────────
