@@ -200,13 +200,6 @@ function UserDetailPanel({
               <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/25">Actions</p>
               <div className="flex flex-col gap-2">
                 <button
-                  onClick={() => onAction("role", profile.id, profile.role === "admin" ? "user" : "admin")}
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12px] font-semibold transition-all border border-white/10 hover:border-purple-500/40 hover:bg-purple-500/10 text-white/50 hover:text-purple-300"
-                >
-                  <Shield className="w-3.5 h-3.5" />
-                  {profile.role === "admin" ? "Demote to User" : "Promote to Admin"}
-                </button>
-                <button
                   onClick={() => profile.email && onAction("reset", profile.id, profile.email)}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12px] font-semibold transition-all border border-white/10 hover:border-blue-500/40 hover:bg-blue-500/10 text-white/50 hover:text-blue-300"
                 >
@@ -642,17 +635,6 @@ export default function AdminDashboardClient({
                             <div className="flex items-center justify-end gap-1.5">
                               {!isSelf && (
                                 <>
-                                  <button
-                                    onClick={() => handleUserAction("role", profile.id, profile.role === "admin" ? "user" : "admin")}
-                                    disabled={loadingId === profile.id}
-                                    className={`text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border transition-all disabled:opacity-40 ${
-                                      profile.role === "admin"
-                                        ? "border-white/10 text-white/35 hover:border-white/25 hover:text-white/70"
-                                        : "border-purple-500/25 text-purple-400/80 hover:bg-purple-500/10 hover:border-purple-500/40"
-                                    }`}
-                                  >
-                                    {loadingId === profile.id ? "…" : profile.role === "admin" ? "Demote" : "Promote"}
-                                  </button>
                                   <button
                                     onClick={() => handleUserAction(profile.banned ? "unban" : "ban", profile.id)}
                                     disabled={loadingId === profile.id}
