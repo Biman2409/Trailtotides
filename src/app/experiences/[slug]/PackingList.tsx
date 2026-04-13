@@ -5,7 +5,7 @@ import {
   Backpack, Check, ChevronDown, Sparkles, IdCard, HeartPulse,
   Shirt, Pickaxe, Bike, Waves, Mountain,
   Snowflake, Zap, Satellite, Smartphone, Thermometer, CloudRain,
-  Anchor, Wind, Lock, LogIn,
+  Anchor, Wind, LogIn,
 } from "lucide-react";
 import type { AdventureType } from "@/lib/data";
 import { loadProfile } from "@/lib/matchmaker";
@@ -537,10 +537,9 @@ export default function PackingList({
               {pct}%
             </span>
           </div>
-          {loggedIn
-            ? <ChevronDown className={`w-4 h-4 text-white/25 transition-transform ${open ? "rotate-180" : ""}`} />
-            : <Lock className="w-3.5 h-3.5 text-white/20" />
-          }
+          {loggedIn && (
+            <ChevronDown className={`w-4 h-4 text-white/25 transition-transform ${open ? "rotate-180" : ""}`} />
+          )}
         </div>
       </button>
 
@@ -554,20 +553,10 @@ export default function PackingList({
 
       {/* ── Login gate ── */}
       {!loggedIn && (
-        <div
-          className="mx-4 my-3 rounded-xl px-4 py-4 flex items-center gap-4"
-          style={{ background: "rgba(255,81,0,0.04)", border: "1px solid rgba(255,81,0,0.12)" }}
-        >
-          <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.1)", border: "1px solid rgba(255,81,0,0.2)" }}>
-            <Lock className="w-4 h-4 text-[#ff5100]/60" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-white/60 text-xs font-semibold leading-snug">Log in to access the packing list</p>
-            <p className="text-white/30 text-[10px] mt-0.5">Track what you've packed and get ACE-personalised gear tips.</p>
-          </div>
+        <div className="px-4 py-3">
           <a
             href="/auth/login"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-white shrink-0 transition-all hover:-translate-y-0.5"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-white transition-all hover:-translate-y-0.5"
             style={{ background: "#ff5100" }}
           >
             <LogIn className="w-3 h-3" />
