@@ -276,6 +276,8 @@ export default function AdminDashboardClient({
   // ── Filtered users ────────────────────────────────────────────────────────────
   const filtered = useMemo(() => {
     return localProfiles.filter((p) => {
+      // Operators only appear in the Operators tab, not Users tab
+      if (p.role === "operator") return false;
       const matchesSearch =
         (p.full_name?.toLowerCase() ?? "").includes(search.toLowerCase()) ||
         (p.email?.toLowerCase() ?? "").includes(search.toLowerCase());
@@ -535,7 +537,6 @@ export default function AdminDashboardClient({
                     <option value="all" className="bg-[#111]">All Roles</option>
                     <option value="user" className="bg-[#111]">Users</option>
                     <option value="admin" className="bg-[#111]">Admins</option>
-                    <option value="operator" className="bg-[#111]">Operators</option>
                     <option value="banned" className="bg-[#111]">Banned</option>
                     <option value="ace" className="bg-[#111]">Has ACE</option>
                   </select>
@@ -844,9 +845,9 @@ export default function AdminDashboardClient({
               <div className="flex items-center gap-2 mb-4">
                 <Building2 className="w-4 h-4 text-white/30" />
                 <h2 className="text-base font-bold">Registered Operators</h2>
-                <span className="bg-white/8 text-white/40 text-[9px] font-black px-2 py-0.5 rounded-full">{localOperatorProfiles.length} total</span>
+                <span className="bg-white/8 text-white/40 text-[9px] font-black px-2 py-0.5 rounded-full">{totalOperators} total</span>
               </div>
-              {localOperatorProfiles.length === 0 ? (
+              {totalOperators === 0 ? (
                 <div className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-10 text-center">
                   <Building2 className="w-6 h-6 text-white/20 mx-auto mb-2" />
                   <p className="text-white/30 text-sm font-semibold">No operator accounts yet</p>
@@ -856,42 +857,45 @@ export default function AdminDashboardClient({
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-white/[0.06] bg-white/[0.02]">
-                        <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Company</th>
+                        <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Operator</th>
                         <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30 hidden md:table-cell">Contact</th>
                         <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30 hidden sm:table-cell">Website</th>
                         <th className="text-left px-5 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] text-white/30">Joined</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {localOperatorProfiles.map(op => (
-                        <tr key={op.user_id} className="border-b border-white/[0.04] hover:bg-white/[0.03] last:border-0 transition-colors">
+                      {localProfiles.filter(p => p.role === "operator").map(p => {
+                        const op = localOperatorProfiles.find(o => o.user_id === p.id);
+                        return (
+                        <tr key={p.id} className="border-b border-white/[0.04] hover:bg-white/[0.03] last:border-0 transition-colors">
                           <td className="px-5 py-4">
                             <div className="flex items-center gap-3">
                               <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/15 flex items-center justify-center text-cyan-400 font-black text-sm shrink-0">
-                                {op.company_name[0]?.toUpperCase() ?? "?"}
+                                {(op?.company_name?.[0] ?? p.full_name?.[0] ?? p.email?.[0] ?? "?").toUpperCase()}
                               </div>
                               <div>
-                                <p className="font-semibold text-white/90 text-[13px] leading-tight">{op.company_name}</p>
-                                <p className="text-white/35 text-[10px] font-mono mt-0.5">{op.email}</p>
+                                <p className="font-semibold text-white/90 text-[13px] leading-tight">{op?.company_name ?? p.full_name ?? "—"}</p>
+                                <p className="text-white/35 text-[10px] font-mono mt-0.5">{p.email}</p>
                               </div>
                             </div>
                           </td>
                           <td className="px-5 py-4 hidden md:table-cell">
-                            <p className="text-white/60 text-[12px]">{op.contact_name}</p>
-                            <p className="text-white/30 text-[10px] font-mono mt-0.5">{op.phone}</p>
+                            <p className="text-white/60 text-[12px]">{op?.contact_name ?? p.full_name ?? "—"}</p>
+                            <p className="text-white/30 text-[10px] font-mono mt-0.5">{op?.phone ?? p.phone ?? "—"}</p>
                           </td>
                           <td className="px-5 py-4 hidden sm:table-cell">
-                            {op.website ? (
+                            {op?.website ? (
                               <a href={op.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[#ff7d47]/70 hover:text-[#ff7d47] text-[11px] transition-colors">
                                 <Globe className="w-3 h-3" />{op.website.replace(/^https?:\/\//, "")}
                               </a>
                             ) : <span className="text-white/25 text-[11px]">—</span>}
                           </td>
                           <td className="px-5 py-4 text-white/30 text-[11px]">
-                            {new Date(op.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                            {format(parseISO(p.created_at), "MMM d, yyyy")}
                           </td>
                         </tr>
-                      ))}
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
