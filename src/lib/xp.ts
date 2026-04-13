@@ -36,16 +36,17 @@ export interface XPTier {
   description: string;
 }
 
+// Gaps: 200 → 300 → 400 → 550 → 800 → 1100 → 1550 → 2100 → 3000 (strictly increasing, sum = 10 000)
 export const XP_TIERS: XPTier[] = [
   { level: 1,  name: "Drifter",      minXP: 0,     color: "#6b7280", description: "Your journey begins." },
   { level: 2,  name: "Wanderer",     minXP: 200,   color: "#84cc16", description: "Curiosity is your compass." },
   { level: 3,  name: "Scout",        minXP: 500,   color: "#22d3ee", description: "You're finding your trail." },
-  { level: 4,  name: "Rover",        minXP: 1000,  color: "#3b82f6", description: "Reading the terrain with ease." },
-  { level: 5,  name: "Rambler",      minXP: 2000,  color: "#8b5cf6", description: "Blazing new routes." },
-  { level: 6,  name: "Expeditioner", minXP: 3500,  color: "#f59e0b", description: "Leading the charge into the wild." },
-  { level: 7,  name: "Summiteer",    minXP: 5500,  color: "#f97316", description: "At the peak of the pursuit." },
-  { level: 8,  name: "Wildlander",   minXP: 7500,  color: "#ef4444", description: "Built for the long haul." },
-  { level: 9,  name: "Legend",       minXP: 9000,  color: "#ec4899", description: "Stories told around campfires." },
+  { level: 4,  name: "Rover",        minXP: 900,   color: "#3b82f6", description: "Reading the terrain with ease." },
+  { level: 5,  name: "Rambler",      minXP: 1450,  color: "#8b5cf6", description: "Blazing new routes." },
+  { level: 6,  name: "Expeditioner", minXP: 2250,  color: "#f59e0b", description: "Leading the charge into the wild." },
+  { level: 7,  name: "Summiteer",    minXP: 3350,  color: "#f97316", description: "At the peak of the pursuit." },
+  { level: 8,  name: "Wildlander",   minXP: 4900,  color: "#ef4444", description: "Built for the long haul." },
+  { level: 9,  name: "Legend",       minXP: 7000,  color: "#ec4899", description: "Stories told around campfires." },
   { level: 10, name: "Immortal",     minXP: 10000, color: "#fbbf24", description: "The mountain bows to you." },
 ];
 
