@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import {
-  Backpack, Check, ChevronDown, Sparkles, IdCard, HeartPulse,
+  Backpack, Check, ChevronDown, IdCard, HeartPulse,
   Shirt, Pickaxe, Bike, Waves, Mountain,
   Snowflake, Zap, Satellite, Smartphone, Thermometer, CloudRain,
   Anchor, Wind, LogIn,
@@ -502,15 +502,6 @@ export default function PackingList({
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/50">
                 Smart Packing List
               </p>
-              {userAce && (
-                <span
-                  className="inline-flex items-center gap-0.5 text-[8px] font-bold px-1.5 py-0.5 rounded-full"
-                  style={{ background: "rgba(255,81,0,0.12)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }}
-                >
-                  <Sparkles className="w-2 h-2" />
-                  ACE-personalised
-                </span>
-              )}
             </div>
             <p className="text-white/30 text-[10px] mt-0.5">
               {checkedCount}/{allItems.length} packed · {essentialCount} essentials
