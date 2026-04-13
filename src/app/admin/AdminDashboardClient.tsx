@@ -224,7 +224,7 @@ function UserDetailPanel({
           {/* Actions */}
           {!isSelf && (
             <div className="space-y-3">
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20">Quick Actions</p>
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20">Actions</p>
               <div className="flex flex-wrap gap-1.5">
                 <button
                   onClick={() => profile.email && onAction("reset", profile.id, profile.email)}
@@ -913,7 +913,7 @@ export default function AdminDashboardClient({
                     <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Role</th>
                     <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25 hidden sm:table-cell">ACE</th>
                     <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25 hidden lg:table-cell">Joined</th>
-                    <th className="text-right px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Actions</th>
+                    <th className="text-right px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Quick Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1232,7 +1232,7 @@ export default function AdminDashboardClient({
                         <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25 hidden sm:table-cell">Website</th>
                         <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25 hidden lg:table-cell">Submissions</th>
                         <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Joined</th>
-                        <th className="text-right px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Actions</th>
+                        <th className="text-right px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Quick Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1330,7 +1330,7 @@ export default function AdminDashboardClient({
                                     </div>
                                     {/* Quick Actions */}
                                     <div className="space-y-2">
-                                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20">Quick Actions</p>
+                                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20">Actions</p>
                                       <div className="flex flex-wrap gap-1.5">
                                         <button
                                           onClick={() => p.email && handleUserAction("reset", p.id, p.email)}
@@ -1405,7 +1405,7 @@ export default function AdminDashboardClient({
                         <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Adventure</th>
                         <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25 hidden sm:table-cell">Price</th>
                         <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Status</th>
-                        <th className="text-right px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Actions</th>
+                        <th className="text-right px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Quick Actions</th>
                       </tr>
                     </thead>
                     <tbody>
