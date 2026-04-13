@@ -112,19 +112,19 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
 
       {/* Upload area — logged in only */}
       {currentUserId ? (
-        <div className="mb-6">
+        <div className="mb-4">
           {!preview ? (
             <div
               ref={dropRef}
               onDrop={handleDrop}
               onDragOver={(e) => e.preventDefault()}
               onClick={() => fileRef.current?.click()}
-              className="flex flex-col items-center justify-center gap-2 py-8 rounded-2xl cursor-pointer transition-all duration-200 hover:border-[#ff5100]/40 hover:bg-[#ff5100]/3"
+              className="flex flex-col items-center justify-center gap-1.5 py-5 rounded-xl cursor-pointer transition-all duration-200 hover:border-[#ff5100]/40 hover:bg-[#ff5100]/3"
               style={{ border: "2px dashed rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.02)" }}
             >
-              <Camera className="w-6 h-6 text-white/20" />
-              <p className="text-white/40 text-sm font-medium">Drop a photo or tap to upload</p>
-              <p className="text-white/20 text-xs">JPG, PNG, WebP · Max 8MB</p>
+              <Camera className="w-5 h-5 text-white/20" />
+              <p className="text-white/40 text-xs font-medium">Drop a photo or tap to upload</p>
+              <p className="text-white/20 text-[10px]">JPG, PNG, WebP · Max 8MB</p>
               <input
                 ref={fileRef}
                 type="file"
