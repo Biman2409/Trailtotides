@@ -4,7 +4,7 @@ import { useTripLog } from "@/contexts/TripLogContext";
 import { adventures } from "@/lib/data";
 import Link from "next/link";
 import Image from "next/image";
-import { X, MapPin, CheckCircle2, Mountain } from "lucide-react";
+import { X, MapPin, Mountain } from "lucide-react";
 
 export default function TripLogSection() {
   const { log, unmark, loading } = useTripLog();
@@ -55,10 +55,6 @@ export default function TripLogSection() {
                   <span className="text-white/20 text-[10px]">·</span>
                   <span className="text-[10px] text-white/35">{a!.type}</span>
                 </div>
-                <p className="flex items-center gap-1 text-emerald-400/70 text-[10px] mt-1 font-medium">
-                  <CheckCircle2 className="w-3 h-3" />
-                  Done · {new Date(entry.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-                </p>
               </div>
               <button
                 onClick={() => unmark(entry.slug)}
