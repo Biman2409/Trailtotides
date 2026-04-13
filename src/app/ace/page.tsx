@@ -5,10 +5,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost, Gauge } from "@/lib/localIcons";
 import { adventures } from "@/lib/data";
-import { getACE, ACE_AXIS_COLORS, ACE_DOMAINS } from "@/lib/ace";
-import ACEBadge from "@/components/ui/custom/ACEBadge";
 import ACERadar from "@/components/ui/custom/ACERadar";
-import Pill from "@/components/ui/custom/Pill";
 
 export const metadata = {
   title: "ACE Rating System — Trail to Tides",
@@ -43,7 +40,33 @@ const SCALE = [
   { level: 5, label: "Extreme",      sub: "Elite level required",  color: "#ef4444" },
 ];
 
-const EXAMPLE_SLUGS = ["kedarkantha-trek", "rupin-pass", "stok-kangri"];
+const PROGRESSION_TREKS = [
+  {
+    slug: "annapurna-base-camp",
+    label: "The Starting Point",
+    sublabel: "Moderate",
+    diffColor: "#f59e0b",
+    desc: "Well-marked trails, moderate altitude. High stamina and altitude demand — other axes stay low. Achievable with consistent training.",
+    ace: { stamina: 3, power: 2, strength: 2, agility: 2, water: 0, altitude: 3, focus: 2, nerve: 1 },
+  },
+  {
+    slug: "kedarkantha-trek",
+    label: "The Step Up",
+    sublabel: "Hard",
+    diffColor: "#f97316",
+    desc: "Summit push at 12,500ft through deep snow. Every axis climbs — stamina and altitude become dominant. Focus and nerve enter the picture.",
+    ace: { stamina: 4, power: 3, strength: 3, agility: 3, water: 0, altitude: 4, focus: 3, nerve: 3 },
+  },
+  {
+    slug: "pin-parvati-pass",
+    label: "The Full Commitment",
+    sublabel: "Advanced",
+    diffColor: "#ef4444",
+    desc: "17,457ft, crevassed glaciers, remote river crossings. The radar fills out — stamina, altitude, nerve and focus all at elite levels.",
+    ace: { stamina: 5, power: 4, strength: 4, agility: 4, water: 2, altitude: 5, focus: 4, nerve: 5 },
+  },
+];
+
 
 const DOMAIN_ICONS: Record<string, React.ReactNode> = {
   Engine:   <Gauge    className="w-5 h-5" />,
@@ -53,10 +76,6 @@ const DOMAIN_ICONS: Record<string, React.ReactNode> = {
 };
 
 export default function ACEPage() {
-  const exampleAdventures = EXAMPLE_SLUGS
-    .map((slug) => adventures.find((a) => a.slug === slug))
-    .filter(Boolean) as typeof adventures;
-
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -306,45 +325,88 @@ export default function ACEPage() {
         </div>
       </section>
 
-      {/* ── LIVE EXAMPLES ─────────────────────────────────────────────── */}
+      {/* ── LIVE EXAMPLES — Trekking progression ─────────────────────── */}
       <section className="py-24 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
-            <div>
-              <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">Live Examples</p>
-              <h2 className="text-white text-4xl font-black tracking-tight">See it in action</h2>
-              <p className="text-white/35 text-base mt-2">Here&apos;s what ACE looks like on real adventures. The radar shapes alone tell you more than any difficulty label ever could.</p>
-            </div>
+          <div className="mb-14">
+            <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">See It In Action</p>
+            <h2 className="text-white text-4xl font-black tracking-tight">Trekking progression</h2>
+            <p className="text-white/35 text-base mt-2 max-w-2xl">
+              Same activity type. Three completely different radar shapes. This is what ACE reveals that a single difficulty label never can — which axes are being pushed, and by how much.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {exampleAdventures.map((a) => {
-              const ace = getACE(a);
-              const topAxis = (Object.entries(ace) as [string, number][]).sort(([,a],[,b]) => b-a)[0];
-              const topColor = topAxis ? ACE_AXIS_COLORS[topAxis[0] as keyof typeof ACE_AXIS_COLORS] : "#ff5100";
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {PROGRESSION_TREKS.map((t, i) => {
+              const adv = adventures.find(a => a.slug === t.slug);
               return (
-                <Link
-                  key={a.slug}
-                  href={`/experiences/${a.slug}`}
-                  className="group relative rounded-3xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
-                  style={{ borderColor: `${topColor}25`, background: "#0f1420" }}
+                <div
+                  key={t.slug}
+                  className="relative rounded-3xl overflow-hidden border flex flex-col"
+                  style={{ borderColor: `${t.diffColor}25`, background: "rgba(10,12,18,0.7)" }}
                 >
-                  <div className="relative h-48 overflow-hidden">
-                    <Image src={a.heroImage} alt={a.name} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
-                    <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(15,20,32,0.1) 0%, rgba(15,20,32,0.9) 100%)" }} />
-                    <div className="absolute bottom-3 left-4 right-4">
-                      <div className="mb-1"><Pill type="subRegion" value={a.state} /></div>
-                      <h3 className="text-white font-bold text-base leading-tight">{a.name}</h3>
+                  {/* Ambient glow */}
+                  <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full blur-3xl pointer-events-none opacity-10" style={{ background: t.diffColor }} />
+
+                  {/* Step + hero image strip */}
+                  {adv && (
+                    <div className="relative h-32 overflow-hidden shrink-0">
+                      <Image src={adv.heroImage} alt={adv.name} fill className="object-cover" />
+                      <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(10,12,18,0) 30%, rgba(10,12,18,0.95) 100%)" }} />
+                      {/* Step badge */}
+                      <div
+                        className="absolute top-3 left-3 w-7 h-7 rounded-full flex items-center justify-center text-xs font-black"
+                        style={{ background: `${t.diffColor}cc`, color: "white" }}
+                      >
+                        {i + 1}
+                      </div>
+                      {/* Difficulty badge */}
+                      <span
+                        className="absolute top-3 right-3 text-[9px] px-2 py-1 rounded-full font-bold"
+                        style={{ background: `${t.diffColor}25`, color: t.diffColor, border: `1px solid ${t.diffColor}40`, backdropFilter: "blur(8px)" }}
+                      >
+                        {t.sublabel}
+                      </span>
+                      <div className="absolute bottom-3 left-4 right-4">
+                        <h3 className="text-white font-bold text-sm leading-tight">{adv.name}</h3>
+                        <p className="text-white/50 text-[10px] mt-0.5">{adv.state}</p>
+                      </div>
                     </div>
+                  )}
+
+                  {/* Label */}
+                  <div className="px-5 pt-4 pb-1">
+                    <p className="text-xs font-black tracking-wide" style={{ color: t.diffColor }}>{t.label}</p>
+                    <p className="text-white/40 text-[11px] leading-relaxed mt-1">{t.desc}</p>
                   </div>
-                  <div className="px-5 pt-4 pb-5">
-                    <div className="flex justify-center mb-4">
-                      <ACERadar ace={ace} size={260} showLabels />
+
+                  {/* Radar */}
+                  <div className="flex justify-center px-4 py-4 flex-1 items-center">
+                    <ACERadar ace={t.ace} size={220} showLabels />
+                  </div>
+
+                  {/* View link */}
+                  {adv && (
+                    <div className="px-5 pb-4">
+                      <Link
+                        href={`/experiences/${adv.slug}`}
+                        className="flex items-center justify-center gap-1.5 w-full py-2 rounded-xl text-xs font-semibold transition-all hover:brightness-110"
+                        style={{ background: `${t.diffColor}14`, color: t.diffColor, border: `1px solid ${t.diffColor}25` }}
+                      >
+                        View adventure <ArrowRight className="w-3 h-3" />
+                      </Link>
                     </div>
-                  </div>
-                </Link>
+                  )}
+                </div>
               );
             })}
+          </div>
+
+          {/* Connector arrow between cards — desktop */}
+          <div className="hidden md:flex items-center justify-center gap-0 mt-8">
+            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+            <p className="text-white/20 text-xs px-4 font-medium">radar shape grows as demands increase →</p>
+            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
           </div>
         </div>
       </section>
