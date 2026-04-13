@@ -51,92 +51,104 @@ export default function ExpeditionProfile() {
   const recent   = events.slice(0, 4);
 
   if (loading) {
-    return <div className="rounded-2xl animate-pulse" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", height: 80 }} />;
+    return <div className="rounded-2xl animate-pulse" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", height: 120 }} />;
   }
 
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.012)" }}>
+    <div className="rounded-2xl overflow-hidden relative" style={{ border: `1px solid ${tier.color}22`, background: "rgba(10,10,14,0.6)" }}>
 
-      {/* ── Section label ── */}
-      <div className="px-4 pt-3 pb-2.5" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25">Expedition Profile</p>
+      {/* Ambient glow behind entire card */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 30% 0%, ${tier.color}0d 0%, transparent 65%)` }} />
+
+      {/* ── Header: label + XP ── */}
+      <div className="relative px-5 pt-4 pb-3 flex items-start justify-between gap-4" style={{ borderBottom: `1px solid ${tier.color}14` }}>
+        <div>
+          <p className="text-[9px] uppercase tracking-[0.25em] font-bold mb-1" style={{ color: `${tier.color}70` }}>Expedition Tier</p>
+          <div className="flex items-center gap-2.5">
+            {/* Tier level badge */}
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-lg shrink-0 relative"
+              style={{ background: `${tier.color}14`, border: `1.5px solid ${tier.color}40`, color: tier.color, boxShadow: `0 0 20px ${tier.color}28, inset 0 1px 0 ${tier.color}20` }}
+            >
+              {tier.level}
+            </div>
+            <div>
+              <h3 className="text-white font-black text-xl leading-none tracking-tight" style={{ color: tier.color }}>{tier.name}</h3>
+              <p className="text-white/30 text-[10px] mt-0.5">{tier.description}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* XP count */}
+        <div className="text-right shrink-0 pt-0.5">
+          <p className="text-2xl font-black tabular-nums leading-none" style={{ color: tier.color }}>{xp.toLocaleString()}</p>
+          <p className="text-white/25 text-[9px] mt-0.5 font-medium tracking-wide">XP TOTAL</p>
+        </div>
       </div>
 
-      {/* ── Tier row ── */}
-      <div
-        className="px-4 py-3 flex items-center gap-3"
-        style={{ background: `linear-gradient(135deg, ${tier.color}0e 0%, transparent 55%)`, borderBottom: "1px solid rgba(255,255,255,0.05)" }}
-      >
-        <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 font-black text-sm"
-          style={{ background: `${tier.color}16`, border: `1.5px solid ${tier.color}35`, color: tier.color, boxShadow: `0 0 12px ${tier.color}22` }}
-        >
-          {tier.level}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-1.5">
-              <span className="text-sm font-bold leading-none" style={{ color: tier.color }}>{tier.name}</span>
-              <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full" style={{ background: `${tier.color}12`, color: `${tier.color}99`, border: `1px solid ${tier.color}20` }}>T{tier.level}</span>
+      {/* ── Progress bar ── */}
+      <div className="relative px-5 py-3" style={{ borderBottom: `1px solid rgba(255,255,255,0.05)` }}>
+        {next ? (
+          <>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] text-white/30">Progress to <span className="font-semibold" style={{ color: next.color }}>{next.name}</span></span>
+              <span className="text-[10px] font-bold tabular-nums" style={{ color: tier.color }}>{xpToNext} XP to go</span>
             </div>
-            <span className="text-sm font-black tabular-nums" style={{ color: tier.color }}>{xp.toLocaleString()} <span className="text-[9px] font-medium text-white/25">XP</span></span>
+            <div className="relative h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+              <div
+                className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
+                style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${tier.color}, ${next.color})`, boxShadow: `0 0 8px ${tier.color}60` }}
+              />
+            </div>
+          </>
+        ) : (
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-3.5 h-3.5" style={{ color: tier.color }} />
+            <span className="text-[10px] font-bold" style={{ color: tier.color }}>Max tier reached — {tier.name}</span>
           </div>
-          {next ? (
-            <>
-              <div className="h-[3px] rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.07)" }}>
-                <div className="h-full rounded-full transition-all duration-700" style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${tier.color}, ${next.color})` }} />
-              </div>
-              <div className="flex items-center justify-between mt-1">
-                <span className="text-[9px] text-white/22">→ <span style={{ color: `${next.color}99` }}>{next.name}</span></span>
-                <span className="text-[9px]" style={{ color: `${tier.color}80` }}>{xpToNext} to go</span>
-              </div>
-            </>
-          ) : (
-            <div className="flex items-center gap-1 mt-0.5">
-              <TrendingUp className="w-2.5 h-2.5" style={{ color: tier.color }} />
-              <span className="text-[9px] font-semibold" style={{ color: tier.color }}>Max tier reached</span>
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       {/* ── Stats strip ── */}
-      <div className="px-4 py-2.5 flex items-center gap-3 flex-wrap" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+      <div className="relative px-5 py-3 flex items-center gap-4 flex-wrap" style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
         {STATS.map(({ action, label, color }) => (
-          <div key={action} className="flex items-center gap-1">
-            <span className="text-xs font-black tabular-nums" style={{ color }}>{countOf(action)}</span>
-            <span className="text-[9px] text-white/25">{label}</span>
+          <div key={action} className="flex flex-col items-center gap-0.5">
+            <span className="text-base font-black tabular-nums leading-none" style={{ color }}>{countOf(action)}</span>
+            <span className="text-[8px] text-white/25 uppercase tracking-wide">{label}</span>
           </div>
         ))}
       </div>
 
-      {/* ── Tier ladder (collapsible) ── */}
+      {/* ── Tier ladder collapsible ── */}
       <button
         onClick={() => setShowLadder(v => !v)}
-        className="w-full flex items-center justify-between px-4 py-2 hover:bg-white/[0.015] transition-colors"
+        className="relative w-full flex items-center justify-between px-5 py-2.5 hover:bg-white/[0.02] transition-colors"
         style={{ borderBottom: showLadder ? "1px solid rgba(255,255,255,0.05)" : "none" }}
       >
-        <span className="text-[9px] uppercase tracking-[0.18em] font-bold text-white/20">Tier Ladder</span>
+        <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/20">Tier Ladder</span>
         <ChevronDown className="w-3 h-3 transition-transform duration-200" style={{ color: "rgba(255,255,255,0.18)", transform: showLadder ? "rotate(180deg)" : "none" }} />
       </button>
 
       {showLadder && (
-        <div className="px-4 pb-3 pt-1" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-0.5">
+        <div className="relative px-5 pb-3 pt-1.5" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+          <div className="grid grid-cols-2 gap-x-5 gap-y-0.5">
             {XP_TIERS.map(t => {
               const reached   = xp >= t.minXP;
               const isCurrent = t.level === tier.level;
               return (
-                <div key={t.level} className="flex items-center gap-1.5 py-[3px]">
+                <div key={t.level} className="flex items-center gap-2 py-[3px]">
                   <div
                     className="w-3.5 h-3.5 rounded flex items-center justify-center text-[7px] font-black shrink-0"
                     style={reached
-                      ? { background: `${t.color}18`, color: t.color, border: `1px solid ${t.color}28`, boxShadow: isCurrent ? `0 0 5px ${t.color}35` : "none" }
+                      ? { background: `${t.color}18`, color: t.color, border: `1px solid ${t.color}30`, boxShadow: isCurrent ? `0 0 6px ${t.color}40` : "none" }
                       : { background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.06)" }
                     }
                   >{t.level}</div>
-                  <span className="text-[10px] font-medium truncate flex-1" style={{ color: isCurrent ? t.color : reached ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.12)" }}>
-                    {t.name}{isCurrent && <span className="ml-1 opacity-50 text-[8px]">◀</span>}
+                  <span
+                    className="text-[10px] font-semibold flex-1 truncate"
+                    style={{ color: isCurrent ? t.color : reached ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.12)" }}
+                  >
+                    {t.name}{isCurrent && <span className="ml-1 text-[8px] opacity-50">◀</span>}
                   </span>
                   <span className="text-[8px] tabular-nums shrink-0" style={{ color: "rgba(255,255,255,0.1)" }}>
                     {t.minXP >= 1000 ? `${(t.minXP / 1000).toFixed(t.minXP % 1000 === 0 ? 0 : 1)}k` : t.minXP}
@@ -148,26 +160,29 @@ export default function ExpeditionProfile() {
         </div>
       )}
 
-      {/* ── Recent / empty ── */}
+      {/* ── Recent activity / empty ── */}
       {recent.length > 0 ? (
-        <div className="px-4 py-2.5">
-          <p className="text-[9px] uppercase tracking-[0.18em] font-bold text-white/18 mb-1.5">Recent</p>
-          <div className="space-y-1">
+        <div className="relative px-5 py-3">
+          <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/18 mb-2">Recent Activity</p>
+          <div className="space-y-1.5">
             {recent.map((ev, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <span style={{ color: "#ff7d47" }} className="opacity-60">{ACTION_ICON[ev.action] ?? <Zap className="w-3 h-3" />}</span>
+              <div key={i} className="flex items-center gap-2.5">
+                <div className="w-5 h-5 rounded-md flex items-center justify-center shrink-0" style={{ background: `${tier.color}12`, color: tier.color }}>
+                  {ACTION_ICON[ev.action] ?? <Zap className="w-3 h-3" />}
+                </div>
                 <span className="text-[10px] text-white/35 flex-1 truncate">
                   {XP_LABELS[ev.action as XPAction] ?? ev.action}
                   {ev.adventure_slug && <span className="text-white/18 ml-1">· {ev.adventure_slug.replace(/-/g, " ")}</span>}
                 </span>
-                <span className="text-[9px] font-bold shrink-0" style={{ color: "#ff7d47" }}>+{ev.xp}</span>
+                <span className="text-[10px] font-bold shrink-0" style={{ color: tier.color }}>+{ev.xp}</span>
               </div>
             ))}
           </div>
         </div>
       ) : (
-        <div className="px-4 py-4 text-center">
-          <p className="text-white/20 text-[11px]">No XP yet — complete adventures, write reviews, or finish your ACE assessment.</p>
+        <div className="relative px-5 py-5 text-center">
+          <Zap className="w-5 h-5 mx-auto mb-2 opacity-10 text-white" />
+          <p className="text-white/20 text-[11px] leading-relaxed">No XP yet — complete adventures,<br />write reviews, or finish your ACE assessment.</p>
         </div>
       )}
 
