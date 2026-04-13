@@ -500,7 +500,7 @@ export default function PackingList({
           <div className="text-left">
             <div className="flex items-center gap-1.5">
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/50">
-                Packing List
+                Smart Packing List
               </p>
               {userAce && (
                 <span
