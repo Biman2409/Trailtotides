@@ -15,7 +15,7 @@ import {
   CheckCircle2, AlertCircle, XCircle, Loader2, Globe, FileText,
   Ban, KeyRound, ChevronRight, Eye, Copy, Activity, Star, TrendingDown,
   Zap, UserCheck, UserX, RefreshCw, ChevronUp, Info, Package, DollarSign,
-  Image, StarOff, ArrowUpDown,
+  Image, StarOff, ArrowUpDown, RotateCcw, Send,
 } from "lucide-react";
 import Link from "next/link";
 import * as XLSX from "xlsx";
@@ -994,13 +994,13 @@ export default function AdminDashboardClient({
                               {!isSelf && (
                                 <>
                                   <button onClick={() => profile.email && handleUserAction("reset", profile.id, profile.email)} disabled={loadingId === profile.id} title="Reset password" className="p-1.5 rounded-lg text-white/20 hover:text-blue-300 hover:bg-blue-500/10 transition-all disabled:opacity-40">
-                                    <KeyRound className="w-3.5 h-3.5" />
+                                    <RotateCcw className="w-3.5 h-3.5" />
                                   </button>
                                   <a href={`mailto:${profile.email}`} title="Email user" className="p-1.5 rounded-lg text-white/20 hover:text-white/60 hover:bg-white/8 transition-all">
-                                    <Mail className="w-3.5 h-3.5" />
+                                    <Send className="w-3.5 h-3.5" />
                                   </a>
                                   <button onClick={() => handleUserAction(profile.banned ? "unban" : "ban", profile.id)} disabled={loadingId === profile.id} title={profile.banned ? "Unban" : "Ban"} className={`p-1.5 rounded-lg transition-all disabled:opacity-40 ${profile.banned ? "text-emerald-400/60 hover:text-emerald-300 hover:bg-emerald-500/10" : "text-white/20 hover:text-amber-400 hover:bg-amber-500/10"}`}>
-                                    {loadingId === profile.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Ban className="w-3.5 h-3.5" />}
+                                    {loadingId === profile.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : profile.banned ? <UserCheck className="w-3.5 h-3.5" /> : <UserX className="w-3.5 h-3.5" />}
                                   </button>
                                   <button onClick={() => handleUserAction("delete", profile.id)} disabled={loadingId === profile.id} title="Delete" className="p-1.5 rounded-lg text-white/15 hover:text-red-400 hover:bg-red-500/10 transition-all disabled:opacity-40">
                                     <Trash2 className="w-3.5 h-3.5" />
@@ -1281,13 +1281,13 @@ export default function AdminDashboardClient({
                               <td className="px-5 py-4">
                                 <div className="flex items-center justify-end gap-1">
                                   <button onClick={() => p.email && handleUserAction("reset", p.id, p.email)} disabled={loadingId === p.id} title="Reset password" className="p-1.5 rounded-lg text-white/20 hover:text-blue-300 hover:bg-blue-500/10 transition-all disabled:opacity-40">
-                                    <KeyRound className="w-3.5 h-3.5" />
+                                    <RotateCcw className="w-3.5 h-3.5" />
                                   </button>
                                   <a href={`mailto:${p.email}`} title="Email operator" className="p-1.5 rounded-lg text-white/20 hover:text-white/60 hover:bg-white/8 transition-all">
-                                    <Mail className="w-3.5 h-3.5" />
+                                    <Send className="w-3.5 h-3.5" />
                                   </a>
                                   <button onClick={() => handleUserAction(p.banned ? "unban" : "ban", p.id)} disabled={loadingId === p.id} title={p.banned ? "Unban" : "Ban"} className={`p-1.5 rounded-lg transition-all disabled:opacity-40 ${p.banned ? "text-emerald-400/60 hover:text-emerald-300 hover:bg-emerald-500/10" : "text-white/20 hover:text-amber-400 hover:bg-amber-500/10"}`}>
-                                    {loadingId === p.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Ban className="w-3.5 h-3.5" />}
+                                    {loadingId === p.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : p.banned ? <UserCheck className="w-3.5 h-3.5" /> : <UserX className="w-3.5 h-3.5" />}
                                   </button>
                                   <button onClick={() => handleUserAction("delete", p.id)} disabled={loadingId === p.id} title="Delete" className="p-1.5 rounded-lg text-white/15 hover:text-red-400 hover:bg-red-500/10 transition-all disabled:opacity-40">
                                     <Trash2 className="w-3.5 h-3.5" />
