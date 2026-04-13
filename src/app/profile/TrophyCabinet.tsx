@@ -108,11 +108,11 @@ function TrophyCell({ badge, earned, boxSize, xl = false, isActive, onToggle }: 
 
   if (!earned) {
     return (
-      <div className="flex flex-col items-center gap-1 select-none" style={{ opacity: 0.16 }}>
-        <div style={{ width: boxSize, height: boxSize, borderRadius: 8, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Lock style={{ width: Math.round(boxSize * 0.33), height: Math.round(boxSize * 0.33) }} className="text-white/20" />
+      <div className="flex flex-col items-center gap-1 select-none">
+        <div style={{ width: boxSize, height: boxSize, borderRadius: 8, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Lock style={{ width: Math.round(boxSize * 0.33), height: Math.round(boxSize * 0.33) }} className="text-white/30" />
         </div>
-        <p className="text-center font-medium text-white/18 leading-tight" style={{ fontSize: 7, width: boxSize + 8 }}>{badge.name}</p>
+        <p className="text-center font-medium leading-tight" style={{ fontSize: 7, width: boxSize + 8, color: "rgba(255,255,255,0.35)" }}>{badge.name}</p>
       </div>
     );
   }
