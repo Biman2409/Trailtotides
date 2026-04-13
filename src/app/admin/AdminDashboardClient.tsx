@@ -656,9 +656,9 @@ export default function AdminDashboardClient({
   const TABS = [
     { value: "overview",  icon: Zap,           label: "Overview" },
     { value: "users",     icon: Users,          label: "Users",     badge: 0 },
+    { value: "operators", icon: Building2,      label: "Operators", badge: pendingOperatorSubmissions },
     { value: "messages",  icon: MessageSquare,  label: "Messages",  badge: localMessages.length },
     { value: "stories",   icon: BookOpen,       label: "Stories",   badge: pendingStories },
-    { value: "operators", icon: Building2,      label: "Operators", badge: pendingOperatorSubmissions },
     { value: "content",   icon: Image,          label: "Content",   badge: 0 },
     { value: "analytics", icon: BarChart3,      label: "Analytics" },
   ];
