@@ -286,27 +286,6 @@ function UserDetailPanel({
                 >
                   <Mail className="w-3.5 h-3.5" /> Email
                 </a>
-                <button
-                  onClick={() => onAction(profile.banned ? "unban" : "ban", profile.id)}
-                  disabled={loadingId === profile.id}
-                  title={profile.banned ? "Unban User" : "Ban User"}
-                  className={`flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border disabled:opacity-40 ${
-                    profile.banned
-                      ? "border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/8 text-emerald-400/70 hover:text-emerald-300"
-                      : "border-amber-500/15 hover:border-amber-500/35 hover:bg-amber-500/8 text-white/35 hover:text-amber-300"
-                  }`}
-                >
-                  {profile.banned ? <UserCheck className="w-3.5 h-3.5" /> : <UserX className="w-3.5 h-3.5" />}
-                  {profile.banned ? "Unban" : "Ban"}
-                </button>
-                <button
-                  onClick={() => onAction("delete", profile.id)}
-                  disabled={loadingId === profile.id}
-                  title="Delete Account"
-                  className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-red-500/10 hover:border-red-500/35 hover:bg-red-500/8 text-white/25 hover:text-red-400 disabled:opacity-40"
-                >
-                  <Trash2 className="w-3.5 h-3.5" /> Delete
-                </button>
               </div>
             </div>
           )}
@@ -1379,28 +1358,6 @@ export default function AdminDashboardClient({
                                           className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-white/8 hover:border-white/20 hover:bg-white/5 text-white/35 hover:text-white/70">
                                           <Mail className="w-3.5 h-3.5" /> Email
                                         </a>
-                                        <button
-                                          onClick={() => handleUserAction(p.banned ? "unban" : "ban", p.id)}
-                                          disabled={loadingId === p.id}
-                                          title={p.banned ? "Unban" : "Ban"}
-                                          className={`flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border disabled:opacity-40 ${
-                                            p.banned
-                                              ? "border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/8 text-emerald-400/70 hover:text-emerald-300"
-                                              : "border-amber-500/15 hover:border-amber-500/35 hover:bg-amber-500/8 text-white/35 hover:text-amber-300"
-                                          }`}
-                                        >
-                                          {p.banned ? <UserCheck className="w-3.5 h-3.5" /> : <UserX className="w-3.5 h-3.5" />}
-                                          {p.banned ? "Unban" : "Ban"}
-                                        </button>
-                                        <button
-                                          onClick={() => handleUserAction("delete", p.id)}
-                                          disabled={loadingId === p.id}
-                                          title="Delete Account"
-                                          className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-[11px] font-semibold transition-all border border-red-500/10 hover:border-red-500/35 hover:bg-red-500/8 text-white/25 hover:text-red-400 disabled:opacity-40"
-                                        >
-                                          {loadingId === p.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
-                                          Delete
-                                        </button>
                                       </div>
                                     </div>
                                   </div>
