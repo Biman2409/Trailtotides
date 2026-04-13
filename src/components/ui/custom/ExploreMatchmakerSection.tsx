@@ -135,7 +135,7 @@ export default function ExploreMatchmakerSection() {
                     <div className="scale-[1.35]">{tier.icon}</div>
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-0.5">Adventure Tier</p>
+                    <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-0.5">Capability Tier</p>
                     <h2 className="text-2xl font-black tracking-tight leading-none" style={{ color: tier.color }}>{tier.label}</h2>
                     <div className="flex items-center gap-[3px] mt-1.5">
                       {Array.from({ length: 5 }).map((_, i) => (

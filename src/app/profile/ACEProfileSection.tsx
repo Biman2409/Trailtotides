@@ -69,7 +69,7 @@ export default function ACEProfileSection() {
             <div className="scale-[1.55] sm:scale-[1.75]">{U.icon}</div>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-1">Adventure Tier</p>
+            <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-1">Capability Tier</p>
             <h1 className="text-[26px] sm:text-[32px] font-black tracking-tight leading-none" style={{ color: U.color }}>Uncharted</h1>
             <div className="flex items-center gap-[3px] mt-2.5">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -138,7 +138,7 @@ export default function ACEProfileSection() {
               <div className="scale-[1.55] sm:scale-[1.75]">{currentRank.icon}</div>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-1">Adventure Tier</p>
+              <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-1">Capability Tier</p>
               <h1 className="text-[26px] sm:text-[32px] font-black tracking-tight leading-none" style={{ color: currentRank.color }}>{currentRank.label}</h1>
               <div className="flex items-center gap-[3px] mt-2.5">
                 {Array.from({ length: 5 }).map((_, i) => (

@@ -70,7 +70,7 @@ export default function MatchmakerCard({ isLoggedIn }: { isLoggedIn: boolean }) 
               {tier.icon}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white/30 text-[9px] uppercase tracking-widest">Adventure Tier</p>
+              <p className="text-white/30 text-[9px] uppercase tracking-widest">Capability Tier</p>
               <p className="font-bold text-base leading-tight" style={{ color: tier.color }}>{rankLabel}</p>
               <div className="flex gap-px mt-0.5">
                 {Array.from({ length: 5 }).map((_, i) => (
