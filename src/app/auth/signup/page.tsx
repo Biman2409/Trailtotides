@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { signUp } from "@/app/auth/actions";
 import Link from "next/link";
-import { Eye, EyeOff, ArrowLeft, CheckCircle2, XCircle, Loader2, AtSign } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft, CheckCircle2, XCircle, Loader2, AtSign, ChevronDown, X } from "lucide-react";
 import Logo from "@/components/ui/custom/Logo";
 import countries from "@/lib/countries.json";
 import TermsModal from "@/components/ui/custom/TermsModal";
@@ -18,7 +18,21 @@ export default function SignUpPage() {
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [selectedAvatarId, setSelectedAvatarId] = useState<number | null>(null);
+  const [avatarDropdownOpen, setAvatarDropdownOpen] = useState(false);
+  const avatarDropdownRef = useRef<HTMLDivElement>(null);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Close avatar dropdown on outside click
+  useEffect(() => {
+    if (!avatarDropdownOpen) return;
+    function handler(e: MouseEvent) {
+      if (avatarDropdownRef.current && !avatarDropdownRef.current.contains(e.target as Node)) {
+        setAvatarDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [avatarDropdownOpen]);
 
   const checkUsername = useCallback((value: string) => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
@@ -250,49 +264,84 @@ export default function SignUpPage() {
               </div>
             </div>
 
-            {/* ── Avatar picker ─────────────────────────────────────── */}
-            <div className="rounded-2xl border p-3.5" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
-              <div className="flex items-center justify-between mb-2.5">
-                <label className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Profile Picture</label>
-                {selectedAvatarId !== null && (
-                  <button
-                    type="button"
-                    onClick={() => setSelectedAvatarId(null)}
-                    className="text-[9px] font-semibold text-white/25 hover:text-white/50 transition-colors"
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
-              <div className="grid grid-cols-5 gap-2">
-                {AVATARS.map(av => {
-                  const active = selectedAvatarId === av.id;
-                  return (
+            {/* ── Avatar picker dropdown ────────────────────────────── */}
+            <div ref={avatarDropdownRef} className="relative">
+              <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1 ml-1">
+                Profile Picture <span className="normal-case tracking-normal font-normal text-white/20">(optional)</span>
+              </label>
+              {/* Trigger */}
+              <button
+                type="button"
+                onClick={() => setAvatarDropdownOpen(o => !o)}
+                className="w-full flex items-center gap-3 bg-white/[0.03] border border-white/10 rounded-2xl px-4 py-2.5 text-left transition-all focus:outline-none hover:bg-white/[0.05]"
+                style={{ borderColor: avatarDropdownOpen ? "rgba(255,81,0,0.4)" : selectedAvatarId ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.1)" }}
+              >
+                {selectedAvatarId !== null ? (
+                  <>
+                    <span className="w-7 h-7 rounded-lg overflow-hidden shrink-0 block" style={{ border: "1.5px solid rgba(255,81,0,0.5)" }}>
+                      <img src={AVATARS.find(a => a.id === selectedAvatarId)?.src} alt="" className="w-full h-full object-cover" />
+                    </span>
+                    <span className="flex-1 text-white text-sm font-medium">{AVATARS.find(a => a.id === selectedAvatarId)?.label}</span>
                     <button
-                      key={av.id}
                       type="button"
-                      onClick={() => setSelectedAvatarId(active ? null : av.id)}
-                      className="flex flex-col items-center gap-1 group/av focus:outline-none"
+                      onClick={e => { e.stopPropagation(); setSelectedAvatarId(null); }}
+                      className="shrink-0 w-5 h-5 rounded-md flex items-center justify-center hover:bg-white/10 transition-colors"
+                      style={{ color: "rgba(255,255,255,0.3)" }}
                     >
-                      <span
-                        className="w-full aspect-square rounded-xl overflow-hidden block transition-all duration-150"
-                        style={{
-                          border: `1.5px solid ${active ? "rgba(255,81,0,0.8)" : "rgba(255,255,255,0.07)"}`,
-                          boxShadow: active ? "0 0 14px rgba(255,81,0,0.4)" : "none",
-                          transform: active ? "scale(1.06)" : "scale(1)",
-                        }}
-                      >
-                        <img src={av.src} alt={av.label} className="w-full h-full object-cover" />
-                      </span>
-                      <span className="text-[7px] text-white/25 group-hover/av:text-white/55 transition-colors font-medium leading-none tracking-wide truncate w-full text-center">
-                        {av.label}
-                      </span>
+                      <X className="w-3 h-3" />
                     </button>
-                  );
-                })}
-              </div>
-              {selectedAvatarId === null && (
-                <p className="text-[9px] text-white/20 mt-2 text-center">Optional — defaults to your ACE adventure rank badge</p>
+                  </>
+                ) : (
+                  <>
+                    <span className="w-7 h-7 rounded-lg shrink-0 flex items-center justify-center" style={{ background: "rgba(255,81,0,0.1)", border: "1.5px solid rgba(255,81,0,0.2)" }}>
+                      <svg className="w-3.5 h-3.5 text-[#ff5100]/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                      </svg>
+                    </span>
+                    <span className="flex-1 text-white/30 text-sm">Choose a character…</span>
+                    <ChevronDown className="w-4 h-4 shrink-0 text-white/20 transition-transform duration-200" style={{ transform: avatarDropdownOpen ? "rotate(180deg)" : "none" }} />
+                  </>
+                )}
+              </button>
+
+              {/* Dropdown panel */}
+              {avatarDropdownOpen && (
+                <div
+                  className="absolute left-0 right-0 z-50 mt-1.5 rounded-2xl overflow-hidden"
+                  style={{ background: "#0e0e12", border: "1px solid rgba(255,255,255,0.09)", boxShadow: "0 16px 48px rgba(0,0,0,0.7)" }}
+                >
+                  <div className="p-3 grid grid-cols-5 gap-2">
+                    {AVATARS.map(av => {
+                      const active = selectedAvatarId === av.id;
+                      return (
+                        <button
+                          key={av.id}
+                          type="button"
+                          onClick={() => { setSelectedAvatarId(av.id); setAvatarDropdownOpen(false); }}
+                          className="flex flex-col items-center gap-1.5 group/av focus:outline-none"
+                        >
+                          <span
+                            className="w-full aspect-square rounded-xl overflow-hidden block transition-all duration-150"
+                            style={{
+                              border: `1.5px solid ${active ? "rgba(255,81,0,0.8)" : "rgba(255,255,255,0.07)"}`,
+                              boxShadow: active ? "0 0 14px rgba(255,81,0,0.4)" : "none",
+                              transform: active ? "scale(1.06)" : "scale(1)",
+                            }}
+                          >
+                            <img src={av.src} alt={av.label} className="w-full h-full object-cover" />
+                          </span>
+                          <span className="text-[7.5px] font-medium leading-none tracking-wide truncate w-full text-center transition-colors"
+                            style={{ color: active ? "rgba(255,81,0,0.9)" : "rgba(255,255,255,0.28)" }}>
+                            {av.label}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="px-3 pb-3">
+                    <p className="text-[9px] text-white/18 text-center">Defaults to your ACE rank badge if skipped</p>
+                  </div>
+                </div>
               )}
             </div>
 
