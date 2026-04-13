@@ -40,14 +40,14 @@ export interface XPTier {
 }
 
 export const XP_TIERS: XPTier[] = [
-  { level: 1,  name: "Uncharted",   minXP: 0,    color: "#6b7280", description: "Your journey begins." },
+  { level: 1,  name: "Drifter",     minXP: 0,    color: "#6b7280", description: "Your journey begins." },
   { level: 2,  name: "Wanderer",    minXP: 80,   color: "#84cc16", description: "Curiosity is your compass." },
-  { level: 3,  name: "Pathfinder",  minXP: 200,  color: "#22d3ee", description: "You're finding your trail." },
-  { level: 4,  name: "Navigator",   minXP: 380,  color: "#3b82f6", description: "Reading the terrain with ease." },
-  { level: 5,  name: "Trailblazer", minXP: 620,  color: "#8b5cf6", description: "Blazing new routes." },
-  { level: 6,  name: "Vanguard",    minXP: 940,  color: "#f59e0b", description: "Leading the charge into the wild." },
-  { level: 7,  name: "Apex",        minXP: 1350, color: "#f97316", description: "At the peak of the pursuit." },
-  { level: 8,  name: "Expedition",  minXP: 1900, color: "#ef4444", description: "Built for the long haul." },
+  { level: 3,  name: "Scout",       minXP: 200,  color: "#22d3ee", description: "You're finding your trail." },
+  { level: 4,  name: "Rover",       minXP: 380,  color: "#3b82f6", description: "Reading the terrain with ease." },
+  { level: 5,  name: "Rambler",     minXP: 620,  color: "#8b5cf6", description: "Blazing new routes." },
+  { level: 6,  name: "Expeditioner",minXP: 940,  color: "#f59e0b", description: "Leading the charge into the wild." },
+  { level: 7,  name: "Summiteer",   minXP: 1350, color: "#f97316", description: "At the peak of the pursuit." },
+  { level: 8,  name: "Wildlander",  minXP: 1900, color: "#ef4444", description: "Built for the long haul." },
   { level: 9,  name: "Legend",      minXP: 2600, color: "#ec4899", description: "Stories told around campfires." },
   { level: 10, name: "Immortal",    minXP: 3500, color: "#fbbf24", description: "The mountain bows to you." },
 ];
