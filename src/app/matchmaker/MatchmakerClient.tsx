@@ -397,6 +397,42 @@ function AxisBar({ axis, value, max = 5 }: { axis: string; value: number; max?: 
 
 // ─── Intro screen ─────────────────────────────────────────────────────────────
 
+const TREK_EXAMPLES = [
+  {
+    name: "Annapurna Base Camp Trek",
+    state: "Nepal",
+    difficulty: "Moderate",
+    diffColor: "#f59e0b",
+    heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/annapurna-base-camp.jpeg",
+    slug: "annapurna-base-camp",
+    axes: { stamina: 3, power: 2, strength: 2, agility: 2, altitude: 3, focus: 2 },
+    label: "A good starting point",
+    desc: "Steady trails, moderate altitude and well-marked paths — demanding but within reach for a fit beginner.",
+  },
+  {
+    name: "Kedarkantha Summit Trek",
+    state: "Uttarakhand",
+    difficulty: "Hard",
+    diffColor: "#f97316",
+    heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/kedarkantha.jpeg",
+    slug: "kedarkantha-trek",
+    axes: { stamina: 4, power: 3, strength: 3, agility: 3, altitude: 4, focus: 3 },
+    label: "The step up",
+    desc: "A true summit push at 12,500ft through deep snow. Requires real stamina and altitude tolerance.",
+  },
+  {
+    name: "Pin Parvati Pass Trek",
+    state: "Himachal Pradesh",
+    difficulty: "Advanced",
+    diffColor: "#ef4444",
+    heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/adventure-images/pin-parvati.jpeg",
+    slug: "pin-parvati-pass",
+    axes: { stamina: 5, power: 4, strength: 4, agility: 4, altitude: 5, focus: 4 },
+    label: "The full commitment",
+    desc: "17,457ft, crevassed glaciers, river crossings — one of the Himalayas' most demanding crossings.",
+  },
+];
+
 function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => void; onViewResults: () => void; hasProfile: boolean }) {
   const pillars = [
     { icon: <Flame className="w-5 h-5" />,    name: "Engine",   color: "#f97316", desc: "Stamina + Power — sustained output and explosive effort. The fuel that keeps you moving." },
@@ -414,6 +450,42 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
       <p className="text-white/50 text-base leading-relaxed mb-9">
         Every adventure makes specific demands on your body. ACE breaks those demands into eight axes — Stamina, Power, Strength, Agility, Water, Altitude, Focus and Nerve — so you know exactly what you&apos;re signing up for.
       </p>
+
+      {/* Trek progression examples */}
+      {!hasProfile && (
+        <div className="mb-10">
+          <p className="text-white/30 text-[10px] uppercase tracking-widest mb-4">See it in action · Trekking progression</p>
+          <div className="space-y-3">
+            {TREK_EXAMPLES.map((t, i) => (
+              <Link key={t.slug} href={`/experiences/${t.slug}`}
+                className="flex items-center gap-4 rounded-2xl p-3.5 border transition-all hover:border-white/15 group"
+                style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}
+              >
+                {/* Step */}
+                <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black shrink-0"
+                  style={{ background: `${t.diffColor}18`, color: t.diffColor, border: `1px solid ${t.diffColor}30` }}>
+                  {i + 1}
+                </div>
+                {/* Image */}
+                <div className="w-12 h-12 rounded-xl overflow-hidden relative shrink-0">
+                  <Image src={t.heroImage} alt={t.name} fill className="object-cover" />
+                </div>
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <p className="text-white text-xs font-bold truncate">{t.name}</p>
+                    <span className="shrink-0 text-[9px] px-1.5 py-0.5 rounded-full font-bold"
+                      style={{ background: `${t.diffColor}18`, color: t.diffColor }}>{t.difficulty}</span>
+                  </div>
+                  <p className="text-white/30 text-[10px] mb-1">{t.state} · {t.label}</p>
+                  <p className="text-white/40 text-[10px] leading-snug line-clamp-2">{t.desc}</p>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-white/20 shrink-0 group-hover:text-white/50 transition-colors" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {!hasProfile && (
         <>
