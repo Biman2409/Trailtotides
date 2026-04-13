@@ -990,18 +990,25 @@ export default function AdminDashboardClient({
                             <p className="text-[11px] text-white/30">{format(parseISO(profile.created_at), "MMM d, yyyy")}</p>
                           </td>
                           <td className="px-5 py-3.5">
-                            <div className="flex items-center justify-end">
-                              <button
-                                onClick={() => setExpandedUserId(isExpanded ? null : profile.id)}
-                                className={`flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border transition-all ${
-                                  isExpanded
-                                    ? "bg-white/8 border-white/15 text-white/60"
-                                    : "border-white/[0.07] text-white/30 hover:text-white/60 hover:bg-white/5 hover:border-white/12"
-                                }`}
-                                title="Open quick actions"
-                              >
-                                <Zap className="w-3 h-3" />
-                                <span className="hidden sm:block">Actions</span>
+                            <div className="flex items-center justify-end gap-1">
+                              {!isSelf && (
+                                <>
+                                  <button onClick={() => profile.email && handleUserAction("reset", profile.id, profile.email)} disabled={loadingId === profile.id} title="Reset password" className="p-1.5 rounded-lg text-white/20 hover:text-blue-300 hover:bg-blue-500/10 transition-all disabled:opacity-40">
+                                    <KeyRound className="w-3.5 h-3.5" />
+                                  </button>
+                                  <a href={`mailto:${profile.email}`} title="Email user" className="p-1.5 rounded-lg text-white/20 hover:text-white/60 hover:bg-white/8 transition-all">
+                                    <Mail className="w-3.5 h-3.5" />
+                                  </a>
+                                  <button onClick={() => handleUserAction(profile.banned ? "unban" : "ban", profile.id)} disabled={loadingId === profile.id} title={profile.banned ? "Unban" : "Ban"} className={`p-1.5 rounded-lg transition-all disabled:opacity-40 ${profile.banned ? "text-emerald-400/60 hover:text-emerald-300 hover:bg-emerald-500/10" : "text-white/20 hover:text-amber-400 hover:bg-amber-500/10"}`}>
+                                    {loadingId === profile.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Ban className="w-3.5 h-3.5" />}
+                                  </button>
+                                  <button onClick={() => handleUserAction("delete", profile.id)} disabled={loadingId === profile.id} title="Delete" className="p-1.5 rounded-lg text-white/15 hover:text-red-400 hover:bg-red-500/10 transition-all disabled:opacity-40">
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </>
+                              )}
+                              <button onClick={() => setExpandedUserId(isExpanded ? null : profile.id)} title="More info" className={`p-1.5 rounded-lg transition-all ${isExpanded ? "text-white/60 bg-white/8" : "text-white/20 hover:text-white/50 hover:bg-white/5"}`}>
+                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                               </button>
                             </div>
                           </td>
@@ -1272,17 +1279,21 @@ export default function AdminDashboardClient({
                                 {format(parseISO(p.created_at), "MMM d, yyyy")}
                               </td>
                               <td className="px-5 py-4">
-                                <div className="flex justify-end">
-                                  <button
-                                    onClick={() => setExpandedUserId(isExpanded ? null : p.id)}
-                                    className={`flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border transition-all ${
-                                      isExpanded
-                                        ? "bg-white/8 border-white/15 text-white/60"
-                                        : "border-white/[0.07] text-white/30 hover:text-white/60 hover:bg-white/5 hover:border-white/12"
-                                    }`}
-                                  >
-                                    <Zap className="w-3 h-3" />
-                                    <span className="hidden sm:block">Actions</span>
+                                <div className="flex items-center justify-end gap-1">
+                                  <button onClick={() => p.email && handleUserAction("reset", p.id, p.email)} disabled={loadingId === p.id} title="Reset password" className="p-1.5 rounded-lg text-white/20 hover:text-blue-300 hover:bg-blue-500/10 transition-all disabled:opacity-40">
+                                    <KeyRound className="w-3.5 h-3.5" />
+                                  </button>
+                                  <a href={`mailto:${p.email}`} title="Email operator" className="p-1.5 rounded-lg text-white/20 hover:text-white/60 hover:bg-white/8 transition-all">
+                                    <Mail className="w-3.5 h-3.5" />
+                                  </a>
+                                  <button onClick={() => handleUserAction(p.banned ? "unban" : "ban", p.id)} disabled={loadingId === p.id} title={p.banned ? "Unban" : "Ban"} className={`p-1.5 rounded-lg transition-all disabled:opacity-40 ${p.banned ? "text-emerald-400/60 hover:text-emerald-300 hover:bg-emerald-500/10" : "text-white/20 hover:text-amber-400 hover:bg-amber-500/10"}`}>
+                                    {loadingId === p.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Ban className="w-3.5 h-3.5" />}
+                                  </button>
+                                  <button onClick={() => handleUserAction("delete", p.id)} disabled={loadingId === p.id} title="Delete" className="p-1.5 rounded-lg text-white/15 hover:text-red-400 hover:bg-red-500/10 transition-all disabled:opacity-40">
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                  <button onClick={() => setExpandedUserId(isExpanded ? null : p.id)} title="More info" className={`p-1.5 rounded-lg transition-all ${isExpanded ? "text-white/60 bg-white/8" : "text-white/20 hover:text-white/50 hover:bg-white/5"}`}>
+                                    <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                                   </button>
                                 </div>
                               </td>
