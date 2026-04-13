@@ -28,8 +28,8 @@ export async function GET() {
         const { data } = await admin.storage.from(BUCKET).download(`xp/${file.name}`);
         if (!data) return { uid, xp: 0 };
         try {
-          const events: { xp: number }[] = JSON.parse(await data.text());
-          const xp = Array.isArray(events) ? events.reduce((s, e) => s + (e.xp ?? 0), 0) : 0;
+          const events: { xp: number; revoked?: boolean }[] = JSON.parse(await data.text());
+          const xp = Array.isArray(events) ? events.filter(e => !e.revoked).reduce((s, e) => s + (e.xp ?? 0), 0) : 0;
           return { uid, xp };
         } catch {
           return { uid, xp: 0 };

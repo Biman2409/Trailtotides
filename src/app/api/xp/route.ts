@@ -16,6 +16,7 @@ interface XPEvent {
   adventure_slug: string;
   xp: number;
   created_at: string;
+  revoked?: boolean;
 }
 
 // ─── Storage helpers ──────────────────────────────────────────────────────────
@@ -62,8 +63,9 @@ export async function GET() {
   if (!user) return NextResponse.json({ xp: 0, events: [] });
 
   const events = await readEvents(user.id);
-  const total = events.reduce((sum, e) => sum + (e.xp ?? 0), 0);
-  const sorted = [...events].sort(
+  const active = events.filter(e => !e.revoked);
+  const total = active.reduce((sum, e) => sum + (e.xp ?? 0), 0);
+  const sorted = [...active].sort(
     (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
   return NextResponse.json({ xp: total, events: sorted });
@@ -86,27 +88,28 @@ export async function POST(req: NextRequest) {
 
   const xp = XP_REWARDS[action];
   const events = await readEvents(user.id);
+  const active = events.filter(e => !e.revoked);
 
   const matchSlug = (e: XPEvent) => e.adventure_slug === slug;
   const matchAction = (e: XPEvent) => e.action === action;
 
   // One-time global actions (first time ever, regardless of slug)
   if (["ace_complete", "wishlist", "compare"].includes(action)) {
-    if (events.some(matchAction)) {
+    if (active.some(matchAction)) {
       return NextResponse.json({ awarded: false, reason: "already_awarded" });
     }
   }
 
   // Per-adventure once actions
   if (["review", "trip_log"].includes(action)) {
-    if (events.some(e => matchAction(e) && matchSlug(e))) {
+    if (active.some(e => matchAction(e) && matchSlug(e))) {
       return NextResponse.json({ awarded: false, reason: "already_awarded" });
     }
   }
 
   // Photo cap: max 3 per adventure
   if (action === "photo" && slug) {
-    const photoCount = events.filter(
+    const photoCount = active.filter(
       e => e.action === "photo" && e.adventure_slug === slug
     ).length;
     if (photoCount >= 3) {
@@ -127,4 +130,38 @@ export async function POST(req: NextRequest) {
 
   const newTotal = updated.reduce((s, e) => s + (e.xp ?? 0), 0);
   return NextResponse.json({ awarded: true, xp, newTotal });
+}
+
+// ─── DELETE /api/xp — revoke XP for an action+slug ───────────────────────────
+
+export async function DELETE(req: NextRequest) {
+  const supabase = await createServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const body = await req.json();
+  const action = body.action as XPAction;
+  const slug: string = body.slug ?? "";
+
+  if (!action || !(action in XP_REWARDS)) {
+    return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+  }
+
+  const events = await readEvents(user.id);
+
+  // Revoke the most recent matching active event
+  let revoked = false;
+  const updated = events.map(e => {
+    if (!revoked && !e.revoked && e.action === action && e.adventure_slug === slug) {
+      revoked = true;
+      return { ...e, revoked: true };
+    }
+    return e;
+  });
+
+  if (!revoked) return NextResponse.json({ revoked: false, reason: "not_found" });
+
+  await writeEvents(user.id, updated);
+  const newTotal = updated.filter(e => !e.revoked).reduce((s, e) => s + (e.xp ?? 0), 0);
+  return NextResponse.json({ revoked: true, newTotal });
 }

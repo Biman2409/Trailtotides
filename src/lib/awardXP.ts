@@ -20,3 +20,15 @@ export async function awardXP(action: XPAction, slug?: string): Promise<void> {
     // Silent — XP is non-critical
   }
 }
+
+export async function revokeXP(action: XPAction, slug?: string): Promise<void> {
+  try {
+    await fetch("/api/xp", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, slug: slug ?? null }),
+    });
+  } catch {
+    // Silent
+  }
+}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { BadgeCheck, GitCompare, Star } from "lucide-react";
 import { toast } from "sonner";
-import { awardXP } from "@/lib/awardXP";
+import { awardXP, revokeXP } from "@/lib/awardXP";
 import type { Adventure, Month } from "@/lib/data";
 import { getACE, computeDifficulty, computeMatchScore } from "@/lib/ace";
 import { loadProfile } from "@/lib/matchmaker";
@@ -68,6 +68,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
     if (inCompare) {
       remove(adventure.id);
       toast("Removed from compare");
+      revokeXP("compare", adventure.slug);
     } else if (isFull) {
       toast.error("Remove an adventure to add another.");
     } else {
