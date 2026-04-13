@@ -451,6 +451,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   bestSeason={adventure.bestSeason}
                   adventureAce={ace}
                   slug={adventure.slug}
+                  loggedIn={!!currentUserId}
                 />
               </div>
             </AccordionSection>
