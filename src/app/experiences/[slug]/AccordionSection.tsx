@@ -15,7 +15,7 @@ export default function AccordionSection({ title, label, defaultOpen = false, ch
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <section id={id}>
+    <section id={id} className="pt-10 first:pt-0">
       {/* Mobile: collapsible header */}
       {(label || title) && (
         <button
@@ -37,7 +37,7 @@ export default function AccordionSection({ title, label, defaultOpen = false, ch
 
       {/* Desktop: always visible header */}
       {(label || title) && (
-        <div className="hidden lg:block mb-3">
+        <div className="hidden lg:block mb-4">
           {label && (
             <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1.5">{label}</p>
           )}

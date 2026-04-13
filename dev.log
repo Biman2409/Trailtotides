@@ -375,3 +375,48 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /api/reviews?slug=annapurna-circuit 200 in 516ms
  GET /api/photos?slug=annapurna-circuit 200 in 683ms
  GET /api/photos?slug=annapurna-circuit 200 in 580ms
+ GET /experiences/annapurna-circuit?_cb=1776107431960 200 in 610ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 357ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 376ms
+ GET /api/photos?slug=annapurna-circuit 200 in 596ms
+ GET /api/photos?slug=annapurna-circuit 200 in 553ms
+ ⨯ ./user/app/src/app/experiences/[slug]/page.tsx
+Error evaluating Node.js code
+SyntaxError: Unterminated JSX contents. (655:10)
+    [at toParseError (/home/user/app/node_modules/@babel/parser/src/parse-error.ts:95:45)]
+    [at TypeScriptParserMixin.raise (/home/user/app/node_modules/@babel/parser/src/tokenizer/index.ts:1507:19)]
+    [at TypeScriptParserMixin.jsxReadToken (/home/user/app/node_modules/@babel/parser/src/plugins/jsx/index.ts:104:22)]
+    [at TypeScriptParserMixin.getTokenFromCode (/home/user/app/node_modules/@babel/parser/src/plugins/jsx/index.ts:596:14)]
+    [at TypeScriptParserMixin.getTokenFromCode (/home/user/app/node_modules/@babel/parser/src/plugins/typescript/index.ts:4121:13)]
+    [at TypeScriptParserMixin.nextToken (/home/user/app/node_modules/@babel/parser/src/tokenizer/index.ts:279:10)]
+    [at TypeScriptParserMixin.next (/home/user/app/node_modules/@babel/parser/src/tokenizer/index.ts:122:10)]
+    [at TypeScriptParserMixin.eat (/home/user/app/node_modules/@babel/parser/src/tokenizer/index.ts:127:12)]
+    [at TypeScriptParserMixin.expect (/home/user/app/node_modules/@babel/parser/src/parser/util.ts:156:15)]
+    [at TypeScriptParserMixin.jsxParseClosingElementAt (/home/user/app/node_modules/@babel/parser/src/plugins/jsx/index.ts:460:12)]
+
+
+
+./user/app/src/app/experiences/[slug]/page.tsx:657:1
+Parsing ecmascript source code failed
+[0m [90m 655 |[39m     [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m 656 |[39m   )[33m;[39m
+[31m[1m>[22m[39m[90m 657 |[39m }
+ [90m     |[39m [31m[1m^[22m[39m
+ [90m 658 |[39m[0m
+
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+
+
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 982ms
+ GET /experiences/annapurna-circuit?_cb=1776107446041 500 in 1130ms
+ ✓ Compiled in 117ms
+ ✓ Compiled in 110ms
+ ✓ Compiled /experiences/[slug] in 12ms
+ GET /experiences/annapurna-circuit?_cb=1776107446041 200 in 1125ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 420ms
+ GET /api/photos?slug=annapurna-circuit 200 in 593ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 624ms
+ GET /api/photos?slug=annapurna-circuit 200 in 645ms
+ ✓ Compiled in 151ms
+ GET /experiences/annapurna-circuit 200 in 897ms

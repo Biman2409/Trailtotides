@@ -445,7 +445,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </AccordionSection>
 
-            {/* ACE Profile — no extra pt, AccordionSection above already adds mt-8 divider */}
+            {/* ACE Profile */}
+            <div className="pt-10">
             <ACEProfileSection
               ace={ace}
               adventureName={adventure.name}
@@ -456,6 +457,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               showPhysicalExhaustionWarning={showPhysicalExhaustionWarning}
               showWaterWarning={showWaterWarning}
             />
+            </div>
 
             {/* Operators */}
             <div id="book-this-adventure" />
@@ -505,9 +507,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </AccordionSection>
 
             {/* Community */}
-            <div>
-              {/* Section divider */}
-              <div className="h-px mb-8" style={{ background: "rgba(255,255,255,0.05)" }} />
+            <div className="pt-10">
               <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4">Community</p>
 
               {/* Single login CTA — only when logged out */}
