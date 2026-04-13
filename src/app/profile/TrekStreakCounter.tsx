@@ -63,7 +63,7 @@ export default function TrekStreakCounter() {
 
   const statCards = [
     { icon: <Mountain className="w-4 h-4" />, value: stats.total,        label: "Adventures",      color: "#ff5100" },
-    { icon: <Layers    className="w-4 h-4" />, value: stats.typesCount,   label: "Types Tried",     color: "#a78bfa" },
+    { icon: <Layers    className="w-4 h-4" />, value: stats.typesCount,   label: "Types",           color: "#a78bfa" },
     { icon: <Globe     className="w-4 h-4" />, value: stats.statesCount,  label: "States",          color: "#38bdf8" },
     { icon: <Clock     className="w-4 h-4" />, value: stats.totalDays,    label: "Days in the Wild",color: "#10b981" },
   ];
