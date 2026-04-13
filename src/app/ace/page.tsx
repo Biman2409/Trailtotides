@@ -42,20 +42,20 @@ const SCALE = [
 
 const PROGRESSION_TREKS = [
   {
-    slug: "annapurna-base-camp",
+    slug: "goechala",
     label: "The Starting Point",
     sublabel: "Moderate",
     diffColor: "#f59e0b",
-    desc: "Well-marked trails, moderate altitude. High stamina and altitude demand — other axes stay low. Achievable with consistent training.",
+    desc: "Closest viewpoint to Kangchenjunga through rhododendron forests. Stamina and altitude lead — terrain stays forgiving and well-marked.",
     ace: { stamina: 3, power: 2, strength: 2, agility: 2, water: 0, altitude: 3, focus: 2, nerve: 1 },
   },
   {
-    slug: "kedarkantha-trek",
+    slug: "rupin-pass",
     label: "The Step Up",
     sublabel: "Hard",
     diffColor: "#f97316",
-    desc: "Summit push at 12,500ft through deep snow. Every axis climbs — stamina and altitude become dominant. Focus and nerve enter the picture.",
-    ace: { stamina: 4, power: 3, strength: 3, agility: 3, water: 0, altitude: 4, focus: 3, nerve: 3 },
+    desc: "Waterfalls, snow bridges and a dramatic high pass at 15,250ft. Agility and focus spike — loose snow, steep descents, real exposure.",
+    ace: { stamina: 4, power: 3, strength: 3, agility: 4, water: 0, altitude: 4, focus: 3, nerve: 3 },
   },
   {
     slug: "pin-parvati-pass",
