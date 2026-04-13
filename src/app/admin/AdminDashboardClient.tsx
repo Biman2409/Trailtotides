@@ -570,6 +570,51 @@ export default function AdminDashboardClient({
     } finally { setLoadingId(null); }
   }
 
+  // ── Filtered reviews & photos ─────────────────────────────────────────────
+  const filteredReviews = useMemo(() => {
+    if (!reviewSearch) return localReviews;
+    const q = reviewSearch.toLowerCase();
+    return localReviews.filter(r =>
+      r.username.toLowerCase().includes(q) ||
+      r.body.toLowerCase().includes(q) ||
+      r.adventure_slug.toLowerCase().includes(q)
+    );
+  }, [localReviews, reviewSearch]);
+
+  const filteredPhotos = useMemo(() => {
+    if (!photoSearch) return localPhotos;
+    const q = photoSearch.toLowerCase();
+    return localPhotos.filter(p =>
+      p.username.toLowerCase().includes(q) ||
+      p.caption.toLowerCase().includes(q) ||
+      p.slug.toLowerCase().includes(q)
+    );
+  }, [localPhotos, photoSearch]);
+
+  async function handleDeleteReview(id: string) {
+    if (!confirm("Delete this review? Cannot be undone.")) return;
+    setLoadingId(id);
+    try {
+      await adminDeleteReview(id);
+      setLocalReviews(prev => prev.filter(r => r.id !== id));
+      showToast("Review deleted");
+    } catch {
+      showToast("Delete failed", "error");
+    } finally { setLoadingId(null); }
+  }
+
+  async function handleDeletePhoto(photo: Photo) {
+    if (!confirm("Delete this photo? Cannot be undone.")) return;
+    setLoadingId(photo.id);
+    try {
+      await adminDeletePhoto(photo.id, photo.slug, photo.path);
+      setLocalPhotos(prev => prev.filter(p => p.id !== photo.id));
+      showToast("Photo deleted");
+    } catch {
+      showToast("Delete failed", "error");
+    } finally { setLoadingId(null); }
+  }
+
   const exportToExcel = () => {
     const data = filtered.map(p => ({
       ID: p.id, Name: p.full_name || "N/A", Email: p.email || "N/A",
@@ -592,6 +637,7 @@ export default function AdminDashboardClient({
     { value: "messages",  icon: MessageSquare,  label: "Messages",  badge: localMessages.length },
     { value: "stories",   icon: BookOpen,       label: "Stories",   badge: pendingStories },
     { value: "operators", icon: Building2,      label: "Operators", badge: pendingOperatorSubmissions },
+    { value: "content",   icon: Image,          label: "Content",   badge: 0 },
     { value: "analytics", icon: BarChart3,      label: "Analytics" },
   ];
 
