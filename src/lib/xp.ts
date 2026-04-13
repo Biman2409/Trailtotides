@@ -11,8 +11,8 @@ export type XPAction =
 export const XP_REWARDS: Record<XPAction, number> = {
   ace_complete: 200,
   trip_log:     100,
-  review:       100,
-  photo:         50,
+  review:       200,
+  photo:        100,
   wishlist:     100,
   compare:      100,
 };
