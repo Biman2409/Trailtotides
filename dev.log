@@ -299,3 +299,26 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
  GET /api/photos?slug=annapurna-circuit 200 in 754ms
  ✓ Compiled in 207ms
  GET /experiences/annapurna-circuit?_cb=1776106608981 200 in 825ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 412ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 421ms
+ GET /api/photos?slug=annapurna-circuit 200 in 600ms
+ GET /api/photos?slug=annapurna-circuit 200 in 789ms
+ ✓ Compiled in 129ms
+ ✓ Compiled /experiences/[slug] in 16ms
+ ⨯ ReferenceError: HazardBadges is not defined
+    at ExperiencePage (.:423:22) {
+  digest: '1531116970'
+}
+ GET /experiences/annapurna-circuit?_cb=1776106608981 200 in 296ms
+ ⨯ ReferenceError: HazardBadges is not defined
+    at ExperiencePage (.:423:22) {
+  digest: '1531116970'
+}
+ GET /experiences/annapurna-circuit?_cb=1776106676137 500 in 555ms
+ ✓ Compiled /experiences/[slug] in 13ms
+ GET /experiences/annapurna-circuit?_cb=1776106678986 200 in 2256ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 421ms
+ GET /api/reviews?slug=annapurna-circuit 200 in 421ms
+ GET /api/photos?slug=annapurna-circuit 200 in 784ms
+ GET /api/photos?slug=annapurna-circuit 200 in 786ms
+ GET /experiences/annapurna-circuit 200 in 474ms

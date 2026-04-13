@@ -42,6 +42,7 @@ import AccordionSection from "./AccordionSection";
 import WeatherWidget from "./WeatherWidget";
 import PhotoGallery from "./PhotoGallery";
 import PackingList from "./PackingList";
+import HazardBadges from "./HazardBadges";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -420,26 +421,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     <p className="text-white/55 text-xs leading-relaxed">{adventure.safetyNotes}</p>
                   </div>
                   {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
-                    <div className="flex flex-wrap gap-2 mt-4 pt-4" style={{ borderTop: "1px solid rgba(245,158,11,0.08)" }}>
-                      {showAltitudeWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-yellow-400 text-[10px] font-semibold px-2.5 py-1 rounded-lg" style={{ background: "rgba(234,179,8,0.08)", border: "1px solid rgba(234,179,8,0.18)" }}>⚠ Altitude Sickness</span>
-                      )}
-                      {showPhysicalExhaustionWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-orange-400 text-[10px] font-semibold px-2.5 py-1 rounded-lg" style={{ background: "rgba(251,146,60,0.08)", border: "1px solid rgba(251,146,60,0.18)" }}>⚠ Physical Exhaustion</span>
-                      )}
-                      {showFatalFallWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-red-400 text-[10px] font-semibold px-2.5 py-1 rounded-lg" style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.18)" }}>⚠ Fatal Fall Risk</span>
-                      )}
-                      {showExtremeIsolationWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-sky-400 text-[10px] font-semibold px-2.5 py-1 rounded-lg" style={{ background: "rgba(56,189,248,0.08)", border: "1px solid rgba(56,189,248,0.18)" }}>⚠ Extreme Isolation</span>
-                      )}
-                      {showTechnicalWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-violet-400 text-[10px] font-semibold px-2.5 py-1 rounded-lg" style={{ background: "rgba(139,92,246,0.08)", border: "1px solid rgba(139,92,246,0.18)" }}>⚠ Technical Terrain</span>
-                      )}
-                      {showWaterWarning && (
-                        <span className="inline-flex items-center gap-1.5 text-blue-400 text-[10px] font-semibold px-2.5 py-1 rounded-lg" style={{ background: "rgba(59,130,246,0.08)", border: "1px solid rgba(59,130,246,0.18)" }}>⚠ Open Water</span>
-                      )}
-                    </div>
+                    <HazardBadges
+                      showAltitude={showAltitudeWarning}
+                      showExhaustion={showPhysicalExhaustionWarning}
+                      showFatalFall={showFatalFallWarning}
+                      showIsolation={showExtremeIsolationWarning}
+                      showTechnical={showTechnicalWarning}
+                      showWater={showWaterWarning}
+                    />
                   )}
                 </div>
 
