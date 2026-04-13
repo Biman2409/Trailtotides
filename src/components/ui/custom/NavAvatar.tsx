@@ -16,11 +16,19 @@ export default function NavAvatar({ fallback }: { fallback: string }) {
     const stored = localStorage.getItem(LS_KEY);
     if (stored) setSelectedId(Number(stored));
 
-    // Sync avatar from server
+    // Bidirectional sync: server wins if it has a value; otherwise push local to server
     fetch("/api/me").then(r => r.ok ? r.json() : null).then(data => {
+      const localRaw = localStorage.getItem(LS_KEY);
       if (data?.avatar_id != null) {
         setSelectedId(data.avatar_id);
         localStorage.setItem(LS_KEY, String(data.avatar_id));
+      } else if (localRaw) {
+        // Push local selection to server (selected before login or server lost it)
+        fetch("/api/me", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ avatar_id: Number(localRaw) }),
+        }).catch(() => {});
       }
     }).catch(() => {});
 

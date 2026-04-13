@@ -279,6 +279,22 @@ function AvatarSection() {
   useEffect(() => {
     const stored = localStorage.getItem(LS_KEY);
     if (stored) setSelectedId(Number(stored));
+
+    // Bidirectional sync with server
+    fetch("/api/me").then(r => r.ok ? r.json() : null).then(data => {
+      const localRaw = localStorage.getItem(LS_KEY);
+      if (data?.avatar_id != null) {
+        setSelectedId(data.avatar_id);
+        localStorage.setItem(LS_KEY, String(data.avatar_id));
+      } else if (localRaw) {
+        fetch("/api/me", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ avatar_id: Number(localRaw) }),
+        }).catch(() => {});
+      }
+    }).catch(() => {});
+
     import("@/lib/matchmaker").then(({ loadProfile, loadProfileFromServer }) => {
       import("@/lib/tiers").then(({ getTierLabel, getTier }) => {
         const apply = (p: ReturnType<typeof loadProfile>) => {
@@ -300,6 +316,12 @@ function AvatarSection() {
     setSelectedId(id);
     if (id !== null) localStorage.setItem(LS_KEY, String(id));
     else localStorage.removeItem(LS_KEY);
+    // Persist to server so it survives across devices/sessions
+    fetch("/api/me", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ avatar_id: id }),
+    }).catch(() => {});
   };
 
   return (

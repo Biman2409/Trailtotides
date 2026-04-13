@@ -80,11 +80,17 @@ function useAvatarState() {
     const stored = localStorage.getItem(LS_KEY);
     if (stored) setSelectedId(Number(stored));
 
-    // Then sync from server (server wins for avatar_id)
+    // Bidirectional sync with server:
+    // - server has value → use it (cross-device sync)
+    // - server has no value but localStorage does → push local to server
     fetchServerAvatarId().then(serverId => {
+      const localRaw = localStorage.getItem(LS_KEY);
       if (serverId !== null) {
         setSelectedId(serverId);
         localStorage.setItem(LS_KEY, String(serverId));
+      } else if (localRaw) {
+        // Local selection not yet on server (e.g. picked before login) — push it
+        saveServerAvatarId(Number(localRaw));
       }
     });
 
