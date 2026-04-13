@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { signUpOperator } from "@/app/auth/operator-actions";
 import Link from "next/link";
-import { Eye, EyeOff, ArrowLeft, Building2, Globe, Mail, Lock, User } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft, Building2, Globe, Mail, Lock, User, Upload, X, ImageIcon } from "lucide-react";
 import countries from "@/lib/countries.json";
 import Logo from "@/components/ui/custom/Logo";
 import TermsModal from "@/components/ui/custom/TermsModal";
@@ -15,20 +15,103 @@ export default function OperatorSignupPage() {
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
 
+  // Logo state
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [logoUploading, setLogoUploading] = useState(false);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [logoError, setLogoError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function handleLogoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 4 * 1024 * 1024) {
+      setLogoError("File too large (max 4 MB)");
+      return;
+    }
+    const allowed = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/svg+xml"];
+    if (!allowed.includes(file.type)) {
+      setLogoError("Only JPG, PNG, WebP or SVG allowed");
+      return;
+    }
+    setLogoError(null);
+    setLogoFile(file);
+    setLogoUrl(null);
+    const reader = new FileReader();
+    reader.onload = (ev) => setLogoPreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  }
+
+  function removeLogo() {
+    setLogoFile(null);
+    setLogoPreview(null);
+    setLogoUrl(null);
+    setLogoError(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  async function uploadLogo(userId: string): Promise<string | null> {
+    if (!logoFile) return null;
+    setLogoUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", logoFile);
+      fd.append("user_id", userId);
+      const res = await fetch("/api/operator-logo", { method: "POST", body: fd });
+      const data = await res.json();
+      if (data.url) { setLogoUrl(data.url); return data.url; }
+      setLogoError(data.error ?? "Upload failed");
+      return null;
+    } catch {
+      setLogoError("Upload failed");
+      return null;
+    } finally {
+      setLogoUploading(false);
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
+
     const formData = new FormData(e.currentTarget);
+
+    // Upload logo first using a temp ID, then pass the URL in form data
+    if (logoFile) {
+      setLogoUploading(true);
+      try {
+        const tempId = `tmp-${Date.now()}`;
+        const fd = new FormData();
+        fd.append("file", logoFile);
+        fd.append("user_id", tempId);
+        const res = await fetch("/api/operator-logo", { method: "POST", body: fd });
+        const data = await res.json();
+        if (data.url) {
+          formData.set("logo_url", data.url);
+        } else {
+          setLogoError(data.error ?? "Logo upload failed");
+        }
+      } catch {
+        setLogoError("Logo upload failed");
+      } finally {
+        setLogoUploading(false);
+      }
+    }
+
     const result = await signUpOperator(formData);
     setLoading(false);
+
     if (result?.error) {
       setMessage({ type: "error", text: result.error });
-    } else if (result?.success) {
-      setMessage({ type: "success", text: result.success });
-      (e.target as HTMLFormElement).reset();
-      setTermsAccepted(false);
+      return;
     }
+
+    setMessage({ type: "success", text: result?.success ?? "Account created! You can now log in." });
+    (e.target as HTMLFormElement).reset();
+    setTermsAccepted(false);
+    removeLogo();
   }
 
   return (
@@ -218,6 +301,75 @@ export default function OperatorSignupPage() {
               </div>
             </div>
 
+            {/* ── Company Logo ──────────────────────────────────── */}
+            <div className="rounded-2xl border p-3.5" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
+              <div className="flex items-center justify-between mb-2.5">
+                <label className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">
+                  Company Logo <span className="normal-case tracking-normal font-normal text-white/20">(optional)</span>
+                </label>
+                {logoPreview && (
+                  <button type="button" onClick={removeLogo} className="text-[9px] font-semibold text-white/25 hover:text-red-400 transition-colors flex items-center gap-1">
+                    <X className="w-3 h-3" /> Remove
+                  </button>
+                )}
+              </div>
+
+              {logoPreview ? (
+                /* Preview */
+                <div className="flex items-center gap-4">
+                  <div
+                    className="w-20 h-20 rounded-2xl overflow-hidden shrink-0 flex items-center justify-center"
+                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}
+                  >
+                    <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain p-1" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white/70 text-xs font-semibold leading-snug truncate">{logoFile?.name}</p>
+                    <p className="text-white/25 text-[10px] mt-0.5">
+                      {logoFile ? `${(logoFile.size / 1024).toFixed(0)} KB` : ""}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="mt-2 text-[10px] text-white/30 hover:text-white/60 transition-colors underline underline-offset-2"
+                    >
+                      Change image
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                /* Drop zone */
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full flex flex-col items-center justify-center gap-2 py-5 rounded-xl border border-dashed transition-all hover:border-white/20 hover:bg-white/[0.03]"
+                  style={{ borderColor: "rgba(255,255,255,0.1)" }}
+                >
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(255,81,0,0.1)" }}>
+                    <ImageIcon className="w-4 h-4 text-[#ff5100]/60" />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-white/50 text-xs font-medium flex items-center gap-1.5 justify-center">
+                      <Upload className="w-3 h-3" /> Upload logo
+                    </p>
+                    <p className="text-white/20 text-[10px] mt-0.5">PNG, JPG, WebP or SVG · max 4 MB</p>
+                  </div>
+                </button>
+              )}
+
+              {logoError && (
+                <p className="mt-2 text-[10px] text-red-400 font-medium">{logoError}</p>
+              )}
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/webp,image/svg+xml"
+                onChange={handleLogoChange}
+                className="hidden"
+              />
+            </div>
+
             <div className="flex items-start gap-3 py-0.5">
               <div className="flex items-center h-5 mt-0.5 shrink-0">
                 <input
@@ -255,10 +407,10 @@ export default function OperatorSignupPage() {
 
             <button
               type="submit"
-              disabled={loading || !termsAccepted}
+              disabled={loading || logoUploading || !termsAccepted}
               className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl py-3 transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-[#ff5100]/20 text-sm mt-1"
             >
-              {loading ? "Submitting application…" : "Register as Operator"}
+              {loading || logoUploading ? "Setting up account…" : "Register as Operator"}
             </button>
           </form>
 

@@ -16,6 +16,7 @@ export type OperatorProfile = {
   email: string;
   phone: string;
   website: string | null;
+  logo_url: string | null;
   status: "approved";
   created_at: string;
 };
@@ -119,6 +120,7 @@ export async function signUpOperator(formData: FormData) {
   const phone_number = formData.get("phone") as string;
   const phone = `${country_code}${phone_number}`;
   const website = (formData.get("website") as string) || null;
+  const logo_url = (formData.get("logo_url") as string) || null;
   const password = formData.get("password") as string;
 
   if (password.length < 8) {
@@ -145,6 +147,7 @@ export async function signUpOperator(formData: FormData) {
     email,
     phone,
     website,
+    logo_url,
     status: "approved",
     created_at: new Date().toISOString(),
   };
@@ -161,7 +164,7 @@ export async function signUpOperator(formData: FormData) {
     created_at: new Date().toISOString(),
   }, { onConflict: "id" });
 
-  return { success: "Account created! You can now log in and start listing adventures." };
+  return { success: "Account created! You can now log in and start listing adventures.", userId };
 }
 
 export async function submitOperatorUpdate(formData: FormData) {
