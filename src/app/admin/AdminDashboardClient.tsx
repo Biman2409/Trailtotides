@@ -168,61 +168,57 @@ function UserDetailPanel({
   return (
     <tr>
       <td colSpan={7} className="px-0 py-0">
-        <div className="mx-3 mb-2 rounded-2xl border p-5 grid grid-cols-1 md:grid-cols-3 gap-6"
+        <div className="mx-3 mb-2 rounded-2xl border p-5 grid grid-cols-1 md:grid-cols-2 gap-6"
           style={{ background: "rgba(255,255,255,0.018)", borderColor: "rgba(255,255,255,0.07)" }}>
 
-          {/* Identity */}
-          <div className="space-y-3">
+          {/* Identity + ACE */}
+          <div className="space-y-2">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20">Identity</p>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Mail className="w-3 h-3 text-white/20 shrink-0" />
-                <span className="text-[12px] font-mono text-white/65 truncate">{profile.email ?? "—"}</span>
-                {profile.email && <CopyBtn text={profile.email} />}
-              </div>
-              {profile.phone && (
-                <div className="flex items-center gap-2">
-                  <Phone className="w-3 h-3 text-white/20 shrink-0" />
-                  <span className="text-[12px] font-mono text-white/65">{profile.phone}</span>
-                  <CopyBtn text={profile.phone} />
-                </div>
-              )}
-              <div className="flex items-center gap-2">
-                <Calendar className="w-3 h-3 text-white/20 shrink-0" />
-                <span className="text-[11px] text-white/40">
-                  Joined {format(parseISO(profile.created_at), "MMM d, yyyy")}
-                  <span className="text-white/20 ml-1">({daysSinceJoin}d ago)</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Activity className="w-3 h-3 text-white/20 shrink-0" />
-                <span className={`text-[11px] ${daysSinceLogin != null && daysSinceLogin > 30 ? "text-amber-400/60" : "text-white/40"}`}>
-                  {profile.last_sign_in_at
-                    ? `Last active ${format(parseISO(profile.last_sign_in_at), "MMM d, yyyy")} · ${daysSinceLogin}d ago`
-                    : "Never signed in"}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 pt-1">
-                <div className="w-3 h-3 shrink-0" />
-                <span className="text-[9px] font-mono text-white/20 truncate">{profile.id}</span>
-                <CopyBtn text={profile.id} />
-              </div>
+            <div className="flex items-center gap-2">
+              <Mail className="w-3 h-3 text-white/20 shrink-0" />
+              <span className="text-[12px] font-mono text-white/65 truncate">{profile.email ?? "—"}</span>
+              {profile.email && <CopyBtn text={profile.email} />}
             </div>
-          </div>
-
-          {/* ACE Profile */}
-          <div className="space-y-3">
-            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20">ACE Profile</p>
-            {ace ? (
+            {profile.phone && (
               <div className="flex items-center gap-2">
-                <span className="text-sm font-black" style={{ color: rankColor }}>{rank}</span>
-                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: `${rankColor}18`, color: rankColor }}>
-                  {Object.values(ace).reduce((a,b) => a+b, 0)} / 40
-                </span>
+                <Phone className="w-3 h-3 text-white/20 shrink-0" />
+                <span className="text-[12px] font-mono text-white/65">{profile.phone}</span>
+                <CopyBtn text={profile.phone} />
               </div>
-            ) : (
-              <p className="text-[11px] text-white/25 font-semibold">No assessment taken</p>
             )}
+            <div className="flex items-center gap-2">
+              <Calendar className="w-3 h-3 text-white/20 shrink-0" />
+              <span className="text-[11px] text-white/40">
+                Joined {format(parseISO(profile.created_at), "MMM d, yyyy")}
+                <span className="text-white/20 ml-1">({daysSinceJoin}d ago)</span>
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Activity className="w-3 h-3 text-white/20 shrink-0" />
+              <span className={`text-[11px] ${daysSinceLogin != null && daysSinceLogin > 30 ? "text-amber-400/60" : "text-white/40"}`}>
+                {profile.last_sign_in_at
+                  ? `Last active ${format(parseISO(profile.last_sign_in_at), "MMM d, yyyy")} · ${daysSinceLogin}d ago`
+                  : "Never signed in"}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Star className="w-3 h-3 text-white/20 shrink-0" />
+              {ace ? (
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11px] font-bold" style={{ color: rankColor }}>{rank}</span>
+                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: `${rankColor}18`, color: rankColor }}>
+                    {Object.values(ace).reduce((a,b) => a+b, 0)} / 40
+                  </span>
+                </div>
+              ) : (
+                <span className="text-[11px] text-white/20">No ACE assessment</span>
+              )}
+            </div>
+            <div className="flex items-center gap-2 pt-1">
+              <div className="w-3 h-3 shrink-0" />
+              <span className="text-[9px] font-mono text-white/20 truncate">{profile.id}</span>
+              <CopyBtn text={profile.id} />
+            </div>
           </div>
 
           {/* Actions */}
