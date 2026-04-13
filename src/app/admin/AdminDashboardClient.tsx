@@ -1237,7 +1237,6 @@ export default function AdminDashboardClient({
                         return (
                           <>
                             <tr key={p.id} className={`border-b border-white/[0.04] last:border-0 transition-colors ${isExpanded ? "bg-white/[0.035]" : "hover:bg-white/[0.025]"}`}>
-                              </td>
                               <td className="px-5 py-4">
                                 <div className="flex items-center gap-3">
                                   <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/12 flex items-center justify-center text-cyan-400 font-black text-sm shrink-0">
