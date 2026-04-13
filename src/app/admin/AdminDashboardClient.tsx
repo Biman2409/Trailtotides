@@ -310,6 +310,7 @@ export default function AdminDashboardClient({
     const roleData = [
       { name: "Users", value: localProfiles.filter((p) => p.role === "user").length, color: "#ff5100" },
       { name: "Admins", value: localProfiles.filter((p) => p.role === "admin").length, color: "#a855f7" },
+      { name: "Operators", value: localProfiles.filter((p) => p.role === "operator").length, color: "#06b6d4" },
     ];
 
     const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -332,6 +333,7 @@ export default function AdminDashboardClient({
 
   const totalUsers = localProfiles.filter((p) => p.role === "user").length;
   const totalAdmins = localProfiles.filter((p) => p.role === "admin").length;
+  const totalOperators = localProfiles.filter((p) => p.role === "operator").length;
   const newToday = analyticsData.growthData[29]?.count || 0;
   const aceCount = localProfiles.filter((p) => !!p.ace_profile).length;
   const pendingOperatorSubmissions = localOperatorSubmissions.filter((s) => s.status === "pending").length;
@@ -399,9 +401,10 @@ export default function AdminDashboardClient({
       setLocalStories(prev => prev.filter(s => s.id !== story.id));
       showToast("Story deleted");
     } else {
-      await updateStoryStatus(story._fileName, action);
-      setLocalStories(prev => prev.map(s => s.id === story.id ? { ...s, status: action } : s));
-      showToast(`Story ${action}d`);
+      const status = action === "approve" ? "approved" : "rejected";
+      await updateStoryStatus(story._fileName, status);
+      setLocalStories(prev => prev.map(s => s.id === story.id ? { ...s, status } : s));
+      showToast(`Story ${status}`);
     }
     setLoadingId(null);
   }
@@ -497,7 +500,7 @@ export default function AdminDashboardClient({
             { label: "New Today",     value: `+${newToday}`,       sub: "Registrations",         icon: TrendingUp,  color: "#3b82f6" },
             { label: "ACE Complete",  value: aceCount,             sub: `${Math.round((aceCount/Math.max(localProfiles.length,1))*100)}% of users`, icon: Star, color: "#f59e0b" },
             { label: "Messages",      value: localMessages.length, sub: "Contact inbox",         icon: MessageSquare, color: "#22c55e" },
-            { label: "Operators",     value: localOperatorProfiles.length, sub: `${pendingOperatorSubmissions} pending`, icon: Building2, color: "#06b6d4" },
+            { label: "Operators",     value: totalOperators, sub: `${pendingOperatorSubmissions} pending`, icon: Building2, color: "#06b6d4" },
           ].map(({ label, value, sub, icon: Icon, color }) => (
             <div key={label} className="relative bg-white/[0.03] border border-white/[0.07] rounded-2xl p-5 overflow-hidden group hover:border-white/[0.12] transition-all">
               <div className="absolute -right-6 -top-6 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: color + "33" }} />
@@ -532,6 +535,7 @@ export default function AdminDashboardClient({
                     <option value="all" className="bg-[#111]">All Roles</option>
                     <option value="user" className="bg-[#111]">Users</option>
                     <option value="admin" className="bg-[#111]">Admins</option>
+                    <option value="operator" className="bg-[#111]">Operators</option>
                     <option value="banned" className="bg-[#111]">Banned</option>
                     <option value="ace" className="bg-[#111]">Has ACE</option>
                   </select>
@@ -613,9 +617,11 @@ export default function AdminDashboardClient({
                           </td>
                           <td className="px-5 py-4">
                             <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${
-                              profile.role === "admin" ? "bg-purple-500/15 text-purple-300 border border-purple-500/20" : "bg-white/5 text-white/40 border border-white/8"
+                              profile.role === "admin" ? "bg-purple-500/15 text-purple-300 border border-purple-500/20"
+                              : profile.role === "operator" ? "bg-cyan-500/15 text-cyan-300 border border-cyan-500/20"
+                              : "bg-white/5 text-white/40 border border-white/8"
                             }`}>
-                              {profile.role === "admin" ? <Shield className="w-2.5 h-2.5" /> : <Users className="w-2.5 h-2.5" />}
+                              {profile.role === "admin" ? <Shield className="w-2.5 h-2.5" /> : profile.role === "operator" ? <Building2 className="w-2.5 h-2.5" /> : <Users className="w-2.5 h-2.5" />}
                               {profile.role}
                             </span>
                           </td>

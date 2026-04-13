@@ -151,6 +151,16 @@ export async function signUpOperator(formData: FormData) {
 
   await writeJsonFile(adminClient, "operator-profiles", `${userId}.json`, profile);
 
+  // Set role = "operator" in the profiles table
+  await adminClient.from("profiles").upsert({
+    id: userId,
+    full_name: contact_name,
+    email,
+    phone,
+    role: "operator",
+    created_at: new Date().toISOString(),
+  }, { onConflict: "id" });
+
   return { success: "Account created! You can now log in and start listing adventures." };
 }
 
@@ -343,6 +353,10 @@ export async function approveOperatorSubmission(submissionId: string) {
     ...sub,
     status: "approved",
   });
+
+  // Ensure the operator's profile row has role = "operator"
+  await adminClient.from("profiles").update({ role: "operator" }).eq("id", sub.operator_id);
+
   return { success: "Approved." };
 }
 
