@@ -80,19 +80,23 @@ export default function TrekStreakCounter() {
           { value: stats.totalDays, delta: stats.wishDaysMore,  label: "Days in the Wild", color: "#f97316", icon: Sun    },
         ].map(({ value, delta, label, color, icon: Icon }, i) => (
           <div key={label}
-            className="flex flex-col items-center justify-center py-3 px-2 gap-1.5"
+            className="flex items-center gap-2.5 px-3 py-3"
             style={i < 2 ? { borderRight: "1px solid rgba(255,255,255,0.06)" } : {}}>
-            <div className="w-6 h-6 rounded-md flex items-center justify-center"
+            {/* Icon */}
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
               style={{ background: `${color}18`, border: `1px solid ${color}30` }}>
-              <Icon className="w-3 h-3" style={{ color }} />
+              <Icon className="w-3.5 h-3.5" style={{ color }} />
             </div>
-            <div className="flex items-baseline gap-1">
-              <span className="text-[14px] font-black tabular-nums leading-none" style={{ color }}>{value}</span>
-              {delta > 0 && stats.wishCount > 0 && (
-                <span className="text-[9px] font-black tabular-nums" style={{ color: "#f43f5e" }}>+{delta}</span>
-              )}
+            {/* Number + label stacked */}
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <div className="flex items-baseline gap-1">
+                <span className="text-[16px] font-black tabular-nums leading-none" style={{ color }}>{value}</span>
+                {delta > 0 && stats.wishCount > 0 && (
+                  <span className="text-[9px] font-black tabular-nums" style={{ color: "#f43f5e" }}>+{delta}</span>
+                )}
+              </div>
+              <span className="text-[8px] uppercase tracking-wide font-bold leading-none truncate" style={{ color: "rgba(255,255,255,0.25)" }}>{label}</span>
             </div>
-            <span className="text-[7px] uppercase tracking-wide font-semibold text-center leading-tight" style={{ color: "rgba(255,255,255,0.22)" }}>{label}</span>
           </div>
         ))}
       </div>
