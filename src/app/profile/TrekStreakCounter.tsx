@@ -43,36 +43,32 @@ export default function TrekStreakCounter() {
 
   return (
     <div className="mb-5 space-y-2">
-      {/* Completed ↔ Wishlist conversion graphic */}
-      <div className="flex items-center gap-2 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+      {/* Completed ↔ Wishlist */}
+      <div className="grid grid-cols-2 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
         {/* Completed */}
-        <div className="flex-1 flex items-center gap-2.5 px-4 py-3">
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+        <div className="flex flex-col items-center justify-center py-4 gap-1 relative"
+          style={{ borderRight: "1px solid rgba(255,255,255,0.07)" }}>
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center mb-0.5"
             style={{ background: "#10b98118", border: "1px solid #10b98130" }}>
             <CheckCircle2 className="w-3.5 h-3.5" style={{ color: "#10b981" }} />
           </div>
-          <div>
-            <p className="text-[20px] font-black tabular-nums leading-none" style={{ color: "#10b981" }}>{stats.total}</p>
-            <p className="text-[8px] uppercase tracking-wide font-semibold mt-0.5" style={{ color: "rgba(255,255,255,0.28)" }}>Completed</p>
+          <p className="text-[28px] font-black tabular-nums leading-none" style={{ color: "#10b981" }}>{stats.total}</p>
+          <p className="text-[8px] uppercase tracking-[0.18em] font-bold" style={{ color: "rgba(255,255,255,0.25)" }}>Completed</p>
+          {/* NEXT badge */}
+          <div className="absolute right-0 translate-x-1/2 top-1/2 -translate-y-1/2 z-10 px-1.5 py-0.5 rounded-full"
+            style={{ background: "#0a0a0e", border: "1px solid rgba(255,255,255,0.1)" }}>
+            <span className="text-[7px] font-black uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.2)" }}>Next</span>
           </div>
         </div>
 
-        {/* Arrow connector */}
-        <div className="flex flex-col items-center gap-0.5 px-1 shrink-0">
-          <ArrowRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.12)" }} />
-          <span className="text-[7px] font-bold uppercase tracking-wide" style={{ color: "rgba(255,255,255,0.1)" }}>next</span>
-        </div>
-
-        {/* Wishlist */}
-        <div className="flex-1 flex items-center gap-2.5 px-4 py-3" style={{ borderLeft: "1px solid rgba(255,255,255,0.06)" }}>
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+        {/* Wishlisted */}
+        <div className="flex flex-col items-center justify-center py-4 gap-1">
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center mb-0.5"
             style={{ background: "#f43f5e18", border: "1px solid #f43f5e30" }}>
             <Heart className="w-3.5 h-3.5" style={{ color: "#f43f5e" }} />
           </div>
-          <div>
-            <p className="text-[20px] font-black tabular-nums leading-none" style={{ color: "#f43f5e" }}>{stats.wishCount}</p>
-            <p className="text-[8px] uppercase tracking-wide font-semibold mt-0.5" style={{ color: "rgba(255,255,255,0.28)" }}>Wishlisted</p>
-          </div>
+          <p className="text-[28px] font-black tabular-nums leading-none" style={{ color: "#f43f5e" }}>{stats.wishCount}</p>
+          <p className="text-[8px] uppercase tracking-[0.18em] font-bold" style={{ color: "rgba(255,255,255,0.25)" }}>Wishlisted</p>
         </div>
       </div>
 
