@@ -77,29 +77,26 @@ export default function TrekStreakCounter() {
       </div>
 
       {/* Secondary stats row */}
-      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+      <div className="grid grid-cols-3 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
         {[
           { value: stats.types,     delta: stats.wishTypesNew,  label: "Types",            color: "#22d3ee", icon: Layers },
           { value: stats.states,    delta: stats.wishStatesNew, label: "States",           color: "#a78bfa", icon: Globe  },
           { value: stats.totalDays, delta: stats.wishDaysMore,  label: "Days in the Wild", color: "#f97316", icon: Sun    },
-        ].map(({ value, delta, label, color, icon: Icon }, i, arr) => (
+        ].map(({ value, delta, label, color, icon: Icon }, i) => (
           <div key={label}
-            className="flex items-center gap-3 px-4 py-2.5"
-            style={i < arr.length - 1 ? { borderBottom: "1px solid rgba(255,255,255,0.05)" } : {}}>
-            {/* Icon */}
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+            className="flex flex-col items-center justify-center py-3 px-2 gap-1.5"
+            style={i < 2 ? { borderRight: "1px solid rgba(255,255,255,0.06)" } : {}}>
+            <div className="w-6 h-6 rounded-md flex items-center justify-center"
               style={{ background: `${color}18`, border: `1px solid ${color}30` }}>
-              <Icon className="w-3.5 h-3.5" style={{ color }} />
+              <Icon className="w-3 h-3" style={{ color }} />
             </div>
-            {/* Label */}
-            <span className="flex-1 text-[11px] font-semibold" style={{ color: "rgba(255,255,255,0.45)" }}>{label}</span>
-            {/* Value + delta */}
-            <div className="flex items-baseline gap-1 shrink-0">
-              <span className="text-[16px] font-black tabular-nums leading-none" style={{ color }}>{value}</span>
+            <div className="flex items-baseline gap-1">
+              <span className="text-[14px] font-black tabular-nums leading-none" style={{ color }}>{value}</span>
               {delta > 0 && stats.wishCount > 0 && (
                 <span className="text-[9px] font-black tabular-nums" style={{ color: "#f43f5e" }}>+{delta}</span>
               )}
             </div>
+            <span className="text-[7px] uppercase tracking-wide font-semibold text-center leading-tight" style={{ color: "rgba(255,255,255,0.22)" }}>{label}</span>
           </div>
         ))}
       </div>
