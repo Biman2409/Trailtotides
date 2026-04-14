@@ -105,9 +105,11 @@ function Tooltip({ badge, visible, anchorRef }: {
 
 function TrophyCard({ badge, index, small = false }: { badge: Achievement; index: number; small?: boolean }) {
   const [visible, setVisible] = useState(false);
-  const [tooltip, setTooltip] = useState(false);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const cardRef    = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState(false);
+  const [pinned,  setPinned]  = useState(false);
+  const tooltip     = hovered || pinned;
+  const closeTimer  = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cardRef     = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), index * 70);
@@ -123,9 +125,9 @@ function TrophyCard({ badge, index, small = false }: { badge: Achievement; index
       ref={cardRef}
       className="relative flex flex-col items-center text-center transition-all duration-500 select-none cursor-pointer"
       style={{ opacity: visible ? 1 : 0, transform: visible ? "translateY(0) scale(1)" : "translateY(10px) scale(0.95)" }}
-      onMouseEnter={() => { if (closeTimer.current) clearTimeout(closeTimer.current); setTooltip(true); }}
-      onMouseLeave={() => { closeTimer.current = setTimeout(() => setTooltip(false), 120); }}
-      onClick={() => setTooltip(v => !v)}
+      onMouseEnter={() => { if (closeTimer.current) clearTimeout(closeTimer.current); setHovered(true); }}
+      onMouseLeave={() => { closeTimer.current = setTimeout(() => setHovered(false), 120); }}
+      onClick={() => setPinned(v => !v)}
     >
       <Tooltip badge={badge} visible={tooltip} anchorRef={cardRef} />
       <div
