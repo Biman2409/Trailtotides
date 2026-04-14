@@ -65,7 +65,15 @@ export default function ExpeditionProfile() {
   const xpToNext = next ? next.minXP - xp : 0;
   const over9k   = isOver9000(xp);
   const countOf  = (action: XPAction) => events.filter(e => e.action === action).length;
-  const recent   = events.slice(0, 4);
+
+  // Deduplicate: keep only the latest event per action+slug combo, then show 4 most recent
+  const seen = new Set<string>();
+  const recent = events.filter(ev => {
+    const key = `${ev.action}::${ev.adventure_slug}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 4);
 
   // When Over 9000, accent everything with the gold colour
   const accentColor = over9k ? OVER_9000_COLOR : tier.color;
