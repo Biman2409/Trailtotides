@@ -183,45 +183,68 @@ export default function ExpeditionProfile() {
       </button>
 
       {showLadder && (
-        <div className="relative px-5 pb-3 pt-1.5" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-          <div className="grid grid-cols-2 gap-x-5 gap-y-0.5">
-            {XP_TIERS.map(t => {
-              const reached   = xp >= t.minXP;
-              const isCurrent = t.level === tier.level;
-              return (
-                <div key={t.level} className="flex items-center gap-2 py-[3px]">
-                  <div
-                    className="w-3.5 h-3.5 rounded flex items-center justify-center text-[7px] font-black shrink-0"
-                    style={reached
-                      ? { background: `${t.color}18`, color: t.color, border: `1px solid ${t.color}30`, boxShadow: isCurrent ? `0 0 6px ${t.color}40` : "none" }
-                      : { background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.06)" }
-                    }
-                  >{t.level}</div>
-                  <span className="text-[10px] font-semibold flex-1 truncate" style={{ color: isCurrent ? t.color : reached ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.12)" }}>
-                    {t.name}{isCurrent && <span className="ml-1 text-[8px] opacity-50">◀</span>}
-                  </span>
-                  <span className="text-[8px] tabular-nums shrink-0" style={{ color: "rgba(255,255,255,0.1)" }}>
-                    {t.minXP >= 1000 ? `${(t.minXP / 1000).toFixed(t.minXP % 1000 === 0 ? 0 : 1)}k` : t.minXP}
-                  </span>
+        <div className="relative px-4 pb-3 pt-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+          <div className="relative">
+            {/* Vertical spine */}
+            <div className="absolute left-[13px] top-3 bottom-3 w-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+
+            <div className="space-y-0.5">
+              {XP_TIERS.map(t => {
+                const reached   = xp >= t.minXP;
+                const isCurrent = t.level === tier.level;
+                const xpLabel   = t.minXP >= 1000 ? `${(t.minXP / 1000).toFixed(t.minXP % 1000 === 0 ? 0 : 1)}k` : String(t.minXP);
+                return (
+                  <div key={t.level} className="relative flex items-center gap-3 px-1 py-1.5 rounded-lg transition-colors" style={isCurrent ? { background: `${t.color}0d` } : {}}>
+                    {/* Node */}
+                    <div
+                      className="relative z-10 w-[26px] h-[26px] shrink-0 rounded-lg flex items-center justify-center text-[9px] font-black"
+                      style={reached
+                        ? { background: `${t.color}18`, color: t.color, border: `1.5px solid ${t.color}${isCurrent ? "60" : "28"}`, boxShadow: isCurrent ? `0 0 10px ${t.color}35` : "none" }
+                        : { background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.14)", border: "1.5px solid rgba(255,255,255,0.07)" }
+                      }
+                    >{t.level}</div>
+
+                    {/* Name */}
+                    <span className="flex-1 text-[11px] font-semibold leading-none" style={{ color: isCurrent ? t.color : reached ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.14)" }}>
+                      {t.name}
+                    </span>
+
+                    {/* Current pill */}
+                    {isCurrent && (
+                      <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full leading-none" style={{ background: `${t.color}18`, color: t.color, border: `1px solid ${t.color}30` }}>
+                        YOU
+                      </span>
+                    )}
+
+                    {/* XP threshold */}
+                    <span className="text-[9px] tabular-nums font-medium shrink-0" style={{ color: reached ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.08)" }}>
+                      {xpLabel}
+                    </span>
+                  </div>
+                );
+              })}
+
+              {/* Over 9000 Club row */}
+              <div className="relative flex items-center gap-3 px-1 py-1.5 rounded-lg mt-1" style={over9k ? { background: `${OVER_9000_COLOR}0d` } : {}}>
+                <div
+                  className="relative z-10 w-[26px] h-[26px] shrink-0 rounded-lg flex items-center justify-center"
+                  style={over9k
+                    ? { background: `${OVER_9000_COLOR}18`, border: `1.5px solid ${OVER_9000_COLOR}50`, boxShadow: `0 0 10px ${OVER_9000_COLOR}35` }
+                    : { background: "rgba(255,255,255,0.03)", border: "1.5px solid rgba(255,255,255,0.07)" }
+                  }
+                >
+                  <Zap className="w-3 h-3" style={{ color: over9k ? OVER_9000_COLOR : "rgba(255,255,255,0.14)" }} />
                 </div>
-              );
-            })}
-            {/* Over 9000 Club row */}
-            <div className="flex items-center gap-2 py-[3px] col-span-2 mt-1">
-              <div
-                className="w-3.5 h-3.5 rounded flex items-center justify-center shrink-0"
-                style={over9k
-                  ? { background: `${OVER_9000_COLOR}20`, border: `1px solid ${OVER_9000_COLOR}40`, boxShadow: `0 0 6px ${OVER_9000_COLOR}50` }
-                  : { background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }
-                }
-              >
-                <Zap className="w-2 h-2" style={{ color: over9k ? OVER_9000_COLOR : "rgba(255,255,255,0.1)" }} />
+                <span className="flex-1 text-[11px] font-semibold leading-none" style={{ color: over9k ? OVER_9000_COLOR : "rgba(255,255,255,0.14)" }}>
+                  It&apos;s Over 9000 Club
+                </span>
+                {over9k && rank !== null && (
+                  <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full leading-none" style={{ background: `${OVER_9000_COLOR}18`, color: OVER_9000_COLOR, border: `1px solid ${OVER_9000_COLOR}30` }}>
+                    #{rank}
+                  </span>
+                )}
+                <span className="text-[9px] tabular-nums font-medium shrink-0" style={{ color: over9k ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.08)" }}>9k+</span>
               </div>
-              <span className="text-[10px] font-semibold flex-1" style={{ color: over9k ? OVER_9000_COLOR : "rgba(255,255,255,0.12)" }}>
-                It&apos;s Over 9000 Club
-                {over9k && rank !== null && <span className="ml-1.5 text-[8px] opacity-60">#{rank}</span>}
-              </span>
-              <span className="text-[8px] tabular-nums" style={{ color: "rgba(255,255,255,0.1)" }}>9k+</span>
             </div>
           </div>
         </div>
