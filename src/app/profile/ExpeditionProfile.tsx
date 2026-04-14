@@ -180,11 +180,9 @@ export default function ExpeditionProfile() {
                         {t.level}
                       </div>
                       {/* Name label */}
-                      <span className="text-[7px] font-semibold leading-none text-center" style={{
-                        maxWidth: "36px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
+                      <span className="text-[7px] font-semibold text-center leading-tight" style={{
+                        maxWidth: "44px",
+                        wordBreak: "break-word",
                         color: isCurrent ? t.color : reached ? t.color : "rgba(255,255,255,0.18)",
                       }}>
                         {t.name}
