@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Zap, TrendingUp, ChevronDown, Heart, Camera, GitCompare, Star, CheckCircle2 } from "lucide-react";
+import { Zap, TrendingUp, ChevronDown, Heart, Camera, GitCompare, Star, CheckCircle2, RotateCcw } from "lucide-react";
 import {
   getTier, getNextTier, getProgressPct, XP_TIERS,
   isOver9000, OVER_9000_COLOR,
@@ -44,6 +44,7 @@ export default function ExpeditionProfile() {
   const [showLadder, setShowLadder] = useState(false);
   const [rank, setRank]   = useState<number | null>(null);
   const [rankTotal, setRankTotal] = useState<number | null>(null);
+  const [resetting, setResetting] = useState(false);
 
   const fetchXP = () => {
     fetch("/api/xp")
@@ -73,6 +74,19 @@ export default function ExpeditionProfile() {
   const over9k    = isOver9000(xp);
   const accentColor = over9k ? OVER_9000_COLOR : tier.color;
   const countOf   = (action: XPAction) => events.filter(e => e.action === action).length;
+
+  async function handleReset() {
+    if (!confirm("Reset all XP? This cannot be undone.")) return;
+    setResetting(true);
+    try {
+      await fetch("/api/xp/reset", { method: "DELETE" });
+      setXp(0);
+      setEvents([]);
+      window.dispatchEvent(new Event("xp:updated"));
+    } finally {
+      setResetting(false);
+    }
+  }
 
   // Recent: dedupe by action+slug, newest first, top 5
   const seen = new Set<string>();
@@ -112,12 +126,21 @@ export default function ExpeditionProfile() {
             <p className="text-white/25 text-[10px] mt-0.5">{tier.description}</p>
           </div>
         </div>
-        <div className="text-right shrink-0">
+        <div className="text-right shrink-0 flex flex-col items-end gap-1">
           <p className="text-[22px] font-black tabular-nums leading-none" style={{ color: accentColor }}>{xp.toLocaleString()}</p>
-          <p className="text-white/22 text-[8.5px] mt-0.5 font-semibold tracking-widest uppercase">XP</p>
+          <p className="text-white/22 text-[8.5px] font-semibold tracking-widest uppercase">XP</p>
           {over9k && rank !== null && (
-            <p className="text-[9px] font-bold mt-0.5" style={{ color: OVER_9000_COLOR }}>#{rank} of {rankTotal}</p>
+            <p className="text-[9px] font-bold" style={{ color: OVER_9000_COLOR }}>#{rank} of {rankTotal}</p>
           )}
+          <button
+            onClick={handleReset}
+            disabled={resetting}
+            className="flex items-center gap-1 px-2 py-1 rounded-lg text-[8px] font-bold uppercase tracking-wide transition-all hover:brightness-125 disabled:opacity-40"
+            style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.25)", border: "1px solid rgba(255,255,255,0.08)" }}
+          >
+            <RotateCcw className="w-2.5 h-2.5" />
+            Reset XP
+          </button>
         </div>
       </div>
 
