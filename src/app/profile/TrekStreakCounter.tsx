@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { Map, Layers, Globe, Sun } from "lucide-react";
 import { useTripLog } from "@/contexts/TripLogContext";
 import { adventures } from "@/lib/data";
 
@@ -26,20 +27,24 @@ export default function TrekStreakCounter() {
   if (loading || stats.total === 0) return null;
 
   const items = [
-    { value: stats.total,    label: "Adventures",       color: "#f97316" },
-    { value: stats.types,    label: "Types",            color: "#22d3ee" },
-    { value: stats.states,   label: "States",           color: "#a78bfa" },
-    { value: stats.totalDays,label: "Days in the Wild", color: "#10b981" },
+    { value: stats.total,     label: "Adventures",       color: "#f97316", icon: Map    },
+    { value: stats.types,     label: "Types",            color: "#22d3ee", icon: Layers },
+    { value: stats.states,    label: "States",           color: "#a78bfa", icon: Globe  },
+    { value: stats.totalDays, label: "Days in the Wild", color: "#10b981", icon: Sun    },
   ];
 
   return (
     <div className="grid grid-cols-4 rounded-xl overflow-hidden mb-5" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-      {items.map(({ value, label, color }, i) => (
+      {items.map(({ value, label, color, icon: Icon }, i) => (
         <div
           key={label}
-          className="flex flex-col items-center justify-center py-3 px-2 gap-0.5"
+          className="flex flex-col items-center justify-center py-3 px-2 gap-1.5"
           style={i < items.length - 1 ? { borderRight: "1px solid rgba(255,255,255,0.06)" } : {}}
         >
+          <div className="w-6 h-6 rounded-md flex items-center justify-center"
+            style={{ background: `${color}18`, border: `1px solid ${color}30` }}>
+            <Icon className="w-3 h-3" style={{ color }} />
+          </div>
           <span className="text-lg font-black tabular-nums leading-none" style={{ color }}>{value}</span>
           <span className="text-[8px] text-white/28 text-center leading-tight">{label}</span>
         </div>
