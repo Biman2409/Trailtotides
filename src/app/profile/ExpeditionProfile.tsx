@@ -144,11 +144,11 @@ export default function ExpeditionProfile() {
         {/* Tier ladder */}
         {showLadder && (
           <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-            {/* Track: line sits at center of circles (circle = 28px, center = 14px from top) */}
-            <div className="relative" style={{ paddingTop: "14px", paddingBottom: "28px" }}>
-              {/* Background spine — vertically centered on the circles */}
+            {/* Track: circles are 28px tall, container has no extra offset — spine at top:14px = circle center */}
+            <div className="relative" style={{ paddingBottom: "4px" }}>
+              {/* Background spine — at exact vertical center of 28px circles */}
               <div className="absolute left-0 right-0 h-px" style={{ top: "14px", background: "rgba(255,255,255,0.07)", zIndex: 0 }} />
-              {/* Filled spine */}
+              {/* Filled spine up to current tier */}
               {(() => {
                 const idx = XP_TIERS.findIndex(t => t.level === tier.level);
                 const pctFill = over9k ? 100 : (idx / (XP_TIERS.length - 1)) * 100;
@@ -162,20 +162,20 @@ export default function ExpeditionProfile() {
                   }} />
                 );
               })()}
-              {/* Nodes row */}
+              {/* Nodes row — sits above spine via z-index */}
               <div className="relative flex items-start justify-between" style={{ zIndex: 1 }}>
                 {XP_TIERS.map(t => {
                   const reached   = xp >= t.minXP;
                   const isCurrent = t.level === tier.level;
                   return (
                     <div key={t.level} className="flex flex-col items-center" style={{ gap: "6px" }}>
-                      {/* Circle — opaque background so spine doesn't bleed through */}
-                      <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black shrink-0"
+                      {/* Circle — solid bg so spine line can't bleed through */}
+                      <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 relative"
                         style={isCurrent
-                          ? { background: t.color, color: "#000", boxShadow: `0 0 10px ${t.color}80, 0 0 0 3px ${t.color}28`, position: "relative", zIndex: 2 }
+                          ? { background: t.color, color: "#000", boxShadow: `0 0 12px ${t.color}90, 0 0 0 3px ${t.color}30`, zIndex: 2 }
                           : reached
-                            ? { background: "rgba(10,10,14,1)", color: t.color, border: `1.5px solid ${t.color}70`, position: "relative", zIndex: 2 }
-                            : { background: "rgba(10,10,14,1)", color: "rgba(255,255,255,0.2)", border: "1.5px solid rgba(255,255,255,0.1)", position: "relative", zIndex: 2 }
+                            ? { background: "#0a0a0e", color: t.color, border: `1.5px solid ${t.color}`, boxShadow: `0 0 8px ${t.color}40`, zIndex: 2 }
+                            : { background: "#0a0a0e", color: "rgba(255,255,255,0.2)", border: "1.5px solid rgba(255,255,255,0.1)", zIndex: 2 }
                         }>
                         {t.level}
                       </div>
@@ -185,7 +185,7 @@ export default function ExpeditionProfile() {
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
-                        color: isCurrent ? t.color : reached ? `${t.color}80` : "rgba(255,255,255,0.18)",
+                        color: isCurrent ? t.color : reached ? t.color : "rgba(255,255,255,0.18)",
                       }}>
                         {t.name}
                       </span>
