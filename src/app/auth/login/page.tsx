@@ -146,9 +146,19 @@ function LoginForm() {
           Wild is calling,<br />
           <span className="text-[#ff5100]">answer it.</span>
         </h1>
-        <p className="text-white/40 text-xs font-medium leading-relaxed">
-          Sign in to access your adventure profile and saved treks.
-        </p>
+        <div className="flex flex-col gap-1.5 mt-1">
+          {[
+            "Track every adventure you've conquered",
+            "Build your wishlist & never lose a find",
+            "Earn XP and climb expedition tiers",
+            "Your data syncs across every device",
+          ].map(perk => (
+            <div key={perk} className="flex items-center gap-2">
+              <div className="w-1 h-1 rounded-full shrink-0" style={{ background: "#ff5100" }} />
+              <span className="text-white/35 text-[11px] font-medium">{perk}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {message && !error && (
