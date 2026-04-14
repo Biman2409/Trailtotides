@@ -147,7 +147,7 @@ function LoginForm() {
           <span className="text-[#ff5100]">answer it.</span>
         </h1>
         <p className="text-white/40 text-xs font-medium leading-relaxed">
-          Track adventures, build your wishlist, and earn XP — all in one place.
+          Sign in to track your adventures, save favourites, and earn XP.
         </p>
       </div>
 
