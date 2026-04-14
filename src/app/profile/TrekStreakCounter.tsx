@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { CheckCircle2, Layers, Globe, Sun, Heart } from "lucide-react";
+import { CheckCircle2, Layers, Globe, Sun, Heart, Info } from "lucide-react";
 import { useTripLog } from "@/contexts/TripLogContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { adventures } from "@/lib/data";
@@ -65,7 +65,8 @@ export default function TrekStreakCounter() {
       </div>
 
       {/* Secondary stats row */}
-      <div className="grid grid-cols-3 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+      <div className="grid grid-cols-3">
         {[
           { value: stats.types,     delta: stats.wishTypesNew,  label: "Types",            color: "#22d3ee", icon: Layers },
           { value: stats.states,    delta: stats.wishStatesNew, label: "States",           color: "#a78bfa", icon: Globe  },
@@ -91,6 +92,16 @@ export default function TrekStreakCounter() {
             </div>
           </div>
         ))}
+      </div>
+      {/* Wishlist delta footnote */}
+      {stats.wishCount > 0 && (stats.wishTypesNew > 0 || stats.wishStatesNew > 0 || stats.wishDaysMore > 0) && (
+        <div className="flex items-center gap-1.5 px-3 py-2" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+          <Info className="w-2.5 h-2.5 shrink-0" style={{ color: "#f43f5e60" }} />
+          <span className="text-[9px] font-medium" style={{ color: "rgba(255,255,255,0.2)" }}>
+            <span style={{ color: "#f43f5e90" }}>+n</span> shows what you'd gain by completing your wishlist
+          </span>
+        </div>
+      )}
       </div>
     </div>
   );
