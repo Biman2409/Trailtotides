@@ -33,12 +33,18 @@ export default function ExpeditionProfile() {
   const [rank, setRank]     = useState<number | null>(null);
   const [rankTotal, setRankTotal] = useState<number | null>(null);
 
-  useEffect(() => {
+  const fetchXP = () => {
     fetch("/api/xp")
       .then(r => r.json())
       .then(d => { setXp(d.xp ?? 0); setEvents(d.events ?? []); })
       .catch(() => {})
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchXP();
+    window.addEventListener("xp:updated", fetchXP);
+    return () => window.removeEventListener("xp:updated", fetchXP);
   }, []);
 
   // Fetch rank only when Over 9000
