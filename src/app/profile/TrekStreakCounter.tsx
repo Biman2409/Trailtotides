@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo } from "react";
-import { Map, Layers, Globe, Sun } from "lucide-react";
+import { CheckCircle2, Layers, Globe, Sun, Heart, ArrowRight } from "lucide-react";
 import { useTripLog } from "@/contexts/TripLogContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { adventures } from "@/lib/data";
 
 function parseDays(durationDays: string): number {
@@ -11,44 +12,77 @@ function parseDays(durationDays: string): number {
 }
 
 export default function TrekStreakCounter() {
-  const { log, loading } = useTripLog();
+  const { log, loading: logLoading } = useTripLog();
+  const { saved, loading: wishLoading } = useWishlist();
 
   const stats = useMemo(() => {
     const entries = log
       .map(e => ({ entry: e, adv: adventures.find(a => a.slug === e.slug) }))
       .filter(x => x.adv);
-    const total      = entries.length;
-    const states     = new Set(entries.map(x => x.adv!.state)).size;
-    const types      = new Set(entries.map(x => x.adv!.type)).size;
-    const totalDays  = entries.reduce((sum, { adv }) => sum + (adv ? parseDays(adv.durationDays) : 0), 0);
-    return { total, states, types, totalDays };
-  }, [log]);
+    const total     = entries.length;
+    const states    = new Set(entries.map(x => x.adv!.state)).size;
+    const types     = new Set(entries.map(x => x.adv!.type)).size;
+    const totalDays = entries.reduce((sum, { adv }) => sum + (adv ? parseDays(adv.durationDays) : 0), 0);
+    const wishCount = saved.size;
+    return { total, states, types, totalDays, wishCount };
+  }, [log, saved]);
 
-  if (loading || stats.total === 0) return null;
-
-  const items = [
-    { value: stats.total,     label: "Completed",        color: "#f97316", icon: Map    },
-    { value: stats.types,     label: "Types",            color: "#22d3ee", icon: Layers },
-    { value: stats.states,    label: "States",           color: "#a78bfa", icon: Globe  },
-    { value: stats.totalDays, label: "Days in the Wild", color: "#10b981", icon: Sun    },
-  ];
+  if (logLoading || wishLoading || (stats.total === 0 && stats.wishCount === 0)) return null;
 
   return (
-    <div className="grid grid-cols-4 rounded-xl overflow-hidden mb-5" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-      {items.map(({ value, label, color, icon: Icon }, i) => (
-        <div
-          key={label}
-          className="flex flex-col items-center justify-center py-3 px-2 gap-1.5"
-          style={i < items.length - 1 ? { borderRight: "1px solid rgba(255,255,255,0.06)" } : {}}
-        >
-          <div className="w-6 h-6 rounded-md flex items-center justify-center"
-            style={{ background: `${color}18`, border: `1px solid ${color}30` }}>
-            <Icon className="w-3 h-3" style={{ color }} />
+    <div className="mb-5 space-y-2">
+      {/* Completed ↔ Wishlist conversion graphic */}
+      <div className="flex items-center gap-2 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+        {/* Completed */}
+        <div className="flex-1 flex items-center gap-2.5 px-4 py-3">
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+            style={{ background: "#10b98118", border: "1px solid #10b98130" }}>
+            <CheckCircle2 className="w-3.5 h-3.5" style={{ color: "#10b981" }} />
           </div>
-          <span className="text-lg font-black tabular-nums leading-none" style={{ color }}>{value}</span>
-          <span className="text-[8px] text-white/28 text-center leading-tight">{label}</span>
+          <div>
+            <p className="text-[20px] font-black tabular-nums leading-none" style={{ color: "#10b981" }}>{stats.total}</p>
+            <p className="text-[8px] uppercase tracking-wide font-semibold mt-0.5" style={{ color: "rgba(255,255,255,0.28)" }}>Completed</p>
+          </div>
         </div>
-      ))}
+
+        {/* Arrow connector */}
+        <div className="flex flex-col items-center gap-0.5 px-1 shrink-0">
+          <ArrowRight className="w-3 h-3" style={{ color: "rgba(255,255,255,0.12)" }} />
+          <span className="text-[7px] font-bold uppercase tracking-wide" style={{ color: "rgba(255,255,255,0.1)" }}>next</span>
+        </div>
+
+        {/* Wishlist */}
+        <div className="flex-1 flex items-center gap-2.5 px-4 py-3" style={{ borderLeft: "1px solid rgba(255,255,255,0.06)" }}>
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+            style={{ background: "#f43f5e18", border: "1px solid #f43f5e30" }}>
+            <Heart className="w-3.5 h-3.5" style={{ color: "#f43f5e" }} />
+          </div>
+          <div>
+            <p className="text-[20px] font-black tabular-nums leading-none" style={{ color: "#f43f5e" }}>{stats.wishCount}</p>
+            <p className="text-[8px] uppercase tracking-wide font-semibold mt-0.5" style={{ color: "rgba(255,255,255,0.28)" }}>On Wishlist</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Secondary stats row */}
+      <div className="grid grid-cols-3 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+        {[
+          { value: stats.types,     label: "Types",            color: "#22d3ee", icon: Layers },
+          { value: stats.states,    label: "States",           color: "#a78bfa", icon: Globe  },
+          { value: stats.totalDays, label: "Days in the Wild", color: "#f97316", icon: Sun    },
+        ].map(({ value, label, color, icon: Icon }, i) => (
+          <div key={label}
+            className="flex flex-col items-center justify-center py-3 px-2 gap-1.5"
+            style={i < 2 ? { borderRight: "1px solid rgba(255,255,255,0.06)" } : {}}>
+            <div className="w-6 h-6 rounded-md flex items-center justify-center"
+              style={{ background: `${color}18`, border: `1px solid ${color}30` }}>
+              <Icon className="w-3 h-3" style={{ color }} />
+            </div>
+            <span className="text-lg font-black tabular-nums leading-none" style={{ color }}>{value}</span>
+            <span className="text-[8px] text-white/28 text-center leading-tight">{label}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
