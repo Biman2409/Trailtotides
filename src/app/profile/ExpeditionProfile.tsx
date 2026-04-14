@@ -185,27 +185,26 @@ export default function ExpeditionProfile() {
       {showLadder && (
         <div className="relative px-4 pb-3 pt-2" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
           <div className="relative">
-            {/* Vertical spine */}
-            <div className="absolute left-[13px] top-3 bottom-3 w-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+            {/* Vertical spine — sits to the left of nodes, not through them */}
+            <div className="absolute top-[22px] bottom-[22px] w-px" style={{ left: "14px", background: "rgba(255,255,255,0.07)" }} />
 
             <div className="space-y-0.5">
               {XP_TIERS.map(t => {
                 const reached   = xp >= t.minXP;
                 const isCurrent = t.level === tier.level;
-                const xpLabel   = t.minXP >= 1000 ? `${(t.minXP / 1000).toFixed(t.minXP % 1000 === 0 ? 0 : 1)}k` : String(t.minXP);
                 return (
                   <div key={t.level} className="relative flex items-center gap-3 px-1 py-1.5 rounded-lg transition-colors" style={isCurrent ? { background: `${t.color}0d` } : {}}>
-                    {/* Node */}
+                    {/* Node — z-10 sits above spine */}
                     <div
                       className="relative z-10 w-[26px] h-[26px] shrink-0 rounded-lg flex items-center justify-center text-[9px] font-black"
                       style={reached
-                        ? { background: `${t.color}18`, color: t.color, border: `1.5px solid ${t.color}${isCurrent ? "60" : "28"}`, boxShadow: isCurrent ? `0 0 10px ${t.color}35` : "none" }
+                        ? { background: `${t.color}20`, color: t.color, border: `1.5px solid ${t.color}${isCurrent ? "70" : "45"}`, boxShadow: isCurrent ? `0 0 10px ${t.color}40` : `0 0 6px ${t.color}20` }
                         : { background: "rgba(255,255,255,0.03)", color: "rgba(255,255,255,0.14)", border: "1.5px solid rgba(255,255,255,0.07)" }
                       }
                     >{t.level}</div>
 
                     {/* Name */}
-                    <span className="flex-1 text-[11px] font-semibold leading-none" style={{ color: isCurrent ? t.color : reached ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.14)" }}>
+                    <span className="flex-1 text-[11px] font-semibold leading-none" style={{ color: isCurrent ? t.color : reached ? t.color + "99" : "rgba(255,255,255,0.14)" }}>
                       {t.name}
                     </span>
 
@@ -216,9 +215,9 @@ export default function ExpeditionProfile() {
                       </span>
                     )}
 
-                    {/* XP threshold */}
-                    <span className="text-[9px] tabular-nums font-medium shrink-0" style={{ color: reached ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.08)" }}>
-                      {xpLabel}
+                    {/* XP threshold — full number */}
+                    <span className="text-[9px] tabular-nums font-medium shrink-0" style={{ color: reached ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.08)" }}>
+                      {t.minXP.toLocaleString()}
                     </span>
                   </div>
                 );
@@ -229,7 +228,7 @@ export default function ExpeditionProfile() {
                 <div
                   className="relative z-10 w-[26px] h-[26px] shrink-0 rounded-lg flex items-center justify-center"
                   style={over9k
-                    ? { background: `${OVER_9000_COLOR}18`, border: `1.5px solid ${OVER_9000_COLOR}50`, boxShadow: `0 0 10px ${OVER_9000_COLOR}35` }
+                    ? { background: `${OVER_9000_COLOR}20`, border: `1.5px solid ${OVER_9000_COLOR}60`, boxShadow: `0 0 10px ${OVER_9000_COLOR}35` }
                     : { background: "rgba(255,255,255,0.03)", border: "1.5px solid rgba(255,255,255,0.07)" }
                   }
                 >
@@ -243,7 +242,7 @@ export default function ExpeditionProfile() {
                     #{rank}
                   </span>
                 )}
-                <span className="text-[9px] tabular-nums font-medium shrink-0" style={{ color: over9k ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.08)" }}>9k+</span>
+                <span className="text-[9px] tabular-nums font-medium shrink-0" style={{ color: over9k ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.08)" }}>9,000+</span>
               </div>
             </div>
           </div>
