@@ -162,3 +162,21 @@ export async function adminDeletePhoto(photoId: string, slug: string, path: stri
   }
   return { success: true };
 }
+
+// ── XP Reset ──────────────────────────────────────────────────────────────────
+
+export async function adminResetAllXP(): Promise<{ success: boolean; deleted: number; error?: string }> {
+  const admin = adminAuth();
+  const BUCKET = "user-data";
+
+  // List all files under xp/
+  const { data: files, error } = await admin.storage.from(BUCKET).list("xp", { limit: 1000 });
+  if (error) return { success: false, deleted: 0, error: error.message };
+  if (!files || files.length === 0) return { success: true, deleted: 0 };
+
+  const paths = files.map(f => `xp/${f.name}`);
+  const { error: removeError } = await admin.storage.from(BUCKET).remove(paths);
+  if (removeError) return { success: false, deleted: 0, error: removeError.message };
+
+  return { success: true, deleted: paths.length };
+}
