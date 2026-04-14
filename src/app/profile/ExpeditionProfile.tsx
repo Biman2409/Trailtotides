@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Zap, TrendingUp, ChevronDown } from "lucide-react";
+import { Zap, TrendingUp, ChevronDown, CheckCircle2, Star, Camera, Heart, GitCompare } from "lucide-react";
 import {
   getTier, getNextTier, getProgressPct, XP_TIERS,
   isOver9000, OVER_9000_COLOR,
@@ -201,18 +201,31 @@ export default function ExpeditionProfile() {
       {/* ── Stats strip ── */}
       <div className="relative grid grid-cols-5 text-center">
         {[
-          { value: countOf("trip_log"), label: "Done",     color: "#10b981" },
-          { value: countOf("review"),   label: "Reviews",  color: "#f97316" },
-          { value: countOf("photo"),    label: "Photos",   color: "#3b82f6" },
-          { value: countOf("wishlist"), label: "Saved",    color: "#f43f5e" },
-          { value: countOf("compare"),  label: "Compared", color: "#a78bfa" },
-        ].map(({ value, label, color }, i, arr) => (
-          <div key={label} className="flex flex-col items-center justify-center py-3 gap-0.5"
-            style={i < arr.length - 1 ? { borderRight: "1px solid rgba(255,255,255,0.05)" } : {}}>
-            <span className="text-[15px] font-black tabular-nums leading-none" style={{ color: value > 0 ? color : "rgba(255,255,255,0.1)" }}>{value}</span>
-            <span className="text-[7px] uppercase tracking-wide font-semibold" style={{ color: "rgba(255,255,255,0.22)" }}>{label}</span>
-          </div>
-        ))}
+          { value: countOf("trip_log"), label: "Done",     color: "#10b981", icon: CheckCircle2 },
+          { value: countOf("review"),   label: "Reviews",  color: "#f97316", icon: Star         },
+          { value: countOf("photo"),    label: "Photos",   color: "#3b82f6", icon: Camera       },
+          { value: countOf("wishlist"), label: "Saved",    color: "#f43f5e", icon: Heart        },
+          { value: countOf("compare"),  label: "Compared", color: "#a78bfa", icon: GitCompare   },
+        ].map(({ value, label, color, icon: Icon }, i, arr) => {
+          const active = value > 0;
+          return (
+            <div key={label} className="flex flex-col items-center justify-center py-3 gap-1.5"
+              style={i < arr.length - 1 ? { borderRight: "1px solid rgba(255,255,255,0.05)" } : {}}>
+              {/* Icon badge */}
+              <div className="w-6 h-6 rounded-md flex items-center justify-center transition-all"
+                style={{
+                  background: active ? `${color}18` : "rgba(255,255,255,0.04)",
+                  border: `1px solid ${active ? `${color}30` : "rgba(255,255,255,0.06)"}`,
+                }}>
+                <Icon className="w-3 h-3" style={{ color: active ? color : "rgba(255,255,255,0.15)" }} />
+              </div>
+              {/* Number */}
+              <span className="text-[14px] font-black tabular-nums leading-none" style={{ color: active ? color : "rgba(255,255,255,0.1)" }}>{value}</span>
+              {/* Label */}
+              <span className="text-[7px] uppercase tracking-wide font-semibold" style={{ color: "rgba(255,255,255,0.2)" }}>{label}</span>
+            </div>
+          );
+        })}
       </div>
 
     </div>
