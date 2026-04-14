@@ -201,7 +201,7 @@ export default function ExpeditionProfile() {
       {/* ── Stats strip ── */}
       <div className="relative grid grid-cols-5 text-center">
         {[
-          { value: countOf("trip_log"), label: "Done",     color: "#10b981", icon: CheckCircle2 },
+          { value: countOf("trip_log"), label: "Completed", color: "#10b981", icon: CheckCircle2 },
           { value: countOf("review"),   label: "Reviews",  color: "#f97316", icon: Star         },
           { value: countOf("photo"),    label: "Photos",   color: "#3b82f6", icon: Camera       },
           { value: countOf("wishlist"), label: "Saved",    color: "#f43f5e", icon: Heart        },
