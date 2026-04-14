@@ -121,15 +121,24 @@ export default function ExpeditionProfile() {
         </div>
       </div>
 
-      {/* ── Progress bar ── */}
-      <div className="relative px-5 py-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+      {/* ── Progress bar + tier ladder ── */}
+      <div className="relative px-5 pt-3" style={{ borderBottom: showLadder ? "none" : "1px solid rgba(255,255,255,0.05)" }}>
         {next ? (
           <>
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[9.5px] text-white/28">
                 Next: <span className="font-bold" style={{ color: next.color }}>{next.name}</span>
               </span>
-              <span className="text-[9.5px] font-bold tabular-nums" style={{ color: `${accentColor}90` }}>{xpToNext.toLocaleString()} to go</span>
+              <div className="flex items-center gap-2">
+                <span className="text-[9.5px] font-bold tabular-nums" style={{ color: `${accentColor}90` }}>{xpToNext.toLocaleString()} to go</span>
+                <button onClick={() => setShowLadder(v => !v)}
+                  className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md transition-all hover:bg-white/[0.06]"
+                  style={{ color: showLadder ? accentColor : "rgba(255,255,255,0.2)" }}>
+                  <span className="text-[8px] font-bold tracking-wide">tiers</span>
+                  <ChevronDown className="w-2.5 h-2.5 transition-transform duration-200"
+                    style={{ transform: showLadder ? "rotate(180deg)" : "none" }} />
+                </button>
+              </div>
             </div>
             <div className="relative h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
               <div className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
@@ -142,9 +151,82 @@ export default function ExpeditionProfile() {
               <TrendingUp className="w-3 h-3" style={{ color: OVER_9000_COLOR }} />
               <span className="text-[9.5px] font-bold" style={{ color: OVER_9000_COLOR }}>Uncapped — keep climbing</span>
             </div>
-            <span className="text-[9.5px] font-bold tabular-nums" style={{ color: OVER_9000_COLOR }}>+{(xp - 9000).toLocaleString()} beyond 9k</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[9.5px] font-bold tabular-nums" style={{ color: OVER_9000_COLOR }}>+{(xp - 9000).toLocaleString()} beyond 9k</span>
+              <button onClick={() => setShowLadder(v => !v)}
+                className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md transition-all hover:bg-white/[0.06]"
+                style={{ color: showLadder ? OVER_9000_COLOR : "rgba(255,255,255,0.2)" }}>
+                <span className="text-[8px] font-bold tracking-wide">tiers</span>
+                <ChevronDown className="w-2.5 h-2.5 transition-transform duration-200"
+                  style={{ transform: showLadder ? "rotate(180deg)" : "none" }} />
+              </button>
+            </div>
           </div>
         )}
+
+        {/* Tier ladder — expands below the bar */}
+        {showLadder && (
+          <div className="pb-3 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.05)", marginTop: "12px" }}>
+            {/* Horizontal milestone track */}
+            <div className="relative flex items-center justify-between mb-4">
+              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
+              {(() => {
+                const idx = XP_TIERS.findIndex(t => t.level === tier.level);
+                const pctFill = over9k ? 100 : (idx / (XP_TIERS.length - 1)) * 100;
+                return (
+                  <div className="absolute top-1/2 -translate-y-1/2 h-px left-0 transition-all duration-700"
+                    style={{ width: `${pctFill}%`, background: `linear-gradient(90deg, ${XP_TIERS[0].color}, ${tier.color})` }} />
+                );
+              })()}
+              {XP_TIERS.map(t => {
+                const reached   = xp >= t.minXP;
+                const isCurrent = t.level === tier.level;
+                return (
+                  <div key={t.level} className="relative z-10 flex flex-col items-center gap-1.5">
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black transition-all"
+                      style={isCurrent
+                        ? { background: t.color, color: "#000", boxShadow: `0 0 12px ${t.color}70, 0 0 0 3px ${t.color}25` }
+                        : reached
+                          ? { background: `${t.color}22`, color: t.color, border: `1.5px solid ${t.color}50` }
+                          : { background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.18)", border: "1.5px solid rgba(255,255,255,0.08)" }
+                      }>
+                      {t.level}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {/* Current + next */}
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
+                  style={{ background: `${tier.color}18`, border: `1.5px solid ${tier.color}40` }}>
+                  <span className="text-[10px] font-black" style={{ color: tier.color }}>{tier.level}</span>
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[11px] font-bold leading-none" style={{ color: tier.color }}>{tier.name}</p>
+                  <p className="text-[9px] text-white/28 mt-0.5 truncate">{tier.description}</p>
+                </div>
+              </div>
+              {next && (
+                <div className="shrink-0 text-right">
+                  <p className="text-[8px] text-white/18 leading-none mb-0.5 uppercase tracking-wide">Next</p>
+                  <p className="text-[11px] font-bold leading-none" style={{ color: next.color }}>{next.name}</p>
+                  <p className="text-[8.5px] tabular-nums mt-0.5" style={{ color: "rgba(255,255,255,0.2)" }}>{next.minXP.toLocaleString()} XP</p>
+                </div>
+              )}
+              {over9k && (
+                <span className="shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[8.5px] font-black"
+                  style={{ background: `${OVER_9000_COLOR}15`, color: OVER_9000_COLOR, border: `1px solid ${OVER_9000_COLOR}30` }}>
+                  <Zap className="w-2.5 h-2.5" /> It&apos;s Over 9000!
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Bottom border when ladder is closed */}
+        {!showLadder && <div className="pb-3" />}
       </div>
 
       {/* ── Stats strip ── */}
@@ -163,80 +245,6 @@ export default function ExpeditionProfile() {
           </div>
         ))}
       </div>
-
-      {/* ── Tier ladder (collapsible) ── */}
-      <button onClick={() => setShowLadder(v => !v)}
-        className="relative w-full flex items-center justify-between px-5 py-2.5 hover:bg-white/[0.02] transition-colors"
-        style={{ borderBottom: showLadder ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
-        <span className="text-[8.5px] uppercase tracking-[0.2em] font-bold text-white/18">Tier Ladder</span>
-        <ChevronDown className="w-3.5 h-3.5 transition-transform duration-200"
-          style={{ color: "rgba(255,255,255,0.15)", transform: showLadder ? "rotate(180deg)" : "none" }} />
-      </button>
-
-      {showLadder && (
-        <div className="px-5 pb-4 pt-1" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-          {/* Horizontal milestone track */}
-          <div className="relative flex items-center justify-between mt-3 mb-5">
-            {/* Background line */}
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
-            {/* Filled line up to current */}
-            {(() => {
-              const idx = XP_TIERS.findIndex(t => t.level === tier.level);
-              const pctFill = over9k ? 100 : (idx / (XP_TIERS.length - 1)) * 100;
-              return (
-                <div className="absolute top-1/2 -translate-y-1/2 h-px left-0 transition-all duration-700"
-                  style={{ width: `${pctFill}%`, background: `linear-gradient(90deg, ${XP_TIERS[0].color}, ${tier.color})` }} />
-              );
-            })()}
-            {XP_TIERS.map(t => {
-              const reached   = xp >= t.minXP;
-              const isCurrent = t.level === tier.level;
-              return (
-                <div key={t.level} className="relative z-10 flex flex-col items-center gap-1.5">
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black transition-all"
-                    style={isCurrent
-                      ? { background: t.color, color: "#000", boxShadow: `0 0 12px ${t.color}70, 0 0 0 3px ${t.color}25` }
-                      : reached
-                        ? { background: `${t.color}22`, color: t.color, border: `1.5px solid ${t.color}50` }
-                        : { background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.18)", border: "1.5px solid rgba(255,255,255,0.08)" }
-                    }>
-                    {t.level}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Current tier details + next target */}
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-                style={{ background: `${tier.color}18`, border: `1.5px solid ${tier.color}40` }}>
-                <span className="text-[11px] font-black" style={{ color: tier.color }}>{tier.level}</span>
-              </div>
-              <div className="min-w-0">
-                <p className="text-[11px] font-bold leading-none" style={{ color: tier.color }}>{tier.name}</p>
-                <p className="text-[9px] text-white/30 mt-0.5 leading-snug truncate">{tier.description}</p>
-              </div>
-            </div>
-            {next && (
-              <div className="shrink-0 text-right">
-                <p className="text-[9px] text-white/20 leading-none mb-0.5">Next up</p>
-                <p className="text-[11px] font-bold leading-none" style={{ color: next.color }}>{next.name}</p>
-                <p className="text-[8.5px] tabular-nums mt-0.5" style={{ color: "rgba(255,255,255,0.22)" }}>{next.minXP.toLocaleString()} XP</p>
-              </div>
-            )}
-            {over9k && (
-              <div className="shrink-0 text-right">
-                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[9px] font-black"
-                  style={{ background: `${OVER_9000_COLOR}15`, color: OVER_9000_COLOR, border: `1px solid ${OVER_9000_COLOR}30` }}>
-                  <Zap className="w-2.5 h-2.5" /> It&apos;s Over 9000!
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* ── Recent Activity ── */}
       <div className="relative px-5 py-3">
