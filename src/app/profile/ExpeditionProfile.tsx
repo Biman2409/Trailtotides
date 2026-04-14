@@ -197,7 +197,7 @@ export default function ExpeditionProfile() {
       </div>
 
       {/* ── Stats strip ── */}
-      <div className="relative grid grid-cols-5 text-center">
+      <div className="relative grid grid-cols-5">
         {[
           { value: countOf("trip_log"), label: "Completed",  color: "#10b981", icon: CheckCircle2 },
           { value: countOf("review"),   label: "Reviews",    color: "#f97316", icon: Star         },
@@ -207,17 +207,19 @@ export default function ExpeditionProfile() {
         ].map(({ value, label, color, icon: Icon }, i, arr) => {
           const active = value > 0;
           return (
-            <div key={label} className="flex flex-col items-center justify-center py-3 gap-1.5"
+            <div key={label} className="flex items-center gap-2 px-2.5 py-3"
               style={i < arr.length - 1 ? { borderRight: "1px solid rgba(255,255,255,0.05)" } : {}}>
-              <div className="w-6 h-6 rounded-md flex items-center justify-center transition-all"
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
                 style={{
                   background: active ? `${color}18` : "rgba(255,255,255,0.04)",
                   border: `1px solid ${active ? `${color}30` : "rgba(255,255,255,0.06)"}`,
                 }}>
-                <Icon className="w-3 h-3" style={{ color: active ? color : "rgba(255,255,255,0.15)" }} />
+                <Icon className="w-3.5 h-3.5" style={{ color: active ? color : "rgba(255,255,255,0.15)" }} />
               </div>
-              <span className="text-[14px] font-black tabular-nums leading-none" style={{ color: active ? color : "rgba(255,255,255,0.1)" }}>{value}</span>
-              <span className="text-[7px] uppercase tracking-wide font-semibold" style={{ color: "rgba(255,255,255,0.2)" }}>{label}</span>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <span className="text-[15px] font-black tabular-nums leading-none" style={{ color: active ? color : "rgba(255,255,255,0.1)" }}>{value}</span>
+                <span className="text-[7px] uppercase tracking-wide font-bold leading-none truncate" style={{ color: "rgba(255,255,255,0.22)" }}>{label}</span>
+              </div>
             </div>
           );
         })}
