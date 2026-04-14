@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import MatchmakerClient from "./MatchmakerClient";
@@ -28,7 +29,9 @@ export default function MatchmakerPage() {
       <ScrollToTop />
       <Navbar />
       <main className="min-h-screen relative">
-        <MatchmakerClient />
+        <Suspense>
+          <MatchmakerClient />
+        </Suspense>
       </main>
       <Footer />
     </>
