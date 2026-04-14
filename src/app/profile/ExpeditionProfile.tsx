@@ -172,19 +172,31 @@ export default function ExpeditionProfile() {
         )}
       </div>
 
-      {/* ── Expedition stats ── */}
-      <div className="relative grid grid-cols-4 divide-x" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.05)" }}>
-        {EXPEDITION_STATS.map(({ value, label, color }) => (
-          <div key={label} className="flex flex-col items-center justify-center py-3.5 px-2 gap-1">
-            <span className="text-xl font-black tabular-nums leading-none" style={{ color: value > 0 ? color : "rgba(255,255,255,0.12)" }}>
-              {value}
-            </span>
-            <span className="text-[8.5px] font-semibold text-center leading-tight" style={{ color: "rgba(255,255,255,0.28)" }}>
-              {label}
-            </span>
+      {/* ── Stats strip ── */}
+      {(() => {
+        const STATS = [
+          { value: countOf("trip_log"),     label: "Completed", color: "#10b981" },
+          { value: countOf("review"),       label: "Reviews",   color: "#f97316" },
+          { value: countOf("photo"),        label: "Photos",    color: "#3b82f6" },
+          { value: countOf("wishlist") > 0 ? 1 : 0, label: "Saved",     color: "#f43f5e" },
+          { value: countOf("compare") > 0 ? 1 : 0,  label: "Compared",  color: "#a78bfa" },
+          { value: countOf("ace_complete"), label: "ACE",       color: "#fbbf24" },
+        ];
+        return (
+          <div className="relative grid grid-cols-6 divide-x" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.05)" }}>
+            {STATS.map(({ value, label, color }) => (
+              <div key={label} className="flex flex-col items-center justify-center py-3 px-1 gap-0.5">
+                <span className="text-base font-black tabular-nums leading-none" style={{ color: value > 0 ? color : "rgba(255,255,255,0.12)" }}>
+                  {value}
+                </span>
+                <span className="text-[7.5px] font-semibold text-center leading-tight uppercase tracking-wide" style={{ color: "rgba(255,255,255,0.25)" }}>
+                  {label}
+                </span>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        );
+      })()}
 
       {/* ── Tier ladder (collapsible) ── */}
       <button
