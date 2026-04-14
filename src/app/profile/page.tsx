@@ -224,20 +224,18 @@ export default async function ProfilePage() {
 
               {/* My Adventures */}
               <div>
-                <div className="flex items-center gap-2 mb-6">
+                <div className="flex items-center gap-2 mb-4">
                   <div className="w-1.5 h-5 rounded-full" style={{ background: "#10b981" }} />
                   <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>My Adventures</h2>
                 </div>
                 <TrekStreakCounter />
-                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* Completed */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/25 mb-3">Completed</p>
+                    <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold text-white/20 mb-2.5">Completed</p>
                     <TripLogSection />
                   </div>
-                  {/* Wishlist */}
                   <div>
-                    <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/25 mb-3">Wishlist</p>
+                    <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold text-white/20 mb-2.5">Wishlist</p>
                     <WishlistSection />
                   </div>
                 </div>
