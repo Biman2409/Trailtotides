@@ -102,7 +102,7 @@ export default function ExpeditionProfile() {
               <button onClick={() => setShowLadder(v => !v)}
                 className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md transition-all hover:bg-white/[0.06]"
                 style={{ color: showLadder ? OVER_9000_COLOR : "rgba(255,255,255,0.2)" }}>
-                <span className="text-[8px] font-bold tracking-wide">all tiers</span>
+                <span className="text-[8px] font-bold tracking-wide">ALL TIERS</span>
                 <ChevronDown className="w-2.5 h-2.5 transition-transform duration-200"
                   style={{ transform: showLadder ? "rotate(180deg)" : "none" }} />
               </button>
@@ -124,7 +124,7 @@ export default function ExpeditionProfile() {
                 <button onClick={() => setShowLadder(v => !v)}
                   className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md transition-all hover:bg-white/[0.06]"
                   style={{ color: showLadder ? accentColor : "rgba(255,255,255,0.2)" }}>
-                  <span className="text-[8px] font-bold tracking-wide">all tiers</span>
+                  <span className="text-[8px] font-bold tracking-wide">ALL TIERS</span>
                   <ChevronDown className="w-2.5 h-2.5 transition-transform duration-200"
                     style={{ transform: showLadder ? "rotate(180deg)" : "none" }} />
                 </button>
