@@ -20,11 +20,23 @@ export default function TrekStreakCounter() {
       .map(e => ({ entry: e, adv: adventures.find(a => a.slug === e.slug) }))
       .filter(x => x.adv);
     const total     = entries.length;
-    const states    = new Set(entries.map(x => x.adv!.state)).size;
-    const types     = new Set(entries.map(x => x.adv!.type)).size;
+    const doneStates = new Set(entries.map(x => x.adv!.state));
+    const doneTypes  = new Set(entries.map(x => x.adv!.type));
+    const states    = doneStates.size;
+    const types     = doneTypes.size;
     const totalDays = entries.reduce((sum, { adv }) => sum + (adv ? parseDays(adv.durationDays) : 0), 0);
     const wishCount = saved.size;
-    return { total, states, types, totalDays, wishCount };
+
+    // Wishlist deltas — new unique values not already in completed set
+    const wishEntries = [...saved]
+      .map(slug => adventures.find(a => a.slug === slug))
+      .filter(Boolean) as (typeof adventures)[0][];
+
+    const wishStatesNew = new Set(wishEntries.map(a => a.state).filter(s => !doneStates.has(s))).size;
+    const wishTypesNew  = new Set(wishEntries.map(a => a.type).filter(t => !doneTypes.has(t))).size;
+    const wishDaysMore  = wishEntries.reduce((sum, a) => sum + parseDays(a.durationDays), 0);
+
+    return { total, states, types, totalDays, wishCount, wishStatesNew, wishTypesNew, wishDaysMore };
   }, [log, saved]);
 
   if (logLoading || wishLoading || (stats.total === 0 && stats.wishCount === 0)) return null;
@@ -67,10 +79,10 @@ export default function TrekStreakCounter() {
       {/* Secondary stats row */}
       <div className="grid grid-cols-3 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
         {[
-          { value: stats.types,     label: "Types",            color: "#22d3ee", icon: Layers },
-          { value: stats.states,    label: "States",           color: "#a78bfa", icon: Globe  },
-          { value: stats.totalDays, label: "Days in the Wild", color: "#f97316", icon: Sun    },
-        ].map(({ value, label, color, icon: Icon }, i) => (
+          { value: stats.types,     delta: stats.wishTypesNew,  label: "Types",            color: "#22d3ee", icon: Layers },
+          { value: stats.states,    delta: stats.wishStatesNew, label: "States",           color: "#a78bfa", icon: Globe  },
+          { value: stats.totalDays, delta: stats.wishDaysMore,  label: "Days in the Wild", color: "#f97316", icon: Sun    },
+        ].map(({ value, delta, label, color, icon: Icon }, i) => (
           <div key={label}
             className="flex flex-col items-center justify-center py-3 px-2 gap-1.5"
             style={i < 2 ? { borderRight: "1px solid rgba(255,255,255,0.06)" } : {}}>
@@ -78,8 +90,23 @@ export default function TrekStreakCounter() {
               style={{ background: `${color}18`, border: `1px solid ${color}30` }}>
               <Icon className="w-3 h-3" style={{ color }} />
             </div>
-            <span className="text-lg font-black tabular-nums leading-none" style={{ color }}>{value}</span>
+            <div className="flex items-baseline gap-1">
+              <span className="text-lg font-black tabular-nums leading-none" style={{ color }}>{value}</span>
+              {delta > 0 && stats.wishCount > 0 && (
+                <span
+                  className="text-[9px] font-black tabular-nums leading-none"
+                  style={{ color: "#f43f5e" }}
+                >
+                  +{delta}
+                </span>
+              )}
+            </div>
             <span className="text-[8px] text-white/28 text-center leading-tight">{label}</span>
+            {delta > 0 && stats.wishCount > 0 && (
+              <span className="text-[7px] font-semibold leading-none" style={{ color: "rgba(244,63,94,0.5)" }}>
+                if wishlist done
+              </span>
+            )}
           </div>
         ))}
       </div>
