@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Zap, TrendingUp, Camera, Heart, GitCompare, Star, CheckCircle2, ChevronDown } from "lucide-react";
+import { Zap, TrendingUp, ChevronDown } from "lucide-react";
 import {
   getTier, getNextTier, getProgressPct, XP_TIERS, XP_LABELS,
   isOver9000, OVER_9000_COLOR,
   type XPAction,
 } from "@/lib/xp";
+import { adventures } from "@/lib/data";
 
 interface XPEvent {
   action: string;
@@ -16,22 +17,13 @@ interface XPEvent {
 }
 
 const ACTION_ICON: Record<string, React.ReactNode> = {
-  ace_complete: <Star className="w-3 h-3" />,
-  review:       <Star className="w-3 h-3" />,
-  photo:        <Camera className="w-3 h-3" />,
-  wishlist:     <Heart className="w-3 h-3" />,
-  compare:      <GitCompare className="w-3 h-3" />,
-  trip_log:     <CheckCircle2 className="w-3 h-3" />,
+  ace_complete: <Zap className="w-3 h-3" />,
+  review:       <Zap className="w-3 h-3" />,
+  photo:        <Zap className="w-3 h-3" />,
+  wishlist:     <Zap className="w-3 h-3" />,
+  compare:      <Zap className="w-3 h-3" />,
+  trip_log:     <Zap className="w-3 h-3" />,
 };
-
-const STATS = [
-  { action: "trip_log"     as XPAction, label: "Completed", color: "#10b981" },
-  { action: "review"       as XPAction, label: "Reviews",   color: "#f97316" },
-  { action: "photo"        as XPAction, label: "Photos",    color: "#3b82f6" },
-  { action: "wishlist"     as XPAction, label: "Saved",     color: "#f43f5e" },
-  { action: "compare"      as XPAction, label: "Compared",  color: "#a78bfa" },
-  { action: "ace_complete" as XPAction, label: "ACE",       color: "#fbbf24" },
-];
 
 export default function ExpeditionProfile() {
   const [xp, setXp]         = useState<number>(0);
@@ -65,6 +57,24 @@ export default function ExpeditionProfile() {
   const xpToNext = next ? next.minXP - xp : 0;
   const over9k   = isOver9000(xp);
   const countOf  = (action: XPAction) => events.filter(e => e.action === action).length;
+
+  // ── Expedition stats derived from completed adventures ──────────────────────
+  const completedSlugs = [...new Set(events.filter(e => e.action === "trip_log").map(e => e.adventure_slug))];
+  const completedAdvs  = completedSlugs.map(s => adventures.find(a => a.slug === s)).filter(Boolean) as typeof adventures;
+  const adventureCount = completedSlugs.length;
+  const typeCount      = new Set(completedAdvs.map(a => a.type)).size;
+  const stateCount     = new Set(completedAdvs.flatMap(a => a.state.split(/\s*[/,]\s*/).map(s => s.trim()))).size;
+  const daysInWild     = completedAdvs.reduce((sum, a) => {
+    const n = parseInt(a.durationDays ?? "0", 10);
+    return sum + (isNaN(n) ? 0 : n);
+  }, 0);
+
+  const EXPEDITION_STATS = [
+    { value: adventureCount, label: "Adventures",       color: "#f97316" },
+    { value: typeCount,      label: "Types",            color: "#22d3ee" },
+    { value: stateCount,     label: "States",           color: "#a78bfa" },
+    { value: daysInWild,     label: "Days in the Wild", color: "#10b981" },
+  ];
 
   // Deduplicate: keep only the latest event per action+slug combo, then show 4 most recent
   const seen = new Set<string>();
@@ -162,12 +172,16 @@ export default function ExpeditionProfile() {
         )}
       </div>
 
-      {/* ── Stats strip ── */}
-      <div className="relative px-5 py-3 flex items-center gap-4 flex-wrap" style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-        {STATS.map(({ action, label, color }) => (
-          <div key={action} className="flex flex-col items-center gap-0.5">
-            <span className="text-base font-black tabular-nums leading-none" style={{ color }}>{countOf(action)}</span>
-            <span className="text-[8px] text-white/25 uppercase tracking-wide">{label}</span>
+      {/* ── Expedition stats ── */}
+      <div className="relative grid grid-cols-4 divide-x" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.05)" }}>
+        {EXPEDITION_STATS.map(({ value, label, color }) => (
+          <div key={label} className="flex flex-col items-center justify-center py-3.5 px-2 gap-1">
+            <span className="text-xl font-black tabular-nums leading-none" style={{ color: value > 0 ? color : "rgba(255,255,255,0.12)" }}>
+              {value}
+            </span>
+            <span className="text-[8.5px] font-semibold text-center leading-tight" style={{ color: "rgba(255,255,255,0.28)" }}>
+              {label}
+            </span>
           </div>
         ))}
       </div>
