@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Zap, TrendingUp, ChevronDown, Heart, Camera, GitCompare, Star, CheckCircle2 } from "lucide-react";
+import { Zap, TrendingUp, ChevronDown } from "lucide-react";
 import {
   getTier, getNextTier, getProgressPct, XP_TIERS,
   isOver9000, OVER_9000_COLOR,
   type XPAction,
 } from "@/lib/xp";
-import { adventures } from "@/lib/data";
 
 interface XPEvent {
   action: string;
@@ -16,34 +15,14 @@ interface XPEvent {
   created_at: string;
 }
 
-const ACTION_META: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
-  trip_log:     { icon: <CheckCircle2 className="w-3 h-3" />, label: "Completed",   color: "#10b981" },
-  wishlist:     { icon: <Heart        className="w-3 h-3" />, label: "Wishlisted",  color: "#f43f5e" },
-  review:       { icon: <Star         className="w-3 h-3" />, label: "Reviewed",    color: "#f97316" },
-  photo:        { icon: <Camera       className="w-3 h-3" />, label: "Photo",       color: "#3b82f6" },
-  compare:      { icon: <GitCompare   className="w-3 h-3" />, label: "Compared",    color: "#a78bfa" },
-  ace_complete: { icon: <Zap          className="w-3 h-3" />, label: "ACE done",    color: "#fbbf24" },
-};
-
-function relativeTime(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const m = Math.floor(diff / 60000);
-  if (m < 1)  return "just now";
-  if (m < 60) return `${m}m ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  const d = Math.floor(h / 24);
-  if (d < 30) return `${d}d ago`;
-  return `${Math.floor(d / 30)}mo ago`;
-}
-
 export default function ExpeditionProfile() {
-  const [xp, setXp]       = useState<number>(0);
-  const [events, setEvents] = useState<XPEvent[]>([]);
-  const [loading, setLoading]       = useState(true);
+  const [xp, setXp]         = useState<number>(0);
+  const [events, setEvents]  = useState<XPEvent[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showLadder, setShowLadder] = useState(false);
-  const [rank, setRank]   = useState<number | null>(null);
+  const [rank, setRank]      = useState<number | null>(null);
   const [rankTotal, setRankTotal] = useState<number | null>(null);
+
   const fetchXP = () => {
     fetch("/api/xp")
       .then(r => r.json())
@@ -65,22 +44,13 @@ export default function ExpeditionProfile() {
     }
   }, [xp]);
 
-  const tier      = getTier(xp);
-  const next      = getNextTier(xp);
-  const pct       = getProgressPct(xp);
-  const xpToNext  = next ? next.minXP - xp : 0;
-  const over9k    = isOver9000(xp);
+  const tier       = getTier(xp);
+  const next       = getNextTier(xp);
+  const pct        = getProgressPct(xp);
+  const xpToNext   = next ? next.minXP - xp : 0;
+  const over9k     = isOver9000(xp);
   const accentColor = over9k ? OVER_9000_COLOR : tier.color;
-  const countOf   = (action: XPAction) => events.filter(e => e.action === action).length;
-
-  // Recent: dedupe by action+slug, newest first, top 5
-  const seen = new Set<string>();
-  const recent = events.filter(ev => {
-    const key = `${ev.action}::${ev.adventure_slug}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  }).slice(0, 5);
+  const countOf    = (action: XPAction) => events.filter(e => e.action === action).length;
 
   if (loading) {
     return <div className="rounded-2xl animate-pulse" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", height: 140 }} />;
@@ -121,14 +91,13 @@ export default function ExpeditionProfile() {
       </div>
 
       {/* ── Progress bar ── */}
-      <div className="relative px-5 pt-3 pb-4" style={{ borderBottom: showLadder ? "none" : "1px solid rgba(255,255,255,0.05)" }}>
+      <div className="relative px-5 pt-3 pb-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
         {over9k ? (
-          /* Over 9000 — full bar, special treatment */
           <div>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <TrendingUp className="w-3 h-3" style={{ color: OVER_9000_COLOR }} />
-                <span className="text-[9px] font-bold tracking-wide" style={{ color: OVER_9000_COLOR }}>Uncapped · +{(xp - 9000).toLocaleString()} beyond 9k</span>
+                <span className="text-[9px] font-bold" style={{ color: OVER_9000_COLOR }}>Uncapped · +{(xp - 9000).toLocaleString()} beyond 9k</span>
               </div>
               <button onClick={() => setShowLadder(v => !v)}
                 className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md transition-all hover:bg-white/[0.06]"
@@ -144,14 +113,13 @@ export default function ExpeditionProfile() {
             </div>
           </div>
         ) : next ? (
-          /* Normal progression */
           <div>
-            {/* Tier name labels */}
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[9px] font-bold" style={{ color: `${tier.color}cc` }}>{tier.name}</span>
               <div className="flex items-center gap-2">
                 <span className="text-[9px] tabular-nums" style={{ color: "rgba(255,255,255,0.22)" }}>
-                  {xpToNext.toLocaleString()} XP to <span className="font-bold" style={{ color: `${next.color}cc` }}>{next.name}</span>
+                  {xpToNext.toLocaleString()} XP to{" "}
+                  <span className="font-bold" style={{ color: `${next.color}cc` }}>{next.name}</span>
                 </span>
                 <button onClick={() => setShowLadder(v => !v)}
                   className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md transition-all hover:bg-white/[0.06]"
@@ -162,116 +130,89 @@ export default function ExpeditionProfile() {
                 </button>
               </div>
             </div>
-            {/* Bar */}
             <div className="relative h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.05)" }}>
               <div className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
                 style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${tier.color}, ${next.color})`, boxShadow: `0 0 8px ${tier.color}50` }} />
             </div>
-            {/* XP labels below bar */}
             <div className="flex items-center justify-between mt-1.5">
-              <span className="text-[8px] tabular-nums font-medium" style={{ color: "rgba(255,255,255,0.18)" }}>{tier.minXP.toLocaleString()} XP</span>
-              <span className="text-[8px] tabular-nums font-medium" style={{ color: "rgba(255,255,255,0.18)" }}>{next.minXP.toLocaleString()} XP</span>
+              <span className="text-[8px] tabular-nums" style={{ color: "rgba(255,255,255,0.18)" }}>{tier.minXP.toLocaleString()} XP</span>
+              <span className="text-[8px] tabular-nums" style={{ color: "rgba(255,255,255,0.18)" }}>{next.minXP.toLocaleString()} XP</span>
             </div>
           </div>
         ) : null}
 
-        {/* Tier ladder — expands below the bar */}
+        {/* Tier ladder */}
         {showLadder && (
-          <div className="pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.05)", marginTop: "14px" }}>
-            {/* Horizontal milestone track */}
-            <div className="relative flex items-center justify-between mb-3">
-              <div className="absolute inset-x-0 top-[14px] h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
+          <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+            {/* Track: line sits at center of circles (circle = 28px, center = 14px from top) */}
+            <div className="relative" style={{ paddingTop: "14px", paddingBottom: "28px" }}>
+              {/* Background spine — vertically centered on the circles */}
+              <div className="absolute left-0 right-0 h-px" style={{ top: "14px", background: "rgba(255,255,255,0.07)", zIndex: 0 }} />
+              {/* Filled spine */}
               {(() => {
                 const idx = XP_TIERS.findIndex(t => t.level === tier.level);
                 const pctFill = over9k ? 100 : (idx / (XP_TIERS.length - 1)) * 100;
                 return (
-                  <div className="absolute top-[14px] h-px left-0 transition-all duration-700"
-                    style={{ width: `${pctFill}%`, background: `linear-gradient(90deg, ${XP_TIERS[0].color}, ${tier.color})` }} />
+                  <div className="absolute left-0 h-px" style={{
+                    top: "14px",
+                    width: `${pctFill}%`,
+                    background: `linear-gradient(90deg, ${XP_TIERS[0].color}, ${tier.color})`,
+                    zIndex: 0,
+                    transition: "width 0.7s ease",
+                  }} />
                 );
               })()}
-              {XP_TIERS.map(t => {
-                const reached   = xp >= t.minXP;
-                const isCurrent = t.level === tier.level;
-                return (
-                  <div key={t.level} className="relative z-10 flex flex-col items-center gap-1.5">
-                    <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black transition-all"
-                      style={isCurrent
-                        ? { background: t.color, color: "#000", boxShadow: `0 0 10px ${t.color}70, 0 0 0 3px ${t.color}25` }
-                        : reached
-                          ? { background: `${t.color}20`, color: t.color, border: `1.5px solid ${t.color}50` }
-                          : { background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.18)", border: "1.5px solid rgba(255,255,255,0.08)" }
-                      }>
-                      {t.level}
+              {/* Nodes row */}
+              <div className="relative flex items-start justify-between" style={{ zIndex: 1 }}>
+                {XP_TIERS.map(t => {
+                  const reached   = xp >= t.minXP;
+                  const isCurrent = t.level === tier.level;
+                  return (
+                    <div key={t.level} className="flex flex-col items-center" style={{ gap: "6px" }}>
+                      {/* Circle — opaque background so spine doesn't bleed through */}
+                      <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black shrink-0"
+                        style={isCurrent
+                          ? { background: t.color, color: "#000", boxShadow: `0 0 10px ${t.color}80, 0 0 0 3px ${t.color}28`, position: "relative", zIndex: 2 }
+                          : reached
+                            ? { background: "rgba(10,10,14,1)", color: t.color, border: `1.5px solid ${t.color}70`, position: "relative", zIndex: 2 }
+                            : { background: "rgba(10,10,14,1)", color: "rgba(255,255,255,0.2)", border: "1.5px solid rgba(255,255,255,0.1)", position: "relative", zIndex: 2 }
+                        }>
+                        {t.level}
+                      </div>
+                      {/* Name label */}
+                      <span className="text-[7px] font-semibold leading-none text-center" style={{
+                        maxWidth: "36px",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        color: isCurrent ? t.color : reached ? `${t.color}80` : "rgba(255,255,255,0.18)",
+                      }}>
+                        {t.name}
+                      </span>
                     </div>
-                    <span className="text-[7.5px] font-semibold leading-none text-center max-w-[36px] truncate"
-                      style={{ color: isCurrent ? t.color : reached ? `${t.color}70` : "rgba(255,255,255,0.15)" }}>
-                      {t.name}
-                    </span>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}
       </div>
 
       {/* ── Stats strip ── */}
-      <div className="relative grid grid-cols-5 text-center" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+      <div className="relative grid grid-cols-5 text-center">
         {[
-          { value: countOf("trip_log"), label: "Done",      color: "#10b981" },
-          { value: countOf("review"),   label: "Reviews",   color: "#f97316" },
-          { value: countOf("photo"),    label: "Photos",    color: "#3b82f6" },
-          { value: countOf("wishlist"), label: "Saved",     color: "#f43f5e" },
-          { value: countOf("compare"),  label: "Compared",  color: "#a78bfa" },
+          { value: countOf("trip_log"), label: "Done",     color: "#10b981" },
+          { value: countOf("review"),   label: "Reviews",  color: "#f97316" },
+          { value: countOf("photo"),    label: "Photos",   color: "#3b82f6" },
+          { value: countOf("wishlist"), label: "Saved",    color: "#f43f5e" },
+          { value: countOf("compare"),  label: "Compared", color: "#a78bfa" },
         ].map(({ value, label, color }, i, arr) => (
-          <div key={label} className="flex flex-col items-center justify-center py-2.5 gap-0.5"
+          <div key={label} className="flex flex-col items-center justify-center py-3 gap-0.5"
             style={i < arr.length - 1 ? { borderRight: "1px solid rgba(255,255,255,0.05)" } : {}}>
             <span className="text-[15px] font-black tabular-nums leading-none" style={{ color: value > 0 ? color : "rgba(255,255,255,0.1)" }}>{value}</span>
             <span className="text-[7px] uppercase tracking-wide font-semibold" style={{ color: "rgba(255,255,255,0.22)" }}>{label}</span>
           </div>
         ))}
-      </div>
-
-      {/* ── Recent Activity ── */}
-      <div className="relative px-5 py-3">
-        <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold text-white/18 mb-3">Recent Activity</p>
-        {recent.length === 0 ? (
-          <div className="flex flex-col items-center py-4 gap-2">
-            <Zap className="w-5 h-5 opacity-10 text-white" />
-            <p className="text-white/20 text-[10px] text-center leading-relaxed">
-              No activity yet — complete adventures,<br />save to wishlist, or write a review.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-1">
-            {recent.map((ev, i) => {
-              const meta   = ACTION_META[ev.action];
-              const adv    = ev.adventure_slug ? adventures.find(a => a.slug === ev.adventure_slug) : null;
-              const color  = meta?.color ?? accentColor;
-              return (
-                <div key={i} className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors hover:bg-white/[0.03]">
-                  {/* Icon badge */}
-                  <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0"
-                    style={{ background: `${color}14`, color }}>
-                    {meta?.icon ?? <Zap className="w-3 h-3" />}
-                  </div>
-                  {/* Label + adventure */}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10.5px] font-semibold leading-none" style={{ color: "rgba(255,255,255,0.7)" }}>
-                      {adv ? adv.name : (meta?.label ?? ev.action)}
-                    </p>
-                    <p className="text-[9px] mt-0.5 leading-none" style={{ color: "rgba(255,255,255,0.25)" }}>
-                      {meta?.label ?? ev.action}
-                      {ev.created_at && <span className="ml-1.5">{relativeTime(ev.created_at)}</span>}
-                    </p>
-                  </div>
-                  {/* XP */}
-                  <span className="text-[10px] font-black tabular-nums shrink-0" style={{ color }}>+{ev.xp}</span>
-                </div>
-              );
-            })}
-          </div>
-        )}
       </div>
 
     </div>
