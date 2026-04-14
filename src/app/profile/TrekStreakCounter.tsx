@@ -27,7 +27,7 @@ export default function TrekStreakCounter() {
   if (loading || stats.total === 0) return null;
 
   const items = [
-    { value: stats.total,     label: "Adventures",       color: "#f97316", icon: Map    },
+    { value: stats.total,     label: "Completed",        color: "#f97316", icon: Map    },
     { value: stats.types,     label: "Types",            color: "#22d3ee", icon: Layers },
     { value: stats.states,    label: "States",           color: "#a78bfa", icon: Globe  },
     { value: stats.totalDays, label: "Days in the Wild", color: "#10b981", icon: Sun    },
