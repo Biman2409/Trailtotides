@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import {
   updateUserRole, deleteUser, banUser, unbanUser,
   sendPasswordReset, deleteMessage, updateStoryStatus, deleteStory,
-  adminDeleteReview, adminDeletePhoto, adminResetAllXP,
+  adminDeleteReview, adminDeletePhoto,
 } from "./actions";
 import { approveOperatorSubmission, rejectOperatorSubmission, type OperatorProfile, type OperatorSubmission } from "@/app/auth/operator-actions";
 import { logout } from "@/app/auth/actions";
@@ -361,19 +361,7 @@ export default function AdminDashboardClient({
   const [reviewSearch, setReviewSearch] = useState("");
   const [photoSearch, setPhotoSearch] = useState("");
   const [contentView, setContentView] = useState<"reviews"|"photos">("reviews");
-  const [xpResetting, setXpResetting] = useState(false);
-  const [xpResetConfirm, setXpResetConfirm] = useState(false);
   const { toast, show: showToast } = useToast();
-
-  async function handleResetXP() {
-    if (!xpResetConfirm) { setXpResetConfirm(true); return; }
-    setXpResetting(true);
-    setXpResetConfirm(false);
-    const result = await adminResetAllXP();
-    setXpResetting(false);
-    if (result.success) showToast(`XP reset — ${result.deleted} file${result.deleted === 1 ? "" : "s"} deleted`);
-    else showToast(result.error ?? "Reset failed", "error");
-  }
 
   // ── Derived counts ────────────────────────────────────────────────────────────
   const totalUsers = localProfiles.filter(p => p.role === "user").length;
@@ -735,25 +723,6 @@ export default function AdminDashboardClient({
                   {delta}
                 </div>
               ))}
-            </div>
-
-            {/* Danger zone */}
-            <div className="flex items-center justify-between bg-white/[0.02] border border-red-500/10 rounded-2xl px-5 py-3.5">
-              <div>
-                <p className="text-[11px] font-bold text-red-400/80">Reset All XP</p>
-                <p className="text-[10px] text-white/25 mt-0.5">Permanently wipes every user's XP and achievement history. Irreversible.</p>
-              </div>
-              <button
-                onClick={handleResetXP}
-                disabled={xpResetting}
-                className="shrink-0 flex items-center gap-1.5 text-[11px] font-bold px-3.5 py-2 rounded-xl transition-all disabled:opacity-50"
-                style={xpResetConfirm
-                  ? { background: "rgba(239,68,68,0.2)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.4)" }
-                  : { background: "rgba(239,68,68,0.08)", color: "rgba(239,68,68,0.6)", border: "1px solid rgba(239,68,68,0.15)" }}
-              >
-                {xpResetting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RotateCcw className="w-3.5 h-3.5" />}
-                {xpResetting ? "Resetting…" : xpResetConfirm ? "Confirm reset" : "Reset XP"}
-              </button>
             </div>
 
             {/* Two-col layout: activity + pending actions */}
