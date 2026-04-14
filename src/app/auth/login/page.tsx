@@ -147,7 +147,7 @@ function LoginForm() {
           <span className="text-[#ff5100]">answer it.</span>
         </h1>
         <p className="text-white/40 text-xs font-medium leading-relaxed">
-          Sign in to access your adventure profile and saved treks.
+          Sign in to access your adventure profile, saved treks and much more.
         </p>
       </div>
 
