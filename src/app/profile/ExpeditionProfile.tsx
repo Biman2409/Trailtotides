@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Zap, TrendingUp, ChevronDown } from "lucide-react";
+import { Zap, TrendingUp, ChevronDown, Heart, Camera, GitCompare, Star, CheckCircle2 } from "lucide-react";
 import {
   getTier, getNextTier, getProgressPct, XP_TIERS, XP_LABELS,
   isOver9000, OVER_9000_COLOR,
@@ -17,12 +17,12 @@ interface XPEvent {
 }
 
 const ACTION_ICON: Record<string, React.ReactNode> = {
-  ace_complete: <Zap className="w-3 h-3" />,
-  review:       <Zap className="w-3 h-3" />,
-  photo:        <Zap className="w-3 h-3" />,
-  wishlist:     <Zap className="w-3 h-3" />,
-  compare:      <Zap className="w-3 h-3" />,
-  trip_log:     <Zap className="w-3 h-3" />,
+  ace_complete: <Star         className="w-3 h-3" />,
+  review:       <Star         className="w-3 h-3" />,
+  photo:        <Camera       className="w-3 h-3" />,
+  wishlist:     <Heart        className="w-3 h-3" />,
+  compare:      <GitCompare   className="w-3 h-3" />,
+  trip_log:     <CheckCircle2 className="w-3 h-3" />,
 };
 
 export default function ExpeditionProfile() {
