@@ -71,42 +71,35 @@ export default function TrekStreakCounter() {
           </div>
           <div>
             <p className="text-[20px] font-black tabular-nums leading-none" style={{ color: "#f43f5e" }}>{stats.wishCount}</p>
-            <p className="text-[8px] uppercase tracking-wide font-semibold mt-0.5" style={{ color: "rgba(255,255,255,0.28)" }}>On Wishlist</p>
+            <p className="text-[8px] uppercase tracking-wide font-semibold mt-0.5" style={{ color: "rgba(255,255,255,0.28)" }}>Wishlisted</p>
           </div>
         </div>
       </div>
 
       {/* Secondary stats row */}
-      <div className="grid grid-cols-3 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
         {[
           { value: stats.types,     delta: stats.wishTypesNew,  label: "Types",            color: "#22d3ee", icon: Layers },
           { value: stats.states,    delta: stats.wishStatesNew, label: "States",           color: "#a78bfa", icon: Globe  },
           { value: stats.totalDays, delta: stats.wishDaysMore,  label: "Days in the Wild", color: "#f97316", icon: Sun    },
-        ].map(({ value, delta, label, color, icon: Icon }, i) => (
+        ].map(({ value, delta, label, color, icon: Icon }, i, arr) => (
           <div key={label}
-            className="flex flex-col items-center justify-center py-3 px-2 gap-1.5"
-            style={i < 2 ? { borderRight: "1px solid rgba(255,255,255,0.06)" } : {}}>
-            <div className="w-6 h-6 rounded-md flex items-center justify-center"
+            className="flex items-center gap-3 px-4 py-2.5"
+            style={i < arr.length - 1 ? { borderBottom: "1px solid rgba(255,255,255,0.05)" } : {}}>
+            {/* Icon */}
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
               style={{ background: `${color}18`, border: `1px solid ${color}30` }}>
-              <Icon className="w-3 h-3" style={{ color }} />
+              <Icon className="w-3.5 h-3.5" style={{ color }} />
             </div>
-            <div className="flex items-baseline gap-1">
-              <span className="text-lg font-black tabular-nums leading-none" style={{ color }}>{value}</span>
+            {/* Label */}
+            <span className="flex-1 text-[11px] font-semibold" style={{ color: "rgba(255,255,255,0.45)" }}>{label}</span>
+            {/* Value + delta */}
+            <div className="flex items-baseline gap-1 shrink-0">
+              <span className="text-[16px] font-black tabular-nums leading-none" style={{ color }}>{value}</span>
               {delta > 0 && stats.wishCount > 0 && (
-                <span
-                  className="text-[9px] font-black tabular-nums leading-none"
-                  style={{ color: "#f43f5e" }}
-                >
-                  +{delta}
-                </span>
+                <span className="text-[9px] font-black tabular-nums" style={{ color: "#f43f5e" }}>+{delta}</span>
               )}
             </div>
-            <span className="text-[8px] text-white/28 text-center leading-tight">{label}</span>
-            {delta > 0 && stats.wishCount > 0 && (
-              <span className="text-[7px] font-semibold leading-none" style={{ color: "rgba(244,63,94,0.5)" }}>
-                if wishlist done
-              </span>
-            )}
           </div>
         ))}
       </div>
