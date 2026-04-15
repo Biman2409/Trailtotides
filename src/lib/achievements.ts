@@ -242,8 +242,8 @@ export const XP_BADGES = [
   },
   {
     id:          "the-analyst",
-    name:        "The Analyst",
-    description: "First comparison made. You don't just pick adventures — you study them.",
+    name:        "Sherlock Scan",
+    description: "First comparison made. You don't just pick adventures — you deduce them.",
     color:       "#a78bfa",
     icon:        "GitCompare",
     tier:        "xp" as const,
