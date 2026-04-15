@@ -201,16 +201,6 @@ export const XP_BADGES = [
     minWishlisted: 10,
   },
   {
-    id:          "pen-and-trail",
-    name:        "Pen & Trail",
-    description: "10 reviews written. The community reads your words.",
-    color:       "#f59e0b",
-    icon:        "Star",
-    tier:        "xp" as const,
-    condition:   "Write 10 reviews",
-    minReviews:  10,
-  },
-  {
     id:          "wishlist-1",
     name:        "Window Shopper",
     description: "First adventure wishlisted. The dreaming has begun.",
