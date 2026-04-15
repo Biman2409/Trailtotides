@@ -137,8 +137,8 @@ export const SPECIAL_BADGES = [
     minEliteAxes: 8,
   },
   {
-    id:            "gandalf-the-grey",
-    name:          "Gandalf the Grey",
+    id:            "the-mad-titan",
+    name:          "The Mad Titan",
     description:   "Elite across 4 or more axes. A rare all-round expedition-grade profile.",
     color:         "#f59e0b",
     icon:          "Wand",
