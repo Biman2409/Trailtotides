@@ -129,7 +129,7 @@ export const SPECIAL_BADGES = [
   },
   {
     id:           "one-above-all",
-    name:         "One Above All",
+    name:         "The One Above All",
     description:  "All 8 axes maxed. The complete adventurer — nothing is out of reach.",
     color:        "#fbbf24",
     icon:         "Crown",
