@@ -113,6 +113,26 @@ export const DOMAIN_BADGES = [
     tier:        "domain" as const,
     axes:        ["focus", "nerve"] as (keyof ACE)[],
   },
+  {
+    id:          "gordon-ramsayd",
+    name:        "Gordon Ramsay'd",
+    description: "10 reviews written. The community reads your every word.",
+    color:       "#f97316",
+    icon:        "Star",
+    tier:        "domain" as const,
+    condition:   "Write 10 reviews",
+    minReviews:  10,
+  },
+  {
+    id:          "the-analyst",
+    name:        "Sherlock Scan",
+    description: "First comparison made. You don't just pick adventures — you deduce them.",
+    color:       "#a78bfa",
+    icon:        "GitCompare",
+    tier:        "domain" as const,
+    condition:   "Compare 1 adventure",
+    minCompares: 1,
+  },
 ];
 
 // ─── Tier 1 — Apex / Special badges ──────────────────────────────────────────
@@ -191,16 +211,6 @@ export const XP_BADGES = [
     minReviews:  1,
   },
   {
-    id:          "gordon-ramsayd",
-    name:        "Gordon Ramsay'd",
-    description: "10 reviews written. The community reads your every word.",
-    color:       "#f97316",
-    icon:        "Star",
-    tier:        "xp" as const,
-    condition:   "Write 10 reviews",
-    minReviews:  10,
-  },
-  {
     id:          "dream-collector",
     name:        "Dream Collector",
     description: "10 adventures wishlisted. The bucket list is getting serious.",
@@ -240,16 +250,6 @@ export const XP_BADGES = [
     condition:   "Upload 20 photos",
     minPhotos:   20,
   },
-  {
-    id:          "the-analyst",
-    name:        "Sherlock Scan",
-    description: "First comparison made. You don't just pick adventures — you deduce them.",
-    color:       "#a78bfa",
-    icon:        "GitCompare",
-    tier:        "xp" as const,
-    condition:   "Compare 1 adventure",
-    minCompares: 1,
-  },
 ];
 
 // ─── Core function ────────────────────────────────────────────────────────────
@@ -279,8 +279,13 @@ export function getAchievements(ace: ACE, totalXP = 0, engagement: EngagementSta
 
   // Tier 2 — Domain
   for (const badge of DOMAIN_BADGES) {
-    if (badge.axes.every((ax) => ace[ax] >= 5)) {
-      earned.push({ ...badge });
+    if ("axes" in badge && badge.axes) {
+      if (badge.axes.every((ax) => ace[ax] >= 5)) earned.push({ ...badge });
+    } else {
+      let qualifies = false;
+      if ("minReviews"  in badge && badge.minReviews  != null && (engagement.reviews  ?? 0) >= badge.minReviews)  qualifies = true;
+      if ("minCompares" in badge && badge.minCompares != null && (engagement.compares ?? 0) >= badge.minCompares) qualifies = true;
+      if (qualifies) earned.push({ ...badge });
     }
   }
 
