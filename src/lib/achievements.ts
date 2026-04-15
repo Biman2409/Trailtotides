@@ -31,8 +31,8 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
     icon:        "Dumbbell",
   },
   strength: {
-    id:          "hero-hercules",
-    name:        "Hero Hercules",
+    id:          "t-800",
+    name:        "T-800",
     description: "Powers through sustained physical demands without losing pace. Never quits.",
     color:       "#eab308",
     icon:        "MountainSnow",
