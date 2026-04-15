@@ -7,8 +7,8 @@ export interface Achievement {
   color: string;
   /** Lucide icon name (string) — mapped in the component */
   icon: string;
-  /** "special" = tier 1 | "domain" = tier 2 | "axis" | "tier3" = tier 3 */
-  tier: "axis" | "domain" | "special" | "tier3";
+  /** "tier1" = pinnacle | "tier2" = domain | "tier3" = axis + engagement */
+  tier: "tier1" | "tier2" | "tier3";
   /** Human-readable unlock condition shown on locked trophies */
   condition?: string;
 }
@@ -83,7 +83,7 @@ export const DOMAIN_BADGES = [
     description: "Stamina and Power both maxed. An unstoppable force that never shuts down.",
     color:       "#f97316",
     icon:        "Zap",
-    tier:        "domain" as const,
+    tier:        "tier2" as const,
     axes:        ["stamina", "power"] as (keyof ACE)[],
   },
   {
@@ -92,7 +92,7 @@ export const DOMAIN_BADGES = [
     description: "Strength and Agility both maxed. Total command over any terrain.",
     color:       "#22d3ee",
     icon:        "Pickaxe",
-    tier:        "domain" as const,
+    tier:        "tier2" as const,
     axes:        ["strength", "agility"] as (keyof ACE)[],
   },
   {
@@ -101,7 +101,7 @@ export const DOMAIN_BADGES = [
     description: "Water and Altitude both maxed. Rides above the clouds and commands the current.",
     color:       "#a78bfa",
     icon:        "Globe",
-    tier:        "domain" as const,
+    tier:        "tier2" as const,
     axes:        ["water", "altitude"] as (keyof ACE)[],
   },
   {
@@ -110,7 +110,7 @@ export const DOMAIN_BADGES = [
     description: "Focus and Nerve both maxed. An unbreakable mind forged in the wild.",
     color:       "#10b981",
     icon:        "Brain",
-    tier:        "domain" as const,
+    tier:        "tier2" as const,
     axes:        ["focus", "nerve"] as (keyof ACE)[],
   },
   {
@@ -119,7 +119,7 @@ export const DOMAIN_BADGES = [
     description: "10 reviews written. The community reads your every word.",
     color:       "#f97316",
     icon:        "Star",
-    tier:        "domain" as const,
+    tier:        "tier2" as const,
     condition:   "Write 10 reviews",
     minReviews:  10,
   },
@@ -129,7 +129,7 @@ export const DOMAIN_BADGES = [
     description: "20 adventure photos uploaded. Your feed is the envy of the community.",
     color:       "#3b82f6",
     icon:        "Camera",
-    tier:        "domain" as const,
+    tier:        "tier2" as const,
     condition:   "Upload 20 photos",
     minPhotos:   20,
   },
@@ -144,7 +144,7 @@ export const SPECIAL_BADGES = [
     description:  "9,000+ XP earned. The scouter can't even measure this power level.",
     color:        "#ff3d00",
     icon:         "Flame9000",   // custom — mapped in components
-    tier:         "special" as const,
+    tier:         "tier1" as const,
     minXP:        9000,
   },
   {
@@ -153,7 +153,7 @@ export const SPECIAL_BADGES = [
     description:  "All 8 axes maxed. The complete adventurer — nothing is out of reach.",
     color:        "#fbbf24",
     icon:         "Crown",
-    tier:         "special" as const,
+    tier:         "tier1" as const,
     minEliteAxes: 8,
   },
   {
@@ -283,7 +283,7 @@ export function getAchievements(ace: ACE, totalXP = 0, engagement: EngagementSta
   // Tier 3 — Axis
   for (const ax of axes) {
     if (ace[ax] >= 5) {
-      earned.push({ ...AXIS_BADGES[ax], tier: "axis" });
+      earned.push({ ...AXIS_BADGES[ax], tier: "tier3" });
     }
   }
 

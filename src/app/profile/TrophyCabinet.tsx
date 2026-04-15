@@ -68,7 +68,7 @@ function Popover({ badge, anchorRect, onClose, locked }: {
   onClose: () => void;
   locked?: boolean;
 }) {
-  const isSpecial = badge.tier === "special";
+  const isSpecial = badge.tier === "tier1";
   const POPOVER_W = 280;
   const GAP = 10;
 
@@ -140,7 +140,7 @@ function TrophyCell({ badge, earned, boxSize, xl = false, isActive, onToggle }: 
 }) {
   const btnRef = useRef<HTMLButtonElement>(null);
   const iconSize = Math.round(boxSize * (xl ? 0.44 : 0.40));
-  const isSpecial = badge.tier === "special";
+  const isSpecial = badge.tier === "tier1";
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
