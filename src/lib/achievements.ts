@@ -56,7 +56,7 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
     name:        "Abominable Snowman",
     description: "Stays active above 4,200m. The altitude works for you, not against you.",
     color:       "#a78bfa",
-    icon:        "Wind",
+    icon:        "MountainSnow",
   },
   focus: {
     id:          "master-yoda",
@@ -74,7 +74,8 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
   },
 };
 
-// ─── Tier 2 — Domain badges (both axes in a domain === 5) ────────────────────
+// ─── Tier 2 — Domain badges ───────────────────────────────────────────────────
+// Axes-based first (hardest), engagement-based after
 
 export const DOMAIN_BADGES = [
   {
@@ -100,7 +101,7 @@ export const DOMAIN_BADGES = [
     name:        "Avatar State",
     description: "Water and Altitude both maxed. Rides above the clouds and commands the current.",
     color:       "#a78bfa",
-    icon:        "Globe",
+    icon:        "Waves",
     tier:        "tier2" as const,
     axes:        ["water", "altitude"] as (keyof ACE)[],
   },
@@ -117,7 +118,7 @@ export const DOMAIN_BADGES = [
     id:          "gordon-ramsayd",
     name:        "Gordon Ramsay'd",
     description: "10 reviews written. The community reads your every word.",
-    color:       "#f97316",
+    color:       "#f59e0b",
     icon:        "Star",
     tier:        "tier2" as const,
     condition:   "Write 10 reviews",
@@ -135,18 +136,9 @@ export const DOMAIN_BADGES = [
   },
 ];
 
-// ─── Tier 1 — Apex / Special badges ──────────────────────────────────────────
+// ─── Tier 1 — Apex / Special badges (ordered rarest → less rare) ─────────────
 
 export const SPECIAL_BADGES = [
-  {
-    id:           "over-9000",
-    name:         "It's Over 9000!",
-    description:  "9,000+ XP earned. The scouter can't even measure this power level.",
-    color:        "#ff3d00",
-    icon:         "Flame9000",   // custom — mapped in components
-    tier:         "tier1" as const,
-    minXP:        9000,
-  },
   {
     id:           "one-above-all",
     name:         "The One Above All",
@@ -157,29 +149,61 @@ export const SPECIAL_BADGES = [
     minEliteAxes: 8,
   },
   {
+    id:           "over-9000",
+    name:         "It's Over 9000!",
+    description:  "9,000+ XP earned. The scouter can't even measure this power level.",
+    color:        "#ff3d00",
+    icon:         "Flame9000",
+    tier:         "tier1" as const,
+    minXP:        9000,
+  },
+  {
     id:            "the-mad-titan",
     name:          "The Mad Titan",
     description:   "Elite across 4 or more axes. A rare all-round adventurer with no weak terrain.",
     color:         "#f59e0b",
-    icon:          "Wand",
-    tier:          "special" as const,
+    icon:          "Award",
+    tier:          "tier1" as const,
     minEliteAxes:  4,
   },
 ];
 
-// ─── XP Trophies — reward engagement actions ─────────────────────────────────
+// ─── XP / Engagement badges (Tier 3) — grouped by action type ────────────────
 
 export const XP_BADGES = [
+  // ── Completions ──
   {
-    id:          "first-blood",
-    name:        "First Blood",
-    description: "Logged your very first completed adventure. Every legend starts somewhere.",
-    color:       "#10b981",
-    icon:        "CheckCircle2",
-    tier:        "tier3" as const,
-    condition:   "Complete 1 adventure",
+    id:           "first-blood",
+    name:         "First Blood",
+    description:  "Logged your very first completed adventure. Every legend starts somewhere.",
+    color:        "#10b981",
+    icon:         "CheckCircle2",
+    tier:         "tier3" as const,
+    condition:    "Complete 1 adventure",
     minCompleted: 1,
   },
+  // ── Wishlist ──
+  {
+    id:            "window-shopper",
+    name:          "Window Shopper",
+    description:   "First adventure wishlisted. The dreaming has begun.",
+    color:         "#f43f5e",
+    icon:          "Compass",
+    tier:          "tier3" as const,
+    condition:     "Wishlist 1 adventure",
+    minWishlisted: 1,
+  },
+  {
+    id:            "dream-collector",
+    name:          "Dream Collector",
+    description:   "10 adventures wishlisted. The bucket list is getting serious.",
+    color:         "#f43f5e",
+    icon:          "Heart",
+    tier:          "tier3" as const,
+    condition:     "Wishlist 10 adventures",
+    minWishlisted: 10,
+  },
+  // ── Reviews ──
   {
     id:          "rotten-tomato",
     name:        "Rotten Tomato",
@@ -190,28 +214,9 @@ export const XP_BADGES = [
     condition:   "Write 1 review",
     minReviews:  1,
   },
+  // ── Photos ──
   {
-    id:          "dream-collector",
-    name:        "Dream Collector",
-    description: "10 adventures wishlisted. The bucket list is getting serious.",
-    color:       "#f43f5e",
-    icon:        "Heart",
-    tier:        "tier3" as const,
-    condition:   "Wishlist 10 adventures",
-    minWishlisted: 10,
-  },
-  {
-    id:          "wishlist-1",
-    name:        "Window Shopper",
-    description: "First adventure wishlisted. The dreaming has begun.",
-    color:       "#f43f5e",
-    icon:        "Heart",
-    tier:        "tier3" as const,
-    condition:   "Wishlist 1 adventure",
-    minWishlisted: 1,
-  },
-  {
-    id:          "shutter-chaser",
+    id:          "shutter-bug",
     name:        "Shutter Bug",
     description: "Uploaded your first adventure photo. Every adventure deserves proof.",
     color:       "#3b82f6",
@@ -254,8 +259,8 @@ export function getAchievements(ace: ACE, totalXP = 0, engagement: EngagementSta
     } else {
       let qualifies = false;
       if ("minReviews"  in badge && badge.minReviews  != null && (engagement.reviews  ?? 0) >= badge.minReviews)  qualifies = true;
-      if ("minCompares" in badge && badge.minCompares != null && (engagement.compares ?? 0) >= badge.minCompares) qualifies = true;
-      if ("minPhotos"   in badge && badge.minPhotos   != null && (engagement.photos   ?? 0) >= badge.minPhotos)   qualifies = true;
+      if ("minCompares" in badge && badge.minCompares != null && (engagement.compares  ?? 0) >= badge.minCompares) qualifies = true;
+      if ("minPhotos"   in badge && badge.minPhotos   != null && (engagement.photos    ?? 0) >= badge.minPhotos)   qualifies = true;
       if (qualifies) earned.push({ ...badge });
     }
   }
@@ -267,10 +272,10 @@ export function getAchievements(ace: ACE, totalXP = 0, engagement: EngagementSta
     }
   }
 
-  // XP & Engagement trophies
+  // Tier 3 — XP & Engagement
   for (const badge of XP_BADGES) {
     let qualifies = false;
-    if ("minXP"        in badge && badge.minXP        != null && totalXP                    >= badge.minXP)        qualifies = true;
+    if ("minXP"        in badge && badge.minXP        != null && totalXP                     >= badge.minXP)        qualifies = true;
     if ("minCompleted" in badge && badge.minCompleted  != null && (engagement.completed ?? 0) >= badge.minCompleted) qualifies = true;
     if ("minReviews"   in badge && badge.minReviews    != null && (engagement.reviews   ?? 0) >= badge.minReviews)   qualifies = true;
     if ("minWishlisted"in badge && badge.minWishlisted != null && (engagement.wishlisted ?? 0) >= badge.minWishlisted) qualifies = true;
