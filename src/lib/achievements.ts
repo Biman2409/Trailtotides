@@ -96,8 +96,8 @@ export const DOMAIN_BADGES = [
     axes:        ["strength", "agility"] as (keyof ACE)[],
   },
   {
-    id:          "storm-rider",
-    name:        "Storm Rider",
+    id:          "avatar-state",
+    name:        "Avatar State",
     description: "Water and Altitude both maxed. Rides above the clouds and commands the current.",
     color:       "#a78bfa",
     icon:        "Globe",
