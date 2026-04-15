@@ -126,12 +126,12 @@ export const DOMAIN_BADGES = [
   {
     id:          "the-analyst",
     name:        "Sherlock Scan",
-    description: "First comparison made. You don't just pick adventures — you deduce them.",
+    description: "10 comparisons made. You don't just pick adventures — you deduce them.",
     color:       "#a78bfa",
     icon:        "GitCompare",
     tier:        "domain" as const,
-    condition:   "Compare 1 adventure",
-    minCompares: 1,
+    condition:   "Compare 10 adventures",
+    minCompares: 10,
   },
 ];
 
