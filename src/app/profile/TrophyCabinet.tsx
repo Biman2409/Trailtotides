@@ -286,11 +286,11 @@ export default function TrophyCabinet() {
   const achievements = getAchievements(stored.ace, totalXP, engagement);
   const earnedIds = new Set(achievements.map(a => a.id));
   const totalEarned = earnedIds.size;
-  const totalPossible = TIER1_ALL.length + TIER2_ALL.length + TIER3_ALL.length + TIERXP_ALL.length;
+  const TIER3_COMBINED = [...TIER3_ALL, ...TIERXP_ALL];
+  const totalPossible = TIER1_ALL.length + TIER2_ALL.length + TIER3_COMBINED.length;
   const t1Earned  = TIER1_ALL.filter(b => earnedIds.has(b.id)).length;
   const t2Earned  = TIER2_ALL.filter(b => earnedIds.has(b.id)).length;
-  const t3Earned  = TIER3_ALL.filter(b => earnedIds.has(b.id)).length;
-  const txpEarned = TIERXP_ALL.filter(b => earnedIds.has(b.id)).length;
+  const t3Earned  = TIER3_COMBINED.filter(b => earnedIds.has(b.id)).length;
 
   const cell = (b: Achievement, size: number, xl = false) => (
     <TrophyCell key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={size} xl={xl} isActive={active?.id === b.id} onToggle={handleToggle} />
@@ -348,34 +348,19 @@ export default function TrophyCabinet() {
         </div>
       </div>
 
-      {/* Row 2 — Tier 3 */}
-      <div className="px-4 py-4 border-b relative overflow-hidden"
-        style={{
-          borderColor: "rgba(255,255,255,0.05)",
-          boxShadow: t3Earned === TIER3_ALL.length ? `inset 0 0 0 1.5px rgba(96,165,250,0.35), inset 0 0 24px rgba(96,165,250,0.07)` : "none",
-          background: t3Earned === TIER3_ALL.length ? "rgba(96,165,250,0.03)" : "transparent",
-        }}>
-        {t3Earned === TIER3_ALL.length && (
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(110deg,transparent 30%,rgba(96,165,250,0.06) 50%,transparent 70%)", backgroundSize: "200% 100%", animation: "trophy-shine 4s ease-in-out infinite" }} />
-        )}
-        <TierLabel label="The Axis Elite" color="#60a5fa" earned={t3Earned} total={TIER3_ALL.length} />
-        <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(36px, 1fr))" }}>
-          {TIER3_ALL.map(b => cell(b, 32))}
-        </div>
-      </div>
-
-      {/* Row 3 — Milestones */}
+      {/* Row 2 — Tier 3 (Axis + Milestones combined) */}
       <div className="px-4 py-4 rounded-b-2xl relative overflow-hidden"
         style={{
-          background: txpEarned === TIERXP_ALL.length ? "rgba(16,185,129,0.05)" : "linear-gradient(160deg,rgba(16,185,129,0.04) 0%,transparent 60%)",
-          boxShadow: txpEarned === TIERXP_ALL.length ? `inset 0 0 0 1.5px rgba(16,185,129,0.35), inset 0 0 24px rgba(16,185,129,0.08)` : "none",
+          borderColor: "rgba(255,255,255,0.05)",
+          boxShadow: t3Earned === TIER3_COMBINED.length ? `inset 0 0 0 1.5px rgba(96,165,250,0.35), inset 0 0 24px rgba(96,165,250,0.07)` : "none",
+          background: t3Earned === TIER3_COMBINED.length ? "rgba(96,165,250,0.03)" : "transparent",
         }}>
-        {txpEarned === TIERXP_ALL.length && (
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(110deg,transparent 30%,rgba(16,185,129,0.07) 50%,transparent 70%)", backgroundSize: "200% 100%", animation: "trophy-shine 4s ease-in-out infinite" }} />
+        {t3Earned === TIER3_COMBINED.length && (
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(110deg,transparent 30%,rgba(96,165,250,0.06) 50%,transparent 70%)", backgroundSize: "200% 100%", animation: "trophy-shine 4s ease-in-out infinite" }} />
         )}
-        <TierLabel label="Explorer Milestones" color="#10b981" earned={txpEarned} total={TIERXP_ALL.length} />
-        <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(40px, 1fr))" }}>
-          {TIERXP_ALL.map(b => cell(b, 36))}
+        <TierLabel label="The Expedition Badges" color="#60a5fa" earned={t3Earned} total={TIER3_COMBINED.length} />
+        <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(36px, 1fr))" }}>
+          {TIER3_COMBINED.map(b => cell(b, 32))}
         </div>
       </div>
 
