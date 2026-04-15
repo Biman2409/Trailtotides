@@ -96,9 +96,9 @@ export const DOMAIN_BADGES = [
     axes:        ["strength", "agility"] as (keyof ACE)[],
   },
   {
-    id:          "the-avatar",
-    name:        "The Avatar",
-    description: "Water and Altitude both maxed. Master of nature's two most unforgiving elements.",
+    id:          "storm-rider",
+    name:        "Storm Rider",
+    description: "Water and Altitude both maxed. Rides above the clouds and commands the current.",
     color:       "#a78bfa",
     icon:        "Globe",
     tier:        "domain" as const,
@@ -128,8 +128,8 @@ export const SPECIAL_BADGES = [
     minXP:        9000,
   },
   {
-    id:           "one-above-all",
-    name:         "One Above All",
+    id:           "the-avatar",
+    name:         "The Avatar",
     description:  "All 8 axes maxed. The complete adventurer — nothing is out of reach.",
     color:        "#fbbf24",
     icon:         "Crown",
