@@ -181,8 +181,8 @@ export const XP_BADGES = [
     minCompleted: 1,
   },
   {
-    id:          "critic",
-    name:        "The Critic",
+    id:          "rotten-tomato",
+    name:        "Rotten Tomato",
     description: "Left your first review. Your voice shapes the adventure community.",
     color:       "#f59e0b",
     icon:        "Star",
