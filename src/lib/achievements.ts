@@ -7,8 +7,10 @@ export interface Achievement {
   color: string;
   /** Lucide icon name (string) — mapped in the component */
   icon: string;
-  /** "axis" = single-axis elite | "domain" = 2-axis domain | "special" = multi/full */
-  tier: "axis" | "domain" | "special";
+  /** "axis" = single-axis elite | "domain" = 2-axis domain | "special" = multi/full | "xp" = engagement */
+  tier: "axis" | "domain" | "special" | "xp";
+  /** Human-readable unlock condition shown on locked trophies */
+  condition?: string;
 }
 
 // ─── Tier 3 — Axis badges (awarded when axis === 5) ──────────────────────────
@@ -145,9 +147,100 @@ export const SPECIAL_BADGES = [
   },
 ];
 
+// ─── XP Trophies — reward engagement actions ─────────────────────────────────
+
+export const XP_BADGES = [
+  {
+    id:          "first-blood",
+    name:        "First Blood",
+    description: "Logged your very first completed adventure. The journey begins.",
+    color:       "#10b981",
+    icon:        "CheckCircle2",
+    tier:        "xp" as const,
+    condition:   "Complete 1 adventure",
+    minCompleted: 1,
+  },
+  {
+    id:          "trail-blazer",
+    name:        "Trail Blazer",
+    description: "5 adventures in the log. You're building a real expedition record.",
+    color:       "#f97316",
+    icon:        "Map",
+    tier:        "xp" as const,
+    condition:   "Complete 5 adventures",
+    minCompleted: 5,
+  },
+  {
+    id:          "seasoned-explorer",
+    name:        "Seasoned Explorer",
+    description: "10 adventures done. Half-way to legendary status.",
+    color:       "#fbbf24",
+    icon:        "Compass",
+    tier:        "xp" as const,
+    condition:   "Complete 10 adventures",
+    minCompleted: 10,
+  },
+  {
+    id:          "critic",
+    name:        "The Critic",
+    description: "Left your first review. Your voice shapes the expedition community.",
+    color:       "#f59e0b",
+    icon:        "Star",
+    tier:        "xp" as const,
+    condition:   "Write 1 review",
+    minReviews:  1,
+  },
+  {
+    id:          "dream-collector",
+    name:        "Dream Collector",
+    description: "10 adventures wishlisted. The bucket list is getting serious.",
+    color:       "#f43f5e",
+    icon:        "Heart",
+    tier:        "xp" as const,
+    condition:   "Wishlist 10 adventures",
+    minWishlisted: 10,
+  },
+  {
+    id:          "xp-500",
+    name:        "500 Club",
+    description: "500 XP earned. You're officially on the board.",
+    color:       "#60a5fa",
+    icon:        "Zap",
+    tier:        "xp" as const,
+    condition:   "Earn 500 XP",
+    minXP:       500,
+  },
+  {
+    id:          "xp-2000",
+    name:        "2K Grinder",
+    description: "2,000 XP earned. Commitment is your middle name.",
+    color:       "#a78bfa",
+    icon:        "TrendingUp",
+    tier:        "xp" as const,
+    condition:   "Earn 2,000 XP",
+    minXP:       2000,
+  },
+  {
+    id:          "xp-5000",
+    name:        "5K Veteran",
+    description: "5,000 XP and counting. An expedition career worth talking about.",
+    color:       "#fb923c",
+    icon:        "Award",
+    tier:        "xp" as const,
+    condition:   "Earn 5,000 XP",
+    minXP:       5000,
+  },
+];
+
 // ─── Core function ────────────────────────────────────────────────────────────
 
-export function getAchievements(ace: ACE, totalXP = 0): Achievement[] {
+export interface EngagementStats {
+  completed?: number;
+  reviews?: number;
+  wishlisted?: number;
+}
+
+export function getAchievements(ace: ACE, totalXP = 0, engagement: EngagementStats = {}): Achievement[] {
   const earned: Achievement[] = [];
 
   const axes = Object.keys(ace) as (keyof ACE)[];
@@ -174,6 +267,16 @@ export function getAchievements(ace: ACE, totalXP = 0): Achievement[] {
     if (ace[ax] >= 5) {
       earned.push({ ...AXIS_BADGES[ax], tier: "axis" });
     }
+  }
+
+  // XP & Engagement trophies
+  for (const badge of XP_BADGES) {
+    let qualifies = false;
+    if ("minXP"        in badge && badge.minXP        != null && totalXP                    >= badge.minXP)        qualifies = true;
+    if ("minCompleted" in badge && badge.minCompleted  != null && (engagement.completed ?? 0) >= badge.minCompleted) qualifies = true;
+    if ("minReviews"   in badge && badge.minReviews    != null && (engagement.reviews   ?? 0) >= badge.minReviews)   qualifies = true;
+    if ("minWishlisted"in badge && badge.minWishlisted != null && (engagement.wishlisted ?? 0) >= badge.minWishlisted) qualifies = true;
+    if (qualifies) earned.push({ ...badge });
   }
 
   return earned;
