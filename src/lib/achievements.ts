@@ -240,36 +240,6 @@ export const XP_BADGES = [
     condition:   "Compare 1 adventure",
     minCompares: 1,
   },
-  {
-    id:          "xp-500",
-    name:        "500 Club",
-    description: "500 XP earned. You're officially on the board.",
-    color:       "#60a5fa",
-    icon:        "Zap",
-    tier:        "xp" as const,
-    condition:   "Earn 500 XP",
-    minXP:       500,
-  },
-  {
-    id:          "xp-2000",
-    name:        "2K Grinder",
-    description: "2,000 XP earned. Commitment is your middle name.",
-    color:       "#a78bfa",
-    icon:        "TrendingUp",
-    tier:        "xp" as const,
-    condition:   "Earn 2,000 XP",
-    minXP:       2000,
-  },
-  {
-    id:          "xp-5000",
-    name:        "5K Veteran",
-    description: "5,000 XP and counting. An expedition career worth talking about.",
-    color:       "#fb923c",
-    icon:        "Award",
-    tier:        "xp" as const,
-    condition:   "Earn 5,000 XP",
-    minXP:       5000,
-  },
 ];
 
 // ─── Core function ────────────────────────────────────────────────────────────
