@@ -24,8 +24,8 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
     icon:        "Timer",
   },
   power: {
-    id:          "t-800-core",
-    name:        "T-800 Core",
+    id:          "juggernaut",
+    name:        "Juggernaut",
     description: "Raw power that levels terrain. Carries impossible loads without breaking stride.",
     color:       "#84cc16",
     icon:        "Dumbbell",
