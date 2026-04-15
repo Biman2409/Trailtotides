@@ -251,16 +251,6 @@ export const XP_BADGES = [
     minCompares: 1,
   },
   {
-    id:          "comparison-king",
-    name:        "Comparison King",
-    description: "10 comparisons done. No adventure gets past your scrutiny.",
-    color:       "#a78bfa",
-    icon:        "GitCompare",
-    tier:        "xp" as const,
-    condition:   "Compare 10 adventures",
-    minCompares: 10,
-  },
-  {
     id:          "xp-500",
     name:        "500 Club",
     description: "500 XP earned. You're officially on the board.",
