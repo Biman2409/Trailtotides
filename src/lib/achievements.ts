@@ -19,7 +19,7 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
   stamina: {
     id:          "run-forrest-run",
     name:        "Run, Forrest, Run!",
-    description: "Moves for 8+ hours without stopping. Built for back-to-back days in the mountains.",
+    description: "Moves for 8+ hours without stopping. Built for back-to-back days in the field.",
     color:       "#f97316",
     icon:        "Timer",
   },
@@ -33,14 +33,14 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
   strength: {
     id:          "hero-hercules",
     name:        "Hero Hercules",
-    description: "Powers up sustained steep ascents without losing pace. Legs that never quit.",
+    description: "Powers through sustained physical demands without losing pace. Never quits.",
     color:       "#eab308",
     icon:        "MountainSnow",
   },
   agility: {
     id:          "spidey-sense",
     name:        "Spidey-Sense",
-    description: "At home on glaciers and exposed rock. Moves confidently where others hesitate.",
+    description: "At home in any terrain — rock, reef, or ridge. Moves confidently where others hesitate.",
     color:       "#22d3ee",
     icon:        "Footprints",
   },
@@ -61,7 +61,7 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
   focus: {
     id:          "master-yoda",
     name:        "Master Yoda",
-    description: "Calm and precise on fatal drop-offs. Exposure doesn't break focus.",
+    description: "Calm and precise in high-stakes moments. Exposure — above or below — doesn't break focus.",
     color:       "#f43f5e",
     icon:        "ScanEye",
   },
@@ -80,7 +80,7 @@ export const DOMAIN_BADGES = [
   {
     id:          "terminator-core",
     name:        "Terminator Core",
-    description: "Stamina and Power both maxed. An unstoppable human engine that never shuts down.",
+    description: "Stamina and Power both maxed. An unstoppable force that never shuts down.",
     color:       "#f97316",
     icon:        "Zap",
     tier:        "domain" as const,
@@ -107,7 +107,7 @@ export const DOMAIN_BADGES = [
   {
     id:          "awakened-buddha",
     name:        "Awakened Buddha",
-    description: "Focus and Nerve both maxed. An unbreakable mind forged in the wilderness.",
+    description: "Focus and Nerve both maxed. An unbreakable mind forged in the wild.",
     color:       "#10b981",
     icon:        "Brain",
     tier:        "domain" as const,
@@ -139,7 +139,7 @@ export const SPECIAL_BADGES = [
   {
     id:            "the-mad-titan",
     name:          "The Mad Titan",
-    description:   "Elite across 4 or more axes. A rare all-round expedition-grade profile.",
+    description:   "Elite across 4 or more axes. A rare all-round adventurer with no weak terrain.",
     color:         "#f59e0b",
     icon:          "Wand",
     tier:          "special" as const,
@@ -153,7 +153,7 @@ export const XP_BADGES = [
   {
     id:          "first-blood",
     name:        "First Blood",
-    description: "Logged your very first completed adventure. The journey begins.",
+    description: "Logged your very first completed adventure. Every legend starts somewhere.",
     color:       "#10b981",
     icon:        "CheckCircle2",
     tier:        "xp" as const,
@@ -163,7 +163,7 @@ export const XP_BADGES = [
   {
     id:          "trail-blazer",
     name:        "Trail Blazer",
-    description: "10 adventures in the log. You're building a real expedition record.",
+    description: "10 adventures in the log. You're building a real record.",
     color:       "#f97316",
     icon:        "Map",
     tier:        "xp" as const,
@@ -173,7 +173,7 @@ export const XP_BADGES = [
   {
     id:          "seasoned-explorer",
     name:        "Seasoned Explorer",
-    description: "30 adventures done. A true expedition career.",
+    description: "30 adventures done. A true career in the wild.",
     color:       "#fbbf24",
     icon:        "Compass",
     tier:        "xp" as const,
@@ -183,7 +183,7 @@ export const XP_BADGES = [
   {
     id:          "critic",
     name:        "The Critic",
-    description: "Left your first review. Your voice shapes the expedition community.",
+    description: "Left your first review. Your voice shapes the adventure community.",
     color:       "#f59e0b",
     icon:        "Star",
     tier:        "xp" as const,
@@ -213,7 +213,7 @@ export const XP_BADGES = [
   {
     id:          "shutter-chaser",
     name:        "Shutter Chaser",
-    description: "Uploaded your first adventure photo. Every summit deserves proof.",
+    description: "Uploaded your first adventure photo. Every adventure deserves proof.",
     color:       "#3b82f6",
     icon:        "Camera",
     tier:        "xp" as const,
@@ -223,7 +223,7 @@ export const XP_BADGES = [
   {
     id:          "lens-legend",
     name:        "Lens Legend",
-    description: "20 adventure photos uploaded. Your feed is the envy of the trail.",
+    description: "20 adventure photos uploaded. Your feed is the envy of the community.",
     color:       "#3b82f6",
     icon:        "Camera",
     tier:        "xp" as const,
