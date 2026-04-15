@@ -323,13 +323,13 @@ export default function TrophyCabinet() {
       {/* Row 1 — Tier 1 + Tier 2 */}
       <div className="flex flex-col sm:flex-row sm:items-stretch border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
         <div className="px-4 py-4 sm:shrink-0 border-b sm:border-b-0 sm:border-r" style={{ background: "linear-gradient(160deg,rgba(251,191,36,0.06) 0%,transparent 70%)", borderColor: "rgba(255,255,255,0.05)" }}>
-          <TierLabel label="The absolute pinnacle" color="#fbbf24" earned={t1Earned} total={TIER1_ALL.length} />
+          <TierLabel label="Apex · Rarest of the Rare" color="#fbbf24" earned={t1Earned} total={TIER1_ALL.length} />
           <div className="flex flex-wrap gap-3 items-start">
             {TIER1_ALL.map(b => cell(b, 52, true))}
           </div>
         </div>
         <div className="flex-1 px-4 py-4">
-          <TierLabel label="The domain master" color="#f97316" earned={t2Earned} total={TIER2_ALL.length} />
+          <TierLabel label="Domain · Dual-Axis Mastery" color="#f97316" earned={t2Earned} total={TIER2_ALL.length} />
           <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(44px, 1fr))" }}>
             {TIER2_ALL.map(b => cell(b, 38))}
           </div>
@@ -338,7 +338,7 @@ export default function TrophyCabinet() {
 
       {/* Row 2 — Tier 3 */}
       <div className="px-4 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-        <TierLabel label="The axis elite" color="#60a5fa" earned={t3Earned} total={TIER3_ALL.length} />
+        <TierLabel label="Axis Elite · Maxed Single Stats" color="#60a5fa" earned={t3Earned} total={TIER3_ALL.length} />
         <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(36px, 1fr))" }}>
           {TIER3_ALL.map(b => cell(b, 32))}
         </div>
@@ -346,7 +346,7 @@ export default function TrophyCabinet() {
 
       {/* Row 3 — XP & Engagement trophies */}
       <div className="px-4 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.05)", background: "linear-gradient(160deg,rgba(16,185,129,0.04) 0%,transparent 60%)" }}>
-        <TierLabel label="Explorer milestones" color="#10b981" earned={txpEarned} total={TIERXP_ALL.length} />
+        <TierLabel label="Milestones · XP & Engagement" color="#10b981" earned={txpEarned} total={TIERXP_ALL.length} />
         <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(40px, 1fr))" }}>
           {TIERXP_ALL.map(b => cell(b, 36))}
         </div>
@@ -354,7 +354,7 @@ export default function TrophyCabinet() {
 
       {/* Row 4 — Adventure type trophies */}
       <div className="px-4 py-4 rounded-b-2xl" style={{ background: "linear-gradient(160deg,rgba(251,191,36,0.03) 0%,transparent 60%)" }}>
-        <TierLabel label="Adventure type mastery" color="#fbbf24" earned={ttypeEarned} total={TIERTYPE_ALL.length} />
+        <TierLabel label="Type Mastery · Discipline Trophies" color="#fbbf24" earned={ttypeEarned} total={TIERTYPE_ALL.length} />
         <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(40px, 1fr))" }}>
           {TIERTYPE_ALL.map(b => cell(b, 36))}
         </div>
