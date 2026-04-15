@@ -223,12 +223,12 @@ export const XP_BADGES = [
   {
     id:          "lens-legend",
     name:        "Lens Legend",
-    description: "10 adventure photos uploaded. Your feed is the envy of the trail.",
+    description: "20 adventure photos uploaded. Your feed is the envy of the trail.",
     color:       "#3b82f6",
     icon:        "Camera",
     tier:        "xp" as const,
-    condition:   "Upload 10 photos",
-    minPhotos:   10,
+    condition:   "Upload 20 photos",
+    minPhotos:   20,
   },
   {
     id:          "the-analyst",
