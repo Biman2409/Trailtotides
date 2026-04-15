@@ -173,12 +173,12 @@ export const XP_BADGES = [
   {
     id:          "seasoned-explorer",
     name:        "Seasoned Explorer",
-    description: "25 adventures done. A true expedition career.",
+    description: "30 adventures done. A true expedition career.",
     color:       "#fbbf24",
     icon:        "Compass",
     tier:        "xp" as const,
-    condition:   "Complete 25 adventures",
-    minCompleted: 25,
+    condition:   "Complete 30 adventures",
+    minCompleted: 30,
   },
   {
     id:          "critic",
