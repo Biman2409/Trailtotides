@@ -20,6 +20,7 @@ interface Photo {
 interface Props {
   slug: string;
   currentUserId?: string;
+  isCompleted?: boolean;
 }
 
 function timeAgo(dateStr: string): string {
@@ -36,7 +37,7 @@ function timeAgo(dateStr: string): string {
   return `${Math.floor(months / 12)}y ago`;
 }
 
-export default function PhotoGallery({ slug, currentUserId }: Props) {
+export default function PhotoGallery({ slug, currentUserId, isCompleted }: Props) {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -110,8 +111,13 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
   return (
     <section>
 
-      {/* Upload area — logged in only */}
+      {/* Upload area — logged in + completed only */}
       {currentUserId ? (
+        !isCompleted ? (
+          <div className="rounded-lg px-3 py-2.5 mb-4 flex items-center gap-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+            <span className="text-white/30 text-xs">Log this adventure to upload photos.</span>
+          </div>
+        ) : (
         <div className="mb-4">
           {!preview ? (
             <div
@@ -180,6 +186,7 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
             </div>
           )}
         </div>
+        )
       ) : null}
 
       {/* Gallery grid */}

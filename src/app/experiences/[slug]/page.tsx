@@ -33,6 +33,7 @@ import SavedAdventuresSection from "@/components/ui/custom/SavedAdventuresSectio
 import HeroActions from "./HeroActions";
 import ReviewSection from "@/components/ui/custom/ReviewSection";
 import { createClient } from "@/lib/supabase/server";
+import { loadTripLog } from "@/app/triplog/actions";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import type { Adventure } from "@/lib/data";
 import { getApprovedOperatorsForAdventure } from "@/app/auth/operator-actions";
@@ -172,6 +173,9 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   const currentUserId = user?.id;
+
+  const tripLog = currentUserId ? await loadTripLog() : [];
+  const isCompleted = tripLog.some(e => e.slug === adventure.slug);
 
   const relatedByState = adventures
     .filter((a) => a.id !== adventure.id && a.state === adventure.state)
@@ -534,7 +538,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
                 {/* Reviews card */}
                 <div className="rounded-xl overflow-hidden" style={{ background: "rgba(251,191,36,0.03)", border: "1px solid rgba(251,191,36,0.12)" }}>
-                  <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} />
+                  <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} isCompleted={isCompleted} />
                 </div>
 
                 {/* Photos card */}
@@ -544,7 +548,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     <h3 className="text-sky-400 text-[10px] font-bold tracking-[0.18em] uppercase">Photos</h3>
                   </div>
                   <div className="p-4">
-                    <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} />
+                    <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} isCompleted={isCompleted} />
                   </div>
                 </div>
               </div>

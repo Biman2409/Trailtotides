@@ -20,6 +20,7 @@ interface Props {
   currentUserId?: string;
   adventureType?: string;
   adventureName?: string;
+  isCompleted?: boolean;
 }
 
 const SUMMIT_KEYWORDS = /summit|peak/i;
@@ -76,7 +77,7 @@ function timeAgo(dateStr: string): string {
   return `${Math.floor(months / 12)}y ago`;
 }
 
-export default function ReviewSection({ slug, currentUserId, adventureType, adventureName }: Props) {
+export default function ReviewSection({ slug, currentUserId, adventureType, adventureName, isCompleted }: Props) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -167,7 +168,11 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
 
       {/* Write / CTA */}
       {currentUserId ? (
-        !hasReviewed ? (
+        !isCompleted ? (
+          <div className="rounded-lg px-3 py-2.5 mb-4 flex items-center gap-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+            <span className="text-white/30 text-xs">Log this adventure to leave a review.</span>
+          </div>
+        ) : !hasReviewed ? (
           <form onSubmit={handleSubmit} className="rounded-xl p-3 mb-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
             <p className="text-white/50 text-xs font-medium mb-3">{ctaText(adventureType, adventureName)}</p>
             <div className="flex items-center gap-3 mb-3">
