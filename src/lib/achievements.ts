@@ -201,6 +201,16 @@ export const XP_BADGES = [
     minWishlisted: 10,
   },
   {
+    id:          "shutter-chaser",
+    name:        "Shutter Chaser",
+    description: "Uploaded your first adventure photo. Every summit deserves proof.",
+    color:       "#3b82f6",
+    icon:        "Camera",
+    tier:        "xp" as const,
+    condition:   "Upload 1 photo",
+    minPhotos:   1,
+  },
+  {
     id:          "xp-500",
     name:        "500 Club",
     description: "500 XP earned. You're officially on the board.",
@@ -276,6 +286,7 @@ export interface EngagementStats {
   completed?: number;
   reviews?: number;
   wishlisted?: number;
+  photos?: number;
   /** Count of completed adventures per type, e.g. { Trekking: 3, Biking: 1 } */
   byType?: Partial<Record<string, number>>;
   /** Number of distinct adventure types completed */
@@ -318,6 +329,7 @@ export function getAchievements(ace: ACE, totalXP = 0, engagement: EngagementSta
     if ("minCompleted" in badge && badge.minCompleted  != null && (engagement.completed ?? 0) >= badge.minCompleted) qualifies = true;
     if ("minReviews"   in badge && badge.minReviews    != null && (engagement.reviews   ?? 0) >= badge.minReviews)   qualifies = true;
     if ("minWishlisted"in badge && badge.minWishlisted != null && (engagement.wishlisted ?? 0) >= badge.minWishlisted) qualifies = true;
+    if ("minPhotos"    in badge && badge.minPhotos     != null && (engagement.photos     ?? 0) >= badge.minPhotos)     qualifies = true;
     if (qualifies) earned.push({ ...badge });
   }
 

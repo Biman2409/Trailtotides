@@ -8,7 +8,7 @@ import {
   Footprints, Waves, ScanEye,
   Timer, Dumbbell, MountainSnow, Wind, Shield,
   Zap, Pickaxe, Wand,
-  CheckCircle2, Star, Heart, Map, Compass, TrendingUp, Award,
+  CheckCircle2, Star, Heart, Map, Compass, TrendingUp, Award, Camera,
 } from "@/lib/localIcons";
 import {
   getAchievements, AXIS_BADGES, DOMAIN_BADGES, SPECIAL_BADGES, XP_BADGES, TYPE_BADGES,
@@ -51,6 +51,7 @@ const ICON = (name: string, size: number): React.ReactNode => {
     Compass:        <Compass        style={s} />,
     TrendingUp:     <TrendingUp     style={s} />,
     Award:          <Award          style={s} />,
+    Camera:         <Camera         style={s} />,
   };
   return map[name] ?? <Trophy style={s} />;
 };
@@ -265,7 +266,7 @@ export default function TrophyCabinet() {
           if (adv?.type) byType[adv.type] = (byType[adv.type] ?? 0) + 1;
         }
         const distinctTypes = Object.keys(byType).length;
-        setEngagement({ completed: uniq("trip_log"), reviews: uniq("review"), wishlisted: uniq("wishlist"), byType, distinctTypes });
+        setEngagement({ completed: uniq("trip_log"), reviews: uniq("review"), wishlisted: uniq("wishlist"), photos: uniq("photo"), byType, distinctTypes });
       }
     }).catch(() => {});
     return () => { cancelled = true; };
