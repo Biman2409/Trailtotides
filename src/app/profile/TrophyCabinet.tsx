@@ -15,6 +15,7 @@ import {
 } from "@/lib/achievements";
 import type { Achievement } from "@/lib/achievements";
 import { loadProfile } from "@/lib/matchmaker";
+import { adventures as advData } from "@/lib/data";
 
 const ICON = (name: string, size: number): React.ReactNode => {
   const s = { width: size, height: size } as React.CSSProperties;
@@ -258,8 +259,6 @@ export default function TrophyCabinet() {
         const events: { action: string; adventure_slug?: string }[] = data.events ?? [];
         const uniq = (action: string) => new Set(events.filter(e => e.action === action).map(e => e.adventure_slug)).size;
         const completedSlugs = [...new Set(events.filter(e => e.action === "trip_log").map(e => e.adventure_slug).filter(Boolean))] as string[];
-        // Build byType from adventures data
-        const { adventures: advData } = await import("@/lib/data");
         const byType: Record<string, number> = {};
         for (const slug of completedSlugs) {
           const adv = advData.find(a => a.slug === slug);
