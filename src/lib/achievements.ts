@@ -220,16 +220,6 @@ export const XP_BADGES = [
     condition:   "Upload 1 photo",
     minPhotos:   1,
   },
-  {
-    id:          "the-analyst",
-    name:        "Sherlock Scan",
-    description: "10 comparisons made. You don't just pick adventures — you deduce them.",
-    color:       "#a78bfa",
-    icon:        "GitCompare",
-    tier:        "tier3" as const,
-    condition:   "Compare 10 adventures",
-    minCompares: 10,
-  },
 ];
 
 // ─── Core function ────────────────────────────────────────────────────────────
