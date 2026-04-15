@@ -11,7 +11,7 @@ import {
   CheckCircle2, Star, Heart, Map, Compass, TrendingUp, Award,
 } from "@/lib/localIcons";
 import {
-  getAchievements, AXIS_BADGES, DOMAIN_BADGES, SPECIAL_BADGES, XP_BADGES,
+  getAchievements, AXIS_BADGES, DOMAIN_BADGES, SPECIAL_BADGES, XP_BADGES, TYPE_BADGES,
 } from "@/lib/achievements";
 import type { Achievement } from "@/lib/achievements";
 import { loadProfile } from "@/lib/matchmaker";
@@ -57,7 +57,8 @@ const ICON = (name: string, size: number): React.ReactNode => {
 const TIER1_ALL: Achievement[] = SPECIAL_BADGES.map(b => ({ ...b }));
 const TIER2_ALL: Achievement[] = DOMAIN_BADGES.map(b => ({ ...b }));
 const TIER3_ALL: Achievement[] = Object.values(AXIS_BADGES).map(b => ({ ...b, tier: "axis" as const }));
-const TIERXP_ALL: Achievement[] = XP_BADGES.map(b => ({ ...b }));
+const TIERXP_ALL: Achievement[]   = XP_BADGES.map(b => ({ ...b }));
+const TIERTYPE_ALL: Achievement[] = TYPE_BADGES.map(b => ({ ...b }));
 
 // ─── Popover ──────────────────────────────────────────────────────────────────
 function Popover({ badge, anchorRect, onClose, locked }: {
@@ -254,9 +255,18 @@ export default function TrophyCabinet() {
       if (!cancelled && data?.xp != null) {
         setTotalXP(data.xp);
         // Count engagement from events
-        const events: { action: string }[] = data.events ?? [];
-        const uniq = (action: string) => new Set(events.filter((e) => e.action === action).map((e: { action: string; adventure_slug?: string }) => (e as { action: string; adventure_slug?: string }).adventure_slug)).size;
-        setEngagement({ completed: uniq("trip_log"), reviews: uniq("review"), wishlisted: uniq("wishlist") });
+        const events: { action: string; adventure_slug?: string }[] = data.events ?? [];
+        const uniq = (action: string) => new Set(events.filter(e => e.action === action).map(e => e.adventure_slug)).size;
+        const completedSlugs = [...new Set(events.filter(e => e.action === "trip_log").map(e => e.adventure_slug).filter(Boolean))] as string[];
+        // Build byType from adventures data
+        const { adventures: advData } = await import("@/lib/data");
+        const byType: Record<string, number> = {};
+        for (const slug of completedSlugs) {
+          const adv = advData.find(a => a.slug === slug);
+          if (adv?.type) byType[adv.type] = (byType[adv.type] ?? 0) + 1;
+        }
+        const distinctTypes = Object.keys(byType).length;
+        setEngagement({ completed: uniq("trip_log"), reviews: uniq("review"), wishlisted: uniq("wishlist"), byType, distinctTypes });
       }
     }).catch(() => {});
     return () => { cancelled = true; };
@@ -284,11 +294,12 @@ export default function TrophyCabinet() {
   const achievements = getAchievements(stored.ace, totalXP, engagement);
   const earnedIds = new Set(achievements.map(a => a.id));
   const totalEarned = earnedIds.size;
-  const totalPossible = TIER1_ALL.length + TIER2_ALL.length + TIER3_ALL.length + TIERXP_ALL.length;
-  const t1Earned   = TIER1_ALL.filter(b => earnedIds.has(b.id)).length;
-  const t2Earned   = TIER2_ALL.filter(b => earnedIds.has(b.id)).length;
-  const t3Earned   = TIER3_ALL.filter(b => earnedIds.has(b.id)).length;
-  const txpEarned  = TIERXP_ALL.filter(b => earnedIds.has(b.id)).length;
+  const totalPossible  = TIER1_ALL.length + TIER2_ALL.length + TIER3_ALL.length + TIERXP_ALL.length + TIERTYPE_ALL.length;
+  const t1Earned    = TIER1_ALL.filter(b => earnedIds.has(b.id)).length;
+  const t2Earned    = TIER2_ALL.filter(b => earnedIds.has(b.id)).length;
+  const t3Earned    = TIER3_ALL.filter(b => earnedIds.has(b.id)).length;
+  const txpEarned   = TIERXP_ALL.filter(b => earnedIds.has(b.id)).length;
+  const ttypeEarned = TIERTYPE_ALL.filter(b => earnedIds.has(b.id)).length;
 
   const cell = (b: Achievement, size: number, xl = false) => (
     <TrophyCell key={b.id} badge={b} earned={earnedIds.has(b.id)} boxSize={size} xl={xl} isActive={active?.id === b.id} onToggle={handleToggle} />
@@ -334,10 +345,18 @@ export default function TrophyCabinet() {
       </div>
 
       {/* Row 3 — XP & Engagement trophies */}
-      <div className="px-4 py-4 rounded-b-2xl" style={{ background: "linear-gradient(160deg,rgba(16,185,129,0.04) 0%,transparent 60%)" }}>
+      <div className="px-4 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.05)", background: "linear-gradient(160deg,rgba(16,185,129,0.04) 0%,transparent 60%)" }}>
         <TierLabel label="Explorer milestones" color="#10b981" earned={txpEarned} total={TIERXP_ALL.length} />
         <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(40px, 1fr))" }}>
           {TIERXP_ALL.map(b => cell(b, 36))}
+        </div>
+      </div>
+
+      {/* Row 4 — Adventure type trophies */}
+      <div className="px-4 py-4 rounded-b-2xl" style={{ background: "linear-gradient(160deg,rgba(251,191,36,0.03) 0%,transparent 60%)" }}>
+        <TierLabel label="Adventure type mastery" color="#fbbf24" earned={ttypeEarned} total={TIERTYPE_ALL.length} />
+        <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(40px, 1fr))" }}>
+          {TIERTYPE_ALL.map(b => cell(b, 36))}
         </div>
       </div>
 

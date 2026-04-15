@@ -8,7 +8,7 @@ export interface Achievement {
   /** Lucide icon name (string) — mapped in the component */
   icon: string;
   /** "axis" = single-axis elite | "domain" = 2-axis domain | "special" = multi/full | "xp" = engagement */
-  tier: "axis" | "domain" | "special" | "xp";
+  tier: "axis" | "domain" | "special" | "xp" | "type";
   /** Human-readable unlock condition shown on locked trophies */
   condition?: string;
 }
@@ -232,12 +232,54 @@ export const XP_BADGES = [
   },
 ];
 
+// ─── Adventure-type trophies ──────────────────────────────────────────────────
+
+export const TYPE_BADGES = [
+  // ── Trekking ──
+  { id: "boot-initiate",    name: "Boot Initiate",    description: "First trek logged. One trail down, thousands to go.",                          color: "#10b981", icon: "Footprints", tier: "type" as const, adventureType: "Trekking",      minCount: 1,  condition: "Complete 1 trek" },
+  { id: "ridge-walker",     name: "Ridge Walker",     description: "5 treks in the bag. You know the rhythm of the mountains.",                    color: "#10b981", icon: "MountainSnow", tier: "type" as const, adventureType: "Trekking",    minCount: 5,  condition: "Complete 5 treks" },
+  { id: "mountain-monk",    name: "Mountain Monk",    description: "10 treks completed. The trail is home.",                                        color: "#10b981", icon: "Compass",    tier: "type" as const, adventureType: "Trekking",      minCount: 10, condition: "Complete 10 treks" },
+
+  // ── Mountaineering ──
+  { id: "summit-seeker",    name: "Summit Seeker",    description: "First peak bagged. The summit hunger is real.",                                 color: "#a78bfa", icon: "MountainSnow", tier: "type" as const, adventureType: "Mountaineering", minCount: 1, condition: "Complete 1 mountaineering" },
+  { id: "peak-bagger",      name: "Peak Bagger",      description: "3 summits. Altitude is your natural habitat.",                                  color: "#a78bfa", icon: "Wind",       tier: "type" as const, adventureType: "Mountaineering", minCount: 3,  condition: "Complete 3 mountaineering" },
+
+  // ── Biking ──
+  { id: "gravel-rookie",    name: "Gravel Rookie",    description: "First MTB adventure in the log. The dirt calls you back.",                     color: "#f97316", icon: "Zap",        tier: "type" as const, adventureType: "Biking",         minCount: 1,  condition: "Complete 1 biking" },
+  { id: "trail-shredder",   name: "Trail Shredder",   description: "3 biking adventures done. Two wheels, no limits.",                             color: "#f97316", icon: "Timer",      tier: "type" as const, adventureType: "Biking",         minCount: 3,  condition: "Complete 3 biking" },
+
+  // ── Rock Climbing ──
+  { id: "crag-rat",         name: "Crag Rat",         description: "First route sent. The rock face is where you feel alive.",                     color: "#fb923c", icon: "Dumbbell",   tier: "type" as const, adventureType: "Rock Climbing",  minCount: 1,  condition: "Complete 1 rock climbing" },
+  { id: "vertical-addict",  name: "Vertical Addict",  description: "3 rock climbs logged. Gravity is just a suggestion.",                         color: "#fb923c", icon: "Shield",     tier: "type" as const, adventureType: "Rock Climbing",  minCount: 3,  condition: "Complete 3 rock climbing" },
+
+  // ── Kayaking / Water ──
+  { id: "paddle-starter",   name: "Paddle Starter",   description: "First paddle adventure completed. You're at home on the water.",               color: "#22d3ee", icon: "Waves",      tier: "type" as const, adventureType: "Kayaking",       minCount: 1,  condition: "Complete 1 kayaking" },
+  { id: "river-runner",     name: "River Runner",     description: "3 kayaking trips done. The current is just the beginning.",                    color: "#22d3ee", icon: "Waves",      tier: "type" as const, adventureType: "Kayaking",       minCount: 3,  condition: "Complete 3 kayaking" },
+
+  // ── Diving ──
+  { id: "first-dive",       name: "First Dive",       description: "First dive logged. The underwater world is yours to explore.",                 color: "#3b82f6", icon: "Waves",      tier: "type" as const, adventureType: "Diving",         minCount: 1,  condition: "Complete 1 diving" },
+
+  // ── Skiing ──
+  { id: "fresh-tracks",     name: "Fresh Tracks",     description: "First ski adventure on the board. The powder doesn't stand a chance.",        color: "#e0f2fe", icon: "Wind",       tier: "type" as const, adventureType: "Skiing",         minCount: 1,  condition: "Complete 1 skiing" },
+
+  // ── Paragliding ──
+  { id: "first-flight",     name: "First Flight",     description: "First paragliding adventure. You've tasted the sky.",                         color: "#fbbf24", icon: "Wind",       tier: "type" as const, adventureType: "Paragliding",    minCount: 1,  condition: "Complete 1 paragliding" },
+
+  // ── Cross-type ──
+  { id: "type-explorer",    name: "Type Explorer",    description: "3 different adventure types completed. Refusing to be put in a box.",         color: "#f43f5e", icon: "Compass",    tier: "type" as const, adventureType: null,             minTypes: 3,  condition: "Complete 3 different adventure types" },
+  { id: "all-terrain",      name: "All Terrain",      description: "5 different adventure types. Land, water, sky — you've done it all.",        color: "#fbbf24", icon: "Globe",      tier: "type" as const, adventureType: null,             minTypes: 5,  condition: "Complete 5 different adventure types" },
+];
+
 // ─── Core function ────────────────────────────────────────────────────────────
 
 export interface EngagementStats {
   completed?: number;
   reviews?: number;
   wishlisted?: number;
+  /** Count of completed adventures per type, e.g. { Trekking: 3, Biking: 1 } */
+  byType?: Partial<Record<string, number>>;
+  /** Number of distinct adventure types completed */
+  distinctTypes?: number;
 }
 
 export function getAchievements(ace: ACE, totalXP = 0, engagement: EngagementStats = {}): Achievement[] {
@@ -276,6 +318,19 @@ export function getAchievements(ace: ACE, totalXP = 0, engagement: EngagementSta
     if ("minCompleted" in badge && badge.minCompleted  != null && (engagement.completed ?? 0) >= badge.minCompleted) qualifies = true;
     if ("minReviews"   in badge && badge.minReviews    != null && (engagement.reviews   ?? 0) >= badge.minReviews)   qualifies = true;
     if ("minWishlisted"in badge && badge.minWishlisted != null && (engagement.wishlisted ?? 0) >= badge.minWishlisted) qualifies = true;
+    if (qualifies) earned.push({ ...badge });
+  }
+
+  // Adventure-type trophies
+  for (const badge of TYPE_BADGES) {
+    let qualifies = false;
+    if (badge.adventureType && "minCount" in badge && badge.minCount != null) {
+      const count = engagement.byType?.[badge.adventureType] ?? 0;
+      if (count >= badge.minCount) qualifies = true;
+    }
+    if (!badge.adventureType && "minTypes" in badge && badge.minTypes != null) {
+      if ((engagement.distinctTypes ?? 0) >= badge.minTypes) qualifies = true;
+    }
     if (qualifies) earned.push({ ...badge });
   }
 
