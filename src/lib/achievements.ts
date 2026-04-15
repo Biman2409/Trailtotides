@@ -191,6 +191,16 @@ export const XP_BADGES = [
     minReviews:  1,
   },
   {
+    id:          "gordon-ramsayd",
+    name:        "Gordon Ramsay'd",
+    description: "10 reviews written. The community reads your every word.",
+    color:       "#f97316",
+    icon:        "Star",
+    tier:        "xp" as const,
+    condition:   "Write 10 reviews",
+    minReviews:  10,
+  },
+  {
     id:          "dream-collector",
     name:        "Dream Collector",
     description: "10 adventures wishlisted. The bucket list is getting serious.",
