@@ -133,16 +133,6 @@ export const DOMAIN_BADGES = [
     condition:   "Upload 20 photos",
     minPhotos:   20,
   },
-  {
-    id:          "the-analyst",
-    name:        "Sherlock Scan",
-    description: "10 comparisons made. You don't just pick adventures — you deduce them.",
-    color:       "#a78bfa",
-    icon:        "GitCompare",
-    tier:        "domain" as const,
-    condition:   "Compare 10 adventures",
-    minCompares: 10,
-  },
 ];
 
 // ─── Tier 1 — Apex / Special badges ──────────────────────────────────────────
@@ -229,6 +219,26 @@ export const XP_BADGES = [
     tier:        "xp" as const,
     condition:   "Upload 1 photo",
     minPhotos:   1,
+  },
+  {
+    id:          "elementary",
+    name:        "Elementary",
+    description: "First comparison made. The game is afoot.",
+    color:       "#a78bfa",
+    icon:        "GitCompare",
+    tier:        "xp" as const,
+    condition:   "Compare 1 adventure",
+    minCompares: 1,
+  },
+  {
+    id:          "the-analyst",
+    name:        "Sherlock Scan",
+    description: "10 comparisons made. You don't just pick adventures — you deduce them.",
+    color:       "#a78bfa",
+    icon:        "GitCompare",
+    tier:        "xp" as const,
+    condition:   "Compare 10 adventures",
+    minCompares: 10,
   },
 ];
 
