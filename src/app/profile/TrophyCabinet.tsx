@@ -301,6 +301,7 @@ export default function TrophyCabinet() {
       <style>{`
         @keyframes trophy-shine { 0%{background-position:200% center} 60%{background-position:-200% center} 100%{background-position:-200% center} }
         @keyframes popover-in { from{opacity:0;transform:translateY(calc(-100% + 6px))} to{opacity:1;transform:translateY(-100%)} }
+        @keyframes tier-complete-pulse { 0%,100%{opacity:0.7} 50%{opacity:1} }
       `}</style>
 
       {/* Header */}
@@ -313,14 +314,34 @@ export default function TrophyCabinet() {
 
       {/* Row 1 — Tier 1 + Tier 2 */}
       <div className="flex flex-col sm:flex-row sm:items-stretch border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-        <div className="px-4 py-4 sm:shrink-0 border-b sm:border-b-0 sm:border-r" style={{ background: "linear-gradient(160deg,rgba(251,191,36,0.06) 0%,transparent 70%)", borderColor: "rgba(255,255,255,0.05)" }}>
-          <TierLabel label="Apex · Rarest of the Rare" color="#fbbf24" earned={t1Earned} total={TIER1_ALL.length} />
+        {/* Tier 1 */}
+        <div className="px-4 py-4 sm:shrink-0 border-b sm:border-b-0 sm:border-r relative overflow-hidden"
+          style={{
+            background: t1Earned === TIER1_ALL.length
+              ? `linear-gradient(160deg,rgba(251,191,36,0.13) 0%,transparent 70%)`
+              : `linear-gradient(160deg,rgba(251,191,36,0.06) 0%,transparent 70%)`,
+            borderColor: "rgba(255,255,255,0.05)",
+            boxShadow: t1Earned === TIER1_ALL.length ? `inset 0 0 0 1.5px rgba(251,191,36,0.35), inset 0 0 24px rgba(251,191,36,0.08)` : "none",
+            borderRadius: "0",
+          }}>
+          {t1Earned === TIER1_ALL.length && (
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(110deg,transparent 30%,rgba(251,191,36,0.06) 50%,transparent 70%)", backgroundSize: "200% 100%", animation: "trophy-shine 4s ease-in-out infinite" }} />
+          )}
+          <TierLabel label="The Absolute Pinnacle" color="#fbbf24" earned={t1Earned} total={TIER1_ALL.length} />
           <div className="flex flex-wrap gap-3 items-start">
             {TIER1_ALL.map(b => cell(b, 52, true))}
           </div>
         </div>
-        <div className="flex-1 px-4 py-4">
-          <TierLabel label="Domain · Dual-Axis Mastery" color="#f97316" earned={t2Earned} total={TIER2_ALL.length} />
+        {/* Tier 2 */}
+        <div className="flex-1 px-4 py-4 relative overflow-hidden"
+          style={{
+            boxShadow: t2Earned === TIER2_ALL.length ? `inset 0 0 0 1.5px rgba(249,115,22,0.35), inset 0 0 24px rgba(249,115,22,0.07)` : "none",
+            background: t2Earned === TIER2_ALL.length ? "rgba(249,115,22,0.04)" : "transparent",
+          }}>
+          {t2Earned === TIER2_ALL.length && (
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(110deg,transparent 30%,rgba(249,115,22,0.06) 50%,transparent 70%)", backgroundSize: "200% 100%", animation: "trophy-shine 4s ease-in-out infinite" }} />
+          )}
+          <TierLabel label="The Domain Masters" color="#f97316" earned={t2Earned} total={TIER2_ALL.length} />
           <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(44px, 1fr))" }}>
             {TIER2_ALL.map(b => cell(b, 38))}
           </div>
@@ -328,16 +349,31 @@ export default function TrophyCabinet() {
       </div>
 
       {/* Row 2 — Tier 3 */}
-      <div className="px-4 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-        <TierLabel label="Axis Elite · Maxed Single Stats" color="#60a5fa" earned={t3Earned} total={TIER3_ALL.length} />
+      <div className="px-4 py-4 border-b relative overflow-hidden"
+        style={{
+          borderColor: "rgba(255,255,255,0.05)",
+          boxShadow: t3Earned === TIER3_ALL.length ? `inset 0 0 0 1.5px rgba(96,165,250,0.35), inset 0 0 24px rgba(96,165,250,0.07)` : "none",
+          background: t3Earned === TIER3_ALL.length ? "rgba(96,165,250,0.03)" : "transparent",
+        }}>
+        {t3Earned === TIER3_ALL.length && (
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(110deg,transparent 30%,rgba(96,165,250,0.06) 50%,transparent 70%)", backgroundSize: "200% 100%", animation: "trophy-shine 4s ease-in-out infinite" }} />
+        )}
+        <TierLabel label="The Axis Elite" color="#60a5fa" earned={t3Earned} total={TIER3_ALL.length} />
         <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(36px, 1fr))" }}>
           {TIER3_ALL.map(b => cell(b, 32))}
         </div>
       </div>
 
-      {/* Row 3 — XP & Engagement trophies */}
-      <div className="px-4 py-4 rounded-b-2xl" style={{ background: "linear-gradient(160deg,rgba(16,185,129,0.04) 0%,transparent 60%)" }}>
-        <TierLabel label="Milestones · XP & Engagement" color="#10b981" earned={txpEarned} total={TIERXP_ALL.length} />
+      {/* Row 3 — Milestones */}
+      <div className="px-4 py-4 rounded-b-2xl relative overflow-hidden"
+        style={{
+          background: txpEarned === TIERXP_ALL.length ? "rgba(16,185,129,0.05)" : "linear-gradient(160deg,rgba(16,185,129,0.04) 0%,transparent 60%)",
+          boxShadow: txpEarned === TIERXP_ALL.length ? `inset 0 0 0 1.5px rgba(16,185,129,0.35), inset 0 0 24px rgba(16,185,129,0.08)` : "none",
+        }}>
+        {txpEarned === TIERXP_ALL.length && (
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(110deg,transparent 30%,rgba(16,185,129,0.07) 50%,transparent 70%)", backgroundSize: "200% 100%", animation: "trophy-shine 4s ease-in-out infinite" }} />
+        )}
+        <TierLabel label="Explorer Milestones" color="#10b981" earned={txpEarned} total={TIERXP_ALL.length} />
         <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(40px, 1fr))" }}>
           {TIERXP_ALL.map(b => cell(b, 36))}
         </div>
