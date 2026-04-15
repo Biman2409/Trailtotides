@@ -124,8 +124,8 @@ export const DOMAIN_BADGES = [
     minReviews:  10,
   },
   {
-    id:          "lens-legend",
-    name:        "Lens Legend",
+    id:          "nolan-vision",
+    name:        "Nolan Vision",
     description: "20 adventure photos uploaded. Your feed is the envy of the community.",
     color:       "#3b82f6",
     icon:        "Camera",
