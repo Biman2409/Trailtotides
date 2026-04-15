@@ -221,16 +221,6 @@ export const XP_BADGES = [
     minPhotos:   1,
   },
   {
-    id:          "elementary",
-    name:        "Elementary",
-    description: "First comparison made. The game is afoot.",
-    color:       "#a78bfa",
-    icon:        "GitCompare",
-    tier:        "tier3" as const,
-    condition:   "Compare 1 adventure",
-    minCompares: 1,
-  },
-  {
     id:          "the-analyst",
     name:        "Sherlock Scan",
     description: "10 comparisons made. You don't just pick adventures — you deduce them.",
