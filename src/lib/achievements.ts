@@ -222,7 +222,7 @@ export const XP_BADGES = [
   },
   {
     id:          "shutter-chaser",
-    name:        "Shutter Chaser",
+    name:        "Shutter Bug",
     description: "Uploaded your first adventure photo. Every adventure deserves proof.",
     color:       "#3b82f6",
     icon:        "Camera",
