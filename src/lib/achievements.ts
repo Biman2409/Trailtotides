@@ -78,8 +78,8 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
 
 export const DOMAIN_BADGES = [
   {
-    id:          "the-juggernaut",
-    name:        "The Juggernaut",
+    id:          "incredible-hulk",
+    name:        "Incredible Hulk",
     description: "Stamina and Power both maxed. An unstoppable force that never shuts down.",
     color:       "#f97316",
     icon:        "Zap",
