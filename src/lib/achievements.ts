@@ -24,8 +24,8 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
     icon:        "Timer",
   },
   power: {
-    id:          "incredible-hulk",
-    name:        "Incredible Hulk",
+    id:          "t-800-core",
+    name:        "T-800 Core",
     description: "Raw power that levels terrain. Carries impossible loads without breaking stride.",
     color:       "#84cc16",
     icon:        "Dumbbell",
@@ -78,8 +78,8 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
 
 export const DOMAIN_BADGES = [
   {
-    id:          "incredible-hulk-domain",
-    name:        "Incredible Hulk",
+    id:          "the-juggernaut",
+    name:        "The Juggernaut",
     description: "Stamina and Power both maxed. An unstoppable force that never shuts down.",
     color:       "#f97316",
     icon:        "Zap",
