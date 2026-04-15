@@ -124,6 +124,16 @@ export const DOMAIN_BADGES = [
     minReviews:  10,
   },
   {
+    id:          "lens-legend",
+    name:        "Lens Legend",
+    description: "20 adventure photos uploaded. Your feed is the envy of the community.",
+    color:       "#3b82f6",
+    icon:        "Camera",
+    tier:        "domain" as const,
+    condition:   "Upload 20 photos",
+    minPhotos:   20,
+  },
+  {
     id:          "the-analyst",
     name:        "Sherlock Scan",
     description: "10 comparisons made. You don't just pick adventures — you deduce them.",
@@ -240,16 +250,6 @@ export const XP_BADGES = [
     condition:   "Upload 1 photo",
     minPhotos:   1,
   },
-  {
-    id:          "lens-legend",
-    name:        "Lens Legend",
-    description: "20 adventure photos uploaded. Your feed is the envy of the community.",
-    color:       "#3b82f6",
-    icon:        "Camera",
-    tier:        "xp" as const,
-    condition:   "Upload 20 photos",
-    minPhotos:   20,
-  },
 ];
 
 // ─── Core function ────────────────────────────────────────────────────────────
@@ -285,6 +285,7 @@ export function getAchievements(ace: ACE, totalXP = 0, engagement: EngagementSta
       let qualifies = false;
       if ("minReviews"  in badge && badge.minReviews  != null && (engagement.reviews  ?? 0) >= badge.minReviews)  qualifies = true;
       if ("minCompares" in badge && badge.minCompares != null && (engagement.compares ?? 0) >= badge.minCompares) qualifies = true;
+      if ("minPhotos"   in badge && badge.minPhotos   != null && (engagement.photos   ?? 0) >= badge.minPhotos)   qualifies = true;
       if (qualifies) earned.push({ ...badge });
     }
   }
