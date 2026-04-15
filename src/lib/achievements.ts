@@ -78,8 +78,8 @@ export const AXIS_BADGES: Record<keyof ACE, Omit<Achievement, "tier">> = {
 
 export const DOMAIN_BADGES = [
   {
-    id:          "terminator-core",
-    name:        "Terminator Core",
+    id:          "t-800-core",
+    name:        "T-800 Core",
     description: "Stamina and Power both maxed. An unstoppable force that never shuts down.",
     color:       "#f97316",
     icon:        "Zap",
