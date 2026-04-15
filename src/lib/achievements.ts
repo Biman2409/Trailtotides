@@ -201,6 +201,26 @@ export const XP_BADGES = [
     minWishlisted: 10,
   },
   {
+    id:          "pen-and-trail",
+    name:        "Pen & Trail",
+    description: "5 reviews written. The community reads your words.",
+    color:       "#f59e0b",
+    icon:        "Star",
+    tier:        "xp" as const,
+    condition:   "Write 5 reviews",
+    minReviews:  5,
+  },
+  {
+    id:          "wishlist-1",
+    name:        "Window Shopper",
+    description: "First adventure wishlisted. The dreaming has begun.",
+    color:       "#f43f5e",
+    icon:        "Heart",
+    tier:        "xp" as const,
+    condition:   "Wishlist 1 adventure",
+    minWishlisted: 1,
+  },
+  {
     id:          "shutter-chaser",
     name:        "Shutter Chaser",
     description: "Uploaded your first adventure photo. Every summit deserves proof.",
@@ -209,6 +229,36 @@ export const XP_BADGES = [
     tier:        "xp" as const,
     condition:   "Upload 1 photo",
     minPhotos:   1,
+  },
+  {
+    id:          "lens-legend",
+    name:        "Lens Legend",
+    description: "5 adventure photos uploaded. Your feed is the envy of the trail.",
+    color:       "#3b82f6",
+    icon:        "Camera",
+    tier:        "xp" as const,
+    condition:   "Upload 5 photos",
+    minPhotos:   5,
+  },
+  {
+    id:          "the-analyst",
+    name:        "The Analyst",
+    description: "First comparison made. You don't just pick adventures — you study them.",
+    color:       "#a78bfa",
+    icon:        "GitCompare",
+    tier:        "xp" as const,
+    condition:   "Compare 1 adventure",
+    minCompares: 1,
+  },
+  {
+    id:          "comparison-king",
+    name:        "Comparison King",
+    description: "5 comparisons done. No adventure gets past your scrutiny.",
+    color:       "#a78bfa",
+    icon:        "GitCompare",
+    tier:        "xp" as const,
+    condition:   "Compare 5 adventures",
+    minCompares: 5,
   },
   {
     id:          "xp-500",
@@ -287,6 +337,7 @@ export interface EngagementStats {
   reviews?: number;
   wishlisted?: number;
   photos?: number;
+  compares?: number;
   /** Count of completed adventures per type, e.g. { Trekking: 3, Biking: 1 } */
   byType?: Partial<Record<string, number>>;
   /** Number of distinct adventure types completed */
@@ -330,6 +381,7 @@ export function getAchievements(ace: ACE, totalXP = 0, engagement: EngagementSta
     if ("minReviews"   in badge && badge.minReviews    != null && (engagement.reviews   ?? 0) >= badge.minReviews)   qualifies = true;
     if ("minWishlisted"in badge && badge.minWishlisted != null && (engagement.wishlisted ?? 0) >= badge.minWishlisted) qualifies = true;
     if ("minPhotos"    in badge && badge.minPhotos     != null && (engagement.photos     ?? 0) >= badge.minPhotos)     qualifies = true;
+    if ("minCompares"  in badge && badge.minCompares   != null && (engagement.compares   ?? 0) >= badge.minCompares)   qualifies = true;
     if (qualifies) earned.push({ ...badge });
   }
 
