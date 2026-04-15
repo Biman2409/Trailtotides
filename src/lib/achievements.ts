@@ -7,8 +7,8 @@ export interface Achievement {
   color: string;
   /** Lucide icon name (string) — mapped in the component */
   icon: string;
-  /** "axis" = single-axis elite | "domain" = 2-axis domain | "special" = multi/full | "xp" = engagement */
-  tier: "axis" | "domain" | "special" | "xp";
+  /** "special" = tier 1 | "domain" = tier 2 | "axis" | "tier3" = tier 3 */
+  tier: "axis" | "domain" | "special" | "tier3";
   /** Human-readable unlock condition shown on locked trophies */
   condition?: string;
 }
@@ -176,7 +176,7 @@ export const XP_BADGES = [
     description: "Logged your very first completed adventure. Every legend starts somewhere.",
     color:       "#10b981",
     icon:        "CheckCircle2",
-    tier:        "xp" as const,
+    tier:        "tier3" as const,
     condition:   "Complete 1 adventure",
     minCompleted: 1,
   },
@@ -186,7 +186,7 @@ export const XP_BADGES = [
     description: "Left your first review. Your voice shapes the adventure community.",
     color:       "#f59e0b",
     icon:        "Star",
-    tier:        "xp" as const,
+    tier:        "tier3" as const,
     condition:   "Write 1 review",
     minReviews:  1,
   },
@@ -196,7 +196,7 @@ export const XP_BADGES = [
     description: "10 adventures wishlisted. The bucket list is getting serious.",
     color:       "#f43f5e",
     icon:        "Heart",
-    tier:        "xp" as const,
+    tier:        "tier3" as const,
     condition:   "Wishlist 10 adventures",
     minWishlisted: 10,
   },
@@ -206,7 +206,7 @@ export const XP_BADGES = [
     description: "First adventure wishlisted. The dreaming has begun.",
     color:       "#f43f5e",
     icon:        "Heart",
-    tier:        "xp" as const,
+    tier:        "tier3" as const,
     condition:   "Wishlist 1 adventure",
     minWishlisted: 1,
   },
@@ -216,7 +216,7 @@ export const XP_BADGES = [
     description: "Uploaded your first adventure photo. Every adventure deserves proof.",
     color:       "#3b82f6",
     icon:        "Camera",
-    tier:        "xp" as const,
+    tier:        "tier3" as const,
     condition:   "Upload 1 photo",
     minPhotos:   1,
   },
@@ -226,7 +226,7 @@ export const XP_BADGES = [
     description: "First comparison made. The game is afoot.",
     color:       "#a78bfa",
     icon:        "GitCompare",
-    tier:        "xp" as const,
+    tier:        "tier3" as const,
     condition:   "Compare 1 adventure",
     minCompares: 1,
   },
@@ -236,7 +236,7 @@ export const XP_BADGES = [
     description: "10 comparisons made. You don't just pick adventures — you deduce them.",
     color:       "#a78bfa",
     icon:        "GitCompare",
-    tier:        "xp" as const,
+    tier:        "tier3" as const,
     condition:   "Compare 10 adventures",
     minCompares: 10,
   },
