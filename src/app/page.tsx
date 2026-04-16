@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Map, ChevronRight, Star } from "lucide-react";
 import MatchmakerHomepageSection from "@/components/ui/custom/MatchmakerHomepageSection";
-import SuitedAdventures from "@/components/ui/custom/SuitedAdventures";
 
 export const metadata: Metadata = {
   title: "Trail to Tides — India's Adventure Discovery Platform",
@@ -200,9 +199,6 @@ export default function HomePage() {
   
         {/* ── ADVENTURE MATCHMAKER ─────────────────────────── */}
         <MatchmakerHomepageSection />
-
-        {/* ── ADVENTURES SUITED FOR YOU ─────────────────────── */}
-        <SuitedAdventures />
 
         {/* ── REGIONS ──────────────────────────────────────── */}
         <FindByRegion />
