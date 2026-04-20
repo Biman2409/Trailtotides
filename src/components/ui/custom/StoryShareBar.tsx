@@ -51,7 +51,7 @@ export default function StoryShareBar({ title, slug }: Props) {
 
         {/* WhatsApp */}
         <a
-          href={`https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`}
+          href={url ? `https://wa.me/?text=${encodeURIComponent(title + "\n" + url)}` : "#"}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-1.5 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/25 text-[#25D366] text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
@@ -60,9 +60,9 @@ export default function StoryShareBar({ title, slug }: Props) {
           WhatsApp
         </a>
 
-        {/* X / Twitter */}
+        {/* X */}
         <a
-          href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`}
+          href={url ? `https://x.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}` : "#"}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-1.5 bg-white/8 hover:bg-white/15 border border-white/15 text-white/70 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
