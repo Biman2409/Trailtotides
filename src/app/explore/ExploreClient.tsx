@@ -230,7 +230,7 @@ export default function ExploreClient() {
       <div className="t-bg-surface pt-24 lg:pt-28 pb-10 lg:pb-12 px-5 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
-            Discover
+            Explore
           </p>
           <h1 className="text-white text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight mb-3">
             All Adventures
