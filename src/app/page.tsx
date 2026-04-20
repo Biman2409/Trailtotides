@@ -48,7 +48,7 @@ export default function HomePage() {
           <h1
             className="font-bold tracking-tight mb-5"
             style={{
-              fontSize: "clamp(2.2rem, 7.5vw, 6rem)",
+              fontSize: "clamp(1.8rem, 6vw, 4.8rem)",
               lineHeight: 1.08,
               color: "white",
               textShadow: "0 2px 24px rgba(0,0,0,0.65)",
