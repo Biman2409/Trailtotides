@@ -14,6 +14,7 @@ import NavAvatar from "@/components/ui/custom/NavAvatar";
 
 const navLinks = [
   { href: "/explore", label: "Explore" },
+  { href: "/compass", label: "AI Finder" },
   { href: "/map", label: "Map" },
   { href: "/planner", label: "Planner" },
   { href: "/operators", label: "Operators" },
