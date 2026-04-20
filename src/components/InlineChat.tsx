@@ -179,7 +179,7 @@ export default function InlineChat() {
         <div className="flex items-center justify-center gap-2 mb-6">
           <div className="h-px w-8 bg-[#ff5100]/40" />
           <span className="text-[#ff5100] text-[10px] font-black tracking-[0.3em] uppercase">
-            Looking for something specific?
+            AI Adventure Finder
           </span>
           <div className="h-px w-8 bg-[#ff5100]/40" />
         </div>
