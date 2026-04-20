@@ -56,7 +56,12 @@ export default function HomePage() {
           >
             <span style={{ display: "block" }}>
               From Mountain{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 700 }}>Trail</em>
+              <em
+                className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ff5100] to-[#ff8c47]"
+                style={{ fontStyle: "italic", textShadow: "none" }}
+              >
+                Trail
+              </em>
             </span>
             <span
               style={{
@@ -70,7 +75,12 @@ export default function HomePage() {
             />
             <span style={{ display: "block" }}>
               To Ocean{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 700 }}>Tides</em>
+              <em
+                className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#3b82f6] to-[#60a5fa]"
+                style={{ fontStyle: "italic", textShadow: "none" }}
+              >
+                Tides
+              </em>
             </span>
           </h1>
 
