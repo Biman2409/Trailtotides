@@ -175,7 +175,7 @@ export default function CompassPage() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#ff5100]/20 bg-[#ff5100]/8 mb-8">
               <Sparkles className="w-3 h-3 text-[#ff5100]" />
-              <span className="text-[#ff5100] text-[10px] font-black tracking-[0.25em] uppercase">AI Adventure Guide</span>
+              <span className="text-[#ff5100] text-[10px] font-black tracking-[0.25em] uppercase">AI Adventure Finder</span>
             </div>
 
             {/* Logo */}
