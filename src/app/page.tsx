@@ -88,16 +88,16 @@ export default function HomePage() {
               href="/explore"
               className="bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-7 py-3.5 rounded-xl text-sm md:text-base flex items-center gap-2 group shadow-xl shadow-black/30 w-full sm:w-auto justify-center hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/40 transition-all duration-200"
             >
-              Explore Adventures
+              Looking for something specific?
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
 
             <Link
-              href="/map"
+              href="/compass"
               className="bg-white/12 hover:bg-white/22 backdrop-blur-md text-white font-semibold px-7 py-3.5 rounded-xl text-sm md:text-base border border-white/25 hover:border-white/40 flex items-center gap-2 w-full sm:w-auto justify-center hover:-translate-y-0.5 transition-all duration-200"
             >
               <Map className="w-4 h-4" />
-              Adventure Map
+              Don&apos;t know where to start?
             </Link>
           </div>
         </div>
