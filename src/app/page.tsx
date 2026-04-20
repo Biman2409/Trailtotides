@@ -57,8 +57,16 @@ export default function HomePage() {
             <span style={{ display: "block" }}>
               From Mountain{" "}
               <em
-                className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ff5100] to-[#ff8c47]"
-                style={{ fontStyle: "italic", textShadow: "none" }}
+                className="font-black not-italic inline-block"
+                style={{
+                  textShadow: "none",
+                  paddingRight: "0.06em",
+                  background: "linear-gradient(115deg, #ff6b1a 0%, #ffb347 55%, #ffd27a 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  fontStyle: "italic",
+                }}
               >
                 Trail
               </em>
@@ -76,8 +84,16 @@ export default function HomePage() {
             <span style={{ display: "block" }}>
               To Ocean{" "}
               <em
-                className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#3b82f6] to-[#60a5fa]"
-                style={{ fontStyle: "italic", textShadow: "none" }}
+                className="font-black not-italic inline-block"
+                style={{
+                  textShadow: "none",
+                  paddingRight: "0.06em",
+                  background: "linear-gradient(115deg, #38bdf8 0%, #818cf8 55%, #a78bfa 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  fontStyle: "italic",
+                }}
               >
                 Tides
               </em>
