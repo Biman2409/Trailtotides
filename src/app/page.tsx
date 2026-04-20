@@ -56,20 +56,21 @@ export default function HomePage() {
           >
             <span style={{ display: "block" }}>
               From Mountain{" "}
-              <em
-                className="font-black not-italic inline-block"
+              <span
+                className="font-black inline-block overflow-visible"
                 style={{
+                  fontStyle: "italic",
                   textShadow: "none",
-                  paddingRight: "0.06em",
-                  background: "linear-gradient(115deg, #ff6b1a 0%, #ffb347 55%, #ffd27a 100%)",
+                  paddingRight: "0.25em",
+                  marginRight: "-0.25em",
+                  background: "linear-gradient(120deg, #c84b00 0%, #ff6a00 35%, #ffaa00 70%, #ffd060 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
-                  fontStyle: "italic",
                 }}
               >
                 Trail
-              </em>
+              </span>
             </span>
             <span
               style={{
@@ -83,20 +84,21 @@ export default function HomePage() {
             />
             <span style={{ display: "block" }}>
               To Ocean{" "}
-              <em
-                className="font-black not-italic inline-block"
+              <span
+                className="font-black inline-block overflow-visible"
                 style={{
+                  fontStyle: "italic",
                   textShadow: "none",
-                  paddingRight: "0.06em",
-                  background: "linear-gradient(115deg, #38bdf8 0%, #818cf8 55%, #a78bfa 100%)",
+                  paddingRight: "0.25em",
+                  marginRight: "-0.25em",
+                  background: "linear-gradient(120deg, #0a4f8c 0%, #0076c0 35%, #00b4d8 70%, #48e0ef 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
-                  fontStyle: "italic",
                 }}
               >
                 Tides
-              </em>
+              </span>
             </span>
           </h1>
 
