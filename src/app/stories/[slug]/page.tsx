@@ -5,7 +5,7 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { stories } from "@/lib/data";
-import { ChevronLeft, Clock, ArrowRight, Crown, Mountain } from "lucide-react";
+import { ChevronLeft, Clock, ArrowRight, Crown, Mountain, PenLine } from "lucide-react";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 import StoryShareBar from "@/components/ui/custom/StoryShareBar";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
@@ -304,6 +304,28 @@ export default async function StoryPage({ params }: Props) {
           </div>
 
           <StoryShareBar title={story.title} slug={story.slug} />
+
+          {/* Share your story CTA */}
+          <div className="mt-10 rounded-2xl overflow-hidden border border-[#ff5100]/20 bg-gradient-to-br from-[#ff5100]/8 via-transparent to-transparent">
+            <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+              <div className="shrink-0 w-12 h-12 rounded-xl bg-[#ff5100] flex items-center justify-center shadow-lg shadow-[#ff5100]/30">
+                <PenLine className="w-5 h-5 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-white font-bold text-base leading-snug">Got a story worth telling?</p>
+                <p className="text-white/45 text-sm mt-1 leading-relaxed">
+                  Every adventure has a voice. Share yours — it might be the one that inspires the next journey.
+                </p>
+              </div>
+              <Link
+                href="/stories/submit"
+                className="shrink-0 flex items-center gap-2 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-[#ff5100]/25 group"
+              >
+                Share your story
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </div>
+          </div>
       </article>
 
       {/* More stories */}
