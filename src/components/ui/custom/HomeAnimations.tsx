@@ -195,7 +195,7 @@ export function HeroSubheading() {
         letterSpacing: "0.01em",
       }}
     >
-      Discover, compare, and book India&apos;s elite adventures.<br />Matched to your body. Guided by AI.
+      India&apos;s first adventure discovery platform.<br />Matched to your body. Guided by AI.
       <style>{`
         @keyframes heroLineIn {
           from { opacity: 0; transform: translateY(20px); }
