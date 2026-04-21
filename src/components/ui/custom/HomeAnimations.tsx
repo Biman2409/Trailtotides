@@ -195,7 +195,7 @@ export function HeroSubheading() {
         letterSpacing: "0.01em",
       }}
     >
-      Elite adventures across India — matched to your body, guided by AI, led by India&apos;s most trusted operators.
+      Discover. Compare. Book. Elite adventures across India — matched to your body, mapped with precision, and guided by AI.
       <style>{`
         @keyframes heroLineIn {
           from { opacity: 0; transform: translateY(20px); }
