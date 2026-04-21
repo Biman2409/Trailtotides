@@ -187,10 +187,14 @@ export function HeroHeadline() {
 export function HeroSubheading() {
   return (
     <div
-      className="flex flex-col items-center gap-3 mx-auto"
+      className="flex flex-col items-center gap-3 mx-auto px-8 py-5 rounded-2xl"
       style={{
         maxWidth: 520,
         animation: "heroLineIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.55s both",
+        background: "rgba(255,255,255,0.04)",
+        border: "1px solid rgba(255,255,255,0.09)",
+        backdropFilter: "blur(12px)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.07)",
       }}
     >
       {/* First line — bold word trio */}
