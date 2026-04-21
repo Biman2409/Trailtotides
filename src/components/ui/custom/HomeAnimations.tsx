@@ -206,6 +206,70 @@ export function HeroSubheading() {
   );
 }
 
+/* ── Hero 4-box feature grid ── */
+const HERO_FEATURES = [
+  {
+    num: "01",
+    title: "Body Assessment",
+    body: "Our AI evaluates your fitness, medical history, and past adventure experience to build your physiological profile.",
+  },
+  {
+    num: "02",
+    title: "AI Matching",
+    body: "We compare your profile against 340+ expeditions to surface routes that challenge without overextending you.",
+  },
+  {
+    num: "03",
+    title: "Precision Mapping",
+    body: "Every route is layered with elevation, weather windows, resupply points, and emergency egress mapped to the meter.",
+  },
+  {
+    num: "04",
+    title: "Trusted Operators",
+    body: "Book only through India's most vetted guides — operators who have passed our rigorous safety, ethics, and experience review.",
+  },
+];
+
+export function HeroFeatureBoxes() {
+  return (
+    <div
+      className="grid grid-cols-2 lg:grid-cols-4 gap-px w-full max-w-4xl mx-auto rounded-2xl overflow-hidden"
+      style={{
+        background: "rgba(255,255,255,0.08)",
+        animation: "heroLineIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.55s both",
+        boxShadow: "0 0 0 1px rgba(255,255,255,0.1), 0 8px 40px rgba(0,0,0,0.4)",
+      }}
+    >
+      {HERO_FEATURES.map(({ num, title, body }) => (
+        <div
+          key={num}
+          className="flex flex-col gap-3 p-5 lg:p-6 text-left"
+          style={{ background: "rgba(10,14,22,0.72)", backdropFilter: "blur(16px)" }}
+        >
+          <span
+            className="text-[10px] font-black tracking-[0.25em]"
+            style={{ color: "#ff5100" }}
+          >
+            {num}
+          </span>
+          <p className="text-white text-[13px] font-bold leading-snug tracking-tight uppercase" style={{ letterSpacing: "0.04em" }}>
+            {title}
+          </p>
+          <p className="text-white/45 text-[11px] leading-relaxed">
+            {body}
+          </p>
+        </div>
+      ))}
+      <style>{`
+        @keyframes heroLineIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 /* ── CTA wrapper fade-in ── */
 export function HeroCTAWrapper({ children }: { children: ReactNode }) {
   return (
