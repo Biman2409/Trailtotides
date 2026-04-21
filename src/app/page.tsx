@@ -55,7 +55,7 @@ export default function HomePage() {
             }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse inline-block" />
-            India&apos;s Adventure Discovery Platform
+            India&apos;s First Adventure Discovery Platform
           </div>
 
           <HeroHeadline />
