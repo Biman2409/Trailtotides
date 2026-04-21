@@ -45,16 +45,18 @@ export default function HomePage() {
         <HeroSlider />
         <HeroOrbs />
 
-        <div className="relative z-10 text-center px-5 max-w-4xl mx-auto flex flex-col items-center gap-7">
+        <div className="relative z-10 text-center px-5 max-w-4xl mx-auto flex flex-col items-center gap-7" style={{ marginTop: "-40px" }}>
           {/* Eyebrow badge */}
           <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/15 text-white/60 text-[11px] font-semibold tracking-[0.2em] uppercase backdrop-blur-md"
+            className="inline-flex items-center px-5 py-2 rounded-full text-[11px] font-bold tracking-[0.22em] uppercase backdrop-blur-md"
             style={{
-              background: "rgba(255,255,255,0.06)",
+              background: "rgba(255,255,255,0.12)",
+              border: "1px solid rgba(255,255,255,0.28)",
+              color: "rgba(255,255,255,0.9)",
+              boxShadow: "0 2px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15)",
               animation: "heroLineIn 0.7s cubic-bezier(0.22,1,0.36,1) 0s both",
             }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse inline-block" />
             India&apos;s First Adventure Discovery Platform
           </div>
 
