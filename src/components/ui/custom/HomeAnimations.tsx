@@ -186,23 +186,39 @@ export function HeroHeadline() {
 /* ── Subheading fade-in ── */
 export function HeroSubheading() {
   return (
-    <p
-      className="text-white/60 text-base md:text-lg mx-auto leading-relaxed"
+    <div
+      className="flex flex-col items-center gap-3 mx-auto"
       style={{
-        maxWidth: 480,
-        textShadow: "0 1px 12px rgba(0,0,0,0.9)",
+        maxWidth: 520,
         animation: "heroLineIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.55s both",
-        letterSpacing: "0.01em",
       }}
     >
-      Discover, compare, and book elite adventures — matched to your body, mapped with precision, guided by AI, and led by India&apos;s most trusted operators.
+      {/* First line — bold word trio */}
+      <div className="flex items-center gap-0 text-white font-black tracking-tight" style={{ fontSize: "clamp(1.1rem, 2.8vw, 1.5rem)" }}>
+        {["Discover", "Compare", "Book"].map((word, i) => (
+          <span key={word} className="flex items-center">
+            <span style={{ textShadow: "0 0 24px rgba(255,81,0,0.4)" }}>{word}</span>
+            {i < 2 && (
+              <span className="mx-2.5 text-[#ff5100]" style={{ fontSize: "0.55em", verticalAlign: "middle" }}>●</span>
+            )}
+          </span>
+        ))}
+      </div>
+
+      {/* Second line — supporting copy */}
+      <p
+        className="text-white/50 text-sm md:text-base leading-relaxed text-center"
+        style={{ textShadow: "0 1px 12px rgba(0,0,0,0.9)", letterSpacing: "0.01em" }}
+      >
+        Elite adventures across India — tailored to your body, precision&#8209;mapped by AI, and led by trusted operators.
+      </p>
       <style>{`
         @keyframes heroLineIn {
           from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
-    </p>
+    </div>
   );
 }
 
