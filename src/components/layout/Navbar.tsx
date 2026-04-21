@@ -13,9 +13,9 @@ import { adventures } from "@/lib/data";
 import NavAvatar from "@/components/ui/custom/NavAvatar";
 
 const navLinks = [
-  { href: "/explore", label: "Explore" },
-  { href: "/compass", label: "AI Finder" },
-  { href: "/map", label: "Map" },
+  { href: "/explore", label: "All Adventures" },
+  { href: "/compass", label: "AI Adventure Finder" },
+  { href: "/map", label: "Adventure Map" },
   { href: "/planner", label: "Planner" },
   { href: "/operators", label: "Operators" },
   { href: "/matchmaker", label: "Matchmaker" },
