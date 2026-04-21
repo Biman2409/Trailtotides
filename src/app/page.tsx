@@ -4,7 +4,7 @@ import Image from "next/image";
 import { ArrowRight, Map, ChevronRight, Star } from "lucide-react";
 import HeroCTAs from "@/components/ui/custom/HeroCTAs";
 import MatchmakerHomepageSection from "@/components/ui/custom/MatchmakerHomepageSection";
-import { FadeUp, HeroOrbs, ShimmerLine, HeroHeadline, HeroFeatureBoxes, HeroCTAWrapper } from "@/components/ui/custom/HomeAnimations";
+import { FadeUp, HeroOrbs, ShimmerLine, HeroHeadline, HeroSubheading, HeroCTAWrapper } from "@/components/ui/custom/HomeAnimations";
 
 export const metadata: Metadata = {
   title: "Trail to Tides — India's Adventure Discovery Platform",
@@ -61,7 +61,7 @@ export default function HomePage() {
           </div>
 
           <HeroHeadline />
-          <HeroFeatureBoxes />
+          <HeroSubheading />
           <HeroCTAWrapper>
             <HeroCTAs />
           </HeroCTAWrapper>
