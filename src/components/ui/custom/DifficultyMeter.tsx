@@ -19,7 +19,7 @@ export default function DifficultyMeter({ difficulty, className = "" }: Difficul
   const cfg = DIFFICULTY_CONFIG[difficulty] ?? { level: 1, color: "#10b981", glow: "#10b98155", label: difficulty };
   return (
     <div
-      className={`inline-flex items-center gap-2 px-2.5 h-5 rounded-full text-[10px] font-bold tracking-tight shadow-sm ${className}`}
+      className={`inline-flex items-center gap-2 px-2.5 h-5 rounded-full text-[10px] font-bold tracking-tight ${className}`}
       style={{
         background: "rgba(0,0,0,0.6)",
         backdropFilter: "blur(8px)",
@@ -30,20 +30,20 @@ export default function DifficultyMeter({ difficulty, className = "" }: Difficul
       <span className="font-bold leading-none" style={{ color: cfg.color, textShadow: `0 0 8px ${cfg.glow}` }}>
         {cfg.label}
       </span>
-      <div className="flex items-center gap-[3px]">
+      {/* Signal bars — 5 bars growing taller left to right */}
+      <div className="flex items-end gap-[2px]" style={{ height: 10 }}>
         {[1, 2, 3, 4, 5].map((i) => {
           const filled = i <= cfg.level;
-          const isLast = i === cfg.level;
+          const barHeight = 3 + (i - 1) * 1.8;
           return (
             <div
               key={i}
               style={{
-                width: i === cfg.level ? 14 : 5,
-                height: 3,
-                borderRadius: 99,
-                background: filled ? cfg.color : "rgba(255,255,255,0.12)",
-                boxShadow: filled && isLast ? `0 0 6px ${cfg.color}, 0 0 12px ${cfg.glow}` : "none",
-                transition: "all 0.2s ease",
+                width: 3,
+                height: barHeight,
+                borderRadius: 2,
+                background: filled ? cfg.color : "rgba(255,255,255,0.15)",
+                boxShadow: filled ? `0 0 4px ${cfg.glow}` : "none",
               }}
             />
           );
