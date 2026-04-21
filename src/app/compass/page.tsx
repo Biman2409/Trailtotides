@@ -189,8 +189,8 @@ export default function CompassPage() {
             </div>
 
             <p className="text-lg t-text-2 leading-relaxed mb-10">
-              Tell us what you&apos;re looking for.{" "}
-              <span className="t-text font-semibold">We&apos;ll find your next adventure.</span>
+              Describe your escape.{" "}
+              <span className="t-text font-semibold">We&apos;ll find the adventure.</span>
             </p>
 
             {/* Starter prompt grid */}
