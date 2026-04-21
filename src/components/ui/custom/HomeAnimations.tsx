@@ -127,36 +127,36 @@ export function ShimmerLine({ className = "" }: { className?: string }) {
   );
 }
 
-/* ── Hero headline letter-by-letter reveal ── */
+/* ── Hero headline reveal ── */
 export function HeroHeadline() {
   return (
     <h1
-      className="font-bold tracking-tight mb-5"
+      className="font-black tracking-tight"
       style={{
-        fontSize: "clamp(1.8rem, 6vw, 4.8rem)",
-        lineHeight: 1.08,
+        fontSize: "clamp(2.4rem, 7vw, 5.6rem)",
+        lineHeight: 1.04,
         color: "white",
-        textShadow: "0 2px 24px rgba(0,0,0,0.65)",
+        textShadow: "0 4px 32px rgba(0,0,0,0.55)",
       }}
     >
       <span
         style={{
           display: "block",
-          animation: "heroLineIn 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both",
+          animation: "heroLineIn 0.8s cubic-bezier(0.22,1,0.36,1) 0.15s both",
         }}
       >
         From Mountain{" "}
-        <em style={{ fontStyle: "italic", fontWeight: 700 }}>Trail</em>
+        <em style={{ fontStyle: "italic", fontWeight: 800, color: "rgba(255,255,255,0.9)" }}>Trail</em>
       </span>
       <span
         style={{
           display: "block",
           height: "2px",
           background:
-            "linear-gradient(90deg, transparent, rgba(255,255,255,0.28) 30%, rgba(255,255,255,0.28) 70%, transparent)",
-          margin: "0.32em auto",
-          maxWidth: "460px",
-          animation: "dividerExpand 0.9s cubic-bezier(0.22,1,0.36,1) 0.5s both",
+            "linear-gradient(90deg, transparent, rgba(255,81,0,0.5) 30%, rgba(255,81,0,0.5) 70%, transparent)",
+          margin: "0.4em auto",
+          maxWidth: "400px",
+          animation: "dividerExpand 1s cubic-bezier(0.22,1,0.36,1) 0.45s both",
           transformOrigin: "center",
         }}
       />
@@ -167,11 +167,11 @@ export function HeroHeadline() {
         }}
       >
         To Ocean{" "}
-        <em style={{ fontStyle: "italic", fontWeight: 700 }}>Tides</em>
+        <em style={{ fontStyle: "italic", fontWeight: 800, color: "rgba(255,255,255,0.9)" }}>Tides</em>
       </span>
       <style>{`
         @keyframes heroLineIn {
-          from { opacity: 0; transform: translateY(20px); }
+          from { opacity: 0; transform: translateY(22px); }
           to   { opacity: 1; transform: translateY(0); }
         }
         @keyframes dividerExpand {
@@ -187,14 +187,15 @@ export function HeroHeadline() {
 export function HeroSubheading() {
   return (
     <p
-      className="text-white/82 text-base md:text-xl w-full mx-auto leading-relaxed mb-8"
+      className="text-white/60 text-base md:text-lg mx-auto leading-relaxed"
       style={{
-        textShadow: "0 1px 10px rgba(0,0,0,0.85)",
+        maxWidth: 480,
+        textShadow: "0 1px 12px rgba(0,0,0,0.9)",
         animation: "heroLineIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.55s both",
+        letterSpacing: "0.01em",
       }}
     >
-      Discover, compare, and book elite adventures — matched to your body, mapped
-      with precision, guided by AI, and led by India&apos;s most trusted operators.
+      Elite adventures across India — matched to your body, guided by AI, led by India&apos;s most trusted operators.
       <style>{`
         @keyframes heroLineIn {
           from { opacity: 0; transform: translateY(20px); }

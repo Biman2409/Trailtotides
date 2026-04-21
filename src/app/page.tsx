@@ -45,12 +45,37 @@ export default function HomePage() {
         <HeroSlider />
         <HeroOrbs />
 
-        <div className="relative z-10 text-center px-5 max-w-5xl mx-auto mt-24 md:mt-32">
+        <div className="relative z-10 text-center px-5 max-w-4xl mx-auto flex flex-col items-center gap-7">
+          {/* Eyebrow badge */}
+          <div
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/15 text-white/60 text-[11px] font-semibold tracking-[0.2em] uppercase backdrop-blur-md"
+            style={{
+              background: "rgba(255,255,255,0.06)",
+              animation: "heroLineIn 0.7s cubic-bezier(0.22,1,0.36,1) 0s both",
+            }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse inline-block" />
+            India&apos;s Adventure Discovery Platform
+          </div>
+
           <HeroHeadline />
           <HeroSubheading />
           <HeroCTAWrapper>
             <HeroCTAs />
           </HeroCTAWrapper>
+        </div>
+
+        {/* Scroll hint */}
+        <div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
+          style={{ animation: "heroLineIn 1s cubic-bezier(0.22,1,0.36,1) 1.2s both" }}
+        >
+          <span className="text-white/30 text-[10px] tracking-[0.25em] uppercase font-medium">Scroll</span>
+          <div className="w-px h-8 bg-gradient-to-b from-white/30 to-transparent" style={{ animation: "scrollPulse 2s ease-in-out infinite" }} />
+          <style>{`
+            @keyframes heroLineIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+            @keyframes scrollPulse { 0%,100% { opacity:0.3; transform:scaleY(1); } 50% { opacity:0.8; transform:scaleY(1.15); } }
+          `}</style>
         </div>
       </section>
 
