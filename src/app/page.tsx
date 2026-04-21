@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ArrowRight, Map, ChevronRight, Star } from "lucide-react";
 import HeroCTAs from "@/components/ui/custom/HeroCTAs";
 import MatchmakerHomepageSection from "@/components/ui/custom/MatchmakerHomepageSection";
+import { FadeUp, HeroOrbs, ShimmerLine, HeroHeadline, HeroSubheading, HeroCTAWrapper } from "@/components/ui/custom/HomeAnimations";
 
 export const metadata: Metadata = {
   title: "Trail to Tides — India's Adventure Discovery Platform",
@@ -42,87 +43,57 @@ export default function HomePage() {
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
         <HeroSlider />
+        <HeroOrbs />
 
         <div className="relative z-10 text-center px-5 max-w-5xl mx-auto mt-24 md:mt-32">
-
-          {/* Headline */}
-          <h1
-            className="font-bold tracking-tight mb-5"
-            style={{
-              fontSize: "clamp(1.8rem, 6vw, 4.8rem)",
-              lineHeight: 1.08,
-              color: "white",
-              textShadow: "0 2px 24px rgba(0,0,0,0.65)",
-            }}
-          >
-            <span style={{ display: "block" }}>
-              From Mountain{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 700 }}>Trail</em>
-            </span>
-            <span
-              style={{
-                display: "block",
-                height: "2px",
-                background:
-                  "linear-gradient(90deg, transparent, rgba(255,255,255,0.28) 30%, rgba(255,255,255,0.28) 70%, transparent)",
-                margin: "0.32em auto",
-                maxWidth: "460px",
-              }}
-            />
-            <span style={{ display: "block" }}>
-              To Ocean{" "}
-              <em style={{ fontStyle: "italic", fontWeight: 700 }}>Tides</em>
-            </span>
-          </h1>
-
-          {/* Subheading */}
-          <p
-            className="text-white/82 text-base md:text-xl w-full mx-auto leading-relaxed mb-8"
-            style={{ textShadow: "0 1px 10px rgba(0,0,0,0.85)" }}
-          >
-            Discover, compare, and book elite adventures — matched to your body, mapped with precision, guided by AI, and led by India's most trusted operators.
-          </p>
-
-          {/* CTAs */}
-          <HeroCTAs />
+          <HeroHeadline />
+          <HeroSubheading />
+          <HeroCTAWrapper>
+            <HeroCTAs />
+          </HeroCTAWrapper>
         </div>
-
-
       </section>
 
         {/* ── STATS BAR ────────────────────────────────────── */}
         <StatsBar />
 
         {/* ── AI FINDER ────────────────────────────────────── */}
-        <InlineChat />
+        <FadeUp>
+          <InlineChat />
+        </FadeUp>
 
-          {/* ── FEATURED ADVENTURES ── */}
+        {/* ── FEATURED ADVENTURES ── */}
         <section id="featured-adventures" className="py-20 lg:py-28 px-5 lg:px-8 t-bg-page">
-            <div className="max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto">
+            <FadeUp>
               <div className="mb-10 lg:mb-14">
                 <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
                   <Star className="w-3.5 h-3.5 fill-[#ff5100]" />
-                  EDITOR'S CHOICE
+                  EDITOR&apos;S CHOICE
                 </p>
                 <div className="flex items-end justify-between gap-4">
                   <div>
                     <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
                       Adventures of a Lifetime
                     </h2>
-                    <div className="mt-4 w-12 h-0.5 bg-[#ff5100] rounded-full" />
+                    <ShimmerLine className="mt-4 max-w-[48px]" />
                   </div>
                   <span className="hidden sm:flex items-center gap-1.5 text-[#ff5100] text-sm font-semibold bg-[#ff5100]/8 border border-[#ff5100]/20 px-3 py-1.5 rounded-full mb-1">
                     {featuredAdventures.length} picks
                   </span>
                 </div>
               </div>
+            </FadeUp>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-                {featuredAdventures.map((adventure) => (
-                  <AdventureCard key={adventure.id} adventure={adventure} size="default" />
-                ))}
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+              {featuredAdventures.map((adventure, i) => (
+                <FadeUp key={adventure.id} delay={i * 70}>
+                  <AdventureCard adventure={adventure} size="default" />
+                </FadeUp>
+              ))}
+            </div>
 
+            <FadeUp delay={200}>
               <div className="mt-10 lg:mt-14 flex justify-center">
                 <Link
                   href="/explore"
@@ -132,7 +103,8 @@ export default function HomePage() {
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
-            </div>
+            </FadeUp>
+          </div>
         </section>
 
         {/* ── MAP CTA ───────────────────────────────────────── */}
@@ -146,77 +118,86 @@ export default function HomePage() {
               style={{ objectFit: "cover" }}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#1a2e20]/98 via-[#1a2e20]/80 to-[#1a2e20]/40" />
-          {/* Subtle dot grid overlay */}
-          <div
-            className="absolute inset-0 opacity-10"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle, rgba(255,255,255,0.55) 1px, transparent 1px)",
-              backgroundSize: "28px 28px",
-            }}
-          />
-        </div>
+            <div
+              className="absolute inset-0 opacity-10"
+              style={{
+                backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.55) 1px, transparent 1px)",
+                backgroundSize: "28px 28px",
+              }}
+            />
+          </div>
 
           <div className="max-w-7xl mx-auto relative z-10">
+            <FadeUp>
               <div className="max-w-2xl">
-                        <p className="text-[#7ec88a] text-xs font-black tracking-[0.25em] mb-5 uppercase">
-                          ADVENTURE MAP
-                        </p>
-            <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-6">
-                India's Adventures,
-                <br />
-                <span className="text-[#7ec88a]">Mapped</span>
-              </h2>
-                        <p className="text-white/72 text-base md:text-xl leading-relaxed mb-8 lg:mb-10 w-full max-w-lg">
-                          Every trail, summit, coast, and canyon — pinned on one map. Cluster by region, filter by type, and tap any pin to explore.
-                        </p>
-                  <Link
-                    href="/map"
-                    className="inline-flex items-center gap-2.5 bg-white text-[#1a2e20] font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#f0f7f1] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 group transition-all duration-200 shadow-lg shadow-black/15"
-                  >
-                    <Map className="w-5 h-5" />
-                    View Map
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-            </div>
+                <p className="text-[#7ec88a] text-xs font-black tracking-[0.25em] mb-5 uppercase">
+                  ADVENTURE MAP
+                </p>
+                <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-6">
+                  India&apos;s Adventures,
+                  <br />
+                  <span className="text-[#7ec88a]">Mapped</span>
+                </h2>
+                <p className="text-white/72 text-base md:text-xl leading-relaxed mb-8 lg:mb-10 w-full max-w-lg">
+                  Every trail, summit, coast, and canyon — pinned on one map. Cluster by region, filter by type, and tap any pin to explore.
+                </p>
+                <Link
+                  href="/map"
+                  className="inline-flex items-center gap-2.5 bg-white text-[#1a2e20] font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#f0f7f1] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 group transition-all duration-200 shadow-lg shadow-black/15"
+                >
+                  <Map className="w-5 h-5" />
+                  View Map
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </FadeUp>
           </div>
         </section>
-  
+
         {/* ── ADVENTURE MATCHMAKER ─────────────────────────── */}
-        <MatchmakerHomepageSection />
+        <FadeUp>
+          <MatchmakerHomepageSection />
+        </FadeUp>
 
         {/* ── REGIONS ──────────────────────────────────────── */}
-        <FindByRegion />
-  
+        <FadeUp>
+          <FindByRegion />
+        </FadeUp>
+
         {/* ── ADVENTURE TYPES ──────────────────────────────── */}
-        <FindYourFormat />
+        <FadeUp>
+          <FindYourFormat />
+        </FadeUp>
 
-
-          {/* ── STORIES ──────────────────────────────────────── */}
+        {/* ── STORIES ──────────────────────────────────────── */}
         <section id="stories" className="py-20 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-[var(--border-subtle)]">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-end justify-between mb-10 lg:mb-14">
-              <div>
-                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
-                  From the Trails
-                </p>
-                <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
-                  Voices from the Edge
-                </h2>
-                <div className="mt-4 w-12 h-0.5 bg-[#ff5100] rounded-full" />
+            <FadeUp>
+              <div className="flex items-end justify-between mb-10 lg:mb-14">
+                <div>
+                  <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
+                    From the Trails
+                  </p>
+                  <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+                    Voices from the Edge
+                  </h2>
+                  <ShimmerLine className="mt-4 max-w-[48px]" />
+                </div>
+                <Link
+                  href="/stories"
+                  className="hidden md:flex items-center gap-1.5 text-white/40 font-medium hover:text-[#ff5100] transition-colors group text-sm"
+                >
+                  All stories
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
-              <Link
-                href="/stories"
-                className="hidden md:flex items-center gap-1.5 text-white/40 font-medium hover:text-[#ff5100] transition-colors group text-sm"
-              >
-                All stories
-                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
+            </FadeUp>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-7">
-              {featuredStories.map((story) => (
-                <StoryCard key={story.id} story={story} />
+              {featuredStories.map((story, i) => (
+                <FadeUp key={story.id} delay={i * 90}>
+                  <StoryCard story={story} />
+                </FadeUp>
               ))}
             </div>
 
