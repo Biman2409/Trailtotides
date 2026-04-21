@@ -16,7 +16,7 @@ export default function HeroCTAs() {
         onMouseEnter={e => (e.currentTarget.style.boxShadow = "0 0 0 1px rgba(255,81,0,0.8), 0 6px 28px rgba(255,81,0,0.6)")}
         onMouseLeave={e => (e.currentTarget.style.boxShadow = "0 0 0 1px rgba(255,81,0,0.6), 0 4px 20px rgba(255,81,0,0.45)")}
       >
-        Browse Adventures
+        Show me what&apos;s out there
         <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
       </Link>
 
