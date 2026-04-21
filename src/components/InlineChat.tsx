@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import {
   Loader2, Compass, ArrowRight, Send, MapPin, Clock,
   BarChart2, Sparkles, Zap, RotateCcw, WifiOff, RefreshCw,
+  Mountain, TreePine, Waves, Wind,
 } from "lucide-react";
 import Link from "next/link";
 import type { Adventure } from "@/lib/data";
@@ -18,12 +19,13 @@ interface Message {
   rateLimited?: boolean;
 }
 
-// Starter prompts — only live adventure types
 const STARTER_PROMPTS = [
-  "Beginner trek in Himachal Pradesh",
-  "Ladakh bike expedition",
-  "Hard trek with summit views",
-  "Multi-day trek in Kashmir",
+  { label: "I want something remote and challenging", icon: Mountain },
+  { label: "Beginner-friendly in Himachal Pradesh", icon: TreePine },
+  { label: "Water adventure in coastal India", icon: Waves },
+  { label: "Ladakh bike expedition", icon: Wind },
+  { label: "Multi-day trek with summit views", icon: Mountain },
+  { label: "Quick weekend escape from Mumbai", icon: Sparkles },
 ];
 
 // Derive contextual chips from the AI response
@@ -175,22 +177,21 @@ export default function InlineChat() {
 
       <div className="max-w-4xl mx-auto px-5 lg:px-8 relative z-10">
 
-        {/* Section label */}
-        <div className="flex items-center justify-center gap-2 mb-6">
-          <div className="h-px w-8 bg-[#ff5100]/40" />
-          <span className="text-[#ff5100] text-[10px] font-black tracking-[0.3em] uppercase">
-            AI Adventure Finder
-          </span>
-          <div className="h-px w-8 bg-[#ff5100]/40" />
+        {/* Badge */}
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#ff5100]/20 bg-[#ff5100]/8">
+            <Sparkles className="w-3 h-3 text-[#ff5100]" />
+            <span className="text-[#ff5100] text-[10px] font-black tracking-[0.25em] uppercase">AI Adventure Finder</span>
+          </div>
         </div>
 
         {/* Heading */}
         <div className="text-center mb-10">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-11 h-11 rounded-2xl bg-[#ff5100] flex items-center justify-center shadow-xl shadow-[#ff5100]/30">
-              <Compass className="w-5 h-5 text-white" strokeWidth={2.5} />
+            <div className="w-14 h-14 rounded-2xl bg-[#ff5100] flex items-center justify-center shadow-2xl shadow-[#ff5100]/40">
+              <Compass className="w-7 h-7 text-white" strokeWidth={2} />
             </div>
-            <h2 className="text-4xl lg:text-5xl font-black tracking-[-0.03em] t-text">
+            <h2 className="text-5xl lg:text-6xl font-black tracking-[-0.04em] t-text">
               Compass<span className="text-[#ff5100]">.AI</span>
             </h2>
           </div>
@@ -237,24 +238,20 @@ export default function InlineChat() {
           >
             {/* Empty state */}
             {messages.length === 0 && (
-              <div className="px-6 py-10 flex flex-col items-center gap-5 text-center">
-                <div className="flex items-center gap-2 t-text-3">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span className="text-[11px] font-semibold uppercase tracking-[0.2em]">Try asking</span>
-                </div>
-                <div className="flex flex-wrap gap-2 justify-center max-w-xl">
-                  {STARTER_PROMPTS.map((p) => (
+              <div className="px-6 py-8">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-w-xl mx-auto">
+                  {STARTER_PROMPTS.map(({ label, icon: Icon }) => (
                     <button
-                      key={p}
-                      onClick={() => send(p)}
-                      className="px-4 py-2 rounded-full text-[12px] font-medium border transition-all duration-200 hover:border-[#ff5100]/50 hover:text-[#ff5100] hover:bg-[#ff5100]/5"
+                      key={label}
+                      onClick={() => send(label)}
+                      className="group flex items-start gap-2.5 p-3.5 rounded-xl border text-left transition-all duration-200 hover:border-[#ff5100]/40 hover:bg-[#ff5100]/5 hover:-translate-y-0.5"
                       style={{
-                        background: "var(--bg-elevated, #141b28)",
+                        background: "var(--bg-page)",
                         borderColor: "var(--border-default)",
-                        color: "var(--text-secondary)",
                       }}
                     >
-                      {p}
+                      <Icon className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#ff5100]/60 group-hover:text-[#ff5100] transition-colors" />
+                      <span className="text-[11px] font-medium leading-snug t-text-2 group-hover:t-text transition-colors">{label}</span>
                     </button>
                   ))}
                 </div>
