@@ -198,7 +198,7 @@ export function HeroSubheading() {
       }}
     >
       {/* First line — bold word trio */}
-      <div className="flex items-center gap-0 text-white font-black tracking-tight" style={{ fontSize: "clamp(1.1rem, 2.8vw, 1.5rem)" }}>
+      <div className="flex items-center gap-0 text-white font-black tracking-tight italic" style={{ fontSize: "clamp(0.9rem, 2.2vw, 1.15rem)" }}>
         {["Discover", "Compare", "Book"].map((word, i) => (
           <span key={word} className="flex items-center">
             <span style={{ textShadow: "0 0 24px rgba(255,81,0,0.4)" }}>{word}</span>
