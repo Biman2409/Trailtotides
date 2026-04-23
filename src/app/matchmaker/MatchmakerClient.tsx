@@ -462,30 +462,40 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
           </div>
         )}
 
+        {/* Meta pill */}
+        <div className="flex items-center gap-2 mb-5">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border"
+            style={{ background: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.10)" }}>
+            <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100]" />
+            <span className="text-white/40 text-[10px] font-semibold tracking-wide">8 questions · ~3 min</span>
+          </div>
+        </div>
+
         {/* CTAs */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2.5">
           {hasProfile && (
             <button onClick={onViewResults}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm text-white transition-all hover:brightness-110"
-              style={{ background: "#ff5100" }}>
+              className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-bold text-sm text-white transition-all hover:brightness-110"
+              style={{ background: "#ff5100", boxShadow: "0 4px 24px rgba(255,81,0,0.35)" }}>
               View My Results <ChevronRight className="w-4 h-4" />
             </button>
           )}
           <button onClick={onStart}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm transition-all hover:brightness-110"
+            className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-bold text-sm transition-all hover:brightness-110"
             style={hasProfile
-              ? { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.6)" }
-              : { background: "#ff5100", color: "#fff" }
+              ? { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.6)" }
+              : { background: "#ff5100", color: "#fff", boxShadow: "0 4px 24px rgba(255,81,0,0.35)" }
             }>
-            {hasProfile ? <><RotateCcw className="w-3.5 h-3.5" />Retake</> : <>Begin Assessment <ChevronRight className="w-4 h-4" /></>}
+            {hasProfile
+              ? <><RotateCcw className="w-3.5 h-3.5" />Retake Assessment</>
+              : <>Begin Assessment <ChevronRight className="w-4 h-4" /></>}
           </button>
           <Link href="/ace"
-            className="w-full flex items-center justify-center px-6 py-3 text-xs text-white/25 hover:text-white/50 transition-colors">
-            What is ACE? →
+            className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl text-sm font-semibold transition-all hover:bg-white/5"
+            style={{ border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.35)" }}>
+            What is ACE? <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
-
-        <p className="text-white/15 text-[10px] text-center mt-3">8 questions · ~3 minutes</p>
       </div>
     </div>
   );
