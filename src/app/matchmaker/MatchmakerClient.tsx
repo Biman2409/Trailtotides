@@ -15,7 +15,7 @@ import Pill from "@/components/ui/custom/Pill";
 import AchievementBadges from "@/components/ui/custom/AchievementBadges";
 import { saveProfile, loadProfile, clearProfile, saveProfileToServer, loadProfileFromServer } from "@/lib/matchmaker";
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
-import { getACE, TYPE_SUPPLEMENTS } from "@/lib/ace";
+import { getACE } from "@/lib/ace";
 import { getAchievements } from "@/lib/achievements";
 import { awardXP } from "@/lib/awardXP";
 
@@ -469,7 +469,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
       >
         {hasProfile ? <><RotateCcw className="w-4 h-4" />Retake Assessment</> : <><ChevronRight className="w-4 h-4" />Begin Assessment</>}
       </button>
-      <p className="text-white/20 text-xs text-center mt-3">8 core questions + activity-specific follow-ups · ~4 minutes</p>
+      <p className="text-white/20 text-xs text-center mt-3">8 questions · ~3 minutes</p>
     </div>
   );
 }
@@ -1099,58 +1099,20 @@ const TRAINING_TIPS: Record<string, string> = {
   nerve: "Build comfort in remote settings — overnight solo trips and wilderness navigation without phone support.",
 };
 
-function buildResult(
-  userAxes: Record<string, number>,
-  supplementAnswers: Record<string, string> = {}
-): AnalysisResult {
+function buildResult(userAxes: Record<string, number>): AnalysisResult {
   const enriched: EnrichedAdventure[] = ALL_ADVENTURES.map((adv) => {
     const req = getACE(adv);
     const axes = Object.keys(userAxes) as (keyof typeof userAxes)[];
     const weakAxes = axes.filter(ax => req[ax as keyof typeof req] > 0 && userAxes[ax] < req[ax as keyof typeof req]);
     const maxGap = weakAxes.reduce((max, ax) => Math.max(max, req[ax as keyof typeof req] - userAxes[ax]), 0);
-
-    // Check type-specific hard gates
-    const supplements = TYPE_SUPPLEMENTS[adv.type as string];
-    let hardBlocked = false;
-    let blockReason = "";
-    if (supplements) {
-      for (const gate of supplements.hardGates) {
-        const ans = supplementAnswers[gate.key];
-        if (ans === gate.failAnswer) {
-          hardBlocked = true;
-          blockReason = gate.failReason;
-          break;
-        }
-      }
-    }
-
-    // Compute soft modifier score (0–1 multiplier on match quality)
-    let softScore = 1.0;
-    if (supplements && !hardBlocked) {
-      const answered = supplements.softModifiers.filter(m => supplementAnswers[m.key]);
-      if (answered.length > 0) {
-        const modSum = answered.reduce((sum, m) => {
-          const opt = m.options.find(o => o.value === supplementAnswers[m.key]);
-          return sum + (opt?.score ?? 1.0);
-        }, 0);
-        softScore = modSum / answered.length;
-      }
-    }
-
-    let status: "IN_ZONE" | "STRETCH" | "RESTRICTED";
-    if (hardBlocked) {
-      status = "RESTRICTED";
-    } else {
-      const effectiveGap = softScore < 0.5 ? maxGap + 2 : softScore < 0.75 ? maxGap + 1 : maxGap;
-      status = effectiveGap === 0 ? "IN_ZONE" : effectiveGap <= 1 ? "STRETCH" : "RESTRICTED";
-    }
+    const status: "IN_ZONE" | "STRETCH" | "RESTRICTED" = maxGap === 0 ? "IN_ZONE" : maxGap <= 1 ? "STRETCH" : "RESTRICTED";
 
     return {
       id: adv.slug, slug: adv.slug, name: adv.name, heroImage: adv.heroImage,
       state: adv.state, region: (adv.region ?? "") as string,
       type: adv.type as string, difficulty: adv.difficulty as string,
       altitude: adv.altitude, status, weakAxes, missingKeys: weakAxes,
-      analysis: hardBlocked ? blockReason : "",
+      analysis: "",
       requirements: req as unknown as Record<string, number>, riskLevel: maxGap,
     };
   });
@@ -1179,226 +1141,12 @@ function buildResult(
   return { userAxes, adventures: enriched, trainingPlan };
 }
 
-// ─── Adventure type groups for type-picker ───────────────────────────────────
-
-const TYPE_GROUPS = [
-  {
-    label: "Land",
-    color: "#f97316",
-    types: ["Trekking", "Scrambling", "Rock Climbing", "Mountaineering", "Caving", "Jeep Safari", "Urban Adventure"],
-  },
-  {
-    label: "Wheels",
-    color: "#eab308",
-    types: ["Motorcycling", "Cycling"],
-  },
-  {
-    label: "Water",
-    color: "#3b82f6",
-    types: ["Diving", "Snorkelling", "Kayaking", "River Rafting", "Surfing"],
-  },
-  {
-    label: "Snow & Ice",
-    color: "#a78bfa",
-    types: ["Skiing", "Snowboarding", "Ice Climbing", "Ice Skating"],
-  },
-  {
-    label: "Air",
-    color: "#10b981",
-    types: ["Paragliding", "Skydiving", "Hang Gliding", "Hot Air Balloon"],
-  },
-];
-
-// ─── Supplement screen ────────────────────────────────────────────────────────
-
-function SupplementScreen({
-  onDone,
-}: {
-  onDone: (answers: Record<string, string>) => void;
-}) {
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const [typesConfirmed, setTypesConfirmed] = useState(false);
-  const [suppAnswers, setSuppAnswers] = useState<Record<string, string>>({});
-  const [qIdx, setQIdx] = useState(0);
-
-  // Build ordered question list from selected types (deduplicated)
-  const relevantQs = typesConfirmed
-    ? selectedTypes
-        .flatMap(t => {
-          const s = TYPE_SUPPLEMENTS[t];
-          if (!s) return [];
-          return [
-            ...s.hardGates.map(g => ({ kind: "gate" as const, gate: g, mod: null, type: t })),
-            ...s.softModifiers.map(m => ({ kind: "mod" as const, gate: null, mod: m, type: t })),
-          ];
-        })
-        // Deduplicate by key
-        .filter((q, i, arr) => {
-          const key = q.kind === "gate" ? q.gate!.key : q.mod!.key;
-          return arr.findIndex(x => (x.kind === "gate" ? x.gate!.key : x.mod!.key) === key) === i;
-        })
-    : [];
-
-  const currentQ = relevantQs[qIdx];
-
-  function toggleType(t: string) {
-    setSelectedTypes(prev =>
-      prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]
-    );
-  }
-
-  function answerCurrent(val: string) {
-    const key = currentQ.kind === "gate" ? currentQ.gate!.key : currentQ.mod!.key;
-    const updated = { ...suppAnswers, [key]: val };
-    setSuppAnswers(updated);
-    if (qIdx < relevantQs.length - 1) {
-      setTimeout(() => setQIdx(i => i + 1), 180);
-    } else {
-      onDone(updated);
-    }
-  }
-
-  // ── Step 1: Type picker ───────────────────────────────────────────────────
-  if (!typesConfirmed) {
-    return (
-      <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-24">
-        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-5">Activity-Specific Questions</p>
-        <h2 className="text-white text-2xl sm:text-3xl font-bold tracking-tight leading-snug mb-3">
-          What types of adventures interest you?
-        </h2>
-        <p className="text-white/40 text-sm leading-relaxed mb-8">
-          Select all that apply. We&apos;ll ask a few targeted questions to improve matching for those types.
-        </p>
-
-        <div className="space-y-4 mb-10">
-          {TYPE_GROUPS.map(group => (
-            <div key={group.label}>
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2.5"
-                style={{ color: group.color }}>
-                {group.label}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {group.types.map(t => {
-                  const selected = selectedTypes.includes(t);
-                  return (
-                    <button
-                      key={t}
-                      onClick={() => toggleType(t)}
-                      className="px-4 py-2 rounded-full text-sm font-medium border transition-all duration-150"
-                      style={{
-                        background: selected ? `${group.color}18` : "rgba(255,255,255,0.04)",
-                        borderColor: selected ? group.color : "rgba(255,255,255,0.12)",
-                        color: selected ? group.color : "rgba(255,255,255,0.5)",
-                        boxShadow: selected ? `0 0 0 1px ${group.color}40` : "none",
-                      }}
-                    >
-                      {t}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <button
-          onClick={() => {
-            if (selectedTypes.length === 0) {
-              onDone({});
-            } else {
-              setTypesConfirmed(true);
-            }
-          }}
-          className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-full font-bold text-sm text-white transition-all hover:brightness-110"
-          style={{ background: "#ff5100" }}
-        >
-          {selectedTypes.length === 0 ? "Skip — use core profile only" : `Continue with ${selectedTypes.length} type${selectedTypes.length > 1 ? "s" : ""}`}
-          <ChevronRight className="w-4 h-4" />
-        </button>
-        <button
-          onClick={() => onDone({})}
-          className="mt-3 w-full text-center text-white/25 text-sm hover:text-white/45 transition-colors py-2"
-        >
-          Skip entirely
-        </button>
-      </div>
-    );
-  }
-
-  // ── Step 2: Supplement questions for selected types ───────────────────────
-  if (relevantQs.length === 0) { onDone(suppAnswers); return null; }
-  if (!currentQ) { onDone(suppAnswers); return null; }
-
-  const totalSteps = relevantQs.length;
-  const isGate = currentQ.kind === "gate";
-  const question = isGate ? currentQ.gate!.question : currentQ.mod!.question;
-  const currentKey = isGate ? currentQ.gate!.key : currentQ.mod!.key;
-
-  // Find the group color for the current question's type
-  const typeColor = TYPE_GROUPS.find(g => g.types.includes(currentQ.type))?.color ?? "#ff5100";
-
-  return (
-    <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-24">
-      <div className="mb-7">
-        <div className="flex items-center justify-between mb-5">
-          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">Activity Questions</p>
-          <span className="text-white/25 text-xs font-medium">{qIdx + 1} / {totalSteps}</span>
-        </div>
-        {/* Type label */}
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-5"
-          style={{ background: `${typeColor}18`, color: typeColor, border: `1px solid ${typeColor}30` }}>
-          {currentQ.type}
-        </div>
-        {/* Progress */}
-        <div className="flex items-center gap-1.5 mb-8">
-          {Array.from({ length: totalSteps }).map((_, i) => (
-            <div key={i} className="h-1 flex-1 rounded-full transition-all duration-300"
-              style={{ background: i < qIdx ? "#ff5100" : i === qIdx ? "#ff5100cc" : "rgba(255,255,255,0.1)" }} />
-          ))}
-        </div>
-      </div>
-
-      <h2 className="text-white text-xl sm:text-2xl font-semibold leading-snug mb-6">{question}</h2>
-
-      {isGate ? (
-        <div className="space-y-2.5">
-          {[{ v: "yes", l: "Yes" }, { v: "no", l: "No" }].map((o, i) => (
-            <OptionBtn key={o.v}
-              value={i === 0 ? "Y" : "N"}
-              label={o.l}
-              selected={suppAnswers[currentKey] === o.v}
-              onClick={() => answerCurrent(o.v)} />
-          ))}
-        </div>
-      ) : (
-        <div className="space-y-2.5">
-          {currentQ.mod!.options.map((o, i) => (
-            <OptionBtn key={o.value}
-              value={String.fromCharCode(65 + i)}
-              label={o.label}
-              selected={suppAnswers[currentKey] === o.value}
-              onClick={() => answerCurrent(o.value)} />
-          ))}
-        </div>
-      )}
-
-      <button
-        onClick={() => onDone(suppAnswers)}
-        className="mt-8 text-white/25 text-sm hover:text-white/50 transition-colors"
-      >
-        Skip remaining →
-      </button>
-    </div>
-  );
-}
 
 export default function MatchmakerClient() {
   const searchParams = useSearchParams();
   const [started, setStarted] = useState(() => searchParams.get("retake") === "1");
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
-  const [supplementAnswers, setSupplementAnswers] = useState<Record<string, string>>({});
-  const [showSupplements, setShowSupplements] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [savedResult, setSavedResult] = useState<AnalysisResult | null>(null);
@@ -1429,7 +1177,7 @@ export default function MatchmakerClient() {
   const currentQ = QUESTIONS[stepIndex] ?? QUESTIONS[0];
   const canAdvance = !!answers[currentQ.key];
 
-  function submitAssessment(finalAnswers: Answers, suppAnswers: Record<string, string>) {
+  function submitAssessment(finalAnswers: Answers) {
     setLoading(true);
     setApiError(null);
 
@@ -1444,7 +1192,7 @@ export default function MatchmakerClient() {
     saveProfileToServer(profile);
     awardXP("ace_complete");
 
-    setResult(buildResult(userAxes, suppAnswers));
+    setResult(buildResult(userAxes));
     setLoading(false);
   }
 
@@ -1453,8 +1201,7 @@ export default function MatchmakerClient() {
     if (stepIndex < QUESTIONS.length - 1) {
       setStepIndex(i => i + 1);
     } else {
-      // After core 8 questions, show supplement screen
-      setShowSupplements(true);
+      submitAssessment(answers);
     }
   }
 
@@ -1463,8 +1210,6 @@ export default function MatchmakerClient() {
     setStarted(false);
     setStepIndex(0);
     setAnswers({});
-    setSupplementAnswers({});
-    setShowSupplements(false);
     setResult(null);
     setSavedResult(null);
     setApiError(null);
@@ -1480,15 +1225,6 @@ export default function MatchmakerClient() {
   );
   if (loading && !result) return <LoadingScreen />;
   if (result) return <ResultsScreen result={result} onReset={reset} />;
-  if (showSupplements) return (
-    <SupplementScreen
-      onDone={(suppAnswers) => {
-        setSupplementAnswers(suppAnswers);
-        setShowSupplements(false);
-        submitAssessment(answers, suppAnswers);
-      }}
-    />
-  );
 
   return (
     <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-24">
@@ -1538,7 +1274,7 @@ export default function MatchmakerClient() {
                 if (stepIndex < QUESTIONS.length - 1) {
                   setStepIndex(stepIndex + 1);
                 } else {
-                  setShowSupplements(true);
+                  submitAssessment(updated);
                 }
               }, 180);
             }}
