@@ -399,11 +399,11 @@ function AxisBar({ axis, value, max = 5 }: { axis: string; value: number; max?: 
 // ─── Intro screen ─────────────────────────────────────────────────────────────
 
 
-const INTRO_AXES = [
-  { label: "Stamina",  color: "#f97316" }, { label: "Power",    color: "#eab308" },
-  { label: "Strength", color: "#84cc16" }, { label: "Agility",  color: "#22d3ee" },
-  { label: "Water",    color: "#3b82f6" }, { label: "Altitude", color: "#a78bfa" },
-  { label: "Focus",    color: "#f43f5e" }, { label: "Nerve",    color: "#10b981" },
+const INTRO_DOMAINS = [
+  { name: "Engine",   color: "#f97316", axes: [{ label: "Stamina", color: "#f97316" }, { label: "Power",    color: "#eab308" }] },
+  { name: "Chassis",  color: "#22d3ee", axes: [{ label: "Strength", color: "#84cc16" }, { label: "Agility",  color: "#22d3ee" }] },
+  { name: "Elements", color: "#a78bfa", axes: [{ label: "Water",    color: "#3b82f6" }, { label: "Altitude", color: "#a78bfa" }] },
+  { name: "Mind",     color: "#10b981", axes: [{ label: "Focus",    color: "#f43f5e" }, { label: "Nerve",    color: "#10b981" }] },
 ];
 
 function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => void; onViewResults: () => void; hasProfile: boolean }) {
@@ -418,11 +418,18 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
       </p>
 
       {!hasProfile && (
-        <div className="flex flex-wrap gap-1.5 mb-8">
-          {INTRO_AXES.map(({ label, color }) => (
-            <span key={label} className="px-2.5 py-1 rounded-full text-[10px] font-bold border" style={{ background: `${color}12`, borderColor: `${color}30`, color }}>
-              {label}
-            </span>
+        <div className="flex flex-col gap-2 mb-8">
+          {INTRO_DOMAINS.map(({ name, color, axes }) => (
+            <div key={name} className="flex items-center gap-3">
+              <span className="text-[9px] font-black tracking-widest uppercase w-16 shrink-0" style={{ color }}>{name}</span>
+              <div className="flex gap-1.5">
+                {axes.map(({ label, color: ac }) => (
+                  <span key={label} className="px-2.5 py-1 rounded-full text-[10px] font-bold border" style={{ background: `${ac}12`, borderColor: `${ac}30`, color: ac }}>
+                    {label}
+                  </span>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}
