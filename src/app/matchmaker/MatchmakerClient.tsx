@@ -1179,6 +1179,36 @@ function buildResult(
   return { userAxes, adventures: enriched, trainingPlan };
 }
 
+// ─── Adventure type groups for type-picker ───────────────────────────────────
+
+const TYPE_GROUPS = [
+  {
+    label: "Land",
+    color: "#f97316",
+    types: ["Trekking", "Scrambling", "Rock Climbing", "Mountaineering", "Caving", "Jeep Safari", "Urban Adventure"],
+  },
+  {
+    label: "Wheels",
+    color: "#eab308",
+    types: ["Biking", "Cycling"],
+  },
+  {
+    label: "Water",
+    color: "#3b82f6",
+    types: ["Diving", "Snorkelling", "Kayaking", "River Rafting", "Surfing"],
+  },
+  {
+    label: "Snow & Ice",
+    color: "#a78bfa",
+    types: ["Skiing", "Snowboarding", "Ice Climbing", "Ice Skating"],
+  },
+  {
+    label: "Air",
+    color: "#10b981",
+    types: ["Paragliding", "Skydiving", "Hang Gliding", "Hot Air Balloon"],
+  },
+];
+
 // ─── Supplement screen ────────────────────────────────────────────────────────
 
 function SupplementScreen({
@@ -1186,91 +1216,171 @@ function SupplementScreen({
 }: {
   onDone: (answers: Record<string, string>) => void;
 }) {
-  // Collect all unique supplement questions across all adventure types
-  const allSupplements = Object.entries(TYPE_SUPPLEMENTS);
-  // Flatten to a deduplicated list of modifiers (hard gates answered as yes/no)
-  const hardGateQs = allSupplements.flatMap(([, s]) => s?.hardGates ?? [])
-    .filter((g, i, arr) => arr.findIndex(x => x.key === g.key) === i);
-  const softModQs = allSupplements.flatMap(([, s]) => s?.softModifiers ?? [])
-    .filter((m, i, arr) => arr.findIndex(x => x.key === m.key) === i);
-
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [typesConfirmed, setTypesConfirmed] = useState(false);
   const [suppAnswers, setSuppAnswers] = useState<Record<string, string>>({});
-  const [gateIdx, setGateIdx] = useState(0);
-  const [modIdx, setModIdx] = useState(-1); // -1 = showing gates first
+  const [qIdx, setQIdx] = useState(0);
 
-  const isDoingGates = modIdx === -1;
-  const currentGate = hardGateQs[gateIdx];
-  const currentMod = modIdx >= 0 ? softModQs[modIdx] : null;
+  // Build ordered question list from selected types (deduplicated)
+  const relevantQs = typesConfirmed
+    ? selectedTypes
+        .flatMap(t => {
+          const s = TYPE_SUPPLEMENTS[t];
+          if (!s) return [];
+          return [
+            ...s.hardGates.map(g => ({ kind: "gate" as const, gate: g, mod: null, type: t })),
+            ...s.softModifiers.map(m => ({ kind: "mod" as const, gate: null, mod: m, type: t })),
+          ];
+        })
+        // Deduplicate by key
+        .filter((q, i, arr) => {
+          const key = q.kind === "gate" ? q.gate!.key : q.mod!.key;
+          return arr.findIndex(x => (x.kind === "gate" ? x.gate!.key : x.mod!.key) === key) === i;
+        })
+    : [];
 
-  function answerGate(val: string) {
-    const updated = { ...suppAnswers, [currentGate.key]: val };
-    setSuppAnswers(updated);
-    if (gateIdx < hardGateQs.length - 1) {
-      setTimeout(() => setGateIdx(i => i + 1), 180);
-    } else {
-      setTimeout(() => setModIdx(0), 180);
-    }
+  const currentQ = relevantQs[qIdx];
+
+  function toggleType(t: string) {
+    setSelectedTypes(prev =>
+      prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]
+    );
   }
 
-  function answerMod(key: string, val: string) {
+  function answerCurrent(val: string) {
+    const key = currentQ.kind === "gate" ? currentQ.gate!.key : currentQ.mod!.key;
     const updated = { ...suppAnswers, [key]: val };
     setSuppAnswers(updated);
-    if (modIdx < softModQs.length - 1) {
-      setTimeout(() => setModIdx(i => i + 1), 180);
+    if (qIdx < relevantQs.length - 1) {
+      setTimeout(() => setQIdx(i => i + 1), 180);
     } else {
       onDone(updated);
     }
   }
 
-  const totalSteps = hardGateQs.length + softModQs.length;
-  const currentStep = isDoingGates ? gateIdx : hardGateQs.length + modIdx;
+  // ── Step 1: Type picker ───────────────────────────────────────────────────
+  if (!typesConfirmed) {
+    return (
+      <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-24">
+        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-5">Activity-Specific Questions</p>
+        <h2 className="text-white text-2xl sm:text-3xl font-bold tracking-tight leading-snug mb-3">
+          What types of adventures interest you?
+        </h2>
+        <p className="text-white/40 text-sm leading-relaxed mb-8">
+          Select all that apply. We&apos;ll ask a few targeted questions to improve matching for those types.
+        </p>
 
-  const question = isDoingGates ? currentGate?.question : currentMod?.question;
-  if (!question) { onDone(suppAnswers); return null; }
+        <div className="space-y-4 mb-10">
+          {TYPE_GROUPS.map(group => (
+            <div key={group.label}>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2.5"
+                style={{ color: group.color }}>
+                {group.label}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {group.types.map(t => {
+                  const selected = selectedTypes.includes(t);
+                  return (
+                    <button
+                      key={t}
+                      onClick={() => toggleType(t)}
+                      className="px-4 py-2 rounded-full text-sm font-medium border transition-all duration-150"
+                      style={{
+                        background: selected ? `${group.color}18` : "rgba(255,255,255,0.04)",
+                        borderColor: selected ? group.color : "rgba(255,255,255,0.12)",
+                        color: selected ? group.color : "rgba(255,255,255,0.5)",
+                        boxShadow: selected ? `0 0 0 1px ${group.color}40` : "none",
+                      }}
+                    >
+                      {t}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={() => {
+            if (selectedTypes.length === 0) {
+              onDone({});
+            } else {
+              setTypesConfirmed(true);
+            }
+          }}
+          className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-full font-bold text-sm text-white transition-all hover:brightness-110"
+          style={{ background: "#ff5100" }}
+        >
+          {selectedTypes.length === 0 ? "Skip — use core profile only" : `Continue with ${selectedTypes.length} type${selectedTypes.length > 1 ? "s" : ""}`}
+          <ChevronRight className="w-4 h-4" />
+        </button>
+        <button
+          onClick={() => onDone({})}
+          className="mt-3 w-full text-center text-white/25 text-sm hover:text-white/45 transition-colors py-2"
+        >
+          Skip entirely
+        </button>
+      </div>
+    );
+  }
+
+  // ── Step 2: Supplement questions for selected types ───────────────────────
+  if (relevantQs.length === 0) { onDone(suppAnswers); return null; }
+  if (!currentQ) { onDone(suppAnswers); return null; }
+
+  const totalSteps = relevantQs.length;
+  const isGate = currentQ.kind === "gate";
+  const question = isGate ? currentQ.gate!.question : currentQ.mod!.question;
+  const currentKey = isGate ? currentQ.gate!.key : currentQ.mod!.key;
+
+  // Find the group color for the current question's type
+  const typeColor = TYPE_GROUPS.find(g => g.types.includes(currentQ.type))?.color ?? "#ff5100";
 
   return (
     <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-24">
       <div className="mb-7">
         <div className="flex items-center justify-between mb-5">
-          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">Activity-Specific Questions</p>
-          <span className="text-white/25 text-xs font-medium">{currentStep + 1} / {totalSteps}</span>
+          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">Activity Questions</p>
+          <span className="text-white/25 text-xs font-medium">{qIdx + 1} / {totalSteps}</span>
         </div>
-        <p className="text-white/40 text-sm mb-5 leading-relaxed">
-          These questions improve matching for specific adventure types — water, air, snow, climbing, and more.
-        </p>
+        {/* Type label */}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-5"
+          style={{ background: `${typeColor}18`, color: typeColor, border: `1px solid ${typeColor}30` }}>
+          {currentQ.type}
+        </div>
         {/* Progress */}
-        <div className="flex items-center gap-1.5 mb-9">
+        <div className="flex items-center gap-1.5 mb-8">
           {Array.from({ length: totalSteps }).map((_, i) => (
             <div key={i} className="h-1 flex-1 rounded-full transition-all duration-300"
-              style={{ background: i < currentStep ? "#ff5100" : i === currentStep ? "#ff5100cc" : "rgba(255,255,255,0.1)" }} />
+              style={{ background: i < qIdx ? "#ff5100" : i === qIdx ? "#ff5100cc" : "rgba(255,255,255,0.1)" }} />
           ))}
         </div>
       </div>
 
       <h2 className="text-white text-xl sm:text-2xl font-semibold leading-snug mb-6">{question}</h2>
 
-      {isDoingGates ? (
+      {isGate ? (
         <div className="space-y-2.5">
-          {[
-            { v: "yes", l: "Yes" },
-            { v: "no",  l: "No" },
-          ].map(o => (
-            <OptionBtn key={o.v} value={o.v === "yes" ? "Y" : "N"} label={o.l}
-              selected={suppAnswers[currentGate.key] === o.v}
-              onClick={() => answerGate(o.v)} />
+          {[{ v: "yes", l: "Yes" }, { v: "no", l: "No" }].map((o, i) => (
+            <OptionBtn key={o.v}
+              value={i === 0 ? "Y" : "N"}
+              label={o.l}
+              selected={suppAnswers[currentKey] === o.v}
+              onClick={() => answerCurrent(o.v)} />
           ))}
         </div>
-      ) : currentMod ? (
+      ) : (
         <div className="space-y-2.5">
-          {currentMod.options.map((o, i) => (
+          {currentQ.mod!.options.map((o, i) => (
             <OptionBtn key={o.value}
               value={String.fromCharCode(65 + i)}
               label={o.label}
-              selected={suppAnswers[currentMod.key] === o.value}
-              onClick={() => answerMod(currentMod.key, o.value)} />
+              selected={suppAnswers[currentKey] === o.value}
+              onClick={() => answerCurrent(o.value)} />
           ))}
         </div>
-      ) : null}
+      )}
 
       <button
         onClick={() => onDone(suppAnswers)}
