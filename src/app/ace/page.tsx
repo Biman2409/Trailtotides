@@ -305,7 +305,7 @@ export default function ACEPage() {
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,81,0,0.1) 0%, transparent 70%)" }} />
         <div className="max-w-xl mx-auto text-center relative">
           <h2 className="text-white text-3xl font-black tracking-tight leading-tight mb-3">Find your level. Find your adventure.</h2>
-          <p className="text-white/40 text-sm leading-relaxed mb-8">8 questions. 3 minutes. We map your capability across every axis and show you exactly which adventures fit — and which ones to work toward.</p>
+          <p className="text-white/40 text-sm leading-relaxed mb-8">8 questions. 2 minutes. Your capability mapped across every axis — adventures that fit, and ones to work toward.</p>
           <Link href="/matchmaker" className="inline-flex items-center gap-2 bg-[#ff5100] text-white px-8 py-3.5 rounded-full font-bold text-sm hover:bg-[#e04800] transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30">
             Take the Assessment
             <ArrowRight className="w-4 h-4" />
