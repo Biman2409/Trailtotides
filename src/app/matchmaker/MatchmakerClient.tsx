@@ -15,7 +15,7 @@ import Pill from "@/components/ui/custom/Pill";
 import AchievementBadges from "@/components/ui/custom/AchievementBadges";
 import { saveProfile, loadProfile, clearProfile, saveProfileToServer, loadProfileFromServer } from "@/lib/matchmaker";
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
-import { getACE } from "@/lib/ace";
+import { getACE, TYPE_SUPPLEMENTS } from "@/lib/ace";
 import { getAchievements } from "@/lib/achievements";
 import { awardXP } from "@/lib/awardXP";
 
@@ -26,112 +26,112 @@ const QUESTIONS = [
     key: "Q1",
     axis: "Stamina",
     icon: <Flame className="w-4 h-4" />,
-    question: "How many hours can you continuously move before needing to stop for the day?",
-    hint: "Count active moving time — short rest stops are fine.",
+    question: "How long can you sustain continuous physical effort before needing to stop for the day?",
+    hint: "Active moving time — short rest stops are fine, think full trekking days.",
     options: [
-      { v: "A", l: "Under 2 hours" },
-      { v: "B", l: "2–4 hours" },
-      { v: "C", l: "4–6 hours" },
-      { v: "D", l: "6–8 hours" },
-      { v: "E", l: "More than 8 hours" },
+      { v: "A", l: "Under 1 hour", s: "Walks and easy half-days only" },
+      { v: "B", l: "1–2 hours", s: "Light day hikes at a relaxed pace" },
+      { v: "C", l: "2–4 hours", s: "Moderate day treks with breaks" },
+      { v: "D", l: "4–6 hours", s: "Full trekking days without struggling" },
+      { v: "E", l: "6+ hours", s: "Long mountain days with minimal fatigue" },
     ],
   },
   {
     key: "Q2",
     axis: "Power",
     icon: <Zap className="w-4 h-4" />,
-    question: "What weight can you comfortably carry over extended periods without significant fatigue or pain?",
-    hint: "Across a full trekking day, not just a short walk.",
+    question: "What weight can you carry comfortably across a full day of trekking?",
+    hint: "Include pack, water, and gear — not just for a short walk.",
     options: [
-      { v: "A", l: "Under 5 kg" },
-      { v: "B", l: "5–8 kg" },
-      { v: "C", l: "8–12 kg" },
-      { v: "D", l: "12–15 kg" },
-      { v: "E", l: "More than 15 kg" },
+      { v: "A", l: "Under 5 kg", s: "Day bag only" },
+      { v: "B", l: "5–8 kg", s: "Light overnight pack" },
+      { v: "C", l: "8–12 kg", s: "Standard multi-day pack" },
+      { v: "D", l: "12–18 kg", s: "Heavy expedition pack" },
+      { v: "E", l: "18 kg+", s: "Full expedition load, sustained days" },
     ],
   },
   {
     key: "Q3",
     axis: "Strength",
     icon: <Dumbbell className="w-4 h-4" />,
-    question: "How do you typically handle long, continuous uphill sections?",
-    hint: "Not a single climb — think repeated ascents over hours.",
+    question: "How do you handle sustained uphill sections over several hours?",
+    hint: "Not a single climb — repeated ascents throughout the day.",
     options: [
-      { v: "A", l: "Avoid steep or prolonged climbs" },
-      { v: "B", l: "Need frequent short breaks" },
-      { v: "C", l: "Maintain a steady pace on moderate climbs" },
-      { v: "D", l: "Sustain long climbs with significant elevation gain" },
-      { v: "E", l: "Comfortable with steep, prolonged ascents" },
+      { v: "A", l: "Avoid steep or prolonged climbs", s: "Flat terrain preferred" },
+      { v: "B", l: "Need frequent breaks on climbs", s: "Short ascents manageable" },
+      { v: "C", l: "Steady pace on moderate climbs", s: "500–800m elevation gain/day" },
+      { v: "D", l: "Sustain hard climbs with heavy load", s: "1,000m+ gain without stopping" },
+      { v: "E", l: "Power through steep prolonged ascents", s: "1,500m+ gain, heavy pack, no issue" },
     ],
   },
   {
     key: "Q4",
     axis: "Agility",
     icon: <Compass className="w-4 h-4" />,
-    question: "What type of terrain are you confident moving through?",
-    hint: "Pick the hardest terrain you can move through safely and steadily.",
+    question: "What is the most technical terrain you can navigate safely and confidently?",
+    hint: "Pick the hardest terrain you can move through without slowing the group.",
     options: [
-      { v: "A", l: "Flat, paved, or well-maintained paths" },
-      { v: "B", l: "Dirt trails with minor obstacles" },
-      { v: "C", l: "Uneven terrain (loose rocks, scree, sand)" },
-      { v: "D", l: "Rocky terrain requiring use of hands" },
-      { v: "E", l: "Highly technical terrain (glaciers, exposed rock)" },
+      { v: "A", l: "Flat, paved, or well-maintained paths", s: "No off-trail movement" },
+      { v: "B", l: "Dirt trails with minor obstacles", s: "Gravel, tree roots, mild slopes" },
+      { v: "C", l: "Uneven terrain — loose rock, scree, sand", s: "Hands-free but careful footing" },
+      { v: "D", l: "Rocky terrain requiring hands", s: "Scrambling, boulders, steep moraine" },
+      { v: "E", l: "Highly technical terrain", s: "Glaciers, exposed rock, via ferrata" },
     ],
   },
   {
     key: "Q5",
     axis: "Water",
     icon: <Waves className="w-4 h-4" />,
-    question: "What level of water conditions are you comfortable handling?",
-    hint: "Think rivers, sea, or open water — not a controlled pool setting.",
+    question: "What level of water conditions are you comfortable in?",
+    hint: "Open water or rivers — not a controlled pool setting.",
     options: [
-      { v: "A", l: "No water exposure" },
-      { v: "B", l: "Shallow, calm water" },
-      { v: "C", l: "Deeper water or basic swimming" },
-      { v: "D", l: "Moving water or moderate currents" },
-      { v: "E", l: "Strong currents or advanced conditions" },
+      { v: "A", l: "No open water — non-swimmer", s: "Water crossings only with support" },
+      { v: "B", l: "Calm shallow water", s: "Knee-deep river crossings, no swimming" },
+      { v: "C", l: "Open water swimming", s: "Lake or sea, calm conditions" },
+      { v: "D", l: "Moving water or moderate sea currents", s: "River crossings, mild surf, snorkelling" },
+      { v: "E", l: "Strong currents, rough conditions", s: "White water, open ocean, diving" },
     ],
   },
   {
     key: "Q6",
     axis: "Altitude",
     icon: <Mountain className="w-4 h-4" />,
-    question: "At what altitude have you remained physically active without significant discomfort?",
-    hint: "Where you've trekked or camped — not just driven or flown through.",
+    question: "At what altitude have you stayed active for multiple days without significant symptoms?",
+    hint: "Where you have trekked or camped — not just driven or flown through.",
     options: [
-      { v: "A", l: "Below 1,500 m" },
-      { v: "B", l: "1,500–2,500 m" },
-      { v: "C", l: "2,500–3,200 m" },
-      { v: "D", l: "3,200–4,200 m" },
-      { v: "E", l: "Above 4,200 m" },
+      { v: "A", l: "Below 1,500m", s: "Sea level to low hills only" },
+      { v: "B", l: "1,500–2,500m", s: "Minor headaches, adapted well" },
+      { v: "C", l: "2,500–3,500m", s: "Acclimatised without major issues" },
+      { v: "D", l: "3,500–4,500m", s: "Himalayan trekking altitude, handled well" },
+      { v: "E", l: "Above 4,500m", s: "High camps, thin air, no significant AMS" },
     ],
   },
   {
     key: "Q7",
     axis: "Focus",
     icon: <Shield className="w-4 h-4" />,
-    question: "How comfortable are you on narrow paths with steep drop-offs?",
-    hint: "Paths where a misstep matters — not a momentary ledge crossing.",
+    question: "How comfortable are you on narrow exposed paths with a significant drop on one or both sides?",
+    hint: "Where a misstep has real consequences — not a momentary step.",
     options: [
-      { v: "A", l: "Not comfortable; prefer wide paths" },
-      { v: "B", l: "Slight discomfort but manageable" },
-      { v: "C", l: "Comfortable with solid footing" },
-      { v: "D", l: "Comfortable on narrow or exposed sections" },
-      { v: "E", l: "Fully comfortable in highly exposed terrain" },
+      { v: "A", l: "Very uncomfortable, prefer wide paths", s: "Heights cause distress" },
+      { v: "B", l: "Manageable with slow movement", s: "Discomfort, but I push through" },
+      { v: "C", l: "Comfortable with solid footing", s: "Focused but not anxious" },
+      { v: "D", l: "Comfortable on narrow or exposed ridges", s: "Heights don't affect performance" },
+      { v: "E", l: "Fully at ease in high-exposure terrain", s: "Thrives on exposed ridges and walls" },
     ],
   },
   {
     key: "Q8",
     axis: "Nerve",
     icon: <Ghost className="w-4 h-4" />,
-    question: "If you're stuck in a remote area without signal or immediate help, how do you respond?",
-    hint: "No phone signal, hours from the nearest town, no guarantee of rescue.",
+    question: "If you were stuck in a remote area — no signal, hours from help — how do you respond?",
+    hint: "No phone, no guide, no guarantee of rescue. Real wilderness self-reliance.",
     options: [
-      { v: "A", l: "Prefer to stay within quick reach of help" },
-      { v: "B", l: "Comfortable on known routes with people nearby" },
-      { v: "C", l: "Can manage basic needs and delays" },
-      { v: "D", l: "Can stay self-sufficient in remote areas" },
-      { v: "E", l: "Fully comfortable operating independently" },
+      { v: "A", l: "Prefer to stay near help at all times", s: "Needs consistent access to support" },
+      { v: "B", l: "OK on known routes with others nearby", s: "Short remote stretches manageable" },
+      { v: "C", l: "Can manage basic needs and short delays", s: "1–2 days remote with preparation" },
+      { v: "D", l: "Self-sufficient in remote terrain", s: "Multi-day remote, calm under pressure" },
+      { v: "E", l: "Fully expedition-level self-reliant", s: "Weeks alone, deep wilderness, no issue" },
     ],
   },
 ];
@@ -347,26 +347,27 @@ function OptionBtn({
   return (
     <button
       onClick={onClick}
-      className="w-full text-left px-5 py-4 rounded-2xl border transition-all duration-150"
+      className="w-full text-left px-5 py-4 rounded-2xl border transition-all duration-150 active:scale-[0.99]"
       style={{
         background: selected ? "rgba(255,81,0,0.12)" : "rgba(255,255,255,0.04)",
         borderColor: selected ? "#ff5100" : "rgba(255,255,255,0.1)",
+        boxShadow: selected ? "0 0 0 1px rgba(255,81,0,0.3)" : "none",
       }}
     >
       <div className="flex items-center gap-3">
         <span
-          className="w-6 h-6 rounded-full border flex items-center justify-center text-[10px] font-bold shrink-0"
+          className="w-6 h-6 rounded-full border flex items-center justify-center text-[10px] font-bold shrink-0 transition-all"
           style={{
             borderColor: selected ? "#ff5100" : "rgba(255,255,255,0.2)",
             color: selected ? "#ff5100" : "rgba(255,255,255,0.4)",
-            background: selected ? "rgba(255,81,0,0.15)" : "transparent",
+            background: selected ? "rgba(255,81,0,0.2)" : "transparent",
           }}
         >
           {value}
         </span>
-        <div>
+        <div className="min-w-0">
           <p className="text-white font-medium text-sm">{label}</p>
-          {sub && <p className="text-white/40 text-xs mt-0.5">{sub}</p>}
+          {sub && <p className="text-white/35 text-xs mt-0.5 leading-snug">{sub}</p>}
         </div>
       </div>
     </button>
@@ -468,7 +469,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
       >
         {hasProfile ? <><RotateCcw className="w-4 h-4" />Retake Assessment</> : <><ChevronRight className="w-4 h-4" />Begin Assessment</>}
       </button>
-      <p className="text-white/20 text-xs text-center mt-3">8 questions · takes about 3 minutes</p>
+      <p className="text-white/20 text-xs text-center mt-3">8 core questions + activity-specific follow-ups · ~4 minutes</p>
     </div>
   );
 }
@@ -1098,20 +1099,59 @@ const TRAINING_TIPS: Record<string, string> = {
   nerve: "Build comfort in remote settings — overnight solo trips and wilderness navigation without phone support.",
 };
 
-function buildResult(userAxes: Record<string, number>): AnalysisResult {
+function buildResult(
+  userAxes: Record<string, number>,
+  supplementAnswers: Record<string, string> = {}
+): AnalysisResult {
   const enriched: EnrichedAdventure[] = ALL_ADVENTURES.map((adv) => {
     const req = getACE(adv);
     const axes = Object.keys(userAxes) as (keyof typeof userAxes)[];
     const weakAxes = axes.filter(ax => req[ax as keyof typeof req] > 0 && userAxes[ax] < req[ax as keyof typeof req]);
     const maxGap = weakAxes.reduce((max, ax) => Math.max(max, req[ax as keyof typeof req] - userAxes[ax]), 0);
-    const status: "IN_ZONE" | "STRETCH" | "RESTRICTED" =
-      maxGap === 0 ? "IN_ZONE" : maxGap <= 1 ? "STRETCH" : "RESTRICTED";
+
+    // Check type-specific hard gates
+    const supplements = TYPE_SUPPLEMENTS[adv.type as string];
+    let hardBlocked = false;
+    let blockReason = "";
+    if (supplements) {
+      for (const gate of supplements.hardGates) {
+        const ans = supplementAnswers[gate.key];
+        if (ans === gate.failAnswer) {
+          hardBlocked = true;
+          blockReason = gate.failReason;
+          break;
+        }
+      }
+    }
+
+    // Compute soft modifier score (0–1 multiplier on match quality)
+    let softScore = 1.0;
+    if (supplements && !hardBlocked) {
+      const answered = supplements.softModifiers.filter(m => supplementAnswers[m.key]);
+      if (answered.length > 0) {
+        const modSum = answered.reduce((sum, m) => {
+          const opt = m.options.find(o => o.value === supplementAnswers[m.key]);
+          return sum + (opt?.score ?? 1.0);
+        }, 0);
+        softScore = modSum / answered.length;
+      }
+    }
+
+    let status: "IN_ZONE" | "STRETCH" | "RESTRICTED";
+    if (hardBlocked) {
+      status = "RESTRICTED";
+    } else {
+      const effectiveGap = softScore < 0.5 ? maxGap + 2 : softScore < 0.75 ? maxGap + 1 : maxGap;
+      status = effectiveGap === 0 ? "IN_ZONE" : effectiveGap <= 1 ? "STRETCH" : "RESTRICTED";
+    }
+
     return {
       id: adv.slug, slug: adv.slug, name: adv.name, heroImage: adv.heroImage,
       state: adv.state, region: (adv.region ?? "") as string,
       type: adv.type as string, difficulty: adv.difficulty as string,
       altitude: adv.altitude, status, weakAxes, missingKeys: weakAxes,
-      analysis: "", requirements: req as unknown as Record<string, number>, riskLevel: maxGap,
+      analysis: hardBlocked ? blockReason : "",
+      requirements: req as unknown as Record<string, number>, riskLevel: maxGap,
     };
   });
 
@@ -1139,11 +1179,116 @@ function buildResult(userAxes: Record<string, number>): AnalysisResult {
   return { userAxes, adventures: enriched, trainingPlan };
 }
 
+// ─── Supplement screen ────────────────────────────────────────────────────────
+
+function SupplementScreen({
+  onDone,
+}: {
+  onDone: (answers: Record<string, string>) => void;
+}) {
+  // Collect all unique supplement questions across all adventure types
+  const allSupplements = Object.entries(TYPE_SUPPLEMENTS);
+  // Flatten to a deduplicated list of modifiers (hard gates answered as yes/no)
+  const hardGateQs = allSupplements.flatMap(([, s]) => s?.hardGates ?? [])
+    .filter((g, i, arr) => arr.findIndex(x => x.key === g.key) === i);
+  const softModQs = allSupplements.flatMap(([, s]) => s?.softModifiers ?? [])
+    .filter((m, i, arr) => arr.findIndex(x => x.key === m.key) === i);
+
+  const [suppAnswers, setSuppAnswers] = useState<Record<string, string>>({});
+  const [gateIdx, setGateIdx] = useState(0);
+  const [modIdx, setModIdx] = useState(-1); // -1 = showing gates first
+
+  const isDoingGates = modIdx === -1;
+  const currentGate = hardGateQs[gateIdx];
+  const currentMod = modIdx >= 0 ? softModQs[modIdx] : null;
+
+  function answerGate(val: string) {
+    const updated = { ...suppAnswers, [currentGate.key]: val };
+    setSuppAnswers(updated);
+    if (gateIdx < hardGateQs.length - 1) {
+      setTimeout(() => setGateIdx(i => i + 1), 180);
+    } else {
+      setTimeout(() => setModIdx(0), 180);
+    }
+  }
+
+  function answerMod(key: string, val: string) {
+    const updated = { ...suppAnswers, [key]: val };
+    setSuppAnswers(updated);
+    if (modIdx < softModQs.length - 1) {
+      setTimeout(() => setModIdx(i => i + 1), 180);
+    } else {
+      onDone(updated);
+    }
+  }
+
+  const totalSteps = hardGateQs.length + softModQs.length;
+  const currentStep = isDoingGates ? gateIdx : hardGateQs.length + modIdx;
+
+  const question = isDoingGates ? currentGate?.question : currentMod?.question;
+  if (!question) { onDone(suppAnswers); return null; }
+
+  return (
+    <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-24">
+      <div className="mb-7">
+        <div className="flex items-center justify-between mb-5">
+          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">Activity-Specific Questions</p>
+          <span className="text-white/25 text-xs font-medium">{currentStep + 1} / {totalSteps}</span>
+        </div>
+        <p className="text-white/40 text-sm mb-5 leading-relaxed">
+          These questions improve matching for specific adventure types — water, air, snow, climbing, and more.
+        </p>
+        {/* Progress */}
+        <div className="flex items-center gap-1.5 mb-9">
+          {Array.from({ length: totalSteps }).map((_, i) => (
+            <div key={i} className="h-1 flex-1 rounded-full transition-all duration-300"
+              style={{ background: i < currentStep ? "#ff5100" : i === currentStep ? "#ff5100cc" : "rgba(255,255,255,0.1)" }} />
+          ))}
+        </div>
+      </div>
+
+      <h2 className="text-white text-xl sm:text-2xl font-semibold leading-snug mb-6">{question}</h2>
+
+      {isDoingGates ? (
+        <div className="space-y-2.5">
+          {[
+            { v: "yes", l: "Yes" },
+            { v: "no",  l: "No" },
+          ].map(o => (
+            <OptionBtn key={o.v} value={o.v === "yes" ? "Y" : "N"} label={o.l}
+              selected={suppAnswers[currentGate.key] === o.v}
+              onClick={() => answerGate(o.v)} />
+          ))}
+        </div>
+      ) : currentMod ? (
+        <div className="space-y-2.5">
+          {currentMod.options.map((o, i) => (
+            <OptionBtn key={o.value}
+              value={String.fromCharCode(65 + i)}
+              label={o.label}
+              selected={suppAnswers[currentMod.key] === o.value}
+              onClick={() => answerMod(currentMod.key, o.value)} />
+          ))}
+        </div>
+      ) : null}
+
+      <button
+        onClick={() => onDone(suppAnswers)}
+        className="mt-8 text-white/25 text-sm hover:text-white/50 transition-colors"
+      >
+        Skip remaining →
+      </button>
+    </div>
+  );
+}
+
 export default function MatchmakerClient() {
   const searchParams = useSearchParams();
   const [started, setStarted] = useState(() => searchParams.get("retake") === "1");
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
+  const [supplementAnswers, setSupplementAnswers] = useState<Record<string, string>>({});
+  const [showSupplements, setShowSupplements] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [savedResult, setSavedResult] = useState<AnalysisResult | null>(null);
@@ -1174,7 +1319,7 @@ export default function MatchmakerClient() {
   const currentQ = QUESTIONS[stepIndex] ?? QUESTIONS[0];
   const canAdvance = !!answers[currentQ.key];
 
-  function submitAssessment(finalAnswers: Answers) {
+  function submitAssessment(finalAnswers: Answers, suppAnswers: Record<string, string>) {
     setLoading(true);
     setApiError(null);
 
@@ -1186,10 +1331,10 @@ export default function MatchmakerClient() {
 
     const profile = { ace: userAxes };
     saveProfile(profile);
-    saveProfileToServer(profile); // persist for logged-in users
+    saveProfileToServer(profile);
     awardXP("ace_complete");
 
-    setResult(buildResult(userAxes));
+    setResult(buildResult(userAxes, suppAnswers));
     setLoading(false);
   }
 
@@ -1198,7 +1343,8 @@ export default function MatchmakerClient() {
     if (stepIndex < QUESTIONS.length - 1) {
       setStepIndex(i => i + 1);
     } else {
-      submitAssessment(answers);
+      // After core 8 questions, show supplement screen
+      setShowSupplements(true);
     }
   }
 
@@ -1207,6 +1353,8 @@ export default function MatchmakerClient() {
     setStarted(false);
     setStepIndex(0);
     setAnswers({});
+    setSupplementAnswers({});
+    setShowSupplements(false);
     setResult(null);
     setSavedResult(null);
     setApiError(null);
@@ -1222,6 +1370,15 @@ export default function MatchmakerClient() {
   );
   if (loading && !result) return <LoadingScreen />;
   if (result) return <ResultsScreen result={result} onReset={reset} />;
+  if (showSupplements) return (
+    <SupplementScreen
+      onDone={(suppAnswers) => {
+        setSupplementAnswers(suppAnswers);
+        setShowSupplements(false);
+        submitAssessment(answers, suppAnswers);
+      }}
+    />
+  );
 
   return (
     <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-24">
@@ -1267,12 +1424,11 @@ export default function MatchmakerClient() {
             onClick={() => {
               const updated = { ...answers, [currentQ.key]: o.v };
               setAnswers(updated);
-              // Auto-advance after brief delay so selection is visible
               setTimeout(() => {
                 if (stepIndex < QUESTIONS.length - 1) {
                   setStepIndex(stepIndex + 1);
                 } else {
-                  submitAssessment(updated);
+                  setShowSupplements(true);
                 }
               }, 180);
             }}
