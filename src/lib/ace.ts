@@ -300,6 +300,31 @@ export const TYPE_SUPPLEMENTS: Partial<Record<string, AdventureTypeSupplements>>
     ],
   },
 
+  Motorcycling: {
+    hardGates: [],
+    softModifiers: [
+      {
+        key: "moto_technical",
+        question: "How do you handle technical terrain on a bike (loose gravel, river crossings, high altitude)?",
+        options: [
+          { value: "beginner",      score: 0.3, label: "Beginner — stick to highways" },
+          { value: "some_offroad",  score: 0.6, label: "Some off-road experience" },
+          { value: "confident",     score: 0.85, label: "Confident on most terrain" },
+          { value: "expert",        score: 1.0, label: "Expert, handle anything" },
+        ],
+      },
+      {
+        key: "mech_selfreliance",
+        question: "Can you handle basic roadside repairs (puncture, chain, clutch adjustment)?",
+        options: [
+          { value: "no",    score: 0.5, label: "No — rely on support" },
+          { value: "basic", score: 0.8, label: "Basic fixes" },
+          { value: "full",  score: 1.0, label: "Full mechanical self-reliance" },
+        ],
+      },
+    ],
+  },
+
   Biking: {
     hardGates: [],
     softModifiers: [

@@ -1190,7 +1190,7 @@ const TYPE_GROUPS = [
   {
     label: "Wheels",
     color: "#eab308",
-    types: ["Biking", "Cycling"],
+    types: ["Motorcycling", "Cycling"],
   },
   {
     label: "Water",
