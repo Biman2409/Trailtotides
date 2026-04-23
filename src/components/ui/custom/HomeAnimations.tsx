@@ -188,7 +188,7 @@ export function HeroHeadline() {
 export function HeroSubheading() {
   return (
     <div
-      className="flex flex-col items-center gap-4 mx-auto px-9 py-6 rounded-2xl"
+      className="flex flex-col items-center gap-5 mx-auto px-10 py-7 rounded-2xl"
       style={{
         maxWidth: 500,
         animation: "heroLineIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.55s both",
@@ -199,9 +199,6 @@ export function HeroSubheading() {
         boxShadow: "0 12px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)",
       }}
     >
-      {/* Divider top */}
-      <div className="w-8 h-px" style={{ background: "rgba(255,81,0,0.5)" }} />
-
       {/* Word trio */}
       <div className="flex items-center gap-0 text-white font-black tracking-wide italic" style={{ fontSize: "clamp(0.85rem, 2vw, 1.05rem)", letterSpacing: "0.05em" }}>
         {["Discover", "Compare", "Book"].map((word, i) => (
@@ -213,6 +210,9 @@ export function HeroSubheading() {
           </span>
         ))}
       </div>
+
+      {/* Thin separator */}
+      <div className="w-full h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
 
       {/* Supporting copy */}
       <p
