@@ -456,7 +456,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
               <Link href="/ace"
                 className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-[13px] font-semibold transition-all hover:bg-white/[0.04]"
                 style={{ border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.30)" }}>
-                Learn more <ScanEye className="w-3.5 h-3.5" />
+                Learn more <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           </div>
