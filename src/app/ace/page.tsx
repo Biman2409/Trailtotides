@@ -211,6 +211,51 @@ export default function ACEPage() {
         </div>
       </section>
 
+      {/* ── HOW MATCHING WORKS ── */}
+      <section className="py-16 px-6 border-t border-white/5">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-8">
+            <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-1">How It Works</p>
+            <h2 className="text-white text-2xl font-black tracking-tight">Every adventure is rated. So are you.</h2>
+            <p className="text-white/35 text-sm mt-1 max-w-xl">Each adventure on Trail to Tides has its own ACE profile — 8 axes scored by our team. Your profile is matched against every one of them.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {[
+              {
+                step: "01",
+                color: "#ff5100",
+                title: "Adventures are rated",
+                body: "Every adventure gets an ACE profile — stamina, altitude, water, nerve, and more — scored honestly by axis, not by a vague difficulty label.",
+              },
+              {
+                step: "02",
+                color: "#f59e0b",
+                title: "You take the assessment",
+                body: "8 questions map your real capability across all 8 axes. No self-reported guesses — structured answers that translate directly to a profile.",
+              },
+              {
+                step: "03",
+                color: "#4ade80",
+                title: "We surface your matches",
+                body: "Adventures are sorted into Ready Now, Stretch, and Out of Range — based on where your axes meet each adventure's requirements.",
+              },
+            ].map(({ step, color, title, body }) => (
+              <div key={step} className="rounded-2xl border p-5 flex flex-col gap-3 relative overflow-hidden"
+                style={{ background: `${color}07`, borderColor: `${color}20` }}>
+                <div className="absolute top-4 right-4 text-[40px] font-black leading-none tabular-nums select-none pointer-events-none"
+                  style={{ color: `${color}10` }}>{step}</div>
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black"
+                  style={{ background: `${color}18`, color, border: `1.5px solid ${color}28` }}>{step}</div>
+                <div>
+                  <p className="text-white font-bold text-sm mb-1">{title}</p>
+                  <p className="text-white/40 text-[12px] leading-relaxed">{body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── LIVE EXAMPLES ── */}
       <section className="py-16 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
