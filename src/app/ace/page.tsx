@@ -116,46 +116,45 @@ export default function ACEPage() {
         </div>
       </section>
 
-      {/* ── 8 AXES + 4 DOMAINS — combined ── */}
+      {/* ── 8 AXES grouped by domain ── */}
       <section className="py-16 px-6 t-bg-surface" style={{ borderTop: "1px solid var(--border-subtle)" }}>
         <div className="max-w-6xl mx-auto">
-
-          {/* Axes */}
-          <div className="mb-4">
+          <div className="mb-8">
             <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-1">8 Axes</p>
             <h2 className="text-white text-2xl font-black tracking-tight">What gets measured</h2>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-12">
-            {AXES.map(({ key, icon, color, label, desc }) => (
-              <div key={key} className="group relative rounded-xl p-4 border overflow-hidden transition-all duration-200 hover:-translate-y-0.5" style={{ background: `${color}08`, borderColor: `${color}20` }}>
-                <div className="absolute top-0 right-0 w-16 h-16 rounded-full blur-xl opacity-0 group-hover:opacity-25 transition-opacity" style={{ background: color }} />
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style={{ background: `${color}18`, color }}>{icon}</div>
-                <p className="font-black text-white text-sm mb-1">{label}</p>
-                <p className="text-white/35 text-[11px] leading-snug">{desc}</p>
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }} />
-              </div>
-            ))}
-          </div>
 
-          {/* Domains */}
-          <div className="mb-4">
-            <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-1">4 Domains</p>
-            <h2 className="text-white text-2xl font-black tracking-tight">How the axes group</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-            {DOMAINS.map(({ name, icon, color, axes, desc }) => (
-              <div key={name} className="group relative rounded-xl p-4 border overflow-hidden transition-all duration-200 hover:-translate-y-0.5" style={{ background: `${color}08`, borderColor: `${color}20` }}>
-                <div className="flex items-center gap-2.5 mb-2">
-                  <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${color}18`, color }}>{icon}</div>
-                  <p className="font-black text-white text-sm">{name}</p>
+          <div className="space-y-6">
+            {DOMAINS.map(({ name, icon, color, axes, desc }) => {
+              const domainAxes = AXES.filter(a => axes.includes(a.label));
+              return (
+                <div key={name}>
+                  {/* Domain label row */}
+                  <div className="flex items-center gap-2.5 mb-2.5">
+                    <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0" style={{ background: `${color}18`, color }}>{icon}</div>
+                    <span className="text-xs font-black tracking-widest uppercase" style={{ color }}>{name}</span>
+                    <span className="text-white/20 text-[11px]">—</span>
+                    <span className="text-white/30 text-[11px]">{desc}</span>
+                  </div>
+                  {/* Axis cards */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {domainAxes.map(({ key, icon: axIcon, color: axColor, label, desc: axDesc }) => (
+                      <div key={key} className="group relative rounded-xl p-4 border overflow-hidden transition-all duration-200 hover:-translate-y-0.5" style={{ background: `${axColor}08`, borderColor: `${axColor}20` }}>
+                        <div className="absolute top-0 right-0 w-16 h-16 rounded-full blur-xl opacity-0 group-hover:opacity-25 transition-opacity" style={{ background: axColor }} />
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${axColor}18`, color: axColor }}>{axIcon}</div>
+                          <div>
+                            <p className="font-black text-white text-sm leading-none mb-1">{label}</p>
+                            <p className="text-white/35 text-[11px] leading-snug">{axDesc}</p>
+                          </div>
+                        </div>
+                        <div className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: `linear-gradient(90deg, transparent, ${axColor}, transparent)` }} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex gap-1 mb-2">
-                  {axes.map(ax => <span key={ax} className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: `${color}18`, color }}>{ax}</span>)}
-                </div>
-                <p className="text-white/35 text-[11px] leading-snug">{desc}</p>
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }} />
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
