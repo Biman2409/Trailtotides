@@ -464,11 +464,16 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
           {/* ── Right: radar card ── */}
           {!hasProfile && (
             <div className="shrink-0 w-full sm:w-auto">
+              {/* Example pill — outside the card */}
+              <div className="flex justify-end mb-2">
+                <span className="text-[9px] font-bold px-2.5 py-1 rounded-full" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100", border: "1px solid rgba(255,81,0,0.2)" }}>Example</span>
+              </div>
+
               <div className="rounded-2xl border overflow-hidden"
                 style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}>
-                <div className="px-4 pt-3.5 pb-1 flex items-center justify-between">
+                {/* Header with bottom divider */}
+                <div className="px-4 py-3 border-b" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
                   <p className="text-[9px] font-black tracking-[0.2em] uppercase text-white/30">Capability Profile</p>
-                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100" }}>Example</span>
                 </div>
                 <div className="flex justify-center px-4 py-3"
                   style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, transparent 70%)" }}>
@@ -477,7 +482,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
                     size={200} showLabels
                   />
                 </div>
-                <div className="px-4 py-3 flex items-center justify-end border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+                <div className="px-4 py-3 border-t text-center" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
                   <span className="text-[10px] font-bold" style={{ color: "#f59e0b" }}>★★★ Trailblazer</span>
                 </div>
               </div>
