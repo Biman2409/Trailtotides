@@ -399,60 +399,38 @@ function AxisBar({ axis, value, max = 5 }: { axis: string; value: number; max?: 
 // ─── Intro screen ─────────────────────────────────────────────────────────────
 
 
-function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => void; onViewResults: () => void; hasProfile: boolean }) {
-  const pillars = [
-    { icon: <Flame className="w-5 h-5" />,    name: "Engine",   color: "#f97316", desc: "Stamina + Power — sustained output and explosive effort. The fuel that keeps you moving." },
-    { icon: <Dumbbell className="w-5 h-5" />, name: "Chassis",  color: "#22d3ee", desc: "Strength + Agility — load-bearing capacity and terrain navigation. How your body handles the ground." },
-    { icon: <Waves className="w-5 h-5" />,    name: "Elements", color: "#a78bfa", desc: "Water + Altitude — aquatic survival and high-altitude physiology. Environmental exposure demands." },
-    { icon: <Ghost className="w-5 h-5" />,      name: "Mind",     color: "#10b981", desc: "Focus + Nerve — psychological exposure tolerance and the grit to operate far from help." },
-  ];
+const INTRO_AXES = [
+  { label: "Stamina",  color: "#f97316" }, { label: "Power",    color: "#eab308" },
+  { label: "Strength", color: "#84cc16" }, { label: "Agility",  color: "#22d3ee" },
+  { label: "Water",    color: "#3b82f6" }, { label: "Altitude", color: "#a78bfa" },
+  { label: "Focus",    color: "#f43f5e" }, { label: "Nerve",    color: "#10b981" },
+];
 
+function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => void; onViewResults: () => void; hasProfile: boolean }) {
   return (
-    <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-28">
-      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-5">Adventure Matchmaker</p>
-      <h1 className="text-white text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4">
-        Adventures built for your body
+    <div className="max-w-lg mx-auto px-5 sm:px-6 py-20 sm:py-24">
+      <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
+      <h1 className="text-white text-3xl sm:text-4xl font-black tracking-tight leading-tight mb-3">
+        Find adventures built for your body.
       </h1>
-      <p className="text-white/50 text-base leading-relaxed mb-9">
-        Every adventure makes specific demands on your body. ACE breaks those demands into eight axes — Stamina, Power, Strength, Agility, Water, Altitude, Focus and Nerve — so you know exactly what you&apos;re signing up for.
+      <p className="text-white/45 text-sm leading-relaxed mb-6">
+        8 questions across the axes below. We map your capability and show you which adventures fit — and exactly where you&apos;d need to grow for the ones that don&apos;t.
       </p>
 
       {!hasProfile && (
-        <>
-          <p className="text-white/30 text-[10px] uppercase tracking-widest mb-4">How we assess you</p>
-          <div className="space-y-3 mb-10">
-            {pillars.map(p => (
-              <div
-                key={p.name}
-                className="flex items-start gap-4 rounded-2xl px-5 py-4 border"
-                style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.07)" }}
-              >
-                <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
-                  style={{ background: `${p.color}18`, color: p.color }}
-                >
-                  {p.icon}
-                </div>
-                <div>
-                  <p className="text-white font-semibold text-sm mb-0.5">{p.name}</p>
-                  <p className="text-white/45 text-xs leading-relaxed">{p.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
+        <div className="flex flex-wrap gap-1.5 mb-8">
+          {INTRO_AXES.map(({ label, color }) => (
+            <span key={label} className="px-2.5 py-1 rounded-full text-[10px] font-bold border" style={{ background: `${color}12`, borderColor: `${color}30`, color }}>
+              {label}
+            </span>
+          ))}
+        </div>
       )}
 
-      <Link
-        href="/ace"
-        className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-full font-semibold text-sm text-white/60 border border-white/10 hover:border-white/20 hover:text-white/80 transition-all mb-3"
-      >
-        Learn more about ACE
-      </Link>
       {hasProfile && (
         <button
           onClick={onViewResults}
-          className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-full font-semibold text-sm text-white transition-all hover:brightness-110 mb-3"
+          className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm text-white transition-all hover:brightness-110 mb-2.5"
           style={{ background: "#ff5100" }}
         >
           View My Results
@@ -461,15 +439,21 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
       )}
       <button
         onClick={onStart}
-        className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-full font-semibold text-sm transition-all hover:brightness-110"
+        className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm transition-all hover:brightness-110 mb-2.5"
         style={hasProfile
           ? { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.7)" }
           : { background: "#ff5100", color: "#fff" }
         }
       >
-        {hasProfile ? <><RotateCcw className="w-4 h-4" />Retake Assessment</> : <><ChevronRight className="w-4 h-4" />Begin Assessment</>}
+        {hasProfile ? <><RotateCcw className="w-3.5 h-3.5" />Retake Assessment</> : <>Begin Assessment<ChevronRight className="w-4 h-4" /></>}
       </button>
-      <p className="text-white/20 text-xs text-center mt-3">8 questions · ~3 minutes</p>
+      <Link
+        href="/ace"
+        className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-sm text-white/40 border border-white/08 hover:text-white/60 hover:border-white/15 transition-all"
+      >
+        What is ACE?
+      </Link>
+      <p className="text-white/20 text-xs text-center mt-4">8 questions · ~3 minutes</p>
     </div>
   );
 }

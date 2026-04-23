@@ -3,7 +3,7 @@ import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost, Gauge } from "@/lib/localIcons";
+import { Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost, Activity, Layers, Globe, Brain } from "@/lib/localIcons";
 import { adventures } from "@/lib/data";
 import ACERadar from "@/components/ui/custom/ACERadar";
 
@@ -31,10 +31,10 @@ const AXES = [
 ];
 
 const DOMAINS = [
-  { name: "Engine",   icon: <Gauge    className="w-4 h-4" />, color: "#f97316", axes: ["Stamina", "Power"],    desc: "The physical fuel. Sustained output + explosive effort." },
-  { name: "Chassis",  icon: <Dumbbell className="w-4 h-4" />, color: "#22d3ee", axes: ["Strength", "Agility"], desc: "How your body handles load and terrain." },
-  { name: "Elements", icon: <Waves    className="w-4 h-4" />, color: "#a78bfa", axes: ["Water", "Altitude"],   desc: "Aquatic and high-altitude physiological demands." },
-  { name: "Mind",     icon: <Ghost    className="w-4 h-4" />, color: "#10b981", axes: ["Focus", "Nerve"],      desc: "Psychological readiness — exposure and remote self-reliance." },
+  { name: "Engine",   icon: <Activity className="w-4 h-4" />, color: "#f97316", axes: ["Stamina", "Power"],    desc: "The physical fuel. Sustained output + explosive effort." },
+  { name: "Chassis",  icon: <Layers   className="w-4 h-4" />, color: "#22d3ee", axes: ["Strength", "Agility"], desc: "How your body handles load and terrain." },
+  { name: "Elements", icon: <Globe    className="w-4 h-4" />, color: "#a78bfa", axes: ["Water", "Altitude"],   desc: "Aquatic and high-altitude physiological demands." },
+  { name: "Mind",     icon: <Brain    className="w-4 h-4" />, color: "#10b981", axes: ["Focus", "Nerve"],      desc: "Psychological readiness — exposure and remote self-reliance." },
 ];
 
 const SCALE = [
