@@ -119,7 +119,7 @@ const TYPE_PACKS: Partial<Record<AdventureType, Category[]>> = {
       ],
     },
   ],
-  Biking: [
+  Motorcycling: [
     {
       name: "Riding Gear",
       Icon: Bike,

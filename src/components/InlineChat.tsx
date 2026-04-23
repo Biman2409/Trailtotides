@@ -58,7 +58,7 @@ function deriveChips(msg: Message, roundCount: number): string[] {
     chips.push("I'm a beginner", "Moderate fitness", "Very fit");
   }
   if (text.includes("type") || text.includes("activity") || text.includes("kind")) {
-    chips.push("Trekking", "Biking", "Kayaking");
+    chips.push("Trekking", "Motorcycling", "Kayaking");
   }
   if (text.includes("solo") || text.includes("group") || text.includes("travel with")) {
     chips.push("Solo", "With friends", "Family trip");

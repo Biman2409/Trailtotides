@@ -23,7 +23,7 @@ const categories = [
 
     items: [
       { type: "Trekking" },
-      { type: "Biking" },
+      { type: "Motorcycling" },
       { type: "Cycling" },
       { type: "Mountaineering" },
       { type: "Rock Climbing" },

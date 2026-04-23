@@ -46,7 +46,7 @@ const seasons: { label: string; months: Month[] }[] = [
 ];
 
 
-const LAND_TYPES: AdventureType[] = ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Biking", "Cycling", "Jeep Safari", "Caving", "Urban Adventure"];
+const LAND_TYPES: AdventureType[] = ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Motorcycling", "Cycling", "Jeep Safari", "Caving", "Urban Adventure"];
 
 export default function ExploreClient() {
   const searchParams = useSearchParams();
@@ -578,7 +578,7 @@ export default function ExploreClient() {
                             const categories = [
                                 {
                                   label: "Land",
-                                  types: ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Biking", "Cycling", "Jeep Safari", "Caving", "Urban Adventure"],
+                                  types: ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Motorcycling", "Cycling", "Jeep Safari", "Caving", "Urban Adventure"],
                                 },
                             ];
                         return (

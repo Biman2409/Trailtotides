@@ -135,7 +135,7 @@ export const ADVENTURE_TYPE_ICONS: Record<string, (size?: number) => React.React
   Mountaineering:    (s = 14) => <MountainSnow  style={{ width: s, height: s }} />,
   "Rock Climbing":   (s = 14) => <SportShoe     size={s} />,
   Scrambling:        (s = 14) => <Footprints    style={{ width: s, height: s }} />,
-  Biking:            (s = 14) => <Motorbike     style={{ width: s, height: s }} />,
+  Motorcycling:      (s = 14) => <Motorbike     style={{ width: s, height: s }} />,
   Cycling:           (s = 14) => <Bike          style={{ width: s, height: s }} />,
   "Jeep Safari":     (s = 14) => <Car           style={{ width: s, height: s }} />,
   Caving:            (s = 14) => <Flashlight    style={{ width: s, height: s }} />,

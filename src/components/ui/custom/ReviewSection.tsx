@@ -30,7 +30,7 @@ function ctaText(type?: string, name?: string): string {
   switch (type) {
     case "Trekking":       return "Done this trek? Tell others what to expect.";
     case "Mountaineering": return "Summited this peak? Share how it went.";
-    case "Biking":         return "Ridden this route? Share the experience.";
+    case "Motorcycling":         return "Ridden this route? Share the experience.";
     case "Cycling":        return "Cycled this route? Share the experience.";
     case "Diving":         return "Dived here? Tell others what's down there.";
     case "Kayaking":       return "Paddled this stretch? Share your story.";

@@ -38,8 +38,8 @@ export const TYPE_ICON_DEFS: Record<string, IconDef> = {
       "M4 13h4",
     ],
   },
-  // Motorbike icon — Biking uses Motorbike, matching adventureIcons.tsx
-  Biking: {
+  // Motorbike icon for Motorcycling adventures
+  Motorcycling: {
     paths: [
       "m18 14-1-3",
       "m3 9 6 2a2 2 0 0 1 2-2h2a2 2 0 0 1 1.99 1.81",

@@ -8,7 +8,7 @@ const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 // ─── Dynamically derive available vs coming-soon types ────────────────────────
 
 const ALL_TYPES: AdventureType[] = [
-  "Trekking", "Biking", "Cycling", "Diving", "Kayaking", "Skiing",
+  "Trekking", "Motorcycling", "Cycling", "Diving", "Kayaking", "Skiing",
   "Mountaineering", "Rock Climbing", "Scrambling", "Jeep Safari", "Caving",
   "Urban Adventure", "Paragliding", "Hot Air Balloon", "Ice Skating",
 ];
@@ -151,10 +151,10 @@ function keywordSearch(query: string, limit = 3) {
     difficult: ["Hard", "Advanced"],
     challenging: ["Hard", "Advanced"],
     extreme: ["Extreme", "Advanced"],
-    bike: ["Biking"],
-    biking: ["Biking"],
-    motorbike: ["Biking"],
-    motorcycle: ["Biking"],
+    bike: ["Motorcycling"],
+    biking: ["Motorcycling"],
+    motorbike: ["Motorcycling"],
+    motorcycle: ["Motorcycling"],
     cycle: ["Cycling"],
     cycling: ["Cycling"],
     climb: ["Mountaineering", "Rock Climbing"],

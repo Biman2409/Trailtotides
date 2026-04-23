@@ -768,7 +768,7 @@ export default function MapPage() {
                   <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>Adventure Type</h3>
                   {(() => {
                     const categories = [
-                      { label: "Land",  types: ["Trekking","Mountaineering","Rock Climbing","Scrambling","Biking","Cycling","Jeep Safari","Caving","Urban Adventure"] },
+                      { label: "Land",  types: ["Trekking","Mountaineering","Rock Climbing","Scrambling","Motorcycling","Cycling","Jeep Safari","Caving","Urban Adventure"] },
                       { label: "Water", types: ["Diving","Kayaking"] },
                       { label: "Snow",  types: ["Skiing"] },
                       { label: "Air",   types: [] as string[] },

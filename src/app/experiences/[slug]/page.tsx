@@ -330,7 +330,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               ...((adventure.altitude || adventure.depth) ? [{ icon: <TrendingUp className="w-3.5 h-3.5 text-sky-400" />, label: adventure.type === "Diving" ? "Max Depth" : "Max Altitude", value: adventure.depth ?? adventure.altitude }] : []),
               { icon: <Sun className="w-3.5 h-3.5 text-amber-400" />, label: "Best Season", value: adventure.bestSeason },
               ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ icon: <Flag className="w-3.5 h-3.5 text-violet-400" />, label: "Base Camp", value: adventure.baseCamp }] : []),
-              ...(adventure.type === "Biking" && adventure.startingPoint ? [{ icon: <Navigation className="w-3.5 h-3.5 text-emerald-400" />, label: "Starting Point", value: adventure.startingPoint }] : []),
+              ...(adventure.type === "Motorcycling" && adventure.startingPoint ? [{ icon: <Navigation className="w-3.5 h-3.5 text-emerald-400" />, label: "Starting Point", value: adventure.startingPoint }] : []),
               { icon: <Gauge className="w-3.5 h-3.5 text-rose-400" />, label: "Difficulty", value: difficulty },
             ].map(({ icon, label, value }, i, arr) => (
               <div
@@ -587,9 +587,9 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 {[
                   { label: "Type", value: adventure.type },
                   ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
-                  ...(adventure.type === "Biking" && adventure.startingPoint ? [{ label: "Starting Point", value: adventure.startingPoint }] : []),
+                  ...(adventure.type === "Motorcycling" && adventure.startingPoint ? [{ label: "Starting Point", value: adventure.startingPoint }] : []),
                   { label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
-                  ...((adventure.type === "Trekking" || adventure.type === "Biking")
+                  ...((adventure.type === "Trekking" || adventure.type === "Motorcycling")
                     ? [{ label: "Distance", value: adventure.distanceRange ?? adventure.distance ?? "Contact for route" }]
                     : adventure.distance ? [{ label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
                   { label: "Difficulty", value: difficulty },

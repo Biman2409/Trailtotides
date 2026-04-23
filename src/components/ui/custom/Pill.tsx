@@ -11,7 +11,7 @@ import DifficultyMeter from "./DifficultyMeter";
 const iconCircleStyle: Record<string, string> = {
   // Land — deeper orange
   Trekking:          "bg-[#cc4000]",
-  Biking:            "bg-[#cc4000]",
+  Motorcycling:      "bg-[#cc4000]",
   Cycling:           "bg-[#cc4000]",
   "Rock Climbing":   "bg-[#cc4000]",
   Scrambling:        "bg-[#cc4000]",

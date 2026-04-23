@@ -325,7 +325,7 @@ export const TYPE_SUPPLEMENTS: Partial<Record<string, AdventureTypeSupplements>>
     ],
   },
 
-  Biking: {
+  Motorcycling: {
     hardGates: [],
     softModifiers: [
       {

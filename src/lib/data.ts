@@ -1,6 +1,6 @@
 export type AdventureType =
   | "Trekking"
-  | "Biking"
+  | "Motorcycling"
   | "Cycling"
   | "Diving"
   | "Kayaking"
@@ -145,7 +145,7 @@ export const adventures: Adventure[] = [
         tagline: "490km, five high passes, zero guardrails — the crown jewel of Indian riding",
         region: "Himalayas",
         state: "Himachal Pradesh / Ladakh",
-        type: "Biking",
+        type: "Motorcycling",
         difficulty: "Moderate",
           duration: "7+ days",
           durationDays: "10 days",
@@ -234,7 +234,7 @@ export const adventures: Adventure[] = [
             tagline: "Nubra dunes, Pangong blue, Umling La at 19,024 ft— Ladakh's full fury on two wheels",
           region: "Himalayas",
           state: "Ladakh",
-          type: "Biking",
+          type: "Motorcycling",
             difficulty: "Advanced",
               duration: "7+ days",
               durationDays: "14 days",
@@ -278,7 +278,7 @@ export const adventures: Adventure[] = [
       tagline: "Cut off from the world 8 months a year — ride in before it closes",
     region: "Himalayas",
     state: "Ladakh",
-    type: "Biking",
+    type: "Motorcycling",
     difficulty: "Extreme",
       duration: "7+ days",
       durationDays: "10 days",
@@ -460,7 +460,7 @@ export const adventures: Adventure[] = [
           tagline: "Ride the old Tibet highway — where the tarmac ends and the adventure begins",
       region: "Himalayas",
       state: "Himachal Pradesh",
-      type: "Biking",
+      type: "Motorcycling",
         difficulty: "Advanced",
           duration: "7+ days",
           durationDays: "9 days",
@@ -1834,10 +1834,10 @@ export const stories: Story[] = [
     authorRole: "Rider",
     authorBio: "Spends most of the year running a business. Once a year, the suit comes off, the saddle goes on, and he goes all in — no guided tours, no safety nets. Just one raw, unscripted adventure that most people only ever dream about.",
     authorAvatar: "/avatars/avatar-5.png",
-    pillTags: ["Ladakh", "Biking"],
+    pillTags: ["Ladakh", "Motorcycling"],
     heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/story-submissions/photi-la.jpeg",
     readTime: "15 min read",
-    tags: ["Featured", "TTT Original", "Ladakh", "Biking", "Motorcycle", "Umling La", "Himalayas", "High Altitude", "Road Trip", "Demchok", "Adventure Travel", "India"],
+    tags: ["Featured", "TTT Original", "Ladakh", "Motorcycling", "Motorcycle", "Umling La", "Himalayas", "High Altitude", "Road Trip", "Demchok", "Adventure Travel", "India"],
     region: "Himalayas",
     date: "July 2022",
     submittedBy: "986fb39a-f174-40ba-aefa-eddee3145687",
@@ -1851,10 +1851,10 @@ export const stories: Story[] = [
     authorRole: "A jack of all trades",
     authorBio: "I read relentlessly and write poetry to ground myself. A mountaineer and skier at heart, I find joy navigating riverbeds on my Himalayan. Anchored by amazing friends, I keep chasing new extremes. Ultimately, my chief occupation is living a life of love. Everything else is fluff.",
     authorAvatar: "/avatars/avatar-10.png",
-    pillTags: ["Nepal", "Biking"],
+    pillTags: ["Nepal", "Motorcycling"],
     heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/story-submissions/riding-through-revolution-hero.jpeg",
     readTime: "8 min read",
-    tags: ["Featured", "TTT Original", "Nepal", "Biking", "Motorcycle", "Road Trip", "Himalayas", "Kathmandu", "Adventure Travel", "Overland", "Solo Rider", "Travel Story"],
+    tags: ["Featured", "TTT Original", "Nepal", "Motorcycling", "Motorcycle", "Road Trip", "Himalayas", "Kathmandu", "Adventure Travel", "Overland", "Solo Rider", "Travel Story"],
     region: "Himalayas",
     date: "Sep 2024",
     submittedBy: "aditya-yadav",
@@ -1914,7 +1914,7 @@ export const regions = [
 
 export const adventureTypes = [
   { type: "Trekking" as AdventureType, count: 38 },
-  { type: "Biking" as AdventureType, count: 4 },
+  { type: "Motorcycling" as AdventureType, count: 4 },
   { type: "Cycling" as AdventureType, count: 1 },
   { type: "Mountaineering" as AdventureType, count: 1 },
   { type: "Rock Climbing" as AdventureType, count: 0 },

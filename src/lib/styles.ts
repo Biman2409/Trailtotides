@@ -1,7 +1,7 @@
 export const typeStyle: Record<string, string> = {
   // Land — vibrant orange
   Trekking:          "bg-[#ff5100] text-white",
-  Biking:            "bg-[#ff5100] text-white",
+  Motorcycling:      "bg-[#ff5100] text-white",
   Cycling:           "bg-[#ff5100] text-white",
   "Rock Climbing":   "bg-[#ff5100] text-white",
   Scrambling:        "bg-[#ff5100] text-white",

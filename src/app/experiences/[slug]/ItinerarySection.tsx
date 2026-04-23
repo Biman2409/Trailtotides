@@ -74,8 +74,8 @@ function generateItinerary(
     return plans.slice(0, days);
   }
 
-  // Biking itineraries
-  if (adventureType === "Biking" || adventureType === "Cycling") {
+  // Motorcycling itineraries
+  if (adventureType === "Motorcycling" || adventureType === "Cycling") {
     const start = startingPoint ?? "Start city";
     return Array.from({ length: days }, (_, i) => ({
       day: i + 1,
