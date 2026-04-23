@@ -423,7 +423,6 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
           {/* ── Left: copy + CTAs ── */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-1 h-4 rounded-full" style={{ background: "#ff5100" }} />
               <p className="text-[#ff5100] text-[10px] font-black tracking-[0.25em] uppercase">Adventure Matchmaker</p>
             </div>
 
