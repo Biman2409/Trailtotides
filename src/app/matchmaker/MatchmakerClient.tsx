@@ -462,15 +462,6 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
           </div>
         )}
 
-        {/* Meta pill */}
-        <div className="flex items-center gap-2 mb-5">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border"
-            style={{ background: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.10)" }}>
-            <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100]" />
-            <span className="text-white/40 text-[10px] font-semibold tracking-wide">8 questions · ~3 min</span>
-          </div>
-        </div>
-
         {/* CTAs */}
         <div className="flex flex-col gap-2.5">
           {hasProfile && (
