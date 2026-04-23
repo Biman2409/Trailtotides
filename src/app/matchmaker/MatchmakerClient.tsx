@@ -435,29 +435,24 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
           8 questions. We map your physical capability across every axis and surface the adventures that actually fit.
         </p>
 
-        {/* Radar + axes — only on no-profile */}
+        {/* Radar card — only on no-profile */}
         {!hasProfile && (
           <div className="rounded-2xl border mb-7 overflow-hidden"
             style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}>
-            {/* Radar */}
-            <div className="flex justify-center py-5"
-              style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)" }}>
+            <div className="px-4 pt-4 pb-1 flex items-center justify-between">
+              <p className="text-[9px] font-black tracking-[0.2em] uppercase text-white/30">ACE Profile</p>
+              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100" }}>Example</span>
+            </div>
+            <div className="flex justify-center py-4"
+              style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, transparent 70%)" }}>
               <ACERadar
                 ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }}
-                size={200} showLabels
+                size={210} showLabels
               />
             </div>
-            {/* Axis bars */}
-            <div className="px-4 pb-4 grid grid-cols-2 gap-x-4 gap-y-2">
-              {INTRO_AXES_DATA.map(({ label, color, v }) => (
-                <div key={label} className="flex items-center gap-2">
-                  <span className="text-[10px] text-white/35 w-14 shrink-0">{label}</span>
-                  <div className="flex-1 h-1 rounded-full" style={{ background: "rgba(255,255,255,0.07)" }}>
-                    <div className="h-full rounded-full" style={{ width: `${(v / 5) * 100}%`, background: color }} />
-                  </div>
-                  <span className="text-[9px] font-mono text-white/25 w-3 text-right">{v}</span>
-                </div>
-              ))}
+            <div className="px-4 pb-4 flex items-center justify-between">
+              <span className="text-[10px] text-white/25">Your shape will look different</span>
+              <span className="text-[10px] font-bold" style={{ color: "#f59e0b" }}>★★★ Trailblazer</span>
             </div>
           </div>
         )}
@@ -484,7 +479,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
           <Link href="/ace"
             className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl text-sm font-semibold transition-all hover:bg-white/5"
             style={{ border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.35)" }}>
-            What is ACE? <ArrowRight className="w-3.5 h-3.5" />
+            Learn more about ACE <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       </div>
