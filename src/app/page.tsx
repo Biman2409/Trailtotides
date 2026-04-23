@@ -45,26 +45,39 @@ export default function HomePage() {
         <HeroSlider />
         <HeroOrbs />
 
-        <div className="relative z-10 text-center px-5 max-w-4xl mx-auto flex flex-col items-center gap-7" style={{ marginTop: "-40px" }}>
-          {/* Eyebrow badge */}
+        <div className="relative z-10 text-center px-5 max-w-4xl mx-auto flex flex-col items-center" style={{ gap: "28px", marginTop: "-32px" }}>
+
+          {/* Eyebrow pill */}
           <div
-            className="inline-flex items-center px-5 py-2 rounded-full text-[11px] font-bold tracking-[0.22em] uppercase backdrop-blur-md"
+            className="inline-flex items-center px-5 py-2 rounded-full text-[10px] font-bold tracking-[0.22em] uppercase backdrop-blur-md"
             style={{
-              background: "rgba(255,255,255,0.12)",
-              border: "1px solid rgba(255,255,255,0.28)",
-              color: "rgba(255,255,255,0.9)",
-              boxShadow: "0 2px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15)",
+              background: "rgba(255,255,255,0.10)",
+              border: "1px solid rgba(255,255,255,0.22)",
+              color: "rgba(255,255,255,0.85)",
+              boxShadow: "0 2px 16px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.12)",
               animation: "heroLineIn 0.7s cubic-bezier(0.22,1,0.36,1) 0s both",
+              letterSpacing: "0.22em",
             }}
           >
             India&apos;s First Adventure Discovery Platform
           </div>
 
-          <HeroHeadline />
-          <HeroSubheading />
-          <HeroCTAWrapper>
-            <HeroCTAs />
-          </HeroCTAWrapper>
+          {/* Headline — tighter to pill */}
+          <div style={{ marginTop: "-4px" }}>
+            <HeroHeadline />
+          </div>
+
+          {/* Subheading box — slightly separated */}
+          <div style={{ marginTop: "4px" }}>
+            <HeroSubheading />
+          </div>
+
+          {/* CTAs — breathing room below box */}
+          <div style={{ marginTop: "8px" }}>
+            <HeroCTAWrapper>
+              <HeroCTAs />
+            </HeroCTAWrapper>
+          </div>
         </div>
 
         {/* Scroll hint */}
