@@ -477,8 +477,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
                     size={200} showLabels
                   />
                 </div>
-                <div className="px-4 py-3 flex items-center justify-between border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-                  <span className="text-[10px] text-white/20">Your shape will differ</span>
+                <div className="px-4 py-3 flex items-center justify-end border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
                   <span className="text-[10px] font-bold" style={{ color: "#f59e0b" }}>★★★ Trailblazer</span>
                 </div>
               </div>
