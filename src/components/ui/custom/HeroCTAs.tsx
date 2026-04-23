@@ -21,7 +21,7 @@ export default function HeroCTAs() {
       </Link>
 
       <Link
-        href="/compass"
+        href="#ai-finder"
         className="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold tracking-wide text-white transition-all duration-200 hover:-translate-y-0.5 active:scale-95"
         style={{
           background: "rgba(255,255,255,0.08)",
