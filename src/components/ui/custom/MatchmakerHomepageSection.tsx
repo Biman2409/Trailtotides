@@ -229,11 +229,7 @@ function DefaultCTA() {
               <span className="text-[#ff5100]">for your body</span>
             </h2>
             <p className="text-white/55 text-base md:text-lg leading-relaxed mb-8">
-              Answer 8 questions. Discover your{" "}
-              <Link href="/ace" className="font-bold text-[#ff5100] underline decoration-[#ff5100]/30 underline-offset-2 hover:decoration-[#ff5100] transition-all">
-                ACE
-              </Link>{" "}
-              profile and find the adventures you&apos;re truly ready for.
+              8 questions. We map your capability and show you exactly which adventures fit.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link

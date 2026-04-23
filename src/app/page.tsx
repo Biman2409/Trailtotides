@@ -179,7 +179,7 @@ export default function HomePage() {
                   <span className="text-[#7ec88a]">Mapped</span>
                 </h2>
                 <p className="text-white/72 text-base md:text-xl leading-relaxed mb-8 lg:mb-10 w-full max-w-lg">
-                  Every trail, summit, coast, and canyon — pinned on one map. Cluster by region, filter by type, and tap any pin to explore.
+                  Every trail, summit and coast — one map. Filter by type, cluster by region, tap to explore.
                 </p>
                 <Link
                   href="/map"
