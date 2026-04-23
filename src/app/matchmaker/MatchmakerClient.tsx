@@ -418,15 +418,16 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
       </p>
 
       {!hasProfile && (
-        <div className="flex flex-col gap-2 mb-8">
+        <div className="grid grid-cols-2 gap-2 mb-8">
           {INTRO_DOMAINS.map(({ name, color, axes }) => (
-            <div key={name} className="flex items-center gap-3">
-              <span className="text-[9px] font-black tracking-widest uppercase w-16 shrink-0" style={{ color }}>{name}</span>
-              <div className="flex gap-1.5">
+            <div key={name} className="rounded-xl px-4 py-3 border" style={{ background: `${color}08`, borderColor: `${color}20` }}>
+              <p className="text-[9px] font-black tracking-widest uppercase mb-2.5" style={{ color }}>{name}</p>
+              <div className="flex flex-col gap-1.5">
                 {axes.map(({ label, color: ac }) => (
-                  <span key={label} className="px-2.5 py-1 rounded-full text-[10px] font-bold border" style={{ background: `${ac}12`, borderColor: `${ac}30`, color: ac }}>
-                    {label}
-                  </span>
+                  <div key={label} className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: ac }} />
+                    <span className="text-white/70 text-xs font-semibold">{label}</span>
+                  </div>
                 ))}
               </div>
             </div>
