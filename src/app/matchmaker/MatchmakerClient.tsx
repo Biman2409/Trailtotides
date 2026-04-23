@@ -464,26 +464,32 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
           {/* ── Right: radar card ── */}
           {!hasProfile && (
             <div className="shrink-0 w-full sm:w-auto">
-              {/* Example pill — outside the card */}
-              <div className="flex justify-end mb-2">
-                <span className="text-[9px] font-bold px-2.5 py-1 rounded-full" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100", border: "1px solid rgba(255,81,0,0.2)" }}>Example</span>
-              </div>
-
               <div className="rounded-2xl border overflow-hidden"
                 style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}>
-                {/* Header with bottom divider */}
-                <div className="px-4 py-3 border-b" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
+
+                {/* Header */}
+                <div className="px-4 py-3 flex items-center justify-between border-b" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
                   <p className="text-[9px] font-black tracking-[0.2em] uppercase text-white/30">Capability Profile</p>
+                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100", border: "1px solid rgba(255,81,0,0.18)" }}>Example</span>
                 </div>
-                <div className="flex justify-center px-4 py-3"
-                  style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, transparent 70%)" }}>
+
+                {/* Radar */}
+                <div className="flex justify-center px-6 py-4"
+                  style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)" }}>
                   <ACERadar
                     ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }}
                     size={200} showLabels
                   />
                 </div>
-                <div className="px-4 py-3 border-t text-center" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-                  <span className="text-[10px] font-bold" style={{ color: "#f59e0b" }}>★★★ Trailblazer</span>
+
+                {/* Footer */}
+                <div className="px-4 py-3 border-t flex items-center justify-center gap-2" style={{ borderColor: "rgba(255,255,255,0.07)", background: "rgba(245,158,11,0.05)" }}>
+                  <div className="flex gap-0.5">
+                    {[1,2,3].map(i => <span key={i} className="text-[11px]" style={{ color: "#f59e0b" }}>★</span>)}
+                    {[4,5].map(i => <span key={i} className="text-[11px]" style={{ color: "rgba(255,255,255,0.08)" }}>★</span>)}
+                  </div>
+                  <span className="text-[10px] font-black tracking-wide" style={{ color: "#f59e0b" }}>Trailblazer</span>
+                  <span className="text-[9px] text-white/20 font-medium">· 28 pts</span>
                 </div>
               </div>
             </div>
