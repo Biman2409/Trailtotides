@@ -451,12 +451,12 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
                 }>
                 {hasProfile
                   ? <><RotateCcw className="w-3.5 h-3.5" />Retake Assessment</>
-                  : <>Begin Assessment <ChevronRight className="w-4 h-4" /></>}
+                  : <>Begin Assessment <Zap className="w-4 h-4" /></>}
               </button>
               <Link href="/ace"
                 className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-[13px] font-semibold transition-all hover:bg-white/[0.04]"
                 style={{ border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.30)" }}>
-                Learn more <ArrowRight className="w-3.5 h-3.5" />
+                Learn more <ScanEye className="w-3.5 h-3.5" />
               </Link>
             </div>
           </div>
@@ -467,7 +467,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
               <div className="rounded-2xl border overflow-hidden"
                 style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}>
                 <div className="px-4 pt-3.5 pb-1 flex items-center justify-between">
-                  <p className="text-[9px] font-black tracking-[0.2em] uppercase text-white/30">ACE Profile</p>
+                  <p className="text-[9px] font-black tracking-[0.2em] uppercase text-white/30">Capability Profile</p>
                   <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100" }}>Example</span>
                 </div>
                 <div className="flex justify-center px-4 py-3"
