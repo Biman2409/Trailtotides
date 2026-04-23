@@ -3,17 +3,16 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import OperatorButton from "./OperatorButton";
-import OperatorCard, { type OperatorCardData } from "./OperatorCard";
+import { type OperatorCardData } from "./OperatorCard";
+import OperatorsSection from "./OperatorsSection";
 import {
   Clock,
   TrendingUp,
   Sun,
-  ShieldCheck,
-  ChevronLeft,
   AlertTriangle,
+  ChevronLeft,
   ArrowRight,
   Route,
-  BadgeCheck,
   Flag,
   Navigation,
   Gauge,
@@ -26,7 +25,6 @@ import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
 import ACEProfileSection from "./ACEProfileSection";
-import VerifyDropdown from "./VerifyDropdown";
 import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import SavedAdventuresSection from "@/components/ui/custom/SavedAdventuresSection";
@@ -467,45 +465,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <div id="book-this-adventure" />
             <AccordionSection label="Book This Adventure" title="" defaultOpen={true}>
               <div id="operators-section" className="space-y-3">
-                {allOperators.some((op) => op.verified) && (
-                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(16,185,129,0.12)" }}>
-                    <div className="flex items-center gap-2 px-4 py-3" style={{ background: "rgba(16,185,129,0.05)", borderBottom: "1px solid rgba(16,185,129,0.08)" }}>
-                      <BadgeCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                      <h3 className="text-emerald-400 text-[10px] font-bold tracking-[0.18em] uppercase">Verified Operators</h3>
-                    </div>
-                    <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {allOperators.filter((op) => op.verified).map((op) => (
-                        <OperatorCard key={op.name} op={op} verified />
-                      ))}
-                    </div>
-                    <div className="px-4 py-2.5 flex items-center gap-1.5" style={{ borderTop: "1px solid rgba(16,185,129,0.08)", background: "rgba(16,185,129,0.02)" }}>
-                      <ShieldCheck className="w-3 h-3 text-emerald-400/60 shrink-0" />
-                      <p className="text-white/25 text-[10px]">All verified operators hold valid permits, safety certifications and guide credentials.</p>
-                    </div>
-                  </div>
-                )}
-
-                <VerifyDropdown />
-
-                {allOperators.some((op) => !op.verified) && (
-                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(245,158,11,0.1)" }}>
-                    <div className="flex items-center gap-2 px-4 py-3" style={{ background: "rgba(245,158,11,0.03)", borderBottom: "1px solid rgba(245,158,11,0.07)" }}>
-                      <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                      <h3 className="text-white/45 text-[10px] font-bold tracking-[0.18em] uppercase">Other Operators</h3>
-                    </div>
-                    <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {allOperators.filter((op) => !op.verified).map((op) => (
-                        <OperatorCard key={op.name} op={op} verified={false} />
-                      ))}
-                    </div>
-                    <div className="px-4 py-2.5 flex items-center gap-1.5" style={{ borderTop: "1px solid rgba(245,158,11,0.07)", background: "rgba(245,158,11,0.02)" }}>
-                      <AlertTriangle className="w-3 h-3 text-amber-400/50 shrink-0" />
-                      <p className="text-white/25 text-[10px]">Do your own research. Ask operators directly for permits and certifications.</p>
-                    </div>
-                  </div>
-                )}
-
-{/* Are you an operator? — inline at bottom */}
+                <OperatorsSection operators={allOperators} />
                 <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
               </div>
             </AccordionSection>
