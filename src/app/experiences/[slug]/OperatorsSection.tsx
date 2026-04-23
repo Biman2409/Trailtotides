@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { SlidersHorizontal, X, Star, CalendarDays, Briefcase, Package, ExternalLink, Check } from "lucide-react";
+import { X, Star, CalendarDays, Briefcase, Package, ExternalLink, Check } from "lucide-react";
 import { type OperatorCardData } from "./OperatorCard";
-import OperatorCard from "./OperatorCard";
 
 function parsePrice(p: string): number {
   const n = parseInt(p.replace(/[^0-9]/g, ""), 10);
@@ -150,40 +148,42 @@ function CompareTable({ operators }: { operators: OperatorCardData[] }) {
 }
 
 export default function OperatorsSection({ operators }: { operators: OperatorCardData[] }) {
-  const [compareMode, setCompareMode] = useState(false);
-
   if (operators.length === 0) {
     return <p className="text-white/25 text-xs text-center py-6">No operators listed yet for this adventure.</p>;
   }
 
-  return (
-    <div className="space-y-3">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <p className="text-white/35 text-[11px]">{operators.length} operator{operators.length !== 1 ? "s" : ""} available</p>
-        {operators.length > 1 && (
-          <button
-            onClick={() => setCompareMode(v => !v)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all"
-            style={compareMode
-              ? { background: "rgba(255,81,0,0.15)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.3)" }
-              : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.45)", border: "1px solid rgba(255,255,255,0.09)" }}
-          >
-            <SlidersHorizontal className="w-3 h-3" />
-            {compareMode ? "Exit Compare" : "Compare"}
-          </button>
-        )}
-      </div>
-
-      {compareMode ? (
-        <CompareTable operators={operators} />
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {operators.map((op) => (
-            <OperatorCard key={op.name} op={op} />
-          ))}
+  if (operators.length === 1) {
+    const op = operators[0];
+    return (
+      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.09)", background: "rgba(255,255,255,0.03)" }}>
+        <div className="p-4 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-white/90 font-bold text-sm">{op.name}</p>
+            <div className="flex items-center gap-0.5 mt-1">
+              {[1,2,3,4,5].map(s => <Star key={s} className={`w-2.5 h-2.5 ${s <= Math.round(op.rating) ? "text-amber-400 fill-amber-400" : "text-white/10 fill-white/10"}`} />)}
+              <span className="text-white/25 text-[10px] ml-1">{op.rating}</span>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-[9px] uppercase tracking-wider text-white/30">from</div>
+            <div className="font-black text-sm text-white/90">{op.priceFrom}</div>
+          </div>
         </div>
-      )}
+        <div className="px-4 pb-4">
+          <button onClick={() => op.website && window.open(op.website, "_blank", "noopener,noreferrer")} disabled={!op.website}
+            className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg text-xs font-semibold disabled:opacity-30"
+            style={{ background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.18)" }}>
+            Get Details <ExternalLink className="w-3 h-3" />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      <p className="text-white/25 text-[10px]">{operators.length} operators — compare side by side</p>
+      <CompareTable operators={operators} />
     </div>
   );
 }
