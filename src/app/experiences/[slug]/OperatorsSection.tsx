@@ -25,7 +25,6 @@ function CompareTable({ operators }: { operators: OperatorCardData[] }) {
     { label: "Dates",     icon: <CalendarDays className="w-3 h-3" /> },
     { label: "Cloakroom", icon: <Briefcase className="w-3 h-3" /> },
     { label: "Porter",    icon: <Package className="w-3 h-3" /> },
-    { label: "",          icon: null },
   ];
 
   return (
@@ -56,9 +55,17 @@ function CompareTable({ operators }: { operators: OperatorCardData[] }) {
             const isMostDates = count > 0 && count === maxBatches;
             return (
               <tr key={i} style={{ borderTop: "1px solid rgba(255,255,255,0.05)", background: i % 2 === 1 ? "rgba(255,255,255,0.01)" : "transparent" }}>
-                {/* Operator name */}
+                {/* Operator name + book */}
                 <td className="px-4 py-3.5">
-                  <p className="text-white/90 font-bold text-[13px] leading-tight">{op.name}</p>
+                  <p className="text-white/90 font-bold text-[13px] leading-tight mb-2">{op.name}</p>
+                  <button
+                    onClick={() => op.website && window.open(op.website, "_blank", "noopener,noreferrer")}
+                    disabled={!op.website}
+                    className="flex items-center gap-1 whitespace-nowrap px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-all disabled:opacity-30 hover:brightness-110"
+                    style={{ background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }}
+                  >
+                    Book <ExternalLink className="w-2.5 h-2.5" />
+                  </button>
                 </td>
 
                 {/* Price */}
@@ -127,17 +134,6 @@ function CompareTable({ operators }: { operators: OperatorCardData[] }) {
                   }
                 </td>
 
-                {/* Book CTA */}
-                <td className="px-3 py-3.5" style={{ borderLeft: "1px solid rgba(255,255,255,0.05)" }}>
-                  <button
-                    onClick={() => op.website && window.open(op.website, "_blank", "noopener,noreferrer")}
-                    disabled={!op.website}
-                    className="flex items-center justify-center gap-1 whitespace-nowrap px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all disabled:opacity-30 hover:brightness-110"
-                    style={{ background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }}
-                  >
-                    Book <ExternalLink className="w-2.5 h-2.5" />
-                  </button>
-                </td>
               </tr>
             );
           })}
