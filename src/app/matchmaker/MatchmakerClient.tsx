@@ -412,75 +412,79 @@ const INTRO_AXES_DATA = [
 
 function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => void; onViewResults: () => void; hasProfile: boolean }) {
   return (
-    <div className="relative min-h-[calc(100vh-64px)] flex items-center justify-center overflow-hidden px-5">
+    <div className="relative h-[calc(100vh-64px)] flex items-center justify-center overflow-hidden px-5">
       {/* Ambient glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full blur-3xl pointer-events-none opacity-10"
-        style={{ background: "radial-gradient(ellipse, #ff5100 0%, #a78bfa 50%, transparent 100%)" }} />
-      <div className="absolute bottom-0 right-0 w-64 h-64 rounded-full blur-3xl pointer-events-none opacity-8"
-        style={{ background: "#10b981" }} />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[400px] rounded-full blur-3xl pointer-events-none opacity-8"
+        style={{ background: "radial-gradient(ellipse, #ff5100 0%, #a78bfa 60%, transparent 100%)" }} />
 
-      <div className="relative w-full max-w-sm mx-auto py-20">
-        {/* Eyebrow */}
-        <div className="flex items-center gap-2 mb-6">
-          <div className="w-1 h-5 rounded-full" style={{ background: "#ff5100" }} />
-          <p className="text-[#ff5100] text-[11px] font-black tracking-[0.25em] uppercase">Adventure Matchmaker</p>
-        </div>
+      <div className="relative w-full max-w-2xl mx-auto">
+        <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
 
-        {/* Headline */}
-        <h1 className="text-white text-4xl font-black tracking-tight leading-[1.05] mb-4">
-          Adventures built for<br /><span style={{ color: "#ff5100" }}>your body</span>
-        </h1>
-
-        <p className="text-white/40 text-sm leading-relaxed mb-8">
-          8 questions. We map your physical capability across every axis and surface the adventures that actually fit.
-        </p>
-
-        {/* Radar card — only on no-profile */}
-        {!hasProfile && (
-          <div className="rounded-2xl border mb-7 overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}>
-            <div className="px-4 pt-4 pb-1 flex items-center justify-between">
-              <p className="text-[9px] font-black tracking-[0.2em] uppercase text-white/30">ACE Profile</p>
-              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100" }}>Example</span>
+          {/* ── Left: copy + CTAs ── */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-1 h-4 rounded-full" style={{ background: "#ff5100" }} />
+              <p className="text-[#ff5100] text-[10px] font-black tracking-[0.25em] uppercase">Adventure Matchmaker</p>
             </div>
-            <div className="flex justify-center py-4"
-              style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, transparent 70%)" }}>
-              <ACERadar
-                ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }}
-                size={210} showLabels
-              />
-            </div>
-            <div className="px-4 pb-4 flex items-center justify-between">
-              <span className="text-[10px] text-white/25">Your shape will look different</span>
-              <span className="text-[10px] font-bold" style={{ color: "#f59e0b" }}>★★★ Trailblazer</span>
+
+            <h1 className="text-white text-3xl sm:text-4xl font-black tracking-tight leading-[1.05] mb-3">
+              Adventures built for<br /><span style={{ color: "#ff5100" }}>your body</span>
+            </h1>
+
+            <p className="text-white/40 text-[13px] leading-relaxed mb-6">
+              8 questions across stamina, strength, altitude, nerve and more. We map your capability and surface the adventures that actually fit.
+            </p>
+
+            <div className="flex flex-col gap-2">
+              {hasProfile && (
+                <button onClick={onViewResults}
+                  className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110"
+                  style={{ background: "#ff5100", boxShadow: "0 4px 20px rgba(255,81,0,0.35)" }}>
+                  View My Results <ChevronRight className="w-4 h-4" />
+                </button>
+              )}
+              <button onClick={onStart}
+                className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm transition-all hover:brightness-110"
+                style={hasProfile
+                  ? { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.6)" }
+                  : { background: "#ff5100", color: "#fff", boxShadow: "0 4px 20px rgba(255,81,0,0.35)" }
+                }>
+                {hasProfile
+                  ? <><RotateCcw className="w-3.5 h-3.5" />Retake Assessment</>
+                  : <>Begin Assessment <ChevronRight className="w-4 h-4" /></>}
+              </button>
+              <Link href="/ace"
+                className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-[13px] font-semibold transition-all hover:bg-white/[0.04]"
+                style={{ border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.30)" }}>
+                Learn more about ACE <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
           </div>
-        )}
 
-        {/* CTAs */}
-        <div className="flex flex-col gap-2.5">
-          {hasProfile && (
-            <button onClick={onViewResults}
-              className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-bold text-sm text-white transition-all hover:brightness-110"
-              style={{ background: "#ff5100", boxShadow: "0 4px 24px rgba(255,81,0,0.35)" }}>
-              View My Results <ChevronRight className="w-4 h-4" />
-            </button>
+          {/* ── Right: radar card ── */}
+          {!hasProfile && (
+            <div className="shrink-0 w-full sm:w-auto">
+              <div className="rounded-2xl border overflow-hidden"
+                style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}>
+                <div className="px-4 pt-3.5 pb-1 flex items-center justify-between">
+                  <p className="text-[9px] font-black tracking-[0.2em] uppercase text-white/30">ACE Profile</p>
+                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100" }}>Example</span>
+                </div>
+                <div className="flex justify-center px-4 py-3"
+                  style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, transparent 70%)" }}>
+                  <ACERadar
+                    ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }}
+                    size={200} showLabels
+                  />
+                </div>
+                <div className="px-4 py-3 flex items-center justify-between border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+                  <span className="text-[10px] text-white/20">Your shape will differ</span>
+                  <span className="text-[10px] font-bold" style={{ color: "#f59e0b" }}>★★★ Trailblazer</span>
+                </div>
+              </div>
+            </div>
           )}
-          <button onClick={onStart}
-            className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-bold text-sm transition-all hover:brightness-110"
-            style={hasProfile
-              ? { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.6)" }
-              : { background: "#ff5100", color: "#fff", boxShadow: "0 4px 24px rgba(255,81,0,0.35)" }
-            }>
-            {hasProfile
-              ? <><RotateCcw className="w-3.5 h-3.5" />Retake Assessment</>
-              : <>Begin Assessment <ChevronRight className="w-4 h-4" /></>}
-          </button>
-          <Link href="/ace"
-            className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl text-sm font-semibold transition-all hover:bg-white/5"
-            style={{ border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.35)" }}>
-            Learn more about ACE <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+
         </div>
       </div>
     </div>
