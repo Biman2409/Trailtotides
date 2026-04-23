@@ -434,7 +434,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
               8 questions across stamina, strength, altitude, nerve and more. We map your capability and surface the adventures that actually fit.
             </p>
 
-            <p className="text-white/18 text-[11px] tracking-wide mb-2">Takes about 2 minutes</p>
+            <p className="text-white/18 text-[11px] tracking-wide mb-2 text-center">Takes about 2 minutes</p>
 
             <div className="flex flex-col gap-2">
               {hasProfile && (
