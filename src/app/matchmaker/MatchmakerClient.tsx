@@ -399,69 +399,94 @@ function AxisBar({ axis, value, max = 5 }: { axis: string; value: number; max?: 
 // ─── Intro screen ─────────────────────────────────────────────────────────────
 
 
-const INTRO_DOMAINS = [
-  { name: "Engine",   color: "#f97316", axes: [{ label: "Stamina", color: "#f97316" }, { label: "Power",    color: "#eab308" }] },
-  { name: "Chassis",  color: "#22d3ee", axes: [{ label: "Strength", color: "#84cc16" }, { label: "Agility",  color: "#22d3ee" }] },
-  { name: "Elements", color: "#a78bfa", axes: [{ label: "Water",    color: "#3b82f6" }, { label: "Altitude", color: "#a78bfa" }] },
-  { name: "Mind",     color: "#10b981", axes: [{ label: "Focus",    color: "#f43f5e" }, { label: "Nerve",    color: "#10b981" }] },
+const INTRO_AXES_DATA = [
+  { label: "Stamina",  color: "#f97316", v: 4 },
+  { label: "Power",    color: "#eab308", v: 3 },
+  { label: "Strength", color: "#84cc16", v: 4 },
+  { label: "Agility",  color: "#22d3ee", v: 3 },
+  { label: "Water",    color: "#3b82f6", v: 1 },
+  { label: "Altitude", color: "#a78bfa", v: 5 },
+  { label: "Focus",    color: "#f43f5e", v: 4 },
+  { label: "Nerve",    color: "#10b981", v: 3 },
 ];
 
 function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => void; onViewResults: () => void; hasProfile: boolean }) {
   return (
-    <div className="max-w-lg mx-auto px-5 sm:px-6 py-20 sm:py-24">
-      <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
-      <h1 className="text-white text-3xl sm:text-4xl font-black tracking-tight leading-tight mb-3">
-        Find adventures built for your body.
-      </h1>
-      <p className="text-white/45 text-sm leading-relaxed mb-6">
-        8 questions across the axes below. We map your capability and show you which adventures fit — and exactly where you&apos;d need to grow for the ones that don&apos;t.
-      </p>
+    <div className="relative min-h-[calc(100vh-64px)] flex items-center justify-center overflow-hidden px-5">
+      {/* Ambient glows */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full blur-3xl pointer-events-none opacity-10"
+        style={{ background: "radial-gradient(ellipse, #ff5100 0%, #a78bfa 50%, transparent 100%)" }} />
+      <div className="absolute bottom-0 right-0 w-64 h-64 rounded-full blur-3xl pointer-events-none opacity-8"
+        style={{ background: "#10b981" }} />
 
-      {!hasProfile && (
-        <div className="grid grid-cols-2 gap-2 mb-8">
-          {INTRO_DOMAINS.map(({ name, color, axes }) => (
-            <div key={name} className="rounded-xl px-4 py-3 border" style={{ background: `${color}08`, borderColor: `${color}20` }}>
-              <p className="text-[9px] font-black tracking-widest uppercase mb-2.5" style={{ color }}>{name}</p>
-              <div className="flex flex-col gap-1.5">
-                {axes.map(({ label, color: ac }) => (
-                  <div key={label} className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: ac }} />
-                    <span className="text-white/70 text-xs font-semibold">{label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+      <div className="relative w-full max-w-sm mx-auto py-20">
+        {/* Eyebrow */}
+        <div className="flex items-center gap-2 mb-6">
+          <div className="w-1 h-5 rounded-full" style={{ background: "#ff5100" }} />
+          <p className="text-[#ff5100] text-[11px] font-black tracking-[0.25em] uppercase">Adventure Matchmaker</p>
         </div>
-      )}
 
-      {hasProfile && (
-        <button
-          onClick={onViewResults}
-          className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm text-white transition-all hover:brightness-110 mb-2.5"
-          style={{ background: "#ff5100" }}
-        >
-          View My Results
-          <ChevronRight className="w-4 h-4" />
-        </button>
-      )}
-      <button
-        onClick={onStart}
-        className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm transition-all hover:brightness-110 mb-2.5"
-        style={hasProfile
-          ? { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.7)" }
-          : { background: "#ff5100", color: "#fff" }
-        }
-      >
-        {hasProfile ? <><RotateCcw className="w-3.5 h-3.5" />Retake Assessment</> : <>Begin Assessment<ChevronRight className="w-4 h-4" /></>}
-      </button>
-      <Link
-        href="/ace"
-        className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full text-sm text-white/40 border border-white/08 hover:text-white/60 hover:border-white/15 transition-all"
-      >
-        What is ACE?
-      </Link>
-      <p className="text-white/20 text-xs text-center mt-4">8 questions · ~3 minutes</p>
+        {/* Headline */}
+        <h1 className="text-white text-4xl font-black tracking-tight leading-[1.05] mb-4">
+          Adventures<br />built for<br /><span style={{ color: "#ff5100" }}>your body.</span>
+        </h1>
+
+        <p className="text-white/40 text-sm leading-relaxed mb-8">
+          8 questions. We map your physical capability across every axis and surface the adventures that actually fit.
+        </p>
+
+        {/* Radar + axes — only on no-profile */}
+        {!hasProfile && (
+          <div className="rounded-2xl border mb-7 overflow-hidden"
+            style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}>
+            {/* Radar */}
+            <div className="flex justify-center py-5"
+              style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)" }}>
+              <ACERadar
+                ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }}
+                size={200} showLabels
+              />
+            </div>
+            {/* Axis bars */}
+            <div className="px-4 pb-4 grid grid-cols-2 gap-x-4 gap-y-2">
+              {INTRO_AXES_DATA.map(({ label, color, v }) => (
+                <div key={label} className="flex items-center gap-2">
+                  <span className="text-[10px] text-white/35 w-14 shrink-0">{label}</span>
+                  <div className="flex-1 h-1 rounded-full" style={{ background: "rgba(255,255,255,0.07)" }}>
+                    <div className="h-full rounded-full" style={{ width: `${(v / 5) * 100}%`, background: color }} />
+                  </div>
+                  <span className="text-[9px] font-mono text-white/25 w-3 text-right">{v}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* CTAs */}
+        <div className="flex flex-col gap-2">
+          {hasProfile && (
+            <button onClick={onViewResults}
+              className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm text-white transition-all hover:brightness-110"
+              style={{ background: "#ff5100" }}>
+              View My Results <ChevronRight className="w-4 h-4" />
+            </button>
+          )}
+          <button onClick={onStart}
+            className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm transition-all hover:brightness-110"
+            style={hasProfile
+              ? { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.6)" }
+              : { background: "#ff5100", color: "#fff" }
+            }>
+            {hasProfile ? <><RotateCcw className="w-3.5 h-3.5" />Retake</> : <>Begin Assessment <ChevronRight className="w-4 h-4" /></>}
+          </button>
+          <Link href="/ace"
+            className="w-full flex items-center justify-center px-6 py-3 text-xs text-white/25 hover:text-white/50 transition-colors">
+            What is ACE? →
+          </Link>
+        </div>
+
+        <p className="text-white/15 text-[10px] text-center mt-3">8 questions · ~3 minutes</p>
+      </div>
     </div>
   );
 }
