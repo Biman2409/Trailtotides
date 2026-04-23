@@ -237,7 +237,6 @@ export default function ACEPage() {
                   )}
                   <div className="px-4 pt-3 pb-1">
                     <p className="text-[10px] font-black tracking-wide uppercase" style={{ color: t.diffColor }}>{t.label}</p>
-                    <p className="text-white/35 text-[11px] leading-relaxed mt-0.5">{t.desc}</p>
                   </div>
                   <div className="flex justify-center px-4 py-3 flex-1 items-center">
                     <ACERadar ace={t.ace} size={200} showLabels />
