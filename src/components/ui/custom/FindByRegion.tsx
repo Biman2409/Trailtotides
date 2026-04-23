@@ -72,7 +72,7 @@ export default function FindByRegion() {
         {/* Header */}
         <div className="mb-10 lg:mb-12">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
-            DISCOVER YOUR REGION
+            DISCOVER BY REGION
           </p>
           <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
             Adventure Lives in Every Corner
