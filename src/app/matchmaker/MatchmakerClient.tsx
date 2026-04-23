@@ -428,7 +428,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
 
         {/* Headline */}
         <h1 className="text-white text-4xl font-black tracking-tight leading-[1.05] mb-4">
-          Adventures<br />built for<br /><span style={{ color: "#ff5100" }}>your body.</span>
+          Adventures built for<br /><span style={{ color: "#ff5100" }}>your body</span>
         </h1>
 
         <p className="text-white/40 text-sm leading-relaxed mb-8">
