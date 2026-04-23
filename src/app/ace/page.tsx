@@ -21,11 +21,11 @@ export const metadata = {
 };
 
 const AXES = [
-  { key: "stamina",  icon: <Flame    className="w-5 h-5" />, color: "#f97316", label: "Stamina",  desc: "Sustained physical effort and endurance — multi-day trekking, long motorcycle rides, consecutive days at altitude." },
+  { key: "stamina",  icon: <Flame    className="w-5 h-5" />, color: "#f97316", label: "Stamina",  desc: "Sustained physical effort and endurance — multi-day trekking, long motorcycling routes, consecutive days at altitude." },
   { key: "power",    icon: <Zap      className="w-5 h-5" />, color: "#eab308", label: "Power",    desc: "Short explosive bursts — steep ascents, paddling rapids, scrambling over boulders, fighting a current." },
   { key: "strength", icon: <Dumbbell className="w-5 h-5" />, color: "#84cc16", label: "Strength", desc: "Load-bearing capability and joint stress — carrying heavy packs for days or hauling up technical terrain." },
-  { key: "agility",  icon: <Compass  className="w-5 h-5" />, color: "#22d3ee", label: "Agility",  desc: "Balance, coordination and terrain navigation — rock hopping, technical riding, snow and ice travel." },
-  { key: "water",    icon: <Waves    className="w-5 h-5" />, color: "#3b82f6", label: "Water",    desc: "Swimming ability and aquatic survival — required for rafting, sea kayaking, scuba and river crossings." },
+  { key: "agility",  icon: <Compass  className="w-5 h-5" />, color: "#22d3ee", label: "Agility",  desc: "Balance, coordination and terrain navigation — rock hopping, technical motorcycle terrain, snow and ice travel." },
+  { key: "water",    icon: <Waves    className="w-5 h-5" />, color: "#3b82f6", label: "Water",    desc: "Swimming ability and aquatic survival — required for river rafting, sea kayaking, diving and river crossings." },
   { key: "altitude", icon: <Mountain className="w-5 h-5" />, color: "#a78bfa", label: "Altitude", desc: "Physiological tolerance to high elevation — the hypoxic stress of Himalayan trekking and 6,000m peaks." },
   { key: "focus",    icon: <ScanEye  className="w-5 h-5" />, color: "#f43f5e", label: "Focus",    desc: "Psychological exposure tolerance — comfort on cliff edges, in caves, on extreme terrain or dangerous rapids." },
   { key: "nerve",    icon: <Ghost    className="w-5 h-5" />, color: "#10b981", label: "Nerve",    desc: "Mental resilience far from help — operating in remote terrain with no support, delayed rescue, and full self-reliance." },
@@ -68,12 +68,36 @@ const PROGRESSION_TREKS = [
 ];
 
 
-const DOMAIN_ICONS: Record<string, React.ReactNode> = {
-  Engine:   <Gauge    className="w-5 h-5" />,
-  Chassis:  <Dumbbell className="w-5 h-5" />,
-  Elements: <Waves    className="w-5 h-5" />,
-  Mind:     <Ghost    className="w-5 h-5" />,
-};
+const DOMAINS = [
+  {
+    name: "Engine",
+    icon: <Gauge    className="w-5 h-5" />,
+    color: "#f97316",
+    axes: ["Stamina", "Power"],
+    desc: "The physical fuel — sustained output over long days and the explosive effort for hard sections. Without a strong engine, all other capability stalls.",
+  },
+  {
+    name: "Chassis",
+    icon: <Dumbbell className="w-5 h-5" />,
+    color: "#22d3ee",
+    axes: ["Strength", "Agility"],
+    desc: "How your body handles the ground — load-bearing across heavy packs and technical movement on rock, scree, snow and loose terrain.",
+  },
+  {
+    name: "Elements",
+    icon: <Waves    className="w-5 h-5" />,
+    color: "#a78bfa",
+    axes: ["Water", "Altitude"],
+    desc: "Environmental exposure demands. Aquatic survival for water-based adventures, and high-altitude physiology for Himalayan objectives.",
+  },
+  {
+    name: "Mind",
+    icon: <Ghost    className="w-5 h-5" />,
+    color: "#10b981",
+    axes: ["Focus", "Nerve"],
+    desc: "Psychological readiness — composure on exposed terrain where a mistake has consequences, and the grit to operate far from any support.",
+  },
+];
 
 export default function ACEPage() {
   return (
@@ -173,6 +197,49 @@ export default function ACEPage() {
                 <p className="font-black text-white text-base mb-1.5 relative">{label}</p>
                 <p className="text-white/40 text-xs leading-relaxed relative">{desc}</p>
                 {/* Bottom accent line */}
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOUR DOMAINS ──────────────────────────────────────────────── */}
+      <section className="py-24 px-6 border-t border-white/5">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-14">
+            <p className="text-[#ff5100] text-[11px] font-bold tracking-[0.25em] uppercase mb-3">The Four Domains</p>
+            <h2 className="text-white text-4xl font-black tracking-tight">Axes grouped by what they share</h2>
+            <p className="text-white/35 text-base mt-2 max-w-xl">The eight axes pair naturally into four domains. Each domain captures a distinct aspect of physical or mental capability — and adventure types tend to stress whole domains at once.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {DOMAINS.map(({ name, icon, color, axes, desc }) => (
+              <div
+                key={name}
+                className="group relative rounded-2xl p-6 border overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
+                style={{ background: `${color}08`, borderColor: `${color}20` }}
+              >
+                <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full blur-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-300" style={{ background: color }} />
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${color}18`, color }}>
+                      {icon}
+                    </div>
+                    <div>
+                      <p className="font-black text-white text-base leading-none">{name}</p>
+                      <div className="flex gap-1.5 mt-1.5">
+                        {axes.map(ax => (
+                          <span key={ax} className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: `${color}18`, color }}>
+                            {ax}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-white/40 text-xs leading-relaxed">{desc}</p>
+                </div>
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }} />
               </div>
