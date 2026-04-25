@@ -166,11 +166,11 @@ export default function ACEProfileSection({
         }}
       >
         {/* Radar + axes */}
-        <div className="flex flex-col lg:flex-row">
+        <div className="flex flex-row">
 
           {/* Radar panel */}
           <div
-            className="flex flex-col items-center justify-center py-8 px-6 lg:px-10 shrink-0 lg:border-r"
+            className="flex flex-col items-center justify-center py-6 px-5 shrink-0 border-r"
             style={{ borderColor: "rgba(255,255,255,0.06)" }}
           >
             {/* Score pill */}
@@ -201,7 +201,7 @@ export default function ACEProfileSection({
               </div>
             )}
 
-            <ACERadar ace={ace} userAce={userAce ?? undefined} userColor="#ffffff" size={280} showLabels />
+            <ACERadar ace={ace} userAce={userAce ?? undefined} userColor="#ffffff" size={200} showLabels />
 
             {/* Legend */}
             <div className="flex items-center gap-5 mt-5">
@@ -238,26 +238,23 @@ export default function ACEProfileSection({
               </div>
             </div>
           ) : (
-            <div className="flex-1 flex items-center justify-center p-8">
-              <div
-                className="rounded-2xl px-6 py-6 flex flex-col gap-4 w-full max-w-sm text-center items-center"
-                style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.18)" }}
-              >
+            <div className="flex-1 flex items-center p-5">
+              <div className="flex flex-col gap-3">
                 <div
-                  className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                  className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
                   style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.25)" }}
                 >
-                  <Flame className="w-5 h-5 text-[#ff5100]" />
+                  <Flame className="w-4 h-4 text-[#ff5100]" />
                 </div>
                 <div>
-                  <p className="text-white font-bold text-sm mb-1.5">See how you measure up</p>
+                  <p className="text-white font-bold text-sm mb-1">See how you measure up</p>
                   <p className="text-white/35 text-xs leading-relaxed">
                     Take the 2-min ACE assessment to overlay your profile and see exactly which axes you meet.
                   </p>
                 </div>
                 <Link
                   href="/matchmaker"
-                  className="inline-flex items-center gap-2 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all hover:brightness-110 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 w-fit text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all hover:brightness-110 hover:-translate-y-0.5"
                   style={{ background: "#ff5100", boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}
                 >
                   Take Assessment
