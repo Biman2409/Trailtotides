@@ -147,16 +147,12 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
     }
 
     setDateFetching(true);
-    // Calculate how many days ahead the target date is
-    const diffMs = new Date(date).getTime() - new Date(todayStr).getTime();
-    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24)) + 1;
 
     const url = new URL("https://api.open-meteo.com/v1/forecast");
     url.searchParams.set("latitude", lat.toString());
     url.searchParams.set("longitude", lng.toString());
     url.searchParams.set("daily", "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum");
     url.searchParams.set("wind_speed_unit", "kmh");
-    url.searchParams.set("forecast_days", Math.max(diffDays, 1).toString());
     url.searchParams.set("start_date", date);
     url.searchParams.set("end_date", date);
     url.searchParams.set("timezone", "auto");
