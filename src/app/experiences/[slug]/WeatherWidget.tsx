@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Cloud, CloudRain, CloudSnow, Sun, Wind, Droplets,
   CloudLightning, CloudDrizzle, CloudFog, Thermometer, ChevronDown, CalendarDays,
@@ -88,10 +88,11 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
 
-  // Date picker state — min/max derived from loaded forecast dates to avoid timezone mismatch
+  // Date picker state
   const [selectedDate, setSelectedDate] = useState("");
   const [dateWeather, setDateWeather] = useState<WeatherDay | null>(null);
   const [dateError, setDateError] = useState(false);
+  const weatherRef = React.useRef<WeatherData | null>(null);
 
   useEffect(() => {
     const url = new URL("https://api.open-meteo.com/v1/forecast");
@@ -107,7 +108,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
       .then((r) => r.json())
       .then((d) => {
         const c = d.current;
-        setWeather({
+        const parsed: WeatherData = {
           current: {
             temp: Math.round(c.temperature_2m),
             apparent: Math.round(c.apparent_temperature),
@@ -123,17 +124,20 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
             precipitation: Math.round(d.daily.precipitation_sum[i] * 10) / 10,
             weatherCode: d.daily.weather_code[i],
           })),
-        });
+        };
+        weatherRef.current = parsed;
+        setWeather(parsed);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [lat, lng]);
 
   function fetchDateWeather(date: string) {
-    if (!date || !weather) return;
+    if (!date) return;
     setDateError(false);
     setDateWeather(null);
-    const match = weather.daily.find(d => d.date === date);
+    const daily = weatherRef.current?.daily ?? [];
+    const match = daily.find(d => d.date === date);
     if (match) {
       setDateWeather(match);
     } else {
