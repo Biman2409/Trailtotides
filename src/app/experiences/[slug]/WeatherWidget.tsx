@@ -96,7 +96,6 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
   const maxDateStr = toYMD(new Date(Date.now() + 15 * 24 * 60 * 60 * 1000));
   const [selectedDate, setSelectedDate] = useState("");
   const [dateWeather, setDateWeather] = useState<WeatherDay | null>(null);
-  const [dateFetching, setDateFetching] = useState(false);
   const [dateError, setDateError] = useState(false);
 
   useEffect(() => {
@@ -106,7 +105,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
     url.searchParams.set("current", "temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code,is_day");
     url.searchParams.set("daily", "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum");
     url.searchParams.set("wind_speed_unit", "kmh");
-    url.searchParams.set("forecast_days", "7");
+    url.searchParams.set("forecast_days", "16");
     url.searchParams.set("timezone", "auto");
 
     fetch(url.toString())
@@ -136,43 +135,15 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
   }, [lat, lng]);
 
   function fetchDateWeather(date: string) {
-    if (!date) return;
+    if (!date || !weather) return;
     setDateError(false);
     setDateWeather(null);
-
-    // Serve from already-loaded 7-day data if possible
-    if (weather) {
-      const cached = weather.daily.find(d => d.date === date);
-      if (cached) { setDateWeather(cached); return; }
+    const match = weather.daily.find(d => d.date === date);
+    if (match) {
+      setDateWeather(match);
+    } else {
+      setDateError(true);
     }
-
-    setDateFetching(true);
-
-    const url = new URL("https://api.open-meteo.com/v1/forecast");
-    url.searchParams.set("latitude", lat.toString());
-    url.searchParams.set("longitude", lng.toString());
-    url.searchParams.set("daily", "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum");
-    url.searchParams.set("wind_speed_unit", "kmh");
-    url.searchParams.set("start_date", date);
-    url.searchParams.set("end_date", date);
-    url.searchParams.set("timezone", "auto");
-    fetch(url.toString())
-      .then(r => r.json())
-      .then(d => {
-        if (d.daily?.time?.[0]) {
-          setDateWeather({
-            date: d.daily.time[0],
-            tempMax: Math.round(d.daily.temperature_2m_max[0]),
-            tempMin: Math.round(d.daily.temperature_2m_min[0]),
-            precipitation: Math.round(d.daily.precipitation_sum[0] * 10) / 10,
-            weatherCode: d.daily.weather_code[0],
-          });
-        } else {
-          setDateError(true);
-        }
-      })
-      .catch(() => setDateError(true))
-      .finally(() => setDateFetching(false));
   }
 
   const altM = altitude ? parseFloat(altitude.replace(/[^0-9.]/g, "")) : null;
@@ -347,12 +318,12 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
                   style={{ border: "1px solid rgba(255,255,255,0.1)", colorScheme: "dark" }}
                 />
                 <button
-                  disabled={!selectedDate || dateFetching}
+                  disabled={!selectedDate}
                   onClick={() => fetchDateWeather(selectedDate)}
                   className="px-4 py-2 rounded-lg text-xs font-bold text-white transition-all disabled:opacity-30 hover:brightness-110"
                   style={{ background: "#ff5100" }}
                 >
-                  {dateFetching ? "…" : "Check"}
+                  Check
                 </button>
               </div>
 
