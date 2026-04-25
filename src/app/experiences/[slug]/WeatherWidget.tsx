@@ -253,7 +253,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
                 }}
               >
                 <span className="text-[11px] font-semibold hidden sm:block whitespace-nowrap" style={{ color: open ? "#ff5100" : "rgba(255,255,255,0.45)" }}>
-                  Check 7-day weather
+                  Week Ahead
                 </span>
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} style={{ color: open ? "#ff5100" : "rgba(255,255,255,0.35)" }} />
               </div>
