@@ -75,9 +75,6 @@ function dayLabel(dateStr: string, i: number) {
   return DAYS[new Date(dateStr).getDay()];
 }
 
-function toYMD(d: Date) {
-  return d.toISOString().split("T")[0];
-}
 
 interface Props {
   lat: number;
@@ -91,9 +88,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
 
-  // Date picker state
-  const todayStr = toYMD(new Date());
-  const maxDateStr = toYMD(new Date(Date.now() + 6 * 24 * 60 * 60 * 1000));
+  // Date picker state — min/max derived from loaded forecast dates to avoid timezone mismatch
   const [selectedDate, setSelectedDate] = useState("");
   const [dateWeather, setDateWeather] = useState<WeatherDay | null>(null);
   const [dateError, setDateError] = useState(false);
@@ -306,8 +301,8 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
               <div className="flex items-center gap-2 flex-1">
                 <input
                   type="date"
-                  min={todayStr}
-                  max={maxDateStr}
+                  min={weather.daily[0]?.date}
+                  max={weather.daily[weather.daily.length - 1]?.date}
                   value={selectedDate}
                   onChange={e => {
                     setSelectedDate(e.target.value);
