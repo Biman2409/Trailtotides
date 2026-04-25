@@ -301,6 +301,8 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
                 <CalendarDays className="w-3.5 h-3.5 text-[#ff5100]" />
                 <span className="text-white/45 text-xs font-semibold">Check for a specific date instead</span>
               </div>
+              {/* debug */}
+              <span className="text-[9px] text-white/20">{weather.daily.map(d=>d.date).join(', ')}</span>
 
               <div className="flex items-center gap-2 flex-1">
                 <input
