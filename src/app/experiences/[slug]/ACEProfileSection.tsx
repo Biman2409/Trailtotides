@@ -64,81 +64,59 @@ function AxisCard({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; 
   const icon = AXIS_ICONS[axis];
   const label = ACE_AXIS_LABELS[axis];
   const hasUser = userVal !== null;
-  const meets = hasUser && userVal >= trekVal;
-  const gap = hasUser ? trekVal - userVal : 0;
+  const meets = hasUser && userVal! >= trekVal;
+  const gap = hasUser ? trekVal - userVal! : 0;
+  const accentColor = !hasUser ? color : meets ? color : "#ef4444";
 
   return (
     <div
-      className="rounded-xl p-3 flex flex-col gap-2.5"
+      className="rounded-xl px-3 py-2.5 flex items-center gap-3"
       style={{
         background: !hasUser
           ? "rgba(255,255,255,0.03)"
           : meets
-          ? `linear-gradient(135deg, ${color}0a 0%, ${color}05 100%)`
-          : "linear-gradient(135deg, rgba(239,68,68,0.08) 0%, rgba(239,68,68,0.04) 100%)",
+          ? `${color}0a`
+          : "rgba(239,68,68,0.07)",
         border: !hasUser
-          ? "1px solid rgba(255,255,255,0.08)"
+          ? "1px solid rgba(255,255,255,0.07)"
           : meets
-          ? `1px solid ${color}28`
-          : "1px solid rgba(239,68,68,0.22)",
+          ? `1px solid ${color}25`
+          : "1px solid rgba(239,68,68,0.2)",
       }}
     >
-      {/* Top row: icon + label + status badge */}
-      <div className="flex items-center justify-between gap-1">
-        <div className="flex items-center gap-1.5 min-w-0">
-          <span style={{ color: !hasUser ? color : meets ? color : "#ef4444" }} className="shrink-0">
-            {icon}
-          </span>
-          <span
-            className="text-[10px] font-bold uppercase tracking-wide truncate"
-            style={{ color: !hasUser ? "rgba(255,255,255,0.55)" : meets ? color : "#ef4444" }}
-          >
-            {label}
-          </span>
+      {/* Icon */}
+      <span style={{ color: accentColor }} className="shrink-0 opacity-90">{icon}</span>
+
+      {/* Label */}
+      <span className="text-[10px] font-bold uppercase tracking-wide w-16 shrink-0 truncate" style={{ color: accentColor }}>
+        {label}
+      </span>
+
+      {/* Dot columns */}
+      <div className="flex flex-col gap-1 flex-1 min-w-0">
+        {/* Trek row */}
+        <div className="flex items-center gap-1.5">
+          <span className="text-[7px] uppercase tracking-wider text-white/20 font-semibold w-6 shrink-0">Req</span>
+          <DotScale value={trekVal} color={color} />
         </div>
+        {/* User row */}
         {hasUser && (
-          <span
-            className="text-[8px] font-black px-1.5 py-0.5 rounded-full shrink-0 flex items-center gap-0.5"
-            style={{
-              background: meets ? "#22c55e18" : "#ef444420",
-              color: meets ? "#4ade80" : "#f87171",
-            }}
-          >
-            {meets ? "✓ Ready" : (
-              <>
-                <ChevronUp className="w-2 h-2" />
-                {gap} gap
-              </>
-            )}
-          </span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[7px] uppercase tracking-wider text-white/20 font-semibold w-6 shrink-0">You</span>
+            <DotScale value={userVal!} color={meets ? color : "#ef4444"} />
+          </div>
         )}
       </div>
 
-      {/* Trek requirement dots */}
-      <div>
-        <p className="text-[8px] uppercase tracking-widest text-white/25 mb-1 font-semibold">Trek needs</p>
-        <DotScale value={trekVal} color={color} />
-      </div>
-
-      {/* User capability dots */}
+      {/* Status badge */}
       {hasUser && (
-        <div>
-          <p className="text-[8px] uppercase tracking-widest text-white/25 mb-1 font-semibold">You</p>
-          <DotScale value={userVal} color={meets ? color : "#ef4444"} />
-        </div>
-      )}
-
-      {/* Numeric score line */}
-      <div className="flex items-center justify-between pt-0.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-        <span className="text-[9px] font-bold" style={{ color: !hasUser ? color : meets ? color : "#f87171" }}>
-          {hasUser ? `You: ${userVal}/5` : `Req: ${trekVal}/5`}
+        <span
+          className="text-[8px] font-black px-1.5 py-0.5 rounded-full shrink-0 flex items-center gap-0.5"
+          style={{ background: meets ? "#22c55e18" : "#ef444420", color: meets ? "#4ade80" : "#f87171" }}
+        >
+          {meets ? "✓" : `+${gap}`}
         </span>
-        {hasUser && (
-          <span className="text-[9px] text-white/25">
-            Req <span className="font-semibold text-white/45">{trekVal}</span>
-          </span>
-        )}
-      </div>
+      )}
     </div>
   );
 }
@@ -248,7 +226,7 @@ export default function ACEProfileSection({
               <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/25 mb-3">
                 Your Capability vs Trek Requirements
               </p>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="flex flex-col gap-1.5">
                 {axes.map(axis => (
                   <AxisCard
                     key={axis}
