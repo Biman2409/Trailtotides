@@ -87,7 +87,7 @@ function CompareTable({ operators, computedRatings }: { operators: OperatorCardD
                     <span className="font-black text-[14px]" style={{ color: isBestPrice ? "#4ade80" : "rgba(255,255,255,0.8)" }}>{op.priceFrom}</span>
                     {isBestPrice && (
                       <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap" style={{ background: "rgba(74,222,128,0.1)", color: "#4ade80", border: "1px solid rgba(74,222,128,0.2)" }}>
-                        Best
+                        Economical
                       </span>
                     )}
                   </div>
