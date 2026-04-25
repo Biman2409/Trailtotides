@@ -90,8 +90,9 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
 
   // Date picker state
   const [selectedDate, setSelectedDate] = useState("");
-  const [dateWeather, setDateWeather] = useState<WeatherDay | null>(null);
+  const [dateWeather, setDateWeather] = useState<WeatherDay & { historical?: boolean; year?: number } | null>(null);
   const [dateError, setDateError] = useState(false);
+  const [dateFetching, setDateFetching] = useState(false);
   const weatherRef = React.useRef<WeatherData | null>(null);
 
   useEffect(() => {
@@ -136,13 +137,45 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
     if (!date) return;
     setDateError(false);
     setDateWeather(null);
-    const daily = weatherRef.current?.daily ?? [];
-    const match = daily.find(d => d.date === date);
-    if (match) {
-      setDateWeather(match);
-    } else {
-      setDateError(true);
-    }
+
+    // Check forecast cache first
+    const cached = weatherRef.current?.daily.find(d => d.date === date);
+    if (cached) { setDateWeather(cached); return; }
+
+    // For any other date: fetch historical data for same date last year
+    setDateFetching(true);
+    const [y, m, d2] = date.split("-");
+    const histDate = `${parseInt(y) - 1}-${m}-${d2}`;
+    const histYear = parseInt(y) - 1;
+
+    const url = new URL("https://archive-api.open-meteo.com/v1/archive");
+    url.searchParams.set("latitude", lat.toString());
+    url.searchParams.set("longitude", lng.toString());
+    url.searchParams.set("daily", "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum");
+    url.searchParams.set("wind_speed_unit", "kmh");
+    url.searchParams.set("start_date", histDate);
+    url.searchParams.set("end_date", histDate);
+    url.searchParams.set("timezone", "auto");
+
+    fetch(url.toString())
+      .then(r => r.json())
+      .then(data => {
+        if (data.daily?.time?.[0]) {
+          setDateWeather({
+            date: data.daily.time[0],
+            tempMax: Math.round(data.daily.temperature_2m_max[0]),
+            tempMin: Math.round(data.daily.temperature_2m_min[0]),
+            precipitation: Math.round(data.daily.precipitation_sum[0] * 10) / 10,
+            weatherCode: data.daily.weather_code[0],
+            historical: true,
+            year: histYear,
+          });
+        } else {
+          setDateError(true);
+        }
+      })
+      .catch(() => setDateError(true))
+      .finally(() => setDateFetching(false));
   }
 
   const altM = altitude ? parseFloat(altitude.replace(/[^0-9.]/g, "")) : null;
@@ -301,14 +334,10 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
                 <CalendarDays className="w-3.5 h-3.5 text-[#ff5100]" />
                 <span className="text-white/45 text-xs font-semibold">Check for a specific date instead</span>
               </div>
-              {/* debug */}
-              <span className="text-[9px] text-white/20">{weather.daily.map(d=>d.date).join(', ')}</span>
 
               <div className="flex items-center gap-2 flex-1">
                 <input
                   type="date"
-                  min={weather.daily[0]?.date}
-                  max={weather.daily[weather.daily.length - 1]?.date}
                   value={selectedDate}
                   onChange={e => {
                     setSelectedDate(e.target.value);
@@ -319,18 +348,18 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
                   style={{ border: "1px solid rgba(255,255,255,0.1)", colorScheme: "dark" }}
                 />
                 <button
-                  disabled={!selectedDate}
+                  disabled={!selectedDate || dateFetching}
                   onClick={() => fetchDateWeather(selectedDate)}
                   className="px-4 py-2 rounded-lg text-xs font-bold text-white transition-all disabled:opacity-30 hover:brightness-110"
                   style={{ background: "#ff5100" }}
                 >
-                  Check
+                  {dateFetching ? "…" : "Check"}
                 </button>
               </div>
 
               {/* Date result */}
               {dateError && (
-                <p className="text-red-400/70 text-xs shrink-0">No data for this date</p>
+                <p className="text-red-400/70 text-xs shrink-0">No data available</p>
               )}
               {dateWeather && (
                 <div className="flex items-center gap-3 sm:border-l sm:pl-4" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
@@ -343,6 +372,9 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
                       {dateWeather.tempMax}° / {dateWeather.tempMin}°
                       {dateWeather.precipitation > 0 && <span className="text-sky-400/70 ml-1.5">{dateWeather.precipitation}mm</span>}
                     </p>
+                    {dateWeather.historical && (
+                      <p className="text-white/20 text-[9px] mt-0.5">Historical · {dateWeather.year}</p>
+                    )}
                   </div>
                 </div>
               )}
