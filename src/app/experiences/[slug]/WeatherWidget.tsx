@@ -239,10 +239,20 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
               ))}
             </div>
 
-            {/* Toggle label */}
-            <div className="flex items-center gap-1.5 px-5 py-3.5 ml-auto shrink-0">
-              <span className="text-white/30 text-[10px] hidden sm:block tracking-wide font-medium">Check 7-day weather</span>
-              <ChevronDown className={`w-3.5 h-3.5 text-white/25 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+            {/* Toggle button */}
+            <div className="flex items-center px-4 py-3.5 ml-auto shrink-0">
+              <div
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all"
+                style={{
+                  background: open ? "rgba(255,81,0,0.12)" : "rgba(255,255,255,0.05)",
+                  border: open ? "1px solid rgba(255,81,0,0.3)" : "1px solid rgba(255,255,255,0.1)",
+                }}
+              >
+                <span className="text-[11px] font-semibold hidden sm:block" style={{ color: open ? "#ff5100" : "rgba(255,255,255,0.45)" }}>
+                  Check 7-day weather
+                </span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} style={{ color: open ? "#ff5100" : "rgba(255,255,255,0.35)" }} />
+              </div>
             </div>
 
           </div>
