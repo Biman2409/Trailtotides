@@ -184,63 +184,67 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
       {/* ── COLLAPSED ROW ── */}
       <button onClick={() => setOpen((v) => !v)} className="w-full text-left hover:bg-white/[0.015] transition-colors">
         <div className="max-w-7xl mx-auto px-5 lg:px-8">
-          <div className="flex items-center overflow-x-auto no-scrollbar" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+          <div className="flex items-stretch" style={{ borderTop: "1px solid var(--border-subtle)" }}>
 
-            <div className="flex items-center gap-2 px-5 lg:px-6 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <div>
-                <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Live Weather</div>
-                <div className="text-white/55 text-[13px] font-medium leading-none truncate max-w-[110px]">{locationName}</div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <div className={`${iconColor(w.weatherCode)} drop-shadow-sm`}>
-                <WeatherIcon code={w.weatherCode} isDay={w.isDay} className="w-4 h-4" />
-              </div>
-              <div>
-                <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Condition</div>
-                <div className="text-white/85 font-medium text-[13px] leading-none">{desc(w.weatherCode)}</div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <Thermometer className="w-3.5 h-3.5 text-orange-400 shrink-0" />
-              <div>
-                <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Temperature</div>
-                <div className="text-white/85 font-medium text-[13px] leading-none">{w.temp}°C <span className="text-white/35 text-[11px] font-normal">/ feels {w.apparent}°</span></div>
-              </div>
-            </div>
-
-            <div className="hidden md:flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <Wind className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-              <div>
-                <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Wind Speed</div>
-                <div className="text-white/85 font-medium text-[13px] leading-none">{w.wind} <span className="text-white/35 text-[11px] font-normal">km/h</span></div>
-              </div>
-            </div>
-
-            <div className="hidden md:flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
-              <Droplets className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-              <div>
-                <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Humidity</div>
-                <div className="text-white/85 font-medium text-[13px] leading-none">{w.humidity}<span className="text-white/35 text-[11px] font-normal">%</span></div>
-              </div>
-            </div>
-
-            <div className="hidden lg:flex items-center gap-4 px-5 py-3.5 flex-1">
-              {weather.daily.slice(1, 4).map((day, i) => (
-                <div key={day.date} className="flex items-center gap-1.5">
-                  <span className="text-white/25 text-[10px] font-medium">{dayLabel(day.date, i + 1).slice(0, 3)}</span>
-                  <div className={iconColor(day.weatherCode)}>
-                    <WeatherIcon code={day.weatherCode} className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="text-white/50 text-[10px] font-semibold">{day.tempMax}°</span>
+            {/* Scrollable stats */}
+            <div className="flex items-center overflow-x-auto no-scrollbar flex-1 min-w-0">
+              <div className="flex items-center gap-2 px-5 lg:px-6 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+                <div>
+                  <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Live Weather</div>
+                  <div className="text-white/55 text-[13px] font-medium leading-none truncate max-w-[110px]">{locationName}</div>
                 </div>
-              ))}
+              </div>
+
+              <div className="flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+                <div className={`${iconColor(w.weatherCode)} drop-shadow-sm`}>
+                  <WeatherIcon code={w.weatherCode} isDay={w.isDay} className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Condition</div>
+                  <div className="text-white/85 font-medium text-[13px] leading-none">{desc(w.weatherCode)}</div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+                <Thermometer className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+                <div>
+                  <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Temperature</div>
+                  <div className="text-white/85 font-medium text-[13px] leading-none">{w.temp}°C <span className="text-white/35 text-[11px] font-normal">/ feels {w.apparent}°</span></div>
+                </div>
+              </div>
+
+              <div className="hidden md:flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+                <Wind className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                <div>
+                  <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Wind Speed</div>
+                  <div className="text-white/85 font-medium text-[13px] leading-none">{w.wind} <span className="text-white/35 text-[11px] font-normal">km/h</span></div>
+                </div>
+              </div>
+
+              <div className="hidden md:flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
+                <Droplets className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                <div>
+                  <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Humidity</div>
+                  <div className="text-white/85 font-medium text-[13px] leading-none">{w.humidity}<span className="text-white/35 text-[11px] font-normal">%</span></div>
+                </div>
+              </div>
             </div>
 
-            {/* Toggle button */}
-            <div className="flex items-center px-4 py-3.5 ml-auto shrink-0">
+            {/* Mini 3-day + button — always visible, no overflow */}
+            <div className="flex items-center gap-3 px-4 shrink-0" style={{ borderLeft: "1px solid var(--border-subtle)" }}>
+              <div className="hidden lg:flex items-center gap-4">
+                {weather.daily.slice(1, 4).map((day, i) => (
+                  <div key={day.date} className="flex items-center gap-1.5">
+                    <span className="text-white/25 text-[10px] font-medium">{dayLabel(day.date, i + 1).slice(0, 3)}</span>
+                    <div className={iconColor(day.weatherCode)}>
+                      <WeatherIcon code={day.weatherCode} className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="text-white/50 text-[10px] font-semibold">{day.tempMax}°</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Toggle button */}
               <div
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all"
                 style={{
@@ -248,14 +252,14 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
                   border: open ? "1px solid rgba(255,81,0,0.3)" : "1px solid rgba(255,255,255,0.1)",
                 }}
               >
-                <span className="text-[11px] font-semibold hidden sm:block" style={{ color: open ? "#ff5100" : "rgba(255,255,255,0.45)" }}>
+                <span className="text-[11px] font-semibold hidden sm:block whitespace-nowrap" style={{ color: open ? "#ff5100" : "rgba(255,255,255,0.45)" }}>
                   Check 7-day weather
                 </span>
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} style={{ color: open ? "#ff5100" : "rgba(255,255,255,0.35)" }} />
               </div>
             </div>
 
-          </div>
+          </div>{/* end outer flex */}
         </div>
       </button>
 
