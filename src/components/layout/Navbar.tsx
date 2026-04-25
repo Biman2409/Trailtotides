@@ -15,9 +15,9 @@ import NavAvatar from "@/components/ui/custom/NavAvatar";
 const navLinks = [
   { href: "/explore", label: "Explore" },
   { href: "/map", label: "Map" },
+  { href: "/matchmaker", label: "Matchmaker" },
   { href: "/planner", label: "Planner" },
   { href: "/operators", label: "Operators" },
-  { href: "/matchmaker", label: "Matchmaker" },
   { href: "/stories", label: "Stories" },
 ];
 
