@@ -93,7 +93,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
 
   // Date picker state
   const todayStr = toYMD(new Date());
-  const maxDateStr = toYMD(new Date(Date.now() + 15 * 24 * 60 * 60 * 1000));
+  const maxDateStr = toYMD(new Date(Date.now() + 6 * 24 * 60 * 60 * 1000));
   const [selectedDate, setSelectedDate] = useState("");
   const [dateWeather, setDateWeather] = useState<WeatherDay | null>(null);
   const [dateError, setDateError] = useState(false);
@@ -105,7 +105,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
     url.searchParams.set("current", "temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code,is_day");
     url.searchParams.set("daily", "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum");
     url.searchParams.set("wind_speed_unit", "kmh");
-    url.searchParams.set("forecast_days", "16");
+    url.searchParams.set("forecast_days", "7");
     url.searchParams.set("timezone", "auto");
 
     fetch(url.toString())
