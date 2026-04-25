@@ -326,58 +326,77 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
             </div>
 
             {/* ── Date picker ── */}
-            <div
-              className="rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-4"
-              style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)" }}
-            >
-              <div className="flex items-center gap-2 shrink-0">
-                <CalendarDays className="w-3.5 h-3.5 text-[#ff5100]" />
-                <span className="text-white/45 text-xs font-semibold">Check for a specific date instead</span>
-              </div>
+            <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
 
-              <div className="flex items-center gap-2 flex-1">
+              {/* Picker row */}
+              <div className="flex items-center gap-3 px-4 py-3" style={{ background: "rgba(255,255,255,0.025)" }}>
+                <CalendarDays className="w-3.5 h-3.5 text-[#ff5100] shrink-0" />
+                <span className="text-white/40 text-xs font-semibold shrink-0">Check a date</span>
                 <input
                   type="date"
                   value={selectedDate}
-                  onChange={e => {
-                    setSelectedDate(e.target.value);
-                    setDateWeather(null);
-                    setDateError(false);
-                  }}
-                  className="flex-1 bg-transparent text-white/70 text-xs px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-[#ff5100]/40"
-                  style={{ border: "1px solid rgba(255,255,255,0.1)", colorScheme: "dark" }}
+                  onChange={e => { setSelectedDate(e.target.value); setDateWeather(null); setDateError(false); }}
+                  className="flex-1 bg-transparent text-white/65 text-xs px-2 py-1.5 rounded-lg outline-none min-w-0"
+                  style={{ border: "1px solid rgba(255,255,255,0.08)", colorScheme: "dark" }}
                 />
                 <button
                   disabled={!selectedDate || dateFetching}
                   onClick={() => fetchDateWeather(selectedDate)}
-                  className="px-4 py-2 rounded-lg text-xs font-bold text-white transition-all disabled:opacity-30 hover:brightness-110"
+                  className="shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-bold text-white transition-all disabled:opacity-30 hover:brightness-110"
                   style={{ background: "#ff5100" }}
                 >
                   {dateFetching ? "…" : "Check"}
                 </button>
               </div>
 
-              {/* Date result */}
+              {/* Result card */}
               {dateError && (
-                <p className="text-red-400/70 text-xs shrink-0">No data available</p>
-              )}
-              {dateWeather && (
-                <div className="flex items-center gap-3 sm:border-l sm:pl-4" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
-                  <div className={iconColor(dateWeather.weatherCode)}>
-                    <WeatherIcon code={dateWeather.weatherCode} className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-white/70 text-xs font-semibold">{desc(dateWeather.weatherCode)}</p>
-                    <p className="text-white/35 text-[10px]">
-                      {dateWeather.tempMax}° / {dateWeather.tempMin}°
-                      {dateWeather.precipitation > 0 && <span className="text-sky-400/70 ml-1.5">{dateWeather.precipitation}mm</span>}
-                    </p>
-                    {dateWeather.historical && (
-                      <p className="text-white/20 text-[9px] mt-0.5">Historical · {dateWeather.year}</p>
-                    )}
-                  </div>
+                <div className="px-4 py-3 flex items-center gap-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                  <p className="text-red-400/60 text-xs">No data available for this date.</p>
                 </div>
               )}
+
+              {dateWeather && (() => {
+                const col = iconColor(dateWeather.weatherCode);
+                const formatted = new Date(dateWeather.date + "T12:00:00").toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" });
+                return (
+                  <div
+                    className="px-4 py-4 flex items-center gap-5"
+                    style={{ borderTop: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.018)" }}
+                  >
+                    {/* Big icon */}
+                    <div className={`${col} shrink-0`}>
+                      <WeatherIcon code={dateWeather.weatherCode} className="w-10 h-10 opacity-90" />
+                    </div>
+
+                    {/* Main info */}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white/25 text-[9px] uppercase tracking-widest font-semibold mb-0.5">{formatted}</p>
+                      <p className="text-white/85 text-sm font-bold leading-tight">{desc(dateWeather.weatherCode)}</p>
+                      {dateWeather.historical && (
+                        <p className="text-white/20 text-[9px] mt-0.5">Based on {dateWeather.year} data</p>
+                      )}
+                    </div>
+
+                    {/* Temp */}
+                    <div className="text-right shrink-0">
+                      <p className="text-white/80 text-xl font-black leading-none">{dateWeather.tempMax}°</p>
+                      <p className="text-white/30 text-xs font-medium mt-0.5">Low {dateWeather.tempMin}°</p>
+                    </div>
+
+                    {/* Precipitation */}
+                    {dateWeather.precipitation > 0 && (
+                      <div
+                        className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl shrink-0"
+                        style={{ background: "rgba(56,189,248,0.08)", border: "1px solid rgba(56,189,248,0.15)" }}
+                      >
+                        <Droplets className="w-3.5 h-3.5 text-sky-400" />
+                        <span className="text-sky-400 text-[10px] font-bold">{dateWeather.precipitation}mm</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
 
             {altM && altM >= 3500 ? (
