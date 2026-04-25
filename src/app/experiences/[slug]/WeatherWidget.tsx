@@ -97,6 +97,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
   const [selectedDate, setSelectedDate] = useState("");
   const [dateWeather, setDateWeather] = useState<WeatherDay | null>(null);
   const [dateFetching, setDateFetching] = useState(false);
+  const [dateError, setDateError] = useState(false);
 
   useEffect(() => {
     const url = new URL("https://api.open-meteo.com/v1/forecast");
@@ -136,13 +137,26 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
 
   function fetchDateWeather(date: string) {
     if (!date) return;
-    setDateFetching(true);
+    setDateError(false);
     setDateWeather(null);
+
+    // Serve from already-loaded 7-day data if possible
+    if (weather) {
+      const cached = weather.daily.find(d => d.date === date);
+      if (cached) { setDateWeather(cached); return; }
+    }
+
+    setDateFetching(true);
+    // Calculate how many days ahead the target date is
+    const diffMs = new Date(date).getTime() - new Date(todayStr).getTime();
+    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24)) + 1;
+
     const url = new URL("https://api.open-meteo.com/v1/forecast");
     url.searchParams.set("latitude", lat.toString());
     url.searchParams.set("longitude", lng.toString());
     url.searchParams.set("daily", "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum");
     url.searchParams.set("wind_speed_unit", "kmh");
+    url.searchParams.set("forecast_days", Math.max(diffDays, 1).toString());
     url.searchParams.set("start_date", date);
     url.searchParams.set("end_date", date);
     url.searchParams.set("timezone", "auto");
@@ -157,9 +171,11 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
             precipitation: Math.round(d.daily.precipitation_sum[0] * 10) / 10,
             weatherCode: d.daily.weather_code[0],
           });
+        } else {
+          setDateError(true);
         }
       })
-      .catch(() => {})
+      .catch(() => setDateError(true))
       .finally(() => setDateFetching(false));
   }
 
@@ -329,6 +345,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
                   onChange={e => {
                     setSelectedDate(e.target.value);
                     setDateWeather(null);
+                    setDateError(false);
                   }}
                   className="flex-1 bg-transparent text-white/70 text-xs px-3 py-2 rounded-lg outline-none focus:ring-1 focus:ring-[#ff5100]/40"
                   style={{ border: "1px solid rgba(255,255,255,0.1)", colorScheme: "dark" }}
@@ -344,6 +361,9 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
               </div>
 
               {/* Date result */}
+              {dateError && (
+                <p className="text-red-400/70 text-xs shrink-0">No data for this date</p>
+              )}
               {dateWeather && (
                 <div className="flex items-center gap-3 sm:border-l sm:pl-4" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
                   <div className={iconColor(dateWeather.weatherCode)}>
