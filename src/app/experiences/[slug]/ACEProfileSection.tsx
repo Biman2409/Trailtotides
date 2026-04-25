@@ -151,7 +151,7 @@ export default function ACEProfileSection({
       <div className="flex items-center justify-between mb-4">
         <div>
           <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-0.5">ACE Profile</p>
-          <h2 className="text-white font-semibold text-base">See how your body compares to the trek requirements</h2>
+          <h2 className="text-white font-semibold text-sm leading-snug">How does your body match up?</h2>
         </div>
         <GradingPill />
       </div>
