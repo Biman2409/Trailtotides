@@ -300,7 +300,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
             >
               <div className="flex items-center gap-2 shrink-0">
                 <CalendarDays className="w-3.5 h-3.5 text-[#ff5100]" />
-                <span className="text-white/45 text-xs font-semibold">Check a specific date</span>
+                <span className="text-white/45 text-xs font-semibold">Check for a specific date instead</span>
               </div>
 
               <div className="flex items-center gap-2 flex-1">
