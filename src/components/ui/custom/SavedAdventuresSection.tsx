@@ -44,7 +44,7 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
   if (loggedIn === null || loading || tripLoading) {
     return (
       <section className="py-10 px-5 lg:px-8" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-        <div className="max-w-7xl mx-auto grid grid-cols-2 gap-4">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
           {[0,1].map(i => (
             <div key={i} className="rounded-2xl p-4 animate-pulse" style={PANEL_STYLE}>
               <div className="h-2.5 w-20 rounded bg-white/10 mb-3" />
@@ -71,7 +71,7 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
 
   return (
     <section className="py-10 px-5 lg:px-8" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-      <div className="max-w-7xl mx-auto grid grid-cols-2 gap-4">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
 
         {/* ── Wishlist panel ── */}
         <div className="p-4" style={PANEL_STYLE}>
@@ -167,7 +167,7 @@ function MiniCard({ a, done = false }: { a: typeof adventures[number]; currentSl
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
-        <Image src={a.heroImage} alt={a.name} fill quality={80} className="object-cover transition-transform duration-700 group-hover:scale-105" />
+        <Image src={a.heroImage} alt={a.name} fill sizes="192px" quality={80} className="object-cover transition-transform duration-700 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10 pointer-events-none" />
 
         {/* Badge */}
