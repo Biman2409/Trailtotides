@@ -5,7 +5,7 @@ import { Star, CalendarDays, Briefcase, Package, ChevronDown, ExternalLink } fro
 
 export type OperatorCardData = {
   name: string;
-  rating: number;
+  googleRating: number;
   priceFrom: string;
   website?: string;
   verified?: boolean;
@@ -40,9 +40,9 @@ export default function OperatorCard({ op, compareMode }: { op: OperatorCardData
             <p className="text-white/90 font-bold text-[13px] leading-snug truncate">{op.name}</p>
             <div className="flex items-center gap-0.5 mt-1">
               {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} className={`w-2.5 h-2.5 ${s <= Math.round(op.rating) ? "text-amber-400 fill-amber-400" : "text-white/10 fill-white/10"}`} />
+                <Star key={s} className={`w-2.5 h-2.5 ${s <= Math.round(op.googleRating) ? "text-amber-400 fill-amber-400" : "text-white/10 fill-white/10"}`} />
               ))}
-              <span className="text-white/25 text-[10px] ml-1">{op.rating}</span>
+              <span className="text-white/25 text-[10px] ml-1">{op.googleRating}</span>
             </div>
           </div>
           <div className="text-right shrink-0">

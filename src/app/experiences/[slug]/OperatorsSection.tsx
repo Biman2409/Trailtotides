@@ -1,7 +1,15 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { X, Star, CalendarDays, Briefcase, Package, ExternalLink, Check } from "lucide-react";
 import { type OperatorCardData } from "./OperatorCard";
+
+interface ComputedRating {
+  avg: number;
+  count: number;
+  display: string;
+  computed: boolean; // true = 5+ user ratings, false = still using google
+}
 
 function parsePrice(p: string): number {
   const n = parseInt(p.replace(/[^0-9]/g, ""), 10);
@@ -14,7 +22,7 @@ function formatDate(d: string) {
   } catch { return d; }
 }
 
-function CompareTable({ operators }: { operators: OperatorCardData[] }) {
+function CompareTable({ operators, computedRatings }: { operators: OperatorCardData[]; computedRatings: Record<string, ComputedRating> }) {
   const prices = operators.map(o => parsePrice(o.priceFrom));
   const minPrice = Math.min(...prices);
   const maxBatches = Math.max(...operators.map(o => o.departureDates?.length ?? 0));
@@ -86,16 +94,27 @@ function CompareTable({ operators }: { operators: OperatorCardData[] }) {
                 </td>
 
                 {/* Rating */}
-                <td className="px-3 py-3.5 text-center" style={{ borderLeft: "1px solid rgba(255,255,255,0.05)" }}>
-                  <div className="flex flex-col items-center gap-1">
-                    <div className="flex gap-0.5">
-                      {[1,2,3,4,5].map(s => (
-                        <Star key={s} className={`w-2 h-2 ${s <= Math.round(op.rating) ? "text-amber-400 fill-amber-400" : "text-white/10 fill-white/10"}`} />
-                      ))}
-                    </div>
-                    <span className="text-[10px] text-white/35">{op.rating}</span>
-                  </div>
-                </td>
+                {(() => {
+                  const norm = op.name.trim().toLowerCase();
+                  const cr = computedRatings[norm];
+                  const displayRating = cr?.computed ? cr.avg : op.googleRating;
+                  const isComputed = !!cr?.computed;
+                  return (
+                    <td className="px-3 py-3.5 text-center" style={{ borderLeft: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div className="flex flex-col items-center gap-1">
+                        <div className="flex gap-0.5">
+                          {[1,2,3,4,5].map(s => (
+                            <Star key={s} className={`w-2 h-2 ${s <= Math.round(displayRating) ? "text-amber-400 fill-amber-400" : "text-white/10 fill-white/10"}`} />
+                          ))}
+                        </div>
+                        <span className="text-[10px] text-white/50 font-semibold">{displayRating}</span>
+                        <span className="text-[8px]" style={{ color: isComputed ? "#4ade80" : "rgba(255,255,255,0.2)" }}>
+                          {isComputed ? `${cr.count} reviews` : "Google"}
+                        </span>
+                      </div>
+                    </td>
+                  );
+                })()}
 
                 {/* Dates */}
                 <td className="px-3 py-3.5 text-center" style={{ borderLeft: "1px solid rgba(255,255,255,0.05)" }}>
@@ -148,21 +167,37 @@ function CompareTable({ operators }: { operators: OperatorCardData[] }) {
   );
 }
 
-export default function OperatorsSection({ operators }: { operators: OperatorCardData[] }) {
+export default function OperatorsSection({ operators, slug }: { operators: OperatorCardData[]; slug: string }) {
+  const [computedRatings, setComputedRatings] = useState<Record<string, ComputedRating>>({});
+
+  useEffect(() => {
+    fetch(`/api/operator-ratings?slug=${encodeURIComponent(slug)}`)
+      .then(r => r.json())
+      .then(d => { if (d.ratings) setComputedRatings(d.ratings); })
+      .catch(() => {});
+  }, [slug]);
+
   if (operators.length === 0) {
     return <p className="text-white/25 text-xs text-center py-6">No operators listed yet for this adventure.</p>;
   }
 
   if (operators.length === 1) {
     const op = operators[0];
+    const norm = op.name.trim().toLowerCase();
+    const cr = computedRatings[norm];
+    const displayRating = cr?.computed ? cr.avg : op.googleRating;
+    const isComputed = !!cr?.computed;
     return (
       <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.09)", background: "rgba(255,255,255,0.03)" }}>
         <div className="p-4 flex items-center justify-between gap-4">
           <div>
             <p className="text-white/90 font-bold text-sm">{op.name}</p>
-            <div className="flex items-center gap-0.5 mt-1">
-              {[1,2,3,4,5].map(s => <Star key={s} className={`w-2.5 h-2.5 ${s <= Math.round(op.rating) ? "text-amber-400 fill-amber-400" : "text-white/10 fill-white/10"}`} />)}
-              <span className="text-white/25 text-[10px] ml-1">{op.rating}</span>
+            <div className="flex items-center gap-1 mt-1">
+              {[1,2,3,4,5].map(s => <Star key={s} className={`w-2.5 h-2.5 ${s <= Math.round(displayRating) ? "text-amber-400 fill-amber-400" : "text-white/10 fill-white/10"}`} />)}
+              <span className="text-white/40 text-[10px] ml-1">{displayRating}</span>
+              <span className="text-[8px] ml-1" style={{ color: isComputed ? "#4ade80" : "rgba(255,255,255,0.18)" }}>
+                {isComputed ? `${cr.count} reviews` : "Google"}
+              </span>
             </div>
           </div>
           <div className="text-right">
@@ -184,7 +219,7 @@ export default function OperatorsSection({ operators }: { operators: OperatorCar
   return (
     <div className="space-y-2">
       <p className="text-white/25 text-[10px]">{operators.length} operators</p>
-      <CompareTable operators={operators} />
+      <CompareTable operators={operators} computedRatings={computedRatings} />
     </div>
   );
 }

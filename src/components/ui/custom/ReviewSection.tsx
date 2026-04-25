@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Star, Trash2, Loader2 } from "lucide-react";
-import Link from "next/link";
+import { Star, Trash2, Loader2, ChevronDown, Plus } from "lucide-react";
 import { awardXP } from "@/lib/awardXP";
 
 interface Review {
@@ -21,6 +20,7 @@ interface Props {
   adventureType?: string;
   adventureName?: string;
   isCompleted?: boolean;
+  operators?: { name: string }[];
 }
 
 const SUMMIT_KEYWORDS = /summit|peak/i;
@@ -30,7 +30,7 @@ function ctaText(type?: string, name?: string): string {
   switch (type) {
     case "Trekking":       return "Done this trek? Tell others what to expect.";
     case "Mountaineering": return "Summited this peak? Share how it went.";
-    case "Motorcycling":         return "Ridden this route? Share the experience.";
+    case "Motorcycling":   return "Ridden this route? Share the experience.";
     case "Cycling":        return "Cycled this route? Share the experience.";
     case "Diving":         return "Dived here? Tell others what's down there.";
     case "Kayaking":       return "Paddled this stretch? Share your story.";
@@ -42,8 +42,9 @@ function ctaText(type?: string, name?: string): string {
   }
 }
 
-function StarRating({ value, onChange }: { value: number; onChange?: (v: number) => void }) {
+function StarRating({ value, onChange, size = "md" }: { value: number; onChange?: (v: number) => void; size?: "sm" | "md" }) {
   const [hovered, setHovered] = useState(0);
+  const sz = size === "sm" ? "w-3.5 h-3.5" : "w-4 h-4";
   return (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((s) => (
@@ -56,7 +57,7 @@ function StarRating({ value, onChange }: { value: number; onChange?: (v: number)
           className={onChange ? "cursor-pointer" : "cursor-default"}
           disabled={!onChange}
         >
-          <Star className={`w-4 h-4 transition-colors ${s <= (hovered || value) ? "text-amber-400 fill-amber-400" : "text-white/15 fill-white/15"}`} />
+          <Star className={`${sz} transition-colors ${s <= (hovered || value) ? "text-amber-400 fill-amber-400" : "text-white/15 fill-white/15"}`} />
         </button>
       ))}
     </div>
@@ -77,15 +78,25 @@ function timeAgo(dateStr: string): string {
   return `${Math.floor(months / 12)}y ago`;
 }
 
-export default function ReviewSection({ slug, currentUserId, adventureType, adventureName, isCompleted }: Props) {
+export default function ReviewSection({ slug, currentUserId, adventureType, adventureName, isCompleted, operators = [] }: Props) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  // Adventure review fields
   const [rating, setRating] = useState(0);
   const [body, setBody] = useState("");
+
+  // Operator rating fields
+  const [opDropdownOpen, setOpDropdownOpen] = useState(false);
+  const [selectedOp, setSelectedOp] = useState<string | null>(null);
+  const [customOp, setCustomOp] = useState("");
+  const [showCustomInput, setShowCustomInput] = useState(false);
+  const [opRating, setOpRating] = useState(0);
+
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -112,6 +123,8 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
       .finally(() => setLoading(false));
   }, [slug]);
 
+  const effectiveOpName = showCustomInput ? customOp.trim() : selectedOp;
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (rating === 0) { setError("Please select a rating"); return; }
@@ -127,7 +140,18 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Something went wrong"); return; }
       setReviews((prev) => [data.review, ...prev]);
+
+      // Submit operator rating if provided
+      if (effectiveOpName && opRating > 0) {
+        await fetch("/api/operator-ratings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug, operatorName: effectiveOpName, rating: opRating }),
+        });
+      }
+
       setRating(0); setBody("");
+      setSelectedOp(null); setCustomOp(""); setOpRating(0); setShowCustomInput(false);
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
       awardXP("review", slug);
@@ -150,7 +174,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
 
   return (
     <section>
-      {/* Card header */}
+      {/* Header */}
       <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid rgba(251,191,36,0.08)", background: "rgba(251,191,36,0.04)" }}>
         <div className="flex items-center gap-2">
           <Star className="w-3.5 h-3.5 text-amber-400" />
@@ -164,35 +188,114 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
           </div>
         )}
       </div>
-      <div className="p-4">
 
-      {/* Write / CTA */}
-      {currentUserId ? (
-        !isCompleted ? (
-          <div className="rounded-lg px-3 py-2.5 mb-4 flex items-center gap-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-            <span className="text-white/30 text-xs">Log this adventure to leave a review.</span>
-          </div>
-        ) : !hasReviewed ? (
-          <form onSubmit={handleSubmit} className="rounded-xl p-3 mb-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-            <p className="text-white/50 text-xs font-medium mb-3">{ctaText(adventureType, adventureName)}</p>
-            <div className="flex items-center gap-3 mb-3">
-              <p className="text-white/25 text-[10px] uppercase tracking-widest">Rating</p>
-              <StarRating value={rating} onChange={setRating} />
+      <div className="p-4">
+        {/* Write form */}
+        {currentUserId ? (
+          !isCompleted ? (
+            <div className="rounded-lg px-3 py-2.5 mb-4 flex items-center gap-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+              <span className="text-white/30 text-xs">Log this adventure to leave a review.</span>
             </div>
-            <textarea
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              placeholder="What was it like? Tips for others?"
-              rows={3}
-              maxLength={600}
-              className="w-full rounded-lg p-2.5 text-xs text-white/70 placeholder:text-white/20 resize-none focus:outline-none transition-colors"
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
-            />
-            <div className="flex items-center justify-between mt-2.5 gap-3">
-              <span className="text-white/20 text-[10px]">{body.length}/600</span>
-              <div className="flex items-center gap-2">
-                {error && <p className="text-red-400 text-xs">{error}</p>}
-                {success && <p className="text-emerald-400 text-xs font-medium">Posted!</p>}
+          ) : !hasReviewed ? (
+            <form onSubmit={handleSubmit} className="rounded-xl p-3.5 mb-4 space-y-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+              <p className="text-white/50 text-xs font-medium">{ctaText(adventureType, adventureName)}</p>
+
+              {/* Adventure rating */}
+              <div className="flex items-center gap-3">
+                <p className="text-white/25 text-[10px] uppercase tracking-widest shrink-0">Rating</p>
+                <StarRating value={rating} onChange={setRating} />
+              </div>
+
+              {/* Review body */}
+              <textarea
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+                placeholder="What was it like? Tips for others?"
+                rows={3}
+                maxLength={600}
+                className="w-full rounded-lg p-2.5 text-xs text-white/70 placeholder:text-white/20 resize-none focus:outline-none transition-colors"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+              />
+              <div className="text-right">
+                <span className="text-white/20 text-[10px]">{body.length}/600</span>
+              </div>
+
+              {/* Operator section */}
+              <div className="rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                <div className="px-3 py-2 flex items-center justify-between" style={{ background: "rgba(255,255,255,0.02)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                  <p className="text-white/35 text-[10px] font-bold uppercase tracking-widest">Used an operator? Rate them</p>
+                  <span className="text-white/20 text-[9px]">Optional</span>
+                </div>
+
+                <div className="p-3 space-y-2.5">
+                  {/* Operator picker */}
+                  {!showCustomInput ? (
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setOpDropdownOpen(v => !v)}
+                        className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors"
+                        style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", color: selectedOp ? "rgba(255,255,255,0.75)" : "rgba(255,255,255,0.25)" }}
+                      >
+                        {selectedOp ?? "Select operator…"}
+                        <ChevronDown className={`w-3.5 h-3.5 text-white/25 transition-transform ${opDropdownOpen ? "rotate-180" : ""}`} />
+                      </button>
+                      {opDropdownOpen && (
+                        <div className="absolute z-10 w-full mt-1 rounded-lg overflow-hidden shadow-xl" style={{ background: "#1a1a20", border: "1px solid rgba(255,255,255,0.1)" }}>
+                          {operators.map((op) => (
+                            <button
+                              key={op.name}
+                              type="button"
+                              onClick={() => { setSelectedOp(op.name); setOpDropdownOpen(false); }}
+                              className="w-full text-left px-3 py-2 text-xs text-white/70 hover:bg-white/[0.04] transition-colors"
+                            >
+                              {op.name}
+                            </button>
+                          ))}
+                          <button
+                            type="button"
+                            onClick={() => { setShowCustomInput(true); setSelectedOp(null); setOpDropdownOpen(false); }}
+                            className="w-full text-left px-3 py-2 text-xs flex items-center gap-1.5 transition-colors"
+                            style={{ color: "#ff7d47", borderTop: "1px solid rgba(255,255,255,0.06)" }}
+                          >
+                            <Plus className="w-3 h-3" /> Other operator
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <input
+                        value={customOp}
+                        onChange={(e) => setCustomOp(e.target.value)}
+                        placeholder="Operator name…"
+                        className="flex-1 px-3 py-2 rounded-lg text-xs text-white/75 placeholder:text-white/20 focus:outline-none"
+                        style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+                      />
+                      <button type="button" onClick={() => { setShowCustomInput(false); setCustomOp(""); }}
+                        className="text-[10px] text-white/30 hover:text-white/60 transition-colors px-2">
+                        Back
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Operator star rating */}
+                  {(selectedOp || (showCustomInput && customOp.trim())) && (
+                    <div className="flex items-center gap-3 pt-0.5">
+                      <p className="text-white/25 text-[10px] uppercase tracking-widest shrink-0">Operator</p>
+                      <StarRating value={opRating} onChange={setOpRating} size="sm" />
+                      {opRating > 0 && <span className="text-white/30 text-[10px]">{opRating}/5</span>}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Submit row */}
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  {error && <p className="text-red-400 text-xs">{error}</p>}
+                  {success && <p className="text-emerald-400 text-xs font-medium">Posted!</p>}
+                </div>
                 <button
                   type="submit"
                   disabled={submitting}
@@ -203,68 +306,66 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                   Post Review
                 </button>
               </div>
+            </form>
+          ) : (
+            <div className="rounded-lg px-3 py-2.5 mb-4 flex items-center gap-2" style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.12)" }}>
+              <Star className="w-3 h-3 fill-emerald-400 text-emerald-400" />
+              <span className="text-emerald-400 text-xs">You&apos;ve already reviewed this adventure</span>
             </div>
-          </form>
+          )
+        ) : null}
+
+        {/* Reviews list */}
+        {loading ? (
+          <div className="flex justify-center py-8">
+            <Loader2 className="w-5 h-5 animate-spin text-white/20" />
+          </div>
+        ) : reviews.length === 0 ? (
+          <p className="text-white/25 text-xs text-center py-6">No reviews yet. Be the first to share your experience!</p>
         ) : (
-          <div className="rounded-lg px-3 py-2.5 mb-4 flex items-center gap-2" style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.12)" }}>
-            <Star className="w-3 h-3 fill-emerald-400 text-emerald-400" />
-            <span className="text-emerald-400 text-xs">You&apos;ve already reviewed this adventure</span>
-          </div>
-        )
-      ) : null}
-
-      {/* Reviews list */}
-      {loading ? (
-        <div className="flex justify-center py-8">
-          <Loader2 className="w-5 h-5 animate-spin text-white/20" />
-        </div>
-      ) : reviews.length === 0 ? (
-        <p className="text-white/25 text-xs text-center py-6">No reviews yet. Be the first to share your experience!</p>
-      ) : (
-        <>
-          <div
-            ref={scrollRef}
-            onScroll={updateScrollState}
-            className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth"
-          >
-            {reviews.map((r) => (
-              <div key={r.id} className="flex-none w-full snap-start flex flex-col gap-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.2)" }}>
-                    {r.avatar_id
-                      ? <img src={`/avatars/avatar-${r.avatar_id}.png`} alt={r.username} className="w-full h-full object-cover" />
-                      : <span className="w-full h-full flex items-center justify-center text-white text-xs font-bold">{r.username.charAt(0).toUpperCase()}</span>}
+          <>
+            <div
+              ref={scrollRef}
+              onScroll={updateScrollState}
+              className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar scroll-smooth"
+            >
+              {reviews.map((r) => (
+                <div key={r.id} className="flex-none w-full snap-start flex flex-col gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.2)" }}>
+                      {r.avatar_id
+                        ? <img src={`/avatars/avatar-${r.avatar_id}.png`} alt={r.username} className="w-full h-full object-cover" />
+                        : <span className="w-full h-full flex items-center justify-center text-white text-xs font-bold">{r.username.charAt(0).toUpperCase()}</span>}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-white/80 font-semibold text-xs leading-none truncate">{r.username}</p>
+                      <p className="text-white/25 text-[10px] mt-0.5">{timeAgo(r.created_at)}</p>
+                    </div>
+                    {currentUserId === r.user_id && (
+                      <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id} className="text-white/20 hover:text-red-400 transition-colors shrink-0">
+                        {deleting === r.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                      </button>
+                    )}
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-white/80 font-semibold text-xs leading-none truncate">{r.username}</p>
-                    <p className="text-white/25 text-[10px] mt-0.5">{timeAgo(r.created_at)}</p>
-                  </div>
-                  {currentUserId === r.user_id && (
-                    <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id} className="text-white/20 hover:text-red-400 transition-colors shrink-0">
-                      {deleting === r.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
-                    </button>
-                  )}
+                  <StarRating value={r.rating} />
+                  <p className="text-white/55 text-xs leading-relaxed">{r.body}</p>
                 </div>
-                <StarRating value={r.rating} />
-                <p className="text-white/55 text-xs leading-relaxed">{r.body}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Dot indicators */}
-          {reviews.length > 1 && (
-            <div className="flex items-center justify-center gap-1.5 mt-4">
-              {reviews.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => scrollRef.current?.scrollTo({ left: i * scrollRef.current.clientWidth, behavior: "smooth" })}
-                  className={`rounded-full transition-all ${activeIndex === i ? "w-4 h-1.5 bg-amber-400" : "w-1.5 h-1.5 bg-white/20"}`}
-                />
               ))}
             </div>
-          )}
-        </>
-      )}
+
+            {reviews.length > 1 && (
+              <div className="flex items-center justify-center gap-1.5 mt-4">
+                {reviews.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => scrollRef.current?.scrollTo({ left: i * scrollRef.current.clientWidth, behavior: "smooth" })}
+                    className={`rounded-full transition-all ${activeIndex === i ? "w-4 h-1.5 bg-amber-400" : "w-1.5 h-1.5 bg-white/20"}`}
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </section>
   );

@@ -241,11 +241,11 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           },
         },
       } : {}),
-      ...(allOperators.some((o) => o.rating) ? {
+      ...(allOperators.some((o) => o.googleRating) ? {
         aggregateRating: {
           "@type": "AggregateRating",
-          ratingValue: (allOperators.reduce((sum, o) => sum + (o.rating ?? 0), 0) / allOperators.filter((o) => o.rating).length).toFixed(1),
-          reviewCount: allOperators.filter((o) => o.rating).length,
+          ratingValue: (allOperators.reduce((sum, o) => sum + (o.googleRating ?? 0), 0) / allOperators.filter((o) => o.googleRating).length).toFixed(1),
+          reviewCount: allOperators.filter((o) => o.googleRating).length,
           bestRating: 5,
           worstRating: 1,
         },
@@ -465,7 +465,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <div id="book-this-adventure" />
             <AccordionSection label="Book This Adventure" title="" defaultOpen={true}>
               <div id="operators-section" className="space-y-3">
-                <OperatorsSection operators={allOperators} />
+                <OperatorsSection operators={allOperators} slug={adventure.slug} />
                 <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
               </div>
             </AccordionSection>
@@ -498,7 +498,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
                 {/* Reviews card */}
                 <div className="rounded-xl overflow-hidden" style={{ background: "rgba(251,191,36,0.03)", border: "1px solid rgba(251,191,36,0.12)" }}>
-                  <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} isCompleted={isCompleted} />
+                  <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} isCompleted={isCompleted} operators={allOperators} />
                 </div>
 
                 {/* Photos card */}

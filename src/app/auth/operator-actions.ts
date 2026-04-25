@@ -220,7 +220,7 @@ export type LiveOperator = {
   name: string;
   verified: boolean;
   priceFrom: string;
-  rating: number;
+  googleRating: number;
   website?: string;
   departureDates?: string[];
   notes?: string | null;
@@ -260,7 +260,7 @@ export async function getApprovedOperatorsForAdventure(adventureSlug: string): P
         name: sub.operator_name,
         verified: true,
         priceFrom,
-        rating: 0,
+        googleRating: 0,
         website: sub.website ?? profile?.website ?? undefined,
         departureDates: sub.exact_dates ?? [],
         notes: sub.notes,

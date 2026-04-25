@@ -42,7 +42,7 @@ function getPrice(a: Adventure) {
 }
 
 function getRating(a: Adventure) {
-  const ratings = a.operators.map((op) => op.rating);
+  const ratings = a.operators.map((op) => op.googleRating);
   return ratings.length ? Math.max(...ratings).toFixed(1) + " / 5" : "–";
 }
 
