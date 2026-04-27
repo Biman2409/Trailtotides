@@ -1189,12 +1189,13 @@ export default function MatchmakerClient() {
 
   // Load previous result on mount — always show results if profile exists
   const autoShown = useRef(false);
+  const isRetake = searchParams.get("retake") === "1";
   useEffect(() => {
     loadProfileFromServer().then((saved) => {
       if (saved?.ace) {
         const r = buildResult(saved.ace as unknown as Record<string, number>);
         setSavedResult(r);
-        if (!autoShown.current) {
+        if (!autoShown.current && !isRetake) {
           autoShown.current = true;
           setResult(r);
         }
