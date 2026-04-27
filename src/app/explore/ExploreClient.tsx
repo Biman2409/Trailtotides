@@ -1088,9 +1088,10 @@ export default function ExploreClient() {
         <div className="mt-12 lg:mt-16 border-t border-white/5" style={{ background: "var(--bg-surface)" }}>
           <div className="max-w-7xl mx-auto px-5 lg:px-8 py-12 lg:py-16">
             <div className="relative rounded-2xl overflow-hidden px-8 py-10 flex flex-col md:flex-row md:items-center gap-8"
-              style={{ background: "linear-gradient(135deg, rgba(255,81,0,0.08) 0%, rgba(255,255,255,0.02) 60%)", border: "1px solid rgba(255,81,0,0.15)" }}>
-              <div className="flex-1">
-                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Adventure Map</p>
+              style={{ background: "linear-gradient(135deg, rgba(126,200,138,0.08) 0%, rgba(26,46,32,0.4) 60%)", border: "1px solid rgba(126,200,138,0.18)" }}>
+              <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at left, rgba(126,200,138,0.07) 0%, transparent 65%)" }} />
+              <div className="flex-1 relative">
+                <p className="text-[#7ec88a] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Adventure Map</p>
                 <h2 className="text-white text-2xl lg:text-3xl font-bold tracking-tight mb-3">
                   Adventures across India
                 </h2>
@@ -1100,7 +1101,8 @@ export default function ExploreClient() {
               </div>
               <Link
                 href="/map"
-                className="inline-flex items-center justify-center gap-2.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/25 whitespace-nowrap min-w-[220px]"
+                className="relative inline-flex items-center justify-center gap-2.5 text-[#1a2e20] px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap min-w-[200px]"
+                style={{ background: "#7ec88a", boxShadow: "0 4px 20px rgba(126,200,138,0.25)" }}
               >
                 <MapIcon className="w-4 h-4" />
                 Explore the Map
