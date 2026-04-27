@@ -220,28 +220,25 @@ export default function StoriesPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 lg:py-24 px-6 lg:px-8">
+      <section className="py-10 lg:py-14 px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
-          <div className="relative rounded-2xl lg:rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-br from-[#ff5100]/10 via-white/[0.02] to-transparent p-8 md:p-10 lg:p-14 text-center">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_#ff5100/8_0%,_transparent_70%)]" />
-            <div className="relative">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#ff5100]/15 border border-[#ff5100]/25 mb-6">
-                <PenLine className="w-6 h-6 text-[#ff5100]" />
-              </div>
-              <h2 className="text-white text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-                Got a story to tell?
-              </h2>
-              <p className="text-white/50 text-base leading-relaxed mb-8 max-w-lg mx-auto">
-                We feature stories from verified adventurers. If you&apos;ve done something remarkable out there, we want to hear it.
-              </p>
-              <Link
-                href="/stories/submit"
-                className="inline-flex items-center gap-2 bg-[#ff5100] hover:bg-[#e04800] text-white font-semibold px-8 py-4 rounded-xl text-sm transition-all duration-200 group shadow-lg shadow-[#ff5100]/20"
-              >
-                Share Your Story
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
+          <div className="relative rounded-2xl overflow-hidden flex flex-col sm:flex-row items-center gap-5 px-6 py-5" style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.18)" }}>
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_left,_rgba(255,81,0,0.08)_0%,_transparent_65%)] pointer-events-none" />
+            <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center relative" style={{ background: "rgba(255,81,0,0.15)", border: "1px solid rgba(255,81,0,0.25)" }}>
+              <PenLine className="w-4.5 h-4.5 text-[#ff5100]" />
             </div>
+            <div className="flex-1 min-w-0 relative text-center sm:text-left">
+              <p className="text-white font-bold text-sm leading-snug">Got a story to tell?</p>
+              <p className="text-white/40 text-xs mt-0.5 leading-relaxed">We feature stories from verified adventurers. Something remarkable out there? We want to hear it.</p>
+            </div>
+            <Link
+              href="/stories/submit"
+              className="relative shrink-0 inline-flex items-center gap-1.5 text-white font-semibold px-4 py-2 rounded-lg text-xs transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5 group whitespace-nowrap"
+              style={{ background: "#ff5100", boxShadow: "0 4px 14px rgba(255,81,0,0.25)" }}
+            >
+              Share Your Story
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
           </div>
         </div>
       </section>
