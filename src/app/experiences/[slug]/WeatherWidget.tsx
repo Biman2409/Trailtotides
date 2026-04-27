@@ -245,20 +245,8 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
               </div>
             </div>
 
-            {/* Mini 3-day + button — always visible, no overflow */}
+            {/* Toggle button — always visible */}
             <div className="flex items-center gap-3 px-4 shrink-0" style={{ borderLeft: "1px solid var(--border-subtle)" }}>
-              <div className="hidden lg:flex items-center gap-4">
-                {weather.daily.slice(1, 4).map((day, i) => (
-                  <div key={day.date} className="flex items-center gap-1.5">
-                    <span className="text-white/25 text-[10px] font-medium">{dayLabel(day.date, i + 1).slice(0, 3)}</span>
-                    <div className={iconColor(day.weatherCode)}>
-                      <WeatherIcon code={day.weatherCode} className="w-3.5 h-3.5" />
-                    </div>
-                    <span className="text-white/50 text-[10px] font-semibold">{day.tempMax}°</span>
-                  </div>
-                ))}
-              </div>
-
               {/* Toggle button */}
               <div
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all"
