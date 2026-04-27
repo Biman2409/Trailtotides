@@ -761,23 +761,7 @@ function ResultsScreen({
             </div>
           </div>
 
-          {/* Achievements — right side, only when earned */}
-          {achievements.length > 0 && (
-            <div
-              className="hidden sm:flex shrink-0 pl-4 border-l self-stretch items-start"
-              style={{ borderColor: `${tier.color}18`, minWidth: 0 }}
-            >
-              <AchievementBadges ace={resultAce} heading="Achievements" />
-            </div>
-          )}
         </div>
-
-        {/* Achievements — mobile: below identity, above divider */}
-        {achievements.length > 0 && (
-          <div className="sm:hidden px-5 pb-4">
-            <AchievementBadges ace={resultAce} heading="Achievements" />
-          </div>
-        )}
 
         {/* Divider */}
         <div className="mx-5 sm:mx-7 h-px" style={{ background: `${tier.color}14` }} />
