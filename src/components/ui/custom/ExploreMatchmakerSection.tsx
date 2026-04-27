@@ -219,7 +219,7 @@ export default function ExploreMatchmakerSection() {
           </Link>
           <Link href="/ace"
             className="flex-1 inline-flex items-center justify-center gap-2 text-white/45 hover:text-white/75 font-semibold px-6 py-3 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all">
-            Learn about ACE
+            Learn more
           </Link>
         </div>
 
