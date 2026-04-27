@@ -25,7 +25,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="relative overflow-hidden pb-32 lg:pb-0" style={{ background: "var(--bg-page)", borderTop: "1px solid var(--border-subtle)", color: "var(--text-primary)" }}>
+    <footer className="relative overflow-hidden pb-20 lg:pb-0" style={{ background: "var(--bg-page)", borderTop: "1px solid var(--border-subtle)", color: "var(--text-primary)" }}>
       {/* Subtle Gradient Accent */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/20 to-transparent" />
       
@@ -62,6 +62,7 @@ export default function Footer() {
                       { label: "Map", href: "/map" },
                       { label: "Planner", href: "/planner" },
                       { label: "Matchmaker", href: "/matchmaker" },
+                      { label: "ACE", href: "/ace" },
                       { label: "Stories", href: "/stories" },
                       { label: "Operators", href: "/operators" },
                     ].map((link) => (

@@ -4,9 +4,10 @@ import Image from "next/image";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { ArrowRight, Mountain, Map, Sparkles, BadgeCheck, Users } from "lucide-react";
+import { adventures } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "About Us",
+  title: "About Us — Trail to Tides",
   description:
     "Trail to Tides is India's adventure discovery platform — built by explorers for explorers. Learn about our mission, values, and the team behind it.",
   openGraph: {
@@ -38,7 +39,7 @@ const VALUES = [
     {
       icon: Sparkles,
       title: "Discovery-first",
-      description: "Built to help you find the adventure that fits you — not to push the most commercially popular one. TRAIL TO TIDES is our commitment to personalised discovery.",
+      description: "Built to help you find the adventure that fits you — not to push the most commercially popular one. Trail to Tides is our commitment to personalised discovery.",
     },
   {
     icon: Users,
@@ -51,7 +52,7 @@ const TEAM = [
   {
     name: "Arjun Mehta",
     role: "Co-founder · Trail runner & trekker",
-    bio: "Former software engineer who left a tech job to trek the length of the Western Ghats. Built TRAIL TO TIDES after spending two years frustrated by the lack of reliable information for Indian adventures.",
+    bio: "Former software engineer who left a tech job to trek the length of the Western Ghats. Built Trail to Tides after spending two years frustrated by the lack of reliable information for Indian adventures.",
     initial: "A",
     adventures: "47 adventures completed",
   },
@@ -117,7 +118,7 @@ export default function AboutPage() {
               And yet, for years, planning an adventure in India meant wading through outdated blogs, WhatsApp groups, and operator websites designed in 2009. You couldn&apos;t easily compare what was out there, couldn&apos;t verify who was safe to book with, and couldn&apos;t find a single place where someone had mapped the whole thing.
             </p>
             <p>
-              We built TRAIL TO TIDES to fix that. A platform where every adventure is described properly, every operator is checked, and every recommendation is grounded in real experience — not affiliate commissions.
+              We built Trail to Tides to fix that. A platform where every adventure is described properly, every operator is checked, and every recommendation is grounded in real experience — not affiliate commissions.
             </p>
           </div>
         </div>
@@ -157,7 +158,7 @@ export default function AboutPage() {
             People who&apos;ve been there
           </h2>
           <p className="text-white/45 text-base mb-14 max-w-xl">
-            Everyone who works on TRAIL TO TIDES has done the adventures. No desk-bound curation here.
+            Everyone who works on Trail to Tides has done the adventures. No desk-bound curation here.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TEAM.map((member) => (
@@ -180,9 +181,9 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { value: "287", label: "Adventures catalogued" },
-              { value: "8", label: "Regions covered" },
-              { value: "48+", label: "Verified operators" },
+              { value: String(adventures.length), label: "Adventures catalogued" },
+              { value: String(new Set(adventures.map(a => a.region)).size), label: "Regions covered" },
+              { value: String(new Set(adventures.map(a => a.type)).size) + "+", label: "Adventure types" },
               { value: "2026", label: "Year founded" },
             ].map(({ value, label }) => (
               <div key={label} className="text-center">
@@ -201,7 +202,7 @@ export default function AboutPage() {
             Ready to find your adventure?
           </h2>
           <p className="text-white/50 text-base mb-8">
-            287 adventures across India, waiting.
+            {adventures.length} adventures across India, waiting.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link

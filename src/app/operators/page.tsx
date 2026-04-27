@@ -10,7 +10,7 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 import OperatorsClient, { OperatorCardData } from "./OperatorsClient";
 
 export const metadata: Metadata = {
-  title: "Verified Adventure Operators",
+  title: "Verified Adventure Operators — Trail to Tides",
   description: "Browse verified adventure operators across India — trekking guides, diving schools, biking tours, and more. Every operator reviewed and approved by Trail to Tides.",
   openGraph: {
     title: "Verified Adventure Operators — Trail to Tides",

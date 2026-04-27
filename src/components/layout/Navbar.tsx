@@ -17,6 +17,7 @@ const navLinks = [
   { href: "/map", label: "Map" },
   { href: "/matchmaker", label: "Matchmaker" },
   { href: "/planner", label: "Planner" },
+  { href: "/ace", label: "ACE" },
   { href: "/operators", label: "Operators" },
   { href: "/stories", label: "Stories" },
 ];
@@ -162,7 +163,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200"
+                  className="relative px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200"
                   style={{
                     color: isActive ? "var(--text-primary)" : "var(--nav-text)",
                     background: isActive ? "var(--nav-active-bg)" : "transparent",

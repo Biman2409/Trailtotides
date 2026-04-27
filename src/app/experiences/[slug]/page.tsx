@@ -112,7 +112,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const difficulty = computeDifficulty(getACE(adventure));
   const description = `${adventure.type} in ${adventure.state} · ${difficulty} · ${adventure.duration} days. ${adventure.tagline ?? "Discover this handpicked adventure on Trail to Tides."}`;
   return {
-    title: adventure.name,
+    title: `${adventure.name} — Trail to Tides`,
     description,
     keywords: [
       adventure.name,

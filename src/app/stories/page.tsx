@@ -9,7 +9,7 @@ import { stories } from "@/lib/data";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 
 export const metadata: Metadata = {
-  title: "Field Stories",
+  title: "Field Stories — Trail to Tides",
   description:
     "First-hand accounts from real adventurers across India — high-altitude treks, ocean dives, desert rides, and everything in between.",
   openGraph: {

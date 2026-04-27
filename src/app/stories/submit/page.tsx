@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import SubmitClient from "./SubmitClient";
 
 export const metadata: Metadata = {
-  title: "Submit Your Story",
+  title: "Submit Your Story — Trail to Tides",
   description:
     "Share your adventure story with the Trail to Tides community. First-hand accounts from real adventurers across India's trails, mountains, coasts, and more.",
   openGraph: {

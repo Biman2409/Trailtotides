@@ -113,10 +113,10 @@ export default function ContactPage() {
             <div className="bg-[#ff5100]/10 border border-[#ff5100]/20 rounded-2xl p-5">
               <p className="text-[#ff5100] text-xs font-semibold uppercase tracking-wider mb-2">For operators</p>
               <p className="text-white/55 text-sm leading-relaxed mb-3">
-                Want to list your adventure on TRAIL TO TIDES?
+                Want to list your adventure on Trail to Tides?
               </p>
               <Link
-                href="/list"
+                href="/auth/operator-signup"
                 className="flex items-center gap-1.5 text-[#ff5100] text-xs font-semibold hover:text-[#e07845] transition-colors"
               >
                 Apply to list <ArrowRight className="w-3.5 h-3.5" />

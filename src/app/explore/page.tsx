@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import ExploreClient from "./ExploreClient";
 
 export const metadata: Metadata = {
-  title: "Explore Adventures",
+  title: "Explore Adventures — Trail to Tides",
   description:
     "Browse and filter handpicked adventures across India — trekking, biking, climbing, kayaking, and more. Filter by region, difficulty, duration, and season.",
   openGraph: {
