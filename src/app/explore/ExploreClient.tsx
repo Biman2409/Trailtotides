@@ -16,6 +16,7 @@ import { getACE, computeDifficulty } from "@/lib/ace";
 import type { AceAxis } from "@/lib/ace";
 import { loadProfile } from "@/lib/matchmaker";
 import type { StoredProfile } from "@/lib/matchmaker";
+import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 
 type AceCategory = "ready" | "stretch" | "out-of-range";
 
@@ -1080,30 +1081,72 @@ export default function ExploreClient() {
         )}
       </div>
 
-        {/* Map CTA Section */}
-        <div className="mt-12 lg:mt-16 border-t border-white/5" style={{ background: "var(--bg-surface)" }}>
-          <div className="max-w-7xl mx-auto px-5 lg:px-8 py-12 lg:py-16">
-            <div className="relative rounded-2xl overflow-hidden px-8 py-10 flex flex-col md:flex-row md:items-center gap-8"
-              style={{ background: "linear-gradient(135deg, rgba(126,200,138,0.08) 0%, rgba(26,46,32,0.4) 60%)", border: "1px solid rgba(126,200,138,0.18)" }}>
-              <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at left, rgba(126,200,138,0.07) 0%, transparent 65%)" }} />
-              <div className="flex-1 relative">
-                <p className="text-[#7ec88a] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Adventure Map</p>
-                <h2 className="text-white text-2xl lg:text-3xl font-bold tracking-tight mb-3">
-                  Adventures across India
-                </h2>
-                <p className="text-white/45 text-sm lg:text-base leading-relaxed max-w-md">
-                  Every trail, summit, coast, and canyon — pinned on one map. Cluster by region, filter by type, and tap any pin to explore.
-                </p>
+        {/* Compare Adventures — compact */}
+        <CompareAdventures />
+
+        {/* Map CTA Section — immersive */}
+        <div className="border-t border-white/5" style={{ background: "var(--bg-surface)" }}>
+          <div className="max-w-7xl mx-auto px-5 lg:px-8 py-10 lg:py-12">
+            <div className="relative rounded-2xl overflow-hidden" style={{ minHeight: 220 }}>
+              {/* Background layers */}
+              <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #0b1c10 0%, #0d1a12 40%, #0a1510 100%)" }} />
+              {/* Subtle grid overlay */}
+              <div className="absolute inset-0 opacity-[0.06]"
+                style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(126,200,138,0.5) 39px, rgba(126,200,138,0.5) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(126,200,138,0.5) 39px, rgba(126,200,138,0.5) 40px)" }} />
+              {/* Glow orbs */}
+              <div className="absolute -top-10 -left-10 w-64 h-64 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(126,200,138,0.12) 0%, transparent 70%)" }} />
+              <div className="absolute -bottom-16 right-0 w-80 h-80 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(126,200,138,0.07) 0%, transparent 70%)" }} />
+              {/* Border */}
+              <div className="absolute inset-0 rounded-2xl pointer-events-none" style={{ border: "1px solid rgba(126,200,138,0.2)" }} />
+
+              {/* Floating pin dots */}
+              {[
+                { top: "18%", left: "12%", size: 6, opacity: 0.5 },
+                { top: "55%", left: "22%", size: 4, opacity: 0.35 },
+                { top: "30%", left: "38%", size: 5, opacity: 0.45 },
+                { top: "70%", left: "52%", size: 4, opacity: 0.3 },
+                { top: "20%", left: "65%", size: 6, opacity: 0.4 },
+                { top: "60%", left: "78%", size: 4, opacity: 0.3 },
+                { top: "80%", left: "88%", size: 5, opacity: 0.35 },
+              ].map((dot, i) => (
+                <div key={i} className="absolute rounded-full pointer-events-none"
+                  style={{ top: dot.top, left: dot.left, width: dot.size, height: dot.size, background: "#7ec88a", opacity: dot.opacity, boxShadow: `0 0 ${dot.size * 3}px rgba(126,200,138,0.6)` }} />
+              ))}
+
+              {/* Content */}
+              <div className="relative z-10 px-8 py-8 lg:py-10 flex flex-col md:flex-row md:items-center gap-8">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: "rgba(126,200,138,0.15)", border: "1px solid rgba(126,200,138,0.3)" }}>
+                      <MapIcon className="w-2.5 h-2.5 text-[#7ec88a]" />
+                    </div>
+                    <span className="text-[#7ec88a] text-[10px] font-bold tracking-[0.22em] uppercase">Adventure Map</span>
+                  </div>
+                  <h2 className="text-white text-xl lg:text-2xl font-bold tracking-tight mb-2 leading-snug">
+                    Every adventure,<br className="hidden sm:block" /> pinned on one map.
+                  </h2>
+                  <p className="text-white/40 text-sm leading-relaxed max-w-sm">
+                    Trails, summits, coasts, canyons — clustered by region, filterable by type.
+                  </p>
+                  <div className="flex items-center gap-4 mt-4 text-[11px] text-white/30 font-medium">
+                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#7ec88a] inline-block" />Filter by type</span>
+                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#7ec88a] inline-block opacity-60" />Cluster by region</span>
+                    <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-[#7ec88a] inline-block opacity-40" />Tap to explore</span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-start md:items-center gap-3 shrink-0">
+                  <Link
+                    href="/map"
+                    className="group inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl text-sm font-bold transition-all hover:-translate-y-0.5 whitespace-nowrap"
+                    style={{ background: "#7ec88a", color: "#0d1f11", boxShadow: "0 4px 24px rgba(126,200,138,0.3), 0 0 0 1px rgba(126,200,138,0.2)" }}
+                  >
+                    <MapIcon className="w-4 h-4" />
+                    Open Map
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                  </Link>
+                  <span className="text-white/20 text-[10px] font-medium">{adventures.length} adventures mapped</span>
+                </div>
               </div>
-              <Link
-                href="/map"
-                className="relative inline-flex items-center justify-center gap-2.5 text-[#1a2e20] px-7 py-4 rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg whitespace-nowrap min-w-[200px]"
-                style={{ background: "#7ec88a", boxShadow: "0 4px 20px rgba(126,200,138,0.25)" }}
-              >
-                <MapIcon className="w-4 h-4" />
-                Explore the Map
-                <ArrowRight className="w-4 h-4" />
-              </Link>
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { X, ArrowRight, GitCompareArrows, LogIn, GitCompare, Heart, Plus, ChevronDown, Search } from "lucide-react";
+import { X, ArrowRight, GitCompare, Heart, Plus, ChevronDown, Search, ChevronUp, LogIn } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -15,21 +15,19 @@ import type { ACE } from "@/lib/ace";
 import { loadProfile } from "@/lib/matchmaker";
 
 const FIELDS: { label: string; key: keyof Adventure | "price" | "rating" | "operators" }[] = [
-  { label: "Region",          key: "region" },
-  { label: "Base Camp",       key: "baseCamp" },
-  { label: "State",           key: "state" },
-  { label: "Type",            key: "type" },
-  { label: "Difficulty",      key: "difficulty" },
-    { label: "Duration",        key: "duration" },
-    { label: "Days",            key: "durationDays" },
-    { label: "Distance",        key: "distance" },
-    { label: "Max Alt",         key: "altitude" },
-    { label: "Best Season",     key: "bestSeason" },
-
-  { label: "Group Size",      key: "groupSize" },
-  { label: "Operators",       key: "operators" },
-  { label: "Starting From",   key: "price" },
-  { label: "Top Rating",      key: "rating" },
+  { label: "Region",      key: "region" },
+  { label: "State",       key: "state" },
+  { label: "Type",        key: "type" },
+  { label: "Difficulty",  key: "difficulty" },
+  { label: "Duration",    key: "duration" },
+  { label: "Days",        key: "durationDays" },
+  { label: "Distance",    key: "distance" },
+  { label: "Max Alt",     key: "altitude" },
+  { label: "Best Season", key: "bestSeason" },
+  { label: "Group Size",  key: "groupSize" },
+  { label: "Operators",   key: "operators" },
+  { label: "From",        key: "price" },
+  { label: "Rating",      key: "rating" },
 ];
 
 function getPrice(a: Adventure) {
@@ -49,31 +47,17 @@ function getRating(a: Adventure) {
 function getValue(a: Adventure, key: keyof Adventure | "price" | "rating" | "operators"): string {
   if (key === "price")     return getPrice(a);
   if (key === "rating")    return getRating(a);
-  if (key === "operators") return `${a.operators.length} operator${a.operators.length !== 1 ? "s" : ""}`;
+  if (key === "operators") return `${a.operators.length} op${a.operators.length !== 1 ? "s" : ""}`;
   const val = a[key as keyof Adventure];
   return val === undefined || val === null ? "–" : String(val);
 }
 
 function WishlistPicker({ onSelect }: { onSelect: (a: Adventure) => void }) {
   const { saved, loading } = useWishlist();
-  const { selected, isFull } = useCompare();
+  const { selected } = useCompare();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
-  const wishlistAdventures = adventures.filter(
-    a => saved.has(a.slug) && !selected.find(s => s.id === a.id)
-  );
-
-  // Don't render until wishlist is loaded
-  if (loading) {
-    return (
-      <div className="rounded-xl border border-dashed border-white/10 bg-white/2 flex items-center justify-center min-h-[112px] animate-pulse">
-        <span className="text-white/15 text-xs">Loading wishlist…</span>
-      </div>
-    );
-  }
-
-  if (isFull) return null;
+  const wishlistAdventures = adventures.filter(a => saved.has(a.slug) && !selected.find(s => s.id === a.id));
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -83,43 +67,26 @@ function WishlistPicker({ onSelect }: { onSelect: (a: Adventure) => void }) {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  if (loading) return <SlotPlaceholder icon={<Heart className="w-3 h-3 text-rose-400/50" />} label="Loading…" />;
+
   if (wishlistAdventures.length === 0) {
-    return (
-      <div className="rounded-xl border border-dashed border-white/15 bg-white/2 flex flex-col items-center justify-center min-h-[112px] gap-2 text-white/25 text-xs px-3 text-center">
-        <Plus className="w-4 h-4 opacity-40" />
-        <span>Add from cards above</span>
-      </div>
-    );
+    return <SlotPlaceholder icon={<Plus className="w-3 h-3 text-white/30" />} label="Add adventure" />;
   }
 
   return (
-    <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen(o => !o)}
-        className="w-full rounded-xl border border-dashed border-white/20 bg-white/2 hover:border-[#ff5100]/40 hover:bg-[#ff5100]/5 flex flex-col items-center justify-center min-h-[88px] gap-1.5 transition-all group"
-      >
-        <div className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-          style={{ background: "rgba(244,63,94,0.1)", border: "1px solid rgba(244,63,94,0.2)" }}>
-          <Heart className="w-3.5 h-3.5 text-rose-400" />
-        </div>
-        <span className="text-white/40 text-xs font-medium group-hover:text-white/60 transition-colors">
-          Add from Wishlist
-        </span>
-        <ChevronDown className={`w-3 h-3 text-white/25 transition-transform ${open ? "rotate-180" : ""}`} />
+    <div ref={ref} className="relative h-full">
+      <button onClick={() => setOpen(o => !o)} className="w-full h-full flex items-center gap-2 px-3 rounded-lg border border-dashed border-white/12 hover:border-[#ff5100]/40 hover:bg-[#ff5100]/5 transition-all group">
+        <Heart className="w-3 h-3 text-rose-400/60 shrink-0" />
+        <span className="text-white/35 text-[11px] truncate group-hover:text-white/55 transition-colors">From wishlist</span>
+        <ChevronDown className={`w-3 h-3 text-white/20 ml-auto transition-transform shrink-0 ${open ? "rotate-180" : ""}`} />
       </button>
-
       {open && (
-        <div
-          className="absolute top-full mt-2 left-0 right-0 z-50 rounded-xl overflow-hidden shadow-2xl"
-          style={{ background: "#0d1520", border: "1px solid rgba(255,255,255,0.1)", maxHeight: "240px", overflowY: "auto" }}
-        >
+        <div className="absolute top-full mt-1 left-0 z-50 rounded-xl overflow-hidden shadow-2xl min-w-[220px]"
+          style={{ background: "#0d1520", border: "1px solid rgba(255,255,255,0.1)", maxHeight: 240, overflowY: "auto" }}>
           {wishlistAdventures.map(a => (
-            <button
-              key={a.slug}
-              onClick={() => { onSelect(a); setOpen(false); }}
-              className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 transition-colors text-left"
-            >
-              <div className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0">
+            <button key={a.slug} onClick={() => { onSelect(a); setOpen(false); }}
+              className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-white/5 transition-colors text-left">
+              <div className="relative w-8 h-8 rounded-md overflow-hidden shrink-0">
                 <Image src={a.heroImage} alt={a.name} fill className="object-cover" />
               </div>
               <div className="min-w-0">
@@ -154,57 +121,48 @@ function SearchPicker({ onSelect }: { onSelect: (a: Adventure) => void }) {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  const handleOpen = () => { setOpen(true); setTimeout(() => inputRef.current?.focus(), 50); };
-
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative h-full">
       {!open ? (
-        <button
-          onClick={handleOpen}
-          className="w-full rounded-xl border border-dashed border-white/15 bg-white/2 hover:border-[#ff5100]/40 hover:bg-[#ff5100]/5 flex flex-col items-center justify-center min-h-[88px] gap-1.5 transition-all group"
-        >
-          <div className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-            style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.15)" }}>
-            <Plus className="w-3.5 h-3.5 text-[#ff5100]/60" />
-          </div>
-          <span className="text-white/35 text-xs font-medium group-hover:text-white/55 transition-colors">Add adventure</span>
+        <button onClick={() => { setOpen(true); setTimeout(() => inputRef.current?.focus(), 50); }}
+          className="w-full h-full flex items-center gap-2 px-3 rounded-lg border border-dashed border-white/12 hover:border-[#ff5100]/40 hover:bg-[#ff5100]/5 transition-all group">
+          <Plus className="w-3 h-3 text-[#ff5100]/50 shrink-0" />
+          <span className="text-white/35 text-[11px] group-hover:text-white/55 transition-colors">Add adventure</span>
         </button>
       ) : (
-        <div className="rounded-xl border border-[#ff5100]/30 overflow-hidden" style={{ background: "#0d1520" }}>
-          <div className="flex items-center gap-2 px-3 py-2.5 border-b border-white/8">
-            <Search className="w-3.5 h-3.5 text-white/30 shrink-0" />
-            <input
-              ref={inputRef}
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              placeholder="Search adventures…"
-              className="flex-1 bg-transparent text-white text-xs placeholder:text-white/25 outline-none"
-            />
-            <button onClick={() => { setOpen(false); setQuery(""); }} className="text-white/30 hover:text-white/60 transition-colors">
-              <X className="w-3.5 h-3.5" />
-            </button>
-          </div>
-          <div style={{ maxHeight: "200px", overflowY: "auto" }}>
-            {results.length === 0 ? (
-              <p className="text-white/25 text-xs text-center py-4">No adventures found</p>
-            ) : results.map(a => (
-              <button
-                key={a.slug}
-                onClick={() => { onSelect(a); setOpen(false); setQuery(""); }}
-                className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 transition-colors text-left"
-              >
-                <div className="relative w-9 h-9 rounded-lg overflow-hidden shrink-0">
-                  <Image src={a.heroImage} alt={a.name} fill className="object-cover" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-white text-xs font-semibold truncate">{a.name}</p>
-                  <p className="text-white/35 text-[10px] truncate">{a.type}{a.state ? ` · ${a.state}` : ""}</p>
-                </div>
-              </button>
-            ))}
-          </div>
+        <div className="h-full flex items-center gap-2 px-3 rounded-lg border border-[#ff5100]/30" style={{ background: "#0d1520" }}>
+          <Search className="w-3 h-3 text-white/30 shrink-0" />
+          <input ref={inputRef} value={query} onChange={e => setQuery(e.target.value)}
+            placeholder="Search…" className="flex-1 bg-transparent text-white text-xs placeholder:text-white/25 outline-none min-w-0" />
+          <button onClick={() => { setOpen(false); setQuery(""); }}><X className="w-3 h-3 text-white/30 hover:text-white/60 transition-colors" /></button>
         </div>
       )}
+      {open && results.length > 0 && (
+        <div className="absolute top-full mt-1 left-0 z-50 rounded-xl overflow-hidden shadow-2xl min-w-[220px]"
+          style={{ background: "#0d1520", border: "1px solid rgba(255,255,255,0.1)", maxHeight: 240, overflowY: "auto" }}>
+          {results.map(a => (
+            <button key={a.slug} onClick={() => { onSelect(a); setOpen(false); setQuery(""); }}
+              className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-white/5 transition-colors text-left">
+              <div className="relative w-8 h-8 rounded-md overflow-hidden shrink-0">
+                <Image src={a.heroImage} alt={a.name} fill className="object-cover" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-white text-xs font-semibold truncate">{a.name}</p>
+                <p className="text-white/35 text-[10px] truncate">{a.type}{a.state ? ` · ${a.state}` : ""}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SlotPlaceholder({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <div className="w-full h-full flex items-center gap-2 px-3 rounded-lg border border-dashed border-white/10 opacity-50">
+      {icon}
+      <span className="text-white/30 text-[11px]">{label}</span>
     </div>
   );
 }
@@ -212,17 +170,14 @@ function SearchPicker({ onSelect }: { onSelect: (a: Adventure) => void }) {
 export default function CompareAdventures() {
   const { selected, remove, add } = useCompare();
   const [userAce, setUserAce] = useState<ACE | null>(null);
-  const [userLabel, setUserLabel] = useState<string>("Your Body");
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
+  const [expanded, setExpanded] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const p = loadProfile();
     if (p) {
       setUserAce(p.ace);
-      const total = Object.values(p.ace).reduce((a, b) => a + b, 0);
-      const rank = total >= 40 ? "Apex" : total >= 32 ? "Vanguard" : total >= 24 ? "Trailblazer" : total >= 16 ? "Navigator" : total >= 8 ? "Pathfinder" : "Uncharted";
-      setUserLabel(rank);
     }
     const supabase = createClient();
     supabase.auth.getSession().then(({ data: { session } }) => setLoggedIn(!!session?.user));
@@ -230,168 +185,189 @@ export default function CompareAdventures() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  return (
-    <section id="compare-section" className="py-10 px-5 lg:px-8 bg-[#0d1520] border-t border-white/6">
-      <div className="max-w-7xl mx-auto">
+  // Auto-expand when 2+ selected
+  useEffect(() => {
+    if (selected.length >= 2) setExpanded(true);
+  }, [selected.length]);
 
-        {/* Header */}
-        <div className="mb-6">
-          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1.5">Side by Side</p>
-          <div className="flex items-end justify-between gap-4">
-            <h2 className="text-white text-xl font-semibold tracking-tight">Compare Adventures</h2>
-            <p className="text-white/30 text-xs hidden sm:block">Select up to {MAX} adventures</p>
+  const hasSelection = selected.length > 0;
+
+  return (
+    <section id="compare-section" className="border-t border-white/5 bg-[#0b111a]">
+      <div className="max-w-7xl mx-auto px-5 lg:px-8">
+
+        {/* Compact header bar */}
+        <div
+          className="flex items-center gap-3 py-3 cursor-pointer group select-none"
+          onClick={() => setExpanded(e => !e)}
+        >
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0"
+              style={{ background: "rgba(255,81,0,0.1)", border: "1px solid rgba(255,81,0,0.2)" }}>
+              <GitCompare className="w-3 h-3 text-[#ff5100]" />
+            </div>
+            <span className="text-white text-xs font-semibold tracking-tight">Compare</span>
+            <span className="text-white/25 text-[10px] hidden sm:block">Side-by-side stats, pricing & ACE profiles</span>
+          </div>
+
+          {/* Selected thumbnails preview */}
+          {hasSelection && (
+            <div className="flex items-center gap-1.5 flex-1 min-w-0">
+              <span className="text-white/20 text-[10px] mx-1">—</span>
+              {selected.map(a => (
+                <div key={a.id} className="relative w-5 h-5 rounded overflow-hidden shrink-0 border border-white/15">
+                  <Image src={a.heroImage} alt={a.name} fill className="object-cover" />
+                </div>
+              ))}
+              <span className="text-[#ff5100] text-[10px] font-semibold shrink-0">{selected.length}/{MAX}</span>
+            </div>
+          )}
+
+          <div className="ml-auto flex items-center gap-2 shrink-0">
+            {!hasSelection && loggedIn === false && (
+              <button
+                onClick={(e) => { e.stopPropagation(); router.push("/auth/login"); }}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold text-white transition-all hover:opacity-80"
+                style={{ background: "#ff5100" }}
+              >
+                <LogIn className="w-2.5 h-2.5" />
+                Log in
+              </button>
+            )}
+            {expanded
+              ? <ChevronUp className="w-3.5 h-3.5 text-white/25 group-hover:text-white/50 transition-colors" />
+              : <ChevronDown className="w-3.5 h-3.5 text-white/25 group-hover:text-white/50 transition-colors" />
+            }
           </div>
         </div>
 
-        {/* Not logged in, nothing selected — CTA */}
-        {loggedIn === false && selected.length === 0 && (
-          <div
-            className="rounded-xl p-4 flex items-center gap-4 mb-5"
-            style={{ background: "rgba(255,81,0,0.05)", border: "1px solid rgba(255,81,0,0.12)" }}
-          >
-            <div className="flex-1">
-              <p className="text-white/60 text-xs leading-relaxed">Log in to compare adventures side by side — stats, pricing, ACE profiles and more.</p>
-            </div>
-            <button
-              onClick={() => router.push("/auth/login")}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white shrink-0 transition-all hover:-translate-y-0.5"
-              style={{ background: "#ff5100" }}
-            >
-              <LogIn className="w-3.5 h-3.5" />
-              Log in
-            </button>
-          </div>
-        )}
-
-        {/* Selected slots grid */}
-        {(selected.length > 0 || loggedIn === true) && (
-          selected.length > 0 ? (
-            <div className="grid grid-cols-3 gap-3 mb-5">
+        {/* Expanded panel */}
+        {expanded && (
+          <div className="pb-6">
+            {/* Slot row */}
+            <div className="grid gap-2 mb-4" style={{ gridTemplateColumns: `repeat(${MAX}, 1fr)` }}>
               {selected.map((adventure) => (
-                <div
-                  key={adventure.id}
-                  className="relative rounded-xl overflow-hidden border border-[#ff5100]/30 bg-[#ff5100]/5"
-                >
-                  <div className="relative h-20">
-                    <Image src={adventure.heroImage} alt={adventure.name} fill className="object-cover opacity-70" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                  </div>
-                  <div className="px-2.5 py-2 flex items-center justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="text-white text-xs font-semibold truncate">{adventure.name}</p>
-                      <p className="text-white/40 text-[10px] truncate">{adventure.type}{adventure.state ? ` · ${adventure.state}` : ""}</p>
+                <div key={adventure.id} className="relative rounded-lg overflow-hidden h-14 border border-[#ff5100]/25"
+                  style={{ background: "rgba(255,81,0,0.04)" }}>
+                  <Image src={adventure.heroImage} alt={adventure.name} fill className="object-cover opacity-40" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
+                  <div className="relative h-full flex items-center gap-2 px-2.5">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-white text-[11px] font-semibold truncate leading-tight">{adventure.name}</p>
+                      <p className="text-white/40 text-[9px] truncate">{adventure.type}{adventure.state ? ` · ${adventure.state}` : ""}</p>
                     </div>
-                    <button onClick={() => remove(adventure.id)} className="shrink-0 w-5 h-5 rounded-full bg-white/10 hover:bg-red-500/30 flex items-center justify-center transition-colors" aria-label="Remove">
-                      <X className="w-2.5 h-2.5 text-white/70" />
+                    <button onClick={() => remove(adventure.id)}
+                      className="shrink-0 w-5 h-5 rounded-full bg-black/40 hover:bg-red-500/40 flex items-center justify-center transition-colors">
+                      <X className="w-2.5 h-2.5 text-white/60" />
                     </button>
                   </div>
                 </div>
               ))}
               {Array.from({ length: MAX - selected.length }).map((_, i) => (
-                <div key={`empty-${i}`}>
-                  {loggedIn === true ? (
-                    <WishlistPicker onSelect={(a) => add(a)} />
-                  ) : (
-                    <SearchPicker onSelect={(a) => add(a)} />
-                  )}
+                <div key={`empty-${i}`} className="h-14">
+                  {loggedIn === true
+                    ? <WishlistPicker onSelect={(a) => add(a)} />
+                    : <SearchPicker onSelect={(a) => add(a)} />
+                  }
                 </div>
               ))}
             </div>
-          ) : (
-            <div className="rounded-xl border border-dashed border-white/10 flex items-center justify-center gap-2 h-16 mb-5 px-4">
-              <span className="text-white/25 text-xs">Tap</span>
-              <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-semibold" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.12)" }}>
-                <GitCompare className="w-2.5 h-2.5" />Compare
-              </span>
-              <span className="text-white/25 text-xs">on any card to start</span>
-            </div>
-          )
-        )}
 
-        {/* Comparison table */}
-        {selected.length >= 2 && (
-          <div className="overflow-x-auto rounded-xl border border-white/8">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/8">
-                  <th className="text-left text-white/30 text-[10px] font-bold tracking-widest uppercase px-3 py-2.5 w-32">Attribute</th>
-                  {selected.map((a) => (
-                    <th key={a.id} className="text-left px-3 py-2.5">
-                      <Link href={`/experiences/${a.slug}`} className="text-white text-xs font-semibold hover:text-[#ff5100] transition-colors line-clamp-2 leading-snug">
-                        {a.name}
-                      </Link>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {FIELDS.map((field, fi) => (
-                  <tr key={field.key} className={fi % 2 === 0 ? "bg-white/[0.02]" : ""}>
-                    <td className="px-3 py-2 text-white/35 text-[10px] font-semibold tracking-wide uppercase whitespace-nowrap">{field.label}</td>
-                    {selected.map((a) => (
-                      <td key={a.id} className="px-3 py-2">
-                        <span className="text-white/70 text-xs">{getValue(a, field.key)}</span>
-                      </td>
+            {/* Hint when nothing selected */}
+            {selected.length === 0 && (
+              <p className="text-white/20 text-[11px] text-center py-2">
+                Tap <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px]" style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                  <GitCompare className="w-2.5 h-2.5" />Compare
+                </span> on any card above to start.
+              </p>
+            )}
+
+            {/* Comparison table */}
+            {selected.length >= 2 && (
+              <div className="overflow-x-auto rounded-xl border border-white/8">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-white/8" style={{ background: "rgba(255,255,255,0.02)" }}>
+                      <th className="text-left text-white/25 text-[9px] font-bold tracking-widest uppercase px-3 py-2 w-24">Attribute</th>
+                      {selected.map((a) => (
+                        <th key={a.id} className="text-left px-3 py-2">
+                          <Link href={`/experiences/${a.slug}`}
+                            className="text-white text-xs font-semibold hover:text-[#ff5100] transition-colors line-clamp-1 leading-snug">
+                            {a.name}
+                          </Link>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {FIELDS.map((field, fi) => (
+                      <tr key={field.key} className={fi % 2 === 0 ? "bg-white/[0.015]" : ""}>
+                        <td className="px-3 py-1.5 text-white/30 text-[9px] font-semibold tracking-wide uppercase whitespace-nowrap">{field.label}</td>
+                        {selected.map((a) => (
+                          <td key={a.id} className="px-3 py-1.5">
+                            <span className="text-white/65 text-xs">{getValue(a, field.key)}</span>
+                          </td>
+                        ))}
+                      </tr>
                     ))}
-                  </tr>
-                ))}
 
-                {/* ACE label row */}
-                <tr className="border-t border-white/8">
-                  <td colSpan={selected.length + 1} className="px-4 pt-5 pb-2">
-                    <div className="flex items-center gap-2">
-                      <div className="w-1 h-4 rounded-full" style={{ background: "#ff5100" }} />
-                      <p className="text-[10px] uppercase tracking-widest font-black text-white/40">ACE Profile</p>
-                      <span className="text-[9px] text-white/20 font-medium">Adventure Capability Engine</span>
-                    </div>
-                  </td>
-                </tr>
-
-                {/* ACE Radar row */}
-                <tr className="bg-white/[0.01]">
-                  <td className="px-4 pb-6 align-top">
-                    {userAce ? (
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)", background: "radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 70%)" }}>
-                          <div className="p-3"><ACERadar ace={userAce} size={210} showLabels /></div>
+                    {/* ACE row */}
+                    <tr className="border-t border-white/8">
+                      <td colSpan={selected.length + 1} className="px-3 pt-4 pb-1.5">
+                        <div className="flex items-center gap-2">
+                          <div className="w-0.5 h-3.5 rounded-full" style={{ background: "#ff5100" }} />
+                          <p className="text-[9px] uppercase tracking-widest font-black text-white/35">ACE Profile</p>
+                          <span className="text-[9px] text-white/18 font-medium">Adventure Capability Engine</span>
                         </div>
-                        <p className="text-[10px] font-bold text-white/40 uppercase tracking-wider">Your Profile</p>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center gap-2 rounded-2xl py-10 px-4 text-center" style={{ border: "1px dashed rgba(255,255,255,0.08)" }}>
-                        <p className="text-white/25 text-xs font-medium">No ACE profile</p>
-                        <a href="/ace" className="text-[#ff5100]/70 text-[10px] hover:text-[#ff5100] transition-colors underline underline-offset-2">Take assessment</a>
-                      </div>
-                    )}
-                  </td>
-                  {selected.map((a) => (
-                    <td key={a.id} className="px-4 pb-6 align-top">
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="rounded-2xl overflow-hidden" style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                          <div className="p-3"><ACERadar ace={getACE(a)} size={210} showLabels /></div>
-                        </div>
-                        <p className="text-[10px] font-bold text-white/40 uppercase tracking-wider truncate max-w-[200px]">{a.name}</p>
-                      </div>
-                    </td>
-                  ))}
-                </tr>
+                      </td>
+                    </tr>
+                    <tr className="bg-white/[0.01]">
+                      <td className="px-3 pb-4 align-top pt-2">
+                        {userAce ? (
+                          <div className="flex flex-col items-center gap-1.5">
+                            <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.08)" }}>
+                              <div className="p-2"><ACERadar ace={userAce} size={140} showLabels /></div>
+                            </div>
+                            <p className="text-[9px] font-bold text-white/35 uppercase tracking-wider">You</p>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center justify-center gap-1.5 rounded-xl py-6 px-3 text-center"
+                            style={{ border: "1px dashed rgba(255,255,255,0.07)" }}>
+                            <p className="text-white/20 text-[10px]">No ACE profile</p>
+                            <a href="/ace" className="text-[#ff5100]/60 text-[10px] hover:text-[#ff5100] transition-colors underline underline-offset-2">Take it →</a>
+                          </div>
+                        )}
+                      </td>
+                      {selected.map((a) => (
+                        <td key={a.id} className="px-3 pb-4 align-top pt-2">
+                          <div className="flex flex-col items-center gap-1.5">
+                            <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                              <div className="p-2"><ACERadar ace={getACE(a)} size={140} showLabels /></div>
+                            </div>
+                            <p className="text-[9px] font-bold text-white/35 uppercase tracking-wider truncate max-w-[130px]">{a.name}</p>
+                          </div>
+                        </td>
+                      ))}
+                    </tr>
 
-                {/* View links row */}
-                <tr className="border-t border-white/8">
-                  <td className="px-3 py-3" />
-                  {selected.map((a) => (
-                    <td key={a.id} className="px-3 py-3">
-                      <Link href={`/experiences/${a.slug}`} className="inline-flex items-center gap-1 text-[#ff5100] text-xs font-semibold hover:gap-2 transition-all group/link">
-                        View details <ArrowRight className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform" />
-                      </Link>
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
+                    {/* View links */}
+                    <tr className="border-t border-white/8">
+                      <td className="px-3 py-2" />
+                      {selected.map((a) => (
+                        <td key={a.id} className="px-3 py-2">
+                          <Link href={`/experiences/${a.slug}`}
+                            className="inline-flex items-center gap-1 text-[#ff5100] text-[11px] font-semibold hover:gap-1.5 transition-all group/l">
+                            View <ArrowRight className="w-3 h-3 group-hover/l:translate-x-0.5 transition-transform" />
+                          </Link>
+                        </td>
+                      ))}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
-
       </div>
     </section>
   );
