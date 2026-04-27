@@ -61,30 +61,32 @@ export default function ACEProfileSection() {
         <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: U.color }} />
 
         {/* Identity row */}
-        <div className="relative flex items-start gap-4 sm:gap-5 px-5 sm:px-7 pt-5 sm:pt-7 pb-4 sm:pb-5">
+        <div className="relative flex items-center gap-3 px-4 sm:px-5 pt-4 pb-3">
           <div
-            className="w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] rounded-2xl flex items-center justify-center shrink-0"
-            style={{ background: `${U.color}18`, color: U.color, boxShadow: `0 0 32px ${U.color}38`, border: `1px solid ${U.color}28` }}
+            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+            style={{ background: `${U.color}18`, color: U.color, boxShadow: `0 0 18px ${U.color}30`, border: `1px solid ${U.color}25` }}
           >
-            <div className="scale-[1.55] sm:scale-[1.75]">{U.icon}</div>
+            <div className="scale-[1.3]">{U.icon}</div>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-1">Capability Tier</p>
-            <h1 className="text-[26px] sm:text-[32px] font-black tracking-tight leading-none" style={{ color: U.color }}>Uncharted</h1>
-            <div className="flex items-center gap-[3px] mt-2.5">
+            <p className="text-[8px] uppercase tracking-[0.22em] font-semibold text-white/25 mb-0.5">Capability Tier</p>
+            <h1 className="text-[20px] font-black tracking-tight leading-none" style={{ color: U.color }}>Uncharted</h1>
+          </div>
+          <div className="flex flex-col items-end gap-0.5 shrink-0">
+            <div className="flex items-center gap-[2px]">
               {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} className="text-[13px] leading-none" style={{ color: "rgba(255,255,255,0.09)" }}>★</span>
+                <span key={i} className="text-[10px] leading-none" style={{ color: "rgba(255,255,255,0.08)" }}>★</span>
               ))}
-              <span className="text-white/22 text-[10px] ml-2">Rank 0 of 5</span>
             </div>
+            <span className="text-white/20 text-[8px]">Rank 0 of 5</span>
           </div>
         </div>
 
         {/* Divider */}
-        <div className="mx-5 sm:mx-7 h-px" style={{ background: `${U.color}14` }} />
+        <div className="mx-4 sm:mx-5 h-px" style={{ background: `${U.color}12` }} />
 
         {/* CTA */}
-        <div className="px-5 sm:px-7 pt-4 pb-5 sm:pb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="px-4 sm:px-5 pt-3 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
             <p className="text-white/60 text-sm font-medium mb-1">Your capability is unassessed</p>
             <p className="text-white/35 text-xs leading-relaxed max-w-sm">Take the 8-question ACE assessment to map your physical profile and unlock your adventure rank.</p>
@@ -127,57 +129,51 @@ export default function ACEProfileSection() {
       <div className="relative flex items-stretch gap-0">
 
         {/* Left column: identity + progression */}
-        <div className="flex-1 min-w-0 flex flex-col px-5 sm:px-7 pt-5 sm:pt-7 pb-5 sm:pb-6 gap-5">
+        <div className="flex-1 min-w-0 flex flex-col px-4 sm:px-5 pt-4 pb-4 gap-3">
 
           {/* Identity row */}
-          <div className="flex items-start gap-4">
+          <div className="flex items-center gap-3">
             <div
-              className="w-[60px] h-[60px] sm:w-[72px] sm:h-[72px] rounded-2xl flex items-center justify-center shrink-0"
-              style={{ background: `${currentRank.color}18`, color: currentRank.color, boxShadow: `0 0 32px ${currentRank.color}38`, border: `1px solid ${currentRank.color}28` }}
+              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+              style={{ background: `${currentRank.color}18`, color: currentRank.color, boxShadow: `0 0 18px ${currentRank.color}30`, border: `1px solid ${currentRank.color}25` }}
             >
-              <div className="scale-[1.55] sm:scale-[1.75]">{currentRank.icon}</div>
+              <div className="scale-[1.3]">{currentRank.icon}</div>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-1">Capability Tier</p>
-              <h1 className="text-[26px] sm:text-[32px] font-black tracking-tight leading-none" style={{ color: currentRank.color }}>{currentRank.label}</h1>
-              <div className="flex items-center gap-[3px] mt-2.5">
+              <p className="text-[8px] uppercase tracking-[0.22em] font-semibold text-white/25 mb-0.5">Capability Tier</p>
+              <h1 className="text-[20px] font-black tracking-tight leading-none" style={{ color: currentRank.color }}>{currentRank.label}</h1>
+            </div>
+            <div className="flex flex-col items-end gap-0.5 shrink-0">
+              <div className="flex items-center gap-[2px]">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <span key={i} className="text-[13px] leading-none" style={{ color: i < currentRank.stars ? currentRank.color : "rgba(255,255,255,0.09)" }}>★</span>
+                  <span key={i} className="text-[10px] leading-none" style={{ color: i < currentRank.stars ? currentRank.color : "rgba(255,255,255,0.08)" }}>★</span>
                 ))}
-                <span className="text-white/22 text-[10px] ml-2">Rank {currentRank.stars} of 5</span>
               </div>
+              <span className="text-white/20 text-[8px]">Rank {currentRank.stars} of 5</span>
             </div>
           </div>
 
           {/* Divider */}
-          <div className="h-px -mx-1" style={{ background: `${currentRank.color}18` }} />
+          <div className="h-px" style={{ background: `${currentRank.color}15` }} />
 
           {/* Progress numbers */}
           {nextRank ? (
-            <div className="flex items-end justify-between">
-              <div>
-                <div className="flex items-baseline gap-0.5 leading-none">
-                  <span className="text-[38px] sm:text-[48px] font-black tabular-nums tracking-tight" style={{ color: currentRank.color }}>{progressPct}</span>
-                  <span className="text-lg sm:text-xl font-bold ml-0.5" style={{ color: `${currentRank.color}70` }}>%</span>
-                </div>
-                <p className="text-[11px] text-white/30 mt-1 leading-none">
-                  to reach <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span>
-                </p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-baseline gap-1">
+                <span className="text-[22px] font-black tabular-nums tracking-tight leading-none" style={{ color: currentRank.color }}>{progressPct}<span className="text-sm font-bold ml-0.5" style={{ color: `${currentRank.color}60` }}>%</span></span>
+                <span className="text-[11px] text-white/30 leading-none">to <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span></span>
               </div>
-              <div className="text-right pb-1">
-                <p className="text-[24px] sm:text-[30px] font-black tabular-nums leading-none text-white/70">{ptsNeeded}</p>
-                <p className="text-[11px] text-white/28 mt-1 leading-none">pts needed</p>
-              </div>
+              <span className="text-[11px] text-white/30"><span className="font-bold text-white/55">{ptsNeeded}</span> pts needed</span>
             </div>
           ) : (
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
-              <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">The absolute pinnacle</p>
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
+              <p className="text-[10px] font-bold tracking-widest uppercase text-[#a78bfa]">Pinnacle rank</p>
             </div>
           )}
 
           {/* Progress bar */}
-          <RankBar totalScore={totalScore} trackH={10} showLabels showYouTag={false} />
+          <RankBar totalScore={totalScore} trackH={7} showLabels showYouTag={false} />
 
           {/* Retake button */}
           <Link
