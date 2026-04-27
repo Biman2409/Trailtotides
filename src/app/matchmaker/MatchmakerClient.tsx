@@ -729,7 +729,7 @@ function ResultsScreen({
       {/* ── 1. PAGE HEADER ───────────────────────────────────────────────────── */}
       <div className="mb-6 sm:mb-8">
         <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-2">Adventure Matchmaker</p>
-        <h2 className="text-white text-2xl sm:text-3xl font-black tracking-tight">Your ACE Profile</h2>
+        <h2 className="text-white text-2xl sm:text-3xl font-black tracking-tight">Adventure Capability Engine Profile</h2>
       </div>
 
       {/* ── 2. TIER HERO CARD ────────────────────────────────────────────────── */}
