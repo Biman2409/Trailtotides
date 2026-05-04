@@ -3,12 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, BarChart2, MapPin, ChevronDown, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind } from "lucide-react";
+import { ArrowRight, BarChart2, MapPin, ChevronDown } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import RankBar from "@/components/ui/custom/RankBar";
-import { ACE_AXIS_COLORS } from "@/lib/ace";
 
 const RANKS = [
   {
@@ -218,21 +217,8 @@ export default function MatchmakerHomepageSection() {
 
 const SAMPLE_ACE = { stamina: 4, power: 3, strength: 3, agility: 4, water: 2, altitude: 5, focus: 3, nerve: 4 };
 
-const ACE_AXIS_META = [
-  { key: "stamina",  icon: <Flame    className="w-3 h-3" />, desc: "Sustained aerobic output over long durations",    color: "#f97316" },
-  { key: "power",    icon: <Zap      className="w-3 h-3" />, desc: "Explosive effort — short bursts at max intensity", color: "#eab308" },
-  { key: "strength", icon: <Dumbbell className="w-3 h-3" />, desc: "Load-bearing: carrying packs, scrambling terrain", color: "#84cc16" },
-  { key: "agility",  icon: <Compass  className="w-3 h-3" />, desc: "Balance, coordination and technical footing",     color: "#22d3ee" },
-  { key: "water",    icon: <Waves    className="w-3 h-3" />, desc: "Aquatic comfort — pool, open water, currents",    color: "#3b82f6" },
-  { key: "altitude", icon: <Mountain className="w-3 h-3" />, desc: "High-altitude acclimatisation and exposure",      color: "#a78bfa" },
-  { key: "focus",    icon: <Shield   className="w-3 h-3" />, desc: "Mental composure under exposure and pressure",    color: "#f43f5e" },
-  { key: "nerve",    icon: <Wind     className="w-3 h-3" />, desc: "Resilience in remote and isolated conditions",    color: "#10b981" },
-];
 
 function SampleRadarPanel() {
-  const [activeAxis, setActiveAxis] = useState<string | null>(null);
-  const active = activeAxis ? ACE_AXIS_META.find(a => a.key === activeAxis) ?? null : null;
-
   return (
     <div
       className="relative rounded-2xl overflow-hidden p-4 shrink-0 self-start"
@@ -265,26 +251,6 @@ function SampleRadarPanel() {
           style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
           <ACERadar ace={SAMPLE_ACE} size={190} showLabels />
         </div>
-      </div>
-
-      {/* Axis label rows — click for description */}
-      <div className="mt-3 space-y-px">
-        {ACE_AXIS_META.map(({ key, icon, color, desc }) => (
-          <button
-            key={key}
-            onClick={() => setActiveAxis(prev => prev === key ? null : key)}
-            className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all"
-            style={{
-              background: activeAxis === key ? `${color}14` : "transparent",
-            }}
-          >
-            <span style={{ color }} className="shrink-0">{icon}</span>
-            <span className="text-[9px] font-black uppercase tracking-wider flex-1" style={{ color: activeAxis === key ? color : `${color}88` }}>{key}</span>
-            {activeAxis === key && (
-              <span className="text-[8px] text-white/40 leading-snug text-right max-w-[140px]">{desc}</span>
-            )}
-          </button>
-        ))}
       </div>
 
       {/* Scan line */}
