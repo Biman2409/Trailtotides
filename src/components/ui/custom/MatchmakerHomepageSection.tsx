@@ -339,7 +339,7 @@ function DefaultCTA() {
                 href="/ace"
                 className="flex items-center justify-center gap-2 text-white/45 hover:text-white/70 font-semibold px-8 py-4 rounded-xl text-base border border-white/10 hover:border-white/20 transition-all duration-200"
               >
-                Learn about ACE
+                Learn More
               </Link>
             </div>
           </div>
