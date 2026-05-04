@@ -231,7 +231,7 @@ export function HeroSubheading() {
             letterSpacing: "0.01em",
           }}
         >
-          Find adventures across India — tailored to your body, precision-mapped by AI, and led by trusted operators.
+          Elite adventures across India — tailored to your body, precision-mapped by AI, and led by trusted operators.
         </p>
       </div>
 
