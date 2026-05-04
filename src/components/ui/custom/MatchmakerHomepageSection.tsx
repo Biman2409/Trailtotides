@@ -217,8 +217,34 @@ export default function MatchmakerHomepageSection() {
 
 const SAMPLE_ACE = { stamina: 4, power: 3, strength: 3, agility: 4, water: 2, altitude: 5, focus: 3, nerve: 4 };
 
+const AXIS_TICKER = [
+  { key: "Stamina",  color: "#f97316", desc: "Sustained aerobic output over long durations" },
+  { key: "Power",    color: "#eab308", desc: "Explosive effort — short bursts at max intensity" },
+  { key: "Strength", color: "#84cc16", desc: "Load-bearing: packs, scrambles, technical terrain" },
+  { key: "Agility",  color: "#22d3ee", desc: "Balance, coordination and technical footing" },
+  { key: "Water",    color: "#3b82f6", desc: "Aquatic comfort — pool, open water, currents" },
+  { key: "Altitude", color: "#a78bfa", desc: "High-altitude acclimatisation and exposure" },
+  { key: "Focus",    color: "#f43f5e", desc: "Mental composure under exposure and pressure" },
+  { key: "Nerve",    color: "#10b981", desc: "Resilience in remote and isolated conditions" },
+];
 
 function SampleRadarPanel() {
+  const [idx, setIdx] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => {
+        setIdx(i => (i + 1) % AXIS_TICKER.length);
+        setVisible(true);
+      }, 300);
+    }, 2200);
+    return () => clearInterval(interval);
+  }, []);
+
+  const current = AXIS_TICKER[idx];
+
   return (
     <div
       className="relative rounded-2xl overflow-hidden p-4 shrink-0 self-start"
@@ -248,6 +274,18 @@ function SampleRadarPanel() {
         <div className="rounded-xl p-2"
           style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
           <ACERadar ace={SAMPLE_ACE} size={190} showLabels />
+        </div>
+      </div>
+
+      {/* Axis ticker */}
+      <div className="mt-3 rounded-xl px-3 py-2.5" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", minHeight: 48 }}>
+        <div style={{ opacity: visible ? 1 : 0, transition: "opacity 0.3s ease" }}>
+          <div className="flex items-center gap-1.5 mb-1">
+            <div className="w-1 h-3 rounded-full" style={{ background: current.color }} />
+            <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: current.color }}>{current.key}</span>
+            <span className="text-[9px] text-white/20 ml-auto tabular-nums">{idx + 1}/{AXIS_TICKER.length}</span>
+          </div>
+          <p className="text-[10px] text-white/45 leading-snug pl-2.5">{current.desc}</p>
         </div>
       </div>
 
