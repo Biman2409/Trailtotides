@@ -190,44 +190,54 @@ export function HeroSubheading() {
     <div
       className="flex flex-col items-center gap-4 w-full mx-auto"
       style={{
-        maxWidth: 576,
+        maxWidth: 672,
         animation: "heroLineIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.55s both",
       }}
     >
-      {/* Pill trio — top */}
-      <div className="flex items-center justify-center gap-1.5">
-        {["Discover", "Compare", "Book"].map((label, i) => (
-          <div key={label} className="flex items-center gap-1">
-            <span
-              className="px-3.5 py-1.5 rounded-full text-[11px] font-black tracking-wide uppercase"
-              style={{
-                background: i === 0 ? "rgba(255,81,0,0.18)" : i === 1 ? "rgba(255,81,0,0.11)" : "rgba(255,81,0,0.07)",
-                border: `1px solid rgba(255,81,0,${i === 0 ? "0.35" : i === 1 ? "0.22" : "0.14"})`,
-                color: i === 0 ? "#ff7d47" : i === 1 ? "#ff9060" : "rgba(255,171,133,0.75)",
-              }}
-            >
-              {label}
-            </span>
-            {i < 2 && <span className="text-white/15 text-[10px]">→</span>}
-          </div>
-        ))}
-      </div>
-
-      {/* Supporting copy */}
-      <p
-        className="text-center font-medium leading-relaxed px-4 py-2.5 rounded-xl"
+      {/* Combined block */}
+      <div
+        className="w-full flex flex-col items-center gap-3 px-5 py-4 rounded-2xl"
         style={{
-          fontSize: "clamp(0.8rem, 1.8vw, 0.95rem)",
-          color: "rgba(255,255,255,0.88)",
-          background: "rgba(0,0,0,0.45)",
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          letterSpacing: "0.01em",
+          background: "rgba(0,0,0,0.48)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          border: "1px solid rgba(255,255,255,0.09)",
         }}
       >
-        Find adventures across India — tailored to your body,<br className="hidden sm:block" /> precision-mapped by AI, and led by trusted operators.
-      </p>
+        {/* Supporting copy */}
+        <p
+          className="text-center font-medium leading-relaxed"
+          style={{
+            fontSize: "clamp(0.8rem, 1.8vw, 0.92rem)",
+            color: "rgba(255,255,255,0.85)",
+            letterSpacing: "0.01em",
+          }}
+        >
+          Find adventures across India — tailored to your body, precision-mapped by AI, and led by trusted operators.
+        </p>
+
+        {/* Divider */}
+        <div className="w-full h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
+
+        {/* Pill trio */}
+        <div className="flex items-center justify-center gap-1.5">
+          {["Discover", "Compare", "Book"].map((label, i) => (
+            <div key={label} className="flex items-center gap-1.5">
+              <span
+                className="px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase"
+                style={{
+                  background: i === 0 ? "rgba(255,81,0,0.2)" : i === 1 ? "rgba(255,81,0,0.12)" : "rgba(255,81,0,0.07)",
+                  border: `1px solid rgba(255,81,0,${i === 0 ? "0.4" : i === 1 ? "0.25" : "0.15"})`,
+                  color: i === 0 ? "#ff7d47" : i === 1 ? "#ff9464" : "rgba(255,171,133,0.7)",
+                }}
+              >
+                {label}
+              </span>
+              {i < 2 && <span style={{ color: "rgba(255,81,0,0.3)", fontSize: 9 }}>▶</span>}
+            </div>
+          ))}
+        </div>
+      </div>
 
       <style>{`
         @keyframes heroLineIn {
