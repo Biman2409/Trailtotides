@@ -239,10 +239,8 @@ function SampleRadarPanel() {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-1.5">
           <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
-          <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/35">ACE · Sample Profile</span>
+          <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/35">Sample Profile</span>
         </div>
-        <span className="text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
-          style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.22)", color: "#ff7d47" }}>Demo</span>
       </div>
 
       {/* Radar */}
