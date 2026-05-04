@@ -235,7 +235,7 @@ function SampleRadarPanel() {
 
   return (
     <div
-      className="relative rounded-2xl overflow-hidden p-4 shrink-0"
+      className="relative rounded-2xl overflow-hidden p-4 shrink-0 self-start"
       style={{
         background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
         border: "1px solid rgba(255,255,255,0.07)",
@@ -260,44 +260,32 @@ function SampleRadarPanel() {
       </div>
 
       {/* Radar */}
-      <div className="flex justify-center mb-3">
+      <div className="flex justify-center">
         <div className="rounded-xl p-2"
           style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
           <ACERadar ace={SAMPLE_ACE} size={190} showLabels />
         </div>
       </div>
 
-      {/* Axis name pills — click for tooltip */}
-      <div className="flex flex-wrap gap-1 justify-center">
-        {ACE_AXIS_META.map(({ key, icon, color }) => (
+      {/* Axis label rows — click for description */}
+      <div className="mt-3 space-y-px">
+        {ACE_AXIS_META.map(({ key, icon, color, desc }) => (
           <button
             key={key}
             onClick={() => setActiveAxis(prev => prev === key ? null : key)}
-            className="flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all"
+            className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all"
             style={{
-              background: activeAxis === key ? `${color}22` : `${color}0c`,
-              border: `1px solid ${activeAxis === key ? color + "55" : color + "1a"}`,
-              color: activeAxis === key ? color : `${color}99`,
+              background: activeAxis === key ? `${color}14` : "transparent",
             }}
           >
-            {icon}{key}
+            <span style={{ color }} className="shrink-0">{icon}</span>
+            <span className="text-[9px] font-black uppercase tracking-wider flex-1" style={{ color: activeAxis === key ? color : `${color}88` }}>{key}</span>
+            {activeAxis === key && (
+              <span className="text-[8px] text-white/40 leading-snug text-right max-w-[140px]">{desc}</span>
+            )}
           </button>
         ))}
       </div>
-
-      {/* Tooltip pop-up */}
-      {active && (
-        <div
-          className="mt-2 rounded-xl px-3 py-2.5 flex items-start gap-2"
-          style={{ background: `${active.color}12`, border: `1px solid ${active.color}28` }}
-        >
-          <span style={{ color: active.color }} className="mt-0.5 shrink-0">{active.icon}</span>
-          <div>
-            <p className="text-[10px] font-black uppercase tracking-wider mb-0.5" style={{ color: active.color }}>{active.key}</p>
-            <p className="text-[10px] text-white/50 leading-snug">{active.desc}</p>
-          </div>
-        </div>
-      )}
 
       {/* Scan line */}
       <div className="absolute inset-x-0 h-px pointer-events-none"
@@ -311,7 +299,7 @@ function DefaultCTA() {
   return (
     <section className="py-20 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-16">
 
           {/* Left: copy */}
           <div className="flex-1">
