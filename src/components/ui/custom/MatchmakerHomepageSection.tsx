@@ -313,9 +313,7 @@ function DefaultCTA() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
 
-          <SampleRadarPanel />
-
-          {/* Right: copy */}
+          {/* Left: copy */}
           <div className="flex-1">
             <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
             <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-4 lg:mb-5">
@@ -342,6 +340,8 @@ function DefaultCTA() {
               </Link>
             </div>
           </div>
+
+          <SampleRadarPanel />
 
         </div>
       </div>
