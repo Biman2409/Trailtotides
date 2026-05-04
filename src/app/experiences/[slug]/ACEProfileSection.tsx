@@ -279,7 +279,7 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
               {/* Trek radar — larger, dominant */}
               <div className="flex flex-col items-center gap-1.5 shrink-0 pr-4">
                 <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[#ff5100]/60">Trek Requirements</span>
-                <ACERadar ace={ace} size={196} showLabels />
+                <ACERadar ace={ace} size={224} showLabels />
               </div>
 
               {/* Divider */}
