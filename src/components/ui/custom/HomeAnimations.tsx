@@ -190,7 +190,7 @@ export function HeroSubheading() {
     <div
       className="flex flex-col items-center gap-4 w-full mx-auto"
       style={{
-        maxWidth: 672,
+        maxWidth: "100%",
         animation: "heroLineIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.55s both",
       }}
     >

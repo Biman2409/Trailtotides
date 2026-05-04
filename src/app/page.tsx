@@ -67,13 +67,9 @@ export default function HomePage() {
             <HeroHeadline />
           </div>
 
-          {/* Subheading box — slightly separated */}
-          <div style={{ marginTop: "4px" }}>
+          {/* Subheading + CTAs — locked to eyebrow width */}
+          <div className="w-full flex flex-col items-center gap-4" style={{ maxWidth: 480, marginTop: "4px" }}>
             <HeroSubheading />
-          </div>
-
-          {/* CTAs — breathing room below box */}
-          <div style={{ marginTop: "8px" }}>
             <HeroCTAWrapper>
               <HeroCTAs />
             </HeroCTAWrapper>

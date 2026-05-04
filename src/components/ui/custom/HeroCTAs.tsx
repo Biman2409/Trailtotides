@@ -18,7 +18,7 @@ export default function HeroCTAs() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-3 w-full max-w-2xl mx-auto">
+    <div className="flex flex-col items-center gap-3 w-full">
       {/* Search input */}
       <div
         className="flex items-center gap-3 w-full px-4 py-3 rounded-full"
