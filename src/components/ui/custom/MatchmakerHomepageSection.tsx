@@ -264,7 +264,7 @@ function SampleRadarPanel() {
         background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
         border: "1px solid rgba(255,255,255,0.07)",
         boxShadow: "0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
-        width: "fit-content",
+        width: 300,
         height: "100%",
         boxSizing: "border-box",
       }}
@@ -315,7 +315,7 @@ function DefaultCTA() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "4rem", alignItems: "stretch" }}>
 
           {/* Left: copy */}
-          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
+          <div style={{ minWidth: 0, display: "flex", flexDirection: "column" }}>
             <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
             <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-4 lg:mb-5">
               Adventures built,<br />
@@ -324,10 +324,10 @@ function DefaultCTA() {
             <p className="text-white/55 text-base md:text-lg leading-relaxed mb-8">
               Answer 8 questions. We calibrate your capability level and match you to adventures you can actually handle.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-3" style={{ marginTop: "auto" }}>
               <Link
                 href="/matchmaker"
-                className="inline-flex items-center justify-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#ff7d47] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25 group transition-all duration-200"
+                className="flex-1 inline-flex items-center justify-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#ff7d47] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25 group transition-all duration-200"
                 style={{ boxShadow: "0 4px 20px rgba(255,81,0,0.3)" }}
               >
                 Take Assessment
@@ -335,7 +335,7 @@ function DefaultCTA() {
               </Link>
               <Link
                 href="/ace"
-                className="inline-flex items-center justify-center gap-2 text-white/45 hover:text-white/70 font-semibold px-6 py-4 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all duration-200"
+                className="flex-1 inline-flex items-center justify-center gap-2 text-white/45 hover:text-white/70 font-semibold px-6 py-4 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all duration-200"
               >
                 Learn about ACE
               </Link>
