@@ -203,7 +203,7 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
                 className="flex flex-col items-center gap-2 rounded-xl py-3 px-2"
                 style={{ background: "rgba(255,81,0,0.04)", border: "1px solid rgba(255,81,0,0.12)" }}
               >
-                <span className="text-[8px] font-black uppercase tracking-[0.18em] text-[#ff5100]/70">Required</span>
+                <span className="text-[8px] font-black uppercase tracking-[0.18em] text-[#ff5100]/70">Trek Requirements</span>
                 <ACERadar ace={ace} size={140} showLabels />
               </div>
               <div
