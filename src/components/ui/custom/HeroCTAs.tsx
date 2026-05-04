@@ -18,15 +18,15 @@ export default function HeroCTAs() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-3 w-full">
+    <div className="flex items-stretch gap-2 w-full">
       {/* Search input */}
       <div
-        className="flex items-center gap-3 w-full px-4 py-3 rounded-full"
+        className="flex items-center gap-2.5 flex-1 px-4 py-3 rounded-xl min-w-0"
         style={{
           background: "rgba(255,255,255,0.10)",
           border: "1px solid rgba(255,255,255,0.22)",
           backdropFilter: "blur(16px)",
-          boxShadow: "0 4px 24px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.12)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
         }}
       >
         <Search className="w-4 h-4 shrink-0" style={{ color: "rgba(255,255,255,0.45)" }} />
@@ -43,7 +43,7 @@ export default function HeroCTAs() {
       {/* Explore button */}
       <button
         type="submit"
-        className="group flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-bold tracking-wide text-white transition-all duration-200 hover:-translate-y-0.5 active:scale-95"
+        className="group flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold tracking-wide text-white transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shrink-0 whitespace-nowrap"
         style={{
           background: "#ff5100",
           boxShadow: "0 0 0 1px rgba(255,81,0,0.6), 0 4px 20px rgba(255,81,0,0.45)",
