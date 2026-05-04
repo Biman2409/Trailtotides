@@ -39,11 +39,11 @@ function useCountUp(target: number, duration = 1400, started = false) {
 function StatItem({ value, label, suffix = "", started }: { value: number; label: string; suffix?: string; started: boolean }) {
   const count = useCountUp(value, 1400, started);
   return (
-    <div className="text-center py-8 px-6">
-      <div className="text-white text-3xl font-bold tracking-tight tabular-nums">
+    <div className="text-center py-5 px-3 sm:py-8 sm:px-6">
+      <div className="text-white text-2xl sm:text-3xl font-bold tracking-tight tabular-nums">
         {count}{suffix}
       </div>
-      <div className="text-white/32 text-xs mt-1.5 tracking-widest uppercase">{label}</div>
+      <div className="text-white/32 text-[10px] sm:text-xs mt-1 sm:mt-1.5 tracking-widest uppercase">{label}</div>
     </div>
   );
 }

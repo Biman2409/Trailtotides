@@ -461,7 +461,7 @@ const INTRO_AXES_DATA = [
 
 function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => void; onViewResults: () => void; hasProfile: boolean }) {
   return (
-    <div className="relative h-[calc(100vh-64px)] flex items-center justify-center overflow-hidden px-5">
+    <div className="relative min-h-[calc(100vh-64px)] flex items-center justify-center overflow-hidden px-5 py-12 sm:py-0">
       {/* Ambient glows */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[400px] rounded-full blur-3xl pointer-events-none opacity-8"
         style={{ background: "radial-gradient(ellipse, #ff5100 0%, #a78bfa 60%, transparent 100%)" }} />

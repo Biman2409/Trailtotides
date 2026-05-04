@@ -179,7 +179,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
             <Pill type="type" value={adventure.type} />
             <Pill type="subRegion" value={adventure.state} />
           </div>
-          <h3 className="text-white font-bold text-lg leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors pointer-events-none">
+          <h3 className="text-white font-bold text-base sm:text-lg leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors pointer-events-none">
             {adventure.name}
           </h3>
           <p className="text-white/60 text-[11px] leading-snug mt-1 pointer-events-none line-clamp-2">

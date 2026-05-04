@@ -49,7 +49,7 @@ export default function HomePage() {
 
           {/* Eyebrow pill */}
           <div
-            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full backdrop-blur-md"
+            className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-md max-w-[calc(100vw-40px)]"
             style={{
               background: "rgba(0,0,0,0.45)",
               border: "1px solid rgba(255,255,255,0.12)",
@@ -63,9 +63,9 @@ export default function HomePage() {
               <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: "#ff5100" }} />
             </span>
             <span
-              className="text-[10px] font-black uppercase"
+              className="text-[9px] sm:text-[10px] font-black uppercase truncate"
               style={{
-                letterSpacing: "0.2em",
+                letterSpacing: "0.18em",
                 background: "linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0.6) 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -80,8 +80,8 @@ export default function HomePage() {
             <HeroHeadline />
           </div>
 
-          {/* Subheading + CTAs — locked to eyebrow width */}
-          <div className="w-full flex flex-col items-center gap-4" style={{ maxWidth: 560, marginTop: "4px" }}>
+          {/* Subheading + CTAs */}
+          <div className="w-full flex flex-col items-center gap-4 max-w-xs sm:max-w-sm md:max-w-xl" style={{ marginTop: "4px" }}>
             <HeroSubheading />
             <HeroCTAWrapper>
               <HeroCTAs />
@@ -182,12 +182,12 @@ export default function HomePage() {
                 <p className="text-[#7ec88a] text-xs font-black tracking-[0.25em] mb-5 uppercase">
                   ADVENTURE MAP
                 </p>
-                <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-6">
+                <h2 className="t-text text-2xl sm:text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-6">
                   India&apos;s Adventures,
                   <br />
                   <span className="text-[#7ec88a]">Mapped</span>
                 </h2>
-                <p className="text-white/72 text-base md:text-xl leading-relaxed mb-8 lg:mb-10 w-full max-w-lg">
+                <p className="text-white/72 text-sm sm:text-base md:text-xl leading-relaxed mb-8 lg:mb-10 w-full max-w-lg">
                   Every trail, summit and coast — one map. Filter by type, cluster by region, tap to explore.
                 </p>
                 <Link
@@ -242,7 +242,7 @@ export default function HomePage() {
               </div>
             </FadeUp>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-7">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 lg:gap-7">
               {featuredStories.map((story, i) => (
                 <FadeUp key={story.id} delay={i * 90}>
                   <StoryCard story={story} />

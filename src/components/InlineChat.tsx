@@ -191,7 +191,7 @@ export default function InlineChat() {
             <div className="w-14 h-14 rounded-2xl bg-[#ff5100] flex items-center justify-center shadow-2xl shadow-[#ff5100]/40">
               <Compass className="w-7 h-7 text-white" strokeWidth={2} />
             </div>
-            <h2 className="text-5xl lg:text-6xl font-black tracking-[-0.04em] t-text">
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-[-0.04em] t-text">
               Compass<span className="text-[#ff5100]">.AI</span>
             </h2>
           </div>
@@ -239,7 +239,7 @@ export default function InlineChat() {
             {/* Empty state */}
             {messages.length === 0 && (
               <div className="px-6 py-8">
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-w-xl mx-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5 max-w-xl mx-auto">
                   {STARTER_PROMPTS.map(({ label, icon: Icon }) => (
                     <button
                       key={label}

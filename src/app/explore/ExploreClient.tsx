@@ -245,12 +245,12 @@ export default function ExploreClient() {
       <div className="sticky top-16 lg:top-20 z-40 t-bg-page/96 backdrop-blur-lg border-b border-white/10 shadow-sm">
         <div className="max-w-7xl mx-auto px-5 lg:px-8 py-3 flex items-center gap-2">
           {/* Search */}
-          <div className="relative flex-1 max-w-md">
+          <div className="relative flex-1 min-w-0 max-w-xs sm:max-w-md">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search adventures, regions..."
+              placeholder="Search adventures..."
               className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 text-white text-sm placeholder-white/30 border border-transparent focus:outline-none focus:border-[#ff5100]/50 transition-colors"
             />
           </div>

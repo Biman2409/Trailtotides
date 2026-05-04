@@ -424,7 +424,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div
-        className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${menuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"}`}
+        className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${menuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}`}
       >
         <div className="px-6 py-4 space-y-1" style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)" }}>
           {navLinks.map((link) => (
@@ -444,7 +444,9 @@ export default function Navbar() {
 
           {/* Mobile wishlist row */}
           {savedList.length > 0 && (
-            <div className="flex items-center gap-2 py-3 px-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+            <Link href={`/explore?saved=${savedList.map(a => a.slug).join(",")}`} onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-2 py-3 px-3 rounded-xl transition-colors hover:bg-white/5"
+              style={{ borderBottom: "1px solid var(--border-subtle)" }}>
               <Heart className="w-4 h-4 fill-[#ff5100] shrink-0" style={{ color: "#ff5100" }} />
               <span className="text-sm font-medium flex-1" style={{ color: "var(--text-secondary)" }}>
                 Wishlist
@@ -452,7 +454,7 @@ export default function Navbar() {
               <span className="w-5 h-5 rounded-full bg-[#ff5100] text-white text-[11px] font-bold flex items-center justify-center">
                 {savedList.length}
               </span>
-            </div>
+            </Link>
           )}
 
           {user ? (

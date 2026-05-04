@@ -165,8 +165,8 @@ export default function MatchmakerHomepageSection() {
 
           </div>
 
-          {/* Right column: Capability Profile Radar */}
-          <div className="shrink-0 lg:self-stretch flex flex-col rounded-2xl overflow-hidden p-4"
+          {/* Right column: Capability Profile Radar — hidden on mobile */}
+          <div className="hidden lg:flex shrink-0 lg:self-stretch flex-col rounded-2xl overflow-hidden p-4"
             style={{ background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)", border: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 20px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05)", width: 270, position: "relative" }}>
             {/* Corner brackets */}
             <div className="absolute top-0 left-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
@@ -305,21 +305,21 @@ function SampleRadarPanel() {
 
 function DefaultCTA() {
   return (
-    <section className="py-20 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-white/5 overflow-hidden">
+    <section className="py-16 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "4rem", alignItems: "stretch" }}>
+        <div className="flex flex-col sm:flex-row gap-8 sm:gap-12 lg:gap-16 items-stretch">
 
           {/* Left: copy */}
-          <div style={{ minWidth: 0, display: "flex", flexDirection: "column" }}>
+          <div className="flex-1 min-w-0 flex flex-col">
             <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
             <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-4 lg:mb-5">
               Adventures built,<br />
               <span className="text-[#ff5100]">for your body</span>
             </h2>
-            <p className="text-white/55 text-base md:text-lg leading-relaxed mb-8">
+            <p className="text-white/55 text-base leading-relaxed mb-8">
               Answer 8 questions. We calibrate your capability level and match you to adventures you can actually handle.
             </p>
-            <div className="flex flex-col gap-3" style={{ marginTop: "auto" }}>
+            <div className="flex flex-col gap-3 mt-auto">
               <Link
                 href="/matchmaker"
                 className="flex items-center justify-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#ff7d47] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25 group transition-all duration-200"
@@ -337,7 +337,10 @@ function DefaultCTA() {
             </div>
           </div>
 
-          <SampleRadarPanel />
+          {/* Radar — hidden on mobile, shown sm+ */}
+          <div className="hidden sm:flex shrink-0 w-[270px]">
+            <SampleRadarPanel />
+          </div>
 
         </div>
       </div>
