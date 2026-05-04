@@ -114,7 +114,7 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
       <div className="flex items-center justify-between mb-3">
         <div>
           <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-0.5">Capability Profile</p>
-          <h2 className="text-white font-semibold text-base leading-snug tracking-tight">How does your body match up?</h2>
+          <h2 className="text-white font-semibold text-base leading-snug tracking-tight">How do you measure up?</h2>
         </div>
         <GradingPill />
       </div>
@@ -123,9 +123,9 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
       <div
         className="rounded-2xl overflow-hidden mb-3"
         style={{
-          background: "linear-gradient(160deg, #0d1525 0%, #0a1018 100%)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          boxShadow: "0 16px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)",
+          background: "linear-gradient(160deg, #0c1220 0%, #080e18 100%)",
+          border: "1px solid rgba(255,255,255,0.07)",
+          boxShadow: "0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
         }}
       >
         {/* Score pill — only when user has profile */}
@@ -134,25 +134,25 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
             className="mx-4 mt-4 px-3 py-2 rounded-xl flex items-center gap-2.5"
             style={{
               background: readyCount === totalAxes
-                ? "linear-gradient(135deg, rgba(34,197,94,0.1), rgba(34,197,94,0.05))"
-                : "linear-gradient(135deg, rgba(255,81,0,0.1), rgba(255,81,0,0.05))",
-              border: readyCount === totalAxes ? "1px solid rgba(34,197,94,0.2)" : "1px solid rgba(255,81,0,0.18)",
+                ? "rgba(34,197,94,0.07)"
+                : "rgba(255,81,0,0.07)",
+              border: readyCount === totalAxes ? "1px solid rgba(34,197,94,0.18)" : "1px solid rgba(255,81,0,0.15)",
             }}
           >
-            <p className="text-xl font-black leading-none" style={{ color: readyCount === totalAxes ? "#4ade80" : "#ff5100" }}>
+            <p className="text-xl font-black leading-none tabular-nums" style={{ color: readyCount === totalAxes ? "#4ade80" : "#ff5100" }}>
               {readyCount}/{totalAxes}
             </p>
-            <div style={{ width: 1, height: 22, background: "rgba(255,255,255,0.07)" }} />
-            <p className="text-[11px] text-white/40 leading-snug flex-1">
+            <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.07)" }} />
+            <p className="text-[11px] text-white/35 leading-snug flex-1">
               {readyCount === totalAxes ? "You meet all requirements" : `${totalAxes - readyCount} axes need work`}
             </p>
             <button
               onClick={() => setOverlapped(o => !o)}
               className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all"
               style={{
-                background: overlapped ? "rgba(255,81,0,0.18)" : "rgba(255,255,255,0.06)",
-                border: overlapped ? "1px solid rgba(255,81,0,0.35)" : "1px solid rgba(255,255,255,0.1)",
-                color: overlapped ? "#ff7d47" : "rgba(255,255,255,0.45)",
+                background: overlapped ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.05)",
+                border: overlapped ? "1px solid rgba(255,81,0,0.3)" : "1px solid rgba(255,255,255,0.09)",
+                color: overlapped ? "#ff7d47" : "rgba(255,255,255,0.4)",
               }}
             >
               <Layers className="w-3 h-3" />
@@ -161,14 +161,13 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
           </div>
         )}
 
-        {/* Radar + Axis grid (overlap view) */}
+        {/* Radar views */}
         <div className="p-4">
           {overlapped && userAce ? (
             /* ── Overlap view: radar left, axis grid right ── */
             <div className="flex gap-4">
-              {/* Radar */}
               <div className="flex flex-col items-center gap-2 shrink-0">
-                <ACERadar ace={ace} userAce={userAce} userColor="#ffffff" size={180} showLabels />
+                <ACERadar ace={ace} userAce={userAce} userColor="#ffffff" size={184} showLabels />
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-1.5">
                     <div className="w-4 h-[2px] rounded-full bg-[#ff5100]" />
@@ -182,8 +181,6 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
                   </div>
                 </div>
               </div>
-
-              {/* Axis grid — only in overlap view */}
               <div className="flex-1 min-w-0 flex flex-col gap-1">
                 <p className="text-[8px] uppercase tracking-[0.2em] font-bold text-white/20 mb-1">Capability vs Requirement</p>
                 {axes.map(axis => (
@@ -200,24 +197,24 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
             /* ── Split two radars ── */
             <div className="grid grid-cols-2 gap-3">
               <div
-                className="flex flex-col items-center gap-2 rounded-xl py-3 px-2"
-                style={{ background: "rgba(255,81,0,0.04)", border: "1px solid rgba(255,81,0,0.12)" }}
+                className="flex flex-col items-center gap-2 rounded-xl py-3.5 px-2"
+                style={{ background: "rgba(255,81,0,0.04)", border: "1px solid rgba(255,81,0,0.1)" }}
               >
-                <span className="text-[8px] font-black uppercase tracking-[0.18em] text-[#ff5100]/70">Trek Requirements</span>
-                <ACERadar ace={ace} size={140} showLabels />
+                <span className="text-[8px] font-black uppercase tracking-[0.18em] text-[#ff5100]/60">Trek Requirements</span>
+                <ACERadar ace={ace} size={148} showLabels />
               </div>
               <div
-                className="flex flex-col items-center gap-2 rounded-xl py-3 px-2"
-                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+                className="flex flex-col items-center gap-2 rounded-xl py-3.5 px-2"
+                style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}
               >
-                <span className="text-[8px] font-black uppercase tracking-[0.18em] text-white/40">Your Capability</span>
-                <ACERadar ace={userAce} size={140} showLabels />
+                <span className="text-[8px] font-black uppercase tracking-[0.18em] text-white/35">Your Capability</span>
+                <ACERadar ace={userAce} size={148} showLabels />
               </div>
-              <div className="col-span-2 flex justify-center">
+              <div className="col-span-2 flex justify-center pt-1">
                 <button
                   onClick={() => setOverlapped(true)}
                   className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[11px] font-bold transition-all hover:-translate-y-0.5"
-                  style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.2)", color: "#ff7d47" }}
+                  style={{ background: "rgba(255,81,0,0.07)", border: "1px solid rgba(255,81,0,0.18)", color: "#ff7d47" }}
                 >
                   <Layers className="w-3 h-3" />
                   Overlap view
@@ -225,34 +222,41 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
               </div>
             </div>
           ) : (
-            /* ── No profile: single trek radar + CTA ── */
-            <div className="flex gap-3 items-stretch">
-              {/* Radar */}
-              <div className="flex flex-col items-center gap-1 shrink-0">
-                <span className="text-[8px] font-black uppercase tracking-[0.18em] text-[#ff5100]/70">Trek Requirements</span>
-                <ACERadar ace={ace} size={176} showLabels />
+            /* ── No profile ── */
+            <div className="flex gap-0 items-stretch">
+              {/* Trek radar — larger, dominant */}
+              <div className="flex flex-col items-center gap-1.5 shrink-0 pr-4">
+                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[#ff5100]/60">Trek Requirements</span>
+                <ACERadar ace={ace} size={196} showLabels />
               </div>
+
               {/* Divider */}
-              <div className="w-px self-stretch mx-1" style={{ background: "rgba(255,255,255,0.06)" }} />
-              {/* CTA — right panel */}
-              <div className="flex flex-col justify-center gap-2.5 flex-1 min-w-0 pl-1">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.22)" }}>
-                  <Flame className="w-3.5 h-3.5 text-[#ff5100]" />
-                </div>
-                <div>
-                  <p className="text-white font-bold text-xs leading-snug mb-1">See how you measure up</p>
-                  <p className="text-white/35 text-[11px] leading-relaxed">
-                    Take the 2-min assessment to compare your body against this trek.
-                  </p>
-                </div>
-                <Link
-                  href="/matchmaker"
-                  className="inline-flex items-center gap-1.5 w-fit text-white text-[11px] font-bold px-3 py-1.5 rounded-xl transition-all hover:brightness-110"
-                  style={{ background: "#ff5100", boxShadow: "0 4px 12px rgba(255,81,0,0.3)" }}
+              <div className="w-px self-stretch" style={{ background: "rgba(255,255,255,0.05)" }} />
+
+              {/* CTA sub-section */}
+              <div className="flex flex-col justify-center pl-4 flex-1 min-w-0">
+                {/* Sub-section label */}
+                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20 mb-3">Your Profile</p>
+
+                <div
+                  className="rounded-xl p-3 flex flex-col gap-3"
+                  style={{ background: "rgba(255,81,0,0.05)", border: "1px solid rgba(255,81,0,0.12)" }}
                 >
-                  Take Assessment
-                  <ArrowRight className="w-3 h-3" />
-                </Link>
+                  <div>
+                    <p className="text-white/90 font-bold text-[13px] leading-snug mb-1">See how you measure up</p>
+                    <p className="text-white/35 text-[11px] leading-relaxed">
+                      Take the 2-min assessment and compare your capability against this trek.
+                    </p>
+                  </div>
+                  <Link
+                    href="/matchmaker"
+                    className="inline-flex items-center justify-center gap-1.5 text-white text-[11px] font-bold px-3.5 py-2 rounded-xl transition-all hover:brightness-110 active:scale-95"
+                    style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)", boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}
+                  >
+                    Take Assessment
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
               </div>
             </div>
           )}
@@ -261,16 +265,16 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
         {/* Bottom bar */}
         <div
           className="px-4 py-2.5 flex items-center gap-3"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.05)", background: "rgba(0,0,0,0.15)" }}
+          style={{ borderTop: "1px solid rgba(255,255,255,0.04)", background: "rgba(0,0,0,0.12)" }}
         >
-          <p className="text-[11px] leading-relaxed text-white/25 flex-1 italic">
+          <p className="text-[11px] leading-relaxed text-white/20 flex-1 italic">
             {aceSummary(ace, adventureName)}
           </p>
           {userAce && (
             <Link
               href="/matchmaker?retake=1"
               className="inline-flex items-center gap-1.5 shrink-0 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg transition-all hover:brightness-110 whitespace-nowrap"
-              style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.4)" }}
+              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.35)" }}
             >
               <RotateCcw className="w-2.5 h-2.5" />
               Retake
