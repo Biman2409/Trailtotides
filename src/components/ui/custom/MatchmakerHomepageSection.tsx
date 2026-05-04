@@ -264,7 +264,8 @@ function SampleRadarPanel() {
         background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
         border: "1px solid rgba(255,255,255,0.07)",
         boxShadow: "0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
-        width: 270,
+        width: "fit-content",
+        minWidth: 240,
       }}
     >
       {/* Corner brackets */}
@@ -280,15 +281,15 @@ function SampleRadarPanel() {
       </div>
 
       {/* Radar */}
-      <div className="flex justify-center flex-1 items-center">
-        <div className="rounded-xl p-1.5"
+      <div className="flex-1 flex items-center justify-center w-full">
+        <div className="rounded-xl p-1.5 w-full"
           style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
-          <ACERadar ace={SAMPLE_ACE} size={170} showLabels />
+          <ACERadar ace={SAMPLE_ACE} size={220} showLabels />
         </div>
       </div>
 
       {/* Axis ticker */}
-      <div className="mt-2 rounded-lg px-2.5 py-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="mt-2 rounded-lg px-2.5 py-2 w-full" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
         <div style={{ opacity: fade ? 1 : 0, transition: "opacity 0.22s ease" }}>
           <div className="flex items-center gap-1.5 mb-0.5">
             <div className="w-1 h-2.5 rounded-full shrink-0" style={{ background: current.color }} />
