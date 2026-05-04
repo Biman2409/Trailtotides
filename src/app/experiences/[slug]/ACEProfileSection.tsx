@@ -167,6 +167,18 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
             <p className="text-[11px] text-white/35 leading-snug flex-1">
               {readyCount === totalAxes ? "You meet all requirements" : `${totalAxes - readyCount} axes need work`}
             </p>
+            <button
+              onClick={() => setOverlapped(o => !o)}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all shrink-0"
+              style={{
+                background: overlapped ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.05)",
+                border: overlapped ? "1px solid rgba(255,81,0,0.3)" : "1px solid rgba(255,255,255,0.09)",
+                color: overlapped ? "#ff7d47" : "rgba(255,255,255,0.4)",
+              }}
+            >
+              <Layers className="w-3 h-3" />
+              {overlapped ? "Split view" : "Overlap view"}
+            </button>
           </div>
         )}
 
@@ -284,24 +296,6 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
             </div>
           )}
         </div>
-
-        {/* Single overlap/split toggle — bottom, only with profile */}
-        {userAce && (
-          <div className="flex justify-center pb-3 -mt-1">
-            <button
-              onClick={() => setOverlapped(o => !o)}
-              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-[11px] font-bold transition-all hover:brightness-110"
-              style={{
-                background: overlapped ? "rgba(255,81,0,0.12)" : "rgba(255,255,255,0.05)",
-                border: overlapped ? "1px solid rgba(255,81,0,0.25)" : "1px solid rgba(255,255,255,0.09)",
-                color: overlapped ? "#ff7d47" : "rgba(255,255,255,0.4)",
-              }}
-            >
-              <Layers className="w-3 h-3" />
-              {overlapped ? "Split view" : "Overlap view"}
-            </button>
-          </div>
-        )}
 
         {/* Bottom bar */}
         <div
