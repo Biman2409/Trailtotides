@@ -310,7 +310,7 @@ function DefaultCTA() {
   return (
     <section className="py-20 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", gap: "4rem" }}>
+        <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", gap: "4rem" }}>
 
           {/* Left: copy */}
           <div style={{ flex: 1, minWidth: 0 }}>
