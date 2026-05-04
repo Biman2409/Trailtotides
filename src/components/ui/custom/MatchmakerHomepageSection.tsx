@@ -218,14 +218,14 @@ export default function MatchmakerHomepageSection() {
 const SAMPLE_ACE = { stamina: 4, power: 3, strength: 3, agility: 4, water: 2, altitude: 5, focus: 3, nerve: 4 };
 
 const AXIS_TICKER = [
-  { key: "Stamina",  color: "#f97316", desc: "Endurance across long hours on trail",  icon: <Flame    className="w-3 h-3" /> },
-  { key: "Power",    color: "#eab308", desc: "Short explosive bursts at max effort",  icon: <Zap      className="w-3 h-3" /> },
-  { key: "Strength", color: "#84cc16", desc: "Carrying loads on technical terrain",   icon: <Dumbbell className="w-3 h-3" /> },
-  { key: "Agility",  color: "#22d3ee", desc: "Balance and footwork on rough ground",  icon: <Compass  className="w-3 h-3" /> },
-  { key: "Water",    color: "#3b82f6", desc: "Comfort across pool, lake and river",   icon: <Waves    className="w-3 h-3" /> },
-  { key: "Altitude", color: "#a78bfa", desc: "Tolerating exposure at high elevation", icon: <Mountain className="w-3 h-3" /> },
-  { key: "Focus",    color: "#f43f5e", desc: "Mental sharpness under hard pressure",  icon: <Shield   className="w-3 h-3" /> },
-  { key: "Nerve",    color: "#10b981", desc: "Grit and resolve in remote terrain",    icon: <Wind     className="w-3 h-3" /> },
+  { key: "Stamina",  color: "#f97316", desc: "Sustained output across any adventure", icon: <Flame    className="w-3 h-3" /> },
+  { key: "Power",    color: "#eab308", desc: "Explosive output when it counts most",  icon: <Zap      className="w-3 h-3" /> },
+  { key: "Strength", color: "#84cc16", desc: "Force for carries, climbs and paddles", icon: <Dumbbell className="w-3 h-3" /> },
+  { key: "Agility",  color: "#22d3ee", desc: "Coordination and control in motion",    icon: <Compass  className="w-3 h-3" /> },
+  { key: "Water",    color: "#3b82f6", desc: "Aquatic ease — pool, sea or river",     icon: <Waves    className="w-3 h-3" /> },
+  { key: "Altitude", color: "#a78bfa", desc: "Coping with exposure at high altitude", icon: <Mountain className="w-3 h-3" /> },
+  { key: "Focus",    color: "#f43f5e", desc: "Staying sharp when conditions get hard",icon: <Shield   className="w-3 h-3" /> },
+  { key: "Nerve",    color: "#10b981", desc: "Calm and grit in high-stakes moments",  icon: <Wind     className="w-3 h-3" /> },
 ];
 
 const SCAN_MS = 3200;
