@@ -245,18 +245,32 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
             /* ── Split two radars ── */
             <div className="grid grid-cols-2 gap-3">
               <div
-                className="flex flex-col items-center gap-2 rounded-xl py-3.5 px-2"
-                style={{ background: "rgba(255,81,0,0.04)", border: "1px solid rgba(255,81,0,0.1)" }}
+                className="flex flex-col items-center gap-3 rounded-2xl py-4 px-3"
+                style={{
+                  background: "linear-gradient(160deg, rgba(255,81,0,0.06) 0%, rgba(255,81,0,0.02) 100%)",
+                  border: "1px solid rgba(255,81,0,0.14)",
+                  boxShadow: "inset 0 1px 0 rgba(255,81,0,0.08)",
+                }}
               >
-                <span className="text-[8px] font-black uppercase tracking-[0.18em] text-[#ff5100]/60">Trek Requirements</span>
-                <ACERadar ace={ace} size={148} showLabels />
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1 h-3 rounded-full bg-[#ff5100]/50" />
+                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#ff5100]/70">Trek Requirements</span>
+                </div>
+                <ACERadar ace={ace} size={168} showLabels />
               </div>
               <div
-                className="flex flex-col items-center gap-2 rounded-xl py-3.5 px-2"
-                style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}
+                className="flex flex-col items-center gap-3 rounded-2xl py-4 px-3"
+                style={{
+                  background: "linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)",
+                  border: "1px solid rgba(255,255,255,0.09)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
+                }}
               >
-                <span className="text-[8px] font-black uppercase tracking-[0.18em] text-white/35">Your Capability</span>
-                <ACERadar ace={userAce} size={148} showLabels />
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1 h-3 rounded-full bg-white/30" />
+                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40">Your Capability</span>
+                </div>
+                <ACERadar ace={userAce} size={168} showLabels />
               </div>
             </div>
           ) : (
