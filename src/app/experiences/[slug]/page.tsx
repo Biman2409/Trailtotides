@@ -207,7 +207,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         { "@type": "PropertyValue", name: "Type", value: adventure.type },
         ...(adventure.altitude ? [{ "@type": "PropertyValue", name: "Max Altitude", value: adventure.altitude }] : []),
         ...(adventure.bestSeason ? [{ "@type": "PropertyValue", name: "Best Season", value: adventure.bestSeason }] : []),
-        ...(adventure.groupSize ? [{ "@type": "PropertyValue", name: "Group Size", value: adventure.groupSize }] : []),
       ],
       isAccessibleForFree: false,
       provider: {
@@ -556,7 +555,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   { label: "Best Season", value: adventure.bestSeason },
                   ...(adventure.altitude ? [{ label: "Max Altitude", value: adventure.altitude }] : []),
                   ...(adventure.depth ? [{ label: "Max Depth", value: adventure.depth }] : []),
-                  { label: "Group Size", value: adventure.groupSize },
                 ].map(({ label, value }) => (
                   <div key={label} className="flex items-center justify-between gap-4 px-4 py-2.5" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
                     <span className="text-white/30 text-[11px] shrink-0">{label}</span>

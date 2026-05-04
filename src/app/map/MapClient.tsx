@@ -10,7 +10,7 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import { adventures } from "@/lib/data";
-import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
+import type { AdventureType, Region, Difficulty, Duration, Month, Adventure } from "@/lib/data";
 import { getACE } from "@/lib/ace";
 import type { AceAxis } from "@/lib/ace";
 import { loadProfile } from "@/lib/matchmaker";
@@ -572,7 +572,6 @@ export default function MapPage() {
   const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
   const [selectedDurations, setSelectedDurations] = useState<Duration[]>([]);
   const [selectedMonths, setSelectedMonths] = useState<Month[]>([]);
-  const [selectedGroupSizes, setSelectedGroupSizes] = useState<GroupSize[]>([]);
   const [selectedSubRegions, setSelectedSubRegions] = useState<string[]>([]);
   const [expandedRegion, setExpandedRegion] = useState<Region | null>(null);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
@@ -589,7 +588,7 @@ export default function MapPage() {
   function clearAll() {
     setSearch(""); setSelectedTypes([]); setSelectedRegions([]);
     setSelectedDifficulties([]); setSelectedDurations([]);
-    setSelectedMonths([]); setSelectedGroupSizes([]); setSelectedSubRegions([]);
+    setSelectedMonths([]); setSelectedSubRegions([]);
     setExpandedRegion(null); setExpandedCategory(null); setExpandedSeason(null);
     setAceCategory(null);
   }
@@ -597,7 +596,7 @@ export default function MapPage() {
   const activeFilterCount =
     selectedTypes.length + selectedRegions.length + selectedSubRegions.length +
     selectedDifficulties.length + selectedDurations.length +
-    selectedMonths.length + selectedGroupSizes.length + (aceCategory !== null ? 1 : 0);
+    selectedMonths.length + (aceCategory !== null ? 1 : 0);
 
   const visibleAdventures = adventures.filter(a => {
     if (search &&
@@ -611,7 +610,6 @@ export default function MapPage() {
     if (selectedDifficulties.length && !selectedDifficulties.includes(a.difficulty)) return false;
     if (selectedDurations.length && !selectedDurations.includes(a.duration)) return false;
     if (selectedMonths.length && !selectedMonths.some(m => a.bestMonths.includes(m))) return false;
-    if (selectedGroupSizes.length && !selectedGroupSizes.includes(a.groupSize)) return false;
     if (aceCategory && userProfile) {
       if (classifyAdventure(userProfile.ace, getACE(a)) !== aceCategory) return false;
     }
@@ -937,9 +935,8 @@ export default function MapPage() {
                   </div>
                 </div>
 
-                {/* Duration + Group Size */}
-                <div className="col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-7">
-                  <div>
+                {/* Duration */}
+                <div className="col-span-2 lg:col-span-3">
                     <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>Duration</h3>
                     <div className="flex flex-wrap gap-1.5">
                       {(["Weekend","3–5 days","7+ days"] as Duration[]).map(val => (
@@ -952,21 +949,6 @@ export default function MapPage() {
                         </button>
                       ))}
                     </div>
-                  </div>
-                  <div>
-                    <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>Group Size</h3>
-                    <div className="flex flex-wrap gap-1.5">
-                      {(["Solo","Small group (2–6)","Large group (6+)"] as GroupSize[]).map(val => (
-                        <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
-                          className="px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all whitespace-nowrap"
-                          style={selectedGroupSizes.includes(val)
-                            ? { background: "#ff5100", color: "white", borderColor: "#ff5100" }
-                            : { background: "white", borderColor: "#e0d8c8", color: "#3a3530" }}>
-                          {val}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
                 </div>
 
                 {/* ACE */}
@@ -1017,7 +999,6 @@ export default function MapPage() {
               ...selectedDifficulties.map(d => ({ label: d, remove: () => toggle(selectedDifficulties, d, setSelectedDifficulties) })),
               ...selectedDurations.map(d => ({ label: d, remove: () => toggle(selectedDurations, d, setSelectedDurations) })),
               ...selectedMonths.map(m => ({ label: m, remove: () => toggle(selectedMonths, m, setSelectedMonths) })),
-              ...selectedGroupSizes.map(g => ({ label: g, remove: () => toggle(selectedGroupSizes, g, setSelectedGroupSizes) })),
               ...(aceCategory ? [{ label: `ACE: ${aceCategory === "ready" ? "Ready" : aceCategory === "stretch" ? "Stretch" : "Out of Range"}`, remove: () => setAceCategory(null) }] : []),
             ].map(({ label, remove }) => (
               <span

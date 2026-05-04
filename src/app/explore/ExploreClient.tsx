@@ -10,7 +10,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import { adventures } from "@/lib/data";
-import type { AdventureType, Region, Difficulty, Duration, Month, GroupSize, Adventure } from "@/lib/data";
+import type { AdventureType, Region, Difficulty, Duration, Month, Adventure } from "@/lib/data";
 import { difficultyStyle } from "@/lib/styles";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import type { AceAxis } from "@/lib/ace";
@@ -66,7 +66,6 @@ export default function ExploreClient() {
     );
   const [selectedDurations, setSelectedDurations] = useState<Duration[]>([]);
   const [selectedMonths, setSelectedMonths] = useState<Month[]>([]);
-  const [selectedGroupSizes, setSelectedGroupSizes] = useState<GroupSize[]>([]);
   const PRICE_MIN = 0;
   const PRICE_MAX = 200000;
   const [priceRange, setPriceRange] = useState<[number, number]>([PRICE_MIN, PRICE_MAX]);
@@ -171,8 +170,6 @@ export default function ExploreClient() {
       if (selectedDurations.length && !selectedDurations.includes(a.duration)) return false;
       if (selectedMonths.length && !selectedMonths.some((m) => a.bestMonths.includes(m)))
         return false;
-      if (selectedGroupSizes.length && !selectedGroupSizes.includes(a.groupSize))
-        return false;
       // Price filter — use cheapest operator price for the adventure
       if (priceRange[0] > PRICE_MIN || priceRange[1] < PRICE_MAX) {
         const lowestPrice = a.operators?.reduce((min, o) => {
@@ -189,10 +186,10 @@ export default function ExploreClient() {
       }
       return true;
     });
-    }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, priceRange, aceCategory, userProfile, editorOnly]);
+    }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, priceRange, aceCategory, userProfile, editorOnly]);
 
   // Reset to page 1 whenever filters change
-  useEffect(() => { setCurrentPage(1); }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, selectedGroupSizes, priceRange, aceCategory]);
+  useEffect(() => { setCurrentPage(1); }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, priceRange, aceCategory]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const pagedResults = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -205,7 +202,6 @@ export default function ExploreClient() {
     selectedDifficulties.length +
     selectedDurations.length +
     selectedMonths.length +
-    selectedGroupSizes.length +
     (priceActive ? 1 : 0) +
     (aceCategory !== null ? 1 : 0);
 
@@ -216,7 +212,6 @@ export default function ExploreClient() {
     setSelectedDifficulties([]);
     setSelectedDurations([]);
     setSelectedMonths([]);
-    setSelectedGroupSizes([]);
     setPriceRange([PRICE_MIN, PRICE_MAX]);
     setAceCategory(null);
     setSearch("");
@@ -713,7 +708,7 @@ export default function ExploreClient() {
                   </div>
                 </div>
 
-                {/* Difficulty, Duration, Group Size — each on its own row */}
+                {/* Difficulty, Duration — each on its own row */}
                       <div className="col-span-2 lg:col-span-3">
                         <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">Difficulty</h3>
                         <div className="flex flex-wrap gap-2">
@@ -737,8 +732,7 @@ export default function ExploreClient() {
                           </div>
                         </div>
 
-                        <div className="col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-8">
-                          <div>
+                        <div className="col-span-2 lg:col-span-3">
                             <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">Duration</h3>
                             <div className="flex flex-wrap gap-2">
                               {([
@@ -751,23 +745,6 @@ export default function ExploreClient() {
                                   {label}
                                 </button>
                               ))}
-                            </div>
-                          </div>
-
-                            <div>
-                              <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">Group Size</h3>
-                              <div className="flex flex-nowrap overflow-x-auto pb-1 gap-2 no-scrollbar">
-                                {([
-                                  { val: "Solo",             idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                                  { val: "Small group (2–6)", idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                                  { val: "Large group (6+)",  idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                                ] as { val: GroupSize; idle: string; active: string }[]).map(({ val, idle, active }) => (
-                                  <button key={val} onClick={() => toggle(selectedGroupSizes, val, setSelectedGroupSizes)}
-                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${selectedGroupSizes.includes(val) ? active : idle}`}>
-                                    {val}
-                                  </button>
-                                ))}
-                              </div>
                             </div>
                         </div>
 
@@ -944,15 +921,6 @@ export default function ExploreClient() {
                   {m} <X className="w-3 h-3" />
                 </span>
               ))}
-            {selectedGroupSizes.map((g) => (
-              <span
-                key={g}
-                onClick={() => toggle(selectedGroupSizes, g, setSelectedGroupSizes)}
-                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
-              >
-                {g} <X className="w-3 h-3" />
-              </span>
-            ))}
             {priceActive && (
               <span
                 onClick={() => setPriceRange([PRICE_MIN, PRICE_MAX])}
