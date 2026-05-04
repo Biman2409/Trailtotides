@@ -179,6 +179,7 @@ interface EnrichedAdventure {
   region: string;
   type: string;
   difficulty: string;
+  tagline: string;
   altitude?: string;
   status: "IN_ZONE" | "STRETCH" | "RESTRICTED";
   weakAxes: string[];
@@ -1041,27 +1042,24 @@ function AdventureSection({
                 style={{ borderColor: `${accentColor}18`, background: "rgba(255,255,255,0.025)" }}
               >
                 {/* Image */}
-                <div className="relative h-[150px] sm:h-[160px] overflow-hidden">
+                <div className="relative h-[140px] sm:h-[150px] overflow-hidden">
                   <Image
                     src={a.heroImage}
                     alt={a.name}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/20 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 px-3.5 pb-3.5 pt-6">
-                    <div className="flex items-center gap-1 mb-1">
-                      <MapPin className="w-2.5 h-2.5 shrink-0" style={{ color: `${accentColor}cc` }} />
-                      <span className="text-white/45 text-[9.5px] truncate">{a.state}</span>
-                    </div>
-                    <h3 className="text-white font-bold text-[13px] sm:text-sm leading-snug">{a.name}</h3>
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
                 </div>
-                {/* Meta */}
-                <div className="px-3.5 py-3">
+                {/* Content */}
+                <div className="px-3.5 pt-3 pb-3">
+                  <h3 className="text-white font-bold text-[13px] sm:text-sm leading-snug mb-1 group-hover:text-[#ff5100] transition-colors">{a.name}</h3>
+                  <p className="text-white/45 text-[10.5px] leading-snug line-clamp-2 mb-2.5">{a.tagline}</p>
                   <div className="flex flex-wrap gap-1.5">
                     <Pill type="type" value={a.type} />
-                    <Pill type="subRegion" value={a.state} />
+                    <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[9px] font-medium bg-white/8 text-white/45 border border-white/10">
+                      <MapPin className="w-2 h-2" />{a.state}
+                    </span>
                   </div>
                 </div>
               </Link>
@@ -1112,6 +1110,7 @@ function buildResult(userAxes: Record<string, number>): AnalysisResult {
       id: adv.slug, slug: adv.slug, name: adv.name, heroImage: adv.heroImage,
       state: adv.state, region: (adv.region ?? "") as string,
       type: adv.type as string, difficulty: adv.difficulty as string,
+      tagline: adv.tagline,
       altitude: adv.altitude, status, weakAxes, missingKeys: weakAxes,
       analysis: "",
       requirements: req as unknown as Record<string, number>, riskLevel: maxGap,
