@@ -18,7 +18,7 @@ export default function HeroCTAs() {
   }
 
   return (
-    <div className="flex items-stretch gap-2 w-full">
+    <form onSubmit={handleSearch} className="flex items-stretch gap-2 w-full">
       {/* Search input */}
       <div
         className="flex items-center gap-2.5 flex-1 px-4 py-3 rounded-xl min-w-0"
@@ -34,7 +34,7 @@ export default function HeroCTAs() {
           type="text"
           value={query}
           onChange={e => setQuery(e.target.value)}
-          placeholder="Search by name, location or type"
+          placeholder="Search adventures"
           className="flex-1 bg-transparent text-white text-sm font-medium outline-none placeholder:font-normal min-w-0"
           style={{ color: "rgba(255,255,255,0.9)", caretColor: "#ff5100" }}
         />
@@ -43,7 +43,7 @@ export default function HeroCTAs() {
       {/* Explore button */}
       <button
         type="submit"
-        className="group flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold tracking-wide text-white transition-all duration-200 hover:-translate-y-0.5 active:scale-95 shrink-0 whitespace-nowrap"
+        className="group flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold tracking-wide text-white transition-all duration-200 hover:-translate-y-0.5 active:scale-95 whitespace-nowrap"
         style={{
           background: "#ff5100",
           boxShadow: "0 0 0 1px rgba(255,81,0,0.6), 0 4px 20px rgba(255,81,0,0.45)",
@@ -51,9 +51,9 @@ export default function HeroCTAs() {
         onMouseEnter={e => (e.currentTarget.style.boxShadow = "0 0 0 1px rgba(255,81,0,0.8), 0 6px 28px rgba(255,81,0,0.6)")}
         onMouseLeave={e => (e.currentTarget.style.boxShadow = "0 0 0 1px rgba(255,81,0,0.6), 0 4px 20px rgba(255,81,0,0.45)")}
       >
-        Explore all adventures
+        Explore all
         <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
       </button>
-    </div>
+    </form>
   );
 }
