@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Star, Trash2, Loader2, ChevronDown, Plus } from "lucide-react";
 import { awardXP } from "@/lib/awardXP";
+import { useTripLog } from "@/contexts/TripLogContext";
 
 interface Review {
   id: string;
@@ -78,7 +79,9 @@ function timeAgo(dateStr: string): string {
   return `${Math.floor(months / 12)}y ago`;
 }
 
-export default function ReviewSection({ slug, currentUserId, adventureType, adventureName, isCompleted, operators = [] }: Props) {
+export default function ReviewSection({ slug, currentUserId, adventureType, adventureName, operators = [] }: Props) {
+  const { markDone, isDone } = useTripLog();
+  const isCompleted = isDone(slug);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
