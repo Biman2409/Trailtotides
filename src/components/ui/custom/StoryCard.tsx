@@ -101,9 +101,9 @@ export default function StoryCard({ story }: { story: Story }) {
 
         <div className="border-t border-white/10 pt-2.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0">
+            <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0 relative">
               {story.authorAvatar
-                ? <img src={story.authorAvatar} alt={story.author} className="w-full h-full object-cover" />
+                ? <Image src={story.authorAvatar} alt={story.author} fill sizes="24px" className="object-cover" />
                 : <span className="w-full h-full flex items-center justify-center text-[10px] font-bold text-white bg-gradient-to-br from-[#ff5100] to-[#ff7d47]">{story.author.charAt(0)}</span>}
             </div>
             <div>

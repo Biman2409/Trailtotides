@@ -98,7 +98,12 @@ export default function MatchmakerHomepageSection() {
     <section className="py-16 lg:py-24 px-5 lg:px-8 t-bg-surface border-t border-white/5">
       <div className="max-w-7xl mx-auto">
 
-        <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-5">Adventure Matchmaker</p>
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-1">Adventure Matchmaker</p>
+            <h2 className="text-white text-xl font-bold tracking-tight">Your matched adventures</h2>
+          </div>
+        </div>
 
         {/* ── Two-column layout: left (tier + adventures) | right (radar) ── */}
         <div className="flex flex-col gap-4">
@@ -109,58 +114,40 @@ export default function MatchmakerHomepageSection() {
 
             {/* Tier card */}
             <div className="rounded-2xl overflow-hidden border relative"
-              style={{ background: `linear-gradient(150deg, ${tier.color}12 0%, rgba(14,14,18,0) 55%)`, borderColor: `${tier.color}22` }}>
-              <div className="absolute -top-8 -right-8 w-48 h-48 rounded-full opacity-[0.06] blur-3xl pointer-events-none" style={{ background: tier.color }} />
-              <div className="relative px-5 pt-5 pb-5">
+              style={{ background: `linear-gradient(150deg, ${tier.color}10 0%, rgba(10,14,18,0.95) 60%)`, borderColor: `${tier.color}20`, boxShadow: `0 0 40px ${tier.color}08` }}>
+              <div className="absolute -top-6 -right-6 w-36 h-36 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: tier.color }} />
+              <div className="relative px-4 pt-4 pb-4">
                 {/* Identity */}
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: `${tier.color}18`, color: tier.color, boxShadow: `0 0 20px ${tier.color}35`, border: `1px solid ${tier.color}28` }}>
-                    <div className="scale-[1.35]">{tier.icon}</div>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                    style={{ background: `${tier.color}15`, color: tier.color, boxShadow: `0 0 16px ${tier.color}30`, border: `1px solid ${tier.color}25` }}>
+                    <div className="scale-125">{tier.icon}</div>
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-0.5">Capability Tier</p>
-                    <h2 className="text-2xl font-black tracking-tight leading-none" style={{ color: tier.color }}>{tier.label}</h2>
-                    <div className="flex items-center gap-[3px] mt-1.5">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <span key={i} className="text-[11px] leading-none" style={{ color: i < tier.stars ? tier.color : "rgba(255,255,255,0.09)" }}>★</span>
-                      ))}
-                      <span className="text-white/22 text-[9px] ml-1.5">Rank {tier.stars} of 5</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="h-px mb-4" style={{ background: `${tier.color}12` }} />
-
-                {/* Progress stats */}
-                {nextRank ? (
-                  <div className="flex items-end justify-between mb-3">
-                    <div>
-                      <div className="flex items-baseline gap-0.5 leading-none">
-                        <span className="text-3xl font-black tabular-nums tracking-tight" style={{ color: tier.color }}>{progressPct}</span>
-                        <span className="text-sm font-bold ml-0.5" style={{ color: `${tier.color}70` }}>%</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[8px] uppercase tracking-[0.22em] font-semibold text-white/25 mb-0.5">Capability Tier</p>
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-xl font-black tracking-tight leading-none" style={{ color: tier.color }}>{tier.label}</h2>
+                      <div className="flex items-center gap-[2px]">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <span key={i} className="text-[10px] leading-none" style={{ color: i < tier.stars ? tier.color : "rgba(255,255,255,0.08)" }}>★</span>
+                        ))}
                       </div>
-                      <p className="text-[10px] text-white/30 mt-1 leading-none">to reach <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span></p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xl font-black tabular-nums leading-none text-white/60">{nextRank.minScore - totalScore}</p>
-                      <p className="text-[10px] text-white/28 mt-1 leading-none">pts needed</p>
                     </div>
                   </div>
-                ) : (
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
-                    <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">The absolute pinnacle</p>
-                  </div>
-                )}
-
-                {/* Progress bar */}
-                <RankBar totalScore={totalScore} trackH={8} showLabels showYouTag />
+                  {nextRank && (
+                    <div className="text-right shrink-0">
+                      <p className="text-xl font-black tabular-nums leading-none" style={{ color: tier.color }}>{progressPct}<span className="text-xs font-bold opacity-60">%</span></p>
+                      <p className="text-[9px] text-white/25 mt-0.5">to <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span></p>
+                    </div>
+                  )}
+                </div>
+                <div className="h-px mb-3" style={{ background: `${tier.color}10` }} />
+                <RankBar totalScore={totalScore} trackH={6} showLabels showYouTag />
               </div>
             </div>
 
             {/* Adventures suited for you */}
-            <div className="rounded-2xl border p-4" style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
+            <div className="rounded-2xl border p-4" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.01) 100%)", borderColor: "rgba(255,255,255,0.07)" }}>
               <div className="flex items-center justify-between mb-3">
                 <p className="text-white/35 text-[10px] font-bold tracking-[0.2em] uppercase">Adventures suited for you</p>
                 {matches.length > 0 && (
@@ -178,14 +165,30 @@ export default function MatchmakerHomepageSection() {
 
           </div>
 
-          {/* Right column: ACE Radar */}
-          <div className="shrink-0 lg:self-stretch flex flex-col items-center rounded-2xl border p-5"
-            style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
-            <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 self-start mb-3">ACE Profile</p>
-            <div className="flex-1 flex items-center justify-center rounded-xl p-4 w-full"
-              style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, rgba(255,255,255,0.01) 70%)", border: "1px solid rgba(255,255,255,0.06)" }}>
-              <ACERadar ace={profile.ace} size={240} showLabels />
+          {/* Right column: Capability Profile Radar */}
+          <div className="shrink-0 lg:self-stretch flex flex-col rounded-2xl overflow-hidden p-4"
+            style={{ background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)", border: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 20px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05)", width: 270, position: "relative" }}>
+            {/* Corner brackets */}
+            <div className="absolute top-0 left-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
+            <div className="absolute top-0 right-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
+            <div className="absolute bottom-0 left-0 w-5 h-5 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
+            <div className="absolute bottom-0 right-0 w-5 h-5 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
+            {/* Header */}
+            <div className="flex items-center gap-1.5 mb-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
+              <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/35">Capability Profile</span>
             </div>
+            {/* Radar */}
+            <div className="flex-1 flex items-center justify-center">
+              <div className="rounded-xl p-1.5" style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                <ACERadar ace={profile.ace} size={220} showLabels />
+              </div>
+            </div>
+            {/* Animated axis ticker */}
+            <AxisTicker />
+            {/* Scan line */}
+            <div className="absolute inset-x-0 h-px pointer-events-none" style={{ background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.45), transparent)", animation: `scanline ${SCAN_MS}ms linear infinite`, top: 0 }} />
+            <style>{`@keyframes scanline { 0% { top:0%; opacity:0; } 8% { opacity:1; } 88% { opacity:1; } 100% { top:100%; opacity:0; } }`}</style>
           </div>
 
         </div>
@@ -230,33 +233,40 @@ const AXIS_TICKER = [
 
 const SCAN_MS = 3200;
 
-function SampleRadarPanel() {
+function AxisTicker() {
   const [idx, setIdx] = useState(0);
   const [fade, setFade] = useState(true);
 
   useEffect(() => {
-    // Scan line hits ticker at ~88% of SCAN_MS
     const swapAt = SCAN_MS * 0.88;
     let swapTimer: ReturnType<typeof setTimeout>;
     let cycleTimer: ReturnType<typeof setInterval>;
-
     function scheduleCycle() {
       swapTimer = setTimeout(() => {
         setFade(false);
-        setTimeout(() => {
-          setIdx(i => (i + 1) % AXIS_TICKER.length);
-          setFade(true);
-        }, 220);
+        setTimeout(() => { setIdx(i => (i + 1) % AXIS_TICKER.length); setFade(true); }, 220);
       }, swapAt);
     }
-
     scheduleCycle();
     cycleTimer = setInterval(scheduleCycle, SCAN_MS);
     return () => { clearTimeout(swapTimer); clearInterval(cycleTimer); };
   }, []);
 
   const current = AXIS_TICKER[idx];
+  return (
+    <div className="mt-2 rounded-lg px-2.5 py-2 w-full" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+      <div style={{ opacity: fade ? 1 : 0, transition: "opacity 0.22s ease" }}>
+        <div className="flex items-center gap-1.5 mb-0.5">
+          <span className="shrink-0" style={{ color: current.color }}>{current.icon}</span>
+          <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: current.color }}>{current.key}</span>
+        </div>
+        <p className="text-[9px] text-white/40 leading-none pl-[18px] truncate">{current.desc}</p>
+      </div>
+    </div>
+  );
+}
 
+function SampleRadarPanel() {
   return (
     <div
       className="relative rounded-2xl overflow-hidden p-3 flex flex-col"
@@ -271,38 +281,21 @@ function SampleRadarPanel() {
         boxSizing: "border-box",
       }}
     >
-      {/* Corner brackets */}
       <div className="absolute top-0 left-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
       <div className="absolute top-0 right-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
       <div className="absolute bottom-0 left-0 w-5 h-5 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
       <div className="absolute bottom-0 right-0 w-5 h-5 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
-
-      {/* Header */}
       <div className="flex items-center gap-1.5 mb-2">
         <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
         <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/35">Sample Profile</span>
       </div>
-
-      {/* Radar */}
       <div className="flex-1 flex items-center justify-center">
         <div className="rounded-xl p-1.5 flex items-center justify-center"
           style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
           <ACERadar ace={SAMPLE_ACE} size={230} showLabels />
         </div>
       </div>
-
-      {/* Axis ticker */}
-      <div className="mt-2 rounded-lg px-2.5 py-2 w-full" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-        <div style={{ opacity: fade ? 1 : 0, transition: "opacity 0.22s ease" }}>
-          <div className="flex items-center gap-1.5 mb-0.5">
-            <span className="shrink-0" style={{ color: current.color }}>{current.icon}</span>
-            <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: current.color }}>{current.key}</span>
-          </div>
-          <p className="text-[9px] text-white/40 leading-none pl-[18px] truncate">{current.desc}</p>
-        </div>
-      </div>
-
-      {/* Scan line — duration matches SCAN_MS */}
+      <AxisTicker />
       <div className="absolute inset-x-0 h-px pointer-events-none"
         style={{ background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.45), transparent)", animation: `scanline ${SCAN_MS}ms linear infinite`, top: 0 }} />
       <style>{`@keyframes scanline { 0% { top:0%; opacity:0; } 8% { opacity:1; } 88% { opacity:1; } 100% { top:100%; opacity:0; } }`}</style>
