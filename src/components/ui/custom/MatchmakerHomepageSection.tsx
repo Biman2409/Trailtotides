@@ -218,7 +218,7 @@ export default function MatchmakerHomepageSection() {
 const SAMPLE_ACE = { stamina: 4, power: 3, strength: 3, agility: 4, water: 2, altitude: 5, focus: 3, nerve: 4 };
 
 const AXIS_TICKER = [
-  { key: "Stamina",  color: "#f97316", desc: "How long you sustain physical output",  icon: <Flame    className="w-3 h-3" /> },
+  { key: "Stamina",  color: "#f97316", desc: "Endurance across long hours on trail",  icon: <Flame    className="w-3 h-3" /> },
   { key: "Power",    color: "#eab308", desc: "Short explosive bursts at max effort",  icon: <Zap      className="w-3 h-3" /> },
   { key: "Strength", color: "#84cc16", desc: "Carrying loads on technical terrain",   icon: <Dumbbell className="w-3 h-3" /> },
   { key: "Agility",  color: "#22d3ee", desc: "Balance and footwork on rough ground",  icon: <Compass  className="w-3 h-3" /> },
