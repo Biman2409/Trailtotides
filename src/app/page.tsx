@@ -49,17 +49,30 @@ export default function HomePage() {
 
           {/* Eyebrow pill */}
           <div
-            className="inline-flex items-center px-5 py-2 rounded-full text-[10px] font-bold tracking-[0.22em] uppercase backdrop-blur-md"
+            className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full backdrop-blur-md"
             style={{
-              background: "rgba(255,255,255,0.10)",
-              border: "1px solid rgba(255,255,255,0.22)",
-              color: "rgba(255,255,255,0.85)",
-              boxShadow: "0 2px 16px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.12)",
+              background: "rgba(0,0,0,0.45)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              boxShadow: "0 2px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)",
               animation: "heroLineIn 0.7s cubic-bezier(0.22,1,0.36,1) 0s both",
-              letterSpacing: "0.22em",
             }}
           >
-            India&apos;s First Adventure Discovery Platform
+            {/* Live dot */}
+            <span className="relative flex h-1.5 w-1.5 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: "#ff5100" }} />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: "#ff5100" }} />
+            </span>
+            <span
+              className="text-[10px] font-black uppercase"
+              style={{
+                letterSpacing: "0.2em",
+                background: "linear-gradient(90deg, #ffffff 0%, rgba(255,255,255,0.6) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              India&apos;s First Adventure Discovery Platform
+            </span>
           </div>
 
           {/* Headline — tighter to pill */}
