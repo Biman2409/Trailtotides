@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, RotateCcw, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind, ChevronUp, Layers } from "lucide-react";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import GradingPill from "@/components/ui/custom/GradingPill";
-import { aceSummary, ACE_AXIS_COLORS, ACE_AXIS_LABELS } from "@/lib/ace";
+import { aceSummary, ACE_AXIS_COLORS, ACE_AXIS_LABELS, ACE_DOMAINS } from "@/lib/ace";
 import { loadProfile } from "@/lib/matchmaker";
 import type { ACE, AceAxis } from "@/lib/ace";
 
@@ -42,7 +42,7 @@ const TRAINING_TIPS: Record<string, string> = {
   nerve:    "Build comfort in remote settings — overnight solo trips and wilderness navigation without phone support.",
 };
 
-function AxisRow({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; userVal: number }) {
+function AxisCell({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; userVal: number }) {
   const color = ACE_AXIS_COLORS[axis];
   const icon = AXIS_ICONS[axis];
   const label = ACE_AXIS_LABELS[axis];
@@ -51,37 +51,44 @@ function AxisRow({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; u
 
   return (
     <div
-      className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg"
+      className="flex flex-col gap-1 rounded-lg px-2 py-1.5"
       style={{
-        background: meets ? `${color}08` : "rgba(239,68,68,0.06)",
-        border: meets ? `1px solid ${color}1a` : "1px solid rgba(239,68,68,0.15)",
+        background: meets ? `${color}0a` : "rgba(239,68,68,0.06)",
+        border: meets ? `1px solid ${color}20` : "1px solid rgba(239,68,68,0.18)",
       }}
     >
-      <span style={{ color: meets ? color : "#f87171" }} className="shrink-0">{icon}</span>
-      <span className="text-[10px] font-bold w-14 shrink-0 truncate capitalize" style={{ color: meets ? color : "#f87171" }}>
-        {label}
-      </span>
+      {/* Label row */}
+      <div className="flex items-center justify-between gap-1">
+        <div className="flex items-center gap-1">
+          <span style={{ color: meets ? color : "#f87171" }} className="shrink-0">{icon}</span>
+          <span className="text-[9px] font-bold truncate capitalize" style={{ color: meets ? color : "#f87171" }}>{label}</span>
+        </div>
+        <span
+          className="text-[8px] font-black px-1 py-px rounded-full shrink-0 leading-none"
+          style={{ background: meets ? "#22c55e18" : "#ef444420", color: meets ? "#4ade80" : "#f87171" }}
+        >
+          {meets ? "✓" : `+${gap}`}
+        </span>
+      </div>
       {/* Req dots */}
-      <div className="flex items-center gap-0.5 shrink-0">
+      <div className="flex items-center gap-px">
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="w-1.5 h-1.5 rounded-full"
+          <div key={i} className="h-1 flex-1 rounded-sm"
             style={{ background: i < trekVal ? color : "rgba(255,255,255,0.07)" }} />
         ))}
       </div>
-      <span className="text-white/15 text-[9px] shrink-0">vs</span>
       {/* You dots */}
-      <div className="flex items-center gap-0.5 shrink-0">
+      <div className="flex items-center gap-px">
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="w-1.5 h-1.5 rounded-full"
+          <div key={i} className="h-1 flex-1 rounded-sm"
             style={{ background: i < userVal ? (meets ? color : "#f87171") : "rgba(255,255,255,0.07)" }} />
         ))}
       </div>
-      <span
-        className="text-[8px] font-black px-1.5 py-0.5 rounded-full shrink-0 ml-auto"
-        style={{ background: meets ? "#22c55e18" : "#ef444420", color: meets ? "#4ade80" : "#f87171" }}
-      >
-        {meets ? "✓" : `+${gap}`}
-      </span>
+      {/* Legend */}
+      <div className="flex items-center justify-between gap-1 mt-px">
+        <span className="text-[7px] text-white/20 font-semibold uppercase tracking-wide">Trek</span>
+        <span className="text-[7px] text-white/20 font-semibold uppercase tracking-wide">You</span>
+      </div>
     </div>
   );
 }
@@ -181,16 +188,29 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
                   </div>
                 </div>
               </div>
-              <div className="flex-1 min-w-0 flex flex-col gap-1">
-                <p className="text-[8px] uppercase tracking-[0.2em] font-bold text-white/20 mb-1">Capability vs Requirement</p>
-                {axes.map(axis => (
-                  <AxisRow
-                    key={axis}
-                    axis={axis}
-                    trekVal={ace[axis]}
-                    userVal={(userAce as unknown as Record<string, number>)[axis] ?? 0}
-                  />
-                ))}
+              {/* 4-domain × 2-axis matrix — fits radar height */}
+              <div className="flex-1 min-w-0 flex flex-col gap-1.5">
+                <p className="text-[8px] uppercase tracking-[0.2em] font-bold text-white/20">Capability vs Requirement</p>
+                <div className="grid grid-cols-4 gap-1">
+                  {ACE_DOMAINS.map(domain => (
+                    <div key={domain.name} className="flex flex-col gap-1">
+                      <p
+                        className="text-[7px] font-black uppercase tracking-[0.1em] text-center leading-none py-0.5 rounded-sm"
+                        style={{ color: domain.color, background: `${domain.color}12` }}
+                      >
+                        {domain.name}
+                      </p>
+                      {domain.axes.map(axis => (
+                        <AxisCell
+                          key={axis}
+                          axis={axis}
+                          trekVal={ace[axis]}
+                          userVal={(userAce as unknown as Record<string, number>)[axis] ?? 0}
+                        />
+                      ))}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           ) : userAce ? (
