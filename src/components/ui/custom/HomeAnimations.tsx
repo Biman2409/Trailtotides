@@ -188,40 +188,43 @@ export function HeroHeadline() {
 export function HeroSubheading() {
   return (
     <div
-      className="flex flex-col items-center gap-3 w-full mx-auto"
+      className="flex flex-col items-center gap-4 w-full mx-auto"
       style={{
         maxWidth: 576,
         animation: "heroLineIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.55s both",
       }}
     >
-      {/* Supporting copy */}
-      <p
-        className="text-white/50 text-sm leading-relaxed text-center"
-        style={{ letterSpacing: "0.015em" }}
-      >
-        Elite adventures across India — tailored to your body, precision-mapped by AI, and led by trusted operators.
-      </p>
-
-      {/* Compact pill trio */}
-      <div className="flex items-center justify-center gap-2">
-        {[
-          { label: "Discover", dot: "#ff5100" },
-          { label: "Compare", dot: "#ff7d47" },
-          { label: "Book", dot: "#ffab85" },
-        ].map(({ label, dot }) => (
-          <div
-            key={label}
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold text-white/70"
-            style={{
-              background: "rgba(255,81,0,0.1)",
-              border: "1px solid rgba(255,81,0,0.2)",
-            }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: dot }} />
-            {label}
+      {/* Pill trio — top */}
+      <div className="flex items-center justify-center gap-1.5">
+        {["Discover", "Compare", "Book"].map((label, i) => (
+          <div key={label} className="flex items-center gap-1">
+            <span
+              className="px-3.5 py-1.5 rounded-full text-[11px] font-black tracking-wide uppercase"
+              style={{
+                background: i === 0 ? "rgba(255,81,0,0.18)" : i === 1 ? "rgba(255,81,0,0.11)" : "rgba(255,81,0,0.07)",
+                border: `1px solid rgba(255,81,0,${i === 0 ? "0.35" : i === 1 ? "0.22" : "0.14"})`,
+                color: i === 0 ? "#ff7d47" : i === 1 ? "#ff9060" : "rgba(255,171,133,0.75)",
+              }}
+            >
+              {label}
+            </span>
+            {i < 2 && <span className="text-white/15 text-[10px]">→</span>}
           </div>
         ))}
       </div>
+
+      {/* Supporting copy */}
+      <p
+        className="text-center font-medium leading-relaxed"
+        style={{
+          fontSize: "clamp(0.8rem, 1.8vw, 0.95rem)",
+          color: "rgba(255,255,255,0.65)",
+          textShadow: "0 2px 12px rgba(0,0,0,0.6)",
+          letterSpacing: "0.01em",
+        }}
+      >
+        Elite adventures across India — tailored to your body,<br className="hidden sm:block" /> precision-mapped by AI, and led by trusted operators.
+      </p>
 
       <style>{`
         @keyframes heroLineIn {
