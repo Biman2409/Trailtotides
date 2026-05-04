@@ -264,8 +264,7 @@ function SampleRadarPanel() {
         background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
         border: "1px solid rgba(255,255,255,0.07)",
         boxShadow: "0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
-        width: "fit-content",
-        minWidth: 240,
+        width: 260,
       }}
     >
       {/* Corner brackets */}
@@ -281,8 +280,8 @@ function SampleRadarPanel() {
       </div>
 
       {/* Radar */}
-      <div className="flex-1 flex items-center justify-center w-full">
-        <div className="rounded-xl p-1.5 w-full"
+      <div className="flex-1 flex items-center justify-center">
+        <div className="rounded-xl p-1.5"
           style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
           <ACERadar ace={SAMPLE_ACE} size={175} showLabels />
         </div>
