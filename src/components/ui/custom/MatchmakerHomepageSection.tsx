@@ -284,7 +284,7 @@ function SampleRadarPanel() {
       <div className="flex-1 flex items-center justify-center w-full">
         <div className="rounded-xl p-1.5 w-full"
           style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
-          <ACERadar ace={SAMPLE_ACE} size={220} showLabels />
+          <ACERadar ace={SAMPLE_ACE} size={175} showLabels />
         </div>
       </div>
 
@@ -314,7 +314,7 @@ function DefaultCTA() {
         <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", gap: "4rem" }}>
 
           {/* Left: copy */}
-          <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
             <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
             <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-4 lg:mb-5">
               Adventures built,<br />
