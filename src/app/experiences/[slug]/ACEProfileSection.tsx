@@ -226,16 +226,25 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
             </div>
           ) : (
             /* ── No profile: single trek radar + CTA ── */
-            <div className="flex gap-3 items-center">
+            <div className="flex gap-3 items-stretch">
+              {/* Radar */}
               <div className="flex flex-col items-center gap-1 shrink-0">
-                <span className="text-[8px] font-black uppercase tracking-[0.18em] text-[#ff5100]/70">Required</span>
+                <span className="text-[8px] font-black uppercase tracking-[0.18em] text-[#ff5100]/70">Trek Requirements</span>
                 <ACERadar ace={ace} size={176} showLabels />
               </div>
-              <div className="flex flex-col gap-2 flex-1 min-w-0">
-                <p className="text-white font-bold text-xs leading-snug">See how you measure up</p>
-                <p className="text-white/35 text-[11px] leading-relaxed">
-                  Take the 2-min assessment to compare your body against this trek.
-                </p>
+              {/* Divider */}
+              <div className="w-px self-stretch mx-1" style={{ background: "rgba(255,255,255,0.06)" }} />
+              {/* CTA — right panel */}
+              <div className="flex flex-col justify-center gap-2.5 flex-1 min-w-0 pl-1">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.22)" }}>
+                  <Flame className="w-3.5 h-3.5 text-[#ff5100]" />
+                </div>
+                <div>
+                  <p className="text-white font-bold text-xs leading-snug mb-1">See how you measure up</p>
+                  <p className="text-white/35 text-[11px] leading-relaxed">
+                    Take the 2-min assessment to compare your body against this trek.
+                  </p>
+                </div>
                 <Link
                   href="/matchmaker"
                   className="inline-flex items-center gap-1.5 w-fit text-white text-[11px] font-bold px-3 py-1.5 rounded-xl transition-all hover:brightness-110"
