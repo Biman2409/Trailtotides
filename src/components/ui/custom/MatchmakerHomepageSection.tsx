@@ -265,8 +265,8 @@ function SampleRadarPanel() {
         border: "1px solid rgba(255,255,255,0.07)",
         boxShadow: "0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
         width: "fit-content",
-        paddingLeft: 14.5,
-        paddingRight: 14.5,
+        paddingLeft: 17,
+        paddingRight: 17,
         height: "100%",
         boxSizing: "border-box",
       }}
