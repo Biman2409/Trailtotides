@@ -3,11 +3,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, BarChart2, MapPin, ChevronDown } from "lucide-react";
+import { ArrowRight, BarChart2, MapPin, ChevronDown, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import RankBar from "@/components/ui/custom/RankBar";
+import { ACE_AXIS_COLORS } from "@/lib/ace";
 
 const RANKS = [
   {
@@ -215,26 +216,154 @@ export default function MatchmakerHomepageSection() {
   );
 }
 
+const SAMPLE_ACE = { stamina: 4, power: 3, strength: 3, agility: 4, water: 2, altitude: 5, focus: 3, nerve: 4 };
+
+const ACE_AXIS_META = [
+  { key: "stamina",  icon: <Flame    className="w-3 h-3" />, desc: "Sustained aerobic output over long durations",   color: "#f97316" },
+  { key: "power",    icon: <Zap      className="w-3 h-3" />, desc: "Explosive effort — short bursts at max intensity", color: "#eab308" },
+  { key: "strength", icon: <Dumbbell className="w-3 h-3" />, desc: "Load-bearing: carrying packs, scrambling terrain", color: "#84cc16" },
+  { key: "agility",  icon: <Compass  className="w-3 h-3" />, desc: "Balance, coordination and technical footing",     color: "#22d3ee" },
+  { key: "water",    icon: <Waves    className="w-3 h-3" />, desc: "Aquatic comfort — pool, open water, currents",    color: "#3b82f6" },
+  { key: "altitude", icon: <Mountain className="w-3 h-3" />, desc: "High-altitude acclimatisation and exposure",      color: "#a78bfa" },
+  { key: "focus",    icon: <Shield   className="w-3 h-3" />, desc: "Mental composure under exposure and pressure",    color: "#f43f5e" },
+  { key: "nerve",    icon: <Wind     className="w-3 h-3" />, desc: "Resilience in remote and isolated conditions",    color: "#10b981" },
+];
+
 function DefaultCTA() {
   return (
-    <section className="py-20 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-white/5">
+    <section className="py-20 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row lg:items-center gap-12 lg:gap-20">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
 
-          {/* Left: copy */}
-          <div className="flex-1 max-w-xl">
+          {/* ── Left: hi-tech sample radar panel ── */}
+          <div className="shrink-0 w-full lg:w-auto flex flex-col items-center">
+            {/* Panel */}
+            <div
+              className="relative rounded-2xl overflow-hidden p-5"
+              style={{
+                background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
+                border: "1px solid rgba(255,255,255,0.07)",
+                boxShadow: "0 32px 64px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
+                width: 340,
+              }}
+            >
+              {/* Corner scan lines decorative */}
+              <div className="absolute top-0 left-0 w-8 h-8 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.35)", borderLeft: "1px solid rgba(255,81,0,0.35)", borderRadius: "0 0 0 0" }} />
+              <div className="absolute top-0 right-0 w-8 h-8 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.35)", borderRight: "1px solid rgba(255,81,0,0.35)" }} />
+              <div className="absolute bottom-0 left-0 w-8 h-8 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.35)", borderLeft: "1px solid rgba(255,81,0,0.35)" }} />
+              <div className="absolute bottom-0 right-0 w-8 h-8 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.35)", borderRight: "1px solid rgba(255,81,0,0.35)" }} />
+
+              {/* Header bar */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
+                  <span className="text-[9px] font-black uppercase tracking-[0.28em] text-white/35">ACE · Sample Profile</span>
+                </div>
+                <div
+                  className="text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                  style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.22)", color: "#ff7d47" }}
+                >
+                  Demo
+                </div>
+              </div>
+
+              {/* Radar */}
+              <div className="flex justify-center mb-4">
+                <div
+                  className="rounded-xl p-3"
+                  style={{
+                    background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, rgba(0,0,0,0) 70%)",
+                    border: "1px solid rgba(255,255,255,0.05)",
+                  }}
+                >
+                  <ACERadar ace={SAMPLE_ACE} size={210} showLabels />
+                </div>
+              </div>
+
+              {/* Axis legend grid */}
+              <div className="grid grid-cols-2 gap-1">
+                {ACE_AXIS_META.map(({ key, icon, desc, color }) => (
+                  <div
+                    key={key}
+                    className="flex items-start gap-2 rounded-lg px-2.5 py-2"
+                    style={{ background: `${color}08`, border: `1px solid ${color}15` }}
+                  >
+                    <span className="mt-px shrink-0" style={{ color }}>{icon}</span>
+                    <div className="min-w-0">
+                      <p className="text-[9px] font-black uppercase tracking-wider leading-none mb-0.5" style={{ color }}>
+                        {key}
+                      </p>
+                      <p className="text-[8px] text-white/28 leading-snug">{desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Scan line animation */}
+              <div
+                className="absolute inset-x-0 h-px pointer-events-none"
+                style={{
+                  background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.4), transparent)",
+                  animation: "scanline 3.5s ease-in-out infinite",
+                  top: 0,
+                }}
+              />
+              <style>{`
+                @keyframes scanline {
+                  0%   { top: 0%;   opacity: 0; }
+                  10%  { opacity: 1; }
+                  90%  { opacity: 1; }
+                  100% { top: 100%; opacity: 0; }
+                }
+              `}</style>
+            </div>
+
+            {/* Below panel: system label */}
+            <div className="mt-3 flex items-center gap-2">
+              <div className="h-px w-10 bg-gradient-to-r from-transparent to-white/10" />
+              <span className="text-[8px] uppercase tracking-[0.3em] text-white/18 font-bold">Adventure Capability Engine</span>
+              <div className="h-px w-10 bg-gradient-to-l from-transparent to-white/10" />
+            </div>
+          </div>
+
+          {/* ── Right: copy ── */}
+          <div className="flex-1">
             <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
             <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-4 lg:mb-5">
               Adventures built,<br />
               <span className="text-[#ff5100]">for your body</span>
             </h2>
-            <p className="text-white/55 text-base md:text-lg leading-relaxed mb-8">
-              8 questions. We map your capability and show you exactly which adventures fit.
+            <p className="text-white/55 text-base md:text-lg leading-relaxed mb-6">
+              Answer 8 questions. We plot your capability across all 8 axes — then surface every adventure that fits your exact profile.
             </p>
+
+            {/* Axis domain pills */}
+            <div className="grid grid-cols-2 gap-2 mb-8">
+              {[
+                { label: "Engine",   desc: "Stamina + Power",     color: "#f97316" },
+                { label: "Chassis",  desc: "Strength + Agility",  color: "#22d3ee" },
+                { label: "Elements", desc: "Water + Altitude",    color: "#a78bfa" },
+                { label: "Mind",     desc: "Focus + Nerve",       color: "#10b981" },
+              ].map(({ label, desc, color }) => (
+                <div
+                  key={label}
+                  className="flex items-center gap-2.5 rounded-xl px-3 py-2.5"
+                  style={{ background: `${color}0d`, border: `1px solid ${color}22` }}
+                >
+                  <div className="w-1.5 h-4 rounded-full shrink-0" style={{ background: `linear-gradient(180deg, ${color}, ${color}55)` }} />
+                  <div>
+                    <p className="text-xs font-black" style={{ color }}>{label}</p>
+                    <p className="text-[10px] text-white/35">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/matchmaker"
                 className="inline-flex items-center justify-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#ff7d47] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25 group transition-all duration-200"
+                style={{ boxShadow: "0 4px 20px rgba(255,81,0,0.3)" }}
               >
                 Take Assessment
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -243,7 +372,7 @@ function DefaultCTA() {
                 href="/ace"
                 className="inline-flex items-center justify-center gap-2 text-white/45 hover:text-white/70 font-semibold px-6 py-4 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all duration-200"
               >
-                Learn more
+                Learn about ACE
               </Link>
             </div>
           </div>
