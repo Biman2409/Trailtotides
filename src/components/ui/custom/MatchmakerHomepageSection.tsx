@@ -299,10 +299,10 @@ function DefaultCTA() {
   return (
     <section className="py-20 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-16">
+        <div style={{ display: "flex", flexDirection: "row", alignItems: "flex-start", gap: "4rem" }}>
 
           {/* Left: copy */}
-          <div className="flex-1">
+          <div style={{ flex: 1, minWidth: 0 }}>
             <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
             <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-4 lg:mb-5">
               Adventures built,<br />
