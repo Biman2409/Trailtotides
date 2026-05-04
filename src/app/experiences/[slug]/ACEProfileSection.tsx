@@ -42,6 +42,25 @@ const TRAINING_TIPS: Record<string, string> = {
   nerve:    "Build comfort in remote settings — overnight solo trips and wilderness navigation without phone support.",
 };
 
+function DotScale({ filled, color, dim }: { filled: number; color: string; dim?: boolean }) {
+  return (
+    <div className="flex gap-[3px]">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div
+          key={i}
+          className="w-2.5 h-2.5 rounded-full"
+          style={{
+            background: i < filled
+              ? dim ? `${color}70` : color
+              : "rgba(255,255,255,0.06)",
+            boxShadow: i < filled && !dim ? `0 0 4px ${color}60` : "none",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function AxisCell({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; userVal: number }) {
   const color = ACE_AXIS_COLORS[axis];
   const icon = AXIS_ICONS[axis];
@@ -51,43 +70,38 @@ function AxisCell({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; 
 
   return (
     <div
-      className="flex flex-col gap-1 rounded-lg px-2 py-1.5"
+      className="flex flex-col gap-2 rounded-xl p-2.5"
       style={{
-        background: meets ? `${color}0a` : "rgba(239,68,68,0.06)",
-        border: meets ? `1px solid ${color}20` : "1px solid rgba(239,68,68,0.18)",
+        background: meets ? `${color}08` : "rgba(239,68,68,0.05)",
+        border: meets ? `1px solid ${color}22` : "1px solid rgba(239,68,68,0.15)",
       }}
     >
-      {/* Label row */}
+      {/* Axis name + badge */}
       <div className="flex items-center justify-between gap-1">
-        <div className="flex items-center gap-1">
-          <span style={{ color: meets ? color : "#f87171" }} className="shrink-0">{icon}</span>
-          <span className="text-[9px] font-bold truncate capitalize" style={{ color: meets ? color : "#f87171" }}>{label}</span>
+        <div className="flex items-center gap-1 min-w-0">
+          <span style={{ color: meets ? color : "#f87171" }} className="shrink-0 opacity-80">{icon}</span>
+          <span className="text-[9px] font-bold truncate" style={{ color: meets ? "rgba(255,255,255,0.7)" : "#f87171" }}>{label}</span>
         </div>
         <span
-          className="text-[8px] font-black px-1 py-px rounded-full shrink-0 leading-none"
-          style={{ background: meets ? "#22c55e18" : "#ef444420", color: meets ? "#4ade80" : "#f87171" }}
+          className="shrink-0 text-[8px] font-black px-1.5 py-0.5 rounded-full leading-none"
+          style={{ background: meets ? "rgba(74,222,128,0.12)" : "rgba(239,68,68,0.15)", color: meets ? "#4ade80" : "#f87171" }}
         >
           {meets ? "✓" : `+${gap}`}
         </span>
       </div>
-      {/* Req dots */}
-      <div className="flex items-center gap-px">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="h-1 flex-1 rounded-sm"
-            style={{ background: i < trekVal ? color : "rgba(255,255,255,0.07)" }} />
-        ))}
+      {/* Trek row */}
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center justify-between">
+          <span className="text-[7px] font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.2)" }}>Trek</span>
+        </div>
+        <DotScale filled={trekVal} color={color} dim />
       </div>
-      {/* You dots */}
-      <div className="flex items-center gap-px">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="h-1 flex-1 rounded-sm"
-            style={{ background: i < userVal ? (meets ? color : "#f87171") : "rgba(255,255,255,0.07)" }} />
-        ))}
-      </div>
-      {/* Legend */}
-      <div className="flex items-center justify-between gap-1 mt-px">
-        <span className="text-[7px] text-white/20 font-semibold uppercase tracking-wide">Trek</span>
-        <span className="text-[7px] text-white/20 font-semibold uppercase tracking-wide">You</span>
+      {/* You row */}
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center justify-between">
+          <span className="text-[7px] font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.2)" }}>You</span>
+        </div>
+        <DotScale filled={userVal} color={meets ? color : "#f87171"} />
       </div>
     </div>
   );
@@ -171,35 +185,49 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
         {/* Radar views */}
         <div className="p-4">
           {overlapped && userAce ? (
-            /* ── Overlap view: radar left, axis grid right ── */
-            <div className="flex gap-4">
-              <div className="flex flex-col items-center gap-2 shrink-0">
-                <ACERadar ace={ace} userAce={userAce} userColor="#ffffff" size={184} showLabels />
+            /* ── Overlap view ── */
+            <div className="flex gap-3 items-start">
+
+              {/* Radar — in a box */}
+              <div
+                className="flex flex-col items-center gap-2.5 shrink-0 rounded-2xl p-3"
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
+                <ACERadar ace={ace} userAce={userAce} userColor="#ffffff" size={180} showLabels />
+                {/* Legend */}
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-1.5">
-                    <div className="w-4 h-[2px] rounded-full bg-[#ff5100]" />
-                    <span className="text-[8px] text-white/30 uppercase tracking-widest font-semibold">Required</span>
+                    <div className="w-5 h-[2px] rounded-full bg-[#ff5100]" />
+                    <span className="text-[8px] text-white/35 font-semibold uppercase tracking-widest">Trek</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <svg width="16" height="3" viewBox="0 0 16 3">
-                      <line x1="0" y1="1.5" x2="16" y2="1.5" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeDasharray="3 2" />
+                    <svg width="16" height="2" viewBox="0 0 16 2">
+                      <line x1="0" y1="1" x2="16" y2="1" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" strokeDasharray="3 2" />
                     </svg>
-                    <span className="text-[8px] text-white/50 uppercase tracking-widest font-semibold">You</span>
+                    <span className="text-[8px] text-white/35 font-semibold uppercase tracking-widest">You</span>
                   </div>
                 </div>
               </div>
-              {/* 4-domain × 2-axis matrix — fits radar height */}
-              <div className="flex-1 min-w-0 flex flex-col gap-1.5">
-                <p className="text-[8px] uppercase tracking-[0.2em] font-bold text-white/20">Capability vs Requirement</p>
-                <div className="grid grid-cols-4 gap-1">
+
+              {/* 4-domain × 2-axis matrix */}
+              <div className="flex-1 min-w-0 flex flex-col gap-2">
+                <p className="text-[8px] font-black uppercase tracking-[0.2em] text-white/25">Capability vs Requirement</p>
+                <div className="grid grid-cols-4 gap-1.5">
                   {ACE_DOMAINS.map(domain => (
-                    <div key={domain.name} className="flex flex-col gap-1">
-                      <p
-                        className="text-[7px] font-black uppercase tracking-[0.1em] text-center leading-none py-0.5 rounded-sm"
-                        style={{ color: domain.color, background: `${domain.color}12` }}
+                    <div key={domain.name} className="flex flex-col gap-1.5">
+                      {/* Domain header */}
+                      <div
+                        className="flex items-center justify-center gap-1 py-1 rounded-lg"
+                        style={{ background: `${domain.color}10`, border: `1px solid ${domain.color}20` }}
                       >
-                        {domain.name}
-                      </p>
+                        <span className="text-[8px] font-black uppercase tracking-[0.1em]" style={{ color: domain.color }}>
+                          {domain.name}
+                        </span>
+                      </div>
+                      {/* 2 axis cells */}
                       {domain.axes.map(axis => (
                         <AxisCell
                           key={axis}
