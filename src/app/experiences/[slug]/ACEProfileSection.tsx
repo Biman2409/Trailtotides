@@ -190,13 +190,13 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
 
               {/* Radar — in a box */}
               <div
-                className="flex flex-col items-center gap-2.5 shrink-0 rounded-2xl p-3"
+                className="flex flex-col items-center justify-between gap-2.5 shrink-0 rounded-2xl p-3 self-stretch"
                 style={{
                   background: "rgba(255,255,255,0.03)",
                   border: "1px solid rgba(255,255,255,0.08)",
                 }}
               >
-                <ACERadar ace={ace} userAce={userAce} userColor="#ffffff" size={180} showLabels />
+                <ACERadar ace={ace} userAce={userAce} userColor="#ffffff" size={214} showLabels />
                 {/* Legend */}
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-1.5">
