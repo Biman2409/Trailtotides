@@ -235,9 +235,6 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
 
               {/* CTA sub-section */}
               <div className="flex flex-col justify-center pl-4 flex-1 min-w-0">
-                {/* Sub-section label */}
-                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20 mb-3">Your Profile</p>
-
                 <div
                   className="rounded-xl p-3 flex flex-col gap-3"
                   style={{ background: "rgba(255,81,0,0.05)", border: "1px solid rgba(255,81,0,0.12)" }}
