@@ -51,7 +51,7 @@ const LAND_TYPES: AdventureType[] = ["Trekking", "Mountaineering", "Rock Climbin
 export default function ExploreClient() {
   const searchParams = useSearchParams();
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
   const [selectedTypes, setSelectedTypes] = useState<AdventureType[]>(
     searchParams.get("type") ? [searchParams.get("type") as AdventureType] : []
   );
