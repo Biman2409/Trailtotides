@@ -167,18 +167,6 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
             <p className="text-[11px] text-white/35 leading-snug flex-1">
               {readyCount === totalAxes ? "You meet all requirements" : `${totalAxes - readyCount} axes need work`}
             </p>
-            <button
-              onClick={() => setOverlapped(o => !o)}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all"
-              style={{
-                background: overlapped ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.05)",
-                border: overlapped ? "1px solid rgba(255,81,0,0.3)" : "1px solid rgba(255,255,255,0.09)",
-                color: overlapped ? "#ff7d47" : "rgba(255,255,255,0.4)",
-              }}
-            >
-              <Layers className="w-3 h-3" />
-              {overlapped ? "Split" : "Overlap"}
-            </button>
           </div>
         )}
 
@@ -212,22 +200,22 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
                 </div>
               </div>
 
-              {/* 4-domain × 2-axis matrix */}
-              <div className="flex-1 min-w-0 flex flex-col gap-2">
+              {/* 4-domain × 2-axis matrix — self-stretch to match radar height */}
+              <div className="flex-1 min-w-0 flex flex-col gap-2 self-stretch">
                 <p className="text-[8px] font-black uppercase tracking-[0.2em] text-white/25">Capability vs Requirement</p>
-                <div className="grid grid-cols-4 gap-1.5">
+                <div className="grid grid-cols-4 gap-1.5 flex-1">
                   {ACE_DOMAINS.map(domain => (
-                    <div key={domain.name} className="flex flex-col gap-1.5">
+                    <div key={domain.name} className="flex flex-col gap-1.5 h-full">
                       {/* Domain header */}
                       <div
-                        className="flex items-center justify-center gap-1 py-1 rounded-lg"
+                        className="flex items-center justify-center py-1 rounded-lg shrink-0"
                         style={{ background: `${domain.color}10`, border: `1px solid ${domain.color}20` }}
                       >
                         <span className="text-[8px] font-black uppercase tracking-[0.1em]" style={{ color: domain.color }}>
                           {domain.name}
                         </span>
                       </div>
-                      {/* 2 axis cells */}
+                      {/* 2 axis cells — grow to fill */}
                       {domain.axes.map(axis => (
                         <AxisCell
                           key={axis}
@@ -257,16 +245,6 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
               >
                 <span className="text-[8px] font-black uppercase tracking-[0.18em] text-white/35">Your Capability</span>
                 <ACERadar ace={userAce} size={148} showLabels />
-              </div>
-              <div className="col-span-2 flex justify-center pt-1">
-                <button
-                  onClick={() => setOverlapped(true)}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[11px] font-bold transition-all hover:-translate-y-0.5"
-                  style={{ background: "rgba(255,81,0,0.07)", border: "1px solid rgba(255,81,0,0.18)", color: "#ff7d47" }}
-                >
-                  <Layers className="w-3 h-3" />
-                  Overlap view
-                </button>
               </div>
             </div>
           ) : (
@@ -306,6 +284,24 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
             </div>
           )}
         </div>
+
+        {/* Single overlap/split toggle — bottom, only with profile */}
+        {userAce && (
+          <div className="flex justify-center pb-3 -mt-1">
+            <button
+              onClick={() => setOverlapped(o => !o)}
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-[11px] font-bold transition-all hover:brightness-110"
+              style={{
+                background: overlapped ? "rgba(255,81,0,0.12)" : "rgba(255,255,255,0.05)",
+                border: overlapped ? "1px solid rgba(255,81,0,0.25)" : "1px solid rgba(255,255,255,0.09)",
+                color: overlapped ? "#ff7d47" : "rgba(255,255,255,0.4)",
+              }}
+            >
+              <Layers className="w-3 h-3" />
+              {overlapped ? "Split view" : "Overlap view"}
+            </button>
+          </div>
+        )}
 
         {/* Bottom bar */}
         <div
