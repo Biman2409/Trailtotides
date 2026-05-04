@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, RotateCcw, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind, ChevronUp, ChevronDown } from "lucide-react";
+import { ArrowRight, RotateCcw, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind, ChevronUp, Layers } from "lucide-react";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import GradingPill from "@/components/ui/custom/GradingPill";
 import { aceSummary, ACE_AXIS_COLORS, ACE_AXIS_LABELS } from "@/lib/ace";
@@ -72,34 +72,19 @@ function AxisCard({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; 
     <div
       className="rounded-xl px-3 py-2.5 flex items-center gap-3"
       style={{
-        background: !hasUser
-          ? "rgba(255,255,255,0.03)"
-          : meets
-          ? `${color}0a`
-          : "rgba(239,68,68,0.07)",
-        border: !hasUser
-          ? "1px solid rgba(255,255,255,0.07)"
-          : meets
-          ? `1px solid ${color}25`
-          : "1px solid rgba(239,68,68,0.2)",
+        background: !hasUser ? "rgba(255,255,255,0.03)" : meets ? `${color}0a` : "rgba(239,68,68,0.07)",
+        border: !hasUser ? "1px solid rgba(255,255,255,0.07)" : meets ? `1px solid ${color}25` : "1px solid rgba(239,68,68,0.2)",
       }}
     >
-      {/* Icon */}
       <span style={{ color: accentColor }} className="shrink-0 opacity-90">{icon}</span>
-
-      {/* Label */}
       <span className="text-[10px] font-bold uppercase tracking-wide w-16 shrink-0 truncate" style={{ color: accentColor }}>
         {label}
       </span>
-
-      {/* Dot columns */}
       <div className="flex flex-col gap-1 flex-1 min-w-0">
-        {/* Trek row */}
         <div className="flex items-center gap-1.5">
           <span className="text-[7px] uppercase tracking-wider text-white/20 font-semibold w-6 shrink-0">Req</span>
           <DotScale value={trekVal} color={color} />
         </div>
-        {/* User row */}
         {hasUser && (
           <div className="flex items-center gap-1.5">
             <span className="text-[7px] uppercase tracking-wider text-white/20 font-semibold w-6 shrink-0">You</span>
@@ -107,8 +92,6 @@ function AxisCard({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; 
           </div>
         )}
       </div>
-
-      {/* Status badge */}
       {hasUser && (
         <span
           className="text-[8px] font-black px-1.5 py-0.5 rounded-full shrink-0 flex items-center gap-0.5"
@@ -121,11 +104,9 @@ function AxisCard({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; 
   );
 }
 
-export default function ACEProfileSection({
-  ace,
-  adventureName,
-}: Props) {
+export default function ACEProfileSection({ ace, adventureName }: Props) {
   const [userAce, setUserAce] = useState<ACE | null>(null);
+  const [overlapped, setOverlapped] = useState(false);
 
   useEffect(() => {
     const p = loadProfile();
@@ -147,7 +128,7 @@ export default function ACEProfileSection({
 
   return (
     <section>
-      {/* Section header */}
+      {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
           <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-0.5">ACE Profile</p>
@@ -165,83 +146,106 @@ export default function ACEProfileSection({
           boxShadow: "0 24px 48px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06)",
         }}
       >
-        {/* Radar + axes */}
-        <div className="flex flex-row">
+        {/* Radar section */}
+        <div className="p-5 pb-4">
 
-          {/* Radar panel */}
-          <div
-            className="flex flex-col items-center justify-center py-6 px-5 shrink-0 border-r"
-            style={{ borderColor: "rgba(255,255,255,0.06)" }}
-          >
-            {/* Score pill */}
-            {userAce && (
-              <div
-                className="mb-5 px-4 py-2 rounded-2xl flex items-center gap-3"
+          {/* Score pill — only when user has profile */}
+          {userAce && (
+            <div
+              className="mb-4 px-4 py-2.5 rounded-xl flex items-center gap-3"
+              style={{
+                background: readyCount === totalAxes
+                  ? "linear-gradient(135deg, rgba(34,197,94,0.1), rgba(34,197,94,0.05))"
+                  : "linear-gradient(135deg, rgba(255,81,0,0.1), rgba(255,81,0,0.05))",
+                border: readyCount === totalAxes ? "1px solid rgba(34,197,94,0.2)" : "1px solid rgba(255,81,0,0.18)",
+              }}
+            >
+              <p className="text-[22px] font-black leading-none" style={{ color: readyCount === totalAxes ? "#4ade80" : "#ff5100" }}>
+                {readyCount}/{totalAxes}
+              </p>
+              <div style={{ width: 1, height: 28, background: "rgba(255,255,255,0.07)" }} />
+              <p className="text-[11px] text-white/40 leading-snug flex-1">
+                {readyCount === totalAxes ? "You meet all requirements" : `${totalAxes - readyCount} axes need work`}
+              </p>
+              {/* Overlap toggle */}
+              <button
+                onClick={() => setOverlapped(o => !o)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all"
                 style={{
-                  background: readyCount === totalAxes
-                    ? "linear-gradient(135deg, rgba(34,197,94,0.12), rgba(34,197,94,0.06))"
-                    : "linear-gradient(135deg, rgba(255,81,0,0.12), rgba(255,81,0,0.06))",
-                  border: readyCount === totalAxes
-                    ? "1px solid rgba(34,197,94,0.25)"
-                    : "1px solid rgba(255,81,0,0.22)",
+                  background: overlapped ? "rgba(255,81,0,0.18)" : "rgba(255,255,255,0.06)",
+                  border: overlapped ? "1px solid rgba(255,81,0,0.35)" : "1px solid rgba(255,255,255,0.1)",
+                  color: overlapped ? "#ff7d47" : "rgba(255,255,255,0.45)",
                 }}
               >
-                <div className="text-center">
-                  <p className="text-[22px] font-black leading-none" style={{ color: readyCount === totalAxes ? "#4ade80" : "#ff5100" }}>
-                    {readyCount}/{totalAxes}
-                  </p>
-                  <p className="text-[8px] uppercase tracking-widest font-bold text-white/30 mt-0.5">axes ready</p>
+                <Layers className="w-3 h-3" />
+                {overlapped ? "Split view" : "Overlap"}
+              </button>
+            </div>
+          )}
+
+          {/* Radars */}
+          {overlapped && userAce ? (
+            /* ── Overlapped single radar ── */
+            <div className="flex flex-col items-center gap-3">
+              <ACERadar ace={ace} userAce={userAce} userColor="#ffffff" size={200} showLabels />
+              <div className="flex items-center gap-5">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-[2.5px] rounded-full bg-[#ff5100]" />
+                  <span className="text-[9px] text-white/35 uppercase tracking-widest font-semibold">Trek</span>
                 </div>
-                <div style={{ width: 1, height: 32, background: "rgba(255,255,255,0.08)" }} />
-                <p className="text-[10px] text-white/45 leading-snug max-w-[100px]">
-                  {readyCount === totalAxes
-                    ? "You meet all requirements"
-                    : `${totalAxes - readyCount} axes need work`}
-                </p>
-              </div>
-            )}
-
-            <ACERadar ace={ace} userAce={userAce ?? undefined} userColor="#ffffff" size={200} showLabels />
-
-            {/* Legend */}
-            <div className="flex items-center gap-5 mt-5">
-              <div className="flex items-center gap-2">
-                <div className="w-5 h-[2.5px] rounded-full bg-[#ff5100]" />
-                <span className="text-[9px] text-white/35 uppercase tracking-widest font-semibold">Trek</span>
-              </div>
-              {userAce && (
                 <div className="flex items-center gap-2">
                   <svg width="20" height="4" viewBox="0 0 20 4">
                     <line x1="0" y1="2" x2="20" y2="2" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeDasharray="4 3" />
                   </svg>
                   <span className="text-[9px] text-white/55 uppercase tracking-widest font-semibold">You</span>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
-
-          {/* Axis grid */}
-          {userAce ? (
-            <div className="flex-1 min-w-0 p-4">
-              <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/25 mb-3">
-                Your Capability vs Trek Requirements
-              </p>
-              <div className="flex flex-col gap-1.5">
-                {axes.map(axis => (
-                  <AxisCard
-                    key={axis}
-                    axis={axis}
-                    trekVal={ace[axis]}
-                    userVal={(userAce as unknown as Record<string, number>)[axis] ?? 0}
-                  />
-                ))}
+          ) : userAce ? (
+            /* ── Split two radars ── */
+            <div className="grid grid-cols-2 gap-3">
+              {/* Trek radar */}
+              <div
+                className="flex flex-col items-center gap-2 rounded-xl py-4 px-2"
+                style={{ background: "rgba(255,81,0,0.04)", border: "1px solid rgba(255,81,0,0.12)" }}
+              >
+                <span className="text-[9px] font-black uppercase tracking-[0.18em] text-[#ff5100]/70">Trek Required</span>
+                <ACERadar ace={ace} size={150} showLabels />
+              </div>
+              {/* Body radar */}
+              <div
+                className="flex flex-col items-center gap-2 rounded-xl py-4 px-2"
+                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+              >
+                <span className="text-[9px] font-black uppercase tracking-[0.18em] text-white/40">Your Body</span>
+                <ACERadar ace={userAce} size={150} showLabels />
+              </div>
+              {/* Overlap button below split view */}
+              <div className="col-span-2 flex justify-center">
+                <button
+                  onClick={() => setOverlapped(true)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[11px] font-bold transition-all hover:-translate-y-0.5"
+                  style={{
+                    background: "rgba(255,81,0,0.1)",
+                    border: "1px solid rgba(255,81,0,0.25)",
+                    color: "#ff7d47",
+                  }}
+                >
+                  <Layers className="w-3.5 h-3.5" />
+                  See overlapped stats
+                </button>
               </div>
             </div>
           ) : (
-            <div className="flex-1 flex items-center p-5">
-              <div className="flex flex-col gap-3">
+            /* ── No profile: single trek radar + CTA ── */
+            <div className="flex flex-col sm:flex-row gap-5 items-center">
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-[9px] font-black uppercase tracking-[0.18em] text-[#ff5100]/70">Trek Required</span>
+                <ACERadar ace={ace} size={160} showLabels />
+              </div>
+              <div className="flex flex-col gap-3 flex-1">
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                  className="w-10 h-10 rounded-xl flex items-center justify-center"
                   style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.25)" }}
                 >
                   <Flame className="w-4 h-4 text-[#ff5100]" />
@@ -249,7 +253,7 @@ export default function ACEProfileSection({
                 <div>
                   <p className="text-white font-bold text-sm mb-1">See how you measure up</p>
                   <p className="text-white/35 text-xs leading-relaxed">
-                    Take the 2-min ACE assessment to overlay your profile and see exactly which axes you meet.
+                    Take the 2-min ACE assessment to see your body radar alongside this trek's requirements.
                   </p>
                 </div>
                 <Link
@@ -265,7 +269,26 @@ export default function ACEProfileSection({
           )}
         </div>
 
-        {/* Bottom summary + retake */}
+        {/* Axis grid — only when user has profile */}
+        {userAce && (
+          <div className="px-5 pb-4">
+            <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/25 mb-2">
+              Capability vs Requirements
+            </p>
+            <div className="flex flex-col gap-1.5">
+              {axes.map(axis => (
+                <AxisCard
+                  key={axis}
+                  axis={axis}
+                  trekVal={ace[axis]}
+                  userVal={(userAce as unknown as Record<string, number>)[axis] ?? 0}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Bottom bar */}
         <div
           className="px-5 py-3.5 flex flex-col sm:flex-row sm:items-center gap-3"
           style={{ borderTop: "1px solid rgba(255,255,255,0.05)", background: "rgba(0,0,0,0.15)" }}
@@ -286,7 +309,7 @@ export default function ACEProfileSection({
         </div>
       </div>
 
-      {/* Focus Areas — only when there are gaps */}
+      {/* Training priorities */}
       {gaps.length > 0 && (
         <div
           className="rounded-2xl overflow-hidden mb-3"
@@ -321,10 +344,7 @@ export default function ACEProfileSection({
                     >
                       {idx + 1}
                     </span>
-                    <div
-                      className="w-8 h-8 rounded-xl flex items-center justify-center"
-                      style={{ background: `${color}20`, color }}
-                    >
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: `${color}20`, color }}>
                       {icon}
                     </div>
                   </div>
@@ -337,18 +357,12 @@ export default function ACEProfileSection({
                       >
                         <ChevronUp className="w-2 h-2" />+{gap} needed
                       </span>
-                      <span className="text-white/20 text-[9px] ml-auto font-mono">
-                        Lv {userVal} → {trekVal}
-                      </span>
+                      <span className="text-white/20 text-[9px] ml-auto font-mono">Lv {userVal} → {trekVal}</span>
                     </div>
-                    {/* Mini progress bar */}
                     <div className="h-1 rounded-full overflow-hidden mb-2" style={{ background: "rgba(255,255,255,0.06)" }}>
                       <div
                         className="h-full rounded-full"
-                        style={{
-                          width: `${(userVal / trekVal) * 100}%`,
-                          background: `linear-gradient(to right, ${color}99, ${color})`,
-                        }}
+                        style={{ width: `${(userVal / trekVal) * 100}%`, background: `linear-gradient(to right, ${color}99, ${color})` }}
                       />
                     </div>
                     <p className="text-white/40 text-[11px] leading-snug">{TRAINING_TIPS[ax]}</p>
