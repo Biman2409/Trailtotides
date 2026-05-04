@@ -219,7 +219,7 @@ export default function MatchmakerHomepageSection() {
 const SAMPLE_ACE = { stamina: 4, power: 3, strength: 3, agility: 4, water: 2, altitude: 5, focus: 3, nerve: 4 };
 
 const ACE_AXIS_META = [
-  { key: "stamina",  icon: <Flame    className="w-3 h-3" />, desc: "Sustained aerobic output over long durations",   color: "#f97316" },
+  { key: "stamina",  icon: <Flame    className="w-3 h-3" />, desc: "Sustained aerobic output over long durations",    color: "#f97316" },
   { key: "power",    icon: <Zap      className="w-3 h-3" />, desc: "Explosive effort — short bursts at max intensity", color: "#eab308" },
   { key: "strength", icon: <Dumbbell className="w-3 h-3" />, desc: "Load-bearing: carrying packs, scrambling terrain", color: "#84cc16" },
   { key: "agility",  icon: <Compass  className="w-3 h-3" />, desc: "Balance, coordination and technical footing",     color: "#22d3ee" },
@@ -229,136 +229,102 @@ const ACE_AXIS_META = [
   { key: "nerve",    icon: <Wind     className="w-3 h-3" />, desc: "Resilience in remote and isolated conditions",    color: "#10b981" },
 ];
 
+function SampleRadarPanel() {
+  const [activeAxis, setActiveAxis] = useState<string | null>(null);
+  const active = activeAxis ? ACE_AXIS_META.find(a => a.key === activeAxis) ?? null : null;
+
+  return (
+    <div
+      className="relative rounded-2xl overflow-hidden p-4 shrink-0"
+      style={{
+        background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
+        border: "1px solid rgba(255,255,255,0.07)",
+        boxShadow: "0 24px 48px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
+        width: 300,
+      }}
+    >
+      {/* Corner brackets */}
+      <div className="absolute top-0 left-0 w-6 h-6 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
+      <div className="absolute top-0 right-0 w-6 h-6 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
+      <div className="absolute bottom-0 left-0 w-6 h-6 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
+      <div className="absolute bottom-0 right-0 w-6 h-6 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
+
+      {/* Header */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-1.5">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
+          <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/35">ACE · Sample Profile</span>
+        </div>
+        <span className="text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+          style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.22)", color: "#ff7d47" }}>Demo</span>
+      </div>
+
+      {/* Radar */}
+      <div className="flex justify-center mb-3">
+        <div className="rounded-xl p-2"
+          style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
+          <ACERadar ace={SAMPLE_ACE} size={190} showLabels />
+        </div>
+      </div>
+
+      {/* Axis name pills — click for tooltip */}
+      <div className="flex flex-wrap gap-1 justify-center">
+        {ACE_AXIS_META.map(({ key, icon, color }) => (
+          <button
+            key={key}
+            onClick={() => setActiveAxis(prev => prev === key ? null : key)}
+            className="flex items-center gap-1 px-2 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all"
+            style={{
+              background: activeAxis === key ? `${color}22` : `${color}0c`,
+              border: `1px solid ${activeAxis === key ? color + "55" : color + "1a"}`,
+              color: activeAxis === key ? color : `${color}99`,
+            }}
+          >
+            {icon}{key}
+          </button>
+        ))}
+      </div>
+
+      {/* Tooltip pop-up */}
+      {active && (
+        <div
+          className="mt-2 rounded-xl px-3 py-2.5 flex items-start gap-2"
+          style={{ background: `${active.color}12`, border: `1px solid ${active.color}28` }}
+        >
+          <span style={{ color: active.color }} className="mt-0.5 shrink-0">{active.icon}</span>
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-wider mb-0.5" style={{ color: active.color }}>{active.key}</p>
+            <p className="text-[10px] text-white/50 leading-snug">{active.desc}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Scan line */}
+      <div className="absolute inset-x-0 h-px pointer-events-none"
+        style={{ background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.35), transparent)", animation: "scanline 3.5s ease-in-out infinite", top: 0 }} />
+      <style>{`@keyframes scanline { 0% { top:0%; opacity:0; } 10% { opacity:1; } 90% { opacity:1; } 100% { top:100%; opacity:0; } }`}</style>
+    </div>
+  );
+}
+
 function DefaultCTA() {
   return (
     <section className="py-20 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
 
-          {/* ── Left: hi-tech sample radar panel ── */}
-          <div className="shrink-0 w-full lg:w-auto flex flex-col items-center">
-            {/* Panel */}
-            <div
-              className="relative rounded-2xl overflow-hidden p-5"
-              style={{
-                background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
-                border: "1px solid rgba(255,255,255,0.07)",
-                boxShadow: "0 32px 64px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
-                width: 340,
-              }}
-            >
-              {/* Corner scan lines decorative */}
-              <div className="absolute top-0 left-0 w-8 h-8 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.35)", borderLeft: "1px solid rgba(255,81,0,0.35)", borderRadius: "0 0 0 0" }} />
-              <div className="absolute top-0 right-0 w-8 h-8 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.35)", borderRight: "1px solid rgba(255,81,0,0.35)" }} />
-              <div className="absolute bottom-0 left-0 w-8 h-8 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.35)", borderLeft: "1px solid rgba(255,81,0,0.35)" }} />
-              <div className="absolute bottom-0 right-0 w-8 h-8 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.35)", borderRight: "1px solid rgba(255,81,0,0.35)" }} />
+          <SampleRadarPanel />
 
-              {/* Header bar */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
-                  <span className="text-[9px] font-black uppercase tracking-[0.28em] text-white/35">ACE · Sample Profile</span>
-                </div>
-                <div
-                  className="text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
-                  style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.22)", color: "#ff7d47" }}
-                >
-                  Demo
-                </div>
-              </div>
-
-              {/* Radar */}
-              <div className="flex justify-center mb-4">
-                <div
-                  className="rounded-xl p-3"
-                  style={{
-                    background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, rgba(0,0,0,0) 70%)",
-                    border: "1px solid rgba(255,255,255,0.05)",
-                  }}
-                >
-                  <ACERadar ace={SAMPLE_ACE} size={210} showLabels />
-                </div>
-              </div>
-
-              {/* Axis legend grid */}
-              <div className="grid grid-cols-2 gap-1">
-                {ACE_AXIS_META.map(({ key, icon, desc, color }) => (
-                  <div
-                    key={key}
-                    className="flex items-start gap-2 rounded-lg px-2.5 py-2"
-                    style={{ background: `${color}08`, border: `1px solid ${color}15` }}
-                  >
-                    <span className="mt-px shrink-0" style={{ color }}>{icon}</span>
-                    <div className="min-w-0">
-                      <p className="text-[9px] font-black uppercase tracking-wider leading-none mb-0.5" style={{ color }}>
-                        {key}
-                      </p>
-                      <p className="text-[8px] text-white/28 leading-snug">{desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Scan line animation */}
-              <div
-                className="absolute inset-x-0 h-px pointer-events-none"
-                style={{
-                  background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.4), transparent)",
-                  animation: "scanline 3.5s ease-in-out infinite",
-                  top: 0,
-                }}
-              />
-              <style>{`
-                @keyframes scanline {
-                  0%   { top: 0%;   opacity: 0; }
-                  10%  { opacity: 1; }
-                  90%  { opacity: 1; }
-                  100% { top: 100%; opacity: 0; }
-                }
-              `}</style>
-            </div>
-
-            {/* Below panel: system label */}
-            <div className="mt-3 flex items-center gap-2">
-              <div className="h-px w-10 bg-gradient-to-r from-transparent to-white/10" />
-              <span className="text-[8px] uppercase tracking-[0.3em] text-white/18 font-bold">Adventure Capability Engine</span>
-              <div className="h-px w-10 bg-gradient-to-l from-transparent to-white/10" />
-            </div>
-          </div>
-
-          {/* ── Right: copy ── */}
+          {/* Right: copy */}
           <div className="flex-1">
             <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
             <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-4 lg:mb-5">
               Adventures built,<br />
               <span className="text-[#ff5100]">for your body</span>
             </h2>
-            <p className="text-white/55 text-base md:text-lg leading-relaxed mb-6">
-              Answer 8 questions. We plot your capability across all 8 axes — then surface every adventure that fits your exact profile.
+            <p className="text-white/55 text-base md:text-lg leading-relaxed mb-8">
+              8 questions. We map your capability across all 8 axes — then surface every adventure that fits your exact profile.
             </p>
-
-            {/* Axis domain pills */}
-            <div className="grid grid-cols-2 gap-2 mb-8">
-              {[
-                { label: "Engine",   desc: "Stamina + Power",     color: "#f97316" },
-                { label: "Chassis",  desc: "Strength + Agility",  color: "#22d3ee" },
-                { label: "Elements", desc: "Water + Altitude",    color: "#a78bfa" },
-                { label: "Mind",     desc: "Focus + Nerve",       color: "#10b981" },
-              ].map(({ label, desc, color }) => (
-                <div
-                  key={label}
-                  className="flex items-center gap-2.5 rounded-xl px-3 py-2.5"
-                  style={{ background: `${color}0d`, border: `1px solid ${color}22` }}
-                >
-                  <div className="w-1.5 h-4 rounded-full shrink-0" style={{ background: `linear-gradient(180deg, ${color}, ${color}55)` }} />
-                  <div>
-                    <p className="text-xs font-black" style={{ color }}>{label}</p>
-                    <p className="text-[10px] text-white/35">{desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/matchmaker"
