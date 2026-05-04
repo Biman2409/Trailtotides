@@ -318,7 +318,7 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
               style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.35)" }}
             >
               <RotateCcw className="w-2.5 h-2.5" />
-              Retake
+              Retake Assessment
             </Link>
           )}
         </div>
