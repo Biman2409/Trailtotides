@@ -165,9 +165,9 @@ function MiniCard({ a, done = false }: { a: typeof adventures[number]; currentSl
       className="group flex flex-col rounded-xl overflow-hidden flex-none w-48 snap-start transition-all duration-300 hover:-translate-y-1"
       style={{ background: "rgba(255,255,255,0.04)", border: done ? "1px solid rgba(251,191,36,0.15)" : "1px solid rgba(255,255,255,0.08)" }}
     >
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative aspect-[4/3] overflow-hidden w-full">
         <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
-        <Image src={a.heroImage} alt={a.name} fill sizes="192px" quality={80} className="object-cover transition-transform duration-700 group-hover:scale-105" />
+        <Image src={a.heroImage} alt={a.name} fill sizes="192px" unoptimized className="object-cover transition-transform duration-700 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10 pointer-events-none" />
 
         {/* Badge */}
