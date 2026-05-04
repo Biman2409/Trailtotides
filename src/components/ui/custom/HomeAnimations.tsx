@@ -215,15 +215,18 @@ export function HeroSubheading() {
 
       {/* Supporting copy */}
       <p
-        className="text-center font-medium leading-relaxed"
+        className="text-center font-medium leading-relaxed px-4 py-2.5 rounded-xl"
         style={{
           fontSize: "clamp(0.8rem, 1.8vw, 0.95rem)",
-          color: "rgba(255,255,255,0.65)",
-          textShadow: "0 2px 12px rgba(0,0,0,0.6)",
+          color: "rgba(255,255,255,0.88)",
+          background: "rgba(0,0,0,0.45)",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          border: "1px solid rgba(255,255,255,0.08)",
           letterSpacing: "0.01em",
         }}
       >
-        Elite adventures across India — tailored to your body,<br className="hidden sm:block" /> precision-mapped by AI, and led by trusted operators.
+        Find adventures across India — tailored to your body,<br className="hidden sm:block" /> precision-mapped by AI, and led by trusted operators.
       </p>
 
       <style>{`
