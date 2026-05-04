@@ -221,7 +221,7 @@ export default function PhotoGallery({ slug, currentUserId, isCompleted }: Props
                   <div className="flex items-center gap-1.5">
                     <div className="w-5 h-5 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.4)" }}>
                       {photo.avatar_id
-                        ? <img src={`/avatars/avatar-${photo.avatar_id}.png`} alt={photo.username} className="w-full h-full object-cover" />
+                        ? <img src={`/avatars/avatar-${photo.avatar_id}.png`} alt={photo.username} className="w-full h-full object-cover" loading="eager" />
                         : <span className="w-full h-full flex items-center justify-center text-white text-[8px] font-bold">{photo.username.charAt(0).toUpperCase()}</span>}
                     </div>
                     <span className="text-white text-[10px] font-semibold leading-none truncate max-w-[80px]">{photo.username}</span>
@@ -279,7 +279,7 @@ export default function PhotoGallery({ slug, currentUserId, isCompleted }: Props
             <div className="px-5 py-3 flex items-center gap-3" style={{ background: "rgba(15,15,20,0.95)" }}>
               <div className="w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.3)" }}>
                 {lightbox.avatar_id
-                  ? <img src={`/avatars/avatar-${lightbox.avatar_id}.png`} alt={lightbox.username} className="w-full h-full object-cover" />
+                  ? <img src={`/avatars/avatar-${lightbox.avatar_id}.png`} alt={lightbox.username} className="w-full h-full object-cover" loading="eager" />
                   : <span className="w-full h-full flex items-center justify-center text-white text-xs font-bold">{lightbox.username.charAt(0).toUpperCase()}</span>}
               </div>
               <div className="flex-1 min-w-0">

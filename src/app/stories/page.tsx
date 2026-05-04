@@ -123,7 +123,7 @@ export default function StoriesPage() {
                 <div className="flex items-center gap-3 flex-wrap">
                   <div className="w-9 h-9 rounded-full flex-shrink-0 overflow-hidden shadow-lg shadow-[#ff5100]/30" style={{ background: "rgba(255,81,0,0.2)" }}>
                     {featured.authorAvatar
-                      ? <img src={featured.authorAvatar} alt={featured.author} className="w-full h-full object-cover" />
+                      ? <img src={featured.authorAvatar} alt={featured.author} className="w-full h-full object-cover" loading="eager" />
                       : <span className="w-full h-full flex items-center justify-center text-sm font-bold text-white bg-[#ff5100]">{featured.author[0]}</span>}
                   </div>
                   <div className="mr-1">
@@ -197,7 +197,7 @@ export default function StoriesPage() {
                     <div className="flex items-center gap-2.5">
                       <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 border border-[#ff5100]/30">
                         {story.authorAvatar
-                          ? <img src={story.authorAvatar} alt={story.author} className="w-full h-full object-cover" />
+                          ? <img src={story.authorAvatar} alt={story.author} className="w-full h-full object-cover" loading="eager" />
                           : <span className="w-full h-full flex items-center justify-center text-xs font-bold text-[#ff5100] bg-[#ff5100]/20">{story.author[0]}</span>}
                       </div>
                       <div>

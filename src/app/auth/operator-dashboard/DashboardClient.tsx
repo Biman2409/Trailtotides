@@ -359,7 +359,7 @@ export default function DashboardClient({ profile, listings: initialListings, al
         <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 flex items-center justify-center"
           style={profile.logo_url ? { background: "#fff", border: "1px solid rgba(255,255,255,0.1)" } : { background: "rgba(255,81,0,0.1)", color: "#ff6b2b" }}>
           {profile.logo_url
-            ? <img src={profile.logo_url} alt={profile.company_name} className="w-full h-full object-contain p-1" />
+            ? <img src={profile.logo_url} alt={profile.company_name} className="w-full h-full object-contain p-1" loading="eager" />
             : <span className="text-xl font-black">{profile.company_name.charAt(0).toUpperCase()}</span>
           }
         </div>

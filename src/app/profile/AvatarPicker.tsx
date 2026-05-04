@@ -148,7 +148,7 @@ export default function AvatarPicker() {
         aria-label="Change profile picture"
       >
         {selected
-          ? <img src={selected.src} alt={selected.label} className="block w-full h-full object-cover rounded-[22px]" />
+          ? <img src={selected.src} alt={selected.label} className="block w-full h-full object-cover rounded-[22px]" loading="eager" />
           : <AceBadge rankName={rankName} rankColor={rankColor} />
         }
         <span className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl gap-1 pointer-events-none">
@@ -273,7 +273,7 @@ function AvatarCell({ av, active, onPick }: { av: (typeof AVATARS)[0]; active: b
           transition: "all 0.13s",
         }}
       >
-        <img src={av.src} alt={av.label} className="w-full h-full object-cover" />
+        <img src={av.src} alt={av.label} className="w-full h-full object-cover" loading="eager" />
       </span>
       <span className="text-[7.5px] text-white/25 group-hover/av:text-white/55 transition-colors font-medium leading-none tracking-wide">
         {av.label}

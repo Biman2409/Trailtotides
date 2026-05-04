@@ -334,7 +334,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                   <div className="flex items-center gap-2.5">
                     <div className="w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.2)" }}>
                       {r.avatar_id
-                        ? <img src={`/avatars/avatar-${r.avatar_id}.png`} alt={r.username} className="w-full h-full object-cover" />
+                        ? <img src={`/avatars/avatar-${r.avatar_id}.png`} alt={r.username} className="w-full h-full object-cover" loading="eager" />
                         : <span className="w-full h-full flex items-center justify-center text-white text-xs font-bold">{r.username.charAt(0).toUpperCase()}</span>}
                     </div>
                     <div className="min-w-0 flex-1">

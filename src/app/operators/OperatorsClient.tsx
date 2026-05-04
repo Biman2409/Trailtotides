@@ -256,7 +256,7 @@ export default function OperatorsClient({ cards, allTypes, allStates }: Props) {
                         style={op.logo_url ? { background: "#fff", border: "1px solid rgba(255,255,255,0.1)" } : { background: "rgba(255,81,0,0.09)", color: "#ff6b2b" }}
                       >
                         {op.logo_url
-                          ? <img src={op.logo_url} alt={op.company_name} className="w-full h-full object-contain p-0.5" />
+                          ? <img src={op.logo_url} alt={op.company_name} className="w-full h-full object-contain p-0.5" loading="eager" />
                           : initial
                         }
                       </div>
