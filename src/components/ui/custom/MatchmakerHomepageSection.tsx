@@ -264,7 +264,7 @@ function SampleRadarPanel() {
         background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
         border: "1px solid rgba(255,255,255,0.07)",
         boxShadow: "0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
-        width: "fit-content",
+        width: 260,
       }}
     >
       {/* Corner brackets */}
@@ -288,13 +288,13 @@ function SampleRadarPanel() {
       </div>
 
       {/* Axis ticker */}
-      <div className="mt-2 rounded-lg px-2.5 py-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", width: "max-content", minWidth: "100%" }}>
+      <div className="mt-2 rounded-lg px-2.5 py-2 w-full" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
         <div style={{ opacity: fade ? 1 : 0, transition: "opacity 0.22s ease" }}>
           <div className="flex items-center gap-1.5 mb-0.5">
             <span className="shrink-0" style={{ color: current.color }}>{current.icon}</span>
             <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: current.color }}>{current.key}</span>
           </div>
-          <p className="text-[9px] text-white/40 leading-snug pl-[18px] whitespace-nowrap">{current.desc}</p>
+          <p className="text-[9px] text-white/40 leading-none pl-[18px] truncate">{current.desc}</p>
         </div>
       </div>
 
