@@ -322,7 +322,7 @@ function DefaultCTA() {
               <span className="text-[#ff5100]">for your body</span>
             </h2>
             <p className="text-white/55 text-base md:text-lg leading-relaxed mb-8">
-              Answer 8 questions. We calibrate your fitness level and match you to adventures your body can actually handle.
+              Answer 8 questions. We calibrate your capability level and match you to adventures you can actually handle.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
