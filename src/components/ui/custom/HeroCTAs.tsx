@@ -18,13 +18,10 @@ export default function HeroCTAs() {
   }
 
   return (
-    <form
-      onSubmit={handleSearch}
-      className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full max-w-xl mx-auto"
-    >
+    <div className="flex flex-col items-center gap-3 w-full max-w-xl mx-auto">
       {/* Search input */}
       <div
-        className="flex items-center gap-3 flex-1 px-4 py-3 rounded-full"
+        className="flex items-center gap-3 w-full px-4 py-3 rounded-full"
         style={{
           background: "rgba(255,255,255,0.10)",
           border: "1px solid rgba(255,255,255,0.22)",
@@ -46,7 +43,7 @@ export default function HeroCTAs() {
       {/* Explore button */}
       <button
         type="submit"
-        className="group flex items-center justify-center gap-2 px-5 py-3 rounded-full text-sm font-bold tracking-wide text-white transition-all duration-200 hover:-translate-y-0.5 active:scale-95 whitespace-nowrap shrink-0"
+        className="group flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-bold tracking-wide text-white transition-all duration-200 hover:-translate-y-0.5 active:scale-95"
         style={{
           background: "#ff5100",
           boxShadow: "0 0 0 1px rgba(255,81,0,0.6), 0 4px 20px rgba(255,81,0,0.45)",
@@ -57,6 +54,6 @@ export default function HeroCTAs() {
         Explore all adventures
         <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
       </button>
-    </form>
+    </div>
   );
 }
