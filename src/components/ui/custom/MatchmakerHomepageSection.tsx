@@ -264,7 +264,7 @@ function SampleRadarPanel() {
         background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
         border: "1px solid rgba(255,255,255,0.07)",
         boxShadow: "0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
-        width: 240,
+        width: 280,
         height: "100%",
         boxSizing: "border-box",
       }}
@@ -282,10 +282,10 @@ function SampleRadarPanel() {
       </div>
 
       {/* Radar */}
-      <div className="flex-1 flex items-center justify-center w-full">
-        <div className="rounded-xl p-1.5"
+      <div className="flex-1 flex items-center justify-center">
+        <div className="rounded-xl p-1.5 flex items-center justify-center"
           style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
-          <ACERadar ace={SAMPLE_ACE} size={150} showLabels />
+          <ACERadar ace={SAMPLE_ACE} size={200} showLabels />
         </div>
       </div>
 
@@ -324,10 +324,10 @@ function DefaultCTA() {
             <p className="text-white/55 text-base md:text-lg leading-relaxed mb-8">
               Answer 8 questions. We calibrate your capability level and match you to adventures you can actually handle.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3" style={{ marginTop: "auto" }}>
+            <div className="flex flex-col gap-3" style={{ marginTop: "auto" }}>
               <Link
                 href="/matchmaker"
-                className="flex-1 flex items-center justify-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#ff7d47] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25 group transition-all duration-200"
+                className="flex items-center justify-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#ff7d47] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25 group transition-all duration-200"
                 style={{ boxShadow: "0 4px 20px rgba(255,81,0,0.3)" }}
               >
                 Take Assessment
@@ -335,7 +335,7 @@ function DefaultCTA() {
               </Link>
               <Link
                 href="/ace"
-                className="flex-1 flex items-center justify-center gap-2 text-white/45 hover:text-white/70 font-semibold px-6 py-4 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all duration-200"
+                className="flex items-center justify-center gap-2 text-white/45 hover:text-white/70 font-semibold px-8 py-4 rounded-xl text-base border border-white/10 hover:border-white/20 transition-all duration-200"
               >
                 Learn about ACE
               </Link>
