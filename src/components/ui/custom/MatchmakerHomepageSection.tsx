@@ -327,7 +327,7 @@ function DefaultCTA() {
             <div className="flex flex-col sm:flex-row gap-3" style={{ marginTop: "auto" }}>
               <Link
                 href="/matchmaker"
-                className="flex-1 inline-flex items-center justify-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#ff7d47] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25 group transition-all duration-200"
+                className="flex-1 flex items-center justify-center gap-2.5 bg-[#ff5100] text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#ff7d47] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/25 group transition-all duration-200"
                 style={{ boxShadow: "0 4px 20px rgba(255,81,0,0.3)" }}
               >
                 Take Assessment
@@ -335,7 +335,7 @@ function DefaultCTA() {
               </Link>
               <Link
                 href="/ace"
-                className="flex-1 inline-flex items-center justify-center gap-2 text-white/45 hover:text-white/70 font-semibold px-6 py-4 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all duration-200"
+                className="flex-1 flex items-center justify-center gap-2 text-white/45 hover:text-white/70 font-semibold px-6 py-4 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all duration-200"
               >
                 Learn about ACE
               </Link>
