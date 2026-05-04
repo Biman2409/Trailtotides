@@ -133,7 +133,7 @@ export function HeroHeadline() {
     <h1
       className="font-black tracking-tight"
       style={{
-        fontSize: "clamp(2.6rem, 7.5vw, 6rem)",
+        fontSize: "clamp(1.9rem, 5vw, 4rem)",
         lineHeight: 1.02,
         color: "white",
         textShadow: "0 4px 40px rgba(0,0,0,0.6)",
