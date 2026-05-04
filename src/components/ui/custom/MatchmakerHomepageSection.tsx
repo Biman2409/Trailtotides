@@ -228,71 +228,80 @@ const AXIS_TICKER = [
   { key: "Nerve",    color: "#10b981", desc: "Resilience in remote and isolated conditions" },
 ];
 
+const SCAN_MS = 3200;
+
 function SampleRadarPanel() {
   const [idx, setIdx] = useState(0);
-  const [visible, setVisible] = useState(true);
+  const [fade, setFade] = useState(true);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setVisible(false);
-      setTimeout(() => {
-        setIdx(i => (i + 1) % AXIS_TICKER.length);
-        setVisible(true);
-      }, 300);
-    }, 2200);
-    return () => clearInterval(interval);
+    // Scan line hits ticker at ~88% of SCAN_MS
+    const swapAt = SCAN_MS * 0.88;
+    let swapTimer: ReturnType<typeof setTimeout>;
+    let cycleTimer: ReturnType<typeof setInterval>;
+
+    function scheduleCycle() {
+      swapTimer = setTimeout(() => {
+        setFade(false);
+        setTimeout(() => {
+          setIdx(i => (i + 1) % AXIS_TICKER.length);
+          setFade(true);
+        }, 220);
+      }, swapAt);
+    }
+
+    scheduleCycle();
+    cycleTimer = setInterval(scheduleCycle, SCAN_MS);
+    return () => { clearTimeout(swapTimer); clearInterval(cycleTimer); };
   }, []);
 
   const current = AXIS_TICKER[idx];
 
   return (
     <div
-      className="relative rounded-2xl overflow-hidden p-4 shrink-0 self-start"
+      className="relative rounded-2xl overflow-hidden p-3 shrink-0 self-start"
       style={{
         background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
         border: "1px solid rgba(255,255,255,0.07)",
-        boxShadow: "0 24px 48px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
-        width: 300,
+        boxShadow: "0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
+        width: 270,
       }}
     >
       {/* Corner brackets */}
-      <div className="absolute top-0 left-0 w-6 h-6 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
-      <div className="absolute top-0 right-0 w-6 h-6 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
-      <div className="absolute bottom-0 left-0 w-6 h-6 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
-      <div className="absolute bottom-0 right-0 w-6 h-6 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
+      <div className="absolute top-0 left-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
+      <div className="absolute top-0 right-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
+      <div className="absolute bottom-0 left-0 w-5 h-5 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
+      <div className="absolute bottom-0 right-0 w-5 h-5 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-1.5">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
-          <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/35">Sample Profile</span>
-        </div>
+      <div className="flex items-center gap-1.5 mb-2">
+        <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
+        <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/35">Sample Profile</span>
       </div>
 
       {/* Radar */}
       <div className="flex justify-center">
-        <div className="rounded-xl p-2"
+        <div className="rounded-xl p-1.5"
           style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
-          <ACERadar ace={SAMPLE_ACE} size={190} showLabels />
+          <ACERadar ace={SAMPLE_ACE} size={170} showLabels />
         </div>
       </div>
 
       {/* Axis ticker */}
-      <div className="mt-3 rounded-xl px-3 py-2.5" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", minHeight: 48 }}>
-        <div style={{ opacity: visible ? 1 : 0, transition: "opacity 0.3s ease" }}>
-          <div className="flex items-center gap-1.5 mb-1">
-            <div className="w-1 h-3 rounded-full" style={{ background: current.color }} />
+      <div className="mt-2 rounded-lg px-2.5 py-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+        <div style={{ opacity: fade ? 1 : 0, transition: "opacity 0.22s ease" }}>
+          <div className="flex items-center gap-1.5 mb-0.5">
+            <div className="w-1 h-2.5 rounded-full shrink-0" style={{ background: current.color }} />
             <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: current.color }}>{current.key}</span>
-            <span className="text-[9px] text-white/20 ml-auto tabular-nums">{idx + 1}/{AXIS_TICKER.length}</span>
           </div>
-          <p className="text-[10px] text-white/45 leading-snug pl-2.5">{current.desc}</p>
+          <p className="text-[9px] text-white/40 leading-snug pl-2.5">{current.desc}</p>
         </div>
       </div>
 
-      {/* Scan line */}
+      {/* Scan line — duration matches SCAN_MS */}
       <div className="absolute inset-x-0 h-px pointer-events-none"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.35), transparent)", animation: "scanline 3.5s ease-in-out infinite", top: 0 }} />
-      <style>{`@keyframes scanline { 0% { top:0%; opacity:0; } 10% { opacity:1; } 90% { opacity:1; } 100% { top:100%; opacity:0; } }`}</style>
+        style={{ background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.45), transparent)", animation: `scanline ${SCAN_MS}ms linear infinite`, top: 0 }} />
+      <style>{`@keyframes scanline { 0% { top:0%; opacity:0; } 8% { opacity:1; } 88% { opacity:1; } 100% { top:100%; opacity:0; } }`}</style>
     </div>
   );
 }
