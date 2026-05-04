@@ -218,14 +218,14 @@ export default function MatchmakerHomepageSection() {
 const SAMPLE_ACE = { stamina: 4, power: 3, strength: 3, agility: 4, water: 2, altitude: 5, focus: 3, nerve: 4 };
 
 const AXIS_TICKER = [
-  { key: "Stamina",  color: "#f97316", desc: "Sustained aerobic output over long durations",    icon: <Flame    className="w-3 h-3" /> },
-  { key: "Power",    color: "#eab308", desc: "Explosive effort — short bursts at max intensity", icon: <Zap      className="w-3 h-3" /> },
-  { key: "Strength", color: "#84cc16", desc: "Load-bearing: packs, scrambles, technical terrain",icon: <Dumbbell className="w-3 h-3" /> },
-  { key: "Agility",  color: "#22d3ee", desc: "Balance, coordination and technical footing",     icon: <Compass  className="w-3 h-3" /> },
-  { key: "Water",    color: "#3b82f6", desc: "Aquatic comfort — pool, open water, currents",    icon: <Waves    className="w-3 h-3" /> },
-  { key: "Altitude", color: "#a78bfa", desc: "High-altitude acclimatisation and exposure",      icon: <Mountain className="w-3 h-3" /> },
-  { key: "Focus",    color: "#f43f5e", desc: "Mental composure under exposure and pressure",    icon: <Shield   className="w-3 h-3" /> },
-  { key: "Nerve",    color: "#10b981", desc: "Resilience in remote and isolated conditions",    icon: <Wind     className="w-3 h-3" /> },
+  { key: "Stamina",  color: "#f97316", desc: "Sustained aerobic output",        icon: <Flame    className="w-3 h-3" /> },
+  { key: "Power",    color: "#eab308", desc: "Explosive short-burst effort",     icon: <Zap      className="w-3 h-3" /> },
+  { key: "Strength", color: "#84cc16", desc: "Load carrying and scrambling",     icon: <Dumbbell className="w-3 h-3" /> },
+  { key: "Agility",  color: "#22d3ee", desc: "Balance and technical footing",    icon: <Compass  className="w-3 h-3" /> },
+  { key: "Water",    color: "#3b82f6", desc: "Pool, open water and currents",    icon: <Waves    className="w-3 h-3" /> },
+  { key: "Altitude", color: "#a78bfa", desc: "High-altitude acclimatisation",    icon: <Mountain className="w-3 h-3" /> },
+  { key: "Focus",    color: "#f43f5e", desc: "Composure under exposure",         icon: <Shield   className="w-3 h-3" /> },
+  { key: "Nerve",    color: "#10b981", desc: "Resilience in remote terrain",     icon: <Wind     className="w-3 h-3" /> },
 ];
 
 const SCAN_MS = 3200;
@@ -264,7 +264,7 @@ function SampleRadarPanel() {
         background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
         border: "1px solid rgba(255,255,255,0.07)",
         boxShadow: "0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
-        width: 260,
+        width: "fit-content",
       }}
     >
       {/* Corner brackets */}
@@ -280,7 +280,7 @@ function SampleRadarPanel() {
       </div>
 
       {/* Radar */}
-      <div className="flex-1 flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center w-full">
         <div className="rounded-xl p-1.5"
           style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
           <ACERadar ace={SAMPLE_ACE} size={175} showLabels />
@@ -294,7 +294,7 @@ function SampleRadarPanel() {
             <span className="shrink-0" style={{ color: current.color }}>{current.icon}</span>
             <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: current.color }}>{current.key}</span>
           </div>
-          <p className="text-[9px] text-white/40 leading-none pl-[18px] truncate">{current.desc}</p>
+          <p className="text-[9px] text-white/40 leading-none pl-[18px] whitespace-nowrap">{current.desc}</p>
         </div>
       </div>
 
