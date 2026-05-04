@@ -210,7 +210,7 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
                 className="flex flex-col items-center gap-2 rounded-xl py-3 px-2"
                 style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
               >
-                <span className="text-[8px] font-black uppercase tracking-[0.18em] text-white/40">Your Body</span>
+                <span className="text-[8px] font-black uppercase tracking-[0.18em] text-white/40">Your Capability</span>
                 <ACERadar ace={userAce} size={140} showLabels />
               </div>
               <div className="col-span-2 flex justify-center">
