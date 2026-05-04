@@ -17,7 +17,6 @@ const navLinks = [
   { href: "/map", label: "Map" },
   { href: "/matchmaker", label: "Matchmaker" },
   { href: "/planner", label: "Planner" },
-  { href: "/ace", label: "ACE" },
   { href: "/operators", label: "Operators" },
   { href: "/stories", label: "Stories" },
 ];
