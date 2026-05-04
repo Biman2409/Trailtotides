@@ -85,6 +85,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
   const [deleting, setDeleting] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
 
   // Adventure review fields
   const [rating, setRating] = useState(0);
@@ -197,6 +198,19 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
               <span className="text-white/30 text-xs">Log this adventure to leave a review.</span>
             </div>
           ) : !hasReviewed ? (
+            !formOpen ? (
+              <button
+                onClick={() => setFormOpen(true)}
+                className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl mb-4 text-left transition-all hover:brightness-110 active:scale-[0.99]"
+                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+              >
+                <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.2)" }}>
+                  <Star className="w-3.5 h-3.5 text-amber-400" />
+                </div>
+                <span className="text-white/45 text-xs flex-1">{ctaText(adventureType, adventureName)}</span>
+                <span className="text-amber-400/60 text-xs font-semibold shrink-0">Write review →</span>
+              </button>
+            ) : (
             <form onSubmit={handleSubmit} className="rounded-xl p-3.5 mb-4 space-y-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
               <p className="text-white/50 text-xs font-medium">{ctaText(adventureType, adventureName)}</p>
 
@@ -296,17 +310,27 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                   {error && <p className="text-red-400 text-xs">{error}</p>}
                   {success && <p className="text-emerald-400 text-xs font-medium">Posted!</p>}
                 </div>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="flex items-center gap-1.5 text-white font-semibold py-1.5 px-4 rounded-lg text-xs transition-colors disabled:opacity-50"
-                  style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)" }}
-                >
-                  {submitting && <Loader2 className="w-3 h-3 animate-spin" />}
-                  Post Review
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => { setFormOpen(false); setRating(0); setBody(""); setError(""); }}
+                    className="text-white/30 text-xs hover:text-white/55 transition-colors px-2 py-1.5"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="flex items-center gap-1.5 text-white font-semibold py-1.5 px-4 rounded-lg text-xs transition-colors disabled:opacity-50"
+                    style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)" }}
+                  >
+                    {submitting && <Loader2 className="w-3 h-3 animate-spin" />}
+                    Post Review
+                  </button>
+                </div>
               </div>
             </form>
+            )
           ) : (
             <div className="rounded-lg px-3 py-2.5 mb-4 flex items-center gap-2" style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.12)" }}>
               <Star className="w-3 h-3 fill-emerald-400 text-emerald-400" />

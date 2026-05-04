@@ -46,6 +46,7 @@ export default function PhotoGallery({ slug, currentUserId, isCompleted }: Props
   const [preview, setPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState("");
+  const [uploadOpen, setUploadOpen] = useState(false);
   const [lightbox, setLightbox] = useState<Photo | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
@@ -117,27 +118,48 @@ export default function PhotoGallery({ slug, currentUserId, isCompleted }: Props
           <div className="rounded-lg px-3 py-2.5 mb-4 flex items-center gap-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
             <span className="text-white/30 text-xs">Log this adventure to upload photos.</span>
           </div>
+        ) : !uploadOpen ? (
+          <button
+            onClick={() => setUploadOpen(true)}
+            className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl mb-4 text-left transition-all hover:brightness-110 active:scale-[0.99]"
+            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+          >
+            <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.1)", border: "1px solid rgba(255,81,0,0.2)" }}>
+              <Camera className="w-3.5 h-3.5 text-[#ff5100]" />
+            </div>
+            <span className="text-white/45 text-xs flex-1">Been here? Share a photo from your trip.</span>
+            <span className="text-[#ff5100]/60 text-xs font-semibold shrink-0">Add photo →</span>
+          </button>
         ) : (
         <div className="mb-4">
           {!preview ? (
-            <div
-              ref={dropRef}
-              onDrop={handleDrop}
-              onDragOver={(e) => e.preventDefault()}
-              onClick={() => fileRef.current?.click()}
-              className="flex flex-col items-center justify-center gap-1.5 py-5 rounded-xl cursor-pointer transition-all duration-200 hover:border-[#ff5100]/40 hover:bg-[#ff5100]/3"
-              style={{ border: "2px dashed rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.02)" }}
-            >
-              <Camera className="w-5 h-5 text-white/20" />
-              <p className="text-white/40 text-xs font-medium">Drop a photo or tap to upload</p>
-              <p className="text-white/20 text-[10px]">JPG, PNG, WebP · Max 8MB</p>
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/heic"
-                className="hidden"
-                onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
-              />
+            <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.02)" }}>
+              <div
+                ref={dropRef}
+                onDrop={handleDrop}
+                onDragOver={(e) => e.preventDefault()}
+                onClick={() => fileRef.current?.click()}
+                className="flex flex-col items-center justify-center gap-1.5 py-5 cursor-pointer transition-all duration-200 hover:bg-[#ff5100]/3"
+              >
+                <Camera className="w-5 h-5 text-white/20" />
+                <p className="text-white/40 text-xs font-medium">Drop a photo or tap to upload</p>
+                <p className="text-white/20 text-[10px]">JPG, PNG, WebP · Max 8MB</p>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/heic"
+                  className="hidden"
+                  onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
+                />
+              </div>
+              <div className="flex justify-end px-3 pb-3 -mt-1">
+                <button
+                  onClick={() => { setUploadOpen(false); setFile(null); setPreview(null); setCaption(""); setError(""); }}
+                  className="text-white/25 text-xs hover:text-white/50 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           ) : (
             <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}>
