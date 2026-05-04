@@ -62,7 +62,6 @@ export default function Footer() {
                       { label: "Map", href: "/map" },
                       { label: "Planner", href: "/planner" },
                       { label: "Matchmaker", href: "/matchmaker" },
-                      { label: "ACE", href: "/ace" },
                       { label: "Stories", href: "/stories" },
                       { label: "Operators", href: "/operators" },
                     ].map((link) => (
