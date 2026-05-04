@@ -259,7 +259,7 @@ function SampleRadarPanel() {
 
   return (
     <div
-      className="relative rounded-2xl overflow-hidden p-3 shrink-0 self-start"
+      className="relative rounded-2xl overflow-hidden p-3 shrink-0 self-stretch flex flex-col"
       style={{
         background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
         border: "1px solid rgba(255,255,255,0.07)",
@@ -280,7 +280,7 @@ function SampleRadarPanel() {
       </div>
 
       {/* Radar */}
-      <div className="flex justify-center">
+      <div className="flex justify-center flex-1 items-center">
         <div className="rounded-xl p-1.5"
           style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
           <ACERadar ace={SAMPLE_ACE} size={170} showLabels />
