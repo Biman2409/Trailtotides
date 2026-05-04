@@ -195,16 +195,14 @@ export function HeroSubheading() {
       }}
     >
       {/* Pill trio — top */}
-      <div className="flex items-center justify-center gap-px w-full overflow-hidden rounded-xl" style={{ border: "1px solid rgba(255,255,255,0.08)" }}>
+      <div className="flex items-center justify-center gap-px w-full overflow-hidden rounded-xl"
+        style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.08)" }}>
         {["Discover", "Compare", "Book"].map((label, i) => (
           <div
             key={label}
             className="flex-1 flex items-center justify-center py-2.5 text-[10px] font-black tracking-[0.18em] uppercase"
             style={{
-              background: i === 1 ? "rgba(255,81,0,0.15)" : "rgba(0,0,0,0.35)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              color: i === 1 ? "#ff8c55" : "rgba(255,255,255,0.45)",
+              color: i === 0 ? "#ff5100" : i === 1 ? "#ff7d47" : "#ffab85",
               borderRight: i < 2 ? "1px solid rgba(255,255,255,0.07)" : "none",
             }}
           >
