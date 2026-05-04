@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, BarChart2, MapPin, ChevronDown } from "lucide-react";
+import { ArrowRight, BarChart2, MapPin, ChevronDown, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
@@ -218,14 +218,14 @@ export default function MatchmakerHomepageSection() {
 const SAMPLE_ACE = { stamina: 4, power: 3, strength: 3, agility: 4, water: 2, altitude: 5, focus: 3, nerve: 4 };
 
 const AXIS_TICKER = [
-  { key: "Stamina",  color: "#f97316", desc: "Sustained aerobic output over long durations" },
-  { key: "Power",    color: "#eab308", desc: "Explosive effort — short bursts at max intensity" },
-  { key: "Strength", color: "#84cc16", desc: "Load-bearing: packs, scrambles, technical terrain" },
-  { key: "Agility",  color: "#22d3ee", desc: "Balance, coordination and technical footing" },
-  { key: "Water",    color: "#3b82f6", desc: "Aquatic comfort — pool, open water, currents" },
-  { key: "Altitude", color: "#a78bfa", desc: "High-altitude acclimatisation and exposure" },
-  { key: "Focus",    color: "#f43f5e", desc: "Mental composure under exposure and pressure" },
-  { key: "Nerve",    color: "#10b981", desc: "Resilience in remote and isolated conditions" },
+  { key: "Stamina",  color: "#f97316", desc: "Sustained aerobic output over long durations",    icon: <Flame    className="w-3 h-3" /> },
+  { key: "Power",    color: "#eab308", desc: "Explosive effort — short bursts at max intensity", icon: <Zap      className="w-3 h-3" /> },
+  { key: "Strength", color: "#84cc16", desc: "Load-bearing: packs, scrambles, technical terrain",icon: <Dumbbell className="w-3 h-3" /> },
+  { key: "Agility",  color: "#22d3ee", desc: "Balance, coordination and technical footing",     icon: <Compass  className="w-3 h-3" /> },
+  { key: "Water",    color: "#3b82f6", desc: "Aquatic comfort — pool, open water, currents",    icon: <Waves    className="w-3 h-3" /> },
+  { key: "Altitude", color: "#a78bfa", desc: "High-altitude acclimatisation and exposure",      icon: <Mountain className="w-3 h-3" /> },
+  { key: "Focus",    color: "#f43f5e", desc: "Mental composure under exposure and pressure",    icon: <Shield   className="w-3 h-3" /> },
+  { key: "Nerve",    color: "#10b981", desc: "Resilience in remote and isolated conditions",    icon: <Wind     className="w-3 h-3" /> },
 ];
 
 const SCAN_MS = 3200;
@@ -264,7 +264,7 @@ function SampleRadarPanel() {
         background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
         border: "1px solid rgba(255,255,255,0.07)",
         boxShadow: "0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
-        width: 260,
+        width: "fit-content",
       }}
     >
       {/* Corner brackets */}
@@ -291,10 +291,10 @@ function SampleRadarPanel() {
       <div className="mt-2 rounded-lg px-2.5 py-2 w-full" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
         <div style={{ opacity: fade ? 1 : 0, transition: "opacity 0.22s ease" }}>
           <div className="flex items-center gap-1.5 mb-0.5">
-            <div className="w-1 h-2.5 rounded-full shrink-0" style={{ background: current.color }} />
+            <span className="shrink-0" style={{ color: current.color }}>{current.icon}</span>
             <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: current.color }}>{current.key}</span>
           </div>
-          <p className="text-[9px] text-white/40 leading-snug pl-2.5">{current.desc}</p>
+          <p className="text-[9px] text-white/40 leading-snug pl-[18px]">{current.desc}</p>
         </div>
       </div>
 
