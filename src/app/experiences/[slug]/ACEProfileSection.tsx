@@ -226,27 +226,19 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
             </div>
           ) : (
             /* ── No profile: single trek radar + CTA ── */
-            <div className="flex gap-4 items-center">
-              <div className="flex flex-col items-center gap-1.5 shrink-0">
+            <div className="flex gap-3 items-center">
+              <div className="flex flex-col items-center gap-1 shrink-0">
                 <span className="text-[8px] font-black uppercase tracking-[0.18em] text-[#ff5100]/70">Required</span>
-                <ACERadar ace={ace} size={150} showLabels />
+                <ACERadar ace={ace} size={176} showLabels />
               </div>
-              <div className="flex flex-col gap-2.5 flex-1 min-w-0">
-                <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                  style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.25)" }}
-                >
-                  <Flame className="w-4 h-4 text-[#ff5100]" />
-                </div>
-                <div>
-                  <p className="text-white font-bold text-sm mb-1">See how you measure up</p>
-                  <p className="text-white/35 text-xs leading-relaxed">
-                    Take the 2-min assessment to compare your body against this trek.
-                  </p>
-                </div>
+              <div className="flex flex-col gap-2 flex-1 min-w-0">
+                <p className="text-white font-bold text-xs leading-snug">See how you measure up</p>
+                <p className="text-white/35 text-[11px] leading-relaxed">
+                  Take the 2-min assessment to compare your body against this trek.
+                </p>
                 <Link
                   href="/matchmaker"
-                  className="inline-flex items-center gap-1.5 w-fit text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all hover:brightness-110"
+                  className="inline-flex items-center gap-1.5 w-fit text-white text-[11px] font-bold px-3 py-1.5 rounded-xl transition-all hover:brightness-110"
                   style={{ background: "#ff5100", boxShadow: "0 4px 12px rgba(255,81,0,0.3)" }}
                 >
                   Take Assessment
