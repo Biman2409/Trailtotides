@@ -68,7 +68,7 @@ export default function HomePage() {
           </div>
 
           {/* Subheading + CTAs — locked to eyebrow width */}
-          <div className="w-full flex flex-col items-center gap-4" style={{ maxWidth: 480, marginTop: "4px" }}>
+          <div className="w-full flex flex-col items-center gap-4" style={{ maxWidth: 560, marginTop: "4px" }}>
             <HeroSubheading />
             <HeroCTAWrapper>
               <HeroCTAs />

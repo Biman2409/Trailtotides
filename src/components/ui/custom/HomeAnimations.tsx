@@ -311,6 +311,7 @@ export function HeroFeatureBoxes() {
 export function HeroCTAWrapper({ children }: { children: ReactNode }) {
   return (
     <div
+      className="w-full"
       style={{
         animation: "heroLineIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.75s both",
       }}
