@@ -259,12 +259,14 @@ function SampleRadarPanel() {
 
   return (
     <div
-      className="relative rounded-2xl overflow-hidden p-3 shrink-0 self-stretch flex flex-col"
+      className="relative rounded-2xl overflow-hidden p-3 flex flex-col"
       style={{
         background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
         border: "1px solid rgba(255,255,255,0.07)",
         boxShadow: "0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
         width: "fit-content",
+        height: "100%",
+        boxSizing: "border-box",
       }}
     >
       {/* Corner brackets */}
@@ -310,7 +312,7 @@ function DefaultCTA() {
   return (
     <section className="py-20 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div style={{ display: "flex", flexDirection: "row", alignItems: "stretch", gap: "4rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "4rem", alignItems: "stretch" }}>
 
           {/* Left: copy */}
           <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
