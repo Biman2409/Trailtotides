@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ChevronRight, ChevronLeft, MapPin, ArrowRight, RotateCcw,
-  Shield, CheckCircle2, AlertTriangle, Loader2,
+  Shield, CheckCircle2, AlertTriangle, Loader2, Wind,
 } from "lucide-react";
 import { Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost, TrendingUp, Lock } from "@/lib/localIcons";
 import ACERadar from "@/components/ui/custom/ACERadar";
@@ -18,6 +18,54 @@ import { adventures as ALL_ADVENTURES } from "@/lib/data";
 import { getACE } from "@/lib/ace";
 import { getAchievements } from "@/lib/achievements";
 import { awardXP } from "@/lib/awardXP";
+
+// ─── Sample radar animation ───────────────────────────────────────────────────
+
+const SCAN_MS = 3200;
+
+const AXIS_TICKER = [
+  { key: "Stamina",  color: "#f97316", desc: "Sustained output across any adventure", icon: <Flame    className="w-3 h-3" /> },
+  { key: "Power",    color: "#eab308", desc: "Explosive output when it counts most",  icon: <Zap      className="w-3 h-3" /> },
+  { key: "Strength", color: "#84cc16", desc: "Force for carries, climbs and paddles", icon: <Dumbbell className="w-3 h-3" /> },
+  { key: "Agility",  color: "#22d3ee", desc: "Coordination and control in motion",    icon: <Compass  className="w-3 h-3" /> },
+  { key: "Water",    color: "#3b82f6", desc: "Aquatic ease — pool, sea or river",     icon: <Waves    className="w-3 h-3" /> },
+  { key: "Altitude", color: "#a78bfa", desc: "Coping with exposure at high altitude", icon: <Mountain className="w-3 h-3" /> },
+  { key: "Focus",    color: "#f43f5e", desc: "Staying sharp when conditions get hard",icon: <Shield   className="w-3 h-3" /> },
+  { key: "Nerve",    color: "#10b981", desc: "Calm and grit in high-stakes moments",  icon: <Wind     className="w-3 h-3" /> },
+];
+
+function AxisTicker() {
+  const [idx, setIdx] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  useEffect(() => {
+    const swapAt = SCAN_MS * 0.88;
+    let swapTimer: ReturnType<typeof setTimeout>;
+    let cycleTimer: ReturnType<typeof setInterval>;
+    function scheduleCycle() {
+      swapTimer = setTimeout(() => {
+        setFade(false);
+        setTimeout(() => { setIdx(i => (i + 1) % AXIS_TICKER.length); setFade(true); }, 220);
+      }, swapAt);
+    }
+    scheduleCycle();
+    cycleTimer = setInterval(scheduleCycle, SCAN_MS);
+    return () => { clearTimeout(swapTimer); clearInterval(cycleTimer); };
+  }, []);
+
+  const current = AXIS_TICKER[idx];
+  return (
+    <div className="mt-2 rounded-lg px-2.5 py-2 w-full" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+      <div style={{ opacity: fade ? 1 : 0, transition: "opacity 0.22s ease" }}>
+        <div className="flex items-center gap-1.5 mb-0.5">
+          <span className="shrink-0" style={{ color: current.color }}>{current.icon}</span>
+          <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: current.color }}>{current.key}</span>
+        </div>
+        <p className="text-[9px] text-white/40 leading-none pl-[18px] truncate">{current.desc}</p>
+      </div>
+    </div>
+  );
+}
 
 // ─── Question definitions (Q1–Q8 map to 8 bio axes) ──────────────────────────
 
@@ -465,34 +513,30 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
 
           {/* ── Right: radar card ── */}
           {!hasProfile && (
-            <div className="shrink-0 w-full sm:w-auto">
-              <div className="rounded-2xl border overflow-hidden"
-                style={{ background: "rgba(255,255,255,0.025)", borderColor: "rgba(255,255,255,0.07)" }}>
-
+            <div className="shrink-0 w-full sm:w-[270px]">
+              <div className="relative rounded-2xl overflow-hidden flex flex-col p-4"
+                style={{ background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)", border: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)" }}>
+                {/* Corner brackets */}
+                <div className="absolute top-0 left-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
+                <div className="absolute top-0 right-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
+                <div className="absolute bottom-0 left-0 w-5 h-5 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
+                <div className="absolute bottom-0 right-0 w-5 h-5 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
                 {/* Header */}
-                <div className="px-4 py-3 flex items-center justify-between border-b" style={{ borderColor: "rgba(255,255,255,0.07)" }}>
-                  <p className="text-[9px] font-black tracking-[0.2em] uppercase text-white/30">Capability Profile</p>
-                  <span className="text-[9px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100", border: "1px solid rgba(255,81,0,0.18)" }}>Example</span>
+                <div className="flex items-center gap-1.5 mb-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
+                  <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/35">Sample Capability Profile</span>
                 </div>
-
                 {/* Radar */}
-                <div className="flex justify-center px-6 py-4"
-                  style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)" }}>
-                  <ACERadar
-                    ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }}
-                    size={200} showLabels
-                  />
-                </div>
-
-                {/* Footer */}
-                <div className="px-4 py-3 border-t flex items-center justify-center gap-2" style={{ borderColor: "rgba(255,255,255,0.07)", background: "rgba(245,158,11,0.05)" }}>
-                  <div className="flex gap-0.5">
-                    {[1,2,3].map(i => <span key={i} className="text-[11px]" style={{ color: "#f59e0b" }}>★</span>)}
-                    {[4,5].map(i => <span key={i} className="text-[11px]" style={{ color: "rgba(255,255,255,0.08)" }}>★</span>)}
+                <div className="flex items-center justify-center">
+                  <div className="rounded-xl p-1.5" style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                    <ACERadar ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }} size={220} showLabels />
                   </div>
-                  <span className="text-[10px] font-black tracking-wide" style={{ color: "#f59e0b" }}>Trailblazer</span>
-                  <span className="text-[9px] text-white/20 font-medium">· 28 pts</span>
                 </div>
+                {/* Axis ticker */}
+                <AxisTicker />
+                {/* Scan line */}
+                <div className="absolute inset-x-0 h-px pointer-events-none" style={{ background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.45), transparent)", animation: `scanline ${SCAN_MS}ms linear infinite`, top: 0 }} />
+                <style>{`@keyframes scanline { 0% { top:0%; opacity:0; } 8% { opacity:1; } 88% { opacity:1; } 100% { top:100%; opacity:0; } }`}</style>
               </div>
             </div>
           )}
