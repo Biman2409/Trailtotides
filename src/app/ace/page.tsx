@@ -20,14 +20,14 @@ export const metadata = {
 };
 
 const AXES = [
-  { key: "stamina",  icon: <Flame    className="w-3.5 h-3.5" />, color: "#f97316", label: "Stamina",  desc: "8 hours moving, day after day, loaded pack, no rest. High-stamina adventures don't break you in one moment — they grind you down across the week." },
-  { key: "power",    icon: <Zap      className="w-3.5 h-3.5" />, color: "#eab308", label: "Power",    desc: "The 45-minute wall of a steep summit push. A class IV rapid. You can't pace through it — you either have the output or you stop." },
-  { key: "strength", icon: <Dumbbell className="w-3.5 h-3.5" />, color: "#84cc16", label: "Strength", desc: "Functional load-bearing over distance — legs, back, joints under 15kg of pack across broken terrain for hours." },
-  { key: "agility",  icon: <Compass  className="w-3.5 h-3.5" />, color: "#22d3ee", label: "Agility",  desc: "Scree fields, iced rock, exposed ridges. Moving precisely on terrain that shifts — where one bad foot placement has consequences." },
-  { key: "water",    icon: <Waves    className="w-3.5 h-3.5" />, color: "#3b82f6", label: "Water",    desc: "Comfort when the current has force. Rafting, sea crossings, chest-deep river fords. Score 0 means no aquatic element." },
-  { key: "altitude", icon: <Mountain className="w-3.5 h-3.5" />, color: "#a78bfa", label: "Altitude", desc: "Above 3,500m your body fights for oxygen. Above 5,000m, poor acclimatisation response is a medical risk — fitness doesn't compensate." },
-  { key: "focus",    icon: <ScanEye  className="w-3.5 h-3.5" />, color: "#f43f5e", label: "Focus",    desc: "Exposed ridgelines, fixed ropes, vertical faces. Your brain registers danger and tries to freeze. Focus is the ability to override it and move." },
-  { key: "nerve",    icon: <Ghost    className="w-3.5 h-3.5" />, color: "#10b981", label: "Nerve",    desc: "Days from the nearest road, no signal, no rescue. How well do you operate — and decide — when you are genuinely on your own?" },
+  { key: "stamina",  icon: <Flame    className="w-3.5 h-3.5" />, color: "#f97316", label: "Stamina",  desc: "Not one hard moment — a week of them. Moving 8+ hours daily under load with no recovery day." },
+  { key: "power",    icon: <Zap      className="w-3.5 h-3.5" />, color: "#eab308", label: "Power",    desc: "Maximum output for minutes, not hours. A steep crux, a rapid, a technical summit push. Pace won't save you." },
+  { key: "strength", icon: <Dumbbell className="w-3.5 h-3.5" />, color: "#84cc16", label: "Strength", desc: "15kg pack, broken terrain, six hours. Legs, back, and joints — not a gym test, a distance test." },
+  { key: "agility",  icon: <Compass  className="w-3.5 h-3.5" />, color: "#22d3ee", label: "Agility",  desc: "Scree, iced rock, narrow ridges. Precise movement on ground that shifts — where hesitation costs." },
+  { key: "water",    icon: <Waves    className="w-3.5 h-3.5" />, color: "#3b82f6", label: "Water",    desc: "Comfort when the current has force. Rapids, open crossings, river fords. Zero means no water element." },
+  { key: "altitude", icon: <Mountain className="w-3.5 h-3.5" />, color: "#a78bfa", label: "Altitude", desc: "Above 3,500m, fitness stops mattering as much as acclimatisation. Above 5,000m, it becomes medical." },
+  { key: "focus",    icon: <ScanEye  className="w-3.5 h-3.5" />, color: "#f43f5e", label: "Focus",    desc: "Exposed drops, fixed ropes, vertical terrain. Your brain wants to freeze. Focus is choosing not to let it." },
+  { key: "nerve",    icon: <Ghost    className="w-3.5 h-3.5" />, color: "#10b981", label: "Nerve",    desc: "No road, no signal, no rescue. How clearly do you think and act when the stakes are yours alone?" },
 ];
 
 const DOMAINS = [
