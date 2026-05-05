@@ -67,10 +67,10 @@ export default function FindByRegion() {
   });
 
     return (
-      <section id="regions" className="py-20 lg:py-28 t-bg-surface2 px-5 lg:px-8">
+      <section id="regions" className="py-10 lg:py-14 t-bg-surface2 px-5 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-10 lg:mb-12">
+        <div className="mb-6 lg:mb-8">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
             DISCOVER BY REGION
           </p>

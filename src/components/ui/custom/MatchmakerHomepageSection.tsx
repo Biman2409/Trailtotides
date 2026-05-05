@@ -95,7 +95,7 @@ export default function MatchmakerHomepageSection() {
     : 100;
 
   return (
-    <section className="py-16 lg:py-24 px-5 lg:px-8 t-bg-surface border-t border-white/5">
+    <section className="py-8 lg:py-12 px-5 lg:px-8 t-bg-surface border-t border-white/5">
       <div className="max-w-7xl mx-auto">
 
         <div className="flex items-center justify-between mb-5">
@@ -305,18 +305,18 @@ function SampleRadarPanel() {
 
 function DefaultCTA() {
   return (
-    <section className="py-16 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-white/5 overflow-hidden">
+    <section className="py-8 lg:py-12 px-5 lg:px-8 t-bg-surface border-t border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row gap-8 sm:gap-12 lg:gap-16 items-stretch">
 
           {/* Left: copy */}
           <div className="flex-1 min-w-0 flex flex-col">
             <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
-            <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-4 lg:mb-5">
+            <h2 className="text-white text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
               Adventures built,<br />
               <span className="text-[#ff5100]">for your body</span>
             </h2>
-            <p className="text-white/55 text-base leading-relaxed mb-8">
+            <p className="text-white/55 text-sm leading-relaxed mb-5">
               Answer 8 questions. We calibrate your capability level and match you to adventures you can actually handle.
             </p>
             <div className="flex flex-col gap-3 mt-auto">

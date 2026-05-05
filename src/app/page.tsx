@@ -112,10 +112,10 @@ export default function HomePage() {
         </FadeUp>
 
         {/* ── FEATURED ADVENTURES ── */}
-        <section id="featured-adventures" className="py-20 lg:py-28 px-5 lg:px-8 t-bg-page">
+        <section id="featured-adventures" className="py-10 lg:py-14 px-5 lg:px-8 t-bg-page">
           <div className="max-w-7xl mx-auto">
             <FadeUp>
-              <div className="mb-10 lg:mb-14">
+              <div className="mb-7 lg:mb-9">
                 <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
                   <Star className="w-3.5 h-3.5 fill-[#ff5100]" />
                   EDITOR&apos;S CHOICE
@@ -143,7 +143,7 @@ export default function HomePage() {
             </div>
 
             <FadeUp delay={200}>
-              <div className="mt-10 lg:mt-14 flex justify-center">
+              <div className="mt-7 lg:mt-9 flex justify-center">
                 <Link
                   href="/explore"
                   className="bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-8 py-3.5 rounded-xl text-sm md:text-base flex items-center gap-2 group shadow-lg shadow-[#ff5100]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30 transition-all duration-200"
@@ -157,7 +157,7 @@ export default function HomePage() {
         </section>
 
         {/* ── MAP CTA ───────────────────────────────────────── */}
-        <section id="map-cta" className="relative py-20 lg:py-28 bg-[#1a2e20] px-5 lg:px-8 overflow-hidden">
+        <section id="map-cta" className="relative py-10 lg:py-16 bg-[#1a2e20] px-5 lg:px-8 overflow-hidden">
           <div className="absolute inset-0">
             <Image
               src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1200&q=100"
@@ -179,15 +179,15 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto relative z-10">
             <FadeUp>
               <div className="max-w-2xl">
-                <p className="text-[#7ec88a] text-xs font-black tracking-[0.25em] mb-5 uppercase">
+                <p className="text-[#7ec88a] text-xs font-black tracking-[0.25em] mb-3 uppercase">
                   ADVENTURE MAP
                 </p>
-                <h2 className="t-text text-2xl sm:text-3xl lg:text-5xl font-bold tracking-tight leading-tight mb-6">
+                <h2 className="t-text text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
                   India&apos;s Adventures,
                   <br />
                   <span className="text-[#7ec88a]">Mapped</span>
                 </h2>
-                <p className="text-white/72 text-sm sm:text-base md:text-xl leading-relaxed mb-8 lg:mb-10 w-full max-w-lg">
+                <p className="text-white/72 text-sm sm:text-base leading-relaxed mb-6 w-full max-w-lg">
                   Every trail, summit and coast — one map. Filter by type, cluster by region, tap to explore.
                 </p>
                 <Link
@@ -219,15 +219,15 @@ export default function HomePage() {
         </FadeUp>
 
         {/* ── STORIES ──────────────────────────────────────── */}
-        <section id="stories" className="py-20 lg:py-28 px-5 lg:px-8 t-bg-surface border-t border-[var(--border-subtle)]">
+        <section id="stories" className="py-10 lg:py-14 px-5 lg:px-8 t-bg-surface border-t border-[var(--border-subtle)]">
           <div className="max-w-7xl mx-auto">
             <FadeUp>
-              <div className="flex items-end justify-between mb-10 lg:mb-14">
+              <div className="flex items-end justify-between mb-7 lg:mb-9">
                 <div>
-                  <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
+                  <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-2 uppercase">
                     From the Trails
                   </p>
-                  <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+                  <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight">
                     Voices from the Edge
                   </h2>
                   <ShimmerLine className="mt-4 max-w-[48px]" />
