@@ -215,19 +215,31 @@ export default function ACEPage() {
                 <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
                 <span className="text-white/20 text-[10px] font-mono">Σ axes = tier</span>
               </div>
-              <p className="text-white/30 text-xs mb-4 leading-relaxed">Your total ACE score — the sum of all 8 axes — places you on the rank ladder. 8 axes × max 5 = <span className="text-white/50 font-semibold">40 points</span>. Higher rank = broader adventure access.</p>
+              <p className="text-white/30 text-xs mb-4 leading-relaxed">Your total ACE score places you on the rank ladder. 8 axes × max 5 = <span className="text-white/50 font-semibold">40 points</span>. Higher rank = broader adventure access.</p>
 
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 {RANKS.map(({ label, color, stars, range, desc }) => (
-                  <div key={label} className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl border" style={{ background: `${color}06`, borderColor: `${color}20` }}>
-                    <div className="flex gap-0.5 shrink-0">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <span key={i} className="text-[9px]" style={{ color: i < stars ? color : "rgba(255,255,255,0.07)" }}>★</span>
-                      ))}
+                  <div key={label} className="flex items-center gap-3 px-3.5 py-3 rounded-xl border" style={{ background: `${color}06`, borderColor: `${color}20` }}>
+                    {/* Badge */}
+                    <div className="shrink-0 w-9 h-9 rounded-xl flex flex-col items-center justify-center gap-0.5 relative overflow-hidden"
+                      style={{ background: `${color}15`, border: `1px solid ${color}30`, boxShadow: `0 0 14px ${color}20` }}>
+                      <div className="absolute inset-0 opacity-10" style={{ background: `radial-gradient(circle at 50% 0%, ${color}, transparent 70%)` }} />
+                      <span className="text-[11px] leading-none relative z-10" style={{ filter: `drop-shadow(0 0 4px ${color})` }}>
+                        {stars === 1 ? "◈" : stars === 2 ? "⬡" : stars === 3 ? "✦" : stars === 4 ? "⬟" : "✺"}
+                      </span>
+                      <div className="flex gap-px relative z-10">
+                        {Array.from({ length: stars }).map((_, i) => (
+                          <span key={i} className="text-[5px] leading-none" style={{ color }}>●</span>
+                        ))}
+                      </div>
                     </div>
-                    <span className="font-black text-white text-xs font-mono w-[88px] shrink-0">{label}</span>
-                    <span className="text-[10px] font-mono shrink-0 font-bold" style={{ color }}>{range} pts</span>
-                    <span className="text-white/25 text-[10px] ml-auto text-right leading-snug hidden sm:block">{desc}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline gap-2">
+                        <span className="font-black text-white text-xs font-mono">{label}</span>
+                        <span className="text-[10px] font-mono font-bold" style={{ color }}>{range} pts</span>
+                      </div>
+                      <p className="text-white/25 text-[10px] mt-0.5 leading-snug">{desc}</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -291,35 +303,57 @@ export default function ACEPage() {
           </div>
           <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-xl">Three treks — same category, wildly different demands. Watch the radar fill out as difficulty climbs. This is what a single difficulty label can never communicate.</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {PROGRESSION_TREKS.map((t, i) => {
               const adv = adventures.find(a => a.slug === t.slug);
+              const aceEntries = Object.entries(t.ace).filter(([, v]) => v > 0);
+              const topAxes = aceEntries.sort(([,a],[,b]) => b - a).slice(0, 3);
               return (
-                <div key={t.slug} className="rounded-xl overflow-hidden border flex flex-col" style={{ borderColor: `${t.diffColor}22`, background: "rgba(8,12,20,0.7)" }}>
+                <div key={t.slug} className="rounded-2xl overflow-hidden border flex flex-col group" style={{ borderColor: `${t.diffColor}25`, background: "rgba(8,12,20,0.85)" }}>
+                  {/* Image */}
                   {adv && (
-                    <div className="relative h-24 overflow-hidden shrink-0">
-                      <Image src={adv.heroImage} alt={adv.name} fill className="object-cover" />
-                      <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 10%, rgba(8,12,20,0.95) 100%)" }} />
-                      <div className="absolute top-2 left-2 w-5 h-5 rounded flex items-center justify-center text-[9px] font-black font-mono" style={{ background: `${t.diffColor}cc`, color: "white" }}>{i + 1}</div>
-                      <span className="absolute top-2 right-2 text-[9px] px-1.5 py-0.5 rounded font-bold font-mono" style={{ background: `${t.diffColor}20`, color: t.diffColor, border: `1px solid ${t.diffColor}35`, backdropFilter: "blur(8px)" }}>{t.sublabel}</span>
-                      <div className="absolute bottom-2 left-3 right-3">
-                        <h3 className="text-white font-bold text-xs leading-tight">{adv.name}</h3>
+                    <div className="relative h-36 overflow-hidden shrink-0">
+                      <Image src={adv.heroImage} alt={adv.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                      <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom, transparent 20%, rgba(8,12,20,0.98) 100%)` }} />
+                      {/* Top accent line */}
+                      <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: `linear-gradient(90deg, transparent, ${t.diffColor}, transparent)` }} />
+                      {/* Step badge */}
+                      <div className="absolute top-3 left-3 w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black font-mono shadow-lg" style={{ background: t.diffColor, color: "#000", boxShadow: `0 0 12px ${t.diffColor}60` }}>{i + 1}</div>
+                      {/* Difficulty */}
+                      <span className="absolute top-3 right-3 text-[9px] px-2 py-0.5 rounded-full font-bold font-mono" style={{ background: `rgba(0,0,0,0.6)`, color: t.diffColor, border: `1px solid ${t.diffColor}50`, backdropFilter: "blur(8px)" }}>{t.sublabel}</span>
+                      {/* Name over gradient */}
+                      <div className="absolute bottom-3 left-4 right-4">
+                        <p className="text-[9px] font-black tracking-[0.2em] uppercase font-mono mb-0.5" style={{ color: t.diffColor }}>{t.label}</p>
+                        <h3 className="text-white font-bold text-sm leading-tight">{adv.name}</h3>
                       </div>
                     </div>
                   )}
 
-                  <div className="px-3 pt-2.5 pb-0 flex items-center justify-between">
-                    <p className="text-[9px] font-black tracking-[0.2em] uppercase font-mono" style={{ color: t.diffColor }}>{t.label}</p>
-                    <p className="text-white/30 text-[9px]">{t.desc}</p>
+                  {/* Desc */}
+                  <p className="text-white/30 text-[10px] leading-relaxed px-4 pt-3 pb-0">{t.desc}</p>
+
+                  {/* Radar */}
+                  <div className="flex justify-center px-4 pt-2 pb-1 flex-1 items-center">
+                    <ACERadar ace={t.ace} size={190} showLabels />
                   </div>
 
-                  <div className="flex justify-center px-3 py-2 flex-1 items-center">
-                    <ACERadar ace={t.ace} size={180} showLabels />
+                  {/* Top axes strip */}
+                  <div className="px-4 pb-3 flex items-center gap-1.5 flex-wrap">
+                    {topAxes.map(([key, val]) => {
+                      const axis = AXES.find(a => a.key === key);
+                      if (!axis) return null;
+                      return (
+                        <span key={key} className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9px] font-bold font-mono border" style={{ background: `${axis.color}12`, borderColor: `${axis.color}28`, color: axis.color }}>
+                          {axis.icon}<span>{axis.label}</span><span className="opacity-60">·{val}</span>
+                        </span>
+                      );
+                    })}
                   </div>
 
+                  {/* CTA */}
                   {adv && (
-                    <div className="px-3 pb-3">
-                      <Link href={`/experiences/${adv.slug}`} className="flex items-center justify-center gap-1.5 w-full py-1.5 rounded-lg text-[10px] font-bold transition-all hover:brightness-110 font-mono" style={{ background: `${t.diffColor}10`, color: t.diffColor, border: `1px solid ${t.diffColor}20` }}>
+                    <div className="px-4 pb-4">
+                      <Link href={`/experiences/${adv.slug}`} className="flex items-center justify-center gap-1.5 w-full py-2 rounded-xl text-[10px] font-bold transition-all hover:brightness-125 font-mono" style={{ background: `${t.diffColor}12`, color: t.diffColor, border: `1px solid ${t.diffColor}25` }}>
                         View adventure <ArrowRight className="w-3 h-3" />
                       </Link>
                     </div>
