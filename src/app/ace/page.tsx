@@ -101,36 +101,34 @@ export default function ACEPage() {
               </div>
 
               <h1 className="text-3xl lg:text-[2.6rem] font-black text-white tracking-tight leading-[1.06] mb-3">
-                Adventure Capability<br />
-                <span className="text-[#ff5100]">Engine</span>
+                Adventure Capability Engine
               </h1>
               <p className="text-white/45 text-sm leading-relaxed mb-5 max-w-md">
-                Every adventure demands something specific. ACE quantifies that across <span className="text-white/75 font-semibold">8 biological axes</span>, rated 1–5, so your match is based on data — not optimism.
+                Every adventure demands something specific from your body. ACE breaks that into <span className="text-white/75 font-semibold">8 biological axes</span> — rated 1 to 5 — so your match is based on data, not optimism. Take the assessment once and see exactly where you stand against every adventure on the platform.
               </p>
 
-              {/* Axis pills — compact inline */}
-              <div className="flex flex-wrap gap-1.5">
-                {AXES.map(({ label, color, icon }) => (
-                  <span key={label} className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold border font-mono" style={{ background: `${color}10`, borderColor: `${color}28`, color }}>
-                    <span className="opacity-70">{icon}</span>{label}
-                  </span>
-                ))}
-              </div>
-
-              {/* Mini stat strip */}
-              <div className="mt-5 flex items-center gap-5 border-t pt-4" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-                {[["8", "Axes"], ["5", "Levels"], ["40", "Max score"], ["5", "Ranks"]].map(([val, lbl]) => (
-                  <div key={lbl} className="text-center">
-                    <div className="text-white font-black text-base leading-none font-mono">{val}</div>
-                    <div className="text-white/25 text-[9px] uppercase tracking-[0.15em] mt-0.5">{lbl}</div>
-                  </div>
-                ))}
+              {/* Axes 4+4 */}
+              <div className="space-y-1.5">
+                <div className="flex flex-wrap gap-1.5">
+                  {AXES.slice(0, 4).map(({ label, color, icon }) => (
+                    <span key={label} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold border font-mono" style={{ background: `${color}10`, borderColor: `${color}28`, color }}>
+                      <span className="opacity-70">{icon}</span>{label}
+                    </span>
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {AXES.slice(4).map(({ label, color, icon }) => (
+                    <span key={label} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold border font-mono" style={{ background: `${color}10`, borderColor: `${color}28`, color }}>
+                      <span className="opacity-70">{icon}</span>{label}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
 
-            <div className="relative shrink-0">
+            <div className="relative shrink-0 mx-auto lg:mx-0">
               <div className="absolute inset-0 rounded-full blur-3xl opacity-12 scale-75" style={{ background: "conic-gradient(from 0deg, #f97316, #eab308, #84cc16, #22d3ee, #3b82f6, #a78bfa, #f43f5e, #10b981, #f97316)" }} />
-              <ACERadar ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }} size={240} showLabels />
+              <ACERadar ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }} size={260} showLabels />
             </div>
           </div>
         </div>
@@ -145,31 +143,28 @@ export default function ACEPage() {
             <span className="text-white/20 text-[10px] font-mono">4 domains · 2 axes each</span>
           </div>
 
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {DOMAINS.map(({ name, icon, color, axes, desc }) => {
               const domainAxes = AXES.filter(a => axes.includes(a.label));
               return (
-                <div key={name} className="rounded-xl overflow-hidden border" style={{ borderColor: `${color}18`, background: `${color}05` }}>
+                <div key={name} className="rounded-xl overflow-hidden border" style={{ borderColor: `${color}20`, background: `${color}05` }}>
                   {/* Domain header */}
-                  <div className="flex items-center gap-2 px-3.5 py-2" style={{ borderBottom: `1px solid ${color}14`, background: `${color}08` }}>
+                  <div className="flex items-center gap-2 px-4 py-2.5" style={{ borderBottom: `1px solid ${color}15`, background: `${color}09` }}>
                     <div className="w-5 h-5 rounded flex items-center justify-center shrink-0" style={{ color }}>{icon}</div>
                     <span className="text-[10px] font-black tracking-[0.2em] uppercase font-mono" style={{ color }}>{name}</span>
-                    <span className="text-white/20 text-[10px] ml-1 hidden sm:inline">— {desc}</span>
+                    <span className="text-white/20 text-[10px] ml-1">— {desc}</span>
                   </div>
                   {/* Axes */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x" style={{ "--tw-divide-opacity": 1, borderColor: `${color}12` } as React.CSSProperties}>
+                  <div className="divide-y" style={{ borderColor: `${color}10` }}>
                     {domainAxes.map(({ key, icon: axIcon, color: axColor, label, desc: axDesc }) => (
-                      <div key={key} className="flex items-center gap-3 px-3.5 py-3">
-                        <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${axColor}15`, color: axColor }}>{axIcon}</div>
+                      <div key={key} className="flex items-start gap-3 px-4 py-3">
+                        <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${axColor}15`, color: axColor }}>{axIcon}</div>
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-white font-bold text-xs font-mono">{label}</span>
-                          </div>
-                          <p className="text-white/30 text-[10px] leading-snug mt-0.5">{axDesc}</p>
+                          <span className="text-white font-bold text-xs font-mono">{label}</span>
+                          <p className="text-white/35 text-[10px] leading-snug mt-0.5">{axDesc}</p>
                         </div>
-                        {/* Dot scale */}
-                        <div className="flex gap-0.5 shrink-0">
-                          {[1,2,3,4,5].map(i => <span key={i} className="w-1.5 h-1.5 rounded-full" style={{ background: i <= 3 ? `${axColor}60` : "rgba(255,255,255,0.08)" }} />)}
+                        <div className="flex gap-0.5 shrink-0 mt-1.5">
+                          {[1,2,3,4,5].map(i => <span key={i} className="w-1.5 h-3.5 rounded-sm" style={{ background: i <= 3 ? `${axColor}55` : "rgba(255,255,255,0.07)" }} />)}
                         </div>
                       </div>
                     ))}
@@ -188,55 +183,59 @@ export default function ACEPage() {
 
             {/* Scale */}
             <div>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">Scale</span>
+              <div className="flex items-center gap-3 mb-1.5">
+                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">The Scale</span>
                 <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
                 <span className="text-white/20 text-[10px] font-mono">1–5 per axis</span>
               </div>
+              <p className="text-white/30 text-xs mb-4 leading-relaxed">Each axis is scored 1–5 independently. A score of 0 means that axis isn't relevant for the adventure — for example, a desert trek scores 0 on Water.</p>
 
-              {/* Single horizontal bar */}
-              <div className="flex rounded-xl overflow-hidden border mb-3" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+              {/* Gradient bar */}
+              <div className="flex rounded-lg overflow-hidden mb-3" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
                 {SCALE.map(({ level, color }) => (
-                  <div key={level} className="flex-1 h-2" style={{ background: color }} />
+                  <div key={level} className="flex-1 h-1.5" style={{ background: color }} />
                 ))}
               </div>
 
               <div className="space-y-1.5">
                 {SCALE.map(({ level, label, sub, color }) => (
-                  <div key={level} className="flex items-center gap-3 px-3 py-2 rounded-lg border" style={{ background: `${color}06`, borderColor: `${color}14` }}>
-                    <span className="font-black text-sm w-5 text-center font-mono leading-none" style={{ color }}>{level}</span>
-                    <div className="w-px h-4" style={{ background: `${color}25` }} />
-                    <span className="text-white/70 text-xs font-semibold">{label}</span>
+                  <div key={level} className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl border" style={{ background: `${color}06`, borderColor: `${color}16` }}>
+                    <span className="font-black text-sm w-5 text-center font-mono leading-none shrink-0" style={{ color, textShadow: level >= 4 ? `0 0 12px ${color}80` : "none" }}>{level}</span>
+                    <div className="w-px h-4 shrink-0" style={{ background: `${color}25` }} />
+                    <span className="text-white/80 text-xs font-bold">{label}</span>
                     <span className="text-white/25 text-[10px] ml-auto">{sub}</span>
+                    {/* fill bar */}
+                    <div className="w-10 h-1 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
+                      <div className="h-full rounded-full" style={{ width: `${(level / 5) * 100}%`, background: color }} />
+                    </div>
                   </div>
                 ))}
               </div>
-              <p className="text-white/20 text-[10px] font-mono mt-2.5">Score 0 = axis not relevant for that adventure</p>
             </div>
 
             {/* Ranks */}
             <div>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">Ranks</span>
+              <div className="flex items-center gap-3 mb-1.5">
+                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">Adventure Rank</span>
                 <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
                 <span className="text-white/20 text-[10px] font-mono">Σ axes = tier</span>
               </div>
+              <p className="text-white/30 text-xs mb-4 leading-relaxed">Your total ACE score — the sum of all 8 axes — places you on the rank ladder. 8 axes × max 5 = <span className="text-white/50 font-semibold">40 points</span>. Higher rank = broader adventure access.</p>
 
               <div className="space-y-1.5">
                 {RANKS.map(({ label, color, stars, range, desc }) => (
-                  <div key={label} className="flex items-center gap-3 px-3 py-2.5 rounded-lg border" style={{ background: `${color}06`, borderColor: `${color}18` }}>
-                    <div className="flex gap-0.5 shrink-0 w-12">
+                  <div key={label} className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl border" style={{ background: `${color}06`, borderColor: `${color}20` }}>
+                    <div className="flex gap-0.5 shrink-0">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <span key={i} className="text-[9px]" style={{ color: i < stars ? color : "rgba(255,255,255,0.07)" }}>★</span>
                       ))}
                     </div>
-                    <span className="font-black text-white text-xs w-24 font-mono">{label}</span>
-                    <span className="text-[10px] font-mono shrink-0" style={{ color }}>{range}</span>
+                    <span className="font-black text-white text-xs font-mono w-[88px] shrink-0">{label}</span>
+                    <span className="text-[10px] font-mono shrink-0 font-bold" style={{ color }}>{range} pts</span>
                     <span className="text-white/25 text-[10px] ml-auto text-right leading-snug hidden sm:block">{desc}</span>
                   </div>
                 ))}
               </div>
-              <p className="text-white/20 text-[10px] font-mono mt-2.5">8 axes × max 5 = 40 points total</p>
             </div>
           </div>
         </div>
@@ -245,41 +244,42 @@ export default function ACEPage() {
       {/* ── HOW MATCHING WORKS ── */}
       <section className="py-8 px-5 lg:px-8" style={{ borderTop: "1px solid var(--border-subtle)", background: "var(--bg-surface)" }}>
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-3 mb-5">
+          <div className="flex items-center gap-3 mb-1.5">
             <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">How It Works</span>
             <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
           </div>
+          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-xl">Adventures and adventurers are both rated. The system compares them axis-by-axis — not with a single difficulty number — so every match is precise.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
             {[
               {
                 step: "01",
                 color: "#ff5100",
-                title: "Adventures rated",
-                body: "Every adventure gets an ACE profile — 8 axes scored by our team. No vague labels.",
+                title: "Adventures are rated",
+                body: "Every adventure on Trail to Tides has an ACE profile — 8 axes scored honestly by our team based on actual route data, altitude profiles, and expedition reports. No vague 'Difficult' labels.",
               },
               {
                 step: "02",
                 color: "#f59e0b",
-                title: "You assess",
-                body: "8 structured questions map your real capability across all axes — not self-reported guesses.",
+                title: "You take the assessment",
+                body: "8 structured questions build your capability profile. Answers translate directly to axis scores using physical benchmarks — your real fitness, not how fit you think you are.",
               },
               {
                 step: "03",
                 color: "#4ade80",
                 title: "Matches surfaced",
-                body: "Adventures sort into Ready Now, Stretch, and Out of Range — axis by axis.",
+                body: "Adventures sort into Ready Now, Stretch, and Out of Range — axis by axis. You see exactly which axes you're short on and how to close the gap.",
               },
             ].map(({ step, color, title, body }) => (
               <div key={step} className="rounded-xl border p-4 flex flex-col gap-3 relative overflow-hidden"
                 style={{ background: `${color}06`, borderColor: `${color}18` }}>
-                <div className="absolute top-3 right-3 text-[32px] font-black leading-none tabular-nums select-none pointer-events-none font-mono"
-                  style={{ color: `${color}10` }}>{step}</div>
+                <div className="absolute top-3 right-3 text-[36px] font-black leading-none tabular-nums select-none pointer-events-none font-mono"
+                  style={{ color: `${color}09` }}>{step}</div>
                 <div className="flex items-center gap-2">
                   <span className="font-black text-[10px] font-mono px-2 py-0.5 rounded" style={{ background: `${color}15`, color }}>{step}</span>
                   <p className="text-white font-bold text-sm">{title}</p>
                 </div>
-                <p className="text-white/35 text-[11px] leading-relaxed">{body}</p>
+                <p className="text-white/40 text-[11px] leading-relaxed">{body}</p>
               </div>
             ))}
           </div>
@@ -289,11 +289,12 @@ export default function ACEPage() {
       {/* ── IN PRACTICE ── */}
       <section className="py-8 px-5 lg:px-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-3 mb-5">
+          <div className="flex items-center gap-3 mb-1.5">
             <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">In Practice</span>
             <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
             <span className="text-white/20 text-[10px] font-mono">Same type · different radar</span>
           </div>
+          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-xl">Three treks — same category, wildly different demands. Watch the radar fill out as difficulty climbs. This is what a single difficulty label can never communicate.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {PROGRESSION_TREKS.map((t, i) => {
