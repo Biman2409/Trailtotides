@@ -123,8 +123,8 @@ export default function ACEPage() {
               </div>
             </div>
 
-            {/* Right: radar — always on the right on all viewports ≥ lg */}
-            <div className="relative hidden lg:flex items-center justify-center">
+            {/* Right: radar */}
+            <div className="relative flex items-center justify-center">
               <div className="absolute inset-0 rounded-full blur-3xl opacity-12 scale-75 pointer-events-none" style={{ background: "conic-gradient(from 0deg, #f97316, #eab308, #84cc16, #22d3ee, #3b82f6, #a78bfa, #f43f5e, #10b981, #f97316)" }} />
               <ACERadar ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }} size={280} showLabels />
             </div>
