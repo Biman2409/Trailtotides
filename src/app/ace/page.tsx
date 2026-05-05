@@ -414,13 +414,6 @@ export default function ACEPage() {
                   Take the Assessment
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
-                <Link
-                  href="/explore"
-                  className="inline-flex items-center gap-1.5 text-white/30 text-xs hover:text-white/60 transition-colors font-mono"
-                >
-                  Browse all adventures
-                  <ArrowRight className="w-3 h-3" />
-                </Link>
               </div>
             </div>
           </div>
