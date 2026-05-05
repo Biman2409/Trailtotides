@@ -20,14 +20,14 @@ export const metadata = {
 };
 
 const AXES = [
-  { key: "stamina",  icon: <Flame    className="w-3.5 h-3.5" />, color: "#f97316", label: "Stamina",  desc: "How long can you keep going? Stamina measures sustained aerobic output over consecutive days — trekking 8+ hours, cycling through mountain passes, or pushing through a multi-day expedition without a recovery day." },
-  { key: "power",    icon: <Zap      className="w-3.5 h-3.5" />, color: "#eab308", label: "Power",    desc: "Short explosive effort. Power covers the hard sections that demand everything at once — a steep 400m ascent, punching through a rapid, or the final push to a technical summit. High power demand = you can't just pace yourself through it." },
-  { key: "strength", icon: <Dumbbell className="w-3.5 h-3.5" />, color: "#84cc16", label: "Strength", desc: "Can your body carry the load? Strength accounts for heavy packs on uneven terrain, pulling yourself up technical rock, and the muscular demand of multi-day treks where your joints and back are under constant stress." },
-  { key: "agility",  icon: <Compass  className="w-3.5 h-3.5" />, color: "#22d3ee", label: "Agility",  desc: "Precision movement and body awareness on unpredictable surfaces — loose scree, snow slopes, river boulders, and narrow ridgelines where a misstep has real consequences. High agility demand means the terrain actively challenges your balance." },
-  { key: "water",    icon: <Waves    className="w-3.5 h-3.5" />, color: "#3b82f6", label: "Water",    desc: "Comfort and competency in or around water. This covers white-water rafting, sea kayaking, open-water swimming, and river crossings where the current has force. A score of 0 means the adventure has no aquatic component whatsoever." },
-  { key: "altitude", icon: <Mountain className="w-3.5 h-3.5" />, color: "#a78bfa", label: "Altitude", desc: "Your body's tolerance for low-oxygen environments. Above 3,500m, acclimatisation becomes non-negotiable. Above 5,000m, even fit individuals with poor hypoxic response are at serious risk. Altitude scores reflect the physiological ceiling, not just the height." },
-  { key: "focus",    icon: <ScanEye  className="w-3.5 h-3.5" />, color: "#f43f5e", label: "Focus",    desc: "Psychological composure in exposed situations — cliffs, fixed ropes, vertiginous ridges, cave systems, or any terrain where a lapse in concentration is dangerous. Focus is about staying calm when the stakes make that hard." },
-  { key: "nerve",    icon: <Ghost    className="w-3.5 h-3.5" />, color: "#10b981", label: "Nerve",    desc: "Can you operate without a safety net? Nerve measures self-reliance in genuinely remote terrain — days from a road, no phone signal, no organised rescue. The higher the score, the more you are truly on your own if something goes wrong." },
+  { key: "stamina",  icon: <Flame    className="w-3.5 h-3.5" />, color: "#f97316", label: "Stamina",  desc: "Sustained aerobic output across consecutive days — 8-hour treks, back-to-back climbs, no real recovery." },
+  { key: "power",    icon: <Zap      className="w-3.5 h-3.5" />, color: "#eab308", label: "Power",    desc: "Explosive short bursts — a steep 400m ascent, punching a rapid, the final push to a technical summit." },
+  { key: "strength", icon: <Dumbbell className="w-3.5 h-3.5" />, color: "#84cc16", label: "Strength", desc: "Load-bearing under a heavy pack on uneven terrain where joints and back are under constant stress." },
+  { key: "agility",  icon: <Compass  className="w-3.5 h-3.5" />, color: "#22d3ee", label: "Agility",  desc: "Precision movement on loose scree, snow slopes, and ridgelines where a misstep has real consequences." },
+  { key: "water",    icon: <Waves    className="w-3.5 h-3.5" />, color: "#3b82f6", label: "Water",    desc: "Comfort in or around moving water — rapids, sea crossings, river fords. Score 0 = no aquatic component." },
+  { key: "altitude", icon: <Mountain className="w-3.5 h-3.5" />, color: "#a78bfa", label: "Altitude", desc: "Hypoxic tolerance above 3,500m. Above 5,000m even fit people fail without genuine acclimatisation capacity." },
+  { key: "focus",    icon: <ScanEye  className="w-3.5 h-3.5" />, color: "#f43f5e", label: "Focus",    desc: "Composure in exposed terrain — cliffs, fixed ropes, vertiginous ridges — where distraction is dangerous." },
+  { key: "nerve",    icon: <Ghost    className="w-3.5 h-3.5" />, color: "#10b981", label: "Nerve",    desc: "Self-reliance with no signal, no road, no organised rescue. The score reflects how alone you truly are." },
 ];
 
 const DOMAINS = [
@@ -92,22 +92,19 @@ export default function ACEPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full opacity-8 blur-3xl pointer-events-none" style={{ background: "radial-gradient(ellipse, #ff5100 0%, #a78bfa 60%, transparent 100%)" }} />
 
         <div className="max-w-6xl mx-auto relative">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14">
-            <div className="flex-1 max-w-lg">
-              {/* System badge */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] items-center gap-8 lg:gap-12">
+            {/* Left: text */}
+            <div>
               <div className="inline-flex items-center gap-2 mb-4 px-2.5 py-1 rounded border" style={{ background: "rgba(255,81,0,0.06)", borderColor: "rgba(255,81,0,0.22)" }}>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
                 <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">System · ACE v2.0</span>
               </div>
-
               <h1 className="text-3xl lg:text-[2.6rem] font-black text-white tracking-tight leading-[1.06] mb-3">
                 Adventure Capability Engine
               </h1>
-              <p className="text-white/45 text-sm leading-relaxed mb-5 max-w-md">
-                Every adventure demands something specific from your body. ACE breaks that into <span className="text-white/75 font-semibold">8 biological axes</span> — rated 1 to 5 — so your match is based on data, not optimism. Take the assessment once and see exactly where you stand against every adventure on the platform.
+              <p className="text-white/45 text-sm leading-relaxed mb-5 max-w-lg">
+                Every adventure demands something specific from your body. ACE breaks that into <span className="text-white/75 font-semibold">8 biological axes</span> — rated 1 to 5 — so your match is based on data, not optimism.
               </p>
-
-              {/* Axes 4+4 */}
               <div className="space-y-1.5">
                 <div className="flex flex-wrap gap-1.5">
                   {AXES.slice(0, 4).map(({ label, color, icon }) => (
@@ -126,7 +123,8 @@ export default function ACEPage() {
               </div>
             </div>
 
-            <div className="relative shrink-0">
+            {/* Right: radar — always on the right on all viewports ≥ lg */}
+            <div className="relative hidden lg:flex items-center justify-center">
               <div className="absolute inset-0 rounded-full blur-3xl opacity-12 scale-75 pointer-events-none" style={{ background: "conic-gradient(from 0deg, #f97316, #eab308, #84cc16, #22d3ee, #3b82f6, #a78bfa, #f43f5e, #10b981, #f97316)" }} />
               <ACERadar ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }} size={280} showLabels />
             </div>
