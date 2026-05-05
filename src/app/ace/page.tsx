@@ -46,11 +46,26 @@ const SCALE = [
 ];
 
 const RANKS = [
-  { label: "Pathfinder",  color: "#22d3ee", stars: 1, range: "8–15",  desc: "Day hikes, beginner routes." },
-  { label: "Navigator",   color: "#4ade80", stars: 2, range: "16–23", desc: "Multi-day, moderate demands." },
-  { label: "Trailblazer", color: "#f59e0b", stars: 3, range: "24–31", desc: "Technical, high altitude." },
-  { label: "Vanguard",    color: "#f97316", stars: 4, range: "32–39", desc: "Expedition-level objectives." },
-  { label: "Apex",        color: "#a78bfa", stars: 5, range: "40",    desc: "Elite. Nothing unreachable." },
+  {
+    label: "Pathfinder", color: "#22d3ee", stars: 1, range: "8–15", desc: "Day hikes, accessible multi-day routes, beginner water sports.",
+    icon: <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6"><circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1"/><path d="M12 16.5V8.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><path d="M8.5 12L12 8.5L15.5 12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  },
+  {
+    label: "Navigator", color: "#4ade80", stars: 2, range: "16–23", desc: "Multi-day expeditions, moderate demands across all axes.",
+    icon: <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6"><circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><path d="M12 4l2.5 7.5L12 10l-2.5 1.5L12 4z" fill="currentColor"/></svg>,
+  },
+  {
+    label: "Trailblazer", color: "#f59e0b", stars: 3, range: "24–31", desc: "Technical routes, high altitude, and serious multi-week trips.",
+    icon: <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6"><path d="M12 2.5L20 6.5V13C20 17.8 16.5 21.3 12 22.8C7.5 21.3 4 17.8 4 13V6.5L12 2.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" fill="currentColor" fillOpacity="0.1"/><path d="M8 15.5l2-3.5 2 2.5 2-4.5 2 5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  },
+  {
+    label: "Vanguard", color: "#f97316", stars: 4, range: "32–39", desc: "Expedition-level objectives, remote terrain, extreme conditions.",
+    icon: <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6"><path d="M12 2L20 7V13.5C20 18.2 16.5 21.8 12 23.5C7.5 21.8 4 18.2 4 13.5V7L12 2Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" fill="currentColor" fillOpacity="0.1"/><path d="M12 2L14 7H20L15.5 10.5L17 16L12 12.5L7 16L8.5 10.5L4 7H10L12 2Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" fill="currentColor" fillOpacity="0.2"/></svg>,
+  },
+  {
+    label: "Apex", color: "#a78bfa", stars: 5, range: "40", desc: "Elite across every axis. No adventure is out of reach.",
+    icon: <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6"><polygon points="12,1.5 15.5,9.5 24,10 17.8,16 19.8,24 12,19.8 4.2,24 6.2,16 0,10 8.5,9.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" fill="currentColor" fillOpacity="0.12"/><polygon points="12,6.5 14,11.5 19.5,12 15.3,15.8 16.7,21 12,18.2 7.3,21 8.7,15.8 4.5,12 10,11.5" fill="currentColor" fillOpacity="0.85"/></svg>,
+  },
 ];
 
 const PROGRESSION_TREKS = [
@@ -218,28 +233,28 @@ export default function ACEPage() {
               <p className="text-white/30 text-xs mb-4 leading-relaxed">Your total ACE score places you on the rank ladder. 8 axes × max 5 = <span className="text-white/50 font-semibold">40 points</span>. Higher rank = broader adventure access.</p>
 
               <div className="space-y-2">
-                {RANKS.map(({ label, color, stars, range, desc }) => (
-                  <div key={label} className="flex items-center gap-3 px-3.5 py-3 rounded-xl border" style={{ background: `${color}06`, borderColor: `${color}20` }}>
-                    {/* Badge */}
-                    <div className="shrink-0 w-9 h-9 rounded-xl flex flex-col items-center justify-center gap-0.5 relative overflow-hidden"
-                      style={{ background: `${color}15`, border: `1px solid ${color}30`, boxShadow: `0 0 14px ${color}20` }}>
-                      <div className="absolute inset-0 opacity-10" style={{ background: `radial-gradient(circle at 50% 0%, ${color}, transparent 70%)` }} />
-                      <span className="text-[11px] leading-none relative z-10" style={{ filter: `drop-shadow(0 0 4px ${color})` }}>
-                        {stars === 1 ? "◈" : stars === 2 ? "⬡" : stars === 3 ? "✦" : stars === 4 ? "⬟" : "✺"}
-                      </span>
-                      <div className="flex gap-px relative z-10">
-                        {Array.from({ length: stars }).map((_, i) => (
-                          <span key={i} className="text-[5px] leading-none" style={{ color }}>●</span>
-                        ))}
-                      </div>
+                {RANKS.map(({ label, color, stars, range, desc, icon }) => (
+                  <div key={label} className="flex items-center gap-3.5 px-3.5 py-3 rounded-xl border relative overflow-hidden" style={{ background: `${color}06`, borderColor: `${color}22` }}>
+                    <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity" style={{ background: `radial-gradient(ellipse at 0% 50%, ${color}08, transparent 60%)` }} />
+                    {/* Icon badge */}
+                    <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center relative"
+                      style={{ background: `${color}15`, border: `1px solid ${color}28`, color, boxShadow: `0 0 16px ${color}18` }}>
+                      <div className="scale-[1.1]">{icon}</div>
                     </div>
+                    {/* Text */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-baseline gap-2">
-                        <span className="font-black text-white text-xs font-mono">{label}</span>
-                        <span className="text-[10px] font-mono font-bold" style={{ color }}>{range} pts</span>
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="font-black text-white text-sm leading-none">{label}</span>
+                        <div className="flex gap-0.5">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <span key={i} className="text-[9px] leading-none" style={{ color: i < stars ? color : "rgba(255,255,255,0.08)" }}>★</span>
+                          ))}
+                        </div>
                       </div>
-                      <p className="text-white/25 text-[10px] mt-0.5 leading-snug">{desc}</p>
+                      <p className="text-white/30 text-[10px] leading-snug">{desc}</p>
                     </div>
+                    {/* Score */}
+                    <span className="shrink-0 text-[10px] font-black font-mono px-2 py-0.5 rounded-lg" style={{ background: `${color}12`, color, border: `1px solid ${color}20` }}>{range}</span>
                   </div>
                 ))}
               </div>
