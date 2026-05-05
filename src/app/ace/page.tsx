@@ -306,8 +306,6 @@ export default function ACEPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {PROGRESSION_TREKS.map((t, i) => {
               const adv = adventures.find(a => a.slug === t.slug);
-              const aceEntries = Object.entries(t.ace).filter(([, v]) => v > 0);
-              const topAxes = aceEntries.sort(([,a],[,b]) => b - a).slice(0, 3);
               return (
                 <div key={t.slug} className="rounded-2xl overflow-hidden border flex flex-col group" style={{ borderColor: `${t.diffColor}25`, background: "rgba(8,12,20,0.85)" }}>
                   {/* Image */}
@@ -335,19 +333,6 @@ export default function ACEPage() {
                   {/* Radar */}
                   <div className="flex justify-center px-4 pt-2 pb-1 flex-1 items-center">
                     <ACERadar ace={t.ace} size={190} showLabels />
-                  </div>
-
-                  {/* Top axes strip */}
-                  <div className="px-4 pb-3 flex items-center gap-1.5 flex-wrap">
-                    {topAxes.map(([key, val]) => {
-                      const axis = AXES.find(a => a.key === key);
-                      if (!axis) return null;
-                      return (
-                        <span key={key} className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[9px] font-bold font-mono border" style={{ background: `${axis.color}12`, borderColor: `${axis.color}28`, color: axis.color }}>
-                          {axis.icon}<span>{axis.label}</span><span className="opacity-60">·{val}</span>
-                        </span>
-                      );
-                    })}
                   </div>
 
                   {/* CTA */}
