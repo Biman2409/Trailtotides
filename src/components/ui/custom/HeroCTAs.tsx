@@ -21,7 +21,7 @@ export default function HeroCTAs() {
     <form onSubmit={handleSearch} className="flex items-stretch gap-2 w-full">
       {/* Search input */}
       <div
-        className="flex items-center gap-2.5 flex-1 basis-0 px-4 py-3 rounded-xl min-w-0"
+        className="relative flex items-center flex-1 basis-0 px-4 py-3 rounded-xl min-w-0"
         style={{
           background: "rgba(255,255,255,0.10)",
           border: "1px solid rgba(255,255,255,0.22)",
@@ -29,13 +29,13 @@ export default function HeroCTAs() {
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
         }}
       >
-        <Search className="w-4 h-4 shrink-0" style={{ color: "rgba(255,255,255,0.45)" }} />
+        <Search className="absolute left-4 w-4 h-4 pointer-events-none" style={{ color: "rgba(255,255,255,0.45)" }} />
         <input
           type="text"
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder="Search adventures"
-          className="flex-1 bg-transparent text-white text-sm font-medium outline-none placeholder:font-normal min-w-0 text-center placeholder:text-center"
+          className="w-full bg-transparent text-white text-sm font-medium outline-none placeholder:font-normal text-center placeholder:text-center"
           style={{ color: "rgba(255,255,255,0.9)", caretColor: "#ff5100" }}
         />
       </div>
