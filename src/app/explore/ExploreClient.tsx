@@ -967,72 +967,43 @@ export default function ExploreClient() {
         {/* Compare Adventures — compact */}
         <CompareAdventures />
 
-        {/* Adventure Map — compact banner */}
-        <div className="relative overflow-hidden mx-5 lg:mx-8 mb-8 rounded-2xl" style={{ background: "#060e08", border: "1px solid rgba(126,200,138,0.12)" }}>
-          {/* Bg layers */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 140% 100% at 70% 50%, #0a1c0f 0%, #060e08 70%)" }} />
-            <div className="absolute right-0 top-0 bottom-0 w-1/2" style={{ background: "radial-gradient(ellipse at 80% 50%, rgba(126,200,138,0.06) 0%, transparent 70%)" }} />
-          </div>
-          {/* Dot grid */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(126,200,138,1) 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
-          {/* Top accent line */}
-          <div className="absolute top-0 inset-x-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(126,200,138,0.4) 40%, rgba(126,200,138,0.4) 60%, transparent)" }} />
+        {/* Adventure Map — strip */}
+        <div className="relative mx-5 lg:mx-8 mb-8 overflow-hidden rounded-xl" style={{ background: "linear-gradient(90deg, #070e09 0%, #0a1810 60%, #070e09 100%)", border: "1px solid rgba(126,200,138,0.09)" }}>
+          <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(126,200,138,1) 1px, transparent 1px)", backgroundSize: "18px 18px" }} />
+          <div className="absolute right-0 inset-y-0 w-64 pointer-events-none" style={{ background: "radial-gradient(ellipse at 100% 50%, rgba(126,200,138,0.07) 0%, transparent 70%)" }} />
 
-          <div className="relative z-10 px-5 lg:px-8 py-5 flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-8">
+          <div className="relative flex items-center gap-0 divide-x" style={{ divideColor: "rgba(126,200,138,0.07)" }}>
 
-            {/* Left: icon + text */}
-            <div className="flex items-center gap-4 flex-1 min-w-0">
-              {/* Map icon badge */}
-              <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "rgba(126,200,138,0.1)", border: "1px solid rgba(126,200,138,0.2)" }}>
-                <MapIcon className="w-4.5 h-4.5 text-[#7ec88a] w-5 h-5" />
-              </div>
+            {/* Label + description */}
+            <div className="flex items-center gap-3 px-5 py-3.5 flex-1 min-w-0">
+              <MapIcon className="w-4 h-4 shrink-0" style={{ color: "rgba(126,200,138,0.6)" }} />
               <div className="min-w-0">
-                <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-white font-bold text-sm leading-none">Adventure Map</span>
-                  <span className="relative flex h-1.5 w-1.5 shrink-0">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#7ec88a] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#7ec88a]" />
-                  </span>
-                </div>
-                <p className="text-white/35 text-[11px] leading-snug">Every trail, summit &amp; canyon across India — pinned and filterable by region and type.</p>
+                <span className="text-white/70 text-[12px] font-semibold">Adventure Map</span>
+                <span className="hidden sm:inline text-white/25 text-[11px] ml-2">— every adventure in India, pinned</span>
               </div>
             </div>
 
-            {/* Mid: stat chips */}
-            <div className="flex items-center gap-2 shrink-0">
+            {/* Stats */}
+            <div className="hidden md:flex items-center divide-x px-0" style={{ borderColor: "rgba(126,200,138,0.07)" }}>
               {([
-                { val: adventures.length.toString(), lbl: "Adventures" },
-                { val: "8", lbl: "Regions" },
-                { val: new Set(adventures.map(a => a.type)).size.toString(), lbl: "Types" },
+                { val: adventures.length, lbl: "pins" },
+                { val: 8, lbl: "regions" },
+                { val: new Set(adventures.map(a => a.type)).size, lbl: "types" },
               ]).map(({ val, lbl }) => (
-                <div key={lbl} className="flex flex-col items-center px-3 py-1.5 rounded-lg" style={{ background: "rgba(126,200,138,0.06)", border: "1px solid rgba(126,200,138,0.1)" }}>
-                  <span className="text-[#7ec88a] text-sm font-black leading-none">{val}</span>
-                  <span className="text-white/25 text-[9px] font-semibold mt-0.5">{lbl}</span>
+                <div key={lbl} className="flex items-baseline gap-1.5 px-4 py-3.5">
+                  <span className="text-[13px] font-black" style={{ color: "#7ec88a" }}>{val}</span>
+                  <span className="text-[10px] text-white/25">{lbl}</span>
                 </div>
               ))}
             </div>
 
-            {/* Right: mini map preview + CTA */}
-            <div className="flex items-center gap-3 shrink-0">
-              {/* Mini India silhouette */}
-              <div className="relative w-14 h-16 hidden md:block overflow-hidden rounded-lg" style={{ background: "rgba(126,200,138,0.05)", border: "1px solid rgba(126,200,138,0.12)" }}>
-                <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: "radial-gradient(circle, rgba(126,200,138,1) 1px, transparent 1px)", backgroundSize: "6px 6px" }} />
-                <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 60 70" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-                  <path d="M24 4 L32 3.5 L39 6 L43 11 L46 16 L48 22 L48 29 L47 35 L44 41 L41 46 L38 51 L35 55 L32 63 L29 59 L27.5 55 L24 51 L20.5 46 L17 41 L14 35 L13 29 L13 22 L15 16 L18 11 L21.5 7 Z" fill="#7ec88a" />
-                </svg>
-                {/* Mini pins */}
-                {[{ x: "30%", y: "18%" }, { x: "55%", y: "28%" }, { x: "45%", y: "48%" }, { x: "25%", y: "62%" }].map((p, i) => (
-                  <div key={i} className="absolute w-1.5 h-1.5 rounded-full" style={{ left: p.x, top: p.y, background: "#7ec88a", boxShadow: "0 0 4px rgba(126,200,138,0.8)", transform: "translate(-50%,-50%)" }} />
-                ))}
-              </div>
-
+            {/* CTA */}
+            <div className="px-4 py-3 shrink-0">
               <Link
                 href="/map"
-                className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all hover:brightness-110 hover:-translate-y-0.5"
-                style={{ background: "linear-gradient(135deg, #7ec88a 0%, #5ab568 100%)", color: "#071209", boxShadow: "0 4px 16px rgba(126,200,138,0.25)" }}
+                className="group inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[11px] font-bold transition-all hover:brightness-110"
+                style={{ background: "rgba(126,200,138,0.1)", color: "#7ec88a", border: "1px solid rgba(126,200,138,0.18)" }}
               >
-                <MapIcon className="w-3.5 h-3.5" />
                 Open Map
                 <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
               </Link>
