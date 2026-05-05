@@ -38,7 +38,7 @@ function useCountUp(target: number, duration = 1600, started = false) {
 function StatItem({ value, label, suffix = "", started, index }: { value: number; label: string; suffix?: string; started: boolean; index: number }) {
   const count = useCountUp(value, 1600, started);
   return (
-    <div className="relative flex flex-col items-center justify-center py-8 px-6 text-center group">
+    <div className="relative flex flex-col items-center justify-center py-4 px-6 text-center group">
       {/* Subtle top accent line */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-10 transition-all duration-500 group-hover:w-16"
@@ -47,7 +47,7 @@ function StatItem({ value, label, suffix = "", started, index }: { value: number
 
       {/* Number */}
       <div
-        className="text-3xl sm:text-4xl font-black tracking-tight tabular-nums leading-none mb-2"
+        className="text-2xl sm:text-3xl font-black tracking-tight tabular-nums leading-none mb-1.5"
         style={{
           background: "linear-gradient(160deg, #ffffff 30%, rgba(255,255,255,0.45) 100%)",
           WebkitBackgroundClip: "text",
