@@ -15,7 +15,7 @@ const STATS = [
   { value: totalAdventures,        label: "Adventures",        suffix: "+" },
   { value: totalRegions,           label: "Regions",           suffix: "" },
   { value: totalTypes,             label: "Genres",            suffix: "" },
-  { value: totalVerifiedOperators, label: "Verified Operators",suffix: "+" },
+  { value: totalVerifiedOperators, label: "Operators",          suffix: "+" },
 ];
 
 function useCountUp(target: number, duration = 1600, started = false) {
