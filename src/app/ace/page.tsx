@@ -20,14 +20,14 @@ export const metadata = {
 };
 
 const AXES = [
-  { key: "stamina",  icon: <Flame    className="w-3.5 h-3.5" />, color: "#f97316", label: "Stamina",  desc: "Sustained aerobic output across consecutive days — 8-hour treks, back-to-back climbs, no real recovery." },
-  { key: "power",    icon: <Zap      className="w-3.5 h-3.5" />, color: "#eab308", label: "Power",    desc: "Explosive short bursts — a steep 400m ascent, punching a rapid, the final push to a technical summit." },
-  { key: "strength", icon: <Dumbbell className="w-3.5 h-3.5" />, color: "#84cc16", label: "Strength", desc: "Load-bearing under a heavy pack on uneven terrain where joints and back are under constant stress." },
-  { key: "agility",  icon: <Compass  className="w-3.5 h-3.5" />, color: "#22d3ee", label: "Agility",  desc: "Precision movement on loose scree, snow slopes, and ridgelines where a misstep has real consequences." },
-  { key: "water",    icon: <Waves    className="w-3.5 h-3.5" />, color: "#3b82f6", label: "Water",    desc: "Comfort in or around moving water — rapids, sea crossings, river fords. Score 0 = no aquatic component." },
-  { key: "altitude", icon: <Mountain className="w-3.5 h-3.5" />, color: "#a78bfa", label: "Altitude", desc: "Hypoxic tolerance above 3,500m. Above 5,000m even fit people fail without genuine acclimatisation capacity." },
-  { key: "focus",    icon: <ScanEye  className="w-3.5 h-3.5" />, color: "#f43f5e", label: "Focus",    desc: "Composure in exposed terrain — cliffs, fixed ropes, vertiginous ridges — where distraction is dangerous." },
-  { key: "nerve",    icon: <Ghost    className="w-3.5 h-3.5" />, color: "#10b981", label: "Nerve",    desc: "Self-reliance with no signal, no road, no organised rescue. The score reflects how alone you truly are." },
+  { key: "stamina",  icon: <Flame    className="w-3.5 h-3.5" />, color: "#f97316", label: "Stamina",  desc: "Your engine over time. Can you keep moving for 8+ hours, day after day, with a loaded pack and no rest day? High-stamina adventures don't break you in one moment — they grind you down slowly." },
+  { key: "power",    icon: <Zap      className="w-3.5 h-3.5" />, color: "#eab308", label: "Power",    desc: "Short, sharp, maximum effort. The 45-minute wall of a steep summit push, a class IV rapid, a technical crux. You can't pace through it — you either have the output or you don't." },
+  { key: "strength", icon: <Dumbbell className="w-3.5 h-3.5" />, color: "#84cc16", label: "Strength", desc: "Carrying 15kg over broken terrain for six hours recruits different muscles than a gym session. Strength here means functional load-bearing — legs, back, joints — over distance and elevation." },
+  { key: "agility",  icon: <Compass  className="w-3.5 h-3.5" />, color: "#22d3ee", label: "Agility",  desc: "Moving precisely on surfaces that shift under you — scree fields, iced rock, river boulders, exposed ridges. Agility is body awareness in terrain where one bad foot placement matters." },
+  { key: "water",    icon: <Waves    className="w-3.5 h-3.5" />, color: "#3b82f6", label: "Water",    desc: "Not just swimming — it's comfort when the current has force. White-water rafting, sea crossings, chest-deep river fords. A score of 0 means the adventure has no aquatic element at all." },
+  { key: "altitude", icon: <Mountain className="w-3.5 h-3.5" />, color: "#a78bfa", label: "Altitude", desc: "Thin air changes everything. Above 3,500m your body works harder for every breath. Above 5,000m, poor acclimatisation response becomes a medical risk — fitness alone doesn't compensate." },
+  { key: "focus",    icon: <ScanEye  className="w-3.5 h-3.5" />, color: "#f43f5e", label: "Focus",    desc: "Mental composure when the drop is real. Exposed ridgelines, fixed-rope sections, vertical faces — your brain registers danger and tries to freeze. Focus is the ability to override that and move cleanly." },
+  { key: "nerve",    icon: <Ghost    className="w-3.5 h-3.5" />, color: "#10b981", label: "Nerve",    desc: "Days from the nearest road. No phone signal. No organised rescue. Nerve measures how well you operate — and make decisions — when you are genuinely on your own and the stakes are real." },
 ];
 
 const DOMAINS = [
