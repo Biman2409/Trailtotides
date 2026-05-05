@@ -12,13 +12,13 @@ const totalVerifiedOperators = adventures.reduce(
 );
 
 const STATS = [
-  { value: totalAdventures, label: "Adventures" },
-  { value: totalRegions,    label: "Regions" },
-  { value: totalTypes,      label: "Genres" },
-  { value: totalVerifiedOperators, label: "Verified Operators" },
+  { value: totalAdventures,        label: "Adventures",        suffix: "+" },
+  { value: totalRegions,           label: "Regions",           suffix: "" },
+  { value: totalTypes,             label: "Genres",            suffix: "" },
+  { value: totalVerifiedOperators, label: "Verified Operators",suffix: "+" },
 ];
 
-function useCountUp(target: number, duration = 1400, started = false) {
+function useCountUp(target: number, duration = 1600, started = false) {
   const [count, setCount] = useState(0);
   useEffect(() => {
     if (!started) return;
@@ -26,8 +26,7 @@ function useCountUp(target: number, duration = 1400, started = false) {
     const step = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
-      // ease-out cubic
-      const eased = 1 - Math.pow(1 - progress, 3);
+      const eased = 1 - Math.pow(1 - progress, 4);
       setCount(Math.floor(eased * target));
       if (progress < 1) requestAnimationFrame(step);
     };
@@ -36,14 +35,33 @@ function useCountUp(target: number, duration = 1400, started = false) {
   return count;
 }
 
-function StatItem({ value, label, suffix = "", started }: { value: number; label: string; suffix?: string; started: boolean }) {
-  const count = useCountUp(value, 1400, started);
+function StatItem({ value, label, suffix = "", started, index }: { value: number; label: string; suffix?: string; started: boolean; index: number }) {
+  const count = useCountUp(value, 1600, started);
   return (
-    <div className="text-center py-5 px-3 sm:py-8 sm:px-6">
-      <div className="text-white text-2xl sm:text-3xl font-bold tracking-tight tabular-nums">
+    <div className="relative flex flex-col items-center justify-center py-8 px-6 text-center group">
+      {/* Subtle top accent line */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-10 transition-all duration-500 group-hover:w-16"
+        style={{ background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.55), transparent)" }}
+      />
+
+      {/* Number */}
+      <div
+        className="text-3xl sm:text-4xl font-black tracking-tight tabular-nums leading-none mb-2"
+        style={{
+          background: "linear-gradient(160deg, #ffffff 30%, rgba(255,255,255,0.45) 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+        }}
+      >
         {count}{suffix}
       </div>
-      <div className="text-white/32 text-[10px] sm:text-xs mt-1 sm:mt-1.5 tracking-widest uppercase">{label}</div>
+
+      {/* Label */}
+      <div className="text-[10px] sm:text-[11px] font-semibold tracking-[0.2em] uppercase" style={{ color: "rgba(255,255,255,0.28)" }}>
+        {label}
+      </div>
     </div>
   );
 }
@@ -57,18 +75,33 @@ export default function StatsBar() {
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setStarted(true); observer.disconnect(); } },
-      { threshold: 0.3 }
+      { threshold: 0.25 }
     );
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
   return (
-    <section ref={ref} className="bg-[#141920] border-b border-white/6">
+    <section
+      ref={ref}
+      style={{
+        background: "linear-gradient(180deg, #0f1319 0%, #111820 100%)",
+        borderTop: "1px solid rgba(255,255,255,0.04)",
+        borderBottom: "1px solid rgba(255,255,255,0.04)",
+      }}
+    >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/8">
-          {STATS.map(({ value, label }) => (
-              <StatItem key={label} value={value} label={label} started={started} />
+        <div
+          className="grid grid-cols-2 md:grid-cols-4"
+          style={{ borderLeft: "1px solid rgba(255,255,255,0.05)" }}
+        >
+          {STATS.map(({ value, label, suffix }, i) => (
+            <div
+              key={label}
+              style={{ borderRight: "1px solid rgba(255,255,255,0.05)" }}
+            >
+              <StatItem value={value} label={label} suffix={suffix} started={started} index={i} />
+            </div>
           ))}
         </div>
       </div>
