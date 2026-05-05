@@ -12,7 +12,7 @@ const totalUniqueOperators = new Set(
 
 const STATS = [
   { value: totalAdventures,      label: "Adventures",  suffix: "+" },
-  { value: totalStates,          label: "States",      suffix: "" },
+  { value: totalStates,          label: "Regions",     suffix: "" },
   { value: totalTypes,           label: "Genres",      suffix: "" },
   { value: totalUniqueOperators, label: "Operators",   suffix: "+" },
 ];
