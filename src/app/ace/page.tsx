@@ -117,11 +117,8 @@ export default function ACEPage() {
               <h1 className="text-3xl lg:text-[2.6rem] font-black text-white tracking-tight leading-[1.06] mb-3">
                 Adventure Capability Engine<sup className="text-[#ff5100] text-base font-black ml-0.5 align-super" style={{ fontSize: "0.45em" }}>™</sup>
               </h1>
-              <p className="text-white/50 text-sm leading-relaxed mb-2 max-w-lg">
-                Most adventure platforms rate difficulty as Easy, Moderate, or Hard. That tells you nothing useful.
-              </p>
               <p className="text-white/45 text-sm leading-relaxed mb-5 max-w-lg">
-                ACE™ is Trail to Tides' proprietary rating system. It breaks every adventure down into <span className="text-white/75 font-semibold">8 physical and psychological axes</span> — each scored 1 to 5 — so you know exactly what your body needs before you go. Answer 8 questions once, and every adventure on the platform is matched to your real capability.
+                Easy, Moderate, Hard tells you nothing. ACE™ is Trail to Tides' proprietary system that rates every adventure across <span className="text-white/75 font-semibold">8 physical and psychological axes</span>. Answer 8 questions once — every adventure is matched to your real capability.
               </p>
               <div className="space-y-1.5">
                 <div className="flex flex-wrap gap-1.5">
