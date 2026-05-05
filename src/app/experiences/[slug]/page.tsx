@@ -579,7 +579,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 className="flex items-center justify-center py-2.5 rounded-xl text-white/40 hover:text-white/70 text-[11px] font-medium transition-all hover:bg-white/5"
                 style={{ border: "1px solid var(--border-subtle)" }}
               >
-                More {adventure.type}
+                More in {adventure.type}
               </Link>
             </div>
 
