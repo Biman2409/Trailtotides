@@ -20,21 +20,21 @@ export const metadata = {
 };
 
 const AXES = [
-  { key: "stamina",  icon: <Flame    className="w-3.5 h-3.5" />, color: "#f97316", label: "Stamina",  desc: "Sustained output across multi-day effort." },
-  { key: "power",    icon: <Zap      className="w-3.5 h-3.5" />, color: "#eab308", label: "Power",    desc: "Explosive bursts — ascents, rapids, scrambling." },
-  { key: "strength", icon: <Dumbbell className="w-3.5 h-3.5" />, color: "#84cc16", label: "Strength", desc: "Load-bearing on heavy packs and technical terrain." },
-  { key: "agility",  icon: <Compass  className="w-3.5 h-3.5" />, color: "#22d3ee", label: "Agility",  desc: "Balance and movement on rock, scree, snow." },
-  { key: "water",    icon: <Waves    className="w-3.5 h-3.5" />, color: "#3b82f6", label: "Water",    desc: "Aquatic survival — rafting, diving, crossings." },
-  { key: "altitude", icon: <Mountain className="w-3.5 h-3.5" />, color: "#a78bfa", label: "Altitude", desc: "Hypoxic tolerance for high-altitude objectives." },
-  { key: "focus",    icon: <ScanEye  className="w-3.5 h-3.5" />, color: "#f43f5e", label: "Focus",    desc: "Exposure tolerance — cliffs, caves, dangerous terrain." },
-  { key: "nerve",    icon: <Ghost    className="w-3.5 h-3.5" />, color: "#10b981", label: "Nerve",    desc: "Self-reliance far from help in remote terrain." },
+  { key: "stamina",  icon: <Flame    className="w-3.5 h-3.5" />, color: "#f97316", label: "Stamina",  desc: "How long can you keep going? Stamina measures sustained aerobic output over consecutive days — trekking 8+ hours, cycling through mountain passes, or pushing through a multi-day expedition without a recovery day." },
+  { key: "power",    icon: <Zap      className="w-3.5 h-3.5" />, color: "#eab308", label: "Power",    desc: "Short explosive effort. Power covers the hard sections that demand everything at once — a steep 400m ascent, punching through a rapid, or the final push to a technical summit. High power demand = you can't just pace yourself through it." },
+  { key: "strength", icon: <Dumbbell className="w-3.5 h-3.5" />, color: "#84cc16", label: "Strength", desc: "Can your body carry the load? Strength accounts for heavy packs on uneven terrain, pulling yourself up technical rock, and the muscular demand of multi-day treks where your joints and back are under constant stress." },
+  { key: "agility",  icon: <Compass  className="w-3.5 h-3.5" />, color: "#22d3ee", label: "Agility",  desc: "Precision movement and body awareness on unpredictable surfaces — loose scree, snow slopes, river boulders, and narrow ridgelines where a misstep has real consequences. High agility demand means the terrain actively challenges your balance." },
+  { key: "water",    icon: <Waves    className="w-3.5 h-3.5" />, color: "#3b82f6", label: "Water",    desc: "Comfort and competency in or around water. This covers white-water rafting, sea kayaking, open-water swimming, and river crossings where the current has force. A score of 0 means the adventure has no aquatic component whatsoever." },
+  { key: "altitude", icon: <Mountain className="w-3.5 h-3.5" />, color: "#a78bfa", label: "Altitude", desc: "Your body's tolerance for low-oxygen environments. Above 3,500m, acclimatisation becomes non-negotiable. Above 5,000m, even fit individuals with poor hypoxic response are at serious risk. Altitude scores reflect the physiological ceiling, not just the height." },
+  { key: "focus",    icon: <ScanEye  className="w-3.5 h-3.5" />, color: "#f43f5e", label: "Focus",    desc: "Psychological composure in exposed situations — cliffs, fixed ropes, vertiginous ridges, cave systems, or any terrain where a lapse in concentration is dangerous. Focus is about staying calm when the stakes make that hard." },
+  { key: "nerve",    icon: <Ghost    className="w-3.5 h-3.5" />, color: "#10b981", label: "Nerve",    desc: "Can you operate without a safety net? Nerve measures self-reliance in genuinely remote terrain — days from a road, no phone signal, no organised rescue. The higher the score, the more you are truly on your own if something goes wrong." },
 ];
 
 const DOMAINS = [
-  { name: "Engine",   icon: <Activity className="w-3.5 h-3.5" />, color: "#f97316", axes: ["Stamina", "Power"],    desc: "Sustained output + explosive effort" },
-  { name: "Chassis",  icon: <Layers   className="w-3.5 h-3.5" />, color: "#22d3ee", axes: ["Strength", "Agility"], desc: "Load-bearing and terrain navigation" },
-  { name: "Elements", icon: <Globe    className="w-3.5 h-3.5" />, color: "#a78bfa", axes: ["Water", "Altitude"],   desc: "Aquatic and high-altitude physiology" },
-  { name: "Mind",     icon: <Brain    className="w-3.5 h-3.5" />, color: "#10b981", axes: ["Focus", "Nerve"],      desc: "Exposure and remote self-reliance" },
+  { name: "Engine",   icon: <Activity className="w-3.5 h-3.5" />, color: "#f97316", axes: ["Stamina", "Power"],    desc: "How hard and how long your body can work" },
+  { name: "Chassis",  icon: <Layers   className="w-3.5 h-3.5" />, color: "#22d3ee", axes: ["Strength", "Agility"], desc: "Structural capacity under load and on terrain" },
+  { name: "Elements", icon: <Globe    className="w-3.5 h-3.5" />, color: "#a78bfa", axes: ["Water", "Altitude"],   desc: "Environmental demands beyond standard fitness" },
+  { name: "Mind",     icon: <Brain    className="w-3.5 h-3.5" />, color: "#10b981", axes: ["Focus", "Nerve"],      desc: "Composure under exposure and in true isolation" },
 ];
 
 const SCALE = [
@@ -159,12 +159,9 @@ export default function ACEPage() {
                     {domainAxes.map(({ key, icon: axIcon, color: axColor, label, desc: axDesc }) => (
                       <div key={key} className="flex items-start gap-3 px-4 py-3">
                         <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${axColor}15`, color: axColor }}>{axIcon}</div>
-                        <div className="flex-1 min-w-0">
+                        <div className="min-w-0">
                           <span className="text-white font-bold text-xs font-mono">{label}</span>
-                          <p className="text-white/35 text-[10px] leading-snug mt-0.5">{axDesc}</p>
-                        </div>
-                        <div className="flex gap-0.5 shrink-0 mt-1.5">
-                          {[1,2,3,4,5].map(i => <span key={i} className="w-1.5 h-3.5 rounded-sm" style={{ background: i <= 3 ? `${axColor}55` : "rgba(255,255,255,0.07)" }} />)}
+                          <p className="text-white/35 text-[10px] leading-relaxed mt-1">{axDesc}</p>
                         </div>
                       </div>
                     ))}
