@@ -223,22 +223,35 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
           </button>
         </div>
 
-        {/* ACE fit bar */}
+        {/* Capability match bar */}
         {matchScore !== null && (() => {
           const pct = matchScore;
-          const color = pct >= 80 ? "#10b981" : pct >= 55 ? "#f59e0b" : "#f43f5e";
-          const label = pct >= 80 ? "Great fit" : pct >= 55 ? "Good fit" : "Tough fit";
+          const isGreat  = pct >= 80;
+          const isGood   = pct >= 55;
+          const color    = isGreat ? "#10b981" : isGood ? "#f59e0b" : "#f43f5e";
+          const bgColor  = isGreat ? "rgba(16,185,129,0.08)"  : isGood ? "rgba(245,158,11,0.08)"  : "rgba(244,63,94,0.08)";
+          const bdColor  = isGreat ? "rgba(16,185,129,0.18)"  : isGood ? "rgba(245,158,11,0.18)"  : "rgba(244,63,94,0.18)";
+          const label    = isGreat ? "Great match" : isGood   ? "Good match"  : "Challenging";
+          const dot      = isGreat ? "●●●" : isGood ? "●●○" : "●○○";
           return (
-            <div className="px-3 pb-2.5 pt-0">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[9px] text-white/25 font-medium uppercase tracking-[0.12em]">ACE Fit</span>
-                <span className="text-[10px] font-bold" style={{ color }}>{pct}% · {label}</span>
-              </div>
-              <div className="h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
-                <div
-                  className="h-full rounded-full transition-all duration-500"
-                  style={{ width: `${pct}%`, background: color }}
-                />
+            <div className="px-3 pb-3 pt-0">
+              <div
+                className="rounded-lg px-2.5 py-1.5 flex items-center gap-2"
+                style={{ background: bgColor, border: `1px solid ${bdColor}` }}
+              >
+                <span className="text-[9px] tracking-[0.06em] font-bold shrink-0" style={{ color, letterSpacing: "0.04em" }}>{dot}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.07)" }}>
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${color}99, ${color})` }}
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  <span className="text-[10px] font-black tabular-nums" style={{ color }}>{pct}%</span>
+                  <span className="text-[9px] font-semibold" style={{ color: `${color}99` }}>{label}</span>
+                </div>
               </div>
             </div>
           );
