@@ -5,6 +5,7 @@ import { Camera, Loader2, Trash2, X, ZoomIn, Upload, ImageOff } from "lucide-rea
 import Link from "next/link";
 import { toast } from "sonner";
 import { awardXP } from "@/lib/awardXP";
+import { useTripLog } from "@/contexts/TripLogContext";
 
 interface Photo {
   id: string;
@@ -37,7 +38,8 @@ function timeAgo(dateStr: string): string {
   return `${Math.floor(months / 12)}y ago`;
 }
 
-export default function PhotoGallery({ slug, currentUserId, isCompleted }: Props) {
+export default function PhotoGallery({ slug, currentUserId }: Props) {
+  const { markDone, isDone } = useTripLog();
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -92,6 +94,7 @@ export default function PhotoGallery({ slug, currentUserId, isCompleted }: Props
       setCaption("");
       toast.success("Photo shared!", { description: "Your shot is live on the trail.", duration: 3000 });
       awardXP("photo", slug);
+      if (!isDone(slug)) markDone(slug);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -112,13 +115,9 @@ export default function PhotoGallery({ slug, currentUserId, isCompleted }: Props
   return (
     <section>
 
-      {/* Upload area — logged in + completed only */}
+      {/* Upload area — logged in only */}
       {currentUserId ? (
-        !isCompleted ? (
-          <div className="rounded-lg px-3 py-2.5 mb-4 flex items-center gap-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-            <span className="text-white/30 text-xs">Log this adventure to upload photos.</span>
-          </div>
-        ) : !uploadOpen ? (
+        !uploadOpen ? (
           <button
             onClick={() => setUploadOpen(true)}
             className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl mb-4 text-left transition-all hover:brightness-110 active:scale-[0.99]"

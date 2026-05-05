@@ -159,6 +159,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
       awardXP("review", slug);
+      if (!isDone(slug)) markDone(slug);
     } catch {
       setError("Something went wrong.");
     } finally {
@@ -196,11 +197,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
       <div className="p-4">
         {/* Write form */}
         {currentUserId ? (
-          !isCompleted ? (
-            <div className="rounded-lg px-3 py-2.5 mb-4 flex items-center gap-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-              <span className="text-white/30 text-xs">Log this adventure to leave a review.</span>
-            </div>
-          ) : !hasReviewed ? (
+          !hasReviewed ? (
             !formOpen ? (
               <button
                 onClick={() => setFormOpen(true)}
