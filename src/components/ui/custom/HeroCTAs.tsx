@@ -35,7 +35,7 @@ export default function HeroCTAs() {
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder="Search adventures"
-          className="flex-1 bg-transparent text-white text-sm font-medium outline-none placeholder:font-normal min-w-0"
+          className="flex-1 bg-transparent text-white text-sm font-medium outline-none placeholder:font-normal min-w-0 text-center placeholder:text-center"
           style={{ color: "rgba(255,255,255,0.9)", caretColor: "#ff5100" }}
         />
       </div>
