@@ -658,8 +658,15 @@ export default function ExploreClient() {
                               ))}
                             </div>
                           )}
+                        </div>
+                      </div>
+
                     </div>
-                  </div>
+                  );
+                })()}
+
+                {/* ── Difficulty + Duration row ── */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 
                   {/* Difficulty */}
                   <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
