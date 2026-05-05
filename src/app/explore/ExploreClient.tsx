@@ -463,73 +463,53 @@ export default function ExploreClient() {
 
         {/* Filter panel */}
           {filtersOpen && (
-            <div className="border-t border-white/10 t-bg-page px-6 lg:px-8 py-6 max-h-[60vh] overflow-y-auto no-scrollbar">
-              <div className="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="border-t border-white/8" style={{ background: "rgba(6,9,18,0.97)", backdropFilter: "blur(12px)" }}>
+              <div className="max-w-7xl mx-auto px-5 lg:px-8 py-4 space-y-4">
 
-                  {/* Region */}
-                    <div className="col-span-2 lg:col-span-3">
-                      <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">
-                        Region
-                      </h3>
-                      {(() => {
-                          const regionGroups: { name: Region; subRegions: string[] }[] = [
-                            {
-                              name: "Himalayas",
-                              subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"],
-                            },
-                            {
-                                name: "Western Ghats",
-                              subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra"],
-                              },
-                              {
-                                    name: "Eastern Ghats",
-                                subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu", "Karnataka"],
-                              },
-                              {
-                                name: "Desert",
-                                  subRegions: ["Rajasthan", "Gujarat"],
-                              },
-                            {
-                              name: "Coast",
-                              subRegions: ["Maharashtra", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"],
-                            },
-                            {
-                              name: "Islands",
-                              subRegions: ["Andaman & Nicobar", "Lakshadweep"],
-                            },
-                                {
-                                  name: "Northeast",
-                                subRegions: ["Nagaland", "Manipur", "Meghalaya", "Mizoram", "Assam", "Arunachal Pradesh", "Sikkim"],
-                              },
-                              {
-                                name: "Urban",
-                                subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"],
-                              },
-                            ];
-                          return (
-                            <div className="flex flex-col gap-2">
-                              <div className="flex flex-wrap gap-2">
-                              {regionGroups.map((rg) => {
-                                const isExpanded = expandedRegion === rg.name;
-                                const hasSelected = selectedRegions.includes(rg.name) || rg.subRegions.some(sr => selectedSubRegions.includes(sr));
-                                const subCount = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
-                                return (
-                                     <button
-                                       key={rg.name}
-                                       onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
-                                       className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
-                                         isExpanded || hasSelected 
-                                           ? "bg-[#ff5100] text-white border-[#ff5100]" 
-                                           : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
-                                       }`}
-                                     >
-                                         {rg.name}
-                               {subCount > 0 && (
-                                  <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
-                                    {subCount}
-                                  </span>
+                {/* ── Region ── */}
+                {(() => {
+                  const regionGroups: { name: Region; subRegions: string[] }[] = [
+                    { name: "Himalayas",     subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
+                    { name: "Western Ghats", subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra"] },
+                    { name: "Eastern Ghats", subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu", "Karnataka"] },
+                    { name: "Desert",        subRegions: ["Rajasthan", "Gujarat"] },
+                    { name: "Coast",         subRegions: ["Maharashtra", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
+                    { name: "Islands",       subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
+                    { name: "Northeast",     subRegions: ["Nagaland", "Manipur", "Meghalaya", "Mizoram", "Assam", "Arunachal Pradesh", "Sikkim"] },
+                    { name: "Urban",         subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"] },
+                  ];
+                  return (
+                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                      <div className="flex items-center gap-2.5 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                        <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Region</span>
+                        {(selectedRegions.length > 0 || selectedSubRegions.length > 0) && (
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>
+                            {selectedRegions.length + selectedSubRegions.length}
+                          </span>
+                        )}
+                      </div>
+                      <div className="p-3">
+                        <div className="flex flex-wrap gap-1.5">
+                          {regionGroups.map((rg) => {
+                            const isExpanded = expandedRegion === rg.name;
+                            const hasSelected = selectedRegions.includes(rg.name) || rg.subRegions.some(sr => selectedSubRegions.includes(sr));
+                            const subCount = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
+                            return (
+                              <button
+                                key={rg.name}
+                                onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
+                                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                                style={{
+                                  background: isExpanded || hasSelected ? "#ff5100" : "rgba(255,255,255,0.05)",
+                                  color: isExpanded || hasSelected ? "#fff" : "rgba(255,255,255,0.55)",
+                                  border: `1px solid ${isExpanded || hasSelected ? "#ff5100" : "rgba(255,255,255,0.08)"}`,
+                                }}
+                              >
+                                {rg.name}
+                                {subCount > 0 && (
+                                  <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,255,255,0.25)" }}>{subCount}</span>
                                 )}
-                                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                                <ChevronDown className={`w-2.5 h-2.5 opacity-60 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                               </button>
                             );
                           })}
@@ -537,330 +517,265 @@ export default function ExploreClient() {
                         {expandedRegion && (() => {
                           const rg = regionGroups.find(r => r.name === expandedRegion)!;
                           return (
-                            <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                              <div className="flex flex-wrap gap-2">
-                                {rg.subRegions.map((sr) => {
-                                  const isSelected = selectedSubRegions.includes(sr);
-                                  return (
-                                    <button
-                                      key={sr}
-                                      onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
-                                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                                        isSelected 
-                                          ? "bg-[#ff5100] text-white" 
-                                          : "bg-white/10 text-white/70 hover:bg-white/20"
-                                      }`}
-                                    >
-                                      {sr}
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          );
-                        })()}
-                        </div>
-                      );
-                    })()}
-                  </div>
-
-                  {/* Adventure type */}
-                  <div className="col-span-2 lg:col-span-3">
-                    <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">
-                      Adventure Type
-                    </h3>
-                    {(() => {
-                            const categories = [
-                                {
-                                  label: "Land",
-                                  types: ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Motorcycling", "Cycling", "Jeep Safari", "Caving", "Urban Adventure"],
-                                },
-                            ];
-                        return (
-                          <div className="flex flex-col gap-2">
-                              {/* Category buttons row */}
-                              <div className="flex flex-wrap gap-2">
-                                {categories.map((cat) => {
-                                  const isExpanded = expandedCategory === cat.label;
-                                  const hasSelected = cat.types.some(t => selectedTypes.includes(t as AdventureType));
-                                  return (
-                                      <button
-                                        key={cat.label}
-                                        onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
-                                        className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
-                                          isExpanded || hasSelected 
-                                            ? "bg-[#ff5100] text-white border-[#ff5100]" 
-                                            : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
-                                        }`}
-                                      >
-                                        {cat.label}
-
-
-
-
-                                  {hasSelected && (
-                                    <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
-                                      {cat.types.filter(t => selectedTypes.includes(t as AdventureType)).length}
-                                    </span>
-                                  )}
-                                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                                </button>
-                              );
-                            })}
-                          </div>
-
-                          {/* Expanded type chips */}
-                            {expandedCategory && (() => {
-                              const cat = categories.find(c => c.label === expandedCategory)!;
-                              return (
-                                <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                                  {cat.types.length === 0 ? (
-                                    <p className="text-xs text-[#ff5100] italic">Coming soon</p>
-                                  ) : (
-
-                                  <div className="flex flex-wrap gap-2">
-                                    {cat.types.map((type) => {
-                                      const isSelected = selectedTypes.includes(type as AdventureType);
-                                      return (
-                                          <button
-                                            key={type}
-                                            onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
-                                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                                              isSelected
-                                                ? "bg-[#ff5100] text-white"
-                                                : "bg-white/10 text-white/70 hover:bg-white/20"
-                                            }`}
-                                          >
-                                            <span className="flex-shrink-0 opacity-80">
-                                              {ADVENTURE_TYPE_ICONS[type]?.(11)}
-                                            </span>
-                                            {type}
-                                          </button>
-                                      );
-                                    })}
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })()}
-                      </div>
-                    );
-                  })()}
-                </div>
-
-                {/* Best Season */}
-                <div className="col-span-2 lg:col-span-3">
-                  <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">
-                    Best Season
-                  </h3>
-                  <div className="flex flex-col gap-2">
-                      {/* Season buttons row */}
-                        <div className="flex flex-wrap gap-2">
-                          {seasons.map(({ label, months: sMonths }) => {
-                            const isExpanded = expandedSeason === label;
-                            const hasSelected = sMonths.some((m) => selectedMonths.includes(m));
-                            const selectedCount = sMonths.filter((m) => selectedMonths.includes(m)).length;
-                            return (
-                                <button
-                                  key={label}
-                                  onClick={() => setExpandedSeason(isExpanded ? null : label)}
-                                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${
-                                    isExpanded || hasSelected 
-                                      ? "bg-[#ff5100] text-white border-[#ff5100]" 
-                                      : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10"
-                                  }`}
-                                >
-                                  {label}
-
-
-                              {hasSelected && (
-                                <span className="bg-white/30 text-xs font-semibold px-1.5 py-0.5 rounded-full leading-none">
-                                  {selectedCount}
-                                </span>
-                              )}
-                              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                            </button>
-                          );
-                        })}
-                      </div>
-                      {/* Expanded month chips */}
-                      {expandedSeason && (() => {
-                        return (
-                          <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                            <div className="flex flex-wrap gap-2">
-                              {seasons.find((s) => s.label === expandedSeason)!.months.map((m) => (
-                                <button
-                                  key={m}
-                                  onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                                    selectedMonths.includes(m) 
-                                      ? "bg-[#ff5100] text-white" 
-                                      : "bg-white/10 text-white/70 hover:bg-white/20"
-                                  }`}
-                                >
-                                  {m}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        );
-                      })()}
-                  </div>
-                </div>
-
-                {/* Difficulty, Duration — each on its own row */}
-                      <div className="col-span-2 lg:col-span-3">
-                        <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">Difficulty</h3>
-                        <div className="flex flex-wrap gap-2">
-                          {(["Easy", "Moderate", "Hard", "Advanced", "Extreme"] as Difficulty[]).map((val) => {
-                              const isSelected = selectedDifficulties.includes(val);
-                              const activeClass = difficultyStyle[val] || "bg-[#ff5100] text-white";
-                              return (
-                                <button 
-                                  key={val} 
-                                  onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
-                                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                                    isSelected 
-                                      ? `${activeClass} border-transparent` 
-                                      : "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border"
-                                  }`}
-                                >
-                                  {val}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-
-                        <div className="col-span-2 lg:col-span-3">
-                            <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40 mb-3">Duration</h3>
-                            <div className="flex flex-wrap gap-2">
-                              {([
-                                { val: "Weekend",  label: "Weekend",  idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                                { val: "3–5 days", label: "3–5 days", idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                                { val: "7+ days",  label: "7+ days",  idle: "bg-white/5 border-white/10 text-white/70 hover:bg-white/10 border", active: "bg-[#ff5100] text-white border border-[#ff5100]" },
-                              ] as { val: Duration; label: string; idle: string; active: string }[]).map(({ val, label, idle, active }) => (
-                                <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
-                                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${selectedDurations.includes(val) ? active : idle}`}>
-                                  {label}
-                                </button>
-                              ))}
-                            </div>
-                        </div>
-
-                        {/* Price Range */}
-                        <div className="col-span-2 lg:col-span-3">
-                          <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40">Price Range</h3>
-                            <span className="text-xs font-semibold text-[#ff5100]">
-                              {priceRange[0] === PRICE_MIN && priceRange[1] === PRICE_MAX
-                                ? "Any price"
-                                : `₹${(priceRange[0]/1000).toFixed(0)}k – ₹${(priceRange[1]/1000).toFixed(0)}k`}
-                            </span>
-                          </div>
-                          <div className="px-1">
-                            {/* Dual range slider — two stacked inputs */}
-                            <div className="relative h-5 flex items-center">
-                              {/* Track background */}
-                              <div className="absolute inset-x-0 h-1 rounded-full bg-white/10" />
-                              {/* Filled track */}
-                              <div
-                                className="absolute h-1 rounded-full bg-[#ff5100]"
-                                style={{
-                                  left: `${(priceRange[0] / PRICE_MAX) * 100}%`,
-                                  right: `${100 - (priceRange[1] / PRICE_MAX) * 100}%`,
-                                }}
-                              />
-                              <input
-                                type="range"
-                                min={PRICE_MIN}
-                                max={PRICE_MAX}
-                                step={5000}
-                                value={priceRange[0]}
-                                onChange={(e) => {
-                                  const v = Math.min(Number(e.target.value), priceRange[1] - 5000);
-                                  setPriceRange([v, priceRange[1]]);
-                                }}
-                                className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
-                                style={{ zIndex: priceRange[0] > PRICE_MAX * 0.9 ? 5 : 3 }}
-                              />
-                              <input
-                                type="range"
-                                min={PRICE_MIN}
-                                max={PRICE_MAX}
-                                step={5000}
-                                value={priceRange[1]}
-                                onChange={(e) => {
-                                  const v = Math.max(Number(e.target.value), priceRange[0] + 5000);
-                                  setPriceRange([priceRange[0], v]);
-                                }}
-                                className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
-                                style={{ zIndex: 4 }}
-                              />
-                            </div>
-                            <div className="flex justify-between mt-2 text-[10px] text-white/30 font-medium">
-                              <span>₹0</span>
-                              <span>₹50k</span>
-                              <span>₹1L</span>
-                              <span>₹1.5L</span>
-                              <span>₹2L+</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* ACE Filters */}
-                        <div className="col-span-2 lg:col-span-3">
-                          <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40">ACE™ Difficulty</h3>
-                            <a href="/ace" target="_blank" className="text-[10px] text-white/25 hover:text-[#ff5100] transition-colors">What is ACE™?</a>
-                          </div>
-                          {!userProfile ? (
-                            <div className="flex items-center gap-4 p-4 rounded-2xl border border-white/8 bg-white/3">
-                              <div className="w-9 h-9 rounded-xl bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center justify-center shrink-0">
-                                <Compass className="w-4 h-4 text-[#ff5100]/60" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-white/60 text-xs font-medium">No ACE profile yet</p>
-                                <p className="text-white/30 text-[11px] mt-0.5">Take the assessment to filter by your capability level</p>
-                              </div>
-                              <Link
-                                href="/matchmaker"
-                                className="shrink-0 inline-flex items-center gap-1.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-3 py-2 rounded-xl text-xs transition-all"
-                              >
-                                Take Assessment
-                                <ArrowRight className="w-3 h-3" />
-                              </Link>
-                            </div>
-                          ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                              {([
-                                { key: "ready" as AceCategory, label: "Ready Now", desc: "Matches your current level", color: "#4ade80", bg: "#4ade8015" },
-                                { key: "stretch" as AceCategory, label: "Stretch Challenge", desc: "Slightly above your level", color: "#f59e0b", bg: "#f59e0b15" },
-                                { key: "out-of-range" as AceCategory, label: "Out of Range", desc: "Significantly beyond current ability", color: "#f43f5e", bg: "#f43f5e15" },
-                              ]).map(({ key, label, desc, color, bg }) => {
-                                const isActive = aceCategory === key;
+                            <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                              {rg.subRegions.map((sr) => {
+                                const isSelected = selectedSubRegions.includes(sr);
                                 return (
                                   <button
-                                    key={key}
-                                    onClick={() => setAceCategory(isActive ? null : key)}
-                                    className="text-left p-3.5 rounded-2xl border transition-all"
+                                    key={sr}
+                                    onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
+                                    className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
                                     style={{
-                                      background: isActive ? bg : "rgba(255,255,255,0.03)",
-                                      borderColor: isActive ? color : "rgba(255,255,255,0.08)",
+                                      background: isSelected ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.04)",
+                                      color: isSelected ? "#ff7d47" : "rgba(255,255,255,0.45)",
+                                      border: `1px solid ${isSelected ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)"}`,
                                     }}
                                   >
-                                    <p className="text-xs font-bold mb-0.5" style={{ color: isActive ? color : "rgba(255,255,255,0.6)" }}>{label}</p>
-                                    <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.35)" }}>{desc}</p>
+                                    {sr}
                                   </button>
                                 );
                               })}
                             </div>
-                          )}
-                        </div>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                  );
+                })()}
 
+                {/* ── Adventure Type ── */}
+                {(() => {
+                  const types = ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Motorcycling", "Cycling", "Jeep Safari", "Caving", "Urban Adventure"];
+                  return (
+                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                      <div className="flex items-center gap-2.5 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                        <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Adventure Type</span>
+                        {selectedTypes.length > 0 && (
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedTypes.length}</span>
+                        )}
+                      </div>
+                      <div className="p-3 flex flex-wrap gap-1.5">
+                        {types.map((type) => {
+                          const isSelected = selectedTypes.includes(type as AdventureType);
+                          return (
+                            <button
+                              key={type}
+                              onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
+                              className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                              style={{
+                                background: isSelected ? "#ff5100" : "rgba(255,255,255,0.05)",
+                                color: isSelected ? "#fff" : "rgba(255,255,255,0.55)",
+                                border: `1px solid ${isSelected ? "#ff5100" : "rgba(255,255,255,0.08)"}`,
+                              }}
+                            >
+                              <span className="opacity-70">{ADVENTURE_TYPE_ICONS[type]?.(10)}</span>
+                              {type}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* ── Season + Difficulty + Duration row ── */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+                  {/* Season */}
+                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                    <div className="flex items-center gap-2.5 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                      <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Season</span>
+                      {selectedMonths.length > 0 && (
+                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedMonths.length}</span>
+                      )}
+                    </div>
+                    <div className="p-3">
+                      <div className="flex flex-wrap gap-1.5">
+                        {seasons.map(({ label, months: sMonths }) => {
+                          const isExpanded = expandedSeason === label;
+                          const hasSelected = sMonths.some(m => selectedMonths.includes(m));
+                          const selectedCount = sMonths.filter(m => selectedMonths.includes(m)).length;
+                          return (
+                            <button
+                              key={label}
+                              onClick={() => setExpandedSeason(isExpanded ? null : label)}
+                              className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                              style={{
+                                background: isExpanded || hasSelected ? "#ff5100" : "rgba(255,255,255,0.05)",
+                                color: isExpanded || hasSelected ? "#fff" : "rgba(255,255,255,0.55)",
+                                border: `1px solid ${isExpanded || hasSelected ? "#ff5100" : "rgba(255,255,255,0.08)"}`,
+                              }}
+                            >
+                              {label}
+                              {selectedCount > 0 && <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,255,255,0.25)" }}>{selectedCount}</span>}
+                              <ChevronDown className={`w-2.5 h-2.5 opacity-60 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                            </button>
+                          );
+                        })}
+                      </div>
+                      {expandedSeason && (
+                        <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                          {seasons.find(s => s.label === expandedSeason)!.months.map(m => (
+                            <button
+                              key={m}
+                              onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
+                              className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
+                              style={{
+                                background: selectedMonths.includes(m) ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.04)",
+                                color: selectedMonths.includes(m) ? "#ff7d47" : "rgba(255,255,255,0.45)",
+                                border: `1px solid ${selectedMonths.includes(m) ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)"}`,
+                              }}
+                            >
+                              {m}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Difficulty */}
+                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                    <div className="flex items-center gap-2.5 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                      <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Difficulty</span>
+                    </div>
+                    <div className="p-3 flex flex-wrap gap-1.5">
+                      {(["Easy", "Moderate", "Hard", "Advanced", "Extreme"] as Difficulty[]).map((val) => {
+                        const isSelected = selectedDifficulties.includes(val);
+                        const colorMap: Record<string, string> = { Easy: "#22c55e", Moderate: "#eab308", Hard: "#f97316", Advanced: "#ef4444", Extreme: "#a855f7" };
+                        const c = colorMap[val] ?? "#ff5100";
+                        return (
+                          <button
+                            key={val}
+                            onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
+                            className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                            style={{
+                              background: isSelected ? `${c}18` : "rgba(255,255,255,0.05)",
+                              color: isSelected ? c : "rgba(255,255,255,0.55)",
+                              border: `1px solid ${isSelected ? `${c}40` : "rgba(255,255,255,0.08)"}`,
+                            }}
+                          >
+                            {val}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Duration */}
+                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                    <div className="flex items-center gap-2.5 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                      <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Duration</span>
+                    </div>
+                    <div className="p-3 flex flex-wrap gap-1.5">
+                      {(["Weekend", "3–5 days", "7+ days"] as Duration[]).map((val) => {
+                        const isSelected = selectedDurations.includes(val);
+                        return (
+                          <button
+                            key={val}
+                            onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
+                            className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                            style={{
+                              background: isSelected ? "#ff5100" : "rgba(255,255,255,0.05)",
+                              color: isSelected ? "#fff" : "rgba(255,255,255,0.55)",
+                              border: `1px solid ${isSelected ? "#ff5100" : "rgba(255,255,255,0.08)"}`,
+                            }}
+                          >
+                            {val}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* ── Price + ACE row ── */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+                  {/* Price Range */}
+                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                    <div className="flex items-center justify-between px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                      <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Price Range</span>
+                      <span className="text-[9px] font-bold" style={{ color: priceActive ? "#ff5100" : "rgba(255,255,255,0.2)" }}>
+                        {priceRange[0] === PRICE_MIN && priceRange[1] === PRICE_MAX ? "Any price" : `₹${(priceRange[0]/1000).toFixed(0)}k – ₹${(priceRange[1]/1000).toFixed(0)}k`}
+                      </span>
+                    </div>
+                    <div className="px-4 pt-4 pb-3">
+                      <div className="relative h-4 flex items-center">
+                        <div className="absolute inset-x-0 h-0.5 rounded-full bg-white/10" />
+                        <div className="absolute h-0.5 rounded-full bg-[#ff5100]" style={{ left: `${(priceRange[0] / PRICE_MAX) * 100}%`, right: `${100 - (priceRange[1] / PRICE_MAX) * 100}%` }} />
+                        <input type="range" min={PRICE_MIN} max={PRICE_MAX} step={5000} value={priceRange[0]}
+                          onChange={e => setPriceRange([Math.min(Number(e.target.value), priceRange[1] - 5000), priceRange[1]])}
+                          className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
+                          style={{ zIndex: priceRange[0] > PRICE_MAX * 0.9 ? 5 : 3 }} />
+                        <input type="range" min={PRICE_MIN} max={PRICE_MAX} step={5000} value={priceRange[1]}
+                          onChange={e => setPriceRange([priceRange[0], Math.max(Number(e.target.value), priceRange[0] + 5000)])}
+                          className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
+                          style={{ zIndex: 4 }} />
+                      </div>
+                      <div className="flex justify-between mt-2 text-[9px] text-white/20 font-medium">
+                        <span>₹0</span><span>₹50k</span><span>₹1L</span><span>₹1.5L</span><span>₹2L+</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ACE Filter */}
+                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                    <div className="flex items-center justify-between px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">ACE™ Readiness</span>
+                        {aceCategory && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>1</span>}
+                      </div>
+                      <a href="/ace" target="_blank" className="text-[9px] text-white/20 hover:text-[#ff5100] transition-colors">What is ACE™?</a>
+                    </div>
+                    <div className="p-3">
+                      {!userProfile ? (
+                        <div className="flex items-center gap-3">
+                          <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.15)" }}>
+                            <Compass className="w-3.5 h-3.5 text-[#ff5100]/50" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-white/50 text-[11px] font-semibold">No ACE profile yet</p>
+                            <p className="text-white/25 text-[10px]">Take the assessment to filter by capability</p>
+                          </div>
+                          <Link href="/matchmaker" className="shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-white transition-all" style={{ background: "#ff5100" }}>
+                            Assess <ArrowRight className="w-2.5 h-2.5" />
+                          </Link>
+                        </div>
+                      ) : (
+                        <div className="flex gap-2">
+                          {([
+                            { key: "ready" as AceCategory, label: "Ready", color: "#4ade80" },
+                            { key: "stretch" as AceCategory, label: "Stretch", color: "#f59e0b" },
+                            { key: "out-of-range" as AceCategory, label: "Out of Range", color: "#f43f5e" },
+                          ]).map(({ key, label, color }) => {
+                            const isActive = aceCategory === key;
+                            return (
+                              <button
+                                key={key}
+                                onClick={() => setAceCategory(isActive ? null : key)}
+                                className="flex-1 py-2 px-2 rounded-lg text-[11px] font-bold transition-all text-center"
+                                style={{
+                                  background: isActive ? `${color}15` : "rgba(255,255,255,0.04)",
+                                  color: isActive ? color : "rgba(255,255,255,0.4)",
+                                  border: `1px solid ${isActive ? `${color}35` : "rgba(255,255,255,0.07)"}`,
+                                }}
+                              >
+                                {label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
 
       {/* Active filter chips */}
