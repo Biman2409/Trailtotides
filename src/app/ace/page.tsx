@@ -332,18 +332,64 @@ export default function ACEPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-10 px-5 lg:px-8 relative overflow-hidden" style={{ borderTop: "1px solid var(--border-subtle)", background: "var(--bg-surface)" }}>
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 120%, rgba(255,81,0,0.08) 0%, transparent 60%)" }} />
-        <div className="max-w-xl mx-auto text-center relative">
-          <div className="inline-flex items-center gap-2 mb-3 px-2.5 py-1 rounded border" style={{ background: "rgba(255,81,0,0.06)", borderColor: "rgba(255,81,0,0.22)" }}>
-            <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">Your turn</span>
+      <section className="relative overflow-hidden py-14 px-5 lg:px-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+        {/* bg layers */}
+        <div className="absolute inset-0" style={{ background: "var(--bg-page)" }} />
+        <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,81,0,0.13) 0%, transparent 65%)" }} />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.4), transparent)" }} />
+
+        <div className="max-w-6xl mx-auto relative">
+          <div className="rounded-2xl overflow-hidden border" style={{ borderColor: "rgba(255,81,0,0.18)", background: "rgba(255,81,0,0.04)" }}>
+            {/* top accent */}
+            <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent, #ff5100, transparent)" }} />
+
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] items-center gap-8 px-8 py-10">
+              {/* Left */}
+              <div>
+                <div className="inline-flex items-center gap-2 mb-4 px-2.5 py-1 rounded border" style={{ background: "rgba(255,81,0,0.08)", borderColor: "rgba(255,81,0,0.25)" }}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#ff5100]" />
+                  <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">Your Turn</span>
+                </div>
+                <h2 className="text-white text-2xl lg:text-3xl font-black tracking-tight leading-tight mb-3">
+                  Know your axes.<br />Pick the right mountain.
+                </h2>
+                <p className="text-white/35 text-sm leading-relaxed max-w-md">
+                  8 questions. 2 minutes. Every axis scored — then matched against every adventure on the platform so you see exactly what you're ready for, and what to build toward.
+                </p>
+
+                {/* Mini feature list */}
+                <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
+                  {[["8", "Axes assessed"], ["2 min", "Assessment"], ["Instant", "Results"]].map(([val, lbl]) => (
+                    <div key={lbl} className="flex items-center gap-2">
+                      <span className="font-black text-sm text-white font-mono">{val}</span>
+                      <span className="text-white/25 text-xs">·</span>
+                      <span className="text-white/35 text-xs">{lbl}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right: CTA */}
+              <div className="flex flex-col items-start lg:items-end gap-3">
+                <Link
+                  href="/matchmaker"
+                  className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/30"
+                  style={{ background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)" }}
+                >
+                  Take the Assessment
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
+                <Link
+                  href="/explore"
+                  className="inline-flex items-center gap-1.5 text-white/30 text-xs hover:text-white/60 transition-colors font-mono"
+                >
+                  Browse all adventures
+                  <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+            </div>
           </div>
-          <h2 className="text-white text-2xl font-black tracking-tight leading-tight mb-2">Find your level.<br />Find your adventure.</h2>
-          <p className="text-white/35 text-sm leading-relaxed mb-6 max-w-sm mx-auto">8 questions. 2 minutes. Your capability mapped across every axis.</p>
-          <Link href="/matchmaker" className="inline-flex items-center gap-2 bg-[#ff5100] text-white px-7 py-3 rounded-xl font-bold text-sm hover:bg-[#e04800] transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30">
-            Take the Assessment
-            <ArrowRight className="w-4 h-4" />
-          </Link>
         </div>
       </section>
 
