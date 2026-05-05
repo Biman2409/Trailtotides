@@ -343,19 +343,13 @@ export default function ExploreClient() {
                     style={{ background: "rgba(255,81,0,0.05)", borderBottom: "1px solid rgba(255,81,0,0.1)" }}
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className="flex gap-1 items-center">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        <span className="w-1 h-1 rounded-full bg-emerald-400/40" />
-                      </div>
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                       <div className="w-px h-3.5 bg-white/10" />
                       <Compass className="w-3.5 h-3.5 text-[#ff5100]" strokeWidth={2.5} />
                       <span className="text-[11px] font-black tracking-[0.18em] uppercase text-white/70">Compass</span>
                       <span className="text-[11px] font-black tracking-[0.1em] text-[#ff5100]">.AI</span>
                     </div>
                     <div className="flex items-center gap-2.5">
-                      <span className="text-[9px] font-bold tracking-[0.15em] uppercase px-2 py-0.5 rounded" style={{ color: "rgba(255,81,0,0.5)", background: "rgba(255,81,0,0.07)", border: "1px solid rgba(255,81,0,0.15)" }}>
-                        Groq · LLM
-                      </span>
                       {aiMessages.length > 0 && (
                         <button
                           onClick={() => { setAiMessages([]); setAiInput(""); }}
