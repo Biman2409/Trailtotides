@@ -964,9 +964,6 @@ export default function ExploreClient() {
         )}
       </div>
 
-        {/* Compare Adventures — compact */}
-        <CompareAdventures />
-
         {/* Adventure Map — strip */}
         <div className="relative mx-5 lg:mx-8 mb-8 overflow-hidden rounded-xl" style={{ background: "linear-gradient(90deg, #070e09 0%, #0a1810 60%, #070e09 100%)", border: "1px solid rgba(126,200,138,0.09)" }}>
           <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(126,200,138,1) 1px, transparent 1px)", backgroundSize: "18px 18px" }} />
