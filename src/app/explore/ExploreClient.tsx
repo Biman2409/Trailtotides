@@ -984,8 +984,8 @@ export default function ExploreClient() {
             <div className="hidden md:flex items-center divide-x px-0" style={{ borderColor: "rgba(126,200,138,0.07)" }}>
               {([
                 { val: adventures.length, lbl: "pins" },
-                { val: 8, lbl: "regions" },
-                { val: new Set(adventures.map(a => a.type)).size, lbl: "types" },
+                { val: new Set(adventures.map(a => a.state)).size, lbl: "regions" },
+                { val: new Set(adventures.map(a => a.type)).size, lbl: "genres" },
               ]).map(({ val, lbl }) => (
                 <div key={lbl} className="flex items-baseline gap-1.5 px-4 py-3.5">
                   <span className="text-[13px] font-black" style={{ color: "#7ec88a" }}>{val}</span>
