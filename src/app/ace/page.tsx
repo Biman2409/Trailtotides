@@ -20,14 +20,14 @@ export const metadata = {
 };
 
 const AXES = [
-  { key: "stamina",  icon: <Flame    className="w-3.5 h-3.5" />, color: "#f97316", label: "Stamina",  desc: "Your engine over time. Can you keep moving for 8+ hours, day after day, with a loaded pack and no rest day? High-stamina adventures don't break you in one moment — they grind you down slowly." },
-  { key: "power",    icon: <Zap      className="w-3.5 h-3.5" />, color: "#eab308", label: "Power",    desc: "Short, sharp, maximum effort. The 45-minute wall of a steep summit push, a class IV rapid, a technical crux. You can't pace through it — you either have the output or you don't." },
-  { key: "strength", icon: <Dumbbell className="w-3.5 h-3.5" />, color: "#84cc16", label: "Strength", desc: "Carrying 15kg over broken terrain for six hours recruits different muscles than a gym session. Strength here means functional load-bearing — legs, back, joints — over distance and elevation." },
-  { key: "agility",  icon: <Compass  className="w-3.5 h-3.5" />, color: "#22d3ee", label: "Agility",  desc: "Moving precisely on surfaces that shift under you — scree fields, iced rock, river boulders, exposed ridges. Agility is body awareness in terrain where one bad foot placement matters." },
-  { key: "water",    icon: <Waves    className="w-3.5 h-3.5" />, color: "#3b82f6", label: "Water",    desc: "Not just swimming — it's comfort when the current has force. White-water rafting, sea crossings, chest-deep river fords. A score of 0 means the adventure has no aquatic element at all." },
-  { key: "altitude", icon: <Mountain className="w-3.5 h-3.5" />, color: "#a78bfa", label: "Altitude", desc: "Thin air changes everything. Above 3,500m your body works harder for every breath. Above 5,000m, poor acclimatisation response becomes a medical risk — fitness alone doesn't compensate." },
-  { key: "focus",    icon: <ScanEye  className="w-3.5 h-3.5" />, color: "#f43f5e", label: "Focus",    desc: "Mental composure when the drop is real. Exposed ridgelines, fixed-rope sections, vertical faces — your brain registers danger and tries to freeze. Focus is the ability to override that and move cleanly." },
-  { key: "nerve",    icon: <Ghost    className="w-3.5 h-3.5" />, color: "#10b981", label: "Nerve",    desc: "Days from the nearest road. No phone signal. No organised rescue. Nerve measures how well you operate — and make decisions — when you are genuinely on your own and the stakes are real." },
+  { key: "stamina",  icon: <Flame    className="w-3.5 h-3.5" />, color: "#f97316", label: "Stamina",  desc: "8 hours moving, day after day, loaded pack, no rest. High-stamina adventures don't break you in one moment — they grind you down across the week." },
+  { key: "power",    icon: <Zap      className="w-3.5 h-3.5" />, color: "#eab308", label: "Power",    desc: "The 45-minute wall of a steep summit push. A class IV rapid. You can't pace through it — you either have the output or you stop." },
+  { key: "strength", icon: <Dumbbell className="w-3.5 h-3.5" />, color: "#84cc16", label: "Strength", desc: "Functional load-bearing over distance — legs, back, joints under 15kg of pack across broken terrain for hours." },
+  { key: "agility",  icon: <Compass  className="w-3.5 h-3.5" />, color: "#22d3ee", label: "Agility",  desc: "Scree fields, iced rock, exposed ridges. Moving precisely on terrain that shifts — where one bad foot placement has consequences." },
+  { key: "water",    icon: <Waves    className="w-3.5 h-3.5" />, color: "#3b82f6", label: "Water",    desc: "Comfort when the current has force. Rafting, sea crossings, chest-deep river fords. Score 0 means no aquatic element." },
+  { key: "altitude", icon: <Mountain className="w-3.5 h-3.5" />, color: "#a78bfa", label: "Altitude", desc: "Above 3,500m your body fights for oxygen. Above 5,000m, poor acclimatisation response is a medical risk — fitness doesn't compensate." },
+  { key: "focus",    icon: <ScanEye  className="w-3.5 h-3.5" />, color: "#f43f5e", label: "Focus",    desc: "Exposed ridgelines, fixed ropes, vertical faces. Your brain registers danger and tries to freeze. Focus is the ability to override it and move." },
+  { key: "nerve",    icon: <Ghost    className="w-3.5 h-3.5" />, color: "#10b981", label: "Nerve",    desc: "Days from the nearest road, no signal, no rescue. How well do you operate — and decide — when you are genuinely on your own?" },
 ];
 
 const DOMAINS = [
@@ -47,7 +47,7 @@ const SCALE = [
 
 const RANKS = [
   {
-    label: "Pathfinder", color: "#22d3ee", stars: 1, range: "8–15", desc: "Day hikes, accessible multi-day routes, beginner water sports.",
+    label: "Pathfinder", color: "#22d3ee", stars: 1, range: "8–15", desc: "Day hikes, accessible multi-day routes, introductory terrain.",
     icon: <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6"><circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1"/><path d="M12 16.5V8.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><path d="M8.5 12L12 8.5L15.5 12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   },
   {
@@ -74,7 +74,7 @@ const PROGRESSION_TREKS = [
     label: "Starting Point",
     sublabel: "Moderate",
     diffColor: "#f59e0b",
-    desc: "Stamina and altitude lead. Terrain stays forgiving.",
+    desc: "Stamina and altitude do the work. Terrain is forgiving.",
     ace: { stamina: 3, power: 2, strength: 2, agility: 2, water: 0, altitude: 3, focus: 2, nerve: 1 },
   },
   {
@@ -82,7 +82,7 @@ const PROGRESSION_TREKS = [
     label: "Step Up",
     sublabel: "Hard",
     diffColor: "#f97316",
-    desc: "Agility and focus spike — loose snow, steep descents, real exposure.",
+    desc: "Agility and focus spike. Loose snow, steep descents, real exposure.",
     ace: { stamina: 4, power: 3, strength: 3, agility: 4, water: 0, altitude: 4, focus: 3, nerve: 3 },
   },
   {
@@ -90,7 +90,7 @@ const PROGRESSION_TREKS = [
     label: "Full Commitment",
     sublabel: "Advanced",
     diffColor: "#ef4444",
-    desc: "17,457ft, glaciers, remote crossings. Radar fills out completely.",
+    desc: "17,457ft. Glaciers, remote crossings, no rescue. The radar fills.",
     ace: { stamina: 5, power: 4, strength: 4, agility: 4, water: 2, altitude: 5, focus: 4, nerve: 5 },
   },
 ];
@@ -155,7 +155,7 @@ export default function ACEPage() {
             <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
             <span className="text-white/20 text-[10px] font-mono">4 domains · 2 axes each</span>
           </div>
-          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-2xl">Instead of a single difficulty rating, ACE™ measures your body across 8 independent axes — grouped into 4 domains. An adventure might be physically easy but psychologically brutal, or demand elite altitude tolerance with almost no strength. Every axis is scored separately, so no single number hides what really matters.</p>
+          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-2xl">Grouped into 4 domains — Engine, Chassis, Elements, Mind. An adventure can be physically light but psychologically brutal, or demand elite altitude tolerance with barely any strength required. Every axis is scored separately so nothing is hidden behind a single number.</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {DOMAINS.map(({ name, icon, color, axes, desc }) => {
@@ -199,7 +199,7 @@ export default function ACEPage() {
                 <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
                 <span className="text-white/20 text-[10px] font-mono">1–5 per axis</span>
               </div>
-              <p className="text-white/30 text-xs mb-4 leading-relaxed">Each axis is scored 1–5 independently. A score of 0 means that axis isn't relevant for the adventure — for example, a desert trek scores 0 on Water.</p>
+              <p className="text-white/30 text-xs mb-4 leading-relaxed">Each axis scored independently, 1–5. A desert trek scores 0 on Water — that axis simply doesn't apply.</p>
 
               {/* Gradient bar */}
               <div className="flex rounded-lg overflow-hidden mb-3" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
@@ -231,7 +231,7 @@ export default function ACEPage() {
                 <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
                 <span className="text-white/20 text-[10px] font-mono">Σ axes = tier</span>
               </div>
-              <p className="text-white/30 text-xs mb-4 leading-relaxed">Your total ACE™ score — the sum of all 8 axes — places you on the rank ladder. 8 axes × max 5 = <span className="text-white/50 font-semibold">40 points</span>. Higher rank unlocks access to harder, more remote, more technical adventures.</p>
+              <p className="text-white/30 text-xs mb-4 leading-relaxed">Sum all 8 axes and you get your rank. Max is 40. Higher rank — harder terrain, more remote, more technical.</p>
 
               <div className="space-y-2">
                 {RANKS.map(({ label, color, stars, range, desc, icon }) => (
@@ -271,7 +271,7 @@ export default function ACEPage() {
             <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">How It Works</span>
             <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
           </div>
-          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-xl">Both adventures and adventurers get an ACE™ profile. The system compares them axis-by-axis — not with a blunt difficulty number — so every match reflects what your body can actually handle.</p>
+          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-xl">Both adventures and adventurers get a profile. The system compares them axis-by-axis — not with a blunt difficulty number — so every match is honest.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
             {[
@@ -317,7 +317,7 @@ export default function ACEPage() {
             <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
             <span className="text-white/20 text-[10px] font-mono">Same type · different radar</span>
           </div>
-          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-xl">Three treks — same category, wildly different demands. Watch the radar fill out as difficulty climbs. This is what a single difficulty label can never communicate.</p>
+          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-xl">Same category, wildly different bodies required. Watch the radar change shape — that's what a single difficulty label will never show you.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {PROGRESSION_TREKS.map((t, i) => {
