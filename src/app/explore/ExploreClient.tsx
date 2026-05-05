@@ -80,6 +80,8 @@ export default function ExploreClient() {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
   const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
+  const [expandedGenre, setExpandedGenre] = useState<string | null>(null);
+  const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(() => {
     const p = parseInt(searchParams.get("page") ?? "1", 10);
     return isNaN(p) || p < 1 ? 1 : p;
@@ -556,40 +558,55 @@ export default function ExploreClient() {
                           <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedTypes.length}</span>
                         )}
                       </div>
-                      <div className="p-3 space-y-2.5">
-                        {genreGroups.map((grp) => {
-                          const groupSelected = grp.types.filter(t => selectedTypes.includes(t));
+                      <div className="p-3">
+                        <div className="flex flex-wrap gap-1.5">
+                          {genreGroups.map((grp) => {
+                            const isExpanded = expandedGenre === grp.label;
+                            const groupSelected = grp.types.filter(t => selectedTypes.includes(t)).length;
+                            const hasSelected = groupSelected > 0;
+                            return (
+                              <button
+                                key={grp.label}
+                                onClick={() => setExpandedGenre(isExpanded ? null : grp.label)}
+                                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                                style={{
+                                  background: isExpanded || hasSelected ? "#ff5100" : "rgba(255,255,255,0.05)",
+                                  color: isExpanded || hasSelected ? "#fff" : "rgba(255,255,255,0.55)",
+                                  border: `1px solid ${isExpanded || hasSelected ? "#ff5100" : "rgba(255,255,255,0.08)"}`,
+                                }}
+                              >
+                                {grp.label}
+                                {groupSelected > 0 && <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,255,255,0.25)" }}>{groupSelected}</span>}
+                                <ChevronDown className={`w-2.5 h-2.5 opacity-60 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {expandedGenre && (() => {
+                          const grp = genreGroups.find(g => g.label === expandedGenre)!;
                           return (
-                            <div key={grp.label}>
-                              <div className="flex items-center gap-2 mb-1.5">
-                                <span className="text-[9px] font-black tracking-[0.18em] uppercase text-white/20">{grp.label}</span>
-                                {groupSelected.length > 0 && (
-                                  <span className="text-[8px] font-bold px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,81,0,0.12)", color: "#ff7d47" }}>{groupSelected.length}</span>
-                                )}
-                              </div>
-                              <div className="flex flex-wrap gap-1.5">
-                                {grp.types.map((type) => {
-                                  const isSelected = selectedTypes.includes(type);
-                                  return (
-                                    <button
-                                      key={type}
-                                      onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
-                                      className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
-                                      style={{
-                                        background: isSelected ? "#ff5100" : "rgba(255,255,255,0.05)",
-                                        color: isSelected ? "#fff" : "rgba(255,255,255,0.55)",
-                                        border: `1px solid ${isSelected ? "#ff5100" : "rgba(255,255,255,0.08)"}`,
-                                      }}
-                                    >
-                                      <span className="opacity-70">{ADVENTURE_TYPE_ICONS[type]?.(10)}</span>
-                                      {type}
-                                    </button>
-                                  );
-                                })}
-                              </div>
+                            <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                              {grp.types.map((type) => {
+                                const isSelected = selectedTypes.includes(type);
+                                return (
+                                  <button
+                                    key={type}
+                                    onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
+                                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
+                                    style={{
+                                      background: isSelected ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.04)",
+                                      color: isSelected ? "#ff7d47" : "rgba(255,255,255,0.45)",
+                                      border: `1px solid ${isSelected ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)"}`,
+                                    }}
+                                  >
+                                    <span className="opacity-70">{ADVENTURE_TYPE_ICONS[type]?.(10)}</span>
+                                    {type}
+                                  </button>
+                                );
+                              })}
                             </div>
                           );
-                        })}
+                        })()}
                       </div>
                     </div>
                   );
@@ -606,32 +623,48 @@ export default function ExploreClient() {
                         <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedMonths.length}</span>
                       )}
                     </div>
-                    <div className="p-3 flex flex-wrap gap-1.5">
-                      {seasons.map(({ label, months: sMonths }) => {
-                        const allSelected = sMonths.every(m => selectedMonths.includes(m));
-                        const hasSelected = sMonths.some(m => selectedMonths.includes(m));
-                        return (
-                          <button
-                            key={label}
-                            onClick={() => {
-                              if (allSelected) {
-                                setSelectedMonths(selectedMonths.filter(m => !sMonths.includes(m)));
-                              } else {
-                                const merged = Array.from(new Set([...selectedMonths, ...sMonths]));
-                                setSelectedMonths(merged as Month[]);
-                              }
-                            }}
-                            className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
-                            style={{
-                              background: allSelected ? "#ff5100" : hasSelected ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.05)",
-                              color: allSelected ? "#fff" : hasSelected ? "#ff7d47" : "rgba(255,255,255,0.55)",
-                              border: `1px solid ${allSelected ? "#ff5100" : hasSelected ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.08)"}`,
-                            }}
-                          >
-                            {label}
-                          </button>
-                        );
-                      })}
+                    <div className="p-3">
+                      <div className="flex flex-wrap gap-1.5">
+                        {seasons.map(({ label, months: sMonths }) => {
+                          const isExpanded = expandedSeason === label;
+                          const hasSelected = sMonths.some(m => selectedMonths.includes(m));
+                          const selectedCount = sMonths.filter(m => selectedMonths.includes(m)).length;
+                          return (
+                            <button
+                              key={label}
+                              onClick={() => setExpandedSeason(isExpanded ? null : label)}
+                              className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                              style={{
+                                background: isExpanded || hasSelected ? "#ff5100" : "rgba(255,255,255,0.05)",
+                                color: isExpanded || hasSelected ? "#fff" : "rgba(255,255,255,0.55)",
+                                border: `1px solid ${isExpanded || hasSelected ? "#ff5100" : "rgba(255,255,255,0.08)"}`,
+                              }}
+                            >
+                              {label}
+                              {selectedCount > 0 && <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,255,255,0.25)" }}>{selectedCount}</span>}
+                              <ChevronDown className={`w-2.5 h-2.5 opacity-60 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                            </button>
+                          );
+                        })}
+                      </div>
+                      {expandedSeason && (
+                        <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                          {seasons.find(s => s.label === expandedSeason)!.months.map(m => (
+                            <button
+                              key={m}
+                              onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
+                              className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
+                              style={{
+                                background: selectedMonths.includes(m) ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.04)",
+                                color: selectedMonths.includes(m) ? "#ff7d47" : "rgba(255,255,255,0.45)",
+                                border: `1px solid ${selectedMonths.includes(m) ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)"}`,
+                              }}
+                            >
+                              {m}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
 
