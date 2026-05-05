@@ -14,7 +14,7 @@ const totalVerifiedOperators = adventures.reduce(
 const STATS = [
   { value: totalAdventures, label: "Adventures" },
   { value: totalRegions,    label: "Regions" },
-  { value: totalTypes,      label: "Adventure Types" },
+  { value: totalTypes,      label: "Genres" },
   { value: totalVerifiedOperators, label: "Verified Operators" },
 ];
 
