@@ -4,18 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import { adventures } from "@/lib/data";
 
 const totalAdventures = adventures.length;
-const totalRegions = new Set(adventures.map((a) => a.region)).size;
+const totalStates = new Set(adventures.map((a) => a.state)).size;
 const totalTypes = new Set(adventures.map((a) => a.type)).size;
-const totalVerifiedOperators = adventures.reduce(
-  (sum, a) => sum + a.operators.filter((o) => o.verified).length,
-  0
-);
+const totalUniqueOperators = new Set(
+  adventures.flatMap((a) => a.operators.map((o) => o.name.trim().toLowerCase()))
+).size;
 
 const STATS = [
-  { value: totalAdventures,        label: "Adventures",        suffix: "+" },
-  { value: totalRegions,           label: "Regions",           suffix: "" },
-  { value: totalTypes,             label: "Genres",            suffix: "" },
-  { value: totalVerifiedOperators, label: "Operators",          suffix: "+" },
+  { value: totalAdventures,      label: "Adventures",  suffix: "+" },
+  { value: totalStates,          label: "States",      suffix: "" },
+  { value: totalTypes,           label: "Genres",      suffix: "" },
+  { value: totalUniqueOperators, label: "Operators",   suffix: "+" },
 ];
 
 function useCountUp(target: number, duration = 1600, started = false) {
