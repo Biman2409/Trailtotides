@@ -60,8 +60,8 @@ function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { titl
   if (items.length === 0) return null;
   return (
     <div>
-      <div className="flex items-end justify-between mb-5">
-        <h3 className="text-white text-lg font-semibold tracking-tight">{title}</h3>
+      <div className="flex items-end justify-between mb-3">
+        <h3 className="text-white text-base font-semibold tracking-tight">{title}</h3>
         <Link href={exploreHref} className="hidden md:flex items-center gap-1.5 text-white/40 text-xs font-medium hover:text-[#ff5100] transition-colors group">
           Explore all
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -72,7 +72,7 @@ function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { titl
           const diff = computeDifficulty(getACE(a));
           return (
             <Link key={a.id} href={`/experiences/${a.slug}`} className="group relative flex flex-col rounded-2xl overflow-hidden flex-none w-56 snap-start transition-all duration-300 hover:-translate-y-1" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
-              <div className="relative h-36 shrink-0 overflow-hidden">
+              <div className="relative h-28 shrink-0 overflow-hidden">
                 <Image src={a.heroImage} alt={a.name} fill loading="lazy" className="object-cover transition-transform duration-700 group-hover:scale-105" style={{ objectFit: "cover" }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
                 <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 z-10">
@@ -82,7 +82,7 @@ function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { titl
                   }
                 </div>
               </div>
-              <div className="p-3 h-16 flex flex-col justify-between">
+              <div className="p-2.5 h-14 flex flex-col justify-between">
                 <h3 className="text-white font-semibold text-xs leading-snug group-hover:text-[#ff5100] transition-colors line-clamp-2">{a.name}</h3>
                 <div className="flex items-center gap-1.5 text-[10px] text-white/35">
                   <span className="font-semibold text-white/50">{diff}</span>
@@ -332,7 +332,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             ].map(({ icon, label, value }, i, arr) => (
               <div
                 key={i}
-                className="flex items-center gap-3 px-5 lg:px-6 py-4 shrink-0"
+                className="flex items-center gap-2.5 px-4 lg:px-5 py-3 shrink-0"
                 style={i < arr.length - 1 ? { borderRight: "1px solid var(--border-subtle)" } : {}}
               >
                 <div className="shrink-0 opacity-80">{icon}</div>
@@ -356,32 +356,32 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       </div>
 
       {/* ── MAIN CONTENT ──────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-10 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+      <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-7 pb-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 
           {/* ── LEFT COLUMN ── */}
           <div className="lg:col-span-2">
 
             {/* The Adventure */}
             <AccordionSection label="The Adventure" title="About This Adventure" defaultOpen={true}>
-              <div className="rounded-xl px-5 py-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+              <div className="rounded-xl px-4 py-3.5" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
                 <p className="text-white/65 text-sm leading-relaxed">{adventure.description}</p>
               </div>
             </AccordionSection>
 
             {/* What Makes It Special */}
             <AccordionSection label="Highlights" title="What Makes It Special" defaultOpen={true}>
-              <div className="rounded-xl px-5 py-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+              <div className="rounded-xl px-4 py-3.5" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
                 <p className="text-white/65 text-sm leading-relaxed">{adventure.whatMakesSpecial}</p>
               </div>
             </AccordionSection>
 
             {/* Is This For You? */}
             <AccordionSection label="Suitability" title="Is This For You?" defaultOpen={true}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="rounded-xl p-4" style={{ background: "rgba(16,185,129,0.04)", border: "1px solid rgba(16,185,129,0.1)" }}>
-                  <h3 className="text-emerald-400 text-[10px] font-bold tracking-[0.18em] uppercase mb-3">This is for you if…</h3>
-                  <ul className="space-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="rounded-xl p-3.5" style={{ background: "rgba(16,185,129,0.04)", border: "1px solid rgba(16,185,129,0.1)" }}>
+                  <h3 className="text-emerald-400 text-[10px] font-bold tracking-[0.18em] uppercase mb-2.5">This is for you if…</h3>
+                  <ul className="space-y-1.5">
                     {adventure.whoFor.split("·").map((item) => {
                       const t = item.trim();
                       if (!t) return null;
@@ -394,9 +394,9 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     })}
                   </ul>
                 </div>
-                <div className="rounded-xl p-4" style={{ background: "rgba(239,68,68,0.04)", border: "1px solid rgba(239,68,68,0.1)" }}>
-                  <h3 className="text-red-400 text-[10px] font-bold tracking-[0.18em] uppercase mb-3">Skip this if…</h3>
-                  <ul className="space-y-2">
+                <div className="rounded-xl p-3.5" style={{ background: "rgba(239,68,68,0.04)", border: "1px solid rgba(239,68,68,0.1)" }}>
+                  <h3 className="text-red-400 text-[10px] font-bold tracking-[0.18em] uppercase mb-2.5">Skip this if…</h3>
+                  <ul className="space-y-1.5">
                     {adventure.whoNot.split("·").map((item) => {
                       const t = item.trim();
                       if (!t) return null;
@@ -416,7 +416,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <AccordionSection label="Safety &amp; Prep" title="" defaultOpen={true}>
               <div className="space-y-3">
                 {/* Safety notes + hazard badges */}
-                <div className="rounded-xl p-4" style={{ background: "rgba(245,158,11,0.03)", border: "1px solid rgba(245,158,11,0.1)" }}>
+                <div className="rounded-xl p-3.5" style={{ background: "rgba(245,158,11,0.03)", border: "1px solid rgba(245,158,11,0.1)" }}>
                   <div className="flex gap-3">
                     <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                     <p className="text-white/55 text-xs leading-relaxed">{adventure.safetyNotes}</p>
@@ -447,7 +447,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </AccordionSection>
 
             {/* ACE Profile */}
-            <div className="pt-10">
+            <div className="pt-6">
             <ACEProfileSection
               ace={ace}
               adventureName={adventure.name}
@@ -463,20 +463,20 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* Operators */}
             <div id="book-this-adventure" />
             <AccordionSection label="Book This Adventure" title="" defaultOpen={true}>
-              <div id="operators-section" className="space-y-3">
+              <div id="operators-section" className="space-y-2.5">
                 <OperatorsSection operators={allOperators} slug={adventure.slug} />
                 <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
               </div>
             </AccordionSection>
 
             {/* Community */}
-            <div className="pt-10">
-              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4">Community</p>
+            <div className="pt-6">
+              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">Community</p>
 
               {/* Single login CTA — only when logged out */}
               {!currentUserId && (
                 <div
-                  className="mb-6 rounded-2xl p-4 flex flex-col sm:flex-row items-center gap-4"
+                  className="mb-4 rounded-2xl p-3.5 flex flex-col sm:flex-row items-center gap-3"
                   style={{ background: "linear-gradient(135deg, rgba(255,81,0,0.07) 0%, rgba(255,81,0,0.03) 100%)", border: "1px solid rgba(255,81,0,0.18)" }}
                 >
                   <div className="flex-1 min-w-0">
@@ -494,7 +494,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               )}
 
               {/* Two sub-sections side by side */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch">
                 {/* Reviews card */}
                 <div className="rounded-xl overflow-hidden" style={{ background: "rgba(251,191,36,0.03)", border: "1px solid rgba(251,191,36,0.12)" }}>
                   <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} isCompleted={isCompleted} operators={allOperators} />
@@ -506,7 +506,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                     <Camera className="w-3.5 h-3.5 text-sky-400" />
                     <h3 className="text-sky-400 text-[10px] font-bold tracking-[0.18em] uppercase">Photos</h3>
                   </div>
-                  <div className="p-4">
+                  <div className="p-3">
                     <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} isCompleted={isCompleted} />
                   </div>
                 </div>
@@ -516,7 +516,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
 
             {/* Tags */}
-            <div className="pt-6 pb-2">
+            <div className="pt-4 pb-1">
               <div className="flex flex-wrap gap-2">
                 {adventure.tags.map((tag) => (
                   <span
@@ -532,7 +532,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           </div>
 
           {/* ── RIGHT SIDEBAR ── */}
-          <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+          <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
 
             {/* At a Glance */}
             <div
@@ -589,11 +589,11 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       {/* ── YOU MIGHT ALSO LIKE ───────────────────────────────── */}
       {(relatedByState.length > 0 || relatedByType.length > 0) && (
         <section
-          className="py-8 px-5 lg:px-8"
+          className="py-6 px-5 lg:px-8"
           style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)" }}
         >
           <div className="max-w-7xl mx-auto">
-            <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-5">Discover More</p>
+            <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4">Discover More</p>
             <div className="grid grid-cols-2 gap-4">
               {relatedByState.length > 0 && (
                 <div className="p-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "1rem" }}>
