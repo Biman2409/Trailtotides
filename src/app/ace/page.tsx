@@ -386,7 +386,7 @@ export default function ACEPage() {
                   <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">Your Turn</span>
                 </div>
                 <h2 className="text-white text-2xl lg:text-3xl font-black tracking-tight leading-tight mb-3">
-                  Know your axes.<br />Pick the right mountain.
+                  Know your axes.<br />Pick the right adventure.
                 </h2>
                 <p className="text-white/35 text-sm leading-relaxed max-w-md">
                   8 questions. 2 minutes. Every axis scored — then matched against every adventure on the platform so you see exactly what you're ready for, and what to build toward.
