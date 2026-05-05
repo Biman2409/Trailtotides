@@ -165,7 +165,7 @@ export default function InlineChat() {
   return (
     <section
       id="ai-finder"
-      className="relative overflow-hidden pt-20 pb-6 lg:pt-28 lg:pb-8"
+      className="relative overflow-hidden pt-10 pb-5 lg:pt-14 lg:pb-6"
       style={{ background: "var(--bg-page)" }}
     >
       {/* Background glow */}
@@ -178,7 +178,7 @@ export default function InlineChat() {
       <div className="max-w-4xl mx-auto px-5 lg:px-8 relative z-10">
 
         {/* Badge */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#ff5100]/20 bg-[#ff5100]/8">
             <Sparkles className="w-3 h-3 text-[#ff5100]" />
             <span className="text-[#ff5100] text-[10px] font-black tracking-[0.25em] uppercase">AI Adventure Finder</span>
@@ -186,16 +186,16 @@ export default function InlineChat() {
         </div>
 
         {/* Heading */}
-        <div className="text-center mb-10">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="w-14 h-14 rounded-2xl bg-[#ff5100] flex items-center justify-center shadow-2xl shadow-[#ff5100]/40">
-              <Compass className="w-7 h-7 text-white" strokeWidth={2} />
+        <div className="text-center mb-6">
+          <div className="flex items-center justify-center gap-2.5 mb-2.5">
+            <div className="w-10 h-10 rounded-xl bg-[#ff5100] flex items-center justify-center shadow-xl shadow-[#ff5100]/40">
+              <Compass className="w-5 h-5 text-white" strokeWidth={2} />
             </div>
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-[-0.04em] t-text">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-[-0.04em] t-text">
               Compass<span className="text-[#ff5100]">.AI</span>
             </h2>
           </div>
-          <p className="text-base lg:text-lg t-text-2 max-w-lg mx-auto leading-relaxed">
+          <p className="text-sm lg:text-base t-text-2 max-w-lg mx-auto leading-relaxed">
             Describe your escape.{" "}
             <span className="t-text font-semibold">We&apos;ll find the adventure.</span>
           </p>
@@ -238,7 +238,7 @@ export default function InlineChat() {
           >
             {/* Empty state */}
             {messages.length === 0 && (
-              <div className="px-6 py-8">
+              <div className="px-5 py-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5 max-w-xl mx-auto">
                   {STARTER_PROMPTS.map(({ label, icon: Icon }) => (
                     <button
