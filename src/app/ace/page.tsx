@@ -107,18 +107,21 @@ export default function ACEPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full opacity-8 blur-3xl pointer-events-none" style={{ background: "radial-gradient(ellipse, #ff5100 0%, #a78bfa 60%, transparent 100%)" }} />
 
         <div className="max-w-6xl mx-auto relative">
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] items-center gap-8 lg:gap-12">
+          <div className="flex flex-col md:flex-row items-center gap-10 md:gap-14">
             {/* Left: text */}
-            <div>
+            <div className="flex-1 min-w-0">
               <div className="inline-flex items-center gap-2 mb-4 px-2.5 py-1 rounded border" style={{ background: "rgba(255,81,0,0.06)", borderColor: "rgba(255,81,0,0.22)" }}>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
-                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">System · ACE v2.0</span>
+                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">Trail to Tides · Proprietary System</span>
               </div>
               <h1 className="text-3xl lg:text-[2.6rem] font-black text-white tracking-tight leading-[1.06] mb-3">
-                Adventure Capability Engine
+                Adventure Capability Engine<sup className="text-[#ff5100] text-base font-black ml-0.5 align-super" style={{ fontSize: "0.45em" }}>™</sup>
               </h1>
+              <p className="text-white/50 text-sm leading-relaxed mb-2 max-w-lg">
+                Most adventure platforms rate difficulty as Easy, Moderate, or Hard. That tells you nothing useful.
+              </p>
               <p className="text-white/45 text-sm leading-relaxed mb-5 max-w-lg">
-                Every adventure demands something specific from your body. ACE breaks that into <span className="text-white/75 font-semibold">8 biological axes</span> — rated 1 to 5 — so your match is based on data, not optimism.
+                ACE™ is Trail to Tides' proprietary rating system. It breaks every adventure down into <span className="text-white/75 font-semibold">8 physical and psychological axes</span> — each scored 1 to 5 — so you know exactly what your body needs before you go. Answer 8 questions once, and every adventure on the platform is matched to your real capability.
               </p>
               <div className="space-y-1.5">
                 <div className="flex flex-wrap gap-1.5">
@@ -138,9 +141,9 @@ export default function ACEPage() {
               </div>
             </div>
 
-            {/* Right: radar */}
-            <div className="relative flex items-center justify-center">
-              <div className="absolute inset-0 rounded-full blur-3xl opacity-12 scale-75 pointer-events-none" style={{ background: "conic-gradient(from 0deg, #f97316, #eab308, #84cc16, #22d3ee, #3b82f6, #a78bfa, #f43f5e, #10b981, #f97316)" }} />
+            {/* Right: radar — always visible, always right */}
+            <div className="shrink-0 relative flex items-center justify-center" style={{ width: 290, height: 290 }}>
+              <div className="absolute inset-0 rounded-full blur-3xl opacity-15 pointer-events-none" style={{ background: "conic-gradient(from 0deg, #f97316, #eab308, #84cc16, #22d3ee, #3b82f6, #a78bfa, #f43f5e, #10b981, #f97316)" }} />
               <ACERadar ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }} size={280} showLabels />
             </div>
           </div>
@@ -150,11 +153,12 @@ export default function ACEPage() {
       {/* ── 8 AXES ── */}
       <section className="py-8 px-5 lg:px-8" style={{ borderTop: "1px solid var(--border-subtle)", background: "var(--bg-surface)" }}>
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-3 mb-5">
-            <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">8 Axes</span>
+          <div className="flex items-center gap-3 mb-1.5">
+            <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">The 8 Axes</span>
             <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
             <span className="text-white/20 text-[10px] font-mono">4 domains · 2 axes each</span>
           </div>
+          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-2xl">Instead of a single difficulty rating, ACE™ measures your body across 8 independent axes — grouped into 4 domains. An adventure might be physically easy but psychologically brutal, or demand elite altitude tolerance with almost no strength. Every axis is scored separately, so no single number hides what really matters.</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {DOMAINS.map(({ name, icon, color, axes, desc }) => {
@@ -230,7 +234,7 @@ export default function ACEPage() {
                 <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
                 <span className="text-white/20 text-[10px] font-mono">Σ axes = tier</span>
               </div>
-              <p className="text-white/30 text-xs mb-4 leading-relaxed">Your total ACE score places you on the rank ladder. 8 axes × max 5 = <span className="text-white/50 font-semibold">40 points</span>. Higher rank = broader adventure access.</p>
+              <p className="text-white/30 text-xs mb-4 leading-relaxed">Your total ACE™ score — the sum of all 8 axes — places you on the rank ladder. 8 axes × max 5 = <span className="text-white/50 font-semibold">40 points</span>. Higher rank unlocks access to harder, more remote, more technical adventures.</p>
 
               <div className="space-y-2">
                 {RANKS.map(({ label, color, stars, range, desc, icon }) => (
@@ -270,7 +274,7 @@ export default function ACEPage() {
             <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">How It Works</span>
             <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
           </div>
-          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-xl">Adventures and adventurers are both rated. The system compares them axis-by-axis — not with a single difficulty number — so every match is precise.</p>
+          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-xl">Both adventures and adventurers get an ACE™ profile. The system compares them axis-by-axis — not with a blunt difficulty number — so every match reflects what your body can actually handle.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
             {[

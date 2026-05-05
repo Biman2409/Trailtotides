@@ -330,10 +330,10 @@ export default function InlineChat() {
                             <div className="flex-1 min-w-0">
                               <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#ff5100]">Personalised for you</span>
                               <p className="text-sm font-bold t-text group-hover:text-[#ff5100] transition-colors mt-0.5">
-                                Take the ACE Assessment
+                                Take the ACE™ Assessment
                               </p>
                               <p className="text-[11px] t-text-3 mt-1 leading-relaxed">
-                                Your Adventure Capability Engine profile matches you to adventures based on actual fitness, skills, and risk tolerance — not guesswork.
+                                ACE™ (Adventure Capability Engine) maps your fitness across 8 axes and matches you to adventures your body is actually ready for.
                               </p>
                             </div>
                             <ArrowRight className="w-4 h-4 text-[#ff5100] shrink-0 mt-1 group-hover:translate-x-0.5 transition-transform" />

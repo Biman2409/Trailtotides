@@ -811,8 +811,8 @@ export default function ExploreClient() {
                         {/* ACE Filters */}
                         <div className="col-span-2 lg:col-span-3">
                           <div className="flex items-center justify-between mb-3">
-                            <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40">ACE Difficulty</h3>
-                            <a href="/ace" target="_blank" className="text-[10px] text-white/25 hover:text-[#ff5100] transition-colors">What is ACE?</a>
+                            <h3 className="text-xs font-semibold tracking-[0.12em] uppercase text-white/40">ACE™ Difficulty</h3>
+                            <a href="/ace" target="_blank" className="text-[10px] text-white/25 hover:text-[#ff5100] transition-colors">What is ACE™?</a>
                           </div>
                           {!userProfile ? (
                             <div className="flex items-center gap-4 p-4 rounded-2xl border border-white/8 bg-white/3">
