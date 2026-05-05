@@ -392,13 +392,17 @@ export default function ACEPage() {
                   8 questions. 2 minutes. Every axis scored — then matched against every adventure on the platform so you see exactly what you're ready for, and what to build toward.
                 </p>
 
-                {/* Mini feature list */}
-                <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
-                  {[["8", "Axes assessed"], ["2 min", "Assessment"], ["Instant", "Results"]].map(([val, lbl]) => (
-                    <div key={lbl} className="flex items-center gap-2">
-                      <span className="font-black text-sm text-white font-mono">{val}</span>
-                      <span className="text-white/25 text-xs">·</span>
-                      <span className="text-white/35 text-xs">{lbl}</span>
+                {/* Mini stat chips */}
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {[
+                    { val: "8", lbl: "Axes assessed", color: "#f97316" },
+                    { val: "2 min", lbl: "Assessment", color: "#22d3ee" },
+                    { val: "Instant", lbl: "Results", color: "#4ade80" },
+                  ].map(({ val, lbl, color }) => (
+                    <div key={lbl} className="flex items-center gap-2 px-3 py-1.5 rounded-lg border" style={{ background: `${color}08`, borderColor: `${color}20` }}>
+                      <span className="font-black text-xs font-mono" style={{ color }}>{val}</span>
+                      <div className="w-px h-3" style={{ background: `${color}25` }} />
+                      <span className="text-white/40 text-[10px] font-mono">{lbl}</span>
                     </div>
                   ))}
                 </div>
