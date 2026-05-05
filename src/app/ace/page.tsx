@@ -92,8 +92,8 @@ export default function ACEPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full opacity-8 blur-3xl pointer-events-none" style={{ background: "radial-gradient(ellipse, #ff5100 0%, #a78bfa 60%, transparent 100%)" }} />
 
         <div className="max-w-6xl mx-auto relative">
-          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-14">
-            <div className="flex-1 max-w-xl">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-14">
+            <div className="flex-1 max-w-lg">
               {/* System badge */}
               <div className="inline-flex items-center gap-2 mb-4 px-2.5 py-1 rounded border" style={{ background: "rgba(255,81,0,0.06)", borderColor: "rgba(255,81,0,0.22)" }}>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
@@ -126,9 +126,9 @@ export default function ACEPage() {
               </div>
             </div>
 
-            <div className="relative shrink-0 mx-auto lg:mx-0">
-              <div className="absolute inset-0 rounded-full blur-3xl opacity-12 scale-75" style={{ background: "conic-gradient(from 0deg, #f97316, #eab308, #84cc16, #22d3ee, #3b82f6, #a78bfa, #f43f5e, #10b981, #f97316)" }} />
-              <ACERadar ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }} size={260} showLabels />
+            <div className="relative shrink-0">
+              <div className="absolute inset-0 rounded-full blur-3xl opacity-12 scale-75 pointer-events-none" style={{ background: "conic-gradient(from 0deg, #f97316, #eab308, #84cc16, #22d3ee, #3b82f6, #a78bfa, #f43f5e, #10b981, #f97316)" }} />
+              <ACERadar ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }} size={280} showLabels />
             </div>
           </div>
         </div>
