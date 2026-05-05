@@ -5,7 +5,7 @@ import {
   Backpack, Check, ChevronDown, IdCard, HeartPulse,
   Shirt, Pickaxe, Bike, Waves, Mountain,
   Snowflake, Zap, Satellite, Smartphone, Thermometer, CloudRain,
-  Anchor, Wind, LogIn,
+  Anchor, Wind, LogIn, Plus, Share2, X, Copy, CheckCheck,
 } from "lucide-react";
 import type { AdventureType } from "@/lib/data";
 import { loadProfile } from "@/lib/matchmaker";
@@ -14,8 +14,7 @@ import type { ACE } from "@/lib/ace";
 interface Item {
   label: string;
   essential: boolean;
-  /** If set, item is only added when condition is true */
-  condition?: string;
+  custom?: boolean;
 }
 
 type LucideIcon = React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
@@ -292,8 +291,6 @@ const FALLBACK_PACK: Category[] = [
   },
 ];
 
-// ─── Smart add-ons based on conditions ───────────────────────────────────────
-
 function buildSmartAddons(
   adventureType: AdventureType,
   difficulty: string,
@@ -306,15 +303,11 @@ function buildSmartAddons(
 
   const isHighAlt = altitudeM >= 3500;
   const isVeryHighAlt = altitudeM >= 4500;
-  const isSnowSeason =
-    /dec|jan|feb|nov/i.test(bestSeason) ||
-    bestSeason.toLowerCase().includes("winter");
+  const isSnowSeason = /dec|jan|feb|nov/i.test(bestSeason) || bestSeason.toLowerCase().includes("winter");
   const isMonsoon = /jun|jul|aug/i.test(bestSeason);
-  const isTrekkingType =
-    adventureType === "Trekking" || adventureType === "Mountaineering" || adventureType === "Scrambling";
+  const isTrekkingType = adventureType === "Trekking" || adventureType === "Mountaineering" || adventureType === "Scrambling";
   const isHardPlus = ["Hard", "Advanced", "Extreme"].includes(difficulty);
 
-  // Altitude pack
   if (isHighAlt) {
     cats.push({
       name: "High Altitude Essentials",
@@ -331,7 +324,6 @@ function buildSmartAddons(
     });
   }
 
-  // Cold weather / snow
   if ((isHighAlt && isTrekkingType) || isSnowSeason) {
     cats.push({
       name: "Cold Weather Gear",
@@ -348,7 +340,6 @@ function buildSmartAddons(
     });
   }
 
-  // Monsoon / rain
   if (isMonsoon || adventureType === "Trekking") {
     cats.push({
       name: "Rain & Waterproofing",
@@ -363,7 +354,6 @@ function buildSmartAddons(
     });
   }
 
-  // ACE-gap tips (personalised)
   if (userAce) {
     const gaps: string[] = [];
     (Object.keys(adventureAce) as (keyof ACE)[]).forEach((ax) => {
@@ -399,10 +389,8 @@ function buildSmartAddons(
         ],
       });
     }
-
   }
 
-  // Tech & connectivity always useful
   cats.push({
     name: "Tech & Connectivity",
     Icon: Smartphone,
@@ -417,6 +405,89 @@ function buildSmartAddons(
   });
 
   return { categories: cats };
+}
+
+// ─── Share Modal ──────────────────────────────────────────────────────────────
+
+function ShareModal({
+  onClose,
+  allCats,
+  customItems,
+  checked,
+  adventureType,
+}: {
+  onClose: () => void;
+  allCats: Category[];
+  customItems: Record<string, string[]>;
+  checked: Set<string>;
+  adventureType: string;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  function buildText() {
+    const lines: string[] = [`📦 Packing List — ${adventureType}`, ""];
+    for (const cat of allCats) {
+      const customs = customItems[cat.name] ?? [];
+      const allItems = [...cat.items, ...customs.map(l => ({ label: l, essential: false, custom: true }))];
+      lines.push(`── ${cat.name} ──`);
+      for (const item of allItems) {
+        const key = `${cat.name}::${item.label}`;
+        const done = checked.has(key);
+        lines.push(`${done ? "✅" : "☐"} ${item.label}${item.essential ? " ⚡" : ""}`);
+      }
+      lines.push("");
+    }
+    return lines.join("\n");
+  }
+
+  function handleCopy() {
+    navigator.clipboard.writeText(buildText()).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-4"
+      style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)" }}
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-md rounded-2xl overflow-hidden"
+        style={{ background: "#111820", border: "1px solid rgba(255,255,255,0.1)" }}
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+          <div>
+            <p className="text-white font-bold text-sm">Share Packing List</p>
+            <p className="text-white/35 text-xs mt-0.5">Copy as text to share anywhere</p>
+          </div>
+          <button onClick={onClose} className="w-7 h-7 rounded-full flex items-center justify-center text-white/40 hover:text-white/70 transition-colors" style={{ background: "rgba(255,255,255,0.06)" }}>
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="p-4">
+          <pre
+            className="text-[11px] text-white/50 leading-relaxed rounded-xl p-3 overflow-auto max-h-56 font-mono"
+            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+          >
+            {buildText()}
+          </pre>
+
+          <button
+            onClick={handleCopy}
+            className="mt-3 w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold text-white transition-all active:scale-95"
+            style={{ background: copied ? "rgba(16,185,129,0.15)" : "linear-gradient(135deg, #ff5100, #ff7d47)", border: copied ? "1px solid rgba(16,185,129,0.3)" : "none", color: copied ? "#4ade80" : "white" }}
+          >
+            {copied ? <CheckCheck className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            {copied ? "Copied!" : "Copy to clipboard"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -442,27 +513,57 @@ export default function PackingList({
   const [open, setOpen] = useState(false);
   const [userAce, setUserAce] = useState<ACE | null>(null);
   const [activeTab, setActiveTab] = useState(0);
+  const [customItems, setCustomItems] = useState<Record<string, string[]>>({});
+  const [newItemText, setNewItemText] = useState("");
+  const [shareOpen, setShareOpen] = useState(false);
 
-  // Load user ACE profile
   useEffect(() => {
     const p = loadProfile();
     if (p) setUserAce(p.ace);
   }, []);
 
-  // Persist checked state per adventure
   const storageKey = `packing-${slug}`;
+  const customKey = `packing-custom-${slug}`;
+
   useEffect(() => {
     try {
       const raw = localStorage.getItem(storageKey);
       if (raw) setChecked(new Set(JSON.parse(raw)));
+      const rawCustom = localStorage.getItem(customKey);
+      if (rawCustom) setCustomItems(JSON.parse(rawCustom));
     } catch { /* ignore */ }
-  }, [storageKey]);
+  }, [storageKey, customKey]);
 
   function toggle(key: string) {
     setChecked((prev) => {
       const n = new Set(prev);
-      if (n.has(key)) n.delete(key);
-      else n.add(key);
+      if (n.has(key)) n.delete(key); else n.add(key);
+      try { localStorage.setItem(storageKey, JSON.stringify([...n])); } catch { /* ignore */ }
+      return n;
+    });
+  }
+
+  function addCustomItem(catName: string) {
+    const trimmed = newItemText.trim();
+    if (!trimmed) return;
+    setCustomItems(prev => {
+      const updated = { ...prev, [catName]: [...(prev[catName] ?? []), trimmed] };
+      try { localStorage.setItem(customKey, JSON.stringify(updated)); } catch { /* ignore */ }
+      return updated;
+    });
+    setNewItemText("");
+  }
+
+  function removeCustomItem(catName: string, label: string) {
+    setCustomItems(prev => {
+      const updated = { ...prev, [catName]: (prev[catName] ?? []).filter(i => i !== label) };
+      try { localStorage.setItem(customKey, JSON.stringify(updated)); } catch { /* ignore */ }
+      return updated;
+    });
+    const key = `${catName}::${label}`;
+    setChecked(prev => {
+      const n = new Set(prev);
+      n.delete(key);
       try { localStorage.setItem(storageKey, JSON.stringify([...n])); } catch { /* ignore */ }
       return n;
     });
@@ -474,219 +575,271 @@ export default function PackingList({
   }
 
   const typeCats: Category[] = TYPE_PACKS[adventureType] ?? FALLBACK_PACK;
-  const { categories: smartCats } = buildSmartAddons(
-    adventureType, difficulty, altitudeM, bestSeason, userAce, adventureAce
-  );
-
+  const { categories: smartCats } = buildSmartAddons(adventureType, difficulty, altitudeM, bestSeason, userAce, adventureAce);
   const allCats: Category[] = [...BASE_GEAR, ...typeCats, ...smartCats];
-  const allItems = allCats.flatMap((c) => c.items.map((i) => `${c.name}::${i.label}`));
+
+  const allItems = allCats.flatMap((c) => {
+    const customs = customItems[c.name] ?? [];
+    return [
+      ...c.items.map((i) => `${c.name}::${i.label}`),
+      ...customs.map(l => `${c.name}::${l}`),
+    ];
+  });
   const essentialCount = allCats.flatMap((c) => c.items).filter((i) => i.essential).length;
   const checkedCount = checked.size;
   const pct = allItems.length > 0 ? Math.round((checkedCount / allItems.length) * 100) : 0;
   const isComplete = pct === 100;
 
   return (
-    <div
-      className="rounded-xl overflow-hidden"
-      style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}
-    >
-      {/* ── Header ── */}
-      <button
-        onClick={() => loggedIn && setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-white/[0.02] transition-colors"
-      >
-        <div className="flex items-center gap-2.5">
-          <Backpack className="w-4 h-4 text-amber-400" />
-          <div className="text-left">
-            <div className="flex items-center gap-1.5">
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/50">
-                Smart Packing List
-              </p>
-            </div>
-            <p className="text-white/30 text-[10px] mt-0.5">
-              {checkedCount}/{allItems.length} packed · {essentialCount} essentials
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          {loggedIn ? (
-            <>
-              {/* Progress ring */}
-              <div className="relative w-8 h-8">
-                <svg viewBox="0 0 32 32" className="w-full h-full -rotate-90">
-                  <circle cx="16" cy="16" r="12" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="3" />
-                  <circle
-                    cx="16" cy="16" r="12" fill="none"
-                    stroke={isComplete ? "#10b981" : "#ff5100"}
-                    strokeWidth="3"
-                    strokeDasharray={`${(pct / 100) * 75.4} 75.4`}
-                    strokeLinecap="round"
-                  />
-                </svg>
-                <span
-                  className="absolute inset-0 flex items-center justify-center text-[8px] font-bold"
-                  style={{ color: isComplete ? "#10b981" : "rgba(255,255,255,0.5)" }}
-                >
-                  {pct}%
-                </span>
-              </div>
-              <ChevronDown className={`w-4 h-4 text-white/25 transition-transform ${open ? "rotate-180" : ""}`} />
-            </>
-          ) : (
-            <a
-              href="/auth/login"
-              onClick={e => e.stopPropagation()}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-white transition-all hover:-translate-y-0.5"
-              style={{ background: "#ff5100" }}
-            >
-              <LogIn className="w-3 h-3" />
-              Log in
-            </a>
-          )}
-        </div>
-      </button>
-
-      {/* Progress bar — logged in only */}
-      {loggedIn && (
-        <div className="h-0.5 mx-4" style={{ background: "rgba(255,255,255,0.05)" }}>
-          <div
-            className="h-full transition-all duration-500 rounded-full"
-            style={{ width: `${pct}%`, background: isComplete ? "#10b981" : "#ff5100" }}
-          />
-        </div>
+    <>
+      {shareOpen && (
+        <ShareModal
+          onClose={() => setShareOpen(false)}
+          allCats={allCats}
+          customItems={customItems}
+          checked={checked}
+          adventureType={adventureType}
+        />
       )}
 
-      {/* ── Body ── */}
-      {open && loggedIn && (() => {
-        const safeTab = Math.min(activeTab, allCats.length - 1);
-        const cat = allCats[safeTab];
-        const CatIcon = cat.Icon;
-        const catChecked = cat.items.filter(i => checked.has(`${cat.name}::${i.label}`)).length;
-        const catPct = cat.items.length > 0 ? Math.round((catChecked / cat.items.length) * 100) : 0;
-
-        return (
-          <>
-            {/* ── Tab bar (scrollable) ── */}
-            <div
-              className="flex gap-1 px-3 pt-3 pb-0 overflow-x-auto no-scrollbar"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}
-            >
-              {allCats.map((c, i) => {
-                const TabIcon = c.Icon;
-                const tabChecked = c.items.filter(it => checked.has(`${c.name}::${it.label}`)).length;
-                const tabDone = tabChecked === c.items.length;
-                const isActive = i === safeTab;
-                return (
-                  <button
-                    key={c.name}
-                    onClick={() => setActiveTab(i)}
-                    className="flex items-center gap-1.5 px-2.5 py-2 rounded-t-lg text-[10px] font-bold whitespace-nowrap shrink-0 transition-all relative"
-                    style={isActive
-                      ? { color: "#ff7d47", background: "rgba(255,81,0,0.08)", borderBottom: "2px solid #ff5100" }
-                      : { color: "rgba(255,255,255,0.3)", background: "transparent", borderBottom: "2px solid transparent" }
-                    }
-                  >
-                    <TabIcon className="w-3 h-3 shrink-0" />
-                    <span className="hidden sm:inline">{c.name}</span>
-                    {/* dot indicator */}
-                    {tabDone
-                      ? <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "#10b981" }} />
-                      : tabChecked > 0
-                        ? <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "#ff5100" }} />
-                        : null
-                    }
-                  </button>
-                );
-              })}
-              {checkedCount > 0 && (
+      <div
+        className="rounded-xl overflow-hidden"
+        style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}
+      >
+        {/* ── Header ── */}
+        <button
+          onClick={() => loggedIn && setOpen((v) => !v)}
+          className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-white/[0.02] transition-colors"
+        >
+          <div className="flex items-center gap-2.5">
+            <Backpack className="w-4 h-4 text-amber-400" />
+            <div className="text-left">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/50">Smart Packing List</p>
+              <p className="text-white/30 text-[10px] mt-0.5">
+                {checkedCount}/{allItems.length} packed · {essentialCount} essentials
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            {loggedIn ? (
+              <>
+                {/* Share button */}
                 <button
-                  onClick={resetAll}
-                  className="ml-auto text-[9px] text-white/20 hover:text-white/40 transition-colors px-2 py-2 shrink-0"
+                  onClick={e => { e.stopPropagation(); setShareOpen(true); }}
+                  className="w-7 h-7 rounded-full flex items-center justify-center transition-colors hover:text-white/60"
+                  style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.25)" }}
+                  title="Share packing list"
                 >
-                  Reset
+                  <Share2 className="w-3.5 h-3.5" />
                 </button>
-              )}
-            </div>
-
-            {/* ── Active tab header ── */}
-            <div className="flex items-center justify-between px-4 pt-3 pb-1">
-              <div className="flex items-center gap-2">
-                <CatIcon className="w-3.5 h-3.5" style={{ color: catPct === 100 ? "#10b981" : "#ff7d47" }} />
-                <p className="text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: catPct === 100 ? "#10b981" : "rgba(255,255,255,0.4)" }}>
-                  {cat.name}
-                </p>
-              </div>
-              <span className="text-[9px] font-semibold" style={{ color: catPct === 100 ? "#10b981" : "rgba(255,255,255,0.25)" }}>
-                {catChecked}/{cat.items.length}
-              </span>
-            </div>
-
-            {/* ── Item list ── */}
-            <div className="px-4 pb-3 space-y-1.5 pt-1">
-              {cat.items.map((item) => {
-                const key = `${cat.name}::${item.label}`;
-                const isDone = checked.has(key);
-                return (
-                  <button
-                    key={key}
-                    onClick={() => toggle(key)}
-                    className="w-full flex items-center gap-3 text-left"
+                {/* Progress ring */}
+                <div className="relative w-8 h-8">
+                  <svg viewBox="0 0 32 32" className="w-full h-full -rotate-90">
+                    <circle cx="16" cy="16" r="12" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="3" />
+                    <circle
+                      cx="16" cy="16" r="12" fill="none"
+                      stroke={isComplete ? "#10b981" : "#ff5100"}
+                      strokeWidth="3"
+                      strokeDasharray={`${(pct / 100) * 75.4} 75.4`}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span
+                    className="absolute inset-0 flex items-center justify-center text-[8px] font-bold"
+                    style={{ color: isComplete ? "#10b981" : "rgba(255,255,255,0.5)" }}
                   >
-                    <div
-                      className="flex-none w-4 h-4 rounded flex items-center justify-center transition-all"
-                      style={{
-                        background: isDone ? "rgba(16,185,129,0.15)" : "rgba(255,255,255,0.04)",
-                        border: isDone ? "1px solid rgba(16,185,129,0.35)" : "1px solid rgba(255,255,255,0.1)",
-                      }}
+                    {pct}%
+                  </span>
+                </div>
+                <ChevronDown className={`w-4 h-4 text-white/25 transition-transform ${open ? "rotate-180" : ""}`} />
+              </>
+            ) : (
+              <a
+                href="/auth/login"
+                onClick={e => e.stopPropagation()}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-white transition-all hover:-translate-y-0.5"
+                style={{ background: "#ff5100" }}
+              >
+                <LogIn className="w-3 h-3" />
+                Log in
+              </a>
+            )}
+          </div>
+        </button>
+
+        {/* Progress bar */}
+        {loggedIn && (
+          <div className="h-0.5 mx-4" style={{ background: "rgba(255,255,255,0.05)" }}>
+            <div
+              className="h-full transition-all duration-500 rounded-full"
+              style={{ width: `${pct}%`, background: isComplete ? "#10b981" : "#ff5100" }}
+            />
+          </div>
+        )}
+
+        {/* ── Body ── */}
+        {open && loggedIn && (() => {
+          const safeTab = Math.min(activeTab, allCats.length - 1);
+          const cat = allCats[safeTab];
+          const CatIcon = cat.Icon;
+          const customs = customItems[cat.name] ?? [];
+          const allCatItems = [...cat.items, ...customs.map(l => ({ label: l, essential: false, custom: true as const }))];
+          const catChecked = allCatItems.filter(i => checked.has(`${cat.name}::${i.label}`)).length;
+          const catPct = allCatItems.length > 0 ? Math.round((catChecked / allCatItems.length) * 100) : 0;
+
+          return (
+            <>
+              {/* Tab bar */}
+              <div
+                className="flex gap-1 px-3 pt-3 pb-0 overflow-x-auto no-scrollbar"
+                style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}
+              >
+                {allCats.map((c, i) => {
+                  const TabIcon = c.Icon;
+                  const tabCustoms = customItems[c.name] ?? [];
+                  const tabAllItems = [...c.items, ...tabCustoms.map(l => ({ label: l, essential: false }))];
+                  const tabChecked = tabAllItems.filter(it => checked.has(`${c.name}::${it.label}`)).length;
+                  const tabDone = tabChecked === tabAllItems.length && tabAllItems.length > 0;
+                  const isActive = i === safeTab;
+                  return (
+                    <button
+                      key={c.name}
+                      onClick={() => setActiveTab(i)}
+                      className="flex items-center gap-1.5 px-2.5 py-2 rounded-t-lg text-[10px] font-bold whitespace-nowrap shrink-0 transition-all"
+                      style={isActive
+                        ? { color: "#ff7d47", background: "rgba(255,81,0,0.08)", borderBottom: "2px solid #ff5100" }
+                        : { color: "rgba(255,255,255,0.3)", background: "transparent", borderBottom: "2px solid transparent" }
+                      }
                     >
-                      {isDone && <Check className="w-2.5 h-2.5 text-emerald-400" />}
-                    </div>
-                    <span
-                      className="text-xs transition-colors flex-1"
-                      style={{
-                        color: isDone ? "rgba(255,255,255,0.22)" : item.essential ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.42)",
-                        textDecoration: isDone ? "line-through" : "none",
-                      }}
-                    >
-                      {item.label}
-                    </span>
-                    {item.essential && !isDone && (
-                      <span
-                        className="flex-none text-[8px] font-bold px-1.5 py-0.5 rounded"
-                        style={{ background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }}
-                      >
-                        MUST
-                      </span>
-                    )}
+                      <TabIcon className="w-3 h-3 shrink-0" />
+                      <span className="hidden sm:inline">{c.name}</span>
+                      {tabDone
+                        ? <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "#10b981" }} />
+                        : tabChecked > 0
+                          ? <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "#ff5100" }} />
+                          : null
+                      }
+                    </button>
+                  );
+                })}
+                {checkedCount > 0 && (
+                  <button
+                    onClick={resetAll}
+                    className="ml-auto text-[9px] text-white/20 hover:text-white/40 transition-colors px-2 py-2 shrink-0"
+                  >
+                    Reset
                   </button>
-                );
-              })}
-            </div>
-
-            {/* ── Tab complete banner ── */}
-            {catPct === 100 && !isComplete && (
-              <div
-                className="mx-4 mb-3 px-3 py-2 rounded-lg flex items-center gap-2"
-                style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}
-              >
-                <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <p className="text-emerald-400/80 text-[10px] font-semibold">{cat.name} packed!</p>
+                )}
               </div>
-            )}
 
-            {/* ── All complete footer ── */}
-            {isComplete && (
-              <div
-                className="px-4 py-3 flex items-center gap-2"
-                style={{ borderTop: "1px solid rgba(16,185,129,0.1)", background: "rgba(16,185,129,0.04)" }}
-              >
-                <Check className="w-4 h-4 text-emerald-400" />
-                <p className="text-emerald-400 text-xs font-semibold">All packed. You&apos;re ready to go!</p>
+              {/* Active tab header */}
+              <div className="flex items-center justify-between px-4 pt-3 pb-1">
+                <div className="flex items-center gap-2">
+                  <CatIcon className="w-3.5 h-3.5" style={{ color: catPct === 100 ? "#10b981" : "#ff7d47" }} />
+                  <p className="text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: catPct === 100 ? "#10b981" : "rgba(255,255,255,0.4)" }}>
+                    {cat.name}
+                  </p>
+                </div>
+                <span className="text-[9px] font-semibold" style={{ color: catPct === 100 ? "#10b981" : "rgba(255,255,255,0.25)" }}>
+                  {catChecked}/{allCatItems.length}
+                </span>
               </div>
-            )}
-          </>
-        );
-      })()}
-    </div>
+
+              {/* Item list */}
+              <div className="px-4 pb-2 space-y-1.5 pt-1">
+                {allCatItems.map((item) => {
+                  const key = `${cat.name}::${item.label}`;
+                  const isDone = checked.has(key);
+                  return (
+                    <div key={key} className="flex items-center gap-3 group">
+                      <button
+                        onClick={() => toggle(key)}
+                        className="flex items-center gap-3 text-left flex-1"
+                      >
+                        <div
+                          className="flex-none w-4 h-4 rounded flex items-center justify-center transition-all"
+                          style={{
+                            background: isDone ? "rgba(16,185,129,0.15)" : "rgba(255,255,255,0.04)",
+                            border: isDone ? "1px solid rgba(16,185,129,0.35)" : "1px solid rgba(255,255,255,0.1)",
+                          }}
+                        >
+                          {isDone && <Check className="w-2.5 h-2.5 text-emerald-400" />}
+                        </div>
+                        <span
+                          className="text-xs transition-colors flex-1"
+                          style={{
+                            color: isDone ? "rgba(255,255,255,0.22)" : item.essential ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.42)",
+                            textDecoration: isDone ? "line-through" : "none",
+                          }}
+                        >
+                          {item.label}
+                        </span>
+                      </button>
+                      {item.essential && !isDone && (
+                        <span
+                          className="flex-none text-[8px] font-bold px-1.5 py-0.5 rounded"
+                          style={{ background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }}
+                        >
+                          MUST
+                        </span>
+                      )}
+                      {item.custom && (
+                        <button
+                          onClick={() => removeCustomItem(cat.name, item.label)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity text-white/20 hover:text-red-400"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {/* Add custom item */}
+                <div className="flex items-center gap-2 mt-2 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                  <input
+                    value={newItemText}
+                    onChange={e => setNewItemText(e.target.value)}
+                    onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addCustomItem(cat.name); } }}
+                    placeholder="Add custom item…"
+                    className="flex-1 bg-transparent text-xs text-white/60 placeholder:text-white/20 outline-none"
+                  />
+                  <button
+                    onClick={() => addCustomItem(cat.name)}
+                    disabled={!newItemText.trim()}
+                    className="w-5 h-5 rounded flex items-center justify-center transition-all disabled:opacity-30"
+                    style={{ background: "rgba(255,81,0,0.15)", color: "#ff7d47" }}
+                  >
+                    <Plus className="w-3 h-3" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Tab complete banner */}
+              {catPct === 100 && !isComplete && (
+                <div
+                  className="mx-4 mb-3 px-3 py-2 rounded-lg flex items-center gap-2"
+                  style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}
+                >
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <p className="text-emerald-400/80 text-[10px] font-semibold">{cat.name} packed!</p>
+                </div>
+              )}
+
+              {/* All complete footer */}
+              {isComplete && (
+                <div
+                  className="px-4 py-3 flex items-center gap-2"
+                  style={{ borderTop: "1px solid rgba(16,185,129,0.1)", background: "rgba(16,185,129,0.04)" }}
+                >
+                  <Check className="w-4 h-4 text-emerald-400" />
+                  <p className="text-emerald-400 text-xs font-semibold">All packed. You&apos;re ready to go!</p>
+                </div>
+              )}
+            </>
+          );
+        })()}
+      </div>
+    </>
   );
 }

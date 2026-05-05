@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
-  ArrowRight, LocateFixed, Map as MapIcon, Layers,
+  ArrowRight, LocateFixed, Map as MapIcon, Layers, Camera,
 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
@@ -273,22 +273,36 @@ const OVERLAY_LAYERS = {
 
 type OverlayKey = keyof typeof OVERLAY_LAYERS;
 
+interface UserPhoto {
+  id: string;
+  slug: string;
+  url: string;
+  caption: string;
+  created_at: string;
+  lat: number;
+  lng: number;
+  adventureName: string;
+}
+
 function MapView({
   adventures: advs,
   flyToRef,
   openPinRef,
   overlays,
+  userPhotos,
 }: {
   adventures: Adventure[];
   flyToRef: React.MutableRefObject<((lat: number, lng: number) => void) | null>;
   openPinRef: React.MutableRefObject<((slug: string) => void) | null>;
   overlays: Set<OverlayKey>;
+  userPhotos: UserPhoto[];
 }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const markerMapRef = useRef<Map<string, L.Marker>>(new Map());
   const overlayLayerRefs = useRef<Partial<Record<OverlayKey, L.TileLayer>>>({});
+  const photoLayerRef = useRef<L.LayerGroup | null>(null);
 
   useEffect(() => {
     flyToRef.current = (lat, lng) => {
@@ -481,6 +495,7 @@ function MapView({
       });
       map.addLayer(MCG);
       markersLayerRef.current = MCG;
+      photoLayerRef.current = leaflet.layerGroup().addTo(map);
       addMarkers(leaflet, advs);
       addIndiaBorder(leaflet, map);
     });
@@ -537,6 +552,52 @@ function MapView({
     });
   }, [overlays]);
 
+  useEffect(() => {
+    if (!photoLayerRef.current) return;
+    loadLeaflet().then(leaflet => {
+      if (!photoLayerRef.current) return;
+      photoLayerRef.current.clearLayers();
+      userPhotos.forEach(photo => {
+        const icon = leaflet.divIcon({
+          className: "",
+          html: `<div style="position:relative;width:44px;height:44px;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.4));">
+            <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;border:2.5px solid #ff5100;background:#111;">
+              <img src="${photo.url}" style="width:100%;height:100%;object-fit:cover;" />
+            </div>
+            <div style="position:absolute;bottom:-2px;right:-2px;width:16px;height:16px;background:#ff5100;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="white"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.92c.04-.26.07-.54.07-.83s-.03-.57-.07-.83l1.8-1.4c.16-.13.2-.35.1-.53l-1.72-2.97a.397.397 0 0 0-.49-.15l-2.12.85c-.44-.34-.9-.63-1.41-.84l-.32-2.26a.4.4 0 0 0-.4-.34H8.12a.4.4 0 0 0-.4.34l-.32 2.26c-.51.21-.97.5-1.41.84L3.87 7.12a.39.39 0 0 0-.49.15L1.66 10.24c-.1.18-.06.4.1.53l1.8 1.4c-.04.26-.07.53-.07.83s.03.57.07.83l-1.8 1.4c-.16.13-.2.35-.1.53l1.71 2.97c.1.18.3.24.49.15l2.12-.85c.44.34.9.63 1.41.84l.32 2.26c.06.2.24.34.4.34h3.44c.17 0 .34-.14.4-.34l.32-2.26c.51-.21.97-.5 1.41-.84l2.12.85c.19.07.39.01.49-.15l1.71-2.97c.1-.18.06-.4-.1-.53l-1.8-1.4z"/></svg>
+            </div>
+          </div>`,
+          iconSize: [44, 44],
+          iconAnchor: [22, 22],
+          popupAnchor: [0, -26],
+        });
+
+        const popupHtml = `
+          <div style="width:220px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:14px;overflow:hidden;">
+            <div style="position:relative;height:140px;">
+              <img src="${photo.url}" alt="${photo.caption || photo.adventureName}" style="width:100%;height:100%;object-fit:cover;display:block;" />
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 60%);" />
+              <div style="position:absolute;bottom:8px;left:10px;right:10px;">
+                <div style="font-size:12px;font-weight:700;color:#fff;line-height:1.2;">${photo.adventureName}</div>
+                ${photo.caption ? `<div style="font-size:10px;color:rgba(255,255,255,0.65);margin-top:2px;">${photo.caption}</div>` : ""}
+              </div>
+            </div>
+            <div style="padding:10px 12px;background:#fff;">
+              <a href="/experiences/${photo.slug}" style="display:flex;align-items:center;justify-content:center;gap:6px;background:#ff5100;color:white;padding:8px;border-radius:8px;font-size:11px;font-weight:600;text-decoration:none;">
+                View Adventure →
+              </a>
+            </div>
+          </div>
+        `;
+
+        const marker = leaflet.marker([photo.lat, photo.lng], { icon })
+          .bindPopup(popupHtml, { maxWidth: 220, minWidth: 220, className: "ttt-popup" });
+        photoLayerRef.current!.addLayer(marker);
+      });
+    });
+  }, [userPhotos]);
+
   return <div ref={mapRef} className="w-full h-full" />;
 }
 
@@ -556,9 +617,28 @@ export default function MapPage() {
   const [mounted, setMounted] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [activeOverlay, setActiveOverlay] = useState<OverlayKey | null>(null);
+  const [myShotsOn, setMyShotsOn] = useState(false);
+  const [myShotsLoading, setMyShotsLoading] = useState(false);
+  const [userPhotos, setUserPhotos] = useState<UserPhoto[]>([]);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   function toggleOverlay(key: OverlayKey) {
     setActiveOverlay(prev => prev === key ? null : key);
+  }
+
+  function toggleMyShots() {
+    if (myShotsOn) {
+      setMyShotsOn(false);
+      setUserPhotos([]);
+      return;
+    }
+    setMyShotsOn(true);
+    setMyShotsLoading(true);
+    fetch("/api/photos/mine")
+      .then(r => r.json())
+      .then(d => setUserPhotos(d.photos ?? []))
+      .catch(() => setUserPhotos([]))
+      .finally(() => setMyShotsLoading(false));
   }
   const flyToRef = useRef<((lat: number, lng: number) => void) | null>(null);
   const openPinRef = useRef<((slug: string) => void) | null>(null);
@@ -579,7 +659,15 @@ export default function MapPage() {
   const [aceCategory, setAceCategory] = useState<AceCategory | null>(null);
   const [userProfile, setUserProfile] = useState<StoredProfile | null>(null);
 
-  useEffect(() => { setMounted(true); setUserProfile(loadProfile()); }, []);
+  useEffect(() => {
+    setMounted(true);
+    setUserProfile(loadProfile());
+    // Check auth state
+    import("@/lib/supabase/client").then(({ createClient }) => {
+      const sb = createClient();
+      sb.auth.getSession().then(({ data: { session } }) => setLoggedIn(!!session?.user));
+    });
+  }, []);
 
   function toggle<T>(arr: T[], val: T, setter: (v: T[]) => void) {
     setter(arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val]);
@@ -689,6 +777,22 @@ export default function MapPage() {
               <span className="hidden sm:inline">Satellite</span>
             </button>
           </div>
+
+          {/* My Shots */}
+          {loggedIn && (
+            <button
+              onClick={toggleMyShots}
+              title="My trip photos"
+              className={tbBtn(myShotsOn, myShotsOn)}
+              style={myShotsOn ? { background: "#ff5100" } : { background: "#f0ebe0", border: "1px solid #e0d8c8" }}
+            >
+              {myShotsLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
+              <span className="hidden sm:inline">My Shots</span>
+              {myShotsOn && userPhotos.length > 0 && (
+                <span className="bg-white/25 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{userPhotos.length}</span>
+              )}
+            </button>
+          )}
 
           {/* Near Me */}
           <div className="relative shrink-0">
@@ -1024,6 +1128,7 @@ export default function MapPage() {
             flyToRef={flyToRef}
             openPinRef={openPinRef}
             overlays={activeOverlay ? new Set([activeOverlay]) : new Set()}
+            userPhotos={userPhotos}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center" style={{ background: "#f0ebe0" }}>
