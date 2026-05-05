@@ -270,16 +270,20 @@ export default function ExploreClient() {
           {/* Compass.AI toggle */}
           <button
             onClick={() => { setAiOpen(!aiOpen); setFiltersOpen(false); }}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
-              aiOpen
-                ? "text-white"
-                : "text-white hover:opacity-90"
-            }`}
-            style={{ background: aiOpen ? "linear-gradient(135deg,#e04800,#ff7d47)" : "linear-gradient(135deg,#ff5100,#ff7d47)" }}
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap relative overflow-hidden"
+            style={{
+              background: aiOpen
+                ? "linear-gradient(135deg,rgba(255,81,0,0.25),rgba(255,125,71,0.15))"
+                : "linear-gradient(135deg,rgba(255,81,0,0.18),rgba(255,125,71,0.08))",
+              border: `1px solid ${aiOpen ? "rgba(255,81,0,0.55)" : "rgba(255,81,0,0.28)"}`,
+              color: aiOpen ? "#ff7d47" : "rgba(255,125,71,0.85)",
+              boxShadow: aiOpen ? "0 0 14px rgba(255,81,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)" : "inset 0 1px 0 rgba(255,255,255,0.04)",
+            }}
           >
-            <Compass className="w-4 h-4" />
-            <span className="hidden sm:inline">Compass.AI</span>
-            <span className="sm:hidden">AI</span>
+            <Compass className={`w-3.5 h-3.5 ${aiOpen ? "text-[#ff5100]" : "text-[#ff7d47]/70"}`} />
+            <span className="hidden sm:inline tracking-wide">Compass.AI</span>
+            <span className="sm:hidden tracking-wide">AI</span>
+            {aiOpen && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ml-0.5" />}
           </button>
 
           {/* Editor's Choice */}
@@ -316,36 +320,49 @@ export default function ExploreClient() {
 
           {/* Compass.AI panel */}
           {aiOpen && (
-            <div className="border-t border-white/10" style={{ background: "var(--bg-page)" }}>
-              <div className="max-w-4xl mx-auto px-5 lg:px-8 py-4">
+            <div className="border-t" style={{ borderColor: "rgba(255,81,0,0.12)", background: "rgba(4,7,14,0.98)", backdropFilter: "blur(16px)" }}>
+              <div className="max-w-4xl mx-auto px-5 lg:px-8 py-5">
+                {/* HUD frame */}
                 <div
-                  className="rounded-2xl overflow-hidden shadow-[0_0_40px_-8px_rgba(0,0,0,0.5)] border"
-                  style={{ borderColor: "var(--border-subtle)", background: "var(--bg-surface)" }}
+                  className="rounded-2xl overflow-hidden relative"
+                  style={{
+                    background: "linear-gradient(160deg, rgba(255,81,0,0.04) 0%, rgba(6,9,18,0.95) 40%)",
+                    border: "1px solid rgba(255,81,0,0.18)",
+                    boxShadow: "0 0 0 1px rgba(255,255,255,0.03), 0 4px 40px rgba(255,81,0,0.08), inset 0 1px 0 rgba(255,255,255,0.04)",
+                  }}
                 >
+                  {/* corner accents */}
+                  <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 rounded-tl-xl" style={{ borderColor: "rgba(255,81,0,0.4)" }} />
+                  <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 rounded-tr-xl" style={{ borderColor: "rgba(255,81,0,0.4)" }} />
+                  <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 rounded-bl-xl" style={{ borderColor: "rgba(255,81,0,0.4)" }} />
+                  <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 rounded-br-xl" style={{ borderColor: "rgba(255,81,0,0.4)" }} />
+
                   {/* Header */}
                   <div
-                    className="flex items-center justify-between px-4 py-2.5 border-b"
-                    style={{ borderColor: "var(--border-subtle)" }}
+                    className="flex items-center justify-between px-4 py-2.5"
+                    style={{ background: "rgba(255,81,0,0.05)", borderBottom: "1px solid rgba(255,81,0,0.1)" }}
                   >
-                    <div className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <Compass className="w-3.5 h-3.5 text-[#ff5100]" strokeWidth={2} />
-                      <span className="text-[11px] font-bold tracking-wide" style={{ color: "var(--text-secondary)" }}>
-                        Compass.AI
-                      </span>
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex gap-1 items-center">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="w-1 h-1 rounded-full bg-emerald-400/40" />
+                      </div>
+                      <div className="w-px h-3.5 bg-white/10" />
+                      <Compass className="w-3.5 h-3.5 text-[#ff5100]" strokeWidth={2.5} />
+                      <span className="text-[11px] font-black tracking-[0.18em] uppercase text-white/70">Compass</span>
+                      <span className="text-[11px] font-black tracking-[0.1em] text-[#ff5100]">.AI</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-md" style={{ color: "var(--text-tertiary)", background: "var(--bg-page)", border: "1px solid var(--border-subtle)" }}>
-                        Powered by Groq
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-[9px] font-bold tracking-[0.15em] uppercase px-2 py-0.5 rounded" style={{ color: "rgba(255,81,0,0.5)", background: "rgba(255,81,0,0.07)", border: "1px solid rgba(255,81,0,0.15)" }}>
+                        Groq · LLM
                       </span>
                       {aiMessages.length > 0 && (
                         <button
                           onClick={() => { setAiMessages([]); setAiInput(""); }}
-                          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all hover:bg-white/5"
-                          style={{ color: "var(--text-tertiary)" }}
+                          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-all hover:bg-white/5 text-white/25 hover:text-white/50"
                         >
-                          <RotateCcw className="w-3 h-3" />
-                          New chat
+                          <RotateCcw className="w-2.5 h-2.5" />
+                          Reset
                         </button>
                       )}
                     </div>
@@ -359,17 +376,27 @@ export default function ExploreClient() {
                   >
                     {/* Empty state */}
                     {aiMessages.length === 0 && (
-                      <div className="px-5 py-6 flex flex-col items-center gap-3">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--text-tertiary)" }}>
-                          Try asking
-                        </p>
+                      <div className="px-5 py-7 flex flex-col items-center gap-4">
+                        <div className="flex flex-col items-center gap-1.5">
+                          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: "rgba(255,81,0,0.1)", border: "1px solid rgba(255,81,0,0.2)" }}>
+                            <Compass className="w-4 h-4 text-[#ff5100]" strokeWidth={2} />
+                          </div>
+                          <p className="text-[9px] font-black tracking-[0.25em] uppercase text-white/20 mt-1">Suggested queries</p>
+                        </div>
                         <div className="flex flex-wrap justify-center gap-2">
                           {AI_SUGGESTIONS.map((s) => (
                             <button
                               key={s}
                               onClick={() => sendAi(s)}
-                              className="px-3.5 py-1.5 rounded-full text-[12px] font-medium border transition-all hover:border-[#ff5100]/50 hover:text-[#ff5100] hover:bg-[#ff5100]/5"
-                              style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)", background: "var(--bg-page)" }}
+                              className="px-3.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all"
+                              style={{
+                                borderColor: "rgba(255,81,0,0.2)",
+                                color: "rgba(255,255,255,0.45)",
+                                background: "rgba(255,81,0,0.04)",
+                                border: "1px solid rgba(255,81,0,0.15)",
+                              }}
+                              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.border = "1px solid rgba(255,81,0,0.4)"; (e.currentTarget as HTMLButtonElement).style.color = "#ff7d47"; (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,81,0,0.1)"; }}
+                              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.border = "1px solid rgba(255,81,0,0.15)"; (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.45)"; (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,81,0,0.04)"; }}
                             >
                               {s}
                             </button>
@@ -384,20 +411,20 @@ export default function ExploreClient() {
                         {aiMessages.map((msg, i) => (
                           <div key={i} className={`flex gap-2.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                             {msg.role === "assistant" && (
-                              <div className="shrink-0 w-6 h-6 rounded-lg bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center justify-center mt-0.5">
+                              <div className="shrink-0 w-6 h-6 rounded-lg flex items-center justify-center mt-0.5" style={{ background: "rgba(255,81,0,0.1)", border: "1px solid rgba(255,81,0,0.22)" }}>
                                 <Compass className="w-3 h-3 text-[#ff5100]" strokeWidth={2} />
                               </div>
                             )}
                             <div className={`space-y-2.5 ${msg.role === "assistant" ? "flex-1 min-w-0" : "max-w-[75%]"}`}>
                               {msg.content && (
                                 <div
-                                  className={`px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
-                                    msg.role === "user" ? "text-white font-medium rounded-tr-sm" : "rounded-tl-sm border"
+                                  className={`px-3.5 py-2.5 text-sm leading-relaxed ${
+                                    msg.role === "user" ? "text-white font-semibold rounded-2xl rounded-tr-sm" : "rounded-2xl rounded-tl-sm"
                                   }`}
                                   style={
                                     msg.role === "user"
-                                      ? { background: "#ff5100" }
-                                      : { background: "var(--bg-surface-2,#141b28)", borderColor: "var(--border-subtle)", color: "var(--text-primary)" }
+                                      ? { background: "linear-gradient(135deg,#ff5100,#ff7d47)", boxShadow: "0 2px 12px rgba(255,81,0,0.25)" }
+                                      : { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.85)" }
                                   }
                                 >
                                   {msg.content}
@@ -411,12 +438,12 @@ export default function ExploreClient() {
                         ))}
                         {aiLoading && (
                           <div className="flex gap-2.5 justify-start">
-                            <div className="shrink-0 w-6 h-6 rounded-lg bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center justify-center">
+                            <div className="shrink-0 w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: "rgba(255,81,0,0.1)", border: "1px solid rgba(255,81,0,0.22)" }}>
                               <Compass className="w-3 h-3 text-[#ff5100]" strokeWidth={2} />
                             </div>
                             <div
-                              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl rounded-tl-sm border"
-                              style={{ background: "var(--bg-surface-2,#141b28)", borderColor: "var(--border-subtle)" }}
+                              className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl rounded-tl-sm"
+                              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
                             >
                               {[0,1,2].map((d) => (
                                 <span key={d} className="w-1.5 h-1.5 rounded-full bg-[#ff5100]/60 animate-bounce"
@@ -431,25 +458,25 @@ export default function ExploreClient() {
                   </div>
 
                   {/* Input */}
-                  <div className="border-t p-3 flex items-center gap-2" style={{ borderColor: "var(--border-subtle)", background: "var(--bg-surface)" }}>
+                  <div className="p-3 flex items-center gap-2.5" style={{ borderTop: "1px solid rgba(255,81,0,0.1)", background: "rgba(255,81,0,0.03)" }}>
                     <div
-                      className="flex items-center gap-2 flex-1 rounded-xl px-3.5 border transition-all focus-within:border-[#ff5100]/40"
-                      style={{ background: "var(--bg-page)", borderColor: "var(--border-default)" }}
+                      className="flex items-center gap-2.5 flex-1 rounded-xl px-3.5 transition-all focus-within:shadow-[0_0_0_1px_rgba(255,81,0,0.35)]"
+                      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
                     >
-                      <Compass className="w-3.5 h-3.5 text-[#ff5100]/50 shrink-0" />
+                      <Compass className="w-3.5 h-3.5 text-[#ff5100]/40 shrink-0" />
                       <input
                         value={aiInput}
                         onChange={(e) => setAiInput(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && !aiLoading && sendAi()}
-                        placeholder={aiMessages.length > 0 ? "Refine or ask something new…" : "Ask Compass.AI…"}
-                        className="flex-1 bg-transparent text-sm py-2.5 outline-none"
-                        style={{ color: "var(--text-primary)" }}
+                        placeholder={aiMessages.length > 0 ? "Refine or ask something new…" : "Ask Compass.AI anything about adventures…"}
+                        className="flex-1 bg-transparent text-[13px] py-2.5 outline-none text-white/80 placeholder-white/20"
                       />
                     </div>
                     <button
                       onClick={() => sendAi()}
                       disabled={!aiInput.trim() || aiLoading}
-                      className="shrink-0 h-9 w-9 flex items-center justify-center rounded-xl bg-[#ff5100] text-white disabled:opacity-25 hover:bg-[#ff7d47] active:scale-95 transition-all shadow-lg shadow-[#ff5100]/20"
+                      className="shrink-0 h-9 w-9 flex items-center justify-center rounded-xl text-white disabled:opacity-20 active:scale-95 transition-all"
+                      style={{ background: "linear-gradient(135deg,#ff5100,#ff7d47)", boxShadow: "0 2px 12px rgba(255,81,0,0.3)" }}
                     >
                       {aiLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
                     </button>
