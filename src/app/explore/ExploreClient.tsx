@@ -761,7 +761,7 @@ export default function ExploreClient() {
                         <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">ACE™ Readiness</span>
                         {aceCategory && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>1</span>}
                       </div>
-                      <a href="/ace" target="_blank" className="text-[9px] text-white/20 hover:text-[#ff5100] transition-colors">What is ACE™?</a>
+                      <a href="/ace" target="_blank" className="text-[9px] font-semibold transition-colors" style={{ color: "#ff5100" }}>What is ACE™?</a>
                     </div>
                     <div className="p-3">
                       {!userProfile ? (
