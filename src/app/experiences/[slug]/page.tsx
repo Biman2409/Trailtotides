@@ -349,8 +349,9 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         <WeatherWidget
           lat={adventure.lat}
           lng={adventure.lng}
-          locationName={adventure.baseCamp ?? adventure.state}
+          locationName={adventure.baseCamp ?? adventure.startingPoint ?? adventure.state}
           altitude={adventure.altitude}
+          isBaseCamp={!!(adventure.baseCamp || adventure.startingPoint)}
         />
 
       </div>

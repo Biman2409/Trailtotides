@@ -81,9 +81,10 @@ interface Props {
   lng: number;
   locationName: string;
   altitude?: string;
+  isBaseCamp?: boolean;
 }
 
-export default function WeatherWidget({ lat, lng, locationName, altitude }: Props) {
+export default function WeatherWidget({ lat, lng, locationName, altitude, isBaseCamp }: Props) {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
@@ -205,7 +206,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude }: Prop
             <div className="flex items-center overflow-x-auto no-scrollbar flex-1 min-w-0">
               <div className="flex items-center gap-2 px-5 lg:px-6 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
                 <div>
-                  <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Live Weather</div>
+                  <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">{isBaseCamp ? "Base Camp" : "Live Weather"}</div>
                   <div className="text-white/55 text-[13px] font-medium leading-none truncate max-w-[110px]">{locationName}</div>
                 </div>
               </div>
