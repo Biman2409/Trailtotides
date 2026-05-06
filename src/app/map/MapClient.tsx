@@ -370,7 +370,7 @@ function MapView({
           </div>
           <p style="font-size:11px;color:#6b6560;line-height:1.5;margin:0 0 11px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${adv.tagline}</p>
           <a href="/experiences/${adv.slug}" style="display:flex;align-items:center;justify-content:center;gap:6px;background:#ff5100;color:white;padding:9px 14px;border-radius:10px;font-size:12px;font-weight:600;text-decoration:none;letter-spacing:0.01em;">
-            View Experience
+            See Full Details
             <span style="font-size:15px;line-height:1;margin-top:-1px;">→</span>
           </a>
         </div>
@@ -585,7 +585,7 @@ function MapView({
             </div>
             <div style="padding:10px 12px;background:#fff;">
               <a href="/experiences/${photo.slug}" style="display:flex;align-items:center;justify-content:center;gap:6px;background:#ff5100;color:white;padding:8px;border-radius:8px;font-size:11px;font-weight:600;text-decoration:none;">
-                View Adventure →
+                See Full Details →
               </a>
             </div>
           </div>
