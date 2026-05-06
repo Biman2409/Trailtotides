@@ -1181,6 +1181,58 @@ export default function MapPage() {
             Trail to Tides
           </div>
         </div>
+
+        {/* ── Adventure list rail ── */}
+        <div
+          className="absolute top-3 right-3 z-[1000] w-56 flex flex-col gap-1.5 max-h-[calc(100%-5rem)] overflow-y-auto"
+          style={{ scrollbarWidth: "none" }}
+        >
+          {sortedAdventures.slice(0, 30).map((adv) => {
+            const c = difficultyColor[adv.difficulty] ?? "#9a9590";
+            return (
+              <Link
+                key={adv.slug}
+                href={`/experiences/${adv.slug}`}
+                className="group flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all"
+                style={{
+                  background: "rgba(255,253,248,0.88)",
+                  backdropFilter: "blur(10px)",
+                  border: "1px solid rgba(232,224,208,0.7)",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,253,248,0.98)";
+                  (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 4px 16px rgba(0,0,0,0.12)";
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,253,248,0.88)";
+                  (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)";
+                }}
+                onClick={() => {
+                  const marker = openPinRef.current;
+                  if (marker) marker(adv.slug);
+                }}
+              >
+                <div className="shrink-0 w-8 h-8 rounded-lg overflow-hidden">
+                  <img src={adv.heroImage} alt={adv.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[11px] font-bold leading-tight truncate" style={{ color: "#1a1814" }}>{adv.name}</p>
+                  <p className="text-[9.5px] mt-0.5 truncate" style={{ color: "#9a9590" }}>{adv.state}</p>
+                </div>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span className="text-[8.5px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: `${c}18`, color: c }}>{adv.difficulty}</span>
+                  <ArrowRight className="w-3 h-3 opacity-30 group-hover:opacity-70 transition-opacity" style={{ color: "#ff5100" }} />
+                </div>
+              </Link>
+            );
+          })}
+          {sortedAdventures.length > 30 && (
+            <div className="text-center text-[10px] font-semibold py-1" style={{ color: "#9a9590" }}>
+              +{sortedAdventures.length - 30} more — use filters
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
