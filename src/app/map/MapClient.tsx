@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
@@ -616,6 +616,7 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 export default function MapPage() {
   const [mounted, setMounted] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [viewOpen, setViewOpen] = useState(false);
   const [activeOverlay, setActiveOverlay] = useState<OverlayKey | null>(null);
   const [myShotsOn, setMyShotsOn] = useState(false);
   const [myShotsLoading, setMyShotsLoading] = useState(false);
@@ -752,30 +753,45 @@ export default function MapPage() {
             onAdventurePin={adv => openPinRef.current?.(adv.slug)}
           />
 
-          {/* Layer toggles */}
-          <div
-            className="flex items-center rounded-xl overflow-hidden shrink-0"
-            style={{ border: "1px solid #e0d8c8", background: "#f0ebe0" }}
-          >
+          {/* View toggle dropdown */}
+          <div className="relative shrink-0">
             <button
-              onClick={() => toggleOverlay("terrain")}
-              title="Terrain layer"
-              className={tbBtn(activeOverlay === "terrain")}
-              style={activeOverlay === "terrain" ? { background: "#1e3d2f" } : {}}
+              onClick={() => setViewOpen(v => !v)}
+              className={tbBtn(!!activeOverlay)}
+              style={activeOverlay ? { background: "#1e3d2f" } : { background: "#f0ebe0", border: "1px solid #e0d8c8" }}
             >
               <Layers className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Terrain</span>
+              <span className="hidden sm:inline">
+                {activeOverlay === "terrain" ? "Terrain" : activeOverlay === "satellite" ? "Satellite" : "View"}
+              </span>
+              <ChevronDown className={`w-3 h-3 transition-transform ${viewOpen ? "rotate-180" : ""}`} />
             </button>
-            <div style={{ width: 1, alignSelf: "stretch", background: "#e0d8c8" }} />
-            <button
-              onClick={() => toggleOverlay("satellite")}
-              title="Satellite imagery"
-              className={tbBtn(activeOverlay === "satellite")}
-              style={activeOverlay === "satellite" ? { background: "#1e3d2f" } : {}}
-            >
-              <MapIcon className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Satellite</span>
-            </button>
+            {viewOpen && (
+              <div
+                className="absolute left-0 top-full mt-1.5 z-[2000] rounded-xl overflow-hidden min-w-[130px]"
+                style={{ background: "rgba(255,253,248,0.98)", border: "1px solid #e0d8c8", boxShadow: "0 8px 24px rgba(0,0,0,0.1)" }}
+              >
+                {([
+                  { key: "terrain" as OverlayKey, icon: <Layers className="w-3.5 h-3.5" />, label: "Terrain" },
+                  { key: "satellite" as OverlayKey, icon: <MapIcon className="w-3.5 h-3.5" />, label: "Satellite" },
+                ] as { key: OverlayKey; icon: React.ReactNode; label: string }[]).map(({ key, icon, label }) => {
+                  const active = activeOverlay === key;
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => { toggleOverlay(key); setViewOpen(false); }}
+                      className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-[12px] font-semibold transition-colors text-left"
+                      style={{ color: active ? "#fff" : "#3a3530", background: active ? "#1e3d2f" : "transparent" }}
+                      onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "#f0ebe0"; }}
+                      onMouseLeave={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
+                    >
+                      {icon}{label}
+                      {active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* My Shots */}
