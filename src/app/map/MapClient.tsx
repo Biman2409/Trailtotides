@@ -5,6 +5,7 @@ import Image from "next/image";
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
   ArrowRight, LocateFixed, Map as MapIcon, Layers, Camera,
+  Navigation as NavigationIcon,
 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
@@ -757,7 +758,7 @@ export default function MapPage() {
                 {([
                   { key: "default"   as OverlayKey, icon: <MapIcon className="w-3.5 h-3.5" />,  label: "Default"   },
                   { key: "satellite" as OverlayKey, icon: <Layers className="w-3.5 h-3.5" />,   label: "Satellite" },
-                  { key: "terrain"   as OverlayKey, icon: <Navigation className="w-3.5 h-3.5" />, label: "Terrain"   },
+                  { key: "terrain"   as OverlayKey, icon: <NavigationIcon className="w-3.5 h-3.5" />, label: "Terrain"   },
                 ] as { key: OverlayKey; icon: React.ReactNode; label: string }[]).map(({ key, icon, label }) => {
                   const active = (activeOverlay ?? "default") === key;
                   return (
