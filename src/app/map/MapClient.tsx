@@ -263,9 +263,9 @@ const BASE_LAYERS = {
     maxZoom: 19,
   },
   terrain: {
-    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
-    attribution: "Topo &copy; Esri, DeLorme, NAVTEQ, TomTom, USGS, NGA, EPA",
-    maxZoom: 19,
+    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
+    maxZoom: 17,
   },
 } as const;
 
