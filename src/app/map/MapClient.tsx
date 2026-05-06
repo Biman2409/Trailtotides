@@ -862,109 +862,96 @@ export default function MapPage() {
 
         {/* Filter panel */}
         {filtersOpen && (
-          <div
-            className="border-t px-3 lg:px-5 py-5 max-h-[58vh] overflow-y-auto"
-            style={{ borderColor: "#e8e0d0", background: "#fdfcfb" }}
-          >
-            <div className="max-w-7xl mx-auto">
-              {activeFilterCount > 0 && (
-                <div className="flex justify-end mb-4">
-                  <button
-                    onClick={clearAll}
-                    className="flex items-center gap-1.5 text-xs font-semibold transition-colors"
-                    style={{ color: "#ff5100" }}
-                  >
-                    <X className="w-3 h-3" />
-                    Clear all
-                  </button>
-                </div>
-              )}
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-7">
+          <div className="border-t border-white/8 max-h-[58vh] overflow-y-auto" style={{ background: "rgba(6,9,18,0.97)", backdropFilter: "blur(12px)" }}>
+            <div className="max-w-7xl mx-auto px-4 lg:px-6 py-4 space-y-3">
 
-                {/* Adventure Type */}
-                <div className="col-span-2 lg:col-span-3">
-                  <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>Adventure Type</h3>
-                  {(() => {
-                    const categories = [
-                      { label: "Land",  types: ["Trekking","Mountaineering","Rock Climbing","Scrambling","Motorcycling","Cycling","Jeep Safari","Caving","Urban Adventure"] },
-                      { label: "Water", types: ["Diving","Kayaking"] },
-                      { label: "Snow",  types: ["Skiing"] },
-                      { label: "Air",   types: [] as string[] },
-                    ];
-                    return (
-                      <div className="flex flex-col gap-2">
-                        <div className="flex flex-wrap gap-2">
-                          {categories.map(cat => {
-                            const isExpanded = expandedCategory === cat.label;
-                            const hasSelected = cat.types.some(t => selectedTypes.includes(t as AdventureType));
+              {/* Genre + Region row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+                {/* Genre */}
+                {(() => {
+                  const genreGroups: { label: string; color: string; types: AdventureType[] }[] = [
+                    { label: "Earth", color: "#a16207", types: ["Trekking","Mountaineering","Rock Climbing","Scrambling","Caving","Motorcycling","Cycling","Jeep Safari","Urban Adventure"] },
+                    { label: "Water", color: "#0369a1", types: ["Diving","Kayaking"] },
+                    { label: "Snow",  color: "#6366f1", types: ["Skiing","Ice Skating"] },
+                    { label: "Air",   color: "#0891b2", types: ["Paragliding","Hot Air Balloon"] },
+                  ];
+                  return (
+                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                      <div className="flex items-center gap-2 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                        <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Genre</span>
+                        {selectedTypes.length > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedTypes.length}</span>}
+                      </div>
+                      <div className="p-3">
+                        <div className="flex flex-wrap gap-1.5">
+                          {genreGroups.map(grp => {
+                            const isExp = expandedCategory === grp.label;
+                            const cnt = grp.types.filter(t => selectedTypes.includes(t)).length;
                             return (
-                              <button key={cat.label} onClick={() => setExpandedCategory(isExpanded ? null : cat.label)}
-                                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all"
-                                style={isExpanded || hasSelected
-                                  ? { background: "#ff5100", color: "white", borderColor: "#ff5100" }
-                                  : { background: "white", borderColor: "#e0d8c8", color: "#3a3530" }}>
-                                {cat.label}
-                                {hasSelected && <span className="bg-white/30 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{cat.types.filter(t => selectedTypes.includes(t as AdventureType)).length}</span>}
-                                <ChevronDown className={`w-3 h-3 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                              <button key={grp.label} onClick={() => setExpandedCategory(isExp ? null : grp.label)}
+                                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                                style={{ background: isExp ? `${grp.color}22` : cnt > 0 ? `${grp.color}18` : "rgba(255,255,255,0.05)", color: isExp || cnt > 0 ? grp.color : "rgba(255,255,255,0.5)", border: `1px solid ${isExp || cnt > 0 ? `${grp.color}50` : "rgba(255,255,255,0.08)"}` }}>
+                                {grp.label}
+                                {cnt > 0 && <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: `${grp.color}30`, color: grp.color }}>{cnt}</span>}
+                                <ChevronDown className={`w-2.5 h-2.5 opacity-50 transition-transform ${isExp ? "rotate-180" : ""}`} />
                               </button>
                             );
                           })}
                         </div>
                         {expandedCategory && (() => {
-                          const cat = categories.find(c => c.label === expandedCategory)!;
+                          const grp = genreGroups.find(g => g.label === expandedCategory)!;
                           return (
-                            <div className="rounded-xl border p-3" style={{ background: "white", borderColor: "#e0d8c8" }}>
-                              {cat.types.length === 0 ? <p className="text-[11px] italic" style={{ color: "#ff5100", opacity: 0.5 }}>Coming soon</p> : (
-                                <div className="flex flex-wrap gap-1.5">
-                                  {cat.types.map(type => (
-                                    <button key={type} onClick={() => toggle(selectedTypes, type as AdventureType, setSelectedTypes)}
-                                      className="px-3 py-1.5 rounded-full text-[11px] font-medium transition-all"
-                                      style={selectedTypes.includes(type as AdventureType)
-                                        ? { background: "#ff5100", color: "white" }
-                                        : { background: "#f0ebe0", color: "#3a3530" }}>
-                                      {type}
-                                    </button>
-                                  ))}
-                                </div>
-                              )}
+                            <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                              {grp.types.map(type => {
+                                const isSel = selectedTypes.includes(type);
+                                return (
+                                  <button key={type} onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
+                                    className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
+                                    style={{ background: isSel ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.04)", color: isSel ? "#ff7d47" : "rgba(255,255,255,0.4)", border: `1px solid ${isSel ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)"}` }}>
+                                    {type}
+                                  </button>
+                                );
+                              })}
                             </div>
                           );
                         })()}
                       </div>
-                    );
-                  })()}
-                </div>
+                    </div>
+                  );
+                })()}
 
                 {/* Region */}
-                <div className="col-span-2 lg:col-span-3">
-                  <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>Region</h3>
-                  {(() => {
-                    const regionGroups: { name: Region; subRegions: string[] }[] = [
-                      { name: "Himalayas",     subRegions: ["Ladakh","Jammu & Kashmir","Uttarakhand","Himachal Pradesh","Sikkim","Arunachal Pradesh"] },
-                      { name: "Western Ghats", subRegions: ["Kerala","Karnataka","Goa","Maharashtra"] },
-                      { name: "Eastern Ghats", subRegions: ["Odisha","Andhra Pradesh","Telangana","Tamil Nadu"] },
-                      { name: "Desert",        subRegions: ["Rajasthan","Gujarat"] },
-                      { name: "Coast",         subRegions: ["Maharashtra","Goa","Kerala","Karnataka","Odisha","Tamil Nadu","Andhra Pradesh"] },
-                      { name: "Islands",       subRegions: ["Andaman & Nicobar","Lakshadweep"] },
-                      { name: "Northeast",     subRegions: ["Nagaland","Manipur","Meghalaya","Mizoram","Assam","Arunachal Pradesh","Sikkim"] },
-                      { name: "Urban",         subRegions: ["Mumbai","Delhi","Bangalore","Chennai","Kolkata","Hyderabad","Pune"] },
-                    ];
-                    return (
-                      <div className="flex flex-col gap-2">
-                        <div className="flex flex-wrap gap-2">
+                {(() => {
+                  const regionGroups: { name: Region; subRegions: string[] }[] = [
+                    { name: "Himalayas",     subRegions: ["Ladakh","Jammu & Kashmir","Uttarakhand","Himachal Pradesh","Sikkim","Arunachal Pradesh"] },
+                    { name: "Western Ghats", subRegions: ["Kerala","Karnataka","Goa","Maharashtra"] },
+                    { name: "Eastern Ghats", subRegions: ["Odisha","Andhra Pradesh","Telangana","Tamil Nadu"] },
+                    { name: "Desert",        subRegions: ["Rajasthan","Gujarat"] },
+                    { name: "Coast",         subRegions: ["Maharashtra","Goa","Kerala","Karnataka","Odisha","Tamil Nadu","Andhra Pradesh"] },
+                    { name: "Islands",       subRegions: ["Andaman & Nicobar","Lakshadweep"] },
+                    { name: "Northeast",     subRegions: ["Nagaland","Manipur","Meghalaya","Mizoram","Assam","Arunachal Pradesh","Sikkim"] },
+                    { name: "Urban",         subRegions: ["Mumbai","Delhi","Bangalore","Chennai","Kolkata","Hyderabad","Pune"] },
+                  ];
+                  const totalSelected = selectedRegions.length + selectedSubRegions.length;
+                  return (
+                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                      <div className="flex items-center gap-2 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                        <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Region</span>
+                        {totalSelected > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{totalSelected}</span>}
+                      </div>
+                      <div className="p-3">
+                        <div className="flex flex-wrap gap-1.5">
                           {regionGroups.map(rg => {
-                            const isExpanded = expandedRegion === rg.name;
-                            const subCount = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
-                            const hasSelected = selectedRegions.includes(rg.name) || subCount > 0;
+                            const isExp = expandedRegion === rg.name;
+                            const subCnt = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
+                            const hasSel = selectedRegions.includes(rg.name) || subCnt > 0;
                             return (
-                              <button key={rg.name} onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
-                                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all"
-                                style={isExpanded || hasSelected
-                                  ? { background: "#ff5100", color: "white", borderColor: "#ff5100" }
-                                  : { background: "white", borderColor: "#e0d8c8", color: "#3a3530" }}>
+                              <button key={rg.name} onClick={() => setExpandedRegion(isExp ? null : rg.name)}
+                                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                                style={{ background: isExp || hasSel ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.05)", color: isExp || hasSel ? "#ff7d47" : "rgba(255,255,255,0.5)", border: `1px solid ${isExp || hasSel ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.08)"}` }}>
                                 {rg.name}
-                                {subCount > 0 && <span className="bg-white/30 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{subCount}</span>}
-                                <ChevronDown className={`w-3 h-3 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                                {subCnt > 0 && <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,81,0,0.25)", color: "#ff7d47" }}>{subCnt}</span>}
+                                <ChevronDown className={`w-2.5 h-2.5 opacity-50 transition-transform ${isExp ? "rotate-180" : ""}`} />
                               </button>
                             );
                           })}
@@ -972,82 +959,104 @@ export default function MapPage() {
                         {expandedRegion && (() => {
                           const rg = regionGroups.find(r => r.name === expandedRegion)!;
                           return (
-                            <div className="rounded-xl border p-3" style={{ background: "white", borderColor: "#e0d8c8" }}>
-                              <div className="flex flex-wrap gap-1.5">
-                                {rg.subRegions.map(sr => (
+                            <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                              {rg.subRegions.map(sr => {
+                                const isSel = selectedSubRegions.includes(sr);
+                                return (
                                   <button key={sr} onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
-                                    className="px-3 py-1.5 rounded-full text-[11px] font-medium transition-all"
-                                    style={selectedSubRegions.includes(sr)
-                                      ? { background: "#ff5100", color: "white" }
-                                      : { background: "#f0ebe0", color: "#3a3530" }}>
+                                    className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
+                                    style={{ background: isSel ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.04)", color: isSel ? "#ff7d47" : "rgba(255,255,255,0.4)", border: `1px solid ${isSel ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)"}` }}>
                                     {sr}
                                   </button>
-                                ))}
-                              </div>
+                                );
+                              })}
                             </div>
                           );
                         })()}
                       </div>
-                    );
-                  })()}
-                </div>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* Season + Difficulty row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 
                 {/* Season */}
-                <div className="col-span-2 lg:col-span-3">
-                  <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>Best Season</h3>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex flex-wrap gap-2">
+                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                  <div className="flex items-center gap-2 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Season</span>
+                    {selectedMonths.length > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedMonths.length}</span>}
+                  </div>
+                  <div className="p-3">
+                    <div className="flex flex-wrap gap-1.5">
                       {seasons.map(({ label, months: sMonths }) => {
-                        const isExpanded = expandedSeason === label;
-                        const count = sMonths.filter(m => selectedMonths.includes(m)).length;
-                        const hasSelected = count > 0;
+                        const isExp = expandedSeason === label;
+                        const cnt = sMonths.filter(m => selectedMonths.includes(m)).length;
                         return (
-                          <button key={label} onClick={() => setExpandedSeason(isExpanded ? null : label)}
-                            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all"
-                            style={isExpanded || hasSelected
-                              ? { background: "#ff5100", color: "white", borderColor: "#ff5100" }
-                              : { background: "white", borderColor: "#e0d8c8", color: "#3a3530" }}>
+                          <button key={label} onClick={() => setExpandedSeason(isExp ? null : label)}
+                            className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                            style={{ background: isExp || cnt > 0 ? "#ff5100" : "rgba(255,255,255,0.05)", color: isExp || cnt > 0 ? "#fff" : "rgba(255,255,255,0.5)", border: `1px solid ${isExp || cnt > 0 ? "#ff5100" : "rgba(255,255,255,0.08)"}` }}>
                             {label}
-                            {hasSelected && <span className="bg-white/30 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{count}</span>}
-                            <ChevronDown className={`w-3 h-3 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                            {cnt > 0 && <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,255,255,0.25)" }}>{cnt}</span>}
+                            <ChevronDown className={`w-2.5 h-2.5 opacity-50 transition-transform ${isExp ? "rotate-180" : ""}`} />
                           </button>
                         );
                       })}
                     </div>
-                    {expandedSeason && (() => {
-                      const season = seasons.find(s => s.label === expandedSeason)!;
-                      return (
-                        <div className="rounded-xl border p-3" style={{ background: "white", borderColor: "#e0d8c8" }}>
-                          <div className="flex flex-wrap gap-1.5">
-                            {season.months.map(m => (
-                              <button key={m} onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                                className="px-3 py-1.5 rounded-full text-[11px] font-medium transition-all"
-                                style={selectedMonths.includes(m)
-                                  ? { background: "#ff5100", color: "white" }
-                                  : { background: "#f0ebe0", color: "#3a3530" }}>
-                                {m}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    })()}
+                    {expandedSeason && (
+                      <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                        {seasons.find(s => s.label === expandedSeason)!.months.map(m => {
+                          const isSel = selectedMonths.includes(m);
+                          return (
+                            <button key={m} onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
+                              className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
+                              style={{ background: isSel ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.04)", color: isSel ? "#ff7d47" : "rgba(255,255,255,0.4)", border: `1px solid ${isSel ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)"}` }}>
+                              {m}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* Difficulty */}
-                <div className="col-span-2 lg:col-span-3">
-                  <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>Difficulty</h3>
-                  <div className="flex flex-wrap gap-2">
+                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                  <div className="flex items-center gap-2.5 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Difficulty</span>
+                  </div>
+                  <div className="p-3 flex flex-wrap gap-1.5">
                     {(["Easy","Moderate","Hard","Advanced","Extreme"] as Difficulty[]).map(val => {
-                      const isSelected = selectedDifficulties.includes(val);
+                      const isSel = selectedDifficulties.includes(val);
+                      const c = difficultyColor[val] ?? "#ff5100";
                       return (
                         <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
-                          className="flex items-center gap-2 px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all"
-                          style={isSelected
-                            ? { background: difficultyColor[val], color: "white", borderColor: difficultyColor[val] }
-                            : { background: "white", borderColor: "#e0d8c8", color: "#3a3530" }}>
-                          <span className="w-2 h-2 rounded-full shrink-0" style={{ background: isSelected ? "rgba(255,255,255,0.55)" : difficultyColor[val] }} />
+                          className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                          style={{ background: isSel ? `${c}18` : "rgba(255,255,255,0.05)", color: isSel ? c : "rgba(255,255,255,0.55)", border: `1px solid ${isSel ? `${c}40` : "rgba(255,255,255,0.08)"}` }}>
+                          {val}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Duration + ACE row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+                {/* Duration */}
+                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                  <div className="flex items-center gap-2.5 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Duration</span>
+                  </div>
+                  <div className="p-3 flex flex-wrap gap-1.5">
+                    {(["Weekend","3–5 days","7+ days"] as Duration[]).map(val => {
+                      const isSel = selectedDurations.includes(val);
+                      return (
+                        <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
+                          className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                          style={{ background: isSel ? "#ff5100" : "rgba(255,255,255,0.05)", color: isSel ? "#fff" : "rgba(255,255,255,0.55)", border: `1px solid ${isSel ? "#ff5100" : "rgba(255,255,255,0.08)"}` }}>
                           {val}
                         </button>
                       );
@@ -1055,63 +1064,52 @@ export default function MapPage() {
                   </div>
                 </div>
 
-                {/* Duration */}
-                <div className="col-span-2 lg:col-span-3">
-                    <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>Duration</h3>
-                    <div className="flex flex-wrap gap-1.5">
-                      {(["Weekend","3–5 days","7+ days"] as Duration[]).map(val => (
-                        <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
-                          className="px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all"
-                          style={selectedDurations.includes(val)
-                            ? { background: "#ff5100", color: "white", borderColor: "#ff5100" }
-                            : { background: "white", borderColor: "#e0d8c8", color: "#3a3530" }}>
-                          {val}
-                        </button>
-                      ))}
-                    </div>
-                </div>
-
                 {/* ACE */}
-                <div className="col-span-2 lg:col-span-3">
-                  <h3 className="text-[9px] font-black uppercase tracking-[0.18em] mb-3" style={{ color: "#b0a898" }}>ACE Profile Match</h3>
-                  {!userProfile ? (
-                    <div className="flex items-center justify-between gap-4 p-4 rounded-xl border" style={{ background: "white", borderColor: "#e0d8c8" }}>
-                      <div>
-                        <p className="text-xs font-semibold" style={{ color: "#3a3530" }}>No ACE profile yet</p>
-                        <p className="text-[11px] mt-0.5" style={{ color: "#9a9590" }}>Take the assessment to filter by capability</p>
+                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                  <div className="flex items-center justify-between px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">ACE™ Readiness</span>
+                      {aceCategory && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>1</span>}
+                    </div>
+                    <a href="/ace" className="text-[9px] text-white/20 hover:text-[#ff5100] transition-colors">What is ACE™?</a>
+                  </div>
+                  <div className="p-3">
+                    {!userProfile ? (
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-[11px] text-white/30">No ACE profile yet</p>
+                        <Link href="/matchmaker" className="shrink-0 inline-flex items-center gap-1 text-white font-semibold px-2.5 py-1 rounded-lg text-[10px] transition-all" style={{ background: "#ff5100" }}>
+                          Take Assessment <ArrowRight className="w-2.5 h-2.5" />
+                        </Link>
                       </div>
-                      <Link href="/matchmaker" className="shrink-0 inline-flex items-center gap-1.5 text-white font-semibold px-3 py-2 rounded-xl text-[11px] transition-all" style={{ background: "#ff5100" }}>
-                        Take Assessment <ArrowRight className="w-3 h-3" />
-                      </Link>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                      {([
-                        { key: "ready" as AceCategory,        label: "Ready Now",        desc: "Matches your current level",          color: "#1e3d2f", bg: "#1e3d2f10", border: "#1e3d2f30" },
-                        { key: "stretch" as AceCategory,      label: "Stretch Challenge", desc: "Slightly above your level",           color: "#b45309", bg: "#b4530910", border: "#b4530930" },
-                        { key: "out-of-range" as AceCategory, label: "Out of Range",     desc: "Significantly beyond current ability", color: "#dc2626", bg: "#dc262610", border: "#dc262630" },
-                      ]).map(({ key, label, desc, color, bg, border }) => {
-                        const isActive = aceCategory === key;
-                        return (
-                          <button key={key} onClick={() => setAceCategory(isActive ? null : key)}
-                            className="text-left p-3 rounded-xl border transition-all"
-                            style={{ background: isActive ? bg : "white", borderColor: isActive ? border : "#e0d8c8" }}>
-                            <p className="text-[11px] font-bold mb-0.5" style={{ color: isActive ? color : "#5a5550" }}>{label}</p>
-                            <p className="text-[10px]" style={{ color: "#9a9590" }}>{desc}</p>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
+                    ) : (
+                      <div className="flex flex-wrap gap-1.5">
+                        {([
+                          { key: "ready" as AceCategory, label: "Ready Now", color: "#22c55e" },
+                          { key: "stretch" as AceCategory, label: "Stretch", color: "#eab308" },
+                          { key: "out-of-range" as AceCategory, label: "Out of Range", color: "#ef4444" },
+                        ]).map(({ key, label, color }) => {
+                          const isAct = aceCategory === key;
+                          return (
+                            <button key={key} onClick={() => setAceCategory(isAct ? null : key)}
+                              className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                              style={{ background: isAct ? `${color}18` : "rgba(255,255,255,0.05)", color: isAct ? color : "rgba(255,255,255,0.55)", border: `1px solid ${isAct ? `${color}40` : "rgba(255,255,255,0.08)"}` }}>
+                              {label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
+
             </div>
           </div>
         )}
 
         {/* Active filter chips */}
         {activeFilterCount > 0 && (
-          <div className="px-3 lg:px-5 py-2 flex flex-wrap gap-1.5 border-t" style={{ borderColor: "#e8e0d0", background: "#fff" }}>
+          <div className="px-3 lg:px-5 py-2 flex flex-wrap gap-1.5 border-t border-white/8" style={{ background: "rgba(6,9,18,0.97)" }}>
             {[
               ...selectedTypes.map(t => ({ label: t, remove: () => toggle(selectedTypes, t, setSelectedTypes) })),
               ...selectedRegions.map(r => ({ label: r, remove: () => toggle(selectedRegions, r, setSelectedRegions) })),
