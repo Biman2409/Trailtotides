@@ -263,9 +263,9 @@ const BASE_LAYERS = {
     maxZoom: 19,
   },
   terrain: {
-    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
-    maxZoom: 17,
+    url: "https://tile.tracestrack.com/topo__/{z}/{x}/{y}.png",
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://www.tracestrack.com">Tracestrack</a>',
+    maxZoom: 19,
   },
 } as const;
 
