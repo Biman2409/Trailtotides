@@ -172,11 +172,11 @@ function UnifiedSearch({
   return (
     <div ref={wrapperRef} className="relative flex-1 min-w-0">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: "#9a9590" }} />
-        {loading && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 animate-spin" style={{ color: "#9a9590" }} />}
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30" />
+        {loading && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 animate-spin text-white/30" />}
         {!loading && query && (
           <button onClick={handleClear} className="absolute right-3 top-1/2 -translate-y-1/2 hover:opacity-70 transition-opacity">
-            <X className="w-3.5 h-3.5" style={{ color: "#9a9590" }} />
+            <X className="w-3.5 h-3.5 text-white/30" />
           </button>
         )}
         <input
@@ -184,34 +184,36 @@ function UnifiedSearch({
           onChange={e => setQuery(e.target.value)}
           onFocus={() => hasResults && setOpen(true)}
           placeholder="Search adventures or places…"
-          className="w-full pl-9 pr-8 py-2.5 rounded-xl text-sm placeholder-[#a0998f] border border-transparent focus:outline-none focus:border-[#c8bfb0] transition-colors"
-          style={{ background: "#f0ebe0", color: "#1a1814" }}
+          className="w-full pl-9 pr-8 py-2.5 rounded-xl text-sm focus:outline-none transition-all"
+          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.85)", caretColor: "#ff5100" }}
+          onFocus={e => { e.currentTarget.style.border = "1px solid rgba(255,81,0,0.4)"; e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+          onBlur={e => { e.currentTarget.style.border = "1px solid rgba(255,255,255,0.1)"; e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
         />
       </div>
 
       {open && (
         <div
-          className="absolute z-[2000] top-full mt-2 w-full rounded-2xl overflow-hidden text-sm min-w-[300px]"
-          style={{ background: "#fff", border: "1px solid #e8e0d0", boxShadow: "0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)" }}
+          className="absolute z-[2000] top-full mt-2 w-full rounded-xl overflow-hidden text-sm min-w-[300px]"
+          style={{ background: "rgba(6,9,18,0.97)", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 16px 48px rgba(0,0,0,0.6)", backdropFilter: "blur(14px)" }}
         >
           {adventureMatches.length > 0 && (
             <>
-              <p className="px-4 pt-3 pb-1.5 text-[9px] font-black uppercase tracking-[0.25em]" style={{ color: "#c0b8ad" }}>Adventures</p>
+              <p className="px-4 pt-3 pb-1.5 text-[9px] font-black uppercase tracking-[0.25em] text-white/25">Adventures</p>
               {adventureMatches.map(a => (
                 <button
                   key={a.id}
                   onMouseDown={() => handleAdvSelect(a)}
                   className="w-full text-left px-4 py-2.5 flex items-center gap-3 transition-colors"
-                  style={{ color: "#1a1814" }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "#faf6ef")}
+                  style={{ color: "rgba(255,255,255,0.8)" }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}
                   onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 relative">
                     <Image src={a.heroImage} alt={a.name} fill className="object-cover" sizes="32px" unoptimized />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-[13px] truncate">{a.name}</p>
-                    <p className="text-[10px] mt-0.5 truncate" style={{ color: "#9a9590" }}>{a.type} · {a.state}</p>
+                    <p className="font-semibold text-[13px] truncate text-white/85">{a.name}</p>
+                    <p className="text-[10px] mt-0.5 truncate text-white/35">{a.type} · {a.state}</p>
                   </div>
                   <div className="w-2 h-2 rounded-full shrink-0" style={{ background: difficultyColor[a.difficulty] }} />
                 </button>
@@ -220,7 +222,7 @@ function UnifiedSearch({
           )}
           {placeResults.length > 0 && (
             <>
-              <p className={`px-4 pb-1.5 text-[9px] font-black uppercase tracking-[0.25em] ${adventureMatches.length > 0 ? "pt-2.5 border-t border-[#f0ece4]" : "pt-3"}`} style={{ color: "#c0b8ad" }}>
+              <p className={`px-4 pb-1.5 text-[9px] font-black uppercase tracking-[0.25em] text-white/25 ${adventureMatches.length > 0 ? "pt-2.5 border-t border-white/6" : "pt-3"}`}>
                 Places
               </p>
               {placeResults.map(r => (
@@ -228,17 +230,17 @@ function UnifiedSearch({
                   key={r.place_id}
                   onMouseDown={() => handlePlaceSelect(r)}
                   className="w-full text-left px-4 py-2.5 flex items-center gap-3 transition-colors"
-                  onMouseEnter={e => (e.currentTarget.style.background = "#faf6ef")}
+                  onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}
                   onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                 >
-                  <MapPin className="w-3.5 h-3.5 shrink-0" style={{ color: "#ff5100" }} />
-                  <span className="line-clamp-1 text-[13px]" style={{ color: "#1a1814" }}>{r.display_name}</span>
+                  <MapPin className="w-3.5 h-3.5 shrink-0 text-[#ff5100]" />
+                  <span className="line-clamp-1 text-[13px] text-white/70">{r.display_name}</span>
                 </button>
               ))}
             </>
           )}
-          <div className="px-4 py-2.5 border-t" style={{ borderColor: "#f0ece4" }}>
-            <p className="text-[9px]" style={{ color: "#c0b8ad" }}>Adventure → fly to pin · Place → navigate to location</p>
+          <div className="px-4 py-2 border-t border-white/6">
+            <p className="text-[9px] text-white/20">Adventure → fly to pin · Place → navigate to location</p>
           </div>
         </div>
       )}
@@ -732,7 +734,7 @@ export default function MapPage() {
     `flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 ${
       active
         ? danger ? "bg-[#ff5100] text-white" : "text-white"
-        : "text-[#4a4540] hover:bg-[#ede8de]"
+        : "text-white/50 hover:text-white/80 hover:bg-white/8"
     }`;
 
   return (
@@ -743,7 +745,7 @@ export default function MapPage() {
       {/* ── Toolbar ────────────────────────────────────────────── */}
       <div
         className="z-[1001] shrink-0"
-        style={{ background: "rgba(255,253,248,0.97)", backdropFilter: "blur(12px)", borderBottom: "1px solid #e8e0d0", boxShadow: "0 1px 0 #e8e0d0" }}
+        style={{ background: "rgba(4,7,14,0.97)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 1px 0 rgba(255,255,255,0.04)" }}
       >
         <div className="max-w-7xl mx-auto px-3 lg:px-5 py-2 flex items-center gap-2">
 
@@ -758,7 +760,7 @@ export default function MapPage() {
             <button
               onClick={() => setViewOpen(v => !v)}
               className={tbBtn(!!activeOverlay)}
-              style={activeOverlay ? { background: "#1e3d2f" } : { background: "#f0ebe0", border: "1px solid #e0d8c8" }}
+              style={activeOverlay ? { background: "rgba(255,81,0,0.2)", border: "1px solid rgba(255,81,0,0.35)", color: "#ff7d47" } : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               <Layers className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">
@@ -769,7 +771,7 @@ export default function MapPage() {
             {viewOpen && (
               <div
                 className="absolute left-0 top-full mt-1.5 z-[2000] rounded-xl overflow-hidden min-w-[130px]"
-                style={{ background: "rgba(255,253,248,0.98)", border: "1px solid #e0d8c8", boxShadow: "0 8px 24px rgba(0,0,0,0.1)" }}
+                style={{ background: "rgba(6,9,18,0.97)", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 8px 32px rgba(0,0,0,0.5)", backdropFilter: "blur(14px)" }}
               >
                 {([
                   { key: "terrain" as OverlayKey, icon: <Layers className="w-3.5 h-3.5" />, label: "Terrain" },
@@ -781,8 +783,8 @@ export default function MapPage() {
                       key={key}
                       onClick={() => { toggleOverlay(key); setViewOpen(false); }}
                       className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-[12px] font-semibold transition-colors text-left"
-                      style={{ color: active ? "#fff" : "#3a3530", background: active ? "#1e3d2f" : "transparent" }}
-                      onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "#f0ebe0"; }}
+                      style={{ color: active ? "#ff7d47" : "rgba(255,255,255,0.6)", background: active ? "rgba(255,81,0,0.12)" : "transparent" }}
+                      onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.05)"; }}
                       onMouseLeave={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
                     >
                       {icon}{label}
@@ -800,7 +802,7 @@ export default function MapPage() {
               onClick={toggleMyShots}
               title="My trip photos"
               className={tbBtn(myShotsOn, myShotsOn)}
-              style={myShotsOn ? { background: "#ff5100" } : { background: "#f0ebe0", border: "1px solid #e0d8c8" }}
+              style={myShotsOn ? { background: "#ff5100" } : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               {myShotsLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
               <span className="hidden sm:inline">My Shots</span>
@@ -816,7 +818,7 @@ export default function MapPage() {
               onClick={handleNearMe}
               title={nearMe ? "Clear Near Me" : "Adventures Near Me"}
               className={tbBtn(nearMe !== null, nearMe !== null)}
-              style={nearMe ? { background: "#ff5100" } : nearMeError ? { background: "#fff0ee", color: "#ef4444", border: "1px solid #fca5a5" } : { background: "#f0ebe0", border: "1px solid #e0d8c8" }}
+              style={nearMe ? { background: "#ff5100" } : nearMeError ? { background: "rgba(239,68,68,0.12)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.3)" } : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
             >
               {nearMeLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LocateFixed className="w-3.5 h-3.5" />}
               <span className="hidden sm:inline">{nearMe ? "Near Me ✓" : "Near Me"}</span>
@@ -830,7 +832,7 @@ export default function MapPage() {
           <button
             onClick={() => setFiltersOpen(!filtersOpen)}
             className={tbBtn(filtersOpen || activeFilterCount > 0)}
-            style={filtersOpen || activeFilterCount > 0 ? { background: "#1e3d2f" } : { background: "#f0ebe0", border: "1px solid #e0d8c8" }}
+            style={filtersOpen || activeFilterCount > 0 ? { background: "rgba(255,81,0,0.2)", border: "1px solid rgba(255,81,0,0.35)", color: "#ff7d47" } : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
             <span>Filters</span>
@@ -843,7 +845,7 @@ export default function MapPage() {
           </button>
 
           {/* Count */}
-          <span className="hidden lg:block text-[11px] font-medium shrink-0" style={{ color: "#a0998f" }}>
+          <span className="hidden lg:block text-[11px] font-medium shrink-0 text-white/30">
             {visibleAdventures.length}<span className="opacity-50"> / {adventures.length}</span>
           </span>
 
@@ -1150,32 +1152,32 @@ export default function MapPage() {
           </div>
         )}
 
-        {/* Difficulty legend — glass card */}
+        {/* Difficulty legend */}
         <div
-          className="absolute bottom-5 left-4 z-[1000] rounded-2xl px-3.5 py-3"
+          className="absolute bottom-5 left-4 z-[1000] rounded-xl px-3 py-2.5"
           style={{
-            background: "rgba(255,253,248,0.88)",
-            backdropFilter: "blur(10px)",
-            border: "1px solid rgba(232,224,208,0.8)",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
+            background: "rgba(4,7,14,0.88)",
+            backdropFilter: "blur(12px)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
           }}
         >
-          <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2" style={{ color: "#b0a898" }}>Difficulty</p>
+          <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2 text-white/25">Difficulty</p>
           <div className="flex flex-col gap-1">
             {Object.entries(difficultyColor).map(([label, color]) => (
               <div key={label} className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full shrink-0" style={{ background: color }} />
-                <span className="text-[11px] font-medium" style={{ color: "#3a3530" }}>{label}</span>
+                <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
+                <span className="text-[11px] font-medium text-white/60">{label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Visible count pill — floats above map when filtered */}
+        {/* Visible count pill */}
         {(activeFilterCount > 0 || search) && (
           <div
-            className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] text-white text-[11px] font-semibold px-4 py-1.5 rounded-full shadow-lg"
-            style={{ background: "#1e3d2f", boxShadow: "0 4px 14px rgba(30,61,47,0.4)" }}
+            className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] text-white text-[11px] font-bold px-4 py-1.5 rounded-full"
+            style={{ background: "rgba(255,81,0,0.9)", boxShadow: "0 2px 16px rgba(255,81,0,0.4)", backdropFilter: "blur(8px)" }}
           >
             {visibleAdventures.length} adventure{visibleAdventures.length !== 1 ? "s" : ""} shown
           </div>
@@ -1183,14 +1185,14 @@ export default function MapPage() {
 
         {/* Branding chip */}
         <div
-          className="absolute bottom-5 right-4 z-[1000] rounded-xl px-2.5 py-1.5"
+          className="absolute bottom-5 right-4 z-[1000] rounded-lg px-2.5 py-1.5"
           style={{
-            background: "rgba(255,253,248,0.82)",
+            background: "rgba(4,7,14,0.75)",
             backdropFilter: "blur(8px)",
-            border: "1px solid rgba(232,224,208,0.7)",
+            border: "1px solid rgba(255,255,255,0.07)",
           }}
         >
-          <div className="flex items-center gap-1.5 text-[9px] font-bold tracking-widest uppercase" style={{ color: "#9a9590" }}>
+          <div className="flex items-center gap-1.5 text-[9px] font-bold tracking-widest uppercase text-white/25">
             <MapIcon className="w-2.5 h-2.5" />
             Trail to Tides
           </div>
