@@ -345,7 +345,7 @@ function MapView({
           <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.78) 0%,rgba(0,0,0,0.08) 55%,transparent 100%);" />
           <div style="position:absolute;top:10px;left:10px;display:flex;gap:5px;">
             <span style="background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:rgba(255,255,255,0.9);font-size:9.5px;font-weight:700;padding:2.5px 8px;border-radius:20px;letter-spacing:0.04em;text-transform:uppercase;">${adv.type}</span>
-            <span style="background:${diffColor}22;color:${diffColor};font-size:9.5px;font-weight:700;padding:2.5px 8px;border-radius:20px;border:1px solid ${diffColor}55;letter-spacing:0.04em;">${adv.difficulty}</span>
+            <span style="background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:${diffColor};font-size:9.5px;font-weight:700;padding:2.5px 8px;border-radius:20px;border:1px solid ${diffColor}80;letter-spacing:0.04em;">${adv.difficulty}</span>
           </div>
           <div style="position:absolute;bottom:10px;left:12px;right:12px;">
             <div style="font-size:14.5px;font-weight:700;color:#fff;line-height:1.2;letter-spacing:-0.01em;">${adv.name}</div>
