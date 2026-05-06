@@ -250,30 +250,25 @@ function UnifiedSearch({
 
 // ── Map View ──────────────────────────────────────────────────────────────────
 
-const BASE_TILE = {
-  url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-  maxZoom: 19,
-};
-
-const OVERLAY_LAYERS = {
-  terrain: {
-    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
-    attribution: "Topo &copy; Esri, DeLorme, NAVTEQ, TomTom, USGS, NGA, EPA",
+const BASE_LAYERS = {
+  default: {
+    url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
     maxZoom: 19,
-    opacityAlone: 1,
-    opacityWithSat: 0.6,
   },
   satellite: {
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics",
     maxZoom: 19,
-    opacityAlone: 1,
-    opacityWithSat: 1,
+  },
+  terrain: {
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Topo &copy; Esri, DeLorme, NAVTEQ, TomTom, USGS, NGA, EPA",
+    maxZoom: 19,
   },
 } as const;
 
-type OverlayKey = keyof typeof OVERLAY_LAYERS;
+type OverlayKey = keyof typeof BASE_LAYERS;
 
 interface UserPhoto {
   id: string;
@@ -303,7 +298,7 @@ function MapView({
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const markerMapRef = useRef<Map<string, L.Marker>>(new Map());
-  const overlayLayerRefs = useRef<Partial<Record<OverlayKey, L.TileLayer>>>({});
+  const baseTileRef = useRef<L.TileLayer | null>(null);
   const photoLayerRef = useRef<L.LayerGroup | null>(null);
 
   useEffect(() => {
@@ -474,7 +469,8 @@ function MapView({
         scrollWheelZoom: true,
       });
 
-      leaflet.tileLayer(BASE_TILE.url, { maxZoom: BASE_TILE.maxZoom, attribution: BASE_TILE.attribution }).addTo(map);
+      const bl = BASE_LAYERS.default;
+      baseTileRef.current = leaflet.tileLayer(bl.url, { maxZoom: bl.maxZoom, attribution: bl.attribution }).addTo(map);
       leaflet.control.zoom({ position: "bottomright" }).addTo(map);
 
       mapInstanceRef.current = map;
@@ -527,30 +523,15 @@ function MapView({
     if (!mapInstanceRef.current) return;
     loadLeaflet().then(leaflet => {
       const map = mapInstanceRef.current;
-      if (!map) return;
-
-      (Object.keys(OVERLAY_LAYERS) as OverlayKey[]).forEach(key => {
-        const cfg = OVERLAY_LAYERS[key];
-        const wantOn = overlays.has(key);
-
-        if (wantOn) {
-          if (!overlayLayerRefs.current[key]) {
-            overlayLayerRefs.current[key] = leaflet.tileLayer(cfg.url, {
-              maxZoom: cfg.maxZoom,
-              attribution: cfg.attribution,
-              opacity: cfg.opacityAlone,
-              keepBuffer: 4,
-            });
-          }
-          if (!map.hasLayer(overlayLayerRefs.current[key]!)) {
-            overlayLayerRefs.current[key]!.addTo(map);
-          }
-        } else {
-          if (overlayLayerRefs.current[key] && map.hasLayer(overlayLayerRefs.current[key]!)) {
-            map.removeLayer(overlayLayerRefs.current[key]!);
-          }
-        }
-      });
+      if (!map || !baseTileRef.current) return;
+      // pick the active base layer key — default if nothing selected
+      const activeKey = ([...overlays][0] as OverlayKey | undefined) ?? "default";
+      const cfg = BASE_LAYERS[activeKey];
+      map.removeLayer(baseTileRef.current);
+      baseTileRef.current = leaflet.tileLayer(cfg.url, { maxZoom: cfg.maxZoom, attribution: cfg.attribution });
+      baseTileRef.current.addTo(map);
+      // ensure markers stay on top
+      markersLayerRef.current?.bringToFront?.();
     });
   }, [overlays]);
 
@@ -764,7 +745,7 @@ export default function MapPage() {
             >
               <Layers className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">
-                {activeOverlay === "terrain" ? "Terrain" : activeOverlay === "satellite" ? "Satellite" : "View"}
+                {activeOverlay === "terrain" ? "Terrain" : activeOverlay === "satellite" ? "Satellite" : "Default"}
               </span>
               <ChevronDown className={`w-3 h-3 transition-transform ${viewOpen ? "rotate-180" : ""}`} />
             </button>
@@ -774,14 +755,15 @@ export default function MapPage() {
                 style={{ background: "rgba(6,9,18,0.97)", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 8px 32px rgba(0,0,0,0.5)", backdropFilter: "blur(14px)" }}
               >
                 {([
-                  { key: "terrain" as OverlayKey, icon: <Layers className="w-3.5 h-3.5" />, label: "Terrain" },
-                  { key: "satellite" as OverlayKey, icon: <MapIcon className="w-3.5 h-3.5" />, label: "Satellite" },
+                  { key: "default"   as OverlayKey, icon: <MapIcon className="w-3.5 h-3.5" />,  label: "Default"   },
+                  { key: "satellite" as OverlayKey, icon: <Layers className="w-3.5 h-3.5" />,   label: "Satellite" },
+                  { key: "terrain"   as OverlayKey, icon: <Navigation className="w-3.5 h-3.5" />, label: "Terrain"   },
                 ] as { key: OverlayKey; icon: React.ReactNode; label: string }[]).map(({ key, icon, label }) => {
-                  const active = activeOverlay === key;
+                  const active = (activeOverlay ?? "default") === key;
                   return (
                     <button
                       key={key}
-                      onClick={() => { toggleOverlay(key); setViewOpen(false); }}
+                      onClick={() => { setActiveOverlay(key === "default" ? null : key); setViewOpen(false); }}
                       className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-[12px] font-semibold transition-colors text-left"
                       style={{ color: active ? "#ff7d47" : "rgba(255,255,255,0.6)", background: active ? "rgba(255,81,0,0.12)" : "transparent" }}
                       onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.05)"; }}
