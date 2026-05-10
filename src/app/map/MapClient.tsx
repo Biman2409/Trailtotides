@@ -256,16 +256,19 @@ const BASE_LAYERS = {
     url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
     maxZoom: 19,
+    labelsUrl: null,
   },
   satellite: {
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics",
     maxZoom: 19,
+    labelsUrl: "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
   },
   terrain: {
-    url: "https://tile.tracestrack.com/topo__/{z}/{x}/{y}.png",
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://www.tracestrack.com">Tracestrack Topo</a>',
-    maxZoom: 19,
+    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
+    maxZoom: 17,
+    labelsUrl: null,
   },
 } as const;
 
@@ -300,6 +303,7 @@ function MapView({
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const markerMapRef = useRef<Map<string, L.Marker>>(new Map());
   const baseTileRef = useRef<L.TileLayer | null>(null);
+  const labelsTileRef = useRef<L.TileLayer | null>(null);
   const photoLayerRef = useRef<L.LayerGroup | null>(null);
 
   useEffect(() => {
@@ -525,13 +529,19 @@ function MapView({
     loadLeaflet().then(leaflet => {
       const map = mapInstanceRef.current;
       if (!map || !baseTileRef.current) return;
-      // pick the active base layer key — default if nothing selected
       const activeKey = ([...overlays][0] as OverlayKey | undefined) ?? "default";
       const cfg = BASE_LAYERS[activeKey];
+      // swap base tile
       map.removeLayer(baseTileRef.current);
       baseTileRef.current = leaflet.tileLayer(cfg.url, { maxZoom: cfg.maxZoom, attribution: cfg.attribution });
       baseTileRef.current.addTo(map);
-      // ensure markers stay on top
+      // remove old labels layer
+      if (labelsTileRef.current) { map.removeLayer(labelsTileRef.current); labelsTileRef.current = null; }
+      // add labels overlay for satellite
+      if (cfg.labelsUrl) {
+        labelsTileRef.current = leaflet.tileLayer(cfg.labelsUrl, { maxZoom: cfg.maxZoom, attribution: "", opacity: 1 });
+        labelsTileRef.current.addTo(map);
+      }
       markersLayerRef.current?.bringToFront?.();
     });
   }, [overlays]);
