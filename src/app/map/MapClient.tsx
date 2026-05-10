@@ -557,31 +557,31 @@ function MapView({
       userPhotos.forEach(photo => {
         const icon = leaflet.divIcon({
           className: "",
-          html: `<div style="position:relative;width:44px;height:44px;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.4));">
-            <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;border:2.5px solid #ff5100;background:#111;">
+          html: `<div style="position:relative;width:46px;height:46px;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5));">
+            <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;border:3px solid #ff5100;background:#09101f;box-shadow:0 0 0 1.5px rgba(255,81,0,0.3);">
               <img src="${photo.url}" style="width:100%;height:100%;object-fit:cover;" />
             </div>
-            <div style="position:absolute;bottom:-2px;right:-2px;width:16px;height:16px;background:#ff5100;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;">
-              <svg width="8" height="8" viewBox="0 0 24 24" fill="white"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.92c.04-.26.07-.54.07-.83s-.03-.57-.07-.83l1.8-1.4c.16-.13.2-.35.1-.53l-1.72-2.97a.397.397 0 0 0-.49-.15l-2.12.85c-.44-.34-.9-.63-1.41-.84l-.32-2.26a.4.4 0 0 0-.4-.34H8.12a.4.4 0 0 0-.4.34l-.32 2.26c-.51.21-.97.5-1.41.84L3.87 7.12a.39.39 0 0 0-.49.15L1.66 10.24c-.1.18-.06.4.1.53l1.8 1.4c-.04.26-.07.53-.07.83s.03.57.07.83l-1.8 1.4c-.16.13-.2.35-.1.53l1.71 2.97c.1.18.3.24.49.15l2.12-.85c.44.34.9.63 1.41.84l.32 2.26c.06.2.24.34.4.34h3.44c.17 0 .34-.14.4-.34l.32-2.26c.51-.21.97-.5 1.41-.84l2.12.85c.19.07.39.01.49-.15l1.71-2.97c.1-.18.06-.4-.1-.53l-1.8-1.4z"/></svg>
+            <div style="position:absolute;bottom:-1px;right:-1px;width:16px;height:16px;background:linear-gradient(135deg,#ff5100,#ff7d47);border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;">
+              <svg width="7" height="7" viewBox="0 0 24 24" fill="white"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.92c.04-.26.07-.54.07-.83s-.03-.57-.07-.83l1.8-1.4c.16-.13.2-.35.1-.53l-1.72-2.97a.397.397 0 0 0-.49-.15l-2.12.85c-.44-.34-.9-.63-1.41-.84l-.32-2.26a.4.4 0 0 0-.4-.34H8.12a.4.4 0 0 0-.4.34l-.32 2.26c-.51.21-.97.5-1.41.84L3.87 7.12a.39.39 0 0 0-.49.15L1.66 10.24c-.1.18-.06.4.1.53l1.8 1.4c-.04.26-.07.53-.07.83s.03.57.07.83l-1.8 1.4c-.16.13-.2.35-.1.53l1.71 2.97c.1.18.3.24.49.15l2.12-.85c.44.34.9.63 1.41.84l.32 2.26c.06.2.24.34.4.34h3.44c.17 0 .34-.14.4-.34l.32-2.26c.51-.21.97-.5 1.41-.84l2.12.85c.19.07.39.01.49-.15l1.71-2.97c.1-.18.06-.4-.1-.53l-1.8-1.4z"/></svg>
             </div>
           </div>`,
-          iconSize: [44, 44],
-          iconAnchor: [22, 22],
-          popupAnchor: [0, -26],
+          iconSize: [46, 46],
+          iconAnchor: [23, 23],
+          popupAnchor: [0, -28],
         });
 
         const popupHtml = `
-          <div style="width:220px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:14px;overflow:hidden;">
-            <div style="position:relative;height:140px;">
+          <div style="width:220px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:14px;overflow:hidden;background:#09101f;">
+            <div style="position:relative;height:144px;">
               <img src="${photo.url}" alt="${photo.caption || photo.adventureName}" style="width:100%;height:100%;object-fit:cover;display:block;" />
-              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,transparent 60%);" />
-              <div style="position:absolute;bottom:8px;left:10px;right:10px;">
-                <div style="font-size:12px;font-weight:700;color:#fff;line-height:1.2;">${photo.adventureName}</div>
-                ${photo.caption ? `<div style="font-size:10px;color:rgba(255,255,255,0.65);margin-top:2px;">${photo.caption}</div>` : ""}
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(9,16,31,0.92) 0%,transparent 55%);" />
+              <div style="position:absolute;bottom:9px;left:11px;right:11px;">
+                <div style="font-size:12.5px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-0.01em;">${photo.adventureName}</div>
+                ${photo.caption ? `<div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:2px;">${photo.caption}</div>` : ""}
               </div>
             </div>
-            <div style="padding:10px 12px;background:#fff;">
-              <button onclick="window.location.href='/experiences/${photo.slug}'" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:#ff5100;color:white;padding:8px;border-radius:8px;font-size:11px;font-weight:600;border:none;cursor:pointer;">
+            <div style="padding:10px 11px 11px;background:#09101f;">
+              <button onclick="window.location.href='/experiences/${photo.slug}'" style="display:flex;align-items:center;justify-content:center;gap:5px;width:100%;background:linear-gradient(135deg,#ff5100,#ff7d47);color:white;padding:8px;border-radius:8px;font-size:11px;font-weight:700;border:none;cursor:pointer;box-shadow:0 2px 10px rgba(255,81,0,0.3);">
                 See Full Details →
               </button>
             </div>
