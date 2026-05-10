@@ -324,56 +324,53 @@ function MapView({
     const diffColor = difficultyColor[adv.difficulty] ?? "#6366f1";
     const svgIcon = typeIconSvg(adv.type, 11, "white");
 
-    // Crisp circular pin with a subtle drop shadow
     const icon = leaflet.divIcon({
       className: "",
-      html: `<div style="position:relative;width:30px;height:36px;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.32));">
-        <div style="width:30px;height:30px;border-radius:50% 50% 50% 0;background:${diffColor};transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,0.92);">
+      html: `<div style="position:relative;width:32px;height:40px;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.45));">
+        <div style="width:32px;height:32px;border-radius:50% 50% 50% 0;background:${diffColor};transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2.5px solid #fff;box-shadow:inset 0 1px 0 rgba(255,255,255,0.3);">
           <div style="transform:rotate(45deg);display:flex;align-items:center;justify-content:center;">${svgIcon}</div>
         </div>
       </div>`,
-      iconSize: [30, 36],
-      iconAnchor: [15, 36],
-      popupAnchor: [0, -40],
+      iconSize: [32, 40],
+      iconAnchor: [16, 40],
+      popupAnchor: [0, -44],
     });
 
     const priceFrom = adv.operators?.find(o => o.priceFrom)?.priceFrom;
 
-    // Crisp popup card — clean white, tight grid layout
     const popupHtml = `
-      <div style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;">
-        <div style="position:relative;height:148px;">
+      <div style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:#09101f;">
+        <div style="position:relative;height:152px;">
           <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />
-          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.78) 0%,rgba(0,0,0,0.08) 55%,transparent 100%);" />
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(9,16,31,0.95) 0%,rgba(9,16,31,0.2) 55%,transparent 100%);" />
           <div style="position:absolute;top:10px;left:10px;display:flex;gap:5px;">
-            <span style="background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:rgba(255,255,255,0.9);font-size:9.5px;font-weight:700;padding:2.5px 8px;border-radius:20px;letter-spacing:0.04em;text-transform:uppercase;">${adv.type}</span>
-            <span style="background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:${diffColor};font-size:9.5px;font-weight:700;padding:2.5px 8px;border-radius:20px;border:1px solid ${diffColor}80;letter-spacing:0.04em;">${adv.difficulty}</span>
+            <span style="background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:rgba(255,255,255,0.85);font-size:9px;font-weight:800;padding:3px 8px;border-radius:20px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,0.1);">${adv.type}</span>
+            <span style="background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:${diffColor};font-size:9px;font-weight:800;padding:3px 8px;border-radius:20px;border:1px solid ${diffColor}60;letter-spacing:0.06em;">${adv.difficulty}</span>
           </div>
+          ${priceFrom ? `<div style="position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#10b981,#059669);color:white;font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:0.03em;">${priceFrom}</div>` : ""}
           <div style="position:absolute;bottom:10px;left:12px;right:12px;">
-            <div style="font-size:14.5px;font-weight:700;color:#fff;line-height:1.2;letter-spacing:-0.01em;">${adv.name}</div>
-            <div style="font-size:10.5px;color:rgba(255,255,255,0.6);margin-top:3px;">${adv.state}</div>
+            <div style="font-size:15px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-0.02em;">${adv.name}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:3px;font-weight:500;">${adv.state}</div>
           </div>
-          ${priceFrom ? `<div style="position:absolute;top:10px;right:10px;background:#10b981;color:white;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;">${priceFrom}</div>` : ""}
         </div>
-        <div style="padding:12px 14px 14px;background:#fff;">
-          <div style="display:flex;gap:12px;margin-bottom:10px;">
-            <div style="text-align:center;flex:1;padding:6px 4px;border-radius:10px;background:#f8f5f0;">
-              <div style="font-size:10px;font-weight:700;color:#1a1814;line-height:1;">${adv.durationDays}</div>
-              <div style="font-size:9px;color:#9a9590;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em;">Duration</div>
+        <div style="padding:12px 13px 13px;background:#09101f;">
+          <div style="display:flex;gap:8px;margin-bottom:10px;">
+            <div style="text-align:center;flex:1;padding:7px 4px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);">
+              <div style="font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.85);line-height:1;">${adv.durationDays}</div>
+              <div style="font-size:8.5px;color:rgba(255,255,255,0.3);margin-top:2.5px;text-transform:uppercase;letter-spacing:0.07em;">Days</div>
             </div>
-            <div style="text-align:center;flex:1;padding:6px 4px;border-radius:10px;background:#f8f5f0;">
-              <div style="font-size:10px;font-weight:700;color:#1a1814;line-height:1;">${adv.difficulty}</div>
-              <div style="font-size:9px;color:#9a9590;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em;">Difficulty</div>
+            <div style="text-align:center;flex:1;padding:7px 4px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);">
+              <div style="font-size:10.5px;font-weight:700;color:${diffColor};line-height:1;">${adv.difficulty}</div>
+              <div style="font-size:8.5px;color:rgba(255,255,255,0.3);margin-top:2.5px;text-transform:uppercase;letter-spacing:0.07em;">Level</div>
             </div>
-            <div style="text-align:center;flex:1;padding:6px 4px;border-radius:10px;background:#f8f5f0;">
-              <div style="font-size:10px;font-weight:700;color:#1a1814;line-height:1;">${adv.bestSeason}</div>
-              <div style="font-size:9px;color:#9a9590;margin-top:2px;text-transform:uppercase;letter-spacing:0.05em;">Best Season</div>
+            <div style="text-align:center;flex:1;padding:7px 4px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);">
+              <div style="font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.85);line-height:1;">${adv.bestSeason}</div>
+              <div style="font-size:8.5px;color:rgba(255,255,255,0.3);margin-top:2.5px;text-transform:uppercase;letter-spacing:0.07em;">Season</div>
             </div>
           </div>
-          <p style="font-size:11px;color:#6b6560;line-height:1.5;margin:0 0 11px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${adv.tagline}</p>
-          <button onclick="window.location.href='/experiences/${adv.slug}'" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:#ff5100;color:white;padding:9px 14px;border-radius:10px;font-size:12px;font-weight:600;border:none;cursor:pointer;letter-spacing:0.01em;">
-            See Full Details
-            <span style="font-size:15px;line-height:1;margin-top:-1px;">→</span>
+          <p style="font-size:11px;color:rgba(255,255,255,0.38);line-height:1.5;margin:0 0 10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${adv.tagline}</p>
+          <button onclick="window.location.href='/experiences/${adv.slug}'" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:linear-gradient(135deg,#ff5100,#ff7d47);color:white;padding:9px 14px;border-radius:10px;font-size:12px;font-weight:700;border:none;cursor:pointer;letter-spacing:0.02em;box-shadow:0 3px 12px rgba(255,81,0,0.35);">
+            See Full Details →
           </button>
         </div>
       </div>
@@ -399,7 +396,7 @@ function MapView({
       .then(r => r.json())
       .then(data => {
         leaflet.geoJSON(data, {
-          style: { color: "#ff5100", weight: 1.5, opacity: 0.22, fillColor: "#ff5100", fillOpacity: 0.02 },
+          style: { color: "#ff5100", weight: 1.8, opacity: 0.3, fillColor: "#ff5100", fillOpacity: 0.03 },
           interactive: false,
         }).addTo(map);
       })
@@ -416,38 +413,44 @@ function MapView({
         padding: 0;
         border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08);
-        border: 1px solid rgba(0,0,0,0.06);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.55), 0 4px 16px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.08);
+        background: #09101f;
       }
       .ttt-popup .leaflet-popup-content { margin: 0; line-height: 1; }
       .ttt-popup .leaflet-popup-tip-container { display: none; }
       .ttt-popup .leaflet-popup-close-button {
         top: 8px !important; right: 8px !important;
         width: 22px !important; height: 22px !important;
-        font-size: 16px !important; line-height: 22px !important;
-        background: rgba(0,0,0,0.45) !important;
+        font-size: 15px !important; line-height: 22px !important;
+        background: rgba(0,0,0,0.55) !important;
+        backdrop-filter: blur(4px) !important;
         border-radius: 50% !important;
-        color: rgba(255,255,255,0.85) !important;
+        color: rgba(255,255,255,0.75) !important;
         display: flex !important; align-items: center !important; justify-content: center !important;
+        border: 1px solid rgba(255,255,255,0.12) !important;
       }
+      .ttt-popup .leaflet-popup-close-button:hover { background: rgba(255,81,0,0.6) !important; color: #fff !important; }
       .leaflet-control-zoom {
         border: none !important;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.12) !important;
-        border-radius: 10px !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+        border-radius: 12px !important;
         overflow: hidden;
       }
       .leaflet-control-zoom a {
-        background: rgba(255,255,255,0.92) !important;
-        backdrop-filter: blur(8px) !important;
-        color: #1a1814 !important;
+        background: rgba(4,7,14,0.88) !important;
+        backdrop-filter: blur(12px) !important;
+        color: rgba(255,255,255,0.7) !important;
         border: none !important;
         font-size: 16px !important;
-        line-height: 28px !important;
-        width: 28px !important;
-        height: 28px !important;
+        line-height: 30px !important;
+        width: 30px !important;
+        height: 30px !important;
+        transition: background 0.15s, color 0.15s;
       }
-      .leaflet-control-zoom a:hover { background: white !important; }
-      .leaflet-control-zoom-in { border-bottom: 1px solid #e8e0d0 !important; }
+      .leaflet-control-zoom a:hover { background: rgba(255,81,0,0.25) !important; color: #ff7d47 !important; }
+      .leaflet-control-zoom-in { border-bottom: 1px solid rgba(255,255,255,0.07) !important; }
+      .leaflet-control-attribution { display: none !important; }
     `;
     document.head.appendChild(s);
   }, []);
@@ -489,7 +492,7 @@ function MapView({
           const count = cluster.getChildCount();
           const size = count >= 100 ? 44 : count >= 20 ? 40 : 36;
           return leaflet.divIcon({
-            html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:#ff5100;color:#fff;font-size:${count >= 100 ? 11 : 12}px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2.5px solid #fff;box-shadow:0 3px 14px rgba(255,81,0,0.4);">${count}</div>`,
+            html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:linear-gradient(135deg,#ff5100,#ff7d47);color:#fff;font-size:${count >= 100 ? 11 : 12}px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2.5px solid rgba(255,255,255,0.9);box-shadow:0 4px 16px rgba(255,81,0,0.5),0 1px 4px rgba(0,0,0,0.3);">${count}</div>`,
             className: "",
             iconSize: [size, size],
             iconAnchor: [size / 2, size / 2],
