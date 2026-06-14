@@ -118,57 +118,56 @@ export default async function OperatorsPage() {
       <Navbar />
 
       {/* ── Header ─────────────────────────────────────────────── */}
-      <section className="pt-28 lg:pt-36 pb-10 px-5 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-          <div>
-            <p className="text-[#ff5100] text-xs font-bold tracking-[0.25em] uppercase mb-4">Operators Directory</p>
-            <h1 className="text-white text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.02]">
+      <section className="pt-24 sm:pt-28 lg:pt-36 pb-8 sm:pb-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-5 sm:gap-6">
+          <div className="min-w-0">
+            <p className="text-[#ff5100] text-[10px] sm:text-xs font-bold tracking-[0.28em] uppercase mb-3 sm:mb-4">
+              Operators Directory
+            </p>
+            <h1 className="text-white text-[2rem] sm:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight leading-[1.04]">
               Guided by the Best
             </h1>
-            <p className="text-white/45 text-base mt-4 max-w-lg leading-relaxed font-light">
+            <p className="text-white/40 text-sm sm:text-base mt-3 sm:mt-4 max-w-lg leading-relaxed font-light">
               Vetted companies running adventures across India&apos;s wildest terrain — from Ladakh passes to Andaman reefs.
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {isOperator ? (
-              // Logged in as operator — show their dashboard link
               <Link
                 href="/auth/operator-dashboard"
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90"
                 style={{ background: "#ff5100", color: "white" }}
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 My Profile
               </Link>
             ) : isLoggedIn ? (
-              // Logged in as explorer — offer operator signup
               <Link
                 href="/auth/operator-signup"
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90"
                 style={{ background: "#ff5100", color: "white" }}
               >
                 List your company
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             ) : (
-              // Not logged in — show both login + signup
-              <>
+              <div className="flex items-center gap-2">
                 <Link
                   href="/auth/login?role=operator"
-                  className="px-4 py-2.5 rounded-xl text-sm font-medium transition-colors"
-                  style={{ color: "rgba(255,255,255,0.45)", border: "1px solid rgba(255,255,255,0.1)" }}
+                  className="px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-colors hover:bg-white/[0.05]"
+                  style={{ color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.1)" }}
                 >
                   Log in
                 </Link>
                 <Link
                   href="/auth/operator-signup"
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                  className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all hover:opacity-90"
                   style={{ background: "#ff5100", color: "white" }}
                 >
                   List your company
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 </Link>
-              </>
+              </div>
             )}
           </div>
         </div>
