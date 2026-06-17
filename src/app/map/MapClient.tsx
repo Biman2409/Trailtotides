@@ -566,11 +566,45 @@ function MapView({
         });
         trailsTileRef.current.addTo(map);
         markersLayerRef.current?.bringToFront?.();
+
+        // Click handler to show trail info
+        function onMapClick(e: L.LeafletMouseEvent) {
+          const { lat, lng } = e.latlng;
+          fetch(`https://waymarkedtrails.org/api/v1/details/hiking/?lat=${lat.toFixed(5)}&lon=${lng.toFixed(5)}`)
+            .then(r => r.json())
+            .then((data: { type: string; features: { properties: Record<string, unknown> }[] }) => {
+              if (!data.features?.length) return;
+              const f = data.features[0].properties;
+              const name = (f.name as string) || (f.ref as string) || "Unnamed trail";
+              const dist = f.distance ? `${Number(f.distance).toFixed(1)} km` : "";
+              const ascent = f.ascent ? `${f.ascent} m ↑` : "";
+              const symb = (f.osmc_symbol as string) || (f.symbol as string) || "";
+              const state = (f.state as string) || (f.completeness as string) || "";
+              L.popup({ className: "ttt-popup", maxWidth: 260 })
+                .setLatLng(e.latlng)
+                .setContent(`
+                  <div style="padding:14px 15px;background:#09101f;min-width:220px;">
+                    <p style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);margin:0 0 6px;line-height:1.3;">${name}</p>
+                    ${symb && symb !== "unknown" ? `<p style="font-size:10px;color:rgba(255,255,255,0.3);margin:0 0 6px;">${symb}</p>` : ""}
+                    ${dist || ascent ? `<div style="display:flex;gap:8px;margin-bottom:6px;">${dist ? `<span style="font-size:10px;color:#22c55e;font-weight:600;">${dist}</span>` : ""}${ascent ? `<span style="font-size:10px;color:#38bdf8;font-weight:600;">${ascent}</span>` : ""}</div>` : ""}
+                    <p style="font-size:9px;color:rgba(255,255,255,0.2);margin:0;">${state || "Hiking route · Click for more"}</p>
+                    <a href="https://waymarkedtrails.org/hiking/route/${f.id || ""}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:10px;color:#ff5100;text-decoration:none;font-weight:600;">View on Waymarked Trails →</a>
+                  </div>
+                `)
+                .openOn(map);
+            })
+            .catch(() => {});
+        }
+        map.on("click", onMapClick);
+        // Store for cleanup
+        (map as unknown as Record<string, unknown>)._trailClickHandler = onMapClick;
       } else {
         if (trailsTileRef.current && map.hasLayer(trailsTileRef.current)) {
           map.removeLayer(trailsTileRef.current);
           trailsTileRef.current = null;
         }
+        const handler = (map as unknown as Record<string, unknown>)._trailClickHandler as ((e: L.LeafletMouseEvent) => void) | undefined;
+        if (handler) map.off("click", handler);
       }
     });
   }, [trailsOn]);
