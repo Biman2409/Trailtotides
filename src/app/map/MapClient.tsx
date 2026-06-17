@@ -786,7 +786,7 @@ export default function MapPage() {
             >
               <Layers className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">
-                {activeOverlay === "terrain" ? "Terrain" : activeOverlay === "satellite" ? "Satellite" : "Default"}
+                {activeOverlay === "terrain" ? "Terrain" : activeOverlay === "satellite" ? "Satellite" : "Layers"}
               </span>
               <ChevronDown className={`w-3 h-3 transition-transform ${viewOpen ? "rotate-180" : ""}`} />
             </button>
