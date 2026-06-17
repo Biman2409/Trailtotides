@@ -557,54 +557,80 @@ function MapView({
     loadLeaflet().then(leaflet => {
       const map = mapInstanceRef.current;
       if (!map) return;
-      if (trailsOn) {
-        if (trailsTileRef.current && map.hasLayer(trailsTileRef.current)) return;
-        trailsTileRef.current = leaflet.tileLayer("https://tile.waymarkedtrails.org/hiking/{z}/{x}/{y}.png", {
-          maxZoom: 18,
-          attribution: '&copy; <a href="https://www.waymarkedtrails.org">waymarkedtrails.org</a>',
-          opacity: 0.75,
-        });
-        trailsTileRef.current.addTo(map);
-        markersLayerRef.current?.bringToFront?.();
 
-        // Click handler to show trail info
-        function onMapClick(e: L.LeafletMouseEvent) {
-          const { lat, lng } = e.latlng;
-          fetch(`https://waymarkedtrails.org/api/v1/details/hiking/?lat=${lat.toFixed(5)}&lon=${lng.toFixed(5)}`)
-            .then(r => r.json())
-            .then((data: { type: string; features: { properties: Record<string, unknown> }[] }) => {
-              if (!data.features?.length) return;
-              const f = data.features[0].properties;
-              const name = (f.name as string) || (f.ref as string) || "Unnamed trail";
-              const dist = f.distance ? `${Number(f.distance).toFixed(1)} km` : "";
-              const ascent = f.ascent ? `${f.ascent} m ↑` : "";
-              const symb = (f.osmc_symbol as string) || (f.symbol as string) || "";
-              const state = (f.state as string) || (f.completeness as string) || "";
-              L.popup({ className: "ttt-popup", maxWidth: 260 })
-                .setLatLng(e.latlng)
-                .setContent(`
-                  <div style="padding:14px 15px;background:#09101f;min-width:220px;">
-                    <p style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);margin:0 0 6px;line-height:1.3;">${name}</p>
-                    ${symb && symb !== "unknown" ? `<p style="font-size:10px;color:rgba(255,255,255,0.3);margin:0 0 6px;">${symb}</p>` : ""}
-                    ${dist || ascent ? `<div style="display:flex;gap:8px;margin-bottom:6px;">${dist ? `<span style="font-size:10px;color:#22c55e;font-weight:600;">${dist}</span>` : ""}${ascent ? `<span style="font-size:10px;color:#38bdf8;font-weight:600;">${ascent}</span>` : ""}</div>` : ""}
-                    <p style="font-size:9px;color:rgba(255,255,255,0.2);margin:0;">${state || "Hiking route · Click for more"}</p>
-                    <a href="https://waymarkedtrails.org/hiking/route/${f.id || ""}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:10px;color:#ff5100;text-decoration:none;font-weight:600;">View on Waymarked Trails →</a>
-                  </div>
-                `)
-                .openOn(map);
-            })
-            .catch(() => {});
+      if (trailsOn) {
+        // Tile background showing global trails
+        if (!trailsTileRef.current || !map.hasLayer(trailsTileRef.current)) {
+          trailsTileRef.current = leaflet.tileLayer("https://tile.waymarkedtrails.org/hiking/{z}/{x}/{y}.png", {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://www.waymarkedtrails.org">waymarkedtrails.org</a>',
+            opacity: 0.65,
+          });
+          trailsTileRef.current.addTo(map);
         }
-        map.on("click", onMapClick);
-        // Store for cleanup
-        (map as unknown as Record<string, unknown>)._trailClickHandler = onMapClick;
+
+        // India-subcontinent bounding box
+        const INDIA_BBOX = "6.5,68.0,37.0,97.5";
+
+        // Fetch Indian hiking trails as GeoJSON from Overpass API
+        const query = `[out:json][timeout:30];way["route"="hiking"](${INDIA_BBOX});out geom;`;
+        fetch("https://overpass-api.de/api/interpreter", {
+          method: "POST",
+          body: "data=" + encodeURIComponent(query),
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        })
+          .then(r => r.json())
+          .then((overpassData: { elements: { id: number; tags?: Record<string, string>; geometry?: { lat: number; lon: number }[] }[] }) => {
+            if (!mapInstanceRef.current) return;
+            const elements = overpassData.elements?.filter(e => e.geometry?.length) ?? [];
+            if (!elements.length) return;
+
+            const trailGroup = leaflet.layerGroup().addTo(map);
+            (map as unknown as Record<string, unknown>)._trailGroup = trailGroup;
+
+            elements.forEach(el => {
+              const coords = el.geometry!.map(g => [g.lat, g.lon] as [number, number]);
+              if (coords.length < 2) return;
+              const tags = el.tags ?? {};
+              const polyline = leaflet.polyline(coords, {
+                color: "#22c55e",
+                weight: 2.5,
+                opacity: 0.7,
+              }).addTo(trailGroup);
+
+              // Click handler per trail
+              polyline.on("click", (e: L.LeafletMouseEvent) => {
+                const name = tags.name || tags.ref || tags.osmc_name || "Unnamed trail";
+                const dist = tags.distance ? `${Number(tags.distance).toFixed(1)} km` : "";
+                const ascent = tags.ascent ? `${tags.ascent} m ↑` : "";
+                const difficulty = tags.difficulty || tags.sac_scale || "";
+                const symbol = tags.osmc_symbol || tags.symbol || "";
+                leaflet.popup({ className: "ttt-popup", maxWidth: 260 })
+                  .setLatLng(e.latlng)
+                  .setContent(`
+                    <div style="padding:14px 15px;background:#09101f;min-width:220px;">
+                      <p style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);margin:0 0 6px;line-height:1.3;">${name}</p>
+                      ${symbol && symbol !== "unknown" ? `<p style="font-size:9px;color:rgba(255,255,255,0.25);margin:0 0 6px;text-transform:uppercase;letter-spacing:0.05em;">${symbol}</p>` : ""}
+                      ${dist || ascent ? `<div style="display:flex;gap:8px;margin-bottom:6px;">${dist ? `<span style="font-size:10px;color:#22c55e;font-weight:600;">${dist}</span>` : ""}${ascent ? `<span style="font-size:10px;color:#38bdf8;font-weight:600;">${ascent}</span>` : ""}</div>` : ""}
+                      ${difficulty ? `<p style="font-size:9px;color:rgba(255,255,255,0.35);margin:0 0 6px;">Difficulty: ${difficulty}</p>` : ""}
+                      <p style="font-size:9px;color:rgba(255,255,255,0.15);margin:0;">Indian subcontinent · OSM hiking route</p>
+                    </div>
+                  `)
+                  .openOn(map);
+              });
+            });
+          })
+          .catch(() => {});
+
+        markersLayerRef.current?.bringToFront?.();
       } else {
+        // Cleanup
         if (trailsTileRef.current && map.hasLayer(trailsTileRef.current)) {
           map.removeLayer(trailsTileRef.current);
           trailsTileRef.current = null;
         }
-        const handler = (map as unknown as Record<string, unknown>)._trailClickHandler as ((e: L.LeafletMouseEvent) => void) | undefined;
-        if (handler) map.off("click", handler);
+        const grp = (map as unknown as Record<string, unknown>)._trailGroup as L.LayerGroup | undefined;
+        if (grp) { map.removeLayer(grp); }
       }
     });
   }, [trailsOn]);
