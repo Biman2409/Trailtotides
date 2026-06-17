@@ -5,7 +5,7 @@ import Image from "next/image";
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
   ArrowRight, LocateFixed, Map as MapIcon, Layers, Camera,
-  Navigation as NavigationIcon,
+  Navigation as NavigationIcon, Route,
 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
@@ -291,12 +291,14 @@ function MapView({
   openPinRef,
   overlays,
   userPhotos,
+  trailsOn,
 }: {
   adventures: Adventure[];
   flyToRef: React.MutableRefObject<((lat: number, lng: number) => void) | null>;
   openPinRef: React.MutableRefObject<((slug: string) => void) | null>;
   overlays: Set<OverlayKey>;
   userPhotos: UserPhoto[];
+  trailsOn: boolean;
 }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -304,6 +306,7 @@ function MapView({
   const markerMapRef = useRef<Map<string, L.Marker>>(new Map());
   const baseTileRef = useRef<L.TileLayer | null>(null);
   const labelsTileRef = useRef<L.TileLayer | null>(null);
+  const trailsTileRef = useRef<L.TileLayer | null>(null);
   const photoLayerRef = useRef<L.LayerGroup | null>(null);
 
   useEffect(() => {
@@ -550,6 +553,29 @@ function MapView({
   }, [overlays]);
 
   useEffect(() => {
+    if (!mapInstanceRef.current) return;
+    loadLeaflet().then(leaflet => {
+      const map = mapInstanceRef.current;
+      if (!map) return;
+      if (trailsOn) {
+        if (trailsTileRef.current && map.hasLayer(trailsTileRef.current)) return;
+        trailsTileRef.current = leaflet.tileLayer("https://tile.waymarkedtrails.org/hiking/{z}/{x}/{y}.png", {
+          maxZoom: 18,
+          attribution: '&copy; <a href="https://www.waymarkedtrails.org">waymarkedtrails.org</a>',
+          opacity: 0.75,
+        });
+        trailsTileRef.current.addTo(map);
+        markersLayerRef.current?.bringToFront?.();
+      } else {
+        if (trailsTileRef.current && map.hasLayer(trailsTileRef.current)) {
+          map.removeLayer(trailsTileRef.current);
+          trailsTileRef.current = null;
+        }
+      }
+    });
+  }, [trailsOn]);
+
+  useEffect(() => {
     if (!photoLayerRef.current) return;
     loadLeaflet().then(leaflet => {
       if (!photoLayerRef.current) return;
@@ -619,6 +645,7 @@ export default function MapPage() {
   const [myShotsLoading, setMyShotsLoading] = useState(false);
   const [userPhotos, setUserPhotos] = useState<UserPhoto[]>([]);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [trailsOn, setTrailsOn] = useState(false);
 
   function toggleOverlay(key: OverlayKey) {
     setActiveOverlay(prev => prev === key ? null : key);
@@ -790,6 +817,20 @@ export default function MapPage() {
                 })}
               </div>
             )}
+          </div>
+
+          {/* Trails overlay */}
+          <div className="relative shrink-0">
+            <button
+              onClick={() => setTrailsOn(t => !t)}
+              title="Show hiking trails"
+              className={tbBtn(trailsOn)}
+              style={trailsOn ? { background: "rgba(34,197,94,0.2)", border: "1px solid rgba(34,197,94,0.35)", color: "#22c55e" } : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
+            >
+              <Route className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Trails</span>
+              {trailsOn && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+            </button>
           </div>
 
           {/* My Shots */}
@@ -1141,6 +1182,7 @@ export default function MapPage() {
             openPinRef={openPinRef}
             overlays={activeOverlay ? new Set([activeOverlay]) : new Set()}
             userPhotos={userPhotos}
+            trailsOn={trailsOn}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center" style={{ background: "#f0ebe0" }}>
