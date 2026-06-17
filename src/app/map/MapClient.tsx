@@ -274,8 +274,6 @@ const BASE_LAYERS = {
 
 type OverlayKey = keyof typeof BASE_LAYERS;
 
-const INDIA_BBOX = "6.5,68.0,37.0,97.5";
-
 // Module-level cache for India GeoJSON (survives re-mounts)
 let indiaGeoCache: Record<string, unknown> | null = null;
 
@@ -595,7 +593,7 @@ function MapView({
               ${symbol && symbol !== "unknown" ? `<p style="font-size:9px;color:rgba(255,255,255,0.25);margin:0 0 6px;text-transform:uppercase;letter-spacing:0.05em;">${symbol}</p>` : ""}
               ${dist || ascent ? `<div style="display:flex;gap:8px;margin-bottom:6px;">${dist ? `<span style="font-size:10px;color:#22c55e;font-weight:600;">${dist}</span>` : ""}${ascent ? `<span style="font-size:10px;color:#38bdf8;font-weight:600;">${ascent}</span>` : ""}</div>` : ""}
               ${difficulty ? `<p style="font-size:9px;color:rgba(255,255,255,0.35);margin:0 0 6px;">Difficulty: ${difficulty}</p>` : ""}
-              <p style="font-size:9px;color:rgba(255,255,255,0.15);margin:0;">Indian subcontinent · OSM hiking route</p>
+              <p style="font-size:9px;color:rgba(255,255,255,0.15);margin:0;">India · Nepal · Bhutan · OSM hiking route</p>
             </div>
           `)
           .openOn(map);
@@ -633,8 +631,8 @@ function MapView({
           return;
         }
 
-        // First time — fetch from Overpass
-        const query = `[out:json][timeout:25];way["route"="hiking"](${INDIA_BBOX});out geom;`;
+        // First time — fetch from Overpass (India + Nepal + Bhutan official borders)
+        const query = `[out:json][timeout:30];(area["ISO3166-1"="IN"];area["ISO3166-1"="NP"];area["ISO3166-1"="BT"];);way["route"="hiking"](area);out geom;`;
         onTrailsLoading(true);
         fetch("https://overpass-api.de/api/interpreter", {
           method: "POST",
