@@ -311,7 +311,6 @@ function MapView({
   const markerMapRef = useRef<Map<string, L.Marker>>(new Map());
   const baseTileRef = useRef<L.TileLayer | null>(null);
   const labelsTileRef = useRef<L.TileLayer | null>(null);
-  const trailsTileRef = useRef<L.TileLayer | null>(null);
   const trailsCacheRef = useRef<{ elements: { id: number; tags?: Record<string, string>; geometry?: { lat: number; lon: number }[] }[] } | null>(null);
   const trailVectorGroupRef = useRef<L.LayerGroup | null>(null);
   const photoLayerRef = useRef<L.LayerGroup | null>(null);
@@ -608,16 +607,6 @@ function MapView({
       if (!map) return;
 
       if (trailsOn) {
-        // Tile background (visual reference)
-        if (!trailsTileRef.current || !map.hasLayer(trailsTileRef.current)) {
-          trailsTileRef.current = leaflet.tileLayer("https://tile.waymarkedtrails.org/hiking/{z}/{x}/{y}.png", {
-            maxZoom: 18,
-            attribution: '&copy; <a href="https://www.waymarkedtrails.org">waymarkedtrails.org</a>',
-            opacity: 0.65,
-          });
-          trailsTileRef.current.addTo(map);
-        }
-
         // Remove stale vector layer before re-creating
         if (trailVectorGroupRef.current && map.hasLayer(trailVectorGroupRef.current)) {
           map.removeLayer(trailVectorGroupRef.current);
@@ -652,11 +641,6 @@ function MapView({
           .catch(() => {})
           .finally(() => onTrailsLoading(false));
       } else {
-        // Cleanup tile layer
-        if (trailsTileRef.current && map.hasLayer(trailsTileRef.current)) {
-          map.removeLayer(trailsTileRef.current);
-          trailsTileRef.current = null;
-        }
         // Cleanup vector group (cache kept for instant re-enable)
         if (trailVectorGroupRef.current && map.hasLayer(trailVectorGroupRef.current)) {
           map.removeLayer(trailVectorGroupRef.current);
