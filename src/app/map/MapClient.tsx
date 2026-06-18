@@ -78,8 +78,11 @@ function loadScript(src: string): Promise<void> {
   });
 }
 
+let leafletLoadPromise: Promise<typeof L> | null = null;
+
 function loadLeaflet(): Promise<typeof L> {
-  return new Promise((resolve) => {
+  if (leafletLoadPromise) return leafletLoadPromise;
+  leafletLoadPromise = new Promise((resolve) => {
     if (typeof window === "undefined") return;
     if (!document.querySelector('link[href*="leaflet.css"]')) {
       const link = document.createElement("link"); link.rel = "stylesheet";
@@ -98,6 +101,7 @@ function loadLeaflet(): Promise<typeof L> {
       .then(() => loadScript("https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"))
       .then(() => resolve(window.L));
   });
+  return leafletLoadPromise;
 }
 
 // ── Unified Search ────────────────────────────────────────────────────────────
@@ -417,7 +421,7 @@ function MapView({
           interactive: false,
         }).addTo(map);
       })
-      .catch(() => {});
+      .catch(() => console.warn("India border GeoJSON fetch failed"));
   }
 
   // Inject popup + zoom control styles once
@@ -638,7 +642,7 @@ function MapView({
             renderTrails(leaflet, map, elements);
             markersLayerRef.current?.bringToFront?.();
           })
-          .catch(() => {})
+          .catch(() => console.warn("Trails Overpass fetch failed"))
           .finally(() => onTrailsLoading(false));
       } else {
         // Cleanup vector group (cache kept for instant re-enable)
