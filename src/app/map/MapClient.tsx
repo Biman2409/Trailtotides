@@ -78,11 +78,8 @@ function loadScript(src: string): Promise<void> {
   });
 }
 
-let leafletLoadPromise: Promise<typeof L> | null = null;
-
 function loadLeaflet(): Promise<typeof L> {
-  if (leafletLoadPromise) return leafletLoadPromise;
-  leafletLoadPromise = new Promise((resolve) => {
+  return new Promise((resolve) => {
     if (typeof window === "undefined") return;
     if (!document.querySelector('link[href*="leaflet.css"]')) {
       const link = document.createElement("link"); link.rel = "stylesheet";
@@ -101,7 +98,6 @@ function loadLeaflet(): Promise<typeof L> {
       .then(() => loadScript("https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"))
       .then(() => resolve(window.L));
   });
-  return leafletLoadPromise;
 }
 
 // ── Unified Search ────────────────────────────────────────────────────────────
@@ -315,6 +311,7 @@ function MapView({
   const markerMapRef = useRef<Map<string, L.Marker>>(new Map());
   const baseTileRef = useRef<L.TileLayer | null>(null);
   const labelsTileRef = useRef<L.TileLayer | null>(null);
+  const trailsTileRef = useRef<L.TileLayer | null>(null);
   const trailsCacheRef = useRef<{ elements: { id: number; tags?: Record<string, string>; geometry?: { lat: number; lon: number }[] }[] } | null>(null);
   const trailVectorGroupRef = useRef<L.LayerGroup | null>(null);
   const photoLayerRef = useRef<L.LayerGroup | null>(null);
@@ -421,7 +418,7 @@ function MapView({
           interactive: false,
         }).addTo(map);
       })
-      .catch(() => console.warn("India border GeoJSON fetch failed"));
+      .catch(() => {});
   }
 
   // Inject popup + zoom control styles once
@@ -611,6 +608,16 @@ function MapView({
       if (!map) return;
 
       if (trailsOn) {
+        // Tile background (visual reference)
+        if (!trailsTileRef.current || !map.hasLayer(trailsTileRef.current)) {
+          trailsTileRef.current = leaflet.tileLayer("https://tile.waymarkedtrails.org/hiking/{z}/{x}/{y}.png", {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://www.waymarkedtrails.org">waymarkedtrails.org</a>',
+            opacity: 0.65,
+          });
+          trailsTileRef.current.addTo(map);
+        }
+
         // Remove stale vector layer before re-creating
         if (trailVectorGroupRef.current && map.hasLayer(trailVectorGroupRef.current)) {
           map.removeLayer(trailVectorGroupRef.current);
@@ -642,9 +649,14 @@ function MapView({
             renderTrails(leaflet, map, elements);
             markersLayerRef.current?.bringToFront?.();
           })
-          .catch(() => console.warn("Trails Overpass fetch failed"))
+          .catch(() => {})
           .finally(() => onTrailsLoading(false));
       } else {
+        // Cleanup tile layer
+        if (trailsTileRef.current && map.hasLayer(trailsTileRef.current)) {
+          map.removeLayer(trailsTileRef.current);
+          trailsTileRef.current = null;
+        }
         // Cleanup vector group (cache kept for instant re-enable)
         if (trailVectorGroupRef.current && map.hasLayer(trailVectorGroupRef.current)) {
           map.removeLayer(trailVectorGroupRef.current);
