@@ -5,7 +5,7 @@ import Image from "next/image";
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
   ArrowRight, LocateFixed, Map as MapIcon, Layers, Camera,
-  Navigation as NavigationIcon, Route,
+  Navigation as NavigationIcon,
 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
@@ -294,16 +294,12 @@ function MapView({
   openPinRef,
   viewKey,
   userPhotos,
-  trailsOn,
-  onTrailsLoading,
-}: {
+  }: {
   adventures: Adventure[];
   flyToRef: React.MutableRefObject<((lat: number, lng: number) => void) | null>;
   openPinRef: React.MutableRefObject<((slug: string) => void) | null>;
   viewKey: OverlayKey;
   userPhotos: UserPhoto[];
-  trailsOn: boolean;
-  onTrailsLoading: (v: boolean) => void;
 }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -311,9 +307,6 @@ function MapView({
   const markerMapRef = useRef<Map<string, L.Marker>>(new Map());
   const baseTileRef = useRef<L.TileLayer | null>(null);
   const labelsTileRef = useRef<L.TileLayer | null>(null);
-  const trailsTileRef = useRef<L.TileLayer | null>(null);
-  const trailsCacheRef = useRef<{ elements: { id: number; tags?: Record<string, string>; geometry?: { lat: number; lon: number }[] }[] } | null>(null);
-  const trailVectorGroupRef = useRef<L.LayerGroup | null>(null);
   const photoLayerRef = useRef<L.LayerGroup | null>(null);
 
   useEffect(() => {
@@ -566,107 +559,6 @@ function MapView({
     });
   }, [viewKey]);
 
-  // Helper: render trail polylines from Overpass elements
-  function renderTrails(leaflet: typeof L, map: L.Map, elements: { id: number; tags?: Record<string, string>; geometry?: { lat: number; lon: number }[] }[]) {
-    const group = leaflet.layerGroup().addTo(map);
-    trailVectorGroupRef.current = group;
-    elements.forEach(el => {
-      const coords = el.geometry!.map(g => [g.lat, g.lon] as [number, number]);
-      if (coords.length < 2) return;
-      const tags = el.tags ?? {};
-      const polyline = leaflet.polyline(coords, {
-        color: "#22c55e",
-        weight: 2.5,
-        opacity: 0.7,
-      }).addTo(group);
-      polyline.on("click", (e: L.LeafletMouseEvent) => {
-        const name = tags.name || tags.ref || tags.osmc_name || "Unnamed trail";
-        const dist = tags.distance ? `${Number(tags.distance).toFixed(1)} km` : "";
-        const ascent = tags.ascent ? `${tags.ascent} m ↑` : "";
-        const difficulty = tags.difficulty || tags.sac_scale || "";
-        const symbol = tags.osmc_symbol || tags.symbol || "";
-        leaflet.popup({ className: "ttt-popup", maxWidth: 260 })
-          .setLatLng(e.latlng)
-          .setContent(`
-            <div style="padding:14px 15px;background:#09101f;min-width:220px;">
-              <p style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);margin:0 0 6px;line-height:1.3;">${name}</p>
-              ${symbol && symbol !== "unknown" ? `<p style="font-size:9px;color:rgba(255,255,255,0.25);margin:0 0 6px;text-transform:uppercase;letter-spacing:0.05em;">${symbol}</p>` : ""}
-              ${dist || ascent ? `<div style="display:flex;gap:8px;margin-bottom:6px;">${dist ? `<span style="font-size:10px;color:#22c55e;font-weight:600;">${dist}</span>` : ""}${ascent ? `<span style="font-size:10px;color:#38bdf8;font-weight:600;">${ascent}</span>` : ""}</div>` : ""}
-              ${difficulty ? `<p style="font-size:9px;color:rgba(255,255,255,0.35);margin:0 0 6px;">Difficulty: ${difficulty}</p>` : ""}
-              <p style="font-size:9px;color:rgba(255,255,255,0.15);margin:0;">India · Nepal · Bhutan · OSM hiking route</p>
-            </div>
-          `)
-          .openOn(map);
-      });
-    });
-  }
-
-  useEffect(() => {
-    if (!mapInstanceRef.current) return;
-    loadLeaflet().then(leaflet => {
-      const map = mapInstanceRef.current;
-      if (!map) return;
-
-      if (trailsOn) {
-        // Tile background (visual reference)
-        if (!trailsTileRef.current || !map.hasLayer(trailsTileRef.current)) {
-          trailsTileRef.current = leaflet.tileLayer("https://tile.waymarkedtrails.org/hiking/{z}/{x}/{y}.png", {
-            maxZoom: 18,
-            attribution: '&copy; <a href="https://www.waymarkedtrails.org">waymarkedtrails.org</a>',
-            opacity: 0.65,
-          });
-          trailsTileRef.current.addTo(map);
-        }
-
-        // Remove stale vector layer before re-creating
-        if (trailVectorGroupRef.current && map.hasLayer(trailVectorGroupRef.current)) {
-          map.removeLayer(trailVectorGroupRef.current);
-          trailVectorGroupRef.current = null;
-        }
-
-        // Cache hit — render from cache, no fetch
-        if (trailsCacheRef.current) {
-          renderTrails(leaflet, map, trailsCacheRef.current.elements);
-          markersLayerRef.current?.bringToFront?.();
-          return;
-        }
-
-        // First time — fetch from Overpass (India + Nepal + Bhutan official borders)
-        const query = `[out:json][timeout:30];(area["ISO3166-1"="IN"];area["ISO3166-1"="NP"];area["ISO3166-1"="BT"];);way["route"="hiking"](area);out geom;`;
-        onTrailsLoading(true);
-        fetch("https://overpass-api.de/api/interpreter", {
-          method: "POST",
-          body: "data=" + encodeURIComponent(query),
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          signal: AbortSignal.timeout(28000),
-        })
-          .then(r => r.json())
-          .then((overpassData: { elements: { id: number; tags?: Record<string, string>; geometry?: { lat: number; lon: number }[] }[] }) => {
-            if (!mapInstanceRef.current) return;
-            const elements = overpassData.elements?.filter(e => e.geometry?.length) ?? [];
-            if (!elements.length) return;
-            trailsCacheRef.current = overpassData;
-            renderTrails(leaflet, map, elements);
-            markersLayerRef.current?.bringToFront?.();
-          })
-          .catch(() => {})
-          .finally(() => onTrailsLoading(false));
-      } else {
-        // Cleanup tile layer
-        if (trailsTileRef.current && map.hasLayer(trailsTileRef.current)) {
-          map.removeLayer(trailsTileRef.current);
-          trailsTileRef.current = null;
-        }
-        // Cleanup vector group (cache kept for instant re-enable)
-        if (trailVectorGroupRef.current && map.hasLayer(trailVectorGroupRef.current)) {
-          map.removeLayer(trailVectorGroupRef.current);
-          trailVectorGroupRef.current = null;
-        }
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trailsOn]);
-
   useEffect(() => {
     if (!photoLayerRef.current) return;
     loadLeaflet().then(leaflet => {
@@ -737,9 +629,7 @@ export default function MapPage() {
   const [myShotsLoading, setMyShotsLoading] = useState(false);
   const [userPhotos, setUserPhotos] = useState<UserPhoto[]>([]);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [trailsOn, setTrailsOn] = useState(false);
-  const [trailsLoading, setTrailsLoading] = useState(false);
-
+  
   function toggleOverlay(key: OverlayKey) {
     setActiveOverlay(prev => prev === key ? null : key);
   }
@@ -910,20 +800,6 @@ export default function MapPage() {
                 })}
               </div>
             )}
-          </div>
-
-          {/* Trails overlay */}
-          <div className="relative shrink-0">
-            <button
-              onClick={() => setTrailsOn(t => !t)}
-              title="Show hiking trails"
-              className={tbBtn(trailsOn)}
-              style={trailsOn ? { background: "rgba(34,197,94,0.2)", border: "1px solid rgba(34,197,94,0.35)", color: "#22c55e" } : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
-            >
-              {trailsLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Route className="w-3.5 h-3.5" />}
-              <span className="hidden sm:inline">Trails</span>
-              {trailsOn && !trailsLoading && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
-            </button>
           </div>
 
           {/* My Shots */}
@@ -1275,8 +1151,6 @@ export default function MapPage() {
             openPinRef={openPinRef}
             viewKey={activeOverlay ?? "default"}
             userPhotos={userPhotos}
-            trailsOn={trailsOn}
-            onTrailsLoading={setTrailsLoading}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center" style={{ background: "#f0ebe0" }}>
@@ -1312,17 +1186,6 @@ export default function MapPage() {
             style={{ background: "rgba(255,81,0,0.9)", boxShadow: "0 2px 16px rgba(255,81,0,0.4)", backdropFilter: "blur(8px)" }}
           >
             {visibleAdventures.length} adventure{visibleAdventures.length !== 1 ? "s" : ""} shown
-          </div>
-        )}
-
-        {/* Trails loading indicator */}
-        {trailsLoading && (
-          <div
-            className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] text-white text-[11px] font-bold px-4 py-1.5 rounded-full flex items-center gap-2"
-            style={{ background: "rgba(34,197,94,0.9)", boxShadow: "0 2px 16px rgba(34,197,94,0.4)", backdropFilter: "blur(8px)" }}
-          >
-            <Loader2 className="w-3 h-3 animate-spin" />
-            Loading trails…
           </div>
         )}
 
