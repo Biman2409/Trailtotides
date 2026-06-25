@@ -342,39 +342,39 @@ function MapView({
     const priceFrom = adv.operators?.find(o => o.priceFrom)?.priceFrom;
 
     const popupHtml = `
-      <div style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:#09101f;">
+      <div onclick="window.location.href='/experiences/${adv.slug}'" style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:#09101f;cursor:pointer;transition:transform 0.15s;">
         <div style="position:relative;height:152px;">
           <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />
-          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(9,16,31,0.95) 0%,rgba(9,16,31,0.2) 55%,transparent 100%);" />
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(9,16,31,0.92) 0%,rgba(9,16,31,0.1) 50%,transparent 100%);" />
           <div style="position:absolute;top:10px;left:10px;display:flex;gap:5px;">
-            <span style="background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:rgba(255,255,255,0.85);font-size:9px;font-weight:800;padding:3px 8px;border-radius:20px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,0.1);">${adv.type}</span>
-            <span style="background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:${diffColor};font-size:9px;font-weight:800;padding:3px 8px;border-radius:20px;border:1px solid ${diffColor}60;letter-spacing:0.06em;">${adv.difficulty}</span>
+            <span style="background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);color:rgba(255,255,255,0.9);font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,0.1);">${adv.type}</span>
+            <span style="background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);color:${diffColor};font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;border:1px solid ${diffColor}60;">${adv.difficulty}</span>
           </div>
-          ${priceFrom ? `<div style="position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#10b981,#059669);color:white;font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:0.03em;">${priceFrom}</div>` : ""}
+          ${priceFrom ? `<div style="position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#059669,#10b981);color:white;font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;">${priceFrom}</div>` : ""}
           <div style="position:absolute;bottom:10px;left:12px;right:12px;">
-            <div style="font-size:15px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-0.02em;">${adv.name}</div>
-            <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:3px;font-weight:500;">${adv.state}</div>
+            <div style="font-size:15px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-0.02em;text-shadow:0 1px 4px rgba(0,0,0,0.5);">${adv.name}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:2px;font-weight:500;">${adv.state}</div>
           </div>
         </div>
-        <div style="padding:12px 13px 13px;background:#09101f;">
-          <div style="display:flex;gap:8px;margin-bottom:10px;">
-            <div style="text-align:center;flex:1;padding:7px 4px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);">
-              <div style="font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.85);line-height:1;">${adv.durationDays}</div>
-              <div style="font-size:8.5px;color:rgba(255,255,255,0.3);margin-top:2.5px;text-transform:uppercase;letter-spacing:0.07em;">Days</div>
+        <div style="padding:11px 12px 12px;">
+          <div style="display:flex;gap:6px;margin-bottom:9px;">
+            <div style="flex:1;text-align:center;padding:6px 4px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);">
+              <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.85);line-height:1.2;">${adv.durationDays}</div>
+              <div style="font-size:8px;color:rgba(255,255,255,0.25);margin-top:2px;text-transform:uppercase;letter-spacing:0.08em;">Days</div>
             </div>
-            <div style="text-align:center;flex:1;padding:7px 4px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);">
-              <div style="font-size:10.5px;font-weight:700;color:${diffColor};line-height:1;">${adv.difficulty}</div>
-              <div style="font-size:8.5px;color:rgba(255,255,255,0.3);margin-top:2.5px;text-transform:uppercase;letter-spacing:0.07em;">Level</div>
+            <div style="flex:1;text-align:center;padding:6px 4px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);">
+              <div style="font-size:11px;font-weight:700;color:${diffColor};line-height:1.2;">${adv.difficulty}</div>
+              <div style="font-size:8px;color:rgba(255,255,255,0.25);margin-top:2px;text-transform:uppercase;letter-spacing:0.08em;">Level</div>
             </div>
-            <div style="text-align:center;flex:1;padding:7px 4px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);">
-              <div style="font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.85);line-height:1;">${adv.bestSeason}</div>
-              <div style="font-size:8.5px;color:rgba(255,255,255,0.3);margin-top:2.5px;text-transform:uppercase;letter-spacing:0.07em;">Season</div>
+            <div style="flex:1;text-align:center;padding:6px 4px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);">
+              <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.85);line-height:1.2;">${adv.bestSeason}</div>
+              <div style="font-size:8px;color:rgba(255,255,255,0.25);margin-top:2px;text-transform:uppercase;letter-spacing:0.08em;">Season</div>
             </div>
           </div>
-          <p style="font-size:11px;color:rgba(255,255,255,0.38);line-height:1.5;margin:0 0 10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${adv.tagline}</p>
-          <button onclick="window.location.href='/experiences/${adv.slug}'" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:linear-gradient(135deg,#ff5100,#ff7d47);color:white;padding:9px 14px;border-radius:10px;font-size:12px;font-weight:700;border:none;cursor:pointer;letter-spacing:0.02em;box-shadow:0 3px 12px rgba(255,81,0,0.35);">
-            See Full Details →
-          </button>
+          <p style="font-size:11px;color:rgba(255,255,255,0.35);line-height:1.5;margin:0 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${adv.tagline}</p>
+          <div style="display:flex;align-items:center;justify-content:center;gap:5px;background:linear-gradient(135deg,#ff5100,#ff7d47);color:white;padding:8px;border-radius:9px;font-size:11px;font-weight:700;letter-spacing:0.02em;box-shadow:0 3px 12px rgba(255,81,0,0.3);">
+            View Adventure →
+          </div>
         </div>
       </div>
     `;
