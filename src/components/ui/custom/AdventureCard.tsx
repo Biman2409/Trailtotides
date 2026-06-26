@@ -59,12 +59,6 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
   function handleCompare(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    if (loggedIn === false) {
-      toast.error("Log in to compare adventures.", {
-        action: { label: "Log in", onClick: () => router.push("/auth/login") },
-      });
-      return;
-    }
     if (inCompare) {
       remove(adventure.id);
       toast("Removed from compare");
@@ -74,7 +68,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
     } else {
       add(adventure);
       toast.success("Added to compare");
-      awardXP("compare");
+      if (loggedIn) awardXP("compare");
     }
   }
   const monthIndex = new Date().getMonth();
