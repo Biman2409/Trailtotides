@@ -60,8 +60,7 @@ export default function Footer() {
                     {[
                       { label: "Explore", href: "/explore" },
                       { label: "Map", href: "/map" },
-                      { label: "Planner", href: "/planner" },
-                      { label: "Matchmaker", href: "/matchmaker" },
+                                            { label: "Matchmaker", href: "/matchmaker" },
                       { label: "Stories", href: "/stories" },
                       { label: "Operators", href: "/operators" },
                     ].map((link) => (
