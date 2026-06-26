@@ -78,8 +78,11 @@ function loadScript(src: string): Promise<void> {
   });
 }
 
+let leafletPromise: Promise<typeof L> | null = null;
+
 function loadLeaflet(): Promise<typeof L> {
-  return new Promise((resolve) => {
+  if (leafletPromise) return leafletPromise;
+  leafletPromise = new Promise((resolve) => {
     if (typeof window === "undefined") return;
     if (!document.querySelector('link[href*="leaflet.css"]')) {
       const link = document.createElement("link"); link.rel = "stylesheet";
@@ -98,6 +101,7 @@ function loadLeaflet(): Promise<typeof L> {
       .then(() => loadScript("https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"))
       .then(() => resolve(window.L));
   });
+  return leafletPromise;
 }
 
 // ── Unified Search ────────────────────────────────────────────────────────────
@@ -342,38 +346,39 @@ function MapView({
     const priceFrom = adv.operators?.find(o => o.priceFrom)?.priceFrom;
 
     const popupHtml = `
-      <div onclick="window.location.href='/experiences/${adv.slug}'" style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:#09101f;cursor:pointer;transition:transform 0.15s;">
-        <div style="position:relative;height:152px;">
+      <div onclick="window.location.href='/experiences/${adv.slug}'" style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:#09101f;cursor:pointer;">
+        <div style="position:relative;height:148px;">
           <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />
-          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(9,16,31,0.92) 0%,rgba(9,16,31,0.1) 50%,transparent 100%);" />
-          <div style="position:absolute;top:10px;left:10px;display:flex;gap:5px;">
-            <span style="background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);color:rgba(255,255,255,0.9);font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,0.1);">${adv.type}</span>
-            <span style="background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);color:${diffColor};font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;border:1px solid ${diffColor}60;">${adv.difficulty}</span>
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(9,16,31,0.88) 5%,rgba(9,16,31,0.05) 50%,rgba(9,16,31,0.15) 100%);" />
+          <div style="position:absolute;top:9px;left:10px;right:10px;display:flex;gap:5px;align-items:start;">
+            <span style="background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);color:rgba(255,255,255,0.92);font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:0.06em;text-transform:uppercase;border:1px solid rgba(255,255,255,0.12);box-shadow:0 1px 4px rgba(0,0,0,0.2);">${adv.type}</span>
+            <span style="background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);color:${diffColor};font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;border:1px solid ${diffColor}60;box-shadow:0 1px 4px rgba(0,0,0,0.2);">${adv.difficulty}</span>
+            ${priceFrom ? `<span style="margin-left:auto;background:linear-gradient(135deg,#059669,#10b981);color:white;font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;box-shadow:0 1px 6px rgba(5,150,105,0.35);">${priceFrom}</span>` : ""}
           </div>
-          ${priceFrom ? `<div style="position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#059669,#10b981);color:white;font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;">${priceFrom}</div>` : ""}
           <div style="position:absolute;bottom:10px;left:12px;right:12px;">
-            <div style="font-size:15px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-0.02em;text-shadow:0 1px 4px rgba(0,0,0,0.5);">${adv.name}</div>
-            <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:2px;font-weight:500;">${adv.state}</div>
+            <div style="font-size:15px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-0.02em;text-shadow:0 1px 6px rgba(0,0,0,0.6);">${adv.name}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.45);margin-top:2px;font-weight:500;text-shadow:0 1px 4px rgba(0,0,0,0.4);">${adv.state}</div>
           </div>
         </div>
-        <div style="padding:11px 12px 12px;">
-          <div style="display:flex;gap:6px;margin-bottom:9px;">
-            <div style="flex:1;text-align:center;padding:6px 4px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);">
-              <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.85);line-height:1.2;">${adv.durationDays}</div>
-              <div style="font-size:8px;color:rgba(255,255,255,0.25);margin-top:2px;text-transform:uppercase;letter-spacing:0.08em;">Days</div>
+        <div style="padding:10px 12px 11px;background:linear-gradient(180deg,#09101f,#070b15);">
+          <div style="display:flex;gap:5px;margin-bottom:8px;">
+            <div style="flex:1;padding:5px 2px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+              <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);text-align:center;line-height:1.2;">${adv.durationDays}</div>
+              <div style="font-size:7.5px;color:rgba(255,255,255,0.2);text-align:center;margin-top:1px;text-transform:uppercase;letter-spacing:0.1em;">Days</div>
             </div>
-            <div style="flex:1;text-align:center;padding:6px 4px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);">
-              <div style="font-size:11px;font-weight:700;color:${diffColor};line-height:1.2;">${adv.difficulty}</div>
-              <div style="font-size:8px;color:rgba(255,255,255,0.25);margin-top:2px;text-transform:uppercase;letter-spacing:0.08em;">Level</div>
+            <div style="flex:1;padding:5px 2px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+              <div style="font-size:12px;font-weight:700;color:${diffColor};text-align:center;line-height:1.2;">${adv.difficulty}</div>
+              <div style="font-size:7.5px;color:rgba(255,255,255,0.2);text-align:center;margin-top:1px;text-transform:uppercase;letter-spacing:0.1em;">Level</div>
             </div>
-            <div style="flex:1;text-align:center;padding:6px 4px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);">
-              <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.85);line-height:1.2;">${adv.bestSeason}</div>
-              <div style="font-size:8px;color:rgba(255,255,255,0.25);margin-top:2px;text-transform:uppercase;letter-spacing:0.08em;">Season</div>
+            <div style="flex:1;padding:5px 2px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+              <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);text-align:center;line-height:1.2;">${adv.bestSeason}</div>
+              <div style="font-size:7.5px;color:rgba(255,255,255,0.2);text-align:center;margin-top:1px;text-transform:uppercase;letter-spacing:0.1em;">Season</div>
             </div>
           </div>
-          <p style="font-size:11px;color:rgba(255,255,255,0.35);line-height:1.5;margin:0 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${adv.tagline}</p>
-          <div style="display:flex;align-items:center;justify-content:center;gap:5px;background:linear-gradient(135deg,#ff5100,#ff7d47);color:white;padding:8px;border-radius:9px;font-size:11px;font-weight:700;letter-spacing:0.02em;box-shadow:0 3px 12px rgba(255,81,0,0.3);">
-            View Adventure →
+          <p style="font-size:11px;color:rgba(255,255,255,0.3);line-height:1.45;margin:0 0 9px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${adv.tagline}</p>
+          <div style="display:flex;align-items:center;justify-content:center;gap:5px;background:linear-gradient(135deg,#ff5100,#e64500);color:white;padding:7px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:0.01em;box-shadow:0 2px 8px rgba(255,81,0,0.25);transition:all 0.15s;">
+            View Adventure
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </div>
         </div>
       </div>
@@ -462,6 +467,8 @@ function MapView({
       .leaflet-control-zoom a:hover { background: rgba(255,81,0,0.25) !important; color: #ff7d47 !important; }
       .leaflet-control-zoom-in { border-bottom: 1px solid rgba(255,255,255,0.07) !important; }
       .leaflet-control-attribution { display: none !important; }
+      .ttt-popup .leaflet-popup-content-wrapper > div { transition: opacity 0.12s; }
+      .ttt-popup .leaflet-popup-content-wrapper > div:hover { opacity: 0.93; }
     `;
     document.head.appendChild(s);
   }, []);
