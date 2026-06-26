@@ -78,6 +78,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  allowedDevOrigins: ["*.orchids.cloud", "*.orchids.app"],
   // Compress responses
   compress: true,
   outputFileTracingRoot: path.resolve(__dirname, '../../'),
