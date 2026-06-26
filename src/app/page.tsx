@@ -208,14 +208,14 @@ export default function HomePage() {
           <MatchmakerHomepageSection />
         </FadeUp>
 
-        {/* ── REGIONS ──────────────────────────────────────── */}
-        <FadeUp>
-          <FindByRegion />
-        </FadeUp>
-
         {/* ── ADVENTURE TYPES ──────────────────────────────── */}
         <FadeUp>
           <FindYourFormat />
+        </FadeUp>
+
+        {/* ── REGIONS ──────────────────────────────────────── */}
+        <FadeUp>
+          <FindByRegion />
         </FadeUp>
 
         {/* ── STORIES ──────────────────────────────────────── */}
