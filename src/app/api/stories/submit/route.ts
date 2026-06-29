@@ -34,6 +34,10 @@ export async function POST(req: NextRequest) {
 
     const adminClient = await createAdminClient();
 
+    // Auto-populate avatar from user's profile picture
+    const avatarId = user?.user_metadata?.avatar_id;
+    const authorAvatar = avatarId ? `/avatars/avatar-${avatarId}.png` : "";
+
     // Insert into stories table with pending status
     const { error } = await adminClient.from("stories").insert({
       slug,
@@ -43,7 +47,7 @@ export async function POST(req: NextRequest) {
       author_name: authorName,
       author_role: authorRole || "",
       author_bio: authorBio || "",
-      author_avatar: "",
+      author_avatar: authorAvatar,
       hero_image: heroImageUrl || "",
       read_time: "5 min read",
       tags: [region],
