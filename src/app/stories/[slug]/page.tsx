@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { stories } from "@/lib/data";
+import { getPublishedStories, getStoryBySlug } from "@/lib/stories";
+import type { StoryDB } from "@/lib/stories";
 import { ChevronLeft, Clock, ArrowRight, Crown, Mountain, PenLine } from "lucide-react";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 import StoryShareBar from "@/components/ui/custom/StoryShareBar";
@@ -12,36 +13,60 @@ import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 
 const BADGE_TAGS = ["Featured", "TTT Original"];
 
+function mapStory(s: StoryDB) {
+  const tags = s.tags ?? [];
+  const pillTags = tags.filter(t => t !== "Featured" && t !== "TTT Original").slice(0, 2);
+  return {
+    id: s.id,
+    slug: s.slug,
+    title: s.title,
+    excerpt: s.excerpt,
+    author: s.author_name,
+    authorRole: s.author_role,
+    authorBio: s.author_bio,
+    authorAvatar: s.author_avatar || undefined,
+    heroImage: s.hero_image,
+    readTime: s.read_time,
+    tags,
+    pillTags,
+    region: s.region as any,
+    date: s.date,
+    submittedBy: s.submitted_by || undefined,
+  };
+}
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
+  const stories = await getPublishedStories();
   return stories.map((s) => ({ slug: s.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const story = stories.find((s) => s.slug === slug);
+  const story = await getStoryBySlug(slug);
   if (!story) return {};
+  const s = mapStory(story);
   return {
-    title: `${story.title} — Trail to Tides`,
-    description: story.excerpt,
+    title: `${s.title} — Trail to Tides`,
+    description: s.excerpt,
     openGraph: {
-      title: `${story.title} — Trail to Tides`,
-      description: story.excerpt,
+      title: `${s.title} — Trail to Tides`,
+      description: s.excerpt,
       url: `https://trailtotides.com/stories/${slug}`,
-      images: [{ url: story.heroImage, width: 1200, height: 630, alt: story.title }],
+      images: [{ url: s.heroImage, width: 1200, height: 630, alt: s.title }],
       type: "article",
-      publishedTime: story.date,
-      authors: [story.author],
-      tags: story.tags ?? [],
+      publishedTime: s.date,
+      authors: [s.author],
+      tags: s.tags ?? [],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${story.title} — Trail to Tides`,
-      description: story.excerpt,
-      images: [story.heroImage],
+      title: `${s.title} — Trail to Tides`,
+      description: s.excerpt,
+      images: [s.heroImage],
     },
     alternates: { canonical: `https://trailtotides.com/stories/${slug}` },
   };
@@ -126,11 +151,12 @@ function buildBody(story: (typeof stories)[number]): string[] {
 
 export default async function StoryPage({ params }: Props) {
   const { slug } = await params;
-  const story = stories.find((s) => s.slug === slug);
-  if (!story) notFound();
+  const dbStory = await getStoryBySlug(slug);
+  if (!dbStory) notFound();
+  const story = mapStory(dbStory);
 
-  const body = buildBody(story);
-  const others = stories.filter((s) => s.id !== story.id).slice(0, 3);
+  const allStories = await getPublishedStories();
+  const others = allStories.filter((s) => s.slug !== story.slug).slice(0, 3).map(mapStory);
 
   const articleStructuredData = {
     "@context": "https://schema.org",

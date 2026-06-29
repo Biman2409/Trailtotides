@@ -5,8 +5,27 @@ import { ArrowRight, Clock, Crown, Mountain, PenLine } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
-import { stories } from "@/lib/data";
+import { getPublishedStories } from "@/lib/stories";
+import type { StoryDB } from "@/lib/stories";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
+
+function mapStory(s: StoryDB) {
+  const tags = s.tags ?? [];
+  const pillTags = tags.filter(t => t !== "Featured" && t !== "TTT Original").slice(0, 2);
+  return {
+    ...s,
+    author: s.author_name,
+    authorRole: s.author_role,
+    authorBio: s.author_bio,
+    authorAvatar: s.author_avatar || undefined,
+    heroImage: s.hero_image,
+    readTime: s.read_time,
+    slug: s.slug,
+    tags,
+    pillTags,
+    date: s.date,
+  };
+}
 
 export const metadata: Metadata = {
   title: "Field Stories — Trail to Tides",
@@ -29,7 +48,9 @@ export const metadata: Metadata = {
 
 const BADGE_TAGS = ["Featured", "TTT Original"];
 
-export default function StoriesPage() {
+export default async function StoriesPage() {
+  const dbStories = await getPublishedStories();
+  const stories = dbStories.map(mapStory);
   const [featured, ...rest] = stories || [];
 
   if (!featured) {

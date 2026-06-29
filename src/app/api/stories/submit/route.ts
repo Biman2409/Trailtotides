@@ -21,57 +21,40 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
     }
 
-    // Pull contact info from the logged-in user's session + profile
+    // Get logged-in user
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    let email: string | null = null;
-    let phone: string | null = null;
-
-    if (user) {
-      email = user.email ?? null;
-      const adminClient = await createAdminClient();
-      const { data: profile } = await adminClient
-        .from("profiles")
-        .select("phone")
-        .eq("id", user.id)
-        .single();
-      phone = profile?.phone ?? null;
-    }
+    // Generate a slug from the title
+    const slug = title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "")
+      .slice(0, 80) || `story-${Date.now()}`;
 
     const adminClient = await createAdminClient();
 
-    // Build submission object
-    const submission = {
-      id: crypto.randomUUID(),
+    // Insert into stories table with pending status
+    const { error } = await adminClient.from("stories").insert({
+      slug,
       title,
       excerpt,
       body: storyBody,
       author_name: authorName,
-      author_role: authorRole || null,
-      author_bio: authorBio || null,
-      email,
-      phone,
-      date_of_adventure: dateOfAdventure,
+      author_role: authorRole || "",
+      author_bio: authorBio || "",
+      author_avatar: "",
+      hero_image: heroImageUrl || "",
+      read_time: "5 min read",
+      tags: [region],
       region,
-      hero_image_url: heroImageUrl || null,
+      date: dateOfAdventure,
       status: "pending",
-      created_at: new Date().toISOString(),
-    };
-
-    // Store as JSON file in Supabase Storage bucket "story-submissions"
-    const fileName = `${submission.created_at.replace(/[:.]/g, "-")}_${submission.id}.json`;
-    const fileContent = JSON.stringify(submission, null, 2);
-
-    const { error } = await adminClient.storage
-      .from("story-submissions")
-      .upload(fileName, new Blob([fileContent], { type: "application/json" }), {
-        contentType: "application/json",
-        upsert: false,
-      });
+      submitted_by: user?.id ?? null,
+    });
 
     if (error) {
-      console.error("story submission storage error:", error);
+      console.error("story submission db error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
