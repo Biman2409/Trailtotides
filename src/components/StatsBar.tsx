@@ -11,10 +11,10 @@ const totalUniqueOperators = new Set(
 ).size;
 
 const STATS = [
-  { value: totalAdventures,      label: "Adventures",  suffix: "+" },
+  { value: totalAdventures,      label: "Adventures",  suffix: "" },
   { value: totalStates,          label: "Regions",     suffix: "" },
   { value: totalTypes,           label: "Genres",      suffix: "" },
-  { value: totalUniqueOperators, label: "Operators",   suffix: "+" },
+  { value: totalUniqueOperators, label: "Operators",   suffix: "" },
 ];
 
 function useCountUp(target: number, duration = 1600, started = false) {
