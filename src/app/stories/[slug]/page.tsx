@@ -154,6 +154,7 @@ export default async function StoryPage({ params }: Props) {
   const dbStory = await getStoryBySlug(slug);
   if (!dbStory) notFound();
   const story = mapStory(dbStory);
+  const body = buildBody(story);
 
   const allStories = await getPublishedStories();
   const others = allStories.filter((s) => s.slug !== story.slug).slice(0, 3).map(mapStory);
