@@ -73,7 +73,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // Generate a plausible article body from the excerpt + title
-function buildBody(story: (typeof stories)[number]): string[] {
+function buildBody(story: ReturnType<typeof mapStory>): string[] {
   // Each story gets 4–6 paragraphs synthesised from its metadata
   const openers: Record<string, string[]> = {
     "what-5000m-feels-like": [

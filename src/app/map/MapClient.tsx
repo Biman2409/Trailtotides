@@ -34,6 +34,7 @@ function classifyAdventure(userAce: StoredProfile["ace"], adventureAce: ReturnTy
 }
 
 import type L from "leaflet";
+import type { GeoJsonObject } from "geojson";
 
 const difficultyColor: Record<string, string> = {
   Easy:     "#10b981",
@@ -187,11 +188,10 @@ function UnifiedSearch({
         <input
           value={query}
           onChange={e => setQuery(e.target.value)}
-          onFocus={() => hasResults && setOpen(true)}
           placeholder="Search adventures or places…"
           className="w-full pl-9 pr-8 py-2.5 rounded-xl text-sm focus:outline-none transition-all"
           style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.85)", caretColor: "#ff5100" }}
-          onFocus={e => { e.currentTarget.style.border = "1px solid rgba(255,81,0,0.4)"; e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+          onFocus={e => { e.currentTarget.style.border = "1px solid rgba(255,81,0,0.4)"; e.currentTarget.style.background = "rgba(255,255,255,0.08)"; hasResults && setOpen(true); }}
           onBlur={e => { e.currentTarget.style.border = "1px solid rgba(255,255,255,0.1)"; e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
         />
       </div>
@@ -279,7 +279,7 @@ const BASE_LAYERS = {
 type OverlayKey = keyof typeof BASE_LAYERS;
 
 // Module-level cache for India GeoJSON (survives re-mounts)
-let indiaGeoCache: Record<string, unknown> | null = null;
+let indiaGeoCache: GeoJsonObject | null = null;
 
 interface UserPhoto {
   id: string;
@@ -562,7 +562,7 @@ function MapView({
         labelsTileRef.current = leaflet.tileLayer(cfg.labelsUrl, { maxZoom: cfg.maxZoom, attribution: "", opacity: 1 });
         labelsTileRef.current.addTo(map);
       }
-      markersLayerRef.current?.bringToFront?.();
+      (markersLayerRef.current as any)?.bringToFront?.();
     });
   }, [viewKey]);
 

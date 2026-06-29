@@ -116,7 +116,7 @@ function TrophyCard({ badge, index, small = false }: { badge: Achievement; index
     return () => clearTimeout(t);
   }, [index]);
 
-  const isSpecial = badge.tier === "special";
+  const isSpecial = badge.tier === "tier1";
   const sz = small ? 40 : 52;
   const borderRadius = "10px";
 
@@ -184,9 +184,9 @@ export default function AchievementBadges({ ace, heading }: Props) {
   const achievements = getAchievements(ace);
   if (achievements.length === 0) return null;
 
-  const special = achievements.filter(a => a.tier === "special");
-  const domain  = achievements.filter(a => a.tier === "domain");
-  const axis    = achievements.filter(a => a.tier === "axis");
+  const special = achievements.filter(a => a.tier === "tier1");
+  const domain  = achievements.filter(a => a.tier === "tier2");
+  const axis    = achievements.filter(a => a.tier === "tier3");
 
   const hasHighTier = special.length > 0 || domain.length > 0;
 
@@ -220,7 +220,7 @@ export default function AchievementBadges({ ace, heading }: Props) {
       {/* Primary row */}
       <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${Math.min(primary.length, 4)}, 1fr)` }}>
         {primary.map((b, i) => (
-          <TrophyCard key={b.id} badge={b} index={i} small={b.tier === "axis"} />
+          <TrophyCard key={b.id} badge={b} index={i} small={b.tier === "tier3"} />
         ))}
       </div>
 

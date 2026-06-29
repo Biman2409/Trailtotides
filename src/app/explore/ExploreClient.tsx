@@ -1014,7 +1014,7 @@ export default function ExploreClient() {
           <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(126,200,138,1) 1px, transparent 1px)", backgroundSize: "18px 18px" }} />
           <div className="absolute right-0 inset-y-0 w-64 pointer-events-none" style={{ background: "radial-gradient(ellipse at 100% 50%, rgba(126,200,138,0.07) 0%, transparent 70%)" }} />
 
-          <div className="relative flex items-center gap-0 divide-x" style={{ divideColor: "rgba(126,200,138,0.07)" }}>
+          <div className="relative flex items-center gap-0 [&>:not(:first-child)]:border-l" style={{ borderColor: "rgba(126,200,138,0.07)" }}>
 
             {/* Label + description */}
             <div className="flex items-center gap-3 px-5 py-3.5 flex-1 min-w-0">

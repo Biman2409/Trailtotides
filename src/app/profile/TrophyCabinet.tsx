@@ -58,7 +58,7 @@ const ICON = (name: string, size: number): React.ReactNode => {
 
 const TIER1_ALL: Achievement[] = SPECIAL_BADGES.map(b => ({ ...b }));
 const TIER2_ALL: Achievement[] = DOMAIN_BADGES.map(b => ({ ...b }));
-const TIER3_ALL: Achievement[] = Object.values(AXIS_BADGES).map(b => ({ ...b, tier: "axis" as const }));
+const TIER3_ALL: Achievement[] = Object.values(AXIS_BADGES).map(b => ({ ...b, tier: "tier3" as const }));
 const TIERXP_ALL: Achievement[] = XP_BADGES.map(b => ({ ...b }));
 
 // ─── Popover ──────────────────────────────────────────────────────────────────
@@ -220,7 +220,7 @@ export default function TrophyCabinet() {
   const [stored, setStored] = useState<ReturnType<typeof loadProfile>>(null);
   const [mounted, setMounted] = useState(false);
   const [totalXP, setTotalXP] = useState(0);
-  const [engagement, setEngagement] = useState({ completed: 0, reviews: 0, wishlisted: 0 });
+  const [engagement, setEngagement] = useState({ completed: 0, reviews: 0, wishlisted: 0, photos: 0, compares: 0 });
   const [active, setActive] = useState<Achievement | null>(null);
   const [activeLocked, setActiveLocked] = useState(false);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);

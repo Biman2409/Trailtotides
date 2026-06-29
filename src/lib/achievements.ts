@@ -258,9 +258,9 @@ export function getAchievements(ace: ACE, totalXP = 0, engagement: EngagementSta
       if (badge.axes.every((ax) => ace[ax] >= 5)) earned.push({ ...badge });
     } else {
       let qualifies = false;
-      if ("minReviews"  in badge && badge.minReviews  != null && (engagement.reviews  ?? 0) >= badge.minReviews)  qualifies = true;
-      if ("minCompares" in badge && badge.minCompares != null && (engagement.compares  ?? 0) >= badge.minCompares) qualifies = true;
-      if ("minPhotos"   in badge && badge.minPhotos   != null && (engagement.photos    ?? 0) >= badge.minPhotos)   qualifies = true;
+      if ("minReviews"  in badge && (badge as any).minReviews  != null && (engagement.reviews  ?? 0) >= (badge as any).minReviews)  qualifies = true;
+      if ("minCompares" in badge && (badge as any).minCompares != null && (engagement.compares  ?? 0) >= (badge as any).minCompares) qualifies = true;
+      if ("minPhotos"   in badge && (badge as any).minPhotos   != null && (engagement.photos    ?? 0) >= (badge as any).minPhotos)   qualifies = true;
       if (qualifies) earned.push({ ...badge });
     }
   }
@@ -275,12 +275,12 @@ export function getAchievements(ace: ACE, totalXP = 0, engagement: EngagementSta
   // Tier 3 — XP & Engagement
   for (const badge of XP_BADGES) {
     let qualifies = false;
-    if ("minXP"        in badge && badge.minXP        != null && totalXP                     >= badge.minXP)        qualifies = true;
-    if ("minCompleted" in badge && badge.minCompleted  != null && (engagement.completed ?? 0) >= badge.minCompleted) qualifies = true;
-    if ("minReviews"   in badge && badge.minReviews    != null && (engagement.reviews   ?? 0) >= badge.minReviews)   qualifies = true;
-    if ("minWishlisted"in badge && badge.minWishlisted != null && (engagement.wishlisted ?? 0) >= badge.minWishlisted) qualifies = true;
-    if ("minPhotos"    in badge && badge.minPhotos     != null && (engagement.photos     ?? 0) >= badge.minPhotos)     qualifies = true;
-    if ("minCompares"  in badge && badge.minCompares   != null && (engagement.compares   ?? 0) >= badge.minCompares)   qualifies = true;
+    if ("minXP"        in badge && (badge as any).minXP        != null && totalXP                      >= (badge as any).minXP)        qualifies = true;
+    if ("minCompleted" in badge && (badge as any).minCompleted  != null && (engagement.completed ?? 0) >= (badge as any).minCompleted) qualifies = true;
+    if ("minReviews"   in badge && (badge as any).minReviews    != null && (engagement.reviews   ?? 0) >= (badge as any).minReviews)   qualifies = true;
+    if ("minWishlisted"in badge && (badge as any).minWishlisted != null && (engagement.wishlisted ?? 0) >= (badge as any).minWishlisted) qualifies = true;
+    if ("minPhotos"    in badge && (badge as any).minPhotos     != null && (engagement.photos     ?? 0) >= (badge as any).minPhotos)     qualifies = true;
+    if ("minCompares"  in badge && (badge as any).minCompares   != null && (engagement.compares   ?? 0) >= (badge as any).minCompares)   qualifies = true;
     if (qualifies) earned.push({ ...badge });
   }
 
