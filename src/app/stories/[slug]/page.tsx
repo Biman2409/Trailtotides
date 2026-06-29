@@ -6,12 +6,21 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { getPublishedStories, getStoryBySlug } from "@/lib/stories";
 import type { StoryDB } from "@/lib/stories";
+import { AVATARS } from "@/lib/avatars";
 import { ChevronLeft, Clock, ArrowRight, Crown, Mountain, PenLine } from "lucide-react";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 import StoryShareBar from "@/components/ui/custom/StoryShareBar";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 
 const BADGE_TAGS = ["Featured", "TTT Original"];
+
+function pickAvatar(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return AVATARS[Math.abs(hash) % AVATARS.length].src;
+}
 
 function mapStory(s: StoryDB) {
   const tags = s.tags ?? [];
@@ -24,7 +33,7 @@ function mapStory(s: StoryDB) {
     author: s.author_name,
     authorRole: s.author_role,
     authorBio: s.author_bio,
-    authorAvatar: s.author_avatar || undefined,
+    authorAvatar: s.author_avatar || pickAvatar(s.author_name),
     heroImage: s.hero_image,
     readTime: s.read_time,
     tags,
