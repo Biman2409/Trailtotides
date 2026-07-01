@@ -200,7 +200,7 @@ export default function Navbar() {
                 onClick={() => setSearchOpen(true)}
                 className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full transition-all hover:bg-white/6 group cursor-pointer whitespace-nowrap"
                 style={{
-                  background: "var(--bg-surface)",
+                  background: "var(--bg-surface-2)",
                   border: "1px solid var(--border-subtle)",
                 }}
               >
