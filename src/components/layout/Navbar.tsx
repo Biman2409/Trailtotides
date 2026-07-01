@@ -543,7 +543,7 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          {/* Mobile search + theme — combined row */}
+          {/* Mobile search + theme toggle */}
           <div className="flex items-center gap-2 py-2 px-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
             <button
               onClick={() => setSearchOpen(true)}
@@ -554,28 +554,15 @@ export default function Navbar() {
               Search
             </button>
             <button
-              onClick={() => { setTheme("light"); setMenuOpen(false); }}
-              className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg transition-all flex-1 justify-center"
-              style={{
-                color: theme === "light" ? "#ff5100" : "var(--text-muted)",
-                background: theme === "light" ? "rgba(255,81,0,0.08)" : "transparent",
-                border: theme === "light" ? "1px solid rgba(255,81,0,0.2)" : "1px solid transparent",
-              }}
+              onClick={() => { setTheme(theme === "dark" ? "light" : "dark"); setMenuOpen(false); }}
+              className="flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-all flex-1"
+              style={{ color: "var(--text-muted)", border: "1px solid var(--border-subtle)" }}
             >
-              <Sun className="w-3.5 h-3.5" />
-              Light
-            </button>
-            <button
-              onClick={() => { setTheme("dark"); setMenuOpen(false); }}
-              className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg transition-all flex-1 justify-center"
-              style={{
-                color: theme === "dark" ? "#ff5100" : "var(--text-muted)",
-                background: theme === "dark" ? "rgba(255,81,0,0.08)" : "transparent",
-                border: theme === "dark" ? "1px solid rgba(255,81,0,0.2)" : "1px solid transparent",
-              }}
-            >
-              <Moon className="w-3.5 h-3.5" />
-              Dark
+              <div className="relative w-3.5 h-3.5 flex items-center justify-center">
+                <Sun className="w-3.5 h-3.5 absolute transition-all duration-300" style={{ opacity: theme === "dark" ? 0 : 1, transform: theme === "dark" ? "rotate(90deg) scale(0)" : "rotate(0) scale(1)" }} />
+                <Moon className="w-3.5 h-3.5 absolute transition-all duration-300" style={{ opacity: theme === "dark" ? 1 : 0, transform: theme === "dark" ? "rotate(0) scale(1)" : "rotate(-90deg) scale(0)" }} />
+              </div>
+              Theme
             </button>
           </div>
 
