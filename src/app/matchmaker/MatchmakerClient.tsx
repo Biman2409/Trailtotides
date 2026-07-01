@@ -55,13 +55,13 @@ function AxisTicker() {
 
   const current = AXIS_TICKER[idx];
   return (
-    <div className="mt-2 rounded-lg px-2.5 py-2 w-full" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+    <div className="mt-2 rounded-lg px-2.5 py-2 w-full" style={{ background: "var(--bg-page)", border: "1px solid var(--border-subtle)" }}>
       <div style={{ opacity: fade ? 1 : 0, transition: "opacity 0.22s ease" }}>
         <div className="flex items-center gap-1.5 mb-0.5">
           <span className="shrink-0" style={{ color: current.color }}>{current.icon}</span>
           <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: current.color }}>{current.key}</span>
         </div>
-        <p className="text-[9px] text-white/40 leading-none pl-[18px] truncate">{current.desc}</p>
+        <p className="text-[9px] leading-none pl-[18px] truncate" style={{ color: "var(--text-tertiary)" }}>{current.desc}</p>
       </div>
     </div>
   );
@@ -340,13 +340,13 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
             <div className="scale-[1.55]">{currentRank.icon}</div>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/28 mb-1">Capability Tier</p>
+            <p className="text-[9px] uppercase tracking-[0.22em] font-semibold mb-1" style={{ color: "var(--text-tertiary)" }}>Capability Tier</p>
             <h3 className="text-[26px] font-black tracking-tight leading-none" style={{ color: currentRank.color }}>{currentRank.label}</h3>
             <div className="flex items-center gap-[3px] mt-2.5">
               {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} className="text-[13px] leading-none" style={{ color: i < currentRank.stars ? currentRank.color : "rgba(255,255,255,0.09)" }}>★</span>
+                <span key={i} className="text-[13px] leading-none" style={{ color: i < currentRank.stars ? currentRank.color : "var(--text-muted)" }}>★</span>
               ))}
-              <span className="text-white/22 text-[10px] ml-2">Rank {currentRank.stars} of 5</span>
+              <span className="text-[10px] ml-2" style={{ color: "var(--text-muted)" }}>Rank {currentRank.stars} of 5</span>
             </div>
           </div>
         </div>
@@ -363,13 +363,13 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
                   <span className="text-[38px] font-black tabular-nums tracking-tight" style={{ color: currentRank.color }}>{progressPct}</span>
                   <span className="text-lg font-bold ml-0.5" style={{ color: `${currentRank.color}70` }}>%</span>
                 </div>
-                <p className="text-[11px] text-white/30 mt-1 leading-none">
+                <p className="text-[11px] mt-1 leading-none" style={{ color: "var(--text-tertiary)" }}>
                   to reach <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span>
                 </p>
               </div>
               <div className="text-right pb-1">
-                <p className="text-[24px] font-black tabular-nums leading-none text-white/70">{nextRank.minScore - totalScore}</p>
-                <p className="text-[11px] text-white/28 mt-1 leading-none">pts needed</p>
+                <p className="text-[24px] font-black tabular-nums leading-none" style={{ color: "var(--text-secondary)" }}>{nextRank.minScore - totalScore}</p>
+                <p className="text-[11px] mt-1 leading-none" style={{ color: "var(--text-tertiary)" }}>pts needed</p>
               </div>
             </div>
             <RankBar totalScore={totalScore} trackH={10} showLabels showYouTag={false} />
@@ -398,8 +398,8 @@ function OptionBtn({
       onClick={onClick}
       className="w-full text-left px-5 py-4 rounded-2xl border transition-all duration-150 active:scale-[0.99]"
       style={{
-        background: selected ? "rgba(255,81,0,0.12)" : "rgba(255,255,255,0.04)",
-        borderColor: selected ? "#ff5100" : "rgba(255,255,255,0.1)",
+        background: selected ? "rgba(255,81,0,0.12)" : "var(--bg-surface)",
+        borderColor: selected ? "#ff5100" : "var(--border-subtle)",
         boxShadow: selected ? "0 0 0 1px rgba(255,81,0,0.3)" : "none",
       }}
     >
@@ -407,16 +407,16 @@ function OptionBtn({
         <span
           className="w-6 h-6 rounded-full border flex items-center justify-center text-[10px] font-bold shrink-0 transition-all"
           style={{
-            borderColor: selected ? "#ff5100" : "rgba(255,255,255,0.2)",
-            color: selected ? "#ff5100" : "rgba(255,255,255,0.4)",
+            borderColor: selected ? "#ff5100" : "var(--border-subtle)",
+            color: selected ? "#ff5100" : "var(--text-tertiary)",
             background: selected ? "rgba(255,81,0,0.2)" : "transparent",
           }}
         >
           {value}
         </span>
         <div className="min-w-0">
-          <p className="text-white font-medium text-sm">{label}</p>
-          {sub && <p className="text-white/35 text-xs mt-0.5 leading-snug">{sub}</p>}
+          <p className="t-text font-medium text-sm">{label}</p>
+          {sub && <p className="text-xs mt-0.5 leading-snug" style={{ color: "var(--text-tertiary)" }}>{sub}</p>}
         </div>
       </div>
     </button>
@@ -432,15 +432,15 @@ function AxisBar({ axis, value, max = 5 }: { axis: string; value: number; max?: 
     <div className="flex items-center gap-3">
       <div className="w-24 flex items-center gap-1.5 shrink-0">
         <span style={{ color }} className="opacity-70">{icon}</span>
-        <span className="text-white/50 text-[11px] uppercase tracking-wide capitalize">{axis}</span>
+        <span className="text-[11px] uppercase tracking-wide capitalize" style={{ color: "var(--text-tertiary)" }}>{axis}</span>
       </div>
-      <div className="flex-1 h-1.5 rounded-full bg-white/[0.07]">
+      <div className="flex-1 h-1.5 rounded-full" style={{ background: "var(--border-subtle)" }}>
         <div
           className="h-full rounded-full transition-all duration-500"
           style={{ width: `${(value / max) * 100}%`, background: color }}
         />
       </div>
-      <span className="text-white/60 text-xs w-4 text-right font-mono">{value}</span>
+      <span className="text-xs w-4 text-right font-mono" style={{ color: "var(--text-secondary)" }}>{value}</span>
     </div>
   );
 }
@@ -475,15 +475,15 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
               <p className="text-[#ff5100] text-[10px] font-black tracking-[0.25em] uppercase">Adventure Matchmaker</p>
             </div>
 
-            <h1 className="text-white text-3xl sm:text-4xl font-black tracking-tight leading-[1.05] mb-3">
+            <h1 className="t-text text-3xl sm:text-4xl font-black tracking-tight leading-[1.05] mb-3">
               Adventures built for<br /><span style={{ color: "#ff5100" }}>your body</span>
             </h1>
 
-            <p className="text-white/40 text-[13px] leading-relaxed mb-5">
+            <p className="text-[13px] leading-relaxed mb-5" style={{ color: "var(--text-tertiary)" }}>
               8 questions across stamina, strength, altitude, nerve and more. We map your capability and surface the adventures that actually fit.
             </p>
 
-            <p className="text-white/18 text-[11px] tracking-wide mb-2 text-center">Takes about 2 minutes</p>
+            <p className="text-[11px] tracking-wide mb-2 text-center" style={{ color: "var(--text-muted)" }}>Takes about 2 minutes</p>
 
             <div className="flex flex-col gap-2">
               {hasProfile && (
@@ -496,7 +496,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
               <button onClick={onStart}
                 className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm transition-all hover:brightness-110"
                 style={hasProfile
-                  ? { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)", color: "rgba(255,255,255,0.6)" }
+                  ? { background: "var(--bg-surface-2)", border: "1px solid var(--border-default)", color: "var(--text-secondary)" }
                   : { background: "#ff5100", color: "#fff", boxShadow: "0 4px 20px rgba(255,81,0,0.35)" }
                 }>
                 {hasProfile
@@ -504,8 +504,8 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
                   : <>Begin Assessment <Zap className="w-4 h-4" /></>}
               </button>
               <Link href="/ace"
-                className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-[13px] font-semibold transition-all hover:bg-white/[0.04]"
-                style={{ border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.30)" }}>
+                className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-[13px] font-semibold transition-all"
+                style={{ border: "1px solid var(--border-subtle)", color: "var(--text-muted)" }}>
                 Learn more about ACE™ <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -571,20 +571,20 @@ function LoadingScreen() {
         <Loader2 className="w-8 h-8 text-[#ff5100] animate-spin" />
       </div>
       <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Analysing</p>
-      <h2 className="text-white text-2xl font-bold mb-8">Running your assessment</h2>
+      <h2 className="t-text text-2xl font-bold mb-8">Running your assessment</h2>
       <div className="space-y-3">
         {steps.map((s, i) => (
           <div
             key={i}
             className="flex items-center gap-3 rounded-xl px-4 py-3 border transition-all"
             style={{
-              background: i <= step ? "rgba(255,81,0,0.08)" : "rgba(255,255,255,0.02)",
-              borderColor: i <= step ? "rgba(255,81,0,0.25)" : "rgba(255,255,255,0.06)",
+              background: i <= step ? "rgba(255,81,0,0.08)" : "var(--bg-surface)",
+              borderColor: i <= step ? "rgba(255,81,0,0.25)" : "var(--border-subtle)",
             }}
           >
             <div
               className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
-              style={{ background: i < step ? "#ff5100" : i === step ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)" }}
+              style={{ background: i < step ? "#ff5100" : i === step ? "rgba(255,81,0,0.3)" : "var(--border-subtle)" }}
             >
               {i < step ? (
                 <CheckCircle2 className="w-3 h-3 text-white" />
@@ -592,7 +592,7 @@ function LoadingScreen() {
                 <Loader2 className="w-2.5 h-2.5 text-[#ff5100] animate-spin" />
               ) : null}
             </div>
-            <p className={`text-sm ${i <= step ? "text-white/80" : "text-white/25"}`}>{s}</p>
+            <p className="text-sm" style={{ color: i <= step ? "var(--text-primary)" : "var(--text-muted)" }}>{s}</p>
           </div>
         ))}
       </div>
@@ -617,29 +617,29 @@ function StrengthsSection({ sorted, sectionLabel, axisLabels, axisDesc, axisColo
 
   return (
     <div className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-5 sm:mb-7"
-      style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
+      style={{ background: "var(--bg-surface)", borderColor: "var(--border-subtle)" }}>
       <div className="flex flex-col sm:flex-row sm:items-stretch">
         {/* Radar */}
         <div className="shrink-0 flex flex-col items-center sm:items-start gap-2.5 p-4 sm:p-5 w-full sm:w-auto">
-          <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 self-start">Capability Breakdown</p>
+          <p className="text-[9px] uppercase tracking-[0.22em] font-bold self-start" style={{ color: "var(--text-tertiary)" }}>Capability Breakdown</p>
           <div className="rounded-xl sm:rounded-2xl flex items-center justify-center p-3 sm:p-4 w-full sm:w-auto"
-            style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, rgba(255,255,255,0.015) 70%)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, transparent 70%)", border: "1px solid var(--border-subtle)" }}>
             <ACERadar ace={userAxes} size={190} showLabels />
           </div>
         </div>
 
         {/* Divider — horizontal on mobile, vertical on sm+ */}
-        <div className="sm:hidden h-px mx-4" style={{ background: "rgba(255,255,255,0.07)" }} />
-        <div className="hidden sm:block w-px self-stretch" style={{ background: "rgba(255,255,255,0.07)" }} />
+        <div className="sm:hidden h-px mx-4" style={{ background: "var(--border-subtle)" }} />
+        <div className="hidden sm:block w-px self-stretch" style={{ background: "var(--border-subtle)" }} />
 
         {/* Strengths */}
         <div className="flex-1 flex flex-col min-w-0 p-4 sm:p-5">
           <div className="flex items-center justify-between mb-1.5">
-            <p className="text-[9px] uppercase tracking-[0.2em] font-bold text-white/22">{sectionLabel}</p>
+            <p className="text-[9px] uppercase tracking-[0.2em] font-bold" style={{ color: "var(--text-tertiary)" }}>{sectionLabel}</p>
             {hasMore && (
               <button onClick={() => setShowAll(v => !v)}
                 className="text-[9px] font-semibold transition-colors"
-                style={{ color: "rgba(255,255,255,0.3)" }}>
+                style={{ color: "var(--text-tertiary)" }}>
                 {showAll ? "Show less" : `+${sorted.length - 4} more`}
               </button>
             )}
@@ -656,7 +656,7 @@ function StrengthsSection({ sorted, sectionLabel, axisLabels, axisDesc, axisColo
                     {icon}
                   </div>
                   <span className="text-[11px] font-bold capitalize" style={{ color }}>{axisLabels[axis]}</span>
-                  <span className="text-[9px] text-white/28 truncate flex-1">{axisDesc[axis]}</span>
+                  <span className="text-[9px] truncate flex-1" style={{ color: "var(--text-tertiary)" }}>{axisDesc[axis]}</span>
                   <span className="text-[10px] font-black tabular-nums px-1.5 py-0.5 rounded shrink-0"
                     style={{ background: `${color}20`, color }}>Lv {val}</span>
                 </div>
@@ -686,13 +686,13 @@ function TrainingSection({ trainingPlan, axisColors, axisIcons }: {
 
   return (
     <div className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-5 sm:mb-7"
-      style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.07)" }}>
+      style={{ background: "var(--bg-surface)", borderColor: "var(--border-subtle)" }}>
 
       {/* Header */}
-      <div className="px-4 sm:px-6 pt-4 sm:pt-5 pb-3.5 sm:pb-4 border-b border-white/[0.05]">
-        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 mb-1">What to train next</p>
-        <h3 className="text-white font-bold text-base leading-tight">Unlock harder adventures</h3>
-        <p className="text-white/35 text-[11px] mt-1">Build these up and more adventures open up for you.</p>
+      <div className="px-4 sm:px-6 pt-4 sm:pt-5 pb-3.5 sm:pb-4 border-b" style={{ borderColor: "var(--border-subtle)" }}>
+        <p className="text-[9px] uppercase tracking-[0.22em] font-bold mb-1" style={{ color: "var(--text-tertiary)" }}>What to train next</p>
+        <h3 className="t-text font-bold text-base leading-tight">Unlock harder adventures</h3>
+        <p className="text-[11px] mt-1" style={{ color: "var(--text-tertiary)" }}>Build these up and more adventures open up for you.</p>
       </div>
 
       {/* Items */}
@@ -710,16 +710,16 @@ function TrainingSection({ trainingPlan, axisColors, axisIcons }: {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <span className="text-white font-bold text-sm capitalize">{item.axis}</span>
+                  <span className="t-text font-bold text-sm capitalize">{item.axis}</span>
                   <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
                     style={{ background: `${color}18`, color }}>
                     +{gap} level{gap > 1 ? "s" : ""} to go
                   </span>
-                  <span className="text-white/22 text-[10px] ml-auto font-mono">
+                  <span className="text-[10px] ml-auto font-mono" style={{ color: "var(--text-muted)" }}>
                     {item.current_level} → {item.required_level}
                   </span>
                 </div>
-                <p className="text-white/40 text-[11px] leading-[1.55]">{item.recommendation}</p>
+                <p className="text-[11px] leading-[1.55]" style={{ color: "var(--text-tertiary)" }}>{item.recommendation}</p>
               </div>
             </div>
           );
@@ -731,7 +731,7 @@ function TrainingSection({ trainingPlan, axisColors, axisIcons }: {
         <div className="px-4 sm:px-6 pb-4 -mt-1">
           <button onClick={() => setShowAll(v => !v)}
             className="w-full py-2 rounded-xl text-[11px] font-semibold transition-all"
-            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.35)" }}>
+            style={{ background: "var(--bg-page)", border: "1px solid var(--border-subtle)", color: "var(--text-tertiary)" }}>
             {showAll ? "Show less" : `Show ${sorted.length - 3} more areas`}
           </button>
         </div>
@@ -774,7 +774,7 @@ function ResultsScreen({
       {/* ── 1. PAGE HEADER ───────────────────────────────────────────────────── */}
       <div className="mb-6 sm:mb-8">
         <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-2">Adventure Matchmaker</p>
-        <h2 className="text-white text-2xl sm:text-3xl font-black tracking-tight">Adventure Capability Engine Profile</h2>
+        <h2 className="t-text text-2xl sm:text-3xl font-black tracking-tight">Adventure Capability Engine Profile</h2>
       </div>
 
       {/* ── 2. TIER HERO CARD ────────────────────────────────────────────────── */}
@@ -796,7 +796,7 @@ function ResultsScreen({
 
           {/* Tier label */}
           <div className="flex-1 min-w-0">
-            <p className="text-[9px] uppercase tracking-[0.22em] font-semibold text-white/25 mb-0.5">Capability Tier</p>
+            <p className="text-[9px] uppercase tracking-[0.22em] font-semibold mb-0.5" style={{ color: "var(--text-tertiary)" }}>Capability Tier</p>
             <h1 className="text-[22px] font-black tracking-tight leading-none" style={{ color: tier.color }}>{tier.label}</h1>
           </div>
 
@@ -804,10 +804,10 @@ function ResultsScreen({
           <div className="flex flex-col items-end gap-0.5 shrink-0">
             <div className="flex items-center gap-[2px]">
               {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} className="text-[11px] leading-none" style={{ color: i < (tierRank?.stars ?? 0) ? tier.color : "rgba(255,255,255,0.08)" }}>★</span>
+                <span key={i} className="text-[11px] leading-none" style={{ color: i < (tierRank?.stars ?? 0) ? tier.color : "var(--text-muted)" }}>★</span>
               ))}
             </div>
-            <span className="text-white/20 text-[9px]">Rank {tierRank?.stars ?? 0} of 5</span>
+            <span className="text-[9px]" style={{ color: "var(--text-muted)" }}>Rank {tierRank?.stars ?? 0} of 5</span>
           </div>
         </div>
 
@@ -835,7 +835,7 @@ function ResultsScreen({
                   ) : (
                     <div className="flex items-baseline gap-1.5">
                       <span className="text-[22px] font-black tabular-nums tracking-tight leading-none" style={{ color: tier.color }}>{progressPct}<span className="text-sm font-bold ml-0.5" style={{ color: `${tier.color}60` }}>%</span></span>
-                      <span className="text-[11px] text-white/30 leading-none">to <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span></span>
+                      <span className="text-[11px] leading-none" style={{ color: "var(--text-tertiary)" }}>to <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span></span>
                     </div>
                   )
                 ) : (
@@ -845,12 +845,12 @@ function ResultsScreen({
                   </div>
                 )}
                 {nextRank && !justUnlocked && (
-                  <span className="text-[11px] text-white/30"><span className="font-bold text-white/55">{ptsNeeded}</span> pts needed</span>
+                  <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}><span className="font-bold" style={{ color: "var(--text-secondary)" }}>{ptsNeeded}</span> pts needed</span>
                 )}
               </div>
 
               {/* Progress bar */}
-              <div className="relative h-[7px] rounded-full mb-2" style={{ background: "rgba(255,255,255,0.05)" }}>
+              <div className="relative h-[7px] rounded-full mb-2" style={{ background: "var(--border-subtle)" }}>
                 <div
                   className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
                   style={{
@@ -884,7 +884,7 @@ function ResultsScreen({
                     style={{
                       left: `${(i / (totalRanks - 1)) * 100}%`,
                       transform: i === 0 ? "none" : i === totalRanks - 1 ? "translateX(-100%)" : "translateX(-50%)",
-                      color: i === currentRankIndex ? tier.color : i < currentRankIndex ? `${rank.color}45` : "rgba(255,255,255,0.12)",
+                      color: i === currentRankIndex ? tier.color : i < currentRankIndex ? `${rank.color}45` : "var(--text-muted)",
                     }}
                   >
                     {rank.label}
