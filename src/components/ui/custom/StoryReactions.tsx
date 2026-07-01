@@ -70,10 +70,10 @@ export default function StoryReactions({ slug }: Props) {
   }, [reactions, userReaction, slug]);
 
   return (
-    <div className="mt-8 pt-8 border-t border-white/10">
-      <p className="text-white/30 text-xs font-medium mb-3">React to this story</p>
+    <div className="mt-8 pt-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+      <p className="text-xs font-medium mb-3" style={{ color: "var(--text-tertiary)" }}>React to this story</p>
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-white/40 text-xs font-medium mr-1">
+        <span className="text-xs font-medium mr-1" style={{ color: "var(--text-muted)" }}>
           {total > 0 ? `${total} reaction${total !== 1 ? "s" : ""}` : ""}
         </span>
 
@@ -88,19 +88,19 @@ export default function StoryReactions({ slug }: Props) {
               onClick={() => react(emoji)}
               className={`
                 relative flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full
-                transition-all duration-200
-                ${isActive
-                  ? "bg-[#ff5100]/15 border-[#ff5100]/40 text-white"
-                  : "bg-white/6 hover:bg-white/12 border-white/10 text-white/60 hover:text-white/90"
-                }
-                border
+                transition-all duration-200 border
                 ${isAnimating ? "scale-110" : "scale-100"}
               `}
+              style={{
+                background: isActive ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
+                borderColor: isActive ? "rgba(255,81,0,0.4)" : "var(--border-subtle)",
+                color: isActive ? "#ff5100" : "var(--text-secondary)",
+              }}
               title={label}
             >
               <span className={`text-sm ${isAnimating ? "animate-bounce" : ""}`}>{emoji}</span>
               {count > 0 && (
-                <span className={`text-[11px] font-medium ${isActive ? "text-[#ff5100]" : "text-white/50"}`}>
+                <span className={`text-[11px] font-medium ${isActive ? "text-[#ff5100]" : ""}`} style={{ color: isActive ? undefined : "var(--text-muted)" }}>
                   {count}
                 </span>
               )}

@@ -42,9 +42,9 @@ export default function StoryShareBar({ title, slug }: Props) {
   };
 
   return (
-    <div className="mt-8 pt-8 border-t border-white/10">
+    <div className="mt-8 pt-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
       <div className="flex flex-wrap items-center gap-2.5">
-        <span className="flex items-center gap-1.5 text-white/40 text-xs font-medium mr-1">
+        <span className="flex items-center gap-1.5 text-xs font-medium mr-1" style={{ color: "var(--text-muted)" }}>
           <Share2 className="w-3.5 h-3.5" />
           Share
         </span>
@@ -54,7 +54,8 @@ export default function StoryShareBar({ title, slug }: Props) {
           href={url ? `https://wa.me/?text=${encodeURIComponent(title + "\n" + url)}` : "#"}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/25 text-[#25D366] text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
+          className="flex items-center gap-1.5 text-[#25D366] text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
+          style={{ background: "rgba(37,211,102,0.1)", border: "1px solid rgba(37,211,102,0.25)" }}
         >
           <WhatsAppIcon />
           WhatsApp
@@ -65,7 +66,12 @@ export default function StoryShareBar({ title, slug }: Props) {
           href={url ? `https://x.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}` : "#"}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 bg-white/8 hover:bg-white/15 border border-white/15 text-white/70 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
+          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full transition-colors hover:brightness-125"
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border-subtle)",
+            color: "var(--text-secondary)",
+          }}
         >
           <XIcon />
           Post on X
@@ -74,7 +80,12 @@ export default function StoryShareBar({ title, slug }: Props) {
         {/* Copy link */}
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 bg-white/8 hover:bg-white/15 border border-white/15 text-white/70 hover:text-white text-xs font-semibold px-3 py-1.5 rounded-full transition-colors"
+          className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full transition-colors hover:brightness-125"
+          style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border-subtle)",
+            color: "var(--text-secondary)",
+          }}
         >
           {copied ? <Check className="w-3.5 h-3.5 text-[#ff5100]" /> : <Link2 className="w-3.5 h-3.5" />}
           {copied ? "Copied!" : "Copy link"}

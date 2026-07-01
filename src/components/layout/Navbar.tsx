@@ -301,7 +301,7 @@ export default function Navbar() {
                       ))}
                     </div>
                     <div className="px-4 py-2.5 flex items-center justify-between" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                      <button onClick={() => { clearAll(); setWishlistOpen(false); }} className="text-xs text-white/30 hover:text-red-400 transition-colors">
+                      <button onClick={() => { clearAll(); setWishlistOpen(false); }} className="text-xs hover:text-red-400 transition-colors" style={{ color: "var(--text-muted)" }}>
                         Clear all
                       </button>
                       <button
@@ -313,7 +313,7 @@ export default function Navbar() {
                             setTimeout(() => setWishlistCopied(false), 2000);
                           });
                         }}
-                        className="flex items-center gap-1 text-xs text-white/30 hover:text-[#ff5100] transition-colors"
+                        className="flex items-center gap-1 text-xs hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-muted)" }}
                       >
                         {wishlistCopied ? <Check className="w-3 h-3 text-[#ff5100]" /> : <Share2 className="w-3 h-3" />}
                         {wishlistCopied ? "Copied!" : "Share list"}
@@ -387,7 +387,7 @@ export default function Navbar() {
                       ))}
                     </div>
                     <div className="px-4 py-2.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                      <button onClick={() => { clear(); setCompareOpen(false); }} className="text-xs text-white/30 hover:text-red-400 transition-colors">
+                      <button onClick={() => { clear(); setCompareOpen(false); }} className="text-xs hover:text-red-400 transition-colors" style={{ color: "var(--text-muted)" }}>
                         Clear all
                       </button>
                     </div>
