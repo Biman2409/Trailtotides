@@ -21,7 +21,6 @@ export default function MobileBottomNav() {
     const handleScroll = () => {
       setVisible(window.scrollY > 80);
     };
-    // Check initial state
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -31,35 +30,63 @@ export default function MobileBottomNav() {
     <nav
       className="fixed bottom-0 left-0 right-0 z-40 lg:hidden safe-area-bottom transition-transform duration-300 ease-out"
       style={{
-        background: "var(--nav-bg)",
-        borderTop: "1px solid var(--nav-border)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
         transform: visible ? "translateY(0)" : "translateY(100%)",
       }}
     >
-      <div className="flex items-center justify-around px-2 py-0.5">
-        {links.map(({ href, label, icon: Icon, isHome }) => {
-          const isActive = isHome
-            ? pathname === "/"
-            : pathname.startsWith(href);
+      <div
+        className="mx-3 mb-2 rounded-2xl shadow-2xl overflow-hidden"
+        style={{
+          background: "var(--nav-bg)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          border: "1px solid var(--nav-border)",
+          boxShadow: "0 -4px 24px rgba(0,0,0,0.1), 0 8px 32px rgba(0,0,0,0.12)",
+        }}
+      >
+        <div className="flex items-center justify-around px-2 py-1">
+          {links.map(({ href, label, icon: Icon, isHome }) => {
+            const isActive = isHome
+              ? pathname === "/"
+              : pathname.startsWith(href);
 
-          return (
-            <Link
-              key={href}
-              href={href}
-              className="flex flex-col items-center gap-0 px-2 py-1 rounded-xl transition-all min-w-0"
-              style={{
-                color: isActive ? "#ff5100" : "var(--nav-text)",
-              }}
-            >
-              <Icon className="w-4 h-4" />
-              <span className="text-[9px] font-medium leading-tight whitespace-nowrap">
-                {label}
-              </span>
-            </Link>
-          );
-        })}
+            return (
+              <Link
+                key={href}
+                href={href}
+                className="relative flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-all min-w-0 group"
+              >
+                <div
+                  className="relative flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-200"
+                  style={{
+                    background: isActive ? "rgba(255,81,0,0.12)" : "transparent",
+                  }}
+                >
+                  <Icon
+                    className="w-4 h-4 transition-all duration-200"
+                    style={{
+                      color: isActive ? "#ff5100" : "var(--nav-text)",
+                    }}
+                  />
+                  {/* Active dot indicator */}
+                  {isActive && (
+                    <span
+                      className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full transition-all duration-200"
+                      style={{ background: "#ff5100" }}
+                    />
+                  )}
+                </div>
+                <span
+                  className="text-[9px] font-medium leading-tight whitespace-nowrap transition-colors duration-200"
+                  style={{
+                    color: isActive ? "#ff5100" : "var(--nav-text)",
+                  }}
+                >
+                  {label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </nav>
   );

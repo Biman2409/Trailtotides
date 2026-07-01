@@ -84,7 +84,7 @@ export default function ChatBubble() {
       {/* Floating button */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className={`fixed bottom-8 right-8 z-50 flex items-center justify-center text-white w-16 h-16 rounded-full shadow-2xl transition-all duration-500 ease-out hover:scale-110 active:scale-95 group ${
+        className={`fixed lg:bottom-8 max-lg:bottom-[68px] right-8 z-50 flex items-center justify-center text-white w-16 h-16 rounded-full shadow-2xl transition-all duration-500 ease-out hover:scale-110 active:scale-95 group ${
           visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-50 pointer-events-none"
         }`}
         style={{ 
@@ -100,7 +100,7 @@ export default function ChatBubble() {
 
         {/* Chat panel */}
         {open && (
-          <div className="fixed bottom-28 right-8 z-50 w-[420px] max-w-[calc(100vw-4rem)] bg-[#11161d] border border-white/10 rounded-[2rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 slide-in-from-bottom-8 duration-500 ease-out backdrop-blur-3xl"
+          <div className="fixed lg:bottom-28 max-lg:bottom-[88px] right-8 z-50 w-[420px] max-w-[calc(100vw-4rem)] bg-[#11161d] border border-white/10 rounded-[2rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 slide-in-from-bottom-8 duration-500 ease-out backdrop-blur-3xl"
             style={{ boxShadow: "0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)" }}
           >
             {/* Header */}
