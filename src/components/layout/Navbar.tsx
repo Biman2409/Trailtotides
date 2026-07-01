@@ -192,20 +192,20 @@ export default function Navbar() {
 
             {/* ── Search bar — slides in on scroll ── */}
             <div
-              className={`transition-all duration-300 ease-out ${
-                scrolled ? "opacity-100 translate-x-0 ml-3" : "opacity-0 translate-x-4 pointer-events-none w-0 ml-0 overflow-hidden"
+              className={`transition-all duration-400 ease-out overflow-hidden ${
+                scrolled ? "max-w-[260px] opacity-100 ml-3" : "max-w-0 opacity-0 ml-0"
               }`}
             >
               <button
                 onClick={() => setSearchOpen(true)}
-                className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full transition-all hover:bg-white/6 group cursor-pointer"
+                className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full transition-all hover:bg-white/6 group cursor-pointer whitespace-nowrap"
                 style={{
                   background: "var(--bg-surface)",
                   border: "1px solid var(--border-subtle)",
                 }}
               >
                 <Search className="w-3.5 h-3.5 shrink-0" style={{ color: "var(--text-tertiary)" }} />
-                <span className="text-sm whitespace-nowrap" style={{ color: "var(--text-tertiary)" }}>
+                <span className="text-sm" style={{ color: "var(--text-tertiary)" }}>
                   Search adventures...
                 </span>
                 <kbd className="flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium rounded ml-1"
