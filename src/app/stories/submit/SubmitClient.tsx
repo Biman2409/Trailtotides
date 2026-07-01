@@ -240,7 +240,7 @@ export default function SubmitStoryPage() {
                         />
                       </div>
                     </div>
-                                      </div>
+                    </div>
 
                   {/* Photo upload */}
                   <div>
