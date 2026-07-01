@@ -5,7 +5,7 @@ import Image from "next/image";
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
   ArrowRight, LocateFixed, Map as MapIcon, Layers, Camera,
-  Navigation as NavigationIcon,
+  Navigation as NavigationIcon, Compass, Share2, Menu, Heart,
 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
@@ -36,7 +36,7 @@ function classifyAdventure(userAce: StoredProfile["ace"], adventureAce: ReturnTy
 import type L from "leaflet";
 import type { GeoJsonObject } from "geojson";
 
-const difficultyColor: Record<string, string> = {
+const DIFFICULTY_COLORS: Record<string, string> = {
   Easy:     "#10b981",
   Moderate: "#38bdf8",
   Hard:     "#a78bfa",
@@ -220,7 +220,7 @@ function UnifiedSearch({
                     <p className="font-semibold text-[13px] truncate text-white/85">{a.name}</p>
                     <p className="text-[10px] mt-0.5 truncate text-white/35">{a.type} · {a.state}</p>
                   </div>
-                  <div className="w-2 h-2 rounded-full shrink-0" style={{ background: difficultyColor[a.difficulty] }} />
+                  <div className="w-2 h-2 rounded-full shrink-0" style={{ background: DIFFICULTY_COLORS[a.difficulty] }} />
                 </button>
               ))}
             </>
@@ -296,14 +296,20 @@ function MapView({
   adventures: advs,
   flyToRef,
   openPinRef,
+  resetViewRef,
   viewKey,
   userPhotos,
+  wishlist,
+  nearMe,
   }: {
   adventures: Adventure[];
   flyToRef: React.MutableRefObject<((lat: number, lng: number) => void) | null>;
   openPinRef: React.MutableRefObject<((slug: string) => void) | null>;
+  resetViewRef: React.MutableRefObject<(() => void) | null>;
   viewKey: OverlayKey;
   userPhotos: UserPhoto[];
+  wishlist: Set<string>;
+  nearMe: { lat: number; lng: number } | null;
 }) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -328,28 +334,36 @@ function MapView({
   });
 
   function buildMarker(leaflet: typeof L, adv: Adventure) {
-    const diffColor = difficultyColor[adv.difficulty] ?? "#6366f1";
+    const diffColor = DIFFICULTY_COLORS[adv.difficulty] ?? "#6366f1";
+    const isWishlisted = wishlist.has(adv.slug);
+    const markerColor = isWishlisted ? "#ff5100" : diffColor;
     const svgIcon = typeIconSvg(adv.type, 11, "white");
 
     const icon = leaflet.divIcon({
       className: "",
       html: `<div style="position:relative;width:32px;height:40px;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.45));">
-        <div style="width:32px;height:32px;border-radius:50% 50% 50% 0;background:${diffColor};transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2.5px solid #fff;box-shadow:inset 0 1px 0 rgba(255,255,255,0.3);">
+        <div style="width:32px;height:32px;border-radius:50% 50% 50% 0;background:${markerColor};transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2.5px solid #fff;${isWishlisted ? "box-shadow:0 0 12px rgba(255,81,0,0.6),inset 0 1px 0 rgba(255,255,255,0.3)" : "box-shadow:inset 0 1px 0 rgba(255,255,255,0.3)"};">
           <div style="transform:rotate(45deg);display:flex;align-items:center;justify-content:center;">${svgIcon}</div>
         </div>
+        ${isWishlisted ? '<div style="position:absolute;top:-4px;right:-4px;width:12px;height:12px;background:#ff5100;border-radius:50%;border:1.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:6px;">❤</div>' : ""}
       </div>`,
       iconSize: [32, 40],
       iconAnchor: [16, 40],
       popupAnchor: [0, -44],
     });
 
+    const distStr = nearMe
+      ? ` · ${Math.round(haversineKm(nearMe.lat, nearMe.lng, adv.lat, adv.lng))} km`
+      : "";
+
     const popupHtml = `
       <div onclick="window.location.href='/experiences/${adv.slug}'" style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:var(--bg-surface,#0f1420);cursor:pointer;border:1px solid var(--border-subtle,rgba(255,255,255,0.06));">
         <div style="position:relative;height:180px;">
           <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />
           <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.1) 50%,rgba(0,0,0,0.2) 100%);" />
-          <div style="position:absolute;top:10px;left:10px;">
+          <div style="position:absolute;top:10px;left:10px;display:flex;gap:4px;align-items:center;">
             <span style="background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);color:#fff;font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);">${adv.type}</span>
+            ${isWishlisted ? '<span style="background:rgba(255,81,0,0.55);backdrop-filter:blur(8px);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;">❤ Saved</span>' : ""}
           </div>
           <div style="position:absolute;bottom:10px;left:14px;right:14px;">
             <div style="font-size:16px;font-weight:700;color:#fff;line-height:1.2;letter-spacing:-0.02em;text-shadow:0 2px 8px rgba(0,0,0,0.7);">${adv.name}</div>
@@ -367,6 +381,10 @@ function MapView({
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.5 6.5L4 10l5.5 4-2 7L12 17l4.5 4-2-7L20 10l-6.5-.5Z"/></svg>
                 ${adv.difficulty}
               </span>
+              ${distStr ? `<span style="display:flex;align-items:center;gap:3px;font-size:11px;color:#22c55e;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                <span style="font-weight:600;">${distStr.replace(" · ", "")}</span>
+              </span>` : ""}
             </div>
             <span style="display:flex;align-items:center;gap:3px;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600;background:rgba(255,81,0,0.12);color:#ff5100;">
               Explore
@@ -378,7 +396,13 @@ function MapView({
     `;
 
     const marker = leaflet.marker([adv.lat, adv.lng], { icon })
-      .bindPopup(popupHtml, { maxWidth: 280, minWidth: 280, className: "ttt-popup" });
+      .bindPopup(popupHtml, { maxWidth: 280, minWidth: 280, className: "ttt-popup" })
+      .bindTooltip(adv.name, {
+        direction: "top",
+        offset: [0, -48],
+        className: "ttt-tooltip",
+        opacity: 0.9,
+      });
 
     return marker;
   }
@@ -440,6 +464,18 @@ function MapView({
         border: 1px solid rgba(255,255,255,0.12) !important;
       }
       .ttt-popup .leaflet-popup-close-button:hover { background: rgba(255,81,0,0.6) !important; color: #fff !important; }
+      .ttt-tooltip {
+        background: rgba(4,7,14,0.92) !important;
+        border: 1px solid rgba(255,255,255,0.12) !important;
+        color: #fff !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        padding: 4px 10px !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+        backdrop-filter: blur(8px) !important;
+      }
+      .ttt-tooltip::before { border-top-color: rgba(4,7,14,0.92) !important; }
       .leaflet-control-zoom {
         border: none !important;
         box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
@@ -497,6 +533,11 @@ function MapView({
       leaflet.control.zoom({ position: "bottomright" }).addTo(map);
 
       mapInstanceRef.current = map;
+
+      // Reset view handler
+      resetViewRef.current = () => {
+        map.flyTo([22.5, 80.0], 5, { duration: 1.2 });
+      };
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const MCG = (leaflet as any).markerClusterGroup({
@@ -654,9 +695,31 @@ export default function MapPage() {
   }
   const flyToRef = useRef<((lat: number, lng: number) => void) | null>(null);
   const openPinRef = useRef<((slug: string) => void) | null>(null);
+  const resetViewRef = useRef<(() => void) | null>(null);
   const [nearMe, setNearMe] = useState<{ lat: number; lng: number } | null>(null);
   const [nearMeLoading, setNearMeLoading] = useState(false);
   const [nearMeError, setNearMeError] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [shareFeedback, setShareFeedback] = useState(false);
+
+  // Load wishlist from localStorage
+  const [wishlist, setWishlist] = useState<Set<string>>(new Set());
+  useEffect(() => {
+    const saved = localStorage.getItem("ttt-bookmarks");
+    if (saved) {
+      const bookmarks = JSON.parse(saved);
+      setWishlist(new Set(Object.keys(bookmarks)));
+    }
+    function handleWishlistChange() {
+      const s = localStorage.getItem("ttt-bookmarks");
+      if (s) {
+        const b = JSON.parse(s);
+        setWishlist(new Set(Object.keys(b)));
+      }
+    }
+    window.addEventListener("storage", handleWishlistChange);
+    return () => window.removeEventListener("storage", handleWishlistChange);
+  }, []);
 
   const [search, setSearch] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<AdventureType[]>([]);
@@ -764,6 +827,19 @@ export default function MapPage() {
             onAdventurePin={adv => openPinRef.current?.(adv.slug)}
           />
 
+          {/* Mobile menu toggle */}
+          <button
+            onClick={() => setMobileMenuOpen(m => !m)}
+            className="lg:hidden flex items-center gap-1 px-2.5 py-2 rounded-xl transition-all"
+            style={{ background: mobileMenuOpen ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: mobileMenuOpen ? "#ff5100" : "rgba(255,255,255,0.5)" }}
+          >
+            <Menu className="w-4 h-4" />
+            <ChevronDown className={`w-3 h-3 transition-transform ${mobileMenuOpen ? "rotate-180" : ""}`} />
+          </button>
+
+          {/* Desktop toolbar items (hidden on mobile) */}
+          <div className="hidden lg:flex items-center gap-2">
+
           {/* View toggle dropdown */}
           <div className="relative shrink-0">
             <button
@@ -870,7 +946,39 @@ export default function MapPage() {
               Clear
             </button>
           )}
+          </div>
         </div>
+
+        {/* Mobile expanded toolbar */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden flex items-center gap-2 px-3 pb-2 flex-wrap" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+            <button
+              onClick={() => { setViewOpen(v => !v); setMobileMenuOpen(false); }}
+              className={tbBtn(!!activeOverlay)}
+              style={{ background: activeOverlay ? "rgba(255,81,0,0.2)" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: activeOverlay ? "#ff7d47" : "rgba(255,255,255,0.5)", fontSize: "11px" }}
+            >
+              <Layers className="w-3.5 h-3.5" />
+              {activeOverlay === "terrain" ? "Terrain" : activeOverlay === "satellite" ? "Satellite" : "Default"}
+            </button>
+            <button onClick={handleNearMe} title="Near Me" className={tbBtn(nearMe !== null)} style={{ background: nearMe ? "#ff5100" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: nearMe ? "#fff" : "rgba(255,255,255,0.5)", fontSize: "11px" }}>
+              <LocateFixed className="w-3.5 h-3.5" />
+              {nearMe ? "Near ✓" : "Near Me"}
+            </button>
+            {loggedIn && (
+              <button onClick={toggleMyShots} className={tbBtn(myShotsOn)} style={{ background: myShotsOn ? "#ff5100" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: myShotsOn ? "#fff" : "rgba(255,255,255,0.5)", fontSize: "11px" }}>
+                <Camera className="w-3.5 h-3.5" />
+                {myShotsLoading ? "Loading" : "Shots"}
+              </button>
+            )}
+            <button onClick={() => { setFiltersOpen(f => !f); }} className={tbBtn(filtersOpen || activeFilterCount > 0)} style={{ background: filtersOpen || activeFilterCount > 0 ? "rgba(255,81,0,0.2)" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: filtersOpen || activeFilterCount > 0 ? "#ff7d47" : "rgba(255,255,255,0.5)", fontSize: "11px" }}>
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+            </button>
+            {(activeFilterCount > 0 || search) && (
+              <button onClick={clearAll} className="text-xs font-semibold" style={{ color: "#ff5100" }}>Clear</button>
+            )}
+          </div>
+        )}
 
         {/* Filter panel */}
         {filtersOpen && (
@@ -1041,7 +1149,7 @@ export default function MapPage() {
                   <div className="p-3 flex flex-wrap gap-1.5">
                     {(["Easy","Moderate","Hard","Advanced","Extreme"] as Difficulty[]).map(val => {
                       const isSel = selectedDifficulties.includes(val);
-                      const c = difficultyColor[val] ?? "#ff5100";
+                      const c = DIFFICULTY_COLORS[val] ?? "#ff5100";
                       return (
                         <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
                           className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
@@ -1153,12 +1261,40 @@ export default function MapPage() {
             adventures={sortedAdventures}
             flyToRef={flyToRef}
             openPinRef={openPinRef}
+            resetViewRef={resetViewRef}
             viewKey={activeOverlay ?? "default"}
             userPhotos={userPhotos}
+            wishlist={wishlist}
+            nearMe={nearMe}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center" style={{ background: "#f0ebe0" }}>
             <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#b0a898" }} />
+          </div>
+        )}
+
+        {/* Empty state when nothing matches filters */}
+        {visibleAdventures.length === 0 && (activeFilterCount > 0 || search) && (
+          <div className="absolute inset-0 z-[999] flex items-center justify-center pointer-events-none">
+            <div className="text-center px-6 py-8 rounded-2xl pointer-events-auto"
+              style={{
+                background: "rgba(4,7,14,0.88)",
+                backdropFilter: "blur(14px)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                boxShadow: "0 8px 40px rgba(0,0,0,0.5)",
+              }}
+            >
+              <Compass className="w-8 h-8 mx-auto mb-3" style={{ color: "rgba(255,255,255,0.2)" }} />
+              <p className="text-white font-bold text-sm mb-1">No adventures match</p>
+              <p className="text-white/30 text-xs mb-4">Try different filters or search terms</p>
+              <button
+                onClick={clearAll}
+                className="px-4 py-2 rounded-lg text-xs font-bold transition-all hover:brightness-110"
+                style={{ background: "#ff5100", color: "#fff", boxShadow: "0 4px 14px rgba(255,81,0,0.25)" }}
+              >
+                Clear All Filters
+              </button>
+            </div>
           </div>
         )}
 
@@ -1174,7 +1310,7 @@ export default function MapPage() {
         >
           <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2 text-white/25">Difficulty</p>
           <div className="flex flex-col gap-1">
-            {Object.entries(difficultyColor).map(([label, color]) => (
+            {Object.entries(DIFFICULTY_COLORS).map(([label, color]) => (
               <div key={label} className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
                 <span className="text-[11px] font-medium text-white/60">{label}</span>
@@ -1182,6 +1318,49 @@ export default function MapPage() {
             ))}
           </div>
         </div>
+
+        {/* Reset view button */}
+        <button
+          onClick={() => resetViewRef.current?.()}
+          className="absolute bottom-5 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-semibold transition-all hover:brightness-110"
+          style={{
+            background: "rgba(4,7,14,0.85)",
+            backdropFilter: "blur(12px)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            color: "rgba(255,255,255,0.7)",
+            boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+          }}
+          title="Reset map view"
+        >
+          <Compass className="w-3.5 h-3.5" />
+          Reset View
+        </button>
+
+        {/* Share map view button */}
+        <button
+          onClick={async () => {
+            const url = window.location.href;
+            try {
+              await navigator.clipboard.writeText(url);
+              setShareFeedback(true);
+              setTimeout(() => setShareFeedback(false), 2000);
+            } catch {
+              // fallback
+            }
+          }}
+          className="absolute top-3 right-4 z-[1000] flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-semibold transition-all hover:brightness-110"
+          style={{
+            background: shareFeedback ? "rgba(34,197,94,0.2)" : "rgba(4,7,14,0.85)",
+            backdropFilter: "blur(12px)",
+            border: `1px solid ${shareFeedback ? "rgba(34,197,94,0.3)" : "rgba(255,255,255,0.1)"}`,
+            color: shareFeedback ? "#22c55e" : "rgba(255,255,255,0.7)",
+            boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+          }}
+          title="Share this map view"
+        >
+          <Share2 className="w-3.5 h-3.5" />
+          {shareFeedback ? "Copied!" : "Share"}
+        </button>
 
         {/* Visible count pill */}
         {(activeFilterCount > 0 || search) && (
