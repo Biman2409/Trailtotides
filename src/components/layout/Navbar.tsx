@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings } from "lucide-react";
+import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search } from "lucide-react";
 import { MountainSnow } from "@/lib/localIcons";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
@@ -11,6 +11,7 @@ import { useCompare, MAX } from "@/contexts/CompareContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { adventures } from "@/lib/data";
 import NavAvatar from "@/components/ui/custom/NavAvatar";
+import SearchModal from "@/components/ui/custom/SearchModal";
 
 const navLinks = [
   { href: "/explore", label: "Explore" },
@@ -24,6 +25,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [user, setUser] = useState<{ name: string; email: string; role: string } | null>(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -87,6 +89,21 @@ export default function Navbar() {
     const handleScroll = () => setScrolled(window.scrollY > 0);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Cmd+K / Ctrl+K to open search
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   // Outside-click handlers
@@ -176,7 +193,22 @@ export default function Navbar() {
           {/* Desktop right side */}
           <div className="hidden lg:flex items-center gap-2">
 
-            {/* ── Wishlist tray ── */}
+            {/* ── Search ── */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl transition-colors hover:bg-white/5"
+              style={{ color: "var(--text-muted)" }}
+              aria-label="Search"
+            >
+              <Search className="w-4 h-4" />
+              <span className="text-sm hidden xl:inline" style={{ color: "var(--text-muted)" }}>Search</span>
+              <kbd className="hidden xl:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium rounded ml-1"
+                style={{ background: "var(--bg-page)", color: "var(--text-muted)", border: "1px solid var(--border-subtle)" }}>
+                <span className="text-[9px]">⌘</span>K
+              </kbd>
+            </button>
+
+          {/* ── Wishlist tray ── */}
             {savedList.length > 0 && (
               <div className="relative" ref={wishlistRef}>
                 <button
@@ -440,6 +472,14 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="w-full flex items-center gap-2 py-3 px-3 text-base font-medium rounded-xl transition-colors hover:bg-white/5"
+            style={{ color: "var(--nav-text)", borderBottom: "1px solid var(--border-subtle)" }}
+          >
+            <Search className="w-4 h-4" />
+            Search
+          </button>
 
           {/* Mobile wishlist row */}
           {savedList.length > 0 && (
@@ -499,6 +539,8 @@ export default function Navbar() {
           )}
         </div>
       </div>
+
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </nav>
   );
 }

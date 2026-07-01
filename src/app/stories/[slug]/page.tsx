@@ -10,6 +10,8 @@ import { AVATARS } from "@/lib/avatars";
 import { ChevronLeft, Clock, ArrowRight, Crown, Mountain, PenLine } from "lucide-react";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 import StoryShareBar from "@/components/ui/custom/StoryShareBar";
+import StoryReactions from "@/components/ui/custom/StoryReactions";
+import ReadingProgressBar from "@/components/ui/custom/ReadingProgressBar";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 
 const BADGE_TAGS = ["Featured", "TTT Original"];
@@ -201,6 +203,7 @@ export default async function StoryPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }}
       />
+      <ReadingProgressBar />
       <ScrollToTop />
       <Navbar />
 
@@ -302,6 +305,8 @@ export default async function StoryPage({ params }: Props) {
             </p>
           ))}
         </div>
+
+        <StoryReactions slug={story.slug} />
 
         {/* Author card */}
           <div className="mt-10 bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-5">
