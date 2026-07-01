@@ -31,7 +31,7 @@ export default function MobileBottomNav() {
       className="fixed bottom-0 left-0 right-0 z-40 lg:hidden transition-transform duration-300 ease-out"
       style={{
         transform: visible ? "translateY(0)" : "translateY(100%)",
-        paddingBottom: "env(safe-area-inset-bottom, 8px)",
+        paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)",
       }}
     >
       <div
