@@ -189,25 +189,35 @@ export default function Navbar() {
                 </Link>
               );
             })}
+
+            {/* ── Search bar — slides in on scroll ── */}
+            <div
+              className={`transition-all duration-300 ease-out ${
+                scrolled ? "opacity-100 translate-x-0 ml-3" : "opacity-0 translate-x-4 pointer-events-none w-0 ml-0 overflow-hidden"
+              }`}
+            >
+              <button
+                onClick={() => setSearchOpen(true)}
+                className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full transition-all hover:bg-white/6 group cursor-pointer"
+                style={{
+                  background: "var(--bg-surface)",
+                  border: "1px solid var(--border-subtle)",
+                }}
+              >
+                <Search className="w-3.5 h-3.5 shrink-0" style={{ color: "var(--text-tertiary)" }} />
+                <span className="text-sm whitespace-nowrap" style={{ color: "var(--text-tertiary)" }}>
+                  Search adventures...
+                </span>
+                <kbd className="flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium rounded ml-1"
+                  style={{ background: "var(--bg-page)", color: "var(--text-muted)", border: "1px solid var(--border-subtle)" }}>
+                  <span className="text-[9px]">⌘</span>K
+                </kbd>
+              </button>
+            </div>
           </div>
 
           {/* Desktop right side */}
           <div className="hidden lg:flex items-center gap-2">
-
-            {/* ── Search (hidden on transparent navbar, appears on scroll) ── */}
-            <button
-              onClick={() => setSearchOpen(true)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all hover:bg-white/5 ${isTransparent ? "opacity-0 pointer-events-none" : "opacity-100"}`}
-              style={{ color: "var(--text-muted)", transitionDuration: "200ms" }}
-              aria-label="Search"
-            >
-              <Search className="w-4 h-4" />
-              <span className="text-sm hidden xl:inline" style={{ color: "var(--text-muted)" }}>Search</span>
-              <kbd className="hidden xl:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium rounded ml-1"
-                style={{ background: "var(--bg-page)", color: "var(--text-muted)", border: "1px solid var(--border-subtle)" }}>
-                <span className="text-[9px]">⌘</span>K
-              </kbd>
-            </button>
 
             {/* ── Theme Toggle ── */}
             <ThemeToggleButton />
