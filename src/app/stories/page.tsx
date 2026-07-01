@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ArrowRight, Clock, Crown, Mountain, PenLine } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import Breadcrumbs from "@/components/ui/custom/Breadcrumbs";
 
 import { getPublishedStories } from "@/lib/stories";
 import type { StoryDB } from "@/lib/stories";
@@ -80,6 +81,9 @@ export default async function StoriesPage() {
   return (
     <div className="min-h-screen">
       <Navbar />
+      <Breadcrumbs items={[
+        { label: "Stories" },
+      ]} />
 
       {/* Hero header */}
       <section className="pt-28 lg:pt-36 pb-10 lg:pb-14 px-6 lg:px-8 t-bg-surface2">

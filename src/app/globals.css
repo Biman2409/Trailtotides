@@ -54,10 +54,73 @@
   --color-dark-overlay: rgba(15, 20, 30, 0.55);
 }
 
-/* ── DARK THEME (always) ─────────────────────────────────── */
+/* ── LIGHT THEME (default) ───────────────────────────────── */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
   --radius: 0.5rem;
+
+  /* Surfaces */
+  --bg-page:        #f8f7f4;
+  --bg-surface:     #ffffff;
+  --bg-surface-2:   #f0eee8;
+  --bg-card:        rgba(0,0,0,0.03);
+  --bg-card-hover:  rgba(0,0,0,0.06);
+  --bg-overlay:     rgba(255,255,255,0.85);
+
+  /* Text */
+  --text-primary:   #1a1a1a;
+  --text-secondary: rgba(0,0,0,0.55);
+  --text-tertiary:  rgba(0,0,0,0.3);
+  --text-muted:     rgba(0,0,0,0.15);
+
+  /* Borders */
+  --border-subtle:  rgba(0,0,0,0.06);
+  --border-default: rgba(0,0,0,0.1);
+  --border-strong:  rgba(0,0,0,0.18);
+
+  /* Nav */
+  --nav-bg:         rgba(255,255,255,0.97);
+  --nav-border:     rgba(0,0,0,0.07);
+  --nav-text:       rgba(0,0,0,0.65);
+  --nav-text-hover: #000000;
+  --nav-active-bg:  rgba(0,0,0,0.06);
+
+  /* Scrollbar */
+  --scrollbar-track: #e8e4de;
+  --scrollbar-thumb: #b0a8a0;
+
+  /* Shared */
+  --background: #f8f7f4;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  --primary: #ff5100;
+  --primary-foreground: #ffffff;
+  --secondary: rgba(0,0,0,0.06);
+  --secondary-foreground: #1a1a1a;
+  --muted: rgba(0,0,0,0.04);
+  --muted-foreground: rgba(0,0,0,0.45);
+  --accent: #ff5100;
+  --accent-foreground: #ffffff;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: rgba(0,0,0,0.08);
+  --input: rgba(0,0,0,0.08);
+  --ring: #ff5100;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-primary: #ff5100;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(0,0,0,0.06);
+  --sidebar-accent-foreground: #1a1a1a;
+  --sidebar-border: rgba(0,0,0,0.08);
+  --sidebar-ring: #5ba3c9;
+}
+
+/* ── DARK THEME ─────────────────────────────────────────── */
+.dark {
+  color-scheme: dark;
 
   /* Surfaces */
   --bg-page:        #080c14;
@@ -114,7 +177,7 @@
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: rgba(255,255,255,0.06);
   --sidebar-accent-foreground: #f0ede8;
-  --sidebar-border: rgba(255,255,255,0.08);
+  --sidebar-border: rgba(255,255,500,0.08);
   --sidebar-ring: #5ba3c9;
 }
 
@@ -248,6 +311,18 @@ button:not([class*="transition"]) {
 .leaflet-control-zoom a:hover {
   background: #ff5100 !important;
   color: white !important;
+}
+
+/* ── Mobile bottom nav spacer ───────────────────────────── */
+@media (max-width: 1023px) {
+  body {
+    padding-bottom: 64px;
+  }
+}
+
+/* ── Safe area for bottom nav on notched phones ─────────── */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* ── Hide scrollbar utility ──────────────────────────────── */

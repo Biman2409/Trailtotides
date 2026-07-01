@@ -5,7 +5,9 @@ import { VisualEditsMessenger } from "orchids-visual-edits";
 import Script from "next/script";
 import CompareWrapper from "@/components/ui/custom/CompareWrapper";
 import NavigationScrollReset from "@/components/ui/custom/NavigationScrollReset";
+import MobileBottomNav from "@/components/ui/custom/MobileBottomNav";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "next-themes";
 import { Suspense } from "react";
 
 const greatVibes = Great_Vibes({
@@ -135,13 +137,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-IN" className="dark" style={{ colorScheme: "dark" }}>
+    <html lang="en-IN" suppressHydrationWarning>
       <head>
         <link rel="icon" type="image/png" sizes="512x512" href="/icon" />
         <link rel="icon" type="image/svg+xml" href="/logo.svg" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon" />
       </head>
         <body className={`${dmSans.variable} ${greatVibes.variable} antialiased`} style={{ background: "var(--bg-page)", color: "var(--text-primary)" }}>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
         <Script
           id="org-structured-data"
           type="application/ld+json"
@@ -227,7 +230,9 @@ export default function RootLayout({
             {children}
             <VisualEditsMessenger />
           </CompareWrapper>
+          <MobileBottomNav />
           <Toaster position="bottom-center" richColors />
+        </ThemeProvider>
       </body>
     </html>
   );

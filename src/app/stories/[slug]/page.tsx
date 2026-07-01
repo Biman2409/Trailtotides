@@ -11,7 +11,10 @@ import { ChevronLeft, Clock, ArrowRight, Crown, Mountain, PenLine } from "lucide
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 import StoryShareBar from "@/components/ui/custom/StoryShareBar";
 import StoryReactions from "@/components/ui/custom/StoryReactions";
+import StoryComments from "@/components/ui/custom/StoryComments";
+import StoryBookmarkButton from "@/components/ui/custom/StoryBookmarkButton";
 import ReadingProgressBar from "@/components/ui/custom/ReadingProgressBar";
+import Breadcrumbs from "@/components/ui/custom/Breadcrumbs";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 
 const BADGE_TAGS = ["Featured", "TTT Original"];
@@ -207,6 +210,11 @@ export default async function StoryPage({ params }: Props) {
       <ScrollToTop />
       <Navbar />
 
+      <Breadcrumbs items={[
+        { label: "Stories", href: "/stories" },
+        { label: story.title },
+      ]} />
+
       {/* Hero */}
       <section className="relative h-[55vh] md:h-[65vh] min-h-[400px] flex items-end overflow-hidden">
           <Image
@@ -285,6 +293,7 @@ export default async function StoryPage({ params }: Props) {
                 {story.readTime}
               </span>
                 <StoryViewPill slug={story.slug} incrementOnMount />
+              <StoryBookmarkButton slug={story.slug} title={story.title} />
             </div>
           </div>
         </div>
@@ -305,8 +314,6 @@ export default async function StoryPage({ params }: Props) {
             </p>
           ))}
         </div>
-
-        <StoryReactions slug={story.slug} />
 
         {/* Author card */}
           <div className="mt-10 bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-5">
@@ -345,6 +352,10 @@ export default async function StoryPage({ params }: Props) {
           </div>
 
           <StoryShareBar title={story.title} slug={story.slug} />
+
+          <StoryReactions slug={story.slug} />
+
+          <StoryComments slug={story.slug} />
 
           {/* Share your story CTA */}
           <div className="mt-8 relative rounded-xl overflow-hidden flex items-center gap-4 px-4 py-3.5" style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.16)" }}>
