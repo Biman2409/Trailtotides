@@ -29,7 +29,7 @@ export default function MobileBottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-[1002] lg:hidden safe-area-bottom transition-transform duration-300 ease-out"
+      className="fixed bottom-0 left-0 right-0 z-40 lg:hidden safe-area-bottom transition-transform duration-300 ease-out"
       style={{
         background: "var(--nav-bg)",
         borderTop: "1px solid var(--nav-border)",
