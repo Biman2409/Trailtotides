@@ -38,7 +38,7 @@ export default function MobileBottomNav() {
         transform: visible ? "translateY(0)" : "translateY(100%)",
       }}
     >
-      <div className="flex items-center justify-around px-2 py-1.5">
+      <div className="flex items-center justify-around px-2 py-0.5">
         {links.map(({ href, label, icon: Icon, isHome }) => {
           const isActive = isHome
             ? pathname === "/"
@@ -48,21 +48,15 @@ export default function MobileBottomNav() {
             <Link
               key={href}
               href={href}
-              className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl transition-all min-w-0"
+              className="flex flex-col items-center gap-0 px-2 py-1 rounded-xl transition-all min-w-0"
               style={{
                 color: isActive ? "#ff5100" : "var(--nav-text)",
               }}
             >
-              <Icon className="w-5 h-5" />
-              <span className="text-[10px] font-medium leading-none whitespace-nowrap">
+              <Icon className="w-4 h-4" />
+              <span className="text-[9px] font-medium leading-tight whitespace-nowrap">
                 {label}
               </span>
-              {isActive && (
-                <span
-                  className="w-4 h-0.5 rounded-full"
-                  style={{ background: "#ff5100" }}
-                />
-              )}
             </Link>
           );
         })}

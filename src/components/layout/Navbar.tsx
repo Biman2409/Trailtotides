@@ -190,18 +190,18 @@ export default function Navbar() {
               );
             })}
 
-            {/* ── Search bar — absolutely positioned, slides in on scroll ── */}
+            {/* ── Search bar — appears when navbar is solid (on scroll) ── */}
             <div
               style={{
                 position: "absolute",
                 left: "100%",
                 top: "50%",
-                transform: scrolled
-                  ? "translateY(-50%) translateX(12px)"
-                  : "translateY(-50%) translateX(-12px)",
-                opacity: scrolled ? 1 : 0,
-                visibility: scrolled ? "visible" : "hidden",
-                pointerEvents: scrolled ? "auto" : "none",
+                transform: isTransparent
+                  ? "translateY(-50%) translateX(-12px)"
+                  : "translateY(-50%) translateX(12px)",
+                opacity: isTransparent ? 0 : 1,
+                visibility: isTransparent ? "hidden" : "visible",
+                pointerEvents: isTransparent ? "none" : "auto",
                 transition: "all 500ms ease-out",
               }}
             >

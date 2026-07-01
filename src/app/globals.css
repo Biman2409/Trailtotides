@@ -316,7 +316,7 @@ button:not([class*="transition"]) {
 /* ── Mobile bottom nav spacer ───────────────────────────── */
 @media (max-width: 1023px) {
   body {
-    padding-bottom: 64px;
+    padding-bottom: 48px;
   }
 }
 
