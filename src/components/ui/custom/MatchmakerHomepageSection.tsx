@@ -167,7 +167,7 @@ export default function MatchmakerHomepageSection() {
 
           {/* Right column: Capability Profile Radar — hidden on mobile */}
           <div className="hidden lg:flex shrink-0 lg:self-stretch flex-col rounded-2xl overflow-hidden p-4"
-            style={{ background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)", border: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 20px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05)", width: 270, position: "relative" }}>
+            style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", boxShadow: "0 20px 40px rgba(0,0,0,0.2)", width: 270, position: "relative" }}>
             {/* Corner brackets */}
             <div className="absolute top-0 left-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
             <div className="absolute top-0 right-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
@@ -176,11 +176,11 @@ export default function MatchmakerHomepageSection() {
             {/* Header */}
             <div className="flex items-center gap-1.5 mb-2">
               <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
-              <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/35">Capability Profile</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.25em]" style={{ color: "var(--text-tertiary)" }}>Capability Profile</span>
             </div>
             {/* Radar */}
             <div className="flex-1 flex items-center justify-center">
-              <div className="rounded-xl p-1.5" style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
+              <div className="rounded-xl p-1.5" style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid var(--border-subtle)" }}>
                 <ACERadar ace={profile.ace} size={220} showLabels />
               </div>
             </div>
@@ -260,13 +260,13 @@ function AxisTicker() {
 
   const current = AXIS_TICKER[idx];
   return (
-    <div className="mt-2 rounded-lg px-2.5 py-2 w-full" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+    <div className="mt-2 rounded-lg px-2.5 py-2 w-full" style={{ background: "var(--bg-page)", border: "1px solid var(--border-subtle)" }}>
       <div style={{ opacity: fade ? 1 : 0, transition: "opacity 0.22s ease" }}>
         <div className="flex items-center gap-1.5 mb-0.5">
           <span className="shrink-0" style={{ color: current.color }}>{current.icon}</span>
           <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: current.color }}>{current.key}</span>
         </div>
-        <p className="text-[9px] text-white/40 leading-none pl-[18px] truncate">{current.desc}</p>
+        <p className="text-[9px] leading-none pl-[18px] truncate" style={{ color: "var(--text-tertiary)" }}>{current.desc}</p>
       </div>
     </div>
   );
@@ -277,9 +277,9 @@ function SampleRadarPanel() {
     <div
       className="relative rounded-2xl overflow-hidden p-3 flex flex-col"
       style={{
-        background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)",
-        border: "1px solid rgba(255,255,255,0.07)",
-        boxShadow: "0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
+        background: "var(--bg-surface)",
+        border: "1px solid var(--border-subtle)",
+        boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
         width: 270,
         paddingLeft: 20,
         paddingRight: 20,
@@ -293,11 +293,11 @@ function SampleRadarPanel() {
       <div className="absolute bottom-0 right-0 w-5 h-5 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
       <div className="flex items-center gap-1.5 mb-2">
         <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
-        <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/35">Sample Profile</span>
+        <span className="text-[9px] font-black uppercase tracking-[0.25em]" style={{ color: "var(--text-tertiary)" }}>Sample Profile</span>
       </div>
       <div className="flex-1 flex items-center justify-center">
         <div className="rounded-xl p-1.5 flex items-center justify-center"
-          style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
+          style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid var(--border-subtle)" }}>
           <ACERadar ace={SAMPLE_ACE} size={230} showLabels />
         </div>
       </div>

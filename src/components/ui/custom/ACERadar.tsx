@@ -2,6 +2,7 @@
 
 import type { ACE, AceAxis } from "@/lib/ace";
 import { ACE_AXIS_COLORS } from "@/lib/ace";
+import { useTheme } from "next-themes";
 
 interface Props {
   ace: ACE;
@@ -58,6 +59,13 @@ function hexToRgb(hex: string) {
 }
 
 export default function ACERadar({ ace, size = 220, showLabels = true, userAce, userColor = "#38bdf8" }: Props) {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+  // Colors that work in both modes — use mid-grey instead of white/black
+  const gridColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)";
+  const spokeColor = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)";
+  const labelInactive = isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.35)";
+  const scoreInactive = isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.25)";
   const pad = 36;
   const cx = size / 2;
   const cy = size / 2;
@@ -134,7 +142,7 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
             key={level}
             points={pts}
             fill={isFull ? `rgba(${dominantRgb},0.03)` : "none"}
-            stroke={isFull ? `rgba(${dominantRgb},0.18)` : "rgba(255,255,255,0.06)"}
+            stroke={isFull ? `rgba(${dominantRgb},0.18)` : gridColor}
             strokeWidth={isFull ? "1" : "0.6"}
           />
         );
@@ -151,7 +159,7 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
             key={i}
             x1={cx} y1={cy}
             x2={outer.x.toFixed(2)} y2={outer.y.toFixed(2)}
-            stroke={val > 0 ? `${color}30` : "rgba(255,255,255,0.05)"}
+            stroke={val > 0 ? `${color}30` : spokeColor}
             strokeWidth="0.75"
           />
         );
@@ -228,7 +236,7 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
                 x={x.toFixed(2)} y={(y - 4).toFixed(2)}
                 textAnchor={anchor}
                 dominantBaseline="central"
-                fill={active ? color : "rgba(255,255,255,0.3)"}
+                fill={active ? color : labelInactive}
                 fontSize={size < 180 ? "7" : "8.5"}
                 fontWeight="800"
                 letterSpacing="0.05em"
@@ -241,7 +249,7 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
                 x={x.toFixed(2)}
                 y={(y + (size < 180 ? 8 : 10)).toFixed(2)}
                 textAnchor={anchor}
-                fill={active ? `rgba(${hexToRgb(color)},0.65)` : "rgba(255,255,255,0.2)"}
+                fill={active ? `rgba(${hexToRgb(color)},0.65)` : scoreInactive}
                 fontSize={size < 180 ? "6.5" : "7.5"}
                 fontWeight="600"
                 fontFamily="system-ui, sans-serif"
