@@ -110,7 +110,7 @@ export default function ChatBubble() {
                   <Compass className="w-5 h-5 text-white" strokeWidth={2.5} />
                 </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-white font-semibold text-sm tracking-tight">Compass<span className="text-[#ff5100]">.</span>AI</p>
+                          <p className="text-white font-semibold text-sm tracking-tight">Compass<span className="text-[#ff5100]">.</span><span className="text-[#ff5100]">AI</span></p>
                         </div>
               </div>
             <button
