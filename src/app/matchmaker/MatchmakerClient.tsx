@@ -325,7 +325,7 @@ function RankProgressionBar({ totalScore }: { totalScore: number }) {
   return (
     <div
       className="rounded-2xl overflow-hidden border relative"
-      style={{ background: `linear-gradient(150deg, ${currentRank.color}14 0%, rgba(14,14,18,0) 60%)`, borderColor: `${currentRank.color}25` }}
+      style={{ background: `linear-gradient(150deg, ${currentRank.color}14 0%, transparent 60%)`, borderColor: `${currentRank.color}25` }}
     >
       <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: currentRank.color }} />
 
@@ -515,7 +515,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
           {!hasProfile && (
             <div className="shrink-0 w-full sm:w-[270px]">
               <div className="relative rounded-2xl overflow-hidden flex flex-col p-4"
-                style={{ background: "linear-gradient(160deg, #0d1525 0%, #0a0e18 100%)", border: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 20px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)" }}>
+                style={{ background: "linear-gradient(160deg, var(--bg-surface-2) 0%, var(--bg-surface) 100%)", border: "1px solid var(--border-subtle)", boxShadow: "0 20px 40px rgba(0,0,0,0.15)" }}>
                 {/* Corner brackets */}
                 <div className="absolute top-0 left-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
                 <div className="absolute top-0 right-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
@@ -524,11 +524,11 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
                 {/* Header */}
                 <div className="flex items-center gap-1.5 mb-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
-                  <span className="text-[9px] font-black uppercase tracking-[0.25em] text-white/35">Sample Capability Profile</span>
+                  <span className="text-[9px] font-black uppercase tracking-[0.25em]" style={{ color: "var(--text-muted)" }}>Sample Capability Profile</span>
                 </div>
                 {/* Radar */}
                 <div className="flex items-center justify-center">
-                  <div className="rounded-xl p-1.5" style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <div className="rounded-xl p-1.5" style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid var(--border-subtle)" }}>
                     <ACERadar ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }} size={220} showLabels />
                   </div>
                 </div>
@@ -780,7 +780,7 @@ function ResultsScreen({
       {/* ── 2. TIER HERO CARD ────────────────────────────────────────────────── */}
       <div
         className="rounded-2xl overflow-hidden border relative mb-5"
-        style={{ background: `linear-gradient(150deg, ${tier.color}12 0%, rgba(14,14,18,0.0) 60%)`, borderColor: `${tier.color}22` }}
+        style={{ background: `linear-gradient(150deg, ${tier.color}12 0%, transparent 60%)`, borderColor: `${tier.color}22` }}
       >
         <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full opacity-[0.06] blur-3xl pointer-events-none" style={{ background: tier.color }} />
 
@@ -860,7 +860,7 @@ function ResultsScreen({
                   }}
                 />
                 {RANKS.slice(1, -1).map((rank, i) => (
-                  <div key={rank.label} className="absolute inset-y-0 w-px bg-[rgba(14,14,18,0.6)]" style={{ left: `${((i + 1) / (totalRanks - 1)) * 100}%` }} />
+                  <div key={rank.label} className="absolute inset-y-0 w-px" style={{ left: `${((i + 1) / (totalRanks - 1)) * 100}%`, background: "var(--border-subtle)" }} />
                 ))}
                 <div
                   className="absolute w-[14px] h-[14px] rounded-full border-2 transition-all duration-700"
@@ -869,7 +869,7 @@ function ResultsScreen({
                     top: "50%",
                     transform: "translate(-50%, -50%)",
                     background: tier.color,
-                    borderColor: "#0e0e12",
+                    borderColor: "var(--bg-page)",
                     boxShadow: `0 0 10px ${tier.color}`,
                   }}
                 />
@@ -953,7 +953,7 @@ function ResultsScreen({
 
       {/* ── 4. ADVENTURE SECTIONS ────────────────────────────────────────────── */}
       <div className="space-y-2.5 mb-5 sm:mb-7">
-        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/25 px-0.5 mb-2.5">Matched Adventures</p>
+        <p className="text-[9px] uppercase tracking-[0.22em] font-bold px-0.5 mb-2.5" style={{ color: "var(--text-tertiary)" }}>Matched Adventures</p>
         <AdventureSection
           label="Ready Now"
           sublabel="Adventures within your current capability"
@@ -1009,8 +1009,10 @@ function ResultsScreen({
         </Link>
         <button
           onClick={onReset}
-          className="sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border text-white/40 text-sm font-medium hover:text-white/70 hover:border-white/20 transition-all active:scale-[0.98]"
-          style={{ borderColor: "rgba(255,255,255,0.10)" }}
+          className="sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border text-sm font-medium transition-all active:scale-[0.98]"
+          style={{ borderColor: "var(--border-subtle)", color: "var(--text-muted)" }}
+          onMouseEnter={e => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}
+          onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.borderColor = "var(--border-subtle)"; }}
         >
           <RotateCcw className="w-3.5 h-3.5" />
           Retake assessment
@@ -1041,12 +1043,12 @@ function AdventureSection({
   return (
     <div
       className="rounded-2xl overflow-hidden border"
-      style={{ borderColor: `${accentColor}22`, background: `linear-gradient(160deg, ${accentColor}06 0%, rgba(14,14,18,0) 60%)` }}
+      style={{ borderColor: `${accentColor}22`, background: `linear-gradient(160deg, ${accentColor}06 0%, transparent 60%)` }}
     >
       {/* ── Accordion header ── */}
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 transition-colors hover:bg-white/[0.02] text-left"
+        className="w-full flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 transition-colors hover:bg-black/[0.02] text-left"
       >
         <div className="flex items-center gap-3">
           <div
@@ -1056,8 +1058,8 @@ function AdventureSection({
             {icon}
           </div>
           <div>
-            <p className="text-white font-bold text-[13px] sm:text-sm leading-snug">{label}</p>
-            <p className="text-white/30 text-[10px] sm:text-[11px] mt-0.5 leading-snug">{sublabel}</p>
+            <p className="font-bold text-[13px] sm:text-sm leading-snug" style={{ color: "var(--text-primary)" }}>{label}</p>
+            <p className="text-[10px] sm:text-[11px] mt-0.5 leading-snug" style={{ color: "var(--text-tertiary)" }}>{sublabel}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0 ml-3">
@@ -1083,7 +1085,7 @@ function AdventureSection({
                 key={a.slug}
                 href={`/experiences/${a.slug}`}
                 className="group rounded-xl overflow-hidden border transition-all duration-200 hover:-translate-y-[2px] hover:shadow-lg"
-                style={{ borderColor: `${accentColor}18`, background: "rgba(255,255,255,0.025)" }}
+                style={{ borderColor: `${accentColor}18`, background: "var(--bg-card)" }}
               >
                 {/* Image */}
                 <div className="relative h-[140px] sm:h-[150px] overflow-hidden">
@@ -1097,11 +1099,11 @@ function AdventureSection({
                 </div>
                 {/* Content */}
                 <div className="px-3.5 pt-3 pb-3">
-                  <h3 className="text-white font-bold text-[13px] sm:text-sm leading-snug mb-1 group-hover:text-[#ff5100] transition-colors">{a.name}</h3>
-                  <p className="text-white/45 text-[10.5px] leading-snug line-clamp-2 mb-2.5">{a.tagline}</p>
+                  <h3 className="font-bold text-[13px] sm:text-sm leading-snug mb-1 group-hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-primary)" }}>{a.name}</h3>
+                  <p className="text-[10.5px] leading-snug line-clamp-2 mb-2.5" style={{ color: "var(--text-tertiary)" }}>{a.tagline}</p>
                   <div className="flex flex-wrap gap-1.5">
                     <Pill type="type" value={a.type} />
-                    <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[9px] font-medium bg-white/8 text-white/45 border border-white/10">
+                    <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[9px] font-medium border" style={{ background: "var(--bg-card)", color: "var(--text-tertiary)", borderColor: "var(--border-subtle)" }}>
                       <MapPin className="w-2 h-2" />{a.state}
                     </span>
                   </div>
@@ -1277,7 +1279,7 @@ export default function MatchmakerClient() {
       <div className="mb-7">
         <div className="flex items-center justify-between mb-5">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">Adventure Matchmaker</p>
-          <span className="text-white/25 text-xs font-medium">{stepIndex + 1} / {QUESTIONS.length}</span>
+          <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>{stepIndex + 1} / {QUESTIONS.length}</span>
         </div>
         <div className="flex items-center gap-2.5 mb-1.5">
           <div
@@ -1286,7 +1288,7 @@ export default function MatchmakerClient() {
           >
             {AXIS_ICONS[currentQ.axis.toLowerCase()]}
           </div>
-          <h1 className="text-white text-2xl font-bold tracking-tight">{currentQ.axis}</h1>
+          <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>{currentQ.axis}</h1>
         </div>
       </div>
 
@@ -1296,15 +1298,15 @@ export default function MatchmakerClient() {
           <div
             key={i}
             className="h-1 flex-1 rounded-full transition-all duration-300"
-            style={{ background: i < stepIndex ? "#ff5100" : i === stepIndex ? "#ff5100cc" : "rgba(255,255,255,0.1)" }}
+            style={{ background: i < stepIndex ? "#ff5100" : i === stepIndex ? "#ff5100cc" : "var(--border-subtle)" }}
           />
         ))}
       </div>
 
       {/* Question */}
       <div className="space-y-2.5">
-        <h2 className="text-white text-xl sm:text-2xl font-semibold leading-snug mb-1.5">{currentQ.question}</h2>
-        {currentQ.hint && <p className="text-white/35 text-sm mb-5 leading-relaxed">{currentQ.hint}</p>}
+        <h2 className="text-xl sm:text-2xl font-semibold leading-snug mb-1.5" style={{ color: "var(--text-primary)" }}>{currentQ.question}</h2>
+        {currentQ.hint && <p className="text-sm mb-5 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>{currentQ.hint}</p>}
         {currentQ.options.map(o => (
           <OptionBtn
             key={o.v}
@@ -1342,14 +1344,14 @@ export default function MatchmakerClient() {
             if (stepIndex === 0) setStarted(false);
             else setStepIndex(i => i - 1);
           }}
-          className="flex items-center gap-1.5 text-white/30 hover:text-white/60 transition-colors text-sm"
+          className="flex items-center gap-1.5 transition-colors text-sm" style={{ color: "var(--text-muted)" }} onMouseEnter={e => { e.currentTarget.style.color = "var(--text-secondary)" }} onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)" }}
         >
           <ChevronLeft className="w-4 h-4" />
           Back
         </button>
       </div>
 
-      <p className="text-center text-white/15 text-xs mt-6">
+      <p className="text-center text-xs mt-6" style={{ color: "var(--text-muted)", opacity: 0.5 }}>
         {stepIndex + 1} of {QUESTIONS.length}
       </p>
     </div>
