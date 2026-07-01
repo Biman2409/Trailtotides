@@ -2,6 +2,29 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { saveStoryToStorage } from "@/lib/stories";
 
+function calcReadTime(text: string): string {
+  const words = text.trim().split(/\s+/).length;
+  const min = Math.max(1, Math.round(words / 200));
+  return `${min} min read`;
+}
+
+function calcTags(title: string, excerpt: string, region: string): string[] {
+  const tags = [region];
+  const words = (title + " " + excerpt).toLowerCase();
+  const keywords = [
+    "trekking", "motorcycling", "cycling", "diving", "kayaking", "skiing",
+    "mountaineering", "rock climbing", "jeep safari", "road trip", "solo",
+    "himalayas", "desert", "coast", "island", "northeast", "urban",
+    "camping", "rafting", "paragliding", "high altitude", "expedition",
+  ];
+  for (const kw of keywords) {
+    if (words.includes(kw) && !tags.includes(kw)) {
+      tags.push(kw.charAt(0).toUpperCase() + kw.slice(1));
+    }
+  }
+  return tags.slice(0, 6);
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -16,9 +39,6 @@ export async function POST(req: NextRequest) {
       dateOfAdventure,
       region,
       heroImageUrl,
-      authorAvatar,
-      readTime,
-      tags,
     } = body;
 
     if (!title || !excerpt || !storyBody || !authorName || !dateOfAdventure || !region) {
@@ -36,21 +56,15 @@ export async function POST(req: NextRequest) {
       .slice(0, 80);
     if (!slug) slug = `story-${Date.now()}`;
 
-    // Auto-populate avatar from user's profile picture if not provided
-    let finalAvatar = authorAvatar || "";
-    if (!finalAvatar) {
-      const avatarId = user?.user_metadata?.avatar_id;
-      if (avatarId) finalAvatar = `/avatars/avatar-${avatarId}.png`;
-    }
+    // Fetch avatar from user's profile picture
+    let authorAvatar = "";
+    const avatarId = user?.user_metadata?.avatar_id;
+    if (avatarId) authorAvatar = `/avatars/avatar-${avatarId}.png`;
 
-    // Parse tags into array, merge with region
-    const tagList: string[] = [];
-    if (tags) {
-      tagList.push(...tags.split(",").map((t: string) => t.trim()).filter(Boolean));
-    }
-    if (!tagList.includes(region)) tagList.unshift(region);
+    // AI-calculated values
+    const readTime = calcReadTime(storyBody);
+    const tagList = calcTags(title, excerpt, region);
 
-    const finalReadTime = readTime || "5 min read";
     const now = new Date().toISOString();
 
     const storyRecord = {
@@ -62,9 +76,9 @@ export async function POST(req: NextRequest) {
       author_name: authorName,
       author_role: authorRole || "",
       author_bio: authorBio || "",
-      author_avatar: finalAvatar,
+      author_avatar: authorAvatar,
       hero_image: heroImageUrl || "",
-      read_time: finalReadTime,
+      read_time: readTime,
       tags: tagList,
       region,
       date: dateOfAdventure,

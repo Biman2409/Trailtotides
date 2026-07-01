@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { AVATARS } from "@/lib/avatars";
 import {
   ArrowRight,
   ArrowLeft,
@@ -15,11 +14,8 @@ import {
   FileText,
   Image as ImageIcon,
   MapPin,
-  Clock,
-  Tag,
   X,
   Upload,
-  Sparkles,
 } from "lucide-react";
 
 type FormData = {
@@ -32,9 +28,6 @@ type FormData = {
   dateOfAdventure: string;
   region: string;
   heroImageUrl: string;
-  authorAvatar: string;
-  readTime: string;
-  tags: string;
 };
 
 type UploadState = {
@@ -52,9 +45,6 @@ const INITIAL: FormData = {
   dateOfAdventure: "",
   region: "",
   heroImageUrl: "",
-  authorAvatar: "",
-  readTime: "",
-  tags: "",
 };
 
 const inputClass =
@@ -92,7 +82,6 @@ export default function SubmitStoryPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [upload, setUpload] = useState<UploadState>({ status: "idle", url: "" });
-  const [avatarOpen, setAvatarOpen] = useState(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -116,11 +105,6 @@ export default function SubmitStoryPage() {
     } catch {
       setUpload({ status: "error", url: "Upload failed. Try again." });
     }
-  }
-
-  function pickAvatar(avatarSrc: string) {
-    setForm((prev) => ({ ...prev, authorAvatar: avatarSrc }));
-    setAvatarOpen(false);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -223,69 +207,6 @@ export default function SubmitStoryPage() {
                     <Label>Bio</Label>
                     <textarea name="authorBio" rows={2} value={form.authorBio} onChange={handleChange} placeholder="A few lines about yourself..." className={textareaClass} />
                   </div>
-                  <div className="sm:col-span-2">
-                    <Label>Profile Avatar</Label>
-                    <div className="flex items-center gap-3 flex-wrap">
-                      {form.authorAvatar ? (
-                        <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-white/10">
-                          <img src={form.authorAvatar} alt="avatar" className="w-full h-full object-cover" />
-                          <button type="button" onClick={() => setForm(p => ({ ...p, authorAvatar: "" }))}
-                            className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-black/70 flex items-center justify-center"
-                          >
-                            <X className="w-2.5 h-2.5 text-white/70" />
-                          </button>
-                        </div>
-                      ) : null}
-                      <button type="button" onClick={() => setAvatarOpen(true)}
-                        className="flex items-center gap-2 bg-white/6 border border-white/10 hover:border-white/20 rounded-xl px-4 py-2.5 text-white/60 hover:text-white/80 text-sm transition-all"
-                      >
-                        <Sparkles className="w-3.5 h-3.5" />
-                        {form.authorAvatar ? "Change" : "Pick an avatar"}
-                      </button>
-                    </div>
-
-                    {/* Avatar Picker Modal */}
-                    {avatarOpen && (
-                      <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-                        style={{ background: "rgba(0,0,0,0.8)", backdropFilter: "blur(10px)" }}
-                        onClick={() => setAvatarOpen(false)}
-                      >
-                        <div className="rounded-2xl overflow-hidden w-full max-w-sm"
-                          style={{ background: "#0e0e12", border: "1px solid rgba(255,255,255,0.09)" }}
-                          onClick={e => e.stopPropagation()}
-                        >
-                          <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
-                            <p className="font-bold text-white text-sm">Choose Avatar</p>
-                            <button type="button" onClick={() => setAvatarOpen(false)}
-                              className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-white/8 text-white/30"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          </div>
-                          <div className="p-5">
-                            <div className="grid grid-cols-5 gap-3">
-                              {AVATARS.map(av => (
-                                <button key={av.id} type="button" onClick={() => pickAvatar(av.src)}
-                                  className="flex flex-col items-center gap-1.5 group"
-                                >
-                                  <span className={`w-full aspect-square rounded-xl overflow-hidden block transition-all ${
-                                    form.authorAvatar === av.src
-                                      ? "ring-2 ring-[#ff5100] ring-offset-2 ring-offset-[#0e0e12] scale-105"
-                                      : "hover:scale-105"
-                                  }`}
-                                    style={{ border: `1px solid ${form.authorAvatar === av.src ? "rgba(255,81,0,0.8)" : "rgba(255,255,255,0.07)"}` }}
-                                  >
-                                    <img src={av.src} alt={av.label} className="w-full h-full object-cover" loading="eager" />
-                                  </span>
-                                  <span className="text-[7px] text-white/25 group-hover:text-white/50 transition-colors leading-none">{av.label}</span>
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
                 </div>
               </SectionCard>
 
@@ -319,26 +240,7 @@ export default function SubmitStoryPage() {
                         />
                       </div>
                     </div>
-                    <div>
-                      <Label>Read time</Label>
-                      <div className="relative">
-                        <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
-                        <input name="readTime" value={form.readTime} onChange={handleChange} placeholder="e.g. 5 min read"
-                          className={`${inputClass} pl-9`}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <Label>Tags</Label>
-                      <div className="relative">
-                        <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
-                        <input name="tags" value={form.tags} onChange={handleChange} placeholder="Ladakh, Motorcycling, Road Trip"
-                          className={`${inputClass} pl-9`}
-                        />
-                      </div>
-                      <p className="text-white/20 text-[10px] mt-1">Comma-separated</p>
-                    </div>
-                  </div>
+                                      </div>
 
                   {/* Photo upload */}
                   <div>
