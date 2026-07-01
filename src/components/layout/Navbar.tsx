@@ -543,20 +543,19 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <button
-            onClick={() => setSearchOpen(true)}
-            className="w-full flex items-center gap-2 py-3 px-3 text-base font-medium rounded-xl transition-colors hover:bg-white/5"
-            style={{ color: "var(--nav-text)", borderBottom: "1px solid var(--border-subtle)" }}
-          >
-            <Search className="w-4 h-4" />
-            Search
-          </button>
-
-          {/* Mobile theme toggle */}
-          <div className="flex items-center gap-1 py-2 px-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+          {/* Mobile search + theme — combined row */}
+          <div className="flex items-center gap-2 py-2 px-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-all flex-1 justify-center"
+              style={{ color: "var(--nav-text)", background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}
+            >
+              <Search className="w-3.5 h-3.5" />
+              Search
+            </button>
             <button
               onClick={() => { setTheme("light"); setMenuOpen(false); }}
-              className="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-all flex-1 justify-center"
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg transition-all flex-1 justify-center"
               style={{
                 color: theme === "light" ? "#ff5100" : "var(--text-muted)",
                 background: theme === "light" ? "rgba(255,81,0,0.08)" : "transparent",
@@ -568,7 +567,7 @@ export default function Navbar() {
             </button>
             <button
               onClick={() => { setTheme("dark"); setMenuOpen(false); }}
-              className="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-all flex-1 justify-center"
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg transition-all flex-1 justify-center"
               style={{
                 color: theme === "dark" ? "#ff5100" : "var(--text-muted)",
                 background: theme === "dark" ? "rgba(255,81,0,0.08)" : "transparent",
