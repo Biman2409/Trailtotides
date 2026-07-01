@@ -28,13 +28,14 @@ export default function MobileBottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 lg:hidden safe-area-bottom transition-transform duration-300 ease-out"
+      className="fixed bottom-0 left-0 right-0 z-40 lg:hidden transition-transform duration-300 ease-out"
       style={{
         transform: visible ? "translateY(0)" : "translateY(100%)",
+        paddingBottom: "env(safe-area-inset-bottom, 8px)",
       }}
     >
       <div
-        className="mx-3 mb-2 rounded-2xl shadow-2xl overflow-hidden"
+        className="mx-3 rounded-2xl shadow-2xl overflow-hidden"
         style={{
           background: "var(--nav-bg)",
           backdropFilter: "blur(24px)",
