@@ -57,7 +57,7 @@ export default function MobileBottomNav() {
                 className="relative flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-all min-w-0 group"
               >
                 <div
-                  className="relative flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-200"
+                  className="flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-200"
                   style={{
                     background: isActive ? "rgba(255,81,0,0.12)" : "transparent",
                   }}
@@ -68,13 +68,6 @@ export default function MobileBottomNav() {
                       color: isActive ? "#ff5100" : "var(--nav-text)",
                     }}
                   />
-                  {/* Active dot indicator */}
-                  {isActive && (
-                    <span
-                      className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full transition-all duration-200"
-                      style={{ background: "#ff5100" }}
-                    />
-                  )}
                 </div>
                 <span
                   className="text-[9px] font-medium leading-tight whitespace-nowrap transition-colors duration-200"
