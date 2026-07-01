@@ -222,16 +222,17 @@ export default function SubmitStoryPage() {
                     <textarea name="excerpt" required rows={2} value={form.excerpt} onChange={handleChange} placeholder="1–2 sentences capturing the essence..." className={textareaClass} />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
+                    <div className="flex flex-col">
                       <Label required>Date</Label>
                       <div className="relative">
                         <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
-                        <input name="dateOfAdventure" required type="month" value={form.dateOfAdventure} onChange={handleChange}
-                          className={`${inputClass} pl-9`} style={{ colorScheme: "dark" }}
+                        <input name="dateOfAdventure" required type="text" value={form.dateOfAdventure} onChange={handleChange}
+                          placeholder="e.g. July 2022"
+                          className={`${inputClass} pl-9`}
                         />
                       </div>
                     </div>
-                    <div>
+                    <div className="flex flex-col">
                       <Label required>Location</Label>
                       <div className="relative">
                         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
