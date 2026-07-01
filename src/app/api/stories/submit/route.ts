@@ -15,6 +15,9 @@ export async function POST(req: NextRequest) {
       dateOfAdventure,
       region,
       heroImageUrl,
+      authorAvatar,
+      readTime,
+      tags,
     } = body;
 
     if (!title || !excerpt || !storyBody || !authorName || !dateOfAdventure || !region) {
@@ -26,19 +29,32 @@ export async function POST(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
 
     // Generate a slug from the title
-    const slug = title
+    let slug = title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "")
-      .slice(0, 80) || `story-${Date.now()}`;
+      .slice(0, 80);
+    if (!slug) slug = `story-${Date.now()}`;
+
+    // Auto-populate avatar from user's profile picture if not provided
+    let finalAvatar = authorAvatar || "";
+    if (!finalAvatar) {
+      const avatarId = user?.user_metadata?.avatar_id;
+      if (avatarId) finalAvatar = `/avatars/avatar-${avatarId}.png`;
+    }
+
+    // Parse tags into array, merge with region
+    const tagList: string[] = [];
+    if (tags) {
+      tagList.push(...tags.split(",").map((t: string) => t.trim()).filter(Boolean));
+    }
+    if (!tagList.includes(region)) tagList.unshift(region);
+
+    // Read time fallback
+    const finalReadTime = readTime || "5 min read";
 
     const adminClient = await createAdminClient();
 
-    // Auto-populate avatar from user's profile picture
-    const avatarId = user?.user_metadata?.avatar_id;
-    const authorAvatar = avatarId ? `/avatars/avatar-${avatarId}.png` : "";
-
-    // Insert into stories table with pending status
     const { error } = await adminClient.from("stories").insert({
       slug,
       title,
@@ -47,10 +63,10 @@ export async function POST(req: NextRequest) {
       author_name: authorName,
       author_role: authorRole || "",
       author_bio: authorBio || "",
-      author_avatar: authorAvatar,
+      author_avatar: finalAvatar,
       hero_image: heroImageUrl || "",
-      read_time: "5 min read",
-      tags: [region],
+      read_time: finalReadTime,
+      tags: tagList,
       region,
       date: dateOfAdventure,
       status: "pending",

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { AVATARS } from "@/lib/avatars";
 import {
   ArrowRight,
   ArrowLeft,
@@ -14,6 +15,11 @@ import {
   FileText,
   Image as ImageIcon,
   MapPin,
+  Clock,
+  Tag,
+  X,
+  Upload,
+  Sparkles,
 } from "lucide-react";
 
 type FormData = {
@@ -26,6 +32,9 @@ type FormData = {
   dateOfAdventure: string;
   region: string;
   heroImageUrl: string;
+  authorAvatar: string;
+  readTime: string;
+  tags: string;
 };
 
 type UploadState = {
@@ -43,18 +52,39 @@ const INITIAL: FormData = {
   dateOfAdventure: "",
   region: "",
   heroImageUrl: "",
+  authorAvatar: "",
+  readTime: "",
+  tags: "",
 };
 
-function FieldLabel({ children }: { children: React.ReactNode }) {
+const inputClass =
+  "w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#ff5100]/60 focus:ring-1 focus:ring-[#ff5100]/20 transition-all";
+
+const textareaClass =
+  "w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#ff5100]/60 focus:ring-1 focus:ring-[#ff5100]/20 transition-all resize-none";
+
+function SectionCard({ icon: Icon, title, children }: { icon: any; title: string; children: React.ReactNode }) {
   return (
-    <label className="block text-white/60 text-xs font-medium mb-2 uppercase tracking-wide">
-      {children}
-    </label>
+    <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl overflow-hidden backdrop-blur-sm">
+      <div className="flex items-center gap-2.5 px-6 pt-5 pb-3 border-b border-white/[0.05]">
+        <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-[#ff5100]/10">
+          <Icon className="w-3.5 h-3.5 text-[#ff5100]" />
+        </div>
+        <h3 className="text-white font-semibold text-sm">{title}</h3>
+      </div>
+      <div className="p-6 space-y-5">{children}</div>
+    </div>
   );
 }
 
-const inputClass =
-  "w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors";
+function Label({ children, required }: { children: React.ReactNode; required?: boolean }) {
+  return (
+    <label className="block text-white/50 text-[11px] font-medium mb-1.5 uppercase tracking-wider">
+      {children}
+      {required && <span className="text-[#ff5100] ml-1">*</span>}
+    </label>
+  );
+}
 
 export default function SubmitStoryPage() {
   const [form, setForm] = useState<FormData>(INITIAL);
@@ -62,36 +92,35 @@ export default function SubmitStoryPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [upload, setUpload] = useState<UploadState>({ status: "idle", url: "" });
+  const [avatarOpen, setAvatarOpen] = useState(false);
 
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-
     setUpload({ status: "uploading", url: "" });
-
     try {
       const fd = new FormData();
       fd.append("file", file);
-
       const res = await fetch("/api/stories/upload", { method: "POST", body: fd });
       const data = await res.json();
-
       if (!res.ok || data.error) {
         setUpload({ status: "error", url: data.error || "Upload failed" });
         return;
       }
-
       setUpload({ status: "done", url: data.url });
       setForm((prev) => ({ ...prev, heroImageUrl: data.url }));
     } catch {
       setUpload({ status: "error", url: "Upload failed. Try again." });
     }
+  }
+
+  function pickAvatar(avatarSrc: string) {
+    setForm((prev) => ({ ...prev, authorAvatar: avatarSrc }));
+    setAvatarOpen(false);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -120,259 +149,266 @@ export default function SubmitStoryPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen t-bg-page">
       <Navbar />
 
       {/* Hero */}
-      <section className="pt-32 pb-16 px-6 lg:px-8 t-bg-surface2 relative overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-20"
+      <section className="relative pt-28 pb-12 px-6 lg:px-8 overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.07]"
           style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 50%, #ff510022 0%, transparent 50%), radial-gradient(circle at 80% 30%, #1e3d2f30 0%, transparent 50%)",
+            backgroundImage: "radial-gradient(circle at 25% 40%, #ff5100 0%, transparent 50%), radial-gradient(circle at 75% 60%, #1e3d2f 0%, transparent 50%)",
           }}
         />
-        <div className="max-w-3xl mx-auto relative z-10">
+        <div className="max-w-3xl mx-auto relative">
           <Link
             href="/stories"
-            className="inline-flex items-center gap-1.5 text-white/40 hover:text-white/80 text-xs font-semibold uppercase tracking-widest mb-6 transition-colors group"
+            className="inline-flex items-center gap-1.5 text-white/35 hover:text-white/70 text-[11px] font-semibold uppercase tracking-[0.15em] mb-5 transition-colors group"
           >
-            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
-            Back to Stories
+            <ArrowLeft className="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" />
+            Back
           </Link>
-          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
+          <p className="text-[#ff5100] text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">
             Share Your Story
           </p>
-          <h1 className="text-white text-5xl lg:text-6xl font-bold tracking-tight leading-none mb-4">
+          <h1 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-3">
             Tell us what<br />
             <span className="text-[#ff5100]">happened out there</span>
           </h1>
-          <p className="text-white/50 text-base leading-relaxed max-w-xl">
-            We feature stories from real adventurers — not travel bloggers, not influencers. If you&apos;ve done something remarkable, fill out the form below. Our team reviews every submission and reaches out to you personally if your story makes the cut.
+          <p className="text-white/45 text-sm leading-relaxed max-w-lg">
+            Real stories from real adventurers. Fill out the form — our team reviews every submission.
           </p>
         </div>
       </section>
 
       {/* Form */}
-      <section className="py-16 px-6 lg:px-8">
+      <section className="pb-20 px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           {submitted ? (
-            <div className="bg-emerald-500/10 border border-emerald-500/25 rounded-3xl p-12 text-center">
-              <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-6">
-                <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+            <div className="bg-emerald-500/8 border border-emerald-500/20 rounded-3xl p-12 text-center">
+              <div className="w-14 h-14 rounded-full bg-emerald-500/15 flex items-center justify-center mx-auto mb-5">
+                <CheckCircle2 className="w-7 h-7 text-emerald-400" />
               </div>
-              <h3 className="text-white text-2xl font-bold mb-3">Story submitted!</h3>
-              <p className="text-white/55 text-base leading-relaxed mb-8 max-w-md mx-auto">
-                Thanks for sharing. Our team will review your submission and reach out within a few days if your story is a good fit.
+              <h3 className="text-white text-xl font-bold mb-2">Story submitted!</h3>
+              <p className="text-white/50 text-sm leading-relaxed mb-7 max-w-sm mx-auto">
+                Our team will review your submission and reach out if it&apos;s a good fit.
               </p>
               <Link
                 href="/stories"
-                className="inline-flex items-center gap-2 bg-[#ff5100] text-white font-semibold px-7 py-3.5 rounded-xl text-base transition-all hover:bg-[#ff7d47] hover:-translate-y-0.5 group"
+                className="inline-flex items-center gap-2 bg-[#ff5100] text-white font-semibold px-6 py-3 rounded-xl text-sm transition-all hover:bg-[#ff7d47] hover:-translate-y-0.5 group"
               >
-                Read Other Stories
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                Read Stories
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
-                <div className="bg-red-500/10 border border-red-500/25 rounded-2xl px-5 py-4 text-red-400 text-sm">
+                <div className="bg-red-500/8 border border-red-500/20 rounded-xl px-4 py-3 text-red-400 text-sm">
                   {error}
                 </div>
               )}
 
-              {/* About You */}
-              <div className="bg-white/4 border border-white/8 rounded-2xl p-7 space-y-5">
-                <div className="flex items-center gap-2.5 mb-1">
-                  <User className="w-4 h-4 text-[#ff5100]" />
-                  <h3 className="text-white font-semibold text-base">About You</h3>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {/* ── Section: About You ── */}
+              <SectionCard icon={User} title="About You">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <FieldLabel>Your Name *</FieldLabel>
-                    <input
-                      name="authorName"
-                      required
-                      value={form.authorName}
-                      onChange={handleChange}
-                      placeholder="e.g. Nishant Ingle"
-                      className={inputClass}
-                    />
+                    <Label required>Name</Label>
+                    <input name="authorName" required value={form.authorName} onChange={handleChange} placeholder="e.g. Nishant Ingle" className={inputClass} />
                   </div>
                   <div>
-                    <FieldLabel>What kind of adventurer are you?</FieldLabel>
-                    <input
-                      name="authorRole"
-                      value={form.authorRole}
-                      onChange={handleChange}
-                      placeholder="e.g. Solo biker, Freediver…"
-                      className={inputClass}
-                    />
+                    <Label>Role</Label>
+                    <input name="authorRole" value={form.authorRole} onChange={handleChange} placeholder="e.g. Solo biker" className={inputClass} />
                   </div>
                   <div className="sm:col-span-2">
-                    <FieldLabel>How would you describe yourself?</FieldLabel>
-                    <textarea
-                      name="authorBio"
-                      rows={3}
-                      value={form.authorBio}
-                      onChange={handleChange}
-                      placeholder="A few lines about yourself — who you are, what drives you out there. This appears on your story page."
-                      className={`${inputClass} resize-none`}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* The Adventure */}
-              <div className="bg-white/4 border border-white/8 rounded-2xl p-7 space-y-5">
-                <div className="flex items-center gap-2.5 mb-1">
-                  <Mountain className="w-4 h-4 text-[#ff5100]" />
-                  <h3 className="text-white font-semibold text-base">The Adventure</h3>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div className="sm:col-span-2">
-                    <FieldLabel>Story Title *</FieldLabel>
-                    <input
-                      name="title"
-                      required
-                      value={form.title}
-                      onChange={handleChange}
-                      placeholder="e.g. Riding the Photi La at 4,000m"
-                      className={inputClass}
-                    />
+                    <Label>Bio</Label>
+                    <textarea name="authorBio" rows={2} value={form.authorBio} onChange={handleChange} placeholder="A few lines about yourself..." className={textareaClass} />
                   </div>
                   <div className="sm:col-span-2">
-                    <FieldLabel>Short Excerpt *</FieldLabel>
-                    <textarea
-                      name="excerpt"
-                      required
-                      rows={3}
-                      value={form.excerpt}
-                      onChange={handleChange}
-                      placeholder="1–2 sentences that capture the essence of the story. This appears on the story card."
-                      className={`${inputClass} resize-none overflow-hidden`}
-                    />
-                  </div>
-                  <div>
-                    <FieldLabel>Adventure Date *</FieldLabel>
-                    <div className="relative">
-                      <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
-                      <input
-                        name="dateOfAdventure"
-                        required
-                        type="month"
-                        value={form.dateOfAdventure}
-                        onChange={handleChange}
-                        className={`${inputClass} pl-10`}
-                        style={{ colorScheme: "dark" }}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <FieldLabel>Location *</FieldLabel>
-                    <div className="relative">
-                      <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
-                      <input
-                        name="region"
-                        required
-                        value={form.region}
-                        onChange={handleChange}
-                        placeholder="e.g. Spiti Valley, Himachal Pradesh"
-                        className={`${inputClass} pl-10`}
-                      />
-                    </div>
-                  </div>
-                  <div className="sm:col-span-2">
-                    <FieldLabel>Got a photo?</FieldLabel>
-                    <div className="space-y-3">
-                      <label
-                        className={`flex items-center gap-3 w-full bg-white/6 border border-dashed rounded-xl px-4 py-4 cursor-pointer text-sm transition-colors ${
-                          upload.status === "uploading"
-                            ? "border-[#ff5100]/60 text-[#ff5100]"
-                            : upload.status === "done"
-                            ? "border-emerald-500/50 text-emerald-400"
-                            : "border-white/10 text-white/50 hover:border-white/25"
-                        }`}
+                    <Label>Profile Avatar</Label>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      {form.authorAvatar ? (
+                        <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-white/10">
+                          <img src={form.authorAvatar} alt="avatar" className="w-full h-full object-cover" />
+                          <button type="button" onClick={() => setForm(p => ({ ...p, authorAvatar: "" }))}
+                            className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-black/70 flex items-center justify-center"
+                          >
+                            <X className="w-2.5 h-2.5 text-white/70" />
+                          </button>
+                        </div>
+                      ) : null}
+                      <button type="button" onClick={() => setAvatarOpen(true)}
+                        className="flex items-center gap-2 bg-white/6 border border-white/10 hover:border-white/20 rounded-xl px-4 py-2.5 text-white/60 hover:text-white/80 text-sm transition-all"
                       >
-                        <input
-                          type="file"
-                          accept="image/jpeg,image/jpg,image/png,image/webp"
-                          onChange={handleFileUpload}
-                          className="hidden"
-                          disabled={upload.status === "uploading"}
+                        <Sparkles className="w-3.5 h-3.5" />
+                        {form.authorAvatar ? "Change" : "Pick an avatar"}
+                      </button>
+                    </div>
+
+                    {/* Avatar Picker Modal */}
+                    {avatarOpen && (
+                      <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                        style={{ background: "rgba(0,0,0,0.8)", backdropFilter: "blur(10px)" }}
+                        onClick={() => setAvatarOpen(false)}
+                      >
+                        <div className="rounded-2xl overflow-hidden w-full max-w-sm"
+                          style={{ background: "#0e0e12", border: "1px solid rgba(255,255,255,0.09)" }}
+                          onClick={e => e.stopPropagation()}
+                        >
+                          <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06]">
+                            <p className="font-bold text-white text-sm">Choose Avatar</p>
+                            <button type="button" onClick={() => setAvatarOpen(false)}
+                              className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-white/8 text-white/30"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                          <div className="p-5">
+                            <div className="grid grid-cols-5 gap-3">
+                              {AVATARS.map(av => (
+                                <button key={av.id} type="button" onClick={() => pickAvatar(av.src)}
+                                  className="flex flex-col items-center gap-1.5 group"
+                                >
+                                  <span className={`w-full aspect-square rounded-xl overflow-hidden block transition-all ${
+                                    form.authorAvatar === av.src
+                                      ? "ring-2 ring-[#ff5100] ring-offset-2 ring-offset-[#0e0e12] scale-105"
+                                      : "hover:scale-105"
+                                  }`}
+                                    style={{ border: `1px solid ${form.authorAvatar === av.src ? "rgba(255,81,0,0.8)" : "rgba(255,255,255,0.07)"}` }}
+                                  >
+                                    <img src={av.src} alt={av.label} className="w-full h-full object-cover" loading="eager" />
+                                  </span>
+                                  <span className="text-[7px] text-white/25 group-hover:text-white/50 transition-colors leading-none">{av.label}</span>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </SectionCard>
+
+              {/* ── Section: The Adventure ── */}
+              <SectionCard icon={Mountain} title="The Adventure">
+                <div className="space-y-4">
+                  <div>
+                    <Label required>Title</Label>
+                    <input name="title" required value={form.title} onChange={handleChange} placeholder="e.g. Riding the Photi La at 4,000m" className={inputClass} />
+                  </div>
+                  <div>
+                    <Label required>Excerpt</Label>
+                    <textarea name="excerpt" required rows={2} value={form.excerpt} onChange={handleChange} placeholder="1–2 sentences capturing the essence..." className={textareaClass} />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label required>Date</Label>
+                      <div className="relative">
+                        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
+                        <input name="dateOfAdventure" required type="month" value={form.dateOfAdventure} onChange={handleChange}
+                          className={`${inputClass} pl-9`} style={{ colorScheme: "dark" }}
                         />
+                      </div>
+                    </div>
+                    <div>
+                      <Label required>Location</Label>
+                      <div className="relative">
+                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
+                        <input name="region" required value={form.region} onChange={handleChange} placeholder="e.g. Spiti Valley"
+                          className={`${inputClass} pl-9`}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label>Read time</Label>
+                      <div className="relative">
+                        <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
+                        <input name="readTime" value={form.readTime} onChange={handleChange} placeholder="e.g. 5 min read"
+                          className={`${inputClass} pl-9`}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label>Tags</Label>
+                      <div className="relative">
+                        <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
+                        <input name="tags" value={form.tags} onChange={handleChange} placeholder="Ladakh, Motorcycling, Road Trip"
+                          className={`${inputClass} pl-9`}
+                        />
+                      </div>
+                      <p className="text-white/20 text-[10px] mt-1">Comma-separated</p>
+                    </div>
+                  </div>
+
+                  {/* Photo upload */}
+                  <div>
+                    <Label>Hero photo</Label>
+                    <div className="space-y-3">
+                      {upload.status === "done" && form.heroImageUrl && (
+                        <div className="relative rounded-xl overflow-hidden h-40 bg-black/40 border border-white/10">
+                          <img src={form.heroImageUrl} alt="Preview" className="w-full h-full object-cover" />
+                          <button type="button" onClick={() => { setUpload({ status: "idle", url: "" }); setForm(p => ({ ...p, heroImageUrl: "" })); }}
+                            className="absolute top-2 right-2 w-7 h-7 rounded-lg bg-black/70 flex items-center justify-center hover:bg-black/90"
+                          >
+                            <X className="w-3.5 h-3.5 text-white/70" />
+                          </button>
+                        </div>
+                      )}
+                      <label className={`flex items-center justify-center gap-2.5 w-full border border-dashed rounded-xl px-4 py-3.5 cursor-pointer text-sm transition-all ${
+                        upload.status === "uploading"
+                          ? "border-[#ff5100]/50 text-[#ff5100] bg-[#ff5100]/5"
+                          : upload.status === "done"
+                          ? "border-emerald-500/40 text-emerald-400 bg-emerald-500/5"
+                          : "border-white/10 text-white/40 hover:border-white/25 hover:text-white/60 hover:bg-white/[0.02]"
+                      }`}>
+                        <input type="file" accept="image/jpeg,image/jpg,image/png,image/webp" onChange={handleFileUpload} className="hidden" disabled={upload.status === "uploading"} />
                         {upload.status === "uploading" ? (
-                          <span className="flex items-center gap-2">
-                            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                            </svg>
-                            Uploading…
-                          </span>
+                          <><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>Uploading…</>
                         ) : upload.status === "done" ? (
-                          <span className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4" />
-                            Photo uploaded
-                          </span>
+                          <><Upload className="w-4 h-4" />Photo uploaded — or upload another</>
                         ) : (
-                          <span className="flex items-center gap-2">
-                            <ImageIcon className="w-4 h-4" />
-                            Click to upload from device
-                          </span>
+                          <><Upload className="w-4 h-4" />Upload photo from device</>
                         )}
                       </label>
-                      {upload.status === "error" && (
-                        <p className="text-red-400 text-xs">{upload.url}</p>
-                      )}
-                      <p className="text-white/25 text-xs">JPEG, PNG, or WebP. Max 8MB.</p>
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 h-px bg-white/8" />
-                        <span className="text-white/20 text-[11px] uppercase tracking-wider">or paste a URL</span>
-                        <div className="flex-1 h-px bg-white/8" />
+                      {upload.status === "error" && <p className="text-red-400 text-xs">{upload.url}</p>}
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1 h-px bg-white/[0.06]" />
+                        <span className="text-white/15 text-[10px] uppercase tracking-wider font-medium">or paste URL</span>
+                        <div className="flex-1 h-px bg-white/[0.06]" />
                       </div>
                       <div className="relative">
-                        <ImageIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
-                        <input
-                          name="heroImageUrl"
-                          value={form.heroImageUrl}
-                          onChange={handleChange}
-                          placeholder="https://…"
-                          className={`${inputClass} pl-10`}
-                        />
+                        <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/25 pointer-events-none" />
+                        <input name="heroImageUrl" value={form.heroImageUrl} onChange={handleChange} placeholder="https://..." className={`${inputClass} pl-9 text-xs`} />
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </SectionCard>
 
-              {/* Your Story */}
-              <div className="bg-white/4 border border-white/8 rounded-2xl p-7 space-y-5">
-                <div className="flex items-center gap-2.5 mb-1">
-                  <FileText className="w-4 h-4 text-[#ff5100]" />
-                  <h3 className="text-white font-semibold text-base">Your Story</h3>
-                </div>
+              {/* ── Section: Your Story ── */}
+              <SectionCard icon={FileText} title="Your Story">
                 <div>
-                  <FieldLabel>Write it out *</FieldLabel>
-                  <textarea
-                    name="body"
-                    required
-                    rows={14}
-                    value={form.body}
-                    onChange={handleChange}
-                    placeholder="Tell us everything. What happened, what you felt, what went wrong, what you learned. Don't hold back. Write it like you're telling a friend over a fire."
-                    className={`${inputClass} resize-none`}
+                  <Label required>Story body</Label>
+                  <textarea name="body" required rows={12} value={form.body} onChange={handleChange}
+                    placeholder="Tell us everything. What happened, what you felt, what went wrong, what you learned. Don't hold back."
+                    className={textareaClass}
                   />
-                  <p className="text-white/25 text-xs mt-1.5">No word limit. The best stories are honest and vivid.</p>
+                  <p className="text-white/20 text-[10px] mt-1.5">No word limit. Honest and vivid wins.</p>
                 </div>
-              </div>
+              </SectionCard>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl text-base flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/25 group"
+              {/* Submit */}
+              <button type="submit" disabled={loading}
+                className="w-full bg-[#ff5100] hover:bg-[#ff7d47] disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-xl text-sm flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/20 group"
               >
                 {loading ? (
-                  <span>Submitting…</span>
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Submitting…
+                  </span>
                 ) : (
                   <>
                     Submit Story
@@ -380,10 +416,6 @@ export default function SubmitStoryPage() {
                   </>
                 )}
               </button>
-
-              <p className="text-white/30 text-xs text-center">
-                Your story, your words. We&apos;ll reach out if it makes the cut.
-              </p>
             </form>
           )}
         </div>
