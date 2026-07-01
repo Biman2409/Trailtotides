@@ -194,11 +194,11 @@ export default function Navbar() {
           {/* Desktop right side */}
           <div className="hidden lg:flex items-center gap-2">
 
-            {/* ── Search ── */}
+            {/* ── Search (hidden on transparent navbar, appears on scroll) ── */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl transition-colors hover:bg-white/5"
-              style={{ color: "var(--text-muted)" }}
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all hover:bg-white/5 ${isTransparent ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+              style={{ color: "var(--text-muted)", transitionDuration: "200ms" }}
               aria-label="Search"
             >
               <Search className="w-4 h-4" />
