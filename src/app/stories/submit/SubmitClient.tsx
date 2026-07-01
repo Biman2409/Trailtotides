@@ -215,7 +215,7 @@ export default function SubmitStoryPage() {
                 <div className="space-y-4">
                   <div>
                     <Label required>Title</Label>
-                    <input name="title" required value={form.title} onChange={handleChange} placeholder="e.g. Riding the Photi La at 4,000m" className={inputClass} />
+                    <input name="title" required value={form.title} onChange={handleChange} placeholder="e.g. The Night I Found Myself at 15,000ft" className={inputClass} />
                   </div>
                   <div>
                     <Label required>Excerpt</Label>
