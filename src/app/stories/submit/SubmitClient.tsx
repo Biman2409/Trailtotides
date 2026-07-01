@@ -159,7 +159,7 @@ export default function SubmitStoryPage() {
             <span className="text-[#ff5100]">happened out there</span>
           </h1>
           <p className="text-white/45 text-sm leading-relaxed max-w-lg">
-            Real stories from real adventurers. Fill out the form — our team reviews every submission.
+            Every adventure has a story worth telling — the road that went wrong, the summit that nearly broke you, the silence that said everything. Write yours, share it with the world, and inspire the next person to step out the door.
           </p>
         </div>
       </section>
