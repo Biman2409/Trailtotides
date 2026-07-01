@@ -172,7 +172,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop nav links */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1" style={{ position: "relative" }}>
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
@@ -190,25 +190,31 @@ export default function Navbar() {
               );
             })}
 
-            {/* ── Search bar — slides in on scroll ── */}
+            {/* ── Search bar — absolutely positioned, slides in on scroll ── */}
             <div
-              className="transition-all duration-500 ease-out overflow-hidden"
               style={{
-                maxWidth: scrolled ? "260px" : "0px",
+                position: "absolute",
+                left: "100%",
+                top: "50%",
+                transform: scrolled
+                  ? "translateY(-50%) translateX(12px)"
+                  : "translateY(-50%) translateX(-12px)",
                 opacity: scrolled ? 1 : 0,
-                marginLeft: scrolled ? "12px" : "0px",
+                visibility: scrolled ? "visible" : "hidden",
+                pointerEvents: scrolled ? "auto" : "none",
+                transition: "all 500ms ease-out",
               }}
             >
               <button
                 onClick={() => setSearchOpen(true)}
-                className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full transition-all hover:bg-white/6 group cursor-pointer whitespace-nowrap"
+                className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full group cursor-pointer whitespace-nowrap"
                 style={{
                   background: "var(--bg-surface-2)",
                   border: "1px solid var(--border-subtle)",
                 }}
               >
                 <Search className="w-3.5 h-3.5 shrink-0" style={{ color: "var(--text-tertiary)" }} />
-                <span className="text-sm" style={{ color: "var(--text-tertiary)" }}>
+                <span className="text-sm whitespace-nowrap" style={{ color: "var(--text-tertiary)" }}>
                   Search adventures...
                 </span>
                 <kbd className="flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium rounded ml-1"
