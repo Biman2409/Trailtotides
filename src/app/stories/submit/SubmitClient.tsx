@@ -28,6 +28,11 @@ type FormData = {
   heroImageUrl: string;
 };
 
+type UploadState = {
+  status: "idle" | "uploading" | "done" | "error";
+  url: string;
+};
+
 const INITIAL: FormData = {
   title: "",
   excerpt: "",
@@ -56,11 +61,37 @@ export default function SubmitStoryPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [upload, setUpload] = useState<UploadState>({ status: "idle", url: "" });
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  }
+
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUpload({ status: "uploading", url: "" });
+
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+
+      const res = await fetch("/api/stories/upload", { method: "POST", body: fd });
+      const data = await res.json();
+
+      if (!res.ok || data.error) {
+        setUpload({ status: "error", url: data.error || "Upload failed" });
+        return;
+      }
+
+      setUpload({ status: "done", url: data.url });
+      setForm((prev) => ({ ...prev, heroImageUrl: data.url }));
+    } catch {
+      setUpload({ status: "error", url: "Upload failed. Try again." });
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -253,15 +284,62 @@ export default function SubmitStoryPage() {
                   </div>
                   <div className="sm:col-span-2">
                     <FieldLabel>Got a photo?</FieldLabel>
-                    <div className="relative">
-                      <ImageIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
-                      <input
-                        name="heroImageUrl"
-                        value={form.heroImageUrl}
-                        onChange={handleChange}
-                        placeholder="https://… (optional — we may use our own if left blank)"
-                        className={`${inputClass} pl-10`}
-                      />
+                    <div className="space-y-3">
+                      <label
+                        className={`flex items-center gap-3 w-full bg-white/6 border border-dashed rounded-xl px-4 py-4 cursor-pointer text-sm transition-colors ${
+                          upload.status === "uploading"
+                            ? "border-[#ff5100]/60 text-[#ff5100]"
+                            : upload.status === "done"
+                            ? "border-emerald-500/50 text-emerald-400"
+                            : "border-white/10 text-white/50 hover:border-white/25"
+                        }`}
+                      >
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/jpg,image/png,image/webp"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                          disabled={upload.status === "uploading"}
+                        />
+                        {upload.status === "uploading" ? (
+                          <span className="flex items-center gap-2">
+                            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                            </svg>
+                            Uploading…
+                          </span>
+                        ) : upload.status === "done" ? (
+                          <span className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4" />
+                            Photo uploaded
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-2">
+                            <ImageIcon className="w-4 h-4" />
+                            Click to upload from device
+                          </span>
+                        )}
+                      </label>
+                      {upload.status === "error" && (
+                        <p className="text-red-400 text-xs">{upload.url}</p>
+                      )}
+                      <p className="text-white/25 text-xs">JPEG, PNG, or WebP. Max 8MB.</p>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 h-px bg-white/8" />
+                        <span className="text-white/20 text-[11px] uppercase tracking-wider">or paste a URL</span>
+                        <div className="flex-1 h-px bg-white/8" />
+                      </div>
+                      <div className="relative">
+                        <ImageIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
+                        <input
+                          name="heroImageUrl"
+                          value={form.heroImageUrl}
+                          onChange={handleChange}
+                          placeholder="https://…"
+                          className={`${inputClass} pl-10`}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
