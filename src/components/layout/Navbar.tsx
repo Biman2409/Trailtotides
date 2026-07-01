@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search } from "lucide-react";
+import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 import { MountainSnow } from "@/lib/localIcons";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
@@ -11,7 +12,6 @@ import { useCompare, MAX } from "@/contexts/CompareContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { adventures } from "@/lib/data";
 import NavAvatar from "@/components/ui/custom/NavAvatar";
-import ThemeToggleButton from "@/components/ui/custom/ThemeToggleButton";
 import SearchModal from "@/components/ui/custom/SearchModal";
 
 const navLinks = [
@@ -43,6 +43,10 @@ export default function Navbar() {
   const wishlistRef = useRef<HTMLDivElement>(null);
   const [wishlistCopied, setWishlistCopied] = useState(false);
   const savedList = adventures.filter(a => saved.has(a.slug));
+
+  const { theme, setTheme } = useTheme();
+  const [themeOpen, setThemeOpen] = useState(false);
+  const themeRef = useRef<HTMLDivElement>(null);
 
   // Auth state
   useEffect(() => {
@@ -136,6 +140,13 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", h);
   }, [wishlistOpen]);
 
+  useEffect(() => {
+    if (!themeOpen) return;
+    function h(e: MouseEvent) { if (themeRef.current && !themeRef.current.contains(e.target as Node)) setThemeOpen(false); }
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, [themeOpen]);
+
   async function handleLogout() {
     const supabase = createClient();
     await supabase.auth.signOut();
@@ -190,7 +201,7 @@ export default function Navbar() {
               );
             })}
 
-            {/* ── Search bar — appears when navbar is solid (on scroll) ── */}
+            {/* ── Search bar + Theme dropdown — appears when navbar is solid (on scroll) ── */}
             <div
               style={{
                 position: "absolute",
@@ -203,6 +214,9 @@ export default function Navbar() {
                 visibility: isTransparent ? "hidden" : "visible",
                 pointerEvents: isTransparent ? "none" : "auto",
                 transition: "all 500ms ease-out",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
               }}
             >
               <button
@@ -218,14 +232,48 @@ export default function Navbar() {
                   Search
                 </span>
               </button>
+
+              {/* ── Theme dropdown ── */}
+              <div className="relative" ref={themeRef}>
+                <button
+                  onClick={() => setThemeOpen(o => !o)}
+                  className="flex items-center justify-center w-7 h-7 rounded-full transition-all hover:bg-white/5"
+                  style={{ color: "var(--text-tertiary)" }}
+                  aria-label="Toggle theme"
+                >
+                  <Sun className="w-3.5 h-3.5 absolute transition-all duration-300" style={{ opacity: theme === "dark" ? 0 : 1, transform: theme === "dark" ? "rotate(90deg) scale(0)" : "rotate(0) scale(1)" }} />
+                  <Moon className="w-3.5 h-3.5 absolute transition-all duration-300" style={{ opacity: theme === "dark" ? 1 : 0, transform: theme === "dark" ? "rotate(0) scale(1)" : "rotate(-90deg) scale(0)" }} />
+                </button>
+
+                {themeOpen && (
+                  <div
+                    className="absolute right-0 top-full mt-2 w-32 rounded-xl shadow-xl overflow-hidden z-50 py-1"
+                    style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}
+                  >
+                    <button
+                      onClick={() => { setTheme("light"); setThemeOpen(false); }}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium transition-colors hover:bg-white/5"
+                      style={{ color: theme === "light" ? "#ff5100" : "var(--text-secondary)" }}
+                    >
+                      <Sun className="w-3.5 h-3.5" />
+                      Light
+                    </button>
+                    <button
+                      onClick={() => { setTheme("dark"); setThemeOpen(false); }}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium transition-colors hover:bg-white/5"
+                      style={{ color: theme === "dark" ? "#ff5100" : "var(--text-secondary)" }}
+                    >
+                      <Moon className="w-3.5 h-3.5" />
+                      Dark
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Desktop right side */}
           <div className="hidden lg:flex items-center gap-2">
-
-            {/* ── Theme Toggle ── */}
-            <ThemeToggleButton />
 
           {/* ── Wishlist tray ── */}
             {savedList.length > 0 && (
@@ -499,6 +547,34 @@ export default function Navbar() {
             <Search className="w-4 h-4" />
             Search
           </button>
+
+          {/* Mobile theme toggle */}
+          <div className="flex items-center gap-1 py-2 px-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+            <button
+              onClick={() => { setTheme("light"); setMenuOpen(false); }}
+              className="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-all flex-1 justify-center"
+              style={{
+                color: theme === "light" ? "#ff5100" : "var(--text-muted)",
+                background: theme === "light" ? "rgba(255,81,0,0.08)" : "transparent",
+                border: theme === "light" ? "1px solid rgba(255,81,0,0.2)" : "1px solid transparent",
+              }}
+            >
+              <Sun className="w-3.5 h-3.5" />
+              Light
+            </button>
+            <button
+              onClick={() => { setTheme("dark"); setMenuOpen(false); }}
+              className="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-all flex-1 justify-center"
+              style={{
+                color: theme === "dark" ? "#ff5100" : "var(--text-muted)",
+                background: theme === "dark" ? "rgba(255,81,0,0.08)" : "transparent",
+                border: theme === "dark" ? "1px solid rgba(255,81,0,0.2)" : "1px solid transparent",
+              }}
+            >
+              <Moon className="w-3.5 h-3.5" />
+              Dark
+            </button>
+          </div>
 
           {/* Mobile wishlist row */}
           {savedList.length > 0 && (
