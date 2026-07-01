@@ -207,20 +207,16 @@ export default function Navbar() {
             >
               <button
                 onClick={() => setSearchOpen(true)}
-                className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full group cursor-pointer whitespace-nowrap"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full group cursor-pointer whitespace-nowrap"
                 style={{
                   background: "var(--bg-surface-2)",
                   border: "1px solid var(--border-subtle)",
                 }}
               >
-                <Search className="w-3.5 h-3.5 shrink-0" style={{ color: "var(--text-tertiary)" }} />
-                <span className="text-sm whitespace-nowrap" style={{ color: "var(--text-tertiary)" }}>
-                  Search adventures...
+                <Search className="w-3 h-3 shrink-0" style={{ color: "var(--text-tertiary)" }} />
+                <span className="text-xs whitespace-nowrap font-medium" style={{ color: "var(--text-tertiary)" }}>
+                  Search
                 </span>
-                <kbd className="flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-medium rounded ml-1"
-                  style={{ background: "var(--bg-page)", color: "var(--text-muted)", border: "1px solid var(--border-subtle)" }}>
-                  <span className="text-[9px]">⌘</span>K
-                </kbd>
               </button>
             </div>
           </div>
