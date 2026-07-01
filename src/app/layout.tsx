@@ -144,7 +144,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon" />
       </head>
         <body className={`${dmSans.variable} ${greatVibes.variable} antialiased`} style={{ background: "var(--bg-page)", color: "var(--text-primary)" }}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange>
         <Script
           id="org-structured-data"
           type="application/ld+json"
