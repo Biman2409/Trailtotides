@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { saveStoryToStorage } from "@/lib/stories";
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,7 +25,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
     }
 
-    // Get logged-in user
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -50,12 +50,11 @@ export async function POST(req: NextRequest) {
     }
     if (!tagList.includes(region)) tagList.unshift(region);
 
-    // Read time fallback
     const finalReadTime = readTime || "5 min read";
+    const now = new Date().toISOString();
 
-    const adminClient = await createAdminClient();
-
-    const { error } = await adminClient.from("stories").insert({
+    const storyRecord = {
+      id: crypto.randomUUID(),
       slug,
       title,
       excerpt,
@@ -69,16 +68,29 @@ export async function POST(req: NextRequest) {
       tags: tagList,
       region,
       date: dateOfAdventure,
-      status: "pending",
+      status: "pending" as const,
       submitted_by: user?.id ?? null,
-    });
+      created_at: now,
+      updated_at: now,
+    };
 
-    if (error) {
-      console.error("story submission db error:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    // Try Supabase DB first
+    const adminClient = await createAdminClient();
+    const { error } = await adminClient.from("stories").insert(storyRecord);
+
+    if (!error) {
+      return NextResponse.json({ success: true });
     }
 
-    return NextResponse.json({ success: true });
+    // If table doesn't exist, fallback to Storage
+    if (error.message?.includes("Could not find the table")) {
+      const saved = await saveStoryToStorage(storyRecord);
+      if (saved) return NextResponse.json({ success: true });
+      return NextResponse.json({ error: "Could not save story. Please try again." }, { status: 500 });
+    }
+
+    console.error("story submission db error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   } catch (err) {
     console.error("story submit route error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
