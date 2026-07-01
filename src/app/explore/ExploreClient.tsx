@@ -818,6 +818,33 @@ export default function ExploreClient() {
 
                 </div>
 
+                {/* ── Clear / Apply ── */}
+                <div className="flex items-center gap-3 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                  <button
+                    onClick={clearAll}
+                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                    style={{
+                      color: "rgba(255,255,255,0.5)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                    }}
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    Clear All
+                  </button>
+                  <button
+                    onClick={() => setFiltersOpen(false)}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all hover:-translate-y-0.5"
+                    style={{
+                      background: "linear-gradient(135deg, #ff5100, #ff7d47)",
+                      color: "#fff",
+                      boxShadow: "0 4px 14px rgba(255,81,0,0.3)",
+                    }}
+                  >
+                    Show Results {filtered.length > 0 && `(${filtered.length})`}
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
               </div>
             </div>
           )}
