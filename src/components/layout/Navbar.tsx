@@ -12,6 +12,7 @@ import { useCompare, MAX } from "@/contexts/CompareContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { adventures } from "@/lib/data";
 import NavAvatar from "@/components/ui/custom/NavAvatar";
+import ThemeToggleButton from "@/components/ui/custom/ThemeToggleButton";
 import SearchModal from "@/components/ui/custom/SearchModal";
 
 const navLinks = [
@@ -274,6 +275,9 @@ export default function Navbar() {
 
           {/* Desktop right side */}
           <div className="hidden lg:flex items-center gap-2">
+
+            {/* ── Theme Toggle ── */}
+            <ThemeToggleButton />
 
           {/* ── Wishlist tray ── */}
             {savedList.length > 0 && (
