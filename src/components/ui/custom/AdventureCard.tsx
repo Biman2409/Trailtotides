@@ -116,8 +116,8 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
       <div
         className="rounded-2xl overflow-hidden flex flex-col transition-all duration-300"
         style={{
-          background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          background: "var(--bg-surface)",
+          border: "1px solid var(--border-subtle)",
           boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
         }}
       >
@@ -184,16 +184,16 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
 
         {/* Dashboard — duration + operators, then compare button */}
         <div className="px-3 pt-2.5 pb-2 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1 text-[10px] leading-none min-w-0 truncate text-white/40">
-            <span className="text-white/60 font-medium shrink-0">{adventure.durationDays}</span>
+          <div className="flex items-center gap-1 text-[10px] leading-none min-w-0 truncate" style={{ color: "var(--text-tertiary)" }}>
+            <span className="font-medium shrink-0" style={{ color: "var(--text-secondary)" }}>{adventure.durationDays}</span>
             {operatorCount > 0 && (
               <>
-                <span className="text-white/20 mx-0.5">·</span>
+                <span className="mx-0.5" style={{ color: "var(--text-muted)" }}>·</span>
                 <BadgeCheck className="w-3 h-3 text-emerald-400/80 shrink-0" />
-                <span><span className="text-white/60 font-semibold">{displayCount}</span> {displayCount === 1 ? "operator" : "operators"}</span>
+                <span><span className="font-semibold" style={{ color: "var(--text-secondary)" }}>{displayCount}</span> {displayCount === 1 ? "operator" : "operators"}</span>
                 {lowestPrice && (
                   <>
-                    <span className="text-white/20 mx-0.5">·</span>
+                    <span className="mx-0.5" style={{ color: "var(--text-muted)" }}>·</span>
                     <span className="text-[#ff5100]/85 font-semibold shrink-0">₹{lowestPrice.toLocaleString("en-IN")} onwards</span>
                   </>
                 )}

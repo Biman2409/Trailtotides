@@ -234,7 +234,8 @@ export default function HomePage() {
                 </div>
                 <Link
                   href="/stories"
-                  className="hidden md:flex items-center gap-1.5 text-white/40 font-medium hover:text-[#ff5100] transition-colors group text-sm"
+                  className="hidden md:flex items-center gap-1.5 font-medium hover:text-[#ff5100] transition-colors group text-sm"
+                  style={{ color: "var(--text-tertiary)" }}
                 >
                   All stories
                   <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

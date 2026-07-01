@@ -107,7 +107,7 @@ export default function FindYourFormat() {
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
             DISCOVER BY GENRE
           </p>
-          <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+          <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
             Adventure Lives in Every Element
           </h2>
           <div className="mt-4 w-12 h-0.5 bg-[#ff5100] rounded-full" />
@@ -127,8 +127,8 @@ export default function FindYourFormat() {
                 key={cat.id}
                 className="rounded-2xl overflow-hidden flex flex-col"
                 style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: `1px solid ${isOpen ? cat.accentBorder : "rgba(255,255,255,0.08)"}`,
+                  background: "var(--bg-surface)",
+                  border: `1px solid ${isOpen ? cat.accentBorder : "var(--border-subtle)"}`,
                   transition: "border-color 0.3s ease",
                   boxShadow: isOpen
                     ? `0 0 0 1px ${cat.accentBorder}, 0 20px 48px rgba(0,0,0,0.35)`
@@ -204,7 +204,7 @@ export default function FindYourFormat() {
                   {/* Always-visible collapsed summary */}
                     {!isOpen && (
                       <div className="py-3.5 flex items-center justify-between">
-                        <span className="text-white/40 text-xs">
+                        <span className="t-text-3 text-xs">
                           {cat.comingSoon
                             ? `${cat.previewItems?.length ?? 0} types`
                             : `${cat.items.length} types`}
@@ -239,10 +239,10 @@ export default function FindYourFormat() {
                                     key={type}
                                     className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl"
                                   >
-                                    <span className="text-white/50 flex-shrink-0">
+                                    <span className="flex-shrink-0" style={{ color: "var(--text-tertiary)" }}>
                                       {ADVENTURE_TYPE_ICONS[type]?.(13)}
                                     </span>
-                                    <span className="text-white/70 text-sm font-medium">{type}</span>
+                                    <span className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>{type}</span>
                                   </div>
                                 ))}
                             </div>
@@ -256,7 +256,7 @@ export default function FindYourFormat() {
                             <p className="font-semibold text-sm" style={{ color: cat.tagText }}>
                               Coming Soon
                             </p>
-                            <p className="text-white/35 text-xs mt-0.5 leading-snug">
+                            <p className="text-xs mt-0.5 leading-snug" style={{ color: "var(--text-tertiary)" }}>
                               {cat.label} adventures launching soon
                             </p>
                           </div>
@@ -278,10 +278,10 @@ export default function FindYourFormat() {
                                     }}
                                   >
                                     <div className="flex items-center gap-2.5">
-                                      <span className="text-white/35 group-hover/row:text-[#ff5100] transition-colors duration-150 flex-shrink-0">
+                                      <span className="group-hover/row:text-[#ff5100] transition-colors duration-150 flex-shrink-0" style={{ color: "var(--text-tertiary)" }}>
                                         {ADVENTURE_TYPE_ICONS[type]?.(13)}
                                       </span>
-                                      <span className="text-white/70 group-hover/row:text-white text-sm font-medium transition-colors duration-150">
+                                      <span className="group-hover/row:text-[var(--text-primary)] text-sm font-medium transition-colors duration-150" style={{ color: "var(--text-secondary)" }}>
                                         {type}
                                       </span>
                                     </div>
@@ -302,7 +302,7 @@ export default function FindYourFormat() {
                           </div>
 
                           {/* View all link */}
-                          <div className="mt-3 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+                          <div className="mt-3 pt-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                             <Link
                               href={`/explore?category=${cat.id}`}
                               className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 hover:-translate-y-0.5"

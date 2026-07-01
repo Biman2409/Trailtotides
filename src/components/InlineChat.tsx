@@ -170,8 +170,8 @@ export default function InlineChat() {
     >
       {/* Background glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1px] bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1px] bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1px]" style={{ background: "linear-gradient(90deg, transparent, var(--border-subtle), transparent)" }} />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1px]" style={{ background: "linear-gradient(90deg, transparent, var(--border-subtle), transparent)" }} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full bg-[#ff5100]/[0.04] blur-[80px]" />
       </div>
 

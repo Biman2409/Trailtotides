@@ -41,8 +41,8 @@ function MiniAdventureCard({ adventure }: { adventure: (typeof adventures)[numbe
   return (
     <Link
       href={`/experiences/${adventure.slug}`}
-      className="group flex-shrink-0 w-44 rounded-xl overflow-hidden border border-white/8 hover:border-white/20 transition-all duration-200 hover:-translate-y-0.5"
-      style={{ background: "rgba(255,255,255,0.05)" }}
+      className="group flex-shrink-0 w-44 rounded-xl overflow-hidden border transition-all duration-200 hover:-translate-y-0.5"
+      style={{ background: "var(--bg-surface)", borderColor: "var(--border-subtle)" }}
     >
       <div className="relative h-24 w-full">
         <Image
@@ -54,7 +54,7 @@ function MiniAdventureCard({ adventure }: { adventure: (typeof adventures)[numbe
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
       </div>
       <div className="p-2.5">
-        <p className="text-white text-xs font-semibold leading-tight line-clamp-2 group-hover:text-[#ff5100] transition-colors">
+        <p className="t-text text-xs font-semibold leading-tight line-clamp-2 group-hover:text-[#ff5100] transition-colors">
           {adventure.name}
         </p>
         <div className="flex flex-wrap items-center gap-1 mt-1.5">
@@ -62,7 +62,7 @@ function MiniAdventureCard({ adventure }: { adventure: (typeof adventures)[numbe
             <span className="px-1.5 py-0.5 rounded-md bg-[#ff5100]/15 text-[#ff5100]/80 text-[9px] font-medium">{adventure.type}</span>
           )}
           {adventure.state && (
-            <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-white/8 text-white/45 text-[9px] font-medium">
+            <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[9px] font-medium" style={{ background: "var(--bg-page)", color: "var(--text-tertiary)" }}>
               <MapPin className="w-2 h-2" />{adventure.state}
             </span>
           )}
@@ -95,13 +95,13 @@ export default function MatchmakerHomepageSection() {
     : 100;
 
   return (
-    <section className="py-8 lg:py-12 px-5 lg:px-8 t-bg-surface border-t border-white/5">
+    <section className="py-8 lg:py-12 px-5 lg:px-8 t-bg-surface border-t" style={{ borderColor: "var(--border-subtle)" }}>
       <div className="max-w-7xl mx-auto">
 
         <div className="flex items-center justify-between mb-5">
           <div>
             <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-1">Adventure Matchmaker</p>
-            <h2 className="text-white text-xl font-bold tracking-tight">Your matched adventures</h2>
+            <h2 className="t-text text-xl font-bold tracking-tight">Your matched adventures</h2>
           </div>
         </div>
 
@@ -147,9 +147,9 @@ export default function MatchmakerHomepageSection() {
             </div>
 
             {/* Adventures suited for you */}
-            <div className="rounded-2xl border p-4" style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.01) 100%)", borderColor: "rgba(255,255,255,0.07)" }}>
+            <div className="rounded-2xl border p-4" style={{ background: "var(--bg-page)", borderColor: "var(--border-subtle)" }}>
               <div className="flex items-center justify-between mb-3">
-                <p className="text-white/35 text-[10px] font-bold tracking-[0.2em] uppercase">Adventures suited for you</p>
+                <p className="text-[10px] font-bold tracking-[0.2em] uppercase" style={{ color: "var(--text-tertiary)" }}>Adventures suited for you</p>
                 {matches.length > 0 && (
                   <Link href="/explore?ace=ready" className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#ff5100]/70 hover:text-[#ff5100] transition-colors">
                     See all <ChevronDown className="w-3 h-3 -rotate-90" />
@@ -159,7 +159,7 @@ export default function MatchmakerHomepageSection() {
               <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1 snap-x no-scrollbar">
                 {matches.length > 0
                   ? matches.map((adv) => <MiniAdventureCard key={adv.id} adventure={adv} />)
-                  : <p className="text-white/30 text-sm italic">No matching adventures found.</p>}
+                  : <p className="text-sm italic" style={{ color: "var(--text-tertiary)" }}>No matching adventures found.</p>}
               </div>
             </div>
 
@@ -202,12 +202,18 @@ export default function MatchmakerHomepageSection() {
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link href="/matchmaker"
-            className="flex-1 inline-flex items-center justify-center gap-2 text-white/45 hover:text-white/75 font-semibold px-6 py-3 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all">
+            className="flex-1 inline-flex items-center justify-center gap-2 font-semibold px-6 py-3 rounded-xl text-sm border transition-all"
+            style={{ color: "var(--text-tertiary)", borderColor: "var(--border-default)" }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}>
             <BarChart2 className="w-3.5 h-3.5" />
             View detailed results
           </Link>
           <Link href="/ace"
-            className="flex-1 inline-flex items-center justify-center gap-2 text-white/45 hover:text-white/75 font-semibold px-6 py-3 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all">
+            className="flex-1 inline-flex items-center justify-center gap-2 font-semibold px-6 py-3 rounded-xl text-sm border transition-all"
+            style={{ color: "var(--text-tertiary)", borderColor: "var(--border-default)" }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}>
             Learn more about ACE™
           </Link>
         </div>
@@ -305,18 +311,18 @@ function SampleRadarPanel() {
 
 function DefaultCTA() {
   return (
-    <section className="py-8 lg:py-12 px-5 lg:px-8 t-bg-surface border-t border-white/5 overflow-hidden">
+    <section className="py-8 lg:py-12 px-5 lg:px-8 t-bg-surface border-t overflow-hidden" style={{ borderColor: "var(--border-subtle)" }}>
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row gap-8 sm:gap-12 lg:gap-16 items-stretch">
 
           {/* Left: copy */}
           <div className="flex-1 min-w-0 flex flex-col">
             <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
-            <h2 className="text-white text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
+            <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
               Adventures built,<br />
               <span className="text-[#ff5100]">for your body</span>
             </h2>
-            <p className="text-white/55 text-sm leading-relaxed mb-5">
+            <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-secondary)" }}>
               Answer 8 questions. We calibrate your capability level and match you to adventures you can actually handle.
             </p>
             <div className="flex flex-col gap-3 mt-auto">
@@ -330,7 +336,10 @@ function DefaultCTA() {
               </Link>
               <Link
                 href="/ace"
-                className="flex items-center justify-center gap-2 text-white/45 hover:text-white/70 font-semibold px-8 py-4 rounded-xl text-base border border-white/10 hover:border-white/20 transition-all duration-200"
+                className="flex items-center justify-center gap-2 font-semibold px-8 py-4 rounded-xl text-base border transition-all duration-200"
+              style={{ color: "var(--text-tertiary)", borderColor: "var(--border-default)" }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}
               >
                 Learn more about ACE™
               </Link>

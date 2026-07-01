@@ -74,7 +74,7 @@ export default function FindByRegion() {
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
             DISCOVER BY REGION
           </p>
-          <h2 className="text-white text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+          <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
             Adventure Lives in Every Corner
           </h2>
           <div className="mt-4 w-12 h-0.5 bg-[#ff5100] rounded-full" />
@@ -90,8 +90,8 @@ export default function FindByRegion() {
                   key={region.id}
                   className="rounded-2xl overflow-hidden flex flex-col"
                     style={{
-                      background: "rgba(255,255,255,0.04)",
-                        border: `1px solid ${isOpen ? "rgba(255,81,0,0.35)" : "rgba(255,255,255,0.08)"}`,
+                      background: "var(--bg-surface)",
+                        border: `1px solid ${isOpen ? "rgba(255,81,0,0.35)" : "var(--border-subtle)"}`,
                         transition: "border-color 0.3s ease",
                         boxShadow: isOpen
                           ? `0 0 0 1px rgba(255,81,0,0.35), 0 20px 48px rgba(0,0,0,0.35)`
@@ -164,7 +164,7 @@ export default function FindByRegion() {
                     {/* Collapsed summary */}
                     {!isOpen && (
                         <div className="py-3.5 flex items-center justify-between">
-                          <span className="text-white/40 text-xs">
+                          <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
                             {region.items.length} {region.items.length === 1 ? "Area" : "Areas"}
                           </span>
                           <span
@@ -187,7 +187,7 @@ export default function FindByRegion() {
                                 className="group/row flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors duration-150 hover:bg-[#ff5100]/10"
                               >
                                 <div className="flex items-center gap-2.5">
-                                  <span className="text-white/70 group-hover/row:text-white text-sm font-medium transition-colors duration-150">
+                                  <span className="group-hover/row:text-[var(--text-primary)] text-sm font-medium transition-colors duration-150" style={{ color: "var(--text-secondary)" }}>
                                     {label}
                                   </span>
                                 </div>
