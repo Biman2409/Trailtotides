@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Compass, Map, BookOpen, User, Search } from "lucide-react";
@@ -14,15 +15,27 @@ const links = [
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setVisible(window.scrollY > 80);
+    };
+    // Check initial state
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-[1002] lg:hidden safe-area-bottom"
+      className="fixed bottom-0 left-0 right-0 z-[1002] lg:hidden safe-area-bottom transition-transform duration-300 ease-out"
       style={{
         background: "var(--nav-bg)",
         borderTop: "1px solid var(--nav-border)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
+        transform: visible ? "translateY(0)" : "translateY(100%)",
       }}
     >
       <div className="flex items-center justify-around px-2 py-1.5">
@@ -46,7 +59,7 @@ export default function MobileBottomNav() {
               </span>
               {isActive && (
                 <span
-                  className="absolute bottom-0 w-4 h-0.5 rounded-full"
+                  className="w-4 h-0.5 rounded-full"
                   style={{ background: "#ff5100" }}
                 />
               )}

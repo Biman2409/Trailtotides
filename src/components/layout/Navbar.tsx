@@ -9,7 +9,6 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { useCompare, MAX } from "@/contexts/CompareContext";
 import { useWishlist } from "@/contexts/WishlistContext";
-import { useTheme } from "next-themes";
 import { adventures } from "@/lib/data";
 import NavAvatar from "@/components/ui/custom/NavAvatar";
 import ThemeToggleButton from "@/components/ui/custom/ThemeToggleButton";
