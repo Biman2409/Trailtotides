@@ -1,30 +1,95 @@
 import { NextResponse } from "next/server";
+import { createAdminClient } from "@/lib/supabase/server";
 
 export async function POST() {
+  const log: string[] = [];
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/sql`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
-      },
-      body: JSON.stringify({ query: MIGRATION_SQL }),
-    });
+    const admin = await createAdminClient();
 
-    if (!res.ok) {
-      const text = await res.text();
-      return NextResponse.json({ error: text }, { status: 500 });
+    // Check if stories table exists
+    const { data: existing, error: checkErr } = await admin
+      .from("stories")
+      .select("slug")
+      .limit(1);
+
+    log.push(`Table check - data: ${JSON.stringify(existing)}, error: ${checkErr?.message || "none"}`);
+
+    if (checkErr) {
+      log.push("Table does not exist. Run this SQL in Supabase dashboard SQL editor:");
+      log.push("https://supabase.com/dashboard/project/vmpvmjzursbjwkrgulyp/sql/new");
+      log.push("--- PASTE BELOW ---");
+      log.push(MIGRATION_SQL);
+      return NextResponse.json({ error: "Table not found", help: log }, { status: 400 });
     }
 
-    const result = await res.json();
-    return NextResponse.json({ success: true, result });
+    log.push(`Found ${existing?.length || 0} existing stories`);
+
+    // Try the seed insert
+    const { data: photo } = await admin
+      .from("stories")
+      .select("slug")
+      .eq("slug", "the-night-photi-la-tested-us")
+      .maybeSingle();
+
+    if (photo) {
+      log.push("Stories already seeded, skipping insert");
+      return NextResponse.json({ message: "Already seeded", log });
+    }
+
+    // Insert from static data
+    const { stories: staticStories } = await import("@/lib/data");
+    let inserted = 0;
+
+    for (const s of staticStories) {
+      const submittedBy = s.submittedBy && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s.submittedBy)
+        ? s.submittedBy
+        : null;
+
+      const { error: insErr } = await admin.from("stories").insert({
+        slug: s.slug,
+        title: s.title,
+        excerpt: s.excerpt,
+        body: "",
+        author_name: s.author,
+        author_role: s.authorRole || "",
+        author_bio: s.authorBio || "",
+        author_avatar: s.authorAvatar || "",
+        hero_image: s.heroImage,
+        read_time: s.readTime,
+        tags: s.tags || [],
+        region: s.region,
+        date: s.date,
+        status: "published",
+        submitted_by: submittedBy,
+      });
+
+      if (insErr) {
+        log.push(`Insert error for ${s.slug}: ${insErr.message}`);
+      } else {
+        log.push(`Inserted ${s.slug}`);
+        inserted++;
+      }
+    }
+
+    log.push(`Done: ${inserted} inserted`);
+
+    // Seed story views
+    const { error: viewsErr } = await admin.from("story_views").upsert([
+      { slug: "the-night-photi-la-tested-us", views: 342 },
+      { slug: "riding-through-a-revolution", views: 156 },
+    ], { onConflict: "slug" });
+
+    if (viewsErr) log.push(`Views seed error: ${viewsErr.message}`);
+    else log.push("Views seeded");
+
+    return NextResponse.json({ inserted, log });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    log.push(`Fatal: ${err.message}`);
+    return NextResponse.json({ error: err.message, log }, { status: 500 });
   }
 }
 
-const MIGRATION_SQL = `
-CREATE TABLE IF NOT EXISTS public.stories (
+const MIGRATION_SQL = `CREATE TABLE IF NOT EXISTS public.stories (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   slug text NOT NULL UNIQUE,
   title text NOT NULL,
@@ -57,82 +122,18 @@ ALTER TABLE public.story_views ENABLE ROW LEVEL SECURITY;
 DO $$ BEGIN
   CREATE POLICY "Anyone can read published stories" ON public.stories FOR SELECT USING (status = 'published');
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-
 DO $$ BEGIN
   CREATE POLICY "Auth users can insert stories" ON public.stories FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-
 DO $$ BEGIN
   CREATE POLICY "Authors can update own stories" ON public.stories FOR UPDATE USING (auth.uid() = submitted_by);
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-
 DO $$ BEGIN
   CREATE POLICY "Service role full access" ON public.stories FOR ALL TO service_role USING (true) WITH CHECK (true);
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-
 DO $$ BEGIN
   CREATE POLICY "Anyone can read story views" ON public.story_views FOR SELECT USING (true);
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-
 DO $$ BEGIN
   CREATE POLICY "Service role full access views" ON public.story_views FOR ALL TO service_role USING (true) WITH CHECK (true);
-EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-
-INSERT INTO public.stories (slug, title, excerpt, body, author_name, author_role, author_bio, author_avatar, hero_image, read_time, tags, region, date, status)
-VALUES
-  (
-    'the-night-photi-la-tested-us',
-    'The Night Photi La Tested Us',
-    'A ride to Umling La, a detour to Demchok, and the mountain that watched over us. Some trips are planned. Some trips are reckless. And some trips stay with you forever.',
-    '',
-    'Nishant Ingle',
-    'Rider',
-    'Spends most of the year running a business. Once a year, the suit comes off, the saddle goes on, and he goes all in',
-    '/avatars/avatar-5.png',
-    'https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/story-submissions/photi-la.jpeg',
-    '15 min read',
-    ARRAY['Featured', 'TTT Original', 'Ladakh', 'Motorcycling', 'Himalayas'],
-    'Himalayas',
-    'July 2022',
-    'published'
-  ),
-  (
-    'riding-through-a-revolution',
-    'Riding through a revolution',
-    'Riding to Nepal and landing in the middle of the Gen Z revolution.',
-    '',
-    'Aditya Yadav',
-    'A jack of all trades',
-    'I read relentlessly and write poetry to ground myself.',
-    '/avatars/avatar-10.png',
-    'https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/story-submissions/riding-through-revolution-hero.jpeg',
-    '8 min read',
-    ARRAY['Featured', 'TTT Original', 'Nepal', 'Motorcycling', 'Himalayas'],
-    'Himalayas',
-    'Sep 2024',
-    'published'
-  )
-ON CONFLICT (slug) DO NOTHING;
-
-INSERT INTO public.story_views (slug, views) VALUES
-  ('the-night-photi-la-tested-us', 342),
-  ('riding-through-a-revolution', 156)
-ON CONFLICT (slug) DO NOTHING;
-
-CREATE OR REPLACE FUNCTION public.increment_story_views(story_slug text)
-RETURNS integer
-LANGUAGE plpgsql
-SECURITY DEFINER
-AS $$
-DECLARE
-  new_views integer;
-BEGIN
-  INSERT INTO public.story_views (slug, views)
-  VALUES (story_slug, 1)
-  ON CONFLICT (slug)
-  DO UPDATE SET views = story_views.views + 1, updated_at = now()
-  RETURNING story_views.views INTO new_views;
-  RETURN new_views;
-END;
-$$;
-`;
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;`;
