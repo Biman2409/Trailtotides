@@ -192,9 +192,12 @@ export default function Navbar() {
 
             {/* ── Search bar — slides in on scroll ── */}
             <div
-              className={`transition-all duration-500 ease-out overflow-hidden ${
-                scrolled ? "max-w-[260px] opacity-100 ml-3" : "max-w-0 opacity-0 ml-0"
-              }`}
+              className="transition-all duration-500 ease-out overflow-hidden"
+              style={{
+                maxWidth: scrolled ? "260px" : "0px",
+                opacity: scrolled ? 1 : 0,
+                marginLeft: scrolled ? "12px" : "0px",
+              }}
             >
               <button
                 onClick={() => setSearchOpen(true)}
