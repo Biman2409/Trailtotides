@@ -23,8 +23,8 @@ function formatSeasonShort(bestMonths: Month[]): string {
 }
 
 const PANEL_STYLE = {
-  background: "rgba(255,255,255,0.03)",
-  border: "1px solid rgba(255,255,255,0.07)",
+  background: "var(--bg-card)",
+  border: "1px solid var(--border-subtle)",
   borderRadius: "1rem",
 };
 
@@ -43,18 +43,18 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
 
   if (loggedIn === null || loading || tripLoading) {
     return (
-      <section className="py-10 px-5 lg:px-8" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+      <section className="py-10 px-5 lg:px-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
           {[0,1].map(i => (
             <div key={i} className="rounded-2xl p-4 animate-pulse" style={PANEL_STYLE}>
-              <div className="h-2.5 w-20 rounded bg-white/10 mb-3" />
+              <div className="h-2.5 w-20 rounded" style={{ background: "var(--bg-card-hover)" }} />
               <div className="flex gap-3 overflow-hidden">
                 {[0,1].map(j => (
-                  <div key={j} className="flex-none w-48 rounded-xl overflow-hidden" style={{ background: "rgba(255,255,255,0.04)" }}>
-                    <div className="aspect-[4/3] bg-white/5" />
+                  <div key={j} className="flex-none w-48 rounded-xl overflow-hidden" style={{ background: "var(--bg-card)" }}>
+                    <div className="aspect-[4/3]" style={{ background: "var(--bg-card-hover)" }} />
                     <div className="p-2.5 space-y-1.5">
-                      <div className="h-2.5 bg-white/5 rounded w-3/4" />
-                      <div className="h-2 bg-white/5 rounded w-1/2" />
+                      <div className="h-2.5 rounded w-3/4" style={{ background: "var(--bg-card-hover)" }} />
+                      <div className="h-2 rounded w-1/2" style={{ background: "var(--bg-card-hover)" }} />
                     </div>
                   </div>
                 ))}
@@ -70,7 +70,7 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
   const doneList  = adventures.filter(a => log.some(e => e.slug === a.slug) && a.slug !== currentSlug);
 
   return (
-    <section className="py-10 px-5 lg:px-8" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+    <section className="py-10 px-5 lg:px-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
 
         {/* ── Wishlist panel ── */}
@@ -85,7 +85,7 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
               )}
             </div>
             {loggedIn && savedList.length > 0 && (
-              <Link href="/explore" className="flex items-center gap-0.5 text-white/30 text-[10px] font-medium hover:text-rose-400 transition-colors">
+              <Link href="/explore" className="flex items-center gap-0.5 text-[10px] font-medium hover:text-rose-400 transition-colors" style={{ color: "var(--text-muted)" }}>
                 Explore <ArrowRight className="w-3 h-3" />
               </Link>
             )}
@@ -94,11 +94,11 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
           {/* Content */}
           {!loggedIn ? (
             <div className="flex items-center gap-3 py-2">
-              <p className="text-white/30 text-xs flex-1">Log in to save adventures to your wishlist.</p>
+              <p className="text-xs flex-1" style={{ color: "var(--text-tertiary)" }}>Log in to save adventures to your wishlist.</p>
               <button onClick={() => router.push("/auth/login")} className="shrink-0 px-3 py-1.5 rounded-lg text-[11px] font-bold text-white" style={{ background: "#ff5100" }}>Log in</button>
             </div>
           ) : savedList.length === 0 ? (
-            <p className="text-white/25 text-xs py-2">Hit the <Heart className="w-3 h-3 inline text-rose-400/60" /> on any adventure to add it here.</p>
+            <p className="text-xs py-2" style={{ color: "var(--text-tertiary)" }}>Hit the <Heart className="w-3 h-3 inline text-rose-400/60" /> on any adventure to add it here.</p>
           ) : (
             <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1 snap-x no-scrollbar">
               {savedList.map((a) => <MiniCard key={a.slug} a={a} currentSlug={currentSlug} />)}
@@ -118,7 +118,7 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
               )}
             </div>
             {loggedIn && doneList.length > 0 && (
-              <Link href="/profile" className="flex items-center gap-0.5 text-white/30 text-[10px] font-medium hover:text-amber-400 transition-colors">
+              <Link href="/profile" className="flex items-center gap-0.5 text-[10px] font-medium hover:text-amber-400 transition-colors" style={{ color: "var(--text-muted)" }}>
                 View log <ArrowRight className="w-3 h-3" />
               </Link>
             )}
@@ -127,11 +127,11 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
           {/* Content */}
           {!loggedIn ? (
             <div className="flex items-center gap-3 py-2">
-              <p className="text-white/30 text-xs flex-1">Log in to track adventures you've completed.</p>
+              <p className="text-xs flex-1" style={{ color: "var(--text-tertiary)" }}>Log in to track adventures you've completed.</p>
               <button onClick={() => router.push("/auth/login")} className="shrink-0 px-3 py-1.5 rounded-lg text-[11px] font-bold text-white" style={{ background: "#ff5100" }}>Log in</button>
             </div>
           ) : doneList.length === 0 ? (
-            <p className="text-white/25 text-xs py-2">Mark adventures as completed to build your log here.</p>
+            <p className="text-xs py-2" style={{ color: "var(--text-tertiary)" }}>Mark adventures as completed to build your log here.</p>
           ) : (
             <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1 snap-x no-scrollbar">
               {doneList.map((a) => <MiniCard key={a.slug} a={a} currentSlug={currentSlug} done />)}
@@ -163,7 +163,7 @@ function MiniCard({ a, done = false }: { a: typeof adventures[number]; currentSl
   return (
     <div
       className="group flex flex-col rounded-xl overflow-hidden flex-none w-48 snap-start transition-all duration-300 hover:-translate-y-1"
-      style={{ background: "rgba(255,255,255,0.04)", border: done ? "1px solid rgba(251,191,36,0.15)" : "1px solid rgba(255,255,255,0.08)" }}
+      style={{ background: "var(--bg-card)", border: done ? "1px solid rgba(251,191,36,0.15)" : "1px solid var(--border-subtle)" }}
     >
       <div className="relative aspect-[4/3] overflow-hidden w-full">
         <Link href={`/experiences/${a.slug}`} className="absolute inset-0 z-10" />
@@ -199,7 +199,7 @@ function MiniCard({ a, done = false }: { a: typeof adventures[number]; currentSl
 
       {/* Footer */}
       <div className="px-2.5 py-2 flex items-center justify-between gap-1.5">
-        <span className="text-white/40 text-[9px] font-medium truncate">{a.durationDays}</span>
+        <span className="text-[9px] font-medium truncate" style={{ color: "var(--text-tertiary)" }}>{a.durationDays}</span>
         {operatorCount > 0 && lowestPrice && (
           <span className="text-[#ff5100]/80 text-[9px] font-semibold whitespace-nowrap">₹{lowestPrice.toLocaleString("en-IN")}+</span>
         )}

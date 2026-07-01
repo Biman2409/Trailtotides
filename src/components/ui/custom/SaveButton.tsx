@@ -42,7 +42,7 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
       toast("Removed from wishlist");
       revokeXP("wishlist", slug);
     } else {
-      toast.success("Added to wishlist ♥");
+      toast.success("Added to wishlist \u2665");
       awardXP("wishlist", slug);
     }
   }
@@ -53,7 +53,8 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
       return (
         <button
           onClick={handleClick}
-          className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-white/5 text-white/50 border border-white/10 hover:bg-white/10 hover:text-white ${className}`}
+          className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${className}`}
+          style={{ background: "var(--bg-card)", color: "var(--text-tertiary)", border: "1px solid var(--border-subtle)" }}
         >
           <LogIn className="w-4 h-4" />
           Wishlist
@@ -68,7 +69,7 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
         className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${className}`}
         style={saved
           ? { background: "rgba(255,81,0,0.15)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.35)", boxShadow: "0 0 12px rgba(255,81,0,0.15)" }
-          : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.1)" }
+          : { background: "var(--bg-card)", color: "var(--text-tertiary)", border: "1px solid var(--border-subtle)" }
         }
       >
         <Heart className={`w-4 h-4 transition-all duration-200 ${saved ? "fill-[#ff7d47]" : ""}`} />

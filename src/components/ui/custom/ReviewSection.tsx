@@ -58,7 +58,9 @@ function StarRating({ value, onChange, size = "md" }: { value: number; onChange?
           className={onChange ? "cursor-pointer" : "cursor-default"}
           disabled={!onChange}
         >
-          <Star className={`${sz} transition-colors ${s <= (hovered || value) ? "text-amber-400 fill-amber-400" : "text-white/15 fill-white/15"}`} />
+          <Star className={`${sz} transition-colors ${s <= (hovered || value) ? "text-amber-400 fill-amber-400" : ""}`}
+            style={s > (hovered || value) ? { color: "var(--text-muted)" } : undefined}
+          />
         </button>
       ))}
     </div>
@@ -180,7 +182,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
   return (
     <section>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid rgba(251,191,36,0.08)", background: "rgba(251,191,36,0.04)" }}>
+      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid var(--border-subtle)", background: "var(--bg-card)" }}>
         <div className="flex items-center gap-2">
           <Star className="w-3.5 h-3.5 text-amber-400" />
           <h3 className="text-amber-400 text-[10px] font-bold tracking-[0.18em] uppercase">Reviews</h3>
@@ -188,8 +190,8 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
         {avgRating !== null && (
           <div className="flex items-center gap-2">
             <StarRating value={Math.round(avgRating)} />
-            <span className="text-white/70 text-xs font-semibold">{avgRating.toFixed(1)}</span>
-            <span className="text-white/30 text-xs">({reviews.length})</span>
+            <span className="text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>{avgRating.toFixed(1)}</span>
+            <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>({reviews.length})</span>
           </div>
         )}
       </div>
@@ -202,21 +204,21 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
               <button
                 onClick={() => setFormOpen(true)}
                 className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl mb-4 text-left transition-all hover:brightness-110 active:scale-[0.99]"
-                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+                style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}
               >
                 <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.2)" }}>
                   <Star className="w-3.5 h-3.5 text-amber-400" />
                 </div>
-                <span className="text-white/45 text-xs flex-1">{ctaText(adventureType, adventureName)}</span>
+                <span className="text-xs flex-1" style={{ color: "var(--text-tertiary)" }}>{ctaText(adventureType, adventureName)}</span>
                 <span className="text-amber-400/60 text-xs font-semibold shrink-0">Write review →</span>
               </button>
             ) : (
-            <form onSubmit={handleSubmit} className="rounded-xl p-3.5 mb-4 space-y-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-              <p className="text-white/50 text-xs font-medium">{ctaText(adventureType, adventureName)}</p>
+            <form onSubmit={handleSubmit} className="rounded-xl p-3.5 mb-4 space-y-4" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
+              <p className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>{ctaText(adventureType, adventureName)}</p>
 
               {/* Adventure rating */}
               <div className="flex items-center gap-3">
-                <p className="text-white/25 text-[10px] uppercase tracking-widest shrink-0">Rating</p>
+                <p className="text-[10px] uppercase tracking-widest shrink-0" style={{ color: "var(--text-tertiary)" }}>Rating</p>
                 <StarRating value={rating} onChange={setRating} />
               </div>
 
@@ -227,18 +229,18 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                 placeholder="What was it like? Tips for others?"
                 rows={3}
                 maxLength={600}
-                className="w-full rounded-lg p-2.5 text-xs text-white/70 placeholder:text-white/20 resize-none focus:outline-none transition-colors"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+                className="w-full rounded-lg p-2.5 text-xs resize-none focus:outline-none transition-colors"
+                style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)" }}
               />
               <div className="text-right">
-                <span className="text-white/20 text-[10px]">{body.length}/600</span>
+                <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>{body.length}/600</span>
               </div>
 
               {/* Operator section */}
-              <div className="rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                <div className="px-3 py-2 flex items-center justify-between" style={{ background: "rgba(255,255,255,0.02)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                  <p className="text-white/35 text-[10px] font-bold uppercase tracking-widest">Used an operator? Rate them</p>
-                  <span className="text-white/20 text-[9px]">Optional</span>
+              <div className="rounded-lg overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+                <div className="px-3 py-2 flex items-center justify-between" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                  <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>Used an operator? Rate them</p>
+                  <span className="text-[9px]" style={{ color: "var(--text-muted)" }}>Optional</span>
                 </div>
 
                 <div className="p-3 space-y-2.5">
@@ -249,19 +251,22 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                         type="button"
                         onClick={() => setOpDropdownOpen(v => !v)}
                         className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors"
-                        style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", color: selectedOp ? "rgba(255,255,255,0.75)" : "rgba(255,255,255,0.25)" }}
+                        style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", color: selectedOp ? "var(--text-secondary)" : "var(--text-muted)" }}
                       >
-                        {selectedOp ?? "Select operator…"}
-                        <ChevronDown className={`w-3.5 h-3.5 text-white/25 transition-transform ${opDropdownOpen ? "rotate-180" : ""}`} />
+                        {selectedOp ?? "Select operator\u2026"}
+                        <ChevronDown className={`w-3.5 h-3.5 transition-transform ${opDropdownOpen ? "rotate-180" : ""}`} style={{ color: "var(--text-muted)" }} />
                       </button>
                       {opDropdownOpen && (
-                        <div className="absolute z-10 w-full mt-1 rounded-lg overflow-hidden shadow-xl" style={{ background: "#1a1a20", border: "1px solid rgba(255,255,255,0.1)" }}>
+                        <div className="absolute z-10 w-full mt-1 rounded-lg overflow-hidden shadow-xl" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}>
                           {operators.map((op) => (
                             <button
                               key={op.name}
                               type="button"
                               onClick={() => { setSelectedOp(op.name); setOpDropdownOpen(false); }}
-                              className="w-full text-left px-3 py-2 text-xs text-white/70 hover:bg-white/[0.04] transition-colors"
+                              className="w-full text-left px-3 py-2 text-xs transition-colors"
+                              style={{ color: "var(--text-secondary)" }}
+                              onMouseEnter={(e) => e.currentTarget.style.background = "var(--bg-card)"}
+                              onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                             >
                               {op.name}
                             </button>
@@ -270,7 +275,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                             type="button"
                             onClick={() => { setShowCustomInput(true); setSelectedOp(null); setOpDropdownOpen(false); }}
                             className="w-full text-left px-3 py-2 text-xs flex items-center gap-1.5 transition-colors"
-                            style={{ color: "#ff7d47", borderTop: "1px solid rgba(255,255,255,0.06)" }}
+                            style={{ color: "#ff7d47", borderTop: "1px solid var(--border-subtle)" }}
                           >
                             <Plus className="w-3 h-3" /> Other operator
                           </button>
@@ -282,12 +287,13 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                       <input
                         value={customOp}
                         onChange={(e) => setCustomOp(e.target.value)}
-                        placeholder="Operator name…"
-                        className="flex-1 px-3 py-2 rounded-lg text-xs text-white/75 placeholder:text-white/20 focus:outline-none"
-                        style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+                        placeholder="Operator name\u2026"
+                        className="flex-1 px-3 py-2 rounded-lg text-xs focus:outline-none"
+                        style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)" }}
                       />
                       <button type="button" onClick={() => { setShowCustomInput(false); setCustomOp(""); }}
-                        className="text-[10px] text-white/30 hover:text-white/60 transition-colors px-2">
+                        className="text-xs transition-colors px-2"
+                        style={{ color: "var(--text-muted)" }}>
                         Back
                       </button>
                     </div>
@@ -296,9 +302,9 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                   {/* Operator star rating */}
                   {(selectedOp || (showCustomInput && customOp.trim())) && (
                     <div className="flex items-center gap-3 pt-0.5">
-                      <p className="text-white/25 text-[10px] uppercase tracking-widest shrink-0">Operator</p>
+                      <p className="text-[10px] uppercase tracking-widest shrink-0" style={{ color: "var(--text-tertiary)" }}>Operator</p>
                       <StarRating value={opRating} onChange={setOpRating} size="sm" />
-                      {opRating > 0 && <span className="text-white/30 text-[10px]">{opRating}/5</span>}
+                      {opRating > 0 && <span className="text-[10px]" style={{ color: "var(--text-muted)" }}>{opRating}/5</span>}
                     </div>
                   )}
                 </div>
@@ -314,7 +320,8 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                   <button
                     type="button"
                     onClick={() => { setFormOpen(false); setRating(0); setBody(""); setError(""); }}
-                    className="text-white/30 text-xs hover:text-white/55 transition-colors px-2 py-1.5"
+                    className="text-xs transition-colors px-2 py-1.5"
+                    style={{ color: "var(--text-muted)" }}
                   >
                     Cancel
                   </button>
@@ -342,10 +349,10 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
         {/* Reviews list */}
         {loading ? (
           <div className="flex justify-center py-8">
-            <Loader2 className="w-5 h-5 animate-spin text-white/20" />
+            <Loader2 className="w-5 h-5 animate-spin" style={{ color: "var(--text-muted)" }} />
           </div>
         ) : reviews.length === 0 ? (
-          <p className="text-white/25 text-xs text-center py-6">No reviews yet. Be the first to share your experience!</p>
+          <p className="text-xs text-center py-6" style={{ color: "var(--text-tertiary)" }}>No reviews yet. Be the first to share your experience!</p>
         ) : (
           <>
             <div
@@ -359,20 +366,20 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                     <div className="w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.2)" }}>
                       {r.avatar_id
                         ? <img src={`/avatars/avatar-${r.avatar_id}.png`} alt={r.username} className="w-full h-full object-cover" loading="eager" />
-                        : <span className="w-full h-full flex items-center justify-center text-white text-xs font-bold">{r.username.charAt(0).toUpperCase()}</span>}
+                        : <span className="w-full h-full flex items-center justify-center text-xs font-bold" style={{ color: "var(--text-primary)" }}>{r.username.charAt(0).toUpperCase()}</span>}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-white/80 font-semibold text-xs leading-none truncate">{r.username}</p>
-                      <p className="text-white/25 text-[10px] mt-0.5">{timeAgo(r.created_at)}</p>
+                      <p className="font-semibold text-xs leading-none truncate" style={{ color: "var(--text-primary)" }}>{r.username}</p>
+                      <p className="text-[10px] mt-0.5" style={{ color: "var(--text-tertiary)" }}>{timeAgo(r.created_at)}</p>
                     </div>
                     {currentUserId === r.user_id && (
-                      <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id} className="text-white/20 hover:text-red-400 transition-colors shrink-0">
+                      <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id} className="transition-colors shrink-0" style={{ color: "var(--text-muted)" }}>
                         {deleting === r.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
                       </button>
                     )}
                   </div>
                   <StarRating value={r.rating} />
-                  <p className="text-white/55 text-xs leading-relaxed">{r.body}</p>
+                  <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>{r.body}</p>
                 </div>
               ))}
             </div>
@@ -383,7 +390,8 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                   <button
                     key={i}
                     onClick={() => scrollRef.current?.scrollTo({ left: i * scrollRef.current.clientWidth, behavior: "smooth" })}
-                    className={`rounded-full transition-all ${activeIndex === i ? "w-4 h-1.5 bg-amber-400" : "w-1.5 h-1.5 bg-white/20"}`}
+                    className={`rounded-full transition-all ${activeIndex === i ? "w-4 h-1.5 bg-amber-400" : "w-1.5 h-1.5"}`}
+                    style={activeIndex !== i ? { background: "var(--text-muted)" } : undefined}
                   />
                 ))}
               </div>
