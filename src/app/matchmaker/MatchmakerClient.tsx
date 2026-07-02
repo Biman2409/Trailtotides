@@ -18,6 +18,7 @@ import { adventures as ALL_ADVENTURES } from "@/lib/data";
 import { getACE } from "@/lib/ace";
 import { getAchievements } from "@/lib/achievements";
 import { awardXP } from "@/lib/awardXP";
+import FadeInSection from "@/components/ui/custom/FadeInSection";
 
 // ─── Sample radar animation ───────────────────────────────────────────────────
 
@@ -772,10 +773,12 @@ function ResultsScreen({
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
 
       {/* ── 1. PAGE HEADER ───────────────────────────────────────────────────── */}
+      <FadeInSection>
       <div className="mb-6 sm:mb-8">
         <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-2">Adventure Matchmaker</p>
         <h2 className="t-text text-2xl sm:text-3xl font-black tracking-tight">Adventure Capability Engine Profile</h2>
       </div>
+      </FadeInSection>
 
       {/* ── 2. TIER HERO CARD ────────────────────────────────────────────────── */}
       <div
@@ -952,6 +955,7 @@ function ResultsScreen({
       })()}
 
       {/* ── 4. ADVENTURE SECTIONS ────────────────────────────────────────────── */}
+      <FadeInSection delay={150}>
       <div className="space-y-2.5 mb-5 sm:mb-7">
         <p className="text-[9px] uppercase tracking-[0.22em] font-bold px-0.5 mb-2.5" style={{ color: "var(--text-tertiary)" }}>Matched Adventures</p>
         <AdventureSection
@@ -987,6 +991,7 @@ function ResultsScreen({
           />
         )}
       </div>
+      </FadeInSection>
 
       {/* ── 5. TRAINING FOCUS AREAS ──────────────────────────────────────────── */}
       {trainingPlan.length > 0 && (
