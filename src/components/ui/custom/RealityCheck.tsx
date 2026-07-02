@@ -53,7 +53,7 @@ export default function RealityCheck({ adventure }: Props) {
             </div>
           </div>
           <p className="text-xs leading-relaxed mb-4" style={{ color: "var(--text-secondary)" }}>
-            Take the 3-minute ACE™ assessment and get a personalized readiness score for this adventure.
+            Take the 3-minute ACE<sup>™</sup> assessment and get a personalized readiness score for this adventure.
           </p>
           <Link
             href="/matchmaker"

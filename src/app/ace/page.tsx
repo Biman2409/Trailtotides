@@ -112,13 +112,13 @@ export default function ACEPage() {
             <div className="flex-1 min-w-0">
               <div className="inline-flex items-center gap-2 mb-4 px-2.5 py-1 rounded border" style={{ background: "rgba(255,81,0,0.06)", borderColor: "rgba(255,81,0,0.22)" }}>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
-                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">ACE™ FRAMEWORK · v2.0</span>
+                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">ACE<sup>™</sup> FRAMEWORK · v2.0</span>
               </div>
               <h1 className="text-3xl lg:text-[2.6rem] font-black text-white tracking-tight leading-[1.06] mb-3">
                 Adventure Capability Engine<sup className="text-[#ff5100] text-base font-black ml-0.5 align-super" style={{ fontSize: "0.45em" }}>™</sup>
               </h1>
               <p className="text-white/45 text-sm leading-relaxed mb-5 max-w-lg">
-                Easy, Moderate, Hard tells you nothing. ACE™ is Trail to Tides' proprietary system that rates every adventure across <span className="text-white/75 font-semibold">8 physical and psychological axes</span>. Answer 8 questions once — every adventure is matched to your real capability.
+                Easy, Moderate, Hard tells you nothing. ACE<sup>™</sup> is Trail to Tides' proprietary system that rates every adventure across <span className="text-white/75 font-semibold">8 physical and psychological axes</span>. Answer 8 questions once — every adventure is matched to your real capability.
               </p>
               <div className="space-y-1.5">
                 <div className="flex flex-wrap gap-1.5">

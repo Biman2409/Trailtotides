@@ -214,7 +214,7 @@ export default function MatchmakerHomepageSection() {
             style={{ color: "var(--text-tertiary)", borderColor: "var(--border-default)" }}
             onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}>
-            Learn more about ACE™
+            Learn more about ACE<sup>™</sup>
           </Link>
         </div>
 
@@ -341,7 +341,7 @@ function DefaultCTA() {
               onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}
               >
-                Learn more about ACE™
+                Learn more about ACE<sup>™</sup>
               </Link>
             </div>
           </div>

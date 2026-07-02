@@ -89,7 +89,7 @@ export default function ACEProfileSection() {
         <div className="px-4 sm:px-5 pt-3 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
             <p className="text-white/60 text-sm font-medium mb-1">Your capability is unassessed</p>
-            <p className="text-white/35 text-xs leading-relaxed max-w-sm">Take the 8-question ACE™ assessment to map your physical profile and unlock your adventure rank.</p>
+            <p className="text-white/35 text-xs leading-relaxed max-w-sm">Take the 8-question ACE<sup>™</sup> assessment to map your physical profile and unlock your adventure rank.</p>
           </div>
           <Link
             href="/matchmaker"

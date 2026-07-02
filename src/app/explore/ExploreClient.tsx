@@ -265,7 +265,7 @@ export default function ExploreClient() {
                           <Compass className="w-4 h-4 text-white" />
                         </div>
                         <div>
-                          <p className="text-white text-sm font-bold">ACE™ Assessment</p>
+                          <p className="text-white text-sm font-bold">ACE<sup>™</sup> Assessment</p>
                           <p className="text-white/30 text-[10px] font-medium">Adventure Compatibility Engine</p>
                         </div>
                       </div>

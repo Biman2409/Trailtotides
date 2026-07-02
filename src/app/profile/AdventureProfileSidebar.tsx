@@ -35,7 +35,7 @@ export default function AdventureProfileSidebar() {
   if (!stored) {
     return (
       <div className="pt-4 border-t border-white/5">
-        <p className="text-[10px] uppercase tracking-wider font-bold text-white/30 mb-3">ACE™ Profile</p>
+        <p className="text-[10px] uppercase tracking-wider font-bold text-white/30 mb-3">ACE<sup>™</sup> Profile</p>
         <p className="text-white/40 text-xs mb-3">No assessment taken yet.</p>
         <Link href="/matchmaker"
           className="inline-flex items-center gap-1.5 bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-4 py-2 rounded-xl text-xs transition-all group">
@@ -57,7 +57,7 @@ export default function AdventureProfileSidebar() {
 
   return (
     <div className="pt-4 border-t border-white/5 space-y-3">
-      <p className="text-[10px] uppercase tracking-wider font-bold text-white/30">ACE™ Profile</p>
+      <p className="text-[10px] uppercase tracking-wider font-bold text-white/30">ACE<sup>™</sup> Profile</p>
 
       {/* Tier badge */}
       <div className="flex items-center gap-3 p-3 rounded-2xl border"

@@ -507,7 +507,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
               <Link href="/ace"
                 className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-[13px] font-semibold transition-all"
                 style={{ border: "1px solid var(--border-subtle)", color: "var(--text-muted)" }}>
-                Learn more about ACE™ <ArrowRight className="w-3.5 h-3.5" />
+                Learn more about ACE<sup>™</sup> <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
           </div>

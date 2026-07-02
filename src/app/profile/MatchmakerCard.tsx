@@ -87,7 +87,7 @@ export default function MatchmakerCard({ isLoggedIn }: { isLoggedIn: boolean }) 
 
           {/* Radar */}
           <div>
-            <p className="text-white/25 text-[9px] uppercase tracking-widest mb-3">ACE™ Capability Profile</p>
+            <p className="text-white/25 text-[9px] uppercase tracking-widest mb-3">ACE<sup>™</sup> Capability Profile</p>
             <div
               className="flex justify-center rounded-2xl py-3"
               style={{
