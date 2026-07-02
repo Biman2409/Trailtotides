@@ -59,46 +59,46 @@
   color-scheme: light;
   --radius: 0.5rem;
 
-  /* Surfaces */
-  --bg-page:        #f8f7f4;
-  --bg-surface:     #ffffff;
-  --bg-surface-2:   #f0eee8;
+  /* Surfaces — warm earthy tones */
+  --bg-page:        #f3efe8;
+  --bg-surface:     #faf8f5;
+  --bg-surface-2:   #ece7df;
   --bg-card:        rgba(0,0,0,0.03);
-  --bg-card-hover:  rgba(0,0,0,0.06);
+  --bg-card-hover:  rgba(0,0,0,0.07);
   --bg-overlay:     rgba(255,255,255,0.85);
 
   /* Text */
   --text-primary:   #1a1a1a;
-  --text-secondary: rgba(0,0,0,0.65);
+  --text-secondary: rgba(0,0,0,0.7);
   --text-tertiary:  rgba(0,0,0,0.5);
   --text-muted:     rgba(0,0,0,0.35);
 
   /* Borders */
-  --border-subtle:  rgba(0,0,0,0.1);
-  --border-default: rgba(0,0,0,0.15);
-  --border-strong:  rgba(0,0,0,0.25);
+  --border-subtle:  rgba(0,0,0,0.08);
+  --border-default: rgba(0,0,0,0.12);
+  --border-strong:  rgba(0,0,0,0.2);
 
   /* Nav */
-  --nav-bg:         rgba(255,255,255,0.97);
+  --nav-bg:         rgba(250,248,245,0.97);
   --nav-border:     rgba(0,0,0,0.07);
   --nav-text:       rgba(0,0,0,0.65);
   --nav-text-hover: #000000;
-  --nav-active-bg:  rgba(0,0,0,0.06);
+  --nav-active-bg:  rgba(0,0,0,0.05);
 
   /* Scrollbar */
   --scrollbar-track: #e8e4de;
   --scrollbar-thumb: #b0a8a0;
 
   /* Shared */
-  --background: #f8f7f4;
+  --background: #f3efe8;
   --foreground: #1a1a1a;
-  --card: #ffffff;
+  --card: #faf8f5;
   --card-foreground: #1a1a1a;
-  --popover: #ffffff;
+  --popover: #faf8f5;
   --popover-foreground: #1a1a1a;
   --primary: #ff5100;
   --primary-foreground: #ffffff;
-  --secondary: rgba(0,0,0,0.06);
+  --secondary: rgba(0,0,0,0.05);
   --secondary-foreground: #1a1a1a;
   --muted: rgba(0,0,0,0.04);
   --muted-foreground: rgba(0,0,0,0.45);
@@ -108,11 +108,11 @@
   --border: rgba(0,0,0,0.08);
   --input: rgba(0,0,0,0.08);
   --ring: #ff5100;
-  --sidebar: #ffffff;
+  --sidebar: #faf8f5;
   --sidebar-foreground: #1a1a1a;
   --sidebar-primary: #ff5100;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: rgba(0,0,0,0.06);
+  --sidebar-accent: rgba(0,0,0,0.05);
   --sidebar-accent-foreground: #1a1a1a;
   --sidebar-border: rgba(0,0,0,0.08);
   --sidebar-ring: #5ba3c9;

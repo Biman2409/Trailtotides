@@ -226,37 +226,38 @@ export default function ExploreClient() {
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
             Explore
           </p>
-          <h1 className="text-white text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight mb-3">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight mb-3" style={{ color: "var(--text-primary)" }}>
             All Adventures
           </h1>
-          <p className="text-white/40 text-base lg:text-lg max-w-2xl leading-relaxed">
+          <p className="text-base lg:text-lg max-w-2xl leading-relaxed" style={{ color: "var(--text-secondary)" }}>
             Every adventure across the Indian subcontinent — search, filter, and find what fits you.
           </p>
         </div>
       </div>
 
       {/* Search + filter bar */}
-      <div className="sticky top-16 lg:top-20 z-40 t-bg-page/96 backdrop-blur-lg border-b border-white/10 shadow-sm relative">
+      <div className="sticky top-16 lg:top-20 z-40 backdrop-blur-lg shadow-sm relative" style={{ background: "var(--bg-page)", borderBottom: "1px solid var(--border-subtle)" }}>
         <div className="max-w-7xl mx-auto px-5 lg:px-8 py-3 flex items-center gap-2">
           {/* Search */}
           <div className="relative flex-1 min-w-0 max-w-xs sm:max-w-md">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--text-tertiary)" }} />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search adventures..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 text-white text-sm placeholder-white/30 border border-transparent focus:outline-none focus:border-[#ff5100]/50 transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm border border-transparent focus:outline-none focus:border-[#ff5100]/50 transition-colors"
+              style={{ background: "var(--bg-surface-2)", color: "var(--text-primary)" }}
             />
           </div>
 
           {/* Filter toggle */}
           <button
             onClick={() => { setFiltersOpen(!filtersOpen); setAiOpen(false); }}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
-              filtersOpen || activeFilterCount > 0
-                ? "bg-[#ff5100] text-white"
-                : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
-            }`}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap"
+            style={{
+              background: filtersOpen || activeFilterCount > 0 ? "#ff5100" : "var(--bg-surface-2)",
+              color: filtersOpen || activeFilterCount > 0 ? "#fff" : "var(--text-secondary)",
+            }}
           >
             <SlidersHorizontal className="w-4 h-4" />
             Filters
@@ -290,12 +291,8 @@ export default function ExploreClient() {
           {/* Editor's Choice */}
           <button
             onClick={() => setEditorOnly(!editorOnly)}
-            className={`hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
-              editorOnly
-                ? "text-white"
-                : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
-            }`}
-            style={editorOnly ? { background: "linear-gradient(135deg,#ff5100,#ff7d47)", boxShadow: "0 2px 12px rgba(255,81,0,0.3)" } : {}}
+            className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap"
+            style={editorOnly ? { background: "linear-gradient(135deg,#ff5100,#ff7d47)", color: "#fff", boxShadow: "0 2px 12px rgba(255,81,0,0.3)" } : { background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
           >
             <Star className={`w-4 h-4 ${editorOnly ? "fill-white" : ""}`} />
             <span className="hidden md:inline">Editor's Choice</span>
@@ -303,7 +300,7 @@ export default function ExploreClient() {
           </button>
 
           {/* Result count */}
-          <span className="hidden lg:block text-xs text-white/35 ml-auto font-medium whitespace-nowrap">
+          <span className="hidden lg:block text-xs ml-auto font-medium whitespace-nowrap" style={{ color: "var(--text-muted)" }}>
             {filtered.length} / {adventures.length}
           </span>
 
@@ -311,7 +308,8 @@ export default function ExploreClient() {
           {(activeFilterCount > 0 || search) && (
             <button
               onClick={clearAll}
-              className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-sm font-medium text-white/50 hover:text-white transition-colors bg-white/5 hover:bg-white/10 whitespace-nowrap"
+              className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors whitespace-nowrap"
+              style={{ color: "var(--text-tertiary)", background: "var(--bg-surface-2)" }}
             >
               <X className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Clear</span>
