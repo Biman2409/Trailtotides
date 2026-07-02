@@ -700,6 +700,7 @@ export default function MapPage() {
   const [nearMeLoading, setNearMeLoading] = useState(false);
   const [nearMeError, setNearMeError] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const [legendOpen, setLegendOpen] = useState(false);
 
   // Load wishlist from localStorage
   const [wishlist, setWishlist] = useState<Set<string>>(new Set());
@@ -1283,25 +1284,77 @@ export default function MapPage() {
           </div>
         )}
 
-        {/* Difficulty legend */}
-        <div
-          className="absolute bottom-5 left-4 z-[1000] rounded-xl px-3 py-2.5"
-          style={{
-            background: "rgba(4,7,14,0.88)",
-            backdropFilter: "blur(12px)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
-          }}
-        >
-          <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2 text-white/25">Difficulty</p>
-          <div className="flex flex-col gap-1">
-            {Object.entries(DIFFICULTY_COLORS).map(([label, color]) => (
-              <div key={label} className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
-                <span className="text-[11px] font-medium text-white/60">{label}</span>
+        {/* Legend toggle */}
+        <div className="absolute bottom-5 left-4 z-[1000]">
+          <button
+            onClick={() => setLegendOpen(!legendOpen)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-semibold transition-all hover:brightness-110"
+            style={{
+              background: legendOpen ? "rgba(255,81,0,0.2)" : "rgba(4,7,14,0.85)",
+              backdropFilter: "blur(12px)",
+              border: `1px solid ${legendOpen ? "rgba(255,81,0,0.35)" : "rgba(255,255,255,0.1)"}`,
+              color: legendOpen ? "#ff7d47" : "rgba(255,255,255,0.7)",
+              boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+            }}
+          >
+            <MapIcon className="w-3.5 h-3.5" />
+            Legend
+          </button>
+
+          {legendOpen && (
+            <>
+              {/* Invisible backdrop */}
+              <div className="fixed inset-0 z-[999]" onClick={() => setLegendOpen(false)} />
+              {/* Popup */}
+              <div
+                className="absolute bottom-full left-0 mb-2 rounded-xl px-3.5 py-3 min-w-[160px]"
+                style={{
+                  background: "rgba(4,7,14,0.96)",
+                  backdropFilter: "blur(14px)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+                }}
+              >
+                {/* Difficulty */}
+                <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2 text-white/25">Difficulty</p>
+                <div className="flex flex-col gap-1 mb-3">
+                  {Object.entries(DIFFICULTY_COLORS).map(([label, color]) => (
+                    <div key={label} className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
+                      <span className="text-[11px] font-medium text-white/60">{label}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Genre */}
+                <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2 text-white/25">Genre</p>
+                <div className="flex flex-col gap-1 mb-3">
+                  {([
+                    { label: "Earth", color: "#a16207" },
+                    { label: "Water", color: "#0369a1" },
+                    { label: "Snow",  color: "#6366f1" },
+                    { label: "Air",   color: "#0891b2" },
+                  ]).map(({ label, color }) => (
+                    <div key={label} className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full shrink-0 flex items-center justify-center" style={{ background: `${color}30` }}>
+                        <div className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
+                      </div>
+                      <span className="text-[11px] font-medium text-white/60">{label}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Wishlist */}
+                <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2 text-white/25">Saved</p>
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-center w-4 h-4 rounded-full shrink-0" style={{ background: "#ff5100" }}>
+                    <span className="text-[7px] leading-none">❤</span>
+                  </div>
+                  <span className="text-[11px] font-medium text-white/60">Wishlisted</span>
+                </div>
               </div>
-            ))}
-          </div>
+            </>
+          )}
         </div>
 
         {/* Reset view button */}
