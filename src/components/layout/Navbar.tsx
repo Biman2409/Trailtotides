@@ -453,7 +453,8 @@ export default function Navbar() {
           </div>
 
           {/* Theme toggle (always visible, on the right) */}
-          <ThemeToggleButton />
+          <div className="flex items-center gap-1">
+            <ThemeToggleButton />
 
           {/* Mobile toggle */}
           <button
@@ -466,6 +467,7 @@ export default function Navbar() {
               {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </span>
           </button>
+          </div>
         </div>
       </div>
 
