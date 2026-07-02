@@ -217,7 +217,7 @@ export default function ExploreClient() {
 
           {/* Filter toggle */}
           <button
-            onClick={() => { setFiltersOpen(!filtersOpen); setAiOpen(false); }}
+            onClick={() => setFiltersOpen(!filtersOpen)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap"
             style={{
               background: filtersOpen || activeFilterCount > 0 ? "#ff5100" : "var(--bg-surface-2)",
