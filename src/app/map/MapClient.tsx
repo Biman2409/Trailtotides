@@ -8,6 +8,7 @@ import {
   Navigation as NavigationIcon, Compass, Menu, Heart,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
+import ChatBubble from "@/components/ChatBubble";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import { adventures } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, Adventure } from "@/lib/data";
@@ -1301,6 +1302,8 @@ const [legendOpen, setLegendOpen] = useState(false);
         </div>
 
       </div>
+
+      <ChatBubble />
     </div>
   );
 }
