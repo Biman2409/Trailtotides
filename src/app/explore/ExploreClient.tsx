@@ -615,6 +615,7 @@ export default function ExploreClient() {
             </div>
             </>
           )}
+        </div>
       </div>
 
       {/* Active filter chips */}
