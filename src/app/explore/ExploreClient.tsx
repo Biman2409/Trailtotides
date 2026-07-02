@@ -17,6 +17,7 @@ import type { AceAxis } from "@/lib/ace";
 import { loadProfile } from "@/lib/matchmaker";
 import type { StoredProfile } from "@/lib/matchmaker";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
+import FadeInSection from "@/components/ui/custom/FadeInSection";
 
 type AceCategory = "ready" | "stretch" | "out-of-range";
 
@@ -973,10 +974,12 @@ export default function ExploreClient() {
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
-              {pagedResults.map((adventure) => (
-                <div key={adventure.id} id={`card-${adventure.slug}`}>
-                  <AdventureCard adventure={adventure} fromPage={currentPage} />
-                </div>
+              {pagedResults.map((adventure, i) => (
+                <FadeInSection key={adventure.id} delay={i * 60}>
+                  <div id={`card-${adventure.slug}`}>
+                    <AdventureCard adventure={adventure} fromPage={currentPage} />
+                  </div>
+                </FadeInSection>
               ))}
             </div>
 

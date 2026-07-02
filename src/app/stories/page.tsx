@@ -182,7 +182,7 @@ export default async function StoriesPage() {
       </section>
 
       {/* All stories grid */}
-      <section className="py-14 lg:py-20 px-6 lg:px-8">
+      <FadeInSection as="section" className="py-14 lg:py-20 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-8 lg:mb-10">
             <div className="flex items-center gap-3">
@@ -253,10 +253,10 @@ export default async function StoriesPage() {
             ))}
           </div>
         </div>
-      </section>
+      </FadeInSection>
 
       {/* CTA */}
-      <section className="py-10 lg:py-14 px-6 lg:px-8">
+      <FadeInSection as="section" className="py-10 lg:py-14 px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <div className="relative rounded-2xl overflow-hidden flex flex-col sm:flex-row items-center gap-5 px-6 py-5" style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.18)" }}>
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_left,_rgba(255,81,0,0.08)_0%,_transparent_65%)] pointer-events-none" />
@@ -277,7 +277,7 @@ export default async function StoriesPage() {
             </Link>
           </div>
         </div>
-      </section>
+      </FadeInSection>
 
       <Footer />
     </div>

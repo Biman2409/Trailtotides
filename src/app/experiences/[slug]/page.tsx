@@ -37,6 +37,7 @@ import type { Adventure } from "@/lib/data";
 import { getApprovedOperatorsForAdventure } from "@/app/auth/operator-actions";
 import OperatorListingPanel from "./OperatorListingPanel";
 import MobileBookBar from "./MobileBookBar";
+import FadeInSection from "@/components/ui/custom/FadeInSection";
 import AccordionSection from "./AccordionSection";
 import WeatherWidget from "./WeatherWidget";
 import PhotoGallery from "./PhotoGallery";
@@ -316,7 +317,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       </section>
 
       {/* ── STATS + WEATHER ZONE ──────────────────────────────── */}
-      <div style={{ background: "var(--bg-surface)", borderBottom: "1px solid var(--border-subtle)" }}>
+      <FadeInSection as="div" style={{ background: "var(--bg-surface)", borderBottom: "1px solid var(--border-subtle)" }}>
 
         {/* Stats strip */}
         <div className="max-w-7xl mx-auto px-5 lg:px-8">
@@ -354,10 +355,10 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           isBaseCamp={!!(adventure.baseCamp || adventure.startingPoint)}
         />
 
-      </div>
+      </FadeInSection>
 
       {/* ── MAIN CONTENT ──────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-7 pb-10">
+      <FadeInSection as="div" className="max-w-7xl mx-auto px-5 lg:px-8 pt-7 pb-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 
           {/* ── LEFT COLUMN ── */}
@@ -591,7 +592,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
           </div>
         </div>
-      </div>
+      </FadeInSection>
 
       {/* ── YOU MIGHT ALSO LIKE ───────────────────────────────── */}
       {(relatedByState.length > 0 || relatedByType.length > 0) && (
@@ -599,6 +600,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           className="py-6 px-5 lg:px-8"
           style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)" }}
         >
+          <FadeInSection>
           <div className="max-w-7xl mx-auto">
             <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4">Discover More</p>
             <div className="grid grid-cols-2 gap-4">
@@ -614,6 +616,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               )}
             </div>
           </div>
+          </FadeInSection>
         </section>
       )}
 

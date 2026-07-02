@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight, ChevronDown, X, ShieldCheck, ShieldAlert } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
+import FadeInSection from "@/components/ui/custom/FadeInSection";
 
 export type OperatorCardData = {
   id: string;
@@ -253,13 +254,13 @@ export default function OperatorsClient({ cards, allTypes, allStates }: Props) {
               overflow: "hidden",
             }}
           >
-            {filtered.map((op) => {
+            {filtered.map((op, i) => {
               const initial = op.company_name.charAt(0).toUpperCase();
               const isStatic = op.id.startsWith("static-");
 
               return (
+                <FadeInSection key={op.id} delay={i * 60}>
                 <div
-                  key={op.id}
                   className="group flex flex-col gap-4 sm:gap-5 p-5 sm:p-6 transition-all duration-200"
                   style={{ background: "var(--bg-card)" }}
                 >
@@ -389,6 +390,7 @@ export default function OperatorsClient({ cards, allTypes, allStates }: Props) {
                     </p>
                   )}
                 </div>
+                </FadeInSection>
               );
             })}
           </div>
