@@ -265,7 +265,7 @@ export default function ExploreClient() {
                           <Compass className="w-4 h-4 text-white" />
                         </div>
                         <div>
-                          <p className="text-white text-sm font-bold">ACE<sup>™</sup> Assessment</p>
+                          <p className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>ACE<sup>™</sup> Assessment</p>
                           <p className="text-[var(--text-muted)] text-[10px] font-medium">Adventure Compatibility Engine</p>
                         </div>
                       </div>
@@ -327,7 +327,7 @@ export default function ExploreClient() {
             <>
               {/* Backdrop — closes on outside click */}
               <div className="fixed inset-0 z-[1999]" onClick={() => setFiltersOpen(false)} />
-              <div className="absolute top-full left-0 right-0 z-[2000] border-t border-white/8" style={{ background: "var(--bg-page)", backdropFilter: "blur(12px)" }}>
+              <div className="absolute top-full left-0 right-0 z-[2000] border-t border-[var(--border-subtle)]" style={{ background: "var(--bg-page)", backdropFilter: "blur(12px)" }}>
               <div className="max-w-7xl mx-auto px-4 lg:px-6 py-2.5 space-y-2">
 
                 {/* ── Region ── */}
@@ -371,7 +371,7 @@ export default function ExploreClient() {
                               >
                                 {rg.name}
                                 {subCount > 0 && (
-                                  <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,255,255,0.25)" }}>{subCount}</span>
+                                  <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "var(--text-muted)" }}>{subCount}</span>
                                 )}
                                 <ChevronDown className={`w-2.5 h-2.5 opacity-60 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                               </button>
@@ -391,7 +391,7 @@ export default function ExploreClient() {
                                     className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
                                     style={{
                                       background: isSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
-                                      color: isSelected ? "#ff7d47" : "rgba(255,255,255,0.45)",
+                                      color: isSelected ? "#ff7d47" : "var(--text-tertiary)",
                                       border: `1px solid ${isSelected ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}`,
                                     }}
                                   >
@@ -551,7 +551,7 @@ export default function ExploreClient() {
                             className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
                             style={{
                               background: isSelected ? `${c}18` : "var(--bg-card)",
-                              color: isSelected ? c : "rgba(255,255,255,0.55)",
+                              color: isSelected ? c : "var(--text-tertiary)",
                               border: `1px solid ${isSelected ? `${c}40` : "var(--border-subtle)"}`,
                             }}
                           >
@@ -577,7 +577,7 @@ export default function ExploreClient() {
                             className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
                             style={{
                               background: isSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
-                              color: isSelected ? "#ff7d47" : "rgba(255,255,255,0.55)",
+                              color: isSelected ? "#ff7d47" : "var(--text-tertiary)",
                               border: `1px solid ${isSelected ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}`,
                             }}
                           >
@@ -600,7 +600,7 @@ export default function ExploreClient() {
                   </div>
                   <div className="px-3.5 pt-3 pb-2.5">
                     <div className="relative h-4 flex items-center">
-                      <div className="absolute inset-x-0 h-0.5 rounded-full bg-white/10" />
+                      <div className="absolute inset-x-0 h-0.5 rounded-full" style={{ background: "var(--border-subtle)" }} />
                       <div className="absolute h-0.5 rounded-full bg-[#ff5100]" style={{ left: `${(priceRange[0] / PRICE_MAX) * 100}%`, right: `${100 - (priceRange[1] / PRICE_MAX) * 100}%` }} />
                       <input type="range" min={PRICE_MIN} max={PRICE_MAX} step={5000} value={priceRange[0]}
                         onChange={e => setPriceRange([Math.min(Number(e.target.value), priceRange[1] - 5000), priceRange[1]])}
