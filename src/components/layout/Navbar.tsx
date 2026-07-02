@@ -3,8 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Sun, Moon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search } from "lucide-react";
 import { MountainSnow } from "@/lib/localIcons";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
@@ -44,8 +43,6 @@ export default function Navbar() {
   const wishlistRef = useRef<HTMLDivElement>(null);
   const [wishlistCopied, setWishlistCopied] = useState(false);
   const savedList = adventures.filter(a => saved.has(a.slug));
-
-  const { theme, setTheme } = useTheme();
 
   // Auth state
   useEffect(() => {
@@ -224,10 +221,7 @@ export default function Navbar() {
               </span>
             </button>
 
-            {/* ── Theme Toggle ── */}
-            <ThemeToggleButton />
-
-          {/* ── Wishlist tray ── */}
+            {/* ── Wishlist tray ── */}
             {savedList.length > 0 && (
               <div className="relative" ref={wishlistRef}>
                 <button
@@ -458,6 +452,9 @@ export default function Navbar() {
             )}
           </div>
 
+          {/* Theme toggle (always visible, on the right) */}
+          <ThemeToggleButton />
+
           {/* Mobile toggle */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
@@ -491,7 +488,7 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          {/* Mobile search + theme toggle */}
+          {/* Mobile search */}
           <div className="flex items-center gap-2 py-2 px-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
             <button
               onClick={() => setSearchOpen(true)}
@@ -500,17 +497,6 @@ export default function Navbar() {
             >
               <Search className="w-3.5 h-3.5" />
               Search
-            </button>
-            <button
-              onClick={() => { setTheme(theme === "dark" ? "light" : "dark"); setMenuOpen(false); }}
-              className="flex items-center justify-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-all flex-1"
-              style={{ color: "var(--text-muted)", border: "1px solid var(--border-subtle)" }}
-            >
-              <div className="relative w-3.5 h-3.5 flex items-center justify-center">
-                <Sun className="w-3.5 h-3.5 absolute transition-all duration-300" style={{ opacity: theme === "dark" ? 0 : 1, transform: theme === "dark" ? "rotate(90deg) scale(0)" : "rotate(0) scale(1)" }} />
-                <Moon className="w-3.5 h-3.5 absolute transition-all duration-300" style={{ opacity: theme === "dark" ? 1 : 0, transform: theme === "dark" ? "rotate(0) scale(1)" : "rotate(-90deg) scale(0)" }} />
-              </div>
-              Theme
             </button>
           </div>
 
