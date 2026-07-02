@@ -817,7 +817,7 @@ export default function MapPage() {
       {/* ── Toolbar ────────────────────────────────────────────── */}
       <div
         className="z-[1001] shrink-0"
-        style={{ background: "rgba(4,7,14,0.97)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 1px 0 rgba(255,255,255,0.04)" }}
+        style={{ position: "relative", background: "rgba(4,7,14,0.97)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 1px 0 rgba(255,255,255,0.04)" }}
       >
         <div className="max-w-7xl mx-auto px-3 lg:px-5 py-2 flex items-center gap-2">
 
@@ -962,9 +962,12 @@ export default function MapPage() {
           </div>
         )}
 
-        {/* Filter panel */}
+        {/* Filter panel (dropdown) */}
         {filtersOpen && (
-          <div className="border-t border-white/8 max-h-[58vh] overflow-y-auto" style={{ background: "rgba(6,9,18,0.97)", backdropFilter: "blur(12px)" }}>
+          <>
+            {/* Invisible backdrop — closes dropdown on outside click */}
+            <div className="fixed inset-0 z-[1999]" onClick={() => setFiltersOpen(false)} />
+            <div className="absolute top-full left-0 right-0 z-[2000] border-t border-white/8 max-h-[58vh] overflow-y-auto" style={{ background: "rgba(6,9,18,0.97)", backdropFilter: "blur(12px)" }}>
             <div className="max-w-7xl mx-auto px-4 lg:px-6 py-4 space-y-3">
 
               {/* Genre + Region row */}
@@ -1207,6 +1210,7 @@ export default function MapPage() {
 
             </div>
           </div>
+          </>
         )}
 
         {/* Active filter chips */}
