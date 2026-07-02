@@ -840,46 +840,28 @@ export default function MapPage() {
           {/* Desktop toolbar items (hidden on mobile) */}
           <div className="hidden lg:flex items-center gap-2">
 
-          {/* View toggle dropdown */}
-          <div className="relative shrink-0">
-            <button
-              onClick={() => setViewOpen(v => !v)}
-              className={tbBtn(!!activeOverlay)}
-              style={activeOverlay ? { background: "rgba(255,81,0,0.2)", border: "1px solid rgba(255,81,0,0.35)", color: "#ff7d47" } : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">
-                {activeOverlay === "terrain" ? "Terrain" : activeOverlay === "satellite" ? "Satellite" : "Layers"}
-              </span>
-              <ChevronDown className={`w-3 h-3 transition-transform ${viewOpen ? "rotate-180" : ""}`} />
-            </button>
-            {viewOpen && (
-              <div
-                className="absolute left-0 top-full mt-1.5 z-[2000] rounded-xl overflow-hidden min-w-[130px]"
-                style={{ background: "rgba(6,9,18,0.97)", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 8px 32px rgba(0,0,0,0.5)", backdropFilter: "blur(14px)" }}
-              >
-                {([
-                  { key: "default"   as OverlayKey, icon: <MapIcon className="w-3.5 h-3.5" />,  label: "Default"   },
-                  { key: "satellite" as OverlayKey, icon: <Layers className="w-3.5 h-3.5" />,   label: "Satellite" },
-                  { key: "terrain"   as OverlayKey, icon: <NavigationIcon className="w-3.5 h-3.5" />, label: "Terrain"   },
-                ] as { key: OverlayKey; icon: React.ReactNode; label: string }[]).map(({ key, icon, label }) => {
-                  const active = (activeOverlay ?? "default") === key;
-                  return (
-                    <button
-                      key={key}
-                      onClick={() => { setActiveOverlay(key === "default" ? null : key); setViewOpen(false); }}
-                      className="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-[12px] font-semibold transition-colors text-left"
-                      style={{ color: active ? "#ff7d47" : "rgba(255,255,255,0.6)", background: active ? "rgba(255,81,0,0.12)" : "transparent" }}
-                      onMouseEnter={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.05)"; }}
-                      onMouseLeave={e => { if (!active) (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
-                    >
-                      {icon}{label}
-                      {active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-400" />}
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+          {/* Default / Satellite / Terrain — directly visible toggle buttons */}
+          <div className="flex items-center rounded-lg overflow-hidden shrink-0" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+            {([
+              { key: null as OverlayKey | null, label: "Default", icon: <MapIcon className="w-3 h-3" /> },
+              { key: "satellite" as OverlayKey, label: "Satellite", icon: <Layers className="w-3 h-3" /> },
+              { key: "terrain" as OverlayKey, label: "Terrain", icon: <NavigationIcon className="w-3 h-3" /> },
+            ]).map(({ key, label, icon }, i, arr) => {
+              const active = (activeOverlay ?? null) === key;
+              return (
+                <button key={label}
+                  onClick={() => setActiveOverlay(key)}
+                  className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold transition-all"
+                  style={{
+                    background: active ? "rgba(255,81,0,0.2)" : "rgba(255,255,255,0.04)",
+                    color: active ? "#ff7d47" : "rgba(255,255,255,0.5)",
+                    borderRight: i < arr.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                  }}
+                >
+                  {icon}{label}
+                </button>
+              );
+            })}
           </div>
 
           {/* My Shots */}
