@@ -17,7 +17,7 @@ import type { AceAxis } from "@/lib/ace";
 import { loadProfile } from "@/lib/matchmaker";
 import type { StoredProfile } from "@/lib/matchmaker";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
-import FadeInSection from "@/components/ui/custom/FadeInSection";
+import { motion } from "framer-motion";
 import ChatBubble from "@/components/ChatBubble";
 
 type AceCategory = "ready" | "stretch" | "out-of-range";
@@ -733,11 +733,16 @@ export default function ExploreClient() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
               {pagedResults.map((adventure, i) => (
-                <FadeInSection key={adventure.id} delay={i * 60}>
+                <motion.div
+                  key={adventure.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: i * 0.04, ease: [0.25, 0.1, 0.25, 1] }}
+                >
                   <div id={`card-${adventure.slug}`}>
                     <AdventureCard adventure={adventure} fromPage={currentPage} />
                   </div>
-                </FadeInSection>
+                </motion.div>
               ))}
             </div>
 
