@@ -939,11 +939,11 @@ const [legendOpen, setLegendOpen] = useState(false);
           <>
             {/* Invisible backdrop — closes dropdown on outside click */}
             <div className="fixed inset-0 z-[1999]" onClick={() => setFiltersOpen(false)} />
-            <div className="absolute top-full left-0 right-0 z-[2000] border-t border-white/8 max-h-[58vh] overflow-y-auto" style={{ background: "rgba(6,9,18,0.97)", backdropFilter: "blur(12px)" }}>
-            <div className="max-w-7xl mx-auto px-4 lg:px-6 py-2.5 space-y-2">
+            <div className="absolute top-full left-0 right-0 z-[2000] border-t border-[var(--border-subtle)] max-h-[58vh] overflow-y-auto" style={{ background: "var(--bg-page)", backdropFilter: "blur(12px)" }}>
+            <div className="max-w-7xl mx-auto px-3 lg:px-5 py-1.5 space-y-1.5">
 
               {/* Genre + Region row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
 
                 {/* Genre */}
                 {(() => {
@@ -954,23 +954,23 @@ const [legendOpen, setLegendOpen] = useState(false);
                     { label: "Air",   color: "#0891b2", types: ["Paragliding","Hot Air Balloon"] },
                   ];
                   return (
-                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                      <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                        <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Genre</span>
-                        {selectedTypes.length > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedTypes.length}</span>}
+                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+                      <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                        <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Genre</span>
+                        {selectedTypes.length > 0 && <span className="text-[8px] font-bold px-1 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedTypes.length}</span>}
                       </div>
-                      <div className="p-2.5">
-                        <div className="flex flex-wrap gap-1.5">
+                      <div className="p-1.5">
+                        <div className="flex flex-wrap gap-1">
                           {genreGroups.map(grp => {
                             const isExp = expandedCategory === grp.label;
                             const cnt = grp.types.filter(t => selectedTypes.includes(t)).length;
                             return (
                               <button key={grp.label} onClick={() => setExpandedCategory(isExp ? null : grp.label)}
-                                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
-                                style={{ background: isExp ? `${grp.color}22` : cnt > 0 ? `${grp.color}18` : "rgba(255,255,255,0.05)", color: isExp || cnt > 0 ? grp.color : "rgba(255,255,255,0.5)", border: `1px solid ${isExp || cnt > 0 ? `${grp.color}50` : "rgba(255,255,255,0.08)"}` }}>
+                                className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
+                                style={{ background: isExp ? `${grp.color}22` : cnt > 0 ? `${grp.color}18` : "var(--bg-card)", color: isExp || cnt > 0 ? grp.color : "var(--text-tertiary)", border: `1px solid ${isExp || cnt > 0 ? `${grp.color}50` : "var(--border-subtle)"}` }}>
                                 {grp.label}
-                                {cnt > 0 && <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: `${grp.color}30`, color: grp.color }}>{cnt}</span>}
-                                <ChevronDown className={`w-2.5 h-2.5 opacity-50 transition-transform ${isExp ? "rotate-180" : ""}`} />
+                                {cnt > 0 && <span className="text-[7px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: `${grp.color}30`, color: grp.color }}>{cnt}</span>}
+                                <ChevronDown className={`w-2 h-2 opacity-50 transition-transform ${isExp ? "rotate-180" : ""}`} />
                               </button>
                             );
                           })}
@@ -978,13 +978,13 @@ const [legendOpen, setLegendOpen] = useState(false);
                         {expandedCategory && (() => {
                           const grp = genreGroups.find(g => g.label === expandedCategory)!;
                           return (
-                            <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                            <div className="mt-1.5 pt-1.5 flex flex-wrap gap-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                               {grp.types.map(type => {
                                 const isSel = selectedTypes.includes(type);
                                 return (
                                   <button key={type} onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
-                                    className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
-                                    style={{ background: isSel ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.04)", color: isSel ? "#ff7d47" : "rgba(255,255,255,0.4)", border: `1px solid ${isSel ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)"}` }}>
+                                    className="px-2 py-0.5 rounded-md text-[10px] font-medium transition-all"
+                                    style={{ background: isSel ? "rgba(255,81,0,0.15)" : "var(--bg-card)", color: isSel ? "#ff7d47" : "var(--text-tertiary)", border: `1px solid ${isSel ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}` }}>
                                     {type}
                                   </button>
                                 );
@@ -1011,24 +1011,24 @@ const [legendOpen, setLegendOpen] = useState(false);
                   ];
                   const totalSelected = selectedRegions.length + selectedSubRegions.length;
                   return (
-                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                      <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                        <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Region</span>
-                        {totalSelected > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{totalSelected}</span>}
+                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+                      <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                        <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Region</span>
+                        {totalSelected > 0 && <span className="text-[8px] font-bold px-1 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{totalSelected}</span>}
                       </div>
-                      <div className="p-2.5">
-                        <div className="flex flex-wrap gap-1.5">
+                      <div className="p-1.5">
+                        <div className="flex flex-wrap gap-1">
                           {regionGroups.map(rg => {
                             const isExp = expandedRegion === rg.name;
                             const subCnt = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
                             const hasSel = selectedRegions.includes(rg.name) || subCnt > 0;
                             return (
                               <button key={rg.name} onClick={() => setExpandedRegion(isExp ? null : rg.name)}
-                                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
-                                style={{ background: isExp || hasSel ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.05)", color: isExp || hasSel ? "#ff7d47" : "rgba(255,255,255,0.5)", border: `1px solid ${isExp || hasSel ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.08)"}` }}>
+                                className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
+                                style={{ background: isExp || hasSel ? "rgba(255,81,0,0.15)" : "var(--bg-card)", color: isExp || hasSel ? "#ff7d47" : "var(--text-tertiary)", border: `1px solid ${isExp || hasSel ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}` }}>
                                 {rg.name}
-                                {subCnt > 0 && <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,81,0,0.25)", color: "#ff7d47" }}>{subCnt}</span>}
-                                <ChevronDown className={`w-2.5 h-2.5 opacity-50 transition-transform ${isExp ? "rotate-180" : ""}`} />
+                                {subCnt > 0 && <span className="text-[7px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,81,0,0.25)", color: "#ff7d47" }}>{subCnt}</span>}
+                                <ChevronDown className={`w-2 h-2 opacity-50 transition-transform ${isExp ? "rotate-180" : ""}`} />
                               </button>
                             );
                           })}
@@ -1036,13 +1036,13 @@ const [legendOpen, setLegendOpen] = useState(false);
                         {expandedRegion && (() => {
                           const rg = regionGroups.find(r => r.name === expandedRegion)!;
                           return (
-                            <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                            <div className="mt-1.5 pt-1.5 flex flex-wrap gap-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                               {rg.subRegions.map(sr => {
                                 const isSel = selectedSubRegions.includes(sr);
                                 return (
                                   <button key={sr} onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
-                                    className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
-                                    style={{ background: isSel ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.04)", color: isSel ? "#ff7d47" : "rgba(255,255,255,0.4)", border: `1px solid ${isSel ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)"}` }}>
+                                    className="px-2 py-0.5 rounded-md text-[10px] font-medium transition-all"
+                                    style={{ background: isSel ? "rgba(255,81,0,0.15)" : "var(--bg-card)", color: isSel ? "#ff7d47" : "var(--text-tertiary)", border: `1px solid ${isSel ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}` }}>
                                     {sr}
                                   </button>
                                 );
@@ -1057,38 +1057,38 @@ const [legendOpen, setLegendOpen] = useState(false);
               </div>
 
               {/* Season + Difficulty row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
 
                 {/* Season */}
-                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                  <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                    <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Season</span>
-                    {selectedMonths.length > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedMonths.length}</span>}
+                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+                  <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                    <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Season</span>
+                    {selectedMonths.length > 0 && <span className="text-[8px] font-bold px-1 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedMonths.length}</span>}
                   </div>
-                  <div className="p-2.5">
-                    <div className="flex flex-wrap gap-1.5">
+                  <div className="p-1.5">
+                    <div className="flex flex-wrap gap-1">
                       {seasons.map(({ label, months: sMonths }) => {
                         const isExp = expandedSeason === label;
                         const cnt = sMonths.filter(m => selectedMonths.includes(m)).length;
                         return (
                           <button key={label} onClick={() => setExpandedSeason(isExp ? null : label)}
-                            className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
-                            style={{ background: isExp || cnt > 0 ? "#ff5100" : "rgba(255,255,255,0.05)", color: isExp || cnt > 0 ? "#fff" : "rgba(255,255,255,0.5)", border: `1px solid ${isExp || cnt > 0 ? "#ff5100" : "rgba(255,255,255,0.08)"}` }}>
+                            className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
+                            style={{ background: isExp || cnt > 0 ? "#ff5100" : "var(--bg-card)", color: isExp || cnt > 0 ? "#fff" : "var(--text-tertiary)", border: `1px solid ${isExp || cnt > 0 ? "#ff5100" : "var(--border-subtle)"}` }}>
                             {label}
-                            {cnt > 0 && <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,255,255,0.25)" }}>{cnt}</span>}
-                            <ChevronDown className={`w-2.5 h-2.5 opacity-50 transition-transform ${isExp ? "rotate-180" : ""}`} />
+                            {cnt > 0 && <span className="text-[7px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "var(--text-muted)" }}>{cnt}</span>}
+                            <ChevronDown className={`w-2 h-2 opacity-50 transition-transform ${isExp ? "rotate-180" : ""}`} />
                           </button>
                         );
                       })}
                     </div>
                     {expandedSeason && (
-                      <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div className="mt-1.5 pt-1.5 flex flex-wrap gap-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                         {seasons.find(s => s.label === expandedSeason)!.months.map(m => {
                           const isSel = selectedMonths.includes(m);
                           return (
                             <button key={m} onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                              className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
-                              style={{ background: isSel ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.04)", color: isSel ? "#ff7d47" : "rgba(255,255,255,0.4)", border: `1px solid ${isSel ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)"}` }}>
+                              className="px-2 py-0.5 rounded-md text-[10px] font-medium transition-all"
+                              style={{ background: isSel ? "rgba(255,81,0,0.15)" : "var(--bg-card)", color: isSel ? "#ff7d47" : "var(--text-tertiary)", border: `1px solid ${isSel ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}` }}>
                               {m}
                             </button>
                           );
@@ -1099,18 +1099,18 @@ const [legendOpen, setLegendOpen] = useState(false);
                 </div>
 
                 {/* Difficulty */}
-                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                  <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                    <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Difficulty</span>
+                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+                  <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                    <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Difficulty</span>
                   </div>
-                  <div className="p-2.5 flex flex-wrap gap-1.5">
+                  <div className="p-1.5 flex flex-wrap gap-1">
                     {(["Easy","Moderate","Hard","Advanced","Extreme"] as Difficulty[]).map(val => {
                       const isSel = selectedDifficulties.includes(val);
                       const c = DIFFICULTY_COLORS[val] ?? "#ff5100";
                       return (
                         <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
-                          className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
-                          style={{ background: isSel ? `${c}18` : "rgba(255,255,255,0.05)", color: isSel ? c : "rgba(255,255,255,0.55)", border: `1px solid ${isSel ? `${c}40` : "rgba(255,255,255,0.08)"}` }}>
+                          className="px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
+                          style={{ background: isSel ? `${c}18` : "var(--bg-card)", color: isSel ? c : "var(--text-tertiary)", border: `1px solid ${isSel ? `${c}40` : "var(--border-subtle)"}` }}>
                           {val}
                         </button>
                       );
@@ -1120,17 +1120,17 @@ const [legendOpen, setLegendOpen] = useState(false);
               </div>
 
               {/* Duration */}
-              <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                  <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Duration</span>
+              <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+                <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                  <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Duration</span>
                 </div>
-                <div className="p-2.5 flex flex-wrap gap-1.5">
+                <div className="p-1.5 flex flex-wrap gap-1">
                   {(["Weekend","3–5 days","7+ days"] as Duration[]).map(val => {
                     const isSel = selectedDurations.includes(val);
                     return (
                       <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
-                        className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
-                        style={{ background: isSel ? "#ff5100" : "rgba(255,255,255,0.05)", color: isSel ? "#fff" : "rgba(255,255,255,0.55)", border: `1px solid ${isSel ? "#ff5100" : "rgba(255,255,255,0.08)"}` }}>
+                        className="px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
+                        style={{ background: isSel ? "#ff5100" : "var(--bg-card)", color: isSel ? "#fff" : "var(--text-tertiary)", border: `1px solid ${isSel ? "#ff5100" : "var(--border-subtle)"}` }}>
                         {val}
                       </button>
                     );
@@ -1145,7 +1145,7 @@ const [legendOpen, setLegendOpen] = useState(false);
 
         {/* Active filter chips */}
         {activeFilterCount > 0 && (
-          <div className="px-3 lg:px-5 py-2 flex flex-wrap gap-1.5 border-t border-white/8" style={{ background: "rgba(6,9,18,0.97)" }}>
+          <div className="px-3 lg:px-5 py-2 flex flex-wrap gap-1.5 border-t border-[var(--border-subtle)]" style={{ background: "var(--bg-page)" }}>
             {[
               ...selectedTypes.map(t => ({ label: t, remove: () => toggle(selectedTypes, t, setSelectedTypes) })),
               ...selectedRegions.map(r => ({ label: r, remove: () => toggle(selectedRegions, r, setSelectedRegions) })),

@@ -203,7 +203,7 @@ export default function ExploreClient() {
 
       {/* Search + filter bar */}
       <div className="sticky top-16 lg:top-20 z-40 backdrop-blur-lg shadow-sm relative" style={{ background: "var(--bg-page)", borderBottom: "1px solid var(--border-subtle)" }}>
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 py-3 flex items-center gap-2">
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 py-2 flex items-center gap-2">
           {/* Search */}
           <div className="relative flex-1 min-w-0 max-w-xs sm:max-w-md">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--text-tertiary)" }} />
@@ -211,7 +211,7 @@ export default function ExploreClient() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search adventures..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm border border-transparent focus:outline-none focus:border-[#ff5100]/50 transition-colors"
+              className="w-full pl-9 pr-3.5 py-2 rounded-xl text-sm border border-transparent focus:outline-none focus:border-[#ff5100]/50 transition-colors"
               style={{ background: "var(--bg-surface-2)", color: "var(--text-primary)" }}
             />
           </div>
@@ -219,7 +219,7 @@ export default function ExploreClient() {
           {/* Filter toggle */}
           <button
             onClick={() => setFiltersOpen(!filtersOpen)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap"
             style={{
               background: filtersOpen || activeFilterCount > 0 ? "#ff5100" : "var(--bg-surface-2)",
               color: filtersOpen || activeFilterCount > 0 ? "#fff" : "var(--text-secondary)",
@@ -239,7 +239,7 @@ export default function ExploreClient() {
           {userProfile ? (
             <button
               onClick={() => setAceCategory(aceCategory === "ready" ? null : "ready")}
-              className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap"
+              className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap"
               style={aceCategory ? { background: "#ff5100", color: "#fff" } : { background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
             >
               <Compass className="w-4 h-4" />
@@ -249,7 +249,7 @@ export default function ExploreClient() {
             <div className="relative hidden sm:block">
               <button
                 onClick={() => setAcePopupOpen(!acePopupOpen)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap"
+                className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap"
                 style={{ background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
               >
                 <Compass className="w-4 h-4" />
@@ -275,7 +275,7 @@ export default function ExploreClient() {
                       <Link
                         href="/matchmaker"
                         onClick={() => setAcePopupOpen(false)}
-                        className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-sm font-bold transition-all hover:-translate-y-0.5"
+                        className="flex items-center justify-center gap-2 w-full px-3 py-2 rounded-xl text-xs font-bold transition-all hover:-translate-y-0.5"
                         style={{ background: "#ff5100", color: "#fff", boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}
                       >
                         Take Assessment
@@ -291,7 +291,7 @@ export default function ExploreClient() {
           {/* Editor's Choice */}
           <button
             onClick={() => setEditorOnly(!editorOnly)}
-            className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap"
+            className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap"
             style={editorOnly ? {
               background: "linear-gradient(105deg, #1a0a00 0%, #2d1200 40%, #1a0a00 100%)",
               color: "#ffb38a",
@@ -313,7 +313,7 @@ export default function ExploreClient() {
           {(activeFilterCount > 0 || search) && (
             <button
               onClick={clearAll}
-              className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors whitespace-nowrap"
+              className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-xs font-medium transition-colors whitespace-nowrap"
               style={{ color: "var(--text-tertiary)", background: "var(--bg-surface-2)" }}
             >
               <X className="w-3.5 h-3.5" />
@@ -328,7 +328,7 @@ export default function ExploreClient() {
               {/* Backdrop — closes on outside click */}
               <div className="fixed inset-0 z-[1999]" onClick={() => setFiltersOpen(false)} />
               <div className="absolute top-full left-0 right-0 z-[2000] border-t border-[var(--border-subtle)]" style={{ background: "var(--bg-page)", backdropFilter: "blur(12px)" }}>
-              <div className="max-w-7xl mx-auto px-4 lg:px-6 py-2.5 space-y-2">
+              <div className="max-w-7xl mx-auto px-3 lg:px-5 py-1.5 space-y-1.5">
 
                 {/* ── Region ── */}
                 {(() => {
@@ -344,16 +344,16 @@ export default function ExploreClient() {
                   ];
                   return (
                     <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                      <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                        <span className="text-[9px] font-black tracking-[0.22em] uppercase text-[var(--text-muted)]">Region</span>
+                      <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                        <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Region</span>
                         {(selectedRegions.length > 0 || selectedSubRegions.length > 0) && (
-                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>
+                          <span className="text-[8px] font-bold px-1 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>
                             {selectedRegions.length + selectedSubRegions.length}
                           </span>
                         )}
                       </div>
-                      <div className="p-2.5">
-                        <div className="flex flex-wrap gap-1.5">
+                      <div className="p-1.5">
+                        <div className="flex flex-wrap gap-1">
                           {regionGroups.map((rg) => {
                             const isExpanded = expandedRegion === rg.name;
                             const hasSelected = selectedRegions.includes(rg.name) || rg.subRegions.some(sr => selectedSubRegions.includes(sr));
@@ -362,7 +362,7 @@ export default function ExploreClient() {
                               <button
                                 key={rg.name}
                                 onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
-                                className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                                className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
                                 style={{
                                   background: isExpanded || hasSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
                                   color: isExpanded || hasSelected ? "#ff7d47" : "var(--text-tertiary)",
@@ -381,14 +381,14 @@ export default function ExploreClient() {
                         {expandedRegion && (() => {
                           const rg = regionGroups.find(r => r.name === expandedRegion)!;
                           return (
-                            <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                            <div className="mt-1.5 pt-1.5 flex flex-wrap gap-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                               {rg.subRegions.map((sr) => {
                                 const isSelected = selectedSubRegions.includes(sr);
                                 return (
                                   <button
                                     key={sr}
                                     onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
-                                    className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
+                                    className="px-2 py-0.5 rounded-md text-[10px] font-medium transition-all"
                                     style={{
                                       background: isSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
                                       color: isSelected ? "#ff7d47" : "var(--text-tertiary)",
@@ -416,16 +416,16 @@ export default function ExploreClient() {
                     { label: "Air",   color: "#0891b2", types: ["Paragliding", "Hot Air Balloon"] },
                   ];
                   return (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
 
                       {/* Genre */}
                       <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                        <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                          <span className="text-[9px] font-black tracking-[0.22em] uppercase text-[var(--text-muted)]">Genre</span>
-                          {selectedTypes.length > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedTypes.length}</span>}
+                        <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                          <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Genre</span>
+                          {selectedTypes.length > 0 && <span className="text-[8px] font-bold px-1 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedTypes.length}</span>}
                         </div>
-                        <div className="p-2.5">
-                          <div className="flex flex-wrap gap-1.5">
+                        <div className="p-1.5">
+                          <div className="flex flex-wrap gap-1">
                             {genreGroups.map((grp) => {
                               const isExpanded = expandedGenre === grp.label;
                               const groupSelected = grp.types.filter(t => selectedTypes.includes(t)).length;
@@ -434,7 +434,7 @@ export default function ExploreClient() {
                                 <button
                                   key={grp.label}
                                   onClick={() => setExpandedGenre(isExpanded ? null : grp.label)}
-                                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                                  className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
                                   style={{
                                     background: isExpanded ? `${grp.color}22` : hasSelected ? `${grp.color}18` : "var(--bg-card)",
                                     color: isExpanded || hasSelected ? grp.color : "var(--text-tertiary)",
@@ -442,8 +442,8 @@ export default function ExploreClient() {
                                   }}
                                 >
                                   {grp.label}
-                                  {groupSelected > 0 && <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: `${grp.color}30`, color: grp.color }}>{groupSelected}</span>}
-                                  <ChevronDown className={`w-2.5 h-2.5 opacity-50 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                                  {groupSelected > 0 && <span className="text-[7px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: `${grp.color}30`, color: grp.color }}>{groupSelected}</span>}
+                                  <ChevronDown className={`w-2 h-2 opacity-50 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                                 </button>
                               );
                             })}
@@ -451,14 +451,14 @@ export default function ExploreClient() {
                           {expandedGenre && (() => {
                             const grp = genreGroups.find(g => g.label === expandedGenre)!;
                             return (
-                              <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                              <div className="mt-1.5 pt-1.5 flex flex-wrap gap-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                                 {grp.types.map((type) => {
                                   const isSelected = selectedTypes.includes(type);
                                   return (
                                     <button
                                       key={type}
                                       onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
-                                      className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
+                                      className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium transition-all"
                                       style={{
                                         background: isSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
                                         color: isSelected ? "#ff7d47" : "var(--text-tertiary)",
@@ -478,12 +478,12 @@ export default function ExploreClient() {
 
                       {/* Season */}
                       <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                        <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                          <span className="text-[9px] font-black tracking-[0.22em] uppercase text-[var(--text-muted)]">Season</span>
-                          {selectedMonths.length > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedMonths.length}</span>}
+                        <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                          <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Season</span>
+                          {selectedMonths.length > 0 && <span className="text-[8px] font-bold px-1 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedMonths.length}</span>}
                         </div>
-                        <div className="p-2.5">
-                          <div className="flex flex-wrap gap-1.5">
+                        <div className="p-1.5">
+                          <div className="flex flex-wrap gap-1">
                             {seasons.map(({ label, months: sMonths }) => {
                               const isExpanded = expandedSeason === label;
                               const hasSelected = sMonths.some(m => selectedMonths.includes(m));
@@ -492,7 +492,7 @@ export default function ExploreClient() {
                                 <button
                                   key={label}
                                   onClick={() => setExpandedSeason(isExpanded ? null : label)}
-                                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                                  className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
                                   style={{
                                     background: isExpanded || hasSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
                                     color: isExpanded || hasSelected ? "#ff7d47" : "var(--text-tertiary)",
@@ -500,19 +500,19 @@ export default function ExploreClient() {
                                   }}
                                 >
                                   {label}
-                                  {selectedCount > 0 && <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,81,0,0.25)", color: "#ff7d47" }}>{selectedCount}</span>}
-                                  <ChevronDown className={`w-2.5 h-2.5 opacity-50 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                                  {selectedCount > 0 && <span className="text-[7px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,81,0,0.25)", color: "#ff7d47" }}>{selectedCount}</span>}
+                                  <ChevronDown className={`w-2 h-2 opacity-50 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                                 </button>
                               );
                             })}
                           </div>
                           {expandedSeason && (
-                            <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                            <div className="mt-1.5 pt-1.5 flex flex-wrap gap-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                               {seasons.find(s => s.label === expandedSeason)!.months.map(m => (
                                 <button
                                   key={m}
                                   onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                                  className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
+                                  className="px-2 py-0.5 rounded-md text-[10px] font-medium transition-all"
                                   style={{
                                     background: selectedMonths.includes(m) ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
                                     color: selectedMonths.includes(m) ? "#ff7d47" : "var(--text-tertiary)",
@@ -532,14 +532,14 @@ export default function ExploreClient() {
                 })()}
 
                 {/* ── Difficulty + Duration row ── */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
 
                   {/* Difficulty */}
                   <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                    <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                      <span className="text-[9px] font-black tracking-[0.22em] uppercase text-[var(--text-muted)]">Difficulty</span>
+                    <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                      <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Difficulty</span>
                     </div>
-                    <div className="p-2.5 flex flex-wrap gap-1.5">
+                    <div className="p-1.5 flex flex-wrap gap-1">
                       {(["Easy", "Moderate", "Hard", "Advanced", "Extreme"] as Difficulty[]).map((val) => {
                         const isSelected = selectedDifficulties.includes(val);
                         const colorMap: Record<string, string> = { Easy: "#22c55e", Moderate: "#eab308", Hard: "#f97316", Advanced: "#ef4444", Extreme: "#a855f7" };
@@ -548,7 +548,7 @@ export default function ExploreClient() {
                           <button
                             key={val}
                             onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
-                            className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                            className="px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
                             style={{
                               background: isSelected ? `${c}18` : "var(--bg-card)",
                               color: isSelected ? c : "var(--text-tertiary)",
@@ -564,17 +564,17 @@ export default function ExploreClient() {
 
                   {/* Duration */}
                   <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                    <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                      <span className="text-[9px] font-black tracking-[0.22em] uppercase text-[var(--text-muted)]">Duration</span>
+                    <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                      <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Duration</span>
                     </div>
-                    <div className="p-2.5 flex flex-wrap gap-1.5">
+                    <div className="p-1.5 flex flex-wrap gap-1">
                       {(["Weekend", "3–5 days", "7+ days"] as Duration[]).map((val) => {
                         const isSelected = selectedDurations.includes(val);
                         return (
                           <button
                             key={val}
                             onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
-                            className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                            className="px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
                             style={{
                               background: isSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
                               color: isSelected ? "#ff7d47" : "var(--text-tertiary)",
@@ -592,47 +592,47 @@ export default function ExploreClient() {
 
                 {/* ── Price Range ── */}
                 <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                  <div className="flex items-center justify-between px-3 py-1.5" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                    <span className="text-[9px] font-black tracking-[0.22em] uppercase text-[var(--text-muted)]">Price Range</span>
-                    <span className="text-[9px] font-bold" style={{ color: priceActive ? "#ff5100" : "var(--text-muted)" }}>
+                  <div className="flex items-center justify-between px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                    <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Price Range</span>
+                    <span className="text-[8px] font-bold" style={{ color: priceActive ? "#ff5100" : "var(--text-muted)" }}>
                       {priceRange[0] === PRICE_MIN && priceRange[1] === PRICE_MAX ? "Any price" : `₹${(priceRange[0]/1000).toFixed(0)}k – ₹${(priceRange[1]/1000).toFixed(0)}k`}
                     </span>
                   </div>
-                  <div className="px-3.5 pt-3 pb-2.5">
-                    <div className="relative h-4 flex items-center">
+                  <div className="px-3 pt-2 pb-2">
+                    <div className="relative h-3 flex items-center">
                       <div className="absolute inset-x-0 h-0.5 rounded-full" style={{ background: "var(--border-subtle)" }} />
                       <div className="absolute h-0.5 rounded-full bg-[#ff5100]" style={{ left: `${(priceRange[0] / PRICE_MAX) * 100}%`, right: `${100 - (priceRange[1] / PRICE_MAX) * 100}%` }} />
                       <input type="range" min={PRICE_MIN} max={PRICE_MAX} step={5000} value={priceRange[0]}
                         onChange={e => setPriceRange([Math.min(Number(e.target.value), priceRange[1] - 5000), priceRange[1]])}
-                        className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
+                        className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
                         style={{ zIndex: priceRange[0] > PRICE_MAX * 0.9 ? 5 : 3 }} />
                       <input type="range" min={PRICE_MIN} max={PRICE_MAX} step={5000} value={priceRange[1]}
                         onChange={e => setPriceRange([priceRange[0], Math.max(Number(e.target.value), priceRange[0] + 5000)])}
-                        className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
+                        className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
                         style={{ zIndex: 4 }} />
                     </div>
-                    <div className="flex justify-between mt-2 text-[9px] text-[var(--text-muted)] font-medium">
+                    <div className="flex justify-between mt-1.5 text-[8px] text-[var(--text-muted)] font-medium">
                       <span>₹0</span><span>₹50k</span><span>₹1L</span><span>₹1.5L</span><span>₹2L+</span>
                     </div>
                   </div>
                 </div>
 
                 {/* ── Clear / Apply ── */}
-                <div className="flex items-center gap-3 pt-2" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                <div className="flex items-center gap-2 pt-1.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                   <button
                     onClick={clearAll}
-                    className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                    className="flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
                     style={{
                       color: "var(--text-tertiary)",
                       border: "1px solid var(--border-default)",
                     }}
                   >
-                    <RotateCcw className="w-3.5 h-3.5" />
+                    <RotateCcw className="w-3 h-3" />
                     Clear All
                   </button>
                   <button
                     onClick={() => setFiltersOpen(false)}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all hover:-translate-y-0.5"
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all hover:-translate-y-0.5"
                     style={{
                       background: "linear-gradient(135deg, #ff5100, #ff7d47)",
                       color: "#fff",
