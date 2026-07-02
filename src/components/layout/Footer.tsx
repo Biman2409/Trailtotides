@@ -6,6 +6,7 @@ import { Instagram, Youtube, Twitter, Mail, Linkedin } from "lucide-react";
 import { Mountain } from "@/lib/localIcons";
 import { createClient } from "@/lib/supabase/client";
 import MessageModal from "./MessageModal";
+import { motion } from "framer-motion";
 
 export default function Footer() {
   const [user, setUser] = useState<{ email: string } | null>(null);
@@ -25,7 +26,12 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="relative overflow-hidden pb-20 lg:pb-0" style={{ background: "var(--bg-page)", borderTop: "1px solid var(--border-subtle)", color: "var(--text-primary)" }}>
+    <motion.footer
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+      className="relative overflow-hidden pb-20 lg:pb-0" style={{ background: "var(--bg-page)", borderTop: "1px solid var(--border-subtle)", color: "var(--text-primary)" }}>
       {/* Subtle Gradient Accent */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/20 to-transparent" />
       
@@ -174,6 +180,6 @@ export default function Footer() {
           userEmail={user.email} 
         />
       )}
-    </footer>
+    </motion.footer>
   );
 }

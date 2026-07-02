@@ -15,6 +15,7 @@ import CheckInButton from "./CheckInButton";
 import { useCompare } from "@/contexts/CompareContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 interface AdventureCardProps {
   adventure: Adventure;
@@ -113,13 +114,15 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         )}
       </div>
 
-      <div
-        className="rounded-2xl overflow-hidden flex flex-col transition-all duration-300"
+      <motion.div
+        className="rounded-2xl overflow-hidden flex flex-col"
         style={{
           background: "var(--bg-surface)",
           border: "1px solid var(--border-subtle)",
           boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
         }}
+        whileHover={{ y: -4, boxShadow: "0 12px 40px rgba(255,81,0,0.15)" }}
+        transition={{ type: "spring", stiffness: 300, damping: 24 }}
       >
       {/* Image area */}
       <div className={`relative w-full overflow-hidden block group ${isLarge ? "aspect-video" : "aspect-[4/3]"}`}>
@@ -250,7 +253,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
             </div>
           );
         })()}
-      </div>
+      </motion.div>
     </div>
   );
 }
