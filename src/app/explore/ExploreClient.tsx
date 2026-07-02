@@ -86,7 +86,7 @@ export default function ExploreClient() {
     const p = parseInt(searchParams.get("page") ?? "1", 10);
     return isNaN(p) || p < 1 ? 1 : p;
   });
-  const PAGE_SIZE = 12;
+  const PAGE_SIZE = 24;
 
   // Shared wishlist banner — ?saved=slug1,slug2,...
   const sharedSlugs = useMemo(() => {
@@ -239,11 +239,7 @@ export default function ExploreClient() {
             <button
               onClick={() => setAceCategory(aceCategory === "ready" ? null : "ready")}
               className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap"
-              style={{
-                background: aceCategory ? "rgba(255,81,0,0.15)" : "var(--bg-surface-2)",
-                color: aceCategory ? "#ff7d47" : "var(--text-secondary)",
-                border: `1px solid ${aceCategory ? "rgba(255,81,0,0.3)" : "transparent"}`,
-              }}
+              style={aceCategory ? { background: "#ff5100", color: "#fff" } : { background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
             >
               <Compass className="w-4 h-4" />
               <span className="hidden sm:inline">ACE™</span>
@@ -263,9 +259,14 @@ export default function ExploreClient() {
           <button
             onClick={() => setEditorOnly(!editorOnly)}
             className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap"
-            style={editorOnly ? { background: "linear-gradient(135deg,#ff5100,#ff7d47)", color: "#fff", boxShadow: "0 2px 12px rgba(255,81,0,0.3)" } : { background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
+            style={editorOnly ? {
+              background: "linear-gradient(105deg, #1a0a00 0%, #2d1200 40%, #1a0a00 100%)",
+              color: "#ffb38a",
+              border: "1px solid rgba(255,81,0,0.35)",
+              boxShadow: "0 0 12px rgba(255,81,0,0.2), inset 0 1px 0 rgba(255,140,80,0.15)",
+            } : { background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
           >
-            <Star className={`w-4 h-4 ${editorOnly ? "fill-white" : ""}`} />
+            <Star className="w-4 h-4" style={editorOnly ? { color: "#ff7d47", fill: "#ff7d47", filter: "drop-shadow(0 0 3px rgba(255,81,0,0.7))" } : {}} />
             <span className="hidden md:inline">Editor's Choice</span>
             <span className="md:hidden">Top Picks</span>
           </button>
