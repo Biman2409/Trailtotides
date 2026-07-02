@@ -12,8 +12,8 @@ interface Message {
   recommendations?: { slug: string; name: string; reason: string }[];
 }
 
-export default function ChatBubble() {
-  const [visible, setVisible] = useState(false);
+export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: boolean }) {
+  const [visible, setVisible] = useState(alwaysVisible);
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -31,6 +31,7 @@ export default function ChatBubble() {
   }, [messages, open]);
 
   useEffect(() => {
+    if (alwaysVisible) { setVisible(true); return; }
     const target = document.getElementById("featured-adventures");
     if (!target) return;
     const observer = new IntersectionObserver(
