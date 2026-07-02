@@ -617,6 +617,9 @@ export default function ExploreClient() {
           )}
       </div>
 
+      {/* Sentinel to trigger ChatBubble on scroll */}
+      <div id="featured-adventures" className="h-px w-full opacity-0 pointer-events-none" />
+
       {/* Active filter chips */}
         {activeFilterCount > 0 && (
           <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-4 flex flex-wrap gap-2">
@@ -847,7 +850,7 @@ export default function ExploreClient() {
           </div>
         </div>
 
-        <ChatBubble alwaysVisible={true} />
+        <ChatBubble />
         <Footer />
       </div>
   );
