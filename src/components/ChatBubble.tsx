@@ -33,13 +33,18 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
   useEffect(() => {
     if (alwaysVisible) { setVisible(true); return; }
     const target = document.getElementById("featured-adventures");
-    if (!target) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.1 }
-    );
-    observer.observe(target);
-    return () => observer.disconnect();
+    if (target) {
+      const observer = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+        { threshold: 0.1 }
+      );
+      observer.observe(target);
+      return () => observer.disconnect();
+    }
+    // Fallback: show on first scroll if no sentinel found
+    const onScroll = () => { setVisible(true); };
+    window.addEventListener("scroll", onScroll, { once: true, passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   async function send() {
