@@ -1317,40 +1317,13 @@ const [legendOpen, setLegendOpen] = useState(false);
               >
                 {/* Difficulty */}
                 <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2 text-white/25">Difficulty</p>
-                <div className="flex flex-col gap-1 mb-3">
+                <div className="flex flex-col gap-1">
                   {Object.entries(DIFFICULTY_COLORS).map(([label, color]) => (
                     <div key={label} className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
                       <span className="text-[11px] font-medium text-white/60">{label}</span>
                     </div>
                   ))}
-                </div>
-
-                {/* Genre */}
-                <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2 text-white/25">Genre</p>
-                <div className="flex flex-col gap-1 mb-3">
-                  {([
-                    { label: "Earth", color: "#a16207" },
-                    { label: "Water", color: "#0369a1" },
-                    { label: "Snow",  color: "#6366f1" },
-                    { label: "Air",   color: "#0891b2" },
-                  ]).map(({ label, color }) => (
-                    <div key={label} className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full shrink-0 flex items-center justify-center" style={{ background: `${color}30` }}>
-                        <div className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
-                      </div>
-                      <span className="text-[11px] font-medium text-white/60">{label}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Wishlist */}
-                <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2 text-white/25">Saved</p>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center justify-center w-4 h-4 rounded-full shrink-0" style={{ background: "#ff5100" }}>
-                    <span className="text-[7px] leading-none">❤</span>
-                  </div>
-                  <span className="text-[11px] font-medium text-white/60">Wishlisted</span>
                 </div>
               </div>
             </>
