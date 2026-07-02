@@ -258,7 +258,7 @@ export default function ExploreClient() {
               {acePopupOpen && (
                 <>
                   <div className="fixed inset-0 z-[1998]" onClick={() => setAcePopupOpen(false)} />
-                  <div className="absolute top-full left-0 mt-1.5 z-[2001] w-72 rounded-xl overflow-hidden" style={{ background: "rgba(15,20,30,0.97)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 20px 60px rgba(0,0,0,0.4)" }}>
+                  <div className="absolute top-full left-0 mt-1.5 z-[2001] w-72 rounded-xl overflow-hidden" style={{ background: "var(--bg-overlay)", backdropFilter: "blur(12px)", border: "1px solid var(--border-default)", boxShadow: "0 20px 60px rgba(0,0,0,0.4)" }}>
                     <div className="p-4">
                       <div className="flex items-center gap-2.5 mb-3">
                         <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center">
@@ -266,10 +266,10 @@ export default function ExploreClient() {
                         </div>
                         <div>
                           <p className="text-white text-sm font-bold">ACE<sup>™</sup> Assessment</p>
-                          <p className="text-white/30 text-[10px] font-medium">Adventure Compatibility Engine</p>
+                          <p className="text-[var(--text-muted)] text-[10px] font-medium">Adventure Compatibility Engine</p>
                         </div>
                       </div>
-                      <p className="text-white/50 text-xs leading-relaxed mb-4">
+                      <p className="text-[var(--text-tertiary)] text-xs leading-relaxed mb-4">
                         Find adventures tailored to your fitness, experience and comfort level.
                       </p>
                       <Link
@@ -327,7 +327,7 @@ export default function ExploreClient() {
             <>
               {/* Backdrop — closes on outside click */}
               <div className="fixed inset-0 z-[1999]" onClick={() => setFiltersOpen(false)} />
-              <div className="absolute top-full left-0 right-0 z-[2000] border-t border-white/8" style={{ background: "rgba(6,9,18,0.97)", backdropFilter: "blur(12px)" }}>
+              <div className="absolute top-full left-0 right-0 z-[2000] border-t border-white/8" style={{ background: "var(--bg-page)", backdropFilter: "blur(12px)" }}>
               <div className="max-w-7xl mx-auto px-4 lg:px-6 py-2.5 space-y-2">
 
                 {/* ── Region ── */}
@@ -343,9 +343,9 @@ export default function ExploreClient() {
                     { name: "Urban",         subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"] },
                   ];
                   return (
-                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                      <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                        <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Region</span>
+                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+                      <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                        <span className="text-[9px] font-black tracking-[0.22em] uppercase text-[var(--text-muted)]">Region</span>
                         {(selectedRegions.length > 0 || selectedSubRegions.length > 0) && (
                           <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>
                             {selectedRegions.length + selectedSubRegions.length}
@@ -364,9 +364,9 @@ export default function ExploreClient() {
                                 onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
                                 className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
                                 style={{
-                                  background: isExpanded || hasSelected ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.05)",
-                                  color: isExpanded || hasSelected ? "#ff7d47" : "rgba(255,255,255,0.5)",
-                                  border: `1px solid ${isExpanded || hasSelected ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.08)"}`,
+                                  background: isExpanded || hasSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
+                                  color: isExpanded || hasSelected ? "#ff7d47" : "var(--text-tertiary)",
+                                  border: `1px solid ${isExpanded || hasSelected ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}`,
                                 }}
                               >
                                 {rg.name}
@@ -381,7 +381,7 @@ export default function ExploreClient() {
                         {expandedRegion && (() => {
                           const rg = regionGroups.find(r => r.name === expandedRegion)!;
                           return (
-                            <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                            <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                               {rg.subRegions.map((sr) => {
                                 const isSelected = selectedSubRegions.includes(sr);
                                 return (
@@ -390,9 +390,9 @@ export default function ExploreClient() {
                                     onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
                                     className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
                                     style={{
-                                      background: isSelected ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.04)",
+                                      background: isSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
                                       color: isSelected ? "#ff7d47" : "rgba(255,255,255,0.45)",
-                                      border: `1px solid ${isSelected ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)"}`,
+                                      border: `1px solid ${isSelected ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}`,
                                     }}
                                   >
                                     {sr}
@@ -419,9 +419,9 @@ export default function ExploreClient() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
 
                       {/* Genre */}
-                      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                        <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                          <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Genre</span>
+                      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+                        <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                          <span className="text-[9px] font-black tracking-[0.22em] uppercase text-[var(--text-muted)]">Genre</span>
                           {selectedTypes.length > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedTypes.length}</span>}
                         </div>
                         <div className="p-2.5">
@@ -436,9 +436,9 @@ export default function ExploreClient() {
                                   onClick={() => setExpandedGenre(isExpanded ? null : grp.label)}
                                   className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
                                   style={{
-                                    background: isExpanded ? `${grp.color}22` : hasSelected ? `${grp.color}18` : "rgba(255,255,255,0.05)",
-                                    color: isExpanded || hasSelected ? grp.color : "rgba(255,255,255,0.5)",
-                                    border: `1px solid ${isExpanded || hasSelected ? `${grp.color}50` : "rgba(255,255,255,0.08)"}`,
+                                    background: isExpanded ? `${grp.color}22` : hasSelected ? `${grp.color}18` : "var(--bg-card)",
+                                    color: isExpanded || hasSelected ? grp.color : "var(--text-tertiary)",
+                                    border: `1px solid ${isExpanded || hasSelected ? `${grp.color}50` : "var(--border-subtle)"}`,
                                   }}
                                 >
                                   {grp.label}
@@ -451,7 +451,7 @@ export default function ExploreClient() {
                           {expandedGenre && (() => {
                             const grp = genreGroups.find(g => g.label === expandedGenre)!;
                             return (
-                              <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                              <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                                 {grp.types.map((type) => {
                                   const isSelected = selectedTypes.includes(type);
                                   return (
@@ -460,9 +460,9 @@ export default function ExploreClient() {
                                       onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
                                       className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
                                       style={{
-                                        background: isSelected ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.04)",
-                                        color: isSelected ? "#ff7d47" : "rgba(255,255,255,0.4)",
-                                        border: `1px solid ${isSelected ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)"}`,
+                                        background: isSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
+                                        color: isSelected ? "#ff7d47" : "var(--text-tertiary)",
+                                        border: `1px solid ${isSelected ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}`,
                                       }}
                                     >
                                       <span className="opacity-60">{ADVENTURE_TYPE_ICONS[type]?.(10)}</span>
@@ -477,9 +477,9 @@ export default function ExploreClient() {
                       </div>
 
                       {/* Season */}
-                      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                        <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                          <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Season</span>
+                      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+                        <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                          <span className="text-[9px] font-black tracking-[0.22em] uppercase text-[var(--text-muted)]">Season</span>
                           {selectedMonths.length > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedMonths.length}</span>}
                         </div>
                         <div className="p-2.5">
@@ -494,9 +494,9 @@ export default function ExploreClient() {
                                   onClick={() => setExpandedSeason(isExpanded ? null : label)}
                                   className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
                                   style={{
-                                    background: isExpanded || hasSelected ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.05)",
-                                    color: isExpanded || hasSelected ? "#ff7d47" : "rgba(255,255,255,0.5)",
-                                    border: `1px solid ${isExpanded || hasSelected ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.08)"}`,
+                                    background: isExpanded || hasSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
+                                    color: isExpanded || hasSelected ? "#ff7d47" : "var(--text-tertiary)",
+                                    border: `1px solid ${isExpanded || hasSelected ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}`,
                                   }}
                                 >
                                   {label}
@@ -507,16 +507,16 @@ export default function ExploreClient() {
                             })}
                           </div>
                           {expandedSeason && (
-                            <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                            <div className="mt-2 pt-2 flex flex-wrap gap-1.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                               {seasons.find(s => s.label === expandedSeason)!.months.map(m => (
                                 <button
                                   key={m}
                                   onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
                                   className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
                                   style={{
-                                    background: selectedMonths.includes(m) ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.04)",
-                                    color: selectedMonths.includes(m) ? "#ff7d47" : "rgba(255,255,255,0.4)",
-                                    border: `1px solid ${selectedMonths.includes(m) ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.06)"}`,
+                                    background: selectedMonths.includes(m) ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
+                                    color: selectedMonths.includes(m) ? "#ff7d47" : "var(--text-tertiary)",
+                                    border: `1px solid ${selectedMonths.includes(m) ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}`,
                                   }}
                                 >
                                   {m}
@@ -535,9 +535,9 @@ export default function ExploreClient() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
 
                   {/* Difficulty */}
-                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                    <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                      <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Difficulty</span>
+                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+                    <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                      <span className="text-[9px] font-black tracking-[0.22em] uppercase text-[var(--text-muted)]">Difficulty</span>
                     </div>
                     <div className="p-2.5 flex flex-wrap gap-1.5">
                       {(["Easy", "Moderate", "Hard", "Advanced", "Extreme"] as Difficulty[]).map((val) => {
@@ -550,9 +550,9 @@ export default function ExploreClient() {
                             onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
                             className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
                             style={{
-                              background: isSelected ? `${c}18` : "rgba(255,255,255,0.05)",
+                              background: isSelected ? `${c}18` : "var(--bg-card)",
                               color: isSelected ? c : "rgba(255,255,255,0.55)",
-                              border: `1px solid ${isSelected ? `${c}40` : "rgba(255,255,255,0.08)"}`,
+                              border: `1px solid ${isSelected ? `${c}40` : "var(--border-subtle)"}`,
                             }}
                           >
                             {val}
@@ -563,9 +563,9 @@ export default function ExploreClient() {
                   </div>
 
                   {/* Duration */}
-                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                    <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                      <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Duration</span>
+                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+                    <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                      <span className="text-[9px] font-black tracking-[0.22em] uppercase text-[var(--text-muted)]">Duration</span>
                     </div>
                     <div className="p-2.5 flex flex-wrap gap-1.5">
                       {(["Weekend", "3–5 days", "7+ days"] as Duration[]).map((val) => {
@@ -576,9 +576,9 @@ export default function ExploreClient() {
                             onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
                             className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
                             style={{
-                              background: isSelected ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.05)",
+                              background: isSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
                               color: isSelected ? "#ff7d47" : "rgba(255,255,255,0.55)",
-                              border: `1px solid ${isSelected ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.08)"}`,
+                              border: `1px solid ${isSelected ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}`,
                             }}
                           >
                             {val}
@@ -591,10 +591,10 @@ export default function ExploreClient() {
                 </div>
 
                 {/* ── Price Range ── */}
-                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                  <div className="flex items-center justify-between px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                    <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Price Range</span>
-                    <span className="text-[9px] font-bold" style={{ color: priceActive ? "#ff5100" : "rgba(255,255,255,0.2)" }}>
+                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+                  <div className="flex items-center justify-between px-3 py-1.5" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                    <span className="text-[9px] font-black tracking-[0.22em] uppercase text-[var(--text-muted)]">Price Range</span>
+                    <span className="text-[9px] font-bold" style={{ color: priceActive ? "#ff5100" : "var(--text-muted)" }}>
                       {priceRange[0] === PRICE_MIN && priceRange[1] === PRICE_MAX ? "Any price" : `₹${(priceRange[0]/1000).toFixed(0)}k – ₹${(priceRange[1]/1000).toFixed(0)}k`}
                     </span>
                   </div>
@@ -611,20 +611,20 @@ export default function ExploreClient() {
                         className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
                         style={{ zIndex: 4 }} />
                     </div>
-                    <div className="flex justify-between mt-2 text-[9px] text-white/20 font-medium">
+                    <div className="flex justify-between mt-2 text-[9px] text-[var(--text-muted)] font-medium">
                       <span>₹0</span><span>₹50k</span><span>₹1L</span><span>₹1.5L</span><span>₹2L+</span>
                     </div>
                   </div>
                 </div>
 
                 {/* ── Clear / Apply ── */}
-                <div className="flex items-center gap-3 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                <div className="flex items-center gap-3 pt-2" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                   <button
                     onClick={clearAll}
                     className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
                     style={{
-                      color: "rgba(255,255,255,0.5)",
-                      border: "1px solid rgba(255,255,255,0.1)",
+                      color: "var(--text-tertiary)",
+                      border: "1px solid var(--border-default)",
                     }}
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
@@ -800,7 +800,7 @@ export default function ExploreClient() {
                     const isNearby = Math.abs(page - currentPage) <= 1 || page === 1 || page === totalPages;
                     if (!isNearby) {
                       if (page === currentPage - 2 || page === currentPage + 2) {
-                        return <span key={page} className="text-white/30 px-1">…</span>;
+                        return <span key={page} className="text-[var(--text-muted)] px-1">…</span>;
                       }
                       return null;
                     }
