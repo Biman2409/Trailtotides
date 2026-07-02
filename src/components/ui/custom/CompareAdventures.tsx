@@ -227,7 +227,7 @@ export default function CompareAdventures() {
               <GitCompare className="w-3 h-3 text-[#ff5100]" />
             </div>
             <span className="text-xs font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>Compare</span>
-            <span className="text-[10px] hidden sm:block" style={{ color: "var(--text-tertiary)" }}>Side-by-side stats, pricing &amp; ACE profiles</span>
+            <span className="text-[10px] hidden sm:block" style={{ color: "var(--text-tertiary)" }}>Side-by-side stats, pricing &amp; ACE™ profiles</span>
           </div>
 
           {/* Selected thumbnails preview */}
@@ -341,7 +341,7 @@ export default function CompareAdventures() {
                       <td colSpan={selected.length + 1} className="px-3 pt-4 pb-1.5">
                         <div className="flex items-center gap-2">
                           <div className="w-0.5 h-3.5 rounded-full" style={{ background: "#ff5100" }} />
-                          <p className="text-[9px] uppercase tracking-widest font-black" style={{ color: "var(--text-tertiary)" }}>ACE Profile</p>
+                          <p className="text-[9px] uppercase tracking-widest font-black" style={{ color: "var(--text-tertiary)" }}>ACE™ Profile</p>
                           <span className="text-[9px] font-medium" style={{ color: "var(--text-muted)" }}>Adventure Capability Engine</span>
                         </div>
                       </td>
@@ -358,7 +358,7 @@ export default function CompareAdventures() {
                         ) : (
                           <div className="flex flex-col items-center justify-center gap-1.5 rounded-xl py-6 px-3 text-center"
                             style={{ border: "1px dashed var(--border-subtle)" }}>
-                            <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>No ACE profile</p>
+                            <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>No ACE™ profile</p>
                             <a href="/ace" className="text-[#ff5100]/60 text-[10px] hover:text-[#ff5100] transition-colors underline underline-offset-2">Take it \u2192</a>
                           </div>
                         )}

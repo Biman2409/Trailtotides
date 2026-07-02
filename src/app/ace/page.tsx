@@ -8,13 +8,13 @@ import { adventures } from "@/lib/data";
 import ACERadar from "@/components/ui/custom/ACERadar";
 
 export const metadata = {
-  title: "ACE Rating System — Trail to Tides",
+  title: "ACE™ Rating System — Trail to Tides",
   description: "The Adventure Capability Engine rates every adventure on 8 biological axes — so you know exactly what your body needs.",
   openGraph: {
-    title: "ACE Rating System — Trail to Tides",
+    title: "ACE™ Rating System — Trail to Tides",
     description: "8-axis biological difficulty rating for every adventure.",
     url: "https://trailtotides.com/ace",
-    images: [{ url: "https://images.unsplash.com/photo-1526139334526-f591a54b477c?w=1200&q=90", width: 1200, height: 630, alt: "ACE Rating System" }],
+    images: [{ url: "https://images.unsplash.com/photo-1526139334526-f591a54b477c?w=1200&q=90", width: 1200, height: 630, alt: "ACE™ Rating System" }],
   },
   alternates: { canonical: "https://trailtotides.com/ace" },
 };
@@ -112,7 +112,7 @@ export default function ACEPage() {
             <div className="flex-1 min-w-0">
               <div className="inline-flex items-center gap-2 mb-4 px-2.5 py-1 rounded border" style={{ background: "rgba(255,81,0,0.06)", borderColor: "rgba(255,81,0,0.22)" }}>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
-                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">ACE FRAMEWORK · v2.0</span>
+                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">ACE™ FRAMEWORK · v2.0</span>
               </div>
               <h1 className="text-3xl lg:text-[2.6rem] font-black text-white tracking-tight leading-[1.06] mb-3">
                 Adventure Capability Engine<sup className="text-[#ff5100] text-base font-black ml-0.5 align-super" style={{ fontSize: "0.45em" }}>™</sup>
@@ -279,7 +279,7 @@ export default function ACEPage() {
                 step: "01",
                 color: "#ff5100",
                 title: "Adventures are rated",
-                body: "Every adventure on Trail to Tides has an ACE profile — 8 axes scored honestly by our team based on actual route data, altitude profiles, and expedition reports. No vague 'Difficult' labels.",
+                body: "Every adventure on Trail to Tides has an ACE™ profile — 8 axes scored honestly by our team based on actual route data, altitude profiles, and expedition reports. No vague 'Difficult' labels.",
               },
               {
                 step: "02",

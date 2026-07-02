@@ -101,7 +101,7 @@ const TT = {
   labelStyle: { color: "rgba(255,255,255,0.5)", marginBottom: 4 },
 };
 
-// ── ACE rank helpers ───────────────────────────────────────────────────────────
+// ── ACE™ rank helpers ───────────────────────────────────────────────────────────
 const RANKS = ["Uncharted","Pathfinder","Navigator","Trailblazer","Vanguard","Apex"] as const;
 const RANK_COLORS: Record<string,string> = { Uncharted:"#6b7280",Pathfinder:"#22d3ee",Navigator:"#4ade80",Trailblazer:"#f59e0b",Vanguard:"#f97316",Apex:"#a78bfa" };
 function getRank(ace: Record<string,number>) {
@@ -171,7 +171,7 @@ function UserDetailPanel({
         <div className="mx-3 mb-2 rounded-2xl border p-5 grid grid-cols-1 md:grid-cols-2 gap-6"
           style={{ background: "rgba(255,255,255,0.018)", borderColor: "rgba(255,255,255,0.07)" }}>
 
-          {/* Identity + ACE */}
+          {/* Identity + ACE™ */}
           <div className="space-y-2">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20">Identity</p>
             <div className="flex items-center gap-2">
@@ -211,7 +211,7 @@ function UserDetailPanel({
                   </span>
                 </div>
               ) : (
-                <span className="text-[11px] text-white/20">No ACE assessment</span>
+                <span className="text-[11px] text-white/20">No ACE™ assessment</span>
               )}
             </div>
             <div className="flex items-center gap-2 pt-1">
@@ -597,8 +597,8 @@ export default function AdminDashboardClient({
       ID: p.id, Name: p.full_name || "N/A", Email: p.email || "N/A",
       Phone: p.phone || "N/A", Role: p.role,
       Banned: p.banned ? "Yes" : "No",
-      ACE_Rank: p.ace_profile?.ace ? getRank(p.ace_profile.ace) : "None",
-      ACE_Score: p.ace_profile?.ace ? Object.values(p.ace_profile.ace).reduce((a,b)=>a+b,0) : 0,
+      ACE™ Rank: p.ace_profile?.ace ? getRank(p.ace_profile.ace) : "None",
+      ACE™ Score: p.ace_profile?.ace ? Object.values(p.ace_profile.ace).reduce((a,b)=>a+b,0) : 0,
       Joined: format(parseISO(p.created_at), "yyyy-MM-dd HH:mm:ss"),
       LastLogin: p.last_sign_in_at ? format(parseISO(p.last_sign_in_at), "yyyy-MM-dd HH:mm:ss") : "N/A",
     }));
@@ -708,7 +708,7 @@ export default function AdminDashboardClient({
                 { label: "Admins",     value: totalAdmins,   delta: null,                                          icon: Shield,         color: "#a855f7" },
                 { label: "Operators",  value: totalOperators, delta: null,                                          icon: Building2,     color: "#06b6d4" },
                 { label: "Banned",     value: bannedCount,   delta: null,                                          icon: Ban,            color: "#ef4444" },
-                { label: "ACE Done",   value: aceCount,      delta: <span className="text-[10px] text-white/25 font-semibold">{Math.round((aceCount/Math.max(totalUsers,1))*100)}% rate</span>, icon: Star, color: "#f59e0b" },
+                { label: "ACE™ Done",   value: aceCount,      delta: <span className="text-[10px] text-white/25 font-semibold">{Math.round((aceCount/Math.max(totalUsers,1))*100)}% rate</span>, icon: Star, color: "#f59e0b" },
                 { label: "Messages",   value: localMessages.length, delta: null,                                   icon: MessageSquare, color: "#22c55e" },
               ].map(({ label, value, delta, icon: Icon, color }) => (
                 <div key={label} className="relative bg-white/[0.025] border border-white/[0.06] rounded-2xl p-4 overflow-hidden group hover:border-white/[0.1] transition-all cursor-default">
@@ -881,7 +881,7 @@ export default function AdminDashboardClient({
                     <option value="user" className="bg-[#111]">Users</option>
                     <option value="admin" className="bg-[#111]">Admins</option>
                     <option value="banned" className="bg-[#111]">Banned</option>
-                    <option value="ace" className="bg-[#111]">Has ACE</option>
+                    <option value="ace" className="bg-[#111]">Has ACE™</option>
                   </select>
                   <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/25 pointer-events-none" />
                 </div>
@@ -911,7 +911,7 @@ export default function AdminDashboardClient({
                     <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">User</th>
                     <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25 hidden md:table-cell">Last Login</th>
                     <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Role</th>
-                    <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25 hidden sm:table-cell">ACE</th>
+                    <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25 hidden sm:table-cell">ACE™</th>
                     <th className="text-left px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25 hidden lg:table-cell">Joined</th>
                     <th className="text-right px-5 py-3 text-[9px] font-black uppercase tracking-[0.15em] text-white/25">Quick Actions</th>
                   </tr>
@@ -1026,7 +1026,7 @@ export default function AdminDashboardClient({
               <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/20">
                 {filtered.length} of {localProfiles.filter(p => p.role !== "operator").length} users
               </p>
-              <p className="text-[10px] text-white/15">{bannedCount} banned · {aceCount} with ACE</p>
+              <p className="text-[10px] text-white/15">{bannedCount} banned · {aceCount} with ACE™</p>
             </div>
           </Tabs.Content>
 
@@ -1685,10 +1685,10 @@ export default function AdminDashboardClient({
                 </div>
               </div>
 
-              {/* ACE Distribution */}
+              {/* ACE™ Distribution */}
               <div className="bg-white/[0.025] border border-white/[0.06] rounded-2xl p-6">
                 <div className="mb-5">
-                  <p className="text-[9px] font-black uppercase tracking-[0.15em] text-white/25 mb-1">ACE Assessment</p>
+                  <p className="text-[9px] font-black uppercase tracking-[0.15em] text-white/25 mb-1">ACE™ Assessment</p>
                   <h3 className="text-sm font-bold">Rank Distribution</h3>
                   <p className="text-[11px] text-white/25 mt-0.5">
                     {aceCount} of {totalUsers} users completed
@@ -1696,7 +1696,7 @@ export default function AdminDashboardClient({
                   </p>
                 </div>
                 {aceCount === 0 ? (
-                  <div className="h-[160px] flex items-center justify-center text-white/15 text-sm">No ACE data yet</div>
+                  <div className="h-[160px] flex items-center justify-center text-white/15 text-sm">No ACE™ data yet</div>
                 ) : (
                   <div className="space-y-3">
                     {RANKS.slice().reverse().map(rank => {
@@ -1716,7 +1716,7 @@ export default function AdminDashboardClient({
                     })}
                     <div className="pt-2 border-t border-white/[0.05]">
                       <div className="flex items-center gap-3">
-                        <span className="w-20 text-[11px] font-semibold text-white/20 shrink-0">No ACE</span>
+                        <span className="w-20 text-[11px] font-semibold text-white/20 shrink-0">No ACE™</span>
                         <div className="flex-1 h-2 rounded-full bg-white/[0.05]">
                           <div className="h-full rounded-full bg-white/[0.08]" style={{ width: `${Math.round(((totalUsers - aceCount)/Math.max(totalUsers,1))*100)}%` }} />
                         </div>

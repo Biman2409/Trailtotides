@@ -239,7 +239,7 @@ export function AvatarPickerModal({
                 <span style={{ width: 20, height: 20, display: "block" }}>{RANK_ICONS[rankName] ?? RANK_ICONS.Uncharted}</span>
               </span>
               <span className="flex-1 text-left">
-                <span className="block text-xs font-semibold text-white/80">ACE Rank — {rankName}</span>
+                <span className="block text-xs font-semibold text-white/80">ACE™ Rank — {rankName}</span>
                 <span className="block text-[10px] text-white/28 mt-0.5">Shows your adventure tier badge</span>
               </span>
               {selectedId === null && <Check className="w-4 h-4 shrink-0" style={{ color: rankColor }} />}

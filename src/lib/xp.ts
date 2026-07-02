@@ -18,7 +18,7 @@ export const XP_REWARDS: Record<XPAction, number> = {
 };
 
 export const XP_LABELS: Record<XPAction, string> = {
-  ace_complete: "ACE Assessment",
+  ace_complete: "ACE™ Assessment",
   review:       "Review",
   photo:        "Photo upload",
   wishlist:     "Wishlist save",

@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     "Uttarakhand trek",
     "adventure booking India",
     "verified adventure operators",
-    "ACE adventure rating",
+    "ACE™ adventure rating",
     "Compass AI",
     "Trail to Tides",
   ],

@@ -352,7 +352,7 @@ function AvatarSection() {
 
         <div className="flex-1">
           <p className="text-white/75 text-sm font-semibold">
-            {selected ? selected.label : `${rankName} — ACE Rank`}
+            {selected ? selected.label : `${rankName} — ACE™ Rank`}
           </p>
           <p className="text-white/28 text-xs mt-0.5 mb-3">
             {selected ? "Custom character" : "Tier badge displayed by default"}

@@ -277,7 +277,7 @@ export default function TrophyCabinet() {
           <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold text-white/25 mb-1">All Trophies</p>
         </div>
         <div className="px-4 py-6 rounded-b-2xl text-center">
-          <p className="text-white/25 text-xs">Complete your <a href="/ace" className="text-[#ff5100]/70 hover:text-[#ff5100] underline underline-offset-2 transition-colors">ACE assessment</a> to unlock trophies</p>
+          <p className="text-white/25 text-xs">Complete your <a href="/ace" className="text-[#ff5100]/70 hover:text-[#ff5100] underline underline-offset-2 transition-colors">ACE™ assessment</a> to unlock trophies</p>
         </div>
       </div>
     );

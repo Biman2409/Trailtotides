@@ -3,7 +3,7 @@ import { createClient, createAdminClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "My Profile — Trail to Tides",
-  description: "Manage your Trail to Tides profile — view your ACE score, trip log, achievements, and adventure history.",
+  description: "Manage your Trail to Tides profile — view your ACE™ score, trip log, achievements, and adventure history.",
   alternates: { canonical: "https://trailtotides.com/profile" },
   robots: { index: false, follow: false },
 };

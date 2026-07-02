@@ -75,7 +75,7 @@ export default function ExploreMatchmakerSection() {
           <div className="relative rounded-2xl overflow-hidden px-8 py-10 flex flex-col md:flex-row md:items-center gap-8"
             style={{ background: "linear-gradient(135deg, rgba(255,81,0,0.08) 0%, rgba(0,0,0,0.02) 60%)", border: "1px solid rgba(255,81,0,0.15)" }}>
             {/* Decorative bg text */}
-            <span className="pointer-events-none select-none absolute right-6 top-4 text-[80px] font-black leading-none hidden lg:block" style={{ color: "var(--text-muted)", opacity: 0.08 }}>ACE</span>
+            <span className="pointer-events-none select-none absolute right-6 top-4 text-[80px] font-black leading-none hidden lg:block" style={{ color: "var(--text-muted)", opacity: 0.08 }}>ACE™</span>
             <div className="flex-1">
               <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Adventure Matchmaker</p>
               <h2 className="text-2xl lg:text-3xl font-bold tracking-tight mb-3" style={{ color: "var(--text-primary)" }}>
@@ -83,7 +83,7 @@ export default function ExploreMatchmakerSection() {
               </h2>
               <p className="text-sm lg:text-base leading-relaxed max-w-md" style={{ color: "var(--text-secondary)" }}>
                 Answer 8 questions. Discover your{" "}
-                <Link href="/ace" className="text-[#ff5100] font-semibold hover:underline">ACE</Link>{" "}
+                <Link href="/ace" className="text-[#ff5100] font-semibold hover:underline">ACE™</Link>{" "}
                 profile and find the adventures you're truly ready for.
               </p>
             </div>
@@ -195,7 +195,7 @@ export default function ExploreMatchmakerSection() {
           {/* Right column: ACE Radar */}
           <div className="shrink-0 lg:self-stretch flex flex-col items-center rounded-2xl border p-5"
             style={{ background: "var(--bg-card)", borderColor: "var(--border-subtle)" }}>
-            <p className="text-[9px] uppercase tracking-[0.22em] font-bold self-start mb-3" style={{ color: "var(--text-muted)" }}>ACE Profile</p>
+            <p className="text-[9px] uppercase tracking-[0.22em] font-bold self-start mb-3" style={{ color: "var(--text-muted)" }}>ACE™ Profile</p>
             <div className="flex-1 flex items-center justify-center rounded-xl p-4 w-full"
               style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid var(--border-subtle)" }}>
               <ACERadar ace={profile.ace} size={240} showLabels />
