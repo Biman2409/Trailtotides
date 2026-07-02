@@ -4,34 +4,13 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
-  ArrowRight, LocateFixed, Map as MapIcon, Layers, Camera,
+  LocateFixed, Map as MapIcon, Layers, Camera,
   Navigation as NavigationIcon, Compass, Menu, Heart,
 } from "lucide-react";
-import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import { adventures } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, Adventure } from "@/lib/data";
-import { getACE } from "@/lib/ace";
-import type { AceAxis } from "@/lib/ace";
-import { loadProfile } from "@/lib/matchmaker";
-import type { StoredProfile } from "@/lib/matchmaker";
-
-type AceCategory = "ready" | "stretch" | "out-of-range";
-
-function classifyAdventure(userAce: StoredProfile["ace"], adventureAce: ReturnType<typeof getACE>): AceCategory {
-  const axes = Object.keys(adventureAce) as AceAxis[];
-  let maxShortfall = 0;
-  for (const axis of axes) {
-    const req = adventureAce[axis];
-    if (req === 0) continue;
-    const shortfall = req - userAce[axis];
-    if (shortfall > maxShortfall) maxShortfall = shortfall;
-  }
-  if (maxShortfall <= 0) return "ready";
-  if (maxShortfall <= 1) return "stretch";
-  return "out-of-range";
-}
 
 import type L from "leaflet";
 import type { GeoJsonObject } from "geojson";
@@ -731,12 +710,8 @@ const [legendOpen, setLegendOpen] = useState(false);
   const [expandedRegion, setExpandedRegion] = useState<Region | null>(null);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
-  const [aceCategory, setAceCategory] = useState<AceCategory | null>(null);
-  const [userProfile, setUserProfile] = useState<StoredProfile | null>(null);
-
   useEffect(() => {
     setMounted(true);
-    setUserProfile(loadProfile());
     // Check auth state
     import("@/lib/supabase/client").then(({ createClient }) => {
       const sb = createClient();
@@ -753,13 +728,12 @@ const [legendOpen, setLegendOpen] = useState(false);
     setSelectedDifficulties([]); setSelectedDurations([]);
     setSelectedMonths([]); setSelectedSubRegions([]);
     setExpandedRegion(null); setExpandedCategory(null); setExpandedSeason(null);
-    setAceCategory(null);
   }
 
   const activeFilterCount =
     selectedTypes.length + selectedRegions.length + selectedSubRegions.length +
     selectedDifficulties.length + selectedDurations.length +
-    selectedMonths.length + (aceCategory !== null ? 1 : 0);
+    selectedMonths.length;
 
   const visibleAdventures = adventures.filter(a => {
     if (search &&
@@ -773,9 +747,6 @@ const [legendOpen, setLegendOpen] = useState(false);
     if (selectedDifficulties.length && !selectedDifficulties.includes(a.difficulty)) return false;
     if (selectedDurations.length && !selectedDurations.includes(a.duration)) return false;
     if (selectedMonths.length && !selectedMonths.some(m => a.bestMonths.includes(m))) return false;
-    if (aceCategory && userProfile) {
-      if (classifyAdventure(userProfile.ace, getACE(a)) !== aceCategory) return false;
-    }
     return true;
   });
 
@@ -968,10 +939,10 @@ const [legendOpen, setLegendOpen] = useState(false);
             {/* Invisible backdrop — closes dropdown on outside click */}
             <div className="fixed inset-0 z-[1999]" onClick={() => setFiltersOpen(false)} />
             <div className="absolute top-full left-0 right-0 z-[2000] border-t border-white/8 max-h-[58vh] overflow-y-auto" style={{ background: "rgba(6,9,18,0.97)", backdropFilter: "blur(12px)" }}>
-            <div className="max-w-7xl mx-auto px-4 lg:px-6 py-3 space-y-3">
+            <div className="max-w-7xl mx-auto px-4 lg:px-6 py-2.5 space-y-2">
 
               {/* Genre + Region row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
 
                 {/* Genre */}
                 {(() => {
@@ -983,11 +954,11 @@ const [legendOpen, setLegendOpen] = useState(false);
                   ];
                   return (
                     <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                      <div className="flex items-center gap-2 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                         <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Genre</span>
                         {selectedTypes.length > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedTypes.length}</span>}
                       </div>
-                      <div className="p-3">
+                      <div className="p-2.5">
                         <div className="flex flex-wrap gap-1.5">
                           {genreGroups.map(grp => {
                             const isExp = expandedCategory === grp.label;
@@ -1040,11 +1011,11 @@ const [legendOpen, setLegendOpen] = useState(false);
                   const totalSelected = selectedRegions.length + selectedSubRegions.length;
                   return (
                     <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                      <div className="flex items-center gap-2 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                         <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Region</span>
                         {totalSelected > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{totalSelected}</span>}
                       </div>
-                      <div className="p-3">
+                      <div className="p-2.5">
                         <div className="flex flex-wrap gap-1.5">
                           {regionGroups.map(rg => {
                             const isExp = expandedRegion === rg.name;
@@ -1085,15 +1056,15 @@ const [legendOpen, setLegendOpen] = useState(false);
               </div>
 
               {/* Season + Difficulty row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
 
                 {/* Season */}
                 <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                  <div className="flex items-center gap-2 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                  <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                     <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Season</span>
                     {selectedMonths.length > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedMonths.length}</span>}
                   </div>
-                  <div className="p-3">
+                  <div className="p-2.5">
                     <div className="flex flex-wrap gap-1.5">
                       {seasons.map(({ label, months: sMonths }) => {
                         const isExp = expandedSeason === label;
@@ -1128,10 +1099,10 @@ const [legendOpen, setLegendOpen] = useState(false);
 
                 {/* Difficulty */}
                 <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                  <div className="flex items-center gap-2.5 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                  <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                     <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Difficulty</span>
                   </div>
-                  <div className="p-3 flex flex-wrap gap-1.5">
+                  <div className="p-2.5 flex flex-wrap gap-1.5">
                     {(["Easy","Moderate","Hard","Advanced","Extreme"] as Difficulty[]).map(val => {
                       const isSel = selectedDifficulties.includes(val);
                       const c = DIFFICULTY_COLORS[val] ?? "#ff5100";
@@ -1147,64 +1118,22 @@ const [legendOpen, setLegendOpen] = useState(false);
                 </div>
               </div>
 
-              {/* Duration + ACE row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-
-                {/* Duration */}
-                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                  <div className="flex items-center gap-2.5 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                    <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Duration</span>
-                  </div>
-                  <div className="p-3 flex flex-wrap gap-1.5">
-                    {(["Weekend","3–5 days","7+ days"] as Duration[]).map(val => {
-                      const isSel = selectedDurations.includes(val);
-                      return (
-                        <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
-                          className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
-                          style={{ background: isSel ? "#ff5100" : "rgba(255,255,255,0.05)", color: isSel ? "#fff" : "rgba(255,255,255,0.55)", border: `1px solid ${isSel ? "#ff5100" : "rgba(255,255,255,0.08)"}` }}>
-                          {val}
-                        </button>
-                      );
-                    })}
-                  </div>
+              {/* Duration */}
+              <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                  <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Duration</span>
                 </div>
-
-                {/* ACE */}
-                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                  <div className="flex items-center justify-between px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">ACE™ Readiness</span>
-                      {aceCategory && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>1</span>}
-                    </div>
-                    <a href="/ace" className="text-[9px] text-white/20 hover:text-[#ff5100] transition-colors">What is ACE™?</a>
-                  </div>
-                  <div className="p-3">
-                    {!userProfile ? (
-                      <div className="flex items-center justify-between gap-3">
-                        <p className="text-[11px] text-white/30">No ACE profile yet</p>
-                        <Link href="/matchmaker" className="shrink-0 inline-flex items-center gap-1 text-white font-semibold px-2.5 py-1 rounded-lg text-[10px] transition-all" style={{ background: "#ff5100" }}>
-                          Take Assessment <ArrowRight className="w-2.5 h-2.5" />
-                        </Link>
-                      </div>
-                    ) : (
-                      <div className="flex flex-wrap gap-1.5">
-                        {([
-                          { key: "ready" as AceCategory, label: "Ready Now", color: "#22c55e" },
-                          { key: "stretch" as AceCategory, label: "Stretch", color: "#eab308" },
-                          { key: "out-of-range" as AceCategory, label: "Out of Range", color: "#ef4444" },
-                        ]).map(({ key, label, color }) => {
-                          const isAct = aceCategory === key;
-                          return (
-                            <button key={key} onClick={() => setAceCategory(isAct ? null : key)}
-                              className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
-                              style={{ background: isAct ? `${color}18` : "rgba(255,255,255,0.05)", color: isAct ? color : "rgba(255,255,255,0.55)", border: `1px solid ${isAct ? `${color}40` : "rgba(255,255,255,0.08)"}` }}>
-                              {label}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
+                <div className="p-2.5 flex flex-wrap gap-1.5">
+                  {(["Weekend","3–5 days","7+ days"] as Duration[]).map(val => {
+                    const isSel = selectedDurations.includes(val);
+                    return (
+                      <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
+                        className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
+                        style={{ background: isSel ? "#ff5100" : "rgba(255,255,255,0.05)", color: isSel ? "#fff" : "rgba(255,255,255,0.55)", border: `1px solid ${isSel ? "#ff5100" : "rgba(255,255,255,0.08)"}` }}>
+                        {val}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -1223,7 +1152,6 @@ const [legendOpen, setLegendOpen] = useState(false);
               ...selectedDifficulties.map(d => ({ label: d, remove: () => toggle(selectedDifficulties, d, setSelectedDifficulties) })),
               ...selectedDurations.map(d => ({ label: d, remove: () => toggle(selectedDurations, d, setSelectedDurations) })),
               ...selectedMonths.map(m => ({ label: m, remove: () => toggle(selectedMonths, m, setSelectedMonths) })),
-              ...(aceCategory ? [{ label: `ACE: ${aceCategory === "ready" ? "Ready" : aceCategory === "stretch" ? "Stretch" : "Out of Range"}`, remove: () => setAceCategory(null) }] : []),
             ].map(({ label, remove }) => (
               <span
                 key={label}

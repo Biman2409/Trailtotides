@@ -294,7 +294,7 @@ export default function ExploreClient() {
               {/* Backdrop — closes on outside click */}
               <div className="fixed inset-0 z-[1999]" onClick={() => setFiltersOpen(false)} />
               <div className="absolute top-full left-0 right-0 z-[2000] border-t border-white/8" style={{ background: "rgba(6,9,18,0.97)", backdropFilter: "blur(12px)" }}>
-              <div className="max-w-7xl mx-auto px-4 lg:px-6 py-3 space-y-3">
+              <div className="max-w-7xl mx-auto px-4 lg:px-6 py-2.5 space-y-2">
 
                 {/* ── Region ── */}
                 {(() => {
@@ -310,7 +310,7 @@ export default function ExploreClient() {
                   ];
                   return (
                     <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                      <div className="flex items-center gap-2.5 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                         <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Region</span>
                         {(selectedRegions.length > 0 || selectedSubRegions.length > 0) && (
                           <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>
@@ -318,7 +318,7 @@ export default function ExploreClient() {
                           </span>
                         )}
                       </div>
-                      <div className="p-3">
+                      <div className="p-2.5">
                         <div className="flex flex-wrap gap-1.5">
                           {regionGroups.map((rg) => {
                             const isExpanded = expandedRegion === rg.name;
@@ -382,15 +382,15 @@ export default function ExploreClient() {
                     { label: "Air",   color: "#0891b2", types: ["Paragliding", "Hot Air Balloon"] },
                   ];
                   return (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
 
                       {/* Genre */}
                       <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                        <div className="flex items-center gap-2 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                        <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                           <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Genre</span>
                           {selectedTypes.length > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedTypes.length}</span>}
                         </div>
-                        <div className="p-3">
+                        <div className="p-2.5">
                           <div className="flex flex-wrap gap-1.5">
                             {genreGroups.map((grp) => {
                               const isExpanded = expandedGenre === grp.label;
@@ -444,11 +444,11 @@ export default function ExploreClient() {
 
                       {/* Season */}
                       <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                        <div className="flex items-center gap-2 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                        <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                           <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Season</span>
                           {selectedMonths.length > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedMonths.length}</span>}
                         </div>
-                        <div className="p-3">
+                        <div className="p-2.5">
                           <div className="flex flex-wrap gap-1.5">
                             {seasons.map(({ label, months: sMonths }) => {
                               const isExpanded = expandedSeason === label;
@@ -498,14 +498,14 @@ export default function ExploreClient() {
                 })()}
 
                 {/* ── Difficulty + Duration row ── */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
 
                   {/* Difficulty */}
                   <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                    <div className="flex items-center gap-2.5 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                       <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Difficulty</span>
                     </div>
-                    <div className="p-3 flex flex-wrap gap-1.5">
+                    <div className="p-2.5 flex flex-wrap gap-1.5">
                       {(["Easy", "Moderate", "Hard", "Advanced", "Extreme"] as Difficulty[]).map((val) => {
                         const isSelected = selectedDifficulties.includes(val);
                         const colorMap: Record<string, string> = { Easy: "#22c55e", Moderate: "#eab308", Hard: "#f97316", Advanced: "#ef4444", Extreme: "#a855f7" };
@@ -530,10 +530,10 @@ export default function ExploreClient() {
 
                   {/* Duration */}
                   <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                    <div className="flex items-center gap-2.5 px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    <div className="flex items-center gap-2 px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
                       <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Duration</span>
                     </div>
-                    <div className="p-3 flex flex-wrap gap-1.5">
+                    <div className="p-2.5 flex flex-wrap gap-1.5">
                       {(["Weekend", "3–5 days", "7+ days"] as Duration[]).map((val) => {
                         const isSelected = selectedDurations.includes(val);
                         return (
@@ -556,87 +556,31 @@ export default function ExploreClient() {
 
                 </div>
 
-                {/* ── Price + ACE row ── */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-
-                  {/* Price Range */}
-                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                    <div className="flex items-center justify-between px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                      <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Price Range</span>
-                      <span className="text-[9px] font-bold" style={{ color: priceActive ? "#ff5100" : "rgba(255,255,255,0.2)" }}>
-                        {priceRange[0] === PRICE_MIN && priceRange[1] === PRICE_MAX ? "Any price" : `₹${(priceRange[0]/1000).toFixed(0)}k – ₹${(priceRange[1]/1000).toFixed(0)}k`}
-                      </span>
+                {/* ── Price Range ── */}
+                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+                  <div className="flex items-center justify-between px-3 py-1.5" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">Price Range</span>
+                    <span className="text-[9px] font-bold" style={{ color: priceActive ? "#ff5100" : "rgba(255,255,255,0.2)" }}>
+                      {priceRange[0] === PRICE_MIN && priceRange[1] === PRICE_MAX ? "Any price" : `₹${(priceRange[0]/1000).toFixed(0)}k – ₹${(priceRange[1]/1000).toFixed(0)}k`}
+                    </span>
+                  </div>
+                  <div className="px-3.5 pt-3 pb-2.5">
+                    <div className="relative h-4 flex items-center">
+                      <div className="absolute inset-x-0 h-0.5 rounded-full bg-white/10" />
+                      <div className="absolute h-0.5 rounded-full bg-[#ff5100]" style={{ left: `${(priceRange[0] / PRICE_MAX) * 100}%`, right: `${100 - (priceRange[1] / PRICE_MAX) * 100}%` }} />
+                      <input type="range" min={PRICE_MIN} max={PRICE_MAX} step={5000} value={priceRange[0]}
+                        onChange={e => setPriceRange([Math.min(Number(e.target.value), priceRange[1] - 5000), priceRange[1]])}
+                        className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
+                        style={{ zIndex: priceRange[0] > PRICE_MAX * 0.9 ? 5 : 3 }} />
+                      <input type="range" min={PRICE_MIN} max={PRICE_MAX} step={5000} value={priceRange[1]}
+                        onChange={e => setPriceRange([priceRange[0], Math.max(Number(e.target.value), priceRange[0] + 5000)])}
+                        className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
+                        style={{ zIndex: 4 }} />
                     </div>
-                    <div className="px-4 pt-4 pb-3">
-                      <div className="relative h-4 flex items-center">
-                        <div className="absolute inset-x-0 h-0.5 rounded-full bg-white/10" />
-                        <div className="absolute h-0.5 rounded-full bg-[#ff5100]" style={{ left: `${(priceRange[0] / PRICE_MAX) * 100}%`, right: `${100 - (priceRange[1] / PRICE_MAX) * 100}%` }} />
-                        <input type="range" min={PRICE_MIN} max={PRICE_MAX} step={5000} value={priceRange[0]}
-                          onChange={e => setPriceRange([Math.min(Number(e.target.value), priceRange[1] - 5000), priceRange[1]])}
-                          className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
-                          style={{ zIndex: priceRange[0] > PRICE_MAX * 0.9 ? 5 : 3 }} />
-                        <input type="range" min={PRICE_MIN} max={PRICE_MAX} step={5000} value={priceRange[1]}
-                          onChange={e => setPriceRange([priceRange[0], Math.max(Number(e.target.value), priceRange[0] + 5000)])}
-                          className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
-                          style={{ zIndex: 4 }} />
-                      </div>
-                      <div className="flex justify-between mt-2 text-[9px] text-white/20 font-medium">
-                        <span>₹0</span><span>₹50k</span><span>₹1L</span><span>₹1.5L</span><span>₹2L+</span>
-                      </div>
+                    <div className="flex justify-between mt-2 text-[9px] text-white/20 font-medium">
+                      <span>₹0</span><span>₹50k</span><span>₹1L</span><span>₹1.5L</span><span>₹2L+</span>
                     </div>
                   </div>
-
-                  {/* ACE Filter */}
-                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
-                    <div className="flex items-center justify-between px-3.5 py-2" style={{ background: "rgba(255,255,255,0.03)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-black tracking-[0.22em] uppercase text-white/30">ACE™ Readiness</span>
-                        {aceCategory && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>1</span>}
-                      </div>
-                      <a href="/ace" target="_blank" className="text-[9px] font-semibold transition-colors" style={{ color: "#ff5100" }}>What is ACE™?</a>
-                    </div>
-                    <div className="p-3">
-                      {!userProfile ? (
-                        <div className="flex items-center gap-3">
-                          <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.15)" }}>
-                            <Compass className="w-3.5 h-3.5 text-[#ff5100]/50" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-white/50 text-[11px] font-semibold">No ACE profile yet</p>
-                            <p className="text-white/25 text-[10px]">Take the assessment to filter by capability</p>
-                          </div>
-                          <Link href="/matchmaker" className="shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-bold text-white transition-all" style={{ background: "#ff5100" }}>
-                            Assess <ArrowRight className="w-2.5 h-2.5" />
-                          </Link>
-                        </div>
-                      ) : (
-                        <div className="flex gap-2">
-                          {([
-                            { key: "ready" as AceCategory, label: "Ready", color: "#4ade80" },
-                            { key: "stretch" as AceCategory, label: "Stretch", color: "#f59e0b" },
-                            { key: "out-of-range" as AceCategory, label: "Out of Range", color: "#f43f5e" },
-                          ]).map(({ key, label, color }) => {
-                            const isActive = aceCategory === key;
-                            return (
-                              <button
-                                key={key}
-                                onClick={() => setAceCategory(isActive ? null : key)}
-                                className="flex-1 py-2 px-2 rounded-lg text-[11px] font-bold transition-all text-center"
-                                style={{
-                                  background: isActive ? `${color}15` : "rgba(255,255,255,0.04)",
-                                  color: isActive ? color : "rgba(255,255,255,0.4)",
-                                  border: `1px solid ${isActive ? `${color}35` : "rgba(255,255,255,0.07)"}`,
-                                }}
-                              >
-                                {label}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
                 </div>
 
                 {/* ── Clear / Apply ── */}
@@ -738,15 +682,7 @@ export default function ExploreClient() {
                 ₹{(priceRange[0]/1000).toFixed(0)}k – ₹{(priceRange[1]/1000).toFixed(0)}k <X className="w-3 h-3" />
               </span>
             )}
-            {aceCategory && (
-              <span
-                onClick={() => setAceCategory(null)}
-                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
-              >
-                ACE: {aceCategory === "ready" ? "Ready Now" : aceCategory === "stretch" ? "Stretch" : "Out of Range"} <X className="w-3 h-3" />
-              </span>
-            )}
-          </div>
+                      </div>
         )}
 
 
