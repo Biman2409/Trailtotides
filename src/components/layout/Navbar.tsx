@@ -46,8 +46,6 @@ export default function Navbar() {
   const savedList = adventures.filter(a => saved.has(a.slug));
 
   const { theme, setTheme } = useTheme();
-  const [themeOpen, setThemeOpen] = useState(false);
-  const themeRef = useRef<HTMLDivElement>(null);
 
   // Auth state
   useEffect(() => {
@@ -141,13 +139,6 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", h);
   }, [wishlistOpen]);
 
-  useEffect(() => {
-    if (!themeOpen) return;
-    function h(e: MouseEvent) { if (themeRef.current && !themeRef.current.contains(e.target as Node)) setThemeOpen(false); }
-    document.addEventListener("mousedown", h);
-    return () => document.removeEventListener("mousedown", h);
-  }, [themeOpen]);
-
   async function handleLogout() {
     const supabase = createClient();
     await supabase.auth.signOut();
@@ -202,79 +193,28 @@ export default function Navbar() {
               );
             })}
 
-            {/* ── Search bar + Theme dropdown — appears when navbar is solid (on scroll) ── */}
-            <div
-              style={{
-                position: "absolute",
-                left: "100%",
-                top: "50%",
-                transform: isTransparent
-                  ? "translateY(-50%) translateX(-12px)"
-                  : "translateY(-50%) translateX(12px)",
-                opacity: isTransparent ? 0 : 1,
-                visibility: isTransparent ? "hidden" : "visible",
-                pointerEvents: isTransparent ? "none" : "auto",
-                transition: "all 500ms ease-out",
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-              }}
-            >
-              <button
-                onClick={() => setSearchOpen(true)}
-                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full group cursor-pointer whitespace-nowrap"
-                style={{
-                  background: "var(--bg-surface-2)",
-                  border: "1px solid var(--border-subtle)",
-                }}
-              >
-                <Search className="w-3 h-3 shrink-0" style={{ color: "var(--text-tertiary)" }} />
-                <span className="text-xs whitespace-nowrap font-medium" style={{ color: "var(--text-tertiary)" }}>
-                  Search
-                </span>
-              </button>
-
-              {/* ── Theme dropdown ── */}
-              <div className="relative" ref={themeRef}>
-                <button
-                  onClick={() => setThemeOpen(o => !o)}
-                  className="flex items-center justify-center w-7 h-7 rounded-full transition-all hover:bg-white/5"
-                  style={{ color: "var(--text-tertiary)" }}
-                  aria-label="Toggle theme"
-                >
-                  <Sun className="w-3.5 h-3.5 absolute transition-all duration-300" style={{ opacity: theme === "dark" ? 0 : 1, transform: theme === "dark" ? "rotate(90deg) scale(0)" : "rotate(0) scale(1)" }} />
-                  <Moon className="w-3.5 h-3.5 absolute transition-all duration-300" style={{ opacity: theme === "dark" ? 1 : 0, transform: theme === "dark" ? "rotate(0) scale(1)" : "rotate(-90deg) scale(0)" }} />
-                </button>
-
-                {themeOpen && (
-                  <div
-                    className="absolute right-0 top-full mt-2 w-32 rounded-xl shadow-xl overflow-hidden z-50 py-1"
-                    style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}
-                  >
-                    <button
-                      onClick={() => { setTheme("light"); setThemeOpen(false); }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium transition-colors hover:bg-white/5"
-                      style={{ color: theme === "light" ? "#ff5100" : "var(--text-secondary)" }}
-                    >
-                      <Sun className="w-3.5 h-3.5" />
-                      Light
-                    </button>
-                    <button
-                      onClick={() => { setTheme("dark"); setThemeOpen(false); }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium transition-colors hover:bg-white/5"
-                      style={{ color: theme === "dark" ? "#ff5100" : "var(--text-secondary)" }}
-                    >
-                      <Moon className="w-3.5 h-3.5" />
-                      Dark
-                    </button>
-                  </div>
-                )}
-              </div>
             </div>
-          </div>
 
           {/* Desktop right side */}
           <div className="hidden lg:flex items-center gap-2">
+
+            {/* ── Search bar — appears when navbar is solid (on scroll) ── */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full group cursor-pointer whitespace-nowrap transition-all duration-500"
+              style={{
+                background: "var(--bg-surface-2)",
+                border: "1px solid var(--border-subtle)",
+                opacity: isTransparent ? 0 : 1,
+                visibility: isTransparent ? "hidden" : "visible",
+                pointerEvents: isTransparent ? "none" : "auto",
+              }}
+            >
+              <Search className="w-3 h-3 shrink-0" style={{ color: "var(--text-tertiary)" }} />
+              <span className="text-xs whitespace-nowrap font-medium" style={{ color: "var(--text-tertiary)" }}>
+                Search
+              </span>
+            </button>
 
             {/* ── Theme Toggle ── */}
             <ThemeToggleButton />
