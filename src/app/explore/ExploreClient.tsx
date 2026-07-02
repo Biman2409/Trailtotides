@@ -3,14 +3,14 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, Compass, Send, ChevronRight, Loader2, ChevronLeft, Heart, RotateCcw, MapPin, Clock, BarChart2, Star, Layers, Navigation } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, ChevronRight, ChevronLeft, Heart, RotateCcw, BarChart2, Star, Compass } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import { adventures } from "@/lib/data";
-import type { AdventureType, Region, Difficulty, Duration, Month, Adventure } from "@/lib/data";
+import type { AdventureType, Region, Difficulty, Duration, Month } from "@/lib/data";
 import { difficultyStyle } from "@/lib/styles";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import type { AceAxis } from "@/lib/ace";
@@ -78,7 +78,6 @@ export default function ExploreClient() {
   const [userProfile, setUserProfile] = useState<StoredProfile | null>(null);
   const [editorOnly, setEditorOnly] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [aiOpen, setAiOpen] = useState(false);
   const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
   const [expandedGenre, setExpandedGenre] = useState<string | null>(null);
   const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
@@ -99,15 +98,6 @@ export default function ExploreClient() {
   [sharedSlugs]);
   const scrollToSlug = searchParams.get("scroll");
 
-  // AI chat state
-  type AiMessage = { role: "user" | "assistant"; content: string; cards?: Adventure[]; recommendations?: { slug: string; name: string; reason: string }[] };
-  const [aiMessages, setAiMessages] = useState<AiMessage[]>([]);
-  const [aiInput, setAiInput] = useState("");
-  const [aiLoading, setAiLoading] = useState(false);
-  const aiBottomRef = useRef<HTMLDivElement>(null);
-  const aiChatRef = useRef<HTMLDivElement>(null);
-  const AI_SUGGESTIONS = ["Easy Himalayan trek for beginners", "Ladakh bike expedition", "Solo adventure in Northeast"];
-
   useEffect(() => { setUserProfile(loadProfile()); }, []);
 
   useEffect(() => {
@@ -120,32 +110,6 @@ export default function ExploreClient() {
       window.scrollTo({ top: 0, behavior: "instant" });
     }
   }, [scrollToSlug]);
-
-  useEffect(() => {
-    if (aiChatRef.current) aiChatRef.current.scrollTop = aiChatRef.current.scrollHeight;
-  }, [aiMessages, aiLoading]);
-
-  async function sendAi(text?: string) {
-    const msg = (text ?? aiInput).trim();
-    if (!msg || aiLoading) return;
-    setAiInput("");
-    const userMsg: AiMessage = { role: "user", content: msg };
-    setAiMessages((prev) => [...prev, userMsg]);
-    setAiLoading(true);
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [...aiMessages, userMsg].map((m) => ({ role: m.role, content: m.content })) }),
-      });
-      const data = await res.json();
-      setAiMessages((prev) => [...prev, { role: "assistant", content: data.text || data.error || "Sorry, something went wrong.", cards: data.cards, recommendations: data.recommendations }]);
-    } catch {
-      setAiMessages((prev) => [...prev, { role: "assistant", content: "Network error. Please try again." }]);
-    } finally {
-      setAiLoading(false);
-    }
-  }
 
   function toggle<T>(arr: T[], val: T, setter: (v: T[]) => void) {
     setter(arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val]);
@@ -269,25 +233,6 @@ export default function ExploreClient() {
             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
           </button>
 
-          {/* Compass.AI toggle */}
-          <button
-            onClick={() => { setAiOpen(!aiOpen); setFiltersOpen(false); }}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap relative overflow-hidden"
-            style={{
-              background: aiOpen
-                ? "linear-gradient(135deg,rgba(255,81,0,0.25),rgba(255,125,71,0.15))"
-                : "linear-gradient(135deg,rgba(255,81,0,0.18),rgba(255,125,71,0.08))",
-              border: `1px solid ${aiOpen ? "rgba(255,81,0,0.55)" : "rgba(255,81,0,0.28)"}`,
-              color: aiOpen ? "#ff7d47" : "rgba(255,125,71,0.85)",
-              boxShadow: aiOpen ? "0 0 14px rgba(255,81,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06)" : "inset 0 1px 0 rgba(255,255,255,0.04)",
-            }}
-          >
-            <Compass className={`w-3.5 h-3.5 ${aiOpen ? "text-[#ff5100]" : "text-[#ff7d47]/70"}`} />
-            <span className="hidden sm:inline tracking-wide">Compass.AI</span>
-            <span className="sm:hidden tracking-wide">AI</span>
-            {aiOpen && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ml-0.5" />}
-          </button>
-
           {/* Editor's Choice */}
           <button
             onClick={() => setEditorOnly(!editorOnly)}
@@ -298,6 +243,37 @@ export default function ExploreClient() {
             <span className="hidden md:inline">Editor's Choice</span>
             <span className="md:hidden">Top Picks</span>
           </button>
+
+          {/* ACE Readiness */}
+          {userProfile ? (
+            <button
+              onClick={() => {
+                const next: (AceCategory | null)[] = [null, "ready", "stretch", "out-of-range"];
+                const idx = next.indexOf(aceCategory);
+                setAceCategory(next[(idx + 1) % next.length]);
+              }}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap"
+              style={{
+                background: aceCategory ? "rgba(255,81,0,0.15)" : "var(--bg-surface-2)",
+                color: aceCategory ? "#ff7d47" : "var(--text-secondary)",
+                border: `1px solid ${aceCategory ? "rgba(255,81,0,0.3)" : "transparent"}`,
+              }}
+            >
+              <Compass className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">
+                {aceCategory === "ready" ? "Ready" : aceCategory === "stretch" ? "Stretch" : aceCategory === "out-of-range" ? "OOR" : "ACE"}
+              </span>
+            </button>
+          ) : (
+            <Link
+              href="/matchmaker"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap"
+              style={{ background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
+            >
+              <Compass className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">ACE</span>
+            </Link>
+          )}
 
           {/* Result count */}
           <span className="hidden lg:block text-xs ml-auto font-medium whitespace-nowrap" style={{ color: "var(--text-muted)" }}>
@@ -317,163 +293,11 @@ export default function ExploreClient() {
           )}
         </div>
 
-          {/* Compass.AI panel */}
-          {aiOpen && (
-            <div className="border-t" style={{ borderColor: "rgba(255,81,0,0.12)", background: "rgba(4,7,14,0.98)", backdropFilter: "blur(16px)" }}>
-              <div className="max-w-4xl mx-auto px-5 lg:px-8 py-3">
-                {/* HUD frame */}
-                <div
-                  className="rounded-xl overflow-hidden relative"
-                  style={{
-                    background: "linear-gradient(160deg, rgba(255,81,0,0.04) 0%, rgba(6,9,18,0.95) 40%)",
-                    border: "1px solid rgba(255,81,0,0.18)",
-                    boxShadow: "0 0 0 1px rgba(255,255,255,0.02), 0 2px 20px rgba(255,81,0,0.06), inset 0 1px 0 rgba(255,255,255,0.03)",
-                  }}
-                >
-                  {/* corner accents */}
-                  <div className="absolute top-0 left-0 w-3 h-3 border-t border-l rounded-tl-xl" style={{ borderColor: "rgba(255,81,0,0.5)" }} />
-                  <div className="absolute top-0 right-0 w-3 h-3 border-t border-r rounded-tr-xl" style={{ borderColor: "rgba(255,81,0,0.5)" }} />
-                  <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l rounded-bl-xl" style={{ borderColor: "rgba(255,81,0,0.5)" }} />
-                  <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r rounded-br-xl" style={{ borderColor: "rgba(255,81,0,0.5)" }} />
-
-                  {/* Header */}
-                  <div
-                    className="flex items-center justify-between px-3.5 py-1.5"
-                    style={{ background: "rgba(255,81,0,0.05)", borderBottom: "1px solid rgba(255,81,0,0.1)" }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <div className="w-px h-3 bg-white/10" />
-                      <Compass className="w-3 h-3 text-[#ff5100]" strokeWidth={2.5} />
-                      <span className="text-[10px] font-black tracking-[0.18em] uppercase text-white/60">Compass</span>
-                      <span className="text-[10px] font-black tracking-[0.1em] text-[#ff5100]">.AI</span>
-                    </div>
-                    {aiMessages.length > 0 && (
-                      <button
-                        onClick={() => { setAiMessages([]); setAiInput(""); }}
-                        className="flex items-center gap-1 px-2 py-0.5 rounded text-[9px] font-semibold transition-all text-white/20 hover:text-white/45"
-                      >
-                        <RotateCcw className="w-2 h-2" />
-                        Reset
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Conversation */}
-                  <div
-                    ref={aiChatRef}
-                    className="overflow-y-auto"
-                    style={{ minHeight: 56, maxHeight: aiMessages.length > 0 ? 340 : "auto" }}
-                  >
-                    {/* Empty state */}
-                    {aiMessages.length === 0 && (
-                      <div className="px-3.5 py-3 flex items-center gap-3 flex-wrap">
-                        <span className="text-[9px] font-black tracking-[0.2em] uppercase text-white/20 shrink-0">Try</span>
-                        {AI_SUGGESTIONS.map((s) => (
-                          <button
-                            key={s}
-                            onClick={() => sendAi(s)}
-                            className="px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all"
-                            style={{
-                              color: "rgba(255,255,255,0.4)",
-                              background: "rgba(255,81,0,0.04)",
-                              border: "1px solid rgba(255,81,0,0.13)",
-                            }}
-                            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.border = "1px solid rgba(255,81,0,0.38)"; (e.currentTarget as HTMLButtonElement).style.color = "#ff7d47"; (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,81,0,0.09)"; }}
-                            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.border = "1px solid rgba(255,81,0,0.13)"; (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.4)"; (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,81,0,0.04)"; }}
-                          >
-                            {s}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Messages */}
-                    {aiMessages.length > 0 && (
-                      <div className="p-3 space-y-3">
-                        {aiMessages.map((msg, i) => (
-                          <div key={i} className={`flex gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                            {msg.role === "assistant" && (
-                              <div className="shrink-0 w-5 h-5 rounded-md flex items-center justify-center mt-0.5" style={{ background: "rgba(255,81,0,0.1)", border: "1px solid rgba(255,81,0,0.22)" }}>
-                                <Compass className="w-2.5 h-2.5 text-[#ff5100]" strokeWidth={2} />
-                              </div>
-                            )}
-                            <div className={`space-y-2 ${msg.role === "assistant" ? "flex-1 min-w-0" : "max-w-[75%]"}`}>
-                              {msg.content && (
-                                <div
-                                  className={`px-3 py-2 text-[12px] leading-relaxed ${
-                                    msg.role === "user" ? "text-white font-semibold rounded-xl rounded-tr-sm" : "rounded-xl rounded-tl-sm"
-                                  }`}
-                                  style={
-                                    msg.role === "user"
-                                      ? { background: "linear-gradient(135deg,#ff5100,#ff7d47)", boxShadow: "0 2px 10px rgba(255,81,0,0.2)" }
-                                      : { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.82)" }
-                                  }
-                                >
-                                  {msg.content}
-                                </div>
-                              )}
-                              {msg.cards && msg.cards.length > 0 && (
-                                <ExploreAiCards cards={msg.cards.slice(0, 2)} recommendations={msg.recommendations} />
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                        {aiLoading && (
-                          <div className="flex gap-2 justify-start">
-                            <div className="shrink-0 w-5 h-5 rounded-md flex items-center justify-center" style={{ background: "rgba(255,81,0,0.1)", border: "1px solid rgba(255,81,0,0.22)" }}>
-                              <Compass className="w-2.5 h-2.5 text-[#ff5100]" strokeWidth={2} />
-                            </div>
-                            <div
-                              className="flex items-center gap-1 px-3 py-2 rounded-xl rounded-tl-sm"
-                              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
-                            >
-                              {[0,1,2].map((d) => (
-                                <span key={d} className="w-1 h-1 rounded-full bg-[#ff5100]/60 animate-bounce"
-                                  style={{ animationDelay: `${d * 0.15}s`, animationDuration: "0.8s" }} />
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        <div ref={aiBottomRef} />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Input */}
-                  <div className="p-2.5 flex items-center gap-2" style={{ borderTop: "1px solid rgba(255,81,0,0.1)", background: "rgba(255,81,0,0.02)" }}>
-                    <div
-                      className="flex items-center gap-2 flex-1 rounded-lg px-3 transition-all focus-within:shadow-[0_0_0_1px_rgba(255,81,0,0.3)]"
-                      style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
-                    >
-                      <Compass className="w-3 h-3 text-[#ff5100]/40 shrink-0" />
-                      <input
-                        value={aiInput}
-                        onChange={(e) => setAiInput(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && !aiLoading && sendAi()}
-                        placeholder={aiMessages.length > 0 ? "Refine or ask something new…" : "Ask Compass.AI anything…"}
-                        className="flex-1 bg-transparent text-[12px] py-2 outline-none text-white/75 placeholder-white/18"
-                      />
-                    </div>
-                    <button
-                      onClick={() => sendAi()}
-                      disabled={!aiInput.trim() || aiLoading}
-                      className="shrink-0 h-8 w-8 flex items-center justify-center rounded-lg text-white disabled:opacity-20 active:scale-95 transition-all"
-                      style={{ background: "linear-gradient(135deg,#ff5100,#ff7d47)", boxShadow: "0 1px 8px rgba(255,81,0,0.28)" }}
-                    >
-                      {aiLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
         {/* Filter panel (dropdown) */}
           {filtersOpen && (
             <>
               {/* Backdrop — closes on outside click */}
-              <div className="fixed inset-0 z-[1999]" onClick={() => { setFiltersOpen(false); setAiOpen(false); }} />
+              <div className="fixed inset-0 z-[1999]" onClick={() => setFiltersOpen(false)} />
               <div className="absolute top-full left-0 right-0 z-[2000] border-t border-white/8" style={{ background: "rgba(6,9,18,0.97)", backdropFilter: "blur(12px)" }}>
               <div className="max-w-7xl mx-auto px-4 lg:px-6 py-3 space-y-3">
 
@@ -1091,79 +915,3 @@ export default function ExploreClient() {
   );
 }
 
-// ─── Compass.AI adventure cards (explore panel) ────────────────────────────────
-
-function ExploreAiCards({
-  cards,
-  recommendations,
-}: {
-  cards: Adventure[];
-  recommendations?: { slug: string; name: string; reason: string }[];
-}) {
-  const colClass = cards.length === 1 ? "grid-cols-1 max-w-xs" : "grid-cols-2";
-
-  return (
-    <div className={`grid gap-2.5 ${colClass}`}>
-      {cards.map((card, ci) => {
-        const rec = recommendations?.find((r) => r.slug === card.slug);
-        return (
-          <Link
-            key={ci}
-            href={`/experiences/${card.slug}`}
-            className="group flex flex-col rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:border-[#ff5100]/30 hover:shadow-xl hover:shadow-[#ff5100]/5"
-            style={{ background: "var(--bg-page)", borderColor: "var(--border-subtle)" }}
-          >
-            {/* Hero image */}
-            <div className="relative h-28 overflow-hidden shrink-0">
-              <Image
-                src={card.heroImage}
-                alt={card.name}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 640px) 100vw, 300px"
-                unoptimized
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-              <div className="absolute bottom-2 left-2.5 flex items-center gap-1.5">
-                <span className="px-2 py-0.5 rounded-full bg-[#ff5100] text-white text-[9px] font-black uppercase tracking-wider">
-                  {card.type}
-                </span>
-                <span className="px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-sm text-white/90 text-[9px] font-semibold flex items-center gap-0.5 border border-white/10">
-                  <MapPin className="w-2 h-2" />{card.state}
-                </span>
-              </div>
-            </div>
-
-            {/* Body */}
-            <div className="p-2.5 flex-1 flex flex-col gap-1.5">
-              <h4 className="text-[12px] font-bold leading-snug group-hover:text-[#ff5100] transition-colors t-text line-clamp-2">
-                {card.name}
-              </h4>
-              <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                <span className="flex items-center gap-1 text-[10px] t-text-3">
-                  <BarChart2 className="w-2.5 h-2.5" />{card.difficulty}
-                </span>
-                {card.durationDays && (
-                  <span className="flex items-center gap-1 text-[10px] t-text-3">
-                    <Clock className="w-2.5 h-2.5" />{card.durationDays}
-                  </span>
-                )}
-              </div>
-              {rec?.reason && (
-                <p className="text-[10px] leading-relaxed t-text-3 italic pt-1.5 border-t mt-auto" style={{ borderColor: "var(--border-subtle)" }}>
-                  {rec.reason}
-                </p>
-              )}
-            </div>
-
-            {/* Footer */}
-            <div className="px-2.5 py-2 border-t flex items-center justify-between" style={{ borderColor: "var(--border-subtle)" }}>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff5100]">View</span>
-              <ArrowRight className="w-3 h-3 text-[#ff5100] group-hover:translate-x-0.5 transition-transform" />
-            </div>
-          </Link>
-        );
-      })}
-    </div>
-  );
-}
