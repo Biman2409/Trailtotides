@@ -5,7 +5,7 @@ import Image from "next/image";
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
   ArrowRight, LocateFixed, Map as MapIcon, Layers, Camera,
-  Navigation as NavigationIcon, Compass, Share2, Menu, Heart,
+  Navigation as NavigationIcon, Compass, Menu, Heart,
 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
@@ -700,7 +700,6 @@ export default function MapPage() {
   const [nearMeLoading, setNearMeLoading] = useState(false);
   const [nearMeError, setNearMeError] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [shareFeedback, setShareFeedback] = useState(false);
 
   // Load wishlist from localStorage
   const [wishlist, setWishlist] = useState<Set<string>>(new Set());
@@ -1320,32 +1319,6 @@ export default function MapPage() {
         >
           <Compass className="w-3.5 h-3.5" />
           Reset View
-        </button>
-
-        {/* Share map view button */}
-        <button
-          onClick={async () => {
-            const url = window.location.href;
-            try {
-              await navigator.clipboard.writeText(url);
-              setShareFeedback(true);
-              setTimeout(() => setShareFeedback(false), 2000);
-            } catch {
-              // fallback
-            }
-          }}
-          className="absolute top-3 right-4 z-[1000] flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-semibold transition-all hover:brightness-110"
-          style={{
-            background: shareFeedback ? "rgba(34,197,94,0.2)" : "rgba(4,7,14,0.85)",
-            backdropFilter: "blur(12px)",
-            border: `1px solid ${shareFeedback ? "rgba(34,197,94,0.3)" : "rgba(255,255,255,0.1)"}`,
-            color: shareFeedback ? "#22c55e" : "rgba(255,255,255,0.7)",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
-          }}
-          title="Share this map view"
-        >
-          <Share2 className="w-3.5 h-3.5" />
-          {shareFeedback ? "Copied!" : "Share"}
         </button>
 
         {/* Visible count pill */}
