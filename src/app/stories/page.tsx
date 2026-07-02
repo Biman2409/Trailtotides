@@ -185,10 +185,10 @@ export default async function StoriesPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-8 lg:mb-10">
             <div className="flex items-center gap-3">
-              <h2 className="text-white text-xl lg:text-2xl font-bold tracking-tight">All Voices</h2>
+              <h2 className="text-xl lg:text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>All Voices</h2>
               <span className="text-[#ff5100] text-xs font-semibold bg-[#ff5100]/8 border border-[#ff5100]/20 px-2.5 py-1 rounded-full">{rest.length}</span>
             </div>
-            <p className="text-white/25 text-sm hidden sm:block">{rest.length} {rest.length === 1 ? "story" : "stories"}</p>
+            <p className="text-sm hidden sm:block" style={{ color: "var(--text-muted)" }}>{rest.length} {rest.length === 1 ? "story" : "stories"}</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
@@ -196,7 +196,8 @@ export default async function StoriesPage() {
               <Link
                 key={story.id}
                 href={`/stories/${story.slug}`}
-                className="group flex flex-col bg-white/[0.04] border border-white/10 rounded-2xl overflow-hidden hover:border-[#ff5100]/40 hover:bg-white/[0.07] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30"
+                className="group flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-black/[0.03] hover:border-[#ff5100]/40"
+                style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}
               >
                 {/* Image */}
                 <div className="relative h-52 md:h-56 overflow-hidden flex-shrink-0">
@@ -219,15 +220,15 @@ export default async function StoriesPage() {
 
                 {/* Content */}
                 <div className="flex flex-col flex-1 p-5 lg:p-6">
-                  <h3 className="text-white text-lg font-bold leading-snug mb-2.5 group-hover:text-[#ff5100] transition-colors duration-200">
+                  <h3 className="text-lg font-bold leading-snug mb-2.5 group-hover:text-[#ff5100] transition-colors duration-200" style={{ color: "var(--text-primary)" }}>
                     {story.title}
                   </h3>
-                  <p className="text-white/45 text-sm leading-relaxed line-clamp-2 mb-4 flex-1">
+                  <p className="text-sm leading-relaxed line-clamp-2 mb-4 flex-1" style={{ color: "var(--text-secondary)" }}>
                     {story.excerpt}
                   </p>
 
                   {/* Footer */}
-                  <div className="flex items-center justify-between pt-4 border-t border-white/8">
+                  <div className="flex items-center justify-between pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
                     <div className="flex items-center gap-2.5">
                       <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 border border-[#ff5100]/30">
                         {story.authorAvatar
@@ -235,12 +236,12 @@ export default async function StoriesPage() {
                           : <span className="w-full h-full flex items-center justify-center text-xs font-bold text-[#ff5100] bg-[#ff5100]/20">{story.author[0]}</span>}
                       </div>
                       <div>
-                        <p className="text-white text-xs font-semibold leading-tight">{story.author}</p>
-                        <p className="text-white/35 text-[10px]">{story.date}</p>
+                        <p className="text-xs font-semibold leading-tight" style={{ color: "var(--text-primary)" }}>{story.author}</p>
+                        <p className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>{story.date}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className="flex items-center gap-1 bg-white/6 border border-white/8 text-white/40 text-[10px] px-2.5 py-1 rounded-full">
+                      <span className="flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-full" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", color: "var(--text-tertiary)" }}>
                         <Clock className="w-2.5 h-2.5" /> {story.readTime}
                       </span>
                       <StoryViewPill slug={story.slug} className="!text-[10px] !px-2.5 !py-1" />
@@ -262,8 +263,8 @@ export default async function StoriesPage() {
               <PenLine className="w-4.5 h-4.5 text-[#ff5100]" />
             </div>
             <div className="flex-1 min-w-0 relative text-center sm:text-left">
-              <p className="text-white font-bold text-sm leading-snug">Got a story to tell?</p>
-              <p className="text-white/40 text-xs mt-0.5 leading-relaxed">We feature stories from verified adventurers. Something remarkable out there? We want to hear it.</p>
+              <p className="font-bold text-sm leading-snug" style={{ color: "var(--text-primary)" }}>Got a story to tell?</p>
+              <p className="text-xs mt-0.5 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>We feature stories from verified adventurers. Something remarkable out there? We want to hear it.</p>
             </div>
             <Link
               href="/stories/submit"

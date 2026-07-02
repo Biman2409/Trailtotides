@@ -135,10 +135,8 @@ export default function AboutPage() {
             {VALUES.map((v) => (
               <div
                 key={v.title}
-                className="rounded-2xl p-6 transition-all duration-300"
+                className="rounded-2xl p-6 transition-all duration-300 hover:bg-black/5 hover:border-[#ff5100]/30"
                 style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(255,81,0,0.3)"; e.currentTarget.style.background = "var(--bg-surface-2)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border-subtle)"; e.currentTarget.style.background = "var(--bg-card)"; }}
               >
                 <div className="w-10 h-10 rounded-xl bg-[#ff5100]/15 flex items-center justify-center mb-4">
                   <v.icon className="w-5 h-5 text-[#ff5100]" />
@@ -217,10 +215,8 @@ export default function AboutPage() {
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 border font-semibold px-8 py-4 rounded-xl text-base transition-all"
+              className="inline-flex items-center gap-2 border font-semibold px-8 py-4 rounded-xl text-base transition-all hover:opacity-80"
               style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}
             >
               Get in touch
             </Link>

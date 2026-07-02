@@ -61,8 +61,8 @@ function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { titl
   return (
     <div>
       <div className="flex items-end justify-between mb-3">
-        <h3 className="text-white text-base font-semibold tracking-tight">{title}</h3>
-        <Link href={exploreHref} className="hidden md:flex items-center gap-1.5 text-white/40 text-xs font-medium hover:text-[#ff5100] transition-colors group">
+        <h3 className="text-base font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>{title}</h3>
+        <Link href={exploreHref} className="hidden md:flex items-center gap-1.5 text-xs font-medium hover:text-[#ff5100] transition-colors group" style={{ color: "var(--text-tertiary)" }}>
           Explore all
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </Link>
@@ -83,10 +83,10 @@ function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { titl
                 </div>
               </div>
               <div className="p-2.5 h-14 flex flex-col justify-between">
-                <h3 className="text-white font-semibold text-xs leading-snug group-hover:text-[#ff5100] transition-colors line-clamp-2">{a.name}</h3>
-                <div className="flex items-center gap-1.5 text-[10px] text-white/35">
-                  <span className="font-semibold text-white/50">{diff}</span>
-                  <span className="text-white/20">·</span>
+                <h3 className="font-semibold text-xs leading-snug group-hover:text-[#ff5100] transition-colors line-clamp-2" style={{ color: "var(--text-primary)" }}>{a.name}</h3>
+                <div className="flex items-center gap-1.5 text-[10px]" style={{ color: "var(--text-tertiary)" }}>
+                  <span className="font-semibold" style={{ color: "var(--text-secondary)" }}>{diff}</span>
+                  <span style={{ color: "var(--text-muted)" }}>·</span>
                   <span>{a.durationDays}</span>
                 </div>
               </div>
@@ -337,8 +337,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               >
                 <div className="shrink-0 opacity-80">{icon}</div>
                 <div>
-                  <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">{label}</div>
-                  <div className="text-white/85 font-medium text-[13px] whitespace-nowrap leading-none">{value}</div>
+                  <div className="text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1" style={{ color: "var(--text-tertiary)" }}>{label}</div>
+                  <div className="font-medium text-[13px] whitespace-nowrap leading-none" style={{ color: "var(--text-primary)" }}>{value}</div>
                 </div>
               </div>
             ))}
@@ -365,15 +365,15 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* The Adventure */}
             <AccordionSection label="The Adventure" title="About This Adventure" defaultOpen={true}>
-              <div className="rounded-xl px-4 py-3.5" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-                <p className="text-white/65 text-sm leading-relaxed">{adventure.description}</p>
+              <div className="rounded-xl px-4 py-3.5" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.description}</p>
               </div>
             </AccordionSection>
 
             {/* What Makes It Special */}
             <AccordionSection label="Highlights" title="What Makes It Special" defaultOpen={true}>
-              <div className="rounded-xl px-4 py-3.5" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-                <p className="text-white/65 text-sm leading-relaxed">{adventure.whatMakesSpecial}</p>
+              <div className="rounded-xl px-4 py-3.5" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.whatMakesSpecial}</p>
               </div>
             </AccordionSection>
 
@@ -389,7 +389,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                       return (
                         <li key={t} className="flex items-start gap-2">
                           <span className="text-emerald-500 shrink-0 text-xs mt-0.5">✓</span>
-                          <span className="text-white/55 text-xs leading-snug">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                          <span className="text-xs leading-snug" style={{ color: "var(--text-secondary)" }}>{t.charAt(0).toUpperCase() + t.slice(1)}</span>
                         </li>
                       );
                     })}
@@ -404,7 +404,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                       return (
                         <li key={t} className="flex items-start gap-2">
                           <span className="text-red-500 shrink-0 text-xs mt-0.5">✕</span>
-                          <span className="text-white/55 text-xs leading-snug">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                          <span className="text-xs leading-snug" style={{ color: "var(--text-secondary)" }}>{t.charAt(0).toUpperCase() + t.slice(1)}</span>
                         </li>
                       );
                     })}
@@ -420,7 +420,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 <div className="rounded-xl p-3.5" style={{ background: "rgba(245,158,11,0.03)", border: "1px solid rgba(245,158,11,0.1)" }}>
                   <div className="flex gap-3">
                     <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                    <p className="text-white/55 text-xs leading-relaxed">{adventure.safetyNotes}</p>
+                    <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.safetyNotes}</p>
                   </div>
                   {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
                     <HazardBadges
@@ -481,8 +481,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   style={{ background: "linear-gradient(135deg, rgba(255,81,0,0.07) 0%, rgba(255,81,0,0.03) 100%)", border: "1px solid rgba(255,81,0,0.18)" }}
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="text-white/80 text-sm font-semibold leading-snug">Join the community</p>
-                    <p className="text-white/40 text-xs mt-0.5 leading-relaxed">Log in to write reviews, share trail photos, and earn XP.</p>
+                    <p className="text-sm font-semibold leading-snug" style={{ color: "var(--text-primary)" }}>Join the community</p>
+                    <p className="text-xs mt-0.5 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>Log in to write reviews, share trail photos, and earn XP.</p>
                   </div>
                   <Link
                     href="/auth/login"
@@ -522,8 +522,10 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 {adventure.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-white/25 text-xs px-3 py-1.5 rounded-full transition-colors hover:text-white/50"
-                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
+                    className="text-xs px-3 py-1.5 rounded-full transition-colors"
+                    style={{ color: "var(--text-tertiary)", background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = "var(--text-secondary)"}
+                    onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-tertiary)"}
                   >
                     #{tag}
                   </span>
@@ -558,8 +560,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   ...(adventure.depth ? [{ label: "Max Depth", value: adventure.depth }] : []),
                 ].map(({ label, value }) => (
                   <div key={label} className="flex items-center justify-between gap-4 px-4 py-2.5" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-                    <span className="text-white/30 text-[11px] shrink-0">{label}</span>
-                    <span className="text-white/70 text-[11px] text-right leading-snug font-medium">{value}</span>
+                    <span className="text-[11px] shrink-0" style={{ color: "var(--text-tertiary)" }}>{label}</span>
+                    <span className="text-[11px] text-right leading-snug font-medium" style={{ color: "var(--text-secondary)" }}>{value}</span>
                   </div>
                 ))}
               </div>
@@ -569,15 +571,19 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <div className="grid grid-cols-2 gap-2">
               <Link
                 href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
-                className="flex items-center justify-center py-2.5 rounded-xl text-white/40 hover:text-white/70 text-[11px] font-medium transition-all hover:bg-white/5"
-                style={{ border: "1px solid var(--border-subtle)" }}
+                className="flex items-center justify-center py-2.5 rounded-xl text-[11px] font-medium transition-all"
+                style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-subtle)" }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.background = "var(--bg-card)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.background = "transparent"; }}
               >
                 More in {adventure.state}
               </Link>
               <Link
                 href={`/explore?type=${encodeURIComponent(adventure.type)}`}
-                className="flex items-center justify-center py-2.5 rounded-xl text-white/40 hover:text-white/70 text-[11px] font-medium transition-all hover:bg-white/5"
-                style={{ border: "1px solid var(--border-subtle)" }}
+                className="flex items-center justify-center py-2.5 rounded-xl text-[11px] font-medium transition-all"
+                style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-subtle)" }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.background = "var(--bg-card)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.background = "transparent"; }}
               >
                 More in {adventure.type}
               </Link>
@@ -597,12 +603,12 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4">Discover More</p>
             <div className="grid grid-cols-2 gap-4">
               {relatedByState.length > 0 && (
-                <div className="p-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "1rem" }}>
+                <div className="p-4" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)", borderRadius: "1rem" }}>
                   <RelatedSection title={`More in ${adventure.state}`} items={relatedByState} exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} pillMode="type" />
                 </div>
               )}
               {relatedByType.length > 0 && (
-                <div className="p-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "1rem" }}>
+                <div className="p-4" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)", borderRadius: "1rem" }}>
                   <RelatedSection title={`More in ${adventure.type}`} items={relatedByType} exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`} pillMode="region" />
                 </div>
               )}
