@@ -243,7 +243,7 @@ export default function ExploreClient() {
               style={aceCategory ? { background: "#ff5100", color: "#fff" } : { background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
             >
               <Compass className="w-4 h-4" />
-              <span className="hidden sm:inline">ACE™</span>
+              <span className="hidden sm:inline">ACE Readiness</span>
             </button>
           ) : (
             <div className="relative hidden sm:block">
@@ -253,7 +253,7 @@ export default function ExploreClient() {
                 style={{ background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
               >
                 <Compass className="w-4 h-4" />
-                <span className="hidden sm:inline">ACE™</span>
+                <span className="hidden sm:inline">ACE Readiness</span>
               </button>
               {acePopupOpen && (
                 <>
