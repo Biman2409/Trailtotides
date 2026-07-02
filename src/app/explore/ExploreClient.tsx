@@ -234,6 +234,31 @@ export default function ExploreClient() {
             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
           </button>
 
+          {/* ACE Readiness */}
+          {userProfile ? (
+            <button
+              onClick={() => setAceCategory(aceCategory === "ready" ? null : "ready")}
+              className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap"
+              style={{
+                background: aceCategory ? "rgba(255,81,0,0.15)" : "var(--bg-surface-2)",
+                color: aceCategory ? "#ff7d47" : "var(--text-secondary)",
+                border: `1px solid ${aceCategory ? "rgba(255,81,0,0.3)" : "transparent"}`,
+              }}
+            >
+              <Compass className="w-4 h-4" />
+              <span className="hidden sm:inline">ACE™</span>
+            </button>
+          ) : (
+            <Link
+              href="/matchmaker"
+              className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap"
+              style={{ background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
+            >
+              <Compass className="w-4 h-4" />
+              <span className="hidden sm:inline">ACE™</span>
+            </Link>
+          )}
+
           {/* Editor's Choice */}
           <button
             onClick={() => setEditorOnly(!editorOnly)}
@@ -244,37 +269,6 @@ export default function ExploreClient() {
             <span className="hidden md:inline">Editor's Choice</span>
             <span className="md:hidden">Top Picks</span>
           </button>
-
-          {/* ACE Readiness */}
-          {userProfile ? (
-            <button
-              onClick={() => {
-                const next: (AceCategory | null)[] = [null, "ready", "stretch", "out-of-range"];
-                const idx = next.indexOf(aceCategory);
-                setAceCategory(next[(idx + 1) % next.length]);
-              }}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap"
-              style={{
-                background: aceCategory ? "rgba(255,81,0,0.15)" : "var(--bg-surface-2)",
-                color: aceCategory ? "#ff7d47" : "var(--text-secondary)",
-                border: `1px solid ${aceCategory ? "rgba(255,81,0,0.3)" : "transparent"}`,
-              }}
-            >
-              <Compass className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">
-                {aceCategory === "ready" ? "Ready" : aceCategory === "stretch" ? "Stretch" : aceCategory === "out-of-range" ? "OOR" : "ACE"}
-              </span>
-            </button>
-          ) : (
-            <Link
-              href="/matchmaker"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap"
-              style={{ background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
-            >
-              <Compass className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">ACE</span>
-            </Link>
-          )}
 
           {/* Result count */}
           <span className="hidden lg:block text-xs ml-auto font-medium whitespace-nowrap" style={{ color: "var(--text-muted)" }}>
