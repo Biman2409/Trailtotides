@@ -968,7 +968,7 @@ const [legendOpen, setLegendOpen] = useState(false);
             {/* Invisible backdrop — closes dropdown on outside click */}
             <div className="fixed inset-0 z-[1999]" onClick={() => setFiltersOpen(false)} />
             <div className="absolute top-full left-0 right-0 z-[2000] border-t border-white/8 max-h-[58vh] overflow-y-auto" style={{ background: "rgba(6,9,18,0.97)", backdropFilter: "blur(12px)" }}>
-            <div className="max-w-7xl mx-auto px-4 lg:px-6 py-4 space-y-3">
+            <div className="max-w-7xl mx-auto px-4 lg:px-6 py-3 space-y-3">
 
               {/* Genre + Region row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

@@ -236,7 +236,7 @@ export default function ExploreClient() {
       </div>
 
       {/* Search + filter bar */}
-      <div className="sticky top-16 lg:top-20 z-40 t-bg-page/96 backdrop-blur-lg border-b border-white/10 shadow-sm">
+      <div className="sticky top-16 lg:top-20 z-40 t-bg-page/96 backdrop-blur-lg border-b border-white/10 shadow-sm relative">
         <div className="max-w-7xl mx-auto px-5 lg:px-8 py-3 flex items-center gap-2">
           {/* Search */}
           <div className="relative flex-1 min-w-0 max-w-xs sm:max-w-md">
@@ -471,10 +471,13 @@ export default function ExploreClient() {
             </div>
           )}
 
-        {/* Filter panel */}
+        {/* Filter panel (dropdown) */}
           {filtersOpen && (
-            <div className="border-t border-white/8" style={{ background: "rgba(6,9,18,0.97)", backdropFilter: "blur(12px)" }}>
-              <div className="max-w-7xl mx-auto px-5 lg:px-8 py-4 space-y-4">
+            <>
+              {/* Backdrop — closes on outside click */}
+              <div className="fixed inset-0 z-[1999]" onClick={() => { setFiltersOpen(false); setAiOpen(false); }} />
+              <div className="absolute top-full left-0 right-0 z-[2000] border-t border-white/8" style={{ background: "rgba(6,9,18,0.97)", backdropFilter: "blur(12px)" }}>
+              <div className="max-w-7xl mx-auto px-4 lg:px-6 py-3 space-y-3">
 
                 {/* ── Region ── */}
                 {(() => {
@@ -510,9 +513,9 @@ export default function ExploreClient() {
                                 onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
                                 className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
                                 style={{
-                                  background: isExpanded || hasSelected ? "#ff5100" : "rgba(255,255,255,0.05)",
-                                  color: isExpanded || hasSelected ? "#fff" : "rgba(255,255,255,0.55)",
-                                  border: `1px solid ${isExpanded || hasSelected ? "#ff5100" : "rgba(255,255,255,0.08)"}`,
+                                  background: isExpanded || hasSelected ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.05)",
+                                  color: isExpanded || hasSelected ? "#ff7d47" : "rgba(255,255,255,0.5)",
+                                  border: `1px solid ${isExpanded || hasSelected ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.08)"}`,
                                 }}
                               >
                                 {rg.name}
@@ -640,13 +643,13 @@ export default function ExploreClient() {
                                   onClick={() => setExpandedSeason(isExpanded ? null : label)}
                                   className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
                                   style={{
-                                    background: isExpanded || hasSelected ? "#ff5100" : "rgba(255,255,255,0.05)",
-                                    color: isExpanded || hasSelected ? "#fff" : "rgba(255,255,255,0.5)",
-                                    border: `1px solid ${isExpanded || hasSelected ? "#ff5100" : "rgba(255,255,255,0.08)"}`,
+                                    background: isExpanded || hasSelected ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.05)",
+                                    color: isExpanded || hasSelected ? "#ff7d47" : "rgba(255,255,255,0.5)",
+                                    border: `1px solid ${isExpanded || hasSelected ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.08)"}`,
                                   }}
                                 >
                                   {label}
-                                  {selectedCount > 0 && <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,255,255,0.25)" }}>{selectedCount}</span>}
+                                  {selectedCount > 0 && <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,81,0,0.25)", color: "#ff7d47" }}>{selectedCount}</span>}
                                   <ChevronDown className={`w-2.5 h-2.5 opacity-50 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
                                 </button>
                               );
@@ -722,9 +725,9 @@ export default function ExploreClient() {
                             onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
                             className="px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all"
                             style={{
-                              background: isSelected ? "#ff5100" : "rgba(255,255,255,0.05)",
-                              color: isSelected ? "#fff" : "rgba(255,255,255,0.55)",
-                              border: `1px solid ${isSelected ? "#ff5100" : "rgba(255,255,255,0.08)"}`,
+                              background: isSelected ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.05)",
+                              color: isSelected ? "#ff7d47" : "rgba(255,255,255,0.55)",
+                              border: `1px solid ${isSelected ? "rgba(255,81,0,0.3)" : "rgba(255,255,255,0.08)"}`,
                             }}
                           >
                             {val}
@@ -848,6 +851,7 @@ export default function ExploreClient() {
 
               </div>
             </div>
+            </>
           )}
       </div>
 
