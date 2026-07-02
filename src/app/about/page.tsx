@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { ArrowRight, Mountain, Map, Sparkles, BadgeCheck, Users } from "lucide-react";
 import { adventures } from "@/lib/data";
+import FadeInSection from "@/components/ui/custom/FadeInSection";
 
 export const metadata: Metadata = {
   title: "About Us — Trail to Tides",
@@ -105,7 +106,7 @@ export default function AboutPage() {
       </section>
 
       {/* Origin */}
-      <section className="py-20 px-6 lg:px-8 t-bg-surface2 border-t border-[var(--border-subtle)]">
+      <FadeInSection as="section" className="py-20 px-6 lg:px-8 t-bg-surface2 border-t border-[var(--border-subtle)]">
         <div className="max-w-4xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-4">
             The Origin
@@ -122,10 +123,10 @@ export default function AboutPage() {
             </p>
           </div>
         </div>
-      </section>
+      </FadeInSection>
 
       {/* Values */}
-      <section className="py-20 lg:py-28 px-6 lg:px-8 t-bg-page border-t border-[var(--border-subtle)]">
+      <FadeInSection as="section" className="py-20 lg:py-28 px-6 lg:px-8 t-bg-page border-t border-[var(--border-subtle)]">
         <div className="max-w-7xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
             What We Stand For
@@ -147,10 +148,10 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
-      </section>
+      </FadeInSection>
 
       {/* Team */}
-      <section className="py-20 lg:py-28 px-6 lg:px-8 t-bg-surface2 border-t border-[var(--border-subtle)]">
+      <FadeInSection as="section" className="py-20 lg:py-28 px-6 lg:px-8 t-bg-surface2 border-t border-[var(--border-subtle)]">
         <div className="max-w-7xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
             The Team
@@ -175,10 +176,10 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
-      </section>
+      </FadeInSection>
 
       {/* Stats */}
-      <section className="py-20 px-6 lg:px-8 t-bg-page border-t border-[var(--border-subtle)]">
+      <FadeInSection as="section" className="py-20 px-6 lg:px-8 t-bg-page border-t border-[var(--border-subtle)]">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {[
@@ -194,10 +195,10 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
-      </section>
+      </FadeInSection>
 
       {/* CTA */}
-      <section className="py-20 px-6 lg:px-8 t-bg-surface2 border-t border-[var(--border-subtle)]">
+      <FadeInSection as="section" className="py-20 px-6 lg:px-8 t-bg-surface2 border-t border-[var(--border-subtle)]">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-4xl font-bold tracking-tight mb-5" style={{ color: "var(--text-primary)" }}>
             Ready to find your adventure?
@@ -222,7 +223,7 @@ export default function AboutPage() {
             </Link>
           </div>
         </div>
-      </section>
+      </FadeInSection>
 
       <Footer />
     </div>

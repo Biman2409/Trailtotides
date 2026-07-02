@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Clock, Crown, Mountain, PenLine } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
+import FadeInSection from "@/components/ui/custom/FadeInSection";
 import Footer from "@/components/layout/Footer";
 import Breadcrumbs from "@/components/ui/custom/Breadcrumbs";
 
