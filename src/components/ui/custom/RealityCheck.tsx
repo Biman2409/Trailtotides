@@ -48,11 +48,11 @@ export default function RealityCheck({ adventure }: Props) {
               <Compass className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-white font-semibold text-sm">Is this right for you?</p>
-              <p className="text-white/35 text-xs mt-0.5">Know before you go.</p>
+              <p className="font-semibold text-sm" style={{ color: "var(--text-primary)" }}>Is this right for you?</p>
+              <p className="text-xs mt-0.5" style={{ color: "var(--text-tertiary)" }}>Know before you go.</p>
             </div>
           </div>
-          <p className="text-white/45 text-xs leading-relaxed mb-4">
+          <p className="text-xs leading-relaxed mb-4" style={{ color: "var(--text-secondary)" }}>
             Take the 3-minute ACE assessment and get a personalized readiness score for this adventure.
           </p>
           <Link
@@ -96,7 +96,7 @@ export default function RealityCheck({ adventure }: Props) {
             </div>
             <div>
               <p className="text-emerald-400 font-bold text-sm">Adventure Match</p>
-              <p className="text-white/35 text-xs mt-0.5">Your profile covers all requirements.</p>
+              <p className="text-xs mt-0.5" style={{ color: "var(--text-tertiary)" }}>Your profile covers all requirements.</p>
             </div>
           </div>
           <div
@@ -104,16 +104,16 @@ export default function RealityCheck({ adventure }: Props) {
             style={{ borderTop: "1px solid rgba(16,185,129,0.12)" }}
           >
             <div>
-              <p className="text-[10px] uppercase tracking-widest text-white/25 mb-2">Your Profile</p>
+              <p className="text-[10px] uppercase tracking-widest mb-2" style={{ color: "var(--text-muted)" }}>Your Profile</p>
               <ACEBadge ace={profile.ace} size="sm" />
             </div>
             <div>
-              <p className="text-[10px] uppercase tracking-widest text-white/25 mb-1.5">Radar</p>
+              <p className="text-[10px] uppercase tracking-widest mb-1.5" style={{ color: "var(--text-muted)" }}>Radar</p>
               <ACERadar ace={adventureAce} userAce={profile.ace} size={90} showLabels={false} />
             </div>
           </div>
-          <p className="mt-3 text-white/25 text-xs">
-            <span className="text-white/40">{rankLabel}</span> ·{" "}
+          <p className="mt-3 text-xs" style={{ color: "var(--text-muted)" }}>
+            <span style={{ color: "var(--text-secondary)" }}>{rankLabel}</span> ·{" "}
             <Link href="/matchmaker" className="hover:text-[#ff5100] transition-colors">Retake</Link>
           </p>
         </div>
@@ -125,12 +125,12 @@ export default function RealityCheck({ adventure }: Props) {
     <div
       className="rounded-2xl overflow-hidden"
       style={{
-        background: "linear-gradient(180deg, rgba(245,158,11,0.06) 0%, rgba(15,20,32,0.8) 60%)",
+        background: "linear-gradient(180deg, rgba(245,158,11,0.06) 0%, var(--bg-surface) 60%)",
         border: "1px solid rgba(245,158,11,0.18)",
       }}
     >
       {/* Header */}
-      <div className="px-5 py-4 flex items-start gap-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="px-5 py-4 flex items-start gap-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
         <div
           className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
           style={{ background: "rgba(245,158,11,0.12)" }}
@@ -138,8 +138,8 @@ export default function RealityCheck({ adventure }: Props) {
           <AlertTriangle className="w-4.5 h-4.5 text-amber-400" />
         </div>
         <div className="flex-1">
-          <p className="text-white font-bold text-sm">Reality Check</p>
-          <p className="text-white/40 text-xs mt-0.5">
+          <p className="font-bold text-sm" style={{ color: "var(--text-primary)" }}>Reality Check</p>
+          <p className="text-xs mt-0.5" style={{ color: "var(--text-tertiary)" }}>
             This adventure exceeds your current capability on{" "}
             <span className="text-amber-400 font-semibold">{gaps.length} axis{gaps.length !== 1 ? "es" : ""}</span>.
           </p>
@@ -147,25 +147,25 @@ export default function RealityCheck({ adventure }: Props) {
       </div>
 
       {/* Radar comparison */}
-      <div className="px-5 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
         <div className="flex items-start gap-5 mb-4">
           <div>
-            <p className="text-[10px] uppercase tracking-widest text-white/25 mb-2">Capability vs Required</p>
+            <p className="text-[10px] uppercase tracking-widest mb-2" style={{ color: "var(--text-muted)" }}>Capability vs Required</p>
             <ACERadar ace={adventureAce} userAce={profile.ace} size={110} showLabels={false} />
             <div className="flex items-center gap-3 mt-2">
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-0.5 bg-[#ff5100] rounded-full" />
-                <span className="text-[9px] text-white/30">Required</span>
+                <span className="text-[9px]" style={{ color: "var(--text-tertiary)" }}>Required</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-3 h-0.5 rounded-full" style={{ background: "rgba(255,255,255,0.25)", borderTop: "1px dashed" }} />
-                <span className="text-[9px] text-white/30">Your level</span>
+                <div className="w-3 h-0.5 rounded-full" style={{ background: "var(--text-muted)", borderTop: "1px dashed" }} />
+                <span className="text-[9px]" style={{ color: "var(--text-tertiary)" }}>Your level</span>
               </div>
             </div>
           </div>
           <div className="flex-1 pt-1">
-            <p className="text-[10px] uppercase tracking-widest text-white/25 mb-1.5">Your tier</p>
-            <p className="text-white font-bold text-sm mb-2">{rankLabel}</p>
+            <p className="text-[10px] uppercase tracking-widest mb-1.5" style={{ color: "var(--text-muted)" }}>Your tier</p>
+            <p className="font-bold text-sm mb-2" style={{ color: "var(--text-primary)" }}>{rankLabel}</p>
             <ACEBadge ace={profile.ace} size="sm" />
           </div>
         </div>
@@ -184,8 +184,8 @@ export default function RealityCheck({ adventure }: Props) {
                   <span className="text-xs font-bold uppercase tracking-wide" style={{ color }}>
                     {gap.label}
                   </span>
-                  <span className="text-[10px] text-white/30">
-                    {gap.userVal} → <span className="text-white/50">{gap.adventureVal}</span>
+                  <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>
+                    {gap.userVal} → <span style={{ color: "var(--text-secondary)" }}>{gap.adventureVal}</span>
                   </span>
                 </div>
                 <div className="flex gap-0.5 mb-1.5">
@@ -199,12 +199,12 @@ export default function RealityCheck({ adventure }: Props) {
                             ? n <= gap.userVal
                               ? color
                               : `${color}28`
-                            : "rgba(255,255,255,0.06)",
+                            : "var(--border-subtle)",
                       }}
                     />
                   ))}
                 </div>
-                <p className="text-white/35 text-[10px] leading-snug">{gap.explanation}</p>
+                <p className="text-[10px] leading-snug" style={{ color: "var(--text-tertiary)" }}>{gap.explanation}</p>
               </div>
             );
           })}
@@ -219,7 +219,7 @@ export default function RealityCheck({ adventure }: Props) {
                 style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.12)" }}
               >
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <p className="text-white/50 text-xs">
+                <p className="text-xs" style={{ color: "var(--text-secondary)" }}>
                   <span className="text-emerald-400 font-medium">{ACE_AXIS_LABELS[k]}</span> — you meet this requirement.
                 </p>
               </div>
@@ -229,17 +229,19 @@ export default function RealityCheck({ adventure }: Props) {
 
       {/* Roadmap */}
       {roadmap.length > 0 && (
-        <div className="px-5 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
           <button
             onClick={() => setRoadmapOpen((v) => !v)}
             className="w-full flex items-center justify-between text-left group"
           >
-            <p className="text-white/80 font-semibold text-sm group-hover:text-white transition-colors">
+            <p className="font-semibold text-sm transition-colors" style={{ color: "var(--text-secondary)" }}
+               onMouseEnter={(e) => e.currentTarget.style.color = "var(--text-primary)"}
+               onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-secondary)"}>
               Your roadmap to {adventure.name}
             </p>
             {roadmapOpen
-              ? <ChevronUp className="w-4 h-4 text-white/30" />
-              : <ChevronDown className="w-4 h-4 text-white/30" />}
+              ? <ChevronUp className="w-4 h-4" style={{ color: "var(--text-tertiary)" }} />
+              : <ChevronDown className="w-4 h-4" style={{ color: "var(--text-tertiary)" }} />}
           </button>
           {roadmapOpen && (
             <div className="mt-4 space-y-3">
@@ -252,7 +254,7 @@ export default function RealityCheck({ adventure }: Props) {
                     {step.step}
                   </span>
                   <div>
-                    <p className="text-white/50 text-xs leading-relaxed">{step.text}</p>
+                    <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>{step.text}</p>
                     {step.exampleSlug && (
                       <Link
                         href={`/experiences/${step.exampleSlug}`}
@@ -271,18 +273,18 @@ export default function RealityCheck({ adventure }: Props) {
 
       {/* Upsells */}
       {upsells.length > 0 && (
-        <div className="px-5 py-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
           <div className="flex items-center gap-1.5 mb-3">
             <Zap className="w-3 h-3 text-[#ff5100]" />
-            <p className="text-white/25 text-[10px] uppercase tracking-widest">Recommended Prep</p>
+            <p className="text-[10px] uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Recommended Prep</p>
           </div>
           <div className="space-y-2.5">
             {upsells.map((u, i) => (
               <div key={i} className="flex items-start gap-3">
                 <span className="text-base shrink-0 leading-none mt-0.5">{u.icon}</span>
                 <div>
-                  <p className="text-white/25 text-[10px] mb-0.5">{u.trigger}</p>
-                  <p className="text-white/65 text-xs font-medium">{u.recommendation}</p>
+                  <p className="text-[10px] mb-0.5" style={{ color: "var(--text-muted)" }}>{u.trigger}</p>
+                  <p className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>{u.recommendation}</p>
                 </div>
               </div>
             ))}
@@ -299,7 +301,9 @@ export default function RealityCheck({ adventure }: Props) {
               className="mt-0.5 shrink-0 accent-[#ff5100]"
               onChange={(e) => setOverrideAccepted(e.target.checked)}
             />
-            <span className="text-white/30 text-xs leading-relaxed group-hover:text-white/45 transition-colors">
+            <span className="text-xs leading-relaxed transition-colors" style={{ color: "var(--text-tertiary)" }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = "var(--text-secondary)"}
+                  onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-tertiary)"}>
               I acknowledge the physical and environmental risks and will prepare appropriately before attempting this adventure.
             </span>
           </label>
@@ -315,7 +319,9 @@ export default function RealityCheck({ adventure }: Props) {
       </div>
 
       <div className="px-5 pb-4">
-        <Link href="/matchmaker" className="text-[10px] text-white/20 hover:text-[#ff5100] transition-colors">
+        <Link href="/matchmaker" className="text-[10px] transition-colors" style={{ color: "var(--text-muted)" }}
+              onMouseEnter={(e) => e.currentTarget.style.color = "#ff5100"}
+              onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-muted)"}>
           Update your profile →
         </Link>
       </div>

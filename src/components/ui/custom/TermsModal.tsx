@@ -62,21 +62,23 @@ export default function TermsModal({ onAccept, onClose }: Props) {
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
       {/* Panel */}
-      <div className="relative w-full max-w-2xl bg-[#0e1117] border border-white/10 rounded-2xl overflow-hidden flex flex-col shadow-2xl"
-           style={{ maxHeight: "90vh" }}>
+      <div className="relative w-full max-w-2xl rounded-2xl overflow-hidden flex flex-col shadow-2xl"
+           style={{ maxHeight: "90vh", background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/8 shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 shrink-0" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
           <div>
-            <p className="text-white font-bold text-base">Terms & Privacy Policy</p>
-            <p className="text-white/40 text-xs mt-0.5">Please read carefully before agreeing</p>
+            <p className="font-bold text-base" style={{ color: "var(--text-primary)" }}>Terms & Privacy Policy</p>
+            <p className="text-xs mt-0.5" style={{ color: "var(--text-tertiary)" }}>Please read carefully before agreeing</p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors" style={{ color: "var(--text-tertiary)" }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.background = "var(--bg-card)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.background = "transparent"; }}
           >
             <X className="w-4 h-4" />
           </button>
@@ -91,33 +93,33 @@ export default function TermsModal({ onAccept, onClose }: Props) {
           {/* Terms of Use */}
           <div>
             <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.2em] uppercase mb-4">Terms of Use</p>
-            <p className="text-white/50 text-sm leading-relaxed mb-6">
+            <p className="text-sm leading-relaxed mb-6" style={{ color: "var(--text-secondary)" }}>
               Please read these Terms of Use carefully before using the TRAIL TO TIDES platform. By using our platform, you agree to these terms.
             </p>
             <div className="space-y-5">
               {TERMS_SECTIONS.map((s) => (
                 <div key={s.title}>
-                  <h3 className="text-white/80 text-sm font-semibold mb-1.5">{s.title}</h3>
-                  <p className="text-white/45 text-sm leading-relaxed">{s.content}</p>
+                  <h3 className="text-sm font-semibold mb-1.5" style={{ color: "var(--text-primary)" }}>{s.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{s.content}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Divider */}
-          <div className="border-t border-white/10" />
+          <div className="border-t" style={{ borderColor: "var(--border-subtle)" }} />
 
           {/* Privacy Policy */}
           <div>
             <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.2em] uppercase mb-4">Privacy Policy</p>
-            <p className="text-white/50 text-sm leading-relaxed mb-6">
+            <p className="text-sm leading-relaxed mb-6" style={{ color: "var(--text-secondary)" }}>
               TRAIL TO TIDES is committed to protecting your privacy. This policy explains what information we collect, how we use it, and what rights you have.
             </p>
             <div className="space-y-5">
               {PRIVACY_SECTIONS.map((s) => (
                 <div key={s.title}>
-                  <h3 className="text-white/80 text-sm font-semibold mb-1.5">{s.title}</h3>
-                  <p className="text-white/45 text-sm leading-relaxed">{s.content}</p>
+                  <h3 className="text-sm font-semibold mb-1.5" style={{ color: "var(--text-primary)" }}>{s.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{s.content}</p>
                 </div>
               ))}
             </div>
@@ -129,13 +131,13 @@ export default function TermsModal({ onAccept, onClose }: Props) {
 
         {/* Scroll hint — fades out once at bottom */}
         {!hasScrolledToBottom && (
-          <div className="absolute bottom-[72px] left-0 right-0 h-16 bg-gradient-to-t from-[#0e1117] to-transparent pointer-events-none flex items-end justify-center pb-2">
-            <p className="text-white/30 text-[10px] font-medium tracking-wide animate-pulse">Scroll to the bottom to agree</p>
+          <div className="absolute bottom-[72px] left-0 right-0 h-16 bg-gradient-to-t from-[var(--bg-surface)] to-transparent pointer-events-none flex items-end justify-center pb-2">
+            <p className="text-[10px] font-medium tracking-wide animate-pulse" style={{ color: "var(--text-tertiary)" }}>Scroll to the bottom to agree</p>
           </div>
         )}
 
         {/* Footer / Accept button */}
-        <div className="px-6 py-4 border-t border-white/8 shrink-0 bg-[#0e1117]">
+        <div className="px-6 py-4 shrink-0" style={{ borderTop: "1px solid var(--border-subtle)", background: "var(--bg-surface)" }}>
           <button
             onClick={() => { onAccept(); onClose(); }}
             disabled={!hasScrolledToBottom}
@@ -145,7 +147,7 @@ export default function TermsModal({ onAccept, onClose }: Props) {
             I have read and agree to the Terms & Privacy Policy
           </button>
           {!hasScrolledToBottom && (
-            <p className="text-center text-white/25 text-[10px] mt-2">
+            <p className="text-center text-[10px] mt-2" style={{ color: "var(--text-muted)" }}>
               Read to the end to enable this button
             </p>
           )}

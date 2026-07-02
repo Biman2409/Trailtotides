@@ -69,8 +69,8 @@ export default async function StoriesPage() {
         <Navbar />
         <section className="pt-32 pb-16 px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-white text-5xl lg:text-7xl font-bold tracking-tight leading-none mb-4">Voices from the Edge</h1>
-            <p className="text-white/50 text-lg max-w-xl mt-4">No stories found. Check back later.</p>
+            <h1 className="text-5xl lg:text-7xl font-bold tracking-tight leading-none mb-4" style={{ color: "var(--text-primary)" }}>Voices from the Edge</h1>
+            <p className="text-lg max-w-xl mt-4" style={{ color: "var(--text-tertiary)" }}>No stories found. Check back later.</p>
           </div>
         </section>
         <Footer />
@@ -89,10 +89,10 @@ export default async function StoriesPage() {
       <section className="pt-28 lg:pt-36 pb-10 lg:pb-14 px-6 lg:px-8 t-bg-surface2">
         <div className="max-w-7xl mx-auto">
           <p className="text-[#ff5100] text-xs font-bold tracking-[0.25em] uppercase mb-4">From the Trails</p>
-          <h1 className="text-white text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.02] mb-5">
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-[1.02] mb-5" style={{ color: "var(--text-primary)" }}>
             Voices from<br className="hidden lg:block" /> the Edge
           </h1>
-          <p className="text-white/45 text-base md:text-lg max-w-2xl leading-relaxed">
+          <p className="text-base md:text-lg max-w-2xl leading-relaxed" style={{ color: "var(--text-secondary)" }}>
             Not travel bloggers. Not influencers. Real people who pushed past the edge — and had the guts to write it down.
           </p>
         </div>

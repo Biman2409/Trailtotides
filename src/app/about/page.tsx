@@ -110,7 +110,7 @@ export default function AboutPage() {
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-4">
             The Origin
           </p>
-          <div className="space-y-6 text-white/65 text-lg leading-relaxed font-light">
+          <div className="space-y-6 text-lg leading-relaxed font-light" style={{ color: "var(--text-secondary)" }}>
             <p>
               India has more adventure than almost anywhere on Earth. The Himalayas alone have more trekking routes than most countries have roads. The Andamans hold some of the healthiest reefs left in the Indian Ocean. The Deccan plateau hides rivers no one has kayaked. The Rann of Kutch turns into a salt desert unlike anything else in Asia.
             </p>
@@ -130,18 +130,21 @@ export default function AboutPage() {
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
             What We Stand For
           </p>
-          <h2 className="text-white text-4xl font-bold tracking-tight mb-14">Our values</h2>
+          <h2 className="text-4xl font-bold tracking-tight mb-14" style={{ color: "var(--text-primary)" }}>Our values</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {VALUES.map((v) => (
               <div
                 key={v.title}
-                className="bg-white/4 border border-white/8 rounded-2xl p-6 hover:border-[#ff5100]/30 hover:bg-white/6 transition-all duration-300"
+                className="rounded-2xl p-6 transition-all duration-300"
+                style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(255,81,0,0.3)"; e.currentTarget.style.background = "var(--bg-surface-2)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border-subtle)"; e.currentTarget.style.background = "var(--bg-card)"; }}
               >
                 <div className="w-10 h-10 rounded-xl bg-[#ff5100]/15 flex items-center justify-center mb-4">
                   <v.icon className="w-5 h-5 text-[#ff5100]" />
                 </div>
-                <h3 className="text-white font-semibold text-base mb-2">{v.title}</h3>
-                <p className="text-white/45 text-sm leading-relaxed">{v.description}</p>
+                <h3 className="font-semibold text-base mb-2" style={{ color: "var(--text-primary)" }}>{v.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{v.description}</p>
               </div>
             ))}
           </div>
@@ -154,22 +157,22 @@ export default function AboutPage() {
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-3">
             The Team
           </p>
-          <h2 className="text-white text-4xl font-bold tracking-tight mb-3">
+          <h2 className="text-4xl font-bold tracking-tight mb-3" style={{ color: "var(--text-primary)" }}>
             People who&apos;ve been there
           </h2>
-          <p className="text-white/45 text-base mb-14 max-w-xl">
+          <p className="text-base mb-14 max-w-xl" style={{ color: "var(--text-secondary)" }}>
             Everyone who works on Trail to Tides has done the adventures. No desk-bound curation here.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TEAM.map((member) => (
-              <div key={member.name} className="bg-white/4 border border-white/8 rounded-2xl p-7">
+              <div key={member.name} className="rounded-2xl p-7" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
                 <div className="w-14 h-14 rounded-2xl bg-[#ff5100]/20 flex items-center justify-center text-2xl font-bold text-[#ff5100] mb-5">
                   {member.initial}
                 </div>
-                <h3 className="text-white font-semibold text-lg mb-1">{member.name}</h3>
+                <h3 className="font-semibold text-lg mb-1" style={{ color: "var(--text-primary)" }}>{member.name}</h3>
                 <p className="text-[#ff5100] text-xs font-medium mb-4">{member.role}</p>
-                <p className="text-white/50 text-sm leading-relaxed mb-4">{member.bio}</p>
-                <p className="text-white/25 text-xs border-t border-white/8 pt-4">{member.adventures}</p>
+                <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--text-secondary)" }}>{member.bio}</p>
+                <p className="text-xs pt-4" style={{ color: "var(--text-muted)", borderTop: "1px solid var(--border-subtle)" }}>{member.adventures}</p>
               </div>
             ))}
           </div>
@@ -188,7 +191,7 @@ export default function AboutPage() {
             ].map(({ value, label }) => (
               <div key={label} className="text-center">
                 <div className="text-[#ff5100] text-5xl font-bold mb-2">{value}</div>
-                <div className="text-white/40 text-sm">{label}</div>
+                <div className="text-sm" style={{ color: "var(--text-tertiary)" }}>{label}</div>
               </div>
             ))}
           </div>
@@ -198,10 +201,10 @@ export default function AboutPage() {
       {/* CTA */}
       <section className="py-20 px-6 lg:px-8 t-bg-surface2 border-t border-[var(--border-subtle)]">
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-white text-4xl font-bold tracking-tight mb-5">
+          <h2 className="text-4xl font-bold tracking-tight mb-5" style={{ color: "var(--text-primary)" }}>
             Ready to find your adventure?
           </h2>
-          <p className="text-white/50 text-base mb-8">
+          <p className="text-base mb-8" style={{ color: "var(--text-secondary)" }}>
             {adventures.length} adventures across India, waiting.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -214,7 +217,10 @@ export default function AboutPage() {
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 border border-white/20 hover:border-white/40 text-white/70 hover:text-white font-semibold px-8 py-4 rounded-xl text-base transition-all"
+              className="inline-flex items-center gap-2 border font-semibold px-8 py-4 rounded-xl text-base transition-all"
+              style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}
             >
               Get in touch
             </Link>

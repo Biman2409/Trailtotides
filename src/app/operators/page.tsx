@@ -124,10 +124,10 @@ export default async function OperatorsPage() {
             <p className="text-[#ff5100] text-[10px] sm:text-xs font-bold tracking-[0.28em] uppercase mb-3 sm:mb-4">
               Operators Directory
             </p>
-            <h1 className="text-white text-[2rem] sm:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight leading-[1.04]">
+            <h1 className="text-[2rem] sm:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight leading-[1.04]" style={{ color: "var(--text-primary)" }}>
               Guided by the Best
             </h1>
-            <p className="text-white/40 text-sm sm:text-base mt-3 sm:mt-4 max-w-lg leading-relaxed font-light">
+            <p className="text-sm sm:text-base mt-3 sm:mt-4 max-w-lg leading-relaxed font-light" style={{ color: "var(--text-secondary)" }}>
               Vetted companies running adventures across India&apos;s wildest terrain — from Ladakh passes to Andaman reefs.
             </p>
           </div>
@@ -154,8 +154,10 @@ export default async function OperatorsPage() {
               <div className="flex items-center gap-2">
                 <Link
                   href="/auth/login?role=operator"
-                  className="px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-colors hover:bg-white/[0.05]"
-                  style={{ color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.1)" }}
+                  className="px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-colors"
+                  style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-subtle)" }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = "var(--bg-card)"}
+                  onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                 >
                   Log in
                 </Link>

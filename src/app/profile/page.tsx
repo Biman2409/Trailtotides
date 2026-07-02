@@ -93,7 +93,7 @@ export default async function ProfilePage() {
       {/* ── Hero banner ─────────────────────────────────────────── */}
       <div
         className="relative pt-32 pb-16 px-5 lg:px-8 overflow-hidden"
-        style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+        style={{ borderBottom: "1px solid var(--border-subtle)" }}
       >
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-3xl opacity-10 pointer-events-none" style={{ background: "radial-gradient(ellipse, #ff5100 0%, transparent 70%)" }} />
 
@@ -120,18 +120,18 @@ export default async function ProfilePage() {
 
             {/* Name + meta */}
             <div className="flex-1 min-w-0 pb-1">
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white leading-tight truncate">
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight truncate" style={{ color: "var(--text-primary)" }}>
                 {displayName}
               </h1>
               {username && (
                 <p className="text-[#ff5100]/70 text-sm font-medium mt-0.5">@{username}</p>
               )}
               <div className="flex flex-wrap items-center gap-4 mt-3">
-                <span className="flex items-center gap-1.5 text-xs text-white/35">
+                <span className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-tertiary)" }}>
                   <Calendar className="w-3.5 h-3.5" />
                   Joined {profile.created_at ? format(new Date(profile.created_at), "MMMM yyyy") : "Recently"}
                 </span>
-                <span className="flex items-center gap-1.5 text-xs text-white/35">
+                <span className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-tertiary)" }}>
                   <Shield className="w-3.5 h-3.5" />
                   {profile.email}
                 </span>
@@ -163,9 +163,9 @@ export default async function ProfilePage() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <div className="w-1.5 h-5 rounded-full" style={{ background: "#34d399" }} />
-                <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>Operator Profile</h2>
+                <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>Operator Profile</h2>
               </div>
-              <p className="text-white/40 text-sm ml-4 mb-6">
+              <p className="text-sm ml-4 mb-6" style={{ color: "var(--text-tertiary)" }}>
                 Manage your listed adventures, pricing, and departure dates.
               </p>
 
@@ -181,7 +181,7 @@ export default async function ProfilePage() {
                   style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}
                 >
                   <Package className="w-8 h-8 text-emerald-400/40" />
-                  <p className="text-white/50 text-sm">No operator profile found.</p>
+                  <p className="text-sm" style={{ color: "var(--text-secondary)" }}>No operator profile found.</p>
                   <a
                     href="/auth/operator-signup"
                     className="text-xs font-semibold px-4 py-2 rounded-xl transition-all hover:brightness-110"
@@ -199,7 +199,7 @@ export default async function ProfilePage() {
               <div>
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-1.5 h-5 rounded-full" style={{ background: "#ff5100" }} />
-                  <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>Expedition Profile</h2>
+                  <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>Expedition Profile</h2>
                 </div>
                 <ExpeditionProfile />
               </div>
@@ -208,7 +208,7 @@ export default async function ProfilePage() {
               <div>
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-1.5 h-5 rounded-full bg-[#ff5100]" />
-                  <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>Capability Profile</h2>
+                  <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>Capability Profile</h2>
                 </div>
                 <ACEProfileSection />
               </div>
@@ -217,7 +217,7 @@ export default async function ProfilePage() {
               <div id="trophies">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-1.5 h-5 rounded-full" style={{ background: "#fbbf24" }} />
-                  <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>Trophy Cabinet</h2>
+                  <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>Trophy Cabinet</h2>
                 </div>
                 <TrophyCabinet />
               </div>
@@ -226,16 +226,16 @@ export default async function ProfilePage() {
               <div>
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-1.5 h-5 rounded-full" style={{ background: "#10b981" }} />
-                  <h2 className="text-white font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em" }}>My Adventures</h2>
+                  <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>My Adventures</h2>
                 </div>
                 <TrekStreakCounter />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold text-white/20 mb-2.5">Completed</p>
+                    <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold mb-2.5" style={{ color: "var(--text-muted)" }}>Completed</p>
                     <TripLogSection />
                   </div>
                   <div>
-                    <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold text-white/20 mb-2.5">Wishlist</p>
+                    <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold mb-2.5" style={{ color: "var(--text-muted)" }}>Wishlist</p>
                     <WishlistSection />
                   </div>
                 </div>

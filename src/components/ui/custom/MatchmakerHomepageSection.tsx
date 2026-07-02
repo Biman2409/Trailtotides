@@ -114,7 +114,7 @@ export default function MatchmakerHomepageSection() {
 
             {/* Tier card */}
             <div className="rounded-2xl overflow-hidden border relative"
-              style={{ background: `linear-gradient(150deg, ${tier.color}10 0%, rgba(10,14,18,0.95) 60%)`, borderColor: `${tier.color}20`, boxShadow: `0 0 40px ${tier.color}08` }}>
+              style={{ background: `linear-gradient(150deg, ${tier.color}10 0%, transparent 60%)`, borderColor: `${tier.color}20`, boxShadow: `0 0 40px ${tier.color}08` }}>
               <div className="absolute -top-6 -right-6 w-36 h-36 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: tier.color }} />
               <div className="relative px-4 pt-4 pb-4">
                 {/* Identity */}
@@ -124,12 +124,12 @@ export default function MatchmakerHomepageSection() {
                     <div className="scale-125">{tier.icon}</div>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[8px] uppercase tracking-[0.22em] font-semibold text-white/25 mb-0.5">Capability Tier</p>
+                    <p className="text-[8px] uppercase tracking-[0.22em] font-semibold mb-0.5" style={{ color: "var(--text-tertiary)" }}>Capability Tier</p>
                     <div className="flex items-center gap-2">
                       <h2 className="text-xl font-black tracking-tight leading-none" style={{ color: tier.color }}>{tier.label}</h2>
                       <div className="flex items-center gap-[2px]">
                         {Array.from({ length: 5 }).map((_, i) => (
-                          <span key={i} className="text-[10px] leading-none" style={{ color: i < tier.stars ? tier.color : "rgba(255,255,255,0.08)" }}>★</span>
+                          <span key={i} className="text-[10px] leading-none" style={{ color: i < tier.stars ? tier.color : "var(--text-muted)" }}>★</span>
                         ))}
                       </div>
                     </div>
@@ -137,7 +137,7 @@ export default function MatchmakerHomepageSection() {
                   {nextRank && (
                     <div className="text-right shrink-0">
                       <p className="text-xl font-black tabular-nums leading-none" style={{ color: tier.color }}>{progressPct}<span className="text-xs font-bold opacity-60">%</span></p>
-                      <p className="text-[9px] text-white/25 mt-0.5">to <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span></p>
+                      <p className="text-[9px] mt-0.5" style={{ color: "var(--text-tertiary)" }}>to <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span></p>
                     </div>
                   )}
                 </div>
