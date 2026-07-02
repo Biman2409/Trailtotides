@@ -18,6 +18,7 @@ import { loadProfile } from "@/lib/matchmaker";
 import type { StoredProfile } from "@/lib/matchmaker";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
+import ChatBubble from "@/components/ChatBubble";
 
 type AceCategory = "ready" | "stretch" | "out-of-range";
 
@@ -910,6 +911,7 @@ export default function ExploreClient() {
           </div>
         </div>
 
+        <ChatBubble />
         <Footer />
       </div>
   );
