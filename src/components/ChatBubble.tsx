@@ -32,6 +32,15 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
 
   useEffect(() => {
     if (alwaysVisible) { setVisible(true); return; }
+
+    // Safety net: always show after 4s no matter what
+    const timer = setTimeout(() => setVisible(true), 4000);
+
+    // Show on first scroll
+    const onScroll = () => setVisible(true);
+    window.addEventListener("scroll", onScroll, { once: true, passive: true });
+
+    // Try IntersectionObserver for early reveal if sentinel exists
     const target = document.getElementById("featured-adventures");
     if (target) {
       const observer = new IntersectionObserver(
@@ -39,12 +48,10 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
         { threshold: 0.1 }
       );
       observer.observe(target);
-      return () => observer.disconnect();
+      return () => { clearTimeout(timer); observer.disconnect(); window.removeEventListener("scroll", onScroll); };
     }
-    // Fallback: show on first scroll if no sentinel found
-    const onScroll = () => { setVisible(true); };
-    window.addEventListener("scroll", onScroll, { once: true, passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+
+    return () => { clearTimeout(timer); window.removeEventListener("scroll", onScroll); };
   }, []);
 
   async function send() {

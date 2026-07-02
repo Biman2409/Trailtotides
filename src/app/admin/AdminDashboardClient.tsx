@@ -597,8 +597,8 @@ export default function AdminDashboardClient({
       ID: p.id, Name: p.full_name || "N/A", Email: p.email || "N/A",
       Phone: p.phone || "N/A", Role: p.role,
       Banned: p.banned ? "Yes" : "No",
-      ACE™ Rank: p.ace_profile?.ace ? getRank(p.ace_profile.ace) : "None",
-      ACE™ Score: p.ace_profile?.ace ? Object.values(p.ace_profile.ace).reduce((a,b)=>a+b,0) : 0,
+      "ACE™ Rank": p.ace_profile?.ace ? getRank(p.ace_profile.ace) : "None",
+      "ACE™ Score": p.ace_profile?.ace ? Object.values(p.ace_profile.ace).reduce((a,b)=>a+b,0) : 0,
       Joined: format(parseISO(p.created_at), "yyyy-MM-dd HH:mm:ss"),
       LastLogin: p.last_sign_in_at ? format(parseISO(p.last_sign_in_at), "yyyy-MM-dd HH:mm:ss") : "N/A",
     }));
