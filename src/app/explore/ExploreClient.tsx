@@ -79,6 +79,7 @@ export default function ExploreClient() {
   const [userProfile, setUserProfile] = useState<StoredProfile | null>(null);
   const [editorOnly, setEditorOnly] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [acePopupOpen, setAcePopupOpen] = useState(false);
   const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
   const [expandedGenre, setExpandedGenre] = useState<string | null>(null);
   const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
@@ -245,14 +246,46 @@ export default function ExploreClient() {
               <span className="hidden sm:inline">ACE™</span>
             </button>
           ) : (
-            <Link
-              href="/matchmaker"
-              className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap"
-              style={{ background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
-            >
-              <Compass className="w-4 h-4" />
-              <span className="hidden sm:inline">ACE™</span>
-            </Link>
+            <div className="relative hidden sm:block">
+              <button
+                onClick={() => setAcePopupOpen(!acePopupOpen)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap"
+                style={{ background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
+              >
+                <Compass className="w-4 h-4" />
+                <span className="hidden sm:inline">ACE™</span>
+              </button>
+              {acePopupOpen && (
+                <>
+                  <div className="fixed inset-0 z-[1998]" onClick={() => setAcePopupOpen(false)} />
+                  <div className="absolute top-full left-0 mt-1.5 z-[2001] w-72 rounded-xl overflow-hidden" style={{ background: "rgba(15,20,30,0.97)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 20px 60px rgba(0,0,0,0.4)" }}>
+                    <div className="p-4">
+                      <div className="flex items-center gap-2.5 mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center">
+                          <Compass className="w-4 h-4 text-white" />
+                        </div>
+                        <div>
+                          <p className="text-white text-sm font-bold">ACE™ Assessment</p>
+                          <p className="text-white/30 text-[10px] font-medium">Adventure Compatibility Engine</p>
+                        </div>
+                      </div>
+                      <p className="text-white/50 text-xs leading-relaxed mb-4">
+                        Find adventures tailored to your fitness, experience and comfort level.
+                      </p>
+                      <Link
+                        href="/matchmaker"
+                        onClick={() => setAcePopupOpen(false)}
+                        className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-sm font-bold transition-all hover:-translate-y-0.5"
+                        style={{ background: "#ff5100", color: "#fff", boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}
+                      >
+                        Take Assessment
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           )}
 
           {/* Editor's Choice */}
