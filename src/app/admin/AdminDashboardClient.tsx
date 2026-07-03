@@ -754,7 +754,7 @@ export default function AdminDashboardClient({
                 >
                   <Icon className="w-3.5 h-3.5" />
                   <span className="hidden sm:block">{label}</span>
-                  <span className="text-[8px] opacity-50 font-mono hidden sm:block">{key}</span>
+                  <kbd className="text-[8px] font-mono hidden sm:inline-flex items-center justify-center w-3.5 h-3.5 rounded-[3px] border border-[var(--border-subtle)] opacity-40 ml-0.5" style={{ background: "var(--bg-surface)" }}>{key}</kbd>
                   {badge != null && badge > 0 && (
                     <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full leading-none ${activeTab === value ? "bg-white/25 text-white" : "bg-amber-500/80 text-white"}`}>{badge}</span>
                   )}
