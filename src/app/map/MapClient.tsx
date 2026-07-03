@@ -999,6 +999,7 @@ const [legendOpen, setLegendOpen] = useState(false);
                       </div>
                     </div>
                   );
+                })()}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
               {/* Genre */}
@@ -1051,6 +1052,7 @@ const [legendOpen, setLegendOpen] = useState(false);
                       </div>
                     </div>
                   );
+                })()}
                 {/* Season */}
                 <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
                   <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
