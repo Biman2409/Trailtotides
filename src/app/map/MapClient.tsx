@@ -5,7 +5,7 @@ import Image from "next/image";
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
   LocateFixed, Map as MapIcon, Layers, Camera,
-  Navigation as NavigationIcon, Compass, Menu, Heart,
+  Navigation as NavigationIcon, Compass, Menu, Heart, RotateCcw,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import ChatBubble from "@/components/ChatBubble";
@@ -942,60 +942,6 @@ const [legendOpen, setLegendOpen] = useState(false);
             <div className="absolute top-full left-0 right-0 z-[2000] border-t border-[var(--border-subtle)] max-h-[58vh] overflow-y-auto" style={{ background: "var(--bg-page)", backdropFilter: "blur(12px)" }}>
             <div className="max-w-7xl mx-auto px-3 lg:px-5 py-1.5 space-y-1.5">
 
-              {/* Genre + Region row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
-
-                {/* Genre */}
-                {(() => {
-                  const genreGroups: { label: string; color: string; types: AdventureType[] }[] = [
-                    { label: "Earth", color: "#a16207", types: ["Trekking","Mountaineering","Rock Climbing","Scrambling","Caving","Motorcycling","Cycling","Jeep Safari","Urban Adventure"] },
-                    { label: "Water", color: "#0369a1", types: ["Diving","Kayaking"] },
-                    { label: "Snow",  color: "#6366f1", types: ["Skiing","Ice Skating"] },
-                    { label: "Air",   color: "#0891b2", types: ["Paragliding","Hot Air Balloon"] },
-                  ];
-                  return (
-                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                      <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                        <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Genre</span>
-                        {selectedTypes.length > 0 && <span className="text-[8px] font-bold px-1 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedTypes.length}</span>}
-                      </div>
-                      <div className="p-1.5">
-                        <div className="flex flex-wrap gap-1">
-                          {genreGroups.map(grp => {
-                            const isExp = expandedCategory === grp.label;
-                            const cnt = grp.types.filter(t => selectedTypes.includes(t)).length;
-                            return (
-                              <button key={grp.label} onClick={() => setExpandedCategory(isExp ? null : grp.label)}
-                                className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
-                                style={{ background: isExp ? `${grp.color}22` : cnt > 0 ? `${grp.color}18` : "var(--bg-card)", color: isExp || cnt > 0 ? grp.color : "var(--text-tertiary)", border: `1px solid ${isExp || cnt > 0 ? `${grp.color}50` : "var(--border-subtle)"}` }}>
-                                {grp.label}
-                                {cnt > 0 && <span className="text-[7px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: `${grp.color}30`, color: grp.color }}>{cnt}</span>}
-                                <ChevronDown className={`w-2 h-2 opacity-50 transition-transform ${isExp ? "rotate-180" : ""}`} />
-                              </button>
-                            );
-                          })}
-                        </div>
-                        {expandedCategory && (() => {
-                          const grp = genreGroups.find(g => g.label === expandedCategory)!;
-                          return (
-                            <div className="mt-1.5 pt-1.5 flex flex-wrap gap-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                              {grp.types.map(type => {
-                                const isSel = selectedTypes.includes(type);
-                                return (
-                                  <button key={type} onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
-                                    className="px-2 py-0.5 rounded-md text-[10px] font-medium transition-all"
-                                    style={{ background: isSel ? "rgba(255,81,0,0.15)" : "var(--bg-card)", color: isSel ? "#ff7d47" : "var(--text-tertiary)", border: `1px solid ${isSel ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}` }}>
-                                    {type}
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          );
-                        })()}
-                      </div>
-                    </div>
-                  );
-                })()}
 
                 {/* Region */}
                 {(() => {
@@ -1053,12 +999,58 @@ const [legendOpen, setLegendOpen] = useState(false);
                       </div>
                     </div>
                   );
-                })()}
-              </div>
 
-              {/* Season + Difficulty row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
-
+              {/* Genre */}
+              {(() => {
+                  const regionGroups: { label: string; color: string; types: AdventureType[] }[] = [
+                    { label: "Earth", color: "#a16207", types: ["Trekking","Mountaineering","Rock Climbing","Scrambling","Caving","Motorcycling","Cycling","Jeep Safari","Urban Adventure"] },
+                    { label: "Water", color: "#0369a1", types: ["Diving","Kayaking"] },
+                    { label: "Snow",  color: "#6366f1", types: ["Skiing","Ice Skating"] },
+                    { label: "Air",   color: "#0891b2", types: ["Paragliding","Hot Air Balloon"] },
+                  ];
+                  return (
+                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+                      <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
+                        <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Genre</span>
+                        {selectedTypes.length > 0 && <span className="text-[8px] font-bold px-1 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedTypes.length}</span>}
+                      </div>
+                      <div className="p-1.5">
+                        <div className="flex flex-wrap gap-1">
+                          {genreGroups.map(grp => {
+                            const isExp = expandedCategory === grp.label;
+                            const cnt = grp.types.filter(t => selectedTypes.includes(t)).length;
+                            return (
+                              <button key={grp.label} onClick={() => setExpandedCategory(isExp ? null : grp.label)}
+                                className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
+                                style={{ background: isExp ? `${grp.color}22` : cnt > 0 ? `${grp.color}18` : "var(--bg-card)", color: isExp || cnt > 0 ? grp.color : "var(--text-tertiary)", border: `1px solid ${isExp || cnt > 0 ? `${grp.color}50` : "var(--border-subtle)"}` }}>
+                                {grp.label}
+                                {cnt > 0 && <span className="text-[7px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: `${grp.color}30`, color: grp.color }}>{cnt}</span>}
+                                <ChevronDown className={`w-2 h-2 opacity-50 transition-transform ${isExp ? "rotate-180" : ""}`} />
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {expandedCategory && (() => {
+                          const grp = genreGroups.find(g => g.label === expandedCategory)!;
+                          return (
+                            <div className="mt-1.5 pt-1.5 flex flex-wrap gap-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                              {grp.types.map(type => {
+                                const isSel = selectedTypes.includes(type);
+                                return (
+                                  <button key={type} onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
+                                    className="px-2 py-0.5 rounded-md text-[10px] font-medium transition-all"
+                                    style={{ background: isSel ? "rgba(255,81,0,0.15)" : "var(--bg-card)", color: isSel ? "#ff7d47" : "var(--text-tertiary)", border: `1px solid ${isSel ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}` }}>
+                                    {type}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                  );
                 {/* Season */}
                 <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
                   <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
@@ -1097,7 +1089,9 @@ const [legendOpen, setLegendOpen] = useState(false);
                     )}
                   </div>
                 </div>
+              </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
                 {/* Difficulty */}
                 <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
                   <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
@@ -1117,8 +1111,6 @@ const [legendOpen, setLegendOpen] = useState(false);
                     })}
                   </div>
                 </div>
-              </div>
-
               {/* Duration */}
               <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
                 <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
@@ -1137,10 +1129,20 @@ const [legendOpen, setLegendOpen] = useState(false);
                   })}
                 </div>
               </div>
+              </div>
+
+              <div className="flex items-center gap-2 pt-1.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                <button onClick={clearAll} className="flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all" style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-default)" }}>
+                  <RotateCcw className="w-3 h-3" /> Clear All
+                </button>
+                <button onClick={() => setFiltersOpen(false)} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all hover:-translate-y-0.5" style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)", color: "#fff", boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}>
+                  Close <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
 
             </div>
           </div>
-          </>
         )}
 
         {/* Active filter chips */}

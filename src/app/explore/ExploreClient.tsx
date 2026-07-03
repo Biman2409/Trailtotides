@@ -639,8 +639,8 @@ export default function ExploreClient() {
                       boxShadow: "0 4px 14px rgba(255,81,0,0.3)",
                     }}
                   >
-                    Show Results {filtered.length > 0 && `(${filtered.length})`}
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    Close
+                    <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
