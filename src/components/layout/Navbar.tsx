@@ -221,6 +221,9 @@ export default function Navbar() {
               </span>
             </button>
 
+            {/* ── Theme toggle ── */}
+            <ThemeToggleButton />
+
             {/* ── Wishlist tray ── */}
             {savedList.length > 0 && (
               <div className="relative" ref={wishlistRef}>
@@ -452,8 +455,8 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Theme toggle (always visible, on the right) */}
-          <div className="flex items-center gap-1">
+          {/* Theme toggle (mobile only) */}
+          <div className="flex items-center gap-1 lg:hidden">
             <ThemeToggleButton />
 
           {/* Mobile toggle */}
