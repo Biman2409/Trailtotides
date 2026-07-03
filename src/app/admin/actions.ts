@@ -75,7 +75,37 @@ export async function updateStoryStatus(fileName: string, status: "approved" | "
       upsert: true, contentType: "application/json",
     });
   if (upErr) return { error: upErr.message };
+
+  // On approval: also publish to DB and story-data bucket so it appears on the site
+  if (status === "approved") {
+    // Update the DB record to "published"
+    const { error: dbErr } = await supabase
+      .from("stories")
+      .update({ status: "published", updated_at: new Date().toISOString() })
+      .eq("id", json.id);
+    if (dbErr) console.error("Failed to update story DB status:", dbErr);
+
+    // Save to story-data bucket for published stories fallback
+    try {
+      const { data: buckets } = await supabase.storage.listBuckets();
+      if (!buckets?.find(b => b.name === "story-data")) {
+        await supabase.storage.createBucket("story-data", { public: false });
+      }
+      const publishedJson = JSON.stringify({ ...json, status: "published" });
+      const publishedBytes = new TextEncoder().encode(publishedJson);
+      await supabase.storage
+        .from("story-data")
+        .upload(`stories/${json.slug}.json`, publishedBytes, {
+          contentType: "application/json",
+          upsert: true,
+        });
+    } catch (e) {
+      console.error("Failed to save to story-data bucket:", e);
+    }
+  }
+
   revalidatePath("/admin");
+  revalidatePath("/stories");
   return { success: true };
 }
 

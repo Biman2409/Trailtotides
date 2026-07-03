@@ -5,7 +5,7 @@ import Image from "next/image";
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
   LocateFixed, Map as MapIcon, Layers, Camera,
-  Navigation as NavigationIcon, Compass, Menu, Heart, RotateCcw,
+  Navigation as NavigationIcon, Compass, RotateCcw,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import ChatBubble from "@/components/ChatBubble";
