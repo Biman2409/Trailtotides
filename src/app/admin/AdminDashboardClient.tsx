@@ -1119,92 +1119,127 @@ export default function AdminDashboardClient({
                   <p className="text-sm font-semibold">{localStories.length === 0 ? "No story submissions yet" : "No stories match filters"}</p>
                 </div>
               </div>
-            ) : filteredStories.map(sub => {
-              const isExpanded = expandedStoryId === sub.id;
-              return (
-                <div key={sub.id} className="border border-white/[0.06] rounded-2xl overflow-hidden hover:border-white/[0.1] transition-all">
-                  <div className="p-5">
-                    <div className="flex items-start gap-4">
-                      {/* Status indicator */}
-                      <div className={`mt-0.5 w-2 h-2 rounded-full shrink-0 ${
-                        sub.status === "pending" ? "bg-amber-400" :
-                        sub.status === "approved" ? "bg-emerald-400" : "bg-white/20"
-                      }`} />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <p className="font-bold text-white/90 text-[14px] leading-tight mb-1">{sub.title}</p>
+            ) : (
+              <div className="border border-white/[0.06] rounded-2xl overflow-hidden divide-y divide-white/[0.04]">
+                {filteredStories.map(sub => {
+                  const isExpanded = expandedStoryId === sub.id;
+                  const heroUrl = (sub as any).hero_image || (sub as any).hero_image_url || null;
+                  return (
+                    <div key={sub.id} className="bg-white/[0.01]">
+                      {/* ── Main card row ── */}
+                      <div className="p-4 lg:p-5">
+                        <div className="flex items-start gap-4">
+                          {/* Hero image thumbnail */}
+                          <div className="hidden sm:block w-16 h-16 lg:w-20 lg:h-20 rounded-xl overflow-hidden shrink-0 border border-white/[0.06]">
+                            {heroUrl ? (
+                              <img src={heroUrl} alt={sub.title} className="w-full h-full object-cover" loading="lazy" />
+                            ) : (
+                              <div className="w-full h-full bg-white/[0.03] flex items-center justify-center">
+                                <BookOpen className="w-5 h-5 text-white/15" />
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            {/* Top row: title + status badge */}
+                            <div className="flex items-start justify-between gap-3 mb-1.5">
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                {/* Status dot */}
+                                <div className={`shrink-0 w-2 h-2 rounded-full mt-0.5 ${
+                                  sub.status === "pending" ? "bg-amber-400" :
+                                  sub.status === "approved" ? "bg-emerald-400" : "bg-white/20"
+                                }`} />
+                                <p className="font-bold text-white/90 text-[14px] leading-tight truncate">{sub.title}</p>
+                              </div>
+                              <span className={`shrink-0 inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${
+                                sub.status === "pending" ? "bg-amber-500/12 text-amber-300 border border-amber-500/20"
+                                : sub.status === "approved" ? "bg-emerald-500/12 text-emerald-300 border border-emerald-500/20"
+                                : "bg-white/5 text-white/25 border border-white/8"
+                              }`}>{sub.status}</span>
+                            </div>
+
+                            {/* Meta row: author, region, date, read time */}
                             <div className="flex items-center gap-2 flex-wrap mb-2">
                               <span className="text-white/55 text-[12px] font-semibold">{sub.author_name}</span>
-                              {sub.author_role && <span className="text-white/25 text-[11px]">· {sub.author_role}</span>}
-                              {sub.state && <span className="inline-flex items-center gap-1 text-white/25 text-[11px]"><MapPin className="w-2.5 h-2.5" />{sub.state}</span>}
+                              {sub.author_role && <span className="text-white/25 text-[11px] hidden sm:inline">· {sub.author_role}</span>}
+                              {sub.region && <span className="inline-flex items-center gap-1 text-white/25 text-[11px]"><MapPin className="w-2.5 h-2.5" />{sub.region}</span>}
                               {sub.read_time && <span className="inline-flex items-center gap-1 text-white/25 text-[11px]"><Clock className="w-2.5 h-2.5" />{sub.read_time}</span>}
+                              {sub.date_of_adventure && <span className="text-white/25 text-[11px]">· {sub.date_of_adventure}</span>}
+                            </div>
+
+                            {/* Excerpt */}
+                            <p className="text-white/35 text-[12px] leading-relaxed line-clamp-2 mb-2.5">{sub.excerpt}</p>
+
+                            {/* Bottom row: contact + tags + date */}
+                            <div className="flex flex-wrap items-center gap-2">
+                              {sub.email && (
+                                <a href={`mailto:${sub.email}`} className="inline-flex items-center gap-1 text-[11px] text-[#ff7d47]/60 hover:text-[#ff7d47] transition-colors">
+                                  <Mail className="w-3 h-3" />{sub.email}
+                                </a>
+                              )}
+                              {sub.tags?.slice(0,3).map(tag => (
+                                <span key={tag} className="inline-flex items-center gap-0.5 bg-white/5 border border-white/[0.06] text-white/25 text-[9px] font-semibold px-2 py-0.5 rounded-full">
+                                  <Tag className="w-2 h-2" />{tag}
+                                </span>
+                              ))}
+                              <span className="text-white/20 text-[10px] ml-auto">{format(parseISO(sub.created_at), "MMM d, yyyy")}</span>
                             </div>
                           </div>
-                          <span className={`shrink-0 inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${
-                            sub.status === "pending" ? "bg-amber-500/12 text-amber-300 border border-amber-500/20"
-                            : sub.status === "approved" ? "bg-emerald-500/12 text-emerald-300 border border-emerald-500/20"
-                            : "bg-white/5 text-white/25 border border-white/8"
-                          }`}>{sub.status}</span>
-                        </div>
-                        <p className="text-white/35 text-[12px] leading-relaxed line-clamp-2 mb-3">{sub.excerpt}</p>
-                        <div className="flex flex-wrap items-center gap-2">
-                          {sub.email && (
-                            <a href={`mailto:${sub.email}`} className="inline-flex items-center gap-1 text-[11px] text-[#ff7d47]/60 hover:text-[#ff7d47] transition-colors">
-                              <Mail className="w-3 h-3" />{sub.email}
-                            </a>
-                          )}
-                          {sub.tags?.slice(0,4).map(tag => (
-                            <span key={tag} className="inline-flex items-center gap-0.5 bg-white/5 border border-white/[0.06] text-white/25 text-[9px] font-semibold px-2 py-0.5 rounded-full">
-                              <Tag className="w-2 h-2" />{tag}
-                            </span>
-                          ))}
-                          <span className="text-white/20 text-[10px] ml-auto">{format(parseISO(sub.created_at), "MMM d, yyyy")}</span>
                         </div>
                       </div>
-                    </div>
-                  </div>
 
-                  <div className="border-t border-white/[0.04] px-5 py-2.5 flex items-center justify-between bg-white/[0.01]">
-                    <button onClick={() => setExpandedStoryId(isExpanded ? null : sub.id)}
-                      className="flex items-center gap-1.5 text-[11px] text-white/30 hover:text-white/55 font-semibold transition-colors">
-                      {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                      {isExpanded ? "Collapse" : "Read Full Story"}
-                    </button>
-                    <div className="flex items-center gap-2">
-                      {sub.status !== "approved" && (
-                        <button onClick={() => handleStoryAction(sub, "approve")} disabled={loadingId === sub.id}
-                          className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-lg border border-emerald-500/20 text-emerald-400/70 hover:bg-emerald-500/10 hover:border-emerald-500/35 transition-all disabled:opacity-40">
-                          {loadingId === sub.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />} Approve
+                      {/* ── Action bar ── */}
+                      <div className="flex items-center justify-between px-4 lg:px-5 py-2.5 bg-white/[0.015]">
+                        <button onClick={() => setExpandedStoryId(isExpanded ? null : sub.id)}
+                          className="flex items-center gap-1.5 text-[11px] text-white/30 hover:text-white/55 font-semibold transition-colors">
+                          {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                          {isExpanded ? "Collapse" : "View Full Story"}
                         </button>
-                      )}
-                      {sub.status !== "rejected" && (
-                        <button onClick={() => handleStoryAction(sub, "reject")} disabled={loadingId === sub.id}
-                          className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-lg border border-white/8 text-white/30 hover:border-red-500/25 hover:text-red-400/80 hover:bg-red-500/8 transition-all disabled:opacity-40">
-                          {loadingId === sub.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />} Reject
-                        </button>
-                      )}
-                      <button onClick={() => handleStoryAction(sub, "delete")} disabled={loadingId === sub.id}
-                        className="p-1.5 text-white/15 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all disabled:opacity-40" title="Delete">
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
+                        <div className="flex items-center gap-2">
+                          {sub.status !== "approved" && (
+                            <button onClick={() => handleStoryAction(sub, "approve")} disabled={loadingId === sub.id}
+                              className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-lg border border-emerald-500/20 text-emerald-400/70 hover:bg-emerald-500/10 hover:border-emerald-500/35 transition-all disabled:opacity-40">
+                              {loadingId === sub.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />} Approve
+                            </button>
+                          )}
+                          {sub.status !== "rejected" && (
+                            <button onClick={() => handleStoryAction(sub, "reject")} disabled={loadingId === sub.id}
+                              className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-lg border border-white/8 text-white/30 hover:border-red-500/25 hover:text-red-400/80 hover:bg-red-500/8 transition-all disabled:opacity-40">
+                              {loadingId === sub.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />} Reject
+                            </button>
+                          )}
+                          <button onClick={() => handleStoryAction(sub, "delete")} disabled={loadingId === sub.id}
+                            className="p-1.5 text-white/15 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all disabled:opacity-40" title="Delete">
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
 
-                  {isExpanded && (
-                    <div className="border-t border-white/[0.04] px-7 py-5 bg-white/[0.01]">
-                      {sub.author_bio && (
-                        <div className="mb-4 flex items-start gap-2 text-white/30 text-[11px] italic border-l-2 border-white/10 pl-3">
-                          <Info className="w-3 h-3 shrink-0 mt-0.5" />
-                          {sub.author_bio}
+                      {/* ── Expanded content ── */}
+                      {isExpanded && (
+                        <div className="border-t border-white/[0.04] px-5 lg:px-7 py-5 bg-white/[0.01] space-y-4">
+                          {/* Hero image preview */}
+                          {heroUrl && (
+                            <div className="rounded-xl overflow-hidden border border-white/[0.06]">
+                              <img src={heroUrl} alt={sub.title} className="w-full max-h-64 object-cover" loading="lazy" />
+                            </div>
+                          )}
+                          {/* Author bio */}
+                          {sub.author_bio && (
+                            <div className="flex items-start gap-2 text-white/30 text-[11px] italic border-l-2 border-white/10 pl-3">
+                              <Info className="w-3 h-3 shrink-0 mt-0.5" />
+                              {sub.author_bio}
+                            </div>
+                          )}
+                          {/* Story body */}
+                          <p className="text-white/55 text-[13px] leading-relaxed whitespace-pre-wrap">{sub.body}</p>
                         </div>
                       )}
-                      <p className="text-white/55 text-[13px] leading-relaxed whitespace-pre-wrap">{sub.body}</p>
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            )}
           </Tabs.Content>
 
           {/* ── OPERATORS TAB ── */}
