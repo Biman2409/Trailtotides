@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   updateUserRole, deleteUser, banUser, unbanUser,
   sendPasswordReset, deleteMessage, updateStoryStatus, deleteStory,
@@ -361,7 +361,29 @@ export default function AdminDashboardClient({
   const [reviewSearch, setReviewSearch] = useState("");
   const [photoSearch, setPhotoSearch] = useState("");
   const [contentView, setContentView] = useState<"reviews"|"photos">("reviews");
+  const [readMsgs, setReadMsgs] = useState<Set<string>>(new Set());
+  const [repliedMsgs, setRepliedMsgs] = useState<Set<string>>(new Set());
+  const [msgFilter, setMsgFilter] = useState<"all"|"unread"|"replied">("all");
   const { toast, show: showToast } = useToast();
+
+  // ── Keyboard shortcuts ─────────────────────────────────────────────────────────
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      // Don't fire when typing in inputs
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
+      const tabIdx = parseInt(e.key);
+      if (tabIdx >= 1 && tabIdx <= 7) {
+        setActiveTab(TABS[tabIdx - 1].value);
+      }
+      if (e.key === "Escape") {
+        setExpandedUserId(null);
+        setExpandedStoryId(null);
+        setExpandedSubId(null);
+      }
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
 
   // ── Derived counts ────────────────────────────────────────────────────────────
   const totalUsers = localProfiles.filter(p => p.role === "user").length;
@@ -407,14 +429,22 @@ export default function AdminDashboardClient({
 
   // ── Filtered messages ──────────────────────────────────────────────────────
   const filteredMessages = useMemo(() => {
-    if (!msgSearch) return localMessages;
-    const q = msgSearch.toLowerCase();
-    return localMessages.filter(m =>
-      (m.name?.toLowerCase() ?? "").includes(q) ||
-      m.email.toLowerCase().includes(q) ||
-      m.message.toLowerCase().includes(q)
-    );
-  }, [localMessages, msgSearch]);
+    let msgs = localMessages;
+    if (msgSearch) {
+      const q = msgSearch.toLowerCase();
+      msgs = msgs.filter(m =>
+        (m.name?.toLowerCase() ?? "").includes(q) ||
+        m.email.toLowerCase().includes(q) ||
+        m.message.toLowerCase().includes(q)
+      );
+    }
+    if (msgFilter === "unread") {
+      msgs = msgs.filter(m => !readMsgs.has(m.id));
+    } else if (msgFilter === "replied") {
+      msgs = msgs.filter(m => repliedMsgs.has(m.id));
+    }
+    return msgs;
+  }, [localMessages, msgSearch, msgFilter, readMsgs, repliedMsgs]);
 
   // ── Filtered stories ───────────────────────────────────────────────────────
   const filteredStories = useMemo(() => {
@@ -609,13 +639,13 @@ export default function AdminDashboardClient({
   };
 
   const TABS = [
-    { value: "overview",  icon: Zap,           label: "Overview" },
-    { value: "users",     icon: Users,          label: "Users",     badge: 0 },
-    { value: "operators", icon: Building2,      label: "Operators", badge: pendingOperatorSubmissions },
-    { value: "messages",  icon: MessageSquare,  label: "Messages",  badge: localMessages.length },
-    { value: "stories",   icon: BookOpen,       label: "Stories",   badge: pendingStories },
-    { value: "content",   icon: Image,          label: "Content",   badge: 0 },
-    { value: "analytics", icon: BarChart3,      label: "Analytics" },
+    { value: "overview",  icon: Zap,           label: "Overview",  key: "1" },
+    { value: "users",     icon: Users,          label: "Users",     key: "2", badge: 0 },
+    { value: "operators", icon: Building2,      label: "Operators", key: "3", badge: pendingOperatorSubmissions },
+    { value: "messages",  icon: MessageSquare,  label: "Messages",  key: "4", badge: localMessages.length },
+    { value: "stories",   icon: BookOpen,       label: "Stories",   key: "5", badge: pendingStories },
+    { value: "content",   icon: Image,          label: "Content",   key: "6", badge: 0 },
+    { value: "analytics", icon: BarChart3,      label: "Analytics", key: "7" },
   ];
 
   return (
@@ -682,7 +712,7 @@ export default function AdminDashboardClient({
               <h1 className="text-xl font-bold tracking-tight">Admin Dashboard</h1>
             </div>
             <Tabs.List className="flex flex-wrap items-center gap-1 bg-[var(--bg-card)] border border-[var(--border-subtle)] p-1 rounded-xl">
-              {TABS.map(({ value, icon: Icon, label, badge }) => (
+              {TABS.map(({ value, icon: Icon, label, badge, key }) => (
                 <Tabs.Trigger key={value} value={value}
                   className={`relative flex items-center gap-1.5 px-3 py-2 rounded-lg text-[12px] font-semibold transition-all outline-none ${
                     activeTab === value ? "bg-[#ff5100] text-white shadow-lg shadow-[#ff5100]/20" : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)]"
@@ -690,6 +720,7 @@ export default function AdminDashboardClient({
                 >
                   <Icon className="w-3.5 h-3.5" />
                   <span className="hidden sm:block">{label}</span>
+                  <span className="text-[8px] opacity-50 font-mono hidden sm:block">{key}</span>
                   {badge != null && badge > 0 && (
                     <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full leading-none ${activeTab === value ? "bg-white/25 text-white" : "bg-amber-500/80 text-white"}`}>{badge}</span>
                   )}
@@ -1032,11 +1063,21 @@ export default function AdminDashboardClient({
 
           {/* ── MESSAGES TAB ── */}
           <Tabs.Content value="messages" className="outline-none space-y-4">
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
               <div className="relative flex-1 max-w-sm">
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
                 <input type="text" placeholder="Search messages…" value={msgSearch} onChange={e => setMsgSearch(e.target.value)}
                   className="w-full bg-[var(--bg-card)] border border-[var(--border-default)] rounded-xl pl-9 pr-4 py-2.5 text-white text-[13px] placeholder-[var(--text-muted)] focus:outline-none focus:border-[#ff5100]/40 transition-all" />
+              </div>
+              <div className="flex items-center gap-1 bg-[var(--bg-card)] border border-[var(--border-subtle)] p-0.5 rounded-lg">
+                {(["all","unread","replied"] as const).map(f => (
+                  <button key={f} onClick={() => setMsgFilter(f)}
+                    className={`px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all ${
+                      msgFilter === f ? "bg-[#ff5100] text-white shadow-sm" : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+                    }`}>
+                    {f} {f === "unread" && `(${[...readMsgs].length > 0 ? localMessages.length - readMsgs.size : localMessages.length})`}
+                  </button>
+                ))}
               </div>
               <span className="text-[11px] text-[var(--text-muted)] font-semibold ml-auto">{filteredMessages.length} messages</span>
             </div>
@@ -1045,20 +1086,28 @@ export default function AdminDashboardClient({
               <div className="border border-[var(--border-subtle)] rounded-2xl p-16 text-center">
                 <div className="flex flex-col items-center gap-3 text-[var(--text-muted)]">
                   <div className="w-12 h-12 rounded-2xl bg-[var(--bg-surface)] flex items-center justify-center"><MessageSquare className="w-6 h-6" /></div>
-                  <p className="text-sm font-semibold">{localMessages.length === 0 ? "No messages yet" : "No messages match search"}</p>
+                  <p className="text-sm font-semibold">{localMessages.length === 0 ? "No messages yet" : "No messages match filter"}</p>
                 </div>
               </div>
-            ) : filteredMessages.map(msg => (
-              <div key={msg.id} className="border border-[var(--border-subtle)] rounded-2xl overflow-hidden hover:border-white/[0.1] transition-all">
+            ) : filteredMessages.map(msg => {
+              const isRead = readMsgs.has(msg.id);
+              const isReplied = repliedMsgs.has(msg.id);
+              return (
+              <div key={msg.id} onClick={() => { if (!isRead) setReadMsgs(prev => new Set(prev).add(msg.id)); }}
+                className={`border rounded-2xl overflow-hidden transition-all cursor-default ${
+                  isRead ? "border-[var(--border-subtle)]" : "border-[#ff5100]/25"
+                } hover:border-white/[0.1]`}>
                 <div className="flex items-start gap-3 p-4">
-                  <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/12 flex items-center justify-center text-emerald-400 font-black text-sm shrink-0">
+                  <div className="relative w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/12 flex items-center justify-center text-emerald-400 font-black text-sm shrink-0">
                     {(msg.name?.[0] ?? msg.email?.[0] ?? "?").toUpperCase()}
+                    {!isRead && <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-[#ff5100] rounded-full border-2 border-[var(--bg-page)]" />}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <p className="font-semibold text-[var(--text-primary)] text-[13px]">{msg.name || "Guest"}</p>
+                      <p className={`text-[13px] ${isRead ? "text-[var(--text-primary)]" : "font-bold text-[var(--text-primary)]"}`}>{msg.name || "Guest"}</p>
                       <span className="text-[var(--text-muted)] text-[10px]">·</span>
                       <span className="text-[var(--text-muted)] text-[11px]">{format(parseISO(msg.created_at), "MMM d, yyyy · HH:mm")}</span>
+                      {isReplied && <span className="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-400/70 bg-emerald-500/10 px-1.5 py-0.5 rounded-full"><CheckCircle2 className="w-2 h-2" />Replied</span>}
                     </div>
                     <div className="flex items-center gap-1 mb-3">
                       <p className="text-[var(--text-tertiary)] text-[11px] font-mono">{msg.email}</p>
@@ -1070,6 +1119,7 @@ export default function AdminDashboardClient({
                   </div>
                   <div className="flex flex-col items-end gap-1.5 shrink-0">
                     <a href={`mailto:${msg.email}?subject=Re: Your message to Trail to Tides`}
+                      onClick={() => setRepliedMsgs(prev => new Set(prev).add(msg.id))}
                       className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-lg border border-[#ff5100]/20 text-[#ff7d47]/70 hover:bg-[#ff5100]/10 hover:border-[#ff5100]/35 hover:text-[#ff7d47] transition-all">
                       <Mail className="w-3 h-3" /> Reply
                     </a>
@@ -1080,7 +1130,7 @@ export default function AdminDashboardClient({
                   </div>
                 </div>
               </div>
-            ))}
+            )})}
           </Tabs.Content>
 
           {/* ── STORIES TAB ── */}
