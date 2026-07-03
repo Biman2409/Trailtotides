@@ -93,6 +93,21 @@ export async function POST(req: NextRequest) {
     const { error } = await adminClient.from("stories").insert(storyRecord);
 
     if (!error) {
+      // Also save to story-submissions bucket so admin can see it
+      try {
+        const { data: buckets } = await adminClient.storage.listBuckets();
+        if (!buckets?.find(b => b.name === "story-submissions")) {
+          await adminClient.storage.createBucket("story-submissions", { public: false });
+        }
+        const json = JSON.stringify(storyRecord);
+        const bytes = new TextEncoder().encode(json);
+        await adminClient.storage
+          .from("story-submissions")
+          .upload(storyRecord.slug + ".json", bytes, {
+            contentType: "application/json",
+            upsert: true,
+          });
+      } catch {}
       return NextResponse.json({ success: true });
     }
 

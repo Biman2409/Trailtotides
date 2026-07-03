@@ -1004,7 +1004,7 @@ const [legendOpen, setLegendOpen] = useState(false);
               <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
               {/* Genre */}
               {(() => {
-                  const regionGroups: { label: string; color: string; types: AdventureType[] }[] = [
+                  const genreGroups: { label: string; color: string; types: AdventureType[] }[] = [
                     { label: "Earth", color: "#a16207", types: ["Trekking","Mountaineering","Rock Climbing","Scrambling","Caving","Motorcycling","Cycling","Jeep Safari","Urban Adventure"] },
                     { label: "Water", color: "#0369a1", types: ["Diving","Kayaking"] },
                     { label: "Snow",  color: "#6366f1", types: ["Skiing","Ice Skating"] },
@@ -1145,6 +1145,7 @@ const [legendOpen, setLegendOpen] = useState(false);
 
             </div>
           </div>
+        </>
         )}
 
         {/* Active filter chips */}
