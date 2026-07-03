@@ -1826,7 +1826,7 @@ export const stories: Story[] = [
     tags: [],
     region: "Himalayas",
     date: "July 2026",
-    submittedBy: "986fb39a-f174-40ba-aefa-eddee3145687",
+    submittedBy: "95cc4754-9271-4337-a79f-25a4a34536d0",
   },
   {
     id: "8",
