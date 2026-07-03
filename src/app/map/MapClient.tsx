@@ -648,7 +648,6 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 export default function MapPage() {
   const [mounted, setMounted] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [viewOpen, setViewOpen] = useState(false);
   const [activeOverlay, setActiveOverlay] = useState<OverlayKey | null>(null);
   const [myShotsOn, setMyShotsOn] = useState(false);
   const [myShotsLoading, setMyShotsLoading] = useState(false);
@@ -679,8 +678,7 @@ export default function MapPage() {
   const [nearMe, setNearMe] = useState<{ lat: number; lng: number } | null>(null);
   const [nearMeLoading, setNearMeLoading] = useState(false);
   const [nearMeError, setNearMeError] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-const [legendOpen, setLegendOpen] = useState(false);
+  const [legendOpen, setLegendOpen] = useState(false);
 
   // Load wishlist from localStorage
   const [wishlist, setWishlist] = useState<Set<string>>(new Set());
@@ -799,18 +797,8 @@ const [legendOpen, setLegendOpen] = useState(false);
             onAdventurePin={adv => openPinRef.current?.(adv.slug)}
           />
 
-          {/* Mobile menu toggle */}
-          <button
-            onClick={() => setMobileMenuOpen(m => !m)}
-            className="lg:hidden flex items-center gap-1 px-2.5 py-2 rounded-xl transition-all"
-            style={{ background: mobileMenuOpen ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: mobileMenuOpen ? "#ff5100" : "rgba(255,255,255,0.5)" }}
-          >
-            <Menu className="w-4 h-4" />
-            <ChevronDown className={`w-3 h-3 transition-transform ${mobileMenuOpen ? "rotate-180" : ""}`} />
-          </button>
-
-          {/* Desktop toolbar items (hidden on mobile) */}
-          <div className="hidden lg:flex items-center gap-2">
+          {/* Toolbar items */}
+          <div className="flex items-center gap-2">
 
           {/* Default / Satellite / Terrain — directly visible toggle buttons */}
           <div className="flex items-center rounded-lg overflow-hidden shrink-0" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
@@ -902,37 +890,6 @@ const [legendOpen, setLegendOpen] = useState(false);
           )}
           </div>
         </div>
-
-        {/* Mobile expanded toolbar */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden flex items-center gap-2 px-3 pb-2 flex-wrap" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-            <button
-              onClick={() => { setViewOpen(v => !v); setMobileMenuOpen(false); }}
-              className={tbBtn(!!activeOverlay)}
-              style={{ background: activeOverlay ? "rgba(255,81,0,0.2)" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: activeOverlay ? "#ff7d47" : "rgba(255,255,255,0.5)", fontSize: "11px" }}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              {activeOverlay === "terrain" ? "Terrain" : activeOverlay === "satellite" ? "Satellite" : "Default"}
-            </button>
-            <button onClick={handleNearMe} title="Near Me" className={tbBtn(nearMe !== null)} style={{ background: nearMe ? "#ff5100" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: nearMe ? "#fff" : "rgba(255,255,255,0.5)", fontSize: "11px" }}>
-              <LocateFixed className="w-3.5 h-3.5" />
-              {nearMe ? "Near ✓" : "Near Me"}
-            </button>
-            {loggedIn && (
-              <button onClick={toggleMyShots} className={tbBtn(myShotsOn)} style={{ background: myShotsOn ? "#ff5100" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: myShotsOn ? "#fff" : "rgba(255,255,255,0.5)", fontSize: "11px" }}>
-                <Camera className="w-3.5 h-3.5" />
-                {myShotsLoading ? "Loading" : "Shots"}
-              </button>
-            )}
-            <button onClick={() => { setFiltersOpen(f => !f); }} className={tbBtn(filtersOpen || activeFilterCount > 0)} style={{ background: filtersOpen || activeFilterCount > 0 ? "rgba(255,81,0,0.2)" : "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: filtersOpen || activeFilterCount > 0 ? "#ff7d47" : "rgba(255,255,255,0.5)", fontSize: "11px" }}>
-              <SlidersHorizontal className="w-3.5 h-3.5" />
-              Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-            </button>
-            {(activeFilterCount > 0 || search) && (
-              <button onClick={clearAll} className="text-xs font-semibold" style={{ color: "#ff5100" }}>Clear</button>
-            )}
-          </div>
-        )}
 
         {/* Filter panel (dropdown) */}
         {filtersOpen && (
