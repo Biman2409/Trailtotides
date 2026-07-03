@@ -276,7 +276,11 @@ export default async function StoryPage({ params }: Props) {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <p className="text-white font-medium text-sm">{story.author}</p>
+                  {story.submittedBy ? (
+                    <Link href={`/profile/${story.submittedBy}`} className="text-white font-medium text-sm hover:text-[#ff5100] transition-colors">{story.author}</Link>
+                  ) : (
+                    <p className="text-white font-medium text-sm">{story.author}</p>
+                  )}
                   {story.submittedBy && (
                     <span className="inline-flex items-center gap-1 bg-[#ff5100]/20 border border-[#ff5100]/30 text-[#ff7d47] text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md">
                       <Mountain className="w-2.5 h-2.5" />
@@ -330,7 +334,11 @@ export default async function StoryPage({ params }: Props) {
                 </span>
               )}
               <div>
-                <p className="text-white font-semibold text-base">{story.author}</p>
+                {story.submittedBy ? (
+                  <Link href={`/profile/${story.submittedBy}`} className="text-white font-semibold text-base hover:text-[#ff5100] transition-colors">{story.author}</Link>
+                ) : (
+                  <p className="text-white font-semibold text-base">{story.author}</p>
+                )}
               </div>
               <p className="text-white/40 text-sm mt-0.5">{story.authorRole}</p>
               {story.authorBio && (

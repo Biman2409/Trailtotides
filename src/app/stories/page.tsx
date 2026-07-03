@@ -35,6 +35,7 @@ function mapStory(s: StoryDB) {
     tags,
     pillTags,
     date: s.date,
+    submittedBy: s.submitted_by || undefined,
   };
 }
 
