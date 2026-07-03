@@ -150,11 +150,14 @@ function Delta({ value, label }: { value: number; label: string }) {
 // ── User detail panel ──────────────────────────────────────────────────────────
 function UserDetailPanel({
   profile, currentUserId, onAction, loadingId,
+  storyCount = 0, messageCount = 0,
 }: {
   profile: Profile;
   currentUserId: string;
   loadingId: string | null;
   onAction: (type: string, id: string, extra?: string) => void;
+  storyCount?: number;
+  messageCount?: number;
 }) {
   const isSelf = profile.id === currentUserId;
   const ace = profile.ace_profile?.ace;
@@ -219,6 +222,21 @@ function UserDetailPanel({
               <span className="text-[9px] font-mono text-[var(--text-muted)] truncate">{profile.id}</span>
               <CopyBtn text={profile.id} />
             </div>
+
+            {/* Activity */}
+            <div className="pt-2 mt-2 border-t border-[var(--border-subtle)]">
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] mb-2">Activity</p>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="p-2.5 rounded-xl border border-[var(--border-subtle)]" style={{ background: "var(--bg-surface)" }}>
+                  <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Stories</p>
+                  <p className="text-sm font-black text-[#ff7d47]">{storyCount}</p>
+                </div>
+                <div className="p-2.5 rounded-xl border border-[var(--border-subtle)]" style={{ background: "var(--bg-surface)" }}>
+                  <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">Messages</p>
+                  <p className="text-sm font-black text-emerald-400">{messageCount}</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Actions */}
@@ -272,7 +290,15 @@ function UserDetailPanel({
 }
 
 // ── Submission detail panel ────────────────────────────────────────────────────
-function SubmissionDetailPanel({ sub }: { sub: OperatorSubmission }) {
+function SubmissionDetailPanel({ sub, allSubmissions }: { sub: OperatorSubmission; allSubmissions?: OperatorSubmission[] }) {
+  const otherPrices = allSubmissions?.filter(s =>
+    s.adventure_slug === sub.adventure_slug && s.id !== sub.id && s.price_from
+  ).map(s => s.price_from) ?? [];
+  const avgPrice = otherPrices.length > 0
+    ? Math.round(otherPrices.reduce((a,b) => a + b, 0) / otherPrices.length)
+    : null;
+  const priceDiff = avgPrice !== null ? sub.price_from - avgPrice : null;
+
   return (
     <tr>
       <td colSpan={6} className="px-0 py-0">
@@ -282,6 +308,14 @@ function SubmissionDetailPanel({ sub }: { sub: OperatorSubmission }) {
             <p className="text-[9px] font-black uppercase tracking-[0.15em] text-[var(--text-muted)] mb-2">Pricing</p>
             <p className="text-lg font-black text-[#ff7d47]">₹{sub.price_from}</p>
             <p className="text-[10px] text-[var(--text-tertiary)] mt-0.5">Starting price per person</p>
+            {priceDiff !== null && (
+              <div className={`mt-2 inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                priceDiff <= 0 ? "bg-emerald-500/10 text-emerald-400" : "bg-amber-500/10 text-amber-400"
+              }`}>
+                {priceDiff <= 0 ? <TrendingDown className="w-2.5 h-2.5" /> : <TrendingUp className="w-2.5 h-2.5" />}
+                ₹{Math.abs(priceDiff)} {priceDiff <= 0 ? "below" : "above"} avg (₹{avgPrice})
+              </div>
+            )}
           </div>
           <div>
             <p className="text-[9px] font-black uppercase tracking-[0.15em] text-[var(--text-muted)] mb-2">Services</p>
@@ -1045,7 +1079,10 @@ export default function AdminDashboardClient({
                           </td>
                         </tr>
                         {isExpanded && (
-                          <UserDetailPanel key={`detail-${profile.id}`} profile={profile} currentUserId={currentUserId} loadingId={loadingId} onAction={handleUserAction} />
+                          <UserDetailPanel key={`detail-${profile.id}`} profile={profile} currentUserId={currentUserId} loadingId={loadingId} onAction={handleUserAction}
+                            storyCount={localStories.filter(s => s.email === profile.email).length}
+                            messageCount={localMessages.filter(m => m.email === profile.email || m.user_id === profile.id).length}
+                          />
                         )}
                       </>
                     );
@@ -1610,7 +1647,7 @@ export default function AdminDashboardClient({
                                 </div>
                               </td>
                             </tr>
-                            {isExpanded && <SubmissionDetailPanel sub={sub} />}
+                            {isExpanded && <SubmissionDetailPanel sub={sub} allSubmissions={localOperatorSubmissions} />}
                           </>
                         );
                       })}
@@ -1623,6 +1660,33 @@ export default function AdminDashboardClient({
 
           {/* ── CONTENT TAB (Reviews & Photos) ── */}
           <Tabs.Content value="content" className="outline-none space-y-4">
+
+            {/* Content metrics */}
+            {(() => {
+              const avgRating = localReviews.length > 0
+                ? Math.round((localReviews.reduce((s, r) => s + r.rating, 0) / localReviews.length) * 10) / 10
+                : 0;
+              const lowRated = localReviews.filter(r => r.rating <= 2).length;
+              return (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[
+                  { label: "Total Reviews", value: localReviews.length, icon: StarOff, color: "#f59e0b" },
+                  { label: "Total Photos", value: localPhotos.length, icon: Image, color: "#06b6d4" },
+                  { label: "Avg Rating", value: avgRating, icon: Star, color: "#22c55e", suffix: "/5" },
+                  { label: "Low Rated (≤2★)", value: lowRated, icon: AlertCircle, color: lowRated > 0 ? "#ef4444" : "#6b7280" },
+                ].map(({ label, value, icon: Icon, color, suffix }) => (
+                  <div key={label} className="border border-[var(--border-subtle)] rounded-2xl p-4" style={{ background: "var(--bg-card)" }}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: color + "15" }}>
+                        <Icon className="w-3.5 h-3.5" style={{ color }} />
+                      </div>
+                    </div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--text-muted)] mb-0.5">{label}</p>
+                    <p className="text-xl font-black tracking-tight" style={{ color }}>{value}{suffix && <span className="text-[var(--text-muted)] text-[12px] font-semibold ml-0.5">{suffix}</span>}</p>
+                  </div>
+                ))}
+              </div>
+            )})()}
 
             {/* Toggle */}
             <div className="flex items-center gap-3">
@@ -1883,6 +1947,40 @@ export default function AdminDashboardClient({
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Story submission funnel */}
+            <div className="border border-[var(--border-subtle)] rounded-2xl p-6" style={{ background: "var(--bg-card)" }}>
+              <div className="mb-5">
+                <p className="text-[9px] font-black uppercase tracking-[0.15em] text-[var(--text-muted)] mb-1">Submissions</p>
+                <h3 className="text-sm font-bold">Story Submission Funnel</h3>
+              </div>
+              {localStories.length === 0 ? (
+                <div className="h-[100px] flex items-center justify-center text-[var(--text-muted)] text-sm">No story submissions yet</div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[
+                    { label: "Total", value: localStories.length, color: "#ff5100" },
+                    { label: "Pending", value: localStories.filter(s => s.status === "pending").length, color: "#f59e0b" },
+                    { label: "Approved", value: localStories.filter(s => s.status === "approved").length, color: "#22c55e" },
+                    { label: "Rejected", value: localStories.filter(s => s.status === "rejected").length, color: "#ef4444" },
+                  ].map(({ label, value, color }) => {
+                    const pct = localStories.length > 0 ? Math.round((value / localStories.length) * 100) : 0;
+                    return (
+                      <div key={label} className="p-4 rounded-xl border border-[var(--border-subtle)]" style={{ background: "var(--bg-surface)" }}>
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--text-muted)]">{label}</p>
+                          <span className="text-[10px] font-black px-1.5 py-0.5 rounded-full" style={{ background: color + "18", color }}>{pct}%</span>
+                        </div>
+                        <p className="text-2xl font-black tracking-tight" style={{ color }}>{value}</p>
+                        <div className="mt-2 h-1.5 rounded-full bg-[var(--bg-surface-2)]">
+                          <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: color }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </Tabs.Content>
 
