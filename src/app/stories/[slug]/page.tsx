@@ -45,7 +45,8 @@ function mapStory(s: StoryDB) {
     tags,
     pillTags,
     region: s.region as any,
-    date: s.date,
+    date: s.adventure_date,
+    adventureDate: s.adventure_date,
     submittedBy: s.submitted_by || undefined,
     baseLikes: s.baseLikes ?? 50,
   };
@@ -284,7 +285,7 @@ export default async function StoryPage({ params }: Props) {
                     <p className="text-white font-medium text-sm">{story.author}</p>
                   )}
                   </div>
-                <p className="text-white/45 text-xs">{story.authorRole} · {story.date}</p>
+                <p className="text-white/45 text-xs">{story.authorRole} · {story.adventureDate}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 ml-auto">

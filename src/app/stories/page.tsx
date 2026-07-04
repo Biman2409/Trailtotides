@@ -35,7 +35,8 @@ function mapStory(s: StoryDB) {
     slug: s.slug,
     tags,
     pillTags,
-    date: s.date,
+    date: s.adventure_date,
+    adventureDate: s.adventure_date,
     submittedBy: s.submitted_by || undefined,
     baseLikes: s.baseLikes ?? 50,
   };
@@ -275,7 +276,7 @@ export default async function StoriesPage() {
                         </div>
                         <div>
                           <p className="text-xs font-semibold leading-tight" style={{ color: "var(--text-primary)" }}>{story.author}</p>
-                          <p className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>{story.date}</p>
+                          <p className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>{story.adventureDate}</p>
                         </div>
                       </div>
                     </div>

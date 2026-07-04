@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
       read_time: readTime,
       tags: tagList,
       region,
-      date: dateOfAdventure,
+      adventure_date: dateOfAdventure,
       status: "pending" as const,
       submitted_by: user?.id ?? null,
       created_at: now,

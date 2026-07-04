@@ -16,7 +16,7 @@ export interface StoryDB {
   read_time: string;
   tags: string[];
   region: string;
-  date: string;
+  adventure_date: string;
   status: string;
   baseLikes?: number;
   submitted_by: string | null;
@@ -47,7 +47,7 @@ function staticToDB(s: any): StoryDB {
     read_time: s.readTime,
     tags: s.tags || [],
     region: s.region,
-    date: s.date,
+    adventure_date: s.adventureDate || s.date || "",
     status: "published",
     submitted_by: s.submittedBy || null,
     created_at: s.created_at || "",

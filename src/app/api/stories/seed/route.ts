@@ -80,7 +80,7 @@ export async function POST() {
         read_time: s.readTime,
         tags: s.tags || [],
         region: s.region,
-        date: s.date,
+        adventure_date: s.adventureDate,
         status: "published",
         submitted_by: submittedBy,
         created_at: new Date().toISOString(),

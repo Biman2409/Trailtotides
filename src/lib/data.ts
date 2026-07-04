@@ -128,7 +128,7 @@ export interface Story {
   readTime: string;
   tags: string[];
   region: Region;
-  date: string;
+  adventureDate: string;
   submittedBy?: string; // user ID of the TTT member who submitted the story
   baseLikes?: number;    // starting like count (defaults to 50)
   // views are stored in Supabase story_views table (slug is the key).
@@ -1827,7 +1827,7 @@ export const stories: Story[] = [
     tags: ["Featured", "TTT Original"],
     baseLikes: 68,
     region: "Himalayas",
-    date: "July 2026",
+    adventureDate: "July 2026",
     submittedBy: "95cc4754-9271-4337-a79f-25a4a34536d0",
   },
   {
@@ -1844,7 +1844,7 @@ export const stories: Story[] = [
     readTime: "8 min",
     tags: ["Featured", "TTT Original"],
     region: "Himalayas",
-    date: "Sep 2024",
+    adventureDate: "Sep 2024",
     submittedBy: "aditya-yadav",
   },
 ];
