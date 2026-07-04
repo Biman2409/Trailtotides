@@ -11,6 +11,8 @@ import { getPublishedStories } from "@/lib/stories";
 import type { StoryDB } from "@/lib/stories";
 import { AVATARS } from "@/lib/avatars";
 import StoryCard from "@/components/ui/custom/StoryCard";
+import StoryLikeButton from "@/components/ui/custom/StoryLikeButton";
+import StoryShareButton from "@/components/ui/custom/StoryShareButton";
 
 function pickAvatar(name: string): string {
   let hash = 0;
@@ -138,6 +140,12 @@ export default async function StoriesPage() {
                     <span className="text-[10px] font-bold leading-none tracking-wide text-white">TTT Original</span>
                   </span>
                 )}
+              </div>
+
+              {/* Top-right: like + share */}
+              <div className="absolute top-5 right-5 z-10 flex items-center gap-2">
+                <StoryLikeButton slug={featured.slug} baseLikes={featured.baseLikes} />
+                <StoryShareButton title={featured.title} slug={featured.slug} />
               </div>
 
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 lg:p-12">
