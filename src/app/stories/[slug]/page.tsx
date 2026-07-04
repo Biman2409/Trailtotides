@@ -283,13 +283,7 @@ export default async function StoryPage({ params }: Props) {
                   ) : (
                     <p className="text-white font-medium text-sm">{story.author}</p>
                   )}
-                  {story.submittedBy && (
-                    <span className="inline-flex items-center gap-1 bg-[#ff5100]/20 border border-[#ff5100]/30 text-[#ff7d47] text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md">
-                      <Mountain className="w-2.5 h-2.5" />
-                      TTT Member
-                    </span>
-                  )}
-                </div>
+                  </div>
                 <p className="text-white/45 text-xs">{story.authorRole} · {story.date}</p>
               </div>
             </div>
@@ -325,12 +319,6 @@ export default async function StoryPage({ params }: Props) {
                 : <span className="w-full h-full flex items-center justify-center text-xl font-bold text-[#ff5100] bg-[#ff5100]/20">{story.author[0]}</span>}
             </div>
             <div className="flex-1">
-              {story.submittedBy && (
-                <span className="inline-flex items-center gap-1 bg-[#ff5100]/15 border border-[#ff5100]/25 text-[#ff7d47] text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md mb-1.5">
-                  <Mountain className="w-2.5 h-2.5" />
-                  TTT Member
-                </span>
-              )}
               <div>
                 {story.submittedBy ? (
                   <Link href={`/profile/${story.submittedBy}`} className="text-white font-semibold text-base hover:text-[#ff5100] transition-colors">{story.author}</Link>
