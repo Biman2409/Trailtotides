@@ -113,7 +113,7 @@ export default function StoryCard({ story }: { story: Story }) {
               </div>
               <div className="min-w-0">
                 <p className="text-white text-[10px] font-semibold leading-tight truncate">{story.author}</p>
-                <p className="text-white/50 text-[9px] truncate">{story.authorRole} · {story.adventureDate}</p>
+                <p className="text-white/50 text-[9px] truncate">{story.authorRole} {story.adventureDate}</p>
               </div>
             </div>
 
