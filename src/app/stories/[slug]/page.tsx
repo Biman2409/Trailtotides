@@ -288,8 +288,8 @@ export default async function StoryPage({ params }: Props) {
               </div>
             </div>
             <div className="flex items-center gap-3 ml-auto">
-              <StoryShareButton title={story.title} slug={story.slug} />
               <StoryLikeButton slug={story.slug} baseLikes={story.baseLikes} pill />
+              <StoryShareButton title={story.title} slug={story.slug} />
             </div>
           </div>
         </div>
