@@ -236,8 +236,17 @@ export default async function StoriesPage() {
 
                     {/* Top-left: Read button */}
                     <div className="absolute top-3 left-3 z-10">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-[#ff5100] bg-[#ff5100]/10 backdrop-blur-sm border border-[#ff5100]/50 transition-all duration-200 hover:bg-[#ff5100] hover:text-white hover:border-[#ff5100] hover:shadow-lg hover:shadow-[#ff5100]/25">
-                        Read
+                      <span
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full relative overflow-hidden"
+                        style={{
+                          background: "linear-gradient(105deg, #1a0a00 0%, #2d1200 40%, #1a0a00 100%)",
+                          border: "1px solid rgba(255,81,0,0.35)",
+                          boxShadow: "0 0 10px rgba(255,81,0,0.18), inset 0 1px 0 rgba(255,140,80,0.12)",
+                        }}
+                      >
+                        <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,120,60,0.08) 50%, transparent 70%)" }} />
+                        <span className="text-[9px] font-bold tracking-[0.22em] uppercase leading-none relative" style={{ color: "#ffb38a" }}>Read</span>
+                        <ArrowRight className="w-2.5 h-2.5 relative" style={{ color: "#ff7d47" }} />
                       </span>
                     </div>
 
