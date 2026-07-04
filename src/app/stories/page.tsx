@@ -234,6 +234,13 @@ export default async function StoriesPage() {
                       <StoryLikeButton slug={story.slug} baseLikes={story.baseLikes} />
                     </div>
 
+                    {/* Top-left: Read button */}
+                    <div className="absolute top-3 left-3 z-10">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-[0.15em] text-white bg-[#ff5100] shadow-lg shadow-[#ff5100]/25 transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5">
+                        Read
+                      </span>
+                    </div>
+
                     <div className="absolute bottom-3 left-3 flex items-center gap-1.5 flex-wrap">
                       {(story.pillTags ?? story.tags.filter((t) => !BADGE_TAGS.includes(t)).slice(0, 2)).map((tag) => (
                         <span key={tag} className="bg-black/50 backdrop-blur-sm border border-white/15 text-white/90 text-[10px] font-medium px-2.5 py-1 rounded-full">
@@ -248,15 +255,9 @@ export default async function StoriesPage() {
                     <h3 className="text-lg font-bold leading-snug mb-2.5 group-hover:text-[#ff5100] transition-colors duration-200" style={{ color: "var(--text-primary)" }}>
                       {story.title}
                     </h3>
-                    <p className="text-sm leading-relaxed line-clamp-2 mb-3 flex-1" style={{ color: "var(--text-secondary)" }}>
+                    <p className="text-sm leading-relaxed line-clamp-2 mb-4 flex-1" style={{ color: "var(--text-secondary)" }}>
                       {story.excerpt}
                     </p>
-
-                    <div className="mb-4">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-[0.15em] text-white bg-[#ff5100] transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5 shadow-lg shadow-[#ff5100]/20 group-hover:shadow-xl group-hover:shadow-[#ff5100]/30">
-                        Read Story
-                      </span>
-                    </div>
 
                     {/* Footer */}
                     <div className="flex items-center justify-between pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>

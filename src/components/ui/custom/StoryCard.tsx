@@ -68,6 +68,13 @@ export default function StoryCard({ story }: { story: Story }) {
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
+        {/* Top-left: Read button */}
+        <div className="absolute top-3 left-3 z-10">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-[0.15em] text-white bg-[#ff5100] border border-[#ff5100] shadow-lg shadow-[#ff5100]/25 transition-all duration-300 group-hover:brightness-110 group-hover:shadow-xl group-hover:shadow-[#ff5100]/35 group-hover:-translate-y-0.5">
+            Read
+          </span>
+        </div>
+
         {/* Top-right: like + share side by side */}
         <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
           <StoryLikeButton slug={story.slug} baseLikes={story.baseLikes} pill />
@@ -95,12 +102,6 @@ export default function StoryCard({ story }: { story: Story }) {
           <p className="text-white/60 text-xs leading-relaxed line-clamp-2 mb-3">
             {story.excerpt}
           </p>
-
-          <div className="mb-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-[0.15em] text-white bg-[#ff5100] border border-[#ff5100] shadow-lg shadow-[#ff5100]/25 transition-all duration-300 group-hover:brightness-110 group-hover:shadow-xl group-hover:shadow-[#ff5100]/35 group-hover:-translate-y-0.5">
-              Read Story
-            </span>
-          </div>
 
           <div className="border-t border-white/10 pt-2.5 flex items-center justify-between">
             <div className="flex items-center gap-2 min-w-0">
