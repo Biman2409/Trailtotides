@@ -241,7 +241,7 @@ export default function HomePage() {
                 </div>
                 <Link
                   href="/stories"
-                  className="hidden md:flex items-center gap-1.5 font-medium hover:text-[#ff5100] transition-colors group text-sm"
+                  className="flex items-center gap-1.5 font-medium hover:text-[#ff5100] transition-colors group text-sm"
                   style={{ color: "var(--text-tertiary)" }}
                 >
                   All stories
@@ -256,15 +256,6 @@ export default function HomePage() {
                   <StoryCard story={story} />
                 </FadeUp>
               ))}
-            </div>
-
-            <div className="mt-10 flex justify-center md:hidden">
-              <Link
-                href="/stories"
-                className="flex items-center gap-1.5 text-[#ff5100] font-semibold text-sm"
-              >
-                All stories <ChevronRight className="w-4 h-4" />
-              </Link>
             </div>
           </div>
         </section>
