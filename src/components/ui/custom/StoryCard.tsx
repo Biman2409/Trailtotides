@@ -117,11 +117,12 @@ export default function StoryCard({ story }: { story: Story }) {
               </div>
             </div>
 
-            <div className="flex flex-col items-end gap-0.5 shrink-0">
+            <div className="flex flex-col md:flex-row md:items-center md:gap-1.5 gap-0.5 shrink-0">
               <span className="flex items-center gap-1 text-[9px] text-white/40 font-medium">
                 <MapPin className="w-2.5 h-2.5" />
                 {story.region}
               </span>
+              <span className="text-[8px] text-white/30 hidden md:inline">·</span>
               <span className="text-[8px] text-white/30">{story.adventureDate}</span>
             </div>
           </div>
