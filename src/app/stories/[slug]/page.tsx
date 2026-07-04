@@ -7,15 +7,16 @@ import Footer from "@/components/layout/Footer";
 import { getPublishedStories, getStoryBySlug } from "@/lib/stories";
 import type { StoryDB } from "@/lib/stories";
 import { AVATARS } from "@/lib/avatars";
-import { ChevronLeft, Clock, ArrowRight, Crown, Mountain, PenLine } from "lucide-react";
+import { ChevronLeft, Clock, ArrowRight, Crown, Mountain, PenLine, Share2 } from "lucide-react";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 import StoryShareBar from "@/components/ui/custom/StoryShareBar";
 import StoryReactions from "@/components/ui/custom/StoryReactions";
 import StoryComments from "@/components/ui/custom/StoryComments";
-import StoryBookmarkButton from "@/components/ui/custom/StoryBookmarkButton";
+import StoryLikeButton from "@/components/ui/custom/StoryLikeButton";
 import ReadingProgressBar from "@/components/ui/custom/ReadingProgressBar";
 import Breadcrumbs from "@/components/ui/custom/Breadcrumbs";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
+import StoryShareButton from "@/components/ui/custom/StoryShareButton";
 
 const BADGE_TAGS = ["Featured", "TTT Original"];
 
@@ -46,6 +47,7 @@ function mapStory(s: StoryDB) {
     region: s.region as any,
     date: s.date,
     submittedBy: s.submitted_by || undefined,
+    baseLikes: s.baseLikes ?? 50,
   };
 }
 
@@ -292,12 +294,8 @@ export default async function StoryPage({ params }: Props) {
               </div>
             </div>
             <div className="flex items-center gap-3 ml-2">
-              <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full">
-                <Clock className="w-3 h-3" />
-                {story.readTime}
-              </span>
-                <StoryViewPill slug={story.slug} incrementOnMount />
-              <StoryBookmarkButton slug={story.slug} title={story.title} />
+              <StoryShareButton title={story.title} slug={story.slug} />
+              <StoryLikeButton slug={story.slug} baseLikes={story.baseLikes} />
             </div>
           </div>
         </div>
