@@ -167,7 +167,7 @@ export default async function StoriesPage() {
                     <p className="text-white text-sm font-semibold">{featured.author}</p>
                     <p className="text-white/40 text-xs">{featured.authorRole}</p>
                   </div>
-                  <span className="flex items-center gap-1.5 text-xs text-white/40">
+                  <span className="flex items-center gap-1.5 text-xs text-white/60">
                     <MapPin className="w-3 h-3" />
                     {featured.region}
                     <span className="text-white/20">·</span>
