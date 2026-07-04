@@ -70,9 +70,9 @@ export default function StoryCard({ story }: { story: Story }) {
 
         {/* Top-left: Read button */}
         <div className="absolute top-3 left-3 z-10">
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full transition-all duration-300 bg-white/10 backdrop-blur-sm border border-white/20">
-            <span className="text-[8px] font-medium tracking-wider uppercase leading-none text-white/70">Read</span>
-            <ArrowRight className="w-2 h-2 text-white/50" />
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-300 bg-black/30 backdrop-blur-sm border border-[#ff5100]/40 shadow-sm shadow-[#ff5100]/20">
+            <span className="text-[11px] font-bold tracking-wide text-[#ff5100]">Read</span>
+            <ArrowRight className="w-3 h-3 text-[#ff5100]/70" />
           </span>
         </div>
 
