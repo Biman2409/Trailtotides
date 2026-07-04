@@ -66,14 +66,13 @@ export default function StoryShareButton({ title, slug }: { title: string; slug:
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen(v => !v)}
-        className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 hover:text-white text-xs px-3 py-1.5 rounded-full transition-all active:scale-90"
+        className="flex items-center justify-center w-9 h-9 bg-white/15 backdrop-blur-sm border border-white/20 text-white/80 hover:text-white hover:bg-white/25 rounded-full transition-all active:scale-90"
       >
         {copied ? (
-          <Check className="w-3 h-3 text-emerald-400" />
+          <Check className="w-4 h-4 text-emerald-400" />
         ) : (
-          <Share2 className="w-3 h-3" />
+          <Share2 className="w-4 h-4" />
         )}
-        {copied ? "Copied!" : "Share"}
       </button>
 
       {open && (

@@ -287,9 +287,9 @@ export default async function StoryPage({ params }: Props) {
                 <p className="text-white/45 text-xs">{story.authorRole} · {story.date}</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 ml-2">
+            <div className="flex items-center gap-3 ml-auto">
               <StoryShareButton title={story.title} slug={story.slug} />
-              <StoryLikeButton slug={story.slug} baseLikes={story.baseLikes} />
+              <StoryLikeButton slug={story.slug} baseLikes={story.baseLikes} className="!flex-row !items-center !gap-1.5 bg-white/15 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1.5" />
             </div>
           </div>
         </div>
