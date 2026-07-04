@@ -98,8 +98,8 @@ export default function StoryCard({ story }: { story: Story }) {
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
-        {/* Top-right: read time + views */}
-        <div className="absolute top-3 right-3 flex flex-col items-end gap-1.5 z-10">
+        {/* Top-left: read time + views */}
+        <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5 z-10">
           <span className="flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/20 text-white font-semibold text-[10px] px-2.5 py-1 rounded-full">
             <Clock className="w-3 h-3 flex-shrink-0" />
             {story.readTime}
@@ -108,6 +108,28 @@ export default function StoryCard({ story }: { story: Story }) {
             slug={story.slug}
             className="!bg-white/15 !border-white/20 !text-white font-semibold !text-[10px] !px-2.5 !py-1"
           />
+        </div>
+
+        {/* Top-right: like button */}
+        <div className="absolute top-3 right-3 z-10">
+          <button
+            onClick={toggleLike}
+            className="flex items-center gap-1 bg-white/15 backdrop-blur-sm border border-white/20 px-2.5 py-1 rounded-full transition-all active:scale-90"
+          >
+            <Heart
+              className="w-3 h-3 transition-colors"
+              style={{
+                color: liked ? "#ff4d6d" : "rgba(255,255,255,0.7)",
+                fill: liked ? "#ff4d6d" : "transparent",
+              }}
+            />
+            <span
+              className="text-[10px] font-semibold tabular-nums"
+              style={{ color: liked ? "#ff4d6d" : "rgba(255,255,255,0.7)" }}
+            >
+              {likeCount}
+            </span>
+          </button>
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -146,26 +168,6 @@ export default function StoryCard({ story }: { story: Story }) {
             </div>
 
             <div className="flex items-center gap-2.5 shrink-0">
-              {/* Like button */}
-              <button
-                onClick={toggleLike}
-                className="flex items-center gap-1 transition-all active:scale-90"
-              >
-                <Heart
-                  className="w-3.5 h-3.5 transition-colors"
-                  style={{
-                    color: liked ? "#ff4d6d" : "rgba(255,255,255,0.5)",
-                    fill: liked ? "#ff4d6d" : "transparent",
-                  }}
-                />
-                <span
-                  className="text-[10px] font-semibold tabular-nums"
-                  style={{ color: liked ? "#ff4d6d" : "rgba(255,255,255,0.5)" }}
-                >
-                  {likeCount}
-                </span>
-              </button>
-
               <div className="text-[#ff5100] text-[10px] font-semibold group-hover:translate-x-1 transition-transform duration-200">
                 Read →
               </div>

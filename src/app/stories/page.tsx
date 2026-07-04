@@ -232,6 +232,20 @@ export default async function StoriesPage() {
                       style={{ objectFit: "cover" }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+
+                    {/* Top-left: read time + views */}
+                    <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5 z-10">
+                      <span className="flex items-center gap-1 bg-black/50 backdrop-blur-sm border border-white/15 text-white/90 text-[10px] font-medium px-2.5 py-1 rounded-full">
+                        <Clock className="w-2.5 h-2.5" /> {story.readTime}
+                      </span>
+                      <StoryViewPill slug={story.slug} className="!bg-black/50 !border-white/15 !text-white/90 !text-[10px] !px-2.5 !py-1" />
+                    </div>
+
+                    {/* Top-right: like button */}
+                    <div className="absolute top-3 right-3 z-10">
+                      <StoryLikeButton slug={story.slug} />
+                    </div>
+
                     <div className="absolute bottom-3 left-3 flex items-center gap-1.5 flex-wrap">
                       {(story.pillTags ?? story.tags.filter((t) => !BADGE_TAGS.includes(t)).slice(0, 2)).map((tag) => (
                         <span key={tag} className="bg-black/50 backdrop-blur-sm border border-white/15 text-white/90 text-[10px] font-medium px-2.5 py-1 rounded-full">
@@ -262,12 +276,6 @@ export default async function StoriesPage() {
                           <p className="text-xs font-semibold leading-tight" style={{ color: "var(--text-primary)" }}>{story.author}</p>
                           <p className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>{story.date}</p>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-full" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", color: "var(--text-tertiary)" }}>
-                          <Clock className="w-2.5 h-2.5" /> {story.readTime}
-                        </span>
-                        <StoryLikeButton slug={story.slug} />
                       </div>
                     </div>
                   </div>
