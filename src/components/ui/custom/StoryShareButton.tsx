@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Share2, Check, Link2 } from "lucide-react";
 
 const FB_ICON = (
@@ -33,13 +34,20 @@ export default function StoryShareButton({ title, slug }: { title: string; slug:
   const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
   const menuRef = useRef<HTMLDivElement>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const url = typeof window !== "undefined" ? `${window.location.origin}/stories/${slug}` : "";
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setOpen(false);
+        const popup = document.getElementById("share-popup");
+        if (popup && !popup.contains(e.target as Node)) {
+          setOpen(false);
+        }
+        if (!popup) setOpen(false);
       }
     }
     if (open) document.addEventListener("mousedown", handleClickOutside);
@@ -99,11 +107,12 @@ export default function StoryShareButton({ title, slug }: { title: string; slug:
         )}
       </button>
 
-      {open && (
+      {open && mounted && createPortal(
         <div
+          id="share-popup"
           style={{
             ...popupStyle,
-            zIndex: 50,
+            zIndex: 9999,
             background: "rgba(20,20,25,0.95)",
             backdropFilter: "blur(16px)",
             border: "1px solid rgba(255,255,255,0.1)",
@@ -127,7 +136,8 @@ export default function StoryShareButton({ title, slug }: { title: string; slug:
           <button onClick={copyLink} className="flex items-center justify-center w-8 h-8 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-all" title="Copy link">
             <Link2 className="w-3.5 h-3.5" />
           </button>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
