@@ -104,7 +104,7 @@ export default function StoryCard({ story }: { story: Story }) {
             {story.excerpt}
           </p>
 
-          <div className="border-t border-white/10 pt-2.5 flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
               <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0 relative">
                 {story.authorAvatar
