@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { MessageSquare, Send, User, Clock } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { MessageSquare, Send, LogIn, Clock } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 interface Props {
   slug: string;
@@ -15,13 +17,34 @@ interface Comment {
 }
 
 export default function StoryComments({ slug }: Props) {
+  const router = useRouter();
   const [comments, setComments] = useState<Comment[]>([]);
-  const [name, setName] = useState("");
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
+  const [userName, setUserName] = useState("");
   const [body, setBody] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
+  // Auth + comments load
   useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      const isLogged = !!session?.user;
+      setLoggedIn(isLogged);
+      if (isLogged) {
+        setNameFromSession(session!.user);
+      }
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
+      const isLogged = !!session?.user;
+      setLoggedIn(isLogged);
+      if (isLogged) {
+        setNameFromSession(session!.user);
+      } else {
+        setNameFromSession(null);
+      }
+    });
+
     async function load() {
       try {
         const res = await fetch(`/api/stories/comments?slug=${slug}`);
@@ -34,16 +57,20 @@ export default function StoryComments({ slug }: Props) {
       }
     }
     load();
+    return () => listener?.subscription.unsubscribe();
   }, [slug]);
 
-  const submit = useCallback(async () => {
-    if (!name.trim() || !body.trim()) return;
-
-    // Check localStorage for edit name
-    const savedName = localStorage.getItem("comment-name") || name;
-    if (!localStorage.getItem("comment-name")) {
-      localStorage.setItem("comment-name", savedName);
+  function setNameFromSession(user: { user_metadata?: Record<string, unknown>; email?: string } | null) {
+    if (user) {
+      const name = (user.user_metadata?.full_name as string) || user.email?.split("@")[0] || "User";
+      setUserName(name);
+    } else {
+      setUserName("");
     }
+  }
+
+  const submit = useCallback(async () => {
+    if (!userName.trim() || !body.trim()) return;
 
     setSubmitting(true);
     setError("");
@@ -54,7 +81,7 @@ export default function StoryComments({ slug }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           slug,
-          name: savedName,
+          name: userName.trim(),
           body: body.trim(),
         }),
       });
@@ -72,13 +99,7 @@ export default function StoryComments({ slug }: Props) {
     } finally {
       setSubmitting(false);
     }
-  }, [slug, name, body]);
-
-  // Load saved name
-  useEffect(() => {
-    const saved = localStorage.getItem("comment-name");
-    if (saved) setName(saved);
-  }, []);
+  }, [slug, userName, body]);
 
   return (
     <div className="mt-10 pt-8 border-t border-white/10">
@@ -95,49 +116,72 @@ export default function StoryComments({ slug }: Props) {
         )}
       </div>
 
-      {/* Comment form */}
-      <div className="mb-6 space-y-3">
-        <input
-          type="text"
-          placeholder="Your name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full text-sm px-3.5 py-2.5 rounded-xl outline-none transition-colors"
+      {/* Comment form — only for logged-in users */}
+      {loggedIn === false ? (
+        <div
+          className="mb-6 p-5 rounded-xl text-center"
           style={{
             background: "var(--bg-card)",
-            border: "1px solid var(--border-default)",
-            color: "var(--text-primary)",
+            border: "1px dashed var(--border-subtle)",
           }}
-        />
-        <div className="relative">
-          <textarea
-            placeholder="Share your thoughts..."
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            rows={3}
-            className="w-full text-sm px-3.5 py-2.5 rounded-xl outline-none transition-colors resize-none"
-            style={{
-              background: "var(--bg-card)",
-              border: "1px solid var(--border-default)",
-              color: "var(--text-primary)",
-            }}
-          />
+        >
+          <LogIn className="w-5 h-5 mx-auto mb-2" style={{ color: "var(--text-tertiary)" }} />
+          <p className="text-sm font-medium mb-1" style={{ color: "var(--text-secondary)" }}>
+            Log in to join the conversation
+          </p>
+          <p className="text-xs mb-3" style={{ color: "var(--text-tertiary)" }}>
+            Share your thoughts on this story
+          </p>
           <button
-            onClick={submit}
-            disabled={submitting || !name.trim() || !body.trim()}
-            className="absolute bottom-3 right-3 p-1.5 rounded-lg transition-all disabled:opacity-30"
-            style={{
-              background: name.trim() && body.trim() ? "#ff5100" : "transparent",
-              color: name.trim() && body.trim() ? "white" : "var(--text-muted)",
-            }}
+            onClick={() => router.push("/auth/login")}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-full transition-all hover:brightness-110"
+            style={{ background: "#ff5100", color: "white" }}
           >
-            <Send className="w-3.5 h-3.5" />
+            <LogIn className="w-3.5 h-3.5" />
+            Log in
           </button>
         </div>
-        {error && (
-          <p className="text-xs" style={{ color: "#ff4444" }}>{error}</p>
-        )}
-      </div>
+      ) : loggedIn === null ? null : (
+        <div className="mb-6 space-y-3">
+          <div className="flex items-center gap-2 text-xs font-medium mb-1" style={{ color: "var(--text-secondary)" }}>
+            <div
+              className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold shrink-0"
+              style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}
+            >
+              {userName[0]}
+            </div>
+            Commenting as <span className="font-semibold">{userName}</span>
+          </div>
+          <div className="relative">
+            <textarea
+              placeholder="Share your thoughts..."
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              rows={3}
+              className="w-full text-sm px-3.5 py-2.5 rounded-xl outline-none transition-colors resize-none"
+              style={{
+                background: "var(--bg-card)",
+                border: "1px solid var(--border-default)",
+                color: "var(--text-primary)",
+              }}
+            />
+            <button
+              onClick={submit}
+              disabled={submitting || !body.trim()}
+              className="absolute bottom-3 right-3 p-1.5 rounded-lg transition-all disabled:opacity-30"
+              style={{
+                background: body.trim() ? "#ff5100" : "transparent",
+                color: body.trim() ? "white" : "var(--text-muted)",
+              }}
+            >
+              <Send className="w-3.5 h-3.5" />
+            </button>
+          </div>
+          {error && (
+            <p className="text-xs" style={{ color: "#ff4444" }}>{error}</p>
+          )}
+        </div>
+      )}
 
       {/* Comments list */}
       {comments.length === 0 ? (
