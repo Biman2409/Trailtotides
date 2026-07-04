@@ -113,15 +113,16 @@ export default function StoryCard({ story }: { story: Story }) {
               </div>
               <div className="min-w-0">
                 <p className="text-white text-[10px] font-semibold leading-tight truncate">{story.author}</p>
-                <p className="text-white/50 text-[9px] truncate">{story.authorRole} {story.adventureDate}</p>
+                <p className="text-white/50 text-[9px] truncate">{story.authorRole}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex flex-col items-end gap-0.5 shrink-0">
               <span className="flex items-center gap-1 text-[9px] text-white/40 font-medium">
                 <MapPin className="w-2.5 h-2.5" />
                 {story.region}
               </span>
+              <span className="text-[8px] text-white/30">{story.adventureDate}</span>
             </div>
           </div>
         </div>
