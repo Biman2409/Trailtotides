@@ -37,7 +37,7 @@ export default function MessageModal({ isOpen, onClose, userEmail }: MessageModa
 
   return (
     <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="w-full max-w-lg bg-[#0a0a0a] border border-white/10 rounded-3xl shadow-2xl shadow-black/50 overflow-hidden relative">
+      <div className="w-full max-w-lg rounded-3xl shadow-2xl shadow-black/50 overflow-hidden relative" style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)" }}>
         {/* Background Decor */}
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/20 to-transparent" />
         <div className="absolute -right-24 -top-24 w-48 h-48 bg-[#ff5100]/5 rounded-full blur-3xl pointer-events-none" />
@@ -45,14 +45,15 @@ export default function MessageModal({ isOpen, onClose, userEmail }: MessageModa
         <div className="p-8">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h3 className="text-xl font-bold text-white tracking-tight">Direct Message</h3>
-              <p className="text-white/40 text-sm mt-1">Send a message directly to our team.</p>
+              <h3 className="text-xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>Direct Message</h3>
+              <p className="text-sm mt-1" style={{ color: "var(--text-tertiary)" }}>Send a message directly to our team.</p>
             </div>
-            <button 
+            <button
               onClick={onClose}
-              className="p-2 hover:bg-white/5 rounded-xl transition-colors text-white/40 hover:text-white"
+              className="p-2 rounded-xl transition-colors hover:bg-[var(--bg-card-hover)]"
+              style={{ color: "var(--text-tertiary)" }}
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 hover:text-[var(--text-primary)]" />
             </button>
           </div>
 
@@ -62,8 +63,8 @@ export default function MessageModal({ isOpen, onClose, userEmail }: MessageModa
                 <CheckCircle2 className="w-8 h-8 text-green-500" />
               </div>
               <div>
-                <h4 className="text-lg font-bold text-white">Message Sent!</h4>
-                <p className="text-white/40 text-sm">We'll get back to you at {userEmail}.</p>
+                <h4 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>Message Sent!</h4>
+                <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>We'll get back to you at {userEmail}.</p>
               </div>
             </div>
           ) : (
@@ -72,7 +73,7 @@ export default function MessageModal({ isOpen, onClose, userEmail }: MessageModa
                 <label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#ff5100] px-1">
                   From
                 </label>
-                <div className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white/40 text-sm font-medium">
+                <div className="w-full rounded-2xl px-5 py-4 text-sm font-medium" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)", color: "var(--text-tertiary)" }}>
                   {userEmail}
                 </div>
               </div>
@@ -87,7 +88,8 @@ export default function MessageModal({ isOpen, onClose, userEmail }: MessageModa
                   placeholder="How can we help you explore India?"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full min-h-[160px] bg-white/5 border border-white/10 focus:border-[#ff5100]/40 rounded-2xl px-5 py-4 text-white placeholder-white/20 text-sm font-medium transition-all outline-none resize-none"
+                  className="w-full min-h-[160px] rounded-2xl px-5 py-4 text-sm font-medium transition-all outline-none resize-none placeholder-[var(--text-tertiary)]"
+                  style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
                 />
               </div>
 
@@ -105,7 +107,7 @@ export default function MessageModal({ isOpen, onClose, userEmail }: MessageModa
                   </>
                 )}
               </button>
-              
+
               {status === "error" && (
                 <p className="text-red-400 text-xs text-center font-medium">
                   Failed to send message. Please try again.

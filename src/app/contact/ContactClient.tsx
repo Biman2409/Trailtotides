@@ -42,10 +42,10 @@ export default function ContactPage() {
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">
             Get in Touch
           </p>
-          <h1 className="text-white text-5xl lg:text-6xl font-bold tracking-tight mb-4">
+          <h1 className="text-[var(--text-primary)] text-5xl lg:text-6xl font-bold tracking-tight mb-4">
             Contact Us
           </h1>
-          <p className="text-white/50 text-lg max-w-xl">
+          <p className="text-[var(--text-secondary)] text-lg max-w-xl">
             Have a question, want to list an adventure, or just want to talk trips? We read every message.
           </p>
         </div>
@@ -57,38 +57,38 @@ export default function ContactPage() {
           {/* Contact info sidebar */}
           <div className="space-y-8">
             <div>
-              <h3 className="text-white font-semibold text-base mb-4">Reach us directly</h3>
+              <h3 className="text-[var(--text-primary)] font-semibold text-base mb-4">Reach us directly</h3>
               <div className="space-y-4">
                 <a
                   href="mailto:hello@trailtotides.com"
-                  className="flex items-center gap-3 text-white/60 hover:text-white transition-colors group"
+                  className="flex items-center gap-3 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center group-hover:border-[#ff5100]/40 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-default)] flex items-center justify-center group-hover:border-[#ff5100]/40 transition-colors">
                     <Mail className="w-4 h-4 text-[#ff5100]" />
                   </div>
                   <div>
-                    <p className="text-white/40 text-xs">General</p>
+                    <p className="text-[var(--text-tertiary)] text-xs">General</p>
                     <p className="text-sm">hello@trailtotides.com</p>
                   </div>
                 </a>
                 <a
                   href="mailto:list@trailtotides.com"
-                  className="flex items-center gap-3 text-white/60 hover:text-white transition-colors group"
+                  className="flex items-center gap-3 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center group-hover:border-[#ff5100]/40 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-default)] flex items-center justify-center group-hover:border-[#ff5100]/40 transition-colors">
                     <Mail className="w-4 h-4 text-[#ff5100]" />
                   </div>
                   <div>
-                    <p className="text-white/40 text-xs">Operators</p>
+                    <p className="text-[var(--text-tertiary)] text-xs">Operators</p>
                     <p className="text-sm">list@trailtotides.com</p>
                   </div>
                 </a>
-                <div className="flex items-center gap-3 text-white/60">
-                  <div className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center">
+                <div className="flex items-center gap-3 text-[var(--text-secondary)]">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-default)] flex items-center justify-center">
                     <MapPin className="w-4 h-4 text-[#ff5100]" />
                   </div>
                   <div>
-                    <p className="text-white/40 text-xs">Based in</p>
+                    <p className="text-[var(--text-tertiary)] text-xs">Based in</p>
                     <p className="text-sm">Mumbai, India</p>
                   </div>
                 </div>
@@ -96,15 +96,15 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <h3 className="text-white font-semibold text-base mb-4">Follow us</h3>
+              <h3 className="text-[var(--text-primary)] font-semibold text-base mb-4">Follow us</h3>
               <div className="flex items-center gap-4">
-                <a href="https://instagram.com/trailtotides" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 transition-all">
+                <a href="https://instagram.com/trailtotides" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-default)] flex items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)] transition-all">
                   <Instagram className="w-4 h-4" />
                 </a>
-                <a href="https://youtube.com/@trailtotides" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 transition-all">
+                <a href="https://youtube.com/@trailtotides" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-default)] flex items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)] transition-all">
                   <Youtube className="w-4 h-4" />
                 </a>
-                <a href="https://twitter.com/trailtotides" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/6 border border-white/8 flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 transition-all">
+                <a href="https://twitter.com/trailtotides" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-default)] flex items-center justify-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:border-[var(--border-strong)] transition-all">
                   <Twitter className="w-4 h-4" />
                 </a>
               </div>
@@ -112,7 +112,7 @@ export default function ContactPage() {
 
             <div className="bg-[#ff5100]/10 border border-[#ff5100]/20 rounded-2xl p-5">
               <p className="text-[#ff5100] text-xs font-semibold uppercase tracking-wider mb-2">For operators</p>
-              <p className="text-white/55 text-sm leading-relaxed mb-3">
+              <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-3">
                 Want to list your adventure on Trail to Tides?
               </p>
               <Link
@@ -131,8 +131,8 @@ export default function ContactPage() {
                 <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-6">
                   <CheckCircle2 className="w-8 h-8 text-emerald-400" />
                 </div>
-                <h3 className="text-white text-2xl font-bold mb-3">Message sent!</h3>
-                <p className="text-white/55 text-base leading-relaxed max-w-sm mx-auto">
+                <h3 className="text-[var(--text-primary)] text-2xl font-bold mb-3">Message sent!</h3>
+                <p className="text-[var(--text-secondary)] text-base leading-relaxed max-w-sm mx-auto">
                   Thanks for reaching out. We&apos;ll get back to you within 1–2 business days.
                 </p>
               </div>
@@ -140,18 +140,18 @@ export default function ContactPage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-white/55 text-xs font-medium mb-2 uppercase tracking-wide">Your Name *</label>
+                    <label className="block text-[var(--text-tertiary)] text-xs font-medium mb-2 uppercase tracking-wide">Your Name *</label>
                     <input
                       name="name"
                       required
                       value={form.name}
                       onChange={handleChange}
                       placeholder="Rahul Sharma"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
+                      className="w-full bg-[var(--bg-surface)] border border-[var(--border-default)] rounded-xl px-4 py-3 text-[var(--text-primary)] placeholder-[var(--text-tertiary)] text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-white/55 text-xs font-medium mb-2 uppercase tracking-wide">Email *</label>
+                    <label className="block text-[var(--text-tertiary)] text-xs font-medium mb-2 uppercase tracking-wide">Email *</label>
                     <input
                       name="email"
                       type="email"
@@ -159,24 +159,24 @@ export default function ContactPage() {
                       value={form.email}
                       onChange={handleChange}
                       placeholder="you@example.com"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
+                      className="w-full bg-[var(--bg-surface)] border border-[var(--border-default)] rounded-xl px-4 py-3 text-[var(--text-primary)] placeholder-[var(--text-tertiary)] text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-white/55 text-xs font-medium mb-2 uppercase tracking-wide">Topic</label>
+                  <label className="block text-[var(--text-tertiary)] text-xs font-medium mb-2 uppercase tracking-wide">Topic</label>
                   <select
                     name="topic"
                     value={form.topic}
                     onChange={handleChange}
-                    className="w-full t-bg-surface2 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
+                    className="w-full bg-[var(--bg-surface)] border border-[var(--border-default)] rounded-xl px-4 py-3 text-[var(--text-primary)] text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors"
                   >
                     <option value="">Select a topic</option>
                     {TOPICS.map((t) => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-white/55 text-xs font-medium mb-2 uppercase tracking-wide">Message *</label>
+                  <label className="block text-[var(--text-tertiary)] text-xs font-medium mb-2 uppercase tracking-wide">Message *</label>
                   <textarea
                     name="message"
                     required
@@ -184,7 +184,7 @@ export default function ContactPage() {
                     value={form.message}
                     onChange={handleChange}
                     placeholder="Tell us what's on your mind…"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors resize-none"
+                    className="w-full bg-[var(--bg-surface)] border border-[var(--border-default)] rounded-xl px-4 py-3 text-[var(--text-primary)] placeholder-[var(--text-tertiary)] text-sm focus:outline-none focus:border-[#ff5100]/60 transition-colors resize-none"
                   />
                 </div>
                 <button

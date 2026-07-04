@@ -266,7 +266,7 @@ export default function Navbar() {
                       {savedList.map((a) => (
                         <div
                           key={a.slug}
-                          className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white/4"
+                          className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-[var(--bg-card-hover)]"
                           style={{ borderBottom: "1px solid var(--border-subtle)" }}
                         >
                           <Link
@@ -359,7 +359,7 @@ export default function Navbar() {
                     </div>
                     <div className="overflow-y-auto" style={{ maxHeight: "320px" }}>
                       {selected.map((a) => (
-                        <div key={a.id} className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-white/4" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+                        <div key={a.id} className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-[var(--bg-card-hover)]" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
                           <Link
                             href={`/experiences/${a.slug}`}
                             onClick={() => setCompareOpen(false)}
@@ -413,28 +413,28 @@ export default function Navbar() {
                       <p className="text-xs truncate" style={{ color: "var(--text-tertiary)" }}>{user.email}</p>
                     </div>
                     {user.role === "admin" && (
-                      <Link href="/admin" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-purple-400 hover:bg-white/5 transition-colors">
+                      <Link href="/admin" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-purple-400 hover:bg-[var(--bg-card-hover)] transition-colors">
                         <Shield className="w-4 h-4" />
                         Admin Dashboard
                       </Link>
                     )}
-                    <Link href="/profile" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5" style={{ color: "var(--text-secondary)" }}>
+                    <Link href="/profile" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-[var(--bg-card-hover)]" style={{ color: "var(--text-secondary)" }}>
                       <User className="w-4 h-4" />
                       Profile
                     </Link>
-                    <Link href="/settings" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5" style={{ color: "var(--text-secondary)" }}>
+                    <Link href="/settings" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-[var(--bg-card-hover)]" style={{ color: "var(--text-secondary)" }}>
                       <Settings className="w-4 h-4" />
                       Settings
                     </Link>
                     {user.role === "operator" && (
-                      <Link href="/auth/operator-dashboard" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5" style={{ color: "var(--text-secondary)" }}>
+                      <Link href="/auth/operator-dashboard" className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-[var(--bg-card-hover)]" style={{ color: "var(--text-secondary)" }}>
                         <LayoutDashboard className="w-4 h-4" />
                         Operator Dashboard
                       </Link>
                     )}
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5"
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-[var(--bg-card-hover)]"
                       style={{ color: "var(--text-tertiary)", borderTop: "1px solid var(--border-subtle)" }}
                     >
                       <LogOut className="w-4 h-4" />
@@ -508,7 +508,7 @@ export default function Navbar() {
           {/* Mobile wishlist row */}
           {savedList.length > 0 && (
             <Link href={`/explore?saved=${savedList.map(a => a.slug).join(",")}`} onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-2 py-3 px-3 rounded-xl transition-colors hover:bg-white/5"
+              className="flex items-center gap-2 py-3 px-3 rounded-xl transition-colors hover:bg-[var(--bg-card-hover)]"
               style={{ borderBottom: "1px solid var(--border-subtle)" }}>
               <Heart className="w-4 h-4 fill-[#ff5100] shrink-0" style={{ color: "#ff5100" }} />
               <span className="text-sm font-medium flex-1" style={{ color: "var(--text-secondary)" }}>
@@ -532,7 +532,7 @@ export default function Navbar() {
                 </div>
               </div>
               {user.role === "admin" && (
-                <Link href="/admin" className="flex items-center gap-2 py-3 px-3 text-sm font-medium text-purple-400 hover:bg-white/5 rounded-xl transition-colors">
+                <Link href="/admin" className="flex items-center gap-2 py-3 px-3 text-sm font-medium text-purple-400 hover:bg-[var(--bg-card-hover)] rounded-xl transition-colors">
                   <Shield className="w-4 h-4" />Admin Dashboard
                 </Link>
               )}

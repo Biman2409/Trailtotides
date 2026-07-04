@@ -113,22 +113,22 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
 
         {/* Chat panel */}
         {open && (
-          <div className="fixed lg:bottom-28 max-lg:bottom-[108px] right-8 z-50 w-[380px] max-w-[calc(100vw-4rem)] bg-[#11161d] border border-white/10 rounded-2xl shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 slide-in-from-bottom-8 duration-500 ease-out backdrop-blur-3xl"
-            style={{ boxShadow: "0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)" }}
+          <div className="fixed lg:bottom-28 max-lg:bottom-[108px] right-8 z-50 w-[380px] max-w-[calc(100vw-4rem)] rounded-2xl shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 slide-in-from-bottom-8 duration-500 ease-out backdrop-blur-3xl"
+            style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)", boxShadow: "0 24px 80px rgba(0,0,0,0.3), 0 0 0 1px var(--border-subtle)" }}
           >
             {/* Header */}
-            <div className="px-5 py-3.5 flex items-center justify-between border-b border-white/[0.05] bg-white/[0.02]">
+            <div className="px-5 py-3.5 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#ff5100] to-[#ff7d47] flex items-center justify-center shadow-lg shadow-[#ff5100]/20">
                   <Compass className="w-5 h-5 text-white" strokeWidth={2.5} />
                 </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-white font-semibold text-sm tracking-tight">Compass<span className="text-[#ff5100]">.</span><span className="text-[#ff5100]">AI</span></p>
+                          <p className="text-[var(--text-primary)] font-semibold text-sm tracking-tight">Compass<span className="text-[#ff5100]">.</span><span className="text-[#ff5100]">AI</span></p>
                         </div>
               </div>
             <button
               onClick={() => setOpen(false)}
-              className="w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-white hover:bg-white/5 transition-all"
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] transition-all"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -147,7 +147,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                       className={`px-4 py-3 rounded-xl text-[13px] leading-relaxed shadow-lg ${
                         msg.role === "user"
                           ? "text-white rounded-tr-[5px] font-semibold"
-                          : "bg-white/[0.04] border border-white/[0.08] text-white/85 rounded-tl-[5px] font-light"
+                          : "bg-[var(--bg-surface)] border border-[var(--border-default)] text-[var(--text-primary)] rounded-tl-[5px] font-light"
                       }`}
                       style={msg.role === "user" ? { background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)" } : {}}
                     >
@@ -163,7 +163,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                           <Link
                             key={ci}
                             href={`/experiences/${card.slug}`}
-                            className="flex items-stretch bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] hover:border-[#ff5100]/40 rounded-xl overflow-hidden transition-all duration-500 group shadow-lg"
+                            className="flex items-stretch bg-[var(--bg-card-hover)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] hover:border-[#ff5100]/40 rounded-xl overflow-hidden transition-all duration-500 group shadow-lg"
                           >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
@@ -172,10 +172,10 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                               className="w-16 h-16 object-cover flex-shrink-0 group-hover:scale-110 transition-transform duration-700"
                             />
                             <div className="p-2.5 flex-1 min-w-0 flex flex-col justify-center">
-                              <p className="text-white text-[12px] font-semibold truncate group-hover:text-[#ff5100] transition-colors">
+                              <p className="text-[var(--text-primary)] text-[12px] font-semibold truncate group-hover:text-[#ff5100] transition-colors">
                                 {card.name}
                               </p>
-                              <p className="text-white/30 text-[9px] font-bold uppercase tracking-widest truncate mt-0.5">
+                              <p className="text-[var(--text-muted)] text-[9px] font-bold uppercase tracking-widest truncate mt-0.5">
                                 {card.state} · {card.type}
                               </p>
                               {rec?.reason && (
@@ -184,7 +184,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                                 </p>
                               )}
                             </div>
-                            <ChevronRight className="w-3 h-3 text-white/10 group-hover:text-[#ff5100] self-center mr-3 flex-shrink-0 transition-all group-hover:translate-x-1" />
+                            <ChevronRight className="w-3 h-3 text-[var(--text-muted)] group-hover:text-[#ff5100] self-center mr-3 flex-shrink-0 transition-all group-hover:translate-x-1" />
                           </Link>
                         );
                       })}
@@ -196,9 +196,9 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
 
             {loading && (
               <div className="flex justify-start animate-in fade-in duration-300">
-                <div className="bg-white/[0.04] border border-white/[0.08] px-4 py-3 rounded-xl rounded-tl-[5px] flex items-center gap-2.5">
+                <div className="bg-[var(--bg-surface)] border border-[var(--border-default)] px-4 py-3 rounded-xl rounded-tl-[5px] flex items-center gap-2.5">
                   <Loader2 className="w-3.5 h-3.5 text-[#ff5100] animate-spin" />
-                  <span className="text-white/40 text-[11px] font-medium tracking-wide">Mapping optimal routes…</span>
+                  <span className="text-[var(--text-tertiary)] text-[11px] font-medium tracking-wide">Mapping optimal routes…</span>
                 </div>
               </div>
             )}
@@ -206,14 +206,14 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
           </div>
 
           {/* Input Area */}
-          <div className="p-4 border-t border-white/[0.05] bg-white/[0.02]">
+          <div className="p-4 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]">
             <div className="relative flex items-center gap-2">
                 <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && send()}
                     placeholder="Ask Compass.AI..."
-                    className="flex-1 bg-white/[0.04] border border-white/[0.08] text-white placeholder-white/10 text-sm px-4 py-3.5 rounded-xl outline-none focus:bg-white/[0.06] focus:border-[#ff5100]/40 transition-all font-light"
+                    className="flex-1 bg-[var(--bg-surface)] border border-[var(--border-default)] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] text-sm px-4 py-3.5 rounded-xl outline-none focus:bg-[var(--bg-card-hover)] focus:border-[#ff5100]/40 transition-all font-light"
                 />
               <button
                 onClick={send}

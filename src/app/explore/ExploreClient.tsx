@@ -788,7 +788,7 @@ export default function ExploreClient() {
                 <button
                   onClick={() => { setCurrentPage((p) => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                   disabled={currentPage === 1}
-                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium"
+                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-default)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   Prev
@@ -811,7 +811,7 @@ export default function ExploreClient() {
                         className={`w-10 h-10 rounded-xl text-sm font-semibold transition-all ${
                           isActive
                             ? "bg-[#ff5100] text-white"
-                            : "bg-white/5 border border-white/10 text-white/60 hover:bg-white/10 hover:text-white"
+                            : "bg-[var(--bg-surface)] border border-[var(--border-default)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)]"
                         }`}
                       >
                         {page}
@@ -823,7 +823,7 @@ export default function ExploreClient() {
                 <button
                   onClick={() => { setCurrentPage((p) => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                   disabled={currentPage === totalPages}
-                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium"
+                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-default)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium"
                 >
                   Next
                   <ChevronRight className="w-4 h-4" />
@@ -831,7 +831,7 @@ export default function ExploreClient() {
               </div>
             )}
 
-            <p className="text-center text-white/25 text-xs mt-4 tracking-wide">
+            <p className="text-center text-[var(--text-muted)] text-xs mt-4 tracking-wide">
               Showing {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filtered.length)} of {filtered.length} adventures
             </p>
           </>

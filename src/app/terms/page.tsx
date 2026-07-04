@@ -65,21 +65,21 @@ export default function TermsPage() {
       <section className="pt-32 pb-14 px-6 lg:px-8 t-bg-surface2">
         <div className="max-w-3xl mx-auto">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Legal</p>
-          <h1 className="text-white text-5xl font-bold tracking-tight mb-4">Terms of Use</h1>
-          <p className="text-white/45 text-base">Last updated: February 2026</p>
+          <h1 className="text-[var(--text-primary)] text-5xl font-bold tracking-tight mb-4">Terms of Use</h1>
+          <p className="text-[var(--text-tertiary)] text-base">Last updated: February 2026</p>
         </div>
       </section>
 
       <section className="py-16 px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
-          <p className="text-white/60 text-base leading-relaxed mb-12">
+          <p className="text-[var(--text-secondary)] text-base leading-relaxed mb-12">
             Please read these Terms of Use carefully before using the TRAIL TO TIDES platform. By using our platform, you agree to these terms.
           </p>
           <div className="space-y-10">
             {SECTIONS.map((section) => (
               <div key={section.title}>
-                <h2 className="text-white text-xl font-semibold mb-4">{section.title}</h2>
-                <p className="text-white/55 text-base leading-relaxed">{section.content}</p>
+                <h2 className="text-[var(--text-primary)] text-xl font-semibold mb-4">{section.title}</h2>
+                <p className="text-[var(--text-secondary)] text-base leading-relaxed">{section.content}</p>
               </div>
             ))}
           </div>
