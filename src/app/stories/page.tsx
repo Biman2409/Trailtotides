@@ -248,9 +248,15 @@ export default async function StoriesPage() {
                     <h3 className="text-lg font-bold leading-snug mb-2.5 group-hover:text-[#ff5100] transition-colors duration-200" style={{ color: "var(--text-primary)" }}>
                       {story.title}
                     </h3>
-                    <p className="text-sm leading-relaxed line-clamp-2 mb-4 flex-1" style={{ color: "var(--text-secondary)" }}>
+                    <p className="text-sm leading-relaxed line-clamp-2 mb-3 flex-1" style={{ color: "var(--text-secondary)" }}>
                       {story.excerpt}
                     </p>
+
+                    <div className="mb-4">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-[0.15em] text-white bg-[#ff5100] transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5 shadow-lg shadow-[#ff5100]/20 group-hover:shadow-xl group-hover:shadow-[#ff5100]/30">
+                        Read Story
+                      </span>
+                    </div>
 
                     {/* Footer */}
                     <div className="flex items-center justify-between pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
