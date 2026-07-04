@@ -95,8 +95,25 @@ export default function MatchmakerHomepageSection() {
     : 100;
 
   return (
-    <section className="py-8 lg:py-12 px-5 lg:px-8 t-bg-surface border-t" style={{ borderColor: "var(--border-subtle)" }}>
-      <div className="max-w-7xl mx-auto">
+    <section className="relative py-8 lg:py-12 px-5 lg:px-8 border-t overflow-hidden" style={{ borderColor: "var(--border-subtle)" }}>
+      <div className="absolute inset-0">
+        <Image
+          src="https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1200&q=100"
+          alt=""
+          fill
+          className="object-cover opacity-[0.05] dark:opacity-[0.08] brightness-[0.7] contrast-[1.1]"
+          style={{ objectFit: "cover" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-page)]/98 via-[var(--bg-page)]/85 to-[var(--bg-page)]/60" />
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: "radial-gradient(circle, #ff5100 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
+      </div>
+      <div className="max-w-7xl mx-auto relative z-10">
 
         <div className="flex items-center justify-between mb-5">
           <div>
@@ -311,8 +328,25 @@ function SampleRadarPanel() {
 
 function DefaultCTA() {
   return (
-    <section className="py-8 lg:py-12 px-5 lg:px-8 t-bg-surface border-t overflow-hidden" style={{ borderColor: "var(--border-subtle)" }}>
-      <div className="max-w-7xl mx-auto">
+    <section className="relative py-8 lg:py-12 px-5 lg:px-8 border-t overflow-hidden" style={{ borderColor: "var(--border-subtle)" }}>
+      <div className="absolute inset-0">
+        <Image
+          src="https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1200&q=100"
+          alt=""
+          fill
+          className="object-cover opacity-[0.05] dark:opacity-[0.08] brightness-[0.7] contrast-[1.1]"
+          style={{ objectFit: "cover" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-page)]/98 via-[var(--bg-page)]/85 to-[var(--bg-page)]/60" />
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: "radial-gradient(circle, #ff5100 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
+      </div>
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex flex-col sm:flex-row gap-8 sm:gap-12 lg:gap-16 items-stretch">
 
           {/* Left: copy */}
