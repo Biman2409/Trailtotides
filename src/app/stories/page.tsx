@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Crown, Mountain, PenLine } from "lucide-react";
+import { ArrowRight, Crown, MapPin, Mountain, PenLine } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
 import Footer from "@/components/layout/Footer";
@@ -167,8 +167,12 @@ export default async function StoriesPage() {
                     <p className="text-white text-sm font-semibold">{featured.author}</p>
                     <p className="text-white/40 text-xs">{featured.authorRole}</p>
                   </div>
-                  <div className="flex items-center gap-2 ml-1">
-                  </div>
+                  <span className="flex items-center gap-1.5 text-xs text-white/40">
+                    <MapPin className="w-3 h-3" />
+                    {featured.region}
+                    <span className="text-white/20">·</span>
+                    {featured.adventureDate}
+                  </span>
                   <span className="ml-auto text-[#ff5100] text-sm font-semibold flex items-center gap-1.5 group-hover:gap-3 transition-all duration-200">
                     Read story <ArrowRight className="w-4 h-4" />
                   </span>
