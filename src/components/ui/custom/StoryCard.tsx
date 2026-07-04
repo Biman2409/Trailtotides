@@ -96,6 +96,12 @@ export default function StoryCard({ story }: { story: Story }) {
             {story.excerpt}
           </p>
 
+          <div className="mb-3">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-[0.15em] transition-all duration-300 group-hover:bg-[#ff5100] group-hover:text-white border border-white/30 group-hover:border-[#ff5100] text-white/80">
+              Read Story
+            </span>
+          </div>
+
           <div className="border-t border-white/10 pt-2.5 flex items-center justify-between">
             <div className="flex items-center gap-2 min-w-0">
               <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0 relative">
