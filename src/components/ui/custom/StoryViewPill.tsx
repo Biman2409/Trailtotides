@@ -75,7 +75,7 @@ export default function StoryViewPill({ slug, incrementOnMount = false, classNam
       className={`flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full ${className}`}
     >
       <Eye className="w-3 h-3 flex-shrink-0" />
-      {views === null ? "—" : `${formatViews(views)} views`}
+      {views === null ? "—" : formatViews(views)}
     </span>
   );
 }
