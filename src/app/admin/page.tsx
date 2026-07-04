@@ -72,6 +72,31 @@ export default async function AdminPage() {
         new Date(b.created_at as string).getTime() - new Date(a.created_at as string).getTime()
       );
     }
+
+    // Also check story-data/stories/ for submissions that may have been saved there
+    // by the old code path (before the fallback was fixed to also save to story-submissions)
+    const { data: storyDataFiles } = await adminClient.storage
+      .from("story-data")
+      .list("stories", { limit: 200, sortBy: { column: "created_at", order: "desc" } });
+
+    if (storyDataFiles && storyDataFiles.length > 0) {
+      const existingSlugs = new Set(storySubmissions.map(s => s.slug as string));
+      const missing = storyDataFiles.filter(f => f.name.endsWith(".json") && !existingSlugs.has(f.name.replace(".json", "")));
+      if (missing.length > 0) {
+        const extra = await Promise.all(
+          missing.map(async (file) => {
+            const { data } = await adminClient.storage.from("story-data").download(`stories/${file.name}`);
+            if (!data) return null;
+            const text = await data.text();
+            try { return { ...JSON.parse(text), _fileName: file.name }; } catch { return null; }
+          })
+        );
+        storySubmissions.push(...extra.filter(Boolean) as Record<string, unknown>[]);
+        storySubmissions.sort((a, b) =>
+          new Date(b.created_at as string).getTime() - new Date(a.created_at as string).getTime()
+        );
+      }
+    }
   } catch {
     // bucket may not exist yet
   }
