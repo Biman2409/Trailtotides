@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, Crown, Mountain, Heart } from "lucide-react";
+import { Clock, Crown, Mountain, Heart, MapPin } from "lucide-react";
 import { Story } from "@/lib/data";
 import StoryViewPill from "./StoryViewPill";
 
@@ -164,7 +164,11 @@ export default function StoryCard({ story }: { story: Story }) {
               </div>
             </div>
 
-            <div className="flex items-center gap-2.5 shrink-0">
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="flex items-center gap-1 text-[9px] text-white/40 font-medium">
+                <MapPin className="w-2.5 h-2.5" />
+                {story.region}
+              </span>
               <div className="text-[#ff5100] text-[10px] font-semibold group-hover:translate-x-1 transition-transform duration-200">
                 Read →
               </div>
