@@ -445,10 +445,10 @@ export default function Navbar() {
               </div>
             ) : (
               <>
-                <Link href="/auth/login" className="text-sm font-medium px-4 py-2 rounded-lg transition-colors duration-200" style={{ color: "var(--nav-text)" }}>
+                <Link href="/auth/login" className="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors duration-200" style={{ color: "var(--nav-text)" }}>
                   Log In
                 </Link>
-                <Link href="/auth/signup" className="bg-[#ff5100] hover:bg-[#ff7d47] text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:-translate-y-0.5 transition-all duration-200" style={{ boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}>
+                <Link href="/auth/signup" className="bg-[#ff5100] hover:bg-[#ff7d47] text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg hover:-translate-y-0.5 transition-all duration-200" style={{ boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}>
                   Sign Up
                 </Link>
               </>
