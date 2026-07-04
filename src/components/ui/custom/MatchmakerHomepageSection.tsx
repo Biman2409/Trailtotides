@@ -102,14 +102,6 @@ export default function MatchmakerHomepageSection() {
       }}
     >
       <div className="absolute inset-0">
-        <Image
-          src="https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1200&q=100"
-          alt=""
-          fill
-          className="object-cover opacity-[0.04] dark:opacity-[0.06] brightness-[0.6] contrast-[1.15]"
-          style={{ objectFit: "cover" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-page)]/95 via-[var(--bg-page)]/70 to-[var(--bg-page)]/30" />
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -343,14 +335,6 @@ function DefaultCTA() {
       }}
     >
       <div className="absolute inset-0">
-        <Image
-          src="https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1200&q=100"
-          alt=""
-          fill
-          className="object-cover opacity-[0.04] dark:opacity-[0.06] brightness-[0.6] contrast-[1.15]"
-          style={{ objectFit: "cover" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-page)]/95 via-[var(--bg-page)]/70 to-[var(--bg-page)]/30" />
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
