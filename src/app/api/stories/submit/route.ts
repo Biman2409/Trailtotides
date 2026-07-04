@@ -105,9 +105,27 @@ export async function POST(req: NextRequest) {
 
     // If table doesn't exist, fallback to Storage
     if (error.message?.includes("Could not find the table")) {
+      // Save to story-data/stories/ (for publishing)
       const saved = await saveStoryToStorage(storyRecord);
-      if (saved) return NextResponse.json({ success: true });
-      return NextResponse.json({ error: "Could not save story. Please try again." }, { status: 500 });
+      if (!saved) {
+        return NextResponse.json({ error: "Could not save story. Please try again." }, { status: 500 });
+      }
+      // Also save to story-submissions bucket so admin can see it
+      try {
+        const { data: buckets } = await adminClient.storage.listBuckets();
+        if (!buckets?.find(b => b.name === "story-submissions")) {
+          await adminClient.storage.createBucket("story-submissions", { public: false });
+        }
+        const json = JSON.stringify(storyRecord);
+        const bytes = new TextEncoder().encode(json);
+        await adminClient.storage
+          .from("story-submissions")
+          .upload(storyRecord.slug + ".json", bytes, {
+            contentType: "application/json",
+            upsert: true,
+          });
+      } catch {}
+      return NextResponse.json({ success: true });
     }
 
     console.error("story submission db error:", error);
