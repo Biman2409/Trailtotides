@@ -169,10 +169,10 @@ export default async function StoriesPage() {
                     <p className="text-white/40 text-xs">{featured.authorRole}</p>
                   </div>
                   <div className="flex items-center gap-2 ml-1">
-                    <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full">
+                    <span className="flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/20 text-white font-semibold text-[10px] px-2.5 py-1 rounded-full">
                       <Clock className="w-3 h-3" /> {featured.readTime}
                     </span>
-                    <StoryViewPill slug={featured.slug} />
+                    <StoryViewPill slug={featured.slug} compact />
                   </div>
                   <span className="ml-auto text-[#ff5100] text-sm font-semibold flex items-center gap-1.5 group-hover:gap-3 transition-all duration-200">
                     Read story <ArrowRight className="w-4 h-4" />
