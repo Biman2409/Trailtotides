@@ -73,13 +73,13 @@ export default function StoryCard({ story }: { story: Story }) {
           <span
             className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full transition-all duration-300"
             style={{
-              background: "rgba(0,0,0,0.25)",
+              background: "rgba(255,81,0,0.08)",
               backdropFilter: "blur(4px)",
-              border: "1px solid rgba(255,255,255,0.12)",
+              border: "1px solid rgba(255,81,0,0.25)",
             }}
           >
-            <span className="text-[8px] font-medium tracking-wider uppercase leading-none" style={{ color: "rgba(255,255,255,0.5)" }}>Read</span>
-            <ArrowRight className="w-2 h-2" style={{ color: "rgba(255,255,255,0.35)" }} />
+            <span className="text-[8px] font-medium tracking-wider uppercase leading-none" style={{ color: "rgba(255,81,0,0.7)" }}>Read</span>
+            <ArrowRight className="w-2 h-2" style={{ color: "rgba(255,81,0,0.55)" }} />
           </span>
         </div>
 
