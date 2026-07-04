@@ -236,10 +236,10 @@ export default async function StoriesPage() {
 
                     {/* Top-left: read time + views */}
                     <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5 z-10">
-                      <span className="flex items-center gap-1.5 bg-black/50 backdrop-blur-sm border border-white/15 text-white/90 text-[10px] font-medium px-2.5 py-1 rounded-full">
+                      <span className="flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/20 text-white font-semibold text-[10px] px-2.5 py-1 rounded-full">
                         <Clock className="w-3 h-3" /> {story.readTime}
                       </span>
-                      <StoryViewPill slug={story.slug} className="!bg-black/50 !border-white/15 !text-white/90 !text-[10px] !px-2.5 !py-1 !font-medium" />
+                      <StoryViewPill slug={story.slug} compact />
                     </div>
 
                     {/* Top-right: like button */}

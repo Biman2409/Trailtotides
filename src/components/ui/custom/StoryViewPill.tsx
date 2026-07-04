@@ -45,9 +45,11 @@ interface Props {
   /** If true, increments the count in Supabase on mount (use only on detail pages). */
   incrementOnMount?: boolean;
   className?: string;
+  /** Compact size for use inside story cards */
+  compact?: boolean;
 }
 
-export default function StoryViewPill({ slug, incrementOnMount = false, className = "" }: Props) {
+export default function StoryViewPill({ slug, incrementOnMount = false, className = "", compact = false }: Props) {
   const [views, setViews] = useState<number | null>(null);
   const incremented = useRef(false);
 
@@ -70,10 +72,12 @@ export default function StoryViewPill({ slug, incrementOnMount = false, classNam
     }
   }, [slug, incrementOnMount]);
 
+  const baseClasses = compact
+    ? "flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/20 text-white font-semibold text-[10px] px-2.5 py-1 rounded-full"
+    : "flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full";
+
   return (
-    <span
-      className={`flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full ${className}`}
-    >
+    <span className={`${baseClasses} ${className}`}>
       <Eye className="w-3 h-3 flex-shrink-0" />
       {views === null ? "—" : formatViews(views)}
     </span>

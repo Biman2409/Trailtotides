@@ -104,10 +104,7 @@ export default function StoryCard({ story }: { story: Story }) {
             <Clock className="w-3 h-3 flex-shrink-0" />
             {story.readTime}
           </span>
-          <StoryViewPill
-            slug={story.slug}
-            className="!bg-white/15 !border-white/20 !text-white font-semibold !text-[10px] !px-2.5 !py-1"
-          />
+          <StoryViewPill slug={story.slug} compact />
         </div>
 
         {/* Top-right: like button */}
