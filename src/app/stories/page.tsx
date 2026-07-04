@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Clock, Crown, Mountain, PenLine } from "lucide-react";
+import { ArrowRight, Crown, Mountain, PenLine } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
 import Footer from "@/components/layout/Footer";
@@ -10,7 +10,6 @@ import Breadcrumbs from "@/components/ui/custom/Breadcrumbs";
 import { getPublishedStories } from "@/lib/stories";
 import type { StoryDB } from "@/lib/stories";
 import { AVATARS } from "@/lib/avatars";
-import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 import StoryLikeButton from "@/components/ui/custom/StoryLikeButton";
 
 function pickAvatar(name: string): string {
@@ -31,7 +30,6 @@ function mapStory(s: StoryDB) {
     authorBio: s.author_bio,
     authorAvatar: s.author_avatar || pickAvatar(s.author_name),
     heroImage: s.hero_image,
-    readTime: s.read_time,
     slug: s.slug,
     tags,
     pillTags,
@@ -170,10 +168,6 @@ export default async function StoriesPage() {
                     <p className="text-white/40 text-xs">{featured.authorRole}</p>
                   </div>
                   <div className="flex items-center gap-2 ml-1">
-                    <span className="flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/20 text-white font-semibold text-[10px] px-2.5 py-1 rounded-full">
-                      <Clock className="w-3 h-3" /> {featured.readTime}
-                    </span>
-                    <StoryViewPill slug={featured.slug} compact />
                   </div>
                   <span className="ml-auto text-[#ff5100] text-sm font-semibold flex items-center gap-1.5 group-hover:gap-3 transition-all duration-200">
                     Read story <ArrowRight className="w-4 h-4" />
@@ -234,14 +228,6 @@ export default async function StoriesPage() {
                       style={{ objectFit: "cover" }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-
-                    {/* Top-left: read time + views */}
-                    <div className="absolute top-3 left-3 flex flex-col gap-1 z-10">
-                      <span className="flex items-center justify-center gap-1 bg-white/15 backdrop-blur-sm border border-white/20 text-white font-semibold text-[10px] min-w-[70px] px-2 py-1 rounded-full">
-                        <Clock className="w-3 h-3" /> {story.readTime}
-                      </span>
-                      <StoryViewPill slug={story.slug} compact equalWidth />
-                    </div>
 
                     {/* Top-right: like button */}
                     <div className="absolute top-3 right-3 z-10">

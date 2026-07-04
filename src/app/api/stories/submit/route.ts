@@ -2,12 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { saveStoryToStorage } from "@/lib/stories";
 
-function calcReadTime(text: string): string {
-  const words = text.trim().split(/\s+/).length;
-  const min = Math.max(1, Math.round(words / 200));
-  return `${min} min read`;
-}
-
 function calcTags(title: string, excerpt: string, region: string): string[] {
   const tags = [region];
   const words = (title + " " + excerpt).toLowerCase();
@@ -62,7 +56,6 @@ export async function POST(req: NextRequest) {
     if (avatarId) authorAvatar = `/avatars/avatar-${avatarId}.png`;
 
     // AI-calculated values
-    const readTime = calcReadTime(storyBody);
     const tagList = calcTags(title, excerpt, region);
 
     const now = new Date().toISOString();
@@ -78,7 +71,6 @@ export async function POST(req: NextRequest) {
       author_bio: authorBio || "",
       author_avatar: authorAvatar,
       hero_image: heroImageUrl || "",
-      read_time: readTime,
       tags: tagList,
       region,
       adventure_date: dateOfAdventure,

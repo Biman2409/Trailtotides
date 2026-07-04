@@ -7,8 +7,7 @@ import Footer from "@/components/layout/Footer";
 import { getPublishedStories, getStoryBySlug } from "@/lib/stories";
 import type { StoryDB } from "@/lib/stories";
 import { AVATARS } from "@/lib/avatars";
-import { ChevronLeft, Clock, ArrowRight, Crown, Mountain, PenLine, Share2, MapPin } from "lucide-react";
-import StoryViewPill from "@/components/ui/custom/StoryViewPill";
+import { ChevronLeft, ArrowRight, Crown, Mountain, PenLine, Share2, MapPin } from "lucide-react";
 import StoryShareBar from "@/components/ui/custom/StoryShareBar";
 import StoryReactions from "@/components/ui/custom/StoryReactions";
 import StoryComments from "@/components/ui/custom/StoryComments";
@@ -41,7 +40,6 @@ function mapStory(s: StoryDB) {
     authorBio: s.author_bio,
     authorAvatar: s.author_avatar || pickAvatar(s.author_name),
     heroImage: s.hero_image,
-    readTime: s.read_time,
     tags,
     pillTags,
     region: s.region as any,
@@ -412,8 +410,8 @@ export default async function StoryPage({ params }: Props) {
                 <h3 className="text-white font-semibold text-base leading-snug group-hover:text-[#ff5100] transition-colors mb-1">
                   {s.title}
                 </h3>
-                <p className="text-white/40 text-xs flex items-center gap-1.5">
-                  <Clock className="w-3 h-3" /> {s.readTime}
+                <p className="text-white/40 text-xs">
+                  {s.adventureDate} · {s.region}
                 </p>
               </Link>
             ))}

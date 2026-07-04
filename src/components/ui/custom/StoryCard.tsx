@@ -3,10 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, Crown, Mountain, Heart, MapPin } from "lucide-react";
+import { Crown, Mountain, Heart, MapPin } from "lucide-react";
 import StoryShareButton from "./StoryShareButton";
 import { Story } from "@/lib/data";
-import StoryViewPill from "./StoryViewPill";
 
 const BADGE_TAGS = ["Featured", "TTT Original"];
 const DEFAULT_LIKES = 50;
@@ -35,14 +34,6 @@ export default function StoryCard({ story }: { story: Story }) {
     setLikeCount(next ? (story.baseLikes ?? DEFAULT_LIKES) + 1 : story.baseLikes ?? DEFAULT_LIKES);
     localStorage.setItem(`story_liked_${story.slug}`, next ? "true" : "false");
   }
-
-  const handleClick = () => {
-    fetch("/api/stories/views", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ slug: story.slug }),
-    }).catch(() => {});
-  };
 
   return (
     <div className="flex flex-col">
@@ -80,7 +71,6 @@ export default function StoryCard({ story }: { story: Story }) {
 
       <Link
         href={`/stories/${story.slug}`}
-        onClick={handleClick}
         className="group block relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[#ff5100]/10"
         style={{ aspectRatio: "3/4" }}
       >
@@ -98,15 +88,6 @@ export default function StoryCard({ story }: { story: Story }) {
         />
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-
-        {/* Top-left: read time + views */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1 z-10">
-          <span className="flex items-center justify-center gap-1 bg-white/15 backdrop-blur-sm border border-white/20 text-white font-semibold text-[10px] min-w-[70px] px-2 py-1 rounded-full">
-            <Clock className="w-3 h-3 flex-shrink-0" />
-            {story.readTime}
-          </span>
-          <StoryViewPill slug={story.slug} compact equalWidth />
-        </div>
 
         {/* Top-right: like + share */}
         <div className="absolute top-3 right-3 z-10 flex flex-col items-center gap-0">

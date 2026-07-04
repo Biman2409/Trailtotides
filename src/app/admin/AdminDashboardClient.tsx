@@ -1250,7 +1250,6 @@ export default function AdminDashboardClient({
                               <span className="text-[var(--text-secondary)] text-[12px] font-semibold">{sub.author_name}</span>
                               {sub.author_role && <span className="text-[var(--text-muted)] text-[11px] hidden sm:inline">· {sub.author_role}</span>}
                               {sub.region && <span className="inline-flex items-center gap-1 text-[var(--text-muted)] text-[11px]"><MapPin className="w-2.5 h-2.5" />{sub.region}</span>}
-                              {sub.read_time && <span className="inline-flex items-center gap-1 text-[var(--text-muted)] text-[11px]"><Clock className="w-2.5 h-2.5" />{sub.read_time}</span>}
                               {sub.date_of_adventure && <span className="text-[var(--text-muted)] text-[11px]">· {sub.date_of_adventure}</span>}
                             </div>
 
@@ -1346,7 +1345,7 @@ export default function AdminDashboardClient({
                               { label: "Region", value: sub.region, icon: MapPin },
                               { label: "State", value: (sub as any).state, icon: MapPin },
                               { label: "Date of Adventure", value: sub.date_of_adventure, icon: Calendar },
-                              { label: "Read Time", value: sub.read_time, icon: Clock },
+                              { label: "Date of Adventure", value: sub.date_of_adventure, icon: Calendar },
                             ].filter(item => item.value).map(item => (
                               <div key={item.label} className="p-3 rounded-xl border border-[var(--border-subtle)]" style={{ background: "var(--bg-surface)" }}>
                                 <p className="text-[9px] font-black uppercase tracking-[0.15em] text-[var(--text-muted)] mb-1">{item.label}</p>

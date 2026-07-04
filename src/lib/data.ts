@@ -125,15 +125,11 @@ export interface Story {
   authorAvatar?: string;
   pillTags?: string[]; // subset shown as pills near title; falls back to first 2 non-badge tags
   heroImage: string;
-  readTime: string;
   tags: string[];
   region: Region;
   adventureDate: string;
   submittedBy?: string; // user ID of the TTT member who submitted the story
   baseLikes?: number;    // starting like count (defaults to 50)
-  // views are stored in Supabase story_views table (slug is the key).
-  // Use StoryViewPill component to display live counts.
-  // To add a new story: insert a row into story_views with { slug, views: <seed> }.
 }
 
 export const adventures: Adventure[] = [
@@ -1823,7 +1819,6 @@ export const stories: Story[] = [
     authorAvatar: "/avatars/avatar-5.png",
     pillTags: [],
     heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/story-submissions/photi-la.jpeg",
-    readTime: "15 min",
     tags: ["Featured", "TTT Original"],
     baseLikes: 68,
     region: "Ladakh",
@@ -1841,7 +1836,6 @@ export const stories: Story[] = [
     authorAvatar: "/avatars/avatar-10.png",
     pillTags: [],
     heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/story-submissions/riding-through-revolution-hero.jpeg",
-    readTime: "8 min",
     tags: ["Featured", "TTT Original"],
     region: "Nepal",
     adventureDate: "Sep 2024",

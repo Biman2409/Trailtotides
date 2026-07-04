@@ -77,7 +77,6 @@ export async function POST() {
         author_bio: s.authorBio || "",
         author_avatar: s.authorAvatar || "",
         hero_image: s.heroImage,
-        read_time: s.readTime,
         tags: s.tags || [],
         region: s.region,
         adventure_date: s.adventureDate,
@@ -96,18 +95,6 @@ export async function POST() {
       }
     }
 
-    // Also seed story views
-    const viewsPayload = [
-      { slug: "the-night-photi-la-tested-us", views: 342, updated_at: new Date().toISOString() },
-      { slug: "riding-through-a-revolution", views: 156, updated_at: new Date().toISOString() },
-    ];
-    const viewsJson = JSON.stringify(viewsPayload);
-    await admin.storage.from(STORAGE_BUCKET).upload("views/index.json", new TextEncoder().encode(viewsJson), {
-      contentType: "application/json",
-      upsert: true,
-    });
-
-    log.push(`Views seeded`);
     log.push(`DONE: ${inserted} inserted, ${skipped} skipped`);
 
     return NextResponse.json({ inserted, skipped, log });

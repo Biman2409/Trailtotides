@@ -13,7 +13,6 @@ export interface StoryDB {
   author_bio: string;
   author_avatar: string;
   hero_image: string;
-  read_time: string;
   tags: string[];
   region: string;
   adventure_date: string;
@@ -44,7 +43,6 @@ function staticToDB(s: any): StoryDB {
     author_bio: s.authorBio || "",
     author_avatar: s.authorAvatar || "",
     hero_image: s.heroImage,
-    read_time: s.readTime,
     tags: s.tags || [],
     region: s.region,
     adventure_date: s.adventureDate || s.date || "",
