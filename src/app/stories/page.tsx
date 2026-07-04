@@ -37,6 +37,7 @@ function mapStory(s: StoryDB) {
     pillTags,
     date: s.date,
     submittedBy: s.submitted_by || undefined,
+    baseLikes: s.baseLikes ?? 50,
   };
 }
 
@@ -243,7 +244,7 @@ export default async function StoriesPage() {
 
                     {/* Top-right: like button */}
                     <div className="absolute top-3 right-3 z-10">
-                      <StoryLikeButton slug={story.slug} />
+                      <StoryLikeButton slug={story.slug} baseLikes={story.baseLikes} />
                     </div>
 
                     <div className="absolute bottom-3 left-3 flex items-center gap-1.5 flex-wrap">

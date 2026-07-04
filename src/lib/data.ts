@@ -130,6 +130,7 @@ export interface Story {
   region: Region;
   date: string;
   submittedBy?: string; // user ID of the TTT member who submitted the story
+  baseLikes?: number;    // starting like count (defaults to 50)
   // views are stored in Supabase story_views table (slug is the key).
   // Use StoryViewPill component to display live counts.
   // To add a new story: insert a row into story_views with { slug, views: <seed> }.
@@ -1824,6 +1825,7 @@ export const stories: Story[] = [
     heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/story-submissions/photi-la.jpeg",
     readTime: "15 min",
     tags: ["Featured", "TTT Original"],
+    baseLikes: 68,
     region: "Himalayas",
     date: "July 2026",
     submittedBy: "95cc4754-9271-4337-a79f-25a4a34536d0",

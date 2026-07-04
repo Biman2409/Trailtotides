@@ -8,7 +8,7 @@ import { Story } from "@/lib/data";
 import StoryViewPill from "./StoryViewPill";
 
 const BADGE_TAGS = ["Featured", "TTT Original"];
-const BASE_LIKES = 50;
+const DEFAULT_LIKES = 50;
 
 export default function StoryCard({ story }: { story: Story }) {
   const isFeatured = story.tags.includes("Featured");
@@ -16,13 +16,13 @@ export default function StoryCard({ story }: { story: Story }) {
   const contentTags = story.pillTags ?? story.tags.filter((t) => !BADGE_TAGS.includes(t)).slice(0, 2);
 
   const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(BASE_LIKES);
+  const [likeCount, setLikeCount] = useState(story.baseLikes ?? DEFAULT_LIKES);
 
   useEffect(() => {
     const stored = localStorage.getItem(`story_liked_${story.slug}`);
     if (stored === "true") {
       setLiked(true);
-      setLikeCount(BASE_LIKES + 1);
+      setLikeCount((story.baseLikes ?? DEFAULT_LIKES) + 1);
     }
   }, [story.slug]);
 
@@ -31,7 +31,7 @@ export default function StoryCard({ story }: { story: Story }) {
     e.stopPropagation();
     const next = !liked;
     setLiked(next);
-    setLikeCount(next ? BASE_LIKES + 1 : BASE_LIKES);
+    setLikeCount(next ? (story.baseLikes ?? DEFAULT_LIKES) + 1 : story.baseLikes ?? DEFAULT_LIKES);
     localStorage.setItem(`story_liked_${story.slug}`, next ? "true" : "false");
   }
 

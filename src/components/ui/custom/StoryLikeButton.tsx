@@ -3,17 +3,17 @@
 import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
 
-const BASE_LIKES = 50;
+const DEFAULT_LIKES = 50;
 
-export default function StoryLikeButton({ slug, className = "" }: { slug: string; className?: string }) {
+export default function StoryLikeButton({ slug, baseLikes, className = "" }: { slug: string; baseLikes?: number; className?: string }) {
   const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(BASE_LIKES);
+  const [likeCount, setLikeCount] = useState(baseLikes ?? DEFAULT_LIKES);
 
   useEffect(() => {
     const stored = localStorage.getItem(`story_liked_${slug}`);
     if (stored === "true") {
       setLiked(true);
-      setLikeCount(BASE_LIKES + 1);
+      setLikeCount((baseLikes ?? DEFAULT_LIKES) + 1);
     }
   }, [slug]);
 
@@ -22,7 +22,7 @@ export default function StoryLikeButton({ slug, className = "" }: { slug: string
     e.stopPropagation();
     const next = !liked;
     setLiked(next);
-    setLikeCount(next ? BASE_LIKES + 1 : BASE_LIKES);
+    setLikeCount(next ? (baseLikes ?? DEFAULT_LIKES) + 1 : baseLikes ?? DEFAULT_LIKES);
     localStorage.setItem(`story_liked_${slug}`, next ? "true" : "false");
   }
 

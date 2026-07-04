@@ -18,6 +18,7 @@ export interface StoryDB {
   region: string;
   date: string;
   status: string;
+  baseLikes?: number;
   submitted_by: string | null;
   created_at: string;
   updated_at: string;
