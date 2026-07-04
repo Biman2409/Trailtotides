@@ -77,7 +77,7 @@ VALUES
     'https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/story-submissions/photi-la.jpeg',
     '15 min read',
     ARRAY['Featured', 'TTT Original', 'Ladakh', 'Motorcycling', 'Motorcycle', 'Umling La', 'Himalayas', 'High Altitude', 'Road Trip', 'Demchok', 'Adventure Travel', 'India'],
-    'Himalayas',
+    'Ladakh',
     'July 2022',
     'published'
   ),
