@@ -411,7 +411,7 @@ export default async function StoryPage({ params }: Props) {
                 <h3 className="text-white font-semibold text-base leading-snug group-hover:text-[#ff5100] transition-colors mb-1">
                   {s.title}
                 </h3>
-                <p className="text-white/40 text-xs">
+                <p className="text-white/70 text-xs font-medium">
                   {s.adventureDate} · {s.region}
                 </p>
               </Link>
