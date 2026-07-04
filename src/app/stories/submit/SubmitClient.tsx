@@ -48,19 +48,29 @@ const INITIAL: FormData = {
 };
 
 const inputClass =
-  "w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#ff5100]/60 focus:ring-1 focus:ring-[#ff5100]/20 transition-all";
+  "w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#ff5100]/60 focus:ring-1 focus:ring-[#ff5100]/20 transition-all";
+const inputStyle: React.CSSProperties = {
+  background: "var(--bg-card)",
+  border: "1px solid var(--border-subtle)",
+  color: "var(--text-primary)",
+};
 
 const textareaClass =
-  "w-full bg-white/6 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/25 text-sm focus:outline-none focus:border-[#ff5100]/60 focus:ring-1 focus:ring-[#ff5100]/20 transition-all resize-none";
+  "w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#ff5100]/60 focus:ring-1 focus:ring-[#ff5100]/20 transition-all resize-none";
+const textareaStyle: React.CSSProperties = {
+  background: "var(--bg-card)",
+  border: "1px solid var(--border-subtle)",
+  color: "var(--text-primary)",
+};
 
 function SectionCard({ icon: Icon, title, children }: { icon: any; title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl overflow-hidden backdrop-blur-sm">
-      <div className="flex items-center gap-2.5 px-6 pt-5 pb-3 border-b border-white/[0.05]">
-        <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-[#ff5100]/10">
+    <div className="rounded-2xl overflow-hidden backdrop-blur-sm" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
+      <div className="flex items-center gap-2.5 px-6 pt-5 pb-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+        <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(255,81,0,0.1)" }}>
           <Icon className="w-3.5 h-3.5 text-[#ff5100]" />
         </div>
-        <h3 className="text-white font-semibold text-sm">{title}</h3>
+        <h3 className="font-semibold text-sm" style={{ color: "var(--text-primary)" }}>{title}</h3>
       </div>
       <div className="p-6 space-y-5">{children}</div>
     </div>
@@ -69,7 +79,7 @@ function SectionCard({ icon: Icon, title, children }: { icon: any; title: string
 
 function Label({ children, required }: { children: React.ReactNode; required?: boolean }) {
   return (
-    <label className="block text-white/50 text-[11px] font-medium mb-1.5 uppercase tracking-wider">
+    <label className="block text-[11px] font-medium mb-1.5 uppercase tracking-wider" style={{ color: "var(--text-tertiary)" }}>
       {children}
       {required && <span className="text-[#ff5100] ml-1">*</span>}
     </label>
@@ -138,29 +148,35 @@ export default function SubmitStoryPage() {
 
       {/* Hero */}
       <section className="relative pt-28 pb-12 px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.07]"
+        <div className="absolute inset-0 opacity-[0.05]"
           style={{
             backgroundImage: "radial-gradient(circle at 25% 40%, #ff5100 0%, transparent 50%), radial-gradient(circle at 75% 60%, #1e3d2f 0%, transparent 50%)",
           }}
         />
-        <div className="max-w-3xl mx-auto relative">
+        <div className="max-w-4xl mx-auto relative">
           <Link
             href="/stories"
-            className="inline-flex items-center gap-1.5 text-white/35 hover:text-white/70 text-[11px] font-semibold uppercase tracking-[0.15em] mb-5 transition-colors group"
+            className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] mb-5 transition-colors group"
+            style={{ color: "var(--text-tertiary)" }}
           >
             <ArrowLeft className="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" />
             Back
           </Link>
-          <p className="text-[#ff5100] text-[11px] font-semibold tracking-[0.2em] uppercase mb-3">
+          <p className="text-[#ff5100] text-[11px] font-semibold tracking-[0.2em] uppercase mb-4">
             Share Your Story
           </p>
-          <h1 className="text-white text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-3">
+          <h1 className="text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-4" style={{ color: "var(--text-primary)" }}>
             Tell us what<br />
             <span className="text-[#ff5100]">happened out there</span>
           </h1>
-          <p className="text-white/45 text-sm leading-relaxed max-w-lg">
-            Every adventure has a story worth telling — the road that went wrong, the summit that nearly broke you, the silence that said everything. Write yours, share it with the world, and inspire the next person to step out the door.
-          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
+            <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              Every adventure has a story worth telling — the road that went wrong, the summit that nearly broke you, the silence that said everything.
+            </p>
+            <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              Write yours, share it with the world, and inspire the next person to step out the door. We review every submission personally.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -168,12 +184,12 @@ export default function SubmitStoryPage() {
       <section className="pb-20 px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           {submitted ? (
-            <div className="bg-emerald-500/8 border border-emerald-500/20 rounded-3xl p-12 text-center">
-              <div className="w-14 h-14 rounded-full bg-emerald-500/15 flex items-center justify-center mx-auto mb-5">
+            <div className="rounded-3xl p-12 text-center" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
+              <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-5" style={{ background: "rgba(16,185,129,0.15)" }}>
                 <CheckCircle2 className="w-7 h-7 text-emerald-400" />
               </div>
-              <h3 className="text-white text-xl font-bold mb-2">Story submitted!</h3>
-              <p className="text-white/50 text-sm leading-relaxed mb-7 max-w-sm mx-auto">
+              <h3 className="text-xl font-bold mb-2" style={{ color: "var(--text-primary)" }}>Story submitted!</h3>
+              <p className="text-sm leading-relaxed mb-7 max-w-sm mx-auto" style={{ color: "var(--text-secondary)" }}>
                 Our team will review your submission and reach out if it&apos;s a good fit.
               </p>
               <Link
@@ -187,7 +203,7 @@ export default function SubmitStoryPage() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
-                <div className="bg-red-500/8 border border-red-500/20 rounded-xl px-4 py-3 text-red-400 text-sm">
+                <div className="rounded-xl px-4 py-3 text-red-400 text-sm" style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}>
                   {error}
                 </div>
               )}
@@ -197,15 +213,15 @@ export default function SubmitStoryPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <Label required>Name</Label>
-                    <input name="authorName" required value={form.authorName} onChange={handleChange} placeholder="e.g. Nishant Ingle" className={inputClass} />
+                    <input name="authorName" required value={form.authorName} onChange={handleChange} placeholder="e.g. Nishant Ingle" className={inputClass} style={inputStyle} />
                   </div>
                   <div>
                     <Label>Role</Label>
-                    <input name="authorRole" value={form.authorRole} onChange={handleChange} placeholder="e.g. Solo biker" className={inputClass} />
+                    <input name="authorRole" value={form.authorRole} onChange={handleChange} placeholder="e.g. Solo biker" className={inputClass} style={inputStyle} />
                   </div>
                   <div className="sm:col-span-2">
                     <Label>Bio</Label>
-                    <textarea name="authorBio" rows={2} value={form.authorBio} onChange={handleChange} placeholder="A few lines about yourself..." className={textareaClass} />
+                    <textarea name="authorBio" rows={2} value={form.authorBio} onChange={handleChange} placeholder="A few lines about yourself..." className={textareaClass} style={textareaStyle} />
                   </div>
                 </div>
               </SectionCard>
@@ -215,29 +231,29 @@ export default function SubmitStoryPage() {
                 <div className="space-y-4">
                   <div>
                     <Label required>Title</Label>
-                    <input name="title" required value={form.title} onChange={handleChange} placeholder="e.g. The Night I Found Myself at 15,000ft" className={inputClass} />
+                    <input name="title" required value={form.title} onChange={handleChange} placeholder="e.g. The Night I Found Myself at 15,000ft" className={inputClass} style={inputStyle} />
                   </div>
                   <div>
                     <Label required>Excerpt</Label>
-                    <textarea name="excerpt" required rows={2} value={form.excerpt} onChange={handleChange} placeholder="1–2 sentences capturing the essence..." className={textareaClass} />
+                    <textarea name="excerpt" required rows={2} value={form.excerpt} onChange={handleChange} placeholder="1–2 sentences capturing the essence..." className={textareaClass} style={textareaStyle} />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="flex flex-col">
                       <Label required>Date</Label>
                       <div className="relative">
-                        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
+                        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none" style={{ color: "var(--text-muted)" }} />
                         <input name="dateOfAdventure" required type="text" value={form.dateOfAdventure} onChange={handleChange}
                           placeholder="e.g. July 2022"
-                          className={`${inputClass} pl-9`}
+                          className={`${inputClass} pl-9`} style={inputStyle}
                         />
                       </div>
                     </div>
                     <div className="flex flex-col">
                       <Label required>Location</Label>
                       <div className="relative">
-                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30 pointer-events-none" />
+                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none" style={{ color: "var(--text-muted)" }} />
                         <input name="region" required value={form.region} onChange={handleChange} placeholder="e.g. Spiti Valley"
-                          className={`${inputClass} pl-9`}
+                          className={`${inputClass} pl-9`} style={inputStyle}
                         />
                       </div>
                     </div>
@@ -248,12 +264,13 @@ export default function SubmitStoryPage() {
                     <Label>Hero photo</Label>
                     <div className="space-y-3">
                       {upload.status === "done" && form.heroImageUrl && (
-                        <div className="relative rounded-xl overflow-hidden h-40 bg-black/40 border border-white/10">
+                        <div className="relative rounded-xl overflow-hidden h-40" style={{ background: "var(--bg-page)", border: "1px solid var(--border-subtle)" }}>
                           <img src={form.heroImageUrl} alt="Preview" className="w-full h-full object-cover" />
                           <button type="button" onClick={() => { setUpload({ status: "idle", url: "" }); setForm(p => ({ ...p, heroImageUrl: "" })); }}
-                            className="absolute top-2 right-2 w-7 h-7 rounded-lg bg-black/70 flex items-center justify-center hover:bg-black/90"
+                            className="absolute top-2 right-2 w-7 h-7 rounded-lg flex items-center justify-center"
+                            style={{ background: "rgba(0,0,0,0.7)", color: "rgba(255,255,255,0.7)" }}
                           >
-                            <X className="w-3.5 h-3.5 text-white/70" />
+                            <X className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       )}
@@ -262,8 +279,8 @@ export default function SubmitStoryPage() {
                           ? "border-[#ff5100]/50 text-[#ff5100] bg-[#ff5100]/5"
                           : upload.status === "done"
                           ? "border-emerald-500/40 text-emerald-400 bg-emerald-500/5"
-                          : "border-white/10 text-white/40 hover:border-white/25 hover:text-white/60 hover:bg-white/[0.02]"
-                      }`}>
+                          : ""
+                      }`} style={upload.status === "idle" || upload.status === "error" ? { border: "1px dashed var(--border-default)", color: "var(--text-tertiary)" } : {}}>
                         <input type="file" accept="image/jpeg,image/jpg,image/png,image/webp" onChange={handleFileUpload} className="hidden" disabled={upload.status === "uploading"} />
                         {upload.status === "uploading" ? (
                           <><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>Uploading…</>
@@ -275,13 +292,13 @@ export default function SubmitStoryPage() {
                       </label>
                       {upload.status === "error" && <p className="text-red-400 text-xs">{upload.url}</p>}
                       <div className="flex items-center gap-3">
-                        <div className="flex-1 h-px bg-white/[0.06]" />
-                        <span className="text-white/15 text-[10px] uppercase tracking-wider font-medium">or paste URL</span>
-                        <div className="flex-1 h-px bg-white/[0.06]" />
+                        <div className="flex-1 h-px" style={{ background: "var(--border-subtle)" }} />
+                        <span className="text-[10px] uppercase tracking-wider font-medium" style={{ color: "var(--text-muted)" }}>or paste URL</span>
+                        <div className="flex-1 h-px" style={{ background: "var(--border-subtle)" }} />
                       </div>
                       <div className="relative">
-                        <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/25 pointer-events-none" />
-                        <input name="heroImageUrl" value={form.heroImageUrl} onChange={handleChange} placeholder="https://..." className={`${inputClass} pl-9 text-xs`} />
+                        <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none" style={{ color: "var(--text-muted)" }} />
+                        <input name="heroImageUrl" value={form.heroImageUrl} onChange={handleChange} placeholder="https://..." className={`${inputClass} pl-9 text-xs`} style={inputStyle} />
                       </div>
                     </div>
                   </div>
@@ -294,9 +311,9 @@ export default function SubmitStoryPage() {
                   <Label required>Story body</Label>
                   <textarea name="body" required rows={12} value={form.body} onChange={handleChange}
                     placeholder="Tell us everything. What happened, what you felt, what went wrong, what you learned. Don't hold back."
-                    className={textareaClass}
+                    className={textareaClass} style={textareaStyle}
                   />
-                  <p className="text-white/20 text-[10px] mt-1.5">No word limit. Honest and vivid wins.</p>
+                  <p className="text-[10px] mt-1.5" style={{ color: "var(--text-muted)" }}>No word limit. Honest and vivid wins.</p>
                 </div>
               </SectionCard>
 
