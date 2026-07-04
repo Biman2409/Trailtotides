@@ -30,7 +30,9 @@ const WA_ICON = (
 export default function StoryShareButton({ title, slug }: { title: string; slug: string }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
   const menuRef = useRef<HTMLDivElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   const url = typeof window !== "undefined" ? `${window.location.origin}/stories/${slug}` : "";
 
@@ -43,6 +45,18 @@ export default function StoryShareButton({ title, slug }: { title: string; slug:
     if (open) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
+
+  function toggleOpen() {
+    if (!open && btnRef.current) {
+      const rect = btnRef.current.getBoundingClientRect();
+      setPopupStyle({
+        position: "fixed",
+        top: rect.bottom + 6,
+        right: window.innerWidth - rect.right,
+      });
+    }
+    setOpen(v => !v);
+  }
 
   function shareFacebook() {
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, "_blank", "noopener,noreferrer,width=600,height=400");
@@ -74,7 +88,8 @@ export default function StoryShareButton({ title, slug }: { title: string; slug:
   return (
     <div className="relative" ref={menuRef}>
       <button
-        onClick={() => setOpen(v => !v)}
+        ref={btnRef}
+        onClick={toggleOpen}
         className="flex items-center justify-center w-9 h-9 bg-white/15 backdrop-blur-sm border border-white/20 text-white/80 hover:text-white hover:bg-white/25 rounded-full transition-all active:scale-90"
       >
         {copied ? (
@@ -86,13 +101,15 @@ export default function StoryShareButton({ title, slug }: { title: string; slug:
 
       {open && (
         <div
-          className="absolute top-full right-0 mt-1.5 z-50 flex items-center gap-1 p-1.5 rounded-xl"
           style={{
+            ...popupStyle,
+            zIndex: 50,
             background: "rgba(20,20,25,0.95)",
             backdropFilter: "blur(16px)",
             border: "1px solid rgba(255,255,255,0.1)",
             boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
           }}
+          className="flex items-center gap-1 p-1.5 rounded-xl"
         >
           <button onClick={shareFacebook} className="flex items-center justify-center w-8 h-8 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-all" title="Facebook">
             {FB_ICON}
