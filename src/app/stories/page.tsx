@@ -236,16 +236,9 @@ export default async function StoriesPage() {
 
                     {/* Top-left: Read button */}
                     <div className="absolute top-3 left-3 z-10">
-                      <span
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full transition-all duration-300"
-                        style={{
-                          background: "rgba(255,81,0,0.08)",
-                          backdropFilter: "blur(4px)",
-                          border: "1px solid rgba(255,81,0,0.25)",
-                        }}
-                      >
-                        <span className="text-[8px] font-medium tracking-wider uppercase leading-none" style={{ color: "rgba(255,81,0,0.7)" }}>Read</span>
-                        <ArrowRight className="w-2 h-2" style={{ color: "rgba(255,81,0,0.55)" }} />
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full transition-all duration-300 bg-white/10 backdrop-blur-sm border border-white/20">
+                        <span className="text-[8px] font-medium tracking-wider uppercase leading-none text-white/70">Read</span>
+                        <ArrowRight className="w-2 h-2 text-white/50" />
                       </span>
                     </div>
 
