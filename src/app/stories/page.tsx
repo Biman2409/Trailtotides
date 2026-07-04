@@ -143,7 +143,7 @@ export default async function StoriesPage() {
               </div>
 
               {/* Top-right: like + share */}
-              <div className="absolute top-5 right-5 z-10 flex items-center gap-2">
+              <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
                 <StoryLikeButton slug={featured.slug} baseLikes={featured.baseLikes} pill />
                 <StoryShareButton title={featured.title} slug={featured.slug} />
               </div>
