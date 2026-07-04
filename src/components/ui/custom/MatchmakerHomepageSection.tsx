@@ -95,23 +95,37 @@ export default function MatchmakerHomepageSection() {
     : 100;
 
   return (
-    <section className="relative py-8 lg:py-12 px-5 lg:px-8 border-t overflow-hidden"
+    <section className="relative py-8 lg:py-12 px-5 lg:px-8 border-t overflow-hidden bg-[#faf3e8] dark:bg-[#1a1410]"
       style={{
         borderColor: "var(--border-subtle)",
-        background: "linear-gradient(180deg, rgba(255,81,0,0.02) 0%, transparent 40%)",
       }}
     >
       <div className="absolute inset-0">
+        <Image
+          src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=100"
+          alt=""
+          fill
+          className="object-cover opacity-[0.05] dark:opacity-[0.08] brightness-[1.1] contrast-[1.05]"
+          style={{ objectFit: "cover" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#faf3e8]/98 via-[#faf3e8]/80 to-[#faf3e8]/40 dark:from-[#1a1410]/98 dark:via-[#1a1410]/80 dark:to-[#1a1410]/40" />
         <div
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.06] dark:hidden"
           style={{
             backgroundImage: "radial-gradient(circle, #ff5100 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
+            backgroundSize: "28px 28px",
+          }}
+        />
+        <div
+          className="absolute inset-0 opacity-10 hidden dark:block"
+          style={{
+            backgroundImage: "radial-gradient(circle, rgba(255,81,0,0.55) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
           }}
         />
         {/* Warm accent glow */}
-        <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full pointer-events-none opacity-[0.04] blur-3xl" style={{ background: "#ff5100" }} />
-        <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full pointer-events-none opacity-[0.03] blur-3xl" style={{ background: "#ff7d47" }} />
+        <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full pointer-events-none opacity-[0.06] blur-3xl" style={{ background: "#ff5100" }} />
+        <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full pointer-events-none opacity-[0.04] blur-3xl" style={{ background: "#ff7d47" }} />
       </div>
       <div className="max-w-7xl mx-auto relative z-10">
 
@@ -328,23 +342,37 @@ function SampleRadarPanel() {
 
 function DefaultCTA() {
   return (
-    <section className="relative py-8 lg:py-12 px-5 lg:px-8 border-t overflow-hidden"
+    <section className="relative py-8 lg:py-12 px-5 lg:px-8 border-t overflow-hidden bg-[#faf3e8] dark:bg-[#1a1410]"
       style={{
         borderColor: "var(--border-subtle)",
-        background: "linear-gradient(180deg, rgba(255,81,0,0.02) 0%, transparent 40%)",
       }}
     >
       <div className="absolute inset-0">
+        <Image
+          src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=100"
+          alt=""
+          fill
+          className="object-cover opacity-[0.05] dark:opacity-[0.08] brightness-[1.1] contrast-[1.05]"
+          style={{ objectFit: "cover" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#faf3e8]/98 via-[#faf3e8]/80 to-[#faf3e8]/40 dark:from-[#1a1410]/98 dark:via-[#1a1410]/80 dark:to-[#1a1410]/40" />
         <div
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.06] dark:hidden"
           style={{
             backgroundImage: "radial-gradient(circle, #ff5100 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
+            backgroundSize: "28px 28px",
+          }}
+        />
+        <div
+          className="absolute inset-0 opacity-10 hidden dark:block"
+          style={{
+            backgroundImage: "radial-gradient(circle, rgba(255,81,0,0.55) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
           }}
         />
         {/* Warm accent glow */}
-        <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full pointer-events-none opacity-[0.04] blur-3xl" style={{ background: "#ff5100" }} />
-        <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full pointer-events-none opacity-[0.03] blur-3xl" style={{ background: "#ff7d47" }} />
+        <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full pointer-events-none opacity-[0.06] blur-3xl" style={{ background: "#ff5100" }} />
+        <div className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full pointer-events-none opacity-[0.04] blur-3xl" style={{ background: "#ff7d47" }} />
       </div>
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex flex-col sm:flex-row gap-8 sm:gap-12 lg:gap-16 items-stretch">
