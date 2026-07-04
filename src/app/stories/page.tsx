@@ -11,6 +11,7 @@ import { getPublishedStories } from "@/lib/stories";
 import type { StoryDB } from "@/lib/stories";
 import { AVATARS } from "@/lib/avatars";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
+import StoryLikeButton from "@/components/ui/custom/StoryLikeButton";
 
 function pickAvatar(name: string): string {
   let hash = 0;
@@ -195,85 +196,83 @@ export default async function StoriesPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
             {rest.map((story) => (
-              <Link
-                key={story.id}
-                href={`/stories/${story.slug}`}
-                className="group flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-black/[0.03] hover:border-[#ff5100]/40"
-                style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}
-              >
-                {/* Image */}
-                <div className="relative h-52 md:h-56 overflow-hidden flex-shrink-0">
-                  <Image
-                    src={story.heroImage}
-                    alt={story.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    style={{ objectFit: "cover" }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-
-                  {/* Top-left badges */}
-                  <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-                    {story.tags.includes("Featured") && (
-                      <span className="flex items-center gap-1.5 rounded-full py-0 pl-0 pr-2"
-                        style={{ background: "rgba(10,10,10,0.75)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,81,0,0.35)", boxShadow: "0 0 12px rgba(255,81,0,0.15)" }}>
-                        <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0" style={{ background: "#ff5100", boxShadow: "0 0 6px rgba(255,81,0,0.5)" }}>
-                          <Crown className="w-2 h-2 text-black" />
-                        </span>
-                        <span className="text-[9px] font-bold leading-none tracking-wide" style={{ color: "#ff5100" }}>Featured</span>
-                      </span>
-                    )}
-                    {story.tags.includes("TTT Original") && (
-                      <span className="flex items-center gap-1.5 rounded-full py-0 pl-0 pr-2"
-                        style={{ background: "linear-gradient(135deg,rgba(255,81,0,0.95),rgba(220,50,0,0.9))", border: "1px solid rgba(255,255,255,0.18)", boxShadow: "0 0 14px rgba(255,81,0,0.35)" }}>
-                        <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0" style={{ background: "#000" }}>
-                          <Mountain className="w-2 h-2" style={{ color: "#ff5100" }} />
-                        </span>
-                        <span className="text-[9px] font-bold leading-none tracking-wide text-white">TTT Original</span>
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="absolute bottom-3 left-3 flex items-center gap-1.5 flex-wrap">
-                    {(story.pillTags ?? story.tags.filter((t) => !BADGE_TAGS.includes(t)).slice(0, 2)).map((tag) => (
-                      <span key={tag} className="bg-black/50 backdrop-blur-sm border border-white/15 text-white/90 text-[10px] font-medium px-2.5 py-1 rounded-full">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+              <div key={story.id} className="flex flex-col">
+                {/* Badge slot above card */}
+                <div className="h-7 flex items-center gap-1.5 mb-0.5">
+                  {story.tags.includes("Featured") && (
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full relative overflow-hidden"
+                      style={{ background: "linear-gradient(105deg, #1a0a00 0%, #2d1200 40%, #1a0a00 100%)", border: "1px solid rgba(255,81,0,0.35)", boxShadow: "0 0 10px rgba(255,81,0,0.18), inset 0 1px 0 rgba(255,140,80,0.12)" }}>
+                      <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,120,60,0.08) 50%, transparent 70%)" }} />
+                      <Crown className="w-2.5 h-2.5 shrink-0" style={{ color: "#ff7d47", fill: "#ff7d47", filter: "drop-shadow(0 0 3px rgba(255,81,0,0.7))" }} />
+                      <span className="text-[9px] font-bold tracking-[0.22em] uppercase leading-none" style={{ color: "#ffb38a" }}>Featured</span>
+                    </div>
+                  )}
+                  {story.tags.includes("TTT Original") && (
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full relative overflow-hidden"
+                      style={{ background: "linear-gradient(105deg, #1a0a00 0%, #2d1200 40%, #1a0a00 100%)", border: "1px solid rgba(255,81,0,0.35)", boxShadow: "0 0 10px rgba(255,81,0,0.18), inset 0 1px 0 rgba(255,140,80,0.12)" }}>
+                      <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,120,60,0.08) 50%, transparent 70%)" }} />
+                      <Mountain className="w-2.5 h-2.5 shrink-0" style={{ color: "#ff7d47", filter: "drop-shadow(0 0 3px rgba(255,81,0,0.7))" }} />
+                      <span className="text-[9px] font-bold tracking-[0.22em] uppercase leading-none" style={{ color: "#ffb38a" }}>TTT Original</span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Content */}
-                <div className="flex flex-col flex-1 p-5 lg:p-6">
-                  <h3 className="text-lg font-bold leading-snug mb-2.5 group-hover:text-[#ff5100] transition-colors duration-200" style={{ color: "var(--text-primary)" }}>
-                    {story.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed line-clamp-2 mb-4 flex-1" style={{ color: "var(--text-secondary)" }}>
-                    {story.excerpt}
-                  </p>
-
-                  {/* Footer */}
-                  <div className="flex items-center justify-between pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 border border-[#ff5100]/30">
-                        {story.authorAvatar
-                          ? <img src={story.authorAvatar} alt={story.author} className="w-full h-full object-cover" loading="eager" />
-                          : <span className="w-full h-full flex items-center justify-center text-xs font-bold text-[#ff5100] bg-[#ff5100]/20">{story.author[0]}</span>}
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold leading-tight" style={{ color: "var(--text-primary)" }}>{story.author}</p>
-                        <p className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>{story.date}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-full" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", color: "var(--text-tertiary)" }}>
-                        <Clock className="w-2.5 h-2.5" /> {story.readTime}
-                      </span>
-                      <StoryViewPill slug={story.slug} className="!text-[10px] !px-2.5 !py-1" />
+                <Link
+                  href={`/stories/${story.slug}`}
+                  className="group flex flex-col rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:bg-black/[0.03] hover:border-[#ff5100]/40"
+                  style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}
+                >
+                  {/* Image */}
+                  <div className="relative h-52 md:h-56 overflow-hidden flex-shrink-0">
+                    <Image
+                      src={story.heroImage}
+                      alt={story.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      style={{ objectFit: "cover" }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                    <div className="absolute bottom-3 left-3 flex items-center gap-1.5 flex-wrap">
+                      {(story.pillTags ?? story.tags.filter((t) => !BADGE_TAGS.includes(t)).slice(0, 2)).map((tag) => (
+                        <span key={tag} className="bg-black/50 backdrop-blur-sm border border-white/15 text-white/90 text-[10px] font-medium px-2.5 py-1 rounded-full">
+                          {tag}
+                        </span>
+                      ))}
                     </div>
                   </div>
-                </div>
-              </Link>
+
+                  {/* Content */}
+                  <div className="flex flex-col flex-1 p-5 lg:p-6">
+                    <h3 className="text-lg font-bold leading-snug mb-2.5 group-hover:text-[#ff5100] transition-colors duration-200" style={{ color: "var(--text-primary)" }}>
+                      {story.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed line-clamp-2 mb-4 flex-1" style={{ color: "var(--text-secondary)" }}>
+                      {story.excerpt}
+                    </p>
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-full overflow-hidden shrink-0 border border-[#ff5100]/30">
+                          {story.authorAvatar
+                            ? <img src={story.authorAvatar} alt={story.author} className="w-full h-full object-cover" loading="eager" />
+                            : <span className="w-full h-full flex items-center justify-center text-xs font-bold text-[#ff5100] bg-[#ff5100]/20">{story.author[0]}</span>}
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold leading-tight" style={{ color: "var(--text-primary)" }}>{story.author}</p>
+                          <p className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>{story.date}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-full" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", color: "var(--text-tertiary)" }}>
+                          <Clock className="w-2.5 h-2.5" /> {story.readTime}
+                        </span>
+                        <StoryLikeButton slug={story.slug} />
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </div>
             ))}
           </div>
         </div>
