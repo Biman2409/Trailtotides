@@ -182,7 +182,7 @@ export default function HomePage() {
                 <p className="text-[#7ec88a] text-xs font-black tracking-[0.25em] mb-3 uppercase">
                   ADVENTURE MAP
                 </p>
-                <h2 className="t-text text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
+                <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
                   India&apos;s Adventures,
                   <br />
                   <span className="text-[#7ec88a]">Mapped</span>
