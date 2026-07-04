@@ -1837,7 +1837,7 @@ export const stories: Story[] = [
     pillTags: [],
     heroImage: "https://vmpvmjzursbjwkrgulyp.supabase.co/storage/v1/object/public/story-submissions/riding-through-revolution-hero.jpeg",
     tags: ["Featured", "TTT Original"],
-    region: "Nepal",
+    region: "Himalayas",
     adventureDate: "Sep 2024",
     submittedBy: "aditya-yadav",
   },
