@@ -1827,7 +1827,7 @@ export const stories: Story[] = [
     tags: ["Featured", "TTT Original"],
     baseLikes: 68,
     region: "Himalayas",
-    adventureDate: "July 2026",
+    adventureDate: "July 2023",
     submittedBy: "95cc4754-9271-4337-a79f-25a4a34536d0",
   },
   {

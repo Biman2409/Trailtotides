@@ -7,7 +7,7 @@ import Footer from "@/components/layout/Footer";
 import { getPublishedStories, getStoryBySlug } from "@/lib/stories";
 import type { StoryDB } from "@/lib/stories";
 import { AVATARS } from "@/lib/avatars";
-import { ChevronLeft, Clock, ArrowRight, Crown, Mountain, PenLine, Share2 } from "lucide-react";
+import { ChevronLeft, Clock, ArrowRight, Crown, Mountain, PenLine, Share2, MapPin } from "lucide-react";
 import StoryViewPill from "@/components/ui/custom/StoryViewPill";
 import StoryShareBar from "@/components/ui/custom/StoryShareBar";
 import StoryReactions from "@/components/ui/custom/StoryReactions";
@@ -285,7 +285,7 @@ export default async function StoryPage({ params }: Props) {
                     <p className="text-white font-medium text-sm">{story.author}</p>
                   )}
                   </div>
-                <p className="text-white/45 text-xs">{story.authorRole} · {story.adventureDate}</p>
+                <p className="text-white/45 text-xs flex items-center gap-1 flex-wrap">{story.authorRole} · {story.adventureDate} · <MapPin className="w-2.5 h-2.5" />{story.region}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 ml-auto">

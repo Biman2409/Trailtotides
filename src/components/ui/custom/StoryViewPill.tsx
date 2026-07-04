@@ -47,9 +47,11 @@ interface Props {
   className?: string;
   /** Compact size for use inside story cards */
   compact?: boolean;
+  /** Give pill a fixed minimum width so it matches sibling pills */
+  equalWidth?: boolean;
 }
 
-export default function StoryViewPill({ slug, incrementOnMount = false, className = "", compact = false }: Props) {
+export default function StoryViewPill({ slug, incrementOnMount = false, className = "", compact = false, equalWidth = false }: Props) {
   const [views, setViews] = useState<number | null>(null);
   const incremented = useRef(false);
 
@@ -73,7 +75,7 @@ export default function StoryViewPill({ slug, incrementOnMount = false, classNam
   }, [slug, incrementOnMount]);
 
   const baseClasses = compact
-    ? "flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/20 text-white font-semibold text-[10px] px-2.5 py-1 rounded-full"
+    ? `flex items-center ${equalWidth ? "justify-center" : ""} gap-1 bg-white/15 backdrop-blur-sm border border-white/20 text-white font-semibold text-[10px] min-w-[70px] px-2 py-1 rounded-full`
     : "flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs px-3 py-1.5 rounded-full";
 
   return (
