@@ -379,6 +379,10 @@ function DefaultCTA() {
 
           {/* Left: copy */}
           <div className="flex-1 min-w-0 flex flex-col relative">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[8px] font-medium tracking-wider uppercase mb-3 self-start opacity-40" style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-default)" }}>
+              Read
+              <ArrowRight className="w-2 h-2" />
+            </span>
                         <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
             <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
               Adventures built,<br />
