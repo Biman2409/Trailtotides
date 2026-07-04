@@ -379,12 +379,7 @@ function DefaultCTA() {
 
           {/* Left: copy */}
           <div className="flex-1 min-w-0 flex flex-col relative">
-            {/* Read pill */}
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-wide uppercase backdrop-blur-md mb-4 self-start" style={{ background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0ede8" }}>
-              Read
-              <ArrowRight className="w-3 h-3" />
-            </span>
-            <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
+                        <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
             <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
               Adventures built,<br />
               <span className="text-[#ff5100]">for your body</span>
