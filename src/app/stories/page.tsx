@@ -236,7 +236,7 @@ export default async function StoriesPage() {
 
                     {/* Top-left: Read button */}
                     <div className="absolute top-3 left-3 z-10">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-[0.15em] text-white bg-[#ff5100] shadow-lg shadow-[#ff5100]/25 transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold text-white/80 bg-white/10 backdrop-blur-sm border border-white/20 transition-all duration-200 hover:bg-[#ff5100] hover:text-white hover:border-[#ff5100] hover:shadow-lg hover:shadow-[#ff5100]/25">
                         Read
                       </span>
                     </div>
