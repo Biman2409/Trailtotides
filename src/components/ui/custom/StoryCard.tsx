@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Crown, Mountain, MapPin } from "lucide-react";
+import { Crown, Mountain, MapPin, ArrowRight } from "lucide-react";
 import StoryLikeButton from "./StoryLikeButton";
 import StoryShareButton from "./StoryShareButton";
 import { Story } from "@/lib/data";
@@ -68,6 +68,14 @@ export default function StoryCard({ story }: { story: Story }) {
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
+        {/* Top-left: read button */}
+        <div className="absolute top-3 left-3 z-10">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-semibold tracking-wide uppercase backdrop-blur-md transition-all duration-300 group-hover:bg-[#ff5100] group-hover:shadow-lg group-hover:shadow-[#ff5100]/30" style={{ background: "rgba(0,0,0,0.45)", border: "1px solid rgba(255,255,255,0.12)", color: "#f0ede8" }}>
+            Read
+            <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+          </span>
+        </div>
+
         {/* Top-right: like + share side by side */}
         <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
           <StoryLikeButton slug={story.slug} baseLikes={story.baseLikes} pill />
@@ -114,9 +122,6 @@ export default function StoryCard({ story }: { story: Story }) {
                 <MapPin className="w-2.5 h-2.5" />
                 {story.region}
               </span>
-              <div className="text-[#ff5100] text-[10px] font-semibold group-hover:translate-x-1 transition-transform duration-200">
-                Read →
-              </div>
             </div>
           </div>
         </div>
