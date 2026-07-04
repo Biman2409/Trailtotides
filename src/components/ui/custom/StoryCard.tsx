@@ -122,7 +122,7 @@ export default function StoryCard({ story }: { story: Story }) {
                 <MapPin className="w-2.5 h-2.5" />
                 {story.region}
               </span>
-              <span className="text-[10px] text-white/70">{story.adventureDate}</span>
+              <span className="text-[11px] font-medium text-white/90">{story.adventureDate}</span>
             </div>
           </div>
         </div>

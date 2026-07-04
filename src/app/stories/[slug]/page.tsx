@@ -284,7 +284,7 @@ export default async function StoryPage({ params }: Props) {
                     <p className="text-white font-medium text-sm">{story.author}</p>
                   )}
                   </div>
-                <p className="text-white/45 text-xs flex items-center gap-1 flex-wrap">{story.authorRole} &nbsp; {story.adventureDate}</p>
+                <p className="text-white/80 text-xs font-medium flex items-center gap-1 flex-wrap">{story.authorRole} &nbsp; {story.adventureDate}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 ml-auto">

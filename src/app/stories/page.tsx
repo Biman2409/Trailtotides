@@ -175,7 +175,7 @@ export default async function StoriesPage() {
                     <p className="text-white text-sm font-semibold">{featured.author}</p>
                     <p className="text-white/40 text-xs">{featured.authorRole}</p>
                   </div>
-                  <span className="flex items-center gap-1.5 text-xs text-white/80">
+                  <span className="flex items-center gap-1.5 text-xs font-medium text-white/90">
                     {featured.adventureDate}
                     <span className="text-white/20">·</span>
                     <MapPin className="w-3 h-3" />
