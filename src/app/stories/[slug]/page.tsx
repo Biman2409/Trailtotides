@@ -359,8 +359,6 @@ export default async function StoryPage({ params }: Props) {
 
           <StoryShareBar title={story.title} slug={story.slug} />
 
-          <StoryReactions slug={story.slug} />
-
           <StoryComments slug={story.slug} />
 
           {/* Share your story CTA */}
