@@ -157,20 +157,20 @@ export default function HomePage() {
         </section>
 
         {/* ── MAP CTA ───────────────────────────────────────── */}
-        <section id="map-cta" className="relative py-10 lg:py-16 bg-[#1a2e20] px-5 lg:px-8 overflow-hidden">
+        <section id="map-cta" className="relative py-10 lg:py-16 bg-[var(--bg-surface-2)] px-5 lg:px-8 overflow-hidden">
           <div className="absolute inset-0">
             <Image
               src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1200&q=100"
               alt="India map texture"
               fill
-              className="object-cover opacity-12 brightness-[1.05] contrast-[1.1] saturate-[1.1]"
+              className="object-cover opacity-[0.04] dark:opacity-12 brightness-[1.05] contrast-[1.1] saturate-[1.1]"
               style={{ objectFit: "cover" }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#1a2e20]/98 via-[#1a2e20]/80 to-[#1a2e20]/40" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[var(--bg-surface-2)]/98 via-[var(--bg-surface-2)]/80 to-[var(--bg-surface-2)]/40" />
             <div
-              className="absolute inset-0 opacity-10"
+              className="absolute inset-0 opacity-[0.04] dark:opacity-10"
               style={{
-                backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.55) 1px, transparent 1px)",
+                backgroundImage: "radial-gradient(circle, var(--text-muted) 1px, transparent 1px)",
                 backgroundSize: "28px 28px",
               }}
             />
@@ -187,12 +187,12 @@ export default function HomePage() {
                   <br />
                   <span className="text-[#7ec88a]">Mapped</span>
                 </h2>
-                <p className="text-white/72 text-sm sm:text-base leading-relaxed mb-6 w-full max-w-lg">
+                <p className="text-[var(--text-secondary)] text-sm sm:text-base leading-relaxed mb-6 w-full max-w-lg">
                   Every trail, summit and coast — one map. Filter by type, cluster by region, tap to explore.
                 </p>
                 <Link
                   href="/map"
-                  className="inline-flex items-center gap-2.5 bg-white text-[#1a2e20] font-semibold px-8 py-4 rounded-xl text-base hover:bg-[#f0f7f1] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 group transition-all duration-200 shadow-lg shadow-black/15"
+                  className="inline-flex items-center gap-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] font-semibold px-8 py-4 rounded-xl text-base hover:bg-[var(--bg-card-hover)] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20 group transition-all duration-200 shadow-lg shadow-black/15"
                 >
                   <Map className="w-5 h-5" />
                   View Map
