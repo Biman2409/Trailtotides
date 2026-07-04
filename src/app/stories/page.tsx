@@ -176,10 +176,10 @@ export default async function StoriesPage() {
                     <p className="text-white/40 text-xs">{featured.authorRole}</p>
                   </div>
                   <span className="flex items-center gap-1.5 text-xs text-white/60">
+                    {featured.adventureDate}
+                    <span className="text-white/20">·</span>
                     <MapPin className="w-3 h-3" />
                     {featured.region}
-                    <span className="text-white/20">·</span>
-                    {featured.adventureDate}
                   </span>
                   <span className="ml-auto text-[#ff5100] text-sm font-semibold flex items-center gap-1.5 group-hover:gap-3 transition-all duration-200">
                     Read story <ArrowRight className="w-4 h-4" />
