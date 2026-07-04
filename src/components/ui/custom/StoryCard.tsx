@@ -1,39 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Crown, Mountain, Heart, MapPin } from "lucide-react";
+import { Crown, Mountain, MapPin } from "lucide-react";
+import StoryLikeButton from "./StoryLikeButton";
 import StoryShareButton from "./StoryShareButton";
 import { Story } from "@/lib/data";
 
 const BADGE_TAGS = ["Featured", "TTT Original"];
-const DEFAULT_LIKES = 50;
 
 export default function StoryCard({ story }: { story: Story }) {
   const isFeatured = story.tags.includes("Featured");
   const isTTTOriginal = story.tags.includes("TTT Original");
   const contentTags = story.pillTags ?? story.tags.filter((t) => !BADGE_TAGS.includes(t)).slice(0, 2);
-
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(story.baseLikes ?? DEFAULT_LIKES);
-
-  useEffect(() => {
-    const stored = localStorage.getItem(`story_liked_${story.slug}`);
-    if (stored === "true") {
-      setLiked(true);
-      setLikeCount((story.baseLikes ?? DEFAULT_LIKES) + 1);
-    }
-  }, [story.slug]);
-
-  function toggleLike(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    const next = !liked;
-    setLiked(next);
-    setLikeCount(next ? (story.baseLikes ?? DEFAULT_LIKES) + 1 : story.baseLikes ?? DEFAULT_LIKES);
-    localStorage.setItem(`story_liked_${story.slug}`, next ? "true" : "false");
-  }
 
   return (
     <div className="flex flex-col">
@@ -89,29 +68,10 @@ export default function StoryCard({ story }: { story: Story }) {
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
-        {/* Top-right: like + share */}
-        <div className="absolute top-3 right-3 z-10 flex flex-col items-center gap-0">
-          <button
-            onClick={toggleLike}
-            className="transition-all active:scale-90"
-          >
-            <Heart
-              className="w-4 h-4 transition-colors"
-              style={{
-                color: liked ? "#ff4d6d" : "rgba(255,255,255,0.7)",
-                fill: liked ? "#ff4d6d" : "transparent",
-              }}
-            />
-          </button>
-          <span
-            className="text-[9px] font-semibold tabular-nums -mt-0.5"
-            style={{ color: liked ? "#ff4d6d" : "rgba(255,255,255,0.7)" }}
-          >
-            {likeCount}
-          </span>
-          <div className="mt-1.5">
-            <StoryShareButton title={story.title} slug={story.slug} />
-          </div>
+        {/* Top-right: like + share side by side */}
+        <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
+          <StoryLikeButton slug={story.slug} baseLikes={story.baseLikes} pill />
+          <StoryShareButton title={story.title} slug={story.slug} />
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 p-4">
