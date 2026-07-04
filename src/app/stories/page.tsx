@@ -211,6 +211,29 @@ export default async function StoriesPage() {
                     style={{ objectFit: "cover" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+
+                  {/* Top-left badges */}
+                  <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+                    {story.tags.includes("Featured") && (
+                      <span className="flex items-center gap-1.5 rounded-full py-0 pl-0 pr-2"
+                        style={{ background: "rgba(10,10,10,0.75)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,81,0,0.35)", boxShadow: "0 0 12px rgba(255,81,0,0.15)" }}>
+                        <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0" style={{ background: "#ff5100", boxShadow: "0 0 6px rgba(255,81,0,0.5)" }}>
+                          <Crown className="w-2 h-2 text-black" />
+                        </span>
+                        <span className="text-[9px] font-bold leading-none tracking-wide" style={{ color: "#ff5100" }}>Featured</span>
+                      </span>
+                    )}
+                    {story.tags.includes("TTT Original") && (
+                      <span className="flex items-center gap-1.5 rounded-full py-0 pl-0 pr-2"
+                        style={{ background: "linear-gradient(135deg,rgba(255,81,0,0.95),rgba(220,50,0,0.9))", border: "1px solid rgba(255,255,255,0.18)", boxShadow: "0 0 14px rgba(255,81,0,0.35)" }}>
+                        <span className="w-[18px] h-[18px] rounded-full flex items-center justify-center shrink-0" style={{ background: "#000" }}>
+                          <Mountain className="w-2 h-2" style={{ color: "#ff5100" }} />
+                        </span>
+                        <span className="text-[9px] font-bold leading-none tracking-wide text-white">TTT Original</span>
+                      </span>
+                    )}
+                  </div>
+
                   <div className="absolute bottom-3 left-3 flex items-center gap-1.5 flex-wrap">
                     {(story.pillTags ?? story.tags.filter((t) => !BADGE_TAGS.includes(t)).slice(0, 2)).map((tag) => (
                       <span key={tag} className="bg-black/50 backdrop-blur-sm border border-white/15 text-white/90 text-[10px] font-medium px-2.5 py-1 rounded-full">
