@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Clock, Crown, Mountain, Heart, MapPin } from "lucide-react";
+import StoryShareButton from "./StoryShareButton";
 import { Story } from "@/lib/data";
 import StoryViewPill from "./StoryViewPill";
 
@@ -107,7 +108,7 @@ export default function StoryCard({ story }: { story: Story }) {
           <StoryViewPill slug={story.slug} compact equalWidth />
         </div>
 
-        {/* Top-right: like button */}
+        {/* Top-right: like + share */}
         <div className="absolute top-3 right-3 z-10 flex flex-col items-center gap-0">
           <button
             onClick={toggleLike}
@@ -127,6 +128,9 @@ export default function StoryCard({ story }: { story: Story }) {
           >
             {likeCount}
           </span>
+          <div className="mt-1.5">
+            <StoryShareButton title={story.title} slug={story.slug} />
+          </div>
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 p-4">
