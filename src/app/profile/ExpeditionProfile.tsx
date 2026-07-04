@@ -53,15 +53,15 @@ export default function ExpeditionProfile() {
   const countOf    = (action: XPAction) => events.filter(e => e.action === action).length;
 
   if (loading) {
-    return <div className="rounded-2xl animate-pulse" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", height: 140 }} />;
+    return <div className="rounded-2xl animate-pulse" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", height: 140 }} />;
   }
 
   return (
-    <div className="rounded-2xl overflow-hidden relative" style={{ border: `1px solid ${accentColor}20`, background: "rgba(10,10,14,0.7)" }}>
+    <div className="rounded-2xl overflow-hidden relative" style={{ border: `1px solid ${accentColor}20`, background: "var(--bg-card)" }}>
       <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 20% 0%, ${accentColor}0a 0%, transparent 60%)` }} />
 
       {/* ── Header ── */}
-      <div className="relative px-5 pt-4 pb-3 flex items-center justify-between gap-4" style={{ borderBottom: `1px solid rgba(255,255,255,0.06)` }}>
+      <div className="relative px-5 pt-4 pb-3 flex items-center justify-between gap-4" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
         <div className="flex items-center gap-3">
           <div className="w-11 h-11 rounded-xl flex items-center justify-center font-black text-xl shrink-0"
             style={{ background: `${accentColor}12`, border: `1.5px solid ${accentColor}35`, color: accentColor, boxShadow: `0 0 18px ${accentColor}22` }}>
@@ -78,12 +78,12 @@ export default function ExpeditionProfile() {
                 </span>
               )}
             </div>
-            <p className="text-white/25 text-[10px] mt-0.5">{tier.description}</p>
+            <p className="text-[10px] mt-0.5" style={{ color: "var(--text-tertiary)" }}>{tier.description}</p>
           </div>
         </div>
         <div className="text-right shrink-0">
           <p className="text-[22px] font-black tabular-nums leading-none" style={{ color: accentColor }}>{xp.toLocaleString()}</p>
-          <p className="text-white/22 text-[8.5px] mt-0.5 font-semibold tracking-widest uppercase">XP</p>
+          <p className="text-[8.5px] mt-0.5 font-semibold tracking-widest uppercase" style={{ color: "var(--text-muted)" }}>XP</p>
           {over9k && rank !== null && (
             <p className="text-[9px] font-bold mt-0.5" style={{ color: OVER_9000_COLOR }}>#{rank} of {rankTotal}</p>
           )}
@@ -91,7 +91,7 @@ export default function ExpeditionProfile() {
       </div>
 
       {/* ── Progress bar ── */}
-      <div className="relative px-5 pt-3 pb-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+      <div className="relative px-5 pt-3 pb-4" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
         {over9k ? (
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -100,14 +100,14 @@ export default function ExpeditionProfile() {
                 <span className="text-[9px] font-bold" style={{ color: OVER_9000_COLOR }}>Uncapped · +{(xp - 9000).toLocaleString()} beyond 9k</span>
               </div>
               <button onClick={() => setShowLadder(v => !v)}
-                className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md transition-all hover:bg-white/[0.06]"
-                style={{ color: showLadder ? OVER_9000_COLOR : "rgba(255,255,255,0.2)" }}>
+                className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md transition-all hover:bg-[var(--bg-surface)]"
+                style={{ color: showLadder ? OVER_9000_COLOR : "var(--text-muted)" }}>
                 <span className="text-[8px] font-bold tracking-wide">ALL TIERS</span>
                 <ChevronDown className="w-2.5 h-2.5 transition-transform duration-200"
                   style={{ transform: showLadder ? "rotate(180deg)" : "none" }} />
               </button>
             </div>
-            <div className="relative h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.05)" }}>
+            <div className="relative h-2 rounded-full overflow-hidden" style={{ background: "var(--bg-surface-2)" }}>
               <div className="absolute inset-y-0 left-0 w-full rounded-full"
                 style={{ background: `linear-gradient(90deg, #f97316, ${OVER_9000_COLOR})`, boxShadow: `0 0 8px ${OVER_9000_COLOR}60` }} />
             </div>
@@ -117,37 +117,37 @@ export default function ExpeditionProfile() {
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[9px] font-bold" style={{ color: `${tier.color}cc` }}>{tier.name}</span>
               <div className="flex items-center gap-2">
-                <span className="text-[9px] tabular-nums" style={{ color: "rgba(255,255,255,0.22)" }}>
+                <span className="text-[9px] tabular-nums" style={{ color: "var(--text-tertiary)" }}>
                   {xpToNext.toLocaleString()} XP to{" "}
                   <span className="font-bold" style={{ color: `${next.color}cc` }}>{next.name}</span>
                 </span>
                 <button onClick={() => setShowLadder(v => !v)}
-                  className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md transition-all hover:bg-white/[0.06]"
-                  style={{ color: showLadder ? accentColor : "rgba(255,255,255,0.2)" }}>
+                  className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md transition-all hover:bg-[var(--bg-surface)]"
+                  style={{ color: showLadder ? accentColor : "var(--text-muted)" }}>
                   <span className="text-[8px] font-bold tracking-wide">ALL TIERS</span>
                   <ChevronDown className="w-2.5 h-2.5 transition-transform duration-200"
                     style={{ transform: showLadder ? "rotate(180deg)" : "none" }} />
                 </button>
               </div>
             </div>
-            <div className="relative h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.05)" }}>
+            <div className="relative h-2 rounded-full overflow-hidden" style={{ background: "var(--bg-surface-2)" }}>
               <div className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
                 style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${tier.color}, ${next.color})`, boxShadow: `0 0 8px ${tier.color}50` }} />
             </div>
             <div className="flex items-center justify-between mt-1.5">
-              <span className="text-[8px] tabular-nums" style={{ color: "rgba(255,255,255,0.18)" }}>{tier.minXP.toLocaleString()} XP</span>
-              <span className="text-[8px] tabular-nums" style={{ color: "rgba(255,255,255,0.18)" }}>{next.minXP.toLocaleString()} XP</span>
+              <span className="text-[8px] tabular-nums" style={{ color: "var(--text-muted)" }}>{tier.minXP.toLocaleString()} XP</span>
+              <span className="text-[8px] tabular-nums" style={{ color: "var(--text-muted)" }}>{next.minXP.toLocaleString()} XP</span>
             </div>
           </div>
         ) : null}
 
         {/* Tier ladder */}
         {showLadder && (
-          <div className="mt-4 pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          <div className="mt-4 pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
             {/* Track: circles are 28px tall, container has no extra offset — spine at top:14px = circle center */}
             <div className="relative" style={{ paddingBottom: "4px" }}>
               {/* Background spine — at exact vertical center of 28px circles */}
-              <div className="absolute left-0 right-0 h-px" style={{ top: "14px", background: "rgba(255,255,255,0.07)", zIndex: 0 }} />
+              <div className="absolute left-0 right-0 h-px" style={{ top: "14px", background: "var(--border-subtle)", zIndex: 0 }} />
               {/* Filled spine up to current tier */}
               {(() => {
                 const idx = XP_TIERS.findIndex(t => t.level === tier.level);
@@ -174,8 +174,8 @@ export default function ExpeditionProfile() {
                         style={isCurrent
                           ? { background: t.color, color: "#000", boxShadow: `0 0 12px ${t.color}90, 0 0 0 3px ${t.color}30`, zIndex: 2 }
                           : reached
-                            ? { background: "#0a0a0e", color: t.color, border: `1.5px solid ${t.color}`, boxShadow: `0 0 8px ${t.color}40`, zIndex: 2 }
-                            : { background: "#0a0a0e", color: "rgba(255,255,255,0.2)", border: "1.5px solid rgba(255,255,255,0.1)", zIndex: 2 }
+                            ? { background: "var(--bg-page)", color: t.color, border: `1.5px solid ${t.color}`, boxShadow: `0 0 8px ${t.color}40`, zIndex: 2 }
+                            : { background: "var(--bg-page)", color: "var(--text-muted)", border: "1.5px solid var(--border-subtle)", zIndex: 2 }
                         }>
                         {t.level}
                       </div>
@@ -183,7 +183,7 @@ export default function ExpeditionProfile() {
                       <span className="text-[7px] font-semibold text-center leading-tight" style={{
                         maxWidth: "44px",
                         wordBreak: "break-word",
-                        color: isCurrent ? t.color : reached ? t.color : "rgba(255,255,255,0.18)",
+                        color: isCurrent ? t.color : reached ? t.color : "var(--text-muted)",
                       }}>
                         {t.name}
                       </span>
@@ -208,17 +208,17 @@ export default function ExpeditionProfile() {
           const active = value > 0;
           return (
             <div key={label} className="flex items-center gap-2 px-2.5 py-3"
-              style={i < arr.length - 1 ? { borderRight: "1px solid rgba(255,255,255,0.05)" } : {}}>
+              style={i < arr.length - 1 ? { borderRight: "1px solid var(--border-subtle)" } : {}}>
               <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
                 style={{
-                  background: active ? `${color}18` : "rgba(255,255,255,0.04)",
-                  border: `1px solid ${active ? `${color}30` : "rgba(255,255,255,0.06)"}`,
+                  background: active ? `${color}18` : "var(--bg-surface-2)",
+                  border: `1px solid ${active ? `${color}30` : "var(--border-subtle)"}`,
                 }}>
-                <Icon className="w-3.5 h-3.5" style={{ color: active ? color : "rgba(255,255,255,0.15)" }} />
+                <Icon className="w-3.5 h-3.5" style={{ color: active ? color : "var(--text-muted)" }} />
               </div>
               <div className="flex flex-col gap-0.5 min-w-0">
-                <span className="text-[15px] font-black tabular-nums leading-none" style={{ color: active ? color : "rgba(255,255,255,0.1)" }}>{value}</span>
-                <span className="text-[7px] uppercase tracking-wide font-bold leading-none truncate" style={{ color: "rgba(255,255,255,0.22)" }}>{label}</span>
+                <span className="text-[15px] font-black tabular-nums leading-none" style={{ color: active ? color : "var(--text-muted)" }}>{value}</span>
+                <span className="text-[7px] uppercase tracking-wide font-bold leading-none truncate" style={{ color: "var(--text-muted)" }}>{label}</span>
               </div>
             </div>
           );

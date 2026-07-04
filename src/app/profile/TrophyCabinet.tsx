@@ -78,17 +78,17 @@ function Popover({ badge, anchorRect, onClose, locked }: {
   const top = anchorRect.top - GAP;
   const arrowLeft = anchorCenterX - left - 6;
 
-  const borderColor = locked ? "rgba(255,255,255,0.12)" : `${badge.color}35`;
-  const iconBg      = locked ? "rgba(255,255,255,0.06)" : (isSpecial ? `linear-gradient(145deg,${badge.color}30,${badge.color}12)` : `${badge.color}14`);
-  const iconBorder  = locked ? "rgba(255,255,255,0.12)" : `${badge.color}55`;
-  const iconColor   = locked ? "rgba(255,255,255,0.25)" : badge.color;
+  const borderColor = locked ? "var(--border-subtle)" : `${badge.color}35`;
+  const iconBg      = locked ? "var(--bg-surface-2)" : (isSpecial ? `linear-gradient(145deg,${badge.color}30,${badge.color}12)` : `${badge.color}14`);
+  const iconBorder  = locked ? "var(--border-subtle)" : `${badge.color}55`;
+  const iconColor   = locked ? "var(--text-muted)" : badge.color;
 
   return createPortal(
     <div className="fixed z-[9999]" style={{ left, top, transform: "translateY(-100%)", width: POPOVER_W }}>
       <div className="rounded-xl p-3.5 shadow-2xl" style={{
-        background: "#0f1923",
+        background: "var(--bg-card)",
         border: `1px solid ${borderColor}`,
-        boxShadow: `0 12px 40px rgba(0,0,0,0.7), 0 0 0 1px ${locked ? "rgba(255,255,255,0.05)" : `${badge.color}15`}`,
+        boxShadow: `0 12px 40px rgba(0,0,0,0.7), 0 0 0 1px ${locked ? "var(--border-subtle)" : `${badge.color}15`}`,
       }}>
         <div className="flex items-start gap-3">
           <div className="relative shrink-0 flex items-center justify-center overflow-hidden rounded-xl"
@@ -97,32 +97,32 @@ function Popover({ badge, anchorRect, onClose, locked }: {
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5 mb-1">
-              <p className="font-bold text-xs leading-none" style={{ color: locked ? "rgba(255,255,255,0.4)" : badge.color }}>{badge.name}</p>
+              <p className="font-bold text-xs leading-none" style={{ color: locked ? "var(--text-tertiary)" : badge.color }}>{badge.name}</p>
               {locked && (
                 <span className="text-[7px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full"
-                  style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.25)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                  style={{ background: "var(--bg-surface)", color: "var(--text-muted)", border: "1px solid var(--border-subtle)" }}>
                   Locked
                 </span>
               )}
             </div>
-            <p className="text-white/50 text-[11px] leading-snug mb-2">{badge.description}</p>
+            <p className="text-[11px] leading-snug mb-2" style={{ color: "var(--text-tertiary)" }}>{badge.description}</p>
             {locked && "condition" in badge && badge.condition && (
               <div className="flex items-center gap-1.5 mt-1.5 px-2 py-1.5 rounded-lg"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                <Lock style={{ width: 9, height: 9, color: "rgba(255,255,255,0.3)", flexShrink: 0 }} />
-                <span className="text-[10px] font-semibold" style={{ color: "rgba(255,255,255,0.35)" }}>
+                style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
+                <Lock style={{ width: 9, height: 9, color: "var(--text-muted)", flexShrink: 0 }} />
+                <span className="text-[10px] font-semibold" style={{ color: "var(--text-tertiary)" }}>
                   {badge.condition as string}
                 </span>
               </div>
             )}
           </div>
           <button type="button" onClick={onClose}
-            className="shrink-0 w-5 h-5 rounded-md flex items-center justify-center hover:bg-white/10 transition-colors"
-            style={{ color: "rgba(255,255,255,0.3)" }}>
+            className="shrink-0 w-5 h-5 rounded-md flex items-center justify-center hover:bg-[var(--bg-surface)] transition-colors"
+            style={{ color: "var(--text-muted)" }}>
             <X className="w-3 h-3" />
           </button>
         </div>
-        <div className="absolute" style={{ bottom: -5, left: Math.max(8, Math.min(arrowLeft, POPOVER_W - 20)), width: 10, height: 10, background: "#0f1923", border: `1px solid ${borderColor}`, borderTop: "none", borderLeft: "none", transform: "rotate(45deg)" }} />
+        <div className="absolute" style={{ bottom: -5, left: Math.max(8, Math.min(arrowLeft, POPOVER_W - 20)), width: 10, height: 10, background: "var(--bg-card)", border: `1px solid ${borderColor}`, borderTop: "none", borderLeft: "none", transform: "rotate(45deg)" }} />
       </div>
     </div>,
     document.body
@@ -157,10 +157,10 @@ function TrophyCell({ badge, earned, boxSize, xl = false, isActive, onToggle }: 
         onClick={handleClick}
       >
         <div className="flex items-center justify-center transition-all group-hover:scale-105"
-          style={{ width: boxSize, height: boxSize, borderRadius: 8, background: "rgba(255,255,255,0.04)", border: `1px solid ${isActive ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.1)"}`, boxShadow: isActive ? "0 0 12px rgba(255,255,255,0.08)" : "none" }}>
-          <Lock style={{ width: Math.round(boxSize * 0.33), height: Math.round(boxSize * 0.33) }} className="text-white/25" />
+          style={{ width: boxSize, height: boxSize, borderRadius: 8, background: "var(--bg-surface)", border: `1px solid ${isActive ? "var(--border-default)" : "var(--border-subtle)"}`, boxShadow: isActive ? "0 0 12px rgba(255,255,255,0.08)" : "none" }}>
+          <Lock style={{ width: Math.round(boxSize * 0.33), height: Math.round(boxSize * 0.33) }} className="text-[var(--text-muted)]" />
         </div>
-        <p className="text-center font-medium leading-tight" style={{ fontSize: 7, width: boxSize + 8, color: "rgba(255,255,255,0.3)" }}>{badge.name}</p>
+        <p className="text-center font-medium leading-tight" style={{ fontSize: 7, width: boxSize + 8, color: "var(--text-muted)" }}>{badge.name}</p>
       </button>
     );
   }
@@ -268,16 +268,16 @@ export default function TrophyCabinet() {
 
   if (!stored) {
     return (
-      <div ref={containerRef} className="rounded-2xl overflow-visible relative" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.015)" }}>
+      <div ref={containerRef} className="rounded-2xl overflow-visible relative" style={{ border: "1px solid var(--border-subtle)", background: "var(--bg-card)" }}>
         <style>{`
           @keyframes trophy-shine { 0%{background-position:200% center} 60%{background-position:-200% center} 100%{background-position:-200% center} }
           @keyframes popover-in { from{opacity:0;transform:translateY(calc(-100% + 6px))} to{opacity:1;transform:translateY(-100%)} }
         `}</style>
-        <div className="px-4 py-3 rounded-2xl" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-          <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold text-white/25 mb-1">All Trophies</p>
+        <div className="px-4 py-3 rounded-2xl" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+          <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold" style={{ color: "var(--text-muted)" }}>All Trophies</p>
         </div>
         <div className="px-4 py-6 rounded-b-2xl text-center">
-          <p className="text-white/25 text-xs">Complete your <a href="/ace" className="text-[#ff5100]/70 hover:text-[#ff5100] underline underline-offset-2 transition-colors">ACE<sup>™</sup> assessment</a> to unlock trophies</p>
+          <p className="text-xs" style={{ color: "var(--text-muted)" }}>Complete your <a href="/ace" className="text-[#ff5100]/70 hover:text-[#ff5100] underline underline-offset-2 transition-colors">ACE<sup>™</sup> assessment</a> to unlock trophies</p>
         </div>
       </div>
     );
@@ -297,7 +297,7 @@ export default function TrophyCabinet() {
   );
 
   return (
-    <div ref={containerRef} className="rounded-2xl overflow-visible relative" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.015)" }}>
+    <div ref={containerRef} className="rounded-2xl overflow-visible relative" style={{ border: "1px solid var(--border-subtle)", background: "var(--bg-card)" }}>
       <style>{`
         @keyframes trophy-shine { 0%{background-position:200% center} 60%{background-position:-200% center} 100%{background-position:-200% center} }
         @keyframes popover-in { from{opacity:0;transform:translateY(calc(-100% + 6px))} to{opacity:1;transform:translateY(-100%)} }
@@ -305,22 +305,22 @@ export default function TrophyCabinet() {
       `}</style>
 
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-b rounded-t-2xl" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-        <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold text-white/25">All Trophies</p>
-        <span className="text-[8px] font-bold px-2 py-0.5 rounded-full" style={totalEarned > 0 ? { background: "rgba(251,191,36,0.1)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.2)" } : { background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.07)" }}>
+      <div className="flex items-center justify-between px-4 py-2.5 border-b rounded-t-2xl" style={{ borderColor: "var(--border-subtle)" }}>
+        <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold" style={{ color: "var(--text-muted)" }}>All Trophies</p>
+        <span className="text-[8px] font-bold px-2 py-0.5 rounded-full" style={totalEarned > 0 ? { background: "rgba(251,191,36,0.1)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.2)" } : { background: "var(--bg-surface)", color: "var(--text-muted)", border: "1px solid var(--border-subtle)" }}>
           {totalEarned} / {totalPossible} unlocked
         </span>
       </div>
 
       {/* Row 1 — Tier 1 + Tier 2 */}
-      <div className="flex flex-col sm:flex-row sm:items-stretch border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
+      <div className="flex flex-col sm:flex-row sm:items-stretch border-b" style={{ borderColor: "var(--border-subtle)" }}>
         {/* Tier 1 */}
         <div className="px-4 py-4 sm:shrink-0 border-b sm:border-b-0 sm:border-r relative overflow-hidden"
           style={{
             background: t1Earned === TIER1_ALL.length
               ? `linear-gradient(160deg,rgba(251,191,36,0.13) 0%,transparent 70%)`
               : `linear-gradient(160deg,rgba(251,191,36,0.06) 0%,transparent 70%)`,
-            borderColor: "rgba(255,255,255,0.05)",
+            borderColor: "var(--border-subtle)",
             boxShadow: t1Earned === TIER1_ALL.length ? `inset 0 0 0 1.5px rgba(251,191,36,0.35), inset 0 0 24px rgba(251,191,36,0.08)` : "none",
             borderRadius: "0",
           }}>
@@ -351,7 +351,7 @@ export default function TrophyCabinet() {
       {/* Row 2 — Tier 3 (Axis + Milestones combined) */}
       <div className="px-4 py-4 rounded-b-2xl relative overflow-hidden"
         style={{
-          borderColor: "rgba(255,255,255,0.05)",
+          borderColor: "var(--border-subtle)",
           boxShadow: t3Earned === TIER3_COMBINED.length ? `inset 0 0 0 1.5px rgba(96,165,250,0.35), inset 0 0 24px rgba(96,165,250,0.07)` : "none",
           background: t3Earned === TIER3_COMBINED.length ? "rgba(96,165,250,0.03)" : "transparent",
         }}>

@@ -56,7 +56,7 @@ export default function ACEProfileSection() {
     return (
       <div
         className="rounded-2xl sm:rounded-3xl overflow-hidden border relative"
-        style={{ background: `linear-gradient(150deg, ${U.color}14 0%, rgba(14,14,18,0.0) 60%)`, borderColor: `${U.color}25` }}
+        style={{ background: `linear-gradient(150deg, ${U.color}14 0%, transparent 60%)`, borderColor: `${U.color}25` }}
       >
         <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: U.color }} />
 
@@ -69,16 +69,16 @@ export default function ACEProfileSection() {
             <div className="scale-[1.3]">{U.icon}</div>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[8px] uppercase tracking-[0.22em] font-semibold text-white/25 mb-0.5">Capability Tier</p>
+            <p className="text-[8px] uppercase tracking-[0.22em] font-semibold mb-0.5" style={{ color: "var(--text-muted)" }}>Capability Tier</p>
             <h1 className="text-[20px] font-black tracking-tight leading-none" style={{ color: U.color }}>Uncharted</h1>
           </div>
           <div className="flex flex-col items-end gap-0.5 shrink-0">
             <div className="flex items-center gap-[2px]">
               {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} className="text-[10px] leading-none" style={{ color: "rgba(255,255,255,0.08)" }}>★</span>
+                <span key={i} className="text-[10px] leading-none" style={{ color: "var(--text-muted)" }}>★</span>
               ))}
             </div>
-            <span className="text-white/20 text-[8px]">Rank 0 of 5</span>
+            <span className="text-[8px]" style={{ color: "var(--text-muted)" }}>Rank 0 of 5</span>
           </div>
         </div>
 
@@ -88,8 +88,8 @@ export default function ACEProfileSection() {
         {/* CTA */}
         <div className="px-4 sm:px-5 pt-3 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
-            <p className="text-white/60 text-sm font-medium mb-1">Your capability is unassessed</p>
-            <p className="text-white/35 text-xs leading-relaxed max-w-sm">Take the 8-question ACE<sup>™</sup> assessment to map your physical profile and unlock your adventure rank.</p>
+            <p className="text-sm font-medium mb-1" style={{ color: "var(--text-secondary)" }}>Your capability is unassessed</p>
+            <p className="text-xs leading-relaxed max-w-sm" style={{ color: "var(--text-tertiary)" }}>Take the 8-question ACE<sup>™</sup> assessment to map your physical profile and unlock your adventure rank.</p>
           </div>
           <Link
             href="/matchmaker"
@@ -121,7 +121,7 @@ export default function ACEProfileSection() {
   return (
     <div
       className="rounded-2xl sm:rounded-3xl overflow-hidden border relative"
-      style={{ background: `linear-gradient(150deg, ${currentRank.color}14 0%, rgba(14,14,18,0.0) 60%)`, borderColor: `${currentRank.color}25` }}
+      style={{ background: `linear-gradient(150deg, ${currentRank.color}14 0%, transparent 60%)`, borderColor: `${currentRank.color}25` }}
     >
       <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: currentRank.color }} />
 
@@ -140,16 +140,16 @@ export default function ACEProfileSection() {
               <div className="scale-[1.3]">{currentRank.icon}</div>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[8px] uppercase tracking-[0.22em] font-semibold text-white/25 mb-0.5">Capability Tier</p>
+              <p className="text-[8px] uppercase tracking-[0.22em] font-semibold mb-0.5" style={{ color: "var(--text-muted)" }}>Capability Tier</p>
               <h1 className="text-[20px] font-black tracking-tight leading-none" style={{ color: currentRank.color }}>{currentRank.label}</h1>
             </div>
             <div className="flex flex-col items-end gap-0.5 shrink-0">
               <div className="flex items-center gap-[2px]">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <span key={i} className="text-[10px] leading-none" style={{ color: i < currentRank.stars ? currentRank.color : "rgba(255,255,255,0.08)" }}>★</span>
+                  <span key={i} className="text-[10px] leading-none" style={{ color: i < currentRank.stars ? currentRank.color : "var(--text-muted)" }}>★</span>
                 ))}
               </div>
-              <span className="text-white/20 text-[8px]">Rank {currentRank.stars} of 5</span>
+              <span className="text-[8px]" style={{ color: "var(--text-muted)" }}>Rank {currentRank.stars} of 5</span>
             </div>
           </div>
 
@@ -161,9 +161,9 @@ export default function ACEProfileSection() {
             <div className="flex items-center justify-between">
               <div className="flex items-baseline gap-1">
                 <span className="text-[22px] font-black tabular-nums tracking-tight leading-none" style={{ color: currentRank.color }}>{progressPct}<span className="text-sm font-bold ml-0.5" style={{ color: `${currentRank.color}60` }}>%</span></span>
-                <span className="text-[11px] text-white/30 leading-none">to <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span></span>
+                <span className="text-[11px] leading-none" style={{ color: "var(--text-tertiary)" }}>to <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span></span>
               </div>
-              <span className="text-[11px] text-white/30"><span className="font-bold text-white/55">{ptsNeeded}</span> pts needed</span>
+              <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}><span className="font-bold" style={{ color: "var(--text-secondary)" }}>{ptsNeeded}</span> pts needed</span>
             </div>
           ) : (
             <div className="flex items-center gap-1.5">
@@ -189,16 +189,16 @@ export default function ACEProfileSection() {
         {/* Right column: radar — desktop only */}
         <div
           className="hidden sm:flex shrink-0 flex-col gap-3 px-6 pt-6 pb-6 border-l"
-          style={{ borderColor: `${currentRank.color}18`, background: "rgba(255,255,255,0.012)" }}
+          style={{ borderColor: `${currentRank.color}18`, background: "var(--bg-surface)" }}
         >
-          <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/30">Capability Breakdown</p>
+          <p className="text-[9px] uppercase tracking-[0.22em] font-bold" style={{ color: "var(--text-tertiary)" }}>Capability Breakdown</p>
           <ACERadar ace={stored.ace} size={240} showLabels />
         </div>
       </div>
 
       {/* ACE Radar — mobile: below everything */}
       <div className="sm:hidden px-5 pb-5 flex flex-col gap-2" style={{ borderTop: `1px solid ${currentRank.color}14` }}>
-        <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/30 pt-4">Capability Breakdown</p>
+        <p className="text-[9px] uppercase tracking-[0.22em] font-bold pt-4" style={{ color: "var(--text-tertiary)" }}>Capability Breakdown</p>
         <ACERadar ace={stored.ace} size={260} showLabels />
       </div>
     </div>

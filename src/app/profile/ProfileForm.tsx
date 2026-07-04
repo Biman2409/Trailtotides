@@ -23,10 +23,10 @@ type Profile = {
 
 function Section({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl p-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
+    <div className="rounded-2xl p-6" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
       <div className="mb-5">
-        <h2 className="text-base font-bold text-white">{title}</h2>
-        {subtitle && <p className="text-white/35 text-xs mt-0.5">{subtitle}</p>}
+        <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>{title}</h2>
+        {subtitle && <p className="text-xs mt-0.5" style={{ color: "var(--text-tertiary)" }}>{subtitle}</p>}
       </div>
       {children}
     </div>
@@ -91,40 +91,40 @@ function AccountDetails({ profile }: { profile: Profile }) {
   const canSave = isDirty && usernameState !== "taken" && usernameState !== "checking" && usernameState !== "invalid";
 
   const fieldClass = (editable: boolean) =>
-    `w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3 text-sm transition-all ${
+    `w-full bg-[var(--bg-surface)] border border-[var(--border-default)] rounded-2xl pl-11 pr-4 py-3 text-sm transition-all ${
       editable
-        ? "text-white placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 cursor-text"
-        : "text-white/50 cursor-default select-none pointer-events-none"
+        ? "text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[#ff5100]/50 cursor-text"
+        : "text-[var(--text-tertiary)] cursor-default select-none pointer-events-none"
     }`;
 
   return (
     <Section title="Account Details" subtitle="Your personal information.">
       <form action={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Full Name</label>
+          <label className="text-[10px] font-bold uppercase tracking-widest pl-1" style={{ color: "var(--text-tertiary)" }}>Full Name</label>
           <div className="relative group">
-            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
+            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors" style={{ color: "var(--text-muted)" }} />
             <input name="fullName" type="text" value={fullName} onChange={e => editing && setFullName(e.target.value)}
               readOnly={!editing} placeholder="Your full name" required className={fieldClass(editing)} />
           </div>
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Username</label>
+          <label className="text-[10px] font-bold uppercase tracking-widest pl-1" style={{ color: "var(--text-tertiary)" }}>Username</label>
           <div className="relative group">
-            <AtSign className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
+            <AtSign className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors" style={{ color: "var(--text-muted)" }} />
             <input name="username" type="text" value={username} readOnly={!editing}
               onChange={(e) => { if (!editing) return; const v = e.target.value.toLowerCase(); setUsername(v); checkUsername(v); }}
               placeholder="your_username"
-              className={`w-full bg-white/5 border rounded-2xl pl-11 pr-10 py-3 text-sm transition-all ${
-                !editing ? "text-white/50 cursor-default select-none pointer-events-none border-white/10" :
-                usernameState === "available" ? "text-white border-emerald-500/50 focus:outline-none" :
-                usernameState === "taken" || usernameState === "invalid" ? "text-white border-red-500/40 focus:outline-none" :
-                "text-white border-white/10 focus:outline-none focus:border-[#ff5100]/50"
+              className={`w-full bg-[var(--bg-surface)] border rounded-2xl pl-11 pr-10 py-3 text-sm transition-all text-[var(--text-primary)] ${
+                !editing ? "cursor-default select-none pointer-events-none border-[var(--border-default)] text-[var(--text-tertiary)]" :
+                usernameState === "available" ? "border-emerald-500/50 focus:outline-none" :
+                usernameState === "taken" || usernameState === "invalid" ? "border-red-500/40 focus:outline-none" :
+                "border-[var(--border-default)] focus:outline-none focus:border-[#ff5100]/50"
               }`} />
             {editing && (
               <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                {usernameState === "checking"  && <Loader2      className="w-4 h-4 text-white/30 animate-spin" />}
+                {usernameState === "checking"  && <Loader2      className="w-4 h-4 animate-spin" style={{ color: "var(--text-tertiary)" }} />}
                 {usernameState === "available" && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
                 {(usernameState === "taken" || usernameState === "invalid") && <XCircle className="w-4 h-4 text-red-400" />}
               </div>
@@ -144,9 +144,9 @@ function AccountDetails({ profile }: { profile: Profile }) {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Email Address</label>
+          <label className="text-[10px] font-bold uppercase tracking-widest pl-1" style={{ color: "var(--text-tertiary)" }}>Email Address</label>
           <div className="relative group">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors" style={{ color: "var(--text-muted)" }} />
             <input name="email" type="email" value={email} readOnly={!editing}
               onChange={e => editing && setEmail(e.target.value)} placeholder="your@email.com"
               className={fieldClass(editing)} />
@@ -154,9 +154,9 @@ function AccountDetails({ profile }: { profile: Profile }) {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Phone Number</label>
+          <label className="text-[10px] font-bold uppercase tracking-widest pl-1" style={{ color: "var(--text-tertiary)" }}>Phone Number</label>
           <div className="relative group">
-            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
+            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors" style={{ color: "var(--text-muted)" }} />
             <input name="phone" type="tel" value={phone} readOnly={!editing}
               onChange={e => editing && setPhone(e.target.value)} placeholder="+91 9876543210"
               className={fieldClass(editing)} />
@@ -177,7 +177,8 @@ function AccountDetails({ profile }: { profile: Profile }) {
             ) : (
               <>
                 <button type="button" onClick={handleCancel} disabled={loading}
-                  className="px-4 py-2.5 rounded-xl text-sm font-medium text-white/40 hover:text-white/70 transition-colors">
+                  className="px-4 py-2.5 rounded-xl text-sm font-medium transition-colors"
+                  style={{ color: "var(--text-tertiary)" }}>
                   Cancel
                 </button>
                 {canSave && (
@@ -220,36 +221,36 @@ function ChangePasswordSection() {
     <Section title="Change Password" subtitle="Verify your current password before setting a new one.">
       <form ref={formRef} action={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Current Password</label>
+          <label className="text-[10px] font-bold uppercase tracking-widest pl-1" style={{ color: "var(--text-tertiary)" }}>Current Password</label>
           <div className="relative group">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors" style={{ color: "var(--text-muted)" }} />
             <input name="currentPassword" type={showCurrent ? "text" : "password"} placeholder="Your current password" required
-              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-11 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
-            <button type="button" onClick={() => setShowCurrent(v => !v)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors">
+              className="w-full bg-[var(--bg-surface)] border border-[var(--border-default)] rounded-2xl pl-11 pr-11 py-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[#ff5100]/50 transition-all" />
+            <button type="button" onClick={() => setShowCurrent(v => !v)} className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors" style={{ color: "var(--text-muted)" }}>
               {showCurrent ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">New Password</label>
+          <label className="text-[10px] font-bold uppercase tracking-widest pl-1" style={{ color: "var(--text-tertiary)" }}>New Password</label>
           <div className="relative group">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors" style={{ color: "var(--text-muted)" }} />
             <input name="newPassword" type={showNew ? "text" : "password"} placeholder="Min. 6 characters" minLength={6} required
-              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-11 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
-            <button type="button" onClick={() => setShowNew(v => !v)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors">
+              className="w-full bg-[var(--bg-surface)] border border-[var(--border-default)] rounded-2xl pl-11 pr-11 py-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[#ff5100]/50 transition-all" />
+            <button type="button" onClick={() => setShowNew(v => !v)} className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors" style={{ color: "var(--text-muted)" }}>
               {showNew ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest pl-1">Confirm New Password</label>
+          <label className="text-[10px] font-bold uppercase tracking-widest pl-1" style={{ color: "var(--text-tertiary)" }}>Confirm New Password</label>
           <div className="relative group">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ff7d47] transition-colors" />
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors" style={{ color: "var(--text-muted)" }} />
             <input name="confirmPassword" type={showConfirm ? "text" : "password"} placeholder="Repeat new password" required
-              className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-11 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 transition-all" />
-            <button type="button" onClick={() => setShowConfirm(v => !v)} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors">
+              className="w-full bg-[var(--bg-surface)] border border-[var(--border-default)] rounded-2xl pl-11 pr-11 py-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:border-[#ff5100]/50 transition-all" />
+            <button type="button" onClick={() => setShowConfirm(v => !v)} className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors" style={{ color: "var(--text-muted)" }}>
               {showConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
@@ -332,7 +333,7 @@ function AvatarSection() {
           onClick={() => setOpen(true)}
           className="group w-[72px] h-[72px] rounded-2xl relative overflow-hidden shrink-0 focus:outline-none"
           style={{
-            border: `1.5px solid ${selected ? "rgba(255,255,255,0.09)" : rankColor + "30"}`,
+            border: `1.5px solid ${selected ? "var(--border-subtle)" : rankColor + "30"}`,
             background: selected ? "transparent" : `linear-gradient(145deg,${rankColor}1a,${rankColor}08)`,
           }}
         >
@@ -342,8 +343,8 @@ function AvatarSection() {
                 <span style={{ width: 34, height: 34, display: "block" }}>{RANK_ICONS[rankName] ?? RANK_ICONS["Uncharted"]}</span>
               </span>
           }
-          <span className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
-            <svg className="w-4 h-4 text-white/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" style={{ background: "var(--bg-card)" }}>
+            <svg className="w-4 h-4" style={{ color: "var(--text-secondary)" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
               <circle cx="12" cy="13" r="4"/>
             </svg>
@@ -351,10 +352,10 @@ function AvatarSection() {
         </button>
 
         <div className="flex-1">
-          <p className="text-white/75 text-sm font-semibold">
+          <p className="text-sm font-semibold" style={{ color: "var(--text-secondary)" }}>
             {selected ? selected.label : `${rankName} — ACE™ Rank`}
           </p>
-          <p className="text-white/28 text-xs mt-0.5 mb-3">
+          <p className="text-xs mt-0.5 mb-3" style={{ color: "var(--text-muted)" }}>
             {selected ? "Custom character" : "Tier badge displayed by default"}
           </p>
           <button
