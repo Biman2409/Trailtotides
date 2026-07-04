@@ -157,7 +157,7 @@ function TrophyCell({ badge, earned, boxSize, xl = false, isActive, onToggle }: 
         onClick={handleClick}
       >
         <div className="flex items-center justify-center transition-all group-hover:scale-105"
-          style={{ width: boxSize, height: boxSize, borderRadius: 8, background: "var(--bg-surface)", border: `1px solid ${isActive ? "var(--border-default)" : "var(--border-subtle)"}`, boxShadow: isActive ? "0 0 12px rgba(255,255,255,0.08)" : "none" }}>
+          style={{ width: boxSize, height: boxSize, borderRadius: 8, background: "var(--bg-surface)", border: `1px solid ${isActive ? "var(--border-default)" : "var(--border-subtle)"}`, boxShadow: isActive ? "0 0 12px rgba(0,0,0,0.15)" : "none" }}>
           <Lock style={{ width: Math.round(boxSize * 0.33), height: Math.round(boxSize * 0.33) }} className="text-[var(--text-muted)]" />
         </div>
         <p className="text-center font-medium leading-tight" style={{ fontSize: 7, width: boxSize + 8, color: "var(--text-muted)" }}>{badge.name}</p>

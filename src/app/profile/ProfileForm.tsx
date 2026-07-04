@@ -355,9 +355,11 @@ function AvatarSection() {
           <p className="text-sm font-semibold" style={{ color: "var(--text-secondary)" }}>
             {selected ? selected.label : `${rankName} — ACE™ Rank`}
           </p>
-          <p className="text-xs mt-0.5 mb-3" style={{ color: "var(--text-muted)" }}>
-            {selected ? "Custom character" : "Tier badge displayed by default"}
-          </p>
+          {!selected && (
+            <p className="text-xs mt-0.5 mb-3" style={{ color: "var(--text-muted)" }}>
+              Tier badge displayed by default
+            </p>
+          )}
           <button
             type="button"
             onClick={() => setOpen(true)}

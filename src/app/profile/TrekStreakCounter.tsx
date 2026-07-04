@@ -44,28 +44,28 @@ export default function TrekStreakCounter() {
   return (
     <div className="mb-5 space-y-2">
       {/* Completed ↔ Wishlist */}
-      <div className="grid grid-cols-2 rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+      <div className="grid grid-cols-2 rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
         {[
           { value: stats.total,     label: "Completed",  color: "#10b981", icon: CheckCircle2 },
           { value: stats.wishCount, label: "Wishlisted", color: "#f43f5e", icon: Heart        },
         ].map(({ value, label, color, icon: Icon }, i) => (
           <div key={label}
             className="flex items-center gap-2.5 px-3 py-3"
-            style={i === 0 ? { borderRight: "1px solid rgba(255,255,255,0.06)" } : {}}>
+            style={i === 0 ? { borderRight: "1px solid var(--border-subtle)" } : {}}>
             <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
               style={{ background: `${color}18`, border: `1px solid ${color}30` }}>
               <Icon className="w-3.5 h-3.5" style={{ color }} />
             </div>
             <div className="flex flex-col gap-0.5">
               <span className="text-[16px] font-black tabular-nums leading-none" style={{ color }}>{value}</span>
-              <span className="text-[8px] uppercase tracking-wide font-bold leading-none" style={{ color: "rgba(255,255,255,0.25)" }}>{label}</span>
+              <span className="text-[8px] uppercase tracking-wide font-bold leading-none" style={{ color: "var(--text-muted)" }}>{label}</span>
             </div>
           </div>
         ))}
       </div>
 
       {/* Secondary stats row */}
-      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
       <div className="grid grid-cols-3">
         {[
           { value: stats.types,     delta: stats.wishTypesNew,  label: "Types",            color: "#22d3ee", icon: Layers },
@@ -74,7 +74,7 @@ export default function TrekStreakCounter() {
         ].map(({ value, delta, label, color, icon: Icon }, i) => (
           <div key={label}
             className="flex items-center gap-2.5 px-3 py-3"
-            style={i < 2 ? { borderRight: "1px solid rgba(255,255,255,0.06)" } : {}}>
+            style={i < 2 ? { borderRight: "1px solid var(--border-subtle)" } : {}}>
             {/* Icon */}
             <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
               style={{ background: `${color}18`, border: `1px solid ${color}30` }}>
@@ -95,9 +95,9 @@ export default function TrekStreakCounter() {
       </div>
       {/* Wishlist delta footnote */}
       {stats.wishCount > 0 && (stats.wishTypesNew > 0 || stats.wishStatesNew > 0 || stats.wishDaysMore > 0) && (
-        <div className="flex items-center gap-1.5 px-3 py-2" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-          <Info className="w-2.5 h-2.5 shrink-0" style={{ color: "#f43f5e60" }} />
-          <span className="text-[9px] font-medium" style={{ color: "rgba(255,255,255,0.2)" }}>
+        <div className="flex items-center gap-1.5 px-3 py-2" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+          <Info className="w-2.5 h-2.5 shrink-0" style={{ color: "var(--text-muted)" }} />
+          <span className="text-[9px] font-medium" style={{ color: "var(--text-muted)" }}>
             <span style={{ color: "#f43f5e90" }}>+n</span> shows what you'd gain by completing your wishlist
           </span>
         </div>
