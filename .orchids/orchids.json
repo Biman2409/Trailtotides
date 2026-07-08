@@ -3,7 +3,7 @@
   "createdAt": 1771794379784,
   "version": "1.0",
   "startupCommands": [
-    "npm install; npx next dev --turbopack --port 3001"
+    "npm install; npm run dev"
   ],
   "templateId": "nextjs"
 }
