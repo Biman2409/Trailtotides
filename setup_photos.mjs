@@ -1,8 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 
 const admin = createClient(
-  "https://vmpvmjzursbjwkrgulyp.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtcHZtanp1cnNiandrcmd1bHlwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjA0NjE2NCwiZXhwIjoyMDg3NjIyMTY0fQ.KPYx4a7tUV9K2PEU1fhkLDYsCzwJPAeX8zBIXRgzR_Q"
+  "https://eylgddhfxzxwovcodihx.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtcHZtanp1cnNiandrcmd1bHlwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjA0NjE2NCwiZXhwIjoyMDg3NjIyMTY0fQ.is781ciwofk9TCRSPyGdGSosAoCCiH6ZhbIImkGbX0k"
 );
 
 // Create bucket

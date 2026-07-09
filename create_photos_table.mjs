@@ -13,7 +13,7 @@ for (const host of hosts) {
       const client = new Client({
         host, port,
         database: "postgres",
-        user: `postgres.vmpvmjzursbjwkrgulyp`,
+        user: `postgres.eylgddhfxzxwovcodihx`,
         password: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtcHZtanp1cnNiandrcmd1bHlwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjA0NjE2NCwiZXhwIjoyMDg3NjIyMTY0fQ.KPYx4a7tUV9K2PEU1fhkLDYsCzwJPAeX8zBIXRgzR_Q",
         ssl: { rejectUnauthorized: false },
         connectionTimeoutMillis: 5000,

@@ -1,12 +1,12 @@
 import pkg from "pg";
 const { Client } = pkg;
 
-// Supabase project: vmpvmjzursbjwkrgulyp
+// Supabase project: eylgddhfxzxwovcodihx
 const DB_PASSWORD =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtcHZtanp1cnNiandrcmd1bHlwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjA0NjE2NCwiZXhwIjoyMDg3NjIyMTY0fQ.KPYx4a7tUV9K2PEU1fhkLDYsCzwJPAeX8zBIXRgzR_Q";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtcHZtanp1cnNiandrcmd1bHlwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjA0NjE2NCwiZXhwIjoyMDg3NjIyMTY0fQ.is781ciwofk9TCRSPyGdGSosAoCCiH6ZhbIImkGbX0k";
 
 const client = new Client({
-  host: "db.vmpvmjzursbjwkrgulyp.supabase.co",
+  host: "db.eylgddhfxzxwovcodihx.supabase.co",
   port: 5432,
   database: "postgres",
   user: "postgres",
