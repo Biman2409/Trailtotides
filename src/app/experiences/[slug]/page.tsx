@@ -43,6 +43,8 @@ import WeatherWidget from "./WeatherWidget";
 import PhotoGallery from "./PhotoGallery";
 import PackingList from "./PackingList";
 import HazardBadges from "./HazardBadges";
+import TagsList from "@/components/ui/custom/TagsList";
+import SidebarLink from "@/components/ui/custom/SidebarLink";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -519,19 +521,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* Tags */}
             <div className="pt-4 pb-1">
-              <div className="flex flex-wrap gap-2">
-                {adventure.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-xs px-3 py-1.5 rounded-full transition-colors"
-                    style={{ color: "var(--text-tertiary)", background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}
-                    onMouseEnter={(e) => e.currentTarget.style.color = "var(--text-secondary)"}
-                    onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-tertiary)"}
-                  >
-                    #{tag}
-                  </span>
-                ))}
-              </div>
+              <TagsList tags={adventure.tags} />
             </div>
           </div>
 
@@ -570,24 +560,12 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* Explore links */}
             <div className="grid grid-cols-2 gap-2">
-              <Link
-                href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}
-                className="flex items-center justify-center py-2.5 rounded-xl text-[11px] font-medium transition-all"
-                style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-subtle)" }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.background = "var(--bg-card)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.background = "transparent"; }}
-              >
+              <SidebarLink href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}>
                 More in {adventure.state}
-              </Link>
-              <Link
-                href={`/explore?type=${encodeURIComponent(adventure.type)}`}
-                className="flex items-center justify-center py-2.5 rounded-xl text-[11px] font-medium transition-all"
-                style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-subtle)" }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.background = "var(--bg-card)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.background = "transparent"; }}
-              >
+              </SidebarLink>
+              <SidebarLink href={`/explore?type=${encodeURIComponent(adventure.type)}`}>
                 More in {adventure.type}
-              </Link>
+              </SidebarLink>
             </div>
 
           </div>
