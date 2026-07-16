@@ -105,7 +105,10 @@ export async function POST(req: NextRequest) {
     contentType: file.type,
     upsert: false,
   });
-  if (uploadError) return NextResponse.json({ error: uploadError.message }, { status: 500 });
+  if (uploadError) {
+    console.error("photos upload error:", uploadError);
+    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+  }
 
   const { data: { publicUrl } } = admin.storage.from(BUCKET).getPublicUrl(path);
 

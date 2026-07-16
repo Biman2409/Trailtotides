@@ -29,7 +29,7 @@ async function main() {
         if (runError) {
           console.log("Statement failed (may be expected):", runError.message);
         }
-      } catch (e: any) {
+      } catch {
         // exec_sql might not exist - this is expected
         console.log("exec_sql not available, need manual migration.");
         console.log("Please run this SQL in the Supabase dashboard SQL editor:");

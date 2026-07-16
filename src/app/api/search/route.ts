@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { adventures } from "@/lib/data";
 import { getPublishedStories } from "@/lib/stories";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
 export interface SearchResult {
   id: string;
@@ -11,7 +12,15 @@ export interface SearchResult {
   image?: string;
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const { allowed, retryAfterMs } = rateLimit(`search:${getClientIp(req)}`, 60, 60_000);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } }
+    );
+  }
+
   const results: SearchResult[] = [];
 
   // Adventures

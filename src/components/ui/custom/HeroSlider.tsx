@@ -86,6 +86,11 @@ export default function HeroSlider() {
   const [loaded,      setLoaded]      = useState<Record<number, boolean>>({ 0: false });
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Bumped each time a slide is (re)activated, so its <Image> remounts and the
+  // Ken Burns animation restarts from 0% instead of resuming a paused mid-flight state.
+  const activationCounter = useRef(0);
+  const activationKey = useRef<Record<number, number>>({ 0: 0 });
+
   useEffect(() => {
     setShuffled(shuffle(slides));
   }, []);
@@ -94,6 +99,8 @@ export default function HeroSlider() {
     if (index === current) return;
     if (animating && !byUser) return;
     if (timerRef.current) clearTimeout(timerRef.current);
+    activationCounter.current += 1;
+    activationKey.current[index] = activationCounter.current;
     setPrev(current);
     setCurrent(index);
     setAnimating(true);
@@ -153,6 +160,7 @@ export default function HeroSlider() {
             }}
           >
               <Image
+                key={activationKey.current[i] ?? 0}
                 src={slide.src}
                 alt={slide.alt}
                 fill
@@ -165,9 +173,12 @@ export default function HeroSlider() {
                     objectFit:  "cover",
                     filter:     slide.filter || "brightness(1.05) contrast(1.1) saturate(1.1)",
                     willChange: "transform",
-                    animation:  isActive
-                      ? `kb${panIdx} ${SLIDE_DURATION + TRANSITION_MS}ms cubic-bezier(0.22,0.61,0.36,1) forwards`
-                      : "none",
+                    // Always keep the animation attached — pause it (freezing the
+                    // current pan/zoom in place) instead of removing it, so the
+                    // outgoing slide doesn't snap back to its unzoomed start
+                    // position while it's still fading out.
+                    animation: `kb${panIdx} ${SLIDE_DURATION + TRANSITION_MS}ms cubic-bezier(0.22,0.61,0.36,1) forwards`,
+                    animationPlayState: isActive ? "running" : "paused",
                   }}
               />
           </div>

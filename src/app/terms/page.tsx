@@ -40,7 +40,7 @@ const SECTIONS = [
   },
         {
           title: "8. Compass.AI Features",
-          content: `TRAIL TO TIDES uses Compass.AI (powered by OpenAI's language model technology) to provide adventure recommendations. Recommendations are generated automatically and may not always be accurate, appropriate, or safe for your specific circumstances. Always exercise your own judgement and verify information before acting on any AI-generated recommendation.`,
+          content: `TRAIL TO TIDES uses Compass.AI (powered by Groq's language model technology) and the ACE Matchmaker (powered by Anthropic's Claude) to provide adventure recommendations. Recommendations are generated automatically and may not always be accurate, appropriate, or safe for your specific circumstances. Always exercise your own judgement and verify information before acting on any AI-generated recommendation.`,
         },
 
   {

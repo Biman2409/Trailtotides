@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { signUp } from "@/app/auth/actions";
 import Link from "next/link";
 import { Eye, EyeOff, ArrowLeft, CheckCircle2, XCircle, Loader2, AtSign, ChevronDown, X } from "lucide-react";
+import Image from "next/image";
 import Logo from "@/components/ui/custom/Logo";
 import countries from "@/lib/countries.json";
 import TermsModal from "@/components/ui/custom/TermsModal";
@@ -278,8 +279,8 @@ export default function SignUpPage() {
               >
                 {selectedAvatarId !== null ? (
                   <>
-                    <span className="w-7 h-7 rounded-lg overflow-hidden shrink-0 block" style={{ border: "1.5px solid rgba(255,81,0,0.5)" }}>
-                      <img src={AVATARS.find(a => a.id === selectedAvatarId)?.src} alt="" className="w-full h-full object-cover" />
+                    <span className="relative w-7 h-7 rounded-lg overflow-hidden shrink-0 block" style={{ border: "1.5px solid rgba(255,81,0,0.5)" }}>
+                      <Image src={AVATARS.find(a => a.id === selectedAvatarId)!.src} alt="" fill sizes="28px" className="object-cover" />
                     </span>
                     <span className="flex-1 text-white text-sm font-medium">{AVATARS.find(a => a.id === selectedAvatarId)?.label}</span>
                     <button
@@ -321,14 +322,14 @@ export default function SignUpPage() {
                           className="flex flex-col items-center gap-1.5 group/av focus:outline-none"
                         >
                           <span
-                            className="w-full aspect-square rounded-xl overflow-hidden block transition-all duration-150"
+                            className="relative w-full aspect-square rounded-xl overflow-hidden block transition-all duration-150"
                             style={{
                               border: `1.5px solid ${active ? "rgba(255,81,0,0.8)" : "rgba(255,255,255,0.07)"}`,
                               boxShadow: active ? "0 0 14px rgba(255,81,0,0.4)" : "none",
                               transform: active ? "scale(1.06)" : "scale(1)",
                             }}
                           >
-                            <img src={av.src} alt={av.label} className="w-full h-full object-cover" />
+                            <Image src={av.src} alt={av.label} fill sizes="60px" className="object-cover" />
                           </span>
                           <span className="text-[7.5px] font-medium leading-none tracking-wide truncate w-full text-center transition-colors"
                             style={{ color: active ? "rgba(255,81,0,0.9)" : "rgba(255,255,255,0.28)" }}>

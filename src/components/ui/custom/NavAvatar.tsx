@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { AVATARS, LS_KEY } from "@/lib/avatars";
 import { getTierLabel, getTier } from "@/lib/tiers";
 import { loadProfile } from "@/lib/matchmaker";
@@ -75,8 +76,8 @@ export default function NavAvatar({ fallback, role }: { fallback: string; role?:
     }
     if (operatorLogo) {
       return (
-        <div className="w-7 h-7 rounded-lg overflow-hidden shrink-0 bg-white flex items-center justify-center" style={{ border: "1.5px solid rgba(255,255,255,0.12)" }}>
-          <img src={operatorLogo} alt="Company logo" className="w-full h-full object-contain p-0.5" loading="eager" />
+        <div className="relative w-7 h-7 rounded-lg overflow-hidden shrink-0 bg-white flex items-center justify-center" style={{ border: "1.5px solid rgba(255,255,255,0.12)" }}>
+          <Image src={operatorLogo} alt="Company logo" fill sizes="28px" className="object-contain p-0.5" />
         </div>
       );
     }
@@ -101,8 +102,8 @@ export default function NavAvatar({ fallback, role }: { fallback: string; role?:
 
   if (selected) {
     return (
-      <div className="w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ border: "1.5px solid rgba(255,255,255,0.12)" }}>
-        <img src={selected.src} alt={selected.label} className="w-full h-full object-cover" loading="eager" />
+      <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ border: "1.5px solid rgba(255,255,255,0.12)" }}>
+        <Image src={selected.src} alt={selected.label} fill sizes="28px" className="object-cover" />
       </div>
     );
   }

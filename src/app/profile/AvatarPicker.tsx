@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { X, Check } from "lucide-react";
 import { AVATARS, LS_KEY } from "@/lib/avatars";
 import { getTierLabel, getTier } from "@/lib/tiers";
@@ -148,7 +149,7 @@ export default function AvatarPicker() {
         aria-label="Change profile picture"
       >
         {selected
-          ? <img src={selected.src} alt={selected.label} className="block w-full h-full object-cover rounded-[22px]" loading="eager" />
+          ? <Image src={selected.src} alt={selected.label} fill sizes="96px" className="object-cover rounded-[22px]" />
           : <AceBadge rankName={rankName} rankColor={rankColor} />
         }
         <span className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl gap-1 pointer-events-none">
@@ -263,7 +264,7 @@ function AvatarCell({ av, active, onPick }: { av: (typeof AVATARS)[0]; active: b
   return (
     <button type="button" onClick={onPick} className="flex flex-col items-center gap-1.5 group/av focus:outline-none">
       <span
-        className="w-full aspect-square rounded-xl overflow-hidden block"
+        className="relative w-full aspect-square rounded-xl overflow-hidden block"
         style={{
           border: `1.5px solid ${active ? "rgba(255,81,0,0.8)" : "rgba(255,255,255,0.07)"}`,
           boxShadow: active ? "0 0 16px rgba(255,81,0,0.4)" : "none",
@@ -273,7 +274,7 @@ function AvatarCell({ av, active, onPick }: { av: (typeof AVATARS)[0]; active: b
           transition: "all 0.13s",
         }}
       >
-        <img src={av.src} alt={av.label} className="w-full h-full object-cover" loading="eager" />
+        <Image src={av.src} alt={av.label} fill sizes="80px" className="object-cover" />
       </span>
       <span className="text-[7.5px] text-white/25 group-hover/av:text-white/55 transition-colors font-medium leading-none tracking-wide">
         {av.label}

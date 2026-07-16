@@ -18,6 +18,7 @@ import {
   Image, StarOff, ArrowUpDown, RotateCcw, Send,
 } from "lucide-react";
 import Link from "next/link";
+import NextImage from "next/image";
 import * as XLSX from "xlsx";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -293,11 +294,12 @@ function UserDetailPanel({
 function SubmissionDetailPanel({ sub, allSubmissions }: { sub: OperatorSubmission; allSubmissions?: OperatorSubmission[] }) {
   const otherPrices = allSubmissions?.filter(s =>
     s.adventure_slug === sub.adventure_slug && s.id !== sub.id && s.price_from
-  ).map(s => s.price_from) ?? [];
+  ).map(s => parseInt(s.price_from.replace(/[^\d]/g, ""), 10)).filter(n => !isNaN(n)) ?? [];
   const avgPrice = otherPrices.length > 0
     ? Math.round(otherPrices.reduce((a,b) => a + b, 0) / otherPrices.length)
     : null;
-  const priceDiff = avgPrice !== null ? sub.price_from - avgPrice : null;
+  const subPrice = parseInt(sub.price_from.replace(/[^\d]/g, ""), 10);
+  const priceDiff = avgPrice !== null && !isNaN(subPrice) ? subPrice - avgPrice : null;
 
   return (
     <tr>
@@ -1130,7 +1132,9 @@ export default function AdminDashboardClient({
               const isRead = readMsgs.has(msg.id);
               const isReplied = repliedMsgs.has(msg.id);
               return (
-              <div key={msg.id} onClick={() => { if (!isRead) setReadMsgs(prev => new Set(prev).add(msg.id)); }}
+              <div key={msg.id}
+                onClick={() => { if (!isRead) setReadMsgs(prev => new Set(prev).add(msg.id)); }}
+                onFocus={() => { if (!isRead) setReadMsgs(prev => new Set(prev).add(msg.id)); }}
                 className={`border rounded-2xl overflow-hidden transition-all cursor-default ${
                   isRead ? "border-[var(--border-subtle)]" : "border-[#ff5100]/25"
                 } hover:border-white/[0.1]`}>
@@ -1210,16 +1214,18 @@ export default function AdminDashboardClient({
               <div className="border border-[var(--border-subtle)] rounded-2xl overflow-hidden divide-y divide-[var(--border-subtle)]">
                 {filteredStories.map(sub => {
                   const isExpanded = expandedStoryId === sub.id;
-                  const heroUrl = (sub as any).hero_image || (sub as any).hero_image_url || null;
+                  // Some submissions come from the published-story storage format (hero_image)
+                  // rather than the pending-submission format (hero_image_url).
+                  const heroUrl = sub.hero_image_url || (sub as StorySubmission & { hero_image?: string }).hero_image || null;
                   return (
                     <div key={sub.id} className="bg-[var(--bg-card)]">
                       {/* ── Main card row ── */}
                       <div className="p-4 lg:p-5">
                         <div className="flex items-start gap-4">
                           {/* Hero image thumbnail */}
-                          <div className="hidden sm:block w-16 h-16 lg:w-20 lg:h-20 rounded-xl overflow-hidden shrink-0 border border-[var(--border-subtle)]">
+                          <div className="hidden sm:block relative w-16 h-16 lg:w-20 lg:h-20 rounded-xl overflow-hidden shrink-0 border border-[var(--border-subtle)]">
                             {heroUrl ? (
-                              <img src={heroUrl} alt={sub.title} className="w-full h-full object-cover" loading="lazy" />
+                              <NextImage src={heroUrl} alt={sub.title} fill sizes="80px" className="object-cover" />
                             ) : (
                               <div className="w-full h-full bg-[var(--bg-card)] flex items-center justify-center">
                                 <BookOpen className="w-5 h-5 text-[var(--text-muted)]" />
@@ -1343,7 +1349,7 @@ export default function AdminDashboardClient({
                           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             {[
                               { label: "Region", value: sub.region, icon: MapPin },
-                              { label: "State", value: (sub as any).state, icon: MapPin },
+                              { label: "State", value: sub.state, icon: MapPin },
                               { label: "Date of Adventure", value: sub.date_of_adventure, icon: Calendar },
                               { label: "Date of Adventure", value: sub.date_of_adventure, icon: Calendar },
                             ].filter(item => item.value).map(item => (
@@ -1361,8 +1367,8 @@ export default function AdminDashboardClient({
                           <div className="flex items-center justify-between flex-wrap gap-2">
                             <div className="flex items-center gap-2">
                               <span className="text-[10px] text-[var(--text-muted)] font-semibold">Submitted {format(parseISO(sub.created_at), "MMM d, yyyy · HH:mm")}</span>
-                              {(sub as any).slug && (
-                                <Link href={`/stories/${(sub as any).slug}`} target="_blank" className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff7d47]/70 hover:text-[#ff7d47] transition-colors">
+                              {(sub as StorySubmission & { slug?: string }).slug && (
+                                <Link href={`/stories/${(sub as StorySubmission & { slug?: string }).slug}`} target="_blank" className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff7d47]/70 hover:text-[#ff7d47] transition-colors">
                                   <ExternalLink className="w-3 h-3" /> View on site
                                 </Link>
                               )}
@@ -1802,11 +1808,12 @@ export default function AdminDashboardClient({
                     <div key={photo.id} className="group relative rounded-2xl overflow-hidden border border-[var(--border-subtle)] hover:border-[var(--border-default)] transition-all bg-[var(--bg-card)]">
                       {/* Image */}
                       <div className="aspect-square relative overflow-hidden bg-[var(--bg-card)]">
-                        <img
+                        <NextImage
                           src={photo.url}
                           alt={photo.caption || "Adventure photo"}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          loading="lazy"
+                          fill
+                          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                         {/* Delete overlay */}
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-[var(--bg-card)] transition-all flex items-center justify-center">

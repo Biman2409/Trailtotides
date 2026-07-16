@@ -16,6 +16,7 @@ import {
   MapPin,
   X,
   Upload,
+  type LucideIcon,
 } from "lucide-react";
 
 type FormData = {
@@ -63,7 +64,7 @@ const textareaStyle: React.CSSProperties = {
   color: "var(--text-primary)",
 };
 
-function SectionCard({ icon: Icon, title, children }: { icon: any; title: string; children: React.ReactNode }) {
+function SectionCard({ icon: Icon, title, children }: { icon: LucideIcon; title: string; children: React.ReactNode }) {
   return (
     <div className="rounded-2xl overflow-hidden backdrop-blur-sm" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
       <div className="flex items-center gap-2.5 px-6 pt-5 pb-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>

@@ -1,5 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { z } from "zod";
+
+type Comment = {
+  id: string;
+  name: string;
+  body: string;
+  createdAt: string;
+};
+
+const commentSchema = z.object({
+  slug: z.string().min(1),
+  name: z.string().trim().min(1).max(60),
+  body: z.string().trim().min(1).max(1000),
+});
 
 const STORAGE_BUCKET = "story-comments";
 const admin = createClient(
@@ -34,16 +48,17 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { slug, name, body } = await req.json();
-  if (!slug || !name?.trim() || !body?.trim()) {
-    return NextResponse.json({ error: "Missing slug, name, or body" }, { status: 400 });
+  const parsed = commentSchema.safeParse(await req.json());
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid slug, name, or body" }, { status: 400 });
   }
+  const { slug, name, body } = parsed.data;
 
   try {
     await ensureBucket();
 
     // Load existing comments
-    let comments: any[] = [];
+    let comments: Comment[] = [];
     try {
       const { data } = await admin.storage.from(STORAGE_BUCKET).download(`${slug}.json`);
       if (data) {
@@ -76,6 +91,7 @@ export async function POST(req: NextRequest) {
     if (error) throw error;
     return NextResponse.json(newComment);
   } catch (e) {
-    return NextResponse.json({ error: String(e) }, { status: 500 });
+    console.error("story comment post error:", e);
+    return NextResponse.json({ error: "Could not post comment" }, { status: 500 });
   }
 }

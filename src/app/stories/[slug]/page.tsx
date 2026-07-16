@@ -42,7 +42,7 @@ function mapStory(s: StoryDB) {
     heroImage: s.hero_image,
     tags,
     pillTags,
-    region: s.region as any,
+    region: s.region,
     date: s.adventure_date,
     adventureDate: s.adventure_date,
     submittedBy: s.submitted_by || undefined,
@@ -271,9 +271,9 @@ export default async function StoryPage({ params }: Props) {
           </h1>
           <div className="flex items-center gap-3 flex-wrap">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full overflow-hidden shadow-md shadow-[#ff5100]/20 shrink-0">
+              <div className="relative w-9 h-9 rounded-full overflow-hidden shadow-md shadow-[#ff5100]/20 shrink-0">
                 {story.authorAvatar
-                  ? <img src={story.authorAvatar} alt={story.author} className="w-full h-full object-cover" loading="eager" />
+                  ? <Image src={story.authorAvatar} alt={story.author} fill sizes="36px" className="object-cover" />
                   : <span className="w-full h-full flex items-center justify-center text-sm font-bold text-white bg-[#ff5100]/50">{story.author[0]}</span>}
               </div>
               <div>
@@ -313,9 +313,9 @@ export default async function StoryPage({ params }: Props) {
 
         {/* Author card */}
           <div className="mt-10 bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-5">
-            <div className="w-14 h-14 rounded-full overflow-hidden shrink-0 shadow-inner" style={{ border: "1.5px solid rgba(255,81,0,0.25)" }}>
+            <div className="relative w-14 h-14 rounded-full overflow-hidden shrink-0 shadow-inner" style={{ border: "1.5px solid rgba(255,81,0,0.25)" }}>
               {story.authorAvatar
-                ? <img src={story.authorAvatar} alt={story.author} className="w-full h-full object-cover" loading="eager" />
+                ? <Image src={story.authorAvatar} alt={story.author} fill sizes="56px" className="object-cover" />
                 : <span className="w-full h-full flex items-center justify-center text-xl font-bold text-[#ff5100] bg-[#ff5100]/20">{story.author[0]}</span>}
             </div>
             <div className="flex-1">

@@ -126,7 +126,7 @@ export interface Story {
   pillTags?: string[]; // subset shown as pills near title; falls back to first 2 non-badge tags
   heroImage: string;
   tags: string[];
-  region: Region;
+  region: string; // free-text place name (e.g. "Ladakh", "Nepal"), not the Adventure Region taxonomy
   adventureDate: string;
   submittedBy?: string; // user ID of the TTT member who submitted the story
   baseLikes?: number;    // starting like count (defaults to 50)

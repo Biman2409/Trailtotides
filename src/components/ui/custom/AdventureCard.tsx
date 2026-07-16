@@ -108,7 +108,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
               className="text-[9px] font-bold tracking-[0.22em] uppercase leading-none"
               style={{ color: "#ffb38a", letterSpacing: "0.22em" }}
             >
-              Editor's Choice
+              Editor&apos;s Choice
             </span>
           </div>
         )}

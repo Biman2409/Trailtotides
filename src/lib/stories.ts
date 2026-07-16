@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/server";
 import { createClient } from "@supabase/supabase-js";
-import { stories as staticStories } from "@/lib/data";
+import { stories as staticStories, type Story } from "@/lib/data";
 
 export interface StoryDB {
   id: string;
@@ -31,13 +31,14 @@ const admin = createClient(
 );
 
 /** Convert a static story (from data.ts) to StoryDB shape */
-function staticToDB(s: any): StoryDB {
+function staticToDB(s: Story): StoryDB {
+  const now = new Date().toISOString();
   return {
     id: s.id,
     slug: s.slug,
     title: s.title,
     excerpt: s.excerpt,
-    body: s.body || "",
+    body: "",
     author_name: s.author,
     author_role: s.authorRole || "",
     author_bio: s.authorBio || "",
@@ -45,11 +46,11 @@ function staticToDB(s: any): StoryDB {
     hero_image: s.heroImage,
     tags: s.tags || [],
     region: s.region,
-    adventure_date: s.adventureDate || s.date || "",
+    adventure_date: s.adventureDate || "",
     status: "published",
     submitted_by: s.submittedBy || null,
-    created_at: s.created_at || "",
-    updated_at: s.updated_at || "",
+    created_at: now,
+    updated_at: now,
   };
 }
 

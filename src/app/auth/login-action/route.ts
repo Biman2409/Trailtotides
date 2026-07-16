@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { createAdminClient } from "@/lib/supabase/server";
+import { findUserByUsername } from "@/lib/resolveUsername";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -17,6 +19,13 @@ function buildUrl(request: NextRequest, path: string): URL {
 // Returns a redirect with Set-Cookie so the browser gets the cookie
 // as part of a navigation (not fetch), bypassing any proxy cookie restrictions.
 export async function POST(request: NextRequest) {
+  const { allowed } = rateLimit(`login:${getClientIp(request)}`, 10, 60_000);
+  if (!allowed) {
+    return NextResponse.redirect(
+      buildUrl(request, `/auth/login?error=${encodeURIComponent("Too many login attempts. Please try again shortly.")}`)
+    );
+  }
+
   const formData = await request.formData();
   const identifier = ((formData.get("identifier") as string) ?? "").trim();
   const password = (formData.get("password") as string) ?? "";
@@ -26,17 +35,20 @@ export async function POST(request: NextRequest) {
   let email = identifier;
   if (!email.includes("@")) {
     const adminClient = await createAdminClient();
-    const { data: allUsers } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
-    const match = allUsers?.users.find(
-      (u: { user_metadata?: { username?: string }; email?: string }) =>
-        (u.user_metadata?.username ?? "").toLowerCase() === email.toLowerCase()
-    );
-    if (!match?.email) {
+    try {
+      const match = await findUserByUsername(adminClient, email);
+      if (!match?.email) {
+        return NextResponse.redirect(
+          buildUrl(request, `/auth/login?error=${encodeURIComponent("No account found with that username.")}`)
+        );
+      }
+      email = match.email;
+    } catch (err) {
+      console.error("login-action username lookup failed:", err);
       return NextResponse.redirect(
-        buildUrl(request, `/auth/login?error=${encodeURIComponent("No account found with that username.")}`)
+        buildUrl(request, `/auth/login?error=${encodeURIComponent("Could not sign in right now")}`)
       );
     }
-    email = match.email;
   }
 
   // Call Supabase token endpoint
@@ -66,9 +78,10 @@ export async function POST(request: NextRequest) {
         cookiesToSet.forEach(({ name, value, options }) =>
           redirectResponse.cookies.set(name, value, {
             ...options,
-            httpOnly: false,
+            httpOnly: true,
             sameSite: "lax",
             path: "/",
+            secure: process.env.NODE_ENV === "production",
           })
         );
       },

@@ -118,7 +118,7 @@ export default function ACEPage() {
                 Adventure Capability Engine<sup className="text-[#ff5100] text-base font-black ml-0.5 align-super" style={{ fontSize: "0.45em" }}>™</sup>
               </h1>
               <p className="text-white/45 text-sm leading-relaxed mb-5 max-w-lg">
-                Easy, Moderate, Hard tells you nothing. ACE<sup>™</sup> is Trail to Tides' proprietary system that rates every adventure across <span className="text-white/75 font-semibold">8 physical and psychological axes</span>. Answer 8 questions once — every adventure is matched to your real capability.
+                Easy, Moderate, Hard tells you nothing. ACE<sup>™</sup> is Trail to Tides&apos; proprietary system that rates every adventure across <span className="text-white/75 font-semibold">8 physical and psychological axes</span>. Answer 8 questions once — every adventure is matched to your real capability.
               </p>
               <div className="space-y-1.5">
                 <div className="flex flex-wrap gap-1.5">
@@ -199,7 +199,7 @@ export default function ACEPage() {
                 <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
                 <span className="text-white/20 text-[10px] font-mono">1–5 per axis</span>
               </div>
-              <p className="text-white/30 text-xs mb-4 leading-relaxed">Each axis scored independently, 1–5. A desert trek scores 0 on Water — that axis simply doesn't apply.</p>
+              <p className="text-white/30 text-xs mb-4 leading-relaxed">Each axis scored independently, 1–5. A desert trek scores 0 on Water — that axis simply doesn&apos;t apply.</p>
 
               {/* Gradient bar */}
               <div className="flex rounded-lg overflow-hidden mb-3" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
@@ -317,7 +317,7 @@ export default function ACEPage() {
             <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
             <span className="text-white/20 text-[10px] font-mono">Same type · different radar</span>
           </div>
-          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-xl">Same category, wildly different bodies required. Watch the radar change shape — that's what a single difficulty label will never show you.</p>
+          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-xl">Same category, wildly different bodies required. Watch the radar change shape — that&apos;s what a single difficulty label will never show you.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {PROGRESSION_TREKS.map((t, i) => {
@@ -390,7 +390,7 @@ export default function ACEPage() {
                   Know your axes.<br />Pick the right adventure.
                 </h2>
                 <p className="text-white/35 text-sm leading-relaxed max-w-md">
-                  8 questions. 2 minutes. Every axis scored — then matched against every adventure on the platform so you see exactly what you're ready for, and what to build toward.
+                  8 questions. 2 minutes. Every axis scored — then matched against every adventure on the platform so you see exactly what you&apos;re ready for, and what to build toward.
                 </p>
 
                 {/* Mini stat chips */}

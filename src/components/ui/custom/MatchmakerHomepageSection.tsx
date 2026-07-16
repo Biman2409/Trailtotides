@@ -277,7 +277,6 @@ function AxisTicker() {
   useEffect(() => {
     const swapAt = SCAN_MS * 0.88;
     let swapTimer: ReturnType<typeof setTimeout>;
-    let cycleTimer: ReturnType<typeof setInterval>;
     function scheduleCycle() {
       swapTimer = setTimeout(() => {
         setFade(false);
@@ -285,7 +284,7 @@ function AxisTicker() {
       }, swapAt);
     }
     scheduleCycle();
-    cycleTimer = setInterval(scheduleCycle, SCAN_MS);
+    const cycleTimer = setInterval(scheduleCycle, SCAN_MS);
     return () => { clearTimeout(swapTimer); clearInterval(cycleTimer); };
   }, []);
 

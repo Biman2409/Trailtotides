@@ -1,26 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { createAdminClient } from "@/lib/supabase/server";
+import { findUserByUsername } from "@/lib/resolveUsername";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export async function POST(request: NextRequest) {
+  const { allowed, retryAfterMs } = rateLimit(`login:${getClientIp(request)}`, 10, 60_000);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many login attempts. Please try again shortly." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } }
+    );
+  }
+
   const { identifier, password } = await request.json();
 
   // Resolve username → email
   let email = (identifier ?? "").trim();
   if (!email.includes("@")) {
     const adminClient = await createAdminClient();
-    const { data: allUsers } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
-    const match = allUsers?.users.find(
-      (u: { user_metadata?: { username?: string }; email?: string }) =>
-        (u.user_metadata?.username ?? "").toLowerCase() === email.toLowerCase()
-    );
-    if (!match?.email) {
-      return NextResponse.json({ error: "No account found with that username." }, { status: 400 });
+    try {
+      const match = await findUserByUsername(adminClient, email);
+      if (!match?.email) {
+        return NextResponse.json({ error: "No account found with that username." }, { status: 400 });
+      }
+      email = match.email;
+    } catch (err) {
+      console.error("login username lookup failed:", err);
+      return NextResponse.json({ error: "Could not sign in right now" }, { status: 500 });
     }
-    email = match.email;
   }
 
   // Call Supabase token endpoint directly
@@ -50,10 +61,10 @@ export async function POST(request: NextRequest) {
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, {
             ...options,
-            httpOnly: false,
+            httpOnly: true,
             sameSite: "lax",
             path: "/",
-            secure: false,
+            secure: process.env.NODE_ENV === "production",
           })
         );
       },

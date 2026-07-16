@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Camera, Loader2, Trash2, X, ZoomIn, Upload, ImageOff } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
 import { awardXP } from "@/lib/awardXP";
@@ -240,9 +241,9 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-end p-2.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
-                    <div className="w-5 h-5 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.4)" }}>
+                    <div className="relative w-5 h-5 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.4)" }}>
                       {photo.avatar_id
-                        ? <img src={`/avatars/avatar-${photo.avatar_id}.png`} alt={photo.username} className="w-full h-full object-cover" loading="eager" />
+                        ? <Image src={`/avatars/avatar-${photo.avatar_id}.png`} alt={photo.username} fill sizes="20px" className="object-cover" />
                         : <span className="w-full h-full flex items-center justify-center text-white text-[8px] font-bold">{photo.username.charAt(0).toUpperCase()}</span>}
                     </div>
                     <span className="text-white text-[10px] font-semibold leading-none truncate max-w-[80px]">{photo.username}</span>
@@ -298,9 +299,9 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
               style={{ background: "#000" }}
             />
             <div className="px-5 py-3 flex items-center gap-3" style={{ background: "rgba(15,15,20,0.95)" }}>
-              <div className="w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.3)" }}>
+              <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.3)" }}>
                 {lightbox.avatar_id
-                  ? <img src={`/avatars/avatar-${lightbox.avatar_id}.png`} alt={lightbox.username} className="w-full h-full object-cover" loading="eager" />
+                  ? <Image src={`/avatars/avatar-${lightbox.avatar_id}.png`} alt={lightbox.username} fill sizes="28px" className="object-cover" />
                   : <span className="w-full h-full flex items-center justify-center text-white text-xs font-bold">{lightbox.username.charAt(0).toUpperCase()}</span>}
               </div>
               <div className="flex-1 min-w-0">

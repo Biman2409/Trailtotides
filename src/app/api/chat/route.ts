@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Groq from "groq-sdk";
 import { adventures } from "@/lib/data";
 import type { AdventureType } from "@/lib/data";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
 const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -252,6 +253,14 @@ function isComingSoonQuery(query: string): boolean {
 // ─── Route handler ────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
+  const { allowed, retryAfterMs } = rateLimit(`chat:${getClientIp(req)}`, 20, 5 * 60_000);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many messages. Please slow down and try again shortly." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } }
+    );
+  }
+
   try {
     const { messages } = await req.json();
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
@@ -363,7 +372,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (err: unknown) {
     console.error("Compass.AI error:", err);
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: "Compass.AI is unavailable right now" }, { status: 500 });
   }
 }

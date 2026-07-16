@@ -64,7 +64,7 @@ export default function MessageModal({ isOpen, onClose, userEmail }: MessageModa
               </div>
               <div>
                 <h4 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>Message Sent!</h4>
-                <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>We'll get back to you at {userEmail}.</p>
+                <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>We&apos;ll get back to you at {userEmail}.</p>
               </div>
             </div>
           ) : (

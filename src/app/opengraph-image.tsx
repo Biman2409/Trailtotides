@@ -74,7 +74,7 @@ export default function OgImage() {
             lineHeight: 1.5,
           }}
         >
-          India's Adventure Discovery Platform
+          India&apos;s Adventure Discovery Platform
         </div>
 
         {/* Bottom accent line */}

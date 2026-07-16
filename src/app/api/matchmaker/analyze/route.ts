@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { anthropic } from "@/lib/anthropic";
 import { adventures } from "@/lib/data";
 import { getACE } from "@/lib/ace";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
 // ─── System prompts verbatim from the 5 agent definitions ────────────────────
 
@@ -296,6 +297,14 @@ async function callClaude(system: string, userMessage: string): Promise<unknown>
 export const maxDuration = 60; // seconds (Vercel/Next.js edge or serverless)
 
 export async function POST(req: NextRequest) {
+  const { allowed, retryAfterMs } = rateLimit(`matchmaker:${getClientIp(req)}`, 10, 5 * 60_000);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again shortly." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } }
+    );
+  }
+
   try {
     const { answers, userKeys = [] } = await req.json();
     // answers: { Q1: "A"|"B"|"C"|"D"|"E", ..., Q8: "..." }

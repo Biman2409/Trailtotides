@@ -268,7 +268,7 @@ export default function OperatorsClient({ cards, allTypes, allStates }: Props) {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <div
-                        className="w-9 h-9 rounded-xl overflow-hidden shrink-0 flex items-center justify-center text-sm font-black"
+                        className="relative w-9 h-9 rounded-xl overflow-hidden shrink-0 flex items-center justify-center text-sm font-black"
                         style={
                           op.logo_url
                             ? { background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }
@@ -276,10 +276,12 @@ export default function OperatorsClient({ cards, allTypes, allStates }: Props) {
                         }
                       >
                         {op.logo_url ? (
-                          <img
+                          <Image
                             src={op.logo_url}
                             alt={op.company_name}
-                            className="w-full h-full object-contain p-0.5"
+                            fill
+                            sizes="36px"
+                            className="object-contain p-0.5"
                           />
                         ) : (
                           initial

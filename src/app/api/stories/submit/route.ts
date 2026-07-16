@@ -1,6 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { saveStoryToStorage } from "@/lib/stories";
+import { z } from "zod";
+
+const storySubmitSchema = z.object({
+  title: z.string().trim().min(1).max(200),
+  excerpt: z.string().trim().min(1).max(500),
+  body: z.string().trim().min(1).max(20000),
+  authorName: z.string().trim().min(1).max(100),
+  authorRole: z.string().trim().max(100).optional(),
+  authorBio: z.string().trim().max(1000).optional(),
+  dateOfAdventure: z.string().trim().min(1).max(50),
+  region: z.string().trim().min(1).max(100),
+  heroImageUrl: z.string().trim().max(2000).optional(),
+});
 
 function calcTags(title: string, excerpt: string, region: string): string[] {
   const tags = [region];
@@ -21,8 +34,10 @@ function calcTags(title: string, excerpt: string, region: string): string[] {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-
+    const parsed = storySubmitSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Missing or invalid required fields." }, { status: 400 });
+    }
     const {
       title,
       excerpt,
@@ -33,11 +48,7 @@ export async function POST(req: NextRequest) {
       dateOfAdventure,
       region,
       heroImageUrl,
-    } = body;
-
-    if (!title || !excerpt || !storyBody || !authorName || !dateOfAdventure || !region) {
-      return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
-    }
+    } = parsed.data;
 
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -129,7 +140,7 @@ export async function POST(req: NextRequest) {
     }
 
     console.error("story submission db error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Could not save story. Please try again." }, { status: 500 });
   } catch (err) {
     console.error("story submit route error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

@@ -47,7 +47,8 @@ export async function POST(req: NextRequest) {
     });
 
     if (uploadError) {
-      return NextResponse.json({ error: uploadError.message }, { status: 500 });
+      console.error("story upload storage error:", uploadError);
+      return NextResponse.json({ error: "Upload failed" }, { status: 500 });
     }
 
     const { data: { publicUrl } } = admin.storage.from(BUCKET).getPublicUrl(path);

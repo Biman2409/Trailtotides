@@ -98,7 +98,7 @@ export default function TrekStreakCounter() {
         <div className="flex items-center gap-1.5 px-3 py-2" style={{ borderTop: "1px solid var(--border-subtle)" }}>
           <Info className="w-2.5 h-2.5 shrink-0" style={{ color: "var(--text-muted)" }} />
           <span className="text-[9px] font-medium" style={{ color: "var(--text-muted)" }}>
-            <span style={{ color: "#f43f5e90" }}>+n</span> shows what you'd gain by completing your wishlist
+            <span style={{ color: "#f43f5e90" }}>+n</span> shows what you&apos;d gain by completing your wishlist
           </span>
         </div>
       )}

@@ -51,26 +51,6 @@ export default function OperatorSignupPage() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
-  async function uploadLogo(userId: string): Promise<string | null> {
-    if (!logoFile) return null;
-    setLogoUploading(true);
-    try {
-      const fd = new FormData();
-      fd.append("file", logoFile);
-      fd.append("user_id", userId);
-      const res = await fetch("/api/operator-logo", { method: "POST", body: fd });
-      const data = await res.json();
-      if (data.url) { setLogoUrl(data.url); return data.url; }
-      setLogoError(data.error ?? "Upload failed");
-      return null;
-    } catch {
-      setLogoError("Upload failed");
-      return null;
-    } finally {
-      setLogoUploading(false);
-    }
-  }
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
@@ -78,14 +58,12 @@ export default function OperatorSignupPage() {
 
     const formData = new FormData(e.currentTarget);
 
-    // Upload logo first using a temp ID, then pass the URL in form data
+    // Upload logo before the account exists; server assigns the storage path
     if (logoFile) {
       setLogoUploading(true);
       try {
-        const tempId = `tmp-${Date.now()}`;
         const fd = new FormData();
         fd.append("file", logoFile);
-        fd.append("user_id", tempId);
         const res = await fetch("/api/operator-logo", { method: "POST", body: fd });
         const data = await res.json();
         if (data.url) {

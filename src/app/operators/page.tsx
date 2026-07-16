@@ -154,10 +154,8 @@ export default async function OperatorsPage() {
               <div className="flex items-center gap-2">
                 <Link
                   href="/auth/login?role=operator"
-                  className="px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-colors"
+                  className="px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-colors bg-transparent hover:bg-[var(--bg-card)]"
                   style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-subtle)" }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = "var(--bg-card)"}
-                  onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                 >
                   Log in
                 </Link>

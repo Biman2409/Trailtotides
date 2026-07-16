@@ -356,10 +356,10 @@ export default function DashboardClient({ profile, listings: initialListings, al
       {/* Profile card */}
       <div className="rounded-2xl p-5 flex items-start gap-4"
         style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-        <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 flex items-center justify-center"
+        <div className="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 flex items-center justify-center"
           style={profile.logo_url ? { background: "#fff", border: "1px solid rgba(255,255,255,0.1)" } : { background: "rgba(255,81,0,0.1)", color: "#ff6b2b" }}>
           {profile.logo_url
-            ? <img src={profile.logo_url} alt={profile.company_name} className="w-full h-full object-contain p-1" loading="eager" />
+            ? <Image src={profile.logo_url} alt={profile.company_name} fill sizes="48px" className="object-contain p-1" />
             : <span className="text-xl font-black">{profile.company_name.charAt(0).toUpperCase()}</span>
           }
         </div>

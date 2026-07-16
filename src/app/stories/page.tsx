@@ -166,9 +166,9 @@ export default async function StoriesPage() {
                 </p>
 
                 <div className="flex items-center gap-3 flex-wrap">
-                  <div className="w-9 h-9 rounded-full flex-shrink-0 overflow-hidden shadow-lg shadow-[#ff5100]/30" style={{ background: "rgba(255,81,0,0.2)" }}>
+                  <div className="relative w-9 h-9 rounded-full flex-shrink-0 overflow-hidden shadow-lg shadow-[#ff5100]/30" style={{ background: "rgba(255,81,0,0.2)" }}>
                     {featured.authorAvatar
-                      ? <img src={featured.authorAvatar} alt={featured.author} className="w-full h-full object-cover" loading="eager" />
+                      ? <Image src={featured.authorAvatar} alt={featured.author} fill sizes="36px" className="object-cover" />
                       : <span className="w-full h-full flex items-center justify-center text-sm font-bold text-white bg-[#ff5100]">{featured.author[0]}</span>}
                   </div>
                   <div className="mr-1">

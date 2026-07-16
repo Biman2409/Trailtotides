@@ -12,6 +12,7 @@ import ChatBubble from "@/components/ChatBubble";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import { adventures } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, Adventure } from "@/lib/data";
+import { toggleSelection, REGION_GROUPS, GENRE_GROUPS, SEASONS } from "@/lib/filterOptions";
 
 import type L from "leaflet";
 import type { GeoJsonObject } from "geojson";
@@ -24,14 +25,7 @@ const DIFFICULTY_COLORS: Record<string, string> = {
   Extreme:  "#ef4444",
 };
 
-const seasons: { label: string; months: Month[] }[] = [
-  { label: "Spring",     months: ["Mar", "Apr"] },
-  { label: "Summer",     months: ["May", "Jun"] },
-  { label: "Monsoon",    months: ["Jul", "Aug"] },
-  { label: "Autumn",     months: ["Sep", "Oct"] },
-  { label: "Pre Winter", months: ["Nov", "Dec"] },
-  { label: "Winter",     months: ["Jan", "Feb"] },
-];
+const seasons = SEASONS;
 
 type NominatimResult = {
   place_id: number;
@@ -524,6 +518,7 @@ function MapView({
         maxClusterRadius: 52,
         spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         iconCreateFunction: (cluster: any) => {
           const count = cluster.getChildCount();
           const size = count >= 100 ? 44 : count >= 20 ? 40 : 36;
@@ -580,6 +575,7 @@ function MapView({
         labelsTileRef.current = leaflet.tileLayer(cfg.labelsUrl, { maxZoom: cfg.maxZoom, attribution: "", opacity: 1 });
         labelsTileRef.current.addTo(map);
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (markersLayerRef.current as any)?.bringToFront?.();
     });
   }, [viewKey]);
@@ -718,9 +714,7 @@ export default function MapPage() {
     });
   }, []);
 
-  function toggle<T>(arr: T[], val: T, setter: (v: T[]) => void) {
-    setter(arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val]);
-  }
+  const toggle = toggleSelection;
 
   function clearAll() {
     setSearch(""); setSelectedTypes([]); setSelectedRegions([]);
@@ -902,16 +896,7 @@ export default function MapPage() {
 
                 {/* Region */}
                 {(() => {
-                  const regionGroups: { name: Region; subRegions: string[] }[] = [
-                    { name: "Himalayas",     subRegions: ["Ladakh","Jammu & Kashmir","Uttarakhand","Himachal Pradesh","Sikkim","Arunachal Pradesh"] },
-                    { name: "Western Ghats", subRegions: ["Kerala","Karnataka","Goa","Maharashtra"] },
-                    { name: "Eastern Ghats", subRegions: ["Odisha","Andhra Pradesh","Telangana","Tamil Nadu"] },
-                    { name: "Desert",        subRegions: ["Rajasthan","Gujarat"] },
-                    { name: "Coast",         subRegions: ["Maharashtra","Goa","Kerala","Karnataka","Odisha","Tamil Nadu","Andhra Pradesh"] },
-                    { name: "Islands",       subRegions: ["Andaman & Nicobar","Lakshadweep"] },
-                    { name: "Northeast",     subRegions: ["Nagaland","Manipur","Meghalaya","Mizoram","Assam","Arunachal Pradesh","Sikkim"] },
-                    { name: "Urban",         subRegions: ["Mumbai","Delhi","Bangalore","Chennai","Kolkata","Hyderabad","Pune"] },
-                  ];
+                  const regionGroups = REGION_GROUPS;
                   const totalSelected = selectedRegions.length + selectedSubRegions.length;
                   return (
                     <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
@@ -961,12 +946,7 @@ export default function MapPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
               {/* Genre */}
               {(() => {
-                  const genreGroups: { label: string; color: string; types: AdventureType[] }[] = [
-                    { label: "Earth", color: "#a16207", types: ["Trekking","Mountaineering","Rock Climbing","Scrambling","Caving","Motorcycling","Cycling","Jeep Safari","Urban Adventure"] },
-                    { label: "Water", color: "#0369a1", types: ["Diving","Kayaking"] },
-                    { label: "Snow",  color: "#6366f1", types: ["Skiing","Ice Skating"] },
-                    { label: "Air",   color: "#0891b2", types: ["Paragliding","Hot Air Balloon"] },
-                  ];
+                  const genreGroups = GENRE_GROUPS;
                   return (
                     <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
                       <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
@@ -1116,7 +1096,8 @@ export default function MapPage() {
               ...selectedDurations.map(d => ({ label: d, remove: () => toggle(selectedDurations, d, setSelectedDurations) })),
               ...selectedMonths.map(m => ({ label: m, remove: () => toggle(selectedMonths, m, setSelectedMonths) })),
             ].map(({ label, remove }) => (
-              <span
+              <button
+                type="button"
                 key={label}
                 onClick={remove}
                 className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold cursor-pointer transition-colors"
@@ -1125,7 +1106,7 @@ export default function MapPage() {
                 onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,81,0,0.08)")}
               >
                 {label} <X className="w-2.5 h-2.5" />
-              </span>
+              </button>
             ))}
           </div>
         )}

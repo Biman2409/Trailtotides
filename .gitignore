@@ -37,3 +37,19 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# env
+.env
+.env*.local
+.env.local
+.env.development
+.env.production
+
+# logs
+*.log
+
+# scratch / one-off data files
+@LongLink
+append_string.txt
+new_adventures.json
+new_adventures.txt

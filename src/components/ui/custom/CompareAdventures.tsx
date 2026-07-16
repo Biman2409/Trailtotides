@@ -147,7 +147,7 @@ function SearchPicker({ onSelect }: { onSelect: (a: Adventure) => void }) {
           <Search className="w-3 h-3 shrink-0" style={{ color: "var(--text-tertiary)" }} />
           <input ref={inputRef} value={query} onChange={e => setQuery(e.target.value)}
             placeholder="Search\u2026" className="flex-1 bg-transparent text-xs outline-none min-w-0"
-            style={{ color: "var(--text-primary)", placeholderColor: "var(--text-muted)" }} />
+            style={{ color: "var(--text-primary)" }} />
           <button onClick={() => { setOpen(false); setQuery(""); }}><X className="w-3 h-3 transition-colors" style={{ color: "var(--text-muted)" }}
             onMouseEnter={(e) => e.currentTarget.style.color = "var(--text-secondary)"}
             onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-muted)"} /></button>

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect, } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   User, Mail, Phone, Save, Loader2, CheckCircle2, AtSign,
   Eye, EyeOff, Lock, XCircle,
@@ -338,7 +339,7 @@ function AvatarSection() {
           }}
         >
           {selected
-            ? <img src={selected.src} alt={selected.label} className="block w-full h-full object-cover" />
+            ? <Image src={selected.src} alt={selected.label} fill sizes="72px" className="object-cover" />
             : <span className="flex items-center justify-center w-full h-full" style={{ color: rankColor }}>
                 <span style={{ width: 34, height: 34, display: "block" }}>{RANK_ICONS[rankName] ?? RANK_ICONS["Uncharted"]}</span>
               </span>

@@ -1,12 +1,15 @@
 import pkg from "pg";
 const { Client } = pkg;
 
-// Supabase project: eylgddhfxzxwovcodihx
-const DB_PASSWORD =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZtcHZtanp1cnNiandrcmd1bHlwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjA0NjE2NCwiZXhwIjoyMDg3NjIyMTY0fQ.is781ciwofk9TCRSPyGdGSosAoCCiH6ZhbIImkGbX0k";
+const DB_HOST = process.env.SUPABASE_DB_HOST;
+const DB_PASSWORD = process.env.SUPABASE_DB_PASSWORD;
+if (!DB_HOST || !DB_PASSWORD) {
+  console.error("Missing SUPABASE_DB_HOST or SUPABASE_DB_PASSWORD in the environment.");
+  process.exit(1);
+}
 
 const client = new Client({
-  host: "db.eylgddhfxzxwovcodihx.supabase.co",
+  host: DB_HOST,
   port: 5432,
   database: "postgres",
   user: "postgres",

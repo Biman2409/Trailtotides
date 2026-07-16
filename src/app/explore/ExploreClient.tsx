@@ -19,6 +19,7 @@ import type { StoredProfile } from "@/lib/matchmaker";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import { motion } from "framer-motion";
 import ChatBubble from "@/components/ChatBubble";
+import { toggleSelection, REGION_GROUPS, GENRE_GROUPS, SEASONS } from "@/lib/filterOptions";
 
 type AceCategory = "ready" | "stretch" | "out-of-range";
 
@@ -38,16 +39,7 @@ function classifyAdventure(userAce: StoredProfile["ace"], adventureAce: ReturnTy
 }
 
 // filter constants
-const seasons: { label: string; months: Month[] }[] = [
-  { label: "Spring",     months: ["Mar", "Apr"] },
-  { label: "Summer",     months: ["May", "Jun"] },
-  { label: "Monsoon",    months: ["Jul", "Aug"] },
-  { label: "Autumn",     months: ["Sep", "Oct"] },
-  { label: "Pre Winter", months: ["Nov", "Dec"] },
-  { label: "Winter",     months: ["Jan", "Feb"] },
-];
-
-
+const seasons = SEASONS;
 
 export default function ExploreClient() {
   const searchParams = useSearchParams();
@@ -113,9 +105,7 @@ export default function ExploreClient() {
     }
   }, [scrollToSlug]);
 
-  function toggle<T>(arr: T[], val: T, setter: (v: T[]) => void) {
-    setter(arr.includes(val) ? arr.filter((x) => x !== val) : [...arr, val]);
-  }
+  const toggle = toggleSelection;
 
   const filtered = useMemo(() => {
     return adventures.filter((a) => {
@@ -300,7 +290,7 @@ export default function ExploreClient() {
             } : { background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
           >
             <Star className="w-4 h-4" style={editorOnly ? { color: "#ff7d47", fill: "#ff7d47", filter: "drop-shadow(0 0 3px rgba(255,81,0,0.7))" } : {}} />
-            <span className="hidden md:inline">Editor's Choice</span>
+            <span className="hidden md:inline">Editor&apos;s Choice</span>
             <span className="md:hidden">Top Picks</span>
           </button>
 
@@ -332,16 +322,7 @@ export default function ExploreClient() {
 
                 {/* ── Region ── */}
                 {(() => {
-                  const regionGroups: { name: Region; subRegions: string[] }[] = [
-                    { name: "Himalayas",     subRegions: ["Ladakh", "Jammu & Kashmir", "Uttarakhand", "Himachal Pradesh", "Sikkim", "Arunachal Pradesh", "Nepal", "Bhutan"] },
-                    { name: "Western Ghats", subRegions: ["Kerala", "Karnataka", "Goa", "Maharashtra"] },
-                    { name: "Eastern Ghats", subRegions: ["Odisha", "Andhra Pradesh", "Telangana", "Tamil Nadu", "Karnataka"] },
-                    { name: "Desert",        subRegions: ["Rajasthan", "Gujarat"] },
-                    { name: "Coast",         subRegions: ["Maharashtra", "Goa", "Kerala", "Karnataka", "Odisha", "Tamil Nadu", "Andhra Pradesh"] },
-                    { name: "Islands",       subRegions: ["Andaman & Nicobar", "Lakshadweep"] },
-                    { name: "Northeast",     subRegions: ["Nagaland", "Manipur", "Meghalaya", "Mizoram", "Assam", "Arunachal Pradesh", "Sikkim"] },
-                    { name: "Urban",         subRegions: ["Mumbai", "Delhi", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune"] },
-                  ];
+                  const regionGroups = REGION_GROUPS;
                   return (
                     <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
                       <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
@@ -409,12 +390,7 @@ export default function ExploreClient() {
 
                 {/* ── Genre + Season (combined row) ── */}
                 {(() => {
-                  const genreGroups: { label: string; color: string; types: AdventureType[] }[] = [
-                    { label: "Earth", color: "#a16207", types: ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Caving", "Motorcycling", "Cycling", "Jeep Safari", "Urban Adventure"] },
-                    { label: "Water", color: "#0369a1", types: ["Diving", "Kayaking"] },
-                    { label: "Snow",  color: "#6366f1", types: ["Skiing", "Ice Skating"] },
-                    { label: "Air",   color: "#0891b2", types: ["Paragliding", "Hot Air Balloon"] },
-                  ];
+                  const genreGroups = GENRE_GROUPS;
                   return (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
 
@@ -657,67 +633,74 @@ export default function ExploreClient() {
         {activeFilterCount > 0 && (
           <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-4 flex flex-wrap gap-2">
             {selectedTypes.map((t) => (
-              <span
+              <button
+                type="button"
                 key={t}
                 onClick={() => toggle(selectedTypes, t, setSelectedTypes)}
                 className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
               >
                 <span className="flex-shrink-0">{ADVENTURE_TYPE_ICONS[t]?.(11)}</span>
                 {t} <X className="w-3 h-3" />
-              </span>
+              </button>
             ))}
              {selectedRegions.map((r) => (
-                <span
+                <button
+                  type="button"
                   key={r}
                   onClick={() => toggle(selectedRegions, r, setSelectedRegions)}
                   className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
                 >
                   {r} <X className="w-3 h-3" />
-                </span>
+                </button>
               ))}
               {selectedSubRegions.map((sr) => (
-                <span
+                <button
+                  type="button"
                   key={sr}
                   onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
                   className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
                 >
                   {sr} <X className="w-3 h-3" />
-                </span>
+                </button>
               ))}
             {selectedDifficulties.map((d) => (
-              <span
+              <button
+                type="button"
                 key={d}
                 onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
                 className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
               >
                 {d} <X className="w-3 h-3" />
-              </span>
+              </button>
             ))}
             {selectedDurations.map((d) => (
-              <span
+              <button
+                type="button"
                 key={d}
                 onClick={() => toggle(selectedDurations, d, setSelectedDurations)}
                 className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
               >
                 {d} <X className="w-3 h-3" />
-              </span>
+              </button>
             ))}
             {selectedMonths.map((m) => (
-                <span
+                <button
+                  type="button"
                   key={m}
                   onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
                   className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
                 >
                   {m} <X className="w-3 h-3" />
-                </span>
+                </button>
               ))}
             {priceActive && (
-              <span
+              <button
+                type="button"
                 onClick={() => setPriceRange([PRICE_MIN, PRICE_MAX])}
                 className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
               >
                 ₹{(priceRange[0]/1000).toFixed(0)}k – ₹{(priceRange[1]/1000).toFixed(0)}k <X className="w-3 h-3" />
-              </span>
+              </button>
             )}
                       </div>
         )}

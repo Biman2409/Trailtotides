@@ -6,60 +6,6 @@ import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import Logo from "@/components/ui/custom/Logo";
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const PROJECT_REF = SUPABASE_URL.replace("https://", "").split(".")[0];
-const COOKIE_NAME = `sb-${PROJECT_REF}-auth-token`;
-
-const COOKIE_CHUNK_SIZE = 3180;
-
-function encodeValue(str: string): string {
-  const bytes = new TextEncoder().encode(str);
-  let binary = "";
-  bytes.forEach((b) => (binary += String.fromCharCode(b)));
-  return "base64-" + btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-}
-
-function setSessionCookies(session: {
-  access_token: string;
-  refresh_token: string;
-  expires_in: number;
-  expires_at?: number;
-  token_type: string;
-  user: object;
-}) {
-  const value = encodeValue(JSON.stringify(session));
-  const maxAge = 400 * 24 * 60 * 60;
-  const opts = `; path=/; max-age=${maxAge}; samesite=lax`;
-
-  // Clear any old chunks first (same key and up to 5 chunks)
-  document.cookie = `${COOKIE_NAME}=; path=/; max-age=0; samesite=lax`;
-  for (let i = 0; i < 5; i++) {
-    document.cookie = `${COOKIE_NAME}.${i}=; path=/; max-age=0; samesite=lax`;
-  }
-
-  // @supabase/ssr createChunks: if encodeURIComponent(value) fits in one chunk,
-  // store as plain `key` (no .0 suffix). Otherwise split into key.0, key.1, ...
-  const encoded = encodeURIComponent(value);
-  if (encoded.length <= COOKIE_CHUNK_SIZE) {
-    document.cookie = `${COOKIE_NAME}=${value}${opts}`;
-  } else {
-    // Split on encoded boundaries, store decoded chunks
-    let remaining = encoded;
-    let i = 0;
-    while (remaining.length > 0) {
-      let head = remaining.slice(0, COOKIE_CHUNK_SIZE);
-      // Don't split in middle of a % escape
-      const lastPct = head.lastIndexOf("%");
-      if (lastPct > COOKIE_CHUNK_SIZE - 3) head = head.slice(0, lastPct);
-      const chunk = decodeURIComponent(head);
-      document.cookie = `${COOKIE_NAME}.${i}=${chunk}${opts}`;
-      remaining = remaining.slice(head.length);
-      i++;
-    }
-  }
-}
-
 function LoginForm() {
   const searchParams = useSearchParams();
   const message = searchParams.get("message");
@@ -74,53 +20,25 @@ function LoginForm() {
     setError(null);
 
     const fd = new FormData(e.currentTarget);
-    let identifier = (fd.get("identifier") as string).trim();
+    const identifier = (fd.get("identifier") as string).trim();
     const password = fd.get("password") as string;
 
     try {
-      // Resolve username → email if needed (our own API, no Set-Cookie issues)
-      let email = identifier;
-      if (!identifier.includes("@")) {
-        const res = await fetch("/api/auth/resolve-username", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username: identifier }),
-        });
-        const data = await res.json();
-        if (!res.ok || data.error) {
-          setError(data.error || "No account found with that username.");
-          setPending(false);
-          return;
-        }
-        email = data.email;
-      }
+      // Server route resolves username → email and sets the session via a
+      // proper Set-Cookie response header (httpOnly), instead of writing the
+      // token to a client-readable cookie via document.cookie.
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier, password }),
+      });
+      const data = await res.json();
 
-      // Call Supabase auth DIRECTLY from browser — bypasses proxy entirely
-      const tokenRes = await fetch(
-        `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json", apikey: ANON_KEY },
-          body: JSON.stringify({ email, password }),
-        }
-      );
-      const tokenData = await tokenRes.json();
-
-      if (!tokenRes.ok || tokenData.error) {
-        setError(tokenData.error_description || tokenData.error || "Invalid credentials");
+      if (!res.ok || data.error) {
+        setError(data.error || "Invalid credentials");
         setPending(false);
         return;
       }
-
-      // Write session cookie directly — same chunked format @supabase/ssr uses
-      setSessionCookies({
-        access_token: tokenData.access_token,
-        refresh_token: tokenData.refresh_token,
-        expires_in: tokenData.expires_in,
-        expires_at: tokenData.expires_at,
-        token_type: tokenData.token_type,
-        user: tokenData.user,
-      });
 
       // Hard reload to homepage — server and client will now see the cookie
       window.location.replace("/");

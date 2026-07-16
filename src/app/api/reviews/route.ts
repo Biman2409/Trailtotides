@@ -2,11 +2,18 @@ import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { adventures } from "@/lib/data";
+import { z } from "zod";
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
+
+const reviewSchema = z.object({
+  slug: z.string().min(1),
+  rating: z.number().int().min(1).max(5),
+  body: z.string().trim().min(1).max(2000),
+});
 
 // GET /api/reviews?slug=<slug>  — fetch reviews for an adventure
 export async function GET(req: NextRequest) {
@@ -27,7 +34,8 @@ export async function GET(req: NextRequest) {
     if (error.code === "PGRST205" || error.message?.includes("reviews")) {
       return NextResponse.json({ reviews: seedReviews, tableReady: false });
     }
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("reviews GET error:", error);
+    return NextResponse.json({ error: "Could not load reviews" }, { status: 500 });
   }
 
   // Enrich DB reviews with avatar_id from user metadata
@@ -60,13 +68,11 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { slug, rating, body } = await req.json();
-  if (!slug || !rating || !body?.trim()) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+  const parsed = reviewSchema.safeParse(await req.json());
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid review" }, { status: 400 });
   }
-  if (rating < 1 || rating > 5) {
-    return NextResponse.json({ error: "Rating must be 1-5" }, { status: 400 });
-  }
+  const { slug, rating, body } = parsed.data;
 
   const username =
     user.user_metadata?.username ||
@@ -93,7 +99,10 @@ export async function POST(req: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    console.error("reviews POST error:", error);
+    return NextResponse.json({ error: "Could not submit review" }, { status: 500 });
+  }
   return NextResponse.json({ review: { ...data, avatar_id } });
 }
 
@@ -112,6 +121,9 @@ export async function DELETE(req: NextRequest) {
     .eq("id", id)
     .eq("user_id", user.id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    console.error("reviews DELETE error:", error);
+    return NextResponse.json({ error: "Could not delete review" }, { status: 500 });
+  }
   return NextResponse.json({ success: true });
 }

@@ -1,11 +1,18 @@
 import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
+
+const operatorRatingSchema = z.object({
+  slug: z.string().min(1),
+  operatorName: z.string().trim().min(1).max(200),
+  rating: z.number().int().min(1).max(5),
+});
 
 const MIN_RATINGS_FOR_COMPUTED = 5;
 
@@ -25,7 +32,8 @@ export async function GET(req: NextRequest) {
     if (error.code === "PGRST205" || error.message?.includes("operator_ratings")) {
       return NextResponse.json({ ratings: {} });
     }
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("operator-ratings GET error:", error);
+    return NextResponse.json({ error: "Could not load ratings" }, { status: 500 });
   }
 
   // Aggregate by normalized operator name
@@ -57,15 +65,13 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { slug, operatorName, rating } = await req.json();
-  if (!slug || !operatorName?.trim() || !rating) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+  const parsed = operatorRatingSchema.safeParse(await req.json());
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid rating" }, { status: 400 });
   }
-  if (rating < 1 || rating > 5) {
-    return NextResponse.json({ error: "Rating must be 1–5" }, { status: 400 });
-  }
+  const { slug, operatorName, rating } = parsed.data;
 
-  const norm = operatorName.trim().toLowerCase();
+  const norm = operatorName.toLowerCase();
 
   const { error } = await admin
     .from("operator_ratings")
@@ -80,6 +86,9 @@ export async function POST(req: NextRequest) {
       { onConflict: "adventure_slug,operator_name,user_id" }
     );
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    console.error("operator-ratings POST error:", error);
+    return NextResponse.json({ error: "Could not submit rating" }, { status: 500 });
+  }
   return NextResponse.json({ success: true });
 }

@@ -84,7 +84,7 @@ export default function ExploreMatchmakerSection() {
               <p className="text-sm lg:text-base leading-relaxed max-w-md" style={{ color: "var(--text-secondary)" }}>
                 Answer 8 questions. Discover your{" "}
                 <Link href="/ace" className="text-[#ff5100] font-semibold hover:underline">ACE<sup>™</sup></Link>{" "}
-                profile and find the adventures you're truly ready for.
+                profile and find the adventures you&apos;re truly ready for.
               </p>
             </div>
             <Link

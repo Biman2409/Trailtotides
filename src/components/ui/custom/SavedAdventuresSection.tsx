@@ -127,7 +127,7 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
           {/* Content */}
           {!loggedIn ? (
             <div className="flex items-center gap-3 py-2">
-              <p className="text-xs flex-1" style={{ color: "var(--text-tertiary)" }}>Log in to track adventures you've completed.</p>
+              <p className="text-xs flex-1" style={{ color: "var(--text-tertiary)" }}>Log in to track adventures you&apos;ve completed.</p>
               <button onClick={() => router.push("/auth/login")} className="shrink-0 px-3 py-1.5 rounded-lg text-[11px] font-bold text-white" style={{ background: "#ff5100" }}>Log in</button>
             </div>
           ) : doneList.length === 0 ? (

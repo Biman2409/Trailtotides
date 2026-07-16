@@ -28,7 +28,7 @@ const SECTIONS = [
   },
     {
       title: "5. Third-Party Services",
-      content: `We use OpenAI's API to power the Compass.AI adventure discovery engine. Queries you send to Compass.AI are processed by OpenAI and subject to their privacy policy. We use Supabase for authentication and database services. We use Unsplash for imagery, which is served directly from their CDN.`,
+      content: `We use Groq's API to power the Compass.AI adventure discovery engine and Anthropic's API to power the ACE Matchmaker. Queries you send to these features are processed by Groq and Anthropic respectively and subject to their privacy policies. We use Supabase for authentication and database services. We use Unsplash for imagery, which is served directly from their CDN.`,
     },
 
 

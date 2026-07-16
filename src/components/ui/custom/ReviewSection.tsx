@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Star, Trash2, Loader2, ChevronDown, Plus } from "lucide-react";
+import Image from "next/image";
 import { awardXP } from "@/lib/awardXP";
 import { useTripLog } from "@/contexts/TripLogContext";
 
@@ -363,9 +364,9 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
               {reviews.map((r) => (
                 <div key={r.id} className="flex-none w-full snap-start flex flex-col gap-3">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.2)" }}>
+                    <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.2)" }}>
                       {r.avatar_id
-                        ? <img src={`/avatars/avatar-${r.avatar_id}.png`} alt={r.username} className="w-full h-full object-cover" loading="eager" />
+                        ? <Image src={`/avatars/avatar-${r.avatar_id}.png`} alt={r.username} fill sizes="28px" className="object-cover" />
                         : <span className="w-full h-full flex items-center justify-center text-xs font-bold" style={{ color: "var(--text-primary)" }}>{r.username.charAt(0).toUpperCase()}</span>}
                     </div>
                     <div className="min-w-0 flex-1">
