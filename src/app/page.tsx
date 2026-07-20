@@ -111,50 +111,10 @@ export default function HomePage() {
           <InlineChat />
         </FadeUp>
 
-        {/* ── FEATURED ADVENTURES ── */}
-        <section id="featured-adventures" className="py-10 lg:py-14 px-5 lg:px-8 t-bg-page">
-          <div className="max-w-7xl mx-auto">
-            <FadeUp>
-              <div className="mb-7 lg:mb-9">
-                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
-                  <Star className="w-3.5 h-3.5 fill-[#ff5100]" />
-                  EDITOR&apos;S CHOICE
-                </p>
-                <div className="flex items-end justify-between gap-4">
-                  <div>
-                    <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
-                      Adventures of a Lifetime
-                    </h2>
-                    <ShimmerLine className="mt-4 max-w-[48px]" />
-                  </div>
-                  <span className="hidden sm:flex items-center gap-1.5 text-[#ff5100] text-sm font-semibold bg-[#ff5100]/8 border border-[#ff5100]/20 px-3 py-1.5 rounded-full mb-1">
-                    {featuredAdventures.length} picks
-                  </span>
-                </div>
-              </div>
-            </FadeUp>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-              {featuredAdventures.map((adventure, i) => (
-                <FadeUp key={adventure.id} delay={i * 70}>
-                  <AdventureCard adventure={adventure} size="default" />
-                </FadeUp>
-              ))}
-            </div>
-
-            <FadeUp delay={200}>
-              <div className="mt-7 lg:mt-9 flex justify-center">
-                <Link
-                  href="/explore"
-                  className="bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-8 py-3.5 rounded-xl text-sm md:text-base flex items-center gap-2 group shadow-lg shadow-[#ff5100]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30 transition-all duration-200"
-                >
-                  View all adventures
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </FadeUp>
-          </div>
-        </section>
+        {/* ── ADVENTURE MATCHMAKER ─────────────────────────── */}
+        <FadeUp>
+          <MatchmakerHomepageSection />
+        </FadeUp>
 
         {/* ── MAP CTA ───────────────────────────────────────── */}
         <section id="map-cta" className="relative py-10 lg:py-16 bg-[#eaf0e8] dark:bg-[#1a2e20] px-5 lg:px-8 overflow-hidden">
@@ -210,10 +170,50 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── ADVENTURE MATCHMAKER ─────────────────────────── */}
-        <FadeUp>
-          <MatchmakerHomepageSection />
-        </FadeUp>
+        {/* ── FEATURED ADVENTURES ── */}
+        <section id="featured-adventures" className="py-10 lg:py-14 px-5 lg:px-8 t-bg-page">
+          <div className="max-w-7xl mx-auto">
+            <FadeUp>
+              <div className="mb-7 lg:mb-9">
+                <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
+                  <Star className="w-3.5 h-3.5 fill-[#ff5100]" />
+                  EDITOR&apos;S CHOICE
+                </p>
+                <div className="flex items-end justify-between gap-4">
+                  <div>
+                    <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+                      Adventures of a Lifetime
+                    </h2>
+                    <ShimmerLine className="mt-4 max-w-[48px]" />
+                  </div>
+                  <span className="hidden sm:flex items-center gap-1.5 text-[#ff5100] text-sm font-semibold bg-[#ff5100]/8 border border-[#ff5100]/20 px-3 py-1.5 rounded-full mb-1">
+                    {featuredAdventures.length} picks
+                  </span>
+                </div>
+              </div>
+            </FadeUp>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+              {featuredAdventures.map((adventure, i) => (
+                <FadeUp key={adventure.id} delay={i * 70}>
+                  <AdventureCard adventure={adventure} size="default" />
+                </FadeUp>
+              ))}
+            </div>
+
+            <FadeUp delay={200}>
+              <div className="mt-7 lg:mt-9 flex justify-center">
+                <Link
+                  href="/explore"
+                  className="bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-8 py-3.5 rounded-xl text-sm md:text-base flex items-center gap-2 group shadow-lg shadow-[#ff5100]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30 transition-all duration-200"
+                >
+                  View all adventures
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </FadeUp>
+          </div>
+        </section>
 
         {/* ── ADVENTURE TYPES ──────────────────────────────── */}
         <FadeUp>

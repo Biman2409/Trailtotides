@@ -59,10 +59,10 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
     }
   }
 
-  const btnBase = "inline-flex items-center gap-2 h-9 px-3.5 rounded-xl text-xs font-semibold transition-all duration-200 backdrop-blur-md";
+  const btnBase = "inline-flex items-center gap-0 sm:gap-2 h-9 px-2.5 sm:px-3.5 rounded-xl text-xs font-semibold transition-all duration-200 backdrop-blur-md";
 
   return (
-    <div className="absolute top-20 right-5 lg:right-8 z-20 flex items-center gap-2">
+    <div className="absolute top-20 right-5 lg:right-8 z-20 flex items-center gap-1.5 sm:gap-2">
 
       {/* ── Compare (first) ── */}
       <button
@@ -76,8 +76,8 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
         }
       >
         {inCompare
-          ? <><CheckCheck className="w-3.5 h-3.5" />Added to compare</>
-          : <><GitCompareArrows className="w-3.5 h-3.5" />{isFull ? "Compare full" : "Compare"}</>
+          ? <><CheckCheck className="w-3.5 h-3.5" /><span className="hidden sm:inline">Added to compare</span></>
+          : <><GitCompareArrows className="w-3.5 h-3.5" /><span className="hidden sm:inline">{isFull ? "Compare full" : "Compare"}</span></>
         }
       </button>
 
@@ -92,8 +92,8 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
         }
       >
         {loggedIn === false
-          ? <><LogIn className="w-3.5 h-3.5" />Wishlist</>
-          : <><Heart className={`w-3.5 h-3.5 ${saved ? "fill-[#ff7d47]" : ""}`} />{saved ? "Wishlisted" : "Wishlist"}</>
+          ? <><LogIn className="w-3.5 h-3.5" /><span className="hidden sm:inline">Wishlist</span></>
+          : <><Heart className={`w-3.5 h-3.5 ${saved ? "fill-[#ff7d47]" : ""}`} /><span className="hidden sm:inline">{saved ? "Wishlisted" : "Wishlist"}</span></>
         }
       </button>
 

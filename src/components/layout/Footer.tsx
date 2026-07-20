@@ -32,8 +32,8 @@ export default function Footer() {
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
       className="relative overflow-hidden pb-20 lg:pb-0" style={{ background: "var(--bg-page)", borderTop: "1px solid var(--border-subtle)", color: "var(--text-primary)" }}>
-      {/* Subtle Gradient Accent */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#ff5100]/20 to-transparent" />
+      {/* Subtle Gradient Accent — rust fading into pine, the brand duo */}
+      <div className="absolute top-0 left-0 w-full h-[1px]" style={{ background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.2) 35%, rgba(74,222,128,0.16) 65%, transparent)" }} />
       
       <div className="max-w-7xl mx-auto px-5 lg:px-10 py-12 lg:py-16 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-24">
@@ -172,6 +172,7 @@ export default function Footer() {
 
       {/* Background Decor */}
       <div className="absolute bottom-0 right-0 w-[60%] h-[80%] bg-[#ff5100]/[0.02] blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-0 w-[45%] h-[60%] bg-[#4ade80]/[0.02] blur-[150px] rounded-full pointer-events-none" />
 
       {user && (
         <MessageModal 

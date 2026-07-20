@@ -10,6 +10,7 @@ interface Props {
   showLabels?: boolean;
   userAce?: ACE;
   userColor?: string;
+  highlightAxis?: AceAxis | null;
 }
 
 const AXIS_ORDER: AceAxis[] = [
@@ -58,7 +59,7 @@ function hexToRgb(hex: string) {
   return `${r},${g},${b}`;
 }
 
-export default function ACERadar({ ace, size = 220, showLabels = true, userAce, userColor = "#38bdf8" }: Props) {
+export default function ACERadar({ ace, size = 220, showLabels = true, userAce, userColor = "#38bdf8", highlightAxis = null }: Props) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   // Colors that work in both modes — use mid-grey instead of white/black
@@ -85,6 +86,9 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
   const dominantAxis = AXIS_ORDER[adventureValues.indexOf(maxVal)];
   const dominantColor = ACE_AXIS_COLORS[dominantAxis] ?? "#ff5100";
   const dominantRgb = hexToRgb(dominantColor);
+
+  // Dim every axis but the hovered one when a breakdown row is highlighted
+  const dimmed = (key: AceAxis) => !!highlightAxis && key !== highlightAxis;
 
   return (
     <svg
@@ -154,13 +158,16 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
         const outer = polarToXY(angle, radius, cx, cy);
         const color = ACE_AXIS_COLORS[key];
         const val = ace[key];
+        const isHighlighted = highlightAxis === key;
         return (
           <line
             key={i}
             x1={cx} y1={cy}
             x2={outer.x.toFixed(2)} y2={outer.y.toFixed(2)}
-            stroke={val > 0 ? `${color}30` : spokeColor}
-            strokeWidth="0.75"
+            stroke={isHighlighted ? `${color}90` : val > 0 ? `${color}30` : spokeColor}
+            strokeWidth={isHighlighted ? "1.5" : "0.75"}
+            opacity={dimmed(key) ? 0.25 : 1}
+            style={{ transition: "opacity 150ms ease, stroke 150ms ease, stroke-width 150ms ease" }}
           />
         );
       })}
@@ -195,21 +202,24 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
         const key = AXIS_ORDER[i];
         const color = ACE_AXIS_COLORS[key];
         if (v === 0) return null;
+        const isHighlighted = highlightAxis === key;
         return (
-          <g key={i}>
+          <g key={i} opacity={dimmed(key) ? 0.25 : 1} style={{ transition: "opacity 150ms ease" }}>
             {/* halo */}
             <circle
               cx={x.toFixed(2)} cy={y.toFixed(2)}
-              r="5"
+              r={isHighlighted ? "8" : "5"}
               fill={color}
-              opacity="0.12"
+              opacity={isHighlighted ? "0.22" : "0.12"}
+              style={{ transition: "r 150ms ease, opacity 150ms ease" }}
             />
             {/* dot */}
             <circle
               cx={x.toFixed(2)} cy={y.toFixed(2)}
-              r="2.8"
+              r={isHighlighted ? "4.2" : "2.8"}
               fill={color}
               filter={`url(#glow-${key})`}
+              style={{ transition: "r 150ms ease" }}
             />
           </g>
         );
@@ -228,19 +238,25 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
             Math.abs(x - cx) < 4 ? "middle" : x < cx ? "end" : "start";
 
           const abbr = AXIS_ABBR[key];
+          const isHighlighted = highlightAxis === key;
 
           return (
-            <g key={key} opacity={active ? 1 : 0.3}>
+            <g
+              key={key}
+              opacity={dimmed(key) ? 0.25 : active ? 1 : 0.3}
+              style={{ transition: "opacity 150ms ease" }}
+            >
               {/* abbr label */}
               <text
                 x={x.toFixed(2)} y={(y - 4).toFixed(2)}
                 textAnchor={anchor}
                 dominantBaseline="central"
                 fill={active ? color : labelInactive}
-                fontSize={size < 180 ? "7" : "8.5"}
+                fontSize={isHighlighted ? (size < 180 ? "8" : "9.5") : size < 180 ? "7" : "8.5"}
                 fontWeight="800"
                 letterSpacing="0.05em"
                 fontFamily="system-ui, sans-serif"
+                style={{ transition: "font-size 150ms ease" }}
               >
                 {abbr}
               </text>

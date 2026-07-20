@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, BarChart2, MapPin, ChevronDown, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind } from "lucide-react";
+import { ArrowRight, BarChart2, MapPin, ChevronDown, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind, RotateCcw } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
@@ -229,23 +229,31 @@ export default function MatchmakerHomepageSection() {
           <Link href="/explore?ace=ready"
             className="flex-1 inline-flex items-center justify-center gap-2 font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 px-6 py-3 rounded-xl"
             style={{ background: "linear-gradient(135deg, #ff5100, #ff7340)" }}>
-            All matching adventures
+            Matched adventures
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link href="/matchmaker"
             className="flex-1 inline-flex items-center justify-center gap-2 font-semibold px-6 py-3 rounded-xl text-sm border transition-all"
             style={{ color: "var(--text-tertiary)", borderColor: "var(--border-default)" }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent-green)"; e.currentTarget.style.borderColor = "var(--accent-green-border)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}>
             <BarChart2 className="w-3.5 h-3.5" />
             View detailed results
           </Link>
+          <Link href="/matchmaker?retake=1"
+            className="flex-1 inline-flex items-center justify-center gap-2 font-semibold px-6 py-3 rounded-xl text-sm border transition-all"
+            style={{ color: "var(--text-tertiary)", borderColor: "var(--border-default)" }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent-green)"; e.currentTarget.style.borderColor = "var(--accent-green-border)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}>
+            <RotateCcw className="w-3.5 h-3.5" />
+            Retake assessment
+          </Link>
           <Link href="/ace"
             className="flex-1 inline-flex items-center justify-center gap-2 font-semibold px-6 py-3 rounded-xl text-sm border transition-all"
             style={{ color: "var(--text-tertiary)", borderColor: "var(--border-default)" }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent-green)"; e.currentTarget.style.borderColor = "var(--accent-green-border)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}>
-            Learn more about ACE<sup>™</sup>
+            <span>Learn more about ACE<sup className="text-[0.6em]">™</sup></span>
           </Link>
         </div>
 
@@ -403,10 +411,10 @@ function DefaultCTA() {
                 href="/ace"
                 className="flex items-center justify-center gap-2 font-semibold px-8 py-4 rounded-xl text-base border transition-all duration-200"
               style={{ color: "var(--text-tertiary)", borderColor: "var(--border-default)" }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent-green)"; e.currentTarget.style.borderColor = "var(--accent-green-border)"; }}
               onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}
               >
-                Learn more about ACE<sup>™</sup>
+                <span>Learn more about ACE<sup className="text-[0.6em]">™</sup></span>
               </Link>
             </div>
           </div>

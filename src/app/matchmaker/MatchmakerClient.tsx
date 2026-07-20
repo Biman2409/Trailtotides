@@ -6,16 +6,16 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ChevronRight, ChevronLeft, MapPin, ArrowRight, RotateCcw,
-  Shield, CheckCircle2, AlertTriangle, Loader2, Wind,
+  Shield, CheckCircle2, AlertTriangle, Loader2, Wind, HeartPulse,
 } from "lucide-react";
 import { Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost, TrendingUp, Lock } from "@/lib/localIcons";
 import ACERadar from "@/components/ui/custom/ACERadar";
-import RankBar from "@/components/ui/custom/RankBar";
 import Pill from "@/components/ui/custom/Pill";
 import AchievementBadges from "@/components/ui/custom/AchievementBadges";
+import AchievementShareButton from "@/components/ui/custom/AchievementShareButton";
 import { saveProfile, loadProfile, clearProfile, saveProfileToServer, loadProfileFromServer } from "@/lib/matchmaker";
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
-import { getACE } from "@/lib/ace";
+import { getACE, type ACE, type AceAxis } from "@/lib/ace";
 import { getAchievements } from "@/lib/achievements";
 import { awardXP } from "@/lib/awardXP";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
@@ -67,124 +67,295 @@ function AxisTicker() {
   );
 }
 
-// ─── Question definitions (Q1–Q8 map to 8 bio axes) ──────────────────────────
+// ─── Question definitions ──────────────────────────────────────────────────
+// 2 questions per axis for finer calibration, except Water and Altitude
+// (1 each — those are already well-pinned by a single concrete question).
 
 const QUESTIONS = [
   {
-    key: "Q1",
+    key: "stamina-1",
     axis: "Stamina",
     icon: <Flame className="w-4 h-4" />,
-    question: "How long can you sustain continuous physical effort before needing to stop for the day?",
-    hint: "Active moving time — short rest stops are fine, think full trekking days.",
+    question: "How long can you sustain moderate-to-vigorous effort before you need to stop?",
+    hint: "Active exertion time, not time spent resting.",
     options: [
-      { v: "A", l: "Under 1 hour", s: "Walks and easy half-days only" },
-      { v: "B", l: "1–2 hours", s: "Light day hikes at a relaxed pace" },
-      { v: "C", l: "2–4 hours", s: "Moderate day treks with breaks" },
-      { v: "D", l: "4–6 hours", s: "Full trekking days without struggling" },
-      { v: "E", l: "6+ hours", s: "Long mountain days with minimal fatigue" },
+      { v: "A", l: "Under 1 hour", s: "Short bursts only" },
+      { v: "B", l: "1–2 hours", s: "Light, relaxed pace" },
+      { v: "C", l: "2–4 hours", s: "Steady, with breaks" },
+      { v: "D", l: "4–6 hours", s: "Hard effort, most of a day" },
+      { v: "E", l: "6+ hours", s: "Minimal fatigue, very long days" },
     ],
   },
   {
-    key: "Q2",
+    key: "stamina-2",
+    axis: "Stamina",
+    icon: <Flame className="w-4 h-4" />,
+    question: "The day after your hardest physical effort, how do you feel?",
+    hint: "Genuine recovery, not mild tiredness.",
+    options: [
+      { v: "A", l: "Need 2+ days to recover", s: "Slow to bounce back" },
+      { v: "B", l: "Sore and drained, want a rest day", s: "Depleted, but functional" },
+      { v: "C", l: "Tired, but up for a lighter day", s: "Reduced, not full rest" },
+      { v: "D", l: "Ready to repeat the effort", s: "Minimal carryover fatigue" },
+      { v: "E", l: "Ready for an even harder day", s: "Rarely limited by recovery" },
+    ],
+  },
+  {
+    key: "power-1",
     axis: "Power",
     icon: <Zap className="w-4 h-4" />,
-    question: "What weight can you carry comfortably across a full day of trekking?",
-    hint: "Include pack, water, and gear — not just for a short walk.",
+    question: "How much weight can you carry comfortably over a sustained period?",
+    hint: "Load-bearing capacity, not a single short lift.",
     options: [
-      { v: "A", l: "Under 5 kg", s: "Day bag only" },
-      { v: "B", l: "5–8 kg", s: "Light overnight pack" },
-      { v: "C", l: "8–12 kg", s: "Standard multi-day pack" },
-      { v: "D", l: "12–18 kg", s: "Heavy expedition pack" },
-      { v: "E", l: "18 kg+", s: "Full expedition load, sustained days" },
+      { v: "A", l: "Under 5 kg", s: "Minimal load" },
+      { v: "B", l: "5–8 kg", s: "Light load, short spells" },
+      { v: "C", l: "8–12 kg", s: "Moderate load, longer spells" },
+      { v: "D", l: "12–18 kg", s: "Heavy load, sustained" },
+      { v: "E", l: "18 kg+", s: "Very heavy, no real limit" },
     ],
   },
   {
-    key: "Q3",
+    key: "power-2",
+    axis: "Power",
+    icon: <Zap className="w-4 h-4" />,
+    question: "How do you handle a short, maximal effort — a heavy lift, a sprint, a sudden hard push?",
+    hint: "One hard push, not sustained effort.",
+    options: [
+      { v: "A", l: "Avoid it, ask for help", s: "Not my strength" },
+      { v: "B", l: "Manage it slowly, real effort", s: "Costly, but doable" },
+      { v: "C", l: "Handle it with some strain", s: "Solid effort" },
+      { v: "D", l: "Handle it comfortably", s: "Rarely an issue" },
+      { v: "E", l: "Explosive, no problem at all", s: "Genuinely strong" },
+    ],
+  },
+  {
+    key: "strength-1",
     axis: "Strength",
     icon: <Dumbbell className="w-4 h-4" />,
-    question: "How do you handle sustained uphill sections over several hours?",
-    hint: "Not a single climb — repeated ascents throughout the day.",
+    question: "How does your body handle sustained strain under load over several hours?",
+    hint: "Repeated demanding exertion, not one effort.",
     options: [
-      { v: "A", l: "Avoid steep or prolonged climbs", s: "Flat terrain preferred" },
-      { v: "B", l: "Need frequent breaks on climbs", s: "Short ascents manageable" },
-      { v: "C", l: "Steady pace on moderate climbs", s: "500–800m elevation gain/day" },
-      { v: "D", l: "Sustain hard climbs with heavy load", s: "1,000m+ gain without stopping" },
-      { v: "E", l: "Power through steep prolonged ascents", s: "1,500m+ gain, heavy pack, no issue" },
+      { v: "A", l: "Tire quickly, avoid sustained strain", s: "Low tolerance for load" },
+      { v: "B", l: "Manage short bursts, need recovery", s: "Works in short stretches" },
+      { v: "C", l: "Steady output under moderate demand", s: "Holds up over a day" },
+      { v: "D", l: "Sustain heavy strain, minimal fatigue", s: "Strong endurance" },
+      { v: "E", l: "Power through extreme demand", s: "Rarely limited" },
     ],
   },
   {
-    key: "Q4",
+    key: "strength-2",
+    axis: "Strength",
+    icon: <Dumbbell className="w-4 h-4" />,
+    question: "How much can you lift or carry relative to your bodyweight, over a short distance?",
+    hint: "Think gear, a fallen bike, a boat — not a gym max.",
+    options: [
+      { v: "A", l: "Struggle beyond light objects", s: "Limited lifting capacity" },
+      { v: "B", l: "Roughly a quarter of my bodyweight", s: "Manageable with effort" },
+      { v: "C", l: "A third to half my bodyweight", s: "Solid functional strength" },
+      { v: "D", l: "Close to my full bodyweight", s: "Strong under load" },
+      { v: "E", l: "More than my own bodyweight", s: "Exceptional raw strength" },
+    ],
+  },
+  {
+    key: "agility-1",
     axis: "Agility",
     icon: <Compass className="w-4 h-4" />,
-    question: "What is the most technical terrain you can navigate safely and confidently?",
-    hint: "Pick the hardest terrain you can move through without slowing the group.",
+    question: "How confidently can you move through unpredictable, physically demanding environments?",
+    hint: "General coordination and control, not one setting.",
     options: [
-      { v: "A", l: "Flat, paved, or well-maintained paths", s: "No off-trail movement" },
-      { v: "B", l: "Dirt trails with minor obstacles", s: "Gravel, tree roots, mild slopes" },
-      { v: "C", l: "Uneven terrain — loose rock, scree, sand", s: "Hands-free but careful footing" },
-      { v: "D", l: "Rocky terrain requiring hands", s: "Scrambling, boulders, steep moraine" },
-      { v: "E", l: "Highly technical terrain", s: "Glaciers, exposed rock, via ferrata" },
+      { v: "A", l: "Prefer flat, stable ground", s: "Uneven ground is hard" },
+      { v: "B", l: "Manage minor obstacles carefully", s: "Slow, deliberate" },
+      { v: "C", l: "Handle shifting conditions with care", s: "Steady, controlled" },
+      { v: "D", l: "Move confidently, rarely slowed", s: "Rarely slowed down" },
+      { v: "E", l: "Fully at ease in technical settings", s: "Exceptional control" },
     ],
   },
   {
-    key: "Q5",
+    key: "agility-2",
+    axis: "Agility",
+    icon: <Compass className="w-4 h-4" />,
+    question: "How comfortable are you balancing on unstable or moving surfaces?",
+    hint: "Balance and coordination under shifting conditions.",
+    options: [
+      { v: "A", l: "Very uneasy, need support", s: "A weak point" },
+      { v: "B", l: "Manage slowly and carefully", s: "Doable with focus" },
+      { v: "C", l: "Comfortable at a measured pace", s: "Steady, controlled" },
+      { v: "D", l: "Comfortable moving quickly", s: "Rarely a second thought" },
+      { v: "E", l: "Fully at ease, barely notice it", s: "Natural balance" },
+    ],
+  },
+  {
+    key: "water-1",
     axis: "Water",
     icon: <Waves className="w-4 h-4" />,
     question: "What level of water conditions are you comfortable in?",
-    hint: "Open water or rivers — not a controlled pool setting.",
+    hint: "Open water, not a controlled pool.",
     options: [
-      { v: "A", l: "No open water — non-swimmer", s: "Water crossings only with support" },
-      { v: "B", l: "Calm shallow water", s: "Knee-deep river crossings, no swimming" },
-      { v: "C", l: "Open water swimming", s: "Lake or sea, calm conditions" },
-      { v: "D", l: "Moving water or moderate sea currents", s: "River crossings, mild surf, snorkelling" },
-      { v: "E", l: "Strong currents, rough conditions", s: "White water, open ocean, diving" },
+      { v: "A", l: "No open water — non-swimmer", s: "Needs support in water" },
+      { v: "B", l: "Calm shallow water", s: "Comfortable wading" },
+      { v: "C", l: "Open water swimming", s: "Calm lake or sea" },
+      { v: "D", l: "Moving water, moderate currents", s: "Confident against resistance" },
+      { v: "E", l: "Strong currents, rough conditions", s: "At ease in rough water" },
     ],
   },
   {
-    key: "Q6",
+    key: "altitude-1",
     axis: "Altitude",
     icon: <Mountain className="w-4 h-4" />,
-    question: "At what altitude have you stayed active for multiple days without significant symptoms?",
-    hint: "Where you have trekked or camped — not just driven or flown through.",
+    question: "At what altitude have you stayed active for days without significant symptoms?",
+    hint: "Time genuinely lived and moved at elevation, not just passed through.",
     options: [
-      { v: "A", l: "Below 1,500m", s: "Sea level to low hills only" },
-      { v: "B", l: "1,500–2,500m", s: "Minor headaches, adapted well" },
-      { v: "C", l: "2,500–3,500m", s: "Acclimatised without major issues" },
-      { v: "D", l: "3,500–4,500m", s: "Himalayan trekking altitude, handled well" },
-      { v: "E", l: "Above 4,500m", s: "High camps, thin air, no significant AMS" },
+      { v: "A", l: "Below 1,500m", s: "Sea level to low hills" },
+      { v: "B", l: "1,500–2,500m", s: "Minor symptoms, adapted" },
+      { v: "C", l: "2,500–3,500m", s: "Acclimatised well" },
+      { v: "D", l: "3,500–4,500m", s: "Handled real altitude" },
+      { v: "E", l: "Above 4,500m", s: "Thin air, no issue" },
     ],
   },
   {
-    key: "Q7",
+    key: "focus-1",
     axis: "Focus",
     icon: <Shield className="w-4 h-4" />,
-    question: "How comfortable are you on narrow exposed paths with a significant drop on one or both sides?",
-    hint: "Where a misstep has real consequences — not a momentary step.",
+    question: "How comfortable are you with real physical exposure — heights, drops, a slim margin for error?",
+    hint: "Real consequences, not just visual height.",
     options: [
-      { v: "A", l: "Very uncomfortable, prefer wide paths", s: "Heights cause distress" },
-      { v: "B", l: "Manageable with slow movement", s: "Discomfort, but I push through" },
-      { v: "C", l: "Comfortable with solid footing", s: "Focused but not anxious" },
-      { v: "D", l: "Comfortable on narrow or exposed ridges", s: "Heights don't affect performance" },
-      { v: "E", l: "Fully at ease in high-exposure terrain", s: "Thrives on exposed ridges and walls" },
+      { v: "A", l: "Very uncomfortable, avoid exposure", s: "Causes real distress" },
+      { v: "B", l: "Manageable with slow, careful movement", s: "Pushes through it" },
+      { v: "C", l: "Comfortable with solid technique", s: "Focused, not anxious" },
+      { v: "D", l: "Comfortable in high-exposure situations", s: "Unaffected by exposure" },
+      { v: "E", l: "Fully at ease, regardless", s: "Thrives under exposure" },
     ],
   },
   {
-    key: "Q8",
+    key: "nerve-1",
     axis: "Nerve",
     icon: <Ghost className="w-4 h-4" />,
-    question: "If you were stuck in a remote area — no signal, hours from help — how do you respond?",
-    hint: "No phone, no guide, no guarantee of rescue. Real wilderness self-reliance.",
+    question: "If you were stuck somewhere remote — no signal, hours from help — how do you respond?",
+    hint: "No phone, no guide. Real self-reliance.",
     options: [
-      { v: "A", l: "Prefer to stay near help at all times", s: "Needs consistent access to support" },
-      { v: "B", l: "OK on known routes with others nearby", s: "Short remote stretches manageable" },
-      { v: "C", l: "Can manage basic needs and short delays", s: "1–2 days remote with preparation" },
-      { v: "D", l: "Self-sufficient in remote terrain", s: "Multi-day remote, calm under pressure" },
-      { v: "E", l: "Fully expedition-level self-reliant", s: "Weeks alone, deep wilderness, no issue" },
+      { v: "A", l: "Prefer to stay near help", s: "Needs support nearby" },
+      { v: "B", l: "OK for short stretches, others nearby", s: "Brief stints manageable" },
+      { v: "C", l: "Can manage basic needs, short delays", s: "1–2 days, prepared" },
+      { v: "D", l: "Self-sufficient in remote conditions", s: "Calm, multi-day" },
+      { v: "E", l: "Fully expedition-level self-reliant", s: "Weeks alone, no issue" },
+    ],
+  },
+];
+
+// ─── Calibration / decay questions ─────────────────────────────────────────
+// Cross-cutting — not tied to a single axis. Each has 4 real severity tiers
+// (A–D) plus a 5th "prefer not to say" option (E), which applies no
+// adjustment (multiplier 1.0) — same as skipping, but always an explicit
+// choice. Answering with a real tier discounts specific axes to correct for
+// detraining or health factors that self-rated capability tends to miss.
+
+const DECAY_QUESTIONS = [
+  {
+    key: "decay-recency",
+    title: "Recent activity",
+    question: "When did you last complete a demanding physical day outdoors?",
+    hint: "Fitness fades over time, even if it doesn't feel that way.",
+    affects: ["stamina", "power", "altitude"],
+    options: [
+      { v: "A", l: "This month", mult: 1.0 },
+      { v: "B", l: "1–6 months ago", mult: 0.88 },
+      { v: "C", l: "6–12 months ago", mult: 0.75 },
+      { v: "D", l: "Over a year ago, or can't recall", mult: 0.6 },
+      { v: "E", l: "Prefer not to say", mult: 1.0 },
+    ],
+  },
+  {
+    key: "decay-joint",
+    title: "Joint history",
+    question: "Any ongoing knee, ankle, hip, or back issues that flare up under load?",
+    hint: "Adjusts load-bearing axes, not effort or willpower.",
+    affects: ["strength", "power", "agility"],
+    options: [
+      { v: "A", l: "None", mult: 1.0 },
+      { v: "B", l: "Mild, occasional", mult: 0.88 },
+      { v: "C", l: "Managed — brace, physio, meds", mult: 0.75 },
+      { v: "D", l: "Significant, limits me", mult: 0.6 },
+      { v: "E", l: "Prefer not to say", mult: 1.0 },
+    ],
+  },
+  {
+    key: "decay-respiratory",
+    title: "Respiratory, cardiac & smoking",
+    question: "Any respiratory or cardiac conditions, or a smoking/vaping habit, that affects exertion?",
+    hint: "Matters for sustained effort, altitude, and breath control in the water.",
+    affects: ["stamina", "altitude", "water"],
+    options: [
+      { v: "A", l: "None — no conditions, don't smoke", mult: 1.0 },
+      { v: "B", l: "Mild — occasional smoking/vaping, or a well-managed condition", mult: 0.85 },
+      { v: "C", l: "Moderate — regular smoking, or a condition needing care", mult: 0.72 },
+      { v: "D", l: "Significant — heavy smoking and/or a serious condition", mult: 0.55 },
+      { v: "E", l: "Prefer not to say", mult: 1.0 },
+    ],
+  },
+  {
+    key: "decay-acute",
+    title: "Current condition",
+    question: "Are you currently recovering from any injury, illness, or surgery?",
+    hint: "A temporary state — separate from any ongoing chronic condition.",
+    affects: ["stamina", "power", "strength", "agility", "nerve"],
+    options: [
+      { v: "A", l: "Not at all", mult: 1.0 },
+      { v: "B", l: "Minor, nearly recovered", mult: 0.9 },
+      { v: "C", l: "Still recovering, limits me somewhat", mult: 0.75 },
+      { v: "D", l: "Early recovery — recent surgery or major illness", mult: 0.58 },
+      { v: "E", l: "Prefer not to say", mult: 1.0 },
+    ],
+  },
+  {
+    key: "decay-age",
+    title: "Age bracket",
+    question: "Which age range are you in?",
+    hint: "Explosive power and muscle strength decline with age faster than endurance does — this fine-tunes, it doesn't judge.",
+    affects: ["power", "strength"],
+    options: [
+      { v: "A", l: "Under 35", mult: 1.0 },
+      { v: "B", l: "35–49", mult: 0.93 },
+      { v: "C", l: "50–64", mult: 0.83 },
+      { v: "D", l: "65+", mult: 0.72 },
+      { v: "E", l: "Prefer not to say", mult: 1.0 },
+    ],
+  },
+  {
+    key: "decay-vestibular",
+    title: "Balance & vestibular",
+    question: "Do you experience vertigo, motion sickness, or a diagnosed balance disorder?",
+    hint: "Inner-ear and balance — distinct from the joint issues covered earlier.",
+    affects: ["agility", "focus", "water"],
+    options: [
+      { v: "A", l: "None", mult: 1.0 },
+      { v: "B", l: "Mild motion sickness, rarely an issue", mult: 0.88 },
+      { v: "C", l: "Occasional vertigo, or managed with medication", mult: 0.75 },
+      { v: "D", l: "Significant, affects balance regularly", mult: 0.58 },
+      { v: "E", l: "Prefer not to say", mult: 1.0 },
+    ],
+  },
+  {
+    key: "decay-medication",
+    title: "Medication effects",
+    question: "On any medication that affects your alertness, coordination, or reaction time?",
+    hint: "Sedatives, beta-blockers, antihistamines and similar — relevant for focus-critical situations.",
+    affects: ["focus", "nerve", "agility"],
+    options: [
+      { v: "A", l: "None", mult: 1.0 },
+      { v: "B", l: "Mild, rarely noticeable", mult: 0.88 },
+      { v: "C", l: "Noticeable effect on alertness or coordination", mult: 0.75 },
+      { v: "D", l: "Significant effect, needs real caution", mult: 0.58 },
+      { v: "E", l: "Prefer not to say", mult: 1.0 },
     ],
   },
 ];
 
 type Answers = Partial<Record<string, string>>;
+type Step = { type: "capability"; q: (typeof QUESTIONS)[number] } | { type: "decay"; q: (typeof DECAY_QUESTIONS)[number] };
+const ALL_STEPS: Step[] = [
+  ...QUESTIONS.map((q) => ({ type: "capability" as const, q })),
+  ...DECAY_QUESTIONS.map((q) => ({ type: "decay" as const, q })),
+];
 
 // ─── Axis colour map ──────────────────────────────────────────────────────────
 
@@ -216,6 +387,8 @@ interface AnalysisResult {
   userAxes: Record<string, number>;
   adventures: EnrichedAdventure[];
   trainingPlan: TrainingItem[];
+  rawAxes?: Record<string, number>;
+  decayNotes?: string[];
 }
 
 interface EnrichedAdventure {
@@ -313,81 +486,6 @@ const RANKS = [
   },
 ];
 
-function RankProgressionBar({ totalScore }: { totalScore: number }) {
-  const currentRankIndex = totalScore >= 40 ? 5 : totalScore >= 32 ? 4 : totalScore >= 24 ? 3 : totalScore >= 16 ? 2 : totalScore >= 8 ? 1 : 0;
-  const currentRank = RANKS[currentRankIndex];
-  const nextRank = RANKS[currentRankIndex + 1] ?? null;
-  const progressPct = nextRank
-    ? Math.min(100, Math.round(((totalScore - currentRank.minScore) / (nextRank.minScore - currentRank.minScore)) * 100))
-    : 100;
-  const totalRanks = RANKS.length;
-
-  return (
-    <div
-      className="rounded-2xl overflow-hidden border relative"
-      style={{ background: `linear-gradient(150deg, ${currentRank.color}14 0%, transparent 60%)`, borderColor: `${currentRank.color}25` }}
-    >
-      <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: currentRank.color }} />
-
-      <div className="relative px-5 pt-5 pb-5 flex flex-col gap-5">
-
-        {/* Identity row */}
-        <div className="flex items-start gap-4">
-          <div
-            className="w-[60px] h-[60px] rounded-2xl flex items-center justify-center shrink-0"
-            style={{ background: `${currentRank.color}18`, color: currentRank.color, boxShadow: `0 0 32px ${currentRank.color}38`, border: `1px solid ${currentRank.color}28` }}
-          >
-            <div className="scale-[1.55]">{currentRank.icon}</div>
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[9px] uppercase tracking-[0.22em] font-semibold mb-1" style={{ color: "var(--text-tertiary)" }}>Capability Tier</p>
-            <h3 className="text-[26px] font-black tracking-tight leading-none" style={{ color: currentRank.color }}>{currentRank.label}</h3>
-            <div className="flex items-center gap-[3px] mt-2.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} className="text-[13px] leading-none" style={{ color: i < currentRank.stars ? currentRank.color : "var(--text-muted)" }}>★</span>
-              ))}
-              <span className="text-[10px] ml-2" style={{ color: "var(--text-muted)" }}>Rank {currentRank.stars} of 5</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className="h-px" style={{ background: `${currentRank.color}18` }} />
-
-        {/* Progress numbers */}
-        {nextRank ? (
-          <>
-            <div className="flex items-end justify-between">
-              <div>
-                <div className="flex items-baseline gap-0.5 leading-none">
-                  <span className="text-[38px] font-black tabular-nums tracking-tight" style={{ color: currentRank.color }}>{progressPct}</span>
-                  <span className="text-lg font-bold ml-0.5" style={{ color: `${currentRank.color}70` }}>%</span>
-                </div>
-                <p className="text-[11px] mt-1 leading-none" style={{ color: "var(--text-tertiary)" }}>
-                  to reach <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span>
-                </p>
-              </div>
-              <div className="text-right pb-1">
-                <p className="text-[24px] font-black tabular-nums leading-none" style={{ color: "var(--text-secondary)" }}>{nextRank.minScore - totalScore}</p>
-                <p className="text-[11px] mt-1 leading-none" style={{ color: "var(--text-tertiary)" }}>pts needed</p>
-              </div>
-            </div>
-            <RankBar totalScore={totalScore} trackH={10} showLabels showYouTag={false} />
-          </>
-        ) : (
-          <>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
-              <p className="text-xs font-bold tracking-widest uppercase text-[#a78bfa]">The absolute pinnacle</p>
-            </div>
-            <RankBar totalScore={totalScore} trackH={10} showLabels showYouTag={false} />
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
-
 // ─── Option button ────────────────────────────────────────────────────────────
 
 function OptionBtn({
@@ -420,28 +518,6 @@ function OptionBtn({
         </div>
       </div>
     </button>
-  );
-}
-
-// ─── Axis bar ─────────────────────────────────────────────────────────────────
-
-function AxisBar({ axis, value, max = 5 }: { axis: string; value: number; max?: number }) {
-  const color = AXIS_COLORS[axis] ?? "#ff5100";
-  const icon = AXIS_ICONS[axis];
-  return (
-    <div className="flex items-center gap-3">
-      <div className="w-24 flex items-center gap-1.5 shrink-0">
-        <span style={{ color }} className="opacity-70">{icon}</span>
-        <span className="text-[11px] uppercase tracking-wide capitalize" style={{ color: "var(--text-tertiary)" }}>{axis}</span>
-      </div>
-      <div className="flex-1 h-1.5 rounded-full" style={{ background: "var(--border-subtle)" }}>
-        <div
-          className="h-full rounded-full transition-all duration-500"
-          style={{ width: `${(value / max) * 100}%`, background: color }}
-        />
-      </div>
-      <span className="text-xs w-4 text-right font-mono" style={{ color: "var(--text-secondary)" }}>{value}</span>
-    </div>
   );
 }
 
@@ -480,10 +556,10 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
             </h1>
 
             <p className="text-[13px] leading-relaxed mb-5" style={{ color: "var(--text-tertiary)" }}>
-              8 questions across stamina, strength, altitude, nerve and more. We map your capability and surface the adventures that actually fit.
+              12 questions across stamina, strength, altitude, nerve and more, plus a few optional calibration questions. We map your capability and surface the adventures that actually fit.
             </p>
 
-            <p className="text-[11px] tracking-wide mb-2 text-center" style={{ color: "var(--text-muted)" }}>Takes about 2 minutes</p>
+            <p className="text-[11px] tracking-wide mb-2 text-center" style={{ color: "var(--text-muted)" }}>Takes about 3 minutes</p>
 
             <div className="flex flex-col gap-2">
               {hasProfile && (
@@ -600,65 +676,95 @@ function LoadingScreen() {
   );
 }
 
-// ─── Strengths section (collapsible) ─────────────────────────────────────────
+// ─── Capability readout ───────────────────────────────────────────────────────
 
-function StrengthsSection({ sorted, sectionLabel, axisLabels, axisDesc, axisColors, axisIcons, userAxes }: {
-  sorted: [string, number][];
-  sectionLabel: string;
+const AXIS_ORDER = ["stamina", "power", "strength", "agility", "water", "altitude", "focus", "nerve"];
+
+function CapabilityReadout({ axisLabels, axisDesc, axisColors, userAxes, rawAxes, decayNotes }: {
   axisLabels: Record<string, string>;
   axisDesc: Record<string, string>;
   axisColors: Record<string, string>;
-  axisIcons: Record<string, React.ReactNode>;
   userAxes: { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; focus: number; nerve: number };
+  rawAxes?: Record<string, number>;
+  decayNotes?: string[];
 }) {
-  const [showAll, setShowAll] = useState(false);
-  const visible = showAll ? sorted : sorted.slice(0, 4);
-  const hasMore = sorted.length > 4;
+  const [hoveredAxis, setHoveredAxis] = useState<AceAxis | null>(null);
+  const hasCalibration = !!rawAxes && !!decayNotes?.length;
 
   return (
-    <div className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-5 sm:mb-7"
-      style={{ background: "var(--bg-surface)", borderColor: "var(--border-subtle)" }}>
-      <div className="flex flex-col sm:flex-row sm:items-stretch">
-        {/* Radar */}
-        <div className="shrink-0 flex flex-col items-center sm:items-start gap-2.5 p-4 sm:p-5 w-full sm:w-auto">
-          <p className="text-[9px] uppercase tracking-[0.22em] font-bold self-start" style={{ color: "var(--text-tertiary)" }}>Capability Breakdown</p>
-          <div className="rounded-xl sm:rounded-2xl flex items-center justify-center p-3 sm:p-4 w-full sm:w-auto"
-            style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.06) 0%, transparent 70%)", border: "1px solid var(--border-subtle)" }}>
-            <ACERadar ace={userAxes} size={190} showLabels />
-          </div>
+    <div className="px-5 sm:px-8 py-6 sm:py-7">
+      <div className="flex flex-col lg:flex-row lg:items-stretch gap-6 lg:gap-0">
+        {/* Radar column */}
+        <div className="shrink-0 flex flex-col items-center lg:items-start gap-3 mx-auto lg:mx-0 lg:pr-6">
+          <p className="text-[10px] uppercase tracking-[0.28em] font-bold font-mono" style={{ color: "#ff5100" }}>
+            Capability Radar
+          </p>
+          <ACERadar
+            ace={userAxes}
+            userAce={hasCalibration ? (rawAxes as typeof userAxes) : undefined}
+            userColor="var(--accent-green)"
+            size={230}
+            showLabels
+            highlightAxis={hoveredAxis}
+          />
+          {hasCalibration && (
+            <div className="w-full max-w-[220px] rounded-lg px-3 py-2.5" style={{ background: "var(--accent-green-soft)", border: "1px solid var(--accent-green-border)" }}>
+              <p className="text-[8px] font-mono font-bold uppercase tracking-wide mb-1" style={{ color: "var(--accent-green)" }}>Calibrated — see adjustments</p>
+              <p className="text-[9px] leading-snug" style={{ color: "var(--text-tertiary)" }}>
+                Solid = calibrated, dashed = raw self-report. Adjusted for: {decayNotes!.map(n => n.split(":")[0]).join(", ").toLowerCase()}.
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* Divider — horizontal on mobile, vertical on sm+ */}
-        <div className="sm:hidden h-px mx-4" style={{ background: "var(--border-subtle)" }} />
-        <div className="hidden sm:block w-px self-stretch" style={{ background: "var(--border-subtle)" }} />
+        {/* Section divider — same treatment as the Achievements Unlocked split */}
+        <div className="border-t lg:border-t-0 lg:border-l" style={{ borderColor: "var(--border-subtle)" }} />
 
-        {/* Strengths */}
-        <div className="flex-1 flex flex-col min-w-0 p-4 sm:p-5">
-          <div className="flex items-center justify-between mb-1.5">
-            <p className="text-[9px] uppercase tracking-[0.2em] font-bold" style={{ color: "var(--text-tertiary)" }}>{sectionLabel}</p>
-            {hasMore && (
-              <button onClick={() => setShowAll(v => !v)}
-                className="text-[9px] font-semibold transition-colors"
-                style={{ color: "var(--text-tertiary)" }}>
-                {showAll ? "Show less" : `+${sorted.length - 4} more`}
-              </button>
-            )}
-          </div>
+        {/* Breakdown column — heading sits on the same line as Capability Radar */}
+        <div className="flex-1 min-w-0 pt-6 lg:pt-0 lg:pl-6">
+          <p className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] mb-2.5" style={{ color: "#ff5100" }}>
+            Capability Breakdown
+          </p>
 
-          <div className="flex flex-col gap-1.5">
-            {visible.map(([axis, val]) => {
+          <div className="flex flex-col">
+            {AXIS_ORDER.map((axis) => {
               const color = axisColors[axis] ?? "#ff5100";
-              const icon  = axisIcons[axis];
+              const val = (userAxes as Record<string, number>)[axis] ?? 0;
+              const isHovered = hoveredAxis === axis;
               return (
-                <div key={axis} className="flex items-center py-1.5 rounded-md px-2 gap-2" style={{ background: `${color}0c`, border: `1px solid ${color}1c` }}>
-                  <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0 [&>svg]:w-3 [&>svg]:h-3"
-                    style={{ background: `${color}14`, border: `1.5px solid ${color}28`, boxShadow: `0 0 6px ${color}20`, color }}>
-                    {icon}
+                <div
+                  key={axis}
+                  className="group relative flex items-center gap-2 py-1 px-1.5 -mx-1.5 rounded-lg transition-colors duration-150"
+                  style={{ background: isHovered ? `${color}14` : "transparent" }}
+                  onMouseEnter={() => setHoveredAxis(axis as AceAxis)}
+                  onMouseLeave={() => setHoveredAxis(null)}
+                >
+                  <span className="text-[9px] font-black uppercase tracking-[0.08em] w-[46px] shrink-0" style={{ color }}>
+                    {axisLabels[axis]}
+                  </span>
+                  <div className="flex-1 h-[3px] rounded-full" style={{ background: "var(--border-subtle)" }}>
+                    <div className="h-full rounded-full transition-all duration-700" style={{ width: `${(val / 5) * 100}%`, background: color }} />
                   </div>
-                  <span className="text-[11px] font-bold capitalize" style={{ color }}>{axisLabels[axis]}</span>
-                  <span className="text-[9px] truncate flex-1" style={{ color: "var(--text-tertiary)" }}>{axisDesc[axis]}</span>
-                  <span className="text-[10px] font-black tabular-nums px-1.5 py-0.5 rounded shrink-0"
-                    style={{ background: `${color}20`, color }}>Lv {val}</span>
+                  <span
+                    className="text-[10px] font-mono font-bold tabular-nums w-5 text-right shrink-0 transition-transform duration-150"
+                    style={{ color, transform: isHovered ? "scale(1.25)" : "scale(1)" }}
+                  >
+                    {val}
+                  </span>
+
+                  {/* Hover tooltip — per-axis comment, hidden until hovered */}
+                  <div
+                    className="pointer-events-none absolute left-0 right-0 bottom-full mb-2.5 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-150 z-20"
+                  >
+                    <div className="rounded-lg px-2.5 py-2 shadow-xl" style={{ background: "var(--bg-surface-2)", border: `1px solid ${color}40` }}>
+                      <p className="text-[9px] leading-snug" style={{ color: "var(--text-secondary)" }}>{axisDesc[axis]}</p>
+                    </div>
+                    {/* caret */}
+                    <div
+                      className="w-2 h-2 rotate-45 ml-4 -mt-1"
+                      style={{ background: "var(--bg-surface-2)", borderRight: `1px solid ${color}40`, borderBottom: `1px solid ${color}40` }}
+                    />
+                  </div>
                 </div>
               );
             })}
@@ -669,11 +775,11 @@ function StrengthsSection({ sorted, sectionLabel, axisLabels, axisDesc, axisColo
   );
 }
 
-// ─── Training section (collapsible) ──────────────────────────────────────────
+// ─── Training focus ───────────────────────────────────────────────────────────
 
 interface TrainingItem { axis: string; current_level: number; required_level: number; recommendation: string; }
 
-function TrainingSection({ trainingPlan, axisColors, axisIcons }: {
+function TrainingSection({ trainingPlan, axisColors }: {
   trainingPlan: TrainingItem[];
   axisColors: Record<string, string>;
   axisIcons: Record<string, React.ReactNode>;
@@ -685,38 +791,26 @@ function TrainingSection({ trainingPlan, axisColors, axisIcons }: {
   const hasMore  = sorted.length > 3;
 
   return (
-    <div className="rounded-2xl sm:rounded-3xl border overflow-hidden mb-5 sm:mb-7"
-      style={{ background: "var(--bg-surface)", borderColor: "var(--border-subtle)" }}>
+    <div className="px-5 sm:px-8 py-6 sm:py-7">
+      <p className="text-[10px] uppercase tracking-[0.28em] font-bold font-mono mb-1" style={{ color: "#ff5100" }}>
+        Training Focus
+      </p>
+      <p className="text-[13px] mb-5" style={{ color: "var(--text-secondary)" }}>Build these up to unlock more adventures.</p>
 
-      {/* Header */}
-      <div className="px-4 sm:px-6 pt-4 sm:pt-5 pb-3.5 sm:pb-4 border-b" style={{ borderColor: "var(--border-subtle)" }}>
-        <p className="text-[9px] uppercase tracking-[0.22em] font-bold mb-1" style={{ color: "var(--text-tertiary)" }}>What to train next</p>
-        <h3 className="t-text font-bold text-base leading-tight">Unlock harder adventures</h3>
-        <p className="text-[11px] mt-1" style={{ color: "var(--text-tertiary)" }}>Build these up and more adventures open up for you.</p>
-      </div>
-
-      {/* Items */}
-      <div className="px-4 sm:px-6 py-4 space-y-2.5">
+      <div>
         {visible.map((item, i) => {
           const color = axisColors[item.axis] ?? "#ff5100";
-          const icon  = axisIcons[item.axis];
           const gap   = item.required_level - item.current_level;
           return (
-            <div key={i} className="flex items-start gap-3 rounded-xl p-3.5"
-              style={{ background: `${color}08`, border: `1px solid ${color}16` }}>
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                style={{ background: `${color}14`, border: `1.5px solid ${color}28`, boxShadow: `0 0 8px ${color}20`, color }}>
-                {icon}
-              </div>
+            <div key={i} className="flex items-start gap-4 py-3.5" style={{ borderTop: i === 0 ? "none" : "1px solid var(--border-subtle)" }}>
+              <span className="text-[11px] font-mono font-bold tabular-nums shrink-0 pt-0.5" style={{ color }}>
+                {String(item.current_level).padStart(2, "0")}→{String(item.required_level).padStart(2, "0")}
+              </span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <span className="t-text font-bold text-sm capitalize">{item.axis}</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
-                    style={{ background: `${color}18`, color }}>
-                    +{gap} level{gap > 1 ? "s" : ""} to go
-                  </span>
-                  <span className="text-[10px] ml-auto font-mono" style={{ color: "var(--text-muted)" }}>
-                    {item.current_level} → {item.required_level}
+                  <span className="t-text font-bold text-sm uppercase tracking-wide" style={{ color }}>{item.axis}</span>
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded" style={{ border: `1px solid ${color}40`, color }}>
+                    +{gap} level{gap > 1 ? "s" : ""}
                   </span>
                 </div>
                 <p className="text-[11px] leading-[1.55]" style={{ color: "var(--text-tertiary)" }}>{item.recommendation}</p>
@@ -728,13 +822,11 @@ function TrainingSection({ trainingPlan, axisColors, axisIcons }: {
 
       {/* Expand toggle */}
       {hasMore && (
-        <div className="px-4 sm:px-6 pb-4 -mt-1">
-          <button onClick={() => setShowAll(v => !v)}
-            className="w-full py-2 rounded-xl text-[11px] font-semibold transition-all"
-            style={{ background: "var(--bg-page)", border: "1px solid var(--border-subtle)", color: "var(--text-tertiary)" }}>
-            {showAll ? "Show less" : `Show ${sorted.length - 3} more areas`}
-          </button>
-        </div>
+        <button onClick={() => setShowAll(v => !v)}
+          className="w-full mt-2 py-2.5 rounded-lg text-[11px] font-semibold transition-all"
+          style={{ background: "var(--bg-page)", border: "1px solid var(--border-subtle)", color: "var(--text-tertiary)" }}>
+          {showAll ? "Show less" : `Show ${sorted.length - 3} more areas`}
+        </button>
       )}
     </div>
   );
@@ -749,7 +841,7 @@ function ResultsScreen({
   result: AnalysisResult;
   onReset: () => void;
 }) {
-  const { userAxes, adventures: enriched, trainingPlan } = result;
+  const { userAxes, adventures: enriched, trainingPlan, rawAxes, decayNotes } = result;
 
   const inZone    = enriched.filter(a => a.status === "IN_ZONE");
   const stretch   = enriched.filter(a => a.status === "STRETCH");
@@ -768,241 +860,220 @@ function ResultsScreen({
                        { label: "Uncharted",   color: "#6b7280" };
   const tierRank = RANKS.find(r => r.label === tier.label);
 
+  // Ruler position math — shared by the ruler and the status line below it
+  const currentRankIndex = tierRank ? RANKS.indexOf(tierRank) : 0;
+  const totalRanks = RANKS.length;
+  const nextRank = RANKS[currentRankIndex + 1] ?? null;
+  const rawPct = nextRank
+    ? Math.min(100, Math.round(((totalScore - RANKS[currentRankIndex].minScore) / (nextRank.minScore - RANKS[currentRankIndex].minScore)) * 100))
+    : 100;
+  const progressPct = Math.max(0, rawPct);
+  const ptsNeeded = nextRank ? nextRank.minScore - totalScore : 0;
+  const rulerPct = nextRank
+    ? ((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100
+    : 100;
+
+  const AXIS_LABELS: Record<string, string> = {
+    stamina: "Stamina", power: "Power", strength: "Strength",
+    agility: "Agility", water: "Water", altitude: "Altitude",
+    focus: "Focus", nerve: "Nerve",
+  };
+  const AXIS_DESC_BY_LEVEL: Record<string, string[]> = {
+    //                  Lv1                                                                    Lv2                                                                Lv3                                                                    Lv4                                                        Lv5
+    stamina:  ["Comfortable moving for under an hour before you need a real break.", "You hold a relaxed pace for 1–2 hours before tiring.", "You keep a steady pace for 2–4 hours with normal rest stops.", "You push through 4–6 hours of hard effort without burning out.", "You sustain 6+ hours of hard effort with barely any drop-off."],
+    power:    ["You manage light loads — comfortably under 5kg — without strain.", "You carry a 5–8kg pack for short stretches without much trouble.", "You handle an 8–12kg load comfortably over longer stretches.", "You haul 12–18kg of gear all day and still perform.", "You move 18kg+ loads with no real ceiling in sight."],
+    strength: ["You manage everyday lifting, but heavier loads wear you down fast.", "You can lift roughly a quarter of your bodyweight without much strain.", "You handle a third to half your bodyweight with solid control.", "You sustain loads close to your own bodyweight without losing form.", "You lift beyond your own bodyweight — genuinely elite raw strength."],
+    agility:  ["Flat, predictable ground is where you move most confidently.", "You pick your way carefully over roots, gravel and minor obstacles.", "You cross loose rock, scree and uneven ground without much hesitation.", "You stay sure-footed scrambling over boulders and steep, broken terrain.", "You move with full control on exposed, technical ground — glaciers, via ferrata, sheer scrambles."],
+    water:    ["You're comfortable wading in calm, shallow water.", "You swim confidently in a calm lake or sheltered sea.", "You hold your own swimming in open water and mild chop.", "You stay in control in moving water and moderate currents.", "You're at home in strong currents and rough, open-ocean conditions."],
+    altitude: ["You've stayed active without issue up to about 1,500m.", "You acclimatise well between 1,500–2,500m, with only minor symptoms.", "You handle 2,500–3,500m for multiple days without it slowing you.", "You stay strong and sharp between 3,500–4,500m.", "You operate above 4,500m — thin air barely touches your performance."],
+    focus:    ["Real exposure — heights, drops, narrow ledges — is genuinely uncomfortable for you.", "You push through exposed sections slowly and carefully.", "You stay composed on exposed terrain once you've got solid footing.", "You perform well even when the margin for error gets slim.", "Sheer drops and high exposure don't rattle your focus at all."],
+    nerve:    ["You prefer staying close to help rather than going it alone.", "You're okay with short remote stretches as long as others are nearby.", "You can manage a day or two remote, self-sufficient with basic prep.", "You operate calmly solo for multiple days, far from any help.", "You're built for weeks alone in genuine wilderness, no support needed."],
+  };
+  const AXIS_DESC: Record<string, string> = Object.fromEntries(
+    Object.entries(AXIS_DESC_BY_LEVEL).map(([axis, levels]) => {
+      const lv = (userAxes as Record<string, number>)[axis] ?? 1;
+      return [axis, levels[Math.min(Math.max(lv, 1), 5) - 1]];
+    })
+  );
+
+  const sectionBorder = { borderTop: "1px solid var(--border-subtle)" };
+
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
 
-      {/* ── 1. PAGE HEADER ───────────────────────────────────────────────────── */}
+      {/* ── PAGE TITLE ────────────────────────────────────────────────────────── */}
       <FadeInSection>
-      <div className="mb-6 sm:mb-8">
+      <div className="mb-5 sm:mb-6">
         <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-2">Adventure Matchmaker</p>
         <h2 className="t-text text-2xl sm:text-3xl font-black tracking-tight">Adventure Capability Engine Profile</h2>
       </div>
       </FadeInSection>
 
-      {/* ── 2. TIER HERO CARD ────────────────────────────────────────────────── */}
-      <div
-        className="rounded-2xl overflow-hidden border relative mb-5"
-        style={{ background: `linear-gradient(150deg, ${tier.color}12 0%, transparent 60%)`, borderColor: `${tier.color}22` }}
-      >
-        <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full opacity-[0.06] blur-3xl pointer-events-none" style={{ background: tier.color }} />
+      {/* ── THE DOCUMENT ──────────────────────────────────────────────────────── */}
+      <div className="rounded-[24px] sm:rounded-[28px] border overflow-hidden" style={{ background: "var(--bg-surface)", borderColor: "var(--border-default)", boxShadow: "0 24px 60px -20px rgba(0,0,0,0.25)" }}>
 
-        {/* Identity row */}
-        <div className="relative flex items-center gap-3.5 px-4 sm:px-5 py-4">
-          {/* Tier icon */}
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-            style={{ background: `${tier.color}18`, color: tier.color, boxShadow: `0 0 20px ${tier.color}30`, border: `1px solid ${tier.color}25` }}
-          >
-            <div className="scale-[1.4]">{tierRank?.icon}</div>
+        {/* ── MASTHEAD: score + tier + ruler ── */}
+        <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-7 sm:pb-8">
+          <div className="flex items-center justify-between mb-6">
+            <p className="text-[10px] font-mono font-bold uppercase tracking-[0.28em]" style={{ color: "#ff5100" }}>Adventure Capability Engine</p>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--accent-green)" }} />
+              <p className="text-[10px] font-mono uppercase tracking-[0.2em]" style={{ color: "var(--accent-green)" }}>Assessment Complete</p>
+            </div>
           </div>
 
-          {/* Tier label */}
-          <div className="flex-1 min-w-0">
-            <p className="text-[9px] uppercase tracking-[0.22em] font-semibold mb-0.5" style={{ color: "var(--text-tertiary)" }}>Capability Tier</p>
-            <h1 className="text-[22px] font-black tracking-tight leading-none" style={{ color: tier.color }}>{tier.label}</h1>
+          <div className="flex flex-wrap items-end gap-x-5 gap-y-2 mb-8">
+            <div className="flex items-baseline">
+              <span className="text-[56px] sm:text-[72px] font-mono font-bold leading-none tabular-nums" style={{ color: tier.color }}>{totalScore}</span>
+              <span className="text-lg sm:text-xl font-mono font-bold" style={{ color: "var(--text-muted)" }}>/40</span>
+            </div>
+            <div className="pb-1 sm:pb-2">
+              <p className="text-[9px] uppercase tracking-[0.22em] font-bold mb-0.5" style={{ color: "var(--text-tertiary)" }}>Capability Tier</p>
+              <h1 className="text-3xl sm:text-[40px] font-black tracking-tight leading-none" style={{ color: tier.color }}>{tier.label}</h1>
+            </div>
           </div>
 
-          {/* Stars — right */}
-          <div className="flex flex-col items-end gap-0.5 shrink-0">
-            <div className="flex items-center gap-[2px]">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} className="text-[11px] leading-none" style={{ color: i < (tierRank?.stars ?? 0) ? tier.color : "var(--text-muted)" }}>★</span>
+          {/* Tier ruler — signature element */}
+          <div className="relative">
+            <div className="relative h-[2px] rounded-full" style={{ background: "var(--border-default)" }}>
+              <div className="absolute inset-y-0 left-0 rounded-full transition-all duration-700" style={{ width: `${rulerPct}%`, background: tier.color }} />
+              {RANKS.map((rank, i) => (
+                <div key={rank.label} className="absolute top-1/2" style={{ left: `${(i / (totalRanks - 1)) * 100}%`, transform: "translate(-50%, -50%)" }}>
+                  <div className="w-px h-3" style={{ background: i <= currentRankIndex ? tier.color : "var(--border-default)" }} />
+                </div>
+              ))}
+              <div className="absolute top-1/2 transition-all duration-700" style={{ left: `${rulerPct}%`, transform: "translate(-50%, -50%)" }}>
+                <div className="w-3 h-3 rounded-full border-2" style={{ background: tier.color, borderColor: "var(--bg-surface)", boxShadow: `0 0 10px ${tier.color}` }} />
+              </div>
+            </div>
+
+            <div className="relative mt-3 h-4">
+              {RANKS.map((rank, i) => (
+                <span
+                  key={rank.label}
+                  className="absolute text-[8px] sm:text-[9px] font-mono font-bold uppercase tracking-wide whitespace-nowrap top-0"
+                  style={{
+                    left: `${(i / (totalRanks - 1)) * 100}%`,
+                    transform: i === 0 ? "none" : i === totalRanks - 1 ? "translateX(-100%)" : "translateX(-50%)",
+                    color: i === currentRankIndex ? tier.color : i < currentRankIndex ? "var(--text-tertiary)" : "var(--text-secondary)",
+                  }}
+                >
+                  {rank.label}
+                </span>
               ))}
             </div>
-            <span className="text-[9px]" style={{ color: "var(--text-muted)" }}>Rank {tierRank?.stars ?? 0} of 5</span>
+          </div>
+
+          <div className="flex items-center justify-between gap-3 mt-5 rounded-xl px-3.5 py-3" style={{ background: `${tier.color}0c`, border: `1px solid ${tier.color}25` }}>
+            <div className="flex items-center gap-3 min-w-0">
+              {tierRank && (
+                <div className="shrink-0" style={{ color: tier.color }}>
+                  {tierRank.icon}
+                </div>
+              )}
+              <p className="text-[12px] leading-snug truncate" style={{ color: "var(--text-secondary)" }}>
+                {nextRank
+                  ? <><span className="font-mono font-bold" style={{ color: tier.color }}>{ptsNeeded}</span> points to <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span></>
+                  : <>Pinnacle rank — <span className="italic">maximum capability tier reached</span>.</>}
+              </p>
+            </div>
+            {trainingPlan.length > 0 && (
+              <a
+                href="#training-focus"
+                onClick={(e) => { e.preventDefault(); document.getElementById("training-focus")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+                className="shrink-0 inline-flex items-center gap-1.5 pl-3 pr-2.5 py-2 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all hover:brightness-110"
+                style={{ background: tier.color, color: "#fff" }}
+              >
+                How to improve
+                <ArrowRight className="w-3 h-3" />
+              </a>
+            )}
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="mx-4 sm:mx-5 h-px" style={{ background: `${tier.color}12` }} />
-
-        {/* Rank progression */}
-        {(() => {
-          const currentRankIndex = tierRank ? RANKS.indexOf(tierRank) : 0;
-          const totalRanks = RANKS.length;
-          const nextRank = RANKS[currentRankIndex + 1] ?? null;
-          const rawPct = nextRank
-            ? Math.min(100, Math.round(((totalScore - RANKS[currentRankIndex].minScore) / (nextRank.minScore - RANKS[currentRankIndex].minScore)) * 100))
-            : 100;
-          const progressPct = Math.max(0, rawPct);
-          const justUnlocked = nextRank !== null && totalScore === RANKS[currentRankIndex].minScore && currentRankIndex > 0;
-          const ptsNeeded = nextRank ? nextRank.minScore - totalScore : 0;
-          return (
-            <div className="px-4 sm:px-5 pt-3 pb-4">
-              {/* Status row */}
-              <div className="flex items-center justify-between mb-2.5">
-                {nextRank ? (
-                  justUnlocked ? (
-                    <span className="text-[11px] font-bold" style={{ color: tier.color }}>Rank just unlocked!</span>
-                  ) : (
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-[22px] font-black tabular-nums tracking-tight leading-none" style={{ color: tier.color }}>{progressPct}<span className="text-sm font-bold ml-0.5" style={{ color: `${tier.color}60` }}>%</span></span>
-                      <span className="text-[11px] leading-none" style={{ color: "var(--text-tertiary)" }}>to <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span></span>
-                    </div>
-                  )
-                ) : (
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
-                    <p className="text-[10px] font-bold tracking-widest uppercase text-[#a78bfa]">Pinnacle rank</p>
-                  </div>
-                )}
-                {nextRank && !justUnlocked && (
-                  <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}><span className="font-bold" style={{ color: "var(--text-secondary)" }}>{ptsNeeded}</span> pts needed</span>
-                )}
-              </div>
-
-              {/* Progress bar */}
-              <div className="relative h-[7px] rounded-full mb-2" style={{ background: "var(--border-subtle)" }}>
-                <div
-                  className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
-                  style={{
-                    width: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
-                    background: `linear-gradient(to right, ${RANKS[1].color}99, ${tier.color})`,
-                    boxShadow: `0 0 10px ${tier.color}44`,
-                  }}
-                />
-                {RANKS.slice(1, -1).map((rank, i) => (
-                  <div key={rank.label} className="absolute inset-y-0 w-px" style={{ left: `${((i + 1) / (totalRanks - 1)) * 100}%`, background: "var(--border-subtle)" }} />
-                ))}
-                <div
-                  className="absolute w-[14px] h-[14px] rounded-full border-2 transition-all duration-700"
-                  style={{
-                    left: `${((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100}%`,
-                    top: "50%",
-                    transform: "translate(-50%, -50%)",
-                    background: tier.color,
-                    borderColor: "var(--bg-page)",
-                    boxShadow: `0 0 10px ${tier.color}`,
-                  }}
-                />
-              </div>
-
-              {/* Rank labels */}
-              <div className="relative h-4">
-                {RANKS.map((rank, i) => (
-                  <span
-                    key={rank.label}
-                    className="absolute text-[7px] font-semibold leading-none whitespace-nowrap top-0"
-                    style={{
-                      left: `${(i / (totalRanks - 1)) * 100}%`,
-                      transform: i === 0 ? "none" : i === totalRanks - 1 ? "translateX(-100%)" : "translateX(-50%)",
-                      color: i === currentRankIndex ? tier.color : i < currentRankIndex ? `${rank.color}45` : "var(--text-muted)",
-                    }}
-                  >
-                    {rank.label}
-                  </span>
-                ))}
-              </div>
-            </div>
-          );
-        })()}
-      </div>
-
-      {/* ── 3. ACE RADAR + STRENGTHS ─────────────────────────────────────────── */}
-      {(() => {
-        const allEntries = Object.entries(userAxes).sort(([, a], [, b]) => b - a);
-        const values = allEntries.map(([, v]) => v);
-        const mean = values.reduce((s, v) => s + v, 0) / values.length;
-        const allEqual = values.every(v => v === values[0]);
-        const aboveAvg = allEntries.filter(([, v]) => v > mean);
-        // Rules:
-        // - All equal + avg >= 4 → show all 8 (4 visible + 4 in dropdown)
-        // - All equal + avg < 4  → show only top 4, no dropdown
-        // - Above avg > 4        → show top 4, rest in dropdown
-        // - Above avg <= 4       → show only those, no dropdown
-        const sorted = (allEqual && mean >= 4)
-          ? allEntries
-          : aboveAvg.length > 4
-            ? aboveAvg
-            : aboveAvg.length > 0
-              ? aboveAvg
-              : allEntries.slice(0, 4).filter(([, v]) => v > 0);
-        const sectionLabel = "Standout Strengths";
-        const AXIS_LABELS: Record<string, string> = {
-          stamina: "Stamina", power: "Power", strength: "Strength",
-          agility: "Agility", water: "Water", altitude: "Altitude",
-          focus: "Focus", nerve: "Nerve",
-        };
-        const AXIS_DESC_BY_LEVEL: Record<string, string[]> = {
-          //                  Lv1                                          Lv2                                         Lv3                                           Lv4                                              Lv5
-          stamina:  ["A solid start — you're out there moving.",  "You hold your own on moderate days.",      "You keep a strong pace when others fade.",    "You keep moving for hours without burning out.", "Rare endurance — you outlast almost everyone."],
-          power:    ["You carry your kit without a fuss.",        "You handle a loaded pack on the go.",      "You manage real weight across tough terrain.", "You haul heavy loads all day and still deliver.", "Exceptional — no load slows you down."],
-          strength: ["You take on gentle climbs with ease.",      "You tackle steady ascents without drama.",  "You push through hard climbs and come out strong.", "You power up steep terrain without losing a beat.", "Elite climbing engine — relentless and unstoppable."],
-          agility:  ["You move confidently on solid ground.",     "You handle mild loose terrain well.",       "You navigate rocky and uneven ground with ease.", "You're sure-footed on scree, rock and technical trail.", "Exceptional — no terrain rattles you."],
-          water:    ["You're comfortable in calm open water.",    "You handle gentle currents with ease.",     "You're solid in open water and mild conditions.", "You thrive in currents and challenging aquatic terrain.", "Rare water ability — you're at home in any conditions."],
-          altitude: ["You're adapting well to elevation.",        "You acclimatise better than most.",         "You handle altitude without it holding you back.", "You stay strong and sharp above 4,000m.",        "Exceptional — thin air doesn't touch you."],
-          focus:    ["You stay composed on exposed sections.",    "You hold steady where it gets serious.",    "You're calm and precise on technical ground.",   "You stay sharp on exposed ridges where it counts.", "Ice-cool — nothing rattles you on the edge."],
-          nerve:    ["You're building confidence in the wild.",   "You hold it together when plans change.",   "You're comfortable operating with uncertainty.",  "You thrive alone, far from help, without flinching.", "Rare self-reliance — built for the deep wilderness."],
-        };
-        const AXIS_DESC: Record<string, string> = Object.fromEntries(
-          Object.entries(AXIS_DESC_BY_LEVEL).map(([axis, levels]) => {
-            const lv = (userAxes as Record<string, number>)[axis] ?? 1;
-            return [axis, levels[Math.min(Math.max(lv, 1), 5) - 1]];
-          })
-        );
-        return (
-          <StrengthsSection
-            sorted={sorted}
-            sectionLabel={sectionLabel}
+        {/* ── CAPABILITY READOUT + ACHIEVEMENTS ── */}
+        <div style={sectionBorder}>
+          <CapabilityReadout
             axisLabels={AXIS_LABELS}
             axisDesc={AXIS_DESC}
             axisColors={AXIS_COLORS}
-            axisIcons={AXIS_ICONS}
             userAxes={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; focus: number; nerve: number }}
+            rawAxes={rawAxes}
+            decayNotes={decayNotes}
           />
-        );
-      })()}
+          {achievements.length > 0 && (
+            <div
+              className="px-5 sm:px-8 py-6 sm:py-7 border-t"
+              style={{ borderColor: "var(--border-subtle)" }}
+            >
+              <div className="flex items-center justify-between gap-2 mb-5">
+                <p className="text-[10px] uppercase tracking-[0.28em] font-bold font-mono" style={{ color: "#ff5100" }}>
+                  Achievements Unlocked
+                </p>
+                <AchievementShareButton title={`My ACE™ Capability Profile — ${tier.label}`} />
+              </div>
+              <AchievementBadges ace={resultAce} heading={false} variant="list" maxListHeight={52} />
+            </div>
+          )}
+        </div>
 
-      {/* ── 4. ADVENTURE SECTIONS ────────────────────────────────────────────── */}
-      <FadeInSection delay={150}>
-      <div className="space-y-2.5 mb-5 sm:mb-7">
-        <p className="text-[9px] uppercase tracking-[0.22em] font-bold px-0.5 mb-2.5" style={{ color: "var(--text-tertiary)" }}>Matched Adventures</p>
-        <AdventureSection
-          label="Ready Now"
-          sublabel="Adventures within your current capability"
-          icon={<CheckCircle2 className="w-4 h-4" />}
-          adventures={[...inZone].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
-          totalCount={inZone.length}
-          exploreUrl="/explore?ace=ready"
-          accentColor="#4ade80"
-          defaultOpen
-        />
-        {stretch.length > 0 && (
+        {/* ── MATCHED ADVENTURES — the point of the whole assessment ── */}
+        <div className="px-5 sm:px-8 py-6 sm:py-7" style={sectionBorder}>
+          <p className="text-[10px] uppercase tracking-[0.28em] font-bold font-mono mb-1" style={{ color: "#ff5100" }}>
+            Matched Adventures
+          </p>
+          <p className="text-[11px] mb-4" style={{ color: "var(--text-secondary)" }}>
+            Every adventure checked against your 8-axis ACE profile above.
+          </p>
           <AdventureSection
-            label="Stretch Challenge"
-            sublabel="Slightly above your current range — achievable with focused training"
-            icon={<TrendingUp className="w-4 h-4" />}
-            adventures={[...stretch].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
-            totalCount={stretch.length}
-            exploreUrl="/explore?ace=stretch"
-            accentColor="#f59e0b"
+            label="Ready Now"
+            sublabel="Adventures within your current capability"
+            icon={<CheckCircle2 className="w-4 h-4" />}
+            adventures={[...inZone].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
+            totalCount={inZone.length}
+            exploreUrl="/explore?ace=ready"
+            accentColor="#4ade80"
+            defaultOpen
+            isFirst
           />
-        )}
-        {restricted.length > 0 && (
-          <AdventureSection
-            label="Currently Out of Range"
-            sublabel="Require capabilities significantly beyond your current profile"
-            icon={<Lock className="w-4 h-4" />}
-            adventures={[...restricted].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
-            totalCount={restricted.length}
-            exploreUrl="/explore?ace=out-of-range"
-            accentColor="#f43f5e"
-          />
+          {stretch.length > 0 && (
+            <AdventureSection
+              label="Stretch Challenge"
+              sublabel="Slightly above your current range — achievable with focused training"
+              icon={<TrendingUp className="w-4 h-4" />}
+              adventures={[...stretch].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
+              totalCount={stretch.length}
+              exploreUrl="/explore?ace=stretch"
+              accentColor="#f59e0b"
+            />
+          )}
+          {restricted.length > 0 && (
+            <AdventureSection
+              label="Currently Out of Range"
+              sublabel="Require capabilities significantly beyond your current profile"
+              icon={<Lock className="w-4 h-4" />}
+              adventures={[...restricted].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
+              totalCount={restricted.length}
+              exploreUrl="/explore?ace=out-of-range"
+              accentColor="#f43f5e"
+            />
+          )}
+        </div>
+
+        {/* ── TRAINING FOCUS ── */}
+        {trainingPlan.length > 0 && (
+          <div id="training-focus" style={{ ...sectionBorder, scrollMarginTop: 88 }}>
+            <TrainingSection
+              trainingPlan={trainingPlan}
+              axisColors={AXIS_COLORS}
+              axisIcons={AXIS_ICONS}
+            />
+          </div>
         )}
       </div>
-      </FadeInSection>
 
-      {/* ── 5. TRAINING FOCUS AREAS ──────────────────────────────────────────── */}
-      {trainingPlan.length > 0 && (
-        <TrainingSection
-          trainingPlan={trainingPlan}
-          axisColors={AXIS_COLORS}
-          axisIcons={AXIS_ICONS}
-        />
-      )}
-
-      {/* ── 6. CTA BUTTONS ───────────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row gap-3 pt-1">
+      {/* ── CTA BUTTONS ───────────────────────────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row gap-3 mt-5 sm:mt-6">
         <Link
           href="/explore?ace=ready"
           className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 active:translate-y-0"
@@ -1014,9 +1085,9 @@ function ResultsScreen({
         <button
           onClick={onReset}
           className="sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border text-sm font-medium transition-all active:scale-[0.98]"
-          style={{ borderColor: "var(--border-subtle)", color: "var(--text-muted)" }}
-          onMouseEnter={e => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}
-          onMouseLeave={e => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.borderColor = "var(--border-subtle)"; }}
+          style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
+          onMouseEnter={e => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
+          onMouseLeave={e => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}
         >
           <RotateCcw className="w-3.5 h-3.5" />
           Retake assessment
@@ -1029,7 +1100,7 @@ function ResultsScreen({
 // ─── Adventure section ────────────────────────────────────────────────────────
 
 function AdventureSection({
-  label, sublabel, icon, adventures: list, accentColor, defaultOpen = false, totalCount, exploreUrl,
+  label, sublabel, icon, adventures: list, accentColor, defaultOpen = false, totalCount, exploreUrl, isFirst = false,
 }: {
   label: string;
   sublabel: string;
@@ -1039,57 +1110,47 @@ function AdventureSection({
   defaultOpen?: boolean;
   totalCount?: number;
   exploreUrl?: string;
+  isFirst?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   if (list.length === 0) return null;
   const hiddenCount = totalCount ? totalCount - list.length : 0;
 
   return (
-    <div
-      className="rounded-2xl overflow-hidden border"
-      style={{ borderColor: `${accentColor}22`, background: `linear-gradient(160deg, ${accentColor}06 0%, transparent 60%)` }}
-    >
+    <div style={{ borderTop: isFirst ? "none" : "1px solid var(--border-subtle)" }}>
       {/* ── Accordion header ── */}
       <button
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 transition-colors hover:bg-black/[0.02] text-left"
+        className="w-full flex items-center justify-between py-4 transition-opacity hover:opacity-70 text-left"
       >
         <div className="flex items-center gap-3">
-          <div
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0"
-            style={{ background: `${accentColor}18`, color: accentColor }}
-          >
-            {icon}
-          </div>
+          <span className="shrink-0" style={{ color: accentColor }}>{icon}</span>
           <div>
-            <p className="font-bold text-[13px] sm:text-sm leading-snug" style={{ color: "var(--text-primary)" }}>{label}</p>
+            <p className="font-bold text-[13px] sm:text-sm leading-snug uppercase tracking-wide" style={{ color: "var(--text-primary)" }}>{label}</p>
             <p className="text-[10px] sm:text-[11px] mt-0.5 leading-snug" style={{ color: "var(--text-tertiary)" }}>{sublabel}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0 ml-3">
-          <span
-            className="text-[10px] font-bold px-2.5 py-[5px] rounded-full tabular-nums"
-            style={{ background: `${accentColor}16`, color: accentColor }}
-          >
-            {totalCount ?? list.length}
+        <div className="flex items-center gap-2.5 shrink-0 ml-3">
+          <span className="text-[13px] font-mono font-bold tabular-nums" style={{ color: accentColor }}>
+            {String(totalCount ?? list.length).padStart(2, "0")}
           </span>
           <ChevronRight
             className="w-[15px] h-[15px] transition-transform duration-200 shrink-0"
-            style={{ color: `${accentColor}70`, transform: open ? "rotate(90deg)" : "none" }}
+            style={{ color: "var(--text-tertiary)", transform: open ? "rotate(90deg)" : "none" }}
           />
         </div>
       </button>
 
       {/* ── Expanded content ── */}
       {open && (
-        <div style={{ borderTop: `1px solid ${accentColor}14` }}>
-          <div className="p-3 sm:p-4 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+        <div className="pb-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {list.map(a => (
               <Link
                 key={a.slug}
                 href={`/experiences/${a.slug}`}
                 className="group rounded-xl overflow-hidden border transition-all duration-200 hover:-translate-y-[2px] hover:shadow-lg"
-                style={{ borderColor: `${accentColor}18`, background: "var(--bg-card)" }}
+                style={{ borderColor: "var(--border-subtle)", background: "var(--bg-card)" }}
               >
                 {/* Image */}
                 <div className="relative h-[140px] sm:h-[150px] overflow-hidden">
@@ -1106,7 +1167,7 @@ function AdventureSection({
                   <h3 className="font-bold text-[13px] sm:text-sm leading-snug mb-1 group-hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-primary)" }}>{a.name}</h3>
                   <p className="text-[10.5px] leading-snug line-clamp-2 mb-2.5" style={{ color: "var(--text-tertiary)" }}>{a.tagline}</p>
                   <div className="flex flex-wrap gap-1.5">
-                    <Pill type="type" value={a.type} />
+                    <Pill type="type" value={a.type} clickable={false} />
                     <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[9px] font-medium border" style={{ background: "var(--bg-card)", color: "var(--text-tertiary)", borderColor: "var(--border-subtle)" }}>
                       <MapPin className="w-2 h-2" />{a.state}
                     </span>
@@ -1118,16 +1179,14 @@ function AdventureSection({
 
           {/* View all */}
           {hiddenCount > 0 && exploreUrl && (
-            <div className="px-3 sm:px-4 pb-3 sm:pb-4">
-              <Link
-                href={exploreUrl}
-                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-[13px] font-semibold transition-all hover:brightness-110"
-                style={{ background: `${accentColor}10`, color: accentColor, border: `1px solid ${accentColor}22` }}
-              >
-                View all {totalCount} adventures
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
+            <Link
+              href={exploreUrl}
+              className="flex items-center justify-center gap-2 w-full py-3 mt-3 rounded-xl text-[13px] font-semibold transition-all hover:opacity-80"
+              style={{ color: accentColor, border: `1px solid ${accentColor}30` }}
+            >
+              View all {totalCount} adventures
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           )}
         </div>
       )}
@@ -1148,7 +1207,7 @@ const TRAINING_TIPS: Record<string, string> = {
   nerve: "Build comfort in remote settings — overnight solo trips and wilderness navigation without phone support.",
 };
 
-function buildResult(userAxes: Record<string, number>): AnalysisResult {
+function buildResult(userAxes: Record<string, number>, extra?: { rawAxes?: Record<string, number>; decayNotes?: string[] }): AnalysisResult {
   const enriched: EnrichedAdventure[] = ALL_ADVENTURES.map((adv) => {
     const req = getACE(adv);
     const axes = Object.keys(userAxes) as (keyof typeof userAxes)[];
@@ -1180,7 +1239,6 @@ function buildResult(userAxes: Record<string, number>): AnalysisResult {
   const trainingPlan: TrainingItem[] = Object.entries(axisGapMap)
     .filter(([, gap]) => gap > 0)
     .sort(([, a], [, b]) => b - a)
-    .slice(0, 4)
     .map(([ax, gap]) => ({
       axis: ax,
       current_level: userAxes[ax],
@@ -1188,7 +1246,7 @@ function buildResult(userAxes: Record<string, number>): AnalysisResult {
       recommendation: TRAINING_TIPS[ax] ?? "Train consistently to improve this capability.",
     }));
 
-  return { userAxes, adventures: enriched, trainingPlan };
+  return { userAxes, adventures: enriched, trainingPlan, rawAxes: extra?.rawAxes, decayNotes: extra?.decayNotes };
 }
 
 
@@ -1225,31 +1283,62 @@ export default function MatchmakerClient() {
     });
   }, []);
 
-  const currentQ = QUESTIONS[stepIndex] ?? QUESTIONS[0];
-  const canAdvance = !!answers[currentQ.key];
+  const currentStep = ALL_STEPS[stepIndex] ?? ALL_STEPS[0];
+  const canAdvance = currentStep.type === "decay" || !!answers[currentStep.q.key];
 
   function submitAssessment(finalAnswers: Answers) {
     setLoading(true);
     setApiError(null);
 
-    const score = (key: string) => ({ A:1, B:2, C:3, D:4, E:5 }[finalAnswers[key] ?? "A"] ?? 1);
-    const userAxes = {
-      stamina: score("Q1"), power: score("Q2"), strength: score("Q3"), agility: score("Q4"),
-      water: score("Q5"), altitude: score("Q6"), focus: score("Q7"), nerve: score("Q8"),
-    };
+    const score = (letter: string | undefined) => ({ A: 1, B: 2, C: 3, D: 4, E: 5 }[letter ?? "A"] ?? 1);
 
-    const profile = { ace: userAxes };
+    // Average the (1 or 2) capability questions per axis into a raw score.
+    const axisTotals: Record<string, { sum: number; count: number }> = {};
+    QUESTIONS.forEach((q) => {
+      const axis = q.axis.toLowerCase();
+      const val = score(finalAnswers[q.key]);
+      const bucket = (axisTotals[axis] ??= { sum: 0, count: 0 });
+      bucket.sum += val;
+      bucket.count += 1;
+    });
+    const rawAxes: Record<string, number> = {};
+    Object.entries(axisTotals).forEach(([axis, { sum, count }]) => {
+      rawAxes[axis] = Math.min(5, Math.max(1, Math.round(sum / count)));
+    });
+
+    // Calibration layer — recency/health flags discount specific axes.
+    // Skipped questions apply no adjustment (multiplier 1.0).
+    const multipliers: Record<string, number> = {};
+    const decayNotes: string[] = [];
+    DECAY_QUESTIONS.forEach((dq) => {
+      const chosen = finalAnswers[dq.key];
+      if (!chosen) return; // skipped — no adjustment
+      const opt = dq.options.find((o) => o.v === chosen);
+      if (!opt || opt.mult === 1.0) return;
+      dq.affects.forEach((axis) => { multipliers[axis] = (multipliers[axis] ?? 1.0) * opt.mult; });
+      decayNotes.push(`${dq.title}: "${opt.l}" adjusted ${dq.affects.join(", ")}`);
+    });
+
+    const userAxes: Record<string, number> = {};
+    Object.entries(axisTotals).forEach(([axis, { sum, count }]) => {
+      const raw = sum / count;
+      const decayed = raw * (multipliers[axis] ?? 1.0);
+      userAxes[axis] = Math.min(5, Math.max(1, Math.round(decayed)));
+    });
+
+    const profile = { ace: userAxes as unknown as ACE };
     saveProfile(profile);
     saveProfileToServer(profile);
     awardXP("ace_complete");
 
-    setResult(buildResult(userAxes));
+    const anyDecayApplied = Object.keys(multipliers).some((axis) => userAxes[axis] !== rawAxes[axis]);
+    setResult(buildResult(userAxes, anyDecayApplied ? { rawAxes, decayNotes } : undefined));
     setLoading(false);
   }
 
   function advance() {
     if (!canAdvance) return;
-    if (stepIndex < QUESTIONS.length - 1) {
+    if (stepIndex < ALL_STEPS.length - 1) {
       setStepIndex(i => i + 1);
     } else {
       submitAssessment(answers);
@@ -1277,58 +1366,81 @@ export default function MatchmakerClient() {
   if (loading && !result) return <LoadingScreen />;
   if (result) return <ResultsScreen result={result} onReset={reset} />;
 
+  const isDecay = currentStep.type === "decay";
+  const decayColor = "var(--accent-green)";
+
+  function goNext(updated: Answers) {
+    setAnswers(updated);
+    setTimeout(() => {
+      if (stepIndex < ALL_STEPS.length - 1) {
+        setStepIndex(stepIndex + 1);
+      } else {
+        submitAssessment(updated);
+      }
+    }, 180);
+  }
+
   return (
     <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-24">
       {/* Header */}
       <div className="mb-7">
         <div className="flex items-center justify-between mb-5">
-          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase">Adventure Matchmaker</p>
-          <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>{stepIndex + 1} / {QUESTIONS.length}</span>
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: isDecay ? decayColor : "#ff5100" }}>
+            {isDecay ? "Calibration" : "Adventure Matchmaker"}
+          </p>
+          <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>{stepIndex + 1} / {ALL_STEPS.length}</span>
         </div>
         <div className="flex items-center gap-2.5 mb-1.5">
-          <div
-            className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-            style={{ background: `${AXIS_COLORS[currentQ.axis.toLowerCase()] ?? "#ff5100"}20`, color: AXIS_COLORS[currentQ.axis.toLowerCase()] ?? "#ff5100" }}
-          >
-            {AXIS_ICONS[currentQ.axis.toLowerCase()]}
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>{currentQ.axis}</h1>
+          {isDecay ? (
+            <>
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: "var(--accent-green-soft)", color: decayColor }}>
+                <HeartPulse className="w-4 h-4" />
+              </div>
+              <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>{currentStep.q.title}</h1>
+            </>
+          ) : (
+            <>
+              <div
+                className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                style={{ background: `${AXIS_COLORS[currentStep.q.axis.toLowerCase()] ?? "#ff5100"}20`, color: AXIS_COLORS[currentStep.q.axis.toLowerCase()] ?? "#ff5100" }}
+              >
+                {AXIS_ICONS[currentStep.q.axis.toLowerCase()]}
+              </div>
+              <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>{currentStep.q.axis}</h1>
+            </>
+          )}
         </div>
+        {isDecay && (
+          <p className="text-xs" style={{ color: "var(--text-muted)" }}>A few quick questions on recency and health — these fine-tune your profile, and every one is optional.</p>
+        )}
       </div>
 
       {/* Progress */}
       <div className="flex items-center gap-1.5 mb-9">
-        {QUESTIONS.map((_, i) => (
-          <div
-            key={i}
-            className="h-1 flex-1 rounded-full transition-all duration-300"
-            style={{ background: i < stepIndex ? "#ff5100" : i === stepIndex ? "#ff5100cc" : "var(--border-subtle)" }}
-          />
-        ))}
+        {ALL_STEPS.map((step, i) => {
+          const color = step.type === "decay" ? "#4ade80" : "#ff5100";
+          return (
+            <div
+              key={i}
+              className="h-1 flex-1 rounded-full transition-all duration-300"
+              style={{ background: i < stepIndex ? color : i === stepIndex ? `${color}cc` : "var(--border-subtle)" }}
+            />
+          );
+        })}
       </div>
 
       {/* Question */}
       <div className="space-y-2.5">
-        <h2 className="text-xl sm:text-2xl font-semibold leading-snug mb-1.5" style={{ color: "var(--text-primary)" }}>{currentQ.question}</h2>
-        {currentQ.hint && <p className="text-sm mb-5 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>{currentQ.hint}</p>}
-        {currentQ.options.map(o => (
+        <h2 className="text-xl sm:text-2xl font-semibold leading-snug mb-1.5" style={{ color: "var(--text-primary)" }}>{currentStep.q.question}</h2>
+        {currentStep.q.hint && <p className="text-sm mb-5 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>{currentStep.q.hint}</p>}
+        {currentStep.q.options.map(o => (
           <OptionBtn
             key={o.v}
             value={o.v}
             label={o.l}
-            sub={undefined}
-            selected={answers[currentQ.key] === o.v}
-            onClick={() => {
-              const updated = { ...answers, [currentQ.key]: o.v };
-              setAnswers(updated);
-              setTimeout(() => {
-                if (stepIndex < QUESTIONS.length - 1) {
-                  setStepIndex(stepIndex + 1);
-                } else {
-                  submitAssessment(updated);
-                }
-              }, 180);
-            }}
+            sub={"s" in o ? o.s : undefined}
+            selected={answers[currentStep.q.key] === o.v}
+            onClick={() => goNext({ ...answers, [currentStep.q.key]: o.v })}
           />
         ))}
       </div>
@@ -1356,7 +1468,7 @@ export default function MatchmakerClient() {
       </div>
 
       <p className="text-center text-xs mt-6" style={{ color: "var(--text-muted)", opacity: 0.5 }}>
-        {stepIndex + 1} of {QUESTIONS.length}
+        {stepIndex + 1} of {ALL_STEPS.length}
       </p>
     </div>
   );

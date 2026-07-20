@@ -147,17 +147,17 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         <div className="absolute z-20 flex flex-wrap items-center gap-1.5 top-3 left-3">
           <DifficultyMeter difficulty={difficulty} />
           {isSeasonActive ? (
-            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(16,185,129,0.25)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(16,185,129,0.35)" }}>
+            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1 backdrop-blur-sm" style={{ background: "rgba(6,78,59,0.8)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(110,231,183,0.4)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
               Season Active
             </span>
           ) : isSeasonUpcoming ? (
-            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1" style={{ background: "rgba(251,191,36,0.2)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(251,191,36,0.35)" }}>
+            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1 backdrop-blur-sm" style={{ background: "rgba(120,53,15,0.8)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(253,230,138,0.4)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
               Upcoming
             </span>
           ) : seasonLabel ? (
-            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center" style={{ background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.85)", boxShadow: "0 0 0 1px rgba(255,255,255,0.12)" }}>
+            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center backdrop-blur-sm" style={{ background: "rgba(0,0,0,0.65)", color: "rgba(255,255,255,0.9)", boxShadow: "0 0 0 1px rgba(255,255,255,0.15)" }}>
               {seasonLabel}
             </span>
           ) : null}
@@ -228,15 +228,13 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
           const color    = isGreat ? "#10b981" : isGood ? "#f59e0b" : "#f43f5e";
           const bgColor  = isGreat ? "rgba(16,185,129,0.08)"  : isGood ? "rgba(245,158,11,0.08)"  : "rgba(244,63,94,0.08)";
           const bdColor  = isGreat ? "rgba(16,185,129,0.18)"  : isGood ? "rgba(245,158,11,0.18)"  : "rgba(244,63,94,0.18)";
-          const label    = isGreat ? "Great match" : isGood   ? "Good match"  : "Challenging";
-          const dot      = isGreat ? "●●●" : isGood ? "●●○" : "●○○";
           return (
             <div className="px-3 pb-3 pt-0">
               <div
                 className="rounded-lg px-2.5 py-1.5 flex items-center gap-2"
                 style={{ background: bgColor, border: `1px solid ${bdColor}` }}
               >
-                <span className="text-[9px] tracking-[0.06em] font-bold shrink-0" style={{ color, letterSpacing: "0.04em" }}>{dot}</span>
+                <span className="text-[10px] font-black tabular-nums shrink-0" style={{ color }}>{pct}%</span>
                 <div className="flex-1 min-w-0">
                   <div className="h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.07)" }}>
                     <div
@@ -245,10 +243,9 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
                     />
                   </div>
                 </div>
-                <div className="flex items-center gap-1 shrink-0">
-                  <span className="text-[10px] font-black tabular-nums" style={{ color }}>{pct}%</span>
-                  <span className="text-[9px] font-semibold" style={{ color: `${color}99` }}>{label}</span>
-                </div>
+                <span className="text-[9px] font-bold tracking-wide shrink-0" style={{ color: `${color}cc` }}>
+                  ACE<sup className="text-[0.7em]">™</sup> Ready
+                </span>
               </div>
             </div>
           );

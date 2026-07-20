@@ -52,6 +52,11 @@
   --color-off-white: #fafaf8;
   --color-warm-grey: #9a9590;
   --color-dark-overlay: rgba(15, 20, 30, 0.55);
+
+  /* Secondary accent — pine green, pairs with the rust/orange primary */
+  --color-pine: #1f7a4d;
+  --color-pine-light: #2f9660;
+  --color-pine-glow: #4ade80;
 }
 
 /* ── LIGHT THEME (default) ───────────────────────────────── */
@@ -116,6 +121,11 @@
   --sidebar-accent-foreground: #1c1814;
   --sidebar-border: #e5e0d9;
   --sidebar-ring: #5ba3c9;
+
+  /* Secondary accent — pine green (deep, readable on cream) */
+  --accent-green:        #1f7a4d;
+  --accent-green-soft:   rgba(31,122,77,0.10);
+  --accent-green-border: rgba(31,122,77,0.24);
 }
 
 /* ── DARK THEME ─────────────────────────────────────────── */
@@ -179,6 +189,11 @@
   --sidebar-accent-foreground: #f0ede8;
   --sidebar-border: rgba(255,255,500,0.08);
   --sidebar-ring: #5ba3c9;
+
+  /* Secondary accent — emerald (vivid pop against dark navy) */
+  --accent-green:        #4ade80;
+  --accent-green-soft:   rgba(74,222,128,0.13);
+  --accent-green-border: rgba(74,222,128,0.30);
 }
 
 
@@ -278,6 +293,7 @@ button:not([class*="transition"]) {
 .t-text-3      { color: var(--text-tertiary); }
 .t-border      { border-color: var(--border-default); }
 .t-border-subtle { border-color: var(--border-subtle); }
+.t-accent-green { color: var(--accent-green); }
 
 /* ── Leaflet map overrides ───────────────────────────────── */
 .leaflet-container {

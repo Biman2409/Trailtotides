@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { adventures } from "@/lib/data";
 
 const totalAdventures = adventures.length;
@@ -36,12 +37,13 @@ function useCountUp(target: number, duration = 1600, started = false) {
 
 function StatItem({ value, label, suffix = "", started, index }: { value: number; label: string; suffix?: string; started: boolean; index: number }) {
   const count = useCountUp(value, 1600, started);
+  const accent = index % 2 === 0 ? "rgba(255,81,0,0.55)" : "rgba(74,222,128,0.5)";
   return (
     <div className="relative flex flex-col items-center justify-center py-4 px-6 text-center group">
-      {/* Subtle top accent line */}
+      {/* Subtle top accent line — alternates rust / pine to echo the brand duo */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-10 transition-all duration-500 group-hover:w-16"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.55), transparent)" }}
+        style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }}
       />
 
       {/* Number */}
@@ -89,21 +91,26 @@ export default function StatsBar() {
         borderBottom: "1px solid rgba(255,255,255,0.04)",
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div
-          className="grid grid-cols-2 md:grid-cols-4"
-          style={{ borderLeft: "1px solid rgba(255,255,255,0.05)" }}
-        >
-          {STATS.map(({ value, label, suffix }, i) => (
-            <div
-              key={label}
-              style={{ borderRight: "1px solid rgba(255,255,255,0.05)" }}
-            >
-              <StatItem value={value} label={label} suffix={suffix} started={started} index={i} />
-            </div>
-          ))}
+      <Link
+        href="/explore"
+        className="block transition-colors duration-200 hover:bg-white/[0.02]"
+      >
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div
+            className="grid grid-cols-2 md:grid-cols-4"
+            style={{ borderLeft: "1px solid rgba(255,255,255,0.05)" }}
+          >
+            {STATS.map(({ value, label, suffix }, i) => (
+              <div
+                key={label}
+                style={{ borderRight: "1px solid rgba(255,255,255,0.05)" }}
+              >
+                <StatItem value={value} label={label} suffix={suffix} started={started} index={i} />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </Link>
     </section>
   );
 }

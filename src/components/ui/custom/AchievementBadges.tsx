@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { ChevronRight } from "lucide-react";
 import {
   Trophy, Crown, Globe, Brain,
   Footprints, Waves, ScanEye,
@@ -91,11 +92,11 @@ function Tooltip({ badge, visible, anchorRef }: {
       className="pointer-events-none transition-all duration-200"
       style={{ position: "fixed", bottom: pos.bottom + (visible ? 0 : -4), left: pos.left, width: TOOLTIP_W, opacity: visible ? 1 : 0, zIndex: 9999 }}
     >
-      <div className="rounded-xl px-3.5 py-3 text-left" style={{ background: "rgba(14,14,18,0.98)", border: `1px solid ${badge.color}40`, boxShadow: "0 8px 32px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)" }}>
+      <div className="rounded-xl px-3.5 py-3 text-left" style={{ background: "var(--bg-surface-2)", border: `1px solid ${badge.color}40`, boxShadow: "0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px var(--border-subtle)" }}>
         <p className="font-bold text-[11px] leading-tight mb-1.5" style={{ color: badge.color }}>{badge.name}</p>
-        <p className="text-white/55 text-[10px] leading-snug">{badge.description}</p>
+        <p className="text-[10px] leading-snug" style={{ color: "var(--text-secondary)" }}>{badge.description}</p>
       </div>
-      <div className="absolute w-2.5 h-2.5" style={{ bottom: -5, left: pos.arrowLeft, transform: "translateX(-50%) rotate(45deg)", background: "rgba(14,14,18,0.98)", borderRight: `1px solid ${badge.color}40`, borderBottom: `1px solid ${badge.color}40` }} />
+      <div className="absolute w-2.5 h-2.5" style={{ bottom: -5, left: pos.arrowLeft, transform: "translateX(-50%) rotate(45deg)", background: "var(--bg-surface-2)", borderRight: `1px solid ${badge.color}40`, borderBottom: `1px solid ${badge.color}40` }} />
     </div>,
     document.body
   );
@@ -131,40 +132,75 @@ function TrophyCard({ badge, index, small = false }: { badge: Achievement; index
     >
       <Tooltip badge={badge} visible={tooltip} anchorRef={cardRef} />
       <div
-        className="relative flex items-center justify-center mb-1.5 transition-transform duration-150 hover:scale-110 overflow-hidden"
+        className="relative flex items-center justify-center mb-1.5 transition-transform duration-150 hover:scale-105 overflow-hidden"
         style={{
           width: sz,
           height: sz,
           borderRadius,
-          background: isSpecial
-            ? `linear-gradient(145deg, ${badge.color}32 0%, ${badge.color}14 100%)`
-            : `${badge.color}16`,
-          border: `1.5px solid ${badge.color}${isSpecial ? "60" : "32"}`,
-          boxShadow: isSpecial
-            ? `0 0 20px ${badge.color}50, 0 0 8px ${badge.color}28`
-            : `0 0 8px ${badge.color}20`,
+          background: `${badge.color}10`,
+          border: `1.5px solid ${badge.color}${isSpecial ? "55" : "30"}`,
+          boxShadow: isSpecial ? `0 0 10px ${badge.color}20` : "none",
         }}
       >
         <span style={{ color: badge.color, display: "flex" }}>
           {small ? (ICON_SM[badge.icon] ?? <Trophy className="w-4 h-4" />) : (ICON_MD[badge.icon] ?? <Trophy className="w-5 h-5" />)}
         </span>
-        {/* Sweeping shine — Tier 1 only */}
-        {isSpecial && (
-          <span
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: "linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.18) 50%, transparent 75%)",
-              backgroundSize: "200% 100%",
-              animation: "trophy-shine 3.5s ease-in-out infinite",
-            }}
-          />
-        )}
-        {/* Pulse ring — Tier 1 only */}
-        {isSpecial && (
-          <span className="absolute inset-0 animate-ping opacity-12" style={{ borderRadius, border: `2px solid ${badge.color}` }} />
-        )}
       </div>
       <p className="leading-tight font-bold w-full text-center" style={{ color: badge.color, fontSize: small ? "8px" : "10px", wordBreak: "break-word", lineHeight: 1.2 }}>
+        {badge.name}
+      </p>
+    </div>
+  );
+}
+
+// ─── Compact row (single-column list variant) ──────────────────────────────────
+
+function TrophyRow({ badge, index }: { badge: Achievement; index: number }) {
+  const [visible, setVisible] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [pinned,  setPinned]  = useState(false);
+  const tooltip     = hovered || pinned;
+  const closeTimer  = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rowRef      = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), index * 40);
+    return () => clearTimeout(t);
+  }, [index]);
+
+  const isSpecial = badge.tier === "tier1";
+
+  return (
+    <div
+      ref={rowRef}
+      className="relative inline-flex items-center gap-2 pl-1.5 pr-3 py-1.5 rounded-full transition-all duration-300 select-none cursor-pointer"
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(4px)",
+        background: `${badge.color}0a`,
+        border: `1px solid ${badge.color}${isSpecial ? "40" : "25"}`,
+      }}
+      onMouseEnter={() => { if (closeTimer.current) clearTimeout(closeTimer.current); setHovered(true); }}
+      onMouseLeave={() => { closeTimer.current = setTimeout(() => setHovered(false), 120); }}
+      onClick={() => setPinned(v => !v)}
+    >
+      <Tooltip badge={badge} visible={tooltip} anchorRef={rowRef} />
+      <div
+        className="shrink-0 flex items-center justify-center"
+        style={{
+          width: 22,
+          height: 22,
+          borderRadius: "50%",
+          background: `${badge.color}12`,
+          border: `1.5px solid ${badge.color}${isSpecial ? "55" : "30"}`,
+          boxShadow: isSpecial ? `0 0 8px ${badge.color}20` : "none",
+        }}
+      >
+        <span style={{ color: badge.color, display: "flex" }}>
+          {ICON_SM[badge.icon] ?? <Trophy className="w-3.5 h-3.5" />}
+        </span>
+      </div>
+      <p className="text-[10.5px] font-semibold leading-tight whitespace-nowrap" style={{ color: "var(--text-primary)" }}>
         {badge.name}
       </p>
     </div>
@@ -176,17 +212,73 @@ function TrophyCard({ badge, index, small = false }: { badge: Achievement; index
 interface Props {
   ace: ACE;
   heading?: string | false;
+  /** "grid" (default) = tiered card grid. "list" = compact single-column, height-capped, expandable. */
+  variant?: "grid" | "list";
+  /** Collapsed height (px) for the "list" variant — matches it to an adjacent element (e.g. the radar chart). */
+  maxListHeight?: number;
 }
 
-export default function AchievementBadges({ ace, heading }: Props) {
+export default function AchievementBadges({ ace, heading, variant = "grid", maxListHeight = 216 }: Props) {
   const [expanded, setExpanded] = useState(false);
+  const [overflowing, setOverflowing] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const achievements = getAchievements(ace);
+
+  useEffect(() => {
+    if (variant !== "list") return;
+    const el = contentRef.current;
+    if (!el) return;
+    setOverflowing(el.scrollHeight > maxListHeight + 1);
+  }, [variant, maxListHeight, achievements.length]);
+
   if (achievements.length === 0) return null;
 
   const special = achievements.filter(a => a.tier === "tier1");
   const domain  = achievements.filter(a => a.tier === "tier2");
   const axis    = achievements.filter(a => a.tier === "tier3");
+
+  if (variant === "list") {
+    const ordered = [...special, ...domain, ...axis];
+    return (
+      <div style={{ minWidth: 0 }}>
+        {heading !== false && (
+          <p className="text-[9px] uppercase tracking-[0.22em] font-bold mb-3" style={{ color: "var(--text-tertiary)" }}>
+            {heading ?? "Achievements"}
+          </p>
+        )}
+        <div className="relative">
+          <div
+            className="rounded-2xl overflow-hidden transition-[max-height] duration-300 ease-in-out"
+            style={{
+              border: "1px solid var(--border-subtle)",
+              maxHeight: expanded ? contentRef.current?.scrollHeight ?? 2000 : maxListHeight,
+            }}
+          >
+            <div ref={contentRef} className="flex flex-wrap gap-2 p-2">
+              {ordered.map((b, i) => <TrophyRow key={b.id} badge={b} index={i} />)}
+            </div>
+          </div>
+          {!expanded && overflowing && (
+            <div
+              className="absolute bottom-0 left-0 right-0 h-10 rounded-b-2xl pointer-events-none"
+              style={{ background: "linear-gradient(to bottom, transparent, var(--bg-surface))" }}
+            />
+          )}
+        </div>
+        {overflowing && (
+          <button
+            onClick={() => setExpanded(v => !v)}
+            className="mt-2 flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wide transition-colors"
+            style={{ color: "var(--text-tertiary)" }}
+          >
+            {expanded ? "Show less" : `Show all ${ordered.length}`}
+            <ChevronRight className="w-3 h-3 transition-transform duration-200" style={{ transform: expanded ? "rotate(90deg)" : "none" }} />
+          </button>
+        )}
+      </div>
+    );
+  }
 
   const hasHighTier = special.length > 0 || domain.length > 0;
 
@@ -198,11 +290,10 @@ export default function AchievementBadges({ ace, heading }: Props) {
 
   return (
     <div className="space-y-3" style={{ minWidth: 0 }}>
-      <style>{`@keyframes trophy-shine{0%{background-position:200% center}60%{background-position:-200% center}100%{background-position:-200% center}}`}</style>
       {/* Heading + expand toggle */}
       <div className="flex items-center justify-between gap-2">
         {heading !== false && (
-          <p className="text-[9px] uppercase tracking-[0.22em] font-bold text-white/30">
+          <p className="text-[9px] uppercase tracking-[0.22em] font-bold" style={{ color: "var(--text-tertiary)" }}>
             {heading ?? "Achievements"}
           </p>
         )}
@@ -210,7 +301,7 @@ export default function AchievementBadges({ ace, heading }: Props) {
           <button
             onClick={() => setExpanded(v => !v)}
             className="text-[9px] font-semibold transition-colors whitespace-nowrap"
-            style={{ color: "rgba(255,255,255,0.35)" }}
+            style={{ color: "var(--text-tertiary)" }}
           >
             {expanded ? "Show less" : `+${secondary.length} more`}
           </button>

@@ -57,12 +57,15 @@ const slides: Slide[] = [
 ];
 
 // Ken Burns variants — distinct pan+zoom combos so each slide moves differently
+// "from" scale must stay above ~1/(1 - 2*|translate%|) or the pan can shift the
+// image past the container edge and expose a sliver of raw background colour
+// (visible as a flickering seam at the hero/StatsBar boundary).
 const panVariants = [
-  { from: "scale(1.08) translateY(4%)",      to: "scale(1.18) translateY(-4%)" },
-  { from: "scale(1.06) translateX(-4%)",     to: "scale(1.16) translateX(4%)" },
-  { from: "scale(1.08) translateY(-4%)",     to: "scale(1.18) translateY(4%)" },
-  { from: "scale(1.07) translateX(4%)",      to: "scale(1.17) translateX(-4%)" },
-  { from: "scale(1.08) translate(-3%,-3%)",  to: "scale(1.18) translate(3%,3%)" },
+  { from: "scale(1.12) translateY(4%)",      to: "scale(1.2) translateY(-4%)" },
+  { from: "scale(1.11) translateX(-4%)",     to: "scale(1.19) translateX(4%)" },
+  { from: "scale(1.12) translateY(-4%)",     to: "scale(1.2) translateY(4%)" },
+  { from: "scale(1.11) translateX(4%)",      to: "scale(1.19) translateX(-4%)" },
+  { from: "scale(1.1) translate(-3%,-3%)",   to: "scale(1.18) translate(3%,3%)" },
 ];
 
 const SLIDE_DURATION = 6000;
