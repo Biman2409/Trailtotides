@@ -9,7 +9,7 @@ import { adventures } from "@/lib/data";
 import DashboardClient from "./DashboardClient";
 
 export const metadata: Metadata = {
-  title: "Operator Profile — Trail to Tides",
+  title: "Operator Profile",
 };
 
 export const dynamic = "force-dynamic";

@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -20,6 +21,14 @@ async function ensureBucket() {
 }
 
 export async function POST(req: NextRequest) {
+  const { allowed, retryAfterMs } = rateLimit(`operator-logo:${getClientIp(req)}`, 10, 30 * 60_000);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many uploads. Please try again later." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } }
+    );
+  }
+
   try {
     await ensureBucket();
 

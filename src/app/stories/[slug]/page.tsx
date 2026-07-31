@@ -7,17 +7,41 @@ import Footer from "@/components/layout/Footer";
 import { getPublishedStories, getStoryBySlug } from "@/lib/stories";
 import type { StoryDB } from "@/lib/stories";
 import { AVATARS } from "@/lib/avatars";
-import { ChevronLeft, ArrowRight, Crown, Mountain, PenLine, Share2, MapPin } from "lucide-react";
+import { ChevronLeft, ArrowRight, Crown, MapPin } from "lucide-react";
+import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
+import ShareStoryCTA from "@/components/ui/custom/ShareStoryCTA";
+import StoryCard from "@/components/ui/custom/StoryCard";
 import StoryShareBar from "@/components/ui/custom/StoryShareBar";
-import StoryReactions from "@/components/ui/custom/StoryReactions";
 import StoryComments from "@/components/ui/custom/StoryComments";
 import StoryLikeButton from "@/components/ui/custom/StoryLikeButton";
 import ReadingProgressBar from "@/components/ui/custom/ReadingProgressBar";
 import Breadcrumbs from "@/components/ui/custom/Breadcrumbs";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import StoryShareButton from "@/components/ui/custom/StoryShareButton";
+import AdventureCard from "@/components/ui/custom/AdventureCard";
+import { adventures } from "@/lib/data";
 
 const BADGE_TAGS = ["Featured", "TTT Original"];
+
+// Suggest adventures whose place or activity type overlaps with the story.
+function getSuggestedAdventures(story: { region: string; tags: string[] }, limit = 3) {
+  const regionQuery = story.region.trim().toLowerCase();
+  const tagSet = new Set(story.tags.map((t) => t.toLowerCase()));
+
+  const scored = adventures
+    .map((a) => {
+      let score = 0;
+      const stateLower = a.state.toLowerCase();
+      if (regionQuery && (stateLower.includes(regionQuery) || regionQuery.includes(stateLower))) score += 3;
+      if (tagSet.has(a.type.toLowerCase())) score += 2;
+      if (tagSet.has(a.region.toLowerCase())) score += 1;
+      return { adventure: a, score };
+    })
+    .filter((x) => x.score > 0);
+
+  scored.sort((a, b) => b.score - a.score);
+  return scored.slice(0, limit).map((x) => x.adventure);
+}
 
 function pickAvatar(name: string): string {
   let hash = 0;
@@ -29,12 +53,16 @@ function pickAvatar(name: string): string {
 
 function mapStory(s: StoryDB) {
   const tags = s.tags ?? [];
-  const pillTags = tags.filter(t => t !== "Featured" && t !== "TTT Original").slice(0, 2);
+  // Exclude the region — it's already shown via the location pin next to the pills.
+  const pillTags = tags
+    .filter(t => t !== "Featured" && t !== "TTT Original" && t.toLowerCase() !== s.region.toLowerCase())
+    .slice(0, 1);
   return {
     id: s.id,
     slug: s.slug,
     title: s.title,
     excerpt: s.excerpt,
+    body: s.body,
     author: s.author_name,
     authorRole: s.author_role,
     authorBio: s.author_bio,
@@ -43,8 +71,8 @@ function mapStory(s: StoryDB) {
     tags,
     pillTags,
     region: s.region,
-    date: s.adventure_date,
-    adventureDate: s.adventure_date,
+    date: s.date,
+    adventureDate: s.date,
     submittedBy: s.submitted_by || undefined,
     baseLikes: s.baseLikes ?? 50,
   };
@@ -65,7 +93,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!story) return {};
   const s = mapStory(story);
   return {
-    title: `${s.title} — Trail to Tides`,
+    title: s.title,
     description: s.excerpt,
     openGraph: {
       title: `${s.title} — Trail to Tides`,
@@ -169,10 +197,16 @@ export default async function StoryPage({ params }: Props) {
   const dbStory = await getStoryBySlug(slug);
   if (!dbStory) notFound();
   const story = mapStory(dbStory);
-  const body = buildBody(story);
+  // Prefer the author's actual submitted body (split on blank-line paragraph
+  // breaks); only fall back to generated filler for the seed stories, whose
+  // `body` column is empty.
+  const body = story.body?.trim()
+    ? story.body.trim().split(/\n\s*\n+/).map((p) => p.trim()).filter(Boolean)
+    : buildBody(story);
 
   const allStories = await getPublishedStories();
   const others = allStories.filter((s) => s.slug !== story.slug).slice(0, 3).map(mapStory);
+  const suggestedAdventures = getSuggestedAdventures(story);
 
   const articleStructuredData = {
     "@context": "https://schema.org",
@@ -207,7 +241,7 @@ export default async function StoryPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }}
       />
-      <ReadingProgressBar />
+      <ReadingProgressBar targetId="story-article" />
       <ScrollToTop />
       <Navbar />
 
@@ -241,31 +275,33 @@ export default async function StoryPage({ params }: Props) {
           All Stories
         </Link>
 
+        {story.tags.includes("Featured") && (
+          <div
+            className="absolute top-20 left-5 lg:left-8 z-10 flex items-center gap-1.5 pl-2 pr-3 py-1.5 rounded-full backdrop-blur-md"
+            style={{ background: "rgba(10,8,6,0.72)", border: "1px solid rgba(255,179,122,0.3)" }}
+          >
+            <Crown className="w-3 h-3" style={{ color: "#ffb37a" }} />
+            <span className="text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: "#ffd9b8" }}>Featured</span>
+          </div>
+        )}
+
         <div className="relative z-10 max-w-4xl mx-auto px-5 lg:px-8 pb-8 lg:pb-14 w-full">
-          {/* Row 1: special badges */}
-            <div className="flex items-center gap-3 mb-2 flex-wrap">
-              {story.tags.includes("Featured") && (
-                  <span className="flex items-center gap-1.5 bg-black text-[#ff5100] text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#ff5100]/20">
-                    <Crown className="w-3 h-3" />
-                    Featured
-                  </span>
-                )}
-                {story.tags.includes("TTT Original") && (
-                  <span className="flex items-center gap-1.5 bg-[#ff5100] text-black text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg border border-[#ff5100]/20">
-                    <Mountain className="w-3 h-3" />
-                    TTT Original
-                  </span>
-                )}
-            </div>
-            {/* Row 2: pill tags — only pillTags if set, else first 2 non-badge tags */}
-              <div className="flex items-center gap-3 mb-4 flex-wrap">
-                {(story.pillTags ?? story.tags.filter(t => !BADGE_TAGS.includes(t)).slice(0, 2)).map(tag => (
-                  <span key={tag} className="bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs px-3 py-1.5 rounded-full">
-                    {tag}
-                  </span>
-                ))}
-                <span className="flex items-center gap-1 text-[11px] text-white/50 font-medium"><MapPin className="w-3 h-3" />{story.region}</span>
-              </div>
+          <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.12em] mb-3 text-white/70">
+            {(story.pillTags ?? story.tags.filter(t => !BADGE_TAGS.includes(t)).slice(0, 1)).map((tag) => (
+              <span key={tag} className="inline-flex items-center gap-1 shrink-0" style={{ color: "#ff5100" }}>
+                {ADVENTURE_TYPE_ICONS[tag]?.(11)}
+                {tag}
+              </span>
+            ))}
+            <span className="opacity-50">·</span>
+            <span className="inline-flex items-center gap-1 shrink-0" style={{ color: "#ff5100" }}>
+              <MapPin className="w-3 h-3" />
+              {story.region}
+            </span>
+            <span className="opacity-50">·</span>
+            <span className="shrink-0" style={{ color: "#ff5100" }}>{story.adventureDate}</span>
+          </div>
+
           <h1 className="text-white text-2xl md:text-4xl lg:text-6xl font-bold tracking-tight leading-tight mb-3 max-w-3xl">
             {story.title}
           </h1>
@@ -278,13 +314,9 @@ export default async function StoryPage({ params }: Props) {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  {story.submittedBy ? (
-                    <Link href={`/profile/${story.submittedBy}`} className="text-white font-medium text-sm hover:text-[#ff5100] transition-colors">{story.author}</Link>
-                  ) : (
-                    <p className="text-white font-medium text-sm">{story.author}</p>
-                  )}
+                  <p className="text-white font-medium text-sm uppercase tracking-wide">{story.author}</p>
                   </div>
-                <p className="text-white/80 text-xs font-medium flex items-center gap-1 flex-wrap">{story.authorRole} &nbsp; {story.adventureDate}</p>
+                <p className="text-white/85 text-base" style={{ fontFamily: "var(--font-script)", fontWeight: 600 }}>{story.authorRole}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 ml-auto">
@@ -296,23 +328,23 @@ export default async function StoryPage({ params }: Props) {
       </section>
 
       {/* Article */}
-      <article className="max-w-2xl mx-auto px-5 lg:px-6 py-10 lg:py-20">
+      <article id="story-article" className="max-w-2xl mx-auto px-5 lg:px-6 py-10 lg:py-20">
         {/* Lede */}
-        <p className="text-white/80 text-lg lg:text-2xl font-light leading-relaxed mb-8 lg:mb-10 border-l-4 border-[#ff5100] pl-5">
+        <p className="text-lg lg:text-2xl font-light leading-relaxed mb-8 lg:mb-10 border-l-4 border-[#ff5100] pl-5" style={{ color: "var(--text-secondary)" }}>
           {story.excerpt}
         </p>
 
         {/* Body paragraphs */}
         <div className="space-y-6">
           {body.map((para, idx) => (
-            <p key={idx} className="text-white/65 text-base lg:text-lg leading-[1.85] font-light">
+            <p key={idx} className="text-base lg:text-lg leading-[1.85] font-light" style={{ color: "var(--text-secondary)" }}>
               {para}
             </p>
           ))}
         </div>
 
         {/* Author card */}
-          <div className="mt-10 bg-white/5 border border-white/10 rounded-2xl p-6 flex items-start gap-5">
+          <div className="mt-10 rounded-2xl p-6 flex items-start gap-5" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
             <div className="relative w-14 h-14 rounded-full overflow-hidden shrink-0 shadow-inner" style={{ border: "1.5px solid rgba(255,81,0,0.25)" }}>
               {story.authorAvatar
                 ? <Image src={story.authorAvatar} alt={story.author} fill sizes="56px" className="object-cover" />
@@ -320,25 +352,22 @@ export default async function StoryPage({ params }: Props) {
             </div>
             <div className="flex-1">
               <div>
-                {story.submittedBy ? (
-                  <Link href={`/profile/${story.submittedBy}`} className="text-white font-semibold text-base hover:text-[#ff5100] transition-colors">{story.author}</Link>
-                ) : (
-                  <p className="text-white font-semibold text-base">{story.author}</p>
-                )}
+                <p className="font-semibold text-base uppercase tracking-wide" style={{ color: "var(--text-primary)" }}>{story.author}</p>
               </div>
-              <p className="text-white/40 text-sm mt-0.5">{story.authorRole}</p>
+              <p className="text-base mt-0.5" style={{ color: "var(--text-tertiary)", fontFamily: "var(--font-script)", fontWeight: 600 }}>{story.authorRole}</p>
               {story.authorBio && (
-                <p className="text-white/50 text-sm mt-2 leading-relaxed">{story.authorBio}</p>
+                <p className="text-sm mt-2 leading-relaxed" style={{ color: "var(--text-secondary)" }}>{story.authorBio}</p>
               )}
             </div>
           </div>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-white/10">
+          <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t" style={{ borderColor: "var(--border-subtle)" }}>
             {story.tags.filter(t => !BADGE_TAGS.includes(t)).map((tag) => (
               <span
                 key={tag}
-                className="bg-white/8 text-white/40 text-xs px-3 py-1.5 rounded-full"
+                className="text-xs px-3 py-1.5 rounded-full"
+                style={{ background: "var(--bg-surface-2)", color: "var(--text-tertiary)" }}
               >
                 #{tag}
               </span>
@@ -350,25 +379,29 @@ export default async function StoryPage({ params }: Props) {
           <StoryComments slug={story.slug} />
 
           {/* Share your story CTA */}
-          <div className="mt-8 relative rounded-xl overflow-hidden flex items-center gap-4 px-4 py-3.5" style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.16)" }}>
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_left,_rgba(255,81,0,0.08)_0%,_transparent_65%)] pointer-events-none" />
-            <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center relative" style={{ background: "rgba(255,81,0,0.15)", border: "1px solid rgba(255,81,0,0.22)" }}>
-              <PenLine className="w-3.5 h-3.5 text-[#ff5100]" />
-            </div>
-            <div className="flex-1 min-w-0 relative">
-              <p className="text-white font-bold text-xs leading-snug">Got a story worth telling?</p>
-              <p className="text-white/35 text-[11px] mt-0.5 leading-relaxed">Share yours — it might inspire the next journey.</p>
-            </div>
-            <Link
-              href="/stories/submit"
-              className="relative shrink-0 inline-flex items-center gap-1.5 text-white font-semibold px-3.5 py-1.5 rounded-lg text-xs transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5 group whitespace-nowrap"
-              style={{ background: "#ff5100", boxShadow: "0 4px 12px rgba(255,81,0,0.22)" }}
-            >
-              Share story
-              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+          <div className="mt-8">
+            <ShareStoryCTA heading="Got a story worth telling?" subtext={["Share yours — it might inspire the next journey."]} size="sm" />
           </div>
       </article>
+
+      {/* Suggested adventures — matched to this story's region and activity */}
+      {suggestedAdventures.length > 0 && (
+        <section className="py-12 lg:py-16 px-5 lg:px-8 border-t" style={{ borderColor: "var(--border-subtle)" }}>
+          <div className="max-w-6xl mx-auto">
+            <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+              Ready to go yourself?
+            </p>
+            <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight mb-8" style={{ color: "var(--text-primary)" }}>
+              Adventures like this one
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+              {suggestedAdventures.map((adventure) => (
+                <AdventureCard key={adventure.id} adventure={adventure} size="default" />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* More stories */}
       <section className="t-bg-surface2 py-12 lg:py-24 px-5 lg:px-8">
@@ -378,43 +411,22 @@ export default async function StoryPage({ params }: Props) {
               <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
                 Keep Reading
               </p>
-              <h2 className="text-white text-2xl lg:text-3xl font-semibold tracking-tight">
+              <h2 className="text-2xl lg:text-3xl font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>
                 More from the trails
               </h2>
             </div>
             <Link
               href="/stories"
-              className="flex items-center gap-1.5 text-white/50 hover:text-white text-xs lg:text-sm font-medium transition-colors group"
+              className="flex items-center gap-1.5 hover:text-[#ff5100] text-xs lg:text-sm font-medium transition-colors group"
+              style={{ color: "var(--text-tertiary)" }}
             >
               All stories
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 lg:gap-6">
             {others.map((s) => (
-              <Link key={s.id} href={`/stories/${s.slug}`} className="group block">
-                <div className="relative h-48 rounded-2xl overflow-hidden mb-4">
-                    <Image
-                      src={s.heroImage}
-                      alt={s.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      style={{ objectFit: "cover" }}
-                    />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-                  <div className="absolute bottom-3 left-3">
-                    <span className="bg-white/10 backdrop-blur-sm border border-white/15 text-white text-xs px-2.5 py-1 rounded-full">
-                      {s.region}
-                    </span>
-                  </div>
-                </div>
-                <h3 className="text-white font-semibold text-base leading-snug group-hover:text-[#ff5100] transition-colors mb-1">
-                  {s.title}
-                </h3>
-                <p className="text-white/70 text-xs font-medium">
-                  {s.adventureDate} · {s.region}
-                </p>
-              </Link>
+              <StoryCard key={s.id} story={s} />
             ))}
           </div>
         </div>

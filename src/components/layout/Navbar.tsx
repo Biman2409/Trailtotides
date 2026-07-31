@@ -35,7 +35,7 @@ export default function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
-  const { selected, remove, clear } = useCompare();
+  const { selected, remove, clear, openDrawer } = useCompare();
   const [compareOpen, setCompareOpen] = useState(false);
   const compareRef = useRef<HTMLDivElement>(null);
 
@@ -154,7 +154,7 @@ export default function Navbar() {
       style={
         isTransparent
           ? { background: "transparent", borderBottom: "none" }
-          : { background: "var(--nav-bg)", backdropFilter: "blur(16px)", borderBottom: "1px solid var(--nav-border)", boxShadow: "0 4px 24px rgba(0,0,0,0.12)" }
+          : { background: "var(--nav-bg)", backdropFilter: "blur(16px)", borderBottom: "1px solid var(--nav-border)", boxShadow: "0 4px 24px rgba(var(--shadow-color), 0.12)" }
       }
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
@@ -366,12 +366,7 @@ export default function Navbar() {
                         </span>
                       </div>
                       <button
-                        onClick={() => {
-                          setCompareOpen(false);
-                          const section = document.getElementById("compare-section");
-                          if (section) section.scrollIntoView({ behavior: "smooth" });
-                          else router.push("/explore#compare-section");
-                        }}
+                        onClick={() => { setCompareOpen(false); openDrawer(); }}
                         className="text-[#ff5100] text-xs font-semibold hover:underline"
                       >
                         View →
@@ -397,7 +392,7 @@ export default function Navbar() {
                               </p>
                             </div>
                           </Link>
-                          <button onClick={() => remove(a.id)} className="transition-colors shrink-0 hover:text-red-400" style={{ color: "var(--text-muted)" }}>
+                          <button onClick={() => remove(a.id)} aria-label={`Remove ${a.name} from compare`} className="transition-colors shrink-0 hover:text-red-400" style={{ color: "var(--text-muted)" }}>
                             <X className="w-3.5 h-3.5" />
                           </button>
                         </div>
@@ -545,6 +540,22 @@ export default function Navbar() {
                 {savedList.length}
               </span>
             </Link>
+          )}
+
+          {/* Mobile compare row */}
+          {selected.length > 0 && (
+            <button
+              onClick={() => { setMenuOpen(false); openDrawer(); }}
+              className="w-full flex items-center gap-2 py-3 px-3 rounded-xl transition-colors hover:bg-[var(--bg-card-hover)]"
+              style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+              <GitCompareArrows className="w-4 h-4 shrink-0" style={{ color: "#ff5100" }} />
+              <span className="text-sm font-medium flex-1 text-left" style={{ color: "var(--text-secondary)" }}>
+                Compare
+              </span>
+              <span className="w-5 h-5 rounded-full bg-[#ff5100] text-white text-[11px] font-bold flex items-center justify-center">
+                {selected.length}
+              </span>
+            </button>
           )}
 
           {user ? (

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Crown, MapPin, Mountain, PenLine } from "lucide-react";
+import { ArrowRight, Crown, MapPin } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
 import Footer from "@/components/layout/Footer";
 import Breadcrumbs from "@/components/ui/custom/Breadcrumbs";
+import ShareStoryCTA from "@/components/ui/custom/ShareStoryCTA";
 
 import { getPublishedStories } from "@/lib/stories";
 import type { StoryDB } from "@/lib/stories";
@@ -13,6 +14,7 @@ import { AVATARS } from "@/lib/avatars";
 import StoryCard from "@/components/ui/custom/StoryCard";
 import StoryLikeButton from "@/components/ui/custom/StoryLikeButton";
 import StoryShareButton from "@/components/ui/custom/StoryShareButton";
+import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 
 function pickAvatar(name: string): string {
   let hash = 0;
@@ -24,7 +26,10 @@ function pickAvatar(name: string): string {
 
 function mapStory(s: StoryDB) {
   const tags = s.tags ?? [];
-  const pillTags = tags.filter(t => t !== "Featured" && t !== "TTT Original").slice(0, 2);
+  // Exclude the region — it's already shown via the location pin next to the pills.
+  const pillTags = tags
+    .filter(t => t !== "Featured" && t !== "TTT Original" && t.toLowerCase() !== s.region.toLowerCase())
+    .slice(0, 1);
   return {
     ...s,
     author: s.author_name,
@@ -35,15 +40,15 @@ function mapStory(s: StoryDB) {
     slug: s.slug,
     tags,
     pillTags,
-    date: s.adventure_date,
-    adventureDate: s.adventure_date,
+    date: s.date,
+    adventureDate: s.date,
     submittedBy: s.submitted_by || undefined,
     baseLikes: s.baseLikes ?? 50,
   };
 }
 
 export const metadata: Metadata = {
-  title: "Field Stories — Trail to Tides",
+  title: "Field Stories",
   description:
     "First-hand accounts from real adventurers across India — high-altitude treks, ocean dives, desert rides, and everything in between.",
   openGraph: {
@@ -120,42 +125,31 @@ export default async function StoriesPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
 
-              {/* Top-left badge */}
-              <div className="absolute top-5 left-5 flex items-center gap-2">
-                {featured.tags.includes("Featured") && (
-                  <span className="flex items-center gap-1.5 rounded-full py-0 pl-0 pr-2.5"
-                    style={{ background: "rgba(10,10,10,0.75)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,81,0,0.35)", boxShadow: "0 0 12px rgba(255,81,0,0.15)" }}>
-                    <span className="w-[22px] h-[22px] rounded-full flex items-center justify-center shrink-0" style={{ background: "#ff5100", boxShadow: "0 0 6px rgba(255,81,0,0.5)" }}>
-                      <Crown className="w-3 h-3 text-black" />
-                    </span>
-                    <span className="text-[10px] font-bold leading-none tracking-wide" style={{ color: "#ff5100" }}>Featured</span>
-                  </span>
-                )}
-                {featured.tags.includes("TTT Original") && (
-                  <span className="flex items-center gap-1.5 rounded-full py-0 pl-0 pr-2.5"
-                    style={{ background: "linear-gradient(135deg,rgba(255,81,0,0.95),rgba(220,50,0,0.9))", border: "1px solid rgba(255,255,255,0.18)", boxShadow: "0 0 14px rgba(255,81,0,0.35)" }}>
-                    <span className="w-[22px] h-[22px] rounded-full flex items-center justify-center shrink-0" style={{ background: "#000" }}>
-                      <Mountain className="w-3 h-3" style={{ color: "#ff5100" }} />
-                    </span>
-                    <span className="text-[10px] font-bold leading-none tracking-wide text-white">TTT Original</span>
-                  </span>
-                )}
-              </div>
-
-              {/* Top-right: like + share */}
-              <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
-                <StoryLikeButton slug={featured.slug} baseLikes={featured.baseLikes} pill />
-                <StoryShareButton title={featured.title} slug={featured.slug} />
-              </div>
+              {/* Top-left: Featured ribbon */}
+              {featured.tags.includes("Featured") && (
+                <div
+                  className="absolute top-5 left-5 flex items-center gap-1.5 pl-2 pr-3 py-1.5 rounded-full backdrop-blur-md"
+                  style={{ background: "rgba(10,8,6,0.72)", border: "1px solid rgba(255,179,122,0.3)" }}
+                >
+                  <Crown className="w-3 h-3" style={{ color: "#ffb37a" }} />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: "#ffd9b8" }}>Featured</span>
+                </div>
+              )}
 
               <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 lg:p-12">
-                {/* Content pills */}
-                <div className="flex items-center gap-2 mb-4 flex-wrap">
-                  {(featured.pillTags ?? featured.tags.filter((t) => !BADGE_TAGS.includes(t)).slice(0, 2)).map((tag) => (
-                    <span key={tag} className="bg-white/15 backdrop-blur-sm border border-white/20 text-white text-xs font-medium px-3 py-1.5 rounded-full">
+                {/* Quiet meta line */}
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] mb-4 text-white/70">
+                  {(featured.pillTags ?? featured.tags.filter((t) => !BADGE_TAGS.includes(t)).slice(0, 1)).map((tag) => (
+                    <span key={tag} className="inline-flex items-center gap-1 shrink-0" style={{ color: "#ff5100" }}>
+                      {ADVENTURE_TYPE_ICONS[tag]?.(12)}
                       {tag}
                     </span>
                   ))}
+                  <span className="opacity-50">·</span>
+                  <span className="inline-flex items-center gap-1 shrink-0" style={{ color: "#ff5100" }}>
+                    <MapPin className="w-3 h-3" />
+                    {featured.region}
+                  </span>
                 </div>
 
                 <h2 className="text-white text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-3 max-w-2xl group-hover:text-[#ff5100] transition-colors duration-300">
@@ -173,17 +167,18 @@ export default async function StoriesPage() {
                   </div>
                   <div className="mr-1">
                     <p className="text-white text-sm font-semibold">{featured.author}</p>
-                    <p className="text-white/40 text-xs">{featured.authorRole}</p>
+                    <p className="text-white/50 text-base" style={{ fontFamily: "var(--font-script)", fontWeight: 600 }}>{featured.authorRole}</p>
                   </div>
-                  <span className="flex items-center gap-1.5 text-xs font-medium text-white/90">
+                  <span className="text-xs font-medium" style={{ color: "#ff5100" }}>
                     {featured.adventureDate}
-                    <span className="text-white/20">·</span>
-                    <MapPin className="w-3 h-3" />
-                    {featured.region}
                   </span>
-                  <span className="ml-auto text-[#ff5100] text-sm font-semibold flex items-center gap-1.5 group-hover:gap-3 transition-all duration-200">
-                    Read story <ArrowRight className="w-4 h-4" />
-                  </span>
+                  <div className="flex items-center gap-3 ml-auto">
+                    <StoryLikeButton slug={featured.slug} baseLikes={featured.baseLikes} pill />
+                    <StoryShareButton title={featured.title} slug={featured.slug} />
+                    <span className="text-[#ff5100] text-sm font-semibold flex items-center gap-1.5 group-hover:gap-3 transition-all duration-200">
+                      Read story <ArrowRight className="w-4 h-4" />
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -213,24 +208,9 @@ export default async function StoriesPage() {
       {/* CTA */}
       <FadeInSection as="section" className="py-10 lg:py-14 px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
-          <div className="relative rounded-2xl overflow-hidden flex flex-col sm:flex-row items-center gap-5 px-6 py-5" style={{ background: "rgba(255,81,0,0.06)", border: "1px solid rgba(255,81,0,0.18)" }}>
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_left,_rgba(255,81,0,0.08)_0%,_transparent_65%)] pointer-events-none" />
-            <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center relative" style={{ background: "rgba(255,81,0,0.15)", border: "1px solid rgba(255,81,0,0.25)" }}>
-              <PenLine className="w-4.5 h-4.5 text-[#ff5100]" />
-            </div>
-            <div className="flex-1 min-w-0 relative text-center sm:text-left">
-              <p className="font-bold text-sm leading-snug" style={{ color: "var(--text-primary)" }}>Got a story to tell?</p>
-              <p className="text-xs mt-0.5 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>We feature stories from verified adventurers. Something remarkable out there? We want to hear it.</p>
-            </div>
-            <Link
-              href="/stories/submit"
-              className="relative shrink-0 inline-flex items-center gap-1.5 text-white font-semibold px-4 py-2 rounded-lg text-xs transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5 group whitespace-nowrap"
-              style={{ background: "#ff5100", boxShadow: "0 4px 14px rgba(255,81,0,0.25)" }}
-            >
-              Share Your Story
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-          </div>
+          <ShareStoryCTA
+            subtext={["We feature stories from verified adventurers.", "Something remarkable out there? We want to hear it."]}
+          />
         </div>
       </FadeInSection>
 

@@ -1,30 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Instagram, Youtube, Twitter, Mail, Linkedin } from "lucide-react";
 import { Mountain } from "@/lib/localIcons";
-import { createClient } from "@/lib/supabase/client";
-import MessageModal from "./MessageModal";
 import { motion } from "framer-motion";
 
 export default function Footer() {
-  const [user, setUser] = useState<{ email: string } | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    const supabase = createClient();
-    const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user ? { email: user.email ?? "" } : null);
-    };
-    fetchUser();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ? { email: session.user.email ?? "" } : null);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-
   return (
     <motion.footer
       initial={{ opacity: 0 }}
@@ -41,13 +22,13 @@ export default function Footer() {
             {/* Column 1: Identity, Platform, Legal */}
             <div className="space-y-8 lg:space-y-10">
               {/* 1. Branding */}
-              <div className="flex flex-col gap-4 group">
+              <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-500 shadow-xl shadow-[#ff5100]/20 group-hover:rotate-6">
+                  <div className="w-10 h-10 rounded-xl bg-[#ff5100] flex items-center justify-center shadow-xl shadow-[#ff5100]/20">
                     <Mountain className="w-5 h-5 text-white" strokeWidth={3} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-semibold text-[1.5rem] leading-none antialiased tracking-tight transition-colors duration-500" style={{ color: "var(--text-primary)" }}>
+                    <span className="font-semibold text-[1.5rem] leading-none antialiased tracking-tight" style={{ color: "var(--text-primary)" }}>
                       <span className="font-black uppercase">TRAIL</span>
                       <span style={{fontFamily: "var(--font-cursive)", color: "var(--text-secondary)"}} className="mx-1 text-[1.2rem] normal-case tracking-normal font-normal">to</span>
                       <span className="font-black uppercase">TIDES</span>
@@ -128,9 +109,9 @@ export default function Footer() {
                 <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ff5100] opacity-90">
                   Contact Us
                 </h4>
-                <div className="flex flex-col gap-5">
-                  <button
-                    onClick={() => user ? setIsModalOpen(true) : window.location.href = "mailto:hello@trailtotides.com"}
+                <div className="inline-flex flex-col items-stretch gap-5">
+                  <a
+                    href="mailto:hello@trailtotides.com"
                     className="group flex items-center gap-2.5 px-4 py-2.5 rounded-xl w-fit transition-all duration-500"
                     style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}
                   >
@@ -138,18 +119,18 @@ export default function Footer() {
                     <span className="text-xs font-semibold group-hover:text-[#ff5100] transition-colors duration-300" style={{ color: "var(--text-tertiary)" }}>
                       hello@trailtotides.com
                     </span>
-                  </button>
+                  </a>
 
-                  <div className="flex items-center gap-5 lg:gap-7">
+                  <div className="flex items-center justify-between">
                     {[
                       { Icon: Instagram, href: "https://instagram.com/trailtotides", name: "Instagram" },
                       { Icon: Twitter, href: "https://twitter.com/trailtotides", name: "Twitter" },
                       { Icon: Youtube, href: "https://youtube.com/@trailtotides", name: "Youtube" },
                       { Icon: Linkedin, href: "https://linkedin.com/company/trailtotides", name: "Linkedin" }
                     ].map(({ Icon, href, name }, i) => (
-                      <a 
-                        key={i} 
-                        href={href} 
+                      <a
+                        key={i}
+                        href={href}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group flex items-center justify-center transition-all duration-300 hover:-translate-y-1.5"
@@ -173,14 +154,6 @@ export default function Footer() {
       {/* Background Decor */}
       <div className="absolute bottom-0 right-0 w-[60%] h-[80%] bg-[#ff5100]/[0.02] blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute top-0 left-0 w-[45%] h-[60%] bg-[#4ade80]/[0.02] blur-[150px] rounded-full pointer-events-none" />
-
-      {user && (
-        <MessageModal 
-          isOpen={isModalOpen} 
-          onClose={() => setIsModalOpen(false)} 
-          userEmail={user.email} 
-        />
-      )}
     </motion.footer>
   );
 }

@@ -49,18 +49,16 @@ const INITIAL: FormData = {
 };
 
 const inputClass =
-  "w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#ff5100]/60 focus:ring-1 focus:ring-[#ff5100]/20 transition-all";
+  "w-full rounded-xl px-4 py-3 text-sm border border-[var(--border-subtle)] focus:outline-none focus:border-[#ff5100]/60 focus:ring-1 focus:ring-[#ff5100]/20 transition-all";
 const inputStyle: React.CSSProperties = {
   background: "var(--bg-card)",
-  border: "1px solid var(--border-subtle)",
   color: "var(--text-primary)",
 };
 
 const textareaClass =
-  "w-full rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#ff5100]/60 focus:ring-1 focus:ring-[#ff5100]/20 transition-all resize-none";
+  "w-full rounded-xl px-4 py-3 text-sm border border-[var(--border-subtle)] focus:outline-none focus:border-[#ff5100]/60 focus:ring-1 focus:ring-[#ff5100]/20 transition-all resize-none";
 const textareaStyle: React.CSSProperties = {
   background: "var(--bg-card)",
-  border: "1px solid var(--border-subtle)",
   color: "var(--text-primary)",
 };
 

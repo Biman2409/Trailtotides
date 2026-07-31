@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,6 +12,14 @@ const MAX_SIZE = 8 * 1024 * 1024; // 8MB
 const ALLOWED_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 export async function POST(req: NextRequest) {
+  const { allowed, retryAfterMs } = rateLimit(`story-upload:${getClientIp(req)}`, 15, 30 * 60_000);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many uploads. Please try again later." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } }
+    );
+  }
+
   try {
     const form = await req.formData();
     const file = form.get("file") as File | null;
@@ -27,24 +36,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unsupported file type. Use JPEG, PNG, or WebP." }, { status: 400 });
     }
 
-    // Ensure bucket exists
-    const { data: buckets } = await admin.storage.listBuckets();
-    if (!buckets?.find((b) => b.name === BUCKET)) {
-      await admin.storage.createBucket(BUCKET, {
-        public: true,
-        fileSizeLimit: MAX_SIZE,
-      });
-    }
-
     const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
     const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
     const path = `${id}.${ext}`;
     const bytes = await file.arrayBuffer();
 
-    const { error: uploadError } = await admin.storage.from(BUCKET).upload(path, bytes, {
+    let { error: uploadError } = await admin.storage.from(BUCKET).upload(path, bytes, {
       contentType: file.type,
       upsert: false,
     });
+
+    // Bucket doesn't exist yet on this project — create it and retry once,
+    // instead of checking/creating it on every single upload.
+    if (uploadError?.message?.includes("Bucket not found")) {
+      await admin.storage.createBucket(BUCKET, { public: true, fileSizeLimit: MAX_SIZE });
+      ({ error: uploadError } = await admin.storage.from(BUCKET).upload(path, bytes, {
+        contentType: file.type,
+        upsert: false,
+      }));
+    }
 
     if (uploadError) {
       console.error("story upload storage error:", uploadError);

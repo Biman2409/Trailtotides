@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
+import { z } from "zod";
 
 const STORAGE_BUCKET = "story-reactions";
 const admin = createClient(
@@ -7,9 +9,18 @@ const admin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+// Storage key is built directly from `slug` — restrict to safe path characters.
+const SLUG_RE = /^[a-z0-9-]+$/;
+// Reaction keys are emoji — cap key length generously rather than hardcoding
+// exact emoji strings (avoids fragile unicode-variant mismatches with the client).
+const reactionsSchema = z.record(
+  z.string().min(1).max(8),
+  z.number().int().min(0).max(1_000_000)
+).refine((obj) => Object.keys(obj).length <= 20, "Too many reaction types");
+
 export async function GET(req: NextRequest) {
   const slug = req.nextUrl.searchParams.get("slug");
-  if (!slug) return NextResponse.json({ error: "Missing slug" }, { status: 400 });
+  if (!slug || !SLUG_RE.test(slug)) return NextResponse.json({ error: "Missing slug" }, { status: 400 });
 
   try {
     const { data: buckets } = await admin.storage.listBuckets();
@@ -27,10 +38,24 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { slug, reactions } = await req.json();
-  if (!slug || !reactions) {
-    return NextResponse.json({ error: "Missing slug or reactions" }, { status: 400 });
+  const { allowed, retryAfterMs } = rateLimit(`story-reactions:${getClientIp(req)}`, 30, 5 * 60_000);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } }
+    );
   }
+
+  const body = await req.json().catch(() => null);
+  const slug = body?.slug;
+  if (!slug || typeof slug !== "string" || !SLUG_RE.test(slug)) {
+    return NextResponse.json({ error: "Missing or invalid slug" }, { status: 400 });
+  }
+  const parsedReactions = reactionsSchema.safeParse(body?.reactions);
+  if (!parsedReactions.success) {
+    return NextResponse.json({ error: "Invalid reactions payload" }, { status: 400 });
+  }
+  const reactions = parsedReactions.data;
 
   try {
     const { data: buckets } = await admin.storage.listBuckets();

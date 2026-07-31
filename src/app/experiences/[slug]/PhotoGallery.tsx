@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Camera, Loader2, Trash2, X, ZoomIn, Upload, ImageOff } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { toast } from "sonner";
 import { awardXP } from "@/lib/awardXP";
 import { useTripLog } from "@/contexts/TripLogContext";

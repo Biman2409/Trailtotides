@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import OperatorButton from "./OperatorButton";
 import { type OperatorCardData } from "./OperatorCard";
 import OperatorsSection from "./OperatorsSection";
 import {
@@ -16,7 +15,6 @@ import {
   Flag,
   Navigation,
   Gauge,
-  Star,
   Camera,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
@@ -25,7 +23,6 @@ import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
 import ACEProfileSection from "./ACEProfileSection";
-import CompareCTA from "./CompareCTA";
 import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import SavedAdventuresSection from "@/components/ui/custom/SavedAdventuresSection";
 import HeroActions from "./HeroActions";
@@ -51,14 +48,6 @@ interface Props {
   searchParams: Promise<{ from?: string }>;
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4">
-      {children}
-    </p>
-  );
-}
-
 function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { title: string; items: Adventure[]; exploreHref: string; pillMode?: "type" | "region" }) {
   if (items.length === 0) return null;
   return (
@@ -80,8 +69,8 @@ function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { titl
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
                 <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 z-10">
                   {pillMode === "type"
-                    ? <Pill type="type" value={a.type} />
-                    : <Pill type="subRegion" value={a.state} />
+                    ? <Pill type="type" value={a.type} clickable={false} />
+                    : <Pill type="subRegion" value={a.state} clickable={false} />
                   }
                 </div>
               </div>
@@ -115,7 +104,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const difficulty = computeDifficulty(getACE(adventure));
   const description = `${adventure.type} in ${adventure.state} · ${difficulty} · ${adventure.duration} days. ${adventure.tagline ?? "Discover this handpicked adventure on Trail to Tides."}`;
   return {
-    title: `${adventure.name} — Trail to Tides`,
+    title: adventure.name,
     description,
     keywords: [
       adventure.name,
@@ -185,7 +174,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
   const relatedByType = adventures
     .filter((a) => a.id !== adventure.id && a.type === adventure.type && !relatedByStateIds.has(a.id))
     .slice(0, 6);
-  const relatedByTypeIds = new Set(relatedByType.map((a) => a.id));
 
   const firstVerifiedOp = allOperators.find((o) => o.verified);
   const priceFrom = firstVerifiedOp?.priceFrom;
@@ -475,7 +463,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* Community */}
             <div className="pt-6">
-              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">Community</p>
+              <h2 className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">Community</h2>
 
               {/* Single login CTA — only when logged out */}
               {!currentUserId && (

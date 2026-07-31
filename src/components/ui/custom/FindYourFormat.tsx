@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { Wind, Mountain, Waves, Snowflake } from "@/lib/localIcons";
 import { adventures } from "@/lib/data";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
+import CardFooterLink from "./CardFooterLink";
 
 const categories = [
     {
@@ -100,8 +101,16 @@ export default function FindYourFormat() {
   const [openId, setOpenId] = useState<string | null>(null);
 
     return (
-      <section id="styles" className="py-10 lg:py-14 px-5 lg:px-8 t-bg-page">
-      <div className="max-w-7xl mx-auto">
+      <section id="styles" className="relative py-10 lg:py-14 px-5 lg:px-8 t-bg-page overflow-hidden">
+      {/* Background accent glow */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-24 right-[8%] w-96 h-96 rounded-full opacity-[0.05] dark:opacity-[0.08] blur-[100px]" style={{ background: "#ff5100" }} />
+        <div
+          className="absolute inset-0 opacity-[0.045] dark:opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(circle, #ff5100 1px, transparent 1px)", backgroundSize: "30px 30px" }}
+        />
+      </div>
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="mb-6 lg:mb-8">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
@@ -131,8 +140,8 @@ export default function FindYourFormat() {
                   border: `1px solid ${isOpen ? cat.accentBorder : "var(--border-subtle)"}`,
                   transition: "border-color 0.3s ease",
                   boxShadow: isOpen
-                    ? `0 0 0 1px ${cat.accentBorder}, 0 20px 48px rgba(0,0,0,0.35)`
-                    : "0 4px 16px rgba(0,0,0,0.2)",
+                    ? `0 0 0 1px ${cat.accentBorder}, 0 20px 48px rgba(var(--shadow-color),0.35)`
+                    : "0 4px 16px rgba(var(--shadow-color),0.2)",
                 }}
               >
                 {/* Image header */}
@@ -302,20 +311,7 @@ export default function FindYourFormat() {
                           </div>
 
                           {/* View all link */}
-                          <div className="mt-3 pt-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                            <Link
-                              href={`/explore?category=${cat.id}`}
-                              className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 hover:-translate-y-0.5"
-                              style={{
-                                background: cat.accent,
-                                color: "white",
-                                boxShadow: `0 4px 14px ${cat.accent}55`,
-                              }}
-                            >
-                              View all {cat.label} adventures
-                              <ArrowRight className="w-3.5 h-3.5" />
-                            </Link>
-                          </div>
+                          <CardFooterLink href={`/explore?category=${cat.id}`} label={`View all ${cat.label} adventures`} accentColor={cat.accent} />
                         </>
                       )}
                     </div>

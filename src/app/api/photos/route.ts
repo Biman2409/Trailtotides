@@ -9,6 +9,7 @@
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/rateLimit";
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -84,6 +85,9 @@ export async function POST(req: NextRequest) {
   const supabase = await createServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { allowed } = rateLimit(`photo-upload:${user.id}`, 20, 30 * 60_000);
+  if (!allowed) return NextResponse.json({ error: "Too many uploads. Please try again later." }, { status: 429 });
 
   const form = await req.formData();
   const file = form.get("file") as File | null;

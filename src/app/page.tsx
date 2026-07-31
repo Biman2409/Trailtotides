@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Map, ChevronRight, Star } from "lucide-react";
+import { ArrowRight, Map, ChevronRight, Crown } from "lucide-react";
 import HeroCTAs from "@/components/ui/custom/HeroCTAs";
 import MatchmakerHomepageSection from "@/components/ui/custom/MatchmakerHomepageSection";
 import { FadeUp, HeroOrbs, ShimmerLine, HeroHeadline, HeroSubheading, HeroCTAWrapper } from "@/components/ui/custom/HomeAnimations";
@@ -89,18 +89,9 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Scroll hint */}
-        <div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
-          style={{ animation: "heroLineIn 1s cubic-bezier(0.22,1,0.36,1) 1.2s both" }}
-        >
-          <span className="text-white/30 text-[10px] tracking-[0.25em] uppercase font-medium">Scroll</span>
-          <div className="w-px h-8 bg-gradient-to-b from-white/30 to-transparent" style={{ animation: "scrollPulse 2s ease-in-out infinite" }} />
-          <style>{`
-            @keyframes heroLineIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
-            @keyframes scrollPulse { 0%,100% { opacity:0.3; transform:scaleY(1); } 50% { opacity:0.8; transform:scaleY(1.15); } }
-          `}</style>
-        </div>
+        <style>{`
+          @keyframes heroLineIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+        `}</style>
       </section>
 
         {/* ── STATS BAR ────────────────────────────────────── */}
@@ -128,7 +119,7 @@ export default function HomePage() {
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#eaf0e8]/98 via-[#eaf0e8]/80 to-[#eaf0e8]/40 dark:from-[#1a2e20]/98 dark:via-[#1a2e20]/80 dark:to-[#1a2e20]/40" />
             <div
-              className="absolute inset-0 opacity-[0.06] dark:hidden"
+              className="absolute inset-0 opacity-[0.09] dark:hidden"
               style={{
                 backgroundImage: "radial-gradient(circle, #4a7a50 1px, transparent 1px)",
                 backgroundSize: "28px 28px",
@@ -176,7 +167,7 @@ export default function HomePage() {
             <FadeUp>
               <div className="mb-7 lg:mb-9">
                 <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 flex items-center gap-1.5 uppercase">
-                  <Star className="w-3.5 h-3.5 fill-[#ff5100]" />
+                  <Crown className="w-3.5 h-3.5 fill-[#ff5100]" />
                   EDITOR&apos;S CHOICE
                 </p>
                 <div className="flex items-end justify-between gap-4">
@@ -205,7 +196,7 @@ export default function HomePage() {
               <div className="mt-7 lg:mt-9 flex justify-center">
                 <Link
                   href="/explore"
-                  className="bg-[#ff5100] hover:bg-[#ff7d47] text-white font-semibold px-8 py-3.5 rounded-xl text-sm md:text-base flex items-center gap-2 group shadow-lg shadow-[#ff5100]/25 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/30 transition-all duration-200"
+                  className="border-2 border-[#ff5100] text-[#ff5100] hover:bg-[#ff5100] hover:text-white font-semibold px-8 py-3.5 rounded-xl text-sm md:text-base flex items-center gap-2 group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/25 transition-all duration-200"
                 >
                   View all adventures
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

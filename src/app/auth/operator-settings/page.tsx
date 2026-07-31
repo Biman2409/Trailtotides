@@ -11,7 +11,7 @@ import { format } from "date-fns";
 import SettingsClient from "./SettingsClient";
 
 export const metadata: Metadata = {
-  title: "Settings — Trail to Tides",
+  title: "Settings",
 };
 
 export const dynamic = "force-dynamic";

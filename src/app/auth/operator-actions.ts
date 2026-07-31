@@ -1,6 +1,7 @@
 "use server";
 
 import { createAdminClient, createClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/authz";
 
 // ─── Storage-based operator system ───────────────────────────────────────────
 // Uses Supabase Storage buckets (operator-profiles, operator-submissions)
@@ -344,6 +345,8 @@ export async function updateOperatorProfile(formData: FormData) {
 }
 
 export async function approveOperatorSubmission(submissionId: string) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   const adminClient = await createAdminClient();
   const sub = (await readJsonFile(
     adminClient,
@@ -364,6 +367,8 @@ export async function approveOperatorSubmission(submissionId: string) {
 }
 
 export async function rejectOperatorSubmission(submissionId: string) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   const adminClient = await createAdminClient();
   const sub = (await readJsonFile(
     adminClient,

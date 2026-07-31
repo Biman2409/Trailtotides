@@ -7,7 +7,7 @@ import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import ProfileForm from "@/app/profile/ProfileForm";
 
 export const metadata: Metadata = {
-  title: "Settings — Trail to Tides",
+  title: "Settings",
   robots: { index: false, follow: false },
 };
 

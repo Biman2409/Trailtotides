@@ -19,36 +19,24 @@ export default function DifficultyMeter({ difficulty, className = "" }: Difficul
   const cfg = DIFFICULTY_CONFIG[difficulty] ?? { level: 1, color: "#10b981", glow: "#10b98155", label: difficulty };
   return (
     <div
-      className={`inline-flex items-center gap-2 px-2.5 h-5 rounded-full text-[10px] font-bold tracking-tight ${className}`}
-      style={{
-        background: "rgba(0,0,0,0.6)",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
-        boxShadow: `0 0 0 1px rgba(255,255,255,0.1), inset 0 1px 0 rgba(255,255,255,0.06)`,
-      }}
+      className={`inline-flex items-center gap-1.5 pl-1.5 pr-2.5 h-5 rounded-full text-[10px] font-bold tracking-tight backdrop-blur-md ${className}`}
+      style={{ background: "rgba(10,8,6,0.6)", border: "1px solid rgba(255,255,255,0.08)" }}
     >
-      <span className="font-bold leading-none" style={{ color: cfg.color, textShadow: `0 0 8px ${cfg.glow}` }}>
-        {cfg.label}
-      </span>
-      {/* Signal bars — 5 bars growing taller left to right */}
-      <div className="flex items-end gap-[2px]" style={{ height: 10 }}>
-        {[1, 2, 3, 4, 5].map((i) => {
-          const filled = i <= cfg.level;
-          const barHeight = 3 + (i - 1) * 1.8;
-          return (
-            <div
-              key={i}
-              style={{
-                width: 3,
-                height: barHeight,
-                borderRadius: 2,
-                background: filled ? cfg.color : "rgba(255,255,255,0.15)",
-                boxShadow: filled ? `0 0 4px ${cfg.glow}` : "none",
-              }}
-            />
-          );
-        })}
+      {/* Segmented meter — filled up to the difficulty level, at a glance */}
+      <div className="flex items-center gap-[2px] shrink-0">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <span
+            key={i}
+            className="rounded-full"
+            style={{
+              width: 3,
+              height: 6,
+              background: i <= cfg.level ? cfg.color : "rgba(255,255,255,0.18)",
+            }}
+          />
+        ))}
       </div>
+      <span className="leading-none text-white/85">{cfg.label}</span>
     </div>
   );
 }

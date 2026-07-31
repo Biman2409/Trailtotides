@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { XP_REWARDS, type XPAction } from "@/lib/xp";
+import { rateLimit } from "@/lib/rateLimit";
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -78,6 +79,9 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const { allowed } = rateLimit(`xp-award:${user.id}`, 40, 5 * 60_000);
+  if (!allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+
   const body = await req.json();
   const action = body.action as XPAction;
   const slug: string = body.slug ?? "";
@@ -138,6 +142,9 @@ export async function DELETE(req: NextRequest) {
   const supabase = await createServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { allowed } = rateLimit(`xp-revoke:${user.id}`, 40, 5 * 60_000);
+  if (!allowed) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
 
   const body = await req.json();
   const action = body.action as XPAction;

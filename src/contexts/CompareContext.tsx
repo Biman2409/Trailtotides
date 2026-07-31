@@ -12,6 +12,9 @@ interface CompareContextValue {
   clear: () => void;
   isSelected: (id: string) => boolean;
   isFull: boolean;
+  drawerOpen: boolean;
+  openDrawer: () => void;
+  closeDrawer: () => void;
 }
 
 const CompareContext = createContext<CompareContextValue | null>(null);
@@ -26,6 +29,7 @@ export function CompareProvider({ children }: { children: ReactNode }) {
       return stored ? JSON.parse(stored) : [];
     } catch { return []; }
   });
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   function add(a: Adventure) {
     setSelected((prev) => {
@@ -54,7 +58,12 @@ export function CompareProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <CompareContext.Provider value={{ selected, add, remove, clear, isSelected, isFull: selected.length >= MAX }}>
+    <CompareContext.Provider
+      value={{
+        selected, add, remove, clear, isSelected, isFull: selected.length >= MAX,
+        drawerOpen, openDrawer: () => setDrawerOpen(true), closeDrawer: () => setDrawerOpen(false),
+      }}
+    >
       {children}
     </CompareContext.Provider>
   );
@@ -67,6 +76,9 @@ const NO_OP: CompareContextValue = {
   clear: () => {},
   isSelected: () => false,
   isFull: false,
+  drawerOpen: false,
+  openDrawer: () => {},
+  closeDrawer: () => {},
 };
 
 export function useCompare() {

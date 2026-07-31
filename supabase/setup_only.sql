@@ -21,7 +21,13 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 DO $$ BEGIN CREATE POLICY "Users view own profile" ON public.profiles FOR SELECT USING (auth.uid() = id); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 DO $$ BEGIN CREATE POLICY "Users update own profile" ON public.profiles FOR UPDATE USING (auth.uid() = id); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 DO $$ BEGIN CREATE POLICY "Insert own profile" ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
-DO $$ BEGIN CREATE POLICY "Admin read all" ON public.profiles FOR SELECT USING (auth.uid() IN (SELECT id FROM public.profiles WHERE role = 'admin')); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+-- SECURITY DEFINER avoids the infinite-recursion error you get from querying
+-- public.profiles directly inside a policy defined on public.profiles.
+CREATE OR REPLACE FUNCTION public.is_admin(uid uuid)
+RETURNS boolean LANGUAGE sql SECURITY DEFINER SET search_path = '' STABLE
+AS $$ SELECT EXISTS (SELECT 1 FROM public.profiles WHERE id = uid AND role = 'admin'); $$;
+DROP POLICY IF EXISTS "Admin read all" ON public.profiles;
+CREATE POLICY "Admin read all" ON public.profiles FOR SELECT USING (public.is_admin(auth.uid()));
 
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger
@@ -30,7 +36,7 @@ SECURITY DEFINER SET search_path = ''
 AS $$
 BEGIN
   INSERT INTO public.profiles (id, full_name, email, username)
-  VALUES (new.id, new.raw_user_meta_data ->> 'full_name', new.email, new.raw_user_meta_data ->> 'user_name');
+  VALUES (new.id, new.raw_user_meta_data ->> 'full_name', new.email, new.raw_user_meta_data ->> 'username');
   RETURN new;
 END;
 $$;

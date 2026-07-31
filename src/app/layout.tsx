@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Great_Vibes } from "next/font/google";
+import { DM_Sans, Great_Vibes, Caveat } from "next/font/google";
 import "./globals.css";
 import { VisualEditsMessenger } from "orchids-visual-edits";
 import Script from "next/script";
@@ -14,6 +14,14 @@ const greatVibes = Great_Vibes({
   variable: "--font-cursive",
   subsets: ["latin"],
   weight: ["400"],
+});
+
+// A bolder, more legible script — for small-scale personal-touch text (author
+// role labels etc.) where Great Vibes' thin strokes disappear at tiny sizes.
+const caveat = Caveat({
+  variable: "--font-script",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
 });
 
 const dmSans = DM_Sans({
@@ -73,15 +81,11 @@ export const metadata: Metadata = {
   creator: "Trail to Tides",
   publisher: "Trail to Tides",
   category: "Travel & Adventure",
+  // /icon, /apple-icon, and /favicon.ico are auto-detected from their route
+  // files (src/app/icon.tsx, apple-icon.tsx, favicon.ico) — only the SVG
+  // fallback needs declaring here since that convention doesn't cover it.
   icons: {
-    icon: [
-      { url: "/icon", type: "image/png", sizes: "512x512" },
-      { url: "/logo.svg", type: "image/svg+xml" },
-    ],
-    apple: [
-      { url: "/apple-icon", type: "image/png", sizes: "180x180" },
-    ],
-    shortcut: "/icon",
+    icon: [{ url: "/logo.svg", type: "image/svg+xml" }],
   },
   manifest: "/manifest.json",
   openGraph: {
@@ -143,7 +147,7 @@ export default function RootLayout({
         <link rel="icon" type="image/svg+xml" href="/logo.svg" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon" />
       </head>
-        <body className={`${dmSans.variable} ${greatVibes.variable} antialiased`} style={{ background: "var(--bg-page)", color: "var(--text-primary)" }}>
+        <body className={`${dmSans.variable} ${greatVibes.variable} ${caveat.variable} antialiased`} style={{ background: "var(--bg-page)", color: "var(--text-primary)" }}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange>
         <Script
           id="org-structured-data"

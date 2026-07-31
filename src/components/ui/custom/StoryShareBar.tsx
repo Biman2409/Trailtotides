@@ -68,7 +68,7 @@ export default function StoryShareBar({ title, slug }: Props) {
   return (
     <div className="mt-8 pt-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
       <div className="flex flex-wrap items-center gap-2.5">
-        <span className="flex items-center gap-1.5 text-xs font-medium mr-1" style={{ color: "var(--text-muted)" }}>
+        <span className="flex items-center gap-1.5 text-xs font-bold mr-1" style={{ color: "var(--text-muted)" }}>
           <Share2 className="w-3.5 h-3.5" />
           Share
         </span>

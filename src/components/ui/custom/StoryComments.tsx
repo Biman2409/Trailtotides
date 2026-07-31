@@ -102,7 +102,7 @@ export default function StoryComments({ slug }: Props) {
   }, [slug, userName, body]);
 
   return (
-    <div className="mt-10 pt-8 border-t border-white/10">
+    <div className="mt-10 pt-8 border-t" style={{ borderColor: "var(--border-subtle)" }}>
       <div className="flex items-center gap-2 mb-6">
         <MessageSquare className="w-4 h-4" style={{ color: "var(--text-secondary)" }} />
         <h3 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
@@ -119,22 +119,24 @@ export default function StoryComments({ slug }: Props) {
       {/* Comment form — only for logged-in users */}
       {loggedIn === false ? (
         <div
-          className="mb-6 p-5 rounded-xl text-center"
+          className="mb-6 flex flex-col sm:flex-row items-center gap-3 px-4 py-3 rounded-xl"
           style={{
             background: "var(--bg-card)",
             border: "1px dashed var(--border-subtle)",
           }}
         >
-          <LogIn className="w-5 h-5 mx-auto mb-2" style={{ color: "var(--text-tertiary)" }} />
-          <p className="text-sm font-medium mb-1" style={{ color: "var(--text-secondary)" }}>
-            Log in to join the conversation
-          </p>
-          <p className="text-xs mb-3" style={{ color: "var(--text-tertiary)" }}>
-            Share your thoughts on this story
-          </p>
+          <LogIn className="w-4 h-4 shrink-0" style={{ color: "var(--text-tertiary)" }} />
+          <div className="flex-1 min-w-0 text-center sm:text-left">
+            <p className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>
+              Log in to join the conversation
+            </p>
+            <p className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>
+              Share your thoughts on this story
+            </p>
+          </div>
           <button
             onClick={() => router.push("/auth/login")}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-full transition-all hover:brightness-110"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-full transition-all hover:brightness-110 shrink-0"
             style={{ background: "#ff5100", color: "white" }}
           >
             <LogIn className="w-3.5 h-3.5" />

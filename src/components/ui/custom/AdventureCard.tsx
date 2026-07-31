@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { BadgeCheck, GitCompare, Star } from "lucide-react";
+import { BadgeCheck, GitCompare, Crown, MapPin, Clock, CalendarDays } from "lucide-react";
 import { toast } from "sonner";
 import { awardXP, revokeXP } from "@/lib/awardXP";
-import type { Adventure, Month } from "@/lib/data";
+import { getLowestPrice, type Adventure, type Month } from "@/lib/data";
 import { getACE, computeDifficulty, computeMatchScore } from "@/lib/ace";
 import { loadProfile } from "@/lib/matchmaker";
-import Pill from "./Pill";
+import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import DifficultyMeter from "./DifficultyMeter";
 import SaveButton from "./SaveButton";
 import CheckInButton from "./CheckInButton";
@@ -81,11 +81,7 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
   const operatorCount = adventure.operators?.length ?? 0;
 
   const verifiedCount = adventure.operators?.filter(o => o.verified).length ?? 0;
-  const lowestPrice = adventure.operators?.reduce<number | null>((min, o) => {
-    const p = parseInt(o.priceFrom.replace(/[^\d]/g, ""), 10);
-    if (isNaN(p)) return min;
-    return min === null ? p : Math.min(min, p);
-  }, null) ?? null;
+  const lowestPrice = getLowestPrice(adventure);
   const displayCount = verifiedCount > 0 ? verifiedCount : operatorCount;
 
   return (
@@ -94,20 +90,11 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
       <div className="h-7 flex items-center">
         {adventure.editorChoice && (
           <div
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full relative overflow-hidden"
-            style={{
-              background: "linear-gradient(105deg, #1a0a00 0%, #2d1200 40%, #1a0a00 100%)",
-              border: "1px solid rgba(255,81,0,0.35)",
-              boxShadow: "0 0 12px rgba(255,81,0,0.2), inset 0 1px 0 rgba(255,140,80,0.15)",
-            }}
+            className="inline-flex items-center gap-1.5 pl-2 pr-3 py-1 rounded-full backdrop-blur-md"
+            style={{ background: "rgba(10,8,6,0.72)", border: "1px solid rgba(255,179,122,0.3)" }}
           >
-            {/* shimmer line */}
-            <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,120,60,0.08) 50%, transparent 70%)" }} />
-            <Star className="w-2.5 h-2.5 shrink-0" style={{ color: "#ff7d47", fill: "#ff7d47", filter: "drop-shadow(0 0 3px rgba(255,81,0,0.7))" }} />
-            <span
-              className="text-[9px] font-bold tracking-[0.22em] uppercase leading-none"
-              style={{ color: "#ffb38a", letterSpacing: "0.22em" }}
-            >
+            <Crown className="w-3 h-3 shrink-0" style={{ color: "#ffb37a" }} />
+            <span className="text-[9px] font-bold tracking-[0.16em] uppercase leading-none" style={{ color: "#ffd9b8" }}>
               Editor&apos;s Choice
             </span>
           </div>
@@ -119,13 +106,13 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         style={{
           background: "var(--bg-surface)",
           border: "1px solid var(--border-subtle)",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+          boxShadow: "0 4px 20px rgba(var(--shadow-color), 0.2)",
         }}
         whileHover={{ y: -4, boxShadow: "0 12px 40px rgba(255,81,0,0.15)" }}
         transition={{ type: "spring", stiffness: 300, damping: 24 }}
       >
       {/* Image area */}
-      <div className={`relative w-full overflow-hidden block group ${isLarge ? "aspect-video" : "aspect-[4/3]"}`}>
+      <div className={`relative w-full overflow-hidden block group ${isLarge ? "aspect-video" : "aspect-video sm:aspect-[4/3]"}`}>
         <Link href={`/experiences/${adventure.slug}${fromPage && fromPage > 1 ? `?from=${fromPage}` : ""}`} className="absolute inset-0 z-10" />
         <Image
           src={adventure.heroImage}
@@ -147,17 +134,21 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
         <div className="absolute z-20 flex flex-wrap items-center gap-1.5 top-3 left-3">
           <DifficultyMeter difficulty={difficulty} />
           {isSeasonActive ? (
-            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1 backdrop-blur-sm" style={{ background: "rgba(6,78,59,0.8)", color: "#6ee7b7", boxShadow: "0 0 0 1px rgba(110,231,183,0.4)" }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
-              Season Active
+            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1.5 backdrop-blur-md" style={{ background: "rgba(10,8,6,0.6)", border: "1px solid rgba(16,185,129,0.5)" }}>
+              <span className="relative flex w-1.5 h-1.5 shrink-0">
+                <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-60 animate-ping" />
+                <span className="relative inline-flex w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              </span>
+              <span className="text-white/90">Season Active</span>
             </span>
           ) : isSeasonUpcoming ? (
-            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1 backdrop-blur-sm" style={{ background: "rgba(120,53,15,0.8)", color: "#fde68a", boxShadow: "0 0 0 1px rgba(253,230,138,0.4)" }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
-              Upcoming
+            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1.5 backdrop-blur-md" style={{ background: "rgba(10,8,6,0.6)", border: "1px solid rgba(245,158,11,0.5)" }}>
+              <Clock className="w-2.5 h-2.5 shrink-0 text-amber-300" />
+              <span className="text-white/90">Upcoming</span>
             </span>
           ) : seasonLabel ? (
-            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center backdrop-blur-sm" style={{ background: "rgba(0,0,0,0.65)", color: "rgba(255,255,255,0.9)", boxShadow: "0 0 0 1px rgba(255,255,255,0.15)" }}>
+            <span className="text-[10px] font-bold px-2.5 h-5 rounded-full tracking-tight inline-flex items-center gap-1.5 backdrop-blur-md text-white/70" style={{ background: "rgba(10,8,6,0.6)", border: "1px solid rgba(255,255,255,0.08)" }}>
+              <CalendarDays className="w-2.5 h-2.5 shrink-0" />
               {seasonLabel}
             </span>
           ) : null}
@@ -171,10 +162,17 @@ export default function AdventureCard({ adventure, size = "default", fromPage }:
 
         {/* Bottom content over image */}
         <div className="absolute bottom-0 left-0 right-0 p-4 z-20 pointer-events-none">
-          {/* Type + location pills above name */}
-          <div className="flex items-center gap-1.5 mb-1.5 pointer-events-auto">
-            <Pill type="type" value={adventure.type} />
-            <Pill type="subRegion" value={adventure.state} />
+          {/* Quiet meta line — type + location, subtle rather than filter chips */}
+          <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.1em] mb-1.5">
+            <span className="inline-flex items-center gap-1 shrink-0" style={{ color: "#ff5100" }}>
+              {ADVENTURE_TYPE_ICONS[adventure.type]?.(11)}
+              {adventure.type}
+            </span>
+            <span className="text-white/40">·</span>
+            <span className="inline-flex items-center gap-1 min-w-0 truncate" style={{ color: "#ff5100" }}>
+              <MapPin className="w-2.5 h-2.5 shrink-0" />
+              <span className="truncate">{adventure.state}</span>
+            </span>
           </div>
           <h3 className="text-white font-bold text-base sm:text-lg leading-tight tracking-tight group-hover:text-[#ff5100] transition-colors pointer-events-none">
             {adventure.name}

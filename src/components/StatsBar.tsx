@@ -36,10 +36,27 @@ function useCountUp(target: number, duration = 1600, started = false) {
 }
 
 function StatItem({ value, label, suffix = "", started, index }: { value: number; label: string; suffix?: string; started: boolean; index: number }) {
-  const count = useCountUp(value, 1600, started);
+  // Each block waits its turn to land, then its own count-up starts —
+  // rather than every number ticking up in lockstep the instant the strip enters view.
+  const [revealed, setRevealed] = useState(false);
+  useEffect(() => {
+    if (!started) return;
+    const t = setTimeout(() => setRevealed(true), index * 130);
+    return () => clearTimeout(t);
+  }, [started, index]);
+
+  const count = useCountUp(value, 1400, revealed);
   const accent = index % 2 === 0 ? "rgba(255,81,0,0.55)" : "rgba(74,222,128,0.5)";
   return (
-    <div className="relative flex flex-col items-center justify-center py-4 px-6 text-center group">
+    <div
+      className="relative flex flex-col items-center justify-center py-4 px-6 text-center group"
+      style={{
+        opacity: revealed ? 1 : 0,
+        transform: revealed ? "translateY(0) scale(1)" : "translateY(16px) scale(0.92)",
+        transition: "opacity 0.65s, transform 0.65s",
+        transitionTimingFunction: "cubic-bezier(0.22,1,0.36,1)",
+      }}
+    >
       {/* Subtle top accent line — alternates rust / pine to echo the brand duo */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-10 transition-all duration-500 group-hover:w-16"

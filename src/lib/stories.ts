@@ -15,7 +15,7 @@ export interface StoryDB {
   hero_image: string;
   tags: string[];
   region: string;
-  adventure_date: string;
+  date: string;
   status: string;
   baseLikes?: number;
   submitted_by: string | null;
@@ -46,7 +46,7 @@ function staticToDB(s: Story): StoryDB {
     hero_image: s.heroImage,
     tags: s.tags || [],
     region: s.region,
-    adventure_date: s.adventureDate || "",
+    date: s.adventureDate || "",
     status: "published",
     submitted_by: s.submittedBy || null,
     created_at: now,

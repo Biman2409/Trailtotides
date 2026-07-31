@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { saveStoryToStorage } from "@/lib/stories";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { z } from "zod";
 
 const storySubmitSchema = z.object({
@@ -33,6 +34,14 @@ function calcTags(title: string, excerpt: string, region: string): string[] {
 }
 
 export async function POST(req: NextRequest) {
+  const { allowed, retryAfterMs } = rateLimit(`story-submit:${getClientIp(req)}`, 5, 30 * 60_000);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many submissions. Please try again later." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } }
+    );
+  }
+
   try {
     const parsed = storySubmitSchema.safeParse(await req.json());
     if (!parsed.success) {
@@ -84,58 +93,37 @@ export async function POST(req: NextRequest) {
       hero_image: heroImageUrl || "",
       tags: tagList,
       region,
-      adventure_date: dateOfAdventure,
+      date: dateOfAdventure,
       status: "pending" as const,
       submitted_by: user?.id ?? null,
       created_at: now,
       updated_at: now,
     };
 
-    // Try Supabase DB first
+    // Save to the `stories` table — the single source of truth for both the
+    // admin moderation queue and the public site.
     const adminClient = await createAdminClient();
-    const { error } = await adminClient.from("stories").insert(storyRecord);
+    let { error } = await adminClient.from("stories").insert(storyRecord);
+
+    // `slug` is UNIQUE — two submissions with the same/similar title collide
+    // (e.g. two "My First Trek" posts). Retry once with a disambiguated slug
+    // instead of failing the submission outright.
+    if (error?.code === "23505") {
+      storyRecord.slug = `${slug}-${Date.now().toString(36).slice(-5)}`;
+      ({ error } = await adminClient.from("stories").insert(storyRecord));
+    }
 
     if (!error) {
-      // Also save to story-submissions bucket so admin can see it
-      try {
-        const { data: buckets } = await adminClient.storage.listBuckets();
-        if (!buckets?.find(b => b.name === "story-submissions")) {
-          await adminClient.storage.createBucket("story-submissions", { public: false });
-        }
-        const json = JSON.stringify(storyRecord);
-        const bytes = new TextEncoder().encode(json);
-        await adminClient.storage
-          .from("story-submissions")
-          .upload(storyRecord.slug + ".json", bytes, {
-            contentType: "application/json",
-            upsert: true,
-          });
-      } catch {}
       return NextResponse.json({ success: true });
     }
 
-    // If table doesn't exist, fallback to Storage
+    // If the table doesn't exist on this project yet, fall back to Storage so
+    // the submission isn't lost outright.
     if (error.message?.includes("Could not find the table")) {
-      // Save to story-data/stories/ (for publishing)
       const saved = await saveStoryToStorage(storyRecord);
       if (!saved) {
         return NextResponse.json({ error: "Could not save story. Please try again." }, { status: 500 });
       }
-      // Also save to story-submissions bucket so admin can see it
-      try {
-        const { data: buckets } = await adminClient.storage.listBuckets();
-        if (!buckets?.find(b => b.name === "story-submissions")) {
-          await adminClient.storage.createBucket("story-submissions", { public: false });
-        }
-        const json = JSON.stringify(storyRecord);
-        const bytes = new TextEncoder().encode(json);
-        await adminClient.storage
-          .from("story-submissions")
-          .upload(storyRecord.slug + ".json", bytes, {
-            contentType: "application/json",
-            upsert: true,
-          });
-      } catch {}
       return NextResponse.json({ success: true });
     }
 

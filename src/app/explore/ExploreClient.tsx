@@ -1,22 +1,21 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, ChevronRight, ChevronLeft, Heart, RotateCcw, BarChart2, Star, Compass } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, ChevronRight, ChevronLeft, Heart, RotateCcw, Crown, Compass } from "lucide-react";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
-import { adventures } from "@/lib/data";
+import EmptyState from "@/components/ui/custom/EmptyState";
+import { adventures, getLowestPrice } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month } from "@/lib/data";
-import { difficultyStyle } from "@/lib/styles";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import type { AceAxis } from "@/lib/ace";
 import { loadProfile } from "@/lib/matchmaker";
 import type { StoredProfile } from "@/lib/matchmaker";
-import CompareAdventures from "@/components/ui/custom/CompareAdventures";
 import { motion } from "framer-motion";
 import ChatBubble from "@/components/ChatBubble";
 import { toggleSelection, REGION_GROUPS, GENRE_GROUPS, SEASONS } from "@/lib/filterOptions";
@@ -127,11 +126,8 @@ export default function ExploreClient() {
         return false;
       // Price filter — use cheapest operator price for the adventure
       if (priceRange[0] > PRICE_MIN || priceRange[1] < PRICE_MAX) {
-        const lowestPrice = a.operators?.reduce((min, o) => {
-          const p = parseInt(o.priceFrom.replace(/[^\d]/g, ""), 10);
-          return isNaN(p) ? min : Math.min(min, p);
-        }, Infinity) ?? Infinity;
-        if (lowestPrice === Infinity || lowestPrice < priceRange[0] || lowestPrice > priceRange[1]) return false;
+        const lowestPrice = getLowestPrice(a);
+        if (lowestPrice === null || lowestPrice < priceRange[0] || lowestPrice > priceRange[1]) return false;
       }
       // ACE category filter
       if (aceCategory && userProfile) {
@@ -289,7 +285,7 @@ export default function ExploreClient() {
               boxShadow: "0 0 12px rgba(255,81,0,0.2), inset 0 1px 0 rgba(255,140,80,0.15)",
             } : { background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
           >
-            <Star className="w-4 h-4" style={editorOnly ? { color: "#ff7d47", fill: "#ff7d47", filter: "drop-shadow(0 0 3px rgba(255,81,0,0.7))" } : {}} />
+            <Crown className="w-4 h-4" style={editorOnly ? { color: "#ff7d47", fill: "#ff7d47", filter: "drop-shadow(0 0 3px rgba(255,81,0,0.7))" } : {}} />
             <span className="hidden md:inline">Editor&apos;s Choice</span>
             <span className="md:hidden">Top Picks</span>
           </button>
@@ -735,19 +731,14 @@ export default function ExploreClient() {
       {/* Grid */}
       <div className="max-w-7xl mx-auto px-5 lg:px-8 py-8 lg:py-10">
         {filtered.length === 0 ? (
-          <div className="text-center py-24">
-              <div className="text-6xl mb-5">🗺️</div>
-              <h3 className="text-white text-2xl font-bold mb-2 uppercase tracking-tight">No adventures found</h3>
-              <p className="text-white/40 mb-7 max-w-xs mx-auto leading-relaxed">
-                Try adjusting your filters or search term
-              </p>
-              <button
-                onClick={clearAll}
-                className="bg-[#ff5100] text-white px-7 py-3 rounded-xl text-sm font-semibold hover:bg-[#ff7d47] hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 uppercase tracking-wider"
-              >
-                Clear all filters
-              </button>
-            </div>
+          <EmptyState
+            icon="🗺️"
+            heading="No adventures found"
+            subtext="Try adjusting your filters or search term"
+            actionLabel="Clear all filters"
+            onAction={clearAll}
+            size="lg"
+          />
         ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">

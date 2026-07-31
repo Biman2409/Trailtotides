@@ -3,6 +3,7 @@
 import { createAdminClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@supabase/supabase-js";
+import { requireAdmin } from "@/lib/authz";
 
 function adminAuth() {
   return createClient(
@@ -12,6 +13,8 @@ function adminAuth() {
 }
 
 export async function updateUserRole(userId: string, role: string) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   const supabase = await createAdminClient();
   const { error } = await supabase.from("profiles").update({ role }).eq("id", userId);
   if (error) return { error: error.message };
@@ -20,14 +23,25 @@ export async function updateUserRole(userId: string, role: string) {
 }
 
 export async function deleteUser(userId: string) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   const supabase = await createAdminClient();
   const { error } = await supabase.auth.admin.deleteUser(userId);
-  if (error) return { error: error.message };
+  // "user_not_found" means the auth user is already gone (e.g. a leftover
+  // orphaned profile row from a previous partial delete) — still clean up
+  // the profile row in that case so deletes are idempotent. Any other error
+  // is a real failure, so bail out without touching profiles.
+  if (error && error.code !== "user_not_found") return { error: error.message };
+  // auth.users has no cascade into profiles — clean it up explicitly so
+  // deleted accounts don't leave an orphaned row behind.
+  await supabase.from("profiles").delete().eq("id", userId);
   revalidatePath("/admin");
   return { success: true };
 }
 
 export async function banUser(userId: string) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   const admin = adminAuth();
   const { error } = await admin.auth.admin.updateUserById(userId, { ban_duration: "876600h" }); // ~100 years
   if (error) return { error: error.message };
@@ -36,6 +50,8 @@ export async function banUser(userId: string) {
 }
 
 export async function unbanUser(userId: string) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   const admin = adminAuth();
   const { error } = await admin.auth.admin.updateUserById(userId, { ban_duration: "none" });
   if (error) return { error: error.message };
@@ -44,6 +60,8 @@ export async function unbanUser(userId: string) {
 }
 
 export async function sendPasswordReset(email: string) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   const admin = adminAuth();
   const { error } = await admin.auth.resetPasswordForEmail(email, {
     redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/auth/reset-password`,
@@ -53,6 +71,8 @@ export async function sendPasswordReset(email: string) {
 }
 
 export async function deleteMessage(messageId: string) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   const supabase = await createAdminClient();
   const { error } = await supabase.from("contact_messages").delete().eq("id", messageId);
   if (error) return { error: error.message };
@@ -60,47 +80,38 @@ export async function deleteMessage(messageId: string) {
   return { success: true };
 }
 
-export async function updateStoryStatus(fileName: string, status: "approved" | "rejected") {
+export async function updateStoryStatus(id: string, status: "approved" | "rejected") {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   const supabase = await createAdminClient();
-  // Download existing file
-  const { data, error: dlErr } = await supabase.storage.from("story-submissions").download(fileName);
-  if (dlErr || !data) return { error: dlErr?.message ?? "Download failed" };
-  const text = await data.text();
-  const json = JSON.parse(text);
-  json.status = status;
-  // Re-upload with updated status
-  const { error: upErr } = await supabase.storage
-    .from("story-submissions")
-    .upload(fileName, new Blob([JSON.stringify(json, null, 2)], { type: "application/json" }), {
-      upsert: true, contentType: "application/json",
-    });
-  if (upErr) return { error: upErr.message };
+  // The `stories` table has a CHECK constraint allowing only
+  // 'published' | 'draft' | 'pending' — "draft" stands in for "rejected".
+  const targetStatus = status === "approved" ? "published" : "draft";
 
-  // On approval: also publish to DB and story-data bucket so it appears on the site
-  if (status === "approved") {
-    // Update the DB record to "published"
-    const { error: dbErr } = await supabase
-      .from("stories")
-      .update({ status: "published", updated_at: new Date().toISOString() })
-      .eq("id", json.id);
-    if (dbErr) console.error("Failed to update story DB status:", dbErr);
+  const { data, error } = await supabase
+    .from("stories")
+    .update({ status: targetStatus, updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) return { error: error.message };
 
-    // Save to story-data bucket for published stories fallback
+  // Best-effort mirror to story-data bucket, purely as an extra fallback for
+  // getPublishedStories() if the DB table is ever unreachable — the DB row
+  // above is the actual source of truth.
+  if (status === "approved" && data) {
     try {
       const { data: buckets } = await supabase.storage.listBuckets();
       if (!buckets?.find(b => b.name === "story-data")) {
         await supabase.storage.createBucket("story-data", { public: false });
       }
-      const publishedJson = JSON.stringify({ ...json, status: "published" });
-      const publishedBytes = new TextEncoder().encode(publishedJson);
-      await supabase.storage
-        .from("story-data")
-        .upload(`stories/${json.slug}.json`, publishedBytes, {
-          contentType: "application/json",
-          upsert: true,
-        });
+      const bytes = new TextEncoder().encode(JSON.stringify(data));
+      await supabase.storage.from("story-data").upload(`stories/${data.slug}.json`, bytes, {
+        contentType: "application/json",
+        upsert: true,
+      });
     } catch (e) {
-      console.error("Failed to save to story-data bucket:", e);
+      console.error("Failed to mirror story to story-data bucket:", e);
     }
   }
 
@@ -109,9 +120,11 @@ export async function updateStoryStatus(fileName: string, status: "approved" | "
   return { success: true };
 }
 
-export async function deleteStory(fileName: string) {
+export async function deleteStory(id: string) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   const supabase = await createAdminClient();
-  const { error } = await supabase.storage.from("story-submissions").remove([fileName]);
+  const { error } = await supabase.from("stories").delete().eq("id", id);
   if (error) return { error: error.message };
   revalidatePath("/admin");
   return { success: true };
@@ -120,6 +133,8 @@ export async function deleteStory(fileName: string) {
 // ── Reviews ───────────────────────────────────────────────────────────────────
 
 export async function adminGetAllReviews() {
+  const authError = await requireAdmin();
+  if (authError) return { reviews: [], error: authError.error };
   const admin = adminAuth();
   const { data, error } = await admin
     .from("reviews")
@@ -130,6 +145,8 @@ export async function adminGetAllReviews() {
 }
 
 export async function adminDeleteReview(reviewId: string) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   const admin = adminAuth();
   const { error } = await admin.from("reviews").delete().eq("id", reviewId);
   if (error) return { error: error.message };
@@ -153,6 +170,8 @@ interface PhotoMeta {
 }
 
 export async function adminGetAllPhotos(): Promise<{ photos: PhotoMeta[] }> {
+  const authError = await requireAdmin();
+  if (authError) return { photos: [] };
   const admin = adminAuth();
   // List all slug folders
   const { data: folders } = await admin.storage.from(PHOTO_BUCKET).list("", { limit: 200 });
@@ -175,6 +194,8 @@ export async function adminGetAllPhotos(): Promise<{ photos: PhotoMeta[] }> {
 }
 
 export async function adminDeletePhoto(photoId: string, slug: string, path: string) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
   const admin = adminAuth();
   // Delete the file
   await admin.storage.from(PHOTO_BUCKET).remove([path]);
@@ -196,6 +217,8 @@ export async function adminDeletePhoto(photoId: string, slug: string, path: stri
 // ── XP Reset ──────────────────────────────────────────────────────────────────
 
 export async function adminResetAllXP(): Promise<{ success: boolean; deleted: number; error?: string }> {
+  const authError = await requireAdmin();
+  if (authError) return { success: false, deleted: 0, error: authError.error };
   const admin = adminAuth();
   const BUCKET = "user-data";
 

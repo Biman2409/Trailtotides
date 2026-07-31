@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import ChatBubble from "@/components/ChatBubble";
+import EmptyState from "@/components/ui/custom/EmptyState";
+import { DIFFICULTY_CONFIG } from "@/components/ui/custom/DifficultyMeter";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import { adventures } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, Adventure } from "@/lib/data";
@@ -17,13 +19,10 @@ import { toggleSelection, REGION_GROUPS, GENRE_GROUPS, SEASONS } from "@/lib/fil
 import type L from "leaflet";
 import type { GeoJsonObject } from "geojson";
 
-const DIFFICULTY_COLORS: Record<string, string> = {
-  Easy:     "#10b981",
-  Moderate: "#38bdf8",
-  Hard:     "#a78bfa",
-  Advanced: "#ff5100",
-  Extreme:  "#ef4444",
-};
+// Single source of truth for difficulty color-coding — see DifficultyMeter.tsx.
+const DIFFICULTY_COLORS: Record<string, string> = Object.fromEntries(
+  Object.entries(DIFFICULTY_CONFIG).map(([key, cfg]) => [key, cfg.color])
+);
 
 const seasons = SEASONS;
 
@@ -590,7 +589,7 @@ function MapView({
           className: "",
           html: `<div style="position:relative;width:46px;height:46px;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5));">
             <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;border:3px solid #ff5100;background:#09101f;box-shadow:0 0 0 1.5px rgba(255,81,0,0.3);">
-              <img src="${photo.url}" style="width:100%;height:100%;object-fit:cover;" />
+              <img src="${photo.url}" alt="${photo.caption || photo.adventureName}" style="width:100%;height:100%;object-fit:cover;" />
             </div>
             <div style="position:absolute;bottom:-1px;right:-1px;width:16px;height:16px;background:linear-gradient(135deg,#ff5100,#ff7d47);border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;">
               <svg width="7" height="7" viewBox="0 0 24 24" fill="white"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.92c.04-.26.07-.54.07-.83s-.03-.57-.07-.83l1.8-1.4c.16-.13.2-.35.1-.53l-1.72-2.97a.397.397 0 0 0-.49-.15l-2.12.85c-.44-.34-.9-.63-1.41-.84l-.32-2.26a.4.4 0 0 0-.4-.34H8.12a.4.4 0 0 0-.4.34l-.32 2.26c-.51.21-.97.5-1.41.84L3.87 7.12a.39.39 0 0 0-.49.15L1.66 10.24c-.1.18-.06.4.1.53l1.8 1.4c-.04.26-.07.53-.07.83s.03.57.07.83l-1.8 1.4c-.16.13-.2.35-.1.53l1.71 2.97c.1.18.3.24.49.15l2.12-.85c.44.34.9.63 1.41.84l.32 2.26c.06.2.24.34.4.34h3.44c.17 0 .34-.14.4-.34l.32-2.26c.51-.21.97-.5 1.41-.84l2.12.85c.19.07.39.01.49-.15l1.71-2.97c.1-.18.06-.4-.1-.53l-1.8-1.4z"/></svg>
@@ -650,10 +649,6 @@ export default function MapPage() {
   const [userPhotos, setUserPhotos] = useState<UserPhoto[]>([]);
   const [loggedIn, setLoggedIn] = useState(false);
   
-  function toggleOverlay(key: OverlayKey) {
-    setActiveOverlay(prev => prev === key ? null : key);
-  }
-
   function toggleMyShots() {
     if (myShotsOn) {
       setMyShotsOn(false);
@@ -1133,27 +1128,15 @@ export default function MapPage() {
 
         {/* Empty state when nothing matches filters */}
         {visibleAdventures.length === 0 && (activeFilterCount > 0 || search) && (
-          <div className="absolute inset-0 z-[999] flex items-center justify-center pointer-events-none">
-            <div className="text-center px-6 py-8 rounded-2xl pointer-events-auto"
-              style={{
-                background: "rgba(4,7,14,0.88)",
-                backdropFilter: "blur(14px)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                boxShadow: "0 8px 40px rgba(0,0,0,0.5)",
-              }}
-            >
-              <Compass className="w-8 h-8 mx-auto mb-3" style={{ color: "rgba(255,255,255,0.2)" }} />
-              <p className="text-white font-bold text-sm mb-1">No adventures match</p>
-              <p className="text-white/30 text-xs mb-4">Try different filters or search terms</p>
-              <button
-                onClick={clearAll}
-                className="px-4 py-2 rounded-lg text-xs font-bold transition-all hover:brightness-110"
-                style={{ background: "#ff5100", color: "#fff", boxShadow: "0 4px 14px rgba(255,81,0,0.25)" }}
-              >
-                Clear All Filters
-              </button>
-            </div>
-          </div>
+          <EmptyState
+            icon={<Compass className="w-8 h-8" style={{ color: "rgba(255,255,255,0.2)" }} />}
+            heading="No adventures match"
+            subtext="Try different filters or search terms"
+            actionLabel="Clear All Filters"
+            onAction={clearAll}
+            size="sm"
+            variant="floating"
+          />
         )}
 
         {/* Legend toggle */}

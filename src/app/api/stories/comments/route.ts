@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { z } from "zod";
 
 type Comment = {
@@ -9,8 +10,9 @@ type Comment = {
   createdAt: string;
 };
 
+// Storage key is built directly from `slug` — restrict to safe path characters.
 const commentSchema = z.object({
-  slug: z.string().min(1),
+  slug: z.string().trim().min(1).max(100).regex(/^[a-z0-9-]+$/),
   name: z.string().trim().min(1).max(60),
   body: z.string().trim().min(1).max(1000),
 });
@@ -48,6 +50,14 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const { allowed, retryAfterMs } = rateLimit(`story-comment:${getClientIp(req)}`, 10, 5 * 60_000);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many comments. Please slow down." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } }
+    );
+  }
+
   const parsed = commentSchema.safeParse(await req.json());
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid slug, name, or body" }, { status: 400 });

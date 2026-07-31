@@ -93,8 +93,16 @@ export async function resetPassword(formData: FormData) {
     });
 
     if (!linkError && linkData?.properties?.action_link) {
-      await sendPasswordResetEmail(email, linkData.properties.action_link);
-      return { success: "Password reset link sent! Please check your email." };
+      const sendResult = await sendPasswordResetEmail(email, linkData.properties.action_link);
+      if (!sendResult.error) {
+        return { success: "Password reset link sent! Please check your email." };
+      }
+      // Resend's sandbox sender (onboarding@resend.dev) can only deliver to
+      // the Resend account owner's own email until a custom domain is
+      // verified — every other recipient gets a 403 here. Don't report
+      // success when the send actually failed; fall through to Supabase's
+      // built-in email instead of leaving the user stranded.
+      console.error("Resend password reset email failed, falling back to Supabase auth email:", sendResult.error);
     }
   }
 

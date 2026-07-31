@@ -339,9 +339,6 @@ export default function SignUpPage() {
                       );
                     })}
                   </div>
-                  <div className="px-3 pb-3">
-                    <p className="text-[9px] text-white/18 text-center">Defaults to your ACE<sup>™</sup> rank badge if skipped</p>
-                  </div>
                 </div>
               )}
             </div>

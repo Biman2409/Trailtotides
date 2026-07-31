@@ -110,7 +110,7 @@ export default function MatchmakerHomepageSection() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#faf3e8]/98 via-[#faf3e8]/80 to-[#faf3e8]/40 dark:from-[#1a1410]/98 dark:via-[#1a1410]/80 dark:to-[#1a1410]/40" />
         <div
-          className="absolute inset-0 opacity-[0.06] dark:hidden"
+          className="absolute inset-0 opacity-[0.09] dark:hidden"
           style={{
             backgroundImage: "radial-gradient(circle, #ff5100 1px, transparent 1px)",
             backgroundSize: "28px 28px",
@@ -198,7 +198,7 @@ export default function MatchmakerHomepageSection() {
 
           {/* Right column: Capability Profile Radar — hidden on mobile */}
           <div className="hidden lg:flex shrink-0 lg:self-stretch flex-col rounded-2xl overflow-hidden p-4"
-            style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", boxShadow: "0 20px 40px rgba(0,0,0,0.2)", width: 270, position: "relative" }}>
+            style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", boxShadow: "0 20px 40px rgba(var(--shadow-color), 0.2)", width: 270, position: "relative" }}>
             {/* Corner brackets */}
             <div className="absolute top-0 left-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
             <div className="absolute top-0 right-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
@@ -238,7 +238,7 @@ export default function MatchmakerHomepageSection() {
             onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent-green)"; e.currentTarget.style.borderColor = "var(--accent-green-border)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}>
             <BarChart2 className="w-3.5 h-3.5" />
-            View detailed results
+            Detailed results
           </Link>
           <Link href="/matchmaker?retake=1"
             className="flex-1 inline-flex items-center justify-center gap-2 font-semibold px-6 py-3 rounded-xl text-sm border transition-all"
@@ -253,7 +253,7 @@ export default function MatchmakerHomepageSection() {
             style={{ color: "var(--text-tertiary)", borderColor: "var(--border-default)" }}
             onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent-green)"; e.currentTarget.style.borderColor = "var(--accent-green-border)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}>
-            <span>Learn more about ACE<sup className="text-[0.6em]">™</sup></span>
+            <span>More about ACE<sup className="text-[0.6em]">™</sup></span>
           </Link>
         </div>
 
@@ -317,7 +317,7 @@ function SampleRadarPanel() {
       style={{
         background: "var(--bg-surface)",
         border: "1px solid var(--border-subtle)",
-        boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+        boxShadow: "0 20px 40px rgba(var(--shadow-color), 0.2)",
         width: 270,
         paddingLeft: 20,
         paddingRight: 20,
@@ -364,7 +364,7 @@ function DefaultCTA() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#faf3e8]/98 via-[#faf3e8]/80 to-[#faf3e8]/40 dark:from-[#1a1410]/98 dark:via-[#1a1410]/80 dark:to-[#1a1410]/40" />
         <div
-          className="absolute inset-0 opacity-[0.06] dark:hidden"
+          className="absolute inset-0 opacity-[0.09] dark:hidden"
           style={{
             backgroundImage: "radial-gradient(circle, #ff5100 1px, transparent 1px)",
             backgroundSize: "28px 28px",
@@ -386,11 +386,7 @@ function DefaultCTA() {
 
           {/* Left: copy */}
           <div className="flex-1 min-w-0 flex flex-col relative">
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[8px] font-medium tracking-wider uppercase mb-3 self-start opacity-40" style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-default)" }}>
-              Read
-              <ArrowRight className="w-2 h-2" />
-            </span>
-                        <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
+            <p className="text-[#ff5100] text-xs font-black tracking-[0.25em] uppercase mb-4">Adventure Matchmaker</p>
             <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
               Adventures built,<br />
               <span className="text-[#ff5100]">for your body</span>

@@ -28,7 +28,7 @@ const WA_ICON = (
   </svg>
 );
 
-export default function StoryShareButton({ title, slug }: { title: string; slug: string }) {
+export default function StoryShareButton({ title, slug, muted = false }: { title: string; slug: string; muted?: boolean }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
@@ -54,7 +54,9 @@ export default function StoryShareButton({ title, slug }: { title: string; slug:
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
-  function toggleOpen() {
+  function toggleOpen(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
     if (!open && btnRef.current) {
       const rect = btnRef.current.getBoundingClientRect();
       setPopupStyle({
@@ -98,7 +100,13 @@ export default function StoryShareButton({ title, slug }: { title: string; slug:
       <button
         ref={btnRef}
         onClick={toggleOpen}
-        className="flex items-center justify-center w-9 h-9 bg-white/15 backdrop-blur-sm border border-white/20 text-white/80 hover:text-white hover:bg-white/25 rounded-full transition-all active:scale-90"
+        aria-label="Share this story"
+        className={
+          muted
+            ? "flex items-center justify-center w-9 h-9 rounded-full transition-all active:scale-90"
+            : "flex items-center justify-center w-9 h-9 bg-white/15 backdrop-blur-sm border border-white/20 text-white/80 hover:text-white hover:bg-white/25 rounded-full transition-all active:scale-90"
+        }
+        style={muted ? { background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)", color: "var(--text-tertiary)" } : undefined}
       >
         {copied ? (
           <Check className="w-4 h-4 text-emerald-400" />

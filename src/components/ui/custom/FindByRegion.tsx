@@ -6,6 +6,7 @@ import { ArrowRight, Sun, Mountain, MountainSnow, Trees, Waves, Palmtree, Buildi
 import Image from "next/image";
 import { regions, adventures } from "@/lib/data";
 import type { AdventureType } from "@/lib/data";
+import CardFooterLink from "./CardFooterLink";
 
 const LAND_TYPES: AdventureType[] = ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Motorcycling", "Cycling", "Jeep Safari", "Caving", "Urban Adventure"];
 
@@ -67,8 +68,16 @@ export default function FindByRegion() {
   });
 
     return (
-      <section id="regions" className="py-10 lg:py-14 t-bg-surface2 px-5 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+      <section id="regions" className="relative py-10 lg:py-14 t-bg-surface2 px-5 lg:px-8 overflow-hidden">
+      {/* Background accent glow — pine green, complementing the orange genre section above */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -bottom-24 left-[6%] w-96 h-96 rounded-full opacity-[0.06] dark:opacity-[0.09] blur-[100px]" style={{ background: "var(--accent-green)" }} />
+        <div
+          className="absolute inset-0 opacity-[0.045] dark:opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(circle, var(--accent-green) 1px, transparent 1px)", backgroundSize: "30px 30px" }}
+        />
+      </div>
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="mb-6 lg:mb-8">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
@@ -94,8 +103,8 @@ export default function FindByRegion() {
                         border: `1px solid ${isOpen ? "rgba(255,81,0,0.35)" : "var(--border-subtle)"}`,
                         transition: "border-color 0.3s ease",
                         boxShadow: isOpen
-                          ? `0 0 0 1px rgba(255,81,0,0.35), 0 20px 48px rgba(0,0,0,0.35)`
-                          : "0 4px 16px rgba(0,0,0,0.2)",
+                          ? `0 0 0 1px rgba(255,81,0,0.35), 0 20px 48px rgba(var(--shadow-color),0.35)`
+                          : "0 4px 16px rgba(var(--shadow-color),0.2)",
                     }}
                 >
                   {/* Image header */}
@@ -203,15 +212,7 @@ export default function FindByRegion() {
                           ))}
                         </div>
   
-                      <div className="mt-4 pt-4 border-t border-white/5">
-                        <Link
-                          href={`/explore?region=${encodeURIComponent(region.name)}`}
-                          className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 hover:-translate-y-0.5 bg-[#ff5100] text-white shadow-lg shadow-[#ff5100]/20"
-                        >
-                          View all in {region.name}
-                          <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
-                      </div>
+                      <CardFooterLink href={`/explore?region=${encodeURIComponent(region.name)}`} label={`View all in ${region.name}`} />
 
                     </div>
                   )}

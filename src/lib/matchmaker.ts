@@ -43,19 +43,6 @@ export interface Upsell {
   icon: string;
 }
 
-// ─── Tier labels ──────────────────────────────────────────────────────────────
-
-// Total ACE score: 8 axes × 1–5 each = range 8–40
-// Rank 0 = no assessment | Rank 1 = 8–15 | Rank 2 = 16–23 | Rank 3 = 24–31 | Rank 4 = 32–39 | Rank 5 = 40
-function aceToLabel(ace: ACE): string {
-  const total = Object.values(ace).reduce((a, b) => a + b, 0);
-  if (total >= 40) return "Apex";
-  if (total >= 32) return "Vanguard";
-  if (total >= 24) return "Trailblazer";
-  if (total >= 16) return "Navigator";
-  return "Pathfinder";
-}
-
 // ─── Adventure matching (ACE-based) ──────────────────────────────────────────
 
 export function getMatchedAdventures(ace: ACE, all: Adventure[]): Adventure[] {
@@ -236,25 +223,3 @@ export async function loadProfileFromServer(): Promise<StoredProfile | null> {
   return loadProfile();
 }
 
-// ─── Legacy ERT gap (kept for RealityCheck backward compat) ───────────────────
-
-export interface ErtGap {
-  dimension: "e" | "r" | "t";
-  label: string;
-  userVal: number;
-  adventureVal: number;
-  gap: number;
-  userLabel: string;
-  adventureLabel: string;
-  explanation: string;
-}
-
-/** @deprecated Use getAceGaps */
-export function getErtGaps(_userErt: { e: number; r: number; t: number }, _adventureErt: { e: number; r: number; t: number }): ErtGap[] {
-  return [];
-}
-
-/** @deprecated Use getUnlockRoadmap */
-export function getUnlockRoadmap_ert(_u: unknown, _a: unknown, _all: unknown[]): RoadmapStep[] {
-  return [];
-}

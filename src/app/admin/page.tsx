@@ -51,54 +51,57 @@ export default async function AdminPage() {
     adminGetAllPhotos(),
   ]);
 
-  // Story submissions from Storage bucket — include file name for status updates
+  // Story submissions — the `stories` table is the source of truth (it's what
+  // both the submit route writes to and the public site reads from).
   let storySubmissions: Record<string, unknown>[] = [];
   try {
-    const { data: files } = await adminClient.storage
-      .from("story-submissions")
-      .list("", { limit: 200, sortBy: { column: "created_at", order: "desc" } });
+    const { data, error } = await adminClient
+      .from("stories")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (!error && data) storySubmissions = data;
+  } catch {}
 
-    if (files && files.length > 0) {
-      const downloads = await Promise.all(
-        files.map(async (file) => {
-          const { data } = await adminClient.storage.from("story-submissions").download(file.name);
-          if (!data) return null;
-          const text = await data.text();
-          try { return { ...JSON.parse(text), _fileName: file.name }; } catch { return null; }
-        })
-      );
-      storySubmissions = downloads.filter(Boolean) as Record<string, unknown>[];
-      storySubmissions.sort((a, b) =>
-        new Date(b.created_at as string).getTime() - new Date(a.created_at as string).getTime()
-      );
-    }
+  // Legacy fallback: submissions that only ever made it into Storage — either
+  // old pre-DB submissions in story-submissions/, or new ones that landed in
+  // story-data/stories/ because the `stories` table doesn't exist on this project.
+  if (storySubmissions.length === 0) {
+    try {
+      const fallbackBuckets: { bucket: string; path: string }[] = [
+        { bucket: "story-submissions", path: "" },
+        { bucket: "story-data", path: "stories" },
+      ];
+      const collected: Record<string, unknown>[] = [];
+      const seenSlugs = new Set<string>();
 
-    // Also check story-data/stories/ for submissions that may have been saved there
-    // by the old code path (before the fallback was fixed to also save to story-submissions)
-    const { data: storyDataFiles } = await adminClient.storage
-      .from("story-data")
-      .list("stories", { limit: 200, sortBy: { column: "created_at", order: "desc" } });
+      for (const { bucket, path } of fallbackBuckets) {
+        const { data: files } = await adminClient.storage
+          .from(bucket)
+          .list(path, { limit: 200, sortBy: { column: "created_at", order: "desc" } });
+        if (!files?.length) continue;
 
-    if (storyDataFiles && storyDataFiles.length > 0) {
-      const existingSlugs = new Set(storySubmissions.map(s => s.slug as string));
-      const missing = storyDataFiles.filter(f => f.name.endsWith(".json") && !existingSlugs.has(f.name.replace(".json", "")));
-      if (missing.length > 0) {
-        const extra = await Promise.all(
-          missing.map(async (file) => {
-            const { data } = await adminClient.storage.from("story-data").download(`stories/${file.name}`);
+        const downloads = await Promise.all(
+          files.filter(f => f.name.endsWith(".json")).map(async (file) => {
+            const filePath = path ? `${path}/${file.name}` : file.name;
+            const { data } = await adminClient.storage.from(bucket).download(filePath);
             if (!data) return null;
-            const text = await data.text();
-            try { return { ...JSON.parse(text), _fileName: file.name }; } catch { return null; }
+            try { return JSON.parse(await data.text()) as Record<string, unknown>; } catch { return null; }
           })
         );
-        storySubmissions.push(...extra.filter(Boolean) as Record<string, unknown>[]);
-        storySubmissions.sort((a, b) =>
-          new Date(b.created_at as string).getTime() - new Date(a.created_at as string).getTime()
-        );
+        for (const story of downloads) {
+          const slug = story?.slug as string | undefined;
+          if (!story || (slug && seenSlugs.has(slug))) continue;
+          if (slug) seenSlugs.add(slug);
+          collected.push(story);
+        }
       }
+
+      storySubmissions = collected.sort((a, b) =>
+        new Date(b.created_at as string).getTime() - new Date(a.created_at as string).getTime()
+      );
+    } catch {
+      // buckets may not exist yet
     }
-  } catch {
-    // bucket may not exist yet
   }
 
   return (

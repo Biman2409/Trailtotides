@@ -2,10 +2,10 @@
 
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useTripLog } from "@/contexts/TripLogContext";
-import { adventures } from "@/lib/data";
+import { adventures, getLowestPrice } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, ArrowRight, BadgeCheck, Trophy } from "lucide-react";
+import { Heart, ArrowRight, Trophy } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -13,14 +13,6 @@ import Pill from "./Pill";
 import DifficultyMeter from "./DifficultyMeter";
 import SaveButton from "./SaveButton";
 import { getACE, computeDifficulty } from "@/lib/ace";
-import type { Month } from "@/lib/data";
-
-const MONTHS: Month[] = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-function formatSeasonShort(bestMonths: Month[]): string {
-  if (!bestMonths?.length) return "";
-  if (bestMonths.length === 1) return bestMonths[0];
-  return `${bestMonths[0]}–${bestMonths[bestMonths.length - 1]}`;
-}
 
 const PANEL_STYLE = {
   background: "var(--bg-card)",
@@ -146,19 +138,8 @@ export default function SavedAdventuresSection({ currentSlug }: { currentSlug: s
 
 function MiniCard({ a, done = false }: { a: typeof adventures[number]; currentSlug: string; done?: boolean }) {
   const difficulty = computeDifficulty(getACE(a));
-  const monthIndex = new Date().getMonth();
-  const currentMonth = MONTHS[monthIndex];
-  const nextMonth = MONTHS[(monthIndex + 1) % 12];
-  const isSeasonActive = a.bestMonths?.includes(currentMonth);
-  const isSeasonUpcoming = !isSeasonActive && a.bestMonths?.includes(nextMonth);
-  const seasonLabel = formatSeasonShort(a.bestMonths ?? []);
   const operatorCount = a.operators?.length ?? 0;
-  const verifiedCount = a.operators?.filter(o => o.verified).length ?? 0;
-  const lowestPrice = a.operators?.reduce<number | null>((min, o) => {
-    const p = parseInt(o.priceFrom.replace(/[^\d]/g, ""), 10);
-    return isNaN(p) ? min : min === null ? p : Math.min(min, p);
-  }, null) ?? null;
-  const displayCount = verifiedCount > 0 ? verifiedCount : operatorCount;
+  const lowestPrice = getLowestPrice(a);
 
   return (
     <div

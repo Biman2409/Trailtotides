@@ -24,8 +24,6 @@ const STARTER_PROMPTS = [
   { label: "Beginner-friendly in Himachal Pradesh", icon: TreePine },
   { label: "Water adventure in coastal India", icon: Waves },
   { label: "Ladakh bike expedition", icon: Wind },
-  { label: "Multi-day trek with summit views", icon: Mountain },
-  { label: "Quick weekend escape from Mumbai", icon: Sparkles },
 ];
 
 // Derive contextual chips from the AI response
@@ -239,7 +237,7 @@ export default function InlineChat() {
             {/* Empty state */}
             {messages.length === 0 && (
               <div className="px-5 py-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-2.5 max-w-xl mx-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 max-w-xl mx-auto">
                   {STARTER_PROMPTS.map(({ label, icon: Icon }) => (
                     <button
                       key={label}
@@ -315,10 +313,10 @@ export default function InlineChat() {
                         </div>
                       )}
 
-                      {/* ACE assessment card */}
+                      {/* Adventure Matchmaker CTA */}
                       {msg.suggestAce && (
                         <Link
-                          href="/ace"
+                          href="/matchmaker"
                           className="group block rounded-2xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#ff5100]/10"
                           style={{ borderColor: "rgba(255,81,0,0.3)", background: "var(--bg-page)" }}
                         >
@@ -328,12 +326,12 @@ export default function InlineChat() {
                               <Zap className="w-5 h-5 text-white" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#ff5100]">Personalised for you</span>
+                              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#ff5100]">Skip the guesswork</span>
                               <p className="text-sm font-bold t-text group-hover:text-[#ff5100] transition-colors mt-0.5">
-                                Take the ACE<sup>™</sup> Assessment
+                                Take the Adventure Matchmaker
                               </p>
                               <p className="text-[11px] t-text-3 mt-1 leading-relaxed">
-                                ACE<sup>™</sup> (Adventure Capability Engine) maps your fitness across 8 axes and matches you to adventures your body is actually ready for.
+                                Answer 8 questions and we&apos;ll match you straight to adventures your body is genuinely ready for — faster than browsing.
                               </p>
                             </div>
                             <ArrowRight className="w-4 h-4 text-[#ff5100] shrink-0 mt-1 group-hover:translate-x-0.5 transition-transform" />
@@ -422,8 +420,8 @@ export default function InlineChat() {
           {/* Input bar */}
           <div className="p-3 flex items-center gap-2.5" style={{ background: "var(--bg-surface)" }}>
             <div
-              className="flex items-center gap-2 flex-1 rounded-xl px-3.5 border transition-all duration-200 focus-within:border-[#ff5100]/40"
-              style={{ background: "var(--bg-page)", borderColor: "var(--border-default)" }}
+              className="flex items-center gap-2 flex-1 rounded-xl px-3.5 border-[1.5px] border-[var(--border-strong)] transition-all duration-200 focus-within:border-[#ff5100] focus-within:shadow-[0_0_0_3px_rgba(255,81,0,0.14)]"
+              style={{ background: "var(--bg-page)" }}
             >
               <Compass className="w-3.5 h-3.5 text-[#ff5100]/50 shrink-0" />
               <input
@@ -432,8 +430,8 @@ export default function InlineChat() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && !loading && send()}
                 placeholder={messages.length > 0 ? "Refine or ask something new…" : "Ask Compass.AI…"}
-                className="flex-1 bg-transparent text-sm py-3 outline-none t-text placeholder:t-text-3"
-                style={{ color: "var(--text-primary)" }}
+                className="flex-1 bg-transparent text-sm py-3 t-text placeholder:t-text-3"
+                style={{ color: "var(--text-primary)", outline: "none" }}
               />
             </div>
             <button
@@ -448,7 +446,7 @@ export default function InlineChat() {
         </div>
 
         <p className="text-center mt-3 text-[10px] tracking-wide italic" style={{ color: "var(--text-tertiary)" }}>
-          Powered by <span className="font-semibold not-italic">Groq</span> · Llama 3.3 70B
+          Powered by <span className="font-semibold not-italic">Google</span> · Gemini 2.5 Flash
         </p>
       </div>
     </section>

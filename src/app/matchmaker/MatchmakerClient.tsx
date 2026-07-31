@@ -13,7 +13,7 @@ import ACERadar from "@/components/ui/custom/ACERadar";
 import Pill from "@/components/ui/custom/Pill";
 import AchievementBadges from "@/components/ui/custom/AchievementBadges";
 import AchievementShareButton from "@/components/ui/custom/AchievementShareButton";
-import { saveProfile, loadProfile, clearProfile, saveProfileToServer, loadProfileFromServer } from "@/lib/matchmaker";
+import { saveProfile, clearProfile, saveProfileToServer, loadProfileFromServer } from "@/lib/matchmaker";
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
 import { getACE, type ACE, type AceAxis } from "@/lib/ace";
 import { getAchievements } from "@/lib/achievements";
@@ -522,18 +522,6 @@ function OptionBtn({
 }
 
 // ─── Intro screen ─────────────────────────────────────────────────────────────
-
-
-const INTRO_AXES_DATA = [
-  { label: "Stamina",  color: "#f97316", v: 4 },
-  { label: "Power",    color: "#eab308", v: 3 },
-  { label: "Strength", color: "#84cc16", v: 4 },
-  { label: "Agility",  color: "#22d3ee", v: 3 },
-  { label: "Water",    color: "#3b82f6", v: 1 },
-  { label: "Altitude", color: "#a78bfa", v: 5 },
-  { label: "Focus",    color: "#f43f5e", v: 4 },
-  { label: "Nerve",    color: "#10b981", v: 3 },
-];
 
 function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => void; onViewResults: () => void; hasProfile: boolean }) {
   return (
@@ -1284,7 +1272,6 @@ export default function MatchmakerClient() {
   }, []);
 
   const currentStep = ALL_STEPS[stepIndex] ?? ALL_STEPS[0];
-  const canAdvance = currentStep.type === "decay" || !!answers[currentStep.q.key];
 
   function submitAssessment(finalAnswers: Answers) {
     setLoading(true);
@@ -1334,15 +1321,6 @@ export default function MatchmakerClient() {
     const anyDecayApplied = Object.keys(multipliers).some((axis) => userAxes[axis] !== rawAxes[axis]);
     setResult(buildResult(userAxes, anyDecayApplied ? { rawAxes, decayNotes } : undefined));
     setLoading(false);
-  }
-
-  function advance() {
-    if (!canAdvance) return;
-    if (stepIndex < ALL_STEPS.length - 1) {
-      setStepIndex(i => i + 1);
-    } else {
-      submitAssessment(answers);
-    }
   }
 
   function reset() {

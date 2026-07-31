@@ -3,7 +3,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Trail to Tides",
+  title: "Privacy Policy",
   description: "Read Trail to Tides' privacy policy — how we collect, use, and protect your data on India's adventure discovery platform.",
   alternates: { canonical: "https://trailtotides.com/privacy" },
   robots: { index: true, follow: false },
@@ -28,7 +28,7 @@ const SECTIONS = [
   },
     {
       title: "5. Third-Party Services",
-      content: `We use Groq's API to power the Compass.AI adventure discovery engine and Anthropic's API to power the ACE Matchmaker. Queries you send to these features are processed by Groq and Anthropic respectively and subject to their privacy policies. We use Supabase for authentication and database services. We use Unsplash for imagery, which is served directly from their CDN.`,
+      content: `We use Google's Gemini API to power the Compass.AI adventure discovery engine and Anthropic's API to power the ACE Matchmaker. Queries you send to these features are processed by Google and Anthropic respectively and subject to their privacy policies. We use Supabase for authentication and database services. We use Unsplash for imagery, which is served directly from their CDN.`,
     },
 
 

@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/rateLimit";
 import { z } from "zod";
 
 const admin = createClient(
@@ -64,6 +65,9 @@ export async function POST(req: NextRequest) {
   const supabase = await createServerClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { allowed } = rateLimit(`operator-rating-post:${user.id}`, 20, 30 * 60_000);
+  if (!allowed) return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
 
   const parsed = operatorRatingSchema.safeParse(await req.json());
   if (!parsed.success) {

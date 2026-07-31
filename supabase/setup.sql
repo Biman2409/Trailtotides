@@ -47,11 +47,21 @@ DO $$ BEGIN
   CREATE POLICY "Insert own profile" ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id);
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
-DO $$ BEGIN
-  CREATE POLICY "Admin read all" ON public.profiles FOR SELECT USING (
-    auth.uid() IN (SELECT id FROM public.profiles WHERE role = 'admin')
-  );
-EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+-- SECURITY DEFINER so this lookup runs as the function owner and bypasses
+-- RLS internally — querying public.profiles directly inside a profiles
+-- policy (as the old version of this policy did) causes Postgres to
+-- re-evaluate that same policy for the subquery, infinitely recursing.
+CREATE OR REPLACE FUNCTION public.is_admin(uid uuid)
+RETURNS boolean
+LANGUAGE sql
+SECURITY DEFINER SET search_path = ''
+STABLE
+AS $$
+  SELECT EXISTS (SELECT 1 FROM public.profiles WHERE id = uid AND role = 'admin');
+$$;
+
+DROP POLICY IF EXISTS "Admin read all" ON public.profiles;
+CREATE POLICY "Admin read all" ON public.profiles FOR SELECT USING (public.is_admin(auth.uid()));
 
 -- Auto-create profile on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
@@ -65,7 +75,7 @@ BEGIN
     new.id,
     new.raw_user_meta_data ->> 'full_name',
     new.email,
-    new.raw_user_meta_data ->> 'user_name'
+    new.raw_user_meta_data ->> 'username'
   );
   RETURN new;
 END;

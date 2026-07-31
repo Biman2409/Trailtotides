@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import Groq from "groq-sdk";
+import OpenAI from "openai";
 import { adventures } from "@/lib/data";
 import type { AdventureType } from "@/lib/data";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
-const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
+// Gemini's free tier via its OpenAI-compatible endpoint — no billing required.
+// https://ai.google.dev/gemini-api/docs/openai
+const hasGeminiKey = !!process.env.GEMINI_API_KEY;
+const client = hasGeminiKey
+  ? new OpenAI({
+      apiKey: process.env.GEMINI_API_KEY,
+      baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+    })
+  : null;
 
 // ─── Dynamically derive available vs coming-soon types ────────────────────────
 
@@ -70,15 +78,19 @@ ${CATALOG_STR}
 **General travel chat** (weather, best time, about a place):
 → Answer warmly with general knowledge, then offer to find an adventure there.
 
-**User confused / indecisive** (fitness doubts, "I don't know", "can't decide"):
-→ Include <suggest_ace/> + 1 sentence about what ACE does.
+**User confused / indecisive** (fitness doubts, "I don't know", "can't decide", "which one", "too many options"):
+→ Include <suggest_ace/> + 1 sentence pointing them to the Adventure Matchmaker — an 8-question quiz that matches them straight to adventures their body is ready for, faster than browsing back and forth with you.
 → Still give recommendations if you can make a reasonable guess.
+
+**Third+ round of recommendations without the user committing:**
+→ Include <suggest_ace/> and note the Adventure Matchmaker will narrow it down in one pass instead of more back-and-forth.
 
 ## Hard rules:
 - ONLY use slugs from the catalog above. Never invent slugs.
 - Never recommend a coming-soon type — say it's coming soon instead.
 - Keep text responses concise (1–3 sentences max before any recommendations).
-- Don't say "I" awkwardly. Speak as Compass, not a generic bot.`;
+- Don't say "I" awkwardly. Speak as Compass, not a generic bot.
+- When you mention <suggest_ace/> in your own words, call it the "Adventure Matchmaker", not "ACE" — ACE is the fitness engine behind it, Matchmaker is the thing users actually take.`;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -164,6 +176,21 @@ function keywordSearch(query: string, limit = 3) {
     skiing: ["Skiing"],
     kayak: ["Kayaking"],
     kayaking: ["Kayaking"],
+    water: ["Diving", "Kayaking", "Surfing", "River Rafting", "Snorkelling"],
+    coastal: ["Diving", "Surfing", "Snorkelling", "beach", "coast"],
+    coast: ["Diving", "Surfing", "Snorkelling", "beach", "coast"],
+    ocean: ["Diving", "Surfing", "Snorkelling"],
+    sea: ["Diving", "Surfing", "Snorkelling"],
+    beach: ["Diving", "Surfing", "Snorkelling", "beach"],
+    dive: ["Diving"],
+    diving: ["Diving"],
+    scuba: ["Diving"],
+    snorkel: ["Snorkelling"],
+    snorkelling: ["Snorkelling"],
+    surf: ["Surfing"],
+    surfing: ["Surfing"],
+    raft: ["River Rafting"],
+    rafting: ["River Rafting"],
     cave: ["Caving"],
     caving: ["Caving"],
     jeep: ["Jeep Safari"],
@@ -194,14 +221,21 @@ function keywordSearch(query: string, limit = 3) {
   }
 
   const scored = adventures.map((a) => {
-    const haystack = [
-      a.name, a.state, a.type, a.difficulty ?? "", a.region ?? "",
-      ...(a.tags ?? []), a.tagline ?? "", a.description ?? "", a.bestSeason ?? "",
+    // Weight matches by field — the activity type/region are what a synonym like
+    // "water" → "Diving" is really trying to signal; generic description text
+    // shouldn't outweigh that and pull in unrelated results.
+    const primary = [a.type].join(" ").toLowerCase();
+    const secondary = [a.state, a.region ?? ""].join(" ").toLowerCase();
+    const rest = [
+      a.name, a.difficulty ?? "", ...(a.tags ?? []), a.tagline ?? "", a.description ?? "", a.bestSeason ?? "",
     ].join(" ").toLowerCase();
 
     let score = 0;
     for (const term of expandedTerms) {
-      if (haystack.includes(term.toLowerCase())) score++;
+      const t = term.toLowerCase();
+      if (primary.includes(t)) score += 4;
+      if (secondary.includes(t)) score += 3;
+      if (rest.includes(t)) score += 1;
     }
     return { a, score };
   });
@@ -243,11 +277,15 @@ function detectIndecision(messages: { role: string; content: string }[]): boolea
 }
 
 // Check if query is about a coming-soon type (to skip keyword fallback)
+// Note: Kayaking/Diving are declared types but currently have zero live adventures,
+// so generic water/coastal phrasing needs to route here too, not just the exact type name.
 function isComingSoonQuery(query: string): boolean {
   const q = query.toLowerCase();
   return COMING_SOON_TYPES.some((t) => q.includes(t.toLowerCase())) ||
     ["scuba", "dive", "diving", "paraglide", "paragliding", "balloon", "hot air",
-      "ice skate", "ice skating", "scramble", "scrambling"].some((w) => q.includes(w));
+      "ice skate", "ice skating", "scramble", "scrambling",
+      "water", "coastal", "ocean", "beach", "surf", "surfing", "snorkel",
+      "kayak", "kayaking", "raft", "rafting"].some((w) => q.includes(w));
 }
 
 // ─── Route handler ────────────────────────────────────────────────────────────
@@ -262,18 +300,25 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { messages } = await req.json();
+    const { messages, recommendationRounds } = await req.json();
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json({ error: "No messages provided" }, { status: 400 });
     }
 
     const serverDetectedIndecision = detectIndecision(messages);
+    // Been shown adventures 2+ times without committing — nudge toward the Matchmaker instead of more browsing.
+    const shownRecommendationsRepeatedly = typeof recommendationRounds === "number" && recommendationRounds >= 2;
+    const shouldSuggestAce = serverDetectedIndecision || shownRecommendationsRepeatedly;
 
-    const systemContent = serverDetectedIndecision
-      ? SYSTEM_PROMPT + "\n\n[HINT: User seems indecisive. Include <suggest_ace/> in your response alongside any recommendations.]"
-      : SYSTEM_PROMPT;
+    const hint = serverDetectedIndecision
+      ? "\n\n[HINT: User seems indecisive. Include <suggest_ace/> in your response alongside any recommendations, and call it the Adventure Matchmaker in your own words.]"
+      : shownRecommendationsRepeatedly
+      ? "\n\n[HINT: You've already shown this user recommendations 2+ times this conversation without them settling on one. Include <suggest_ace/> and briefly note that the Adventure Matchmaker (8 quick questions) would narrow things down in one pass instead of more browsing.]"
+      : "";
 
-    const groqMessages: { role: "user" | "assistant" | "system"; content: string }[] = [
+    const systemContent = SYSTEM_PROMPT + hint;
+
+    const chatMessages: { role: "user" | "assistant" | "system"; content: string }[] = [
       { role: "system", content: systemContent },
       ...messages.map((m: { role: string; content: string }) => ({
         role: m.role as "user" | "assistant",
@@ -281,31 +326,63 @@ export async function POST(req: NextRequest) {
       })),
     ];
 
+    // No AI configured (missing/empty GEMINI_API_KEY) — degrade to keyword search instead of crashing.
+    if (!client) {
+      console.error("Compass.AI: GEMINI_API_KEY is not configured — using keyword search only.");
+      const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
+
+      if (isComingSoonQuery(lastQuery)) {
+        return NextResponse.json({
+          text: "Water adventures are coming soon — we're planning dives and kayaking trips in the Andamans and Lakshadweep. Want to see what's live today instead?",
+          recommendations: [],
+          cards: [],
+          suggestAce: shouldSuggestAce,
+        });
+      }
+
+      const fallback = keywordSearch(lastQuery, 3);
+      if (fallback.length > 0) {
+        return NextResponse.json({
+          text: "Here are some adventures that match what you're looking for.",
+          recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery) })),
+          cards: fallback,
+          suggestAce: shouldSuggestAce,
+        });
+      }
+      return NextResponse.json({
+        text: "Tell me a region, activity, or trip length and I'll pull up matching adventures.",
+        recommendations: [],
+        cards: [],
+        suggestAce: shouldSuggestAce,
+      });
+    }
+
     let rawContent = "";
 
     try {
       const response = await client.chat.completions.create({
-        model: "llama-3.3-70b-versatile",
-        messages: groqMessages,
+        model: "gemini-2.5-flash",
+        messages: chatMessages,
         temperature: 0.5,
         max_tokens: 500,
       });
       rawContent = response.choices[0].message.content ?? "";
-    } catch (groqErr: unknown) {
-      // Rate limit or API error — try lighter model as fallback
-      const errMsg = groqErr instanceof Error ? groqErr.message : String(groqErr);
-      const isRateLimit = errMsg.includes("429") || errMsg.includes("rate_limit") || errMsg.includes("Rate limit");
+    } catch (apiErr: unknown) {
+      // Rate limit or API error — try a lighter model as fallback
+      const isRateLimit = apiErr instanceof OpenAI.APIError && apiErr.status === 429;
+      console.error("Compass.AI primary model error:", apiErr instanceof Error ? apiErr.message : apiErr, "isRateLimit:", isRateLimit);
 
       if (isRateLimit) {
         try {
           const fallbackResponse = await client.chat.completions.create({
-            model: "llama-3.1-8b-instant",
-            messages: groqMessages,
+            model: "gemini-2.5-flash-lite",
+            messages: chatMessages,
             temperature: 0.5,
             max_tokens: 500,
           });
           rawContent = fallbackResponse.choices[0].message.content ?? "";
-        } catch {
+        } catch (liteErr: unknown) {
+          console.error("Compass.AI lite model also failed:", liteErr instanceof Error ? liteErr.message : liteErr);
           // Both models failed — use keyword search only
           const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
           const fallback = keywordSearch(lastQuery, 3);
@@ -314,7 +391,7 @@ export async function POST(req: NextRequest) {
               text: "Here are some adventures that match what you're looking for.",
               recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery) })),
               cards: fallback,
-              suggestAce: serverDetectedIndecision,
+              suggestAce: shouldSuggestAce,
             });
           }
           return NextResponse.json({
@@ -326,11 +403,11 @@ export async function POST(req: NextRequest) {
           });
         }
       } else {
-        throw groqErr;
+        throw apiErr;
       }
     }
 
-    const suggestAce = /<suggest_ace\s*\/>/.test(rawContent) || serverDetectedIndecision;
+    const suggestAce = /<suggest_ace\s*\/>/.test(rawContent) || shouldSuggestAce;
     const recommendations = parseRecommendations(rawContent);
     const cards = recommendations
       .map((r) => adventures.find((a) => a.slug === r.slug))

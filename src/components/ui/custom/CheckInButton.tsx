@@ -6,6 +6,7 @@ import { useTripLog } from "@/contexts/TripLogContext";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 interface Props {
   slug: string;
@@ -62,17 +63,21 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
   }
 
   return (
-    <button
-      onClick={handleToggle}
-      aria-label={done ? "Remove from completed" : "Mark as done"}
-      title={done ? "Completed ✓" : "Mark as done"}
-      className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm ${className}`}
-      style={done
-        ? { background: "rgba(74,222,128,0.9)", color: "#0d2818", boxShadow: "0 0 0 1px rgba(74,222,128,0.5), 0 0 10px rgba(74,222,128,0.25)" }
-        : { background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.45)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }
-      }
-    >
-      <CheckCircle2 className="w-3.5 h-3.5" />
-    </button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          onClick={handleToggle}
+          aria-label={done ? "Remove from completed" : "Mark as done"}
+          className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm ${className}`}
+          style={done
+            ? { background: "rgba(74,222,128,0.9)", color: "#0d2818", boxShadow: "0 0 0 1px rgba(74,222,128,0.5), 0 0 10px rgba(74,222,128,0.25)" }
+            : { background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.45)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }
+          }
+        >
+          <CheckCircle2 className="w-3.5 h-3.5" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>{done ? "Completed" : "Mark as done"}</TooltipContent>
+    </Tooltip>
   );
 }

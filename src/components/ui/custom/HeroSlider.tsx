@@ -136,11 +136,6 @@ export default function HeroSlider() {
           from { transform: scaleX(0); }
           to   { transform: scaleX(1); }
         }
-        @keyframes scrollCue {
-          0%   { transform: translateY(-130%); opacity: 0; }
-          25%  { opacity: 1; }
-          100% { transform: translateY(310%);  opacity: 0; }
-        }
       `}</style>
 
       {shuffled.map((slide, i) => {
@@ -180,7 +175,13 @@ export default function HeroSlider() {
                     // current pan/zoom in place) instead of removing it, so the
                     // outgoing slide doesn't snap back to its unzoomed start
                     // position while it's still fading out.
-                    animation: `kb${panIdx} ${SLIDE_DURATION + TRANSITION_MS}ms cubic-bezier(0.22,0.61,0.36,1) forwards`,
+                    // (Longhand properties, not the `animation` shorthand — mixing
+                    // shorthand with animationPlayState across rerenders triggers
+                    // a React style-diffing warning.)
+                    animationName: `kb${panIdx}`,
+                    animationDuration: `${SLIDE_DURATION + TRANSITION_MS}ms`,
+                    animationTimingFunction: "cubic-bezier(0.22,0.61,0.36,1)",
+                    animationFillMode: "forwards",
                     animationPlayState: isActive ? "running" : "paused",
                   }}
               />
@@ -239,25 +240,6 @@ export default function HeroSlider() {
         style={{ zIndex: 5 }}
       >
         {String(current + 1).padStart(2, "0")} / {String(shuffled.length).padStart(2, "0")}
-      </div>
-
-      {/* Scroll cue */}
-      <div
-        className="absolute bottom-8 right-10 flex flex-col items-center gap-2"
-        style={{ zIndex: 5 }}
-      >
-        <span
-          className="text-white/28 text-[9px] tracking-[0.32em] uppercase"
-          style={{ writingMode: "vertical-rl" }}
-        >
-          Scroll
-        </span>
-        <div className="w-px h-10 overflow-hidden rounded-full bg-white/12">
-          <div
-            className="w-full rounded-full bg-white/55"
-            style={{ height: "38%", animation: "scrollCue 2s ease-in-out infinite" }}
-          />
-        </div>
       </div>
     </div>
   );

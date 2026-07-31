@@ -224,12 +224,12 @@ export function HeroSubheading() {
         <p
           className="text-center font-medium leading-relaxed"
           style={{
-            fontSize: "clamp(0.78rem, 1.6vw, 0.9rem)",
+            fontSize: "clamp(0.95rem, 2.1vw, 1.15rem)",
             color: "rgba(255,255,255,0.82)",
             letterSpacing: "0.01em",
           }}
         >
-          Elite adventures across India — tailored to your body, precision-mapped by AI, and led by trusted operators.
+          Matched to your body, recommended by AI, run by real operators.
         </p>
       </div>
 

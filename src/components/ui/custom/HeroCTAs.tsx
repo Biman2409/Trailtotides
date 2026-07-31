@@ -18,7 +18,7 @@ export default function HeroCTAs() {
   }
 
   return (
-    <form onSubmit={handleSearch} className="flex items-stretch gap-2 w-full">
+    <form onSubmit={handleSearch} className="flex flex-col sm:flex-row items-stretch gap-2 w-full">
       {/* Search input */}
       <div
         className="relative flex items-center flex-1 basis-0 px-4 py-3 rounded-xl min-w-0"
@@ -29,13 +29,13 @@ export default function HeroCTAs() {
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12)",
         }}
       >
-        <Search className="absolute left-4 w-4 h-4 pointer-events-none" style={{ color: "rgba(255,255,255,0.45)" }} />
+        <Search className="absolute left-4 w-4 h-4 pointer-events-none shrink-0" style={{ color: "rgba(255,255,255,0.45)" }} />
         <input
           type="text"
           value={query}
           onChange={e => setQuery(e.target.value)}
           placeholder="Search adventures"
-          className="w-full bg-transparent text-white text-sm font-medium outline-none placeholder:font-normal text-center placeholder:text-center"
+          className="w-full bg-transparent text-white text-sm font-medium outline-none text-center placeholder:text-center truncate"
           style={{ color: "rgba(255,255,255,0.9)", caretColor: "#ff5100" }}
         />
       </div>
@@ -43,7 +43,7 @@ export default function HeroCTAs() {
       {/* Explore button */}
       <button
         type="submit"
-        className="group flex flex-1 basis-0 items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold tracking-wide text-white transition-all duration-200 hover:-translate-y-0.5 active:scale-95 whitespace-nowrap"
+        className="group flex sm:flex-1 sm:basis-0 items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold tracking-wide text-white transition-all duration-200 hover:-translate-y-0.5 active:scale-95 whitespace-nowrap"
         style={{
           background: "#ff5100",
           boxShadow: "0 0 0 1px rgba(255,81,0,0.6), 0 4px 20px rgba(255,81,0,0.45)",

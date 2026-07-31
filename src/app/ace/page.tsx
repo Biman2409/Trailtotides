@@ -8,7 +8,7 @@ import { adventures } from "@/lib/data";
 import ACERadar from "@/components/ui/custom/ACERadar";
 
 export const metadata = {
-  title: "ACE™ Rating System — Trail to Tides",
+  title: "ACE™ Rating System",
   description: "The Adventure Capability Engine rates every adventure on 8 biological axes — so you know exactly what your body needs.",
   openGraph: {
     title: "ACE™ Rating System — Trail to Tides",

@@ -8,7 +8,7 @@ import { adventures } from "@/lib/data";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
 
 export const metadata: Metadata = {
-  title: "About Us — Trail to Tides",
+  title: "About Us",
   description:
     "Trail to Tides is India's adventure discovery platform — built by explorers for explorers. Learn about our mission, values, and the team behind it.",
   openGraph: {

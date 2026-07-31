@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import MapClient from "./MapClient";
 
 export const metadata: Metadata = {
-  title: "Adventure Map — Trail to Tides",
+  title: "Adventure Map",
   description:
     "Explore every trail, summit, coast, and canyon across India on one interactive map. Filter by type, region, and difficulty.",
   openGraph: {

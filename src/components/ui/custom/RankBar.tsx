@@ -49,7 +49,7 @@ export default function RankBar({
         {/* ── Track: absolute inset-0, overflow-hidden clips fill + ticks ── */}
         <div
           className="absolute inset-0 rounded-full overflow-hidden"
-          style={{ background: "rgba(255,255,255,0.08)" }}
+          style={{ background: "var(--border-subtle)" }}
         >
           {/* Fill — no border-radius, no box-shadow */}
           <div
@@ -86,7 +86,7 @@ export default function RankBar({
                 top:    "50%",
                 left:   `${nodePct}%`,
                 transform: "translate(-50%, -50%)",
-                background: reached ? rank.color : "rgba(255,255,255,0.12)",
+                background: reached ? rank.color : "var(--border-default)",
                 boxShadow: isCur ? `0 0 6px ${rank.color}` : "none",
                 zIndex: 1,
               }}
@@ -142,7 +142,7 @@ export default function RankBar({
                       ? rank.color
                       : isPast
                       ? `${rank.color}60`
-                      : "rgba(255,255,255,0.18)",
+                      : "var(--text-muted)",
                   }}
                 >
                   {rank.label}

@@ -64,10 +64,10 @@
   color-scheme: light;
   --radius: 0.5rem;
 
-  /* Surfaces — crisp white cards on warm paper background */
-  --bg-page:        #f0ede6;
-  --bg-surface:     #faf8f4;
-  --bg-surface-2:   #e9e5dd;
+  /* Surfaces — deliberately higher contrast so sections read as distinct bands, not one flat cream wash */
+  --bg-page:        #eae5da;
+  --bg-surface:     #ffffff;
+  --bg-surface-2:   #ddd4c2;
   --bg-card:        #ffffff;
   --bg-card-hover:  #f5f2ec;
   --bg-overlay:     rgba(255,255,255,0.9);
@@ -79,9 +79,12 @@
   --text-muted:     #c2bcb4;
 
   /* Borders — warm stone, visibly distinct */
-  --border-subtle:  #e5e0d9;
-  --border-default: #d1cbc2;
-  --border-strong:  #b5ada3;
+  --border-subtle:  #d8cfc0;
+  --border-default: #b3a794;
+  --border-strong:  #978971;
+
+  /* Shadow tint — warm charcoal instead of flat black, so elevation reads on cream */
+  --shadow-color: 28,22,16;
 
   /* Nav — clean white */
   --nav-bg:         rgba(255,255,255,0.97);
@@ -150,6 +153,9 @@
   --border-subtle:  rgba(255,255,255,0.06);
   --border-default: rgba(255,255,255,0.1);
   --border-strong:  rgba(255,255,255,0.18);
+
+  /* Shadow tint — near-black already reads fine against navy */
+  --shadow-color: 0,0,0;
 
   /* Nav */
   --nav-bg:         rgba(15,20,32,0.97);
@@ -294,6 +300,9 @@ button:not([class*="transition"]) {
 .t-border      { border-color: var(--border-default); }
 .t-border-subtle { border-color: var(--border-subtle); }
 .t-accent-green { color: var(--accent-green); }
+.t-shadow-sm { box-shadow: 0 2px 10px rgba(var(--shadow-color), 0.08); }
+.t-shadow-md { box-shadow: 0 8px 24px rgba(var(--shadow-color), 0.12); }
+.t-shadow-lg { box-shadow: 0 20px 40px rgba(var(--shadow-color), 0.16); }
 
 /* ── Leaflet map overrides ───────────────────────────────── */
 .leaflet-container {
@@ -301,7 +310,7 @@ button:not([class*="transition"]) {
 }
 .leaflet-popup-content-wrapper {
   border-radius: 14px !important;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.18) !important;
+  box-shadow: 0 12px 40px rgba(var(--shadow-color), 0.18) !important;
   border: 1px solid var(--border-subtle) !important;
   background: var(--bg-surface) !important;
   color: var(--text-primary) !important;

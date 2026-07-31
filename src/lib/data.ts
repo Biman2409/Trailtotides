@@ -132,6 +132,15 @@ export interface Story {
   baseLikes?: number;    // starting like count (defaults to 50)
 }
 
+/** Cheapest operator price for an adventure, or null if none parse. */
+export function getLowestPrice(adventure: Pick<Adventure, "operators">): number | null {
+  return adventure.operators?.reduce<number | null>((min, o) => {
+    const p = parseInt(o.priceFrom.replace(/[^\d]/g, ""), 10);
+    if (isNaN(p)) return min;
+    return min === null ? p : Math.min(min, p);
+  }, null) ?? null;
+}
+
 export const adventures: Adventure[] = [
 {
       id: "3",
@@ -1814,10 +1823,10 @@ export const stories: Story[] = [
     title: "The Night Photi La Tested Us",
     excerpt: "A ride to Umling La, a detour to Demchok, and the mountain that watched over us. Some trips are planned. Some trips are reckless. And some trips stay with you forever.",
     author: "Nishant Ingle",
-    authorRole: "Rider",
+    authorRole: "Rider n Provider",
     authorBio: "Spends most of the year running a business. Once a year, the suit comes off, the saddle goes on, and he goes all in — no guided tours, no safety nets. Just one raw, unscripted adventure that most people only ever dream about.",
     authorAvatar: "/avatars/avatar-5.png",
-    pillTags: [],
+    pillTags: ["Motorcycling"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/story-submissions/photi-la.jpeg",
     tags: ["Featured", "TTT Original"],
     baseLikes: 68,
@@ -1834,7 +1843,7 @@ export const stories: Story[] = [
     authorRole: "A jack of all trades",
     authorBio: "I read relentlessly and write poetry to ground myself. A mountaineer and skier at heart, I find joy navigating riverbeds on my Himalayan. Anchored by amazing friends, I keep chasing new extremes. Ultimately, my chief occupation is living a life of love. Everything else is fluff.",
     authorAvatar: "/avatars/avatar-10.png",
-    pillTags: [],
+    pillTags: ["Motorcycling"],
     heroImage: "https://eylgddhfxzxwovcodihx.supabase.co/storage/v1/object/public/story-submissions/riding-through-revolution-hero.jpeg",
     tags: ["Featured", "TTT Original"],
     region: "Nepal",

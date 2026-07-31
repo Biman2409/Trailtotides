@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Loader2, ChevronRight, Compass } from "lucide-react";
+import { X, Send, Loader2, ChevronRight, Compass, Zap, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { Adventure } from "@/lib/data";
 
@@ -10,10 +10,12 @@ interface Message {
   content: string;
   cards?: Adventure[];
   recommendations?: { slug: string; name: string; reason: string }[];
+  suggestAce?: boolean;
 }
 
 export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: boolean }) {
   const [visible, setVisible] = useState(alwaysVisible);
+  const [labelVisible, setLabelVisible] = useState(false);
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -24,6 +26,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [nudge, setNudge] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -54,6 +57,80 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
     return () => { clearTimeout(timer); window.removeEventListener("scroll", onScroll); };
   }, []);
 
+  // Show the "Compass.AI" label alongside the button once it appears, and keep
+  // it up until the user scrolls past the on-page Compass.AI (#ai-finder)
+  // section — at which point it's retracted since the feature's already introduced.
+  useEffect(() => {
+    if (!visible || open) return;
+    const showTimer = setTimeout(() => setLabelVisible(true), 250);
+    return () => clearTimeout(showTimer);
+  }, [visible, open]);
+
+  useEffect(() => {
+    if (open) { setLabelVisible(false); return; }
+
+    const target = document.getElementById("ai-finder");
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Section has fully scrolled above the viewport — retract the label.
+        if (!entry.isIntersecting && entry.boundingClientRect.bottom < 0) {
+          setLabelVisible(false);
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [open]);
+
+  // Once the Compass.AI (#ai-finder) section has fully scrolled past, give the
+  // button a brief attention pulse instead of forcing the panel open — the
+  // user still chooses to click it. If they already have the panel open once
+  // the Adventure Map (#map-cta) section scrolls past, close it for them.
+  useEffect(() => {
+    const finder = document.getElementById("ai-finder");
+    if (!finder) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting && entry.boundingClientRect.bottom < 0) {
+          setNudge(true);
+          setLabelVisible(true);
+          setTimeout(() => { setNudge(false); setLabelVisible(false); }, 2400);
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(finder);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const mapSection = document.getElementById("map-cta");
+    if (!mapSection) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting && entry.boundingClientRect.bottom < 0) {
+          setOpen(false);
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(mapSection);
+    return () => observer.disconnect();
+  }, []);
+
+  function toggleOpen() {
+    setOpen((v) => !v);
+  }
+
+  function closePanel() {
+    setOpen(false);
+  }
+
   async function send() {
     const text = input.trim();
     if (!text || loading) return;
@@ -63,6 +140,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
     setLoading(true);
 
     try {
+      const recommendationRounds = messages.filter((m) => m.role === "assistant" && (m.cards?.length ?? 0) > 0).length;
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -70,6 +148,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
           messages: [...messages, userMsg]
             .filter((m) => m.role === "user" || m.role === "assistant")
             .map((m) => ({ role: m.role, content: m.content })),
+          recommendationRounds,
         }),
       });
       const data = await res.json();
@@ -80,6 +159,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
           content: data.text || data.error || "Sorry, something went wrong.",
           cards: data.cards,
           recommendations: data.recommendations,
+          suggestAce: data.suggestAce,
         },
       ]);
     } catch {
@@ -94,22 +174,46 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
 
   return (
     <>
-      {/* Floating button */}
+      {/* Floating button — a single seamless capsule that extends to show the
+          "Compass.AI" label, then elegantly collapses back to just the icon. */}
       <button
-        onClick={() => setOpen((v) => !v)}
-        className={`fixed lg:bottom-8 max-lg:bottom-[88px] right-8 z-50 flex items-center justify-center text-white w-14 h-14 rounded-full shadow-2xl transition-all duration-500 ease-out hover:scale-110 active:scale-95 group ${
-          visible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-50 pointer-events-none"
+        onClick={toggleOpen}
+        className={`fixed lg:bottom-8 max-lg:bottom-[88px] right-8 z-50 flex items-center rounded-full hover:scale-105 active:scale-95 group ${
+          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12 pointer-events-none"
         }`}
-        style={{ 
-          background: "#ff5100", 
-          boxShadow: "0 10px 40px -10px rgba(255,81,0,0.6)", 
-          transition: "opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s" 
+        style={{
+          background: labelVisible ? "var(--bg-card)" : "#ff5100",
+          border: "2px solid #ff5100",
+          boxShadow: "0 10px 40px -10px rgba(255,81,0,0.45)",
+          transition: "background-color 0.4s ease, opacity 0.6s ease, transform 0.45s cubic-bezier(0.34,1.56,0.64,1)",
         }}
-          aria-label="Open Compass.AI"
+        aria-label="Open Compass.AI"
+      >
+        <span
+          className={`overflow-hidden whitespace-nowrap transition-[max-width,opacity,padding] ease-[cubic-bezier(0.65,0,0.35,1)] ${
+            labelVisible ? "max-w-[140px] opacity-100 pl-5 pr-1" : "max-w-0 opacity-0 pl-0 pr-0"
+          }`}
+          style={{ transitionDuration: "500ms" }}
         >
-          <div className="absolute inset-0 rounded-full bg-white/20 scale-0 group-hover:scale-100 transition-transform duration-500" />
+          <span className="block text-left text-sm font-bold leading-tight" style={{ color: "var(--text-primary)" }}>
+            Compass<span style={{ color: "#ff5100" }}>.AI</span>
+          </span>
+          <span className="block text-left italic text-[10px] leading-tight mt-0.5" style={{ color: "var(--text-tertiary)" }}>
+            AI Assistant
+          </span>
+        </span>
+        <span
+          className="relative flex items-center justify-center w-[52px] h-[52px] rounded-full shrink-0 transition-colors duration-400"
+          style={{ color: labelVisible ? "#ff5100" : "#ffffff" }}
+        >
+          <span
+            className={`absolute inset-0 rounded-full scale-0 group-hover:scale-100 transition-transform duration-500 ${
+              labelVisible ? "bg-[#ff5100]/10" : "bg-white/20"
+            }`}
+          />
           <Compass className={`w-6 h-6 relative z-10 transition-transform duration-700 ${open ? 'rotate-180' : 'group-hover:rotate-90'}`} />
-        </button>
+        </span>
+      </button>
 
         {/* Chat panel */}
         {open && (
@@ -124,10 +228,11 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                 </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-[var(--text-primary)] font-semibold text-sm tracking-tight">Compass<span className="text-[#ff5100]">.</span><span className="text-[#ff5100]">AI</span></p>
+                          <p className="text-left italic text-xs text-[var(--text-muted)] leading-none mt-0.5">AI Assistant</p>
                         </div>
               </div>
             <button
-              onClick={() => setOpen(false)}
+              onClick={closePanel}
               className="w-7 h-7 rounded-lg flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] transition-all"
             >
               <X className="w-3.5 h-3.5" />
@@ -190,6 +295,27 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                       })}
                     </div>
                   )}
+
+                  {msg.suggestAce && (
+                    <Link
+                      href="/matchmaker"
+                      className="group flex items-center gap-3 p-3 rounded-xl border transition-all duration-300 hover:-translate-y-0.5 shadow-lg"
+                      style={{ borderColor: "rgba(255,81,0,0.3)", background: "var(--bg-surface)" }}
+                    >
+                      <div className="shrink-0 w-9 h-9 rounded-lg bg-[#ff5100] flex items-center justify-center shadow-lg shadow-[#ff5100]/30">
+                        <Zap className="w-4 h-4 text-white" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[11px] font-bold text-[var(--text-primary)] group-hover:text-[#ff5100] transition-colors">
+                          Take the Adventure Matchmaker
+                        </p>
+                        <p className="text-[10px] text-[var(--text-tertiary)] mt-0.5 leading-snug">
+                          8 quick questions — get matched straight to adventures your body is ready for.
+                        </p>
+                      </div>
+                      <ArrowRight className="w-3.5 h-3.5 text-[#ff5100] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
+                  )}
                 </div>
               </div>
             ))}
@@ -213,7 +339,8 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && send()}
                     placeholder="Ask Compass.AI..."
-                    className="flex-1 bg-[var(--bg-surface)] border border-[var(--border-default)] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] text-sm px-4 py-3.5 rounded-xl outline-none focus:bg-[var(--bg-card-hover)] focus:border-[#ff5100]/40 transition-all font-light"
+                    className="flex-1 bg-[var(--bg-surface)] border-[1.5px] border-[var(--border-strong)] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] text-sm px-4 py-3.5 rounded-xl focus:bg-[var(--bg-card-hover)] focus:border-[#ff5100] focus:shadow-[0_0_0_3px_rgba(255,81,0,0.14)] transition-all font-light"
+                    style={{ outline: "none" }}
                 />
               <button
                 onClick={send}

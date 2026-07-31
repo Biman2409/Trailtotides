@@ -19,7 +19,6 @@ export default function OperatorSignupPage() {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [logoUploading, setLogoUploading] = useState(false);
-  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [logoError, setLogoError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -37,7 +36,6 @@ export default function OperatorSignupPage() {
     }
     setLogoError(null);
     setLogoFile(file);
-    setLogoUrl(null);
     const reader = new FileReader();
     reader.onload = (ev) => setLogoPreview(ev.target?.result as string);
     reader.readAsDataURL(file);
@@ -46,7 +44,6 @@ export default function OperatorSignupPage() {
   function removeLogo() {
     setLogoFile(null);
     setLogoPreview(null);
-    setLogoUrl(null);
     setLogoError(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   }

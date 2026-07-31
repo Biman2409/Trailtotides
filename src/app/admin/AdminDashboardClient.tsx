@@ -10,12 +10,12 @@ import { approveOperatorSubmission, rejectOperatorSubmission, type OperatorProfi
 import { logout } from "@/app/auth/actions";
 import {
   Mountain, Users, Shield, Trash2, ChevronDown, LogOut, Search, Download,
-  BarChart3, Calendar, Filter, ArrowUpRight, TrendingUp, MessageSquare,
+  BarChart3, Calendar, Filter, TrendingUp, MessageSquare,
   ExternalLink, BookOpen, MapPin, Tag, Clock, Phone, Mail, Building2,
   CheckCircle2, AlertCircle, XCircle, Loader2, Globe, FileText,
-  Ban, KeyRound, ChevronRight, Eye, Copy, Activity, Star, TrendingDown,
-  Zap, UserCheck, UserX, RefreshCw, ChevronUp, Info, Package, DollarSign,
-  Image, StarOff, ArrowUpDown, RotateCcw, Send,
+  Ban, ChevronRight, Eye, Copy, Activity, Star, TrendingDown,
+  Zap, UserCheck, UserX, RefreshCw, ChevronUp, Package, DollarSign,
+  Image, StarOff, RotateCcw, Send,
 } from "lucide-react";
 import Link from "next/link";
 import NextImage from "next/image";
@@ -53,22 +53,20 @@ type Message = {
 
 type StorySubmission = {
   id: string;
-  _fileName?: string;
+  slug: string;
   title: string;
   excerpt: string;
   body: string;
   author_name: string;
   author_role: string | null;
   author_bio: string | null;
-  email: string | null;
-  phone: string | null;
-  date_of_adventure: string;
-  region: string;
-  state: string | null;
+  author_avatar: string | null;
+  hero_image: string | null;
   tags: string[] | null;
-  read_time: string | null;
-  hero_image_url: string | null;
+  region: string;
+  date: string;
   status: string;
+  submitted_by: string | null;
   created_at: string;
 };
 
@@ -391,7 +389,9 @@ export default function AdminDashboardClient({
   const [localPhotos, setLocalPhotos] = useState<Photo[]>(photos);
   const [expandedStoryId, setExpandedStoryId] = useState<string | null>(null);
   const [expandedSubId, setExpandedSubId] = useState<string | null>(null);
-  const [storyFilter, setStoryFilter] = useState<"all"|"pending"|"approved"|"rejected">("all");
+  // "draft" is the DB-level stand-in for "rejected" (the stories table's CHECK
+  // constraint only allows pending | published | draft).
+  const [storyFilter, setStoryFilter] = useState<"all"|"pending"|"published"|"draft">("all");
   const [msgSearch, setMsgSearch] = useState("");
   const [storySearch, setStorySearch] = useState("");
   const [reviewSearch, setReviewSearch] = useState("");
@@ -534,25 +534,30 @@ export default function AdminDashboardClient({
     setLoadingId(userId);
     try {
       if (type === "role") {
-        await updateUserRole(userId, extra!);
+        const res = await updateUserRole(userId, extra!);
+        if (res && "error" in res && res.error) { showToast(res.error, "error"); return; }
         setLocalProfiles(prev => prev.map(p => p.id === userId ? { ...p, role: extra! } : p));
         if (extra === "operator") setExpandedUserId(null);
         showToast(`Role set to ${extra}`);
       } else if (type === "ban") {
         if (!confirm("Ban this user? They won't be able to sign in.")) return;
-        await banUser(userId);
+        const res = await banUser(userId);
+        if (res && "error" in res && res.error) { showToast(res.error, "error"); return; }
         setLocalProfiles(prev => prev.map(p => p.id === userId ? { ...p, banned: true } : p));
         showToast("User banned");
       } else if (type === "unban") {
-        await unbanUser(userId);
+        const res = await unbanUser(userId);
+        if (res && "error" in res && res.error) { showToast(res.error, "error"); return; }
         setLocalProfiles(prev => prev.map(p => p.id === userId ? { ...p, banned: false } : p));
         showToast("User unbanned");
       } else if (type === "reset") {
-        await sendPasswordReset(extra!);
+        const res = await sendPasswordReset(extra!);
+        if (res && "error" in res && res.error) { showToast(res.error, "error"); return; }
         showToast("Password reset email sent");
       } else if (type === "delete") {
         if (!confirm("Delete this user permanently? Cannot be undone.")) return;
-        await deleteUser(userId);
+        const res = await deleteUser(userId);
+        if (res && "error" in res && res.error) { showToast(res.error, "error"); return; }
         setLocalProfiles(prev => prev.filter(p => p.id !== userId));
         setExpandedUserId(null);
         showToast("User deleted");
@@ -594,19 +599,20 @@ export default function AdminDashboardClient({
   }
 
   async function handleStoryAction(story: StorySubmission, action: "approve" | "reject" | "delete") {
-    if (!story._fileName) { showToast("Missing file reference", "error"); return; }
     setLoadingId(story.id);
     try {
       if (action === "delete") {
         if (!confirm("Delete this story submission?")) return;
-        await deleteStory(story._fileName);
+        await deleteStory(story.id);
         setLocalStories(prev => prev.filter(s => s.id !== story.id));
         showToast("Story deleted");
       } else {
-        const status = action === "approve" ? "approved" : "rejected";
-        await updateStoryStatus(story._fileName, status);
-        setLocalStories(prev => prev.map(s => s.id === story.id ? { ...s, status } : s));
-        showToast(`Story ${status}`);
+        const apiStatus = action === "approve" ? "approved" : "rejected";
+        const resultStatus = action === "approve" ? "published" : "draft";
+        const res = await updateStoryStatus(story.id, apiStatus);
+        if (res && "error" in res && res.error) { showToast(res.error, "error"); return; }
+        setLocalStories(prev => prev.map(s => s.id === story.id ? { ...s, status: resultStatus } : s));
+        showToast(action === "approve" ? "Story published" : "Story rejected");
       }
     } catch {
       showToast("Action failed", "error");
@@ -703,10 +709,14 @@ export default function AdminDashboardClient({
       <header className="border-b border-[var(--border-subtle)] px-6 py-3.5 flex items-center justify-between sticky top-0" style={{ background: "var(--bg-page)", backdropFilter: "blur(24px)" }}>
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-[#ff5100]/10 border border-[#ff5100]/20 flex items-center justify-center group-hover:bg-[#ff5100]/20 transition-all">
-              <Mountain className="w-4 h-4 text-[#ff7d47]" />
+            <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all shadow-md shadow-[#ff5100]/30">
+              <Mountain className="w-4 h-4 text-white" strokeWidth={2.5} />
             </div>
-            <span className="font-bold text-sm tracking-widest uppercase transition-colors hidden sm:block" style={{ color: "var(--text-primary)" }}>Trail to Tides</span>
+            <span className="text-base leading-none tracking-tight hidden sm:block" style={{ color: "var(--text-primary)" }}>
+              <span className="font-black uppercase">TRAIL</span>
+              <span style={{ fontFamily: "var(--font-cursive)", color: "var(--text-tertiary)" }} className="text-[15px] normal-case tracking-normal font-normal mx-1">to</span>
+              <span className="font-black uppercase">TIDES</span>
+            </span>
           </Link>
           <div className="h-4 w-px" style={{ background: "var(--border-subtle)" }} />
           <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[#ff5100]/60">Admin Console</span>
@@ -1082,7 +1092,7 @@ export default function AdminDashboardClient({
                         </tr>
                         {isExpanded && (
                           <UserDetailPanel key={`detail-${profile.id}`} profile={profile} currentUserId={currentUserId} loadingId={loadingId} onAction={handleUserAction}
-                            storyCount={localStories.filter(s => s.email === profile.email).length}
+                            storyCount={localStories.filter(s => s.submitted_by === profile.id).length}
                             messageCount={localMessages.filter(m => m.email === profile.email || m.user_id === profile.id).length}
                           />
                         )}
@@ -1179,19 +1189,20 @@ export default function AdminDashboardClient({
             <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
               {/* Status filter pills */}
               <div className="flex flex-wrap gap-1.5">
-                {(["all","pending","approved","rejected"] as const).map(s => {
+                {(["all","pending","published","draft"] as const).map(s => {
                   const count = s === "all" ? localStories.length : localStories.filter(x => x.status === s).length;
+                  const label = s === "draft" ? "rejected" : s;
                   return (
                     <button key={s} onClick={() => setStoryFilter(s)}
                       className={`text-[11px] font-bold px-3 py-1.5 rounded-lg border transition-all capitalize flex items-center gap-1.5 ${
                         storyFilter === s
                           ? s === "pending" ? "bg-amber-500/15 border-amber-500/30 text-amber-300"
-                          : s === "approved" ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-300"
-                          : s === "rejected" ? "bg-red-500/15 border-red-500/25 text-red-300"
+                          : s === "published" ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-300"
+                          : s === "draft" ? "bg-red-500/15 border-red-500/25 text-red-300"
                           : "bg-[#ff5100]/15 border-[#ff5100]/30 text-[#ff7d47]"
                           : "border-[var(--border-default)] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:border-[var(--border-default)]"
                       }`}>
-                      {s} <span className="opacity-60">({count})</span>
+                      {label} <span className="opacity-60">({count})</span>
                     </button>
                   );
                 })}
@@ -1214,9 +1225,8 @@ export default function AdminDashboardClient({
               <div className="border border-[var(--border-subtle)] rounded-2xl overflow-hidden divide-y divide-[var(--border-subtle)]">
                 {filteredStories.map(sub => {
                   const isExpanded = expandedStoryId === sub.id;
-                  // Some submissions come from the published-story storage format (hero_image)
-                  // rather than the pending-submission format (hero_image_url).
-                  const heroUrl = sub.hero_image_url || (sub as StorySubmission & { hero_image?: string }).hero_image || null;
+                  const heroUrl = sub.hero_image || null;
+                  const submitter = sub.submitted_by ? localProfiles.find(p => p.id === sub.submitted_by) : null;
                   return (
                     <div key={sub.id} className="bg-[var(--bg-card)]">
                       {/* ── Main card row ── */}
@@ -1240,23 +1250,25 @@ export default function AdminDashboardClient({
                                 {/* Status dot */}
                                 <div className={`shrink-0 w-2 h-2 rounded-full mt-0.5 ${
                                   sub.status === "pending" ? "bg-amber-400" :
-                                  sub.status === "approved" ? "bg-emerald-400" : "bg-[var(--text-muted)]"
+                                  sub.status === "published" ? "bg-emerald-400" :
+                                  sub.status === "draft" ? "bg-red-400" : "bg-[var(--text-muted)]"
                                 }`} />
                                 <p className="font-bold text-[var(--text-primary)] text-[14px] leading-tight truncate">{sub.title}</p>
                               </div>
                               <span className={`shrink-0 inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${
                                 sub.status === "pending" ? "bg-amber-500/12 text-amber-300 border border-amber-500/20"
-                                : sub.status === "approved" ? "bg-emerald-500/12 text-emerald-300 border border-emerald-500/20"
+                                : sub.status === "published" ? "bg-emerald-500/12 text-emerald-300 border border-emerald-500/20"
+                                : sub.status === "draft" ? "bg-red-500/12 text-red-300 border border-red-500/20"
                                 : "bg-[var(--bg-surface)] text-[var(--text-muted)] border border-[var(--border-subtle)]"
-                              }`}>{sub.status}</span>
+                              }`}>{sub.status === "draft" ? "rejected" : sub.status}</span>
                             </div>
 
-                            {/* Meta row: author, region, date, read time */}
+                            {/* Meta row: author, region, date */}
                             <div className="flex items-center gap-2 flex-wrap mb-2">
                               <span className="text-[var(--text-secondary)] text-[12px] font-semibold">{sub.author_name}</span>
                               {sub.author_role && <span className="text-[var(--text-muted)] text-[11px] hidden sm:inline">· {sub.author_role}</span>}
                               {sub.region && <span className="inline-flex items-center gap-1 text-[var(--text-muted)] text-[11px]"><MapPin className="w-2.5 h-2.5" />{sub.region}</span>}
-                              {sub.date_of_adventure && <span className="text-[var(--text-muted)] text-[11px]">· {sub.date_of_adventure}</span>}
+                              {sub.date && <span className="text-[var(--text-muted)] text-[11px]">· {sub.date}</span>}
                             </div>
 
                             {/* Excerpt */}
@@ -1264,9 +1276,9 @@ export default function AdminDashboardClient({
 
                             {/* Bottom row: contact + tags + date */}
                             <div className="flex flex-wrap items-center gap-2">
-                              {sub.email && (
-                                <a href={`mailto:${sub.email}`} className="inline-flex items-center gap-1 text-[11px] text-[#ff7d47]/60 hover:text-[#ff7d47] transition-colors">
-                                  <Mail className="w-3 h-3" />{sub.email}
+                              {submitter?.email && (
+                                <a href={`mailto:${submitter.email}`} className="inline-flex items-center gap-1 text-[11px] text-[#ff7d47]/60 hover:text-[#ff7d47] transition-colors">
+                                  <Mail className="w-3 h-3" />{submitter.email}
                                 </a>
                               )}
                               {sub.tags?.slice(0,3).map(tag => (
@@ -1288,13 +1300,13 @@ export default function AdminDashboardClient({
                           {isExpanded ? "Collapse" : "View Full Story"}
                         </button>
                         <div className="flex items-center gap-2">
-                          {sub.status !== "approved" && (
+                          {sub.status !== "published" && (
                             <button onClick={() => handleStoryAction(sub, "approve")} disabled={loadingId === sub.id}
                               className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-lg border border-emerald-500/20 text-emerald-400/70 hover:bg-emerald-500/10 hover:border-emerald-500/35 transition-all disabled:opacity-40">
                               {loadingId === sub.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />} Approve
                             </button>
                           )}
-                          {sub.status !== "rejected" && (
+                          {sub.status !== "draft" && (
                             <button onClick={() => handleStoryAction(sub, "reject")} disabled={loadingId === sub.id}
                               className="flex items-center gap-1.5 text-[11px] font-bold px-3 py-1.5 rounded-lg border border-[var(--border-subtle)] text-[var(--text-tertiary)] hover:border-red-500/25 hover:text-red-400/80 hover:bg-red-500/8 transition-all disabled:opacity-40">
                               {loadingId === sub.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />} Reject
@@ -1330,18 +1342,13 @@ export default function AdminDashboardClient({
                               {sub.author_bio && (
                                 <p className="text-[var(--text-tertiary)] text-[11px] italic leading-relaxed mt-1">{sub.author_bio}</p>
                               )}
-                              <div className="flex flex-wrap items-center gap-3 mt-2">
-                                {sub.email && (
-                                  <a href={`mailto:${sub.email}`} className="inline-flex items-center gap-1 text-[11px] text-[#ff7d47]/70 hover:text-[#ff7d47] transition-colors">
-                                    <Mail className="w-3 h-3" />{sub.email}
+                              {submitter?.email && (
+                                <div className="flex flex-wrap items-center gap-3 mt-2">
+                                  <a href={`mailto:${submitter.email}`} className="inline-flex items-center gap-1 text-[11px] text-[#ff7d47]/70 hover:text-[#ff7d47] transition-colors">
+                                    <Mail className="w-3 h-3" />{submitter.email}
                                   </a>
-                                )}
-                                {sub.phone && (
-                                  <span className="inline-flex items-center gap-1 text-[var(--text-muted)] text-[11px]">
-                                    <Phone className="w-3 h-3" />{sub.phone}
-                                  </span>
-                                )}
-                              </div>
+                                </div>
+                              )}
                             </div>
                           </div>
 
@@ -1349,9 +1356,7 @@ export default function AdminDashboardClient({
                           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             {[
                               { label: "Region", value: sub.region, icon: MapPin },
-                              { label: "State", value: sub.state, icon: MapPin },
-                              { label: "Date of Adventure", value: sub.date_of_adventure, icon: Calendar },
-                              { label: "Date of Adventure", value: sub.date_of_adventure, icon: Calendar },
+                              { label: "Date of Adventure", value: sub.date, icon: Calendar },
                             ].filter(item => item.value).map(item => (
                               <div key={item.label} className="p-3 rounded-xl border border-[var(--border-subtle)]" style={{ background: "var(--bg-surface)" }}>
                                 <p className="text-[9px] font-black uppercase tracking-[0.15em] text-[var(--text-muted)] mb-1">{item.label}</p>
@@ -1367,8 +1372,8 @@ export default function AdminDashboardClient({
                           <div className="flex items-center justify-between flex-wrap gap-2">
                             <div className="flex items-center gap-2">
                               <span className="text-[10px] text-[var(--text-muted)] font-semibold">Submitted {format(parseISO(sub.created_at), "MMM d, yyyy · HH:mm")}</span>
-                              {(sub as StorySubmission & { slug?: string }).slug && (
-                                <Link href={`/stories/${(sub as StorySubmission & { slug?: string }).slug}`} target="_blank" className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff7d47]/70 hover:text-[#ff7d47] transition-colors">
+                              {sub.status === "published" && sub.slug && (
+                                <Link href={`/stories/${sub.slug}`} target="_blank" className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#ff7d47]/70 hover:text-[#ff7d47] transition-colors">
                                   <ExternalLink className="w-3 h-3" /> View on site
                                 </Link>
                               )}
@@ -1968,10 +1973,44 @@ export default function AdminDashboardClient({
                   {[
                     { label: "Total", value: localStories.length, color: "#ff5100" },
                     { label: "Pending", value: localStories.filter(s => s.status === "pending").length, color: "#f59e0b" },
-                    { label: "Approved", value: localStories.filter(s => s.status === "approved").length, color: "#22c55e" },
-                    { label: "Rejected", value: localStories.filter(s => s.status === "rejected").length, color: "#ef4444" },
+                    { label: "Published", value: localStories.filter(s => s.status === "published").length, color: "#22c55e" },
+                    { label: "Rejected", value: localStories.filter(s => s.status === "draft").length, color: "#ef4444" },
                   ].map(({ label, value, color }) => {
                     const pct = localStories.length > 0 ? Math.round((value / localStories.length) * 100) : 0;
+                    return (
+                      <div key={label} className="p-4 rounded-xl border border-[var(--border-subtle)]" style={{ background: "var(--bg-surface)" }}>
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--text-muted)]">{label}</p>
+                          <span className="text-[10px] font-black px-1.5 py-0.5 rounded-full" style={{ background: color + "18", color }}>{pct}%</span>
+                        </div>
+                        <p className="text-2xl font-black tracking-tight" style={{ color }}>{value}</p>
+                        <div className="mt-2 h-1.5 rounded-full bg-[var(--bg-surface-2)]">
+                          <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: color }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Operator submission funnel */}
+            <div className="border border-[var(--border-subtle)] rounded-2xl p-6" style={{ background: "var(--bg-card)" }}>
+              <div className="mb-5">
+                <p className="text-[9px] font-black uppercase tracking-[0.15em] text-[var(--text-muted)] mb-1">Submissions</p>
+                <h3 className="text-sm font-bold">Operator Listing Funnel</h3>
+              </div>
+              {localOperatorSubmissions.length === 0 ? (
+                <div className="h-[100px] flex items-center justify-center text-[var(--text-muted)] text-sm">No operator submissions yet</div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[
+                    { label: "Total", value: localOperatorSubmissions.length, color: "#ff5100" },
+                    { label: "Pending", value: localOperatorSubmissions.filter(s => s.status === "pending").length, color: "#f59e0b" },
+                    { label: "Approved", value: localOperatorSubmissions.filter(s => s.status === "approved").length, color: "#22c55e" },
+                    { label: "Rejected", value: localOperatorSubmissions.filter(s => s.status === "rejected").length, color: "#ef4444" },
+                  ].map(({ label, value, color }) => {
+                    const pct = localOperatorSubmissions.length > 0 ? Math.round((value / localOperatorSubmissions.length) * 100) : 0;
                     return (
                       <div key={label} className="p-4 rounded-xl border border-[var(--border-subtle)]" style={{ background: "var(--bg-surface)" }}>
                         <div className="flex items-center justify-between mb-2">

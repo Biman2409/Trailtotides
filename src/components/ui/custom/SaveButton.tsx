@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { awardXP, revokeXP } from "@/lib/awardXP";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 interface SaveButtonProps {
   slug: string;
@@ -81,28 +82,38 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
   /* ── CARD variant ─────────────────────────────────────────── */
   if (loggedIn === false) {
     return (
-      <button
-        onClick={handleClick}
-        aria-label="Log in to save"
-        className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm ${className}`}
-        style={{ background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.5)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }}
-      >
-        <Heart className="w-3.5 h-3.5" />
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={handleClick}
+            aria-label="Log in to save"
+            className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm ${className}`}
+            style={{ background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.5)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }}
+          >
+            <LogIn className="w-3.5 h-3.5" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>Log in to save</TooltipContent>
+      </Tooltip>
     );
   }
 
   return (
-    <button
-      onClick={handleClick}
-      aria-label={saved ? "Remove from wishlist" : "Save adventure"}
-      className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm ${className}`}
-      style={saved
-        ? { background: "rgba(255,81,0,0.9)", color: "#fff", boxShadow: "0 0 0 1px rgba(255,81,0,0.5), 0 0 10px rgba(255,81,0,0.3)" }
-        : { background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.7)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }
-      }
-    >
-      <Heart className={`w-3.5 h-3.5 transition-all duration-200 ${saved ? "fill-white" : ""}`} />
-    </button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          onClick={handleClick}
+          aria-label={saved ? "Remove from wishlist" : "Save adventure"}
+          className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm ${className}`}
+          style={saved
+            ? { background: "rgba(255,81,0,0.9)", color: "#fff", boxShadow: "0 0 0 1px rgba(255,81,0,0.5), 0 0 10px rgba(255,81,0,0.3)" }
+            : { background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.7)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }
+          }
+        >
+          <Heart className={`w-3.5 h-3.5 transition-all duration-200 ${saved ? "fill-white" : ""}`} />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>{saved ? "Saved" : "Save adventure"}</TooltipContent>
+    </Tooltip>
   );
 }

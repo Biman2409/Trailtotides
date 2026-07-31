@@ -5,7 +5,7 @@ import { Heart } from "lucide-react";
 
 const DEFAULT_LIKES = 50;
 
-export default function StoryLikeButton({ slug, baseLikes, className = "", pill = false }: { slug: string; baseLikes?: number; className?: string; pill?: boolean }) {
+export default function StoryLikeButton({ slug, baseLikes, className = "", pill = false, muted = false }: { slug: string; baseLikes?: number; className?: string; pill?: boolean; muted?: boolean }) {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(baseLikes ?? DEFAULT_LIKES);
 
@@ -27,19 +27,21 @@ export default function StoryLikeButton({ slug, baseLikes, className = "", pill 
   }
 
   if (pill) {
+    const idleColor = muted ? "var(--text-tertiary)" : "rgba(255,255,255,0.7)";
     return (
       <button
         onClick={toggleLike}
-        className={`flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/20 rounded-full px-3 h-9 transition-all active:scale-90 ${className}`}
+        className={`flex items-center gap-1.5 rounded-full px-3 h-9 transition-all active:scale-90 ${muted ? "" : "bg-white/15 backdrop-blur-sm border border-white/20"} ${className}`}
+        style={muted ? { background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" } : undefined}
       >
         <Heart
           className="w-4 h-4 transition-colors"
           style={{
-            color: liked ? "#ff4d6d" : "rgba(255,255,255,0.7)",
+            color: liked ? "#ff4d6d" : idleColor,
             fill: liked ? "#ff4d6d" : "transparent",
           }}
         />
-        <span className="text-xs font-semibold tabular-nums" style={{ color: liked ? "#ff4d6d" : "rgba(255,255,255,0.7)" }}>
+        <span className="text-xs font-semibold tabular-nums" style={{ color: liked ? "#ff4d6d" : idleColor }}>
           {likeCount}
         </span>
       </button>
