@@ -490,6 +490,7 @@ function CapabilityReadout({ axisLabels, axisDesc, axisColors, userAxes, rawAxes
   decayNotes?: string[];
 }) {
   const [hoveredAxis, setHoveredAxis] = useState<AceAxis | null>(null);
+  const [expandedAxis, setExpandedAxis] = useState<AceAxis | null>(null);
   const hasCalibration = !!rawAxes && !!decayNotes?.length;
 
   return (
@@ -509,11 +510,12 @@ function CapabilityReadout({ axisLabels, axisDesc, axisColors, userAxes, rawAxes
             highlightAxis={hoveredAxis}
           />
           {hasCalibration && (
-            <div className="w-full max-w-[220px] rounded-lg px-3 py-2.5" style={{ background: "var(--accent-green-soft)", border: "1px solid var(--accent-green-border)" }}>
-              <p className="text-[8px] font-mono font-bold uppercase tracking-wide mb-1" style={{ color: "var(--accent-green)" }}>Calibrated — see adjustments</p>
-              <p className="text-[9px] leading-snug" style={{ color: "var(--text-tertiary)" }}>
-                Solid = calibrated, dashed = raw self-report. Adjusted for: {decayNotes!.map(n => n.split(":")[0]).join(", ").toLowerCase()}.
-              </p>
+            <div className="w-full max-w-[260px] rounded-lg px-3 py-2.5 space-y-1.5" style={{ background: "var(--accent-green-soft)", border: "1px solid var(--accent-green-border)" }}>
+              <p className="text-[8px] font-mono font-bold uppercase tracking-wide" style={{ color: "var(--accent-green)" }}>Calibrated — see adjustments</p>
+              <p className="text-[9px] leading-snug" style={{ color: "var(--text-tertiary)" }}>Solid = calibrated, dashed = raw self-report.</p>
+              {decayNotes!.map((note, i) => (
+                <p key={i} className="text-[9px] leading-snug" style={{ color: "var(--text-tertiary)" }}>{note}</p>
+              ))}
             </div>
           )}
         </div>
@@ -532,40 +534,40 @@ function CapabilityReadout({ axisLabels, axisDesc, axisColors, userAxes, rawAxes
               const color = axisColors[axis] ?? "#ff5100";
               const val = (userAxes as Record<string, number>)[axis] ?? 0;
               const isHovered = hoveredAxis === axis;
+              const isExpanded = expandedAxis === axis;
               return (
-                <div
-                  key={axis}
-                  className="group relative flex items-center gap-2 py-1 px-1.5 -mx-1.5 rounded-lg transition-colors duration-150"
-                  style={{ background: isHovered ? `${color}14` : "transparent" }}
-                  onMouseEnter={() => setHoveredAxis(axis as AceAxis)}
-                  onMouseLeave={() => setHoveredAxis(null)}
-                >
-                  <span className="text-[9px] font-black uppercase tracking-[0.08em] w-[46px] shrink-0" style={{ color }}>
-                    {axisLabels[axis]}
-                  </span>
-                  <div className="flex-1 h-[3px] rounded-full" style={{ background: "var(--border-subtle)" }}>
-                    <div className="h-full rounded-full transition-all duration-700" style={{ width: `${(val / 5) * 100}%`, background: color }} />
-                  </div>
-                  <span
-                    className="text-[10px] font-mono font-bold tabular-nums w-5 text-right shrink-0 transition-transform duration-150"
-                    style={{ color, transform: isHovered ? "scale(1.25)" : "scale(1)" }}
+                <div key={axis}>
+                  {/* Tap or click to reveal the description below — works
+                      identically on touch and mouse, unlike a hover-only
+                      tooltip (which is unreachable on touch devices). */}
+                  <button
+                    type="button"
+                    className="w-full flex items-center gap-2 py-1 px-1.5 -mx-1.5 rounded-lg transition-colors duration-150 text-left"
+                    style={{ background: isHovered || isExpanded ? `${color}14` : "transparent" }}
+                    onMouseEnter={() => setHoveredAxis(axis as AceAxis)}
+                    onMouseLeave={() => setHoveredAxis(null)}
+                    onClick={() => setExpandedAxis((prev) => (prev === axis ? null : (axis as AceAxis)))}
+                    aria-expanded={isExpanded}
                   >
-                    {val}
-                  </span>
-
-                  {/* Hover tooltip — per-axis comment, hidden until hovered */}
-                  <div
-                    className="pointer-events-none absolute left-0 right-0 bottom-full mb-2.5 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-150 z-20"
-                  >
-                    <div className="rounded-lg px-2.5 py-2 shadow-xl" style={{ background: "var(--bg-surface-2)", border: `1px solid ${color}40` }}>
-                      <p className="text-[9px] leading-snug" style={{ color: "var(--text-secondary)" }}>{axisDesc[axis]}</p>
+                    <span className="text-[9px] font-black uppercase tracking-[0.08em] w-[46px] shrink-0" style={{ color }}>
+                      {axisLabels[axis]}
+                    </span>
+                    <div className="flex-1 h-[3px] rounded-full" style={{ background: "var(--border-subtle)" }}>
+                      <div className="h-full rounded-full transition-all duration-700" style={{ width: `${(val / 5) * 100}%`, background: color }} />
                     </div>
-                    {/* caret */}
-                    <div
-                      className="w-2 h-2 rotate-45 ml-4 -mt-1"
-                      style={{ background: "var(--bg-surface-2)", borderRight: `1px solid ${color}40`, borderBottom: `1px solid ${color}40` }}
-                    />
-                  </div>
+                    <span
+                      className="text-[10px] font-mono font-bold tabular-nums w-5 text-right shrink-0 transition-transform duration-150"
+                      style={{ color, transform: isHovered ? "scale(1.25)" : "scale(1)" }}
+                    >
+                      {val}
+                    </span>
+                  </button>
+
+                  {isExpanded && (
+                    <div className="px-1.5 pt-1 pb-2">
+                      <p className="text-[10px] leading-relaxed" style={{ color: "var(--text-tertiary)" }}>{axisDesc[axis]}</p>
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -706,7 +708,7 @@ function ResultsScreen({
       <FadeInSection>
       <div className="mb-5 sm:mb-6">
         <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-2">Adventure Matchmaker</p>
-        <h2 className="t-text text-2xl sm:text-3xl font-black tracking-tight">Adventure Capability Engine Profile</h2>
+        <h2 className="t-text text-2xl sm:text-3xl font-black tracking-tight">Your Capability Profile</h2>
       </div>
       </FadeInSection>
 
@@ -716,7 +718,7 @@ function ResultsScreen({
         {/* ── MASTHEAD: score + tier + ruler ── */}
         <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-7 sm:pb-8">
           <div className="flex items-center justify-between mb-6">
-            <p className="text-[10px] font-mono font-bold uppercase tracking-[0.28em]" style={{ color: "#ff5100" }}>Adventure Capability Engine</p>
+            <p className="text-[10px] font-mono font-bold uppercase tracking-[0.28em]" style={{ color: "#ff5100" }}>ACE<sup>™</sup></p>
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--accent-green)" }} />
               <p className="text-[10px] font-mono uppercase tracking-[0.2em]" style={{ color: "var(--accent-green)" }}>Assessment Complete</p>
@@ -748,7 +750,9 @@ function ResultsScreen({
               </div>
             </div>
 
-            <div className="relative mt-3 h-4">
+            {/* Tier name labels — hidden on mobile where 6 labels collide;
+                the current tier is already shown prominently above. */}
+            <div className="relative mt-3 h-4 hidden sm:block">
               {RANKS.map((rank, i) => (
                 <span
                   key={rank.label}
@@ -765,14 +769,14 @@ function ResultsScreen({
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3 mt-5 rounded-xl px-3.5 py-3" style={{ background: `${tier.color}0c`, border: `1px solid ${tier.color}25` }}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-5 rounded-xl px-3.5 py-3" style={{ background: `${tier.color}0c`, border: `1px solid ${tier.color}25` }}>
             <div className="flex items-center gap-3 min-w-0">
               {tierRank && (
                 <div className="shrink-0" style={{ color: tier.color }}>
                   {tierRank.icon}
                 </div>
               )}
-              <p className="text-[12px] leading-snug truncate" style={{ color: "var(--text-secondary)" }}>
+              <p className="text-[12px] leading-snug" style={{ color: "var(--text-secondary)" }}>
                 {nextRank
                   ? <><span className="font-mono font-bold" style={{ color: tier.color }}>{ptsNeeded}</span> points to <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span></>
                   : <>Pinnacle rank — <span className="italic">maximum capability tier reached</span>.</>}
@@ -782,7 +786,7 @@ function ResultsScreen({
               <a
                 href="#training-focus"
                 onClick={(e) => { e.preventDefault(); document.getElementById("training-focus")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
-                className="shrink-0 inline-flex items-center gap-1.5 pl-3 pr-2.5 py-2 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all hover:brightness-110"
+                className="shrink-0 inline-flex items-center justify-center gap-1.5 pl-3 pr-2.5 py-2 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all hover:brightness-110"
                 style={{ background: tier.color, color: "#fff" }}
               >
                 How to improve
@@ -826,6 +830,14 @@ function ResultsScreen({
           <p className="text-[11px] mb-4" style={{ color: "var(--text-secondary)" }}>
             Every adventure checked against your 8-axis ACE profile above.
           </p>
+          {inZone.length === 0 && (
+            <div className="flex items-start gap-2.5 mb-4 rounded-lg px-3.5 py-3" style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.2)" }}>
+              <TrendingUp className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: "#f59e0b" }} />
+              <p className="text-[11px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                Nothing fully matches your current profile yet — here&apos;s what&apos;s within reach.
+              </p>
+            </div>
+          )}
           <AdventureSection
             label="Ready Now"
             sublabel="Adventures within your current capability"
@@ -834,7 +846,7 @@ function ResultsScreen({
             totalCount={inZone.length}
             exploreUrl="/explore?ace=ready"
             accentColor="#4ade80"
-            defaultOpen
+            defaultOpen={inZone.length > 0}
             isFirst
           />
           {stretch.length > 0 && (
@@ -846,6 +858,8 @@ function ResultsScreen({
               totalCount={stretch.length}
               exploreUrl="/explore?ace=stretch"
               accentColor="#f59e0b"
+              defaultOpen={inZone.length === 0}
+              isFirst={inZone.length === 0}
             />
           )}
           {restricted.length > 0 && (
@@ -857,6 +871,8 @@ function ResultsScreen({
               totalCount={restricted.length}
               exploreUrl="/explore?ace=out-of-range"
               accentColor="#f43f5e"
+              defaultOpen={inZone.length === 0 && stretch.length === 0}
+              isFirst={inZone.length === 0 && stretch.length === 0}
             />
           )}
         </div>
