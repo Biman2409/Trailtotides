@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, AlertTriangle } from "lucide-react";
+import { loadProfileFromServer, isProfileStale } from "@/lib/matchmaker";
 
 interface Props {
   adventureName: string;
@@ -14,12 +15,23 @@ interface Props {
 
 export default function MobileBookBar({ adventureName, priceFrom, difficulty, duration, operatorWebsite, operatorName }: Props) {
   const [visible, setVisible] = useState(false);
+  const [staleProfile, setStaleProfile] = useState(false);
 
   useEffect(() => {
     const threshold = window.innerHeight * 0.8;
     const onScroll = () => setVisible(window.scrollY > threshold);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Mirrors RecalibrationNudge's staleness check — this was the original
+  // gap: mobile is the primary last-mile booking surface, so the nudge
+  // shouldn't only live below the fold in the desktop-style banner.
+  useEffect(() => {
+    loadProfileFromServer().then((profile) => {
+      if (!profile) return;
+      setStaleProfile(isProfileStale((profile as { updatedAt?: string }).updatedAt));
+    });
   }, []);
 
   const handleBook = () => {
@@ -55,6 +67,18 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
             <p className="text-white/35 text-[11px] mt-0.5 truncate">
               {duration}{difficulty && <> · {difficulty}</>}
             </p>
+            {staleProfile && (
+              <button
+                onClick={() => {
+                  const el = document.getElementById("book-this-adventure");
+                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="inline-flex items-center gap-1 mt-1 px-1.5 py-0.5 rounded-full text-[9px] font-semibold"
+                style={{ background: difficulty === "Extreme" ? "rgba(239,68,68,0.18)" : "rgba(245,158,11,0.15)", color: difficulty === "Extreme" ? "#f87171" : "#fbbf24" }}
+              >
+                <AlertTriangle className="w-2.5 h-2.5" /> Profile stale
+              </button>
+            )}
           </div>
           <div className="text-right shrink-0">
             {operatorName && (

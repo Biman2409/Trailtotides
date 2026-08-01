@@ -42,6 +42,10 @@ import PackingList from "./PackingList";
 import HazardBadges from "./HazardBadges";
 import TagsList from "@/components/ui/custom/TagsList";
 import SidebarLink from "@/components/ui/custom/SidebarLink";
+import RecalibrationNudge from "./RecalibrationNudge";
+import MedicalCautionNote from "./MedicalCautionNote";
+import { deriveMedicalCautions } from "@/lib/medicalCautions";
+import type { MedicalFlags } from "@/lib/matchmakerQuestions";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -163,6 +167,12 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   const currentUserId = user?.id;
+
+  // Derived server-side so the user's raw medical flags never reach client
+  // JS on a page anyone can view — only these already-computed advisory
+  // strings get passed down.
+  const medicalFlags = (user?.user_metadata?.ace_medical as MedicalFlags | undefined) ?? null;
+  const medicalCautions = deriveMedicalCautions(medicalFlags, adventure);
 
   const tripLog = currentUserId ? await loadTripLog() : [];
   const isCompleted = tripLog.some(e => e.slug === adventure.slug);
@@ -423,6 +433,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                       showWater={showWaterWarning}
                     />
                   )}
+                  <MedicalCautionNote notes={medicalCautions} />
                 </div>
 
                 {/* Packing list — nested within Safety & Prep */}
@@ -453,6 +464,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </div>
 
             {/* Operators */}
+            <RecalibrationNudge difficulty={difficulty} />
             <div id="book-this-adventure" />
             <AccordionSection label="Book This Adventure" title="" defaultOpen={true}>
               <div id="operators-section" className="space-y-2.5">

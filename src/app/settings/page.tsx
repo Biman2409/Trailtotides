@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import ProfileForm from "@/app/profile/ProfileForm";
+import DeleteAceDataButton from "./DeleteAceDataButton";
 
 export const metadata: Metadata = {
   title: "Settings",
@@ -69,6 +70,10 @@ export default async function SettingsPage() {
             username: user.user_metadata?.username || profile.username || null,
             phone: profile.phone || user.user_metadata?.phone || null,
           }} />
+
+          <div className="mt-8">
+            <DeleteAceDataButton />
+          </div>
         </div>
       </section>
 

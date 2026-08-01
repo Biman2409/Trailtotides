@@ -1,5 +1,6 @@
 import type { Adventure } from "./data";
 import { getACE, type ACE, type AceAxis, ACE_AXIS_LABELS } from "./ace";
+import type { MedicalFlags } from "./matchmakerQuestions";
 
 // ─── Answer types ─────────────────────────────────────────────────────────────
 
@@ -158,9 +159,17 @@ export function getUpsells(userAce: ACE, adventureAce: ACE): Upsell[] {
 // ─── localStorage helpers ─────────────────────────────────────────────────────
 
 const STORAGE_KEY = "ttt_matchmaker_profile";
+const MEDICAL_STORAGE_KEY = "ttt_matchmaker_medical";
+const CONSENT_STORAGE_KEY = "ttt_matchmaker_consent";
 
 export interface StoredProfile {
   ace: ACE;
+  /** ISO timestamp — always server-stamped on save, never trusted from a client clock. */
+  updatedAt?: string;
+  /** True if the altitude axis was capped due to a reported evacuation. */
+  altitudeCapped?: boolean;
+  rawAxes?: Record<string, number>;
+  decayNotes?: string[];
   answers?: Record<string, unknown>; // kept for backward compatibility
   // Legacy ERT field — kept so old profiles don't break
   ert?: { e: number; r: number; t: number };
@@ -221,5 +230,130 @@ export async function loadProfileFromServer(): Promise<StoredProfile | null> {
     return local;
   } catch {}
   return loadProfile();
+}
+
+// ─── Staleness ────────────────────────────────────────────────────────────────
+
+/** Missing/null timestamp (old-shape profiles, edge cases) is treated as maximally stale. */
+export function isProfileStale(updatedAt: string | null | undefined, thresholdDays = 90): boolean {
+  if (!updatedAt) return true;
+  const ageMs = Date.now() - new Date(updatedAt).getTime();
+  return ageMs > thresholdDays * 86_400_000;
+}
+
+// ─── Medical flags — localStorage ──────────────────────────────────────────────
+// Kept in a separate key from the profile above, at every layer, so there's
+// no code path where medical answers could be merged into the scored ACE.
+
+export function saveMedicalFlags(flags: MedicalFlags): void {
+  try { localStorage.setItem(MEDICAL_STORAGE_KEY, JSON.stringify(flags)); } catch {}
+}
+
+export function loadMedicalFlags(): MedicalFlags | null {
+  try {
+    const raw = localStorage.getItem(MEDICAL_STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as MedicalFlags) : null;
+  } catch { return null; }
+}
+
+export function clearMedicalFlags(): void {
+  try { localStorage.removeItem(MEDICAL_STORAGE_KEY); } catch {}
+}
+
+// ─── Medical flags — server sync ───────────────────────────────────────────────
+
+export async function saveMedicalFlagsToServer(flags: MedicalFlags): Promise<void> {
+  try {
+    await fetch("/api/ace-medical", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(flags),
+    });
+  } catch {}
+}
+
+export async function loadMedicalFlagsFromServer(): Promise<MedicalFlags | null> {
+  try {
+    const res = await fetch("/api/ace-medical");
+    if (!res.ok) return loadMedicalFlags();
+    const { flags } = await res.json();
+    if (flags) {
+      saveMedicalFlags(flags as MedicalFlags);
+      return flags as MedicalFlags;
+    }
+    const local = loadMedicalFlags();
+    if (local) saveMedicalFlagsToServer(local); // fire-and-forget
+    return local;
+  } catch {}
+  return loadMedicalFlags();
+}
+
+export async function deleteMedicalFlags(): Promise<void> {
+  clearMedicalFlags();
+  try { await fetch("/api/ace-medical", { method: "DELETE" }); } catch {}
+}
+
+// ─── Consent — localStorage + server ───────────────────────────────────────────
+
+export const MATCHMAKER_CONSENT_VERSION = 1;
+
+export interface StoredConsent {
+  consentedAt: string;
+  consentVersion: number;
+}
+
+export function saveConsent(consent: StoredConsent): void {
+  try { localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(consent)); } catch {}
+}
+
+export function loadConsent(): StoredConsent | null {
+  try {
+    const raw = localStorage.getItem(CONSENT_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as StoredConsent;
+    return parsed.consentVersion === MATCHMAKER_CONSENT_VERSION ? parsed : null;
+  } catch { return null; }
+}
+
+/** Fire-and-forget — consent is stored as a sibling of ace_profile in the same POST body shape via api/ace-profile. */
+export async function saveConsentToServer(consent: StoredConsent): Promise<void> {
+  try {
+    await fetch("/api/ace-consent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(consent),
+    });
+  } catch {}
+}
+
+export async function loadConsentFromServer(): Promise<StoredConsent | null> {
+  try {
+    const res = await fetch("/api/ace-consent");
+    if (!res.ok) return loadConsent();
+    const { consent } = await res.json();
+    if (consent?.consentVersion === MATCHMAKER_CONSENT_VERSION) {
+      saveConsent(consent as StoredConsent);
+      return consent as StoredConsent;
+    }
+    const local = loadConsent();
+    if (local) saveConsentToServer(local); // fire-and-forget
+    return local;
+  } catch {}
+  return loadConsent();
+}
+
+// ─── Delete-all — used by the account-settings "delete my capability & health data" control ──
+
+export async function deleteAllMatchmakerData(): Promise<void> {
+  clearProfile();
+  clearMedicalFlags();
+  try { localStorage.removeItem(CONSENT_STORAGE_KEY); } catch {}
+  // Sequential, not Promise.all: user_metadata is a single JSON blob with no
+  // per-field atomicity, so two concurrent read-modify-write DELETEs race —
+  // whichever finishes last overwrites the other's change with its own
+  // (now-stale) read, silently undoing it. Awaiting one before starting the
+  // next means each starts from the state the previous one actually left.
+  try { await fetch("/api/ace-profile", { method: "DELETE" }); } catch {}
+  try { await fetch("/api/ace-medical", { method: "DELETE" }); } catch {}
 }
 

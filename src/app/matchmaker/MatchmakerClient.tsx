@@ -7,18 +7,29 @@ import Link from "next/link";
 import {
   ChevronRight, ChevronLeft, MapPin, ArrowRight, RotateCcw,
   Shield, CheckCircle2, AlertTriangle, Loader2, Wind, HeartPulse,
+  Stethoscope,
 } from "lucide-react";
 import { Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost, TrendingUp, Lock } from "@/lib/localIcons";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import Pill from "@/components/ui/custom/Pill";
 import AchievementBadges from "@/components/ui/custom/AchievementBadges";
 import AchievementShareButton from "@/components/ui/custom/AchievementShareButton";
-import { saveProfile, clearProfile, saveProfileToServer, loadProfileFromServer } from "@/lib/matchmaker";
+import {
+  saveProfile, clearProfile, saveProfileToServer, loadProfileFromServer,
+  saveMedicalFlags, saveMedicalFlagsToServer,
+  saveConsent, saveConsentToServer, loadConsentFromServer, MATCHMAKER_CONSENT_VERSION,
+  type StoredProfile,
+} from "@/lib/matchmaker";
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
 import { getACE, type ACE, type AceAxis } from "@/lib/ace";
 import { getAchievements } from "@/lib/achievements";
 import { awardXP } from "@/lib/awardXP";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
+import {
+  CAPABILITY_QUESTIONS, DECAY_QUESTIONS, MEDICAL_QUESTIONS, buildMedicalFlags,
+  type CapabilityQuestion, type DecayQuestion, type MedicalQuestion,
+} from "@/lib/matchmakerQuestions";
+import { computeAceFromAnswers } from "@/lib/matchmakerScoring";
 
 // ─── Sample radar animation ───────────────────────────────────────────────────
 
@@ -68,293 +79,19 @@ function AxisTicker() {
 }
 
 // ─── Question definitions ──────────────────────────────────────────────────
-// 2 questions per axis for finer calibration, except Water and Altitude
-// (1 each — those are already well-pinned by a single concrete question).
-
-const QUESTIONS = [
-  {
-    key: "stamina-1",
-    axis: "Stamina",
-    icon: <Flame className="w-4 h-4" />,
-    question: "How long can you sustain moderate-to-vigorous effort before you need to stop?",
-    hint: "Active exertion time, not time spent resting.",
-    options: [
-      { v: "A", l: "Under 1 hour", s: "Short bursts only" },
-      { v: "B", l: "1–2 hours", s: "Light, relaxed pace" },
-      { v: "C", l: "2–4 hours", s: "Steady, with breaks" },
-      { v: "D", l: "4–6 hours", s: "Hard effort, most of a day" },
-      { v: "E", l: "6+ hours", s: "Minimal fatigue, very long days" },
-    ],
-  },
-  {
-    key: "stamina-2",
-    axis: "Stamina",
-    icon: <Flame className="w-4 h-4" />,
-    question: "The day after your hardest physical effort, how do you feel?",
-    hint: "Genuine recovery, not mild tiredness.",
-    options: [
-      { v: "A", l: "Need 2+ days to recover", s: "Slow to bounce back" },
-      { v: "B", l: "Sore and drained, want a rest day", s: "Depleted, but functional" },
-      { v: "C", l: "Tired, but up for a lighter day", s: "Reduced, not full rest" },
-      { v: "D", l: "Ready to repeat the effort", s: "Minimal carryover fatigue" },
-      { v: "E", l: "Ready for an even harder day", s: "Rarely limited by recovery" },
-    ],
-  },
-  {
-    key: "power-1",
-    axis: "Power",
-    icon: <Zap className="w-4 h-4" />,
-    question: "How much weight can you carry comfortably over a sustained period?",
-    hint: "Load-bearing capacity, not a single short lift.",
-    options: [
-      { v: "A", l: "Under 5 kg", s: "Minimal load" },
-      { v: "B", l: "5–8 kg", s: "Light load, short spells" },
-      { v: "C", l: "8–12 kg", s: "Moderate load, longer spells" },
-      { v: "D", l: "12–18 kg", s: "Heavy load, sustained" },
-      { v: "E", l: "18 kg+", s: "Very heavy, no real limit" },
-    ],
-  },
-  {
-    key: "power-2",
-    axis: "Power",
-    icon: <Zap className="w-4 h-4" />,
-    question: "How do you handle a short, maximal effort — a heavy lift, a sprint, a sudden hard push?",
-    hint: "One hard push, not sustained effort.",
-    options: [
-      { v: "A", l: "Avoid it, ask for help", s: "Not my strength" },
-      { v: "B", l: "Manage it slowly, real effort", s: "Costly, but doable" },
-      { v: "C", l: "Handle it with some strain", s: "Solid effort" },
-      { v: "D", l: "Handle it comfortably", s: "Rarely an issue" },
-      { v: "E", l: "Explosive, no problem at all", s: "Genuinely strong" },
-    ],
-  },
-  {
-    key: "strength-1",
-    axis: "Strength",
-    icon: <Dumbbell className="w-4 h-4" />,
-    question: "How does your body handle sustained strain under load over several hours?",
-    hint: "Repeated demanding exertion, not one effort.",
-    options: [
-      { v: "A", l: "Tire quickly, avoid sustained strain", s: "Low tolerance for load" },
-      { v: "B", l: "Manage short bursts, need recovery", s: "Works in short stretches" },
-      { v: "C", l: "Steady output under moderate demand", s: "Holds up over a day" },
-      { v: "D", l: "Sustain heavy strain, minimal fatigue", s: "Strong endurance" },
-      { v: "E", l: "Power through extreme demand", s: "Rarely limited" },
-    ],
-  },
-  {
-    key: "strength-2",
-    axis: "Strength",
-    icon: <Dumbbell className="w-4 h-4" />,
-    question: "How much can you lift or carry relative to your bodyweight, over a short distance?",
-    hint: "Think gear, a fallen bike, a boat — not a gym max.",
-    options: [
-      { v: "A", l: "Struggle beyond light objects", s: "Limited lifting capacity" },
-      { v: "B", l: "Roughly a quarter of my bodyweight", s: "Manageable with effort" },
-      { v: "C", l: "A third to half my bodyweight", s: "Solid functional strength" },
-      { v: "D", l: "Close to my full bodyweight", s: "Strong under load" },
-      { v: "E", l: "More than my own bodyweight", s: "Exceptional raw strength" },
-    ],
-  },
-  {
-    key: "agility-1",
-    axis: "Agility",
-    icon: <Compass className="w-4 h-4" />,
-    question: "How confidently can you move through unpredictable, physically demanding environments?",
-    hint: "General coordination and control, not one setting.",
-    options: [
-      { v: "A", l: "Prefer flat, stable ground", s: "Uneven ground is hard" },
-      { v: "B", l: "Manage minor obstacles carefully", s: "Slow, deliberate" },
-      { v: "C", l: "Handle shifting conditions with care", s: "Steady, controlled" },
-      { v: "D", l: "Move confidently, rarely slowed", s: "Rarely slowed down" },
-      { v: "E", l: "Fully at ease in technical settings", s: "Exceptional control" },
-    ],
-  },
-  {
-    key: "agility-2",
-    axis: "Agility",
-    icon: <Compass className="w-4 h-4" />,
-    question: "How comfortable are you balancing on unstable or moving surfaces?",
-    hint: "Balance and coordination under shifting conditions.",
-    options: [
-      { v: "A", l: "Very uneasy, need support", s: "A weak point" },
-      { v: "B", l: "Manage slowly and carefully", s: "Doable with focus" },
-      { v: "C", l: "Comfortable at a measured pace", s: "Steady, controlled" },
-      { v: "D", l: "Comfortable moving quickly", s: "Rarely a second thought" },
-      { v: "E", l: "Fully at ease, barely notice it", s: "Natural balance" },
-    ],
-  },
-  {
-    key: "water-1",
-    axis: "Water",
-    icon: <Waves className="w-4 h-4" />,
-    question: "What level of water conditions are you comfortable in?",
-    hint: "Open water, not a controlled pool.",
-    options: [
-      { v: "A", l: "No open water — non-swimmer", s: "Needs support in water" },
-      { v: "B", l: "Calm shallow water", s: "Comfortable wading" },
-      { v: "C", l: "Open water swimming", s: "Calm lake or sea" },
-      { v: "D", l: "Moving water, moderate currents", s: "Confident against resistance" },
-      { v: "E", l: "Strong currents, rough conditions", s: "At ease in rough water" },
-    ],
-  },
-  {
-    key: "altitude-1",
-    axis: "Altitude",
-    icon: <Mountain className="w-4 h-4" />,
-    question: "At what altitude have you stayed active for days without significant symptoms?",
-    hint: "Time genuinely lived and moved at elevation, not just passed through.",
-    options: [
-      { v: "A", l: "Below 1,500m", s: "Sea level to low hills" },
-      { v: "B", l: "1,500–2,500m", s: "Minor symptoms, adapted" },
-      { v: "C", l: "2,500–3,500m", s: "Acclimatised well" },
-      { v: "D", l: "3,500–4,500m", s: "Handled real altitude" },
-      { v: "E", l: "Above 4,500m", s: "Thin air, no issue" },
-    ],
-  },
-  {
-    key: "focus-1",
-    axis: "Focus",
-    icon: <Shield className="w-4 h-4" />,
-    question: "How comfortable are you with real physical exposure — heights, drops, a slim margin for error?",
-    hint: "Real consequences, not just visual height.",
-    options: [
-      { v: "A", l: "Very uncomfortable, avoid exposure", s: "Causes real distress" },
-      { v: "B", l: "Manageable with slow, careful movement", s: "Pushes through it" },
-      { v: "C", l: "Comfortable with solid technique", s: "Focused, not anxious" },
-      { v: "D", l: "Comfortable in high-exposure situations", s: "Unaffected by exposure" },
-      { v: "E", l: "Fully at ease, regardless", s: "Thrives under exposure" },
-    ],
-  },
-  {
-    key: "nerve-1",
-    axis: "Nerve",
-    icon: <Ghost className="w-4 h-4" />,
-    question: "If you were stuck somewhere remote — no signal, hours from help — how do you respond?",
-    hint: "No phone, no guide. Real self-reliance.",
-    options: [
-      { v: "A", l: "Prefer to stay near help", s: "Needs support nearby" },
-      { v: "B", l: "OK for short stretches, others nearby", s: "Brief stints manageable" },
-      { v: "C", l: "Can manage basic needs, short delays", s: "1–2 days, prepared" },
-      { v: "D", l: "Self-sufficient in remote conditions", s: "Calm, multi-day" },
-      { v: "E", l: "Fully expedition-level self-reliant", s: "Weeks alone, no issue" },
-    ],
-  },
-];
-
-// ─── Calibration / decay questions ─────────────────────────────────────────
-// Cross-cutting — not tied to a single axis. Each has 4 real severity tiers
-// (A–D) plus a 5th "prefer not to say" option (E), which applies no
-// adjustment (multiplier 1.0) — same as skipping, but always an explicit
-// choice. Answering with a real tier discounts specific axes to correct for
-// detraining or health factors that self-rated capability tends to miss.
-
-const DECAY_QUESTIONS = [
-  {
-    key: "decay-recency",
-    title: "Recent activity",
-    question: "When did you last complete a demanding physical day outdoors?",
-    hint: "Fitness fades over time, even if it doesn't feel that way.",
-    affects: ["stamina", "power", "altitude"],
-    options: [
-      { v: "A", l: "This month", mult: 1.0 },
-      { v: "B", l: "1–6 months ago", mult: 0.88 },
-      { v: "C", l: "6–12 months ago", mult: 0.75 },
-      { v: "D", l: "Over a year ago, or can't recall", mult: 0.6 },
-      { v: "E", l: "Prefer not to say", mult: 1.0 },
-    ],
-  },
-  {
-    key: "decay-joint",
-    title: "Joint history",
-    question: "Any ongoing knee, ankle, hip, or back issues that flare up under load?",
-    hint: "Adjusts load-bearing axes, not effort or willpower.",
-    affects: ["strength", "power", "agility"],
-    options: [
-      { v: "A", l: "None", mult: 1.0 },
-      { v: "B", l: "Mild, occasional", mult: 0.88 },
-      { v: "C", l: "Managed — brace, physio, meds", mult: 0.75 },
-      { v: "D", l: "Significant, limits me", mult: 0.6 },
-      { v: "E", l: "Prefer not to say", mult: 1.0 },
-    ],
-  },
-  {
-    key: "decay-respiratory",
-    title: "Respiratory, cardiac & smoking",
-    question: "Any respiratory or cardiac conditions, or a smoking/vaping habit, that affects exertion?",
-    hint: "Matters for sustained effort, altitude, and breath control in the water.",
-    affects: ["stamina", "altitude", "water"],
-    options: [
-      { v: "A", l: "None — no conditions, don't smoke", mult: 1.0 },
-      { v: "B", l: "Mild — occasional smoking/vaping, or a well-managed condition", mult: 0.85 },
-      { v: "C", l: "Moderate — regular smoking, or a condition needing care", mult: 0.72 },
-      { v: "D", l: "Significant — heavy smoking and/or a serious condition", mult: 0.55 },
-      { v: "E", l: "Prefer not to say", mult: 1.0 },
-    ],
-  },
-  {
-    key: "decay-acute",
-    title: "Current condition",
-    question: "Are you currently recovering from any injury, illness, or surgery?",
-    hint: "A temporary state — separate from any ongoing chronic condition.",
-    affects: ["stamina", "power", "strength", "agility", "nerve"],
-    options: [
-      { v: "A", l: "Not at all", mult: 1.0 },
-      { v: "B", l: "Minor, nearly recovered", mult: 0.9 },
-      { v: "C", l: "Still recovering, limits me somewhat", mult: 0.75 },
-      { v: "D", l: "Early recovery — recent surgery or major illness", mult: 0.58 },
-      { v: "E", l: "Prefer not to say", mult: 1.0 },
-    ],
-  },
-  {
-    key: "decay-age",
-    title: "Age bracket",
-    question: "Which age range are you in?",
-    hint: "Explosive power and muscle strength decline with age faster than endurance does — this fine-tunes, it doesn't judge.",
-    affects: ["power", "strength"],
-    options: [
-      { v: "A", l: "Under 35", mult: 1.0 },
-      { v: "B", l: "35–49", mult: 0.93 },
-      { v: "C", l: "50–64", mult: 0.83 },
-      { v: "D", l: "65+", mult: 0.72 },
-      { v: "E", l: "Prefer not to say", mult: 1.0 },
-    ],
-  },
-  {
-    key: "decay-vestibular",
-    title: "Balance & vestibular",
-    question: "Do you experience vertigo, motion sickness, or a diagnosed balance disorder?",
-    hint: "Inner-ear and balance — distinct from the joint issues covered earlier.",
-    affects: ["agility", "focus", "water"],
-    options: [
-      { v: "A", l: "None", mult: 1.0 },
-      { v: "B", l: "Mild motion sickness, rarely an issue", mult: 0.88 },
-      { v: "C", l: "Occasional vertigo, or managed with medication", mult: 0.75 },
-      { v: "D", l: "Significant, affects balance regularly", mult: 0.58 },
-      { v: "E", l: "Prefer not to say", mult: 1.0 },
-    ],
-  },
-  {
-    key: "decay-medication",
-    title: "Medication effects",
-    question: "On any medication that affects your alertness, coordination, or reaction time?",
-    hint: "Sedatives, beta-blockers, antihistamines and similar — relevant for focus-critical situations.",
-    affects: ["focus", "nerve", "agility"],
-    options: [
-      { v: "A", l: "None", mult: 1.0 },
-      { v: "B", l: "Mild, rarely noticeable", mult: 0.88 },
-      { v: "C", l: "Noticeable effect on alertness or coordination", mult: 0.75 },
-      { v: "D", l: "Significant effect, needs real caution", mult: 0.58 },
-      { v: "E", l: "Prefer not to say", mult: 1.0 },
-    ],
-  },
-];
+// Question content lives in src/lib/matchmakerQuestions.ts (CAPABILITY_QUESTIONS,
+// DECAY_QUESTIONS, MEDICAL_QUESTIONS, imported above); scoring math lives in
+// src/lib/matchmakerScoring.ts.
 
 type Answers = Partial<Record<string, string>>;
-type Step = { type: "capability"; q: (typeof QUESTIONS)[number] } | { type: "decay"; q: (typeof DECAY_QUESTIONS)[number] };
+type Step =
+  | { type: "capability"; q: CapabilityQuestion }
+  | { type: "decay"; q: DecayQuestion }
+  | { type: "medical"; q: MedicalQuestion };
 const ALL_STEPS: Step[] = [
-  ...QUESTIONS.map((q) => ({ type: "capability" as const, q })),
+  ...CAPABILITY_QUESTIONS.map((q) => ({ type: "capability" as const, q })),
   ...DECAY_QUESTIONS.map((q) => ({ type: "decay" as const, q })),
+  ...MEDICAL_QUESTIONS.map((q) => ({ type: "medical" as const, q })),
 ];
 
 // ─── Axis colour map ──────────────────────────────────────────────────────────
@@ -544,7 +281,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
             </h1>
 
             <p className="text-[13px] leading-relaxed mb-5" style={{ color: "var(--text-tertiary)" }}>
-              12 questions across stamina, strength, altitude, nerve and more, plus a few optional calibration questions. We map your capability and surface the adventures that actually fit.
+              12 questions across stamina, strength, altitude, nerve and more, 2 quick questions on recency and current fitness, and some optional health questions to help us flag anything relevant. We map your capability and surface the adventures that actually fit.
             </p>
 
             <p className="text-[11px] tracking-wide mb-2 text-center" style={{ color: "var(--text-muted)" }}>Takes about 3 minutes</p>
@@ -606,6 +343,82 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
           )}
 
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Consent screen ───────────────────────────────────────────────────────────
+
+function ConsentScreen({ onAccept, onBack }: { onAccept: () => void; onBack: () => void }) {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-24">
+      <div className="mb-7">
+        <div className="flex items-center gap-2.5 mb-3">
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100" }}>
+            <Shield className="w-4 h-4" />
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>Before you begin</h1>
+        </div>
+        <p className="text-sm leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+          This assessment matches you to adventures based on your physical capability and health background. A few things to know:
+        </p>
+      </div>
+
+      <div className="space-y-3 mb-7">
+        {[
+          { title: "Not medical advice.", body: "Your results guide matching — they don't diagnose or clear you for any activity. Some adventures may still require a doctor's certificate regardless of your score." },
+          { title: "Answer honestly.", body: "Inaccurate answers can lead to unsafe matches. You can retake this anytime." },
+          { title: "Health questions are optional.", body: "Skipping them may mean we can't flag risks specific to you. This data is used only for matching within the app and is never sold. You can delete it anytime in account settings." },
+          { title: "This is guidance, not a guarantee.", body: "Adventure sports carry real risk. A separate waiver applies when you book." },
+        ].map((item) => (
+          <div key={item.title} className="flex gap-3 rounded-xl px-4 py-3.5" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
+            <CheckCircle2 className="w-4 h-4 mt-0.5 shrink-0" style={{ color: "#ff5100" }} />
+            <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              <span className="font-semibold" style={{ color: "var(--text-primary)" }}>{item.title}</span> {item.body}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex items-center gap-3 mb-6 text-xs" style={{ color: "var(--text-muted)" }}>
+        <Link href="/privacy" className="underline hover:text-[#ff5100] transition-colors">Privacy Policy</Link>
+        <span>·</span>
+        <Link href="/terms" className="underline hover:text-[#ff5100] transition-colors">Terms of Service</Link>
+      </div>
+
+      <label className="flex items-start gap-3 mb-6 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={(e) => setChecked(e.target.checked)}
+          className="mt-0.5 w-4 h-4 rounded shrink-0"
+          style={{ accentColor: "#ff5100" }}
+        />
+        <span className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+          I&apos;ve read this, understand it&apos;s a guidance tool and not medical advice, and consent to my answers — including any health information I share — being used to generate my match, per the Privacy Policy and Terms.
+        </span>
+      </label>
+
+      <div className="flex items-center gap-3">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1.5 transition-colors text-sm"
+          style={{ color: "var(--text-muted)" }}
+        >
+          <ChevronLeft className="w-4 h-4" />
+          Back
+        </button>
+        <button
+          onClick={onAccept}
+          disabled={!checked}
+          className="ml-auto flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:brightness-100"
+          style={{ background: "#ff5100", boxShadow: checked ? "0 4px 20px rgba(255,81,0,0.35)" : "none" }}
+        >
+          Begin Assessment <ChevronRight className="w-4 h-4" />
+        </button>
       </div>
     </div>
   );
@@ -1241,8 +1054,12 @@ function buildResult(userAxes: Record<string, number>, extra?: { rawAxes?: Recor
 export default function MatchmakerClient() {
   const searchParams = useSearchParams();
   const [started, setStarted] = useState(() => searchParams.get("retake") === "1");
+  const [showConsent, setShowConsent] = useState(false);
+  const [consentChecked, setConsentChecked] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
+  const [altitudeEvacuationFlagged, setAltitudeEvacuationFlagged] = useState(false);
+  const [jointNote, setJointNote] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [savedResult, setSavedResult] = useState<AnalysisResult | null>(null);
@@ -1255,20 +1072,31 @@ export default function MatchmakerClient() {
     }
   }, [searchParams]);
 
-  // Load previous result on mount — always show results if profile exists
+  // Load previous result + consent status on mount — always show results if profile exists
   const autoShown = useRef(false);
   const isRetake = searchParams.get("retake") === "1";
   useEffect(() => {
-    loadProfileFromServer().then((saved) => {
-      if (saved?.ace) {
-        const r = buildResult(saved.ace as unknown as Record<string, number>);
-        setSavedResult(r);
-        if (!autoShown.current && !isRetake) {
-          autoShown.current = true;
-          setResult(r);
+    // Sequential: both loaders can fall back to *pushing* local data up to
+    // a different user_metadata key when the server has none yet (e.g. a
+    // guest who completed the assessment before logging in) — user_metadata
+    // has no per-field atomicity, so two such pushes firing concurrently can
+    // race and one silently clobbers the other's key.
+    loadProfileFromServer()
+      .then((saved) => {
+        if (saved?.ace) {
+          const r = buildResult(saved.ace as unknown as Record<string, number>);
+          setSavedResult(r);
+          if (!autoShown.current && !isRetake) {
+            autoShown.current = true;
+            setResult(r);
+          }
         }
-      }
-    });
+      })
+      .then(() =>
+        loadConsentFromServer().then((consent) => {
+          if (consent?.consentVersion === MATCHMAKER_CONSENT_VERSION) setConsentChecked(true);
+        })
+      );
   }, []);
 
   const currentStep = ALL_STEPS[stepIndex] ?? ALL_STEPS[0];
@@ -1277,66 +1105,76 @@ export default function MatchmakerClient() {
     setLoading(true);
     setApiError(null);
 
-    const score = (letter: string | undefined) => ({ A: 1, B: 2, C: 3, D: 4, E: 5 }[letter ?? "A"] ?? 1);
+    // Capability + decay + the altitude safety flag are the only inputs to
+    // scoring — medical answers are handled entirely separately below and
+    // never reach this function.
+    const { ace: userAxes, rawAxes, decayMultiplier, altitudeCapped } =
+      computeAceFromAnswers(finalAnswers, finalAnswers, altitudeEvacuationFlagged);
 
-    // Average the (1 or 2) capability questions per axis into a raw score.
-    const axisTotals: Record<string, { sum: number; count: number }> = {};
-    QUESTIONS.forEach((q) => {
-      const axis = q.axis.toLowerCase();
-      const val = score(finalAnswers[q.key]);
-      const bucket = (axisTotals[axis] ??= { sum: 0, count: 0 });
-      bucket.sum += val;
-      bucket.count += 1;
-    });
-    const rawAxes: Record<string, number> = {};
-    Object.entries(axisTotals).forEach(([axis, { sum, count }]) => {
-      rawAxes[axis] = Math.min(5, Math.max(1, Math.round(sum / count)));
-    });
-
-    // Calibration layer — recency/health flags discount specific axes.
-    // Skipped questions apply no adjustment (multiplier 1.0).
-    const multipliers: Record<string, number> = {};
     const decayNotes: string[] = [];
-    DECAY_QUESTIONS.forEach((dq) => {
-      const chosen = finalAnswers[dq.key];
-      if (!chosen) return; // skipped — no adjustment
-      const opt = dq.options.find((o) => o.v === chosen);
-      if (!opt || opt.mult === 1.0) return;
-      dq.affects.forEach((axis) => { multipliers[axis] = (multipliers[axis] ?? 1.0) * opt.mult; });
-      decayNotes.push(`${dq.title}: "${opt.l}" adjusted ${dq.affects.join(", ")}`);
-    });
+    if (decayMultiplier < 1) {
+      decayNotes.push(`Recency of activity and current activity level applied a ${Math.round((1 - decayMultiplier) * 100)}% adjustment to Stamina, Power, Strength, and Agility.`);
+    }
+    if (altitudeCapped) {
+      decayNotes.push("Your Altitude score was capped because you reported needing to descend early or being evacuated for altitude illness — regardless of the height you reached.");
+    }
 
-    const userAxes: Record<string, number> = {};
-    Object.entries(axisTotals).forEach(([axis, { sum, count }]) => {
-      const raw = sum / count;
-      const decayed = raw * (multipliers[axis] ?? 1.0);
-      userAxes[axis] = Math.min(5, Math.max(1, Math.round(decayed)));
-    });
-
-    const profile = { ace: userAxes as unknown as ACE };
+    const updatedAt = new Date().toISOString();
+    const profile: StoredProfile = { ace: userAxes, rawAxes: rawAxes as Record<string, number>, altitudeCapped, updatedAt };
     saveProfile(profile);
-    saveProfileToServer(profile);
     awardXP("ace_complete");
 
-    const anyDecayApplied = Object.keys(multipliers).some((axis) => userAxes[axis] !== rawAxes[axis]);
-    setResult(buildResult(userAxes, anyDecayApplied ? { rawAxes, decayNotes } : undefined));
+    // Medical answers → flags only, saved to a completely separate store.
+    const medicalFlags = buildMedicalFlags(finalAnswers, jointNote);
+    saveMedicalFlags(medicalFlags);
+
+    // Sequential, not concurrent: user_metadata is a single JSON blob with
+    // no per-field atomicity, so two overlapping POSTs can each read a
+    // stale snapshot and the later write silently clobbers the earlier
+    // one's change. Chaining (still fire-and-forget from the UI's
+    // perspective — results render immediately below) avoids that race.
+    saveProfileToServer(profile).then(() => saveMedicalFlagsToServer(medicalFlags));
+
+    setResult(buildResult(userAxes as unknown as Record<string, number>, decayNotes.length > 0 ? { rawAxes: rawAxes as Record<string, number>, decayNotes } : undefined));
     setLoading(false);
   }
 
   function reset() {
     clearProfile();
     setStarted(false);
+    setShowConsent(false);
     setStepIndex(0);
     setAnswers({});
+    setAltitudeEvacuationFlagged(false);
+    setJointNote("");
     setResult(null);
     setSavedResult(null);
     setApiError(null);
     setLoading(false);
   }
 
+  if (showConsent && !started && !result) return (
+    <ConsentScreen
+      onAccept={() => {
+        const consent = { consentedAt: new Date().toISOString(), consentVersion: MATCHMAKER_CONSENT_VERSION };
+        saveConsent(consent);
+        saveConsentToServer(consent); // fire-and-forget
+        setConsentChecked(true);
+        setShowConsent(false);
+        setStarted(true);
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }}
+      onBack={() => setShowConsent(false)}
+    />
+  );
+
   if (!started && !result) return (
     <IntroScreen
-      onStart={() => { setStarted(true); window.scrollTo({ top: 0, behavior: "instant" }); }}
+      onStart={() => {
+        if (consentChecked) setStarted(true);
+        else setShowConsent(true);
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }}
       onViewResults={() => { setResult(savedResult); window.scrollTo({ top: 0, behavior: "instant" }); }}
       hasProfile={!!savedResult}
     />
@@ -1344,8 +1182,14 @@ export default function MatchmakerClient() {
   if (loading && !result) return <LoadingScreen />;
   if (result) return <ResultsScreen result={result} onReset={reset} />;
 
-  const isDecay = currentStep.type === "decay";
-  const decayColor = "var(--accent-green)";
+  const capQ = currentStep.type === "capability" ? currentStep.q : null;
+  const decayQ = currentStep.type === "decay" ? currentStep.q : null;
+  const medQ = currentStep.type === "medical" ? currentStep.q : null;
+  const isDecay = !!decayQ;
+  const isMedical = !!medQ;
+  const accentColor = isMedical ? "#38bdf8" : isDecay ? "var(--accent-green)" : "#ff5100";
+  const headerTitle = capQ ? capQ.axis : decayQ ? decayQ.title : medQ!.title;
+  const firstMedicalIndex = ALL_STEPS.findIndex((s) => s.type === "medical");
 
   function goNext(updated: Answers) {
     setAnswers(updated);
@@ -1358,45 +1202,58 @@ export default function MatchmakerClient() {
     }, 180);
   }
 
+  function skipCurrentQuestion() {
+    setTimeout(() => {
+      if (stepIndex < ALL_STEPS.length - 1) {
+        setStepIndex(stepIndex + 1);
+      } else {
+        submitAssessment(answers);
+      }
+    }, 100);
+  }
+
   return (
     <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-24">
       {/* Header */}
       <div className="mb-7">
         <div className="flex items-center justify-between mb-5">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: isDecay ? decayColor : "#ff5100" }}>
-            {isDecay ? "Calibration" : "Adventure Matchmaker"}
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: accentColor }}>
+            {isMedical ? "Health Background (Optional)" : isDecay ? "Calibration" : "Adventure Matchmaker"}
           </p>
           <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>{stepIndex + 1} / {ALL_STEPS.length}</span>
         </div>
         <div className="flex items-center gap-2.5 mb-1.5">
-          {isDecay ? (
+          {isDecay || isMedical ? (
             <>
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: "var(--accent-green-soft)", color: decayColor }}>
-                <HeartPulse className="w-4 h-4" />
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${accentColor}20`, color: accentColor }}>
+                {isMedical ? <Stethoscope className="w-4 h-4" /> : <HeartPulse className="w-4 h-4" />}
               </div>
-              <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>{currentStep.q.title}</h1>
+              <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>{headerTitle}</h1>
             </>
           ) : (
             <>
               <div
                 className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-                style={{ background: `${AXIS_COLORS[currentStep.q.axis.toLowerCase()] ?? "#ff5100"}20`, color: AXIS_COLORS[currentStep.q.axis.toLowerCase()] ?? "#ff5100" }}
+                style={{ background: `${AXIS_COLORS[capQ!.axis.toLowerCase()] ?? "#ff5100"}20`, color: AXIS_COLORS[capQ!.axis.toLowerCase()] ?? "#ff5100" }}
               >
-                {AXIS_ICONS[currentStep.q.axis.toLowerCase()]}
+                {AXIS_ICONS[capQ!.axis.toLowerCase()]}
               </div>
-              <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>{currentStep.q.axis}</h1>
+              <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>{headerTitle}</h1>
             </>
           )}
         </div>
         {isDecay && (
-          <p className="text-xs" style={{ color: "var(--text-muted)" }}>A few quick questions on recency and health — these fine-tune your profile, and every one is optional.</p>
+          <p className="text-xs" style={{ color: "var(--text-muted)" }}>Two quick questions on recency and current fitness — these fine-tune your profile.</p>
+        )}
+        {isMedical && (
+          <p className="text-xs" style={{ color: "var(--text-muted)" }}>Every question here is optional. We use these only to flag relevant notes on specific adventures — never to change your score.</p>
         )}
       </div>
 
       {/* Progress */}
       <div className="flex items-center gap-1.5 mb-9">
         {ALL_STEPS.map((step, i) => {
-          const color = step.type === "decay" ? "#4ade80" : "#ff5100";
+          const color = step.type === "medical" ? "#38bdf8" : step.type === "decay" ? "#4ade80" : "#ff5100";
           return (
             <div
               key={i}
@@ -1410,17 +1267,74 @@ export default function MatchmakerClient() {
       {/* Question */}
       <div className="space-y-2.5">
         <h2 className="text-xl sm:text-2xl font-semibold leading-snug mb-1.5" style={{ color: "var(--text-primary)" }}>{currentStep.q.question}</h2>
-        {currentStep.q.hint && <p className="text-sm mb-5 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>{currentStep.q.hint}</p>}
-        {currentStep.q.options.map(o => (
+        {capQ?.hint && <p className="text-sm mb-5 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>{capQ.hint}</p>}
+        {currentStep.q.options.map((o) => (
           <OptionBtn
             key={o.v}
             value={o.v}
             label={o.l}
-            sub={"s" in o ? o.s : undefined}
             selected={answers[currentStep.q.key] === o.v}
-            onClick={() => goNext({ ...answers, [currentStep.q.key]: o.v })}
+            onClick={() => {
+              const updated = { ...answers, [currentStep.q.key]: o.v };
+              // The joint/injury question pauses on "yes" so the optional
+              // free-text field below is actually reachable, instead of
+              // being auto-advanced past within 180ms.
+              if (medQ?.hasFreeText && o.v === "yes") setAnswers(updated);
+              else goNext(updated);
+            }}
           />
         ))}
+
+        {/* Altitude safety flag — evacuation checkbox, altitude question only */}
+        {capQ?.hasSafetyFlag && (
+          <label className="flex items-start gap-3 mt-4 px-4 py-3.5 rounded-xl cursor-pointer" style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)" }}>
+            <input
+              type="checkbox"
+              checked={altitudeEvacuationFlagged}
+              onChange={(e) => setAltitudeEvacuationFlagged(e.target.checked)}
+              className="mt-0.5 w-4 h-4 rounded shrink-0"
+              style={{ accentColor: "#ef4444" }}
+            />
+            <span className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              I had to descend early or was evacuated due to altitude illness
+            </span>
+          </label>
+        )}
+
+        {/* Optional free text — joint/injury medical question, shown once answered "yes" */}
+        {medQ?.hasFreeText && answers[medQ.key] === "yes" && (
+          <div className="mt-3 space-y-2.5">
+            <textarea
+              value={jointNote}
+              onChange={(e) => setJointNote(e.target.value)}
+              placeholder={medQ.freeTextPrompt}
+              rows={3}
+              className="w-full px-4 py-3 rounded-xl text-sm resize-none"
+              style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)" }}
+            />
+            <button
+              onClick={() => goNext(answers)}
+              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110"
+              style={{ background: "#38bdf8" }}
+            >
+              Continue <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+        {/* Skip controls — medical questions only */}
+        {isMedical && (
+          <div className="flex items-center justify-between pt-1">
+            <button onClick={skipCurrentQuestion} className="text-xs font-medium transition-colors" style={{ color: "var(--text-muted)" }}>
+              Skip this question
+            </button>
+            {stepIndex >= firstMedicalIndex && (
+              <button onClick={() => submitAssessment(answers)} className="text-xs font-medium transition-colors underline" style={{ color: "var(--text-muted)" }}>
+                Skip remaining health questions
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Error */}

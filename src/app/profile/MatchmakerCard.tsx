@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { loadProfile } from "@/lib/matchmaker";
+import { loadProfile, clearProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import RankBar from "@/components/ui/custom/RankBar";
@@ -51,7 +51,15 @@ export default function MatchmakerCard({ isLoggedIn }: { isLoggedIn: boolean }) 
         <p className="text-white font-semibold text-sm">Adventure Profile</p>
         {profile && (
           <button
-            onClick={() => { localStorage.removeItem("ttt_matchmaker_profile"); setProfile(null); router.push("/matchmaker?retake=1"); }}
+            onClick={() => {
+              clearProfile();
+              setProfile(null);
+              // Also clear the server copy immediately — previously this only
+              // cleared localStorage, so retaking and abandoning partway left
+              // the old profile live on the server until a new one completed.
+              fetch("/api/ace-profile", { method: "DELETE" }).catch(() => {});
+              router.push("/matchmaker?retake=1");
+            }}
             className="flex items-center gap-1.5 text-white/30 hover:text-white/60 text-xs transition-colors"
           >
             <RotateCcw className="w-3 h-3" />

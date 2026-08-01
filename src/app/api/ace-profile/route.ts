@@ -17,6 +17,13 @@ const aceAxesSchema = z.object({
 // Client sends/expects a StoredProfile shape: { ace: {...} }
 const aceProfileSchema = z.object({ ace: aceAxesSchema });
 
+function adminClient() {
+  return createAdminSupabase(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
+
 // GET — load ACE profile for the logged-in user
 export async function GET() {
   const supabase = await createClient();
@@ -25,7 +32,8 @@ export async function GET() {
 
   // Stored flat in user_metadata; wrap to match the client's { ace: {...} } contract
   const aceAxes = user.user_metadata?.ace_profile ?? null;
-  return NextResponse.json({ profile: aceAxes ? { ace: aceAxes } : null });
+  const updatedAt = user.user_metadata?.ace_profile_updated_at ?? null;
+  return NextResponse.json({ profile: aceAxes ? { ace: aceAxes, updatedAt } : null });
 }
 
 // POST — save ACE profile for the logged-in user
@@ -39,16 +47,34 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid ACE profile" }, { status: 400 });
   }
 
-  // Store flat in user_metadata — persists across devices/sessions
-  const admin = createAdminSupabase(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  // Server-stamped, never trusts a client-supplied timestamp — otherwise a
+  // user could reset their system clock and make a stale profile look fresh.
+  const updatedAt = new Date().toISOString();
+
+  const admin = adminClient();
   await admin.auth.admin.updateUserById(user.id, {
     user_metadata: {
       ...user.user_metadata,
       ace_profile: parsed.data.ace,
+      ace_profile_updated_at: updatedAt,
     },
+  });
+
+  return NextResponse.json({ ok: true, updatedAt });
+}
+
+// DELETE — clear the ACE profile for the logged-in user
+export async function DELETE() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+
+  // Supabase's updateUserById merges user_metadata rather than replacing it
+  // — omitting a key from the payload leaves it untouched server-side, so
+  // clearing a field requires setting it to null explicitly, not omitting it.
+  const admin = adminClient();
+  await admin.auth.admin.updateUserById(user.id, {
+    user_metadata: { ...user.user_metadata, ace_profile: null, ace_profile_updated_at: null },
   });
 
   return NextResponse.json({ ok: true });
