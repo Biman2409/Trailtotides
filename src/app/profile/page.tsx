@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 import { redirect } from "next/navigation";
-import { Calendar, Shield, Package } from "lucide-react";
+import { Calendar, Shield, Package, Mail } from "lucide-react";
 import { format } from "date-fns";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -23,6 +23,7 @@ import ExpeditionProfile from "./ExpeditionProfile";
 import { getOperatorProfile, getSubmissionsForOperator } from "@/app/auth/operator-actions";
 import { adventures } from "@/lib/data";
 import DashboardClient from "@/app/auth/operator-dashboard/DashboardClient";
+import AccountTabs from "@/components/ui/custom/AccountTabs";
 
 export const dynamic = "force-dynamic";
 
@@ -98,6 +99,9 @@ export default async function ProfilePage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-3xl opacity-10 pointer-events-none" style={{ background: "radial-gradient(ellipse, #ff5100 0%, transparent 70%)" }} />
 
         <div className="max-w-4xl mx-auto relative">
+          <div className="mb-6">
+            <AccountTabs active="/profile" />
+          </div>
           <div className="flex flex-col sm:flex-row items-start sm:items-end gap-6">
 
             {/* Avatar */}
@@ -132,7 +136,7 @@ export default async function ProfilePage() {
                   Joined {profile.created_at ? format(new Date(profile.created_at), "MMMM yyyy") : "Recently"}
                 </span>
                 <span className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-tertiary)" }}>
-                  <Shield className="w-3.5 h-3.5" />
+                  <Mail className="w-3.5 h-3.5" />
                   {profile.email}
                 </span>
               </div>

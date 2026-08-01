@@ -71,7 +71,7 @@ async function saveServerAvatarId(id: number | null): Promise<void> {
   } catch { /* silent */ }
 }
 
-function useAvatarState() {
+export function useAvatarState() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [rankName, setRankName] = useState("Uncharted");
   const [rankColor, setRankColor] = useState("#6b7280");
@@ -119,7 +119,7 @@ function useAvatarState() {
 }
 
 // ─── ACE tier badge — icon only, no label ────────────────────────────────────
-function AceBadge({ rankName, rankColor, size = 96 }: { rankName: string; rankColor: string; size?: number }) {
+export function AceBadge({ rankName, rankColor, size = 96 }: { rankName: string; rankColor: string; size?: number }) {
   const icon = RANK_ICONS[rankName] ?? RANK_ICONS.Uncharted;
   const iconPx = Math.round(size * 0.52);
   return (

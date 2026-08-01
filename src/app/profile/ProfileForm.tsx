@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect, } from "react";
+import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -8,8 +8,8 @@ import {
   Eye, EyeOff, Lock, XCircle,
 } from "lucide-react";
 import { updateProfile, changePassword } from "./actions";
-import { AVATARS, LS_KEY } from "@/lib/avatars";
-import { AvatarPickerModal, RANK_ICONS } from "./AvatarPicker";
+import { AVATARS } from "@/lib/avatars";
+import { AvatarPickerModal, useAvatarState, AceBadge } from "./AvatarPicker";
 
 type Profile = {
   id: string;
@@ -22,7 +22,7 @@ type Profile = {
 };
 
 
-function Section({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
+export function Section({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
   return (
     <div className="rounded-2xl p-6" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
       <div className="mb-5">
@@ -273,58 +273,12 @@ function ChangePasswordSection() {
 }
 
 function AvatarSection() {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [rankName, setRankName] = useState("Uncharted");
-  const [rankColor, setRankColor] = useState("#6b7280");
+  // Shared with the profile-hero avatar (AvatarPicker.tsx) — one source of
+  // truth for avatar state so the two can never drift out of sync.
+  const { selectedId, rankName, rankColor, saveSelection } = useAvatarState();
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const stored = localStorage.getItem(LS_KEY);
-    if (stored) setSelectedId(Number(stored));
-
-    // Bidirectional sync with server
-    fetch("/api/me").then(r => r.ok ? r.json() : null).then(data => {
-      const localRaw = localStorage.getItem(LS_KEY);
-      if (data?.avatar_id != null) {
-        setSelectedId(data.avatar_id);
-        localStorage.setItem(LS_KEY, String(data.avatar_id));
-      } else if (localRaw) {
-        fetch("/api/me", {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ avatar_id: Number(localRaw) }),
-        }).catch(() => {});
-      }
-    }).catch(() => {});
-
-    import("@/lib/matchmaker").then(({ loadProfile, loadProfileFromServer }) => {
-      import("@/lib/tiers").then(({ getTierLabel, getTier }) => {
-        const apply = (p: ReturnType<typeof loadProfile>) => {
-          if (!p?.ace) return;
-          const total = Object.values(p.ace).reduce((s: number, v) => s + (v as number), 0);
-          const label = getTierLabel(total);
-          setRankName(label);
-          setRankColor(getTier(label).color);
-        };
-        apply(loadProfile());
-        loadProfileFromServer().then(apply);
-      });
-    });
-  }, []);
-
   const selected = selectedId !== null ? AVATARS.find(a => a.id === selectedId) ?? null : null;
-
-  const handleSelect = (id: number | null) => {
-    setSelectedId(id);
-    if (id !== null) localStorage.setItem(LS_KEY, String(id));
-    else localStorage.removeItem(LS_KEY);
-    // Persist to server so it survives across devices/sessions
-    fetch("/api/me", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ avatar_id: id }),
-    }).catch(() => {});
-  };
 
   return (
     <Section title="Profile Picture" subtitle="Choose a character or display your ACE adventure rank.">
@@ -340,9 +294,7 @@ function AvatarSection() {
         >
           {selected
             ? <Image src={selected.src} alt={selected.label} fill sizes="72px" className="object-cover" />
-            : <span className="flex items-center justify-center w-full h-full" style={{ color: rankColor }}>
-                <span style={{ width: 34, height: 34, display: "block" }}>{RANK_ICONS[rankName] ?? RANK_ICONS["Uncharted"]}</span>
-              </span>
+            : <AceBadge rankName={rankName} rankColor={rankColor} size={72} />
           }
           <span className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" style={{ background: "var(--bg-card)" }}>
             <svg className="w-4 h-4" style={{ color: "var(--text-secondary)" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -377,7 +329,7 @@ function AvatarSection() {
           selectedId={selectedId}
           rankName={rankName}
           rankColor={rankColor}
-          onSelect={handleSelect}
+          onSelect={saveSelection}
           onClose={() => setOpen(false)}
         />
       )}

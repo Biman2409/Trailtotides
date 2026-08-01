@@ -6,16 +6,7 @@ import { useRouter } from "next/navigation";
 import { loadProfile, clearProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import { ArrowRight, RotateCcw } from "lucide-react";
-import RankBar from "@/components/ui/custom/RankBar";
-
-const RANKS = [
-  { label: "Uncharted",   color: "#6b7280", stars: 0, minScore: 0  },
-  { label: "Pathfinder",  color: "#22d3ee", stars: 1, minScore: 8  },
-  { label: "Navigator",   color: "#4ade80", stars: 2, minScore: 16 },
-  { label: "Trailblazer", color: "#f59e0b", stars: 3, minScore: 24 },
-  { label: "Vanguard",    color: "#f97316", stars: 4, minScore: 32 },
-  { label: "Apex",        color: "#a78bfa", stars: 5, minScore: 40 },
-];
+import RankBar, { RANKS } from "@/components/ui/custom/RankBar";
 
 const TIER_INFO: Record<string, { color: string; stars: number; icon: React.ReactNode }> = {
   "Uncharted":   { color: "#6b7280", stars: 0, icon: <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6"><circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" strokeDasharray="3 2.5" fill="currentColor" fillOpacity="0.06"/><path d="M9 9a3 3 0 016 0c0 2-2 2.5-3 3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><circle cx="12" cy="16.5" r="1.2" fill="currentColor"/></svg> },

@@ -110,10 +110,13 @@ export default function RankBar({
         />
       </div>
 
-      {/* ── Labels — absolutely positioned to align under each node ── */}
+      {/* ── Labels — absolutely positioned to align under each node ──
+           Hidden below sm: — 6 labels crowd on narrow screens, and
+           wherever RankBar is used the current tier name is already
+           shown prominently elsewhere on the page. */}
       {showLabels && (
         <div
-          className="relative mt-2.5"
+          className="relative mt-2.5 hidden sm:block"
           style={{ marginLeft: HALF, marginRight: HALF, height: showYouTag ? 22 : 12 }}
         >
           {RANKS.map((rank, i) => {
