@@ -366,16 +366,12 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* The Adventure */}
             <AccordionSection label="The Adventure" title="About This Adventure" defaultOpen={true}>
-              <div className="rounded-xl px-4 py-3.5" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.description}</p>
-              </div>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.description}</p>
             </AccordionSection>
 
             {/* What Makes It Special */}
             <AccordionSection label="Highlights" title="What Makes It Special" defaultOpen={true}>
-              <div className="rounded-xl px-4 py-3.5" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)" }}>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.whatMakesSpecial}</p>
-              </div>
+              <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.whatMakesSpecial}</p>
             </AccordionSection>
 
             {/* Is This For You? */}
@@ -415,7 +411,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </AccordionSection>
 
             {/* Safety & Prep */}
-            <AccordionSection label="Safety &amp; Prep" title="" defaultOpen={true}>
+            <AccordionSection label="Safety &amp; Prep" title="What to Know Before You Go" defaultOpen={true}>
               <div className="space-y-3">
                 {/* Safety notes + hazard badges */}
                 <div className="rounded-xl p-3.5" style={{ background: "rgba(245,158,11,0.03)", border: "1px solid rgba(245,158,11,0.1)" }}>
@@ -466,7 +462,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* Operators */}
             <RecalibrationNudge difficulty={difficulty} />
             <div id="book-this-adventure" />
-            <AccordionSection label="Book This Adventure" title="" defaultOpen={true}>
+            <AccordionSection label="Book This Adventure" title="Where to Book" defaultOpen={true}>
               <div id="operators-section" className="space-y-2.5">
                 <OperatorsSection operators={allOperators} slug={adventure.slug} />
                 <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />

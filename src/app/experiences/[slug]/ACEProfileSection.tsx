@@ -31,6 +31,14 @@ const AXIS_ICONS: Record<string, React.ReactNode> = {
   nerve:    <Wind     className="w-3 h-3" />,
 };
 
+// Short, deliberate labels for the compact domain-grid cells — the full
+// ACE_AXIS_LABELS names don't fit and were being cut into illegible
+// ellipsis fragments ("Stamina" -> "St…") by a `truncate` class.
+const AXIS_LABELS_SHORT: Record<AceAxis, string> = {
+  stamina: "STA", power: "PWR", strength: "STR", agility: "AGI",
+  water: "WTR", altitude: "ALT", focus: "FOC", nerve: "NRV",
+};
+
 const TRAINING_TIPS: Record<string, string> = {
   stamina:  "Build aerobic base with 3–4 weekly runs or hikes. Progress to back-to-back long days.",
   power:    "Add interval training and steep hill repeats to develop explosive leg power.",
@@ -64,7 +72,7 @@ function DotScale({ filled, color, dim }: { filled: number; color: string; dim?:
 function AxisCell({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; userVal: number }) {
   const color = ACE_AXIS_COLORS[axis];
   const icon = AXIS_ICONS[axis];
-  const label = ACE_AXIS_LABELS[axis];
+  const label = AXIS_LABELS_SHORT[axis];
   const meets = userVal >= trekVal;
   const gap = trekVal - userVal;
 
@@ -80,7 +88,7 @@ function AxisCell({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; 
       <div className="flex items-center justify-between gap-1">
         <div className="flex items-center gap-1 min-w-0">
           <span style={{ color: meets ? color : "#f87171" }} className="shrink-0 opacity-80">{icon}</span>
-          <span className="text-[9px] font-bold truncate" style={{ color: meets ? "rgba(255,255,255,0.7)" : "#f87171" }}>{label}</span>
+          <span className="text-[9px] font-bold tracking-wide" style={{ color: meets ? "rgba(255,255,255,0.7)" : "#f87171" }}>{label}</span>
         </div>
         <span
           className="shrink-0 text-[8px] font-black px-1.5 py-0.5 rounded-full leading-none"
@@ -109,7 +117,11 @@ function AxisCell({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; 
 
 export default function ACEProfileSection({ ace, adventureName }: Props) {
   const [userAce, setUserAce] = useState<ACE | null>(null);
-  const [overlapped, setOverlapped] = useState(false);
+  // Overlap is the default — more compact than side-by-side (especially
+  // when an adventure's requirements are low/near-zero, which leaves the
+  // split view's "Trek Requirements" radar nearly empty) and it surfaces
+  // more information (per-axis ✓/gap badges) in less space.
+  const [overlapped, setOverlapped] = useState(true);
 
   useEffect(() => {
     const p = loadProfile();
@@ -186,7 +198,7 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
         <div className="p-4">
           {overlapped && userAce ? (
             /* ── Overlap view ── */
-            <div className="flex gap-3 items-start">
+            <div className="flex flex-col sm:flex-row gap-3 items-start">
 
               {/* Radar — in a box */}
               <div
@@ -215,7 +227,7 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
               {/* 4-domain × 2-axis matrix — self-stretch to match radar height */}
               <div className="flex-1 min-w-0 flex flex-col gap-2 self-stretch">
                 <p className="text-[8px] font-black uppercase tracking-[0.2em] text-white/25">Capability vs Requirement</p>
-                <div className="grid grid-cols-4 gap-1.5 flex-1">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 flex-1">
                   {ACE_DOMAINS.map(domain => (
                     <div key={domain.name} className="flex flex-col gap-1.5 h-full">
                       {/* Domain header */}
