@@ -573,11 +573,13 @@ export default function AdminDashboardClient({
     setLoadingId(subId);
     try {
       if (action === "approve") {
-        await approveOperatorSubmission(subId);
+        const res = await approveOperatorSubmission(subId);
+        if (res && "error" in res && res.error) { showToast(res.error, "error"); return; }
         setLocalOperatorSubmissions(prev => prev.map(s => s.id === subId ? { ...s, status: "approved" } : s));
         showToast("Submission approved");
       } else {
-        await rejectOperatorSubmission(subId);
+        const res = await rejectOperatorSubmission(subId);
+        if (res && "error" in res && res.error) { showToast(res.error, "error"); return; }
         setLocalOperatorSubmissions(prev => prev.map(s => s.id === subId ? { ...s, status: "rejected" } : s));
         showToast("Submission rejected");
       }
@@ -592,7 +594,8 @@ export default function AdminDashboardClient({
     if (!confirm("Delete this message?")) return;
     setLoadingId(id);
     try {
-      await deleteMessage(id);
+      const res = await deleteMessage(id);
+      if (res && "error" in res && res.error) { showToast(res.error, "error"); return; }
       setLocalMessages(prev => prev.filter(m => m.id !== id));
       showToast("Message deleted");
     } finally { setLoadingId(null); }
@@ -603,7 +606,8 @@ export default function AdminDashboardClient({
     try {
       if (action === "delete") {
         if (!confirm("Delete this story submission?")) return;
-        await deleteStory(story.id);
+        const res = await deleteStory(story.id);
+        if (res && "error" in res && res.error) { showToast(res.error, "error"); return; }
         setLocalStories(prev => prev.filter(s => s.id !== story.id));
         showToast("Story deleted");
       } else {
@@ -644,7 +648,8 @@ export default function AdminDashboardClient({
     if (!confirm("Delete this review? Cannot be undone.")) return;
     setLoadingId(id);
     try {
-      await adminDeleteReview(id);
+      const res = await adminDeleteReview(id);
+      if (res && "error" in res && res.error) { showToast(res.error, "error"); return; }
       setLocalReviews(prev => prev.filter(r => r.id !== id));
       showToast("Review deleted");
     } catch {
@@ -656,7 +661,8 @@ export default function AdminDashboardClient({
     if (!confirm("Delete this photo? Cannot be undone.")) return;
     setLoadingId(photo.id);
     try {
-      await adminDeletePhoto(photo.id, photo.slug, photo.path);
+      const res = await adminDeletePhoto(photo.id, photo.slug, photo.path);
+      if (res && "error" in res && res.error) { showToast(res.error, "error"); return; }
       setLocalPhotos(prev => prev.filter(p => p.id !== photo.id));
       showToast("Photo deleted");
     } catch {
