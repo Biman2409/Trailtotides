@@ -16,15 +16,21 @@ import {
   Navigation,
   Gauge,
   Camera,
+  Compass,
+  BookOpen,
+  Sparkles,
+  ShieldCheck,
+  ShieldAlert,
+  Ticket,
+  Target,
 } from "lucide-react";
+import GradingPill from "@/components/ui/custom/GradingPill";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import { adventures } from "@/lib/data";
 import Pill from "@/components/ui/custom/Pill";
 import ACEProfileSection from "./ACEProfileSection";
-import CompareAdventures from "@/components/ui/custom/CompareAdventures";
-import SavedAdventuresSection from "@/components/ui/custom/SavedAdventuresSection";
 import HeroActions from "./HeroActions";
 import ReviewSection from "@/components/ui/custom/ReviewSection";
 import { createClient } from "@/lib/supabase/server";
@@ -271,7 +277,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       <Navbar />
 
       {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="relative h-[85vh] min-h-[560px] max-h-[860px] flex items-end overflow-hidden">
+      <section className="relative h-[62vh] min-h-[420px] sm:h-[75vh] sm:min-h-[520px] lg:h-[85vh] lg:min-h-[560px] max-h-[860px] flex items-end overflow-hidden">
         <Image
           src={adventure.heroImage}
           alt={adventure.name}
@@ -320,10 +326,11 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       <FadeInSection as="div" style={{ background: "var(--bg-surface)", borderBottom: "1px solid var(--border-subtle)" }}>
 
         {/* Stats strip */}
-        <div className="max-w-7xl mx-auto px-5 lg:px-8">
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 relative">
           <div className="flex items-stretch overflow-x-auto no-scrollbar" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
             {[
               { icon: <Clock className="w-3.5 h-3.5 text-[#ff5100]" />, label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
+              { icon: <Compass className="w-3.5 h-3.5 text-fuchsia-400" />, label: "Type", value: adventure.type },
               ...(adventure.distance ? [{ icon: <Route className="w-3.5 h-3.5 text-emerald-400" />, label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
               ...((adventure.altitude || adventure.depth) ? [{ icon: <TrendingUp className="w-3.5 h-3.5 text-sky-400" />, label: adventure.type === "Diving" ? "Max Depth" : "Max Altitude", value: adventure.depth ?? adventure.altitude }] : []),
               { icon: <Sun className="w-3.5 h-3.5 text-amber-400" />, label: "Best Season", value: adventure.bestSeason },
@@ -344,6 +351,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             ))}
           </div>
+          {/* Scroll hint — the strip overflows on mobile/tablet with no other affordance */}
+          <div className="lg:hidden pointer-events-none absolute top-0 right-5 bottom-0 w-10" style={{ background: "linear-gradient(to right, transparent, var(--bg-surface))" }} />
         </div>
 
         {/* Weather strip — sits flush inside same surface */}
@@ -364,19 +373,30 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           {/* ── LEFT COLUMN ── */}
           <div className="lg:col-span-2">
 
-            {/* The Adventure */}
-            <AccordionSection label="The Adventure" title="About This Adventure" defaultOpen={true}>
-              <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.description}</p>
-            </AccordionSection>
+            {/* The Adventure + What Makes It Special — a matched pair, side by side on desktop */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 pt-6 first:pt-0">
+              <AccordionSection
+                label="The Adventure" title="About This Adventure" defaultOpen
+                icon={<BookOpen className="w-4 h-4" />} tintRgb="255,81,0" noDivider noTopPad stretch
+              >
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.description}</p>
+              </AccordionSection>
 
-            {/* What Makes It Special */}
-            <AccordionSection label="Highlights" title="What Makes It Special" defaultOpen={true}>
-              <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.whatMakesSpecial}</p>
-            </AccordionSection>
+              <AccordionSection
+                label="Highlights" title="What Makes It Special" defaultOpen
+                icon={<Sparkles className="w-4 h-4" />} tintRgb="167,139,250" noDivider noTopPad stretch
+              >
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.whatMakesSpecial}</p>
+              </AccordionSection>
+            </div>
+            <div className="h-px mt-6" style={{ background: "rgba(255,255,255,0.05)" }} />
 
             {/* Is This For You? */}
-            <AccordionSection label="Suitability" title="Is This For You?" defaultOpen={true}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <AccordionSection
+              label="Suitability" title="Is This For You?" defaultOpen
+              icon={<ShieldCheck className="w-4 h-4" />} tintRgb="56,189,248"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="rounded-xl p-3.5" style={{ background: "rgba(16,185,129,0.04)", border: "1px solid rgba(16,185,129,0.1)" }}>
                   <h3 className="text-emerald-400 text-[10px] font-bold tracking-[0.18em] uppercase mb-2.5">This is for you if…</h3>
                   <ul className="space-y-1.5">
@@ -410,8 +430,30 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </AccordionSection>
 
+            {/* Capability Profile — below Suitability; its radar + domain matrix need full width to read well */}
+            <AccordionSection
+              label="Capability Profile" title="How Do You Measure Up?" defaultOpen={false}
+              icon={<Target className="w-4 h-4" />} tintRgb="31,122,77"
+              headerExtra={<GradingPill />}
+            >
+              <ACEProfileSection
+                bare
+                ace={ace}
+                adventureName={adventure.name}
+                showAltitudeWarning={showAltitudeWarning}
+                showFatalFallWarning={showFatalFallWarning}
+                showExtremeIsolationWarning={showExtremeIsolationWarning}
+                showTechnicalWarning={showTechnicalWarning}
+                showPhysicalExhaustionWarning={showPhysicalExhaustionWarning}
+                showWaterWarning={showWaterWarning}
+              />
+            </AccordionSection>
+
             {/* Safety & Prep */}
-            <AccordionSection label="Safety &amp; Prep" title="What to Know Before You Go" defaultOpen={true}>
+            <AccordionSection
+              label="Safety &amp; Prep" title="What to Know Before You Go" defaultOpen={false}
+              icon={<ShieldAlert className="w-4 h-4" />} tintRgb="245,158,11"
+            >
               <div className="space-y-3">
                 {/* Safety notes + hazard badges */}
                 <div className="rounded-xl p-3.5" style={{ background: "rgba(245,158,11,0.03)", border: "1px solid rgba(245,158,11,0.1)" }}>
@@ -445,24 +487,13 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </AccordionSection>
 
-            {/* ACE Profile */}
-            <div className="pt-6">
-            <ACEProfileSection
-              ace={ace}
-              adventureName={adventure.name}
-              showAltitudeWarning={showAltitudeWarning}
-              showFatalFallWarning={showFatalFallWarning}
-              showExtremeIsolationWarning={showExtremeIsolationWarning}
-              showTechnicalWarning={showTechnicalWarning}
-              showPhysicalExhaustionWarning={showPhysicalExhaustionWarning}
-              showWaterWarning={showWaterWarning}
-            />
-            </div>
-
             {/* Operators */}
             <RecalibrationNudge difficulty={difficulty} />
             <div id="book-this-adventure" />
-            <AccordionSection label="Book This Adventure" title="Where to Book" defaultOpen={true}>
+            <AccordionSection
+              label="Book This Adventure" title="Where to Book" defaultOpen={false}
+              icon={<Ticket className="w-4 h-4" />} tintRgb="91,163,201"
+            >
               <div id="operators-section" className="space-y-2.5">
                 <OperatorsSection operators={allOperators} slug={adventure.slug} />
                 <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
@@ -521,8 +552,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </div>
           </div>
 
-          {/* ── RIGHT SIDEBAR ── */}
-          <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
+          {/* ── RIGHT SIDEBAR — desktop-only; its contents duplicate the mobile stats strip and Discover More section ── */}
+          <div className="hidden lg:block space-y-3 lg:sticky lg:top-24 lg:self-start">
 
             {/* At a Glance */}
             <div
@@ -577,7 +608,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           <FadeInSection>
           <div className="max-w-7xl mx-auto">
             <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4">Discover More</p>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {relatedByState.length > 0 && (
                 <div className="p-4" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)", borderRadius: "1rem" }}>
                   <RelatedSection title={`More in ${adventure.state}`} items={relatedByState} exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} pillMode="type" />
@@ -594,8 +625,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         </section>
       )}
 
-      <CompareAdventures />
-      <SavedAdventuresSection currentSlug={adventure.slug} />
       <Footer />
     </div>
   );

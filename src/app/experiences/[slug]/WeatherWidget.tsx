@@ -103,7 +103,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
     url.searchParams.set("current", "temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code,is_day");
     url.searchParams.set("daily", "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum");
     url.searchParams.set("wind_speed_unit", "kmh");
-    url.searchParams.set("forecast_days", "7");
+    url.searchParams.set("forecast_days", "16");
     url.searchParams.set("timezone", "auto");
 
     fetch(url.toString())
@@ -139,15 +139,81 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
     setDateError(false);
     setDateWeather(null);
 
-    // Check forecast cache first
+    // Check forecast cache first (today .. +15 days, live data)
     const cached = weatherRef.current?.daily.find(d => d.date === date);
     if (cached) { setDateWeather(cached); return; }
 
-    // For any other date: fetch historical data for same date last year
     setDateFetching(true);
-    const [y, m, d2] = date.split("-");
-    const histDate = `${parseInt(y) - 1}-${m}-${d2}`;
-    const histYear = parseInt(y) - 1;
+    const todayUTC = Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    const [y, m, d2] = date.split("-").map(Number);
+    const targetUTC = Date.UTC(y, m - 1, d2);
+    const diffDays = Math.round((targetUTC - todayUTC) / 86400000);
+
+    // Within live forecast horizon but missed the cache (e.g. widget loaded before this date existed): ask the live forecast source directly
+    if (diffDays >= 0 && diffDays <= 15) {
+      const url = new URL("https://api.open-meteo.com/v1/forecast");
+      url.searchParams.set("latitude", lat.toString());
+      url.searchParams.set("longitude", lng.toString());
+      url.searchParams.set("daily", "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum");
+      url.searchParams.set("wind_speed_unit", "kmh");
+      url.searchParams.set("start_date", date);
+      url.searchParams.set("end_date", date);
+      url.searchParams.set("timezone", "auto");
+
+      fetch(url.toString())
+        .then(r => r.json())
+        .then(data => {
+          if (data.daily?.time?.[0]) {
+            setDateWeather({
+              date: data.daily.time[0],
+              tempMax: Math.round(data.daily.temperature_2m_max[0]),
+              tempMin: Math.round(data.daily.temperature_2m_min[0]),
+              precipitation: Math.round(data.daily.precipitation_sum[0] * 10) / 10,
+              weatherCode: data.daily.weather_code[0],
+            });
+          } else {
+            setDateError(true);
+          }
+        })
+        .catch(() => setDateError(true))
+        .finally(() => setDateFetching(false));
+      return;
+    }
+
+    // Genuine past date: fetch what actually happened, not a shifted year
+    if (diffDays < 0) {
+      const url = new URL("https://archive-api.open-meteo.com/v1/archive");
+      url.searchParams.set("latitude", lat.toString());
+      url.searchParams.set("longitude", lng.toString());
+      url.searchParams.set("daily", "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum");
+      url.searchParams.set("wind_speed_unit", "kmh");
+      url.searchParams.set("start_date", date);
+      url.searchParams.set("end_date", date);
+      url.searchParams.set("timezone", "auto");
+
+      fetch(url.toString())
+        .then(r => r.json())
+        .then(data => {
+          if (data.daily?.time?.[0]) {
+            setDateWeather({
+              date: data.daily.time[0],
+              tempMax: Math.round(data.daily.temperature_2m_max[0]),
+              tempMin: Math.round(data.daily.temperature_2m_min[0]),
+              precipitation: Math.round(data.daily.precipitation_sum[0] * 10) / 10,
+              weatherCode: data.daily.weather_code[0],
+            });
+          } else {
+            setDateError(true);
+          }
+        })
+        .catch(() => setDateError(true))
+        .finally(() => setDateFetching(false));
+      return;
+    }
+
+    // Far-future date, beyond any forecast horizon: fall back to the same date last year as a historical estimate
+    const histDate = `${y - 1}-${String(m).padStart(2, "0")}-${String(d2).padStart(2, "0")}`;
+    const histYear = y - 1;
 
     const url = new URL("https://archive-api.open-meteo.com/v1/archive");
     url.searchParams.set("latitude", lat.toString());
@@ -163,7 +229,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
       .then(data => {
         if (data.daily?.time?.[0]) {
           setDateWeather({
-            date: data.daily.time[0],
+            date,
             tempMax: Math.round(data.daily.temperature_2m_max[0]),
             tempMin: Math.round(data.daily.temperature_2m_min[0]),
             precipitation: Math.round(data.daily.precipitation_sum[0] * 10) / 10,
@@ -203,7 +269,8 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
           <div className="flex items-stretch" style={{ borderTop: "1px solid var(--border-subtle)" }}>
 
             {/* Scrollable stats */}
-            <div className="flex items-center overflow-x-auto no-scrollbar flex-1 min-w-0">
+            <div className="relative flex-1 min-w-0">
+            <div className="flex items-center overflow-x-auto no-scrollbar">
               <div className="flex items-center gap-2 px-5 lg:px-6 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
                 <div>
                   <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">{isBaseCamp ? "Base Camp" : "Live Weather"}</div>
@@ -245,6 +312,9 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
                 </div>
               </div>
             </div>
+            {/* Scroll hint — this row overflows on mobile with no other affordance */}
+            <div className="md:hidden pointer-events-none absolute top-0 right-0 bottom-0 w-8" style={{ background: "linear-gradient(to right, transparent, var(--bg-surface))" }} />
+            </div>
 
             {/* Toggle button — always visible */}
             <div className="flex items-center gap-3 px-4 shrink-0" style={{ borderLeft: "1px solid var(--border-subtle)" }}>
@@ -256,6 +326,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
                   border: open ? "1px solid rgba(255,81,0,0.3)" : "1px solid rgba(255,255,255,0.1)",
                 }}
               >
+                <CalendarDays className="w-3.5 h-3.5 sm:hidden shrink-0" style={{ color: open ? "#ff5100" : "rgba(255,255,255,0.45)" }} />
                 <span className="text-[11px] font-semibold hidden sm:block whitespace-nowrap" style={{ color: open ? "#ff5100" : "rgba(255,255,255,0.45)" }}>
                   Week Ahead
                 </span>
@@ -274,7 +345,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
 
             {/* 7-day grid */}
             <div className="grid grid-cols-7 gap-2.5 mb-5">
-              {weather.daily.map((day, i) => (
+              {weather.daily.slice(0, 7).map((day, i) => (
                 <div
                   key={day.date}
                   className="flex flex-col items-center gap-2 py-3.5 px-2 rounded-xl"
@@ -284,7 +355,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
                       : { background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)" }
                   }
                 >
-                  <span className="text-[9px] font-bold uppercase tracking-[0.12em]" style={{ color: i === 0 ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.25)" }}>
+                  <span className="text-[9px] font-bold uppercase tracking-[0.12em]" style={{ color: i === 0 ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.35)" }}>
                     {dayLabel(day.date, i)}
                   </span>
                   <div className={iconColor(day.weatherCode)}>
@@ -295,11 +366,11 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
                   </span>
                   <div className="w-full h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
                   <div className="flex flex-col items-center gap-0.5">
-                    <span className="text-white/20 text-[7px] uppercase tracking-wide">High</span>
+                    <span className="text-white/30 text-[7px] uppercase tracking-wide">High</span>
                     <span className="text-white/80 text-[12px] font-bold leading-none">{day.tempMax}°</span>
                   </div>
                   <div className="flex flex-col items-center gap-0.5">
-                    <span className="text-white/20 text-[7px] uppercase tracking-wide">Low</span>
+                    <span className="text-white/30 text-[7px] uppercase tracking-wide">Low</span>
                     <span className="text-white/40 text-[11px] font-medium leading-none">{day.tempMin}°</span>
                   </div>
                   {day.precipitation > 0 ? (
@@ -360,10 +431,10 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
 
                     {/* Main info */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-white/25 text-[9px] uppercase tracking-widest font-semibold mb-0.5">{formatted}</p>
+                      <p className="text-white/35 text-[9px] uppercase tracking-widest font-semibold mb-0.5">{formatted}</p>
                       <p className="text-white/85 text-sm font-bold leading-tight">{desc(dateWeather.weatherCode)}</p>
                       {dateWeather.historical && (
-                        <p className="text-white/20 text-[9px] mt-0.5">Based on {dateWeather.year} data</p>
+                        <p className="text-white/30 text-[9px] mt-0.5">Based on {dateWeather.year} data</p>
                       )}
                     </div>
 
@@ -389,13 +460,13 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
             </div>
 
             {altM && altM >= 3500 ? (
-              <p className="mt-4 text-white/20 text-[9px] flex items-center gap-1.5">
+              <p className="mt-4 text-white/30 text-[9px] flex items-center gap-1.5">
                 <Thermometer className="w-3 h-3 text-amber-400/40 shrink-0" />
                 At {altitude}, summit temps run 10–15°C colder. Data reflects base-area conditions.
-                <span className="ml-auto text-white/12">Open-Meteo</span>
+                <span className="ml-auto text-white/35">Open-Meteo</span>
               </p>
             ) : (
-              <p className="mt-3 text-white/12 text-[9px] text-right">Open-Meteo · Updated now</p>
+              <p className="mt-3 text-white/35 text-[9px] text-right">Open-Meteo · Updated now</p>
             )}
           </div>
         </div>

@@ -50,6 +50,7 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
     return (
       <button
         onClick={handleToggle}
+        aria-label={done ? "Remove from completed" : "Mark as done"}
         className={`inline-flex items-center gap-0 sm:gap-1.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${className}`}
         style={done
           ? { background: "rgba(74,222,128,0.18)", color: "#4ade80", border: "1px solid rgba(74,222,128,0.35)", boxShadow: "0 0 10px rgba(74,222,128,0.15)" }

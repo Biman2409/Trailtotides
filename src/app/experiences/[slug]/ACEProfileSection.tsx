@@ -18,6 +18,8 @@ interface Props {
   showTechnicalWarning: boolean;
   showPhysicalExhaustionWarning: boolean;
   showWaterWarning: boolean;
+  /** Skip the section's own eyebrow/title/grading-pill header — use when an outer wrapper (e.g. a paired AccordionSection card) already provides it. */
+  bare?: boolean;
 }
 
 const AXIS_ICONS: Record<string, React.ReactNode> = {
@@ -100,14 +102,14 @@ function AxisCell({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; 
       {/* Trek row */}
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
-          <span className="text-[7px] font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.2)" }}>Trek</span>
+          <span className="text-[7px] font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.32)" }}>Trek</span>
         </div>
         <DotScale filled={trekVal} color={color} dim />
       </div>
       {/* You row */}
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
-          <span className="text-[7px] font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.2)" }}>You</span>
+          <span className="text-[7px] font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.32)" }}>You</span>
         </div>
         <DotScale filled={userVal} color={meets ? color : "#f87171"} />
       </div>
@@ -115,7 +117,7 @@ function AxisCell({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; 
   );
 }
 
-export default function ACEProfileSection({ ace, adventureName }: Props) {
+export default function ACEProfileSection({ ace, adventureName, bare }: Props) {
   const [userAce, setUserAce] = useState<ACE | null>(null);
   // Overlap is the default — more compact than side-by-side (especially
   // when an adventure's requirements are low/near-zero, which leaves the
@@ -144,13 +146,15 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
   return (
     <section>
       {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <div>
-          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-0.5">Capability Profile</p>
-          <h2 className="text-white font-semibold text-base leading-snug tracking-tight">How do you measure up?</h2>
+      {!bare && (
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-0.5">Capability Profile</p>
+            <h2 className="text-white font-semibold text-base leading-snug tracking-tight">How do you measure up?</h2>
+          </div>
+          <GradingPill />
         </div>
-        <GradingPill />
-      </div>
+      )}
 
       {/* Main card */}
       <div
@@ -226,7 +230,7 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
 
               {/* 4-domain × 2-axis matrix — self-stretch to match radar height */}
               <div className="flex-1 min-w-0 flex flex-col gap-2 self-stretch">
-                <p className="text-[8px] font-black uppercase tracking-[0.2em] text-white/25">Capability vs Requirement</p>
+                <p className="text-[8px] font-black uppercase tracking-[0.2em] text-white/35">Capability vs Requirement</p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 flex-1">
                   {ACE_DOMAINS.map(domain => (
                     <div key={domain.name} className="flex flex-col gap-1.5 h-full">
@@ -255,7 +259,7 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
             </div>
           ) : userAce ? (
             /* ── Split two radars ── */
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div
                 className="flex flex-col items-center gap-3 rounded-2xl py-4 px-3"
                 style={{
@@ -287,18 +291,18 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
             </div>
           ) : (
             /* ── No profile ── */
-            <div className="flex gap-0 items-stretch">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 items-center sm:items-stretch">
               {/* Trek radar — larger, dominant */}
-              <div className="flex flex-col items-center gap-1.5 shrink-0 pr-4">
+              <div className="flex flex-col items-center gap-1.5 shrink-0 sm:pr-4">
                 <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[#ff5100]/60">Trek Requirements</span>
-                <ACERadar ace={ace} size={224} showLabels />
+                <ACERadar ace={ace} size={200} showLabels />
               </div>
 
-              {/* Divider */}
-              <div className="w-px self-stretch" style={{ background: "rgba(255,255,255,0.05)" }} />
+              {/* Divider — vertical on desktop, horizontal on mobile */}
+              <div className="w-full h-px sm:w-px sm:h-auto sm:self-stretch" style={{ background: "rgba(255,255,255,0.05)" }} />
 
               {/* CTA sub-section */}
-              <div className="flex flex-col justify-center pl-4 flex-1 min-w-0">
+              <div className="flex flex-col justify-center w-full sm:pl-4 flex-1 min-w-0">
                 <div
                   className="rounded-xl p-3 flex flex-col gap-3"
                   style={{ background: "rgba(255,81,0,0.05)", border: "1px solid rgba(255,81,0,0.12)" }}
@@ -328,7 +332,7 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
           className="px-4 py-2.5 flex items-center gap-3"
           style={{ borderTop: "1px solid rgba(255,255,255,0.04)", background: "rgba(0,0,0,0.12)" }}
         >
-          <p className="text-[11px] leading-relaxed text-white/20 flex-1 italic">
+          <p className="text-[11px] leading-relaxed text-white/30 flex-1 italic">
             {aceSummary(ace, adventureName)}
           </p>
           {userAce && (
@@ -392,7 +396,7 @@ export default function ACEProfileSection({ ace, adventureName }: Props) {
                       >
                         <ChevronUp className="w-2 h-2" />+{gap}
                       </span>
-                      <span className="text-white/20 text-[9px] ml-auto font-mono">Lv {userVal} → {trekVal}</span>
+                      <span className="text-white/30 text-[9px] ml-auto font-mono">Lv {userVal} → {trekVal}</span>
                     </div>
                     <div className="h-1 rounded-full overflow-hidden mb-1.5" style={{ background: "rgba(255,255,255,0.06)" }}>
                       <div
