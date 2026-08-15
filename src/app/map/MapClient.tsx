@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
   LocateFixed, Map as MapIcon, Layers, Camera,
@@ -25,6 +27,10 @@ const DIFFICULTY_COLORS: Record<string, string> = Object.fromEntries(
 );
 
 const seasons = SEASONS;
+
+// Distinct activity types actually present in the data — drives the Legend's
+// icon key so it always matches what's really on the map.
+const PRESENT_TYPES = Array.from(new Set(adventures.map(a => a.type))).sort();
 
 type NominatimResult = {
   place_id: number;
@@ -269,6 +275,7 @@ function MapView({
   adventures: advs,
   flyToRef,
   openPinRef,
+  placePinRef,
   resetViewRef,
   viewKey,
   userPhotos,
@@ -278,12 +285,14 @@ function MapView({
   adventures: Adventure[];
   flyToRef: React.MutableRefObject<((lat: number, lng: number) => void) | null>;
   openPinRef: React.MutableRefObject<((slug: string) => void) | null>;
+  placePinRef: React.MutableRefObject<((lat: number, lng: number, name: string) => void) | null>;
   resetViewRef: React.MutableRefObject<(() => void) | null>;
   viewKey: OverlayKey;
   userPhotos: UserPhoto[];
   wishlist: Set<string>;
   nearMe: { lat: number; lng: number } | null;
 }) {
+  const router = useRouter();
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
@@ -291,6 +300,8 @@ function MapView({
   const baseTileRef = useRef<L.TileLayer | null>(null);
   const labelsTileRef = useRef<L.TileLayer | null>(null);
   const photoLayerRef = useRef<L.LayerGroup | null>(null);
+  const placeLayerRef = useRef<L.LayerGroup | null>(null);
+  const meLayerRef = useRef<L.LayerGroup | null>(null);
 
   useEffect(() => {
     flyToRef.current = (lat, lng) => {
@@ -303,6 +314,25 @@ function MapView({
         if (adv) mapInstanceRef.current.flyTo([adv.lat, adv.lng], 11, { duration: 1.0 });
         setTimeout(() => marker.openPopup(), 1100);
       }
+    };
+    // Drop a distinct pin at a searched place — otherwise flying there gives no
+    // visual confirmation of exactly where the map landed.
+    placePinRef.current = (lat, lng, name) => {
+      loadLeaflet().then(leaflet => {
+        if (!placeLayerRef.current) return;
+        placeLayerRef.current.clearLayers();
+        const icon = leaflet.divIcon({
+          className: "",
+          html: `<div style="width:26px;height:26px;border-radius:50% 50% 50% 0;background:#38bdf8;transform:rotate(-45deg);border:2.5px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.35);"></div>`,
+          iconSize: [26, 26],
+          iconAnchor: [13, 26],
+          popupAnchor: [0, -30],
+        });
+        const marker = leaflet.marker([lat, lng], { icon }).bindTooltip(name, {
+          direction: "top", offset: [0, -28], className: "ttt-tooltip", opacity: 0.9, permanent: true,
+        });
+        placeLayerRef.current.addLayer(marker);
+      });
     };
   });
 
@@ -330,7 +360,7 @@ function MapView({
       : "";
 
     const popupHtml = `
-      <div onclick="window.location.href='/experiences/${adv.slug}'" style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:var(--bg-surface,#0f1420);cursor:pointer;border:1px solid var(--border-subtle,rgba(255,255,255,0.06));">
+      <div data-nav="/experiences/${adv.slug}" style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:var(--bg-surface,#0f1420);cursor:pointer;border:1px solid var(--border-subtle,rgba(255,255,255,0.06));">
         <div style="position:relative;height:180px;">
           <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />
           <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.1) 50%,rgba(0,0,0,0.2) 100%);" />
@@ -376,6 +406,13 @@ function MapView({
         className: "ttt-tooltip",
         opacity: 0.9,
       });
+
+    // Popups render as raw HTML outside React, so a plain href would force a
+    // full page reload — route through Next's client-side router instead.
+    marker.on("popupopen", () => {
+      const el = marker.getPopup()?.getElement()?.querySelector<HTMLElement>("[data-nav]");
+      if (el) el.onclick = () => router.push(el.dataset.nav!);
+    });
 
     return marker;
   }
@@ -475,6 +512,13 @@ function MapView({
       .ttt-popup .leaflet-popup-content-wrapper > div:hover {
         transform: scale(1.02);
       }
+      .ttt-me-pulse {
+        animation: ttt-me-pulse 2s ease-out infinite;
+      }
+      @keyframes ttt-me-pulse {
+        0% { transform: scale(0.6); opacity: 0.8; }
+        100% { transform: scale(2.2); opacity: 0; }
+      }
     `;
     document.head.appendChild(s);
   }, []);
@@ -503,7 +547,9 @@ function MapView({
 
       const bl = BASE_LAYERS.default;
       baseTileRef.current = leaflet.tileLayer(bl.url, { maxZoom: bl.maxZoom, attribution: bl.attribution }).addTo(map);
-      leaflet.control.zoom({ position: "bottomright" }).addTo(map);
+      // topright — bottomright is where Legend/Reset View/branding chip live,
+      // and on mobile the branding chip visually covers the zoom-out button there.
+      leaflet.control.zoom({ position: "topright" }).addTo(map);
 
       mapInstanceRef.current = map;
 
@@ -532,6 +578,8 @@ function MapView({
       map.addLayer(MCG);
       markersLayerRef.current = MCG;
       photoLayerRef.current = leaflet.layerGroup().addTo(map);
+      placeLayerRef.current = leaflet.layerGroup().addTo(map);
+      meLayerRef.current = leaflet.layerGroup().addTo(map);
       addMarkers(leaflet, advs);
       addIndiaBorder(leaflet, map);
     });
@@ -611,7 +659,7 @@ function MapView({
               </div>
             </div>
             <div style="padding:10px 11px 11px;background:#09101f;">
-              <button onclick="window.location.href='/experiences/${photo.slug}'" style="display:flex;align-items:center;justify-content:center;gap:5px;width:100%;background:linear-gradient(135deg,#ff5100,#ff7d47);color:white;padding:8px;border-radius:8px;font-size:11px;font-weight:700;border:none;cursor:pointer;box-shadow:0 2px 10px rgba(255,81,0,0.3);">
+              <button data-nav="/experiences/${photo.slug}" style="display:flex;align-items:center;justify-content:center;gap:5px;width:100%;background:linear-gradient(135deg,#ff5100,#ff7d47);color:white;padding:8px;border-radius:8px;font-size:11px;font-weight:700;border:none;cursor:pointer;box-shadow:0 2px 10px rgba(255,81,0,0.3);">
                 See Full Details →
               </button>
             </div>
@@ -620,10 +668,37 @@ function MapView({
 
         const marker = leaflet.marker([photo.lat, photo.lng], { icon })
           .bindPopup(popupHtml, { maxWidth: 220, minWidth: 220, className: "ttt-popup" });
+        marker.on("popupopen", () => {
+          const el = marker.getPopup()?.getElement()?.querySelector<HTMLElement>("[data-nav]");
+          if (el) el.onclick = () => router.push(el.dataset.nav!);
+        });
         photoLayerRef.current!.addLayer(marker);
       });
     });
   }, [userPhotos]);
+
+  // "You are here" marker — otherwise the map recenters on Near Me with no
+  // fixed reference point to judge the distances shown in adventure popups.
+  useEffect(() => {
+    if (!meLayerRef.current) return;
+    loadLeaflet().then(leaflet => {
+      if (!meLayerRef.current) return;
+      meLayerRef.current.clearLayers();
+      if (!nearMe) return;
+      const icon = leaflet.divIcon({
+        className: "",
+        html: `<div style="position:relative;width:22px;height:22px;">
+          <div class="ttt-me-pulse" style="position:absolute;inset:0;border-radius:50%;background:rgba(56,189,248,0.35);"></div>
+          <div style="position:absolute;top:5px;left:5px;width:12px;height:12px;border-radius:50%;background:#38bdf8;border:2px solid #fff;box-shadow:0 0 0 1px rgba(56,189,248,0.5),0 2px 6px rgba(0,0,0,0.4);"></div>
+        </div>`,
+        iconSize: [22, 22],
+        iconAnchor: [11, 11],
+      });
+      const marker = leaflet.marker([nearMe.lat, nearMe.lng], { icon, zIndexOffset: 1000 })
+        .bindTooltip("You are here", { direction: "top", offset: [0, -10], className: "ttt-tooltip", opacity: 0.9 });
+      meLayerRef.current.addLayer(marker);
+    });
+  }, [nearMe]);
 
   return <div ref={mapRef} className="w-full h-full" />;
 }
@@ -659,12 +734,17 @@ export default function MapPage() {
     setMyShotsLoading(true);
     fetch("/api/photos/mine")
       .then(r => r.json())
-      .then(d => setUserPhotos(d.photos ?? []))
+      .then(d => {
+        const photos = d.photos ?? [];
+        setUserPhotos(photos);
+        if (photos.length === 0) toast("No trip photos yet — add some from a completed adventure's page.");
+      })
       .catch(() => setUserPhotos([]))
       .finally(() => setMyShotsLoading(false));
   }
   const flyToRef = useRef<((lat: number, lng: number) => void) | null>(null);
   const openPinRef = useRef<((slug: string) => void) | null>(null);
+  const placePinRef = useRef<((lat: number, lng: number, name: string) => void) | null>(null);
   const resetViewRef = useRef<(() => void) | null>(null);
   const [nearMe, setNearMe] = useState<{ lat: number; lng: number } | null>(null);
   const [nearMeLoading, setNearMeLoading] = useState(false);
@@ -746,7 +826,7 @@ export default function MapPage() {
 
   function handleNearMe() {
     if (nearMe) { setNearMe(null); setNearMeError(false); return; }
-    if (!navigator.geolocation) { setNearMeError(true); return; }
+    if (!navigator.geolocation) { setNearMeError(true); toast.error("Location isn't supported on this device."); return; }
     setNearMeLoading(true);
     setNearMeError(false);
     navigator.geolocation.getCurrentPosition(
@@ -755,7 +835,7 @@ export default function MapPage() {
         flyToRef.current?.(pos.coords.latitude, pos.coords.longitude);
         setNearMeLoading(false);
       },
-      () => { setNearMeLoading(false); setNearMeError(true); },
+      () => { setNearMeLoading(false); setNearMeError(true); toast.error("Location access denied — enable it in your browser settings to see nearby adventures."); },
       { timeout: 8000, enableHighAccuracy: false }
     );
   }
@@ -778,16 +858,17 @@ export default function MapPage() {
         className="z-[1001] shrink-0"
         style={{ position: "relative", background: "rgba(4,7,14,0.97)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 1px 0 rgba(255,255,255,0.04)" }}
       >
-        <div className="max-w-7xl mx-auto px-3 lg:px-5 py-2 flex items-center gap-2">
+        <div className="max-w-7xl mx-auto px-3 lg:px-5 py-2 flex flex-col sm:flex-row sm:items-center gap-2">
 
           <UnifiedSearch
             onAdventureSearch={setSearch}
-            onPlaceSelect={(lat, lng) => flyToRef.current?.(lat, lng)}
+            onPlaceSelect={(lat, lng, name) => { flyToRef.current?.(lat, lng); placePinRef.current?.(lat, lng, name); }}
             onAdventurePin={adv => openPinRef.current?.(adv.slug)}
           />
 
-          {/* Toolbar items */}
-          <div className="flex items-center gap-2">
+          {/* Toolbar items — its own horizontally-scrollable row on mobile so it never
+             squeezes the search box (flex-1 min-w-0) down to zero width */}
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0">
 
           {/* Default / Satellite / Terrain — directly visible toggle buttons */}
           <div className="flex items-center rounded-lg overflow-hidden shrink-0" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
@@ -840,9 +921,6 @@ export default function MapPage() {
               {nearMeLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LocateFixed className="w-3.5 h-3.5" />}
               <span className="hidden sm:inline">{nearMe ? "Near Me ✓" : "Near Me"}</span>
             </button>
-            {nearMeError && (
-              <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1 text-[9px] text-red-400 font-semibold whitespace-nowrap">Location denied</span>
-            )}
           </div>
 
           {/* Filters */}
@@ -1114,6 +1192,7 @@ export default function MapPage() {
             adventures={sortedAdventures}
             flyToRef={flyToRef}
             openPinRef={openPinRef}
+            placePinRef={placePinRef}
             resetViewRef={resetViewRef}
             viewKey={activeOverlay ?? "default"}
             userPhotos={userPhotos}
@@ -1162,7 +1241,7 @@ export default function MapPage() {
               <div className="fixed inset-0 z-[999]" onClick={() => setLegendOpen(false)} />
               {/* Popup */}
               <div
-                className="absolute bottom-full left-0 mb-2 rounded-xl px-3.5 py-3 min-w-[160px]"
+                className="absolute bottom-full left-0 mb-2 rounded-xl px-3.5 py-3 min-w-[160px] max-h-[60vh] overflow-y-auto"
                 style={{
                   background: "rgba(4,7,14,0.96)",
                   backdropFilter: "blur(14px)",
@@ -1170,6 +1249,21 @@ export default function MapPage() {
                   boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
                 }}
               >
+                {/* Activity type — decodes the marker shapes, not just their color */}
+                <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2 text-white/25">Activity</p>
+                <div className="flex flex-col gap-1.5 mb-3">
+                  {PRESENT_TYPES.map(type => (
+                    <div key={type} className="flex items-center gap-2">
+                      <div
+                        className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+                        style={{ background: "rgba(255,255,255,0.08)" }}
+                        dangerouslySetInnerHTML={{ __html: typeIconSvg(type, 10, "rgba(255,255,255,0.75)") }}
+                      />
+                      <span className="text-[11px] font-medium text-white/60">{type}</span>
+                    </div>
+                  ))}
+                </div>
+
                 {/* Difficulty */}
                 <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2 text-white/25">Difficulty</p>
                 <div className="flex flex-col gap-1">
