@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { BookOpen, Ticket, ShieldCheck, ShieldAlert, MessagesSquare } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -36,23 +37,30 @@ export default function SectionNav() {
   return (
     <div
       className="hidden lg:block sticky top-20 z-30 backdrop-blur-xl"
-      style={{ background: "rgba(8,12,20,0.82)" }}
+      style={{ background: "rgba(8,12,20,0.82)", boxShadow: "0 1px 0 rgba(255,255,255,0.06), 0 12px 24px -16px rgba(0,0,0,0.5)" }}
     >
       <div className="max-w-7xl mx-auto px-5 lg:px-8">
-        <nav className="flex items-center gap-6 overflow-x-auto no-scrollbar" style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+        <nav className="flex items-center gap-1.5 py-3 overflow-x-auto no-scrollbar">
           {NAV_ITEMS.map(({ id, label, icon: Icon }) => {
             const isActive = active === id;
             return (
               <a
                 key={id}
                 href={`#${id}`}
-                className={`flex items-center gap-1.5 py-3.5 text-[13px] font-semibold whitespace-nowrap transition-colors duration-200 border-b-2 ${
-                  isActive ? "" : "text-white/50 border-transparent hover:text-white/80"
+                className={`relative flex items-center gap-1.5 px-4 py-2.5 rounded-full text-[13px] font-semibold whitespace-nowrap transition-colors duration-200 ${
+                  isActive ? "text-white" : "text-white/45 hover:text-white/75"
                 }`}
-                style={isActive ? { color: "#ff7d47", borderColor: "#ff5100" } : undefined}
               >
-                <Icon className="w-3.5 h-3.5 shrink-0" />
-                {label}
+                {isActive && (
+                  <motion.div
+                    layoutId="sectionNavPill"
+                    className="absolute inset-0 rounded-full"
+                    style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)", boxShadow: "0 4px 18px rgba(255,81,0,0.4)" }}
+                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  />
+                )}
+                <Icon className="w-3.5 h-3.5 shrink-0 relative z-10" />
+                <span className="relative z-10">{label}</span>
               </a>
             );
           })}
