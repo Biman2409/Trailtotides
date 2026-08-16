@@ -3,17 +3,13 @@
 import { useEffect, useState } from "react";
 import { X, Star, CalendarDays, Briefcase, Package, ExternalLink, Check, ArrowUpDown, ChevronDown } from "lucide-react";
 import { type OperatorCardData } from "./OperatorCard";
+import { parsePrice } from "@/lib/price";
 
 interface ComputedRating {
   avg: number;
   count: number;
   display: string;
   computed: boolean;
-}
-
-function parsePrice(p: string): number {
-  const n = parseInt(p.replace(/[^0-9]/g, ""), 10);
-  return isNaN(n) ? Infinity : n;
 }
 
 function formatDate(d: string) {

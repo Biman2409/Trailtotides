@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, Star, Users, ShieldCheck, Clock3, Sparkles } from "lucide-react";
+import { ChevronRight, Star, Users, ShieldCheck, Clock3, Sparkles, CalendarDays } from "lucide-react";
 import type { SeasonUrgency } from "@/lib/seasonUrgency";
 
 interface Props {
@@ -11,6 +11,7 @@ interface Props {
   operatorName?: string;
   hasVerifiedOperator?: boolean;
   seasonUrgency: SeasonUrgency | null;
+  nextDeparture?: string | null;
 }
 
 function UrgencyBadge({ urgency }: { urgency: SeasonUrgency }) {
@@ -39,7 +40,7 @@ function UrgencyBadge({ urgency }: { urgency: SeasonUrgency }) {
   return null;
 }
 
-export default function BookingSidebarCard({ priceFrom, operatorCount, avgRating, operatorWebsite, operatorName, hasVerifiedOperator, seasonUrgency }: Props) {
+export default function BookingSidebarCard({ priceFrom, operatorCount, avgRating, operatorWebsite, operatorName, hasVerifiedOperator, seasonUrgency, nextDeparture }: Props) {
   const handleBook = () => {
     if (operatorWebsite) {
       window.open(operatorWebsite, "_blank", "noopener noreferrer");
@@ -88,6 +89,12 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, avgRating
             <span className="flex items-center gap-1.5" style={{ color: "#34d399" }}>
               <ShieldCheck className="w-3 h-3" />
               Verified
+            </span>
+          )}
+          {nextDeparture && (
+            <span className="flex items-center gap-1.5">
+              <CalendarDays className="w-3 h-3" />
+              Next: {nextDeparture}
             </span>
           )}
         </div>

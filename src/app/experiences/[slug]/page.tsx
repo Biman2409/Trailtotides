@@ -25,6 +25,7 @@ import {
   Target,
   IndianRupee,
   Star,
+  HelpCircle,
 } from "lucide-react";
 import GradingPill from "@/components/ui/custom/GradingPill";
 import Navbar from "@/components/layout/Navbar";
@@ -58,6 +59,12 @@ import NearbyAdventuresMap from "./NearbyAdventuresMap";
 import BookingSidebarCard from "./BookingSidebarCard";
 import { haversineKm } from "@/lib/geo";
 import { getSeasonUrgency } from "@/lib/seasonUrgency";
+import { parsePrice } from "@/lib/price";
+import { getNextDeparture } from "@/lib/nextDeparture";
+import FAQSection from "./FAQSection";
+import SectionNav from "./SectionNav";
+
+const DIFFICULTY_LEVEL: Record<string, number> = { Easy: 1, Moderate: 2, Hard: 3, Advanced: 4, Extreme: 5 };
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -204,13 +211,27 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
     .slice(0, 6)
     .map(({ adventure: a }) => a);
 
-  const firstVerifiedOp = allOperators.find((o) => o.verified);
-  const priceFrom = firstVerifiedOp?.priceFrom;
+  // Featured operator = cheapest overall, so the price shown up top always
+  // matches the operator the primary CTA books with (previously this used
+  // the first *verified* operator's price, which could be higher than the
+  // true minimum shown further down in the operator comparison table).
+  const featuredOp = allOperators.length > 0
+    ? allOperators.reduce((best, o) => (parsePrice(o.priceFrom) < parsePrice(best.priceFrom) ? o : best))
+    : undefined;
+  const priceFrom = featuredOp?.priceFrom;
   const ratedOps = allOperators.filter((o) => o.googleRating);
   const avgRating = ratedOps.length > 0
     ? ratedOps.reduce((sum, o) => sum + (o.googleRating ?? 0), 0) / ratedOps.length
     : null;
   const seasonUrgency = getSeasonUrgency(adventure.bestMonths);
+  const nextDeparture = getNextDeparture(allOperators.flatMap((o) => o.departureDates ?? []));
+
+  const currentDifficultyLevel = DIFFICULTY_LEVEL[difficulty] ?? 1;
+  const easierAlternatives = currentDifficultyLevel >= 4
+    ? nearbyAdventures
+        .filter((a) => (DIFFICULTY_LEVEL[computeDifficulty(getACE(a))] ?? 1) < currentDifficultyLevel)
+        .slice(0, 2)
+    : [];
 
   const structuredData = [
     {
@@ -288,9 +309,10 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         priceFrom={priceFrom}
         difficulty={difficulty}
         duration={adventure.durationDays ?? adventure.duration}
-        operatorWebsite={firstVerifiedOp?.website}
-        operatorName={firstVerifiedOp?.name}
+        operatorWebsite={featuredOp?.website}
+        operatorName={featuredOp?.name}
         seasonUrgency={seasonUrgency}
+        nextDeparture={nextDeparture}
       />
       <ScrollToTop />
       <Navbar />
@@ -340,6 +362,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         {/* Top-right: Compare + Save with labels */}
         <HeroActions adventure={adventure} />
       </section>
+
+      <SectionNav />
 
       {/* ── STATS + WEATHER ZONE ──────────────────────────────── */}
       <FadeInSection as="div" style={{ background: "var(--bg-surface)", borderBottom: "1px solid var(--border-subtle)" }}>
@@ -395,7 +419,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           <div className="lg:col-span-2">
 
             {/* The Adventure + What Makes It Special — a matched pair, side by side on desktop */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 pt-6 first:pt-0">
+            <div id="overview" className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 pt-6 first:pt-0 scroll-mt-24">
               <AccordionSection
                 label="The Adventure" title="About This Adventure" defaultOpen
                 icon={<BookOpen className="w-4 h-4" />} tintRgb="255,81,0" noDivider noTopPad stretch
@@ -412,21 +436,9 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </div>
             <div className="h-px mt-6" style={{ background: "rgba(255,255,255,0.05)" }} />
 
-            {/* Operators — surfaced early since booking is the primary conversion goal */}
-            <RecalibrationNudge difficulty={difficulty} />
-            <div id="book-this-adventure" />
-            <AccordionSection
-              label="Book This Adventure" title="Where to Book" defaultOpen
-              icon={<Ticket className="w-4 h-4" />} tintRgb="91,163,201"
-            >
-              <div id="operators-section" className="space-y-2.5">
-                <OperatorsSection operators={allOperators} slug={adventure.slug} />
-                <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
-              </div>
-            </AccordionSection>
-
             {/* Is This For You? */}
             <AccordionSection
+              id="suitability"
               label="Suitability" title="Is This For You?" defaultOpen
               icon={<ShieldCheck className="w-4 h-4" />} tintRgb="56,189,248"
             >
@@ -462,6 +474,34 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   </ul>
                 </div>
               </div>
+
+              {/* Too intense? Surface easier nearby alternatives instead of only at the very bottom of the page */}
+              {easierAlternatives.length > 0 && (
+                <div className="mt-3 rounded-xl p-3.5" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                  <p className="text-[10px] font-bold tracking-[0.16em] uppercase mb-2.5" style={{ color: "var(--text-tertiary)" }}>Want something a bit easier?</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {easierAlternatives.map((a) => {
+                      const aDiff = computeDifficulty(getACE(a));
+                      return (
+                        <Link
+                          key={a.id}
+                          href={`/experiences/${a.slug}`}
+                          className="flex items-center gap-2.5 p-2 rounded-lg transition-colors hover:bg-white/[0.04]"
+                          style={{ border: "1px solid var(--border-subtle)" }}
+                        >
+                          <div className="relative w-11 h-11 rounded-lg overflow-hidden shrink-0">
+                            <Image src={a.heroImage} alt={a.name} fill className="object-cover" style={{ objectFit: "cover" }} />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-xs font-semibold truncate" style={{ color: "var(--text-primary)" }}>{a.name}</p>
+                            <p className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>{aDiff} · {a.type}</p>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </AccordionSection>
 
             {/* Capability Profile — below Suitability; its radar + domain matrix need full width to read well */}
@@ -485,6 +525,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
             {/* Safety & Prep */}
             <AccordionSection
+              id="safety"
               label="Safety &amp; Prep" title="What to Know Before You Go" defaultOpen={false}
               icon={<ShieldAlert className="w-4 h-4" />} tintRgb="245,158,11"
             >
@@ -521,8 +562,29 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </AccordionSection>
 
+            {/* FAQ */}
+            <AccordionSection
+              label="FAQ" title="Common Questions" defaultOpen={false}
+              icon={<HelpCircle className="w-4 h-4" />} tintRgb="45,212,191"
+            >
+              <FAQSection adventure={adventure} difficulty={difficulty} operatorCount={allOperators.length} />
+            </AccordionSection>
+
+            {/* Operators */}
+            <RecalibrationNudge difficulty={difficulty} />
+            <div id="book-this-adventure" />
+            <AccordionSection
+              label="Book This Adventure" title="Where to Book" defaultOpen
+              icon={<Ticket className="w-4 h-4" />} tintRgb="91,163,201"
+            >
+              <div id="operators-section" className="space-y-2.5">
+                <OperatorsSection operators={allOperators} slug={adventure.slug} />
+                <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
+              </div>
+            </AccordionSection>
+
             {/* Community */}
-            <div className="pt-6">
+            <div id="community" className="pt-6 scroll-mt-24">
               <h2 className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">Community</h2>
 
               {/* Single login CTA — only when logged out */}
@@ -581,10 +643,11 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               priceFrom={priceFrom}
               operatorCount={allOperators.length}
               avgRating={avgRating}
-              operatorWebsite={firstVerifiedOp?.website}
-              operatorName={firstVerifiedOp?.name}
-              hasVerifiedOperator={!!firstVerifiedOp}
+              operatorWebsite={featuredOp?.website}
+              operatorName={featuredOp?.name}
+              hasVerifiedOperator={!!featuredOp?.verified}
               seasonUrgency={seasonUrgency}
+              nextDeparture={nextDeparture}
             />
 
             {/* At a Glance */}

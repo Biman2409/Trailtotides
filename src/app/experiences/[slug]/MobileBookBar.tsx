@@ -13,9 +13,10 @@ interface Props {
   operatorWebsite?: string;
   operatorName?: string;
   seasonUrgency?: SeasonUrgency | null;
+  nextDeparture?: string | null;
 }
 
-export default function MobileBookBar({ adventureName, priceFrom, difficulty, duration, operatorWebsite, operatorName, seasonUrgency }: Props) {
+export default function MobileBookBar({ adventureName, priceFrom, difficulty, duration, operatorWebsite, operatorName, seasonUrgency, nextDeparture }: Props) {
   const [visible, setVisible] = useState(false);
   const [staleProfile, setStaleProfile] = useState(false);
 
@@ -98,6 +99,9 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
               <p className="text-white font-bold text-sm leading-none whitespace-nowrap">
                 <span className="text-white/30 font-normal text-[11px]">From </span>{priceFrom}
               </p>
+            )}
+            {nextDeparture && (
+              <p className="text-white/30 text-[10px] mt-1 whitespace-nowrap">Next: {nextDeparture}</p>
             )}
           </div>
         </div>

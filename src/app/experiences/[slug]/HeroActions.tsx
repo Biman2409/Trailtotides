@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, LogIn, GitCompareArrows, CheckCheck } from "lucide-react";
+import { Heart, LogIn, GitCompareArrows, CheckCheck, Share2, Check } from "lucide-react";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCompare } from "@/contexts/CompareContext";
 import CheckInButton from "@/components/ui/custom/CheckInButton";
@@ -17,6 +17,7 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
   const inCompare = isSelected(adventure.id);
   const router = useRouter();
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
+  const [shared, setShared] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -59,6 +60,26 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
     }
   }
 
+  async function handleShare() {
+    const url = `https://trailtotides.com/experiences/${adventure.slug}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: adventure.name, text: adventure.tagline, url });
+      } catch {
+        // user cancelled the native share sheet — no-op
+      }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setShared(true);
+      toast.success("Link copied to clipboard");
+      setTimeout(() => setShared(false), 2000);
+    } catch {
+      toast.error("Couldn't copy link — copy it from the address bar instead.");
+    }
+  }
+
   const btnBase = "inline-flex items-center gap-0 sm:gap-2 h-9 px-2.5 sm:px-3.5 rounded-xl text-xs font-semibold transition-all duration-200 backdrop-blur-md";
 
   return (
@@ -97,7 +118,20 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
         }
       </button>
 
-      {/* ── Been There (third) ── */}
+      {/* ── Share (third) ── */}
+      <button
+        onClick={handleShare}
+        aria-label="Share this adventure"
+        className={btnBase}
+        style={{ background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }}
+      >
+        {shared
+          ? <><Check className="w-3.5 h-3.5" /><span className="hidden sm:inline">Copied</span></>
+          : <><Share2 className="w-3.5 h-3.5" /><span className="hidden sm:inline">Share</span></>
+        }
+      </button>
+
+      {/* ── Been There (fourth) ── */}
       <CheckInButton slug={adventure.slug} variant="page" className={btnBase} />
 
     </div>
