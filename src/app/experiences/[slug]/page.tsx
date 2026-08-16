@@ -23,6 +23,8 @@ import {
   ShieldAlert,
   Ticket,
   Target,
+  IndianRupee,
+  Star,
 } from "lucide-react";
 import GradingPill from "@/components/ui/custom/GradingPill";
 import Navbar from "@/components/layout/Navbar";
@@ -52,6 +54,10 @@ import RecalibrationNudge from "./RecalibrationNudge";
 import MedicalCautionNote from "./MedicalCautionNote";
 import { deriveMedicalCautions } from "@/lib/medicalCautions";
 import type { MedicalFlags } from "@/lib/matchmakerQuestions";
+import NearbyAdventuresMap from "./NearbyAdventuresMap";
+import BookingSidebarCard from "./BookingSidebarCard";
+import { haversineKm } from "@/lib/geo";
+import { getSeasonUrgency } from "@/lib/seasonUrgency";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -191,8 +197,20 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
     .filter((a) => a.id !== adventure.id && a.type === adventure.type && !relatedByStateIds.has(a.id))
     .slice(0, 6);
 
+  const nearbyAdventures = adventures
+    .filter((a) => a.id !== adventure.id)
+    .map((a) => ({ adventure: a, km: haversineKm(adventure.lat, adventure.lng, a.lat, a.lng) }))
+    .sort((a, b) => a.km - b.km)
+    .slice(0, 6)
+    .map(({ adventure: a }) => a);
+
   const firstVerifiedOp = allOperators.find((o) => o.verified);
   const priceFrom = firstVerifiedOp?.priceFrom;
+  const ratedOps = allOperators.filter((o) => o.googleRating);
+  const avgRating = ratedOps.length > 0
+    ? ratedOps.reduce((sum, o) => sum + (o.googleRating ?? 0), 0) / ratedOps.length
+    : null;
+  const seasonUrgency = getSeasonUrgency(adventure.bestMonths);
 
   const structuredData = [
     {
@@ -272,6 +290,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         duration={adventure.durationDays ?? adventure.duration}
         operatorWebsite={firstVerifiedOp?.website}
         operatorName={firstVerifiedOp?.name}
+        seasonUrgency={seasonUrgency}
       />
       <ScrollToTop />
       <Navbar />
@@ -329,6 +348,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         <div className="max-w-7xl mx-auto px-5 lg:px-8 relative">
           <div className="flex items-stretch overflow-x-auto no-scrollbar" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
             {[
+              ...(priceFrom ? [{ icon: <IndianRupee className="w-3.5 h-3.5 text-[#ff5100]" />, label: "From", value: priceFrom }] : []),
+              ...(avgRating !== null ? [{ icon: <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />, label: "Rating", value: `${avgRating.toFixed(1)} / 5` }] : []),
               { icon: <Clock className="w-3.5 h-3.5 text-[#ff5100]" />, label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
               { icon: <Compass className="w-3.5 h-3.5 text-fuchsia-400" />, label: "Type", value: adventure.type },
               ...(adventure.distance ? [{ icon: <Route className="w-3.5 h-3.5 text-emerald-400" />, label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
@@ -390,6 +411,19 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </AccordionSection>
             </div>
             <div className="h-px mt-6" style={{ background: "rgba(255,255,255,0.05)" }} />
+
+            {/* Operators — surfaced early since booking is the primary conversion goal */}
+            <RecalibrationNudge difficulty={difficulty} />
+            <div id="book-this-adventure" />
+            <AccordionSection
+              label="Book This Adventure" title="Where to Book" defaultOpen
+              icon={<Ticket className="w-4 h-4" />} tintRgb="91,163,201"
+            >
+              <div id="operators-section" className="space-y-2.5">
+                <OperatorsSection operators={allOperators} slug={adventure.slug} />
+                <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
+              </div>
+            </AccordionSection>
 
             {/* Is This For You? */}
             <AccordionSection
@@ -487,19 +521,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </AccordionSection>
 
-            {/* Operators */}
-            <RecalibrationNudge difficulty={difficulty} />
-            <div id="book-this-adventure" />
-            <AccordionSection
-              label="Book This Adventure" title="Where to Book" defaultOpen={false}
-              icon={<Ticket className="w-4 h-4" />} tintRgb="91,163,201"
-            >
-              <div id="operators-section" className="space-y-2.5">
-                <OperatorsSection operators={allOperators} slug={adventure.slug} />
-                <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
-              </div>
-            </AccordionSection>
-
             {/* Community */}
             <div className="pt-6">
               <h2 className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">Community</h2>
@@ -555,6 +576,17 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           {/* ── RIGHT SIDEBAR — desktop-only; its contents duplicate the mobile stats strip and Discover More section ── */}
           <div className="hidden lg:block space-y-3 lg:sticky lg:top-24 lg:self-start">
 
+            {/* Book Now */}
+            <BookingSidebarCard
+              priceFrom={priceFrom}
+              operatorCount={allOperators.length}
+              avgRating={avgRating}
+              operatorWebsite={firstVerifiedOp?.website}
+              operatorName={firstVerifiedOp?.name}
+              hasVerifiedOperator={!!firstVerifiedOp}
+              seasonUrgency={seasonUrgency}
+            />
+
             {/* At a Glance */}
             <div
               className="rounded-xl overflow-hidden"
@@ -584,6 +616,11 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 ))}
               </div>
             </div>
+
+            {/* Nearby adventures map */}
+            {nearbyAdventures.length > 0 && (
+              <NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} />
+            )}
 
             {/* Explore links */}
             <div className="grid grid-cols-2 gap-2">

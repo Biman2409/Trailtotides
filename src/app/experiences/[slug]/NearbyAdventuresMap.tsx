@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { Adventure } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
+import { haversineKm } from "@/lib/geo";
+import { typeIconSvg } from "@/lib/mapMarkerIcons";
 
 interface Props {
   current: Adventure;
@@ -19,21 +23,12 @@ const DIFF_COLORS: Record<string, string> = {
   Extreme: "#ef4444",
 };
 
-function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
-  const R = 6371;
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLng = ((lng2 - lng1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLng / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
 export default function NearbyAdventuresMap({ current, nearby }: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<import("leaflet").Map | null>(null);
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme !== "light";
+  const router = useRouter();
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -64,6 +59,58 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
       });
 
+      let style = document.getElementById("ttt-nearby-map-style") as HTMLStyleElement | null;
+      if (!style) {
+        style = document.createElement("style");
+        style.id = "ttt-nearby-map-style";
+        document.head.appendChild(style);
+      }
+      style.textContent = `
+        .ttt-nearby-map .leaflet-control-zoom a {
+          background: ${isDark ? "rgba(9,16,31,0.9)" : "rgba(255,255,255,0.92)"} !important;
+          border-color: ${isDark ? "rgba(255,255,255,0.1)" : "rgba(15,23,31,0.12)"} !important;
+          color: ${isDark ? "rgba(255,255,255,0.7)" : "rgba(15,23,31,0.65)"} !important;
+        }
+        .ttt-nearby-map .leaflet-control-zoom a:hover {
+          background: rgba(255,81,0,0.25) !important;
+          color: #ff7d47 !important;
+        }
+        .ttt-marker-glow {
+          filter: drop-shadow(0 0 3px var(--glow)) drop-shadow(0 0 ${isDark ? 9 : 5}px var(--glow));
+          transition: transform 0.15s ease-out;
+        }
+        .ttt-nearby-map .leaflet-marker-icon {
+          cursor: pointer;
+        }
+        .ttt-nearby-map .leaflet-marker-icon:hover .ttt-marker-glow {
+          transform: scale(1.18);
+        }
+        .ttt-marker-pulse {
+          position: absolute;
+          inset: 0;
+          border-radius: 9999px;
+          animation: ttt-marker-pulse-anim 2.4s cubic-bezier(0.4,0,0.6,1) infinite;
+        }
+        @keyframes ttt-marker-pulse-anim {
+          0% { transform: scale(0.5); opacity: 0.6; }
+          100% { transform: scale(2.6); opacity: 0; }
+        }
+        .ttt-nearby-tooltip {
+          background: rgba(4,7,14,0.92) !important;
+          border: 1px solid rgba(255,255,255,0.14) !important;
+          color: #fff !important;
+          font-family: sans-serif !important;
+          font-size: 11px !important;
+          font-weight: 600 !important;
+          padding: 4px 9px !important;
+          border-radius: 8px !important;
+          box-shadow: 0 4px 14px rgba(0,0,0,0.35) !important;
+        }
+        .ttt-nearby-tooltip::before {
+          border-top-color: rgba(4,7,14,0.92) !important;
+        }
+      `;
+
       const map = L.map(mapRef.current, {
         zoomControl: false,
         scrollWheelZoom: false,
@@ -71,21 +118,22 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
       });
       mapInstanceRef.current = map;
 
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-        maxZoom: 18,
-      }).addTo(map);
+      const tileUrl = isDark
+        ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+        : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+      L.tileLayer(tileUrl, { maxZoom: isDark ? 18 : 19 }).addTo(map);
 
-      function makeIcon(color: string, size: number, isActive = false) {
-        const pulse = isActive
-          ? `<circle cx="16" cy="16" r="18" fill="${color}" opacity="0.15"/>`
-          : "";
-        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 32 32">
-          ${pulse}
-          <circle cx="16" cy="16" r="${isActive ? 9 : 7}" fill="${color}" opacity="${isActive ? 1 : 0.9}"/>
-          <circle cx="16" cy="16" r="${isActive ? 4 : 3}" fill="white" opacity="0.95"/>
-        </svg>`;
+      function makeIcon(color: string, size: number, type: string, isActive = false) {
+        const iconSize = Math.round(size * 0.42);
+        const svgIcon = typeIconSvg(type, iconSize, "white");
+        const html = `<div style="position:relative;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;">
+          ${isActive ? `<span class="ttt-marker-pulse" style="background:${color};"></span>` : ""}
+          <div class="ttt-marker-glow" style="--glow:${color};position:relative;width:${isActive ? 22 : 16}px;height:${isActive ? 22 : 16}px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:inset 0 1px 0 rgba(255,255,255,0.35);">
+            ${svgIcon}
+          </div>
+        </div>`;
         return L.divIcon({
-          html: svg,
+          html,
           className: "",
           iconSize: [size, size],
           iconAnchor: [size / 2, size / 2],
@@ -94,17 +142,16 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
       }
 
       const currentMarker = L.marker([current.lat, current.lng], {
-        icon: makeIcon("#ff5100", 36, true),
+        icon: makeIcon("#ff5100", 36, current.type, true),
         zIndexOffset: 1000,
       }).addTo(map);
 
-      currentMarker.bindPopup(
-        `<div style="font-family:sans-serif;min-width:130px;padding:2px 0;">
-          <p style="font-size:9px;color:#ff5100;font-weight:800;margin:0 0 4px;text-transform:uppercase;letter-spacing:0.1em;">You are here</p>
-          <p style="font-size:12px;font-weight:700;color:#0f1117;margin:0;line-height:1.3;">${current.name}</p>
-        </div>`,
-        { closeButton: false, className: "leaflet-popup-clean" }
-      );
+      currentMarker.bindTooltip(`${current.name} · You are here`, {
+        direction: "top",
+        offset: [0, -22],
+        opacity: 0.95,
+        className: "ttt-nearby-tooltip",
+      });
 
       const allPoints: [number, number][] = [[current.lat, current.lng]];
 
@@ -113,17 +160,17 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         const color = DIFF_COLORS[diff] ?? "#38bdf8";
         const km = Math.round(haversineKm(current.lat, current.lng, a.lat, a.lng));
         const marker = L.marker([a.lat, a.lng], {
-          icon: makeIcon(color, 26),
+          icon: makeIcon(color, 26, a.type),
         }).addTo(map);
 
-        marker.bindPopup(
-          `<div style="font-family:sans-serif;min-width:130px;padding:2px 0;">
-            <p style="font-size:9px;color:${color};font-weight:800;margin:0 0 4px;text-transform:uppercase;letter-spacing:0.08em;">${diff} · ${km} km</p>
-            <p style="font-size:12px;font-weight:700;color:#0f1117;margin:0 0 6px;line-height:1.3;">${a.name}</p>
-            <a href="/experiences/${a.slug}" style="font-size:10px;color:#ff5100;font-weight:700;text-decoration:none;letter-spacing:0.03em;">View →</a>
-          </div>`,
-          { closeButton: false }
-        );
+        marker.bindTooltip(`${a.name} · ${km} km`, {
+          direction: "top",
+          offset: [0, -16],
+          opacity: 0.95,
+          className: "ttt-nearby-tooltip",
+        });
+
+        marker.on("click", () => router.push(`/experiences/${a.slug}`));
 
         allPoints.push([a.lat, a.lng]);
       });
@@ -147,7 +194,7 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         (mapRef.current as HTMLElement & { _leaflet_id?: number })._leaflet_id = undefined;
       }
     };
-  }, [current, nearby]);
+  }, [current, nearby, isDark, router]);
 
   return (
     <div
@@ -164,7 +211,13 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
       </div>
 
       {/* Map */}
-      <div ref={mapRef} className="w-full h-44" style={{ background: "#0d1117" }} />
+      <div className="relative">
+        <div ref={mapRef} className="ttt-nearby-map w-full h-44" style={{ background: isDark ? "#0d1117" : "#e5e3dc" }} />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ boxShadow: `inset 0 0 20px 0px rgba(0,0,0,${isDark ? 0.35 : 0.1})` }}
+        />
+      </div>
 
       {/* List */}
       <div className="divide-y" style={{ borderTop: "1px solid var(--border-subtle)", borderColor: "var(--border-subtle)" }}>

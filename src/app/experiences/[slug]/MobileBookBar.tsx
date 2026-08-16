@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ChevronRight, AlertTriangle } from "lucide-react";
+import { ChevronRight, AlertTriangle, Clock3 } from "lucide-react";
 import { loadProfileFromServer, isProfileStale } from "@/lib/matchmaker";
+import type { SeasonUrgency } from "@/lib/seasonUrgency";
 
 interface Props {
   adventureName: string;
@@ -11,9 +12,10 @@ interface Props {
   duration: string;
   operatorWebsite?: string;
   operatorName?: string;
+  seasonUrgency?: SeasonUrgency | null;
 }
 
-export default function MobileBookBar({ adventureName, priceFrom, difficulty, duration, operatorWebsite, operatorName }: Props) {
+export default function MobileBookBar({ adventureName, priceFrom, difficulty, duration, operatorWebsite, operatorName, seasonUrgency }: Props) {
   const [visible, setVisible] = useState(false);
   const [staleProfile, setStaleProfile] = useState(false);
 
@@ -67,6 +69,14 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
             <p className="text-white/35 text-[11px] mt-0.5 truncate">
               {duration}{difficulty && <> · {difficulty}</>}
             </p>
+            {seasonUrgency?.kind === "ending" && (
+              <span
+                className="inline-flex items-center gap-1 mt-1 px-1.5 py-0.5 rounded-full text-[9px] font-semibold"
+                style={{ background: "rgba(239,68,68,0.18)", color: "#f87171" }}
+              >
+                <Clock3 className="w-2.5 h-2.5" /> {seasonUrgency.weeksLeft}w left in season
+              </span>
+            )}
             {staleProfile && (
               <button
                 onClick={() => {
