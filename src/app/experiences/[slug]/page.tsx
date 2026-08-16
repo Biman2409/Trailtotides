@@ -373,7 +373,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           <div className="flex items-stretch overflow-x-auto no-scrollbar" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
             {[
               ...(priceFrom ? [{ icon: <IndianRupee className="w-3.5 h-3.5 text-[#ff5100]" />, label: "From", value: priceFrom }] : []),
-              ...(avgRating !== null ? [{ icon: <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />, label: "Rating", value: `${avgRating.toFixed(1)} / 5` }] : []),
+              ...(avgRating !== null ? [{ icon: <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />, label: "Operator Rating", value: `${avgRating.toFixed(1)} / 5` }] : []),
               { icon: <Clock className="w-3.5 h-3.5 text-[#ff5100]" />, label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
               { icon: <Compass className="w-3.5 h-3.5 text-fuchsia-400" />, label: "Type", value: adventure.type },
               ...(adventure.distance ? [{ icon: <Route className="w-3.5 h-3.5 text-emerald-400" />, label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
@@ -514,6 +514,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 bare
                 ace={ace}
                 adventureName={adventure.name}
+                slug={adventure.slug}
                 showAltitudeWarning={showAltitudeWarning}
                 showFatalFallWarning={showFatalFallWarning}
                 showExtremeIsolationWarning={showExtremeIsolationWarning}
@@ -574,7 +575,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <RecalibrationNudge difficulty={difficulty} />
             <div id="book-this-adventure" />
             <AccordionSection
-              label="Book This Adventure" title="Where to Book" defaultOpen
+              label="Book This Adventure" title="Where to Book" defaultOpen mobileDefaultOpen={false}
               icon={<Ticket className="w-4 h-4" />} tintRgb="255,81,0"
             >
               <div id="operators-section" className="space-y-2.5">

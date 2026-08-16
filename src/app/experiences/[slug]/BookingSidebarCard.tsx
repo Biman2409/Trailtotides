@@ -71,9 +71,12 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, avgRating
             )}
           </div>
           {avgRating !== null && (
-            <div className="flex items-center gap-1 shrink-0 mt-0.5">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-              <span className="text-white/80 text-sm font-semibold">{avgRating.toFixed(1)}</span>
+            <div className="flex flex-col items-end shrink-0 mt-0.5">
+              <div className="flex items-center gap-1">
+                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                <span className="text-white/80 text-sm font-semibold">{avgRating.toFixed(1)}</span>
+              </div>
+              <span className="text-white/30 text-[9px] uppercase tracking-wide">Operators</span>
             </div>
           )}
         </div>

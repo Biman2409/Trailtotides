@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Cloud, CloudRain, CloudSnow, Sun, Wind, Droplets,
-  CloudLightning, CloudDrizzle, CloudFog, Thermometer, ChevronDown, CalendarDays,
+  CloudLightning, CloudDrizzle, CloudFog, Thermometer, ChevronDown, CalendarDays, RotateCw,
 } from "lucide-react";
 
 interface WeatherDay {
@@ -87,6 +87,7 @@ interface Props {
 export default function WeatherWidget({ lat, lng, locationName, altitude, isBaseCamp }: Props) {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [weatherError, setWeatherError] = useState(false);
   const [open, setOpen] = useState(false);
 
   // Date picker state
@@ -96,7 +97,10 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
   const [dateFetching, setDateFetching] = useState(false);
   const weatherRef = React.useRef<WeatherData | null>(null);
 
-  useEffect(() => {
+  function loadWeather() {
+    setLoading(true);
+    setWeatherError(false);
+
     const url = new URL("https://api.open-meteo.com/v1/forecast");
     url.searchParams.set("latitude", lat.toString());
     url.searchParams.set("longitude", lng.toString());
@@ -109,6 +113,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
     fetch(url.toString())
       .then((r) => r.json())
       .then((d) => {
+        if (!d?.current || !d?.daily?.time) throw new Error("Unexpected weather response shape");
         const c = d.current;
         const parsed: WeatherData = {
           current: {
@@ -130,8 +135,13 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
         weatherRef.current = parsed;
         setWeather(parsed);
       })
-      .catch(() => {})
+      .catch(() => setWeatherError(true))
       .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    loadWeather();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lat, lng]);
 
   function fetchDateWeather(date: string) {
@@ -247,6 +257,17 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
 
   const altM = altitude ? parseFloat(altitude.replace(/[^0-9.]/g, "")) : null;
 
+  // Surface this before the user hits "Check", not just after — otherwise the
+  // result card looks identical to a real forecast with no upfront hint that
+  // dates beyond the 16-day horizon fall back to last year's data.
+  let selectedDiffDays: number | null = null;
+  if (selectedDate) {
+    const todayUTC = Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    const [sy, sm, sd] = selectedDate.split("-").map(Number);
+    selectedDiffDays = Math.round((Date.UTC(sy, sm - 1, sd) - todayUTC) / 86400000);
+  }
+  const willUseHistorical = selectedDiffDays !== null && selectedDiffDays > 15;
+
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-5 lg:px-8 py-3.5 flex items-center gap-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
@@ -257,7 +278,22 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
     );
   }
 
-  if (!weather) return null;
+  if (weatherError || !weather) {
+    return (
+      <div className="max-w-7xl mx-auto px-5 lg:px-8 py-3.5 flex items-center gap-2.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+        <Cloud className="w-3.5 h-3.5 text-white/25 shrink-0" />
+        <span className="text-white/35 text-[12px]">Weather unavailable right now.</span>
+        <button
+          onClick={loadWeather}
+          className="ml-auto flex items-center gap-1.5 text-[11px] font-semibold transition-colors hover:text-[#ff7d47]"
+          style={{ color: "#ff5100" }}
+        >
+          <RotateCw className="w-3 h-3" />
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   const w = weather.current;
 
@@ -408,6 +444,16 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
                   {dateFetching ? "…" : "Check"}
                 </button>
               </div>
+
+              {/* Upfront disclosure — shown as soon as a far-future date is picked, before "Check" is even clicked */}
+              {willUseHistorical && !dateWeather && (
+                <div className="px-4 py-2.5 flex items-start gap-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)", background: "rgba(56,189,248,0.05)" }}>
+                  <CalendarDays className="w-3 h-3 text-sky-400/70 shrink-0 mt-0.5" />
+                  <p className="text-sky-400/70 text-[10.5px] leading-snug">
+                    This date is beyond the 16-day forecast — we'll show last year's conditions for this date instead of a live forecast.
+                  </p>
+                </div>
+              )}
 
               {/* Result card */}
               {dateError && (

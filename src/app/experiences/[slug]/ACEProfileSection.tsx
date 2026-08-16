@@ -12,6 +12,7 @@ import type { ACE, AceAxis } from "@/lib/ace";
 interface Props {
   ace: ACE;
   adventureName: string;
+  slug: string;
   showAltitudeWarning: boolean;
   showFatalFallWarning: boolean;
   showExtremeIsolationWarning: boolean;
@@ -117,7 +118,7 @@ function AxisCell({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; 
   );
 }
 
-export default function ACEProfileSection({ ace, adventureName, bare }: Props) {
+export default function ACEProfileSection({ ace, adventureName, slug, bare }: Props) {
   const [userAce, setUserAce] = useState<ACE | null>(null);
   // Overlap is the default — more compact than side-by-side (especially
   // when an adventure's requirements are low/near-zero, which leaves the
@@ -314,7 +315,7 @@ export default function ACEProfileSection({ ace, adventureName, bare }: Props) {
                     </p>
                   </div>
                   <Link
-                    href="/matchmaker"
+                    href={`/matchmaker?from=${slug}`}
                     className="inline-flex items-center justify-center gap-1.5 text-white text-[11px] font-bold px-3.5 py-2 rounded-xl transition-all hover:brightness-110 active:scale-95"
                     style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)", boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}
                   >
@@ -337,7 +338,7 @@ export default function ACEProfileSection({ ace, adventureName, bare }: Props) {
           </p>
           {userAce && (
             <Link
-              href="/matchmaker?retake=1"
+              href={`/matchmaker?retake=1&from=${slug}`}
               className="inline-flex items-center gap-1.5 shrink-0 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg transition-all hover:brightness-110 whitespace-nowrap"
               style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.35)" }}
             >

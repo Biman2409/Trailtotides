@@ -186,7 +186,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
       <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid var(--border-subtle)", background: "var(--bg-card)" }}>
         <div className="flex items-center gap-2">
           <Star className="w-3.5 h-3.5 text-amber-400" />
-          <h3 className="text-amber-400 text-[10px] font-bold tracking-[0.18em] uppercase">Reviews</h3>
+          <h3 className="text-amber-400 text-[10px] font-bold tracking-[0.18em] uppercase">Traveler Reviews</h3>
         </div>
         {avgRating !== null && (
           <div className="flex items-center gap-2">

@@ -646,6 +646,14 @@ function ResultsScreen({
 }) {
   const { userAxes, adventures: enriched, trainingPlan, rawAxes, decayNotes } = result;
 
+  // If the assessment was reached from a specific trek page (via ?from=slug),
+  // give the user a direct way back instead of stranding them here — the
+  // "All adventures" / "Retake assessment" pair otherwise has no path back
+  // to the trek that sent them here.
+  const searchParams = useSearchParams();
+  const fromSlug = searchParams.get("from");
+  const fromAdventure = fromSlug ? ALL_ADVENTURES.find((a) => a.slug === fromSlug) : null;
+
   const inZone    = enriched.filter(a => a.status === "IN_ZONE");
   const stretch   = enriched.filter(a => a.status === "STRETCH");
   const restricted = enriched.filter(a => a.status === "RESTRICTED");
@@ -891,14 +899,36 @@ function ResultsScreen({
 
       {/* ── CTA BUTTONS ───────────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row gap-3 mt-5 sm:mt-6">
-        <Link
-          href="/explore?ace=ready"
-          className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 active:translate-y-0"
-          style={{ background: "linear-gradient(135deg, #ff5100, #ff7340)" }}
-        >
-          All adventures
-          <ArrowRight className="w-4 h-4" />
-        </Link>
+        {fromAdventure ? (
+          <Link
+            href={`/experiences/${fromAdventure.slug}`}
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 active:translate-y-0"
+            style={{ background: "linear-gradient(135deg, #ff5100, #ff7340)" }}
+          >
+            <ChevronLeft className="w-4 h-4" />
+            Back to {fromAdventure.name}
+          </Link>
+        ) : (
+          <Link
+            href="/explore?ace=ready"
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 active:translate-y-0"
+            style={{ background: "linear-gradient(135deg, #ff5100, #ff7340)" }}
+          >
+            All adventures
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        )}
+        {fromAdventure && (
+          <Link
+            href="/explore?ace=ready"
+            className="sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border text-sm font-medium transition-all active:scale-[0.98]"
+            style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
+            onMouseEnter={e => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
+            onMouseLeave={e => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}
+          >
+            All adventures
+          </Link>
+        )}
         <button
           onClick={onReset}
           className="sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border text-sm font-medium transition-all active:scale-[0.98]"

@@ -1,12 +1,14 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 interface Props {
   title: string;
   label?: string;
   defaultOpen?: boolean;
+  /** Overrides defaultOpen specifically below the lg breakpoint — use when a section's content is heavy enough that it shouldn't dump onto the mobile page on load even though it should stay open on desktop. */
+  mobileDefaultOpen?: boolean;
   children: React.ReactNode;
   id?: string;
   /** Paired with `tintRgb` to render this section as a badged card instead of the plain header — used for the small set of sections meant to stand out as a matched pair (e.g. About / Highlights). */
@@ -23,9 +25,18 @@ interface Props {
   stretch?: boolean;
 }
 
-export default function AccordionSection({ title, label, defaultOpen = false, children, id, icon, tintRgb, noDivider, noTopPad, headerExtra, stretch }: Props) {
-  const [open, setOpen] = useState(defaultOpen);
+export default function AccordionSection({ title, label, defaultOpen = false, mobileDefaultOpen, children, id, icon, tintRgb, noDivider, noTopPad, headerExtra, stretch }: Props) {
+  const [open, setOpen] = useState(mobileDefaultOpen ?? defaultOpen);
   const sectionRef = useRef<HTMLElement>(null);
+
+  // mobileDefaultOpen renders collapsed (SSR-safe, matches initial client paint) so
+  // it never causes a hydration mismatch; once mounted, promote to defaultOpen on
+  // desktop viewports where the section is meant to start open.
+  useEffect(() => {
+    if (mobileDefaultOpen === undefined) return;
+    if (window.innerWidth >= 1024) setOpen(defaultOpen);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleToggle() {
     setOpen((o) => {
