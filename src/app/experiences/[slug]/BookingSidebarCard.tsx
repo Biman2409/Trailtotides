@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, Star, Users, ShieldCheck, Clock3, Sparkles, CalendarDays } from "lucide-react";
+import { ChevronRight, Star, Clock3, Sparkles } from "lucide-react";
 import type { SeasonUrgency } from "@/lib/seasonUrgency";
 
 interface Props {
@@ -78,26 +78,13 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, avgRating
           )}
         </div>
 
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-3 text-white/40 text-[11px] font-medium">
-          {operatorCount > 0 && (
-            <span className="flex items-center gap-1.5">
-              <Users className="w-3 h-3" />
-              {operatorCount} operator{operatorCount !== 1 ? "s" : ""}
-            </span>
-          )}
-          {hasVerifiedOperator && (
-            <span className="flex items-center gap-1.5" style={{ color: "#34d399" }}>
-              <ShieldCheck className="w-3 h-3" />
-              Verified
-            </span>
-          )}
-          {nextDeparture && (
-            <span className="flex items-center gap-1.5">
-              <CalendarDays className="w-3 h-3" />
-              Next: {nextDeparture}
-            </span>
-          )}
-        </div>
+        {(operatorCount > 0 || hasVerifiedOperator || nextDeparture) && (
+          <p className="mb-3 text-white/40 text-[11px] font-medium leading-relaxed">
+            {operatorCount > 0 && <>{operatorCount} operator{operatorCount !== 1 ? "s" : ""}</>}
+            {hasVerifiedOperator && <> · <span style={{ color: "#34d399" }}>Verified</span></>}
+            {nextDeparture && <> · Next {nextDeparture}</>}
+          </p>
+        )}
 
         {seasonUrgency && <UrgencyBadge urgency={seasonUrgency} />}
 

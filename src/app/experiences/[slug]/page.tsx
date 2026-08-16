@@ -422,14 +422,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <div id="overview" className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 pt-6 first:pt-0 scroll-mt-24">
               <AccordionSection
                 label="The Adventure" title="About This Adventure" defaultOpen
-                icon={<BookOpen className="w-4 h-4" />} tintRgb="255,81,0" noDivider noTopPad stretch
+                icon={<BookOpen className="w-4 h-4" />} tintRgb="148,163,184" noDivider noTopPad stretch
               >
                 <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.description}</p>
               </AccordionSection>
 
               <AccordionSection
                 label="Highlights" title="What Makes It Special" defaultOpen
-                icon={<Sparkles className="w-4 h-4" />} tintRgb="167,139,250" noDivider noTopPad stretch
+                icon={<Sparkles className="w-4 h-4" />} tintRgb="148,163,184" noDivider noTopPad stretch
               >
                 <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.whatMakesSpecial}</p>
               </AccordionSection>
@@ -440,7 +440,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <AccordionSection
               id="suitability"
               label="Suitability" title="Is This For You?" defaultOpen
-              icon={<ShieldCheck className="w-4 h-4" />} tintRgb="56,189,248"
+              icon={<ShieldCheck className="w-4 h-4" />} tintRgb="148,163,184"
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="rounded-xl p-3.5" style={{ background: "rgba(16,185,129,0.04)", border: "1px solid rgba(16,185,129,0.1)" }}>
@@ -507,7 +507,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* Capability Profile — below Suitability; its radar + domain matrix need full width to read well */}
             <AccordionSection
               label="Capability Profile" title="How Do You Measure Up?" defaultOpen={false}
-              icon={<Target className="w-4 h-4" />} tintRgb="31,122,77"
+              icon={<Target className="w-4 h-4" />} tintRgb="148,163,184"
               headerExtra={<GradingPill />}
             >
               <ACEProfileSection
@@ -565,7 +565,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* FAQ */}
             <AccordionSection
               label="FAQ" title="Common Questions" defaultOpen={false}
-              icon={<HelpCircle className="w-4 h-4" />} tintRgb="45,212,191"
+              icon={<HelpCircle className="w-4 h-4" />} tintRgb="148,163,184"
             >
               <FAQSection adventure={adventure} difficulty={difficulty} operatorCount={allOperators.length} />
             </AccordionSection>
@@ -575,7 +575,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <div id="book-this-adventure" />
             <AccordionSection
               label="Book This Adventure" title="Where to Book" defaultOpen
-              icon={<Ticket className="w-4 h-4" />} tintRgb="91,163,201"
+              icon={<Ticket className="w-4 h-4" />} tintRgb="255,81,0"
             >
               <div id="operators-section" className="space-y-2.5">
                 <OperatorsSection operators={allOperators} slug={adventure.slug} />
@@ -650,35 +650,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               nextDeparture={nextDeparture}
             />
 
-            {/* At a Glance */}
-            <div
-              className="rounded-xl overflow-hidden"
-              style={{ border: "1px solid var(--border-subtle)" }}
-            >
-              <div className="px-4 py-3" style={{ borderBottom: "1px solid var(--border-subtle)", background: "var(--bg-surface)" }}>
-                <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase">At a Glance</p>
-              </div>
-              <div style={{ background: "var(--bg-surface)" }}>
-                {[
-                  { label: "Type", value: adventure.type },
-                  ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
-                  ...(adventure.type === "Motorcycling" && adventure.startingPoint ? [{ label: "Starting Point", value: adventure.startingPoint }] : []),
-                  { label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
-                  ...((adventure.type === "Trekking" || adventure.type === "Motorcycling")
-                    ? [{ label: "Distance", value: adventure.distanceRange ?? adventure.distance ?? "Contact for route" }]
-                    : adventure.distance ? [{ label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
-                  { label: "Difficulty", value: difficulty },
-                  { label: "Best Season", value: adventure.bestSeason },
-                  ...(adventure.altitude ? [{ label: "Max Altitude", value: adventure.altitude }] : []),
-                  ...(adventure.depth ? [{ label: "Max Depth", value: adventure.depth }] : []),
-                ].map(({ label, value }) => (
-                  <div key={label} className="flex items-center justify-between gap-4 px-4 py-2.5" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-                    <span className="text-[11px] shrink-0" style={{ color: "var(--text-tertiary)" }}>{label}</span>
-                    <span className="text-[11px] text-right leading-snug font-medium" style={{ color: "var(--text-secondary)" }}>{value}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
 
             {/* Nearby adventures map */}
             {nearbyAdventures.length > 0 && (
@@ -710,12 +681,12 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4">Discover More</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {relatedByState.length > 0 && (
-                <div className="p-4" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)", borderRadius: "1rem" }}>
+                <div className="p-4 rounded-2xl" style={{ background: "rgba(148,163,184,0.025)", border: "1px solid rgba(148,163,184,0.18)" }}>
                   <RelatedSection title={`More in ${adventure.state}`} items={relatedByState} exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} pillMode="type" />
                 </div>
               )}
               {relatedByType.length > 0 && (
-                <div className="p-4" style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-subtle)", borderRadius: "1rem" }}>
+                <div className="p-4 rounded-2xl" style={{ background: "rgba(148,163,184,0.025)", border: "1px solid rgba(148,163,184,0.18)" }}>
                   <RelatedSection title={`More in ${adventure.type}`} items={relatedByType} exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`} pillMode="region" />
                 </div>
               )}
