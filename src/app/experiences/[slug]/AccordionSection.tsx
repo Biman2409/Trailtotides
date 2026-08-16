@@ -57,7 +57,7 @@ export default function AccordionSection({ title, label, defaultOpen = false, ch
             </div>
             <div className="flex-1 min-w-0">
               {label && <p className="text-[10px] font-bold tracking-[0.2em] uppercase leading-none mb-1" style={{ color: `rgb(${tintRgb})` }}>{label}</p>}
-              {title && <h2 className="font-semibold text-[15px] leading-snug" style={{ color: "var(--text-primary)" }}>{title}</h2>}
+              {title && <h2 className="font-semibold text-[15px] leading-snug" style={{ color: "#ff5100" }}>{title}</h2>}
             </div>
             {headerExtra && (
               <div className="shrink-0" onClick={(e) => e.stopPropagation()}>{headerExtra}</div>
@@ -90,7 +90,7 @@ export default function AccordionSection({ title, label, defaultOpen = false, ch
             {label && (
               <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-0.5">{label}</p>
             )}
-            {title && <h2 className="text-white font-semibold text-base">{title}</h2>}
+            {title && <h2 className="font-semibold text-base" style={{ color: "#ff5100" }}>{title}</h2>}
           </div>
           <ChevronDown
             className={`w-5 h-5 text-white/30 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
@@ -105,7 +105,7 @@ export default function AccordionSection({ title, label, defaultOpen = false, ch
             <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1.5">{label}</p>
           )}
           {title && (
-            <h2 className="text-white font-semibold text-base leading-snug">{title}</h2>
+            <h2 className="font-semibold text-base leading-snug" style={{ color: "#ff5100" }}>{title}</h2>
           )}
         </div>
       )}
