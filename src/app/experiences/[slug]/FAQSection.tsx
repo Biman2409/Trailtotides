@@ -9,7 +9,7 @@ interface Props {
 
 function FAQItem({ q, a }: { q: string; a: string }) {
   return (
-    <details className="group rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.02)" }}>
+    <details className="group rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)", background: "var(--bg-card)" }}>
       <summary className="flex items-center justify-between gap-3 px-4 py-3 cursor-pointer list-none select-none">
         <span className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>{q}</span>
         <ChevronDown className="w-4 h-4 shrink-0 transition-transform duration-200 group-open:rotate-180" style={{ color: "var(--text-tertiary)" }} />

@@ -63,7 +63,7 @@ function DotScale({ filled, color, dim }: { filled: number; color: string; dim?:
           style={{
             background: i < filled
               ? dim ? `${color}70` : color
-              : "rgba(255,255,255,0.06)",
+              : "rgba(var(--fg-rgb),0.06)",
             boxShadow: i < filled && !dim ? `0 0 4px ${color}60` : "none",
           }}
         />
@@ -91,7 +91,7 @@ function AxisCell({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; 
       <div className="flex items-center justify-between gap-1">
         <div className="flex items-center gap-1 min-w-0">
           <span style={{ color: meets ? color : "#f87171" }} className="shrink-0 opacity-80">{icon}</span>
-          <span className="text-[9px] font-bold tracking-wide" style={{ color: meets ? "rgba(255,255,255,0.7)" : "#f87171" }}>{label}</span>
+          <span className="text-[9px] font-bold tracking-wide" style={{ color: meets ? "rgba(var(--fg-rgb),0.7)" : "#f87171" }}>{label}</span>
         </div>
         <span
           className="shrink-0 text-[8px] font-black px-1.5 py-0.5 rounded-full leading-none"
@@ -103,14 +103,14 @@ function AxisCell({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; 
       {/* Trek row */}
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
-          <span className="text-[7px] font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.32)" }}>Trek</span>
+          <span className="text-[7px] font-semibold uppercase tracking-wider" style={{ color: "rgba(var(--fg-rgb),0.32)" }}>Trek</span>
         </div>
         <DotScale filled={trekVal} color={color} dim />
       </div>
       {/* You row */}
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
-          <span className="text-[7px] font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.32)" }}>You</span>
+          <span className="text-[7px] font-semibold uppercase tracking-wider" style={{ color: "rgba(var(--fg-rgb),0.32)" }}>You</span>
         </div>
         <DotScale filled={userVal} color={meets ? color : "#f87171"} />
       </div>
@@ -151,7 +151,7 @@ export default function ACEProfileSection({ ace, adventureName, slug, bare }: Pr
         <div className="flex items-center justify-between mb-3">
           <div>
             <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-0.5">Capability Profile</p>
-            <h2 className="text-white font-semibold text-base leading-snug tracking-tight">How do you measure up?</h2>
+            <h2 className="text-black dark:text-white font-semibold text-base leading-snug tracking-tight">How do you measure up?</h2>
           </div>
           <GradingPill />
         </div>
@@ -159,11 +159,10 @@ export default function ACEProfileSection({ ace, adventureName, slug, bare }: Pr
 
       {/* Main card */}
       <div
-        className="rounded-2xl overflow-hidden mb-3"
+        className="rounded-2xl overflow-hidden mb-3 bg-[linear-gradient(160deg,#ffffff_0%,#f5f2ec_100%)] dark:bg-[linear-gradient(160deg,#0c1220_0%,#080e18_100%)]"
         style={{
-          background: "linear-gradient(160deg, #0c1220 0%, #080e18 100%)",
-          border: "1px solid rgba(255,255,255,0.07)",
-          boxShadow: "0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
+          border: "1px solid rgba(var(--fg-rgb),0.07)",
+          boxShadow: "0 20px 40px rgba(0,0,0,0.12), inset 0 1px 0 rgba(var(--fg-rgb),0.05)",
         }}
       >
         {/* Score pill — only when user has profile */}
@@ -180,17 +179,17 @@ export default function ACEProfileSection({ ace, adventureName, slug, bare }: Pr
             <p className="text-xl font-black leading-none tabular-nums" style={{ color: readyCount === totalAxes ? "#4ade80" : "#ff5100" }}>
               {readyCount}/{totalAxes}
             </p>
-            <div style={{ width: 1, height: 20, background: "rgba(255,255,255,0.07)" }} />
-            <p className="text-[11px] text-white/35 leading-snug flex-1">
+            <div style={{ width: 1, height: 20, background: "rgba(var(--fg-rgb),0.07)" }} />
+            <p className="text-[11px] text-black/40 dark:text-white/35 leading-snug flex-1">
               {readyCount === totalAxes ? "You meet all requirements" : `${totalAxes - readyCount} axes need work`}
             </p>
             <button
               onClick={() => setOverlapped(o => !o)}
               className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all shrink-0"
               style={{
-                background: overlapped ? "rgba(255,81,0,0.15)" : "rgba(255,255,255,0.05)",
-                border: overlapped ? "1px solid rgba(255,81,0,0.3)" : "1px solid rgba(255,255,255,0.09)",
-                color: overlapped ? "#ff7d47" : "rgba(255,255,255,0.4)",
+                background: overlapped ? "rgba(255,81,0,0.15)" : "rgba(var(--fg-rgb),0.05)",
+                border: overlapped ? "1px solid rgba(255,81,0,0.3)" : "1px solid rgba(var(--fg-rgb),0.09)",
+                color: overlapped ? "#ff7d47" : "rgba(var(--fg-rgb),0.4)",
               }}
             >
               <Layers className="w-3 h-3" />
@@ -209,29 +208,29 @@ export default function ACEProfileSection({ ace, adventureName, slug, bare }: Pr
               <div
                 className="flex flex-col items-center justify-between gap-2.5 shrink-0 rounded-2xl p-3 self-stretch"
                 style={{
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.08)",
+                  background: "rgba(var(--fg-rgb),0.03)",
+                  border: "1px solid rgba(var(--fg-rgb),0.08)",
                 }}
               >
-                <ACERadar ace={ace} userAce={userAce} userColor="#ffffff" size={214} showLabels />
+                <ACERadar ace={ace} userAce={userAce} size={214} showLabels />
                 {/* Legend */}
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-1.5">
                     <div className="w-5 h-[2px] rounded-full bg-[#ff5100]" />
-                    <span className="text-[8px] text-white/35 font-semibold uppercase tracking-widest">Trek</span>
+                    <span className="text-[8px] text-black/40 dark:text-white/35 font-semibold uppercase tracking-widest">Trek</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <svg width="16" height="2" viewBox="0 0 16 2">
-                      <line x1="0" y1="1" x2="16" y2="1" stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" strokeDasharray="3 2" />
+                      <line x1="0" y1="1" x2="16" y2="1" stroke="rgba(var(--fg-rgb),0.55)" strokeWidth="1.5" strokeDasharray="3 2" />
                     </svg>
-                    <span className="text-[8px] text-white/35 font-semibold uppercase tracking-widest">You</span>
+                    <span className="text-[8px] text-black/40 dark:text-white/35 font-semibold uppercase tracking-widest">You</span>
                   </div>
                 </div>
               </div>
 
               {/* 4-domain × 2-axis matrix — self-stretch to match radar height */}
               <div className="flex-1 min-w-0 flex flex-col gap-2 self-stretch">
-                <p className="text-[8px] font-black uppercase tracking-[0.2em] text-white/35">Capability vs Requirement</p>
+                <p className="text-[8px] font-black uppercase tracking-[0.2em] text-black/40 dark:text-white/35">Capability vs Requirement</p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 flex-1">
                   {ACE_DOMAINS.map(domain => (
                     <div key={domain.name} className="flex flex-col gap-1.5 h-full">
@@ -278,14 +277,14 @@ export default function ACEProfileSection({ ace, adventureName, slug, bare }: Pr
               <div
                 className="flex flex-col items-center gap-3 rounded-2xl py-4 px-3"
                 style={{
-                  background: "linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)",
-                  border: "1px solid rgba(255,255,255,0.09)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
+                  background: "linear-gradient(160deg, rgba(var(--fg-rgb),0.04) 0%, rgba(var(--fg-rgb),0.01) 100%)",
+                  border: "1px solid rgba(var(--fg-rgb),0.09)",
+                  boxShadow: "inset 0 1px 0 rgba(var(--fg-rgb),0.05)",
                 }}
               >
                 <div className="flex items-center gap-1.5">
-                  <div className="w-1 h-3 rounded-full bg-white/30" />
-                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40">Your Capability</span>
+                  <div className="w-1 h-3 rounded-full bg-black/25 dark:bg-white/30" />
+                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-black/45 dark:text-white/40">Your Capability</span>
                 </div>
                 <ACERadar ace={userAce} size={168} showLabels />
               </div>
@@ -300,7 +299,7 @@ export default function ACEProfileSection({ ace, adventureName, slug, bare }: Pr
               </div>
 
               {/* Divider — vertical on desktop, horizontal on mobile */}
-              <div className="w-full h-px sm:w-px sm:h-auto sm:self-stretch" style={{ background: "rgba(255,255,255,0.05)" }} />
+              <div className="w-full h-px sm:w-px sm:h-auto sm:self-stretch" style={{ background: "rgba(var(--fg-rgb),0.05)" }} />
 
               {/* CTA sub-section */}
               <div className="flex flex-col justify-center w-full sm:pl-4 flex-1 min-w-0">
@@ -309,8 +308,8 @@ export default function ACEProfileSection({ ace, adventureName, slug, bare }: Pr
                   style={{ background: "rgba(255,81,0,0.05)", border: "1px solid rgba(255,81,0,0.12)" }}
                 >
                   <div>
-                    <p className="text-white/90 font-bold text-[13px] leading-snug mb-1">See how you measure up</p>
-                    <p className="text-white/35 text-[11px] leading-relaxed">
+                    <p className="text-black/90 dark:text-white/90 font-bold text-[13px] leading-snug mb-1">See how you measure up</p>
+                    <p className="text-black/40 dark:text-white/35 text-[11px] leading-relaxed">
                       Take the 2-min assessment and compare your capability against this trek.
                     </p>
                   </div>
@@ -331,16 +330,16 @@ export default function ACEProfileSection({ ace, adventureName, slug, bare }: Pr
         {/* Bottom bar */}
         <div
           className="px-4 py-2.5 flex items-center gap-3"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.04)", background: "rgba(0,0,0,0.12)" }}
+          style={{ borderTop: "1px solid rgba(var(--fg-rgb),0.04)", background: "rgba(0,0,0,0.12)" }}
         >
-          <p className="text-[11px] leading-relaxed text-white/30 flex-1 italic">
+          <p className="text-[11px] leading-relaxed text-black/35 dark:text-white/30 flex-1 italic">
             {aceSummary(ace, adventureName)}
           </p>
           {userAce && (
             <Link
               href={`/matchmaker?retake=1&from=${slug}`}
               className="inline-flex items-center gap-1.5 shrink-0 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg transition-all hover:brightness-110 whitespace-nowrap"
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.35)" }}
+              style={{ background: "rgba(var(--fg-rgb),0.04)", border: "1px solid rgba(var(--fg-rgb),0.08)", color: "rgba(var(--fg-rgb),0.35)" }}
             >
               <RotateCcw className="w-2.5 h-2.5" />
               Retake Assessment
@@ -362,7 +361,7 @@ export default function ACEProfileSection({ ace, adventureName, slug, bare }: Pr
             <div className="w-1 h-3.5 rounded-full bg-red-500" />
             <div>
               <p className="text-red-400 text-[10px] font-bold tracking-[0.22em] uppercase">Training Priority</p>
-              <p className="text-white/35 text-[10px] mt-0.5">Top {gaps.length} axes to build before this trek</p>
+              <p className="text-black/40 dark:text-white/35 text-[10px] mt-0.5">Top {gaps.length} axes to build before this trek</p>
             </div>
           </div>
           <div className="p-3.5 space-y-2">
@@ -379,8 +378,8 @@ export default function ACEProfileSection({ ace, adventureName, slug, bare }: Pr
                 >
                   <div className="flex items-center gap-2 shrink-0">
                     <span
-                      className="w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black text-white/35"
-                      style={{ background: "rgba(255,255,255,0.06)" }}
+                      className="w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black text-black/40 dark:text-white/35"
+                      style={{ background: "rgba(var(--fg-rgb),0.06)" }}
                     >
                       {idx + 1}
                     </span>
@@ -390,22 +389,22 @@ export default function ACEProfileSection({ ace, adventureName, slug, bare }: Pr
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-1">
-                      <span className="text-white font-bold text-xs capitalize">{ACE_AXIS_LABELS[ax]}</span>
+                      <span className="text-black dark:text-white font-bold text-xs capitalize">{ACE_AXIS_LABELS[ax]}</span>
                       <span
                         className="text-[8px] px-1.5 py-px rounded-full font-bold inline-flex items-center gap-0.5"
                         style={{ background: `${color}20`, color }}
                       >
                         <ChevronUp className="w-2 h-2" />+{gap}
                       </span>
-                      <span className="text-white/30 text-[9px] ml-auto font-mono">Lv {userVal} → {trekVal}</span>
+                      <span className="text-black/35 dark:text-white/30 text-[9px] ml-auto font-mono">Lv {userVal} → {trekVal}</span>
                     </div>
-                    <div className="h-1 rounded-full overflow-hidden mb-1.5" style={{ background: "rgba(255,255,255,0.06)" }}>
+                    <div className="h-1 rounded-full overflow-hidden mb-1.5" style={{ background: "rgba(var(--fg-rgb),0.06)" }}>
                       <div
                         className="h-full rounded-full"
                         style={{ width: `${(userVal / trekVal) * 100}%`, background: `linear-gradient(to right, ${color}99, ${color})` }}
                       />
                     </div>
-                    <p className="text-white/35 text-[10px] leading-snug">{TRAINING_TIPS[ax]}</p>
+                    <p className="text-black/40 dark:text-white/35 text-[10px] leading-snug">{TRAINING_TIPS[ax]}</p>
                   </div>
                 </div>
               );

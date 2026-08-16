@@ -129,6 +129,14 @@
   --accent-green:        #1f7a4d;
   --accent-green-soft:   rgba(31,122,77,0.10);
   --accent-green-border: rgba(31,122,77,0.24);
+
+  /* Neutral tint for informational card headers/icons — needs real weight against cream */
+  --tint-neutral-rgb: 107,101,94;
+
+  /* Foreground RGB triple — for components that tint text/borders/washes at
+     low opacity against their own card surface (rgba(var(--fg-rgb),X)) rather
+     than assuming a permanently dark backdrop */
+  --fg-rgb: 28,24,20;
 }
 
 /* ── DARK THEME ─────────────────────────────────────────── */
@@ -200,6 +208,12 @@
   --accent-green:        #4ade80;
   --accent-green-soft:   rgba(74,222,128,0.13);
   --accent-green-border: rgba(74,222,128,0.30);
+
+  /* Neutral tint for informational card headers/icons */
+  --tint-neutral-rgb: 148,163,184;
+
+  /* Foreground RGB triple — see :root for explanation */
+  --fg-rgb: 255,255,255;
 }
 
 

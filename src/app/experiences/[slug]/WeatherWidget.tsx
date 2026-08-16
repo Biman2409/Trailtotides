@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 import {
   Cloud, CloudRain, CloudSnow, Sun, Wind, Droplets,
   CloudLightning, CloudDrizzle, CloudFog, Thermometer, ChevronDown, CalendarDays, RotateCw,
@@ -85,6 +86,8 @@ interface Props {
 }
 
 export default function WeatherWidget({ lat, lng, locationName, altitude, isBaseCamp }: Props) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme !== "light";
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [weatherError, setWeatherError] = useState(false);
@@ -271,9 +274,9 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-5 lg:px-8 py-3.5 flex items-center gap-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-        <div className="w-3.5 h-3.5 rounded-full bg-white/8 animate-pulse" />
-        <div className="w-24 h-2.5 rounded bg-white/8 animate-pulse" />
-        <div className="w-16 h-2.5 rounded bg-white/6 animate-pulse ml-2" />
+        <div className="w-3.5 h-3.5 rounded-full bg-black/8 dark:bg-white/8 animate-pulse" />
+        <div className="w-24 h-2.5 rounded bg-black/8 dark:bg-white/8 animate-pulse" />
+        <div className="w-16 h-2.5 rounded bg-black/6 dark:bg-white/6 animate-pulse ml-2" />
       </div>
     );
   }
@@ -281,8 +284,8 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
   if (weatherError || !weather) {
     return (
       <div className="max-w-7xl mx-auto px-5 lg:px-8 py-3.5 flex items-center gap-2.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-        <Cloud className="w-3.5 h-3.5 text-white/25 shrink-0" />
-        <span className="text-white/35 text-[12px]">Weather unavailable right now.</span>
+        <Cloud className="w-3.5 h-3.5 text-black/30 dark:text-white/25 shrink-0" />
+        <span className="text-black/40 dark:text-white/35 text-[12px]">Weather unavailable right now.</span>
         <button
           onClick={loadWeather}
           className="ml-auto flex items-center gap-1.5 text-[11px] font-semibold transition-colors hover:text-[#ff7d47]"
@@ -300,7 +303,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
   return (
     <div>
       {/* ── COLLAPSED ROW ── */}
-      <button onClick={() => setOpen((v) => !v)} className="w-full text-left hover:bg-white/[0.015] transition-colors">
+      <button onClick={() => setOpen((v) => !v)} className="w-full text-left hover:bg-black/[0.015] dark:hover:bg-white/[0.015] transition-colors">
         <div className="max-w-7xl mx-auto px-5 lg:px-8">
           <div className="flex items-stretch" style={{ borderTop: "1px solid var(--border-subtle)" }}>
 
@@ -309,8 +312,8 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
             <div className="flex items-center overflow-x-auto no-scrollbar">
               <div className="flex items-center gap-2 px-5 lg:px-6 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
                 <div>
-                  <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">{isBaseCamp ? "Base Camp" : "Live Weather"}</div>
-                  <div className="text-white/55 text-[13px] font-medium leading-none truncate max-w-[110px]">{locationName}</div>
+                  <div className="text-black/40 dark:text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">{isBaseCamp ? "Base Camp" : "Live Weather"}</div>
+                  <div className="text-black/60 dark:text-white/55 text-[13px] font-medium leading-none truncate max-w-[110px]">{locationName}</div>
                 </div>
               </div>
 
@@ -319,32 +322,32 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
                   <WeatherIcon code={w.weatherCode} isDay={w.isDay} className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Condition</div>
-                  <div className="text-white/85 font-medium text-[13px] leading-none">{desc(w.weatherCode)}</div>
+                  <div className="text-black/40 dark:text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Condition</div>
+                  <div className="text-black/85 dark:text-white/85 font-medium text-[13px] leading-none">{desc(w.weatherCode)}</div>
                 </div>
               </div>
 
               <div className="flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
                 <Thermometer className="w-3.5 h-3.5 text-orange-400 shrink-0" />
                 <div>
-                  <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Temperature</div>
-                  <div className="text-white/85 font-medium text-[13px] leading-none">{w.temp}°C <span className="text-white/35 text-[11px] font-normal">/ feels {w.apparent}°</span></div>
+                  <div className="text-black/40 dark:text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Temperature</div>
+                  <div className="text-black/85 dark:text-white/85 font-medium text-[13px] leading-none">{w.temp}°C <span className="text-black/40 dark:text-white/35 text-[11px] font-normal">/ feels {w.apparent}°</span></div>
                 </div>
               </div>
 
               <div className="hidden md:flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
                 <Wind className="w-3.5 h-3.5 text-sky-400 shrink-0" />
                 <div>
-                  <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Wind Speed</div>
-                  <div className="text-white/85 font-medium text-[13px] leading-none">{w.wind} <span className="text-white/35 text-[11px] font-normal">km/h</span></div>
+                  <div className="text-black/40 dark:text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Wind Speed</div>
+                  <div className="text-black/85 dark:text-white/85 font-medium text-[13px] leading-none">{w.wind} <span className="text-black/40 dark:text-white/35 text-[11px] font-normal">km/h</span></div>
                 </div>
               </div>
 
               <div className="hidden md:flex items-center gap-2.5 px-5 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
                 <Droplets className="w-3.5 h-3.5 text-blue-400 shrink-0" />
                 <div>
-                  <div className="text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Humidity</div>
-                  <div className="text-white/85 font-medium text-[13px] leading-none">{w.humidity}<span className="text-white/35 text-[11px] font-normal">%</span></div>
+                  <div className="text-black/40 dark:text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">Humidity</div>
+                  <div className="text-black/85 dark:text-white/85 font-medium text-[13px] leading-none">{w.humidity}<span className="text-black/40 dark:text-white/35 text-[11px] font-normal">%</span></div>
                 </div>
               </div>
             </div>
@@ -356,17 +359,17 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
             <div className="flex items-center gap-3 px-4 shrink-0" style={{ borderLeft: "1px solid var(--border-subtle)" }}>
               {/* Toggle button */}
               <div
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all"
-                style={{
-                  background: open ? "rgba(255,81,0,0.12)" : "rgba(255,255,255,0.05)",
-                  border: open ? "1px solid rgba(255,81,0,0.3)" : "1px solid rgba(255,255,255,0.1)",
-                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all border ${
+                  open
+                    ? "bg-[rgba(255,81,0,0.12)] border-[rgba(255,81,0,0.3)]"
+                    : "bg-black/[0.03] dark:bg-white/[0.05] border-black/[0.08] dark:border-white/[0.1]"
+                }`}
               >
-                <CalendarDays className="w-3.5 h-3.5 sm:hidden shrink-0" style={{ color: open ? "#ff5100" : "rgba(255,255,255,0.45)" }} />
-                <span className="text-[11px] font-semibold hidden sm:block whitespace-nowrap" style={{ color: open ? "#ff5100" : "rgba(255,255,255,0.45)" }}>
+                <CalendarDays className={`w-3.5 h-3.5 sm:hidden shrink-0 ${open ? "text-[#ff5100]" : "text-black/45 dark:text-white/45"}`} />
+                <span className={`text-[11px] font-semibold hidden sm:block whitespace-nowrap ${open ? "text-[#ff5100]" : "text-black/45 dark:text-white/45"}`}>
                   Week Ahead
                 </span>
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} style={{ color: open ? "#ff5100" : "rgba(255,255,255,0.35)" }} />
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180 text-[#ff5100]" : "text-black/35 dark:text-white/35"}`} />
               </div>
             </div>
 
@@ -376,7 +379,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
 
       {/* ── EXPANDED PANEL ── */}
       <div className="overflow-hidden transition-all duration-300 ease-in-out" style={{ maxHeight: open ? "600px" : "0px" }}>
-        <div style={{ borderTop: "1px solid var(--border-subtle)", background: "rgba(255,255,255,0.012)" }}>
+        <div className="bg-black/[0.01] dark:bg-white/[0.012]" style={{ borderTop: "1px solid var(--border-subtle)" }}>
           <div className="max-w-7xl mx-auto px-5 lg:px-8 py-5">
 
             {/* 7-day grid */}
@@ -384,30 +387,29 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
               {weather.daily.slice(0, 7).map((day, i) => (
                 <div
                   key={day.date}
-                  className="flex flex-col items-center gap-2 py-3.5 px-2 rounded-xl"
-                  style={
+                  className={`flex flex-col items-center gap-2 py-3.5 px-2 rounded-xl border ${
                     i === 0
-                      ? { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }
-                      : { background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.06)" }
-                  }
+                      ? "bg-black/[0.04] dark:bg-white/[0.05] border-black/10 dark:border-white/10"
+                      : "bg-black/[0.02] dark:bg-white/[0.025] border-black/[0.06] dark:border-white/[0.06]"
+                  }`}
                 >
-                  <span className="text-[9px] font-bold uppercase tracking-[0.12em]" style={{ color: i === 0 ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.35)" }}>
+                  <span className={`text-[9px] font-bold uppercase tracking-[0.12em] ${i === 0 ? "text-black/60 dark:text-white/60" : "text-black/35 dark:text-white/35"}`}>
                     {dayLabel(day.date, i)}
                   </span>
                   <div className={iconColor(day.weatherCode)}>
                     <WeatherIcon code={day.weatherCode} className="w-5 h-5" />
                   </div>
-                  <span className="text-white/30 text-[8px] text-center leading-tight min-h-[20px] flex items-center justify-center">
+                  <span className="text-black/35 dark:text-white/30 text-[8px] text-center leading-tight min-h-[20px] flex items-center justify-center">
                     {desc(day.weatherCode)}
                   </span>
-                  <div className="w-full h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+                  <div className="w-full h-px bg-black/[0.06] dark:bg-white/[0.06]" />
                   <div className="flex flex-col items-center gap-0.5">
-                    <span className="text-white/30 text-[7px] uppercase tracking-wide">High</span>
-                    <span className="text-white/80 text-[12px] font-bold leading-none">{day.tempMax}°</span>
+                    <span className="text-black/35 dark:text-white/30 text-[7px] uppercase tracking-wide">High</span>
+                    <span className="text-black/80 dark:text-white/80 text-[12px] font-bold leading-none">{day.tempMax}°</span>
                   </div>
                   <div className="flex flex-col items-center gap-0.5">
-                    <span className="text-white/30 text-[7px] uppercase tracking-wide">Low</span>
-                    <span className="text-white/40 text-[11px] font-medium leading-none">{day.tempMin}°</span>
+                    <span className="text-black/35 dark:text-white/30 text-[7px] uppercase tracking-wide">Low</span>
+                    <span className="text-black/45 dark:text-white/40 text-[11px] font-medium leading-none">{day.tempMin}°</span>
                   </div>
                   {day.precipitation > 0 ? (
                     <div className="flex flex-col items-center gap-0.5">
@@ -422,18 +424,18 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
             </div>
 
             {/* ── Date picker ── */}
-            <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+            <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
 
               {/* Picker row */}
-              <div className="flex items-center gap-3 px-4 py-3" style={{ background: "rgba(255,255,255,0.025)" }}>
+              <div className="flex items-center gap-3 px-4 py-3 bg-black/[0.02] dark:bg-white/[0.025]">
                 <CalendarDays className="w-3.5 h-3.5 text-[#ff5100] shrink-0" />
-                <span className="text-white/40 text-xs font-semibold shrink-0">Check a date</span>
+                <span className="text-black/45 dark:text-white/40 text-xs font-semibold shrink-0">Check a date</span>
                 <input
                   type="date"
                   value={selectedDate}
                   onChange={e => { setSelectedDate(e.target.value); setDateWeather(null); setDateError(false); }}
-                  className="flex-1 bg-transparent text-white/65 text-xs px-2 py-1.5 rounded-lg outline-none min-w-0"
-                  style={{ border: "1px solid rgba(255,255,255,0.08)", colorScheme: "dark" }}
+                  className="flex-1 bg-transparent text-black/70 dark:text-white/65 text-xs px-2 py-1.5 rounded-lg outline-none min-w-0 border-black/10 dark:border-white/[0.08]"
+                  style={{ borderWidth: "1px", borderStyle: "solid", colorScheme: isDark ? "dark" : "light" }}
                 />
                 <button
                   disabled={!selectedDate || dateFetching}
@@ -447,7 +449,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
 
               {/* Upfront disclosure — shown as soon as a far-future date is picked, before "Check" is even clicked */}
               {willUseHistorical && !dateWeather && (
-                <div className="px-4 py-2.5 flex items-start gap-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)", background: "rgba(56,189,248,0.05)" }}>
+                <div className="px-4 py-2.5 flex items-start gap-2" style={{ borderTop: "1px solid var(--border-subtle)", background: "rgba(56,189,248,0.08)" }}>
                   <CalendarDays className="w-3 h-3 text-sky-400/70 shrink-0 mt-0.5" />
                   <p className="text-sky-400/70 text-[10.5px] leading-snug">
                     This date is beyond the 16-day forecast — we'll show last year's conditions for this date instead of a live forecast.
@@ -457,8 +459,8 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
 
               {/* Result card */}
               {dateError && (
-                <div className="px-4 py-3 flex items-center gap-2" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-                  <p className="text-red-400/60 text-xs">No data available for this date.</p>
+                <div className="px-4 py-3 flex items-center gap-2" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                  <p className="text-red-500/80 dark:text-red-400/60 text-xs">No data available for this date.</p>
                 </div>
               )}
 
@@ -467,8 +469,8 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
                 const formatted = new Date(dateWeather.date + "T12:00:00").toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" });
                 return (
                   <div
-                    className="px-4 py-4 flex items-center gap-5"
-                    style={{ borderTop: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.018)" }}
+                    className="px-4 py-4 flex items-center gap-5 bg-black/[0.015] dark:bg-white/[0.018]"
+                    style={{ borderTop: "1px solid var(--border-subtle)" }}
                   >
                     {/* Big icon */}
                     <div className={`${col} shrink-0`}>
@@ -477,17 +479,17 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
 
                     {/* Main info */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-white/35 text-[9px] uppercase tracking-widest font-semibold mb-0.5">{formatted}</p>
-                      <p className="text-white/85 text-sm font-bold leading-tight">{desc(dateWeather.weatherCode)}</p>
+                      <p className="text-black/40 dark:text-white/35 text-[9px] uppercase tracking-widest font-semibold mb-0.5">{formatted}</p>
+                      <p className="text-black/85 dark:text-white/85 text-sm font-bold leading-tight">{desc(dateWeather.weatherCode)}</p>
                       {dateWeather.historical && (
-                        <p className="text-white/30 text-[9px] mt-0.5">Based on {dateWeather.year} data</p>
+                        <p className="text-black/35 dark:text-white/30 text-[9px] mt-0.5">Based on {dateWeather.year} data</p>
                       )}
                     </div>
 
                     {/* Temp */}
                     <div className="text-right shrink-0">
-                      <p className="text-white/80 text-xl font-black leading-none">{dateWeather.tempMax}°</p>
-                      <p className="text-white/30 text-xs font-medium mt-0.5">Low {dateWeather.tempMin}°</p>
+                      <p className="text-black/80 dark:text-white/80 text-xl font-black leading-none">{dateWeather.tempMax}°</p>
+                      <p className="text-black/35 dark:text-white/30 text-xs font-medium mt-0.5">Low {dateWeather.tempMin}°</p>
                     </div>
 
                     {/* Precipitation */}
@@ -506,13 +508,13 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
             </div>
 
             {altM && altM >= 3500 ? (
-              <p className="mt-4 text-white/30 text-[9px] flex items-center gap-1.5">
-                <Thermometer className="w-3 h-3 text-amber-400/40 shrink-0" />
+              <p className="mt-4 text-black/35 dark:text-white/30 text-[9px] flex items-center gap-1.5">
+                <Thermometer className="w-3 h-3 text-amber-500/50 dark:text-amber-400/40 shrink-0" />
                 At {altitude}, summit temps run 10–15°C colder. Data reflects base-area conditions.
-                <span className="ml-auto text-white/35">Open-Meteo</span>
+                <span className="ml-auto text-black/40 dark:text-white/35">Open-Meteo</span>
               </p>
             ) : (
-              <p className="mt-3 text-white/35 text-[9px] text-right">Open-Meteo · Updated now</p>
+              <p className="mt-3 text-black/40 dark:text-white/35 text-[9px] text-right">Open-Meteo · Updated now</p>
             )}
           </div>
         </div>

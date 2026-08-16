@@ -52,13 +52,13 @@ function CompareDrawer({
     >
       <div
         className="w-full max-h-[88vh] flex flex-col rounded-t-2xl overflow-hidden"
-        style={{ background: "#0e1420", border: "1px solid rgba(255,255,255,0.09)", borderBottom: "none" }}
+        style={{ background: "#0e1420", border: "1px solid rgba(var(--fg-rgb),0.09)", borderBottom: "none" }}
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
         <div
           className="flex items-center justify-between px-5 py-4 shrink-0"
-          style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+          style={{ borderBottom: "1px solid rgba(var(--fg-rgb),0.07)" }}
         >
           <div>
             <p className="text-white font-bold text-sm">Compare Operators</p>
@@ -67,7 +67,7 @@ function CompareDrawer({
           <button
             onClick={onClose}
             className="w-8 h-8 rounded-full flex items-center justify-center text-white/50 hover:text-white transition-colors"
-            style={{ background: "rgba(255,255,255,0.07)" }}
+            style={{ background: "rgba(var(--fg-rgb),0.07)" }}
           >
             <X className="w-4 h-4" />
           </button>
@@ -77,7 +77,7 @@ function CompareDrawer({
         <div className="overflow-auto flex-1">
           <table className="w-full border-collapse min-w-[560px]">
             <thead className="sticky top-0 z-10" style={{ background: "#0e1420" }}>
-              <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+              <tr style={{ borderBottom: "1px solid rgba(var(--fg-rgb),0.07)" }}>
                 <th className="px-5 py-3 text-left w-[180px]">
                   <span className="text-[10px] font-bold text-white/25 uppercase tracking-widest">Operator</span>
                 </th>
@@ -111,7 +111,7 @@ function CompareDrawer({
                   <tr
                     key={i}
                     style={{
-                      borderTop: "1px solid rgba(255,255,255,0.05)",
+                      borderTop: "1px solid rgba(var(--fg-rgb),0.05)",
                       background: isBestPrice ? "rgba(74,222,128,0.03)" : "transparent",
                     }}
                   >
@@ -141,7 +141,7 @@ function CompareDrawer({
                     {/* Price */}
                     <td className="px-4 py-4 text-center">
                       <div className="flex flex-col items-center gap-1">
-                        <span className="font-black text-[15px]" style={{ color: isBestPrice ? "#4ade80" : "rgba(255,255,255,0.8)" }}>
+                        <span className="font-black text-[15px]" style={{ color: isBestPrice ? "#4ade80" : "rgba(var(--fg-rgb),0.8)" }}>
                           {op.priceFrom}
                         </span>
                         {isBestPrice && (
@@ -164,7 +164,7 @@ function CompareDrawer({
                           ))}
                         </div>
                         <span className="text-[11px] text-white/60 font-semibold">{displayRating}</span>
-                        <span className="text-[8px]" style={{ color: isComputed ? "#4ade80" : "rgba(255,255,255,0.2)" }}>
+                        <span className="text-[8px]" style={{ color: isComputed ? "#4ade80" : "rgba(var(--fg-rgb),0.2)" }}>
                           {isComputed ? `${cr.count} reviews` : "Google"}
                         </span>
                       </div>
@@ -175,7 +175,7 @@ function CompareDrawer({
                       {count === 0
                         ? <span className="text-[10px] text-white/20">On request</span>
                         : <div className="flex flex-col items-center gap-1">
-                            <span className="font-bold text-[13px]" style={{ color: isMostDates ? "#ff7d47" : "rgba(255,255,255,0.65)" }}>{count}</span>
+                            <span className="font-bold text-[13px]" style={{ color: isMostDates ? "#ff7d47" : "rgba(var(--fg-rgb),0.65)" }}>{count}</span>
                             <div className="flex flex-wrap justify-center gap-0.5">
                               {op.departureDates!.slice(0, 2).map((d, j) => (
                                 <span key={j} className="text-[8px] px-1 py-0.5 rounded" style={{ background: "rgba(255,81,0,0.08)", color: "#ff9d70" }}>{formatDate(d)}</span>
@@ -221,7 +221,7 @@ function CompareDrawer({
         {/* Footer */}
         <div
           className="px-5 py-3 flex items-center gap-3 shrink-0"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.05)", background: "rgba(0,0,0,0.15)" }}
+          style={{ borderTop: "1px solid rgba(var(--fg-rgb),0.05)", background: "rgba(0,0,0,0.15)" }}
         >
           <div className="flex items-center gap-1.5">
             <svg className="w-3 h-3 text-emerald-400/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -254,7 +254,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
   }, [slug]);
 
   if (operators.length === 0) {
-    return <p className="text-white/25 text-xs text-center py-6">No operators listed yet for this adventure.</p>;
+    return <p className="text-black/30 dark:text-white/25 text-xs text-center py-6">No operators listed yet for this adventure.</p>;
   }
 
   // Single operator — simple card
@@ -265,21 +265,21 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
     const displayRating = cr?.computed ? cr.avg : op.googleRating;
     const isComputed = !!cr?.computed;
     return (
-      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.09)", background: "rgba(255,255,255,0.03)" }}>
+      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(var(--fg-rgb),0.09)", background: "rgba(var(--fg-rgb),0.03)" }}>
         <div className="p-4 flex items-center justify-between gap-4">
           <div>
-            <p className="text-white/90 font-bold text-sm">{op.name}</p>
+            <p className="text-black/90 dark:text-white/90 font-bold text-sm">{op.name}</p>
             <div className="flex items-center gap-1 mt-1">
-              {[1,2,3,4,5].map(s => <Star key={s} className={`w-2.5 h-2.5 ${s <= Math.round(displayRating) ? "text-amber-400 fill-amber-400" : "text-white/10 fill-white/10"}`} />)}
-              <span className="text-white/40 text-[10px] ml-1">{displayRating}</span>
-              <span className="text-[8px] ml-1" style={{ color: isComputed ? "#4ade80" : "rgba(255,255,255,0.18)" }}>
+              {[1,2,3,4,5].map(s => <Star key={s} className={`w-2.5 h-2.5 ${s <= Math.round(displayRating) ? "text-amber-400 fill-amber-400" : "text-black/10 dark:text-white/10 fill-black/10 dark:fill-white/10"}`} />)}
+              <span className="text-black/45 dark:text-white/40 text-[10px] ml-1">{displayRating}</span>
+              <span className="text-[8px] ml-1" style={{ color: isComputed ? "#4ade80" : "rgba(var(--fg-rgb),0.18)" }}>
                 {isComputed ? `${cr.count} reviews` : "Google"}
               </span>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-[9px] uppercase tracking-wider text-white/30">from</div>
-            <div className="font-black text-sm text-white/90">{op.priceFrom}</div>
+            <div className="text-[9px] uppercase tracking-wider text-black/35 dark:text-white/30">from</div>
+            <div className="font-black text-sm text-black/90 dark:text-white/90">{op.priceFrom}</div>
           </div>
         </div>
         <div className="px-4 pb-4">
@@ -321,10 +321,10 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
         <div className="grid grid-cols-3 gap-2">
           <div
             className="rounded-xl p-3 flex flex-col gap-1"
-            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
+            style={{ background: "rgba(var(--fg-rgb),0.03)", border: "1px solid rgba(var(--fg-rgb),0.07)" }}
           >
-            <span className="text-[8px] font-bold uppercase tracking-widest text-white/25">Operators</span>
-            <span className="font-black text-xl text-white/80">{operators.length}</span>
+            <span className="text-[8px] font-bold uppercase tracking-widest text-black/30 dark:text-white/25">Operators</span>
+            <span className="font-black text-xl text-black/80 dark:text-white/80">{operators.length}</span>
           </div>
           <div
             className="rounded-xl p-3 flex flex-col gap-1"
@@ -359,8 +359,8 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
           <div className="flex items-center gap-2.5">
             <ArrowUpDown className="w-4 h-4 text-[#ff5100]/70" />
             <div className="text-left">
-              <p className="text-white/80 text-[13px] font-bold leading-none">Compare All Operators</p>
-              <p className="text-white/30 text-[10px] mt-0.5">Price · Rating · Dates · Services</p>
+              <p className="text-black/80 dark:text-white/80 text-[13px] font-bold leading-none">Compare All Operators</p>
+              <p className="text-black/35 dark:text-white/30 text-[10px] mt-0.5">Price · Rating · Dates · Services</p>
             </div>
           </div>
           <ChevronDown className="w-4 h-4 text-[#ff5100]/50 -rotate-90 shrink-0" />

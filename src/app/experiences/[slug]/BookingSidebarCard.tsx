@@ -63,26 +63,26 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, avgRating
           <div>
             {priceFrom ? (
               <p className="leading-none">
-                <span className="text-white/40 text-[10px] font-medium uppercase tracking-wide block mb-1">From</span>
-                <span className="text-white font-bold text-2xl">{priceFrom}</span>
+                <span className="text-black/40 dark:text-white/40 text-[10px] font-medium uppercase tracking-wide block mb-1">From</span>
+                <span className="text-black dark:text-white font-bold text-2xl">{priceFrom}</span>
               </p>
             ) : (
-              <p className="text-white/50 text-sm font-semibold">Contact for pricing</p>
+              <p className="text-black/50 dark:text-white/50 text-sm font-semibold">Contact for pricing</p>
             )}
           </div>
           {avgRating !== null && (
             <div className="flex flex-col items-end shrink-0 mt-0.5">
               <div className="flex items-center gap-1">
                 <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                <span className="text-white/80 text-sm font-semibold">{avgRating.toFixed(1)}</span>
+                <span className="text-black/80 dark:text-white/80 text-sm font-semibold">{avgRating.toFixed(1)}</span>
               </div>
-              <span className="text-white/30 text-[9px] uppercase tracking-wide">Operators</span>
+              <span className="text-black/35 dark:text-white/30 text-[9px] uppercase tracking-wide">Operators</span>
             </div>
           )}
         </div>
 
         {(operatorCount > 0 || hasVerifiedOperator || nextDeparture) && (
-          <p className="mb-3 text-white/40 text-[11px] font-medium leading-relaxed">
+          <p className="mb-3 text-black/40 dark:text-white/40 text-[11px] font-medium leading-relaxed">
             {operatorCount > 0 && <>{operatorCount} operator{operatorCount !== 1 ? "s" : ""}</>}
             {hasVerifiedOperator && <> · <span style={{ color: "#34d399" }}>Verified</span></>}
             {nextDeparture && <> · Next {nextDeparture}</>}
@@ -105,8 +105,7 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, avgRating
           </button>
           <button
             onClick={handleBrowse}
-            className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:bg-white/[0.06]"
-            style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.65)", border: "1px solid rgba(255,255,255,0.1)" }}
+            className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-black/[0.03] hover:bg-black/[0.06] dark:bg-white/[0.04] dark:hover:bg-white/[0.06] text-black/65 dark:text-white/65 border border-black/10 dark:border-white/10"
           >
             Compare Operators
           </button>

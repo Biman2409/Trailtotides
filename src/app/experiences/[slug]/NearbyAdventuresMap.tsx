@@ -205,9 +205,9 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
       <div className="px-4 pt-4 pb-3 flex items-center justify-between">
         <div>
           <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase leading-none mb-1">Nearby</p>
-          <p className="text-white/60 text-xs font-semibold">{nearby.length} adventures in region</p>
+          <p className="text-black/55 dark:text-white/60 text-xs font-semibold">{nearby.length} adventures in region</p>
         </div>
-        <span className="text-white/15 text-[9px] font-medium uppercase tracking-widest">Map</span>
+        <span className="text-black/25 dark:text-white/15 text-[9px] font-medium uppercase tracking-widest">Map</span>
       </div>
 
       {/* Map */}
@@ -229,16 +229,16 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
             <Link
               key={a.id}
               href={`/experiences/${a.slug}`}
-              className="flex items-center gap-2.5 px-4 py-2 hover:bg-white/[0.03] transition-colors group"
+              className="flex items-center gap-2.5 px-4 py-2 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] transition-colors group"
             >
               <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
               <div className="flex-1 min-w-0">
-                <p className="text-white/65 text-[11px] font-semibold group-hover:text-white/90 transition-colors truncate leading-none mb-0.5">{a.name}</p>
-                <p className="text-white/20 text-[9px] uppercase tracking-wide">{diff} · {a.type}</p>
+                <p className="text-black/70 dark:text-white/65 text-[11px] font-semibold group-hover:text-black/90 dark:group-hover:text-white/90 transition-colors truncate leading-none mb-0.5">{a.name}</p>
+                <p className="text-black/30 dark:text-white/20 text-[9px] uppercase tracking-wide">{diff} · {a.type}</p>
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                <span className="text-white/30 text-[10px] tabular-nums">{km} km</span>
-                <ArrowRight className="w-3 h-3 text-white/15 group-hover:text-white/40 transition-colors" />
+                <span className="text-black/40 dark:text-white/30 text-[10px] tabular-nums">{km} km</span>
+                <ArrowRight className="w-3 h-3 text-black/20 dark:text-white/15 group-hover:text-black/50 dark:group-hover:text-white/40 transition-colors" />
               </div>
             </Link>
           );

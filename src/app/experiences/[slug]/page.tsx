@@ -422,14 +422,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <div id="overview" className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 pt-6 first:pt-0 scroll-mt-24">
               <AccordionSection
                 label="The Adventure" title="About This Adventure" defaultOpen
-                icon={<BookOpen className="w-4 h-4" />} tintRgb="148,163,184" noDivider noTopPad stretch
+                icon={<BookOpen className="w-4 h-4" />} tintRgb="var(--tint-neutral-rgb)" noDivider noTopPad stretch
               >
                 <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.description}</p>
               </AccordionSection>
 
               <AccordionSection
                 label="Highlights" title="What Makes It Special" defaultOpen
-                icon={<Sparkles className="w-4 h-4" />} tintRgb="148,163,184" noDivider noTopPad stretch
+                icon={<Sparkles className="w-4 h-4" />} tintRgb="var(--tint-neutral-rgb)" noDivider noTopPad stretch
               >
                 <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.whatMakesSpecial}</p>
               </AccordionSection>
@@ -440,7 +440,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <AccordionSection
               id="suitability"
               label="Suitability" title="Is This For You?" defaultOpen
-              icon={<ShieldCheck className="w-4 h-4" />} tintRgb="148,163,184"
+              icon={<ShieldCheck className="w-4 h-4" />} tintRgb="var(--tint-neutral-rgb)"
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="rounded-xl p-3.5" style={{ background: "rgba(16,185,129,0.04)", border: "1px solid rgba(16,185,129,0.1)" }}>
@@ -477,7 +477,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
               {/* Too intense? Surface easier nearby alternatives instead of only at the very bottom of the page */}
               {easierAlternatives.length > 0 && (
-                <div className="mt-3 rounded-xl p-3.5" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <div className="mt-3 rounded-xl p-3.5" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
                   <p className="text-[10px] font-bold tracking-[0.16em] uppercase mb-2.5" style={{ color: "var(--text-tertiary)" }}>Want something a bit easier?</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     {easierAlternatives.map((a) => {
@@ -486,7 +486,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                         <Link
                           key={a.id}
                           href={`/experiences/${a.slug}`}
-                          className="flex items-center gap-2.5 p-2 rounded-lg transition-colors hover:bg-white/[0.04]"
+                          className="flex items-center gap-2.5 p-2 rounded-lg transition-colors hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
                           style={{ border: "1px solid var(--border-subtle)" }}
                         >
                           <div className="relative w-11 h-11 rounded-lg overflow-hidden shrink-0">
@@ -507,7 +507,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* Capability Profile — below Suitability; its radar + domain matrix need full width to read well */}
             <AccordionSection
               label="Capability Profile" title="How Do You Measure Up?" defaultOpen={false}
-              icon={<Target className="w-4 h-4" />} tintRgb="148,163,184"
+              icon={<Target className="w-4 h-4" />} tintRgb="var(--tint-neutral-rgb)"
               headerExtra={<GradingPill />}
             >
               <ACEProfileSection
@@ -566,7 +566,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* FAQ */}
             <AccordionSection
               label="FAQ" title="Common Questions" defaultOpen={false}
-              icon={<HelpCircle className="w-4 h-4" />} tintRgb="148,163,184"
+              icon={<HelpCircle className="w-4 h-4" />} tintRgb="var(--tint-neutral-rgb)"
             >
               <FAQSection adventure={adventure} difficulty={difficulty} operatorCount={allOperators.length} />
             </AccordionSection>
@@ -682,12 +682,12 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4">Discover More</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {relatedByState.length > 0 && (
-                <div className="p-4 rounded-2xl" style={{ background: "rgba(148,163,184,0.025)", border: "1px solid rgba(148,163,184,0.18)" }}>
+                <div className="p-4 rounded-2xl" style={{ background: "rgba(var(--tint-neutral-rgb),0.025)", border: "1px solid rgba(var(--tint-neutral-rgb),0.18)" }}>
                   <RelatedSection title={`More in ${adventure.state}`} items={relatedByState} exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} pillMode="type" />
                 </div>
               )}
               {relatedByType.length > 0 && (
-                <div className="p-4 rounded-2xl" style={{ background: "rgba(148,163,184,0.025)", border: "1px solid rgba(148,163,184,0.18)" }}>
+                <div className="p-4 rounded-2xl" style={{ background: "rgba(var(--tint-neutral-rgb),0.025)", border: "1px solid rgba(var(--tint-neutral-rgb),0.18)" }}>
                   <RelatedSection title={`More in ${adventure.type}`} items={relatedByType} exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`} pillMode="region" />
                 </div>
               )}
