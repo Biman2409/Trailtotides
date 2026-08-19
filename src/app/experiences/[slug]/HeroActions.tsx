@@ -102,23 +102,7 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
         }
       </button>
 
-      {/* ── Wishlist (second) ── */}
-      <button
-        onClick={handleSave}
-        aria-label={saved ? "Remove from wishlist" : "Add to wishlist"}
-        className={`${btnBase}`}
-        style={saved
-          ? { background: "rgba(255,81,0,0.18)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)", boxShadow: "0 0 12px rgba(255,81,0,0.2)" }
-          : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }
-        }
-      >
-        {loggedIn === false
-          ? <><LogIn className="w-3.5 h-3.5" /><span className="hidden sm:inline">Wishlist</span></>
-          : <><Heart className={`w-3.5 h-3.5 ${saved ? "fill-[#ff7d47]" : ""}`} /><span className="hidden sm:inline">{saved ? "Wishlisted" : "Wishlist"}</span></>
-        }
-      </button>
-
-      {/* ── Share (third) ── */}
+      {/* ── Share (second) ── */}
       <button
         onClick={handleShare}
         aria-label="Share this adventure"
@@ -128,6 +112,24 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
         {shared
           ? <><Check className="w-3.5 h-3.5" /><span className="hidden sm:inline">Copied</span></>
           : <><Share2 className="w-3.5 h-3.5" /><span className="hidden sm:inline">Share</span></>
+        }
+      </button>
+
+      {/* ── Save / Wishlist (third) — grouped next to "Mark as done" so the two
+           personal-tracking actions (save for later / log as completed) sit
+           together for quick access ── */}
+      <button
+        onClick={handleSave}
+        aria-label={saved ? "Remove from saved" : "Save this adventure"}
+        className={`${btnBase}`}
+        style={saved
+          ? { background: "rgba(255,81,0,0.18)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)", boxShadow: "0 0 12px rgba(255,81,0,0.2)" }
+          : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }
+        }
+      >
+        {loggedIn === false
+          ? <><LogIn className="w-3.5 h-3.5" /><span className="hidden sm:inline">Save</span></>
+          : <><Heart className={`w-3.5 h-3.5 ${saved ? "fill-[#ff7d47]" : ""}`} /><span className="hidden sm:inline">{saved ? "Saved" : "Save"}</span></>
         }
       </button>
 
