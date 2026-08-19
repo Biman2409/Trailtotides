@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
-  LocateFixed, Map as MapIcon, Layers, Camera,
+  LocateFixed, Map as MapIcon, Layers, Camera, Trophy,
   Navigation as NavigationIcon, Compass, RotateCcw,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
@@ -14,6 +14,7 @@ import ChatBubble from "@/components/ChatBubble";
 import EmptyState from "@/components/ui/custom/EmptyState";
 import { DIFFICULTY_CONFIG } from "@/components/ui/custom/DifficultyMeter";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
+import { useTripLog } from "@/contexts/TripLogContext";
 import { adventures } from "@/lib/data";
 import type { AdventureType, Region, Difficulty, Duration, Month, Adventure } from "@/lib/data";
 import { toggleSelection, REGION_GROUPS, GENRE_GROUPS, SEASONS } from "@/lib/filterOptions";
@@ -271,6 +272,13 @@ interface UserPhoto {
   adventureName: string;
 }
 
+interface CompletedAdventure {
+  adv: Adventure;
+  date: string;
+}
+
+const TROPHY_SVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>`;
+
 function MapView({
   adventures: advs,
   flyToRef,
@@ -281,6 +289,7 @@ function MapView({
   userPhotos,
   wishlist,
   nearMe,
+  completed,
   }: {
   adventures: Adventure[];
   flyToRef: React.MutableRefObject<((lat: number, lng: number) => void) | null>;
@@ -291,6 +300,7 @@ function MapView({
   userPhotos: UserPhoto[];
   wishlist: Set<string>;
   nearMe: { lat: number; lng: number } | null;
+  completed: CompletedAdventure[];
 }) {
   const router = useRouter();
   const mapRef = useRef<HTMLDivElement>(null);
@@ -302,6 +312,7 @@ function MapView({
   const photoLayerRef = useRef<L.LayerGroup | null>(null);
   const placeLayerRef = useRef<L.LayerGroup | null>(null);
   const meLayerRef = useRef<L.LayerGroup | null>(null);
+  const trophyLayerRef = useRef<L.LayerGroup | null>(null);
 
   useEffect(() => {
     flyToRef.current = (lat, lng) => {
@@ -580,6 +591,7 @@ function MapView({
       photoLayerRef.current = leaflet.layerGroup().addTo(map);
       placeLayerRef.current = leaflet.layerGroup().addTo(map);
       meLayerRef.current = leaflet.layerGroup().addTo(map);
+      trophyLayerRef.current = leaflet.layerGroup().addTo(map);
       addMarkers(leaflet, advs);
       addIndiaBorder(leaflet, map);
     });
@@ -700,6 +712,66 @@ function MapView({
     });
   }, [nearMe]);
 
+  // Trail Passport pins — completed adventures, celebrated with a gold trophy
+  // marker distinct from the difficulty/wishlist pin language.
+  useEffect(() => {
+    if (!trophyLayerRef.current) return;
+    loadLeaflet().then(leaflet => {
+      if (!trophyLayerRef.current) return;
+      trophyLayerRef.current.clearLayers();
+      completed.forEach(({ adv, date }) => {
+        const icon = leaflet.divIcon({
+          className: "",
+          html: `<div style="position:relative;width:34px;height:42px;filter:drop-shadow(0 3px 10px rgba(234,179,8,0.55));">
+            <div style="width:34px;height:34px;border-radius:50% 50% 50% 0;background:linear-gradient(135deg,#f7cd3a,#eab308);transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2.5px solid #fff;box-shadow:0 0 14px rgba(234,179,8,0.55),inset 0 1px 0 rgba(255,255,255,0.4);">
+              <div style="transform:rotate(45deg);display:flex;align-items:center;justify-content:center;">${TROPHY_SVG}</div>
+            </div>
+          </div>`,
+          iconSize: [34, 42],
+          iconAnchor: [17, 42],
+          popupAnchor: [0, -46],
+        });
+
+        const dateStr = new Date(date + "T00:00:00").toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+
+        const popupHtml = `
+          <div data-nav="/experiences/${adv.slug}" style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:var(--bg-surface,#0f1420);cursor:pointer;border:1px solid var(--border-subtle,rgba(255,255,255,0.06));">
+            <div style="position:relative;height:180px;">
+              <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.1) 50%,rgba(0,0,0,0.2) 100%);" />
+              <div style="position:absolute;top:10px;left:10px;">
+                <span style="background:linear-gradient(135deg,#f7cd3a,#eab308);color:#1a1200;font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:4px;">🏆 Completed ${dateStr}</span>
+              </div>
+              <div style="position:absolute;bottom:10px;left:14px;right:14px;">
+                <div style="font-size:16px;font-weight:700;color:#fff;line-height:1.2;letter-spacing:-0.02em;text-shadow:0 2px 8px rgba(0,0,0,0.7);">${adv.name}</div>
+              </div>
+            </div>
+            <div style="padding:12px 14px 14px;">
+              <p style="font-size:12.5px;color:var(--text-secondary,rgba(255,255,255,0.5));line-height:1.5;margin:0 0 12px;">${adv.tagline}</p>
+              <div style="display:flex;align-items:center;justify-content:flex-end;">
+                <span style="display:flex;align-items:center;gap:3px;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600;background:rgba(255,81,0,0.12);color:#ff5100;">
+                  Relive it
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        const marker = leaflet.marker([adv.lat, adv.lng], { icon, zIndexOffset: 500 })
+          .bindPopup(popupHtml, { maxWidth: 280, minWidth: 280, className: "ttt-popup" })
+          .bindTooltip(`${adv.name} · ${dateStr}`, { direction: "top", offset: [0, -48], className: "ttt-tooltip", opacity: 0.9 });
+
+        marker.on("popupopen", () => {
+          const el = marker.getPopup()?.getElement()?.querySelector<HTMLElement>("[data-nav]");
+          if (el) el.onclick = () => router.push(el.dataset.nav!);
+        });
+
+        trophyLayerRef.current!.addLayer(marker);
+      });
+    });
+  }, [completed, router]);
+
   return <div ref={mapRef} className="w-full h-full" />;
 }
 
@@ -723,7 +795,21 @@ export default function MapPage() {
   const [myShotsLoading, setMyShotsLoading] = useState(false);
   const [userPhotos, setUserPhotos] = useState<UserPhoto[]>([]);
   const [loggedIn, setLoggedIn] = useState(false);
-  
+  const [myTrailOn, setMyTrailOn] = useState(false);
+  const { log: tripLog } = useTripLog();
+
+  const completedAdventures: CompletedAdventure[] = tripLog
+    .map(e => { const adv = adventures.find(a => a.slug === e.slug); return adv ? { adv, date: e.date } : null; })
+    .filter((x): x is CompletedAdventure => !!x);
+
+  function toggleMyTrail() {
+    if (myTrailOn) { setMyTrailOn(false); return; }
+    setMyTrailOn(true);
+    if (completedAdventures.length === 0) {
+      toast("No completed adventures yet — mark one done from its page to build your trail map.");
+    }
+  }
+
   function toggleMyShots() {
     if (myShotsOn) {
       setMyShotsOn(false);
@@ -906,6 +992,22 @@ export default function MapPage() {
               <span className="hidden sm:inline">My Shots</span>
               {myShotsOn && userPhotos.length > 0 && (
                 <span className="bg-white/25 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{userPhotos.length}</span>
+              )}
+            </button>
+          )}
+
+          {/* My Trail — completed adventures, celebrated as gold pins */}
+          {loggedIn && (
+            <button
+              onClick={toggleMyTrail}
+              title="My completed adventures"
+              className={tbBtn(myTrailOn, myTrailOn)}
+              style={myTrailOn ? { background: "linear-gradient(135deg,#f7cd3a,#eab308)", color: "#1a1200" } : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
+            >
+              <Trophy className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">My Trail</span>
+              {myTrailOn && completedAdventures.length > 0 && (
+                <span className="bg-black/20 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{completedAdventures.length}</span>
               )}
             </button>
           )}
@@ -1198,6 +1300,7 @@ export default function MapPage() {
             userPhotos={userPhotos}
             wishlist={wishlist}
             nearMe={nearMe}
+            completed={myTrailOn ? completedAdventures : []}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center" style={{ background: "#f0ebe0" }}>
