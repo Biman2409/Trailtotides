@@ -96,18 +96,18 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
           100% { transform: scale(2.6); opacity: 0; }
         }
         .ttt-nearby-tooltip {
-          background: rgba(4,7,14,0.92) !important;
-          border: 1px solid rgba(255,255,255,0.14) !important;
-          color: #fff !important;
+          background: ${isDark ? "rgba(4,7,14,0.92)" : "rgba(255,255,255,0.97)"} !important;
+          border: 1px solid ${isDark ? "rgba(255,255,255,0.14)" : "rgba(15,23,31,0.12)"} !important;
+          color: ${isDark ? "#fff" : "#1c1814"} !important;
           font-family: sans-serif !important;
           font-size: 11px !important;
           font-weight: 600 !important;
           padding: 4px 9px !important;
           border-radius: 8px !important;
-          box-shadow: 0 4px 14px rgba(0,0,0,0.35) !important;
+          box-shadow: 0 4px 14px rgba(0,0,0,0.25) !important;
         }
         .ttt-nearby-tooltip::before {
-          border-top-color: rgba(4,7,14,0.92) !important;
+          border-top-color: ${isDark ? "rgba(4,7,14,0.92)" : "rgba(255,255,255,0.97)"} !important;
         }
       `;
 

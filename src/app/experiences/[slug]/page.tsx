@@ -434,7 +434,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.whatMakesSpecial}</p>
               </AccordionSection>
             </div>
-            <div className="h-px mt-6" style={{ background: "rgba(255,255,255,0.05)" }} />
+            <div className="h-px mt-6" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
 
             {/* Is This For You? */}
             <AccordionSection

@@ -51,8 +51,8 @@ function CompareDrawer({
       onClick={onClose}
     >
       <div
-        className="w-full max-h-[88vh] flex flex-col rounded-t-2xl overflow-hidden"
-        style={{ background: "#0e1420", border: "1px solid rgba(var(--fg-rgb),0.09)", borderBottom: "none" }}
+        className="w-full max-h-[88vh] flex flex-col rounded-t-2xl overflow-hidden bg-white dark:bg-[#0e1420]"
+        style={{ border: "1px solid rgba(var(--fg-rgb),0.09)", borderBottom: "none" }}
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -61,12 +61,12 @@ function CompareDrawer({
           style={{ borderBottom: "1px solid rgba(var(--fg-rgb),0.07)" }}
         >
           <div>
-            <p className="text-white font-bold text-sm">Compare Operators</p>
-            <p className="text-white/35 text-xs mt-0.5">{operators.length} operators · side-by-side</p>
+            <p className="text-black dark:text-white font-bold text-sm">Compare Operators</p>
+            <p className="text-black/40 dark:text-white/35 text-xs mt-0.5">{operators.length} operators · side-by-side</p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-white/50 hover:text-white transition-colors"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-black/55 dark:text-white/50 hover:text-black dark:hover:text-white transition-colors"
             style={{ background: "rgba(var(--fg-rgb),0.07)" }}
           >
             <X className="w-4 h-4" />
@@ -76,10 +76,10 @@ function CompareDrawer({
         {/* Table */}
         <div className="overflow-auto flex-1">
           <table className="w-full border-collapse min-w-[560px]">
-            <thead className="sticky top-0 z-10" style={{ background: "#0e1420" }}>
+            <thead className="sticky top-0 z-10 bg-white dark:bg-[#0e1420]">
               <tr style={{ borderBottom: "1px solid rgba(var(--fg-rgb),0.07)" }}>
                 <th className="px-5 py-3 text-left w-[180px]">
-                  <span className="text-[10px] font-bold text-white/25 uppercase tracking-widest">Operator</span>
+                  <span className="text-[10px] font-bold text-black/30 dark:text-white/25 uppercase tracking-widest">Operator</span>
                 </th>
                 {[
                   { label: "Price", icon: null },
@@ -89,7 +89,7 @@ function CompareDrawer({
                   { label: "Porter", icon: <Package className="w-3 h-3" /> },
                 ].map((col, i) => (
                   <th key={i} className="px-4 py-3 text-center">
-                    <div className="flex items-center justify-center gap-1 text-white/25">
+                    <div className="flex items-center justify-center gap-1 text-black/30 dark:text-white/25">
                       {col.icon}
                       <span className="text-[10px] font-bold uppercase tracking-widest">{col.label}</span>
                     </div>
@@ -122,7 +122,7 @@ function CompareDrawer({
                           <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "#4ade80" }} />
                         )}
                         <div className="min-w-0">
-                          <p className="text-white/90 font-bold text-[13px] leading-tight truncate">{op.name}</p>
+                          <p className="text-black/90 dark:text-white/90 font-bold text-[13px] leading-tight truncate">{op.name}</p>
                           {op.verified && (
                             <span className="text-[8px] font-bold text-emerald-400/70 uppercase tracking-widest">Verified</span>
                           )}
@@ -160,10 +160,10 @@ function CompareDrawer({
                       <div className="flex flex-col items-center gap-1">
                         <div className="flex gap-0.5">
                           {[1,2,3,4,5].map(s => (
-                            <Star key={s} className={`w-2.5 h-2.5 ${s <= Math.round(displayRating) ? "text-amber-400 fill-amber-400" : "text-white/10 fill-white/10"}`} />
+                            <Star key={s} className={`w-2.5 h-2.5 ${s <= Math.round(displayRating) ? "text-amber-400 fill-amber-400" : "text-black/10 dark:text-white/10 fill-black/10 dark:fill-white/10"}`} />
                           ))}
                         </div>
-                        <span className="text-[11px] text-white/60 font-semibold">{displayRating}</span>
+                        <span className="text-[11px] text-black/65 dark:text-white/60 font-semibold">{displayRating}</span>
                         <span className="text-[8px]" style={{ color: isComputed ? "#4ade80" : "rgba(var(--fg-rgb),0.2)" }}>
                           {isComputed ? `${cr.count} reviews` : "Google"}
                         </span>
@@ -173,14 +173,14 @@ function CompareDrawer({
                     {/* Departures */}
                     <td className="px-4 py-4 text-center">
                       {count === 0
-                        ? <span className="text-[10px] text-white/20">On request</span>
+                        ? <span className="text-[10px] text-black/25 dark:text-white/20">On request</span>
                         : <div className="flex flex-col items-center gap-1">
                             <span className="font-bold text-[13px]" style={{ color: isMostDates ? "#ff7d47" : "rgba(var(--fg-rgb),0.65)" }}>{count}</span>
                             <div className="flex flex-wrap justify-center gap-0.5">
                               {op.departureDates!.slice(0, 2).map((d, j) => (
                                 <span key={j} className="text-[8px] px-1 py-0.5 rounded" style={{ background: "rgba(255,81,0,0.08)", color: "#ff9d70" }}>{formatDate(d)}</span>
                               ))}
-                              {count > 2 && <span className="text-[8px] text-white/25">+{count - 2}</span>}
+                              {count > 2 && <span className="text-[8px] text-black/30 dark:text-white/25">+{count - 2}</span>}
                             </div>
                           </div>
                       }
@@ -195,7 +195,7 @@ function CompareDrawer({
                             </div>
                             <span className="text-[8px] text-indigo-300/60">{op.cloakroom_charge ? `₹${op.cloakroom_charge}` : "Free"}</span>
                           </div>
-                        : <X className="w-4 h-4 text-white/10 mx-auto" />
+                        : <X className="w-4 h-4 text-black/15 dark:text-white/10 mx-auto" />
                       }
                     </td>
 
@@ -208,7 +208,7 @@ function CompareDrawer({
                             </div>
                             <span className="text-[8px] text-teal-300/60">{op.offloading_charge ? `₹${op.offloading_charge}/kg` : "Incl."}</span>
                           </div>
-                        : <X className="w-4 h-4 text-white/10 mx-auto" />
+                        : <X className="w-4 h-4 text-black/15 dark:text-white/10 mx-auto" />
                       }
                     </td>
                   </tr>
@@ -220,20 +220,20 @@ function CompareDrawer({
 
         {/* Footer */}
         <div
-          className="px-5 py-3 flex items-center gap-3 shrink-0"
-          style={{ borderTop: "1px solid rgba(var(--fg-rgb),0.05)", background: "rgba(0,0,0,0.15)" }}
+          className="px-5 py-3 flex items-center gap-3 shrink-0 bg-black/[0.03] dark:bg-[rgba(0,0,0,0.15)]"
+          style={{ borderTop: "1px solid rgba(var(--fg-rgb),0.05)" }}
         >
           <div className="flex items-center gap-1.5">
             <svg className="w-3 h-3 text-emerald-400/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 6v2m0 8v2"/>
             </svg>
-            <span className="text-[10px] text-white/30">Best price</span>
+            <span className="text-[10px] text-black/35 dark:text-white/30">Best price</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400 opacity-60" />
-            <span className="text-[10px] text-white/30">Community rating</span>
+            <span className="text-[10px] text-black/35 dark:text-white/30">Community rating</span>
           </div>
-          <button onClick={onClose} className="ml-auto text-xs text-white/30 hover:text-white/60 transition-colors">
+          <button onClick={onClose} className="ml-auto text-xs text-black/35 dark:text-white/30 hover:text-black/60 dark:hover:text-white/60 transition-colors">
             Close
           </button>
         </div>

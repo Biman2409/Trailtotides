@@ -104,7 +104,7 @@ export default function AccordionSection({ title, label, defaultOpen = false, mo
             {title && <h2 className="font-semibold text-base" style={{ color: "#ff5100" }}>{title}</h2>}
           </div>
           <ChevronDown
-            className={`w-5 h-5 text-white/30 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+            className={`w-5 h-5 text-black/35 dark:text-white/30 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           />
         </button>
       )}
@@ -132,7 +132,7 @@ export default function AccordionSection({ title, label, defaultOpen = false, mo
 
       {/* Divider */}
       {!noDivider && (label || title) && (
-        <div className="h-px mt-6" style={{ background: "rgba(255,255,255,0.05)" }} />
+        <div className="h-px mt-6" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
       )}
     </section>
   );

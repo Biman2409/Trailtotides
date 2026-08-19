@@ -54,9 +54,8 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
     >
       {/* Blur backdrop */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_top,rgba(255,255,255,0.97)_60%,rgba(255,255,255,0)_100%)] dark:bg-[linear-gradient(to_top,rgba(8,10,18,0.97)_60%,rgba(8,10,18,0)_100%)]"
         style={{
-          background: "linear-gradient(to top, rgba(8,10,18,0.97) 60%, rgba(8,10,18,0.0) 100%)",
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",
         }}
@@ -66,8 +65,8 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
         {/* Top row */}
         <div className="flex items-start justify-between gap-3 mb-3">
           <div className="min-w-0">
-            <p className="text-white font-semibold text-sm leading-snug">{adventureName}</p>
-            <p className="text-white/35 text-[11px] mt-0.5 truncate">
+            <p className="text-black dark:text-white font-semibold text-sm leading-snug">{adventureName}</p>
+            <p className="text-black/40 dark:text-white/35 text-[11px] mt-0.5 truncate">
               {duration}{difficulty && <> · {difficulty}</>}
             </p>
             {seasonUrgency?.kind === "ending" && (
@@ -96,12 +95,12 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
               <p className="text-[#ff5100] text-xs font-bold leading-none mb-1">{operatorName}</p>
             )}
             {priceFrom && (
-              <p className="text-white font-bold text-sm leading-none whitespace-nowrap">
-                <span className="text-white/30 font-normal text-[11px]">From </span>{priceFrom}
+              <p className="text-black dark:text-white font-bold text-sm leading-none whitespace-nowrap">
+                <span className="text-black/35 dark:text-white/30 font-normal text-[11px]">From </span>{priceFrom}
               </p>
             )}
             {nextDeparture && (
-              <p className="text-white/30 text-[10px] mt-1 whitespace-nowrap">Next: {nextDeparture}</p>
+              <p className="text-black/35 dark:text-white/30 text-[10px] mt-1 whitespace-nowrap">Next: {nextDeparture}</p>
             )}
           </div>
         </div>
@@ -113,8 +112,7 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
               const el = document.getElementById("book-this-adventure");
               if (el) el.scrollIntoView({ behavior: "smooth" });
             }}
-            className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-2xl text-sm font-semibold transition-all duration-200 active:scale-[0.98]"
-            style={{ background: "rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.65)", border: "1px solid rgba(255,255,255,0.1)" }}
+            className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-2xl text-sm font-semibold transition-all duration-200 active:scale-[0.98] bg-black/[0.05] dark:bg-white/[0.07] text-black/70 dark:text-white/65 border border-black/10 dark:border-white/10"
           >
             Browse Operators
           </button>

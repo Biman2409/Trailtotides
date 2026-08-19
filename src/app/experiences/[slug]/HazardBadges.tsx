@@ -139,7 +139,7 @@ export default function HazardBadges({
             <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: activeBadge.textColor }}>
               {activeBadge.label}
             </p>
-            <p className="text-white/55 text-xs leading-relaxed">{activeBadge.description}</p>
+            <p className="text-black/65 dark:text-white/55 text-xs leading-relaxed">{activeBadge.description}</p>
           </div>
         </div>
       )}

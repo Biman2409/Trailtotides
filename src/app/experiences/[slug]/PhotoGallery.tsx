@@ -121,18 +121,18 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
           <button
             onClick={() => setUploadOpen(true)}
             className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl mb-4 text-left transition-all hover:brightness-110 active:scale-[0.99]"
-            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+            style={{ background: "rgba(var(--fg-rgb),0.03)", border: "1px solid rgba(var(--fg-rgb),0.08)" }}
           >
             <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.1)", border: "1px solid rgba(255,81,0,0.2)" }}>
               <Camera className="w-3.5 h-3.5 text-[#ff5100]" />
             </div>
-            <span className="text-white/45 text-xs flex-1">Been here? Share a photo from your trip.</span>
+            <span className="text-black/55 dark:text-white/45 text-xs flex-1">Been here? Share a photo from your trip.</span>
             <span className="text-[#ff5100]/60 text-xs font-semibold shrink-0">Add photo →</span>
           </button>
         ) : (
         <div className="mb-4">
           {!preview ? (
-            <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.02)" }}>
+            <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(var(--fg-rgb),0.08)", background: "rgba(var(--fg-rgb),0.02)" }}>
               <div
                 ref={dropRef}
                 onDrop={handleDrop}
@@ -140,9 +140,9 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
                 onClick={() => fileRef.current?.click()}
                 className="flex flex-col items-center justify-center gap-1.5 py-5 cursor-pointer transition-all duration-200 hover:bg-[#ff5100]/3"
               >
-                <Camera className="w-5 h-5 text-white/20" />
-                <p className="text-white/40 text-xs font-medium">Drop a photo or tap to upload</p>
-                <p className="text-white/20 text-[10px]">JPG, PNG, WebP · Max 8MB</p>
+                <Camera className="w-5 h-5 text-black/25 dark:text-white/20" />
+                <p className="text-black/45 dark:text-white/40 text-xs font-medium">Drop a photo or tap to upload</p>
+                <p className="text-black/25 dark:text-white/20 text-[10px]">JPG, PNG, WebP · Max 8MB</p>
                 <input
                   ref={fileRef}
                   type="file"
@@ -154,14 +154,14 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
               <div className="flex justify-end px-3 pb-3 -mt-1">
                 <button
                   onClick={() => { setUploadOpen(false); setFile(null); setPreview(null); setCaption(""); setError(""); }}
-                  className="text-white/25 text-xs hover:text-white/50 transition-colors"
+                  className="text-black/30 dark:text-white/25 text-xs hover:text-black/55 dark:hover:text-white/50 transition-colors"
                 >
                   Cancel
                 </button>
               </div>
             </div>
           ) : (
-            <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}>
+            <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(var(--fg-rgb),0.1)", background: "rgba(var(--fg-rgb),0.03)" }}>
               {/* Preview */}
               <div className="relative aspect-video">
                 <img src={preview} alt="Preview" className="w-full h-full object-cover" />
@@ -179,16 +179,16 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
                   onChange={(e) => setCaption(e.target.value)}
                   maxLength={120}
                   placeholder="Add a caption (optional)"
-                  className="w-full bg-transparent border-b text-sm text-white/70 placeholder:text-white/25 focus:outline-none focus:border-[#ff5100]/50 pb-2 mb-4 transition-colors"
-                  style={{ borderColor: "rgba(255,255,255,0.1)" }}
+                  className="w-full bg-transparent border-b text-sm text-black/80 dark:text-white/70 placeholder:text-black/30 dark:placeholder:text-white/25 focus:outline-none focus:border-[#ff5100]/50 pb-2 mb-4 transition-colors"
+                  style={{ borderColor: "rgba(var(--fg-rgb),0.1)" }}
                 />
                 <div className="flex items-center justify-between gap-3">
                   {error && <p className="text-red-400 text-xs">{error}</p>}
                   <div className="flex gap-2 ml-auto">
                     <button
                       onClick={() => { setPreview(null); setFile(null); setCaption(""); setError(""); }}
-                      className="px-4 py-2 rounded-xl text-xs font-medium text-white/40 hover:text-white/70 transition-colors"
-                      style={{ background: "rgba(255,255,255,0.05)" }}
+                      className="px-4 py-2 rounded-xl text-xs font-medium text-black/45 dark:text-white/40 hover:text-black/70 dark:hover:text-white/70 transition-colors"
+                      style={{ background: "rgba(var(--fg-rgb),0.05)" }}
                     >
                       Cancel
                     </button>
@@ -213,12 +213,12 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
       {/* Gallery grid */}
       {loading ? (
         <div className="flex justify-center py-10">
-          <Loader2 className="w-5 h-5 animate-spin text-white/20" />
+          <Loader2 className="w-5 h-5 animate-spin text-black/25 dark:text-white/20" />
         </div>
       ) : photos.length === 0 ? (
         <div className="flex flex-col items-center gap-2 py-10">
-          <ImageOff className="w-8 h-8 text-white/10" />
-          <p className="text-white/25 text-sm">No photos yet. Be the first to share.</p>
+          <ImageOff className="w-8 h-8 text-black/15 dark:text-white/10" />
+          <p className="text-black/30 dark:text-white/25 text-sm">No photos yet. Be the first to share.</p>
         </div>
       ) : (
         <>
@@ -271,7 +271,7 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
         </div>
         </div>
         {photos.length > 1 && (
-          <p className="text-center text-white/25 text-[10px] mt-3">{photos.length} photos · scroll to see all</p>
+          <p className="text-center text-black/30 dark:text-white/25 text-[10px] mt-3">{photos.length} photos · scroll to see all</p>
         )}
         </>
       )}
@@ -285,7 +285,7 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
         >
           <button
             className="absolute top-5 right-5 w-9 h-9 rounded-full flex items-center justify-center text-white/60 hover:text-white transition-colors"
-            style={{ background: "rgba(255,255,255,0.08)" }}
+            style={{ background: "rgba(var(--fg-rgb),0.08)" }}
             onClick={() => setLightbox(null)}
           >
             <X className="w-5 h-5" />

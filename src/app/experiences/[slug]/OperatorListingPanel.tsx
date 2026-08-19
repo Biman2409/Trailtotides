@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 import { createClient } from "@/lib/supabase/client";
 import { submitOperatorUpdate } from "@/app/auth/operator-actions";
 import { getOperatorProfile } from "@/app/auth/operator-actions";
@@ -16,6 +17,8 @@ interface Props {
 }
 
 export default function OperatorListingPanel({ adventureSlug, adventureName }: Props) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme !== "light";
   const [user, setUser] = useState<{ id: string; email: string } | null>(null);
   const [isOperator, setIsOperator] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -91,16 +94,16 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
     return (
       <button
         onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center justify-between gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors"
+        className="w-full flex items-center justify-between gap-3 px-4 py-3 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
       >
         <div className="text-left">
           <p className={`text-[10px] font-bold tracking-[0.2em] uppercase leading-none mb-0.5 ${accent ? "text-[#ff5100]" : "text-emerald-400"}`}>
             {label}
           </p>
-          <p className="text-white/35 text-[11px]">{sub}</p>
+          <p className="text-black/40 dark:text-white/35 text-[11px]">{sub}</p>
         </div>
         <ChevronDown
-          className={`w-3.5 h-3.5 text-white/25 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`w-3.5 h-3.5 text-black/30 dark:text-white/25 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
       </button>
     );
@@ -119,9 +122,9 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
           style={{ maxHeight: open ? "200px" : "0px" }}
         >
           <div className="px-4 pb-4 pt-1" style={{ borderTop: "1px solid rgba(255,81,0,0.1)" }}>
-            <p className="text-white/40 text-xs leading-relaxed mb-3">
+            <p className="text-black/45 dark:text-white/40 text-xs leading-relaxed mb-3">
               Reach thousands of adventure seekers by listing{" "}
-              <span className="text-white/60 font-medium">{adventureName}</span> on your operator profile.
+              <span className="text-black/70 dark:text-white/60 font-medium">{adventureName}</span> on your operator profile.
             </p>
             <div className="flex gap-2">
               <Link
@@ -132,8 +135,8 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
               </Link>
               <Link
                 href="/auth/login?role=operator"
-                className="flex-1 text-center text-xs font-semibold py-2 rounded-lg text-white/50 hover:text-white transition-all"
-                style={{ border: "1px solid rgba(255,255,255,0.1)" }}
+                className="flex-1 text-center text-xs font-semibold py-2 rounded-lg text-black/55 dark:text-white/50 hover:text-black dark:hover:text-white transition-all"
+                style={{ border: "1px solid rgba(var(--fg-rgb),0.1)" }}
               >
                 Log In
               </Link>
@@ -157,7 +160,7 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
           style={{ maxHeight: open ? "160px" : "0px" }}
         >
           <div className="px-4 pb-4 pt-1" style={{ borderTop: "1px solid rgba(255,81,0,0.1)" }}>
-            <p className="text-white/40 text-xs leading-relaxed mb-3">
+            <p className="text-black/45 dark:text-white/40 text-xs leading-relaxed mb-3">
               You&apos;re logged in as an explorer. Register an operator account to list your services.
             </p>
             <Link
@@ -181,17 +184,17 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
     >
       <button
         onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center justify-between gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors"
+        className="w-full flex items-center justify-between gap-3 px-4 py-3 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
       >
         <div className="flex items-center gap-2.5">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
           <div className="text-left">
             <p className="text-emerald-400 text-[10px] font-bold tracking-[0.2em] uppercase leading-none mb-0.5">Operator Panel</p>
-            <p className="text-white/35 text-[11px]">Submit a listing for this adventure</p>
+            <p className="text-black/40 dark:text-white/35 text-[11px]">Submit a listing for this adventure</p>
           </div>
         </div>
         <ChevronDown
-          className={`w-3.5 h-3.5 text-white/25 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`w-3.5 h-3.5 text-black/30 dark:text-white/25 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
       </button>
 
@@ -206,22 +209,22 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
         className="overflow-hidden transition-all duration-300 ease-in-out"
         style={{ maxHeight: open ? "900px" : "0px" }}
       >
-        <form onSubmit={handleSubmit} className="px-4 pb-4 pt-3 space-y-3.5" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        <form onSubmit={handleSubmit} className="px-4 pb-4 pt-3 space-y-3.5" style={{ borderTop: "1px solid rgba(var(--fg-rgb),0.06)" }}>
           {/* Company Name */}
           <div>
-            <label className="block text-[9px] font-bold text-white/30 uppercase tracking-[0.18em] mb-1">Company Name</label>
+            <label className="block text-[9px] font-bold text-black/35 dark:text-white/30 uppercase tracking-[0.18em] mb-1">Company Name</label>
             <input
               value={operatorName}
               onChange={(e) => setOperatorName(e.target.value)}
               required
               placeholder="Summit Adventures Pvt. Ltd."
-              className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder-white/20 focus:outline-none focus:border-emerald-500/40 transition-all"
+              className="w-full bg-black/[0.02] dark:bg-white/[0.03] border border-black/10 dark:border-white/10 rounded-lg px-3 py-2 text-black dark:text-white text-xs placeholder-black/30 dark:placeholder-white/20 focus:outline-none focus:border-emerald-500/40 transition-all"
             />
           </div>
 
           {/* Price From */}
           <div>
-            <label className="block text-[9px] font-bold text-white/30 uppercase tracking-[0.18em] mb-1">Starting Price (₹)</label>
+            <label className="block text-[9px] font-bold text-black/35 dark:text-white/30 uppercase tracking-[0.18em] mb-1">Starting Price (₹)</label>
             <input
               value={priceFrom}
               onChange={(e) => setPriceFrom(e.target.value)}
@@ -229,22 +232,22 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
               placeholder="e.g. 8500"
               type="number"
               min="0"
-              className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder-white/20 focus:outline-none focus:border-emerald-500/40 transition-all"
+              className="w-full bg-black/[0.02] dark:bg-white/[0.03] border border-black/10 dark:border-white/10 rounded-lg px-3 py-2 text-black dark:text-white text-xs placeholder-black/30 dark:placeholder-white/20 focus:outline-none focus:border-emerald-500/40 transition-all"
             />
           </div>
 
           {/* Departure Batches */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-[9px] font-bold text-white/30 uppercase tracking-[0.18em]">Departure Batches</label>
-              <div className="flex items-center rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+              <label className="text-[9px] font-bold text-black/35 dark:text-white/30 uppercase tracking-[0.18em]">Departure Batches</label>
+              <div className="flex items-center rounded-lg overflow-hidden" style={{ border: "1px solid rgba(var(--fg-rgb),0.1)" }}>
                 <button type="button" onClick={() => setBatchCount(batches.length - 1)} disabled={batches.length <= 1}
-                  className="w-6 h-6 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/[0.06] transition-all disabled:opacity-25">
+                  className="w-6 h-6 flex items-center justify-center text-black/45 dark:text-white/40 hover:text-black dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-all disabled:opacity-25">
                   <Minus className="w-2.5 h-2.5" />
                 </button>
-                <span className="w-6 text-center text-[11px] font-bold text-white">{batches.length}</span>
+                <span className="w-6 text-center text-[11px] font-bold text-black dark:text-white">{batches.length}</span>
                 <button type="button" onClick={() => setBatchCount(batches.length + 1)} disabled={batches.length >= 12}
-                  className="w-6 h-6 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/[0.06] transition-all disabled:opacity-25">
+                  className="w-6 h-6 flex items-center justify-center text-black/45 dark:text-white/40 hover:text-black dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-all disabled:opacity-25">
                   <Plus className="w-2.5 h-2.5" />
                 </button>
               </div>
@@ -252,14 +255,14 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
             <div className="space-y-1.5">
               {batches.map((val, i) => (
                 <div key={i} className="flex items-center gap-2">
-                  <span className="text-[9px] font-bold text-white/20 w-10 shrink-0">Batch {i + 1}</span>
+                  <span className="text-[9px] font-bold text-black/25 dark:text-white/20 w-10 shrink-0">Batch {i + 1}</span>
                   <input
                     type="date"
                     value={val}
                     onChange={e => setBatchDate(i, e.target.value)}
                     required
-                    className="flex-1 bg-white/[0.03] border border-white/10 rounded-lg px-3 py-1.5 text-white text-xs focus:outline-none focus:border-emerald-500/40 transition-all"
-                    style={{ colorScheme: "dark" }}
+                    className="flex-1 bg-black/[0.02] dark:bg-white/[0.03] border border-black/10 dark:border-white/10 rounded-lg px-3 py-1.5 text-black dark:text-white text-xs focus:outline-none focus:border-emerald-500/40 transition-all"
+                    style={{ colorScheme: isDark ? "dark" : "light" }}
                   />
                 </div>
               ))}
@@ -268,48 +271,48 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
 
           {/* Facilities */}
           <div>
-            <label className="block text-[9px] font-bold text-white/30 uppercase tracking-[0.18em] mb-1.5">Facilities</label>
+            <label className="block text-[9px] font-bold text-black/35 dark:text-white/30 uppercase tracking-[0.18em] mb-1.5">Facilities</label>
             <div className="space-y-1.5">
               {/* Cloakroom */}
-              <div className="rounded-lg border border-white/10 overflow-hidden">
+              <div className="rounded-lg border border-black/10 dark:border-white/10 overflow-hidden">
                 <button type="button" onClick={() => setCloakroom(v => !v)}
-                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-white/[0.03] transition-colors">
+                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] transition-colors">
                   <div className="flex items-center gap-2">
-                    <Briefcase className="w-3 h-3 text-white/35" />
-                    <span className="text-xs text-white/60 font-medium">Cloakroom / Luggage Storage</span>
+                    <Briefcase className="w-3 h-3 text-black/40 dark:text-white/35" />
+                    <span className="text-xs text-black/65 dark:text-white/60 font-medium">Cloakroom / Luggage Storage</span>
                   </div>
-                  <div className={`w-8 h-4 rounded-full transition-colors relative shrink-0 ${cloakroom ? "bg-emerald-500" : "bg-white/10"}`}>
+                  <div className={`w-8 h-4 rounded-full transition-colors relative shrink-0 ${cloakroom ? "bg-emerald-500" : "bg-black/15 dark:bg-white/10"}`}>
                     <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white shadow transition-transform ${cloakroom ? "translate-x-4" : "translate-x-0.5"}`} />
                   </div>
                 </button>
                 {cloakroom && (
-                  <div className="px-3 pb-2.5 border-t border-white/6">
-                    <label className="block text-[9px] font-bold text-white/25 uppercase tracking-[0.15em] mt-2 mb-1">Charge (₹) — blank if free</label>
+                  <div className="px-3 pb-2.5 border-t border-black/[0.06] dark:border-white/6">
+                    <label className="block text-[9px] font-bold text-black/30 dark:text-white/25 uppercase tracking-[0.15em] mt-2 mb-1">Charge (₹) — blank if free</label>
                     <input type="number" min="0" value={cloakroomCharge} onChange={e => setCloakroomCharge(e.target.value)}
                       placeholder="e.g. 200"
-                      className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-1.5 text-white text-xs placeholder-white/20 focus:outline-none focus:border-emerald-500/40 transition-all" />
+                      className="w-full bg-black/[0.02] dark:bg-white/[0.03] border border-black/10 dark:border-white/10 rounded-lg px-3 py-1.5 text-black dark:text-white text-xs placeholder-black/30 dark:placeholder-white/20 focus:outline-none focus:border-emerald-500/40 transition-all" />
                   </div>
                 )}
               </div>
 
               {/* Offloading */}
-              <div className="rounded-lg border border-white/10 overflow-hidden">
+              <div className="rounded-lg border border-black/10 dark:border-white/10 overflow-hidden">
                 <button type="button" onClick={() => setOffloading(v => !v)}
-                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-white/[0.03] transition-colors">
+                  className="w-full flex items-center justify-between px-3 py-2 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] transition-colors">
                   <div className="flex items-center gap-2">
-                    <Package className="w-3 h-3 text-white/35" />
-                    <span className="text-xs text-white/60 font-medium">Porter / Offloading Service</span>
+                    <Package className="w-3 h-3 text-black/40 dark:text-white/35" />
+                    <span className="text-xs text-black/65 dark:text-white/60 font-medium">Porter / Offloading Service</span>
                   </div>
-                  <div className={`w-8 h-4 rounded-full transition-colors relative shrink-0 ${offloading ? "bg-emerald-500" : "bg-white/10"}`}>
+                  <div className={`w-8 h-4 rounded-full transition-colors relative shrink-0 ${offloading ? "bg-emerald-500" : "bg-black/15 dark:bg-white/10"}`}>
                     <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white shadow transition-transform ${offloading ? "translate-x-4" : "translate-x-0.5"}`} />
                   </div>
                 </button>
                 {offloading && (
-                  <div className="px-3 pb-2.5 border-t border-white/6">
-                    <label className="block text-[9px] font-bold text-white/25 uppercase tracking-[0.15em] mt-2 mb-1">Charge per KG (₹) — blank if included</label>
+                  <div className="px-3 pb-2.5 border-t border-black/[0.06] dark:border-white/6">
+                    <label className="block text-[9px] font-bold text-black/30 dark:text-white/25 uppercase tracking-[0.15em] mt-2 mb-1">Charge per KG (₹) — blank if included</label>
                     <input type="number" min="0" value={offloadingCharge} onChange={e => setOffloadingCharge(e.target.value)}
                       placeholder="e.g. 150"
-                      className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-1.5 text-white text-xs placeholder-white/20 focus:outline-none focus:border-emerald-500/40 transition-all" />
+                      className="w-full bg-black/[0.02] dark:bg-white/[0.03] border border-black/10 dark:border-white/10 rounded-lg px-3 py-1.5 text-black dark:text-white text-xs placeholder-black/30 dark:placeholder-white/20 focus:outline-none focus:border-emerald-500/40 transition-all" />
                   </div>
                 )}
               </div>
@@ -318,15 +321,15 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
 
           {/* Notes */}
           <div>
-            <label className="block text-[9px] font-bold text-white/30 uppercase tracking-[0.18em] mb-1">
-              Notes <span className="normal-case tracking-normal text-white/15">(optional)</span>
+            <label className="block text-[9px] font-bold text-black/35 dark:text-white/30 uppercase tracking-[0.18em] mb-1">
+              Notes <span className="normal-case tracking-normal text-black/20 dark:text-white/15">(optional)</span>
             </label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
               placeholder="Inclusions, group size limits, special info…"
-              className="w-full bg-white/[0.03] border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder-white/20 focus:outline-none focus:border-emerald-500/40 transition-all resize-none"
+              className="w-full bg-black/[0.02] dark:bg-white/[0.03] border border-black/10 dark:border-white/10 rounded-lg px-3 py-2 text-black dark:text-white text-xs placeholder-black/30 dark:placeholder-white/20 focus:outline-none focus:border-emerald-500/40 transition-all resize-none"
             />
           </div>
 
@@ -342,7 +345,7 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
           >
             {submitting ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Submitting…</> : "Submit for Review"}
           </button>
-          <p className="text-white/20 text-[9px] text-center">Reviewed by our team · usually within 24h</p>
+          <p className="text-black/25 dark:text-white/20 text-[9px] text-center">Reviewed by our team · usually within 24h</p>
         </form>
       </div>
     </div>
