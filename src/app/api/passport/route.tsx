@@ -24,6 +24,8 @@ const DIFFICULTY_LEVEL: Record<string, number> = { Easy: 1, Moderate: 2, Hard: 3
 const DIFFICULTY_COLOR: Record<string, string> = { Easy: "#10b981", Moderate: "#38bdf8", Hard: "#a78bfa", Advanced: "#ff5100", Extreme: "#ef4444" };
 
 export async function GET(req: Request) {
+  const url = new URL(req.url);
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -43,7 +45,7 @@ export async function GET(req: Request) {
 
   const name = (user.user_metadata?.full_name as string) || (user.user_metadata?.username as string) || "Explorer";
   const avatarId = user.user_metadata?.avatar_id as number | null | undefined;
-  const origin = new URL(req.url).origin;
+  const origin = url.origin;
   const avatarUrl = avatarId ? `${origin}/avatars/avatar-${avatarId}.png` : null;
 
   const statesCount = new Set(completed.map((a) => a.state)).size;
