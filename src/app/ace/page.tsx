@@ -319,42 +319,42 @@ export default function ACEPage() {
           </div>
           <p className="text-xs mb-5 leading-relaxed max-w-xl" style={{ color: "var(--text-tertiary)" }}>Same category, wildly different bodies required. Watch the radar change shape — that&apos;s what a single difficulty label will never show you.</p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {PROGRESSION_TREKS.map((t, i) => {
               const adv = adventures.find(a => a.slug === t.slug);
               return (
                 <div key={t.slug} className="rounded-2xl overflow-hidden border flex flex-col group" style={{ borderColor: `${t.diffColor}25`, background: "rgba(8,12,20,0.85)" }}>
                   {/* Image */}
                   {adv && (
-                    <div className="relative h-36 overflow-hidden shrink-0">
+                    <div className="relative h-20 overflow-hidden shrink-0">
                       <Image src={adv.heroImage} alt={adv.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
                       <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom, transparent 20%, rgba(8,12,20,0.98) 100%)` }} />
                       {/* Top accent line */}
                       <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: `linear-gradient(90deg, transparent, ${t.diffColor}, transparent)` }} />
                       {/* Step badge */}
-                      <div className="absolute top-3 left-3 w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-black font-mono shadow-lg" style={{ background: t.diffColor, color: "#000", boxShadow: `0 0 12px ${t.diffColor}60` }}>{i + 1}</div>
+                      <div className="absolute top-2 left-2 w-5 h-5 rounded-md flex items-center justify-center text-[9px] font-black font-mono shadow-lg" style={{ background: t.diffColor, color: "#000", boxShadow: `0 0 10px ${t.diffColor}60` }}>{i + 1}</div>
                       {/* Difficulty */}
-                      <span className="absolute top-3 right-3 text-[9px] px-2 py-0.5 rounded-full font-bold font-mono" style={{ background: `rgba(0,0,0,0.6)`, color: t.diffColor, border: `1px solid ${t.diffColor}50`, backdropFilter: "blur(8px)" }}>{t.sublabel}</span>
+                      <span className="absolute top-2 right-2 text-[8px] px-1.5 py-0.5 rounded-full font-bold font-mono" style={{ background: `rgba(0,0,0,0.6)`, color: t.diffColor, border: `1px solid ${t.diffColor}50`, backdropFilter: "blur(8px)" }}>{t.sublabel}</span>
                       {/* Name over gradient */}
-                      <div className="absolute bottom-3 left-4 right-4">
-                        <p className="text-[9px] font-black tracking-[0.2em] uppercase font-mono mb-0.5" style={{ color: t.diffColor }}>{t.label}</p>
-                        <h3 className="text-white font-bold text-sm leading-tight">{adv.name}</h3>
+                      <div className="absolute bottom-1.5 left-3 right-3">
+                        <p className="text-[8px] font-black tracking-[0.2em] uppercase font-mono mb-0.5" style={{ color: t.diffColor }}>{t.label}</p>
+                        <h3 className="text-white font-bold text-xs leading-tight">{adv.name}</h3>
                       </div>
                     </div>
                   )}
 
                   {/* Desc */}
-                  <p className="text-white/30 text-[10px] leading-relaxed px-4 pt-3 pb-0">{t.desc}</p>
+                  <p className="text-white/30 text-[10px] leading-snug px-3 pt-2 pb-0 line-clamp-2">{t.desc}</p>
 
                   {/* Radar */}
-                  <div className="flex justify-center px-4 pt-2 pb-1 flex-1 items-center">
-                    <ACERadar ace={t.ace} size={190} showLabels />
+                  <div className="flex justify-center px-3 py-1 flex-1 items-center">
+                    <ACERadar ace={t.ace} size={150} showLabels />
                   </div>
 
                   {/* CTA */}
                   {adv && (
-                    <div className="px-4 pb-4">
-                      <Link href={`/experiences/${adv.slug}`} className="flex items-center justify-center gap-1.5 w-full py-2 rounded-xl text-[10px] font-bold transition-all hover:brightness-125 font-mono" style={{ background: `${t.diffColor}12`, color: t.diffColor, border: `1px solid ${t.diffColor}25` }}>
+                    <div className="px-3 pb-3">
+                      <Link href={`/experiences/${adv.slug}`} className="flex items-center justify-center gap-1.5 w-full py-1.5 rounded-lg text-[10px] font-bold transition-all hover:brightness-125 font-mono" style={{ background: `${t.diffColor}12`, color: t.diffColor, border: `1px solid ${t.diffColor}25` }}>
                         View adventure <ArrowRight className="w-3 h-3" />
                       </Link>
                     </div>
