@@ -22,7 +22,6 @@ import {
   ShieldCheck,
   ShieldAlert,
   Ticket,
-  Target,
   IndianRupee,
   Star,
   HelpCircle,
@@ -436,11 +435,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </div>
             <div className="h-px mt-6" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
 
-            {/* Is This For You? */}
+            {/* Is This For You? — fit/skip lists plus the Capability Profile radar,
+                merged since they both answer the same underlying question from
+                two different angles (quick-skim list vs. data-driven comparison) */}
             <AccordionSection
               id="suitability"
               label="Suitability" title="Is This For You?" defaultOpen
               icon={<ShieldCheck className="w-4 h-4" />} tintRgb="129,140,248"
+              headerExtra={<GradingPill />}
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="rounded-xl p-3.5" style={{ background: "rgba(16,185,129,0.04)", border: "1px solid rgba(16,185,129,0.1)" }}>
@@ -502,26 +504,36 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   </div>
                 </div>
               )}
+
+              {/* Capability Profile — supporting detail below the quick-skim lists above */}
+              <div className="mt-5 pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                <p className="text-[10px] font-bold tracking-[0.18em] uppercase mb-3" style={{ color: "var(--text-tertiary)" }}>How Do You Measure Up?</p>
+                <ACEProfileSection
+                  bare
+                  ace={ace}
+                  adventureName={adventure.name}
+                  slug={adventure.slug}
+                  showAltitudeWarning={showAltitudeWarning}
+                  showFatalFallWarning={showFatalFallWarning}
+                  showExtremeIsolationWarning={showExtremeIsolationWarning}
+                  showTechnicalWarning={showTechnicalWarning}
+                  showPhysicalExhaustionWarning={showPhysicalExhaustionWarning}
+                  showWaterWarning={showWaterWarning}
+                />
+              </div>
             </AccordionSection>
 
-            {/* Capability Profile — below Suitability; its radar + domain matrix need full width to read well */}
+            {/* Operators */}
+            <RecalibrationNudge difficulty={difficulty} />
+            <div id="book-this-adventure" />
             <AccordionSection
-              label="Capability Profile" title="How Do You Measure Up?" defaultOpen={false}
-              icon={<Target className="w-4 h-4" />} tintRgb="45,212,191"
-              headerExtra={<GradingPill />}
+              label="Book This Adventure" title="Where to Book" defaultOpen mobileDefaultOpen={false}
+              icon={<Ticket className="w-4 h-4" />} tintRgb="34,197,94"
             >
-              <ACEProfileSection
-                bare
-                ace={ace}
-                adventureName={adventure.name}
-                slug={adventure.slug}
-                showAltitudeWarning={showAltitudeWarning}
-                showFatalFallWarning={showFatalFallWarning}
-                showExtremeIsolationWarning={showExtremeIsolationWarning}
-                showTechnicalWarning={showTechnicalWarning}
-                showPhysicalExhaustionWarning={showPhysicalExhaustionWarning}
-                showWaterWarning={showWaterWarning}
-              />
+              <div id="operators-section" className="space-y-2.5">
+                <OperatorsSection operators={allOperators} slug={adventure.slug} />
+                <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
+              </div>
             </AccordionSection>
 
             {/* Safety & Prep */}
@@ -563,26 +575,15 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               </div>
             </AccordionSection>
 
-            {/* FAQ */}
-            <AccordionSection
-              label="FAQ" title="Common Questions" defaultOpen={false}
-              icon={<HelpCircle className="w-4 h-4" />} tintRgb="232,121,249"
-            >
-              <FAQSection adventure={adventure} difficulty={difficulty} operatorCount={allOperators.length} />
-            </AccordionSection>
-
-            {/* Operators */}
-            <RecalibrationNudge difficulty={difficulty} />
-            <div id="book-this-adventure" />
-            <AccordionSection
-              label="Book This Adventure" title="Where to Book" defaultOpen mobileDefaultOpen={false}
-              icon={<Ticket className="w-4 h-4" />} tintRgb="34,197,94"
-            >
-              <div id="operators-section" className="space-y-2.5">
-                <OperatorsSection operators={allOperators} slug={adventure.slug} />
-                <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
-              </div>
-            </AccordionSection>
+            {/* FAQ — mobile only; desktop shows it in the sidebar under the booking card */}
+            <div className="lg:hidden">
+              <AccordionSection
+                label="FAQ" title="Common Questions" defaultOpen={false}
+                icon={<HelpCircle className="w-4 h-4" />} tintRgb="232,121,249"
+              >
+                <FAQSection adventure={adventure} difficulty={difficulty} operatorCount={allOperators.length} />
+              </AccordionSection>
+            </div>
 
             {/* Community */}
             <div id="community" className="pt-6 scroll-mt-24">
@@ -611,15 +612,15 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               {/* Two sub-sections side by side */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch">
                 {/* Reviews card */}
-                <div className="rounded-xl overflow-hidden" style={{ background: "rgba(251,191,36,0.03)", border: "1px solid rgba(251,191,36,0.12)" }}>
+                <div className="rounded-xl overflow-hidden" style={{ background: "rgba(var(--tint-neutral-rgb),0.025)", border: "1px solid rgba(var(--tint-neutral-rgb),0.18)" }}>
                   <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} isCompleted={isCompleted} operators={allOperators} />
                 </div>
 
                 {/* Photos card */}
-                <div className="rounded-xl overflow-hidden" style={{ background: "rgba(56,189,248,0.03)", border: "1px solid rgba(56,189,248,0.12)" }}>
-                  <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: "1px solid rgba(56,189,248,0.08)", background: "rgba(56,189,248,0.04)" }}>
-                    <Camera className="w-3.5 h-3.5 text-sky-400" />
-                    <h3 className="text-sky-400 text-[10px] font-bold tracking-[0.18em] uppercase">Photos</h3>
+                <div className="rounded-xl overflow-hidden" style={{ background: "rgba(var(--tint-neutral-rgb),0.025)", border: "1px solid rgba(var(--tint-neutral-rgb),0.18)" }}>
+                  <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: "1px solid var(--border-subtle)", background: "rgba(var(--tint-neutral-rgb),0.05)" }}>
+                    <Camera className="w-3.5 h-3.5" style={{ color: "var(--text-tertiary)" }} />
+                    <h3 className="text-[10px] font-bold tracking-[0.18em] uppercase" style={{ color: "var(--text-tertiary)" }}>Photos</h3>
                   </div>
                   <div className="p-3">
                     <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} isCompleted={isCompleted} />
@@ -651,6 +652,18 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               nextDeparture={nextDeparture}
             />
 
+            {/* FAQ — desktop-only home for this section, right under the at-a-glance booking card */}
+            <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(232,121,249,0.18)", background: "rgba(232,121,249,0.025)" }}>
+              <div className="flex items-center gap-2.5 px-4 py-3" style={{ borderBottom: "1px solid rgba(232,121,249,0.14)", background: "rgba(232,121,249,0.05)" }}>
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(232,121,249,0.15)", color: "rgb(232,121,249)" }}>
+                  <HelpCircle className="w-3.5 h-3.5" />
+                </div>
+                <h3 className="font-semibold text-[13px]" style={{ color: "#ff5100" }}>Common Questions</h3>
+              </div>
+              <div className="p-3">
+                <FAQSection adventure={adventure} difficulty={difficulty} operatorCount={allOperators.length} />
+              </div>
+            </div>
 
             {/* Nearby adventures map */}
             {nearbyAdventures.length > 0 && (

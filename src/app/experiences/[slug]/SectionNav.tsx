@@ -7,8 +7,8 @@ import { BookOpen, Ticket, ShieldCheck, ShieldAlert, MessagesSquare } from "luci
 const NAV_ITEMS = [
   { id: "overview", label: "Overview", icon: BookOpen },
   { id: "suitability", label: "Suitability", icon: ShieldCheck },
-  { id: "safety", label: "Safety", icon: ShieldAlert },
   { id: "book-this-adventure", label: "Book", icon: Ticket },
+  { id: "safety", label: "Safety", icon: ShieldAlert },
   { id: "community", label: "Reviews", icon: MessagesSquare },
 ];
 
