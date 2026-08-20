@@ -103,7 +103,7 @@ export default function ACEPage() {
       {/* ── HERO ── */}
       <section className="relative pt-24 pb-10 px-5 lg:px-8 overflow-hidden">
         {/* Grid bg */}
-        <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "linear-gradient(rgba(var(--fg-rgb),1) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--fg-rgb),1) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full opacity-8 blur-3xl pointer-events-none" style={{ background: "radial-gradient(ellipse, #ff5100 0%, #a78bfa 60%, transparent 100%)" }} />
 
         <div className="max-w-6xl mx-auto relative">
@@ -114,11 +114,11 @@ export default function ACEPage() {
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
                 <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">ACE<sup>™</sup> FRAMEWORK · v2.0</span>
               </div>
-              <h1 className="text-3xl lg:text-[2.6rem] font-black text-white tracking-tight leading-[1.06] mb-3">
+              <h1 className="text-3xl lg:text-[2.6rem] font-black tracking-tight leading-[1.06] mb-3" style={{ color: "var(--text-primary)" }}>
                 Adventure Capability Engine<sup className="text-[#ff5100] text-base font-black ml-0.5 align-super" style={{ fontSize: "0.45em" }}>™</sup>
               </h1>
-              <p className="text-white/45 text-sm leading-relaxed mb-5 max-w-lg">
-                Easy, Moderate, Hard tells you nothing. ACE<sup>™</sup> is Trail to Tides&apos; proprietary system that rates every adventure across <span className="text-white/75 font-semibold">8 physical and psychological axes</span>. Answer 8 questions once — every adventure is matched to your real capability.
+              <p className="text-sm leading-relaxed mb-5 max-w-lg" style={{ color: "var(--text-tertiary)" }}>
+                Easy, Moderate, Hard tells you nothing. ACE<sup>™</sup> is Trail to Tides&apos; proprietary system that rates every adventure across <span className="font-semibold" style={{ color: "var(--text-secondary)" }}>8 physical and psychological axes</span>. Answer 8 questions once — every adventure is matched to your real capability.
               </p>
               <div className="space-y-1.5">
                 <div className="flex flex-wrap gap-1.5">
@@ -152,10 +152,10 @@ export default function ACEPage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-1.5">
             <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">The 8 Axes</span>
-            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
-            <span className="text-white/20 text-[10px] font-mono">4 domains · 2 axes each</span>
+            <div className="flex-1 h-px" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
+            <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>4 domains · 2 axes each</span>
           </div>
-          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-2xl">Grouped into 4 domains — Engine, Chassis, Elements, Mind. An adventure can be physically light but psychologically brutal, or demand elite altitude tolerance with barely any strength required. Every axis is scored separately so nothing is hidden behind a single number.</p>
+          <p className="text-xs mb-5 leading-relaxed max-w-2xl" style={{ color: "var(--text-tertiary)" }}>Grouped into 4 domains — Engine, Chassis, Elements, Mind. An adventure can be physically light but psychologically brutal, or demand elite altitude tolerance with barely any strength required. Every axis is scored separately so nothing is hidden behind a single number.</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {DOMAINS.map(({ name, icon, color, axes, desc }) => {
@@ -166,7 +166,7 @@ export default function ACEPage() {
                   <div className="flex items-center gap-2 px-4 py-2.5" style={{ borderBottom: `1px solid ${color}15`, background: `${color}09` }}>
                     <div className="w-5 h-5 rounded flex items-center justify-center shrink-0" style={{ color }}>{icon}</div>
                     <span className="text-[10px] font-black tracking-[0.2em] uppercase font-mono" style={{ color }}>{name}</span>
-                    <span className="text-white/20 text-[10px] ml-1">— {desc}</span>
+                    <span className="text-[10px] ml-1" style={{ color: "var(--text-muted)" }}>— {desc}</span>
                   </div>
                   {/* Axes */}
                   <div className="divide-y" style={{ borderColor: `${color}10` }}>
@@ -174,8 +174,8 @@ export default function ACEPage() {
                       <div key={key} className="flex items-start gap-3 px-4 py-3">
                         <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${axColor}15`, color: axColor }}>{axIcon}</div>
                         <div className="min-w-0">
-                          <span className="text-white font-bold text-xs font-mono">{label}</span>
-                          <p className="text-white/35 text-[10px] leading-relaxed mt-1">{axDesc}</p>
+                          <span className="font-bold text-xs font-mono" style={{ color: "var(--text-primary)" }}>{label}</span>
+                          <p className="text-[10px] leading-relaxed mt-1" style={{ color: "var(--text-tertiary)" }}>{axDesc}</p>
                         </div>
                       </div>
                     ))}
@@ -196,13 +196,13 @@ export default function ACEPage() {
             <div>
               <div className="flex items-center gap-3 mb-1.5">
                 <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">The Scale</span>
-                <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
-                <span className="text-white/20 text-[10px] font-mono">1–5 per axis</span>
+                <div className="flex-1 h-px" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
+                <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>1–5 per axis</span>
               </div>
-              <p className="text-white/30 text-xs mb-4 leading-relaxed">Each axis scored independently, 1–5. A desert trek scores 0 on Water — that axis simply doesn&apos;t apply.</p>
+              <p className="text-xs mb-4 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>Each axis scored independently, 1–5. A desert trek scores 0 on Water — that axis simply doesn&apos;t apply.</p>
 
               {/* Gradient bar */}
-              <div className="flex rounded-lg overflow-hidden mb-3" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div className="flex rounded-lg overflow-hidden mb-3" style={{ border: "1px solid rgba(var(--fg-rgb),0.08)" }}>
                 {SCALE.map(({ level, color }) => (
                   <div key={level} className="flex-1 h-1.5" style={{ background: color }} />
                 ))}
@@ -213,10 +213,10 @@ export default function ACEPage() {
                   <div key={level} className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl border" style={{ background: `${color}06`, borderColor: `${color}16` }}>
                     <span className="font-black text-sm w-5 text-center font-mono leading-none shrink-0" style={{ color, textShadow: level >= 4 ? `0 0 12px ${color}80` : "none" }}>{level}</span>
                     <div className="w-px h-4 shrink-0" style={{ background: `${color}25` }} />
-                    <span className="text-white/80 text-xs font-bold">{label}</span>
-                    <span className="text-white/25 text-[10px] ml-auto">{sub}</span>
+                    <span className="text-xs font-bold" style={{ color: "var(--text-primary)" }}>{label}</span>
+                    <span className="text-[10px] ml-auto" style={{ color: "var(--text-muted)" }}>{sub}</span>
                     {/* fill bar */}
-                    <div className="w-10 h-1 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,255,255,0.06)" }}>
+                    <div className="w-10 h-1 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(var(--fg-rgb),0.08)" }}>
                       <div className="h-full rounded-full" style={{ width: `${(level / 5) * 100}%`, background: color }} />
                     </div>
                   </div>
@@ -228,10 +228,10 @@ export default function ACEPage() {
             <div>
               <div className="flex items-center gap-3 mb-1.5">
                 <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">Adventure Rank</span>
-                <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
-                <span className="text-white/20 text-[10px] font-mono">Σ axes = tier</span>
+                <div className="flex-1 h-px" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
+                <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>Σ axes = tier</span>
               </div>
-              <p className="text-white/30 text-xs mb-4 leading-relaxed">Sum all 8 axes and you get your rank. Max is 40. Higher rank — harder terrain, more remote, more technical.</p>
+              <p className="text-xs mb-4 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>Sum all 8 axes and you get your rank. Max is 40. Higher rank — harder terrain, more remote, more technical.</p>
 
               <div className="space-y-2">
                 {RANKS.map(({ label, color, stars, range, desc, icon }) => (
@@ -245,14 +245,14 @@ export default function ACEPage() {
                     {/* Text */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className="font-black text-white text-sm leading-none">{label}</span>
+                        <span className="font-black text-sm leading-none" style={{ color: "var(--text-primary)" }}>{label}</span>
                         <div className="flex gap-0.5">
                           {Array.from({ length: 5 }).map((_, i) => (
-                            <span key={i} className="text-[9px] leading-none" style={{ color: i < stars ? color : "rgba(255,255,255,0.08)" }}>★</span>
+                            <span key={i} className="text-[9px] leading-none" style={{ color: i < stars ? color : "rgba(var(--fg-rgb),0.15)" }}>★</span>
                           ))}
                         </div>
                       </div>
-                      <p className="text-white/30 text-[10px] leading-snug">{desc}</p>
+                      <p className="text-[10px] leading-snug" style={{ color: "var(--text-tertiary)" }}>{desc}</p>
                     </div>
                     {/* Score */}
                     <span className="shrink-0 text-[10px] font-black font-mono px-2 py-0.5 rounded-lg" style={{ background: `${color}12`, color, border: `1px solid ${color}20` }}>{range}</span>
@@ -269,9 +269,9 @@ export default function ACEPage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-1.5">
             <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">How It Works</span>
-            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+            <div className="flex-1 h-px" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
           </div>
-          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-xl">Both adventures and adventurers get a profile. The system compares them axis-by-axis — not with a blunt difficulty number — so every match is honest.</p>
+          <p className="text-xs mb-5 leading-relaxed max-w-xl" style={{ color: "var(--text-tertiary)" }}>Both adventures and adventurers get a profile. The system compares them axis-by-axis — not with a blunt difficulty number — so every match is honest.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
             {[
@@ -300,9 +300,9 @@ export default function ACEPage() {
                   style={{ color: `${color}09` }}>{step}</div>
                 <div className="flex items-center gap-2">
                   <span className="font-black text-[10px] font-mono px-2 py-0.5 rounded" style={{ background: `${color}15`, color }}>{step}</span>
-                  <p className="text-white font-bold text-sm">{title}</p>
+                  <p className="font-bold text-sm" style={{ color: "var(--text-primary)" }}>{title}</p>
                 </div>
-                <p className="text-white/40 text-[11px] leading-relaxed">{body}</p>
+                <p className="text-[11px] leading-relaxed" style={{ color: "var(--text-tertiary)" }}>{body}</p>
               </div>
             ))}
           </div>
@@ -314,10 +314,10 @@ export default function ACEPage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-1.5">
             <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">In Practice</span>
-            <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
-            <span className="text-white/20 text-[10px] font-mono">Same type · different radar</span>
+            <div className="flex-1 h-px" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
+            <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>Same type · different radar</span>
           </div>
-          <p className="text-white/30 text-xs mb-5 leading-relaxed max-w-xl">Same category, wildly different bodies required. Watch the radar change shape — that&apos;s what a single difficulty label will never show you.</p>
+          <p className="text-xs mb-5 leading-relaxed max-w-xl" style={{ color: "var(--text-tertiary)" }}>Same category, wildly different bodies required. Watch the radar change shape — that&apos;s what a single difficulty label will never show you.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {PROGRESSION_TREKS.map((t, i) => {
@@ -370,7 +370,7 @@ export default function ACEPage() {
       <section className="relative overflow-hidden py-14 px-5 lg:px-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
         {/* bg layers */}
         <div className="absolute inset-0" style={{ background: "var(--bg-page)" }} />
-        <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+        <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "linear-gradient(rgba(var(--fg-rgb),1) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--fg-rgb),1) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,81,0,0.13) 0%, transparent 65%)" }} />
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.4), transparent)" }} />
 
@@ -386,10 +386,10 @@ export default function ACEPage() {
                   <span className="w-1.5 h-1.5 rounded-full bg-[#ff5100]" />
                   <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">Your Turn</span>
                 </div>
-                <h2 className="text-white text-2xl lg:text-3xl font-black tracking-tight leading-tight mb-3">
+                <h2 className="text-2xl lg:text-3xl font-black tracking-tight leading-tight mb-3" style={{ color: "var(--text-primary)" }}>
                   Know your axes.<br />Pick the right adventure.
                 </h2>
-                <p className="text-white/35 text-sm leading-relaxed max-w-md">
+                <p className="text-sm leading-relaxed max-w-md" style={{ color: "var(--text-tertiary)" }}>
                   8 questions. 2 minutes. Every axis scored — then matched against every adventure on the platform so you see exactly what you&apos;re ready for, and what to build toward.
                 </p>
 
@@ -403,7 +403,7 @@ export default function ACEPage() {
                     <div key={lbl} className="flex items-center gap-2 px-3 py-1.5 rounded-lg border" style={{ background: `${color}08`, borderColor: `${color}20` }}>
                       <span className="font-black text-xs font-mono" style={{ color }}>{val}</span>
                       <div className="w-px h-3" style={{ background: `${color}25` }} />
-                      <span className="text-white/40 text-[10px] font-mono">{lbl}</span>
+                      <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>{lbl}</span>
                     </div>
                   ))}
                 </div>
