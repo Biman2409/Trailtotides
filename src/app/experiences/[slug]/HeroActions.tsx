@@ -1,6 +1,7 @@
 "use client";
 
 import { Heart, LogIn, GitCompareArrows, CheckCheck, Share2, Check } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCompare } from "@/contexts/CompareContext";
 import CheckInButton from "@/components/ui/custom/CheckInButton";
@@ -80,60 +81,69 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
     }
   }
 
-  const btnBase = "inline-flex items-center gap-0 sm:gap-2 h-9 px-2.5 sm:px-3.5 rounded-xl text-xs font-semibold transition-all duration-200 backdrop-blur-md";
+  const btnBase = "flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200 backdrop-blur-md";
 
   return (
     <div className="absolute top-20 right-5 lg:right-8 z-20 flex items-center gap-1.5 sm:gap-2">
 
-      {/* ── Compare (first) ── */}
-      <button
-        onClick={handleCompare}
-        disabled={!inCompare && isFull}
-        aria-label={inCompare ? "Remove from compare" : "Compare"}
-        className={`${btnBase} disabled:opacity-40 disabled:cursor-not-allowed`}
-        style={inCompare
-          ? { background: "rgba(255,81,0,0.18)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)", boxShadow: "0 0 12px rgba(255,81,0,0.2)" }
-          : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }
-        }
-      >
-        {inCompare
-          ? <><CheckCheck className="w-3.5 h-3.5" /><span className="hidden sm:inline">Added to compare</span></>
-          : <><GitCompareArrows className="w-3.5 h-3.5" /><span className="hidden sm:inline">{isFull ? "Compare full" : "Compare"}</span></>
-        }
-      </button>
+      {/* ── Compare (first) — evaluate against other adventures ── */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={handleCompare}
+            disabled={!inCompare && isFull}
+            aria-label={inCompare ? "Remove from compare" : "Compare"}
+            className={`${btnBase} disabled:opacity-40 disabled:cursor-not-allowed`}
+            style={inCompare
+              ? { background: "rgba(255,81,0,0.18)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)", boxShadow: "0 0 12px rgba(255,81,0,0.2)" }
+              : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }
+            }
+          >
+            {inCompare ? <CheckCheck className="w-4 h-4" /> : <GitCompareArrows className="w-4 h-4" />}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>{inCompare ? "Added to compare" : isFull ? "Compare full" : "Compare"}</TooltipContent>
+      </Tooltip>
 
       {/* ── Share (second) ── */}
-      <button
-        onClick={handleShare}
-        aria-label="Share this adventure"
-        className={btnBase}
-        style={{ background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }}
-      >
-        {shared
-          ? <><Check className="w-3.5 h-3.5" /><span className="hidden sm:inline">Copied</span></>
-          : <><Share2 className="w-3.5 h-3.5" /><span className="hidden sm:inline">Share</span></>
-        }
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={handleShare}
+            aria-label="Share this adventure"
+            className={btnBase}
+            style={{ background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }}
+          >
+            {shared ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>{shared ? "Copied" : "Share"}</TooltipContent>
+      </Tooltip>
 
       {/* ── Save / Wishlist (third) — grouped next to "Mark as done" so the two
            personal-tracking actions (save for later / log as completed) sit
            together for quick access ── */}
-      <button
-        onClick={handleSave}
-        aria-label={saved ? "Remove from saved" : "Save this adventure"}
-        className={`${btnBase}`}
-        style={saved
-          ? { background: "rgba(255,81,0,0.18)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)", boxShadow: "0 0 12px rgba(255,81,0,0.2)" }
-          : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }
-        }
-      >
-        {loggedIn === false
-          ? <><LogIn className="w-3.5 h-3.5" /><span className="hidden sm:inline">Save</span></>
-          : <><Heart className={`w-3.5 h-3.5 ${saved ? "fill-[#ff7d47]" : ""}`} /><span className="hidden sm:inline">{saved ? "Saved" : "Save"}</span></>
-        }
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={handleSave}
+            aria-label={saved ? "Remove from saved" : "Save this adventure"}
+            className={btnBase}
+            style={saved
+              ? { background: "rgba(255,81,0,0.18)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)", boxShadow: "0 0 12px rgba(255,81,0,0.2)" }
+              : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }
+            }
+          >
+            {loggedIn === false
+              ? <LogIn className="w-4 h-4" />
+              : <Heart className={`w-4 h-4 ${saved ? "fill-[#ff7d47]" : ""}`} />
+            }
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>{saved ? "Saved" : "Save"}</TooltipContent>
+      </Tooltip>
 
-      {/* ── Been There (fourth) ── */}
+      {/* ── Mark as done (fourth) ── */}
       <CheckInButton slug={adventure.slug} variant="page" className={btnBase} />
 
     </div>

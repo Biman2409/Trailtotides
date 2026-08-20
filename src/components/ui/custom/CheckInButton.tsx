@@ -48,18 +48,22 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
 
   if (variant === "page") {
     return (
-      <button
-        onClick={handleToggle}
-        aria-label={done ? "Remove from completed" : "Mark as done"}
-        className={`inline-flex items-center gap-0 sm:gap-1.5 text-xs font-semibold transition-all duration-200 active:scale-95 ${className}`}
-        style={done
-          ? { background: "rgba(74,222,128,0.18)", color: "#4ade80", border: "1px solid rgba(74,222,128,0.35)", boxShadow: "0 0 10px rgba(74,222,128,0.15)" }
-          : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.15)" }
-        }
-      >
-        <CheckCircle2 className={`w-3.5 h-3.5 ${done ? "fill-[#4ade80]/20" : ""}`} />
-        <span className="hidden sm:inline">{done ? "Completed" : "Mark as done"}</span>
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={handleToggle}
+            aria-label={done ? "Remove from completed" : "Mark as done"}
+            className={`active:scale-95 ${className}`}
+            style={done
+              ? { background: "rgba(74,222,128,0.18)", color: "#4ade80", border: "1px solid rgba(74,222,128,0.35)", boxShadow: "0 0 10px rgba(74,222,128,0.15)" }
+              : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.15)" }
+            }
+          >
+            <CheckCircle2 className={`w-4 h-4 ${done ? "fill-[#4ade80]/20" : ""}`} />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>{done ? "Completed" : "Mark as done"}</TooltipContent>
+      </Tooltip>
     );
   }
 

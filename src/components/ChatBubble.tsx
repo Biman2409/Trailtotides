@@ -13,7 +13,7 @@ interface Message {
   suggestAce?: boolean;
 }
 
-export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: boolean }) {
+export default function ChatBubble({ alwaysVisible = false, opaque = false }: { alwaysVisible?: boolean; opaque?: boolean }) {
   const [visible, setVisible] = useState(alwaysVisible);
   const [labelVisible, setLabelVisible] = useState(false);
   const [open, setOpen] = useState(false);
@@ -182,7 +182,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
           visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12 pointer-events-none"
         }`}
         style={{
-          background: labelVisible ? "var(--bg-card)" : "#ff5100",
+          background: labelVisible ? (opaque ? "var(--bg-surface)" : "var(--bg-card)") : "#ff5100",
           border: "2px solid #ff5100",
           boxShadow: "0 10px 40px -10px rgba(255,81,0,0.45)",
           transition: "background-color 0.4s ease, opacity 0.6s ease, transform 0.45s cubic-bezier(0.34,1.56,0.64,1)",
@@ -218,7 +218,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
         {/* Chat panel */}
         {open && (
           <div className="fixed lg:bottom-28 max-lg:bottom-[108px] right-8 z-50 w-[380px] max-w-[calc(100vw-4rem)] rounded-2xl shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 slide-in-from-bottom-8 duration-500 ease-out backdrop-blur-3xl"
-            style={{ background: "var(--bg-card)", border: "1px solid var(--border-default)", boxShadow: "0 24px 80px rgba(0,0,0,0.3), 0 0 0 1px var(--border-subtle)" }}
+            style={{ background: opaque ? "var(--bg-surface)" : "var(--bg-card)", border: "1px solid var(--border-default)", boxShadow: "0 24px 80px rgba(0,0,0,0.3), 0 0 0 1px var(--border-subtle)" }}
           >
             {/* Header */}
             <div className="px-5 py-3.5 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]">

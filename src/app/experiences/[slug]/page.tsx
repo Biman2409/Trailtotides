@@ -422,14 +422,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <div id="overview" className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 pt-6 first:pt-0 scroll-mt-24">
               <AccordionSection
                 label="The Adventure" title="About This Adventure" defaultOpen
-                icon={<BookOpen className="w-4 h-4" />} tintRgb="var(--tint-neutral-rgb)" noDivider noTopPad stretch
+                icon={<BookOpen className="w-4 h-4" />} tintRgb="56,189,248" noDivider noTopPad stretch
               >
                 <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.description}</p>
               </AccordionSection>
 
               <AccordionSection
                 label="Highlights" title="What Makes It Special" defaultOpen
-                icon={<Sparkles className="w-4 h-4" />} tintRgb="var(--tint-neutral-rgb)" noDivider noTopPad stretch
+                icon={<Sparkles className="w-4 h-4" />} tintRgb="244,63,94" noDivider noTopPad stretch
               >
                 <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.whatMakesSpecial}</p>
               </AccordionSection>
@@ -440,7 +440,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <AccordionSection
               id="suitability"
               label="Suitability" title="Is This For You?" defaultOpen
-              icon={<ShieldCheck className="w-4 h-4" />} tintRgb="var(--tint-neutral-rgb)"
+              icon={<ShieldCheck className="w-4 h-4" />} tintRgb="129,140,248"
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="rounded-xl p-3.5" style={{ background: "rgba(16,185,129,0.04)", border: "1px solid rgba(16,185,129,0.1)" }}>
@@ -507,7 +507,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* Capability Profile — below Suitability; its radar + domain matrix need full width to read well */}
             <AccordionSection
               label="Capability Profile" title="How Do You Measure Up?" defaultOpen={false}
-              icon={<Target className="w-4 h-4" />} tintRgb="var(--tint-neutral-rgb)"
+              icon={<Target className="w-4 h-4" />} tintRgb="45,212,191"
               headerExtra={<GradingPill />}
             >
               <ACEProfileSection
@@ -566,7 +566,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* FAQ */}
             <AccordionSection
               label="FAQ" title="Common Questions" defaultOpen={false}
-              icon={<HelpCircle className="w-4 h-4" />} tintRgb="var(--tint-neutral-rgb)"
+              icon={<HelpCircle className="w-4 h-4" />} tintRgb="232,121,249"
             >
               <FAQSection adventure={adventure} difficulty={difficulty} operatorCount={allOperators.length} />
             </AccordionSection>
@@ -576,7 +576,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <div id="book-this-adventure" />
             <AccordionSection
               label="Book This Adventure" title="Where to Book" defaultOpen mobileDefaultOpen={false}
-              icon={<Ticket className="w-4 h-4" />} tintRgb="255,81,0"
+              icon={<Ticket className="w-4 h-4" />} tintRgb="34,197,94"
             >
               <div id="operators-section" className="space-y-2.5">
                 <OperatorsSection operators={allOperators} slug={adventure.slug} />

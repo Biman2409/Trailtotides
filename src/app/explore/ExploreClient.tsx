@@ -857,7 +857,7 @@ export default function ExploreClient() {
           </div>
         </div>
 
-        <ChatBubble />
+        <ChatBubble opaque />
         <Footer />
       </div>
   );
