@@ -173,27 +173,52 @@ function burstVertices(cx: number, cy: number, rBase: number, waveAmp: number, w
   }
   return verts;
 }
+// Maps a unit-space silhouette (authored around the origin, radius ~1) to a
+// rotated, scaled position — shared by every hand-authored point shape below.
+function unitVertices(cx: number, cy: number, r: number, unit: [number, number][], rotateDeg: number): [number, number][] {
+  const rad = (rotateDeg * Math.PI) / 180;
+  const cos = Math.cos(rad), sin = Math.sin(rad);
+  return unit.map(([ux, uy]) => {
+    const x = ux * r, y = uy * r;
+    return [cx + x * cos - y * sin, cy + x * sin + y * cos];
+  });
+}
 // Unit heraldic shield (notched top, bulging shoulders, tapered point) —
 // Chassis (strength/agility) gets a load-bearing, structural mark.
 const SHIELD_UNIT: [number, number][] = [
   [-0.7, -1], [-0.12, -0.82], [0, -0.98], [0.12, -0.82], [0.7, -1],
   [1, -0.42], [0.55, 0.55], [0, 1.15], [-0.55, 0.55], [-1, -0.42],
 ];
-function shieldVertices(cx: number, cy: number, r: number, rotateDeg: number): [number, number][] {
+// Unit beveled lozenge — an armored, faceted alternative to the shield.
+const LOZENGE_UNIT: [number, number][] = [
+  [0, -1.15], [0.5, -0.62], [0.85, 0], [0.5, 0.62],
+  [0, 1.15], [-0.5, 0.62], [-0.85, 0], [-0.5, -0.62],
+];
+// A real entry-stamp classic: a scalloped OVAL rather than a circle. Unlike
+// the polygon shapes, an ellipse can't be rotated by an angle offset alone
+// (its curvature isn't uniform), so points are built axis-aligned in unit
+// space and then rotated as real coordinates, same as the hand-authored
+// shields/lozenges above.
+function ovalBurstVertices(cx: number, cy: number, rx: number, ry: number, waveAmp: number, waveCount: number, rotateDeg: number): [number, number][] {
+  const totalPoints = waveCount * 10;
   const rad = (rotateDeg * Math.PI) / 180;
   const cos = Math.cos(rad), sin = Math.sin(rad);
-  return SHIELD_UNIT.map(([ux, uy]) => {
-    const x = ux * r, y = uy * r;
-    return [cx + x * cos - y * sin, cy + x * sin + y * cos];
-  });
+  const verts: [number, number][] = [];
+  for (let i = 0; i < totalPoints; i++) {
+    const angle = (Math.PI * 2 * i) / totalPoints;
+    const scale = 1 + waveAmp * Math.sin(waveCount * angle);
+    const ux = rx * scale * Math.cos(angle), uy = ry * scale * Math.sin(angle);
+    verts.push([cx + ux * cos - uy * sin, cy + ux * sin + uy * cos]);
+  }
+  return verts;
 }
-/** Builds the outline for a domain+seed at a given radius. */
-function domainVertices(domain: StampDomain, cx: number, cy: number, r: number, rotate: number): [number, number][] {
+/** Builds the outline for a domain+seed at a given radius; variant picks between two real-stamp-inspired silhouettes per domain. */
+function domainVertices(domain: StampDomain, cx: number, cy: number, r: number, rotate: number, variant: 0 | 1): [number, number][] {
   switch (domain) {
-    case "engine": return gearVertices(cx, cy, r, r * 0.72, 8, rotate);
-    case "chassis": return shieldVertices(cx, cy, r * 1.05, rotate);
-    case "elements": return burstVertices(cx, cy, r * 0.92, r * 0.12, 9, rotate);
-    case "mind": return compassVertices(cx, cy, r, r * 0.6, r * 0.32, 8, rotate);
+    case "engine": return variant === 0 ? gearVertices(cx, cy, r, r * 0.72, 8, rotate) : starVertices(cx, cy, r, r * 0.82, 16, rotate);
+    case "chassis": return variant === 0 ? unitVertices(cx, cy, r * 1.05, SHIELD_UNIT, rotate) : unitVertices(cx, cy, r, LOZENGE_UNIT, rotate);
+    case "elements": return variant === 0 ? burstVertices(cx, cy, r * 0.92, r * 0.12, 9, rotate) : ovalBurstVertices(cx, cy, r * 1.12, r * 0.86, 0.09, 9, rotate);
+    case "mind": return variant === 0 ? compassVertices(cx, cy, r, r * 0.6, r * 0.32, 8, rotate) : polygonVertices(cx, cy, r, 8, rotate);
   }
 }
 
@@ -219,17 +244,23 @@ function TypeIcon({ type, size, color }: { type: string; size: number; color: st
 // this particular mark.
 function StampOutline({ seed, domain, size, color, tier }: { seed: number; domain: StampDomain; size: number; color: string; tier: number }) {
   const cx = size / 2, cy = size / 2;
-  const rand01 = mulberry32(seed)();
-  // Hexagon/star/burst read fine at any angle, but a shield rotated off-axis
-  // stops looking like a shield — keep chassis stamps close to upright.
+  const rand = mulberry32(seed);
+  const rand01 = rand();
+  // A shield or lozenge rotated off-axis stops reading as that shape, but
+  // the gear/rosette/burst/oval/compass/octagon families all read fine at
+  // any angle — only chassis stays close to upright.
   const rotate = domain === "chassis" ? (rand01 - 0.5) * 30 : rand01 * 360;
+  // Second draw from the same seeded sequence picks which of the two
+  // real-stamp-inspired silhouettes this domain uses — still fully
+  // deterministic per adventure.
+  const variant: 0 | 1 = rand() < 0.5 ? 0 : 1;
   const rOuter = size * 0.47, rMid = size * 0.35;
   const ticks = tickLines(cx, cy, size * 0.5, size * 0.57, tier >= 4 ? 24 : 16);
 
   const outline = [
-    <polygon key="o1" points={ptsStr(domainVertices(domain, cx, cy, rOuter, rotate))} fill={tint(color, 0.06)} stroke={color} strokeWidth={3} />,
-    <polygon key="o2" points={ptsStr(domainVertices(domain, cx, cy, rMid, rotate))} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4 3" opacity={0.65} />,
-    ...(tier >= 5 ? [<polygon key="o3" points={ptsStr(domainVertices(domain, cx, cy, size * 0.44, rotate))} fill="none" stroke={color} strokeWidth={1} opacity={0.5} />] : []),
+    <polygon key="o1" points={ptsStr(domainVertices(domain, cx, cy, rOuter, rotate, variant))} fill={tint(color, 0.06)} stroke={color} strokeWidth={3} />,
+    <polygon key="o2" points={ptsStr(domainVertices(domain, cx, cy, rMid, rotate, variant))} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4 3" opacity={0.65} />,
+    ...(tier >= 5 ? [<polygon key="o3" points={ptsStr(domainVertices(domain, cx, cy, size * 0.44, rotate, variant))} fill="none" stroke={color} strokeWidth={1} opacity={0.5} />] : []),
   ];
 
   const tickEls = tier >= 3 ? ticks.map(([x1, y1, x2, y2], i) => (
