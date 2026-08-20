@@ -74,9 +74,15 @@ function tickLines(cx: number, cy: number, rInner: number, rOuter: number, count
   return lines;
 }
 
-// ─── Stamp shapes — every adventure gets its own procedurally generated
-// outline, seeded from its slug so the same adventure always draws the same
-// shape (stable across shares) while no two adventures look alike ──────────
+// ─── Stamp shapes — a small, explainable system with four factors ─────────
+// 1. SHAPE   — which ACE domain the adventure demands most (Engine/Chassis/
+//              Elements/Mind), so the outline itself carries meaning
+// 2. COLOR   — difficulty tier
+// 3. SIZE    — difficulty tier
+// 4. SEED    — the adventure's own slug drives rotation + a subtle per-stamp
+//              size variance, so two stamps of the same domain and tier
+//              still never look identical, and the same adventure always
+//              redraws the same stamp (stable across re-shared passports)
 
 function hashSeed(s: string): number {
   let h = 0;
@@ -94,27 +100,63 @@ function mulberry32(seed: number) {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
-interface StampShape { sides: number; rotate: number; jitters: number[] }
-function buildStampShape(seed: number): StampShape {
-  const rand = mulberry32(seed);
-  const sides = 5 + Math.floor(rand() * 7); // 5..11 — some near-circular, some angular
-  const rotate = rand() * 360;
-  const jitterAmp = 0.06 + rand() * 0.32; // how irregular the outline is
-  const jitters = Array.from({ length: sides }, () => 1 - jitterAmp / 2 + rand() * jitterAmp);
-  return { sides, rotate, jitters };
+
+type StampDomain = "engine" | "chassis" | "elements" | "mind";
+/** Which ACE domain an adventure leans on hardest — decides the stamp's shape family. */
+function dominantDomain(ace: ACE): StampDomain {
+  const sums: Record<StampDomain, number> = {
+    engine: ace.stamina + ace.power,
+    chassis: ace.strength + ace.agility,
+    elements: ace.water + ace.altitude,
+    mind: ace.focus + ace.nerve,
+  };
+  return (Object.keys(sums) as StampDomain[]).reduce((best, d) => (sums[d] > sums[best] ? d : best), "engine");
 }
-function stampVertices(shape: StampShape, cx: number, cy: number, r: number): [number, number][] {
+
+function starVertices(cx: number, cy: number, rOuter: number, rInner: number, points: number, rotateDeg = -90): [number, number][] {
   const verts: [number, number][] = [];
-  for (let i = 0; i < shape.sides; i++) {
-    const angle = (Math.PI * 2 * i) / shape.sides + (shape.rotate * Math.PI) / 180;
-    const rr = r * shape.jitters[i];
-    verts.push([cx + rr * Math.cos(angle), cy + rr * Math.sin(angle)]);
+  const step = Math.PI / points;
+  for (let i = 0; i < points * 2; i++) {
+    const r = i % 2 === 0 ? rOuter : rInner;
+    const angle = i * step + (rotateDeg * Math.PI) / 180;
+    verts.push([cx + r * Math.cos(angle), cy + r * Math.sin(angle)]);
   }
   return verts;
 }
-
-// Slight per-stamp rotation/offset so the page reads as hand-stamped, not printed.
-const STAMP_ROTATIONS = [-9, 7, -6, 10, -8, 5, -11, 8, -5, 9, -7, 6];
+// A gently scalloped seal/sunburst outline — Elements (water/altitude) reads
+// as "organic" rather than a hard-edged polygon.
+function burstVertices(cx: number, cy: number, rBase: number, waveAmp: number, waveCount: number, rotateDeg = -90): [number, number][] {
+  const totalPoints = waveCount * 8;
+  const verts: [number, number][] = [];
+  for (let i = 0; i < totalPoints; i++) {
+    const angle = (Math.PI * 2 * i) / totalPoints + (rotateDeg * Math.PI) / 180;
+    const r = rBase + waveAmp * Math.sin(waveCount * angle);
+    verts.push([cx + r * Math.cos(angle), cy + r * Math.sin(angle)]);
+  }
+  return verts;
+}
+// Unit shield silhouette (flat top, bulging shoulders, tapered point) —
+// Chassis (strength/agility) gets a load-bearing, structural mark.
+const SHIELD_UNIT: [number, number][] = [
+  [-0.7, -1], [0.7, -1], [1, -0.42], [0.55, 0.55], [0, 1.15], [-0.55, 0.55], [-1, -0.42],
+];
+function shieldVertices(cx: number, cy: number, r: number, rotateDeg: number): [number, number][] {
+  const rad = (rotateDeg * Math.PI) / 180;
+  const cos = Math.cos(rad), sin = Math.sin(rad);
+  return SHIELD_UNIT.map(([ux, uy]) => {
+    const x = ux * r, y = uy * r;
+    return [cx + x * cos - y * sin, cy + x * sin + y * cos];
+  });
+}
+/** Builds the three concentric outlines (outer/mid/extra) for a domain+seed at a given radius. */
+function domainVertices(domain: StampDomain, cx: number, cy: number, r: number, rotate: number): [number, number][] {
+  switch (domain) {
+    case "engine": return polygonVertices(cx, cy, r, 6, rotate);
+    case "chassis": return shieldVertices(cx, cy, r * 1.05, rotate);
+    case "elements": return burstVertices(cx, cy, r * 0.92, r * 0.11, 9, rotate);
+    case "mind": return starVertices(cx, cy, r, r * 0.5, 6, rotate);
+  }
+}
 
 function TypeIcon({ type, size, color }: { type: string; size: number; color: string }) {
   const def = TYPE_ICON_DEFS[type] ?? TYPE_ICON_DEFS.Mountaineering;
@@ -132,19 +174,23 @@ function TypeIcon({ type, size, color }: { type: string; size: number; color: st
 
 // Every stamp gets a faint ink wash, a main ring, a dashed inner ring, and a
 // burst of postmark ticks; Extreme adventures earn one more outer ring. The
-// outline itself is procedurally unique per adventure (see buildStampShape) —
-// the visual weight and irregularity both say something about what it took
-// to earn this particular mark.
-function StampOutline({ seed, size, color, tier }: { seed: number; size: number; color: string; tier: number }) {
+// silhouette itself names what the adventure demands (domain), while the
+// seed gives it a free full-circle rotation so no two stamps ever align —
+// the visual weight and shape both say something about what it took to earn
+// this particular mark.
+function StampOutline({ seed, domain, size, color, tier }: { seed: number; domain: StampDomain; size: number; color: string; tier: number }) {
   const cx = size / 2, cy = size / 2;
-  const shape = buildStampShape(seed);
+  const rand01 = mulberry32(seed)();
+  // Hexagon/star/burst read fine at any angle, but a shield rotated off-axis
+  // stops looking like a shield — keep chassis stamps close to upright.
+  const rotate = domain === "chassis" ? (rand01 - 0.5) * 30 : rand01 * 360;
   const rOuter = size * 0.47, rMid = size * 0.35;
   const ticks = tickLines(cx, cy, size * 0.5, size * 0.57, tier >= 4 ? 24 : 16);
 
   const outline = [
-    <polygon key="o1" points={ptsStr(stampVertices(shape, cx, cy, rOuter))} fill={tint(color, 0.06)} stroke={color} strokeWidth={3} />,
-    <polygon key="o2" points={ptsStr(stampVertices(shape, cx, cy, rMid))} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4 3" opacity={0.65} />,
-    ...(tier >= 5 ? [<polygon key="o3" points={ptsStr(stampVertices(shape, cx, cy, size * 0.44))} fill="none" stroke={color} strokeWidth={1} opacity={0.5} />] : []),
+    <polygon key="o1" points={ptsStr(domainVertices(domain, cx, cy, rOuter, rotate))} fill={tint(color, 0.06)} stroke={color} strokeWidth={3} />,
+    <polygon key="o2" points={ptsStr(domainVertices(domain, cx, cy, rMid, rotate))} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4 3" opacity={0.65} />,
+    ...(tier >= 5 ? [<polygon key="o3" points={ptsStr(domainVertices(domain, cx, cy, size * 0.44, rotate))} fill="none" stroke={color} strokeWidth={1} opacity={0.5} />] : []),
   ];
 
   const tickEls = tier >= 3 ? ticks.map(([x1, y1, x2, y2], i) => (
@@ -245,6 +291,19 @@ const RADAR_AXIS_SHORT: Record<string, string> = {
 };
 const RADAR_SIZE = 200, RADAR_CX = 100, RADAR_CY = 100, RADAR_MAXR = 62, RADAR_LABEL_R = 82;
 
+// ACE rank — same tiers as the /ace page's "Adventure Rank" ladder, keyed
+// off the sum of all 8 self-assessment axes (max 40).
+const ACE_RANKS = [
+  { min: 40, label: "Apex", color: "#a78bfa" },
+  { min: 32, label: "Vanguard", color: "#f97316" },
+  { min: 24, label: "Trailblazer", color: "#f59e0b" },
+  { min: 16, label: "Navigator", color: "#4ade80" },
+  { min: 8, label: "Pathfinder", color: "#22d3ee" },
+];
+function getAceRank(sum: number) {
+  return ACE_RANKS.find((r) => sum >= r.min) ?? null;
+}
+
 export async function GET(req: Request) {
   const url = new URL(req.url);
 
@@ -292,6 +351,8 @@ export async function GET(req: Request) {
   const userAce: Record<string, number> = Object.fromEntries(RADAR_AXES.map((ax) => [ax, userAceRaw?.[ax] ?? 0]));
   const hasAceData = RADAR_AXES.some((ax) => userAce[ax] > 0);
   const topAxis = RADAR_AXES.reduce((best, ax) => (userAce[ax] > userAce[best] ? ax : best), RADAR_AXES[0]);
+  const aceSum = RADAR_AXES.reduce((sum, ax) => sum + userAce[ax], 0);
+  const aceRank = hasAceData ? getAceRank(aceSum) : null;
 
   // Achievement badges — same source as the Trophy Cabinet on /profile: total
   // XP and per-action engagement counts, read straight from the XP event log.
@@ -471,7 +532,17 @@ export async function GET(req: Request) {
                 ))}
               </div>
               <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, color: INK, opacity: 0.5 }}>{"CAPABILITY PROFILE"}</span>
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, color: INK, opacity: 0.5 }}>{"CAPABILITY PROFILE"}</span>
+                  {aceRank && (
+                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 5, padding: "3px 9px 3px 7px", borderRadius: 999, background: tint(aceRank.color, 0.16), border: `1px solid ${aceRank.color}` }}>
+                      <svg width={9} height={9} viewBox="0 0 10 10">
+                        <polygon points={ptsStr(starVertices(5, 5, 5, 2.1, 5))} fill={aceRank.color} />
+                      </svg>
+                      <span style={{ fontSize: 8, fontWeight: 800, letterSpacing: 0.6, color: aceRank.color }}>{aceRank.label.toUpperCase()}</span>
+                    </div>
+                  )}
+                </div>
                 <span style={{ fontSize: 14, fontWeight: 700, color: INK, marginTop: 8, lineHeight: 1.4 }}>
                   {hasAceData ? `Strongest in ${RADAR_AXIS_LABELS[topAxis]}` : "Take the ACE assessment to build your profile"}
                 </span>
@@ -545,10 +616,15 @@ export async function GET(req: Request) {
                   <path d={INDIA_PATH} fill={tint(INK, 0.04)} stroke={tint(INK, 0.32)} strokeWidth={1.6} />
                 </svg>
 
-                {displayStamps.map(({ adv, date, difficulty, dispX, dispY }, i) => {
+                {displayStamps.map(({ adv, difficulty, dispX, dispY }) => {
                   const color = DIFFICULTY_COLOR[difficulty] ?? INK;
                   const size = DIFFICULTY_STAMP_SIZE[difficulty] ?? 100;
-                  const rot = STAMP_ROTATIONS[i % STAMP_ROTATIONS.length];
+                  const seed = hashSeed(adv.slug);
+                  const domain = dominantDomain(getACE(adv));
+                  // A small hand-stamped tilt, seeded off the same adventure so it's
+                  // stable across re-shares — kept separate from the shape's own free
+                  // rotation so the icon/name inside always stay upright and legible.
+                  const rot = (mulberry32(seed * 7 + 3)() - 0.5) * 20;
                   const detailed = size >= 110;
                   return (
                     <div
@@ -567,20 +643,15 @@ export async function GET(req: Request) {
                         transform: `rotate(${rot}deg)`,
                       }}
                     >
-                      <StampOutline seed={hashSeed(adv.slug)} size={size} color={color} tier={DIFFICULTY_LEVEL[difficulty] ?? 1} />
+                      <StampOutline seed={seed} domain={domain} size={size} color={color} tier={DIFFICULTY_LEVEL[difficulty] ?? 1} />
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 6, zIndex: 1 }}>
                         <div style={{ display: "flex" }}>
                           <TypeIcon type={adv.type} size={detailed ? 22 : 15} color={color} />
                         </div>
                         {detailed && (
-                          <>
-                            <span style={{ fontSize: 12, fontWeight: 800, color, marginTop: 5, textAlign: "center", lineHeight: 1.15 }}>
-                              {truncate(adv.name, 18)}
-                            </span>
-                            <span style={{ fontSize: 9, fontWeight: 700, color, opacity: 0.7, marginTop: 3 }}>
-                              {fmtDate(parseISODate(date))}
-                            </span>
-                          </>
+                          <span style={{ display: "flex", fontSize: 12, fontWeight: 800, color, marginTop: 5, textAlign: "center", lineHeight: 1.15 }}>
+                            {truncate(adv.name, 18)}
+                          </span>
                         )}
                       </div>
                     </div>
