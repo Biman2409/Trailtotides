@@ -20,6 +20,7 @@ import ACEProfileSection from "./ACEProfileSection";
 import AvatarPicker from "./AvatarPicker";
 import TrophyCabinet from "./TrophyCabinet";
 import ExpeditionProfile from "./ExpeditionProfile";
+import AdventurePassportCard from "./AdventurePassportCard";
 import { getOperatorProfile, getSubmissionsForOperator } from "@/app/auth/operator-actions";
 import { adventures } from "@/lib/data";
 import DashboardClient from "@/app/auth/operator-dashboard/DashboardClient";
@@ -199,6 +200,15 @@ export default async function ProfilePage() {
           ) : (
             /* ── Explorer view ─────────────────────────────────── */
             <>
+              {/* Adventure Passport — the primary, shareable home for achievements */}
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-1.5 h-5 rounded-full" style={{ background: "#c9a24d" }} />
+                  <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>Adventure Passport</h2>
+                </div>
+                <AdventurePassportCard />
+              </div>
+
               {/* Expedition Profile */}
               <div>
                 <div className="flex items-center gap-2 mb-4">

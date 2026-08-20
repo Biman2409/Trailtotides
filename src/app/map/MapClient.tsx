@@ -712,7 +712,7 @@ function MapView({
     });
   }, [nearMe]);
 
-  // Trail Passport pins — completed adventures, celebrated with a gold trophy
+  // Adventure Passport pins — completed adventures, celebrated with a gold trophy
   // marker distinct from the difficulty/wishlist pin language.
   useEffect(() => {
     if (!trophyLayerRef.current) return;
