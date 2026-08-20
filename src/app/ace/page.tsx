@@ -190,10 +190,10 @@ export default function ACEPage() {
       {/* ── SCALE + RANKS (side by side on desktop) ── */}
       <section className="py-8 px-5 lg:px-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
 
             {/* Scale */}
-            <div>
+            <div className="flex flex-col">
               <div className="flex items-center gap-3 mb-1.5">
                 <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">The Scale</span>
                 <div className="flex-1 h-px" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
@@ -208,7 +208,7 @@ export default function ACEPage() {
                 ))}
               </div>
 
-              <div className="space-y-1.5">
+              <div className="flex-1 flex flex-col justify-between gap-1.5">
                 {SCALE.map(({ level, label, sub, color }) => (
                   <div key={level} className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl border" style={{ background: `${color}06`, borderColor: `${color}16` }}>
                     <span className="font-black text-sm w-5 text-center font-mono leading-none shrink-0" style={{ color, textShadow: level >= 4 ? `0 0 12px ${color}80` : "none" }}>{level}</span>
@@ -225,7 +225,7 @@ export default function ACEPage() {
             </div>
 
             {/* Ranks */}
-            <div>
+            <div className="flex flex-col">
               <div className="flex items-center gap-3 mb-1.5">
                 <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">Adventure Rank</span>
                 <div className="flex-1 h-px" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
@@ -233,7 +233,7 @@ export default function ACEPage() {
               </div>
               <p className="text-xs mb-4 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>Sum all 8 axes and you get your rank. Max is 40. Higher rank — harder terrain, more remote, more technical.</p>
 
-              <div className="space-y-2">
+              <div className="flex-1 flex flex-col justify-between gap-2">
                 {RANKS.map(({ label, color, stars, range, desc, icon }) => (
                   <div key={label} className="flex items-center gap-3.5 px-3.5 py-3 rounded-xl border relative overflow-hidden" style={{ background: `${color}06`, borderColor: `${color}22` }}>
                     <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity" style={{ background: `radial-gradient(ellipse at 0% 50%, ${color}08, transparent 60%)` }} />
