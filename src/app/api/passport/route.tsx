@@ -1,8 +1,9 @@
 import { ImageResponse } from "next/og";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { adventures, type Adventure } from "@/lib/data";
-import { getACE, computeDifficulty } from "@/lib/ace";
+import { getACE, computeDifficulty, type ACE } from "@/lib/ace";
 import { TYPE_ICON_DEFS } from "@/lib/mapMarkerIcons";
+import { getAchievements } from "@/lib/achievements";
 
 export const runtime = "edge";
 
@@ -64,20 +65,38 @@ function radarVertices(cx: number, cy: number, values: number[], maxVal: number,
   }
   return verts;
 }
+function starVertices(cx: number, cy: number, rOuter: number, rInner: number, points: number, rotateDeg = -90): [number, number][] {
+  const verts: [number, number][] = [];
+  const step = Math.PI / points;
+  for (let i = 0; i < points * 2; i++) {
+    const r = i % 2 === 0 ? rOuter : rInner;
+    const angle = i * step + (rotateDeg * Math.PI) / 180;
+    verts.push([cx + r * Math.cos(angle), cy + r * Math.sin(angle)]);
+  }
+  return verts;
+}
+function tickLines(cx: number, cy: number, rInner: number, rOuter: number, count: number): [number, number, number, number][] {
+  const lines: [number, number, number, number][] = [];
+  for (let i = 0; i < count; i++) {
+    const angle = (Math.PI * 2 * i) / count;
+    lines.push([cx + rInner * Math.cos(angle), cy + rInner * Math.sin(angle), cx + rOuter * Math.cos(angle), cy + rOuter * Math.sin(angle)]);
+  }
+  return lines;
+}
 
 // ─── Stamp shapes — the activity type decides the outline, not chance, so the
 // page reads as a system rather than random decoration ─────────────────────
 
-type ShapeKind = "triangle" | "pentagon" | "hexagon" | "octagon" | "diamond" | "circle";
+type ShapeKind = "triangle" | "pentagon" | "hexagon" | "star" | "diamond" | "circle";
 const SHAPE_BY_TYPE: Record<string, ShapeKind> = {
   Mountaineering: "triangle", "Ice Climbing": "triangle",
   Trekking: "hexagon", Scrambling: "hexagon", "Urban Adventure": "hexagon", Caving: "hexagon",
   "Rock Climbing": "pentagon",
   Motorcycling: "diamond", Cycling: "diamond", "Jeep Safari": "diamond", "Camel Safari": "diamond", Sandboarding: "diamond",
-  Paragliding: "octagon", "Hot Air Balloon": "octagon", "Hang Gliding": "octagon", Skydiving: "octagon",
+  Paragliding: "star", "Hot Air Balloon": "star", "Hang Gliding": "star", Skydiving: "star",
   Diving: "circle", Kayaking: "circle", Skiing: "circle", "Ice Skating": "circle",
 };
-const SHAPE_SIDES: Record<string, number> = { triangle: 3, pentagon: 5, hexagon: 6, octagon: 8, diamond: 4 };
+const SHAPE_SIDES: Record<string, number> = { triangle: 3, pentagon: 5, hexagon: 6, diamond: 4 };
 
 // Slight per-stamp rotation/offset so the page reads as hand-stamped, not printed.
 const STAMP_ROTATIONS = [-9, 7, -6, 10, -8, 5, -11, 8, -5, 9, -7, 6];
@@ -96,21 +115,108 @@ function TypeIcon({ type, size, color }: { type: string; size: number; color: st
   );
 }
 
-function StampOutline({ shape, size, color }: { shape: ShapeKind; size: number; color: string }) {
+// Every stamp gets a faint ink wash, a main ring, a dashed inner ring, and a
+// burst of postmark ticks; Extreme adventures earn one more outer ring — the
+// visual weight of the mark should say something about what it took to earn it.
+function StampOutline({ shape, size, color, tier }: { shape: ShapeKind; size: number; color: string; tier: number }) {
   const cx = size / 2, cy = size / 2;
-  if (shape === "circle") {
-    return (
-      <svg width={size} height={size} style={{ position: "absolute", top: 0, left: 0 }}>
-        <circle cx={cx} cy={cy} r={size * 0.47} fill="none" stroke={color} strokeWidth={3} />
-        <circle cx={cx} cy={cy} r={size * 0.37} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4 3" opacity={0.65} />
-      </svg>
-    );
-  }
-  const sides = SHAPE_SIDES[shape];
+  const rOuter = size * 0.47, rMid = size * 0.35;
+  const ticks = tickLines(cx, cy, size * 0.49, size * 0.55, tier >= 4 ? 24 : 16);
+
+  const outline = shape === "circle" ? [
+    <circle key="o1" cx={cx} cy={cy} r={rOuter} fill={tint(color, 0.06)} stroke={color} strokeWidth={3} />,
+    <circle key="o2" cx={cx} cy={cy} r={rMid} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4 3" opacity={0.65} />,
+    ...(tier >= 5 ? [<circle key="o3" cx={cx} cy={cy} r={size * 0.44} fill="none" stroke={color} strokeWidth={1} opacity={0.5} />] : []),
+  ] : shape === "star" ? [
+    <polygon key="o1" points={ptsStr(starVertices(cx, cy, rOuter, rOuter * 0.48, 6))} fill={tint(color, 0.06)} stroke={color} strokeWidth={3} />,
+    <polygon key="o2" points={ptsStr(starVertices(cx, cy, rMid, rMid * 0.48, 6))} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4 3" opacity={0.65} />,
+  ] : [
+    <polygon key="o1" points={ptsStr(polygonVertices(cx, cy, rOuter, SHAPE_SIDES[shape]))} fill={tint(color, 0.06)} stroke={color} strokeWidth={3} />,
+    <polygon key="o2" points={ptsStr(polygonVertices(cx, cy, rMid, SHAPE_SIDES[shape]))} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4 3" opacity={0.65} />,
+    ...(tier >= 5 ? [<polygon key="o3" points={ptsStr(polygonVertices(cx, cy, size * 0.44, SHAPE_SIDES[shape]))} fill="none" stroke={color} strokeWidth={1} opacity={0.5} />] : []),
+  ];
+
+  const tickEls = tier >= 3 ? ticks.map(([x1, y1, x2, y2], i) => (
+    <line key={`t${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={1.2} opacity={0.45} strokeLinecap="round" />
+  )) : [];
+
   return (
     <svg width={size} height={size} style={{ position: "absolute", top: 0, left: 0 }}>
-      <polygon points={ptsStr(polygonVertices(cx, cy, size * 0.47, sides))} fill="none" stroke={color} strokeWidth={3} />
-      <polygon points={ptsStr(polygonVertices(cx, cy, size * 0.35, sides))} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4 3" opacity={0.65} />
+      {[...tickEls, ...outline]}
+    </svg>
+  );
+}
+
+// ─── Achievement badge icons — a small curated set covering every icon name
+// used in lib/achievements.ts, drawn the same way as the type icons above ───
+
+type BadgeIconDef = { paths?: string[]; circles?: { cx: number; cy: number; r: number }[]; lines?: { x1: number; y1: number; x2: number; y2: number }[] };
+const BADGE_ICON_DEFS: Record<string, BadgeIconDef> = {
+  Timer: { lines: [{ x1: 10, y1: 2, x2: 14, y2: 2 }, { x1: 12, y1: 14, x2: 15, y2: 11 }], circles: [{ cx: 12, cy: 14, r: 8 }] },
+  Dumbbell: { paths: [
+    "M17.596 12.768a2 2 0 1 0 2.829-2.829l-1.768-1.767a2 2 0 0 0 2.828-2.829l-2.828-2.828a2 2 0 0 0-2.829 2.828l-1.767-1.768a2 2 0 1 0-2.829 2.829z",
+    "m2.5 21.5 1.4-1.4", "m20.1 3.9 1.4-1.4",
+    "M5.343 21.485a2 2 0 1 0 2.829-2.828l1.767 1.768a2 2 0 1 0 2.829-2.829l-6.364-6.364a2 2 0 1 0-2.829 2.829l1.768 1.767a2 2 0 0 0-2.828 2.829z",
+    "m9.6 14.4 4.8-4.8",
+  ] },
+  MountainSnow: { paths: ["m8 3 4 8 5-5 5 15H2L8 3z", "M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19"] },
+  Footprints: { paths: [
+    "M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z",
+    "M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z",
+    "M16 17h4", "M4 13h4",
+  ] },
+  Waves: { paths: [
+    "M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1",
+    "M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1",
+    "M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1",
+  ] },
+  ScanEye: { paths: [
+    "M3 7V5a2 2 0 0 1 2-2h2", "M17 3h2a2 2 0 0 1 2 2v2", "M21 17v2a2 2 0 0 1-2 2h-2", "M7 21H5a2 2 0 0 1-2-2v-2",
+    "M18.944 12.33a1 1 0 0 0 0-.66 7.5 7.5 0 0 0-13.888 0 1 1 0 0 0 0 .66 7.5 7.5 0 0 0 13.888 0",
+  ], circles: [{ cx: 12, cy: 12, r: 1 }] },
+  Shield: { paths: ["M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"] },
+  Zap: { paths: ["M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"] },
+  Pickaxe: { paths: [
+    "M14.531 12.469 6.619 20.38a1 1 0 1 1-3-3l7.912-7.912",
+    "M15.686 4.314A12.5 12.5 0 0 0 5.461 2.958 1 1 0 0 0 5.58 4.71a22 22 0 0 1 6.318 3.393",
+    "M17.7 3.7a1 1 0 0 0-1.4 0l-4.6 4.6a1 1 0 0 0 0 1.4l2.6 2.6a1 1 0 0 0 1.4 0l4.6-4.6a1 1 0 0 0 0-1.4z",
+    "M19.686 8.314a12.501 12.501 0 0 1 1.356 10.225 1 1 0 0 1-1.751-.119 22 22 0 0 0-3.393-6.319",
+  ] },
+  Brain: { paths: [
+    "M12 18V5", "M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4", "M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5",
+    "M17.997 5.125a4 4 0 0 1 2.526 5.77", "M18 18a4 4 0 0 0 2-7.464", "M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517",
+    "M6 18a4 4 0 0 1-2-7.464", "M6.003 5.125a4 4 0 0 0-2.526 5.77",
+  ] },
+  Crown: { paths: [
+    "M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z",
+    "M5 21h14",
+  ] },
+  Flame9000: { paths: ["M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"] },
+  Award: { paths: ["M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"], circles: [{ cx: 12, cy: 8, r: 6 }] },
+  CheckCircle2: { paths: ["m9 12 2 2 4-4"], circles: [{ cx: 12, cy: 12, r: 10 }] },
+  Compass: { paths: ["m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"], circles: [{ cx: 12, cy: 12, r: 10 }] },
+  Heart: { paths: ["M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"] },
+  Star: { paths: ["M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"] },
+  Camera: { paths: ["M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"], circles: [{ cx: 12, cy: 13, r: 3 }] },
+  Trophy: { paths: [
+    "M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978", "M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978",
+    "M18 9h1.5a1 1 0 0 0 0-5H18", "M4 22h16", "M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z", "M6 9H4.5a1 1 0 0 1 0-5H6",
+  ] },
+};
+
+function BadgeIcon({ name, size, color }: { name: string; size: number; color: string }) {
+  const def = BADGE_ICON_DEFS[name] ?? BADGE_ICON_DEFS.Trophy;
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      {(def.paths ?? []).map((d, i) => (
+        <path key={`p${i}`} d={d} stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      ))}
+      {(def.circles ?? []).map((c, i) => (
+        <circle key={`c${i}`} cx={c.cx} cy={c.cy} r={c.r} stroke={color} strokeWidth={2} />
+      ))}
+      {(def.lines ?? []).map((l, i) => (
+        <line key={`l${i}`} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke={color} strokeWidth={2} strokeLinecap="round" />
+      ))}
     </svg>
   );
 }
@@ -165,17 +271,32 @@ export async function GET(req: Request) {
     return best;
   }, null);
 
-  // Aggregate ACE — the average demand of everything this explorer has actually
-  // done, i.e. a capability fingerprint built from real completions, not a quiz.
-  const aggregateAce: Record<string, number> = Object.fromEntries(RADAR_AXES.map((ax) => [ax, 0]));
-  if (stamps.length > 0) {
-    for (const ax of RADAR_AXES) {
-      const sum = stamps.reduce((acc, s) => acc + (getACE(s.adv)[ax] ?? 0), 0);
-      aggregateAce[ax] = sum / stamps.length;
-    }
+  // The explorer's own ACE self-assessment (from the matchmaker quiz), stored
+  // flat on user_metadata by /api/ace-profile — not derived from adventures.
+  const userAceRaw = user.user_metadata?.ace_profile as Record<string, number> | undefined;
+  const userAce: Record<string, number> = Object.fromEntries(RADAR_AXES.map((ax) => [ax, userAceRaw?.[ax] ?? 0]));
+  const hasAceData = RADAR_AXES.some((ax) => userAce[ax] > 0);
+  const topAxis = RADAR_AXES.reduce((best, ax) => (userAce[ax] > userAce[best] ? ax : best), RADAR_AXES[0]);
+
+  // Achievement badges — same source as the Trophy Cabinet on /profile: total
+  // XP and per-action engagement counts, read straight from the XP event log.
+  const { data: xpBlob } = await admin.storage.from("user-data").download(`xp/${user.id}.json`);
+  let xpEvents: { action: string; adventure_slug?: string; xp?: number; revoked?: boolean }[] = [];
+  if (xpBlob) {
+    try { xpEvents = JSON.parse(await xpBlob.text()); } catch { xpEvents = []; }
   }
-  const hasAceData = stamps.length > 0 && RADAR_AXES.some((ax) => aggregateAce[ax] > 0);
-  const topAxis = RADAR_AXES.reduce((best, ax) => (aggregateAce[ax] > aggregateAce[best] ? ax : best), RADAR_AXES[0]);
+  const activeXp = xpEvents.filter((e) => !e.revoked);
+  const totalXP = activeXp.reduce((sum, e) => sum + (e.xp ?? 0), 0);
+  const uniqBy = (action: string) => new Set(activeXp.filter((e) => e.action === action).map((e) => e.adventure_slug)).size;
+  const engagement = {
+    completed: uniqBy("trip_log"),
+    reviews: uniqBy("review"),
+    wishlisted: uniqBy("wishlist"),
+    photos: uniqBy("photo"),
+    compares: uniqBy("compare"),
+  };
+  const badgeAce: ACE = { stamina: userAce.stamina, power: userAce.power, strength: userAce.strength, agility: userAce.agility, water: userAce.water, altitude: userAce.altitude, focus: userAce.focus, nerve: userAce.nerve };
+  const earnedBadges = getAchievements(badgeAce, totalXP, engagement).slice(0, 9);
 
   const MAP_W = 640, MAP_H = 731;
   const shown = stamps.slice(0, 18);
@@ -319,7 +440,7 @@ export async function GET(req: Request) {
                   ))}
                   {hasAceData && (
                     <polygon
-                      points={ptsStr(radarVertices(RADAR_CX, RADAR_CY, RADAR_AXES.map((ax) => aggregateAce[ax]), 5, RADAR_MAXR))}
+                      points={ptsStr(radarVertices(RADAR_CX, RADAR_CY, RADAR_AXES.map((ax) => userAce[ax]), 5, RADAR_MAXR))}
                       fill="rgba(255,81,0,0.18)" stroke="#ff5100" strokeWidth={2}
                     />
                   )}
@@ -328,12 +449,28 @@ export async function GET(req: Request) {
               <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
                 <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, color: INK, opacity: 0.5 }}>{"CAPABILITY PROFILE"}</span>
                 <span style={{ fontSize: 14, fontWeight: 700, color: INK, marginTop: 8, lineHeight: 1.4 }}>
-                  {hasAceData ? `Strongest in ${RADAR_AXIS_LABELS[topAxis]}` : "Complete an adventure to build your profile"}
+                  {hasAceData ? `Strongest in ${RADAR_AXIS_LABELS[topAxis]}` : "Take the ACE assessment to build your profile"}
                 </span>
                 <span style={{ fontSize: 10, color: INK, opacity: 0.4, marginTop: 4, lineHeight: 1.4 }}>
-                  {hasAceData ? "Averaged across every adventure completed — your real capability fingerprint." : "The shape fills in as you log completed adventures."}
+                  {hasAceData ? "From your ACE self-assessment — updated any time you retake it." : "8 quick questions map your physical profile at trailtotides.com/matchmaker."}
                 </span>
               </div>
+            </div>
+
+            {/* Achievement badges earned */}
+            <div style={{ display: "flex", flexDirection: "column", marginTop: 18, zIndex: 1 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, color: INK, opacity: 0.5 }}>{`BADGES EARNED${earnedBadges.length ? ` · ${earnedBadges.length}` : ""}`}</span>
+              {earnedBadges.length > 0 ? (
+                <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 9 }}>
+                  {earnedBadges.map((b) => (
+                    <div key={b.id} style={{ display: "flex", width: 32, height: 32, borderRadius: 999, background: tint(b.color, 0.14), border: `1.5px solid ${tint(b.color, 0.5)}`, alignItems: "center", justifyContent: "center" }}>
+                      <BadgeIcon name={b.icon} size={15} color={b.color} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <span style={{ fontSize: 11, color: INK, opacity: 0.4, marginTop: 6 }}>{"Complete adventures and take the ACE assessment to start unlocking badges"}</span>
+              )}
             </div>
 
             <div style={{ display: "flex", flex: 1 }} />
@@ -401,7 +538,7 @@ export async function GET(req: Request) {
                         transform: `rotate(${rot}deg)`,
                       }}
                     >
-                      <StampOutline shape={shape} size={size} color={color} />
+                      <StampOutline shape={shape} size={size} color={color} tier={DIFFICULTY_LEVEL[difficulty] ?? 1} />
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 6, zIndex: 1 }}>
                         <div style={{ display: "flex" }}>
                           <TypeIcon type={adv.type} size={detailed ? 22 : 15} color={color} />
