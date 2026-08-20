@@ -65,16 +65,6 @@ function radarVertices(cx: number, cy: number, values: number[], maxVal: number,
   }
   return verts;
 }
-function starVertices(cx: number, cy: number, rOuter: number, rInner: number, points: number, rotateDeg = -90): [number, number][] {
-  const verts: [number, number][] = [];
-  const step = Math.PI / points;
-  for (let i = 0; i < points * 2; i++) {
-    const r = i % 2 === 0 ? rOuter : rInner;
-    const angle = i * step + (rotateDeg * Math.PI) / 180;
-    verts.push([cx + r * Math.cos(angle), cy + r * Math.sin(angle)]);
-  }
-  return verts;
-}
 function tickLines(cx: number, cy: number, rInner: number, rOuter: number, count: number): [number, number, number, number][] {
   const lines: [number, number, number, number][] = [];
   for (let i = 0; i < count; i++) {
@@ -84,19 +74,44 @@ function tickLines(cx: number, cy: number, rInner: number, rOuter: number, count
   return lines;
 }
 
-// ─── Stamp shapes — the activity type decides the outline, not chance, so the
-// page reads as a system rather than random decoration ─────────────────────
+// ─── Stamp shapes — every adventure gets its own procedurally generated
+// outline, seeded from its slug so the same adventure always draws the same
+// shape (stable across shares) while no two adventures look alike ──────────
 
-type ShapeKind = "triangle" | "pentagon" | "hexagon" | "star" | "diamond" | "circle";
-const SHAPE_BY_TYPE: Record<string, ShapeKind> = {
-  Mountaineering: "triangle", "Ice Climbing": "triangle",
-  Trekking: "hexagon", Scrambling: "hexagon", "Urban Adventure": "hexagon", Caving: "hexagon",
-  "Rock Climbing": "pentagon",
-  Motorcycling: "diamond", Cycling: "diamond", "Jeep Safari": "diamond", "Camel Safari": "diamond", Sandboarding: "diamond",
-  Paragliding: "star", "Hot Air Balloon": "star", "Hang Gliding": "star", Skydiving: "star",
-  Diving: "circle", Kayaking: "circle", Skiing: "circle", "Ice Skating": "circle",
-};
-const SHAPE_SIDES: Record<string, number> = { triangle: 3, pentagon: 5, hexagon: 6, diamond: 4 };
+function hashSeed(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return Math.abs(h) || 1;
+}
+// Deterministic PRNG (mulberry32) — same seed always produces the same
+// sequence, unlike Math.random(), so a re-generated passport is stable.
+function mulberry32(seed: number) {
+  let s = seed;
+  return function () {
+    s = (s + 0x6d2b79f5) | 0;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+interface StampShape { sides: number; rotate: number; jitters: number[] }
+function buildStampShape(seed: number): StampShape {
+  const rand = mulberry32(seed);
+  const sides = 5 + Math.floor(rand() * 7); // 5..11 — some near-circular, some angular
+  const rotate = rand() * 360;
+  const jitterAmp = 0.06 + rand() * 0.32; // how irregular the outline is
+  const jitters = Array.from({ length: sides }, () => 1 - jitterAmp / 2 + rand() * jitterAmp);
+  return { sides, rotate, jitters };
+}
+function stampVertices(shape: StampShape, cx: number, cy: number, r: number): [number, number][] {
+  const verts: [number, number][] = [];
+  for (let i = 0; i < shape.sides; i++) {
+    const angle = (Math.PI * 2 * i) / shape.sides + (shape.rotate * Math.PI) / 180;
+    const rr = r * shape.jitters[i];
+    verts.push([cx + rr * Math.cos(angle), cy + rr * Math.sin(angle)]);
+  }
+  return verts;
+}
 
 // Slight per-stamp rotation/offset so the page reads as hand-stamped, not printed.
 const STAMP_ROTATIONS = [-9, 7, -6, 10, -8, 5, -11, 8, -5, 9, -7, 6];
@@ -116,24 +131,20 @@ function TypeIcon({ type, size, color }: { type: string; size: number; color: st
 }
 
 // Every stamp gets a faint ink wash, a main ring, a dashed inner ring, and a
-// burst of postmark ticks; Extreme adventures earn one more outer ring — the
-// visual weight of the mark should say something about what it took to earn it.
-function StampOutline({ shape, size, color, tier }: { shape: ShapeKind; size: number; color: string; tier: number }) {
+// burst of postmark ticks; Extreme adventures earn one more outer ring. The
+// outline itself is procedurally unique per adventure (see buildStampShape) —
+// the visual weight and irregularity both say something about what it took
+// to earn this particular mark.
+function StampOutline({ seed, size, color, tier }: { seed: number; size: number; color: string; tier: number }) {
   const cx = size / 2, cy = size / 2;
+  const shape = buildStampShape(seed);
   const rOuter = size * 0.47, rMid = size * 0.35;
-  const ticks = tickLines(cx, cy, size * 0.49, size * 0.55, tier >= 4 ? 24 : 16);
+  const ticks = tickLines(cx, cy, size * 0.5, size * 0.57, tier >= 4 ? 24 : 16);
 
-  const outline = shape === "circle" ? [
-    <circle key="o1" cx={cx} cy={cy} r={rOuter} fill={tint(color, 0.06)} stroke={color} strokeWidth={3} />,
-    <circle key="o2" cx={cx} cy={cy} r={rMid} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4 3" opacity={0.65} />,
-    ...(tier >= 5 ? [<circle key="o3" cx={cx} cy={cy} r={size * 0.44} fill="none" stroke={color} strokeWidth={1} opacity={0.5} />] : []),
-  ] : shape === "star" ? [
-    <polygon key="o1" points={ptsStr(starVertices(cx, cy, rOuter, rOuter * 0.48, 6))} fill={tint(color, 0.06)} stroke={color} strokeWidth={3} />,
-    <polygon key="o2" points={ptsStr(starVertices(cx, cy, rMid, rMid * 0.48, 6))} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4 3" opacity={0.65} />,
-  ] : [
-    <polygon key="o1" points={ptsStr(polygonVertices(cx, cy, rOuter, SHAPE_SIDES[shape]))} fill={tint(color, 0.06)} stroke={color} strokeWidth={3} />,
-    <polygon key="o2" points={ptsStr(polygonVertices(cx, cy, rMid, SHAPE_SIDES[shape]))} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4 3" opacity={0.65} />,
-    ...(tier >= 5 ? [<polygon key="o3" points={ptsStr(polygonVertices(cx, cy, size * 0.44, SHAPE_SIDES[shape]))} fill="none" stroke={color} strokeWidth={1} opacity={0.5} />] : []),
+  const outline = [
+    <polygon key="o1" points={ptsStr(stampVertices(shape, cx, cy, rOuter))} fill={tint(color, 0.06)} stroke={color} strokeWidth={3} />,
+    <polygon key="o2" points={ptsStr(stampVertices(shape, cx, cy, rMid))} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4 3" opacity={0.65} />,
+    ...(tier >= 5 ? [<polygon key="o3" points={ptsStr(stampVertices(shape, cx, cy, size * 0.44))} fill="none" stroke={color} strokeWidth={1} opacity={0.5} />] : []),
   ];
 
   const tickEls = tier >= 3 ? ticks.map(([x1, y1, x2, y2], i) => (
@@ -228,7 +239,11 @@ const RADAR_AXIS_LABELS: Record<string, string> = {
   stamina: "Stamina", power: "Power", strength: "Strength", agility: "Agility",
   water: "Water", altitude: "Altitude", focus: "Focus", nerve: "Nerve",
 };
-const RADAR_SIZE = 150, RADAR_CX = 75, RADAR_CY = 75, RADAR_MAXR = 56;
+const RADAR_AXIS_SHORT: Record<string, string> = {
+  stamina: "STA", power: "PWR", strength: "STR", agility: "AGI",
+  water: "WTR", altitude: "ALT", focus: "FOC", nerve: "NRV",
+};
+const RADAR_SIZE = 200, RADAR_CX = 100, RADAR_CY = 100, RADAR_MAXR = 62, RADAR_LABEL_R = 82;
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -296,7 +311,11 @@ export async function GET(req: Request) {
     compares: uniqBy("compare"),
   };
   const badgeAce: ACE = { stamina: userAce.stamina, power: userAce.power, strength: userAce.strength, agility: userAce.agility, water: userAce.water, altitude: userAce.altitude, focus: userAce.focus, nerve: userAce.nerve };
-  const earnedBadges = getAchievements(badgeAce, totalXP, engagement).slice(0, 9);
+  // Capped at 6 (3 rows) — the page has a fixed height and more rows than
+  // this run the badge list past the bottom of the canvas.
+  const allEarnedBadges = getAchievements(badgeAce, totalXP, engagement);
+  const earnedBadges = allEarnedBadges.slice(0, 6);
+  const badgeOverflow = allEarnedBadges.length - earnedBadges.length;
 
   const MAP_W = 640, MAP_H = 731;
   const shown = stamps.slice(0, 18);
@@ -429,7 +448,7 @@ export async function GET(req: Request) {
             <div style={{ display: "flex", marginTop: 20, borderBottom: "1px dashed rgba(36,26,18,0.3)" }} />
 
             {/* Capability Profile — the ACE fingerprint built from everything completed */}
-            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 20, marginTop: 18, zIndex: 1 }}>
+            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 14, marginTop: 16, zIndex: 1 }}>
               <div style={{ display: "flex", position: "relative", width: RADAR_SIZE, height: RADAR_SIZE, flexShrink: 0 }}>
                 <svg width={RADAR_SIZE} height={RADAR_SIZE} viewBox={`0 0 ${RADAR_SIZE} ${RADAR_SIZE}`}>
                   {[1 / 3, 2 / 3, 1].map((f, i) => (
@@ -445,6 +464,11 @@ export async function GET(req: Request) {
                     />
                   )}
                 </svg>
+                {polygonVertices(RADAR_CX, RADAR_CY, RADAR_LABEL_R, 8).map(([x, y], i) => (
+                  <div key={i} style={{ display: "flex", position: "absolute", left: x, top: y, transform: "translate(-50%,-50%)", alignItems: "center", justifyContent: "center" }}>
+                    <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: 0.5, color: INK, opacity: 0.55 }}>{RADAR_AXIS_SHORT[RADAR_AXES[i]]}</span>
+                  </div>
+                ))}
               </div>
               <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
                 <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, color: INK, opacity: 0.5 }}>{"CAPABILITY PROFILE"}</span>
@@ -458,15 +482,21 @@ export async function GET(req: Request) {
             </div>
 
             {/* Achievement badges earned */}
-            <div style={{ display: "flex", flexDirection: "column", marginTop: 18, zIndex: 1 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, color: INK, opacity: 0.5 }}>{`BADGES EARNED${earnedBadges.length ? ` · ${earnedBadges.length}` : ""}`}</span>
+            <div style={{ display: "flex", flexDirection: "column", marginTop: 14, zIndex: 1 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, color: INK, opacity: 0.5 }}>{`BADGES EARNED${allEarnedBadges.length ? ` · ${allEarnedBadges.length}` : ""}`}</span>
               {earnedBadges.length > 0 ? (
-                <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 9 }}>
+                <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 9 }}>
                   {earnedBadges.map((b) => (
-                    <div key={b.id} style={{ display: "flex", width: 32, height: 32, borderRadius: 999, background: tint(b.color, 0.14), border: `1.5px solid ${tint(b.color, 0.5)}`, alignItems: "center", justifyContent: "center" }}>
-                      <BadgeIcon name={b.icon} size={15} color={b.color} />
+                    <div key={b.id} style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 8, width: 318 }}>
+                      <div style={{ display: "flex", width: 26, height: 26, borderRadius: 999, background: tint(b.color, 0.15), border: `1.5px solid ${tint(b.color, 0.5)}`, alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <BadgeIcon name={b.icon} size={13} color={b.color} />
+                      </div>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: INK, lineHeight: 1.2 }}>{truncate(b.name, 26)}</span>
                     </div>
                   ))}
+                  {badgeOverflow > 0 && (
+                    <span style={{ display: "flex", fontSize: 10, fontWeight: 700, color: INK, opacity: 0.4, alignItems: "center" }}>{`+ ${badgeOverflow} more`}</span>
+                  )}
                 </div>
               ) : (
                 <span style={{ fontSize: 11, color: INK, opacity: 0.4, marginTop: 6 }}>{"Complete adventures and take the ACE assessment to start unlocking badges"}</span>
@@ -517,7 +547,6 @@ export async function GET(req: Request) {
 
                 {displayStamps.map(({ adv, date, difficulty, dispX, dispY }, i) => {
                   const color = DIFFICULTY_COLOR[difficulty] ?? INK;
-                  const shape = SHAPE_BY_TYPE[adv.type] ?? "hexagon";
                   const size = DIFFICULTY_STAMP_SIZE[difficulty] ?? 100;
                   const rot = STAMP_ROTATIONS[i % STAMP_ROTATIONS.length];
                   const detailed = size >= 110;
@@ -538,7 +567,7 @@ export async function GET(req: Request) {
                         transform: `rotate(${rot}deg)`,
                       }}
                     >
-                      <StampOutline shape={shape} size={size} color={color} tier={DIFFICULTY_LEVEL[difficulty] ?? 1} />
+                      <StampOutline seed={hashSeed(adv.slug)} size={size} color={color} tier={DIFFICULTY_LEVEL[difficulty] ?? 1} />
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 6, zIndex: 1 }}>
                         <div style={{ display: "flex" }}>
                           <TypeIcon type={adv.type} size={detailed ? 22 : 15} color={color} />
