@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import type { ACE, AceAxis } from "@/lib/ace";
 import { ACE_AXIS_COLORS } from "@/lib/ace";
 import { useTheme } from "next-themes";
@@ -60,8 +61,13 @@ function hexToRgb(hex: string) {
 }
 
 export default function ACERadar({ ace, size = 220, showLabels = true, userAce, userColor = "#38bdf8", highlightAxis = null }: Props) {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
+  const { resolvedTheme } = useTheme();
+  // resolvedTheme is unknown to the server — stay in a fixed default until
+  // mounted so the first client render matches the server's HTML, then
+  // switch to the real theme (see ThemeToggleButton for the same pattern).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme === "dark";
   // Colors that work in both modes — use mid-grey instead of white/black
   const gridColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)";
   const spokeColor = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)";

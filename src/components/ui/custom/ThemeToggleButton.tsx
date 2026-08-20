@@ -1,12 +1,19 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 export default function ThemeToggleButton() {
   const { theme, setTheme, resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  // resolvedTheme is unknown to the server (it depends on localStorage/system
+  // preference), so the first client render must match the server's guess —
+  // otherwise React logs a hydration mismatch. Stay in the server's assumed
+  // state until mounted, then switch to the real resolved theme.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme === "dark";
   const label = isDark ? "Switch to light mode" : "Switch to dark mode";
 
   return (

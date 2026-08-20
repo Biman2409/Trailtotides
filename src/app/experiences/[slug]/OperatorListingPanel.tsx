@@ -18,7 +18,12 @@ interface Props {
 
 export default function OperatorListingPanel({ adventureSlug, adventureName }: Props) {
   const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme !== "light";
+  // resolvedTheme is unknown to the server — stay in a fixed default until
+  // mounted so the first client render matches the server's HTML, then
+  // switch to the real theme (see ThemeToggleButton for the same pattern).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme !== "light";
   const [user, setUser] = useState<{ id: string; email: string } | null>(null);
   const [isOperator, setIsOperator] = useState(false);
   const [loading, setLoading] = useState(true);

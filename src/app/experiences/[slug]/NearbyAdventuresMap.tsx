@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -27,7 +27,12 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<import("leaflet").Map | null>(null);
   const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme !== "light";
+  // resolvedTheme is unknown to the server — stay in a fixed default until
+  // mounted so the first client render matches the server's HTML, then
+  // switch to the real theme (see ThemeToggleButton for the same pattern).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme !== "light";
   const router = useRouter();
 
   useEffect(() => {

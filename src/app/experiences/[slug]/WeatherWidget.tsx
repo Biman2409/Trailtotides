@@ -87,7 +87,12 @@ interface Props {
 
 export default function WeatherWidget({ lat, lng, locationName, altitude, isBaseCamp }: Props) {
   const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme !== "light";
+  // resolvedTheme is unknown to the server — stay in a fixed default until
+  // mounted so the first client render matches the server's HTML, then
+  // switch to the real theme (see ThemeToggleButton for the same pattern).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const isDark = mounted && resolvedTheme !== "light";
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [weatherError, setWeatherError] = useState(false);
@@ -452,7 +457,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
                 <div className="px-4 py-2.5 flex items-start gap-2" style={{ borderTop: "1px solid var(--border-subtle)", background: "rgba(56,189,248,0.08)" }}>
                   <CalendarDays className="w-3 h-3 text-sky-400/70 shrink-0 mt-0.5" />
                   <p className="text-sky-400/70 text-[10.5px] leading-snug">
-                    This date is beyond the 16-day forecast — we'll show last year's conditions for this date instead of a live forecast.
+                    This date is beyond the 16-day forecast — we&apos;ll show last year&apos;s conditions for this date instead of a live forecast.
                   </p>
                 </div>
               )}
