@@ -23,6 +23,13 @@ const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "
 function fmtDate(d: Date) { return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`; }
 function parseISODate(s: string) { const [y, m, d] = s.split("-").map(Number); return new Date(y, (m || 1) - 1, d || 1); }
 function truncate(s: string, n: number) { return s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s; }
+function tint(hex: string, alpha: number) {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.substring(0, 2), 16);
+  const g = parseInt(h.substring(2, 4), 16);
+  const b = parseInt(h.substring(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
 
 // Slight per-stamp rotation so the page reads as hand-stamped, not printed.
 const STAMP_ROTATIONS = [-7, 5, -4, 8, -6, 3, -8, 6, -3, 7, -5, 4, -9, 2, -6, 5];
@@ -80,11 +87,12 @@ export async function GET(req: Request) {
   const passportNo = `TT-${user.id.replace(/-/g, "").slice(-6).toUpperCase()}`;
 
   const statesCount = new Set(stamps.map((s) => s.adv.state)).size;
-  const hardest = stamps.reduce<{ name: string; difficulty: string; level: number } | null>((best, s) => {
+  const hardest = stamps.reduce<{ adv: Adventure; difficulty: string; level: number } | null>((best, s) => {
     const level = DIFFICULTY_LEVEL[s.difficulty] ?? 1;
-    if (!best || level > best.level) return { name: s.adv.name, difficulty: s.difficulty, level };
+    if (!best || level > best.level) return { adv: s.adv, difficulty: s.difficulty, level };
     return best;
   }, null);
+  const mostRecent = stamps[0] ?? null;
 
   const size = stampSize(stamps.length);
   const shown = stamps.slice(0, 15);
@@ -119,6 +127,7 @@ export async function GET(req: Request) {
                 { label: "TYPE", value: "P" },
                 { label: "CODE", value: "TTT" },
                 { label: "PASSPORT NO.", value: passportNo },
+                { label: "DATE OF ISSUE", value: fmtDate(new Date()) },
               ].map((f, i, arr) => (
                 <div key={f.label} style={{ display: "flex", flexDirection: "column", paddingRight: 24, marginRight: 24, borderRight: i < arr.length - 1 ? "1px dashed rgba(36,26,18,0.25)" : "none" }}>
                   <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, color: INK, opacity: 0.45 }}>{f.label}</span>
@@ -148,8 +157,6 @@ export async function GET(req: Request) {
                 {[
                   { label: "NAME / NOM", value: name },
                   { label: "NATIONALITY", value: "TRAIL TO TIDES EXPLORER" },
-                  { label: "DATE OF ISSUE", value: fmtDate(new Date()) },
-                  { label: "AUTHORITY", value: "TRAILTOTIDES.COM" },
                 ].map((f) => (
                   <div key={f.label} style={{ display: "flex", flexDirection: "column", borderBottom: "1px dashed rgba(36,26,18,0.22)", paddingBottom: 10 }}>
                     <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.5, color: INK, opacity: 0.45 }}>{f.label}</span>
@@ -159,29 +166,55 @@ export async function GET(req: Request) {
               </div>
             </div>
 
-            <div style={{ display: "flex", marginTop: 30, borderBottom: "1px dashed rgba(36,26,18,0.3)" }} />
+            <div style={{ display: "flex", flexDirection: "column", marginTop: 28, zIndex: 1 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: 3, color: INK, opacity: 0.5 }}>{"ACHIEVEMENTS"}</span>
+              <div style={{ display: "flex", flexDirection: "row", alignItems: "baseline", gap: 10, marginTop: 10 }}>
+                <span style={{ fontSize: 44, fontWeight: 800, color: INK }}>{stamps.length}</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: INK, opacity: 0.5 }}>{`ADVENTURES · ${statesCount} STATE${statesCount === 1 ? "" : "S"}`}</span>
+              </div>
+            </div>
 
-            <div style={{ display: "flex", flexDirection: "row", marginTop: 26, zIndex: 1 }}>
-              {[
-                { value: String(stamps.length), label: "ADVENTURES COMPLETED", color: INK },
-                { value: String(statesCount), label: "STATES EXPLORED", color: INK },
-                { value: hardest?.difficulty ?? "—", label: "HIGHEST DIFFICULTY", color: hardest ? (DIFFICULTY_COLOR[hardest.difficulty] ?? INK) : INK },
-              ].map((s, i, arr) => (
-                <div key={s.label} style={{ display: "flex", flexDirection: "column", paddingRight: 28, marginRight: 28, borderRight: i < arr.length - 1 ? "1px solid rgba(36,26,18,0.15)" : "none" }}>
-                  <span style={{ fontSize: 36, fontWeight: 800, color: s.color }}>{s.value}</span>
-                  <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: 1.2, color: INK, opacity: 0.5, marginTop: 4 }}>{s.label}</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 18, zIndex: 1 }}>
+              {hardest && (
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", background: "rgba(36,26,18,0.045)", borderRadius: 10, padding: "10px 14px", gap: 14 }}>
+                  <div style={{ display: "flex", width: 38, height: 38, borderRadius: 9, background: tint(DIFFICULTY_COLOR[hardest.difficulty] ?? INK, 0.15), border: `1px solid ${tint(DIFFICULTY_COLOR[hardest.difficulty] ?? INK, 0.4)}`, alignItems: "center", justifyContent: "center" }}>
+                    <TypeIcon type={hardest.adv.type} size={18} color={DIFFICULTY_COLOR[hardest.difficulty] ?? INK} />
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: INK }}>{truncate(hardest.adv.name, 30)}</span>
+                    <span style={{ fontSize: 10, color: INK, opacity: 0.45, marginTop: 2 }}>{"Toughest completed"}</span>
+                  </div>
+                  <div style={{ display: "flex", padding: "4px 10px", borderRadius: 999, background: tint(DIFFICULTY_COLOR[hardest.difficulty] ?? INK, 0.14), border: `1px solid ${DIFFICULTY_COLOR[hardest.difficulty] ?? INK}` }}>
+                    <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: 0.5, color: DIFFICULTY_COLOR[hardest.difficulty] ?? INK }}>{hardest.difficulty.toUpperCase()}</span>
+                  </div>
                 </div>
-              ))}
+              )}
+              {mostRecent && (
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "center", background: "rgba(36,26,18,0.045)", borderRadius: 10, padding: "10px 14px", gap: 14 }}>
+                  <div style={{ display: "flex", width: 38, height: 38, borderRadius: 9, background: tint(INK, 0.08), border: `1px solid ${tint(INK, 0.2)}`, alignItems: "center", justifyContent: "center" }}>
+                    <TypeIcon type={mostRecent.adv.type} size={18} color={INK} />
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: INK }}>{truncate(mostRecent.adv.name, 30)}</span>
+                    <span style={{ fontSize: 10, color: INK, opacity: 0.45, marginTop: 2 }}>{`Most recent · ${fmtDate(parseISODate(mostRecent.date))}`}</span>
+                  </div>
+                  <div style={{ display: "flex", padding: "4px 10px", borderRadius: 999, background: tint(GOLD, 0.2), border: `1px solid ${GOLD}` }}>
+                    <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: 0.5, color: "#8a6a1f" }}>{"LATEST"}</span>
+                  </div>
+                </div>
+              )}
+              {!hardest && (
+                <span style={{ fontSize: 12, color: INK, opacity: 0.4 }}>{"Mark your first adventure done to start earning achievements"}</span>
+              )}
             </div>
 
             <div style={{ display: "flex", flex: 1 }} />
 
             <div style={{ display: "flex", flexDirection: "row", alignItems: "center", zIndex: 1 }}>
               <span style={{ fontSize: 11, color: INK, opacity: 0.4 }}>{"Issued electronically · trailtotides.com"}</span>
-              <div style={{ display: "flex", marginLeft: "auto", width: 50, height: 50, borderRadius: 999, border: `2px dashed ${GOLD}`, alignItems: "center", justifyContent: "center", transform: "rotate(-10deg)" }}>
-                <div style={{ display: "flex", opacity: 0.7 }}>
-                  <TypeIcon type="Mountaineering" size={22} color={GOLD} />
-                </div>
+              <div style={{ display: "flex", marginLeft: "auto", flexDirection: "column", alignItems: "center", justifyContent: "center", width: 92, height: 46, borderRadius: 6, background: INK, border: `1.5px solid ${GOLD}`, transform: "rotate(-4deg)" }}>
+                <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: 1.5, color: GOLD }}>{"TTT"}</span>
+                <span style={{ fontSize: 7, fontWeight: 700, letterSpacing: 1, color: "rgba(201,162,77,0.7)", marginTop: 2 }}>{"EST. 2024"}</span>
               </div>
             </div>
           </div>
