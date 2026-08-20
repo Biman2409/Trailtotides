@@ -113,6 +113,7 @@ function dominantDomain(ace: ACE): StampDomain {
   return (Object.keys(sums) as StampDomain[]).reduce((best, d) => (sums[d] > sums[best] ? d : best), "engine");
 }
 
+// Small 5-point star — used for the rank badge icon, not a stamp shape.
 function starVertices(cx: number, cy: number, rOuter: number, rInner: number, points: number, rotateDeg = -90): [number, number][] {
   const verts: [number, number][] = [];
   const step = Math.PI / points;
@@ -123,22 +124,60 @@ function starVertices(cx: number, cy: number, rOuter: number, rInner: number, po
   }
   return verts;
 }
-// A gently scalloped seal/sunburst outline — Elements (water/altitude) reads
-// as "organic" rather than a hard-edged polygon.
+// Mechanical cog — Engine (stamina/power) is the domain about output and
+// drive, so it gets teeth, not a plain polygon.
+function gearVertices(cx: number, cy: number, rOuter: number, rInner: number, teeth: number, rotateDeg = -90): [number, number][] {
+  const step = (Math.PI * 2) / teeth;
+  const toothHalf = step * 0.22;
+  const gapHalf = step * 0.16;
+  const rot = (rotateDeg * Math.PI) / 180;
+  const verts: [number, number][] = [];
+  for (let i = 0; i < teeth; i++) {
+    const center = i * step + rot;
+    const rootCenter = center + step / 2;
+    const a1 = center - toothHalf, a2 = center + toothHalf;
+    const a3 = rootCenter - gapHalf, a4 = rootCenter + gapHalf;
+    verts.push([cx + rOuter * Math.cos(a1), cy + rOuter * Math.sin(a1)]);
+    verts.push([cx + rOuter * Math.cos(a2), cy + rOuter * Math.sin(a2)]);
+    verts.push([cx + rInner * Math.cos(a3), cy + rInner * Math.sin(a3)]);
+    verts.push([cx + rInner * Math.cos(a4), cy + rInner * Math.sin(a4)]);
+  }
+  return verts;
+}
+// Compass rose — Mind (focus/nerve) is about bearing and precision, so its
+// mark alternates long cardinal spikes with short intercardinal ones.
+function compassVertices(cx: number, cy: number, rLong: number, rShort: number, rInner: number, points: number, rotateDeg = -90): [number, number][] {
+  const angStep = Math.PI / points;
+  const rot = (rotateDeg * Math.PI) / 180;
+  const verts: [number, number][] = [];
+  for (let i = 0; i < points; i++) {
+    const spikeAngle = i * 2 * angStep + rot;
+    const valleyAngle = spikeAngle + angStep;
+    const r = i % 2 === 0 ? rLong : rShort;
+    verts.push([cx + r * Math.cos(spikeAngle), cy + r * Math.sin(spikeAngle)]);
+    verts.push([cx + rInner * Math.cos(valleyAngle), cy + rInner * Math.sin(valleyAngle)]);
+  }
+  return verts;
+}
+// A scalloped seal outline built from two harmonics — Elements (water/
+// altitude) reads as organic and hand-carved rather than a hard-edged
+// polygon; the second, weaker ripple keeps any single stamp from looking
+// like a stamped-out template of every other one.
 function burstVertices(cx: number, cy: number, rBase: number, waveAmp: number, waveCount: number, rotateDeg = -90): [number, number][] {
-  const totalPoints = waveCount * 8;
+  const totalPoints = waveCount * 10;
   const verts: [number, number][] = [];
   for (let i = 0; i < totalPoints; i++) {
     const angle = (Math.PI * 2 * i) / totalPoints + (rotateDeg * Math.PI) / 180;
-    const r = rBase + waveAmp * Math.sin(waveCount * angle);
+    const r = rBase + waveAmp * Math.sin(waveCount * angle) + waveAmp * 0.3 * Math.sin(waveCount * 3 * angle);
     verts.push([cx + r * Math.cos(angle), cy + r * Math.sin(angle)]);
   }
   return verts;
 }
-// Unit shield silhouette (flat top, bulging shoulders, tapered point) —
+// Unit heraldic shield (notched top, bulging shoulders, tapered point) —
 // Chassis (strength/agility) gets a load-bearing, structural mark.
 const SHIELD_UNIT: [number, number][] = [
-  [-0.7, -1], [0.7, -1], [1, -0.42], [0.55, 0.55], [0, 1.15], [-0.55, 0.55], [-1, -0.42],
+  [-0.7, -1], [-0.12, -0.82], [0, -0.98], [0.12, -0.82], [0.7, -1],
+  [1, -0.42], [0.55, 0.55], [0, 1.15], [-0.55, 0.55], [-1, -0.42],
 ];
 function shieldVertices(cx: number, cy: number, r: number, rotateDeg: number): [number, number][] {
   const rad = (rotateDeg * Math.PI) / 180;
@@ -148,13 +187,13 @@ function shieldVertices(cx: number, cy: number, r: number, rotateDeg: number): [
     return [cx + x * cos - y * sin, cy + x * sin + y * cos];
   });
 }
-/** Builds the three concentric outlines (outer/mid/extra) for a domain+seed at a given radius. */
+/** Builds the outline for a domain+seed at a given radius. */
 function domainVertices(domain: StampDomain, cx: number, cy: number, r: number, rotate: number): [number, number][] {
   switch (domain) {
-    case "engine": return polygonVertices(cx, cy, r, 6, rotate);
+    case "engine": return gearVertices(cx, cy, r, r * 0.72, 8, rotate);
     case "chassis": return shieldVertices(cx, cy, r * 1.05, rotate);
-    case "elements": return burstVertices(cx, cy, r * 0.92, r * 0.11, 9, rotate);
-    case "mind": return starVertices(cx, cy, r, r * 0.5, 6, rotate);
+    case "elements": return burstVertices(cx, cy, r * 0.92, r * 0.12, 9, rotate);
+    case "mind": return compassVertices(cx, cy, r, r * 0.6, r * 0.32, 8, rotate);
   }
 }
 
