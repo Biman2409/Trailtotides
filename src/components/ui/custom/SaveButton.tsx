@@ -86,14 +86,14 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
         <TooltipTrigger asChild>
           <button
             onClick={handleClick}
-            aria-label="Log in to save"
+            aria-label="Save this adventure"
             className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm ${className}`}
             style={{ background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.5)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }}
           >
             <LogIn className="w-3.5 h-3.5" />
           </button>
         </TooltipTrigger>
-        <TooltipContent>Log in to save</TooltipContent>
+        <TooltipContent>Save this adventure</TooltipContent>
       </Tooltip>
     );
   }
