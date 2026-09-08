@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, type Variants } from "framer-motion";
-import { Share2, Loader2, ChevronLeft, ChevronRight, X, Compass } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Share2, Loader2, X, Compass } from "lucide-react";
 import { toast } from "sonner";
 import type { PassportData } from "@/lib/passportData";
 import {
@@ -16,9 +16,13 @@ import {
 // time and never reach the client bundle).
 
 const MAP_W = PASSPORT_MAP_W, MAP_H = PASSPORT_MAP_H;
+type PageKind = "stats" | "map";
+// Both pages are designed at this fixed pixel size, then scaled to fit
+// whatever the actual slot size is — see ScaledPage below.
+const PAGE_REF_W = 400, PAGE_REF_H = 520;
 
-// ─── Small hook: measures a container's rendered width so the fixed-pixel
-// map scene (built once at native size) can be scaled down/up to fit
+// ─── Small hook: measures a container's rendered width so fixed-pixel
+// content (built once at native size) can be scaled down/up to fit
 // responsively, the same way a poster is photographed then resized. ───────
 function useContainerScale(referenceWidth: number) {
   const ref = useRef<HTMLDivElement>(null);
@@ -34,6 +38,46 @@ function useContainerScale(referenceWidth: number) {
     return () => ro.disconnect();
   }, [referenceWidth]);
   return { ref, scale };
+}
+
+// Renders children at a fixed (refWidth x refHeight) pixel canvas, scaled to
+// fill whatever size its parent actually is — guarantees the fixed-pixel
+// page content (small font sizes, absolute stamp positions) never overflows
+// or clips regardless of how wide the open spread ends up being rendered.
+function ScaledPage({ refWidth, refHeight, children }: { refWidth: number; refHeight: number; children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      const { width, height } = entries[0].contentRect;
+      if (width && height) setScale(Math.min(width / refWidth, height / refHeight));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [refWidth, refHeight]);
+  return (
+    <div ref={ref} className="relative w-full h-full overflow-hidden">
+      <div style={{ width: refWidth, height: refHeight, transform: `scale(${scale})`, transformOrigin: "top left", position: "absolute" }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function ShareButton({ onClick, sharing }: { onClick: () => void; sharing: boolean }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={sharing}
+      aria-label="Share this page"
+      className="absolute bottom-2.5 right-2.5 z-10 w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 disabled:opacity-60"
+      style={{ background: "rgba(36,26,18,0.5)", color: "#f5ecd6" }}
+    >
+      {sharing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Share2 className="w-3 h-3" />}
+    </button>
+  );
 }
 
 function RadarChart({ ace, hasData, size = 180 }: { ace: Record<string, number>; hasData: boolean; size?: number }) {
@@ -63,11 +107,11 @@ function RadarChart({ ace, hasData, size = 180 }: { ace: Record<string, number>;
   );
 }
 
-// ─── Page 1 — bio, achievements, capability profile, badges ───────────────
-function StatsPage({ data }: { data: PassportData }) {
+// ─── Left page — bio, achievements, capability profile, badges ────────────
+function StatsPage({ data, onShare, sharing }: { data: PassportData; onShare: () => void; sharing: boolean }) {
   const issueDate = new Date(data.issueDateISO);
   return (
-    <div className="w-full h-full flex flex-col overflow-hidden" style={{ background: PAPER, padding: "18px 20px 14px" }}>
+    <div className="relative flex flex-col overflow-hidden" style={{ width: PAGE_REF_W, height: PAGE_REF_H, background: PAPER, padding: "18px 20px 14px" }}>
       <div className="flex items-center gap-2">
         <div className="w-5 h-5 rounded-md flex items-center justify-center shrink-0" style={{ background: "#ff5100" }}>
           <Compass className="w-3 h-3 text-white" />
@@ -184,15 +228,17 @@ function StatsPage({ data }: { data: PassportData }) {
           <span className="text-[7px] font-extrabold tracking-wider" style={{ color: GOLD }}>TTT</span>
         </div>
       </div>
+
+      <ShareButton onClick={onShare} sharing={sharing} />
     </div>
   );
 }
 
-// ─── Page 2 — the map, stamped wherever the explorer has been ─────────────
-function MapPage({ data }: { data: PassportData }) {
+// ─── Right page — the map, stamped wherever the explorer has been ─────────
+function MapPage({ data, onShare, sharing }: { data: PassportData; onShare: () => void; sharing: boolean }) {
   const { ref, scale } = useContainerScale(MAP_W);
   return (
-    <div className="w-full h-full flex flex-col items-center overflow-hidden" style={{ background: PAPER, padding: "22px 18px 14px" }}>
+    <div className="relative flex flex-col items-center overflow-hidden" style={{ width: PAGE_REF_W, height: PAGE_REF_H, background: PAPER, padding: "18px 16px 14px" }}>
       <div className="flex flex-col items-center shrink-0">
         <span className="text-[9px] font-bold tracking-[0.2em]" style={{ color: INK, opacity: 0.5 }}>VISAS & ENDORSEMENTS</span>
         <div className="w-16 h-px mt-1.5" style={{ background: "rgba(36,26,18,0.25)" }} />
@@ -243,11 +289,13 @@ function MapPage({ data }: { data: PassportData }) {
         )}
         <span className="text-[10px]" style={{ color: INK, opacity: 0.35 }}>trailtotides.com</span>
       </div>
+
+      <ShareButton onClick={onShare} sharing={sharing} />
     </div>
   );
 }
 
-// ─── Closed cover ───────────────────────────────────────────────────────
+// ─── Closed cover — a real book, portrait, waiting to be opened ───────────
 function Cover({ onOpen }: { onOpen: () => void }) {
   return (
     <motion.button
@@ -261,7 +309,7 @@ function Cover({ onOpen }: { onOpen: () => void }) {
       initial={false}
       whileHover={{ scale: 1.015, rotate: -0.6 }}
       whileTap={{ scale: 0.98 }}
-      exit={{ rotateY: -115, opacity: 0, transition: { duration: 0.65, ease: [0.65, 0, 0.35, 1] } }}
+      exit={{ rotateY: -115, opacity: 0, transition: { duration: 0.6, ease: [0.65, 0, 0.35, 1] } }}
     >
       <div className="absolute inset-0 rounded-2xl pointer-events-none" style={{ boxShadow: "inset 0 0 60px rgba(0,0,0,0.35)" }} />
 
@@ -283,19 +331,46 @@ function Cover({ onOpen }: { onOpen: () => void }) {
   );
 }
 
-const pageVariants: Variants = {
-  enter: (dir: number) => ({ rotateY: dir > 0 ? 78 : -78, opacity: 0 }),
-  center: { rotateY: 0, opacity: 1, transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] } },
-  exit: (dir: number) => ({ rotateY: dir > 0 ? -78 : 78, opacity: 0, transition: { duration: 0.35, ease: [0.4, 0, 1, 1] } }),
-};
+// ─── Open spread — both pages side by side, like a real open passport ─────
+function OpenSpread({ data, onClose, onShare, sharingKind }: {
+  data: PassportData; onClose: () => void; onShare: (kind: PageKind) => void; sharingKind: PageKind | null;
+}) {
+  return (
+    <motion.div
+      className="absolute inset-0 rounded-2xl overflow-hidden flex flex-row"
+      style={{ boxShadow: "0 30px 70px rgba(0,0,0,0.5)", background: "#180509" }}
+      initial={{ opacity: 0, scale: 0.96 }}
+      animate={{ opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] } }}
+    >
+      <button
+        onClick={onClose}
+        className="absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full flex items-center justify-center transition-transform hover:scale-110"
+        style={{ background: "rgba(36,26,18,0.5)", color: "#f5ecd6" }}
+        aria-label="Close passport"
+      >
+        <X className="w-3.5 h-3.5" />
+      </button>
+
+      <div className="flex-1 h-full min-w-0">
+        <ScaledPage refWidth={PAGE_REF_W} refHeight={PAGE_REF_H}>
+          <StatsPage data={data} onShare={() => onShare("stats")} sharing={sharingKind === "stats"} />
+        </ScaledPage>
+      </div>
+      <div className="w-2 h-full shrink-0" style={{ background: "linear-gradient(90deg, rgba(0,0,0,0.28), rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.05) 60%, rgba(0,0,0,0.28))" }} />
+      <div className="flex-1 h-full min-w-0">
+        <ScaledPage refWidth={PAGE_REF_W} refHeight={PAGE_REF_H}>
+          <MapPage data={data} onShare={() => onShare("map")} sharing={sharingKind === "map"} />
+        </ScaledPage>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function PassportBook() {
   const [data, setData] = useState<PassportData | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [open, setOpen] = useState(false);
-  const [page, setPage] = useState<0 | 1>(0);
-  const [direction, setDirection] = useState(1);
-  const [sharing, setSharing] = useState(false);
+  const [sharingKind, setSharingKind] = useState<PageKind | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -306,23 +381,8 @@ export default function PassportBook() {
     return () => { cancelled = true; };
   }, []);
 
-  function goTo(next: 0 | 1) {
-    if (next === page) return;
-    setDirection(next > page ? 1 : -1);
-    setPage(next);
-  }
-  function goNext() {
-    if (page === 0) goTo(1);
-    else setOpen(false);
-  }
-  function goPrev() {
-    if (page === 1) goTo(0);
-    else setOpen(false);
-  }
-
-  async function handleShare() {
-    setSharing(true);
-    const kind = page === 0 ? "stats" : "map";
+  async function handleShare(kind: PageKind) {
+    setSharingKind(kind);
     try {
       const res = await fetch(`/api/passport?page=${kind}`);
       if (!res.ok) { toast.error("Couldn't generate your Adventure Passport — try again in a moment."); return; }
@@ -338,118 +398,59 @@ export default function PassportBook() {
     } catch {
       // AbortError from a cancelled native share sheet is expected — no toast
     } finally {
-      setSharing(false);
+      setSharingKind(null);
     }
   }
 
   return (
     <div className="rounded-2xl overflow-hidden p-6 sm:p-10 flex flex-col items-center gap-5" style={{ border: "1px solid var(--border-subtle)", background: "linear-gradient(180deg, #2c0a10, #180509)" }}>
-      <div className="relative w-full max-w-[380px]" style={{ perspective: 1800 }}>
-        <div className="relative w-full" style={{ aspectRatio: "1080 / 1350" }}>
-          {status === "loading" && (
-            <div className="absolute inset-0 rounded-2xl flex items-center justify-center" style={{ background: "rgba(255,255,255,0.03)" }}>
-              <Loader2 className="w-6 h-6 animate-spin" style={{ color: "rgba(255,255,255,0.3)" }} />
-            </div>
-          )}
+      <div
+        className="relative w-full transition-[max-width,aspect-ratio] duration-700"
+        style={{
+          maxWidth: open ? 860 : 320,
+          aspectRatio: open ? "1600 / 1040" : "700 / 900",
+          perspective: 1800,
+          transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+      >
+        {status === "loading" && (
+          <div className="absolute inset-0 rounded-2xl flex items-center justify-center" style={{ background: "rgba(255,255,255,0.03)" }}>
+            <Loader2 className="w-6 h-6 animate-spin" style={{ color: "rgba(255,255,255,0.3)" }} />
+          </div>
+        )}
 
-          {status === "error" && (
-            <div className="absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-2 px-6 text-center" style={{ background: "rgba(255,255,255,0.03)" }}>
-              <Compass className="w-6 h-6" style={{ color: "rgba(255,255,255,0.25)" }} />
-              <span className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>Couldn&apos;t load your passport. Refresh to try again.</span>
-            </div>
-          )}
+        {status === "error" && (
+          <div className="absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-2 px-6 text-center" style={{ background: "rgba(255,255,255,0.03)" }}>
+            <Compass className="w-6 h-6" style={{ color: "rgba(255,255,255,0.25)" }} />
+            <span className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>Couldn&apos;t load your passport. Refresh to try again.</span>
+          </div>
+        )}
 
-          {status === "ready" && data && (
-            <>
-              {/* Page-edge hint — a few offset sheets peeking out from behind the closed cover */}
-              {!open && [10, 6, 3].map((offset, i) => (
-                <div
-                  key={offset}
-                  className="absolute rounded-2xl pointer-events-none"
-                  style={{ inset: 0, left: offset, top: offset, background: PAPER, opacity: 0.16 - i * 0.03, zIndex: 0 }}
-                />
-              ))}
-
-              <AnimatePresence>
-                {!open && <Cover key="cover" onOpen={() => setOpen(true)} />}
-              </AnimatePresence>
-
-              {open && (
-                <motion.div
-                  className="absolute inset-0 rounded-2xl overflow-hidden"
-                  style={{ boxShadow: "0 30px 70px rgba(0,0,0,0.5)" }}
-                  initial={{ opacity: 0, scale: 0.94 }}
-                  animate={{ opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] } }}
-                >
-                  <button
-                    onClick={() => setOpen(false)}
-                    className="absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full flex items-center justify-center transition-transform hover:scale-110"
-                    style={{ background: "rgba(36,26,18,0.5)", color: "#f5ecd6" }}
-                    aria-label="Close passport"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-
-                  <div className="w-full h-full" style={{ perspective: 1400 }}>
-                    <AnimatePresence mode="wait" custom={direction} initial={false}>
-                      <motion.div
-                        key={page}
-                        custom={direction}
-                        variants={pageVariants}
-                        initial="enter"
-                        animate="center"
-                        exit="exit"
-                        className="w-full h-full"
-                        style={{ transformStyle: "preserve-3d" }}
-                      >
-                        {page === 0 ? <StatsPage data={data} /> : <MapPage data={data} />}
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-
-      {status === "ready" && open && (
-        <div className="flex items-center gap-4">
-          <button onClick={goPrev} className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(245,236,214,0.8)" }} aria-label="Previous page">
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-
-          <div className="flex items-center gap-2">
-            {[0, 1].map((i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i as 0 | 1)}
-                className="rounded-full transition-all"
-                style={{ width: page === i ? 16 : 6, height: 6, background: page === i ? "#ff5100" : "rgba(255,255,255,0.2)" }}
-                aria-label={`Go to page ${i + 1}`}
+        {status === "ready" && data && (
+          <>
+            {/* Page-edge hint — a few offset sheets peeking out from behind the closed cover */}
+            {!open && [10, 6, 3].map((offset, i) => (
+              <div
+                key={offset}
+                className="absolute rounded-2xl pointer-events-none"
+                style={{ inset: 0, left: offset, top: offset, background: PAPER, opacity: 0.16 - i * 0.03, zIndex: 0 }}
               />
             ))}
-          </div>
 
-          <button onClick={goNext} className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(245,236,214,0.8)" }} aria-label="Next page">
-            <ChevronRight className="w-4 h-4" />
-          </button>
+            <AnimatePresence>
+              {!open && <Cover key="cover" onOpen={() => setOpen(true)} />}
+            </AnimatePresence>
 
-          <button
-            onClick={handleShare}
-            disabled={sharing}
-            className="ml-2 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0"
-            style={{ background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)", color: "#fff", boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}
-          >
-            {sharing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Share2 className="w-3.5 h-3.5" />}
-            {sharing ? "…" : "Share"}
-          </button>
-        </div>
-      )}
+            {open && (
+              <OpenSpread data={data} onClose={() => setOpen(false)} onShare={handleShare} sharingKind={sharingKind} />
+            )}
+          </>
+        )}
+      </div>
 
-      {status === "ready" && !open && (
-        <p className="text-xs text-center" style={{ color: "rgba(245,236,214,0.4)" }}>Every completed adventure, stamped.</p>
-      )}
+      <p className="text-xs text-center" style={{ color: "rgba(245,236,214,0.4)" }}>
+        {open ? "Tap the share icon on either page to post it." : "Every completed adventure, stamped."}
+      </p>
     </div>
   );
 }
