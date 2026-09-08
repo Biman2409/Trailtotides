@@ -100,6 +100,12 @@ function mulberry32(seed: number) {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
+// A real ink stamp is never exactly the same size twice — a ±8% seeded
+// wobble on top of the difficulty-tier base size, so two adventures in the
+// same tier don't look like clones of each other.
+function sizeJitter(seed: number): number {
+  return 0.92 + mulberry32(seed * 13 + 5)() * 0.16;
+}
 
 type StampDomain = "engine" | "chassis" | "elements" | "mind";
 /** Which ACE domain an adventure leans on hardest — decides the stamp's shape family. */
@@ -452,41 +458,53 @@ export async function GET(req: Request) {
   const shown = stamps.slice(0, 18);
   const overflow = stamps.length - shown.length;
 
+  // Past ~8 stamps, shrink every mark a little so the declutter pass below
+  // has room to separate them without the map turning into a wall of ink.
+  const stampScale = shown.length <= 8 ? 1 : Math.max(0.64, 1 - (shown.length - 8) * 0.028);
+
   // India's adventures cluster hard in the Himalayan belt — plotting exact
-  // coordinates would stack half the stamps directly on top of each other.
-  // Group anything within ~7% of the map into a cluster and fan it out in a
-  // small ring, like a map pin "spiderfy", so every stamp stays legible.
-  const positioned = shown.map((s) => ({ ...s, ...project(s.adv.lng, s.adv.lat) }));
-  const CLUSTER_THRESHOLD = 7;
-  const clusters: (typeof positioned)[] = [];
-  const used = new Array(positioned.length).fill(false);
-  for (let i = 0; i < positioned.length; i++) {
-    if (used[i]) continue;
-    const cluster = [positioned[i]];
-    used[i] = true;
-    for (let j = i + 1; j < positioned.length; j++) {
-      if (used[j]) continue;
-      const dx = positioned[j].xPct - positioned[i].xPct;
-      const dy = positioned[j].yPct - positioned[i].yPct;
-      if (Math.sqrt(dx * dx + dy * dy) < CLUSTER_THRESHOLD) { cluster.push(positioned[j]); used[j] = true; }
-    }
-    clusters.push(cluster);
-  }
-  const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
-  const displayStamps = clusters.flatMap((cluster) => {
-    if (cluster.length === 1) {
-      const s = cluster[0];
-      return [{ ...s, dispX: clamp(s.xPct, 6, 94), dispY: clamp(s.yPct, 6, 94) }];
-    }
-    const cx = cluster.reduce((a, s) => a + s.xPct, 0) / cluster.length;
-    const cy = cluster.reduce((a, s) => a + s.yPct, 0) / cluster.length;
-    const ringR = Math.min(23, 6 + cluster.length * 3);
-    const ringRy = ringR * (MAP_W / MAP_H);
-    return cluster.map((s, idx) => {
-      const angle = (2 * Math.PI * idx) / cluster.length - Math.PI / 2;
-      return { ...s, dispX: clamp(cx + ringR * Math.cos(angle), 6, 94), dispY: clamp(cy + ringRy * Math.sin(angle), 6, 94) };
-    });
+  // coordinates would stack stamps directly on top of each other. Run a
+  // short physics relaxation in real pixel space: every stamp repels its
+  // neighbors by its own visual radius (including the postmark tick burst),
+  // pulled back toward its true location by a weak spring each step, so the
+  // layout stays close to the real map but nothing actually overlaps.
+  type MapNode = { adv: Adventure; date: string; difficulty: string; x: number; y: number; ox: number; oy: number; r: number };
+  const nodes: MapNode[] = shown.map((s) => {
+    const { xPct, yPct } = project(s.adv.lng, s.adv.lat);
+    const size = (DIFFICULTY_STAMP_SIZE[s.difficulty] ?? 100) * stampScale * sizeJitter(hashSeed(s.adv.slug));
+    const x = (xPct / 100) * MAP_W, y = (yPct / 100) * MAP_H;
+    return { ...s, x, y, ox: x, oy: y, r: size * 0.57 };
   });
+  const PADDING = 5;
+  for (let iter = 0; iter < 400; iter++) {
+    for (const n of nodes) {
+      n.x += (n.ox - n.x) * 0.02;
+      n.y += (n.oy - n.y) * 0.02;
+    }
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i], b = nodes[j];
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const minDist = a.r + b.r + PADDING;
+        let dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < minDist) {
+          if (dist < 0.001) dist = 0.001;
+          const overlap = (minDist - dist) / 2;
+          const ux = dx / dist, uy = dy / dist;
+          a.x -= ux * overlap; a.y -= uy * overlap;
+          b.x += ux * overlap; b.y += uy * overlap;
+        }
+      }
+    }
+    for (const n of nodes) {
+      n.x = Math.max(n.r, Math.min(MAP_W - n.r, n.x));
+      n.y = Math.max(n.r, Math.min(MAP_H - n.r, n.y));
+    }
+  }
+  const displayStamps = nodes.map((n) => ({
+    adv: n.adv, date: n.date, difficulty: n.difficulty,
+    dispX: (n.x / MAP_W) * 100, dispY: (n.y / MAP_H) * 100,
+  }));
 
   return new ImageResponse(
     (
@@ -688,8 +706,8 @@ export async function GET(req: Request) {
 
                 {displayStamps.map(({ adv, difficulty, dispX, dispY }) => {
                   const color = DIFFICULTY_COLOR[difficulty] ?? INK;
-                  const size = DIFFICULTY_STAMP_SIZE[difficulty] ?? 100;
                   const seed = hashSeed(adv.slug);
+                  const size = (DIFFICULTY_STAMP_SIZE[difficulty] ?? 100) * stampScale * sizeJitter(seed);
                   const domain = dominantDomain(getACE(adv));
                   // A small hand-stamped tilt, seeded off the same adventure so it's
                   // stable across re-shares — kept separate from the shape's own free
