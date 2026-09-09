@@ -93,7 +93,7 @@ function Popover({ badge, anchorRect, onClose, locked }: {
         <div className="flex items-start gap-3">
           <div className="relative shrink-0 flex items-center justify-center overflow-hidden rounded-xl"
             style={{ width: 40, height: 40, background: iconBg, border: `1.5px solid ${iconBorder}`, color: iconColor }}>
-            {locked ? <Lock style={{ width: 18, height: 18 }} /> : ICON(badge.icon, 20)}
+            {ICON(badge.icon, 20)}
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5 mb-1">
@@ -157,8 +157,8 @@ function TrophyCell({ badge, earned, boxSize, xl = false, isActive, onToggle }: 
         onClick={handleClick}
       >
         <div className="flex items-center justify-center transition-all group-hover:scale-105"
-          style={{ width: boxSize, height: boxSize, borderRadius: 8, background: "var(--bg-surface)", border: `1px solid ${isActive ? "var(--border-default)" : "var(--border-subtle)"}`, boxShadow: isActive ? "0 0 12px rgba(0,0,0,0.15)" : "none" }}>
-          <Lock style={{ width: Math.round(boxSize * 0.33), height: Math.round(boxSize * 0.33) }} className="text-[var(--text-muted)]" />
+          style={{ width: boxSize, height: boxSize, borderRadius: 8, background: "var(--bg-surface)", border: `1px solid ${isActive ? "var(--border-default)" : "var(--border-subtle)"}`, boxShadow: isActive ? "0 0 12px rgba(0,0,0,0.15)" : "none", color: "var(--text-muted)", opacity: 0.5 }}>
+          {ICON(badge.icon, iconSize)}
         </div>
         <p className="text-center font-medium leading-tight" style={{ fontSize: 7, width: boxSize + 8, color: "var(--text-muted)" }}>{badge.name}</p>
       </button>

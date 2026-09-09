@@ -19,7 +19,7 @@ export default function DeleteAceDataButton() {
   }
 
   return (
-    <Section title="Danger Zone" subtitle="Permanently delete data associated with your account.">
+    <Section title="Your Data" subtitle="Permanently delete data associated with your account.">
       {done ? (
         <div className="flex items-start gap-2.5">
           <Trash2 className="w-4 h-4 mt-0.5 shrink-0" style={{ color: "var(--text-tertiary)" }} />

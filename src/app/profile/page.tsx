@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { Calendar, Shield, Package, Mail, Hash } from "lucide-react";
+import { Calendar, Shield, Package, Mail, Hash, Crown } from "lucide-react";
 import { format } from "date-fns";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -108,19 +108,36 @@ export default async function ProfilePage() {
             {/* Avatar */}
             <div className="relative shrink-0">
               <AvatarPicker />
-              {/* Role badge */}
-              <div
-                className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider"
-                style={
-                  profile.role === "admin"
-                    ? { background: "rgba(139,92,246,0.2)", color: "#a78bfa", border: "1px solid rgba(139,92,246,0.3)" }
-                    : profile.role === "operator"
-                    ? { background: "rgba(16,185,129,0.15)", color: "#34d399", border: "1px solid rgba(16,185,129,0.25)" }
-                    : { background: "rgba(255,81,0,0.12)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }
-                }
-              >
-                {profile.role}
-              </div>
+              {/* Role badge — admin gets a distinct, ornamented mark instead of
+                  the plain colored pill everyone else gets */}
+              {profile.role === "admin" ? (
+                <div
+                  className="absolute -bottom-2 -right-2 flex items-center gap-1 pl-1.5 pr-2.5 py-1 rounded-full overflow-hidden"
+                  style={{
+                    background: "linear-gradient(135deg, #a78bfa 0%, #c9a24d 100%)",
+                    boxShadow: "0 3px 14px rgba(167,139,250,0.45), 0 0 0 1px rgba(255,255,255,0.2) inset",
+                  }}
+                >
+                  <style>{`@keyframes admin-badge-shine { 0%,100%{background-position:200% center} 50%{background-position:-200% center} }`}</style>
+                  <span
+                    className="absolute inset-0 pointer-events-none"
+                    style={{ background: "linear-gradient(110deg, transparent 35%, rgba(255,255,255,0.55) 50%, transparent 65%)", backgroundSize: "220% 100%", animation: "admin-badge-shine 3.2s ease-in-out infinite" }}
+                  />
+                  <Crown className="w-3 h-3 relative shrink-0" style={{ color: "#241a12" }} fill="#241a12" />
+                  <span className="relative text-[9px] font-black uppercase tracking-wider" style={{ color: "#241a12" }}>Admin</span>
+                </div>
+              ) : (
+                <div
+                  className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider"
+                  style={
+                    profile.role === "operator"
+                      ? { background: "rgba(16,185,129,0.15)", color: "#34d399", border: "1px solid rgba(16,185,129,0.25)" }
+                      : { background: "rgba(255,81,0,0.12)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }
+                  }
+                >
+                  {profile.role}
+                </div>
+              )}
             </div>
 
             {/* Name + meta */}
@@ -221,11 +238,11 @@ export default async function ProfilePage() {
                 <PassportBook />
               </div>
 
-              {/* Expedition Profile */}
+              {/* Adventure Profile */}
               <div>
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-1.5 h-5 rounded-full" style={{ background: "#ff5100" }} />
-                  <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>Expedition Profile</h2>
+                  <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>Adventure Profile</h2>
                 </div>
                 <ExpeditionProfile />
               </div>
