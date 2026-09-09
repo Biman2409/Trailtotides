@@ -1,12 +1,35 @@
 import { createClient, createAdminClient } from "@/lib/supabase/server";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { adventures, type Adventure } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import { getAchievements } from "@/lib/achievements";
 import {
-  RADAR_AXES, getAceRank, dominantDomain, declutterStamps,
-  DIFFICULTY_LEVEL, hashSeed, type StampDomain,
+  RADAR_AXES, getAceRank, dominantDomain, declutterStamps, deriveTripTrophies,
+  DIFFICULTY_LEVEL, hashSeed, type StampDomain, type TripTrophy,
   PASSPORT_MAP_W, PASSPORT_MAP_H,
 } from "@/lib/passportVisuals";
+
+const PHOTO_BUCKET = "adventure-photos";
+interface PhotoMeta { id: string; user_id: string; caption: string; url: string; created_at: string }
+async function readPhotoIndex(admin: SupabaseClient, slug: string): Promise<PhotoMeta[]> {
+  const { data, error } = await admin.storage.from(PHOTO_BUCKET).download(`${slug}/_index.json`);
+  if (error || !data) return [];
+  try { return JSON.parse(await data.text()) as PhotoMeta[]; } catch { return []; }
+}
+/** Every completed adventure's most recent photo BY THIS USER, keyed by slug — fetched in small parallel batches to avoid hammering storage. */
+async function readMyPhotosBySlug(admin: SupabaseClient, userId: string, slugs: string[]): Promise<Map<string, PhotoMeta>> {
+  const result = new Map<string, PhotoMeta>();
+  const BATCH = 8;
+  for (let i = 0; i < slugs.length; i += BATCH) {
+    const batch = slugs.slice(i, i + BATCH);
+    const lists = await Promise.all(batch.map((slug) => readPhotoIndex(admin, slug)));
+    lists.forEach((list, j) => {
+      const mine = list.find((p) => p.user_id === userId);
+      if (mine) result.set(batch[j], mine);
+    });
+  }
+  return result;
+}
 
 export interface PassportStamp {
   slug: string;
@@ -19,6 +42,19 @@ export interface PassportStamp {
   dispX: number;
   dispY: number;
   stampScale: number;
+}
+
+export interface AdventureLogEntry {
+  slug: string;
+  name: string;
+  type: string;
+  difficulty: string;
+  date: string;
+  photoUrl: string;
+  photoCaption: string | null;
+  isPersonalPhoto: boolean;
+  memorableMoment: string;
+  trophies: TripTrophy[];
 }
 
 export interface PassportData {
@@ -37,6 +73,7 @@ export interface PassportData {
   totalBadges: number;
   badges: { id: string; name: string; icon: string; color: string }[];
   badgeOverflow: number;
+  logPages: AdventureLogEntry[];
   stamps: PassportStamp[];
   stampOverflow: number;
 }
@@ -61,7 +98,7 @@ export async function computePassportData(origin: string, demoMode?: string | nu
   } as unknown as NonNullable<typeof realUser>;
 
   const admin = await createAdminClient();
-  let entries: { slug: string; date: string }[] = [];
+  let entries: { slug: string; date: string; note?: string }[] = [];
   if (DEBUG_DEMO) {
     const count = DEBUG_DEMO === "many" ? 24 : DEBUG_DEMO === "empty" ? 0 : 6;
     entries = adventures.slice(0, count).map((a, i) => ({ slug: a.slug, date: `2024-${String((i % 12) + 1).padStart(2, "0")}-1${i % 9}` }));
@@ -77,9 +114,9 @@ export async function computePassportData(origin: string, demoMode?: string | nu
       const adv = adventures.find((a) => a.slug === e.slug);
       if (!adv) return null;
       const difficulty = computeDifficulty(getACE(adv));
-      return { adv, date: e.date, difficulty };
+      return { adv, date: e.date, note: e.note, difficulty };
     })
-    .filter((x): x is { adv: Adventure; date: string; difficulty: string } => !!x)
+    .filter((x): x is { adv: Adventure; date: string; note: string | undefined; difficulty: string } => !!x)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const name = (user.user_metadata?.full_name as string) || (user.user_metadata?.username as string) || "Explorer";
@@ -144,12 +181,61 @@ export async function computePassportData(origin: string, demoMode?: string | nu
     stampScale: declutteredStamps[i].stampScale,
   }));
 
+  // ─── Adventure log pages — one per notable completed adventure: a photo
+  // (the user's own upload if they made one, else the adventure's own hero
+  // shot, so a log page is never empty), 2-3 trip-specific trophies, and a
+  // short "memorable moment" line pulled from whatever's most personal: a
+  // trip-log note, a review the user wrote, the photo's own caption, or
+  // finally the adventure's own tagline.
+  const LOG_PAGE_CAP = 8;
+  const myPhotosBySlug = DEBUG_DEMO
+    ? new Map<string, PhotoMeta>()
+    : await readMyPhotosBySlug(admin, user.id, stampsRaw.map((s) => s.adv.slug));
+
+  let reviewBySlug = new Map<string, string>();
+  if (!DEBUG_DEMO && stampsRaw.length > 0) {
+    const { data: myReviews } = await supabase
+      .from("reviews")
+      .select("adventure_slug, body")
+      .eq("user_id", user.id)
+      .in("adventure_slug", stampsRaw.map((s) => s.adv.slug));
+    reviewBySlug = new Map((myReviews ?? []).map((r) => [r.adventure_slug as string, r.body as string]));
+  }
+
+  const logPages: AdventureLogEntry[] = stampsRaw
+    .map((s) => ({ ...s, photo: myPhotosBySlug.get(s.adv.slug) }))
+    // Prioritize adventures with a personal photo, then the hardest —
+    // those are the ones most worth a dedicated page.
+    .sort((a, b) => {
+      if (!!a.photo !== !!b.photo) return a.photo ? -1 : 1;
+      return (DIFFICULTY_LEVEL[b.difficulty] ?? 1) - (DIFFICULTY_LEVEL[a.difficulty] ?? 1);
+    })
+    .slice(0, LOG_PAGE_CAP)
+    // Then read like a diary — most recent trip first.
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .map((s) => ({
+      slug: s.adv.slug,
+      name: s.adv.name,
+      type: s.adv.type,
+      difficulty: s.difficulty,
+      date: s.date,
+      photoUrl: s.photo?.url ?? s.adv.heroImage,
+      photoCaption: s.photo?.caption?.trim() || null,
+      isPersonalPhoto: !!s.photo,
+      memorableMoment: s.note?.trim() || reviewBySlug.get(s.adv.slug)?.trim() || s.photo?.caption?.trim() || s.adv.tagline,
+      trophies: deriveTripTrophies({
+        type: s.adv.type, difficulty: s.difficulty, domain: dominantDomain(getACE(s.adv)),
+        altitude: s.adv.altitude, distance: s.adv.distance,
+      }),
+    }));
+
   return {
     name, username, avatarUrl, passportNo, issueDateISO,
     totalAdventures: stampsRaw.length, statesCount,
     hardest: hardest ? { name: hardest.adv.name, type: hardest.adv.type, difficulty: hardest.difficulty } : null,
     hasAceData, userAce, topAxis, aceRank,
     totalBadges: allEarnedBadges.length, badges, badgeOverflow: allEarnedBadges.length - badges.length,
+    logPages,
     stamps, stampOverflow,
   };
 }

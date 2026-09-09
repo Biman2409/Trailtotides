@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Share2, Loader2, X, Compass } from "lucide-react";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { Share2, Loader2, X, Compass, ChevronLeft, ChevronRight, Camera } from "lucide-react";
 import { toast } from "sonner";
-import type { PassportData } from "@/lib/passportData";
+import type { PassportData, AdventureLogEntry } from "@/lib/passportData";
 import {
   INK, PAPER, GOLD, INDIA_PATH, DIFFICULTY_COLOR, DIFFICULTY_STAMP_SIZE, DIFFICULTY_LEVEL,
   RADAR_AXES, RADAR_AXIS_LABELS, RADAR_AXIS_SHORT, PASSPORT_MAP_W, PASSPORT_MAP_H,
-  fmtDate, truncate, tint, ptsStr, polygonVertices, radarVertices, starVertices,
+  fmtDate, parseISODate, truncate, tint, ptsStr, polygonVertices, radarVertices, starVertices,
   mulberry32, sizeJitter, TypeIcon, StampOutline, BadgeIcon,
 } from "@/lib/passportVisuals";
 // PassportData is a type-only import — safe even though passportData.ts
@@ -295,6 +295,75 @@ function MapPage({ data, onShare, sharing }: { data: PassportData; onShare: () =
   );
 }
 
+// ─── Adventure log page — one specific completed trip: a photo (the
+// explorer's own if they uploaded one, otherwise the adventure's own hero
+// shot), the trophies that trip itself earned, and a memorable-moment line.
+function AdventureLogPage({ entry }: { entry: AdventureLogEntry }) {
+  return (
+    <div className="relative flex flex-col overflow-hidden" style={{ width: PAGE_REF_W, height: PAGE_REF_H, background: PAPER, padding: "18px 20px 14px" }}>
+      <span className="text-[8px] font-bold tracking-[0.25em]" style={{ color: INK, opacity: 0.5 }}>ADVENTURE LOG</span>
+      <span className="text-base font-extrabold tracking-wide mt-0.5 truncate" style={{ color: INK }}>{entry.name}</span>
+
+      <div className="relative mt-2.5 rounded-lg overflow-hidden shrink-0" style={{ height: 190, border: `1px solid rgba(36,26,18,0.15)` }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={entry.photoUrl} alt={entry.name} className="w-full h-full object-cover" />
+        {entry.isPersonalPhoto && (
+          <div className="absolute top-1.5 left-1.5 flex items-center gap-1 px-1.5 py-0.5 rounded-full" style={{ background: "rgba(36,26,18,0.55)" }}>
+            <Camera className="w-2.5 h-2.5" style={{ color: "#f5ecd6" }} />
+            <span className="text-[7px] font-bold" style={{ color: "#f5ecd6" }}>MY PHOTO</span>
+          </div>
+        )}
+        {entry.photoCaption && (
+          <div className="absolute bottom-0 left-0 right-0 px-2 py-1.5" style={{ background: "linear-gradient(0deg, rgba(0,0,0,0.65), transparent)" }}>
+            <p className="text-[9px] font-medium truncate" style={{ color: "#f5ecd6" }}>{entry.photoCaption}</p>
+          </div>
+        )}
+      </div>
+
+      <div className="flex flex-col mt-2.5">
+        <span className="text-[8px] font-bold tracking-wider" style={{ color: INK, opacity: 0.5 }}>TROPHIES & BADGES</span>
+        <div className="flex flex-row gap-2 mt-1.5">
+          {entry.trophies.map((t, i) => (
+            <div key={i} className="flex flex-col items-center flex-1 min-w-0 rounded-lg px-1 py-2" style={{ background: "rgba(36,26,18,0.045)" }}>
+              <div className="w-7 h-7 rounded-full flex items-center justify-center shrink-0" style={{ background: tint(DIFFICULTY_COLOR[entry.difficulty] ?? INK, 0.15), border: `1px solid ${tint(DIFFICULTY_COLOR[entry.difficulty] ?? INK, 0.4)}` }}>
+                {t.icon === "type"
+                  ? <TypeIcon type={entry.type} size={13} color={DIFFICULTY_COLOR[entry.difficulty] ?? INK} />
+                  : <BadgeIcon name={t.icon} size={13} color={DIFFICULTY_COLOR[entry.difficulty] ?? INK} />}
+              </div>
+              <span className="text-[6.5px] font-extrabold text-center mt-1 leading-tight" style={{ color: INK }}>{t.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col mt-2.5 flex-1 min-h-0">
+        <span className="text-[8px] font-bold tracking-wider" style={{ color: INK, opacity: 0.5 }}>MEMORABLE MOMENT</span>
+        <p className="text-[10px] italic mt-1 leading-snug overflow-hidden" style={{ color: INK, opacity: 0.75, display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical" }}>
+          &ldquo;{truncate(entry.memorableMoment, 160)}&rdquo;
+        </p>
+      </div>
+
+      <div className="flex flex-row items-center justify-between">
+        <span className="text-[9px]" style={{ color: INK, opacity: 0.4 }}>{fmtDate(parseISODate(entry.date))}</span>
+        <div className="px-1.5 py-0.5 rounded-full shrink-0" style={{ background: tint(DIFFICULTY_COLOR[entry.difficulty] ?? INK, 0.14), border: `1px solid ${DIFFICULTY_COLOR[entry.difficulty] ?? INK}` }}>
+          <span className="text-[7px] font-extrabold" style={{ color: DIFFICULTY_COLOR[entry.difficulty] ?? INK }}>{entry.difficulty.toUpperCase()}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// A blank right-hand page when there's an odd number of log pages — keeps
+// the spread feeling like a real book instead of one page floating alone.
+function MoreAdventuresPage() {
+  return (
+    <div className="relative flex flex-col items-center justify-center overflow-hidden" style={{ width: PAGE_REF_W, height: PAGE_REF_H, background: PAPER, padding: "18px 20px 14px" }}>
+      <div style={{ opacity: 0.15 }}><Compass className="w-10 h-10" style={{ color: INK }} /></div>
+      <span className="text-xs font-bold mt-3 text-center px-6" style={{ color: INK, opacity: 0.4 }}>More adventures ahead</span>
+    </div>
+  );
+}
+
 // ─── Closed cover — a real book, portrait, waiting to be opened ───────────
 function Cover({ onOpen }: { onOpen: () => void }) {
   return (
@@ -331,9 +400,18 @@ function Cover({ onOpen }: { onOpen: () => void }) {
   );
 }
 
-// ─── Open spread — both pages side by side, like a real open passport ─────
-function OpenSpread({ data, onClose, onShare, sharingKind }: {
-  data: PassportData; onClose: () => void; onShare: (kind: PageKind) => void; sharingKind: PageKind | null;
+const spreadVariants: Variants = {
+  enter: (dir: number) => ({ rotateY: dir > 0 ? 65 : -65, opacity: 0 }),
+  center: { rotateY: 0, opacity: 1, transition: { duration: 0.45, ease: [0.4, 0, 0.2, 1] } },
+  exit: (dir: number) => ({ rotateY: dir > 0 ? -65 : 65, opacity: 0, transition: { duration: 0.35, ease: [0.4, 0, 1, 1] } }),
+};
+
+// ─── Open spread — both pages side by side, like a real open passport.
+// Spread 0 is always Stats|Map; any further spreads pair up adventure log
+// pages, navigated with the arrows below rather than flipped one page at a
+// time — closer to how you'd actually leaf through a real passport. ───────
+function OpenSpread({ left, right, spreadIndex, direction, onClose }: {
+  left: React.ReactNode; right: React.ReactNode; spreadIndex: number; direction: number; onClose: () => void;
 }) {
   return (
     <motion.div
@@ -351,16 +429,27 @@ function OpenSpread({ data, onClose, onShare, sharingKind }: {
         <X className="w-3.5 h-3.5" />
       </button>
 
-      <div className="flex-1 h-full min-w-0">
-        <ScaledPage refWidth={PAGE_REF_W} refHeight={PAGE_REF_H}>
-          <StatsPage data={data} onShare={() => onShare("stats")} sharing={sharingKind === "stats"} />
-        </ScaledPage>
-      </div>
-      <div className="w-2 h-full shrink-0" style={{ background: "linear-gradient(90deg, rgba(0,0,0,0.28), rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.05) 60%, rgba(0,0,0,0.28))" }} />
-      <div className="flex-1 h-full min-w-0">
-        <ScaledPage refWidth={PAGE_REF_W} refHeight={PAGE_REF_H}>
-          <MapPage data={data} onShare={() => onShare("map")} sharing={sharingKind === "map"} />
-        </ScaledPage>
+      <div className="w-full h-full" style={{ perspective: 1400 }}>
+        <AnimatePresence mode="wait" custom={direction} initial={false}>
+          <motion.div
+            key={spreadIndex}
+            custom={direction}
+            variants={spreadVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            className="w-full h-full flex flex-row"
+            style={{ transformStyle: "preserve-3d" }}
+          >
+            <div className="flex-1 h-full min-w-0">
+              <ScaledPage refWidth={PAGE_REF_W} refHeight={PAGE_REF_H}>{left}</ScaledPage>
+            </div>
+            <div className="w-2 h-full shrink-0" style={{ background: "linear-gradient(90deg, rgba(0,0,0,0.28), rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.05) 60%, rgba(0,0,0,0.28))" }} />
+            <div className="flex-1 h-full min-w-0">
+              <ScaledPage refWidth={PAGE_REF_W} refHeight={PAGE_REF_H}>{right}</ScaledPage>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </motion.div>
   );
@@ -371,6 +460,8 @@ export default function PassportBook() {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [open, setOpen] = useState(false);
   const [sharingKind, setSharingKind] = useState<PageKind | null>(null);
+  const [spreadIndex, setSpreadIndex] = useState(0);
+  const [direction, setDirection] = useState(1);
 
   useEffect(() => {
     let cancelled = false;
@@ -399,6 +490,35 @@ export default function PassportBook() {
       // AbortError from a cancelled native share sheet is expected — no toast
     } finally {
       setSharingKind(null);
+    }
+  }
+
+  const logPages = data?.logPages ?? [];
+  const logSpreadCount = Math.ceil(logPages.length / 2);
+  const spreadCount = 1 + logSpreadCount;
+
+  function goTo(next: number) {
+    if (next === spreadIndex || next < 0 || next >= spreadCount) return;
+    setDirection(next > spreadIndex ? 1 : -1);
+    setSpreadIndex(next);
+  }
+
+  function openBook() {
+    setOpen(true);
+    setSpreadIndex(0);
+  }
+
+  let left: React.ReactNode = null;
+  let right: React.ReactNode = null;
+  if (data) {
+    if (spreadIndex === 0) {
+      left = <StatsPage data={data} onShare={() => handleShare("stats")} sharing={sharingKind === "stats"} />;
+      right = <MapPage data={data} onShare={() => handleShare("map")} sharing={sharingKind === "map"} />;
+    } else {
+      const a = logPages[(spreadIndex - 1) * 2];
+      const b = logPages[(spreadIndex - 1) * 2 + 1];
+      left = a ? <AdventureLogPage entry={a} /> : <MoreAdventuresPage />;
+      right = b ? <AdventureLogPage entry={b} /> : <MoreAdventuresPage />;
     }
   }
 
@@ -438,18 +558,40 @@ export default function PassportBook() {
             ))}
 
             <AnimatePresence>
-              {!open && <Cover key="cover" onOpen={() => setOpen(true)} />}
+              {!open && <Cover key="cover" onOpen={openBook} />}
             </AnimatePresence>
 
             {open && (
-              <OpenSpread data={data} onClose={() => setOpen(false)} onShare={handleShare} sharingKind={sharingKind} />
+              <OpenSpread left={left} right={right} spreadIndex={spreadIndex} direction={direction} onClose={() => setOpen(false)} />
             )}
           </>
         )}
       </div>
 
+      {open && spreadCount > 1 && (
+        <div className="flex items-center gap-4">
+          <button onClick={() => goTo(spreadIndex - 1)} disabled={spreadIndex === 0} className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 disabled:opacity-30 disabled:hover:scale-100" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(245,236,214,0.8)" }} aria-label="Previous spread">
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <div className="flex items-center gap-2">
+            {Array.from({ length: spreadCount }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                className="rounded-full transition-all"
+                style={{ width: spreadIndex === i ? 16 : 6, height: 6, background: spreadIndex === i ? "#ff5100" : "rgba(255,255,255,0.2)" }}
+                aria-label={`Go to spread ${i + 1}`}
+              />
+            ))}
+          </div>
+          <button onClick={() => goTo(spreadIndex + 1)} disabled={spreadIndex === spreadCount - 1} className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 disabled:opacity-30 disabled:hover:scale-100" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(245,236,214,0.8)" }} aria-label="Next spread">
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       <p className="text-xs text-center" style={{ color: "rgba(245,236,214,0.4)" }}>
-        {open ? "Tap the share icon on either page to post it." : "Every completed adventure, stamped."}
+        {open ? (spreadIndex === 0 ? "Tap the share icon on either page to post it." : "One page per adventure, photo and all.") : "Every completed adventure, stamped."}
       </p>
     </div>
   );

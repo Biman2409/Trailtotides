@@ -235,6 +235,45 @@ export function domainVertices(domain: StampDomain, cx: number, cy: number, r: n
   }
 }
 
+// ─── Trip trophies — 2-3 badges earned by ONE specific completed adventure,
+// derived from that adventure's own stats (not the account-wide achievement
+// system in lib/achievements.ts). Every adventure has enough data to earn at
+// least the domain+difficulty trophy; altitude/distance ones only appear
+// when that adventure actually has the field. ──────────────────────────────
+
+export interface TripTrophy { icon: string; label: string }
+
+const DOMAIN_WORD: Record<StampDomain, string> = { engine: "ENDURANCE", chassis: "POWER", elements: "WILD", mind: "FEARLESS" };
+const DIFFICULTY_EPITHET: Record<string, string> = { Easy: "WANDERER", Moderate: "EXPLORER", Hard: "WARRIOR", Advanced: "CHAMPION", Extreme: "MASTER" };
+const DISTANCE_VERB: Record<string, string> = { Motorcycling: "RIDDEN", Cycling: "CYCLED", Trekking: "TREKKED", Scrambling: "TREKKED", "Rock Climbing": "CLIMBED" };
+
+export function deriveTripTrophies(opts: {
+  type: string; difficulty: string; domain: StampDomain; altitude?: string; distance?: string;
+}): TripTrophy[] {
+  const trophies: TripTrophy[] = [];
+
+  if (opts.altitude) {
+    const passMatch = opts.altitude.match(/\(([^)]+)\)/);
+    const value = opts.altitude.split("(")[0].trim();
+    trophies.push({
+      icon: "MountainSnow",
+      label: passMatch ? `${passMatch[1].toUpperCase()} CONQUERED` : `${value.toUpperCase()} SUMMIT`,
+    });
+  }
+
+  if (opts.distance) {
+    const verb = DISTANCE_VERB[opts.type] ?? "COVERED";
+    trophies.push({ icon: "type", label: `${opts.distance.toUpperCase()} ${verb}` });
+  }
+
+  trophies.push({
+    icon: opts.difficulty === "Advanced" || opts.difficulty === "Extreme" ? "Crown" : "Award",
+    label: `${DOMAIN_WORD[opts.domain]} ${DIFFICULTY_EPITHET[opts.difficulty] ?? "EXPLORER"}`,
+  });
+
+  return trophies.slice(0, 3);
+}
+
 export function TypeIcon({ type, size, color }: { type: string; size: number; color: string }) {
   const def = TYPE_ICON_DEFS[type] ?? TYPE_ICON_DEFS.Mountaineering;
   return (
