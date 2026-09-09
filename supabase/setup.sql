@@ -30,15 +30,15 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   role text NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin')),
   username text UNIQUE,
   -- Permanent, human-readable id shown on the profile and Adventure
-  -- Passport: 'TTT' + number for admins (TTT1, TTT2, ...), a zero-padded
-  -- 4-digit number for everyone else (0001, 0002, ...). Assigned once at
-  -- signup (or by backfill) and never reassigned afterwards.
+  -- Passport: 'TTT' + number for admins (TTT0, TTT1, TTT2, ...), a
+  -- zero-padded 4-digit number for everyone else (0001, 0002, ...).
+  -- Assigned once at signup (or by backfill) and never reassigned after.
   public_id text UNIQUE,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
 
-CREATE SEQUENCE IF NOT EXISTS public.admin_public_id_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS public.admin_public_id_seq START 0;
 CREATE SEQUENCE IF NOT EXISTS public.user_public_id_seq START 1;
 
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;

@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   updated_at timestamptz DEFAULT now()
 );
 
-CREATE SEQUENCE IF NOT EXISTS public.admin_public_id_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS public.admin_public_id_seq START 0;
 CREATE SEQUENCE IF NOT EXISTS public.user_public_id_seq START 1;
 
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
