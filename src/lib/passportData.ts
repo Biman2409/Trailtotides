@@ -86,7 +86,10 @@ export async function computePassportData(origin: string, demoMode?: string | nu
   const username = (user.user_metadata?.username as string | undefined) ?? null;
   const avatarId = user.user_metadata?.avatar_id as number | null | undefined;
   const avatarUrl = avatarId ? `${origin}/avatars/avatar-${avatarId}.png` : null;
-  const passportNo = `TT-${user.id.replace(/-/g, "").slice(-6).toUpperCase()}`;
+  // The real, permanent system-wide id (see migration 20260909000000) — the
+  // TT- hash is only a fallback for an account that predates that backfill.
+  const { data: profileRow } = await admin.from("profiles").select("public_id").eq("id", user.id).single();
+  const passportNo = profileRow?.public_id ?? `TT-${user.id.replace(/-/g, "").slice(-6).toUpperCase()}`;
   const issueDateISO = (user.created_at ? new Date(user.created_at) : new Date()).toISOString();
 
   const statesCount = new Set(stampsRaw.map((s) => s.adv.state)).size;

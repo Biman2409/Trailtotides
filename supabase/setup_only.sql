@@ -12,9 +12,13 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   avatar_url text,
   role text NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin')),
   username text UNIQUE,
+  public_id text UNIQUE,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
+
+CREATE SEQUENCE IF NOT EXISTS public.admin_public_id_seq START 1;
+CREATE SEQUENCE IF NOT EXISTS public.user_public_id_seq START 1;
 
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
@@ -35,14 +39,26 @@ LANGUAGE plpgsql
 SECURITY DEFINER SET search_path = ''
 AS $$
 BEGIN
-  INSERT INTO public.profiles (id, full_name, email, username)
-  VALUES (new.id, new.raw_user_meta_data ->> 'full_name', new.email, new.raw_user_meta_data ->> 'username');
+  INSERT INTO public.profiles (id, full_name, email, username, public_id)
+  VALUES (new.id, new.raw_user_meta_data ->> 'full_name', new.email, new.raw_user_meta_data ->> 'username', lpad(nextval('public.user_public_id_seq')::text, 4, '0'));
   RETURN new;
 END;
 $$;
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Backfill anyone who doesn't have a public_id yet, oldest account first.
+DO $$
+DECLARE r RECORD;
+BEGIN
+  FOR r IN SELECT id FROM public.profiles WHERE role = 'admin' AND public_id IS NULL ORDER BY created_at ASC LOOP
+    UPDATE public.profiles SET public_id = 'TTT' || nextval('public.admin_public_id_seq') WHERE id = r.id;
+  END LOOP;
+  FOR r IN SELECT id FROM public.profiles WHERE role = 'user' AND public_id IS NULL ORDER BY created_at ASC LOOP
+    UPDATE public.profiles SET public_id = lpad(nextval('public.user_public_id_seq')::text, 4, '0') WHERE id = r.id;
+  END LOOP;
+END $$;
 
 -- 2. Stories table
 CREATE TABLE IF NOT EXISTS public.stories (

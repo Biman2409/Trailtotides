@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 import { redirect } from "next/navigation";
-import { Calendar, Shield, Package, Mail } from "lucide-react";
+import { Calendar, Shield, Package, Mail, Hash } from "lucide-react";
 import { format } from "date-fns";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -125,9 +125,20 @@ export default async function ProfilePage() {
 
             {/* Name + meta */}
             <div className="flex-1 min-w-0 pb-1">
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight truncate" style={{ color: "var(--text-primary)" }}>
-                {displayName}
-              </h1>
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-2xl sm:text-3xl font-black tracking-tight leading-tight truncate" style={{ color: "var(--text-primary)" }}>
+                  {displayName}
+                </h1>
+                {profile.public_id && (
+                  <span
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold font-mono shrink-0"
+                    style={{ background: "var(--bg-card)", color: "var(--text-tertiary)", border: "1px solid var(--border-subtle)" }}
+                  >
+                    <Hash className="w-3 h-3" />
+                    {profile.public_id}
+                  </span>
+                )}
+              </div>
               {username && (
                 <p className="text-[#ff5100]/70 text-sm font-medium mt-0.5">@{username}</p>
               )}
