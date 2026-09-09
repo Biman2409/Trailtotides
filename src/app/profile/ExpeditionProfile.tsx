@@ -211,19 +211,19 @@ export default function ExpeditionProfile() {
         )}
       </div>
 
-      {/* ── Stats strip ── */}
-      <div className="relative grid grid-cols-5">
+      {/* ── Stats strip — 3 columns on mobile (2 rows) so labels have room to
+          breathe instead of truncating into "0 C..."; 5 across from sm: up ── */}
+      <div className="relative grid grid-cols-3 sm:grid-cols-5 divide-x divide-y sm:divide-y-0 divide-[color:var(--border-subtle)]">
         {[
           { value: countOf("trip_log"), label: "Completed",  color: "#10b981", icon: CheckCircle2 },
           { value: countOf("review"),   label: "Reviews",    color: "#f97316", icon: Star         },
           { value: countOf("photo"),    label: "Photos",     color: "#3b82f6", icon: Camera       },
           { value: countOf("wishlist"), label: "Wishlisted", color: "#f43f5e", icon: Heart        },
           { value: countOf("compare"),  label: "Compared",   color: "#a78bfa", icon: GitCompare   },
-        ].map(({ value, label, color, icon: Icon }, i, arr) => {
+        ].map(({ value, label, color, icon: Icon }) => {
           const active = value > 0;
           return (
-            <div key={label} className="flex items-center gap-2 px-2.5 py-3"
-              style={i < arr.length - 1 ? { borderRight: "1px solid var(--border-subtle)" } : {}}>
+            <div key={label} className="flex items-center gap-2 px-2.5 py-3 min-w-0">
               <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
                 style={{
                   background: active ? `${color}18` : "var(--bg-surface-2)",
@@ -233,7 +233,7 @@ export default function ExpeditionProfile() {
               </div>
               <div className="flex flex-col gap-0.5 min-w-0">
                 <span className="text-[15px] font-black tabular-nums leading-none" style={{ color: active ? color : "var(--text-muted)" }}>{value}</span>
-                <span className="text-[7px] uppercase tracking-wide font-bold leading-none truncate" style={{ color: "var(--text-muted)" }}>{label}</span>
+                <span className="text-[8px] uppercase tracking-wide font-bold leading-none truncate" style={{ color: "var(--text-muted)" }}>{label}</span>
               </div>
             </div>
           );

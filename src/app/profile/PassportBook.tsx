@@ -415,7 +415,7 @@ function OpenSpread({ left, right, spreadIndex, direction, onClose }: {
 }) {
   return (
     <motion.div
-      className="absolute inset-0 rounded-2xl overflow-hidden flex flex-row"
+      className="absolute inset-0 rounded-2xl overflow-hidden flex flex-col sm:flex-row"
       style={{ boxShadow: "0 30px 70px rgba(0,0,0,0.5)", background: "#180509" }}
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] } }}
@@ -438,14 +438,14 @@ function OpenSpread({ left, right, spreadIndex, direction, onClose }: {
             initial="enter"
             animate="center"
             exit="exit"
-            className="w-full h-full flex flex-row"
+            className="w-full h-full flex flex-col sm:flex-row"
             style={{ transformStyle: "preserve-3d" }}
           >
-            <div className="flex-1 h-full min-w-0">
+            <div className="flex-1 w-full sm:h-full min-w-0 min-h-0">
               <ScaledPage refWidth={PAGE_REF_W} refHeight={PAGE_REF_H}>{left}</ScaledPage>
             </div>
-            <div className="w-2 h-full shrink-0" style={{ background: "linear-gradient(90deg, rgba(0,0,0,0.28), rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.05) 60%, rgba(0,0,0,0.28))" }} />
-            <div className="flex-1 h-full min-w-0">
+            <div className="w-full h-2 sm:w-2 sm:h-full shrink-0" style={{ background: "rgba(0,0,0,0.16)" }} />
+            <div className="flex-1 w-full sm:h-full min-w-0 min-h-0">
               <ScaledPage refWidth={PAGE_REF_W} refHeight={PAGE_REF_H}>{right}</ScaledPage>
             </div>
           </motion.div>
@@ -525,10 +525,9 @@ export default function PassportBook() {
   return (
     <div className="rounded-2xl overflow-hidden p-6 sm:p-10 flex flex-col items-center gap-5" style={{ border: "1px solid var(--border-subtle)", background: "linear-gradient(180deg, #2c0a10, #180509)" }}>
       <div
-        className="relative w-full transition-[max-width,aspect-ratio] duration-700"
+        className={`relative w-full transition-[max-width,aspect-ratio] duration-700 ${open ? "aspect-[400/1048] sm:aspect-[1600/1040]" : "aspect-[700/900]"}`}
         style={{
           maxWidth: open ? 860 : 320,
-          aspectRatio: open ? "1600 / 1040" : "700 / 900",
           perspective: 1800,
           transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
         }}
