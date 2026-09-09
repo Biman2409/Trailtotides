@@ -19,15 +19,17 @@ export default function ExpeditionProfile() {
   const [xp, setXp]         = useState<number>(0);
   const [events, setEvents]  = useState<XPEvent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [showLadder, setShowLadder] = useState(false);
   const [rank, setRank]      = useState<number | null>(null);
   const [rankTotal, setRankTotal] = useState<number | null>(null);
 
   const fetchXP = () => {
+    setError(false);
     fetch("/api/xp")
-      .then(r => r.json())
+      .then(r => { if (!r.ok) throw new Error("not ok"); return r.json(); })
       .then(d => { setXp(d.xp ?? 0); setEvents(d.events ?? []); })
-      .catch(() => {})
+      .catch(() => setError(true))
       .finally(() => setLoading(false));
   };
 
@@ -54,6 +56,17 @@ export default function ExpeditionProfile() {
 
   if (loading) {
     return <div className="rounded-2xl animate-pulse" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", height: 140 }} />;
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-2xl flex flex-col items-center justify-center gap-2 py-8 px-4 text-center" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
+        <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>Couldn&apos;t load your expedition progress.</p>
+        <button onClick={fetchXP} className="text-xs font-bold px-3 py-1.5 rounded-lg transition-colors hover:bg-[var(--bg-surface)]" style={{ color: "#ff7d47", border: "1px solid rgba(255,81,0,0.25)" }}>
+          Retry
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -100,6 +113,7 @@ export default function ExpeditionProfile() {
                 <span className="text-[9px] font-bold" style={{ color: OVER_9000_COLOR }}>Uncapped · +{(xp - 9000).toLocaleString()} beyond 9k</span>
               </div>
               <button onClick={() => setShowLadder(v => !v)}
+                aria-expanded={showLadder} aria-controls="expedition-tier-ladder"
                 className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md transition-all hover:bg-[var(--bg-surface)]"
                 style={{ color: showLadder ? OVER_9000_COLOR : "var(--text-muted)" }}>
                 <span className="text-[8px] font-bold tracking-wide">ALL TIERS</span>
@@ -122,6 +136,7 @@ export default function ExpeditionProfile() {
                   <span className="font-bold" style={{ color: `${next.color}cc` }}>{next.name}</span>
                 </span>
                 <button onClick={() => setShowLadder(v => !v)}
+                  aria-expanded={showLadder} aria-controls="expedition-tier-ladder"
                   className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md transition-all hover:bg-[var(--bg-surface)]"
                   style={{ color: showLadder ? accentColor : "var(--text-muted)" }}>
                   <span className="text-[8px] font-bold tracking-wide">ALL TIERS</span>
@@ -143,7 +158,7 @@ export default function ExpeditionProfile() {
 
         {/* Tier ladder */}
         {showLadder && (
-          <div className="mt-4 pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+          <div id="expedition-tier-ladder" className="mt-4 pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
             {/* Track: circles are 28px tall, container has no extra offset — spine at top:14px = circle center */}
             <div className="relative" style={{ paddingBottom: "4px" }}>
               {/* Background spine — at exact vertical center of 28px circles */}

@@ -1,12 +1,5 @@
 import type { Metadata } from "next";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
-
-export const metadata: Metadata = {
-  title: "My Profile",
-  description: "Manage your Trail to Tides profile — view your ACE™ score, trip log, achievements, and adventure history.",
-  alternates: { canonical: "https://trailtotides.com/profile" },
-  robots: { index: false, follow: false },
-};
 import { redirect } from "next/navigation";
 import { Calendar, Shield, Package, Mail, Hash } from "lucide-react";
 import { format } from "date-fns";
@@ -25,6 +18,13 @@ import { getOperatorProfile, getSubmissionsForOperator } from "@/app/auth/operat
 import { adventures } from "@/lib/data";
 import DashboardClient from "@/app/auth/operator-dashboard/DashboardClient";
 import AccountTabs from "@/components/ui/custom/AccountTabs";
+
+export const metadata: Metadata = {
+  title: "My Profile",
+  description: "Manage your Trail to Tides profile — view your ACE™ score, trip log, achievements, and adventure history.",
+  alternates: { canonical: "https://trailtotides.com/profile" },
+  robots: { index: false, follow: false },
+};
 
 export const dynamic = "force-dynamic";
 

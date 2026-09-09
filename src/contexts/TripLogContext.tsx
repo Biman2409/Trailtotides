@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useRef, useState, useCallb
 import { createClient } from "@/lib/supabase/client";
 import { loadTripLog, saveTripLog } from "@/app/triplog/actions";
 import type { TripEntry } from "@/app/triplog/actions";
-import { awardXP } from "@/lib/awardXP";
+import { awardXP, revokeXP } from "@/lib/awardXP";
 
 export type { TripEntry };
 
@@ -78,7 +78,7 @@ export function TripLogProvider({ children }: { children: React.ReactNode }) {
   const unmark = useCallback(async (slug: string) => {
     const next = logRef.current.filter(e => e.slug !== slug);
     setLog(next);
-    if (userId) saveTripLog(next); else lsSet(next);
+    if (userId) { saveTripLog(next); revokeXP("trip_log", slug); } else lsSet(next);
   }, [userId]);
 
   return (

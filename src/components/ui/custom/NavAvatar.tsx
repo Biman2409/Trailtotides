@@ -5,7 +5,7 @@ import Image from "next/image";
 import { AVATARS, LS_KEY } from "@/lib/avatars";
 import { getTierLabel, getTier } from "@/lib/tiers";
 import { loadProfile } from "@/lib/matchmaker";
-import { RANK_ICONS } from "@/app/profile/AvatarPicker";
+import { RANK_ICONS } from "@/lib/rankIcons";
 
 const OPERATOR_LOGO_KEY = "ttt_operator_logo";
 

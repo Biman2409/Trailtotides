@@ -14,7 +14,7 @@ import {
   getAchievements, AXIS_BADGES, DOMAIN_BADGES, SPECIAL_BADGES, XP_BADGES,
 } from "@/lib/achievements";
 import type { Achievement } from "@/lib/achievements";
-import { loadProfile } from "@/lib/matchmaker";
+import { loadProfile, loadProfileFromServer } from "@/lib/matchmaker";
 
 const ICON = (name: string, size: number): React.ReactNode => {
   const s = { width: size, height: size } as React.CSSProperties;
@@ -116,7 +116,7 @@ function Popover({ badge, anchorRect, onClose, locked }: {
               </div>
             )}
           </div>
-          <button type="button" onClick={onClose}
+          <button type="button" onClick={onClose} aria-label="Close"
             className="shrink-0 w-5 h-5 rounded-md flex items-center justify-center hover:bg-[var(--bg-surface)] transition-colors"
             style={{ color: "var(--text-muted)" }}>
             <X className="w-3 h-3" />
@@ -224,6 +224,7 @@ export default function TrophyCabinet() {
   const [active, setActive] = useState<Achievement | null>(null);
   const [activeLocked, setActiveLocked] = useState(false);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
+  const [error, setError] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -247,12 +248,11 @@ export default function TrophyCabinet() {
     setActiveLocked(locked);
   }, []);
 
-  useEffect(() => {
+  const fetchAll = useCallback(() => {
     let cancelled = false;
-    import("@/lib/matchmaker").then(({ loadProfileFromServer }) => {
-      loadProfileFromServer().then(p => { if (!cancelled) { setStored(p); setMounted(true); } });
-    });
-    fetch("/api/xp").then(r => r.ok ? r.json() : null).then(data => {
+    setError(false);
+    loadProfileFromServer().then(p => { if (!cancelled) { setStored(p); setMounted(true); } });
+    fetch("/api/xp").then(r => { if (!r.ok) throw new Error("not ok"); return r.json(); }).then(data => {
       if (!cancelled && data?.xp != null) {
         setTotalXP(data.xp);
         // Count engagement from events
@@ -260,11 +260,24 @@ export default function TrophyCabinet() {
         const uniq = (action: string) => new Set(events.filter(e => e.action === action).map(e => e.adventure_slug)).size;
         setEngagement({ completed: uniq("trip_log"), reviews: uniq("review"), wishlisted: uniq("wishlist"), photos: uniq("photo"), compares: uniq("compare") });
       }
-    }).catch(() => {});
+    }).catch(() => { if (!cancelled) setError(true); });
     return () => { cancelled = true; };
   }, []);
 
+  useEffect(() => fetchAll(), [fetchAll]);
+
   if (!mounted) return null;
+
+  if (error) {
+    return (
+      <div className="rounded-2xl flex flex-col items-center justify-center gap-2 py-8 px-4 text-center" style={{ border: "1px solid var(--border-subtle)", background: "var(--bg-card)" }}>
+        <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>Couldn&apos;t load your trophies.</p>
+        <button onClick={fetchAll} className="text-xs font-bold px-3 py-1.5 rounded-lg transition-colors hover:bg-[var(--bg-surface)]" style={{ color: "#ff7d47", border: "1px solid rgba(255,81,0,0.25)" }}>
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   if (!stored) {
     return (

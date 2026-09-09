@@ -1,13 +1,8 @@
 "use client";
 
-export const RANKS = [
-  { label: "Uncharted",   color: "#6b7280", stars: 0, minScore: 0  },
-  { label: "Pathfinder",  color: "#22d3ee", stars: 1, minScore: 8  },
-  { label: "Navigator",   color: "#4ade80", stars: 2, minScore: 16 },
-  { label: "Trailblazer", color: "#f59e0b", stars: 3, minScore: 24 },
-  { label: "Vanguard",    color: "#f97316", stars: 4, minScore: 32 },
-  { label: "Apex",        color: "#a78bfa", stars: 5, minScore: 40 },
-];
+import { TIER_LIST } from "@/lib/tiers";
+
+export const RANKS = TIER_LIST;
 
 const N    = RANKS.length;
 const SEGW = 100 / (N - 1); // 20% per segment

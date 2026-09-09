@@ -43,7 +43,7 @@ export default function WishlistSection() {
           </div>
           <button
             onClick={() => toggle(a.slug)}
-            className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500/20"
+            className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus-visible:opacity-100 transition-all hover:bg-red-500/20"
             style={{ color: "#f43f5e" }}
             aria-label="Remove from wishlist"
           >

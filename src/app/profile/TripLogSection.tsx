@@ -45,7 +45,8 @@ export default function TripLogSection() {
           </div>
           <button
             onClick={() => unmark(entry.slug)}
-            className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500/20 hover:text-red-400"
+            aria-label="Remove from completed"
+            className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus-visible:opacity-100 transition-all hover:bg-red-500/20 hover:text-red-400"
             style={{ color: "var(--text-muted)" }}
           >
             <X className="w-2.5 h-2.5" />
