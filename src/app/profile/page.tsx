@@ -131,11 +131,12 @@ export default async function ProfilePage() {
                 </h1>
                 {profile.public_id && (
                   <span
-                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold font-mono shrink-0"
+                    className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-bold shrink-0"
                     style={{ background: "var(--bg-card)", color: "var(--text-tertiary)", border: "1px solid var(--border-subtle)" }}
                   >
                     <Hash className="w-3 h-3" />
-                    {profile.public_id}
+                    <span style={{ opacity: 0.6 }}>USER ID</span>
+                    <span className="font-mono" style={{ color: "var(--text-secondary)" }}>{profile.public_id}</span>
                   </span>
                 )}
               </div>
