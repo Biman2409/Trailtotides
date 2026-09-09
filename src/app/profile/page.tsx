@@ -105,38 +105,45 @@ export default async function ProfilePage() {
           </div>
           <div className="flex flex-col sm:flex-row items-start sm:items-end gap-6">
 
-            {/* Avatar */}
+            {/* Avatar — admin gets an ornamented gradient frame around the
+                photo itself instead of everyone else's plain color pill */}
             <div className="relative shrink-0">
-              <AvatarPicker />
-              {/* Role badge — admin gets a distinct, ornamented mark instead of
-                  the plain colored pill everyone else gets */}
               {profile.role === "admin" ? (
-                <div
-                  className="absolute -bottom-2 -right-2 flex items-center gap-1 pl-1.5 pr-2.5 py-1 rounded-full overflow-hidden"
-                  style={{
-                    background: "linear-gradient(135deg, #a78bfa 0%, #c9a24d 100%)",
-                    boxShadow: "0 3px 14px rgba(167,139,250,0.45), 0 0 0 1px rgba(255,255,255,0.2) inset",
-                  }}
-                >
-                  <style>{`@keyframes admin-badge-shine { 0%,100%{background-position:200% center} 50%{background-position:-200% center} }`}</style>
-                  <span
-                    className="absolute inset-0 pointer-events-none"
-                    style={{ background: "linear-gradient(110deg, transparent 35%, rgba(255,255,255,0.55) 50%, transparent 65%)", backgroundSize: "220% 100%", animation: "admin-badge-shine 3.2s ease-in-out infinite" }}
-                  />
-                  <Crown className="w-3 h-3 relative shrink-0" style={{ color: "#241a12" }} fill="#241a12" />
-                  <span className="relative text-[9px] font-black uppercase tracking-wider" style={{ color: "#241a12" }}>Admin</span>
-                </div>
+                <>
+                  <div
+                    className="relative rounded-[28px] p-[3px] overflow-hidden"
+                    style={{ background: "linear-gradient(135deg, #a78bfa 0%, #c9a24d 100%)", boxShadow: "0 4px 20px rgba(167,139,250,0.4)" }}
+                  >
+                    <style>{`@keyframes admin-frame-shine { 0%,100%{background-position:200% center} 50%{background-position:-200% center} }`}</style>
+                    <span
+                      className="absolute inset-0 pointer-events-none z-10"
+                      style={{ background: "linear-gradient(110deg, transparent 35%, rgba(255,255,255,0.5) 50%, transparent 65%)", backgroundSize: "220% 100%", animation: "admin-frame-shine 3.2s ease-in-out infinite" }}
+                    />
+                    <div className="rounded-3xl overflow-hidden" style={{ background: "#0e0e12" }}>
+                      <AvatarPicker />
+                    </div>
+                  </div>
+                  <div
+                    className="absolute -bottom-1.5 -right-1.5 z-20 w-6 h-6 rounded-full flex items-center justify-center pointer-events-none"
+                    style={{ background: "linear-gradient(135deg, #a78bfa 0%, #c9a24d 100%)", boxShadow: "0 2px 8px rgba(0,0,0,0.4), 0 0 0 2px #0a0a0f" }}
+                  >
+                    <Crown className="w-3 h-3" style={{ color: "#241a12" }} fill="#241a12" />
+                  </div>
+                </>
               ) : (
-                <div
-                  className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider"
-                  style={
-                    profile.role === "operator"
-                      ? { background: "rgba(16,185,129,0.15)", color: "#34d399", border: "1px solid rgba(16,185,129,0.25)" }
-                      : { background: "rgba(255,81,0,0.12)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }
-                  }
-                >
-                  {profile.role}
-                </div>
+                <>
+                  <AvatarPicker />
+                  <div
+                    className="absolute -bottom-2 -right-2 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider"
+                    style={
+                      profile.role === "operator"
+                        ? { background: "rgba(16,185,129,0.15)", color: "#34d399", border: "1px solid rgba(16,185,129,0.25)" }
+                        : { background: "rgba(255,81,0,0.12)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }
+                    }
+                  >
+                    {profile.role}
+                  </div>
+                </>
               )}
             </div>
 
