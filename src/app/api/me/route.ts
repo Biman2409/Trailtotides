@@ -7,6 +7,7 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   return NextResponse.json({
     avatar_id: user.user_metadata?.avatar_id ?? null,
+    avatar_url: user.user_metadata?.avatar_url ?? null,
   });
 }
 
@@ -18,9 +19,12 @@ export async function PATCH(req: Request) {
 
   const body = await req.json();
   const avatar_id = body.avatar_id !== undefined ? body.avatar_id : user.user_metadata?.avatar_id;
+  // Picking a preset character (or the default rank badge) supersedes any
+  // uploaded photo — the two are mutually exclusive, whichever was set last.
+  const avatar_url = body.avatar_id !== undefined ? null : (user.user_metadata?.avatar_url ?? null);
 
   await adminClient.auth.admin.updateUserById(user.id, {
-    user_metadata: { ...user.user_metadata, avatar_id },
+    user_metadata: { ...user.user_metadata, avatar_id, avatar_url },
   });
 
   return NextResponse.json({ success: true });

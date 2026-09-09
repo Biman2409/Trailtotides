@@ -275,24 +275,27 @@ function ChangePasswordSection() {
 function AvatarSection() {
   // Shared with the profile-hero avatar (AvatarPicker.tsx) — one source of
   // truth for avatar state so the two can never drift out of sync.
-  const { selectedId, rankName, rankColor, saveSelection } = useAvatarState();
+  const { selectedId, avatarUrl, rankName, rankColor, saveSelection, uploadPhoto, removePhoto, uploading, uploadError } = useAvatarState();
   const [open, setOpen] = useState(false);
 
   const selected = selectedId !== null ? AVATARS.find(a => a.id === selectedId) ?? null : null;
 
   return (
-    <Section title="Profile Picture" subtitle="Choose a character or display your ACE adventure rank.">
+    <Section title="Profile Picture" subtitle="Upload your own photo, choose a character, or display your ACE adventure rank.">
       <div className="flex items-center gap-5">
         <button
           type="button"
           onClick={() => setOpen(true)}
           className="group w-[72px] h-[72px] rounded-2xl relative overflow-hidden shrink-0 focus:outline-none"
           style={{
-            border: `1.5px solid ${selected ? "var(--border-subtle)" : rankColor + "30"}`,
-            background: selected ? "transparent" : `linear-gradient(145deg,${rankColor}1a,${rankColor}08)`,
+            border: `1.5px solid ${selected || avatarUrl ? "var(--border-subtle)" : rankColor + "30"}`,
+            background: selected || avatarUrl ? "transparent" : `linear-gradient(145deg,${rankColor}1a,${rankColor}08)`,
           }}
         >
-          {selected
+          {avatarUrl
+            // eslint-disable-next-line @next/next/no-img-element
+            ? <img src={avatarUrl} alt="Your photo" className="w-full h-full object-cover" />
+            : selected
             ? <Image src={selected.src} alt={selected.label} fill sizes="72px" className="object-cover" />
             : <AceBadge rankName={rankName} rankColor={rankColor} size={72} />
           }
@@ -306,9 +309,9 @@ function AvatarSection() {
 
         <div className="flex-1">
           <p className="text-sm font-semibold" style={{ color: "var(--text-secondary)" }}>
-            {selected ? selected.label : `${rankName} — ACE™ Rank`}
+            {avatarUrl ? "Your photo" : selected ? selected.label : `${rankName} — ACE™ Rank`}
           </p>
-          {!selected && (
+          {!selected && !avatarUrl && (
             <p className="text-xs mt-0.5 mb-3" style={{ color: "var(--text-muted)" }}>
               Tier badge displayed by default
             </p>
@@ -327,9 +330,14 @@ function AvatarSection() {
       {open && (
         <AvatarPickerModal
           selectedId={selectedId}
+          avatarUrl={avatarUrl}
           rankName={rankName}
           rankColor={rankColor}
           onSelect={saveSelection}
+          onUpload={uploadPhoto}
+          onRemovePhoto={removePhoto}
+          uploading={uploading}
+          uploadError={uploadError}
           onClose={() => setOpen(false)}
         />
       )}

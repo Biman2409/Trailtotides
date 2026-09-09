@@ -120,7 +120,7 @@ export default async function ProfilePage() {
                       style={{ background: "linear-gradient(110deg, transparent 35%, rgba(255,255,255,0.5) 50%, transparent 65%)", backgroundSize: "220% 100%", animation: "admin-frame-shine 3.2s ease-in-out infinite" }}
                     />
                     <div className="rounded-3xl overflow-hidden" style={{ background: "#0e0e12" }}>
-                      <AvatarPicker />
+                      <AvatarPicker isAdmin />
                     </div>
                   </div>
                   <div
