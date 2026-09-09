@@ -257,11 +257,11 @@ export default async function ProfilePage() {
                 <TrekStreakCounter />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold mb-2.5" style={{ color: "var(--text-muted)" }}>Completed</p>
+                    <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold mb-2.5" style={{ color: "var(--text-muted)" }}>Mark as Done</p>
                     <TripLogSection />
                   </div>
                   <div>
-                    <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold mb-2.5" style={{ color: "var(--text-muted)" }}>Wishlist</p>
+                    <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold mb-2.5" style={{ color: "var(--text-muted)" }}>Save Adventure</p>
                     <WishlistSection />
                   </div>
                 </div>
