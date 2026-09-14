@@ -121,40 +121,43 @@ function StatsPage({ data, onShare, sharing }: { data: PassportData; onShare: ()
         <span className="text-[9px] font-extrabold tracking-[0.25em]" style={{ color: INK, opacity: 0.7 }}>TRAIL TO TIDES</span>
       </div>
 
-      <div className="flex flex-row mt-2 flex-wrap gap-y-1">
-        {[
-          { label: "TYPE", value: "P" },
-          { label: "CODE", value: "TTT" },
-          { label: "PASSPORT NO.", value: data.passportNo },
-          { label: "ISSUED", value: fmtDate(issueDate) },
-        ].map((f, i, arr) => (
-          <div key={f.label} className="flex flex-col pr-3 mr-3" style={{ borderRight: i < arr.length - 1 ? "1px dashed rgba(36,26,18,0.25)" : "none" }}>
-            <span className="text-[7px] font-bold tracking-wider" style={{ color: INK, opacity: 0.45 }}>{f.label}</span>
-            <span className="text-[10px] font-extrabold mt-0.5" style={{ color: INK }}>{f.value}</span>
-          </div>
-        ))}
-      </div>
-
       <span className="mt-2 text-base font-extrabold tracking-wide" style={{ color: INK }}>ADVENTURE PASSPORT</span>
 
-      <div className="flex flex-row gap-3 mt-2">
-        <div className="w-14 h-16 flex items-center justify-center shrink-0 overflow-hidden" style={{ background: "#e9dfc3", border: `2px solid ${INK}`, borderRadius: 4 }}>
-          {data.avatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={data.avatarUrl} className="w-full h-full object-cover" alt="" />
-          ) : (
-            <div style={{ opacity: 0.25 }}><TypeIcon type="Mountaineering" size={24} color={INK} /></div>
-          )}
+      {/* ── Bio-data panel — photo + identity grouped in one bordered block,
+          like a real passport's photo page, instead of loose stacked rows ── */}
+      <div className="mt-2 rounded-lg overflow-hidden shrink-0" style={{ border: `1.5px solid rgba(36,26,18,0.55)` }}>
+        <div className="flex flex-row gap-3 p-2.5">
+          <div className="w-14 h-16 flex items-center justify-center shrink-0 overflow-hidden" style={{ background: "#e9dfc3", border: `2px solid ${INK}`, borderRadius: 4 }}>
+            {data.avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={data.avatarUrl} className="w-full h-full object-cover" alt="" />
+            ) : (
+              <div style={{ opacity: 0.25 }}><TypeIcon type="Mountaineering" size={24} color={INK} /></div>
+            )}
+          </div>
+          <div className="flex flex-col flex-1 min-w-0 justify-center gap-1">
+            <div className="flex flex-col pb-0.5" style={{ borderBottom: "1px dashed rgba(36,26,18,0.22)" }}>
+              <span className="text-[7px] font-bold tracking-wider" style={{ color: INK, opacity: 0.45 }}>NAME / NOM</span>
+              <span className="text-[11px] font-bold mt-0.5 truncate" style={{ color: INK }}>{data.name}</span>
+            </div>
+            <div className="flex flex-col pb-0.5">
+              <span className="text-[7px] font-bold tracking-wider" style={{ color: INK, opacity: 0.45 }}>USERNAME</span>
+              <span className="text-[11px] font-bold mt-0.5 truncate" style={{ color: INK }}>{data.username ? `@${data.username}` : "—"}</span>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col flex-1 min-w-0 justify-center gap-1">
-          <div className="flex flex-col pb-0.5" style={{ borderBottom: "1px dashed rgba(36,26,18,0.22)" }}>
-            <span className="text-[7px] font-bold tracking-wider" style={{ color: INK, opacity: 0.45 }}>NAME / NOM</span>
-            <span className="text-[11px] font-bold mt-0.5 truncate" style={{ color: INK }}>{data.name}</span>
-          </div>
-          <div className="flex flex-col pb-0.5" style={{ borderBottom: "1px dashed rgba(36,26,18,0.22)" }}>
-            <span className="text-[7px] font-bold tracking-wider" style={{ color: INK, opacity: 0.45 }}>USERNAME</span>
-            <span className="text-[11px] font-bold mt-0.5 truncate" style={{ color: INK }}>{data.username ? `@${data.username}` : "—"}</span>
-          </div>
+        <div className="grid grid-cols-4 gap-2 px-2.5 pb-2 pt-1.5" style={{ borderTop: "1px dashed rgba(36,26,18,0.22)" }}>
+          {[
+            { label: "TYPE", value: "P" },
+            { label: "CODE", value: "TTT" },
+            { label: "PASSPORT NO.", value: data.passportNo },
+            { label: "ISSUED", value: fmtDate(issueDate) },
+          ].map((f) => (
+            <div key={f.label} className="flex flex-col min-w-0">
+              <span className="text-[6.5px] font-bold tracking-wider truncate" style={{ color: INK, opacity: 0.45 }}>{f.label}</span>
+              <span className="text-[9.5px] font-extrabold mt-0.5 truncate" style={{ color: INK }}>{f.value}</span>
+            </div>
+          ))}
         </div>
       </div>
 
