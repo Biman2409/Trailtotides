@@ -5,7 +5,7 @@ import { getACE, computeDifficulty } from "@/lib/ace";
 import { getAchievements } from "@/lib/achievements";
 import {
   RADAR_AXES, getAceRank, dominantDomain, declutterStamps, deriveTripTrophies,
-  DIFFICULTY_LEVEL, hashSeed, type StampDomain, type TripTrophy,
+  DIFFICULTY_LEVEL, hashSeed, type TripTrophy,
   PASSPORT_MAP_W, PASSPORT_MAP_H,
 } from "@/lib/passportVisuals";
 
@@ -37,7 +37,7 @@ export interface PassportStamp {
   type: string;
   date: string;
   difficulty: string;
-  domain: StampDomain;
+  state: string;
   seed: number;
   dispX: number;
   dispY: number;
@@ -174,7 +174,7 @@ export async function computePassportData(origin: string, demoMode?: string | nu
     type: s.adv.type,
     date: s.date,
     difficulty: s.difficulty,
-    domain: dominantDomain(getACE(s.adv)),
+    state: s.adv.state,
     seed: hashSeed(s.adv.slug),
     dispX: declutteredStamps[i].dispX,
     dispY: declutteredStamps[i].dispY,

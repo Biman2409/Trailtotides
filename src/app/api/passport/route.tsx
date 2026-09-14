@@ -4,7 +4,7 @@ import {
   INK, PAPER, GOLD, INDIA_PATH, RADAR_AXES, RADAR_AXIS_LABELS, RADAR_AXIS_SHORT,
   DIFFICULTY_COLOR, DIFFICULTY_STAMP_SIZE, DIFFICULTY_LEVEL,
   fmtDate, truncate, tint, ptsStr, polygonVertices, radarVertices, starVertices,
-  mulberry32, sizeJitter, TypeIcon, StampOutline, BadgeIcon,
+  sizeJitter, TypeIcon, ImmigrationStamp, stateStampStyle, BadgeIcon,
   PASSPORT_MAP_W, PASSPORT_MAP_H,
 } from "@/lib/passportVisuals";
 
@@ -211,9 +211,8 @@ export async function GET(req: Request) {
           </svg>
 
           {stamps.map((s) => {
-            const color = DIFFICULTY_COLOR[s.difficulty] ?? INK;
+            const { ink } = stateStampStyle(s.state);
             const size = (DIFFICULTY_STAMP_SIZE[s.difficulty] ?? 100) * s.stampScale * sizeJitter(s.seed);
-            const rot = (mulberry32(s.seed * 7 + 3)() - 0.5) * 20;
             const detailed = size >= 110;
             return (
               <div
@@ -221,16 +220,16 @@ export async function GET(req: Request) {
                 style={{
                   display: "flex", position: "absolute", left: `${s.dispX}%`, top: `${s.dispY}%`,
                   width: size, height: size, marginLeft: -size / 2, marginTop: -size / 2,
-                  alignItems: "center", justifyContent: "center", transform: `rotate(${rot}deg)`,
+                  alignItems: "center", justifyContent: "center",
                 }}
               >
-                <StampOutline seed={s.seed} domain={s.domain} size={size} color={color} tier={DIFFICULTY_LEVEL[s.difficulty] ?? 1} />
+                <ImmigrationStamp seed={s.seed} state={s.state} date={s.date} size={size} tier={DIFFICULTY_LEVEL[s.difficulty] ?? 1} />
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 6, zIndex: 1 }}>
                   <div style={{ display: "flex" }}>
-                    <TypeIcon type={s.type} size={detailed ? 22 : 15} color={color} />
+                    <TypeIcon type={s.type} size={detailed ? 20 : 14} color={ink} />
                   </div>
                   {detailed && (
-                    <span style={{ display: "flex", fontSize: 12, fontWeight: 800, color, marginTop: 5, textAlign: "center", lineHeight: 1.15 }}>
+                    <span style={{ display: "flex", fontSize: 12, fontWeight: 800, color: ink, marginTop: 5, textAlign: "center", lineHeight: 1.15 }}>
                       {truncate(s.name, 18)}
                     </span>
                   )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Share2, Loader2, X, Compass, ChevronLeft, ChevronRight, Camera } from "lucide-react";
 import { toast } from "sonner";
 import type { PassportData, AdventureLogEntry } from "@/lib/passportData";
@@ -9,7 +9,7 @@ import {
   INK, PAPER, GOLD, INDIA_PATH, DIFFICULTY_COLOR, DIFFICULTY_STAMP_SIZE, DIFFICULTY_LEVEL,
   RADAR_AXES, RADAR_AXIS_LABELS, RADAR_AXIS_SHORT, PASSPORT_MAP_W, PASSPORT_MAP_H,
   fmtDate, parseISODate, truncate, tint, ptsStr, polygonVertices, radarVertices, starVertices,
-  mulberry32, sizeJitter, TypeIcon, StampOutline, BadgeIcon,
+  sizeJitter, TypeIcon, ImmigrationStamp, stateStampStyle, BadgeIcon,
 } from "@/lib/passportVisuals";
 // PassportData is a type-only import — safe even though passportData.ts
 // itself pulls in server-only Supabase clients (types are erased at build
@@ -275,20 +275,19 @@ function MapPage({ data, onShare, sharing }: { data: PassportData; onShare: () =
               <path d={INDIA_PATH} fill={tint(INK, 0.04)} stroke={tint(INK, 0.32)} strokeWidth={1.6} />
             </svg>
             {data.stamps.map((s) => {
-              const color = DIFFICULTY_COLOR[s.difficulty] ?? INK;
+              const { ink } = stateStampStyle(s.state);
               const size = (DIFFICULTY_STAMP_SIZE[s.difficulty] ?? 100) * s.stampScale * sizeJitter(s.seed);
-              const rot = (mulberry32(s.seed * 7 + 3)() - 0.5) * 20;
               const detailed = size >= 110;
               return (
                 <div
                   key={s.slug}
                   className="absolute flex items-center justify-center"
-                  style={{ left: `${s.dispX}%`, top: `${s.dispY}%`, width: size, height: size, marginLeft: -size / 2, marginTop: -size / 2, transform: `rotate(${rot}deg)` }}
+                  style={{ left: `${s.dispX}%`, top: `${s.dispY}%`, width: size, height: size, marginLeft: -size / 2, marginTop: -size / 2 }}
                 >
-                  <StampOutline seed={s.seed} domain={s.domain} size={size} color={color} tier={DIFFICULTY_LEVEL[s.difficulty] ?? 1} />
+                  <ImmigrationStamp seed={s.seed} state={s.state} date={s.date} size={size} tier={DIFFICULTY_LEVEL[s.difficulty] ?? 1} />
                   <div className="flex flex-col items-center p-1.5 relative z-10">
-                    <TypeIcon type={s.type} size={detailed ? 22 : 15} color={color} />
-                    {detailed && <span className="text-xs font-extrabold mt-1 text-center leading-tight" style={{ color }}>{truncate(s.name, 18)}</span>}
+                    <TypeIcon type={s.type} size={detailed ? 20 : 14} color={ink} />
+                    {detailed && <span className="text-xs font-extrabold mt-1 text-center leading-tight" style={{ color: ink }}>{truncate(s.name, 18)}</span>}
                   </div>
                 </div>
               );
@@ -440,18 +439,74 @@ function Cover({ onOpen }: { onOpen: () => void }) {
   );
 }
 
-const spreadVariants: Variants = {
-  enter: (dir: number) => ({ rotateY: dir > 0 ? 65 : -65, opacity: 0 }),
-  center: { rotateY: 0, opacity: 1, transition: { duration: 0.45, ease: [0.4, 0, 0.2, 1] } },
-  exit: (dir: number) => ({ rotateY: dir > 0 ? -65 : 65, opacity: 0, transition: { duration: 0.35, ease: [0.4, 0, 1, 1] } }),
-};
+// One spread's two pages, side by side — the shared inner layout used by
+// both the static base layer and the flipping leaf's front/back faces below.
+function SpreadPages({ left, right }: { left: React.ReactNode; right: React.ReactNode }) {
+  return (
+    <div className="absolute inset-0 flex flex-col sm:flex-row">
+      <div className="flex-1 w-full sm:h-full min-w-0 min-h-0">
+        <ScaledPage refWidth={PAGE_REF_W} refHeight={PAGE_REF_H}>{left}</ScaledPage>
+      </div>
+      <div className="w-full h-2 sm:w-2 sm:h-full shrink-0" style={{ background: "rgba(0,0,0,0.16)" }} />
+      <div className="flex-1 w-full sm:h-full min-w-0 min-h-0">
+        <ScaledPage refWidth={PAGE_REF_W} refHeight={PAGE_REF_H}>{right}</ScaledPage>
+      </div>
+    </div>
+  );
+}
+
+// A real page turning over: the outgoing spread (front face) rotates around
+// the book's spine edge — the left edge going forward, the right edge going
+// back — while its back face, pre-rotated 180°, carries the incoming spread
+// so it's already facing the right way round the instant the turn finishes.
+// A soft shadow sweeps across at the midpoint, like light catching the fold.
+function FlippingLeaf({
+  frontLeft, frontRight, backLeft, backRight, direction, onComplete,
+}: {
+  frontLeft: React.ReactNode; frontRight: React.ReactNode;
+  backLeft: React.ReactNode; backRight: React.ReactNode;
+  direction: number; onComplete: () => void;
+}) {
+  const origin = direction > 0 ? "0% 50%" : "100% 50%";
+  const target = direction > 0 ? -180 : 180;
+  return (
+    <div className="absolute inset-0 z-10" style={{ perspective: 1600 }}>
+      <motion.div
+        className="absolute inset-0"
+        style={{ transformStyle: "preserve-3d", transformOrigin: origin }}
+        initial={{ rotateY: 0 }}
+        animate={{ rotateY: target }}
+        transition={{ duration: 0.7, ease: [0.45, 0, 0.2, 1] }}
+        onAnimationComplete={onComplete}
+      >
+        <div className="absolute inset-0" style={{ backfaceVisibility: "hidden" }}>
+          <SpreadPages left={frontLeft} right={frontRight} />
+        </div>
+        <div className="absolute inset-0" style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
+          <SpreadPages left={backLeft} right={backRight} />
+        </div>
+      </motion.div>
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: direction > 0 ? "linear-gradient(90deg, rgba(0,0,0,0.35), transparent 60%)" : "linear-gradient(270deg, rgba(0,0,0,0.35), transparent 60%)" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 0.6, 0] }}
+        transition={{ duration: 0.7, times: [0, 0.5, 1], ease: "easeInOut" }}
+      />
+    </div>
+  );
+}
 
 // ─── Open spread — both pages side by side, like a real open passport.
 // Spread 0 is always Stats|Map; any further spreads pair up adventure log
 // pages, navigated with the arrows below rather than flipped one page at a
-// time — closer to how you'd actually leaf through a real passport. ───────
-function OpenSpread({ left, right, spreadIndex, direction, onClose }: {
-  left: React.ReactNode; right: React.ReactNode; spreadIndex: number; direction: number; onClose: () => void;
+// time — closer to how you'd actually leaf through a real passport. The
+// base layer always shows the current spread; a FlippingLeaf plays on top
+// of it only while a page turn is in progress (see flipFrom in the parent). ─
+function OpenSpread({ left, right, flipFrom, direction, onFlipEnd, onClose }: {
+  left: React.ReactNode; right: React.ReactNode;
+  flipFrom: { left: React.ReactNode; right: React.ReactNode } | null;
+  direction: number; onFlipEnd: () => void; onClose: () => void;
 }) {
   return (
     <motion.div
@@ -469,27 +524,15 @@ function OpenSpread({ left, right, spreadIndex, direction, onClose }: {
         <X className="w-3.5 h-3.5" />
       </button>
 
-      <div className="w-full h-full" style={{ perspective: 1400 }}>
-        <AnimatePresence mode="wait" custom={direction} initial={false}>
-          <motion.div
-            key={spreadIndex}
-            custom={direction}
-            variants={spreadVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            className="w-full h-full flex flex-col sm:flex-row"
-            style={{ transformStyle: "preserve-3d" }}
-          >
-            <div className="flex-1 w-full sm:h-full min-w-0 min-h-0">
-              <ScaledPage refWidth={PAGE_REF_W} refHeight={PAGE_REF_H}>{left}</ScaledPage>
-            </div>
-            <div className="w-full h-2 sm:w-2 sm:h-full shrink-0" style={{ background: "rgba(0,0,0,0.16)" }} />
-            <div className="flex-1 w-full sm:h-full min-w-0 min-h-0">
-              <ScaledPage refWidth={PAGE_REF_W} refHeight={PAGE_REF_H}>{right}</ScaledPage>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+      <div className="w-full h-full relative">
+        <SpreadPages left={left} right={right} />
+        {flipFrom && (
+          <FlippingLeaf
+            frontLeft={flipFrom.left} frontRight={flipFrom.right}
+            backLeft={left} backRight={right}
+            direction={direction} onComplete={onFlipEnd}
+          />
+        )}
       </div>
     </motion.div>
   );
@@ -502,6 +545,10 @@ export default function PassportBook() {
   const [sharingKind, setSharingKind] = useState<PageKind | null>(null);
   const [spreadIndex, setSpreadIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+  // The spread being turned away from, kept around only for the duration of
+  // the flip so FlippingLeaf has something to show on its front face — null
+  // once idle, meaning no turn is in progress.
+  const [flipFrom, setFlipFrom] = useState<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -537,30 +584,37 @@ export default function PassportBook() {
   const logSpreadCount = Math.ceil(logPages.length / 2);
   const spreadCount = 1 + logSpreadCount;
 
+  function pagesFor(idx: number): { left: React.ReactNode; right: React.ReactNode } {
+    if (!data) return { left: null, right: null };
+    if (idx === 0) {
+      return {
+        left: <StatsPage data={data} onShare={() => handleShare("stats")} sharing={sharingKind === "stats"} />,
+        right: <MapPage data={data} onShare={() => handleShare("map")} sharing={sharingKind === "map"} />,
+      };
+    }
+    const a = logPages[(idx - 1) * 2];
+    const b = logPages[(idx - 1) * 2 + 1];
+    return {
+      left: a ? <AdventureLogPage entry={a} /> : <MoreAdventuresPage />,
+      right: b ? <AdventureLogPage entry={b} /> : <MoreAdventuresPage />,
+    };
+  }
+
   function goTo(next: number) {
-    if (next === spreadIndex || next < 0 || next >= spreadCount) return;
+    if (next === spreadIndex || next < 0 || next >= spreadCount || flipFrom !== null) return;
     setDirection(next > spreadIndex ? 1 : -1);
+    setFlipFrom(spreadIndex);
     setSpreadIndex(next);
   }
 
   function openBook() {
     setOpen(true);
     setSpreadIndex(0);
+    setFlipFrom(null);
   }
 
-  let left: React.ReactNode = null;
-  let right: React.ReactNode = null;
-  if (data) {
-    if (spreadIndex === 0) {
-      left = <StatsPage data={data} onShare={() => handleShare("stats")} sharing={sharingKind === "stats"} />;
-      right = <MapPage data={data} onShare={() => handleShare("map")} sharing={sharingKind === "map"} />;
-    } else {
-      const a = logPages[(spreadIndex - 1) * 2];
-      const b = logPages[(spreadIndex - 1) * 2 + 1];
-      left = a ? <AdventureLogPage entry={a} /> : <MoreAdventuresPage />;
-      right = b ? <AdventureLogPage entry={b} /> : <MoreAdventuresPage />;
-    }
-  }
+  const { left, right } = pagesFor(spreadIndex);
+  const flipFromPages = flipFrom !== null ? pagesFor(flipFrom) : null;
 
   return (
     <div className="rounded-2xl overflow-hidden p-6 sm:p-10 flex flex-col items-center gap-5" style={{ border: "1px solid var(--border-subtle)", background: "linear-gradient(180deg, #2c0a10, #180509)" }}>
@@ -601,7 +655,12 @@ export default function PassportBook() {
             </AnimatePresence>
 
             {open && (
-              <OpenSpread left={left} right={right} spreadIndex={spreadIndex} direction={direction} onClose={() => setOpen(false)} />
+              <OpenSpread
+                left={left} right={right}
+                flipFrom={flipFromPages} direction={direction}
+                onFlipEnd={() => setFlipFrom(null)}
+                onClose={() => setOpen(false)}
+              />
             )}
           </>
         )}

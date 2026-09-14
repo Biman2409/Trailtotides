@@ -71,14 +71,6 @@ export function radarVertices(cx: number, cy: number, values: number[], maxVal: 
   }
   return verts;
 }
-export function tickLines(cx: number, cy: number, rInner: number, rOuter: number, count: number): [number, number, number, number][] {
-  const lines: [number, number, number, number][] = [];
-  for (let i = 0; i < count; i++) {
-    const angle = (Math.PI * 2 * i) / count;
-    lines.push([cx + rInner * Math.cos(angle), cy + rInner * Math.sin(angle), cx + rOuter * Math.cos(angle), cy + rOuter * Math.sin(angle)]);
-  }
-  return lines;
-}
 
 // ─── Stamp shapes — a small, explainable system with four factors ─────────
 // 1. SHAPE   — which ACE domain the adventure demands most (Engine/Chassis/
@@ -137,45 +129,9 @@ export function starVertices(cx: number, cy: number, rOuter: number, rInner: num
   }
   return verts;
 }
-// Mechanical cog — Engine (stamina/power) is the domain about output and
-// drive, so it gets teeth, not a plain polygon.
-export function gearVertices(cx: number, cy: number, rOuter: number, rInner: number, teeth: number, rotateDeg = -90): [number, number][] {
-  const step = (Math.PI * 2) / teeth;
-  const toothHalf = step * 0.22;
-  const gapHalf = step * 0.16;
-  const rot = (rotateDeg * Math.PI) / 180;
-  const verts: [number, number][] = [];
-  for (let i = 0; i < teeth; i++) {
-    const center = i * step + rot;
-    const rootCenter = center + step / 2;
-    const a1 = center - toothHalf, a2 = center + toothHalf;
-    const a3 = rootCenter - gapHalf, a4 = rootCenter + gapHalf;
-    verts.push([cx + rOuter * Math.cos(a1), cy + rOuter * Math.sin(a1)]);
-    verts.push([cx + rOuter * Math.cos(a2), cy + rOuter * Math.sin(a2)]);
-    verts.push([cx + rInner * Math.cos(a3), cy + rInner * Math.sin(a3)]);
-    verts.push([cx + rInner * Math.cos(a4), cy + rInner * Math.sin(a4)]);
-  }
-  return verts;
-}
-// Compass rose — Mind (focus/nerve) is about bearing and precision, so its
-// mark alternates long cardinal spikes with short intercardinal ones.
-export function compassVertices(cx: number, cy: number, rLong: number, rShort: number, rInner: number, points: number, rotateDeg = -90): [number, number][] {
-  const angStep = Math.PI / points;
-  const rot = (rotateDeg * Math.PI) / 180;
-  const verts: [number, number][] = [];
-  for (let i = 0; i < points; i++) {
-    const spikeAngle = i * 2 * angStep + rot;
-    const valleyAngle = spikeAngle + angStep;
-    const r = i % 2 === 0 ? rLong : rShort;
-    verts.push([cx + r * Math.cos(spikeAngle), cy + r * Math.sin(spikeAngle)]);
-    verts.push([cx + rInner * Math.cos(valleyAngle), cy + rInner * Math.sin(valleyAngle)]);
-  }
-  return verts;
-}
-// A scalloped seal outline built from two harmonics — Elements (water/
-// altitude) reads as organic and hand-carved rather than a hard-edged
-// polygon; the second, weaker ripple keeps any single stamp from looking
-// like a stamped-out template of every other one.
+// A scalloped seal outline built from two harmonics — the second, weaker
+// ripple keeps any single stamp from looking like a stamped-out template of
+// every other one. Used by the "scallop" immigration-stamp family below.
 export function burstVertices(cx: number, cy: number, rBase: number, waveAmp: number, waveCount: number, rotateDeg = -90): [number, number][] {
   const totalPoints = waveCount * 10;
   const verts: [number, number][] = [];
@@ -186,32 +142,10 @@ export function burstVertices(cx: number, cy: number, rBase: number, waveAmp: nu
   }
   return verts;
 }
-// Maps a unit-space silhouette (authored around the origin, radius ~1) to a
-// rotated, scaled position — shared by every hand-authored point shape below.
-export function unitVertices(cx: number, cy: number, r: number, unit: [number, number][], rotateDeg: number): [number, number][] {
-  const rad = (rotateDeg * Math.PI) / 180;
-  const cos = Math.cos(rad), sin = Math.sin(rad);
-  return unit.map(([ux, uy]) => {
-    const x = ux * r, y = uy * r;
-    return [cx + x * cos - y * sin, cy + x * sin + y * cos];
-  });
-}
-// Unit heraldic shield (notched top, bulging shoulders, tapered point) —
-// Chassis (strength/agility) gets a load-bearing, structural mark.
-export const SHIELD_UNIT: [number, number][] = [
-  [-0.7, -1], [-0.12, -0.82], [0, -0.98], [0.12, -0.82], [0.7, -1],
-  [1, -0.42], [0.55, 0.55], [0, 1.15], [-0.55, 0.55], [-1, -0.42],
-];
-// Unit beveled lozenge — an armored, faceted alternative to the shield.
-export const LOZENGE_UNIT: [number, number][] = [
-  [0, -1.15], [0.5, -0.62], [0.85, 0], [0.5, 0.62],
-  [0, 1.15], [-0.5, 0.62], [-0.85, 0], [-0.5, -0.62],
-];
 // A real entry-stamp classic: a scalloped OVAL rather than a circle. Unlike
 // the polygon shapes, an ellipse can't be rotated by an angle offset alone
 // (its curvature isn't uniform), so points are built axis-aligned in unit
-// space and then rotated as real coordinates, same as the hand-authored
-// shields/lozenges above.
+// space and then rotated as real coordinates.
 export function ovalBurstVertices(cx: number, cy: number, rx: number, ry: number, waveAmp: number, waveCount: number, rotateDeg: number): [number, number][] {
   const totalPoints = waveCount * 10;
   const rad = (rotateDeg * Math.PI) / 180;
@@ -224,15 +158,6 @@ export function ovalBurstVertices(cx: number, cy: number, rx: number, ry: number
     verts.push([cx + ux * cos - uy * sin, cy + ux * sin + uy * cos]);
   }
   return verts;
-}
-/** Builds the outline for a domain+seed at a given radius; variant picks between two real-stamp-inspired silhouettes per domain. */
-export function domainVertices(domain: StampDomain, cx: number, cy: number, r: number, rotate: number, variant: 0 | 1): [number, number][] {
-  switch (domain) {
-    case "engine": return variant === 0 ? gearVertices(cx, cy, r, r * 0.72, 8, rotate) : starVertices(cx, cy, r, r * 0.82, 16, rotate);
-    case "chassis": return variant === 0 ? unitVertices(cx, cy, r * 1.05, SHIELD_UNIT, rotate) : unitVertices(cx, cy, r, LOZENGE_UNIT, rotate);
-    case "elements": return variant === 0 ? burstVertices(cx, cy, r * 0.92, r * 0.12, 9, rotate) : ovalBurstVertices(cx, cy, r * 1.12, r * 0.86, 0.09, 9, rotate);
-    case "mind": return variant === 0 ? compassVertices(cx, cy, r, r * 0.6, r * 0.32, 8, rotate) : polygonVertices(cx, cy, r, 8, rotate);
-  }
 }
 
 // ─── Trip trophies — 2-3 badges earned by ONE specific completed adventure,
@@ -288,41 +213,137 @@ export function TypeIcon({ type, size, color }: { type: string; size: number; co
   );
 }
 
-// Every stamp gets a faint ink wash, a main ring, a dashed inner ring, and a
-// burst of postmark ticks; Extreme adventures earn one more outer ring. The
-// silhouette itself names what the adventure demands (domain), while the
-// seed gives it a free full-circle rotation so no two stamps ever align —
-// the visual weight and shape both say something about what it took to earn
-// this particular mark.
-export function StampOutline({ seed, domain, size, color, tier }: { seed: number; domain: StampDomain; size: number; color: string; tier: number }) {
+// ─── Immigration stamps — every stamp is a real customs/entry-stamp
+// pastiche: a single ink color, a hand-stamped (never-quite-round) border,
+// curved agency text following the rim, and a date struck through the
+// center. Two factors give the wall of stamps real structure instead of
+// visual noise:
+//   STATE   → picks the ink color AND the border family (circle/oval/
+//             octagon/scallop) from a small curated set, so every stamp
+//             from the same state reads as part of one "district office"
+//             — exactly like how real passport stamps from the same
+//             border post look alike.
+//   SEED    → (the adventure's own slug) drives rotation, the ink-wobble
+//             on the border, and speckle placement, so no two stamps —
+//             even from the same state — are ever pixel-identical.
+// Difficulty still shows through size (DIFFICULTY_STAMP_SIZE) and an extra
+// ring + corner star for Extreme trips, same as a "priority" endorsement.
+
+export const STAMP_INK_PALETTE = ["#8b1a1a", "#1a3c6e", "#2f5233", "#5c2a6e", "#7a4a1f", "#0f5c5c"];
+export type StampFamily = "circle" | "oval" | "octagon" | "scallop";
+const STAMP_FAMILIES: StampFamily[] = ["circle", "oval", "octagon", "scallop"];
+
+/** Every adventure from the same state gets the same ink color + border family. */
+export function stateStampStyle(state: string): { ink: string; family: StampFamily } {
+  const h = hashSeed(state);
+  return { ink: STAMP_INK_PALETTE[h % STAMP_INK_PALETTE.length], family: STAMP_FAMILIES[Math.floor(h / STAMP_INK_PALETTE.length) % STAMP_FAMILIES.length] };
+}
+
+/** The hand-stamped (never a perfect curve) border for one ink-family, seeded so the same adventure always redraws identically. */
+function stampBorderVertices(family: StampFamily, seed: number, cx: number, cy: number, r: number, rotate: number): [number, number][] {
+  const wobbleSeed = seed * 17 + 9;
+  switch (family) {
+    case "circle": return burstVertices(cx, cy, r, r * 0.035, 13 + (seed % 3), rotate);
+    case "oval": return ovalBurstVertices(cx, cy, r * 1.14, r * 0.86, 0.035, 11, rotate);
+    case "octagon": {
+      const base = polygonVertices(cx, cy, r, 8, rotate);
+      const rand = mulberry32(wobbleSeed);
+      return base.map(([x, y]) => {
+        const j = 1 + (rand() - 0.5) * 0.05;
+        return [cx + (x - cx) * j, cy + (y - cy) * j];
+      });
+    }
+    case "scallop": return burstVertices(cx, cy, r * 0.95, r * 0.075, 15 + (seed % 4), rotate);
+  }
+}
+
+/** Rotates a point around (cx,cy) by `deg` — used to keep the HTML text
+ * overlay in sync with the SVG border's own seeded rotation, since the two
+ * can't share a single transform (see the note on curvedText below). */
+function rotatePoint(x: number, y: number, cx: number, cy: number, deg: number): [number, number] {
+  const rad = (deg * Math.PI) / 180;
+  const cos = Math.cos(rad), sin = Math.sin(rad);
+  const dx = x - cx, dy = y - cy;
+  return [cx + dx * cos - dy * sin, cy + dx * sin + dy * cos];
+}
+
+/** Places `text` as individual glyphs tangent to a circle of `radius` around
+ * (cx,cy), centered on `centerAngleDeg` (0 = 12 o'clock, clockwise), then
+ * rotated another `stampRotate` degrees to match the border's own seeded
+ * tilt. Rendered as absolutely-positioned HTML `<span>`s — not an SVG
+ * `<text>` — because Satori (the edge share-image renderer) doesn't support
+ * `<text>` nodes inside an embedded raw SVG; plain positioned HTML text is
+ * the same technique this file already uses for the ACE radar's axis
+ * labels, and works identically in both the browser and on the edge. */
+function curvedText(text: string, cx: number, cy: number, radius: number, centerAngleDeg: number, degPerChar: number, fontSize: number, color: string, upsideDown: boolean, stampRotate: number) {
+  const chars = text.split("");
+  const span = degPerChar * (chars.length - 1);
+  const start = centerAngleDeg - span / 2;
+  return chars.map((ch, i) => {
+    const angle = start + i * degPerChar;
+    const rad = (angle * Math.PI) / 180;
+    const dir = upsideDown ? -1 : 1;
+    const x0 = cx + dir * radius * Math.sin(rad);
+    const y0 = cy - dir * radius * Math.cos(rad);
+    const [x, y] = rotatePoint(x0, y0, cx, cy, stampRotate);
+    const rot = (upsideDown ? angle + 180 : angle) + stampRotate;
+    return (
+      <div key={i} style={{ display: "flex", position: "absolute", left: x, top: y, transform: "translate(-50%,-50%)", alignItems: "center", justifyContent: "center" }}>
+        <span style={{ display: "flex", fontSize, fontWeight: 800, color, transform: `rotate(${rot}deg)` }}>{ch}</span>
+      </div>
+    );
+  });
+}
+
+/** DD·MM·YY struck through the stamp's center, like a real date-wheel. */
+function stampDate(iso: string): string {
+  const d = parseISODate(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(d.getDate())}·${pad(d.getMonth() + 1)}·${String(d.getFullYear()).slice(2)}`;
+}
+
+export function ImmigrationStamp({
+  seed, state, date, size, tier,
+}: { seed: number; state: string; date: string; size: number; tier: number }) {
   const cx = size / 2, cy = size / 2;
+  const { ink, family } = stateStampStyle(state);
   const rand = mulberry32(seed);
-  const rand01 = rand();
-  // A shield or lozenge rotated off-axis stops reading as that shape, but
-  // the gear/rosette/burst/oval/compass/octagon families all read fine at
-  // any angle — only chassis stays close to upright.
-  const rotate = domain === "chassis" ? (rand01 - 0.5) * 30 : rand01 * 360;
-  // Second draw from the same seeded sequence picks which of the two
-  // real-stamp-inspired silhouettes this domain uses — still fully
-  // deterministic per adventure.
-  const variant: 0 | 1 = rand() < 0.5 ? 0 : 1;
-  const rOuter = size * 0.47, rMid = size * 0.35;
-  const ticks = tickLines(cx, cy, size * 0.5, size * 0.57, tier >= 4 ? 24 : 16);
+  const rotate = rand() * 360;
+  const rOuter = size * 0.47, rInner = size * 0.36;
+  const textR = size * 0.395;
 
-  const outline = [
-    <polygon key="o1" points={ptsStr(domainVertices(domain, cx, cy, rOuter, rotate, variant))} fill={tint(color, 0.06)} stroke={color} strokeWidth={3} />,
-    <polygon key="o2" points={ptsStr(domainVertices(domain, cx, cy, rMid, rotate, variant))} fill="none" stroke={color} strokeWidth={1.5} strokeDasharray="4 3" opacity={0.65} />,
-    ...(tier >= 5 ? [<polygon key="o3" points={ptsStr(domainVertices(domain, cx, cy, size * 0.44, rotate, variant))} fill="none" stroke={color} strokeWidth={1} opacity={0.5} />] : []),
-  ];
+  // A handful of seeded ink specks — real rubber stamps never lay down
+  // perfectly even ink, and this is what keeps the mark from reading as a
+  // clean vector badge.
+  const speckles = Array.from({ length: 6 + (seed % 5) }, (_, i) => {
+    const a = mulberry32(seed * 31 + i * 7 + 1)() * Math.PI * 2;
+    const r = rOuter * (0.55 + mulberry32(seed * 53 + i)() * 0.4);
+    return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a), s: 0.6 + mulberry32(seed * 71 + i)() * 1.1 };
+  });
 
-  const tickEls = tier >= 3 ? ticks.map(([x1, y1, x2, y2], i) => (
-    <line key={`t${i}`} x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={1.2} opacity={0.45} strokeLinecap="round" />
-  )) : [];
+  const stateLabel = state.toUpperCase();
+  const degPerChar = Math.min(11, 150 / Math.max(stateLabel.length, 1));
+  const [dateX, dateY] = rotatePoint(cx, cy + size * 0.03, cx, cy, rotate);
+  const [lineX1, lineY1] = rotatePoint(cx - rInner * 0.72, cy, cx, cy, rotate);
+  const [lineX2, lineY2] = rotatePoint(cx + rInner * 0.72, cy, cx, cy, rotate);
 
   return (
-    <svg width={size} height={size} style={{ position: "absolute", top: 0, left: 0 }}>
-      {[...tickEls, ...outline]}
-    </svg>
+    <div style={{ display: "flex", position: "absolute", top: 0, left: 0, width: size, height: size, opacity: 0.88 }}>
+      <svg width={size} height={size} style={{ position: "absolute", top: 0, left: 0, mixBlendMode: "multiply" }}>
+        <polygon points={ptsStr(stampBorderVertices(family, seed, cx, cy, rOuter, rotate))} fill="none" stroke={ink} strokeWidth={2.75} />
+        <polygon points={ptsStr(stampBorderVertices(family, seed + 5, cx, cy, rInner, rotate))} fill="none" stroke={ink} strokeWidth={1} strokeDasharray="2.5 2.5" opacity={0.6} />
+        {tier >= 5 && (
+          <polygon points={ptsStr(stampBorderVertices(family, seed + 11, cx, cy, size * 0.44, rotate))} fill="none" stroke={ink} strokeWidth={1} opacity={0.45} />
+        )}
+        <line x1={lineX1} y1={lineY1} x2={lineX2} y2={lineY2} stroke={ink} strokeWidth={1} opacity={0.55} />
+        {speckles.map((sp, i) => <circle key={i} cx={sp.x} cy={sp.y} r={sp.s} fill={ink} opacity={0.35} />)}
+      </svg>
+      {curvedText(stateLabel, cx, cy, textR, 0, degPerChar, size * 0.082, ink, false, rotate)}
+      {curvedText("TRAIL TO TIDES", cx, cy, textR, 180, Math.min(11, 130 / 14), size * 0.062, ink, true, rotate)}
+      <div style={{ display: "flex", position: "absolute", left: dateX, top: dateY, transform: "translate(-50%,-50%)", alignItems: "center", justifyContent: "center" }}>
+        <span style={{ display: "flex", fontSize: size * 0.088, fontWeight: 800, color: ink, letterSpacing: 0.5, transform: `rotate(${rotate}deg)` }}>{stampDate(date)}</span>
+      </div>
+    </div>
   );
 }
 
