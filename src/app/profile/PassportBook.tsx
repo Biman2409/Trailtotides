@@ -107,19 +107,27 @@ function RadarChart({ ace, hasData, size = 180 }: { ace: Record<string, number>;
   );
 }
 
+// Small brand mark repeated at the top of every page — like a passport's
+// running header — so each page reads as part of the same document.
+function PageHeader() {
+  return (
+    <div className="flex items-center gap-2 shrink-0 self-start">
+      <div className="w-5 h-5 rounded-md flex items-center justify-center shrink-0" style={{ background: "#ff5100" }}>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+          <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
+        </svg>
+      </div>
+      <span className="text-[9px] font-extrabold tracking-[0.25em]" style={{ color: INK, opacity: 0.7 }}>TRAIL TO TIDES</span>
+    </div>
+  );
+}
+
 // ─── Left page — bio, achievements, capability profile, badges ────────────
 function StatsPage({ data, onShare, sharing }: { data: PassportData; onShare: () => void; sharing: boolean }) {
   const issueDate = new Date(data.issueDateISO);
   return (
     <div className="relative flex flex-col overflow-hidden" style={{ width: PAGE_REF_W, height: PAGE_REF_H, background: PAPER, padding: "18px 20px 14px" }}>
-      <div className="flex items-center gap-2">
-        <div className="w-5 h-5 rounded-md flex items-center justify-center shrink-0" style={{ background: "#ff5100" }}>
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-            <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
-          </svg>
-        </div>
-        <span className="text-[9px] font-extrabold tracking-[0.25em]" style={{ color: INK, opacity: 0.7 }}>TRAIL TO TIDES</span>
-      </div>
+      <PageHeader />
 
       <span className="mt-2 text-base font-extrabold tracking-wide" style={{ color: INK }}>ADVENTURE PASSPORT</span>
 
@@ -244,7 +252,8 @@ function MapPage({ data, onShare, sharing }: { data: PassportData; onShare: () =
   const { ref, scale } = useContainerScale(MAP_W);
   return (
     <div className="relative flex flex-col items-center overflow-hidden" style={{ width: PAGE_REF_W, height: PAGE_REF_H, background: PAPER, padding: "18px 16px 14px" }}>
-      <div className="flex flex-col items-center shrink-0">
+      <PageHeader />
+      <div className="flex flex-col items-center shrink-0 mt-2.5">
         <span className="text-[9px] font-bold tracking-[0.2em]" style={{ color: INK, opacity: 0.5 }}>VISAS & ENDORSEMENTS</span>
         <div className="w-16 h-px mt-1.5" style={{ background: "rgba(36,26,18,0.25)" }} />
       </div>
@@ -306,10 +315,11 @@ function MapPage({ data, onShare, sharing }: { data: PassportData; onShare: () =
 function AdventureLogPage({ entry }: { entry: AdventureLogEntry }) {
   return (
     <div className="relative flex flex-col overflow-hidden" style={{ width: PAGE_REF_W, height: PAGE_REF_H, background: PAPER, padding: "18px 20px 14px" }}>
-      <span className="text-[8px] font-bold tracking-[0.25em]" style={{ color: INK, opacity: 0.5 }}>ADVENTURE LOG</span>
+      <PageHeader />
+      <span className="text-[8px] font-bold tracking-[0.25em] mt-2.5" style={{ color: INK, opacity: 0.5 }}>ADVENTURE LOG</span>
       <span className="text-base font-extrabold tracking-wide mt-0.5 truncate" style={{ color: INK }}>{entry.name}</span>
 
-      <div className="relative mt-2.5 rounded-lg overflow-hidden shrink-0" style={{ height: 190, border: `1px solid rgba(36,26,18,0.15)` }}>
+      <div className="relative mt-2 rounded-lg overflow-hidden shrink-0" style={{ height: 172, border: `1px solid rgba(36,26,18,0.15)` }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={entry.photoUrl} alt={entry.name} className="w-full h-full object-cover" />
         {entry.isPersonalPhoto && (
@@ -362,9 +372,12 @@ function AdventureLogPage({ entry }: { entry: AdventureLogEntry }) {
 // the spread feeling like a real book instead of one page floating alone.
 function MoreAdventuresPage() {
   return (
-    <div className="relative flex flex-col items-center justify-center overflow-hidden" style={{ width: PAGE_REF_W, height: PAGE_REF_H, background: PAPER, padding: "18px 20px 14px" }}>
-      <div style={{ opacity: 0.15 }}><Compass className="w-10 h-10" style={{ color: INK }} /></div>
-      <span className="text-xs font-bold mt-3 text-center px-6" style={{ color: INK, opacity: 0.4 }}>More adventures ahead</span>
+    <div className="relative flex flex-col items-center overflow-hidden" style={{ width: PAGE_REF_W, height: PAGE_REF_H, background: PAPER, padding: "18px 20px 14px" }}>
+      <PageHeader />
+      <div className="flex-1 flex flex-col items-center justify-center">
+        <div style={{ opacity: 0.15 }}><Compass className="w-10 h-10" style={{ color: INK }} /></div>
+        <span className="text-xs font-bold mt-3 text-center px-6" style={{ color: INK, opacity: 0.4 }}>More adventures ahead</span>
+      </div>
     </div>
   );
 }
