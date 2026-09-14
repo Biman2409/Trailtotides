@@ -383,7 +383,7 @@ function Cover({ onOpen }: { onOpen: () => void }) {
       <div className="absolute inset-0 rounded-2xl pointer-events-none" style={{ boxShadow: "inset 0 0 60px rgba(0,0,0,0.35)" }} />
 
       {/* Faint India-outline watermark, like a currency/passport security print */}
-      <svg viewBox="0 0 420 480" className="absolute pointer-events-none" style={{ width: "92%", height: "92%", top: "3%", left: "4%", opacity: 0.055 }}>
+      <svg viewBox="0 0 420 480" preserveAspectRatio="xMidYMid meet" className="absolute pointer-events-none" style={{ width: "80%", aspectRatio: "420 / 480", top: "14%", left: "10%", opacity: 0.055 }}>
         <path d={INDIA_PATH} fill={GOLD} />
       </svg>
 
