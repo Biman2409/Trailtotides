@@ -382,8 +382,30 @@ function Cover({ onOpen }: { onOpen: () => void }) {
     >
       <div className="absolute inset-0 rounded-2xl pointer-events-none" style={{ boxShadow: "inset 0 0 60px rgba(0,0,0,0.35)" }} />
 
-      <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5" style={{ background: "rgba(201,162,77,0.14)", border: `1.5px solid ${GOLD}` }}>
-        <Compass className="w-7 h-7" style={{ color: GOLD }} />
+      {/* Faint India-outline watermark, like a currency/passport security print */}
+      <svg viewBox="0 0 420 480" className="absolute pointer-events-none" style={{ width: "62%", height: "62%", top: "18%", left: "19%", opacity: 0.05 }}>
+        <path d={INDIA_PATH} fill={GOLD} />
+      </svg>
+
+      {/* Corner brackets — foil-stamped frame like a real cover */}
+      {[
+        { top: 14, left: 14, borderWidth: "1.5px 0 0 1.5px" },
+        { top: 14, right: 14, borderWidth: "1.5px 1.5px 0 0" },
+        { bottom: 14, left: 14, borderWidth: "0 0 1.5px 1.5px" },
+        { bottom: 14, right: 14, borderWidth: "0 1.5px 1.5px 0" },
+      ].map((pos, i) => (
+        <div key={i} className="absolute w-4 h-4 pointer-events-none" style={{ ...pos, borderStyle: "solid", borderColor: "rgba(201,162,77,0.4)" }} />
+      ))}
+
+      {/* Emblem — a wax-seal-style ring around the Trail to Tides mark */}
+      <div className="relative w-16 h-16 rounded-full flex items-center justify-center mb-5" style={{ border: `1px solid rgba(201,162,77,0.4)` }}>
+        <div className="absolute inset-[3px] rounded-full" style={{ border: `1px solid rgba(201,162,77,0.4)` }} />
+        <div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ background: "rgba(201,162,77,0.14)", border: `1.5px solid ${GOLD}` }}>
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke={GOLD} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
+            <path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19" />
+          </svg>
+        </div>
       </div>
       <span className="text-[11px] font-extrabold tracking-[0.35em]" style={{ color: "rgba(245,236,214,0.55)" }}>TRAIL TO TIDES</span>
       <span className="text-2xl font-extrabold tracking-[0.15em] mt-2 text-center px-4" style={{ color: "#f5ecd6" }}>ADVENTURE<br />PASSPORT</span>
