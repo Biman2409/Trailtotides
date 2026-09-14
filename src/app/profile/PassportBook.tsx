@@ -114,7 +114,9 @@ function StatsPage({ data, onShare, sharing }: { data: PassportData; onShare: ()
     <div className="relative flex flex-col overflow-hidden" style={{ width: PAGE_REF_W, height: PAGE_REF_H, background: PAPER, padding: "18px 20px 14px" }}>
       <div className="flex items-center gap-2">
         <div className="w-5 h-5 rounded-md flex items-center justify-center shrink-0" style={{ background: "#ff5100" }}>
-          <Compass className="w-3 h-3 text-white" />
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
+          </svg>
         </div>
         <span className="text-[9px] font-extrabold tracking-[0.25em]" style={{ color: INK, opacity: 0.7 }}>TRAIL TO TIDES</span>
       </div>
