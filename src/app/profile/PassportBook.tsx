@@ -397,10 +397,10 @@ function Cover({ onOpen }: { onOpen: () => void }) {
         <div key={i} className="absolute w-4 h-4 pointer-events-none" style={{ ...pos, borderStyle: "solid", borderColor: "rgba(201,162,77,0.4)" }} />
       ))}
 
-      {/* Emblem — a wax-seal-style ring around the Trail to Tides mark */}
-      <div className="relative w-16 h-16 rounded-full flex items-center justify-center mb-5" style={{ border: `1px solid rgba(201,162,77,0.4)` }}>
-        <div className="absolute inset-[3px] rounded-full" style={{ border: `1px solid rgba(201,162,77,0.4)` }} />
-        <div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ background: "rgba(201,162,77,0.14)", border: `1.5px solid ${GOLD}` }}>
+      {/* Emblem — a foil-stamped frame around the Trail to Tides mark */}
+      <div className="relative w-16 h-16 rounded-2xl flex items-center justify-center mb-5" style={{ border: `1px solid rgba(201,162,77,0.4)` }}>
+        <div className="absolute inset-[3px] rounded-xl" style={{ border: `1px solid rgba(201,162,77,0.4)` }} />
+        <div className="w-11 h-11 rounded-lg flex items-center justify-center" style={{ background: "rgba(201,162,77,0.14)", border: `1.5px solid ${GOLD}` }}>
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke={GOLD} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
             <path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19" />
