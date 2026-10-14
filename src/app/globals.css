@@ -44,7 +44,7 @@
   --color-teal-light: #1a6b80;
   --color-sand: #f5f0e8;
   --color-sand-dark: #e8dfc8;
-  --color-slate: #2c3e50;
+  --color-slate: #3a302a;
   --color-charcoal: #1a1f2e;
   --color-rust: #ff5100;
   --color-rust-light: #ff7d47;
@@ -57,6 +57,10 @@
   --color-pine: #1f7a4d;
   --color-pine-light: #2f9660;
   --color-pine-glow: #4ade80;
+
+  /* Tide teal + sand gold — supporting accents so orange can stay the signature */
+  --color-tide: var(--tide);
+  --color-gold: var(--gold);
 }
 
 /* ── LIGHT THEME (default) ───────────────────────────────── */
@@ -74,8 +78,8 @@
 
   /* Text — warm charcoal with better contrast hierarchy */
   --text-primary:   #1c1814;
-  --text-secondary: #6b655e;
-  --text-tertiary:  #9a938b;
+  --text-secondary: #5b5249;
+  --text-tertiary:  #857b70;
   --text-muted:     #c2bcb4;
 
   /* Borders — warm stone, visibly distinct */
@@ -137,6 +141,14 @@
      low opacity against their own card surface (rgba(var(--fg-rgb),X)) rather
      than assuming a permanently dark backdrop */
   --fg-rgb: 28,24,20;
+
+  --tide: #0e7c86;
+  --tide-soft: rgba(14,124,134,0.10);
+  --tide-border: rgba(14,124,134,0.26);
+  --gold: #b7791f;
+  --gold-soft: rgba(183,121,31,0.12);
+  --grain-opacity: 0.035;
+  --topo-stroke: rgba(91,82,73,0.10);
 }
 
 /* ── DARK THEME ─────────────────────────────────────────── */
@@ -144,12 +156,12 @@
   color-scheme: dark;
 
   /* Surfaces */
-  --bg-page:        #080c14;
-  --bg-surface:     #0f1420;
-  --bg-surface-2:   #141b28;
-  --bg-card:        rgba(255,255,255,0.04);
-  --bg-card-hover:  rgba(255,255,255,0.07);
-  --bg-overlay:     rgba(8,12,20,0.85);
+  --bg-page:        #0f0d0b;
+  --bg-surface:     #17120f;
+  --bg-surface-2:   #1f1812;
+  --bg-card:        rgba(255,214,170,0.045);
+  --bg-card-hover:  rgba(255,214,170,0.08);
+  --bg-overlay:     rgba(14,12,11,0.85);
 
   /* Text */
   --text-primary:   #f0ede8;
@@ -158,30 +170,30 @@
   --text-muted:     rgba(240,237,232,0.2);
 
   /* Borders */
-  --border-subtle:  rgba(255,255,255,0.06);
-  --border-default: rgba(255,255,255,0.1);
-  --border-strong:  rgba(255,255,255,0.18);
+  --border-subtle:  rgba(255,200,150,0.08);
+  --border-default: rgba(255,200,150,0.14);
+  --border-strong:  rgba(255,200,150,0.24);
 
-  /* Shadow tint — near-black already reads fine against navy */
+  /* Shadow tint — near-black reads fine against the warm charcoal */
   --shadow-color: 0,0,0;
 
   /* Nav */
-  --nav-bg:         rgba(15,20,32,0.97);
+  --nav-bg:         rgba(22,19,17,0.97);
   --nav-border:     rgba(255,255,255,0.07);
   --nav-text:       rgba(255,255,255,0.65);
   --nav-text-hover: #ffffff;
   --nav-active-bg:  rgba(255,255,255,0.1);
 
   /* Scrollbar */
-  --scrollbar-track: #111820;
-  --scrollbar-thumb: #2c3e50;
+  --scrollbar-track: #171310;
+  --scrollbar-thumb: #3a302a;
 
   /* Shared */
-  --background: #080c14;
+  --background: #0e0c0b;
   --foreground: #f0ede8;
-  --card: #0f1420;
+  --card: #161311;
   --card-foreground: #f0ede8;
-  --popover: #141b28;
+  --popover: #1d1916;
   --popover-foreground: #f0ede8;
   --primary: #ff5100;
   --primary-foreground: #ffffff;
@@ -195,7 +207,7 @@
   --border: rgba(255,255,255,0.08);
   --input: rgba(255,255,255,0.08);
   --ring: #ff5100;
-  --sidebar: #0f1420;
+  --sidebar: #161311;
   --sidebar-foreground: #f0ede8;
   --sidebar-primary: #ff5100;
   --sidebar-primary-foreground: #ffffff;
@@ -214,6 +226,14 @@
 
   /* Foreground RGB triple — see :root for explanation */
   --fg-rgb: 255,255,255;
+
+  --tide: #2dd4bf;
+  --tide-soft: rgba(45,212,191,0.12);
+  --tide-border: rgba(45,212,191,0.28);
+  --gold: #e8b25a;
+  --gold-soft: rgba(232,178,90,0.14);
+  --grain-opacity: 0.05;
+  --topo-stroke: rgba(255,200,150,0.07);
 }
 
 
@@ -235,7 +255,47 @@
     letter-spacing: -0.02em;
     color: var(--text-primary);
   }
+  /* Editorial display serif for page and section headlines */
+  h1, h2 {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
 }
+
+/* ── Film grain over the whole page (non-interactive) ────── */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ── Topographic contour texture — add .topo to any section ─ */
+.topo.topo {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400' fill='none' stroke='%23b08a5c' stroke-opacity='0.12' stroke-width='1'><path d='M-20 320C80 260 140 330 240 280S400 200 460 250 580 300 640 240'/><path d='M-20 280C70 220 150 290 240 240S410 160 470 210 590 260 640 200'/><path d='M-20 240C60 180 160 250 240 200S420 120 480 170 600 220 640 160'/><path d='M-20 200C50 140 170 210 240 160S430 80 490 130 610 180 640 120'/><path d='M-20 160C40 100 180 170 240 120S440 40 500 90 620 140 640 80'/></svg>");
+  background-size: 600px 400px;
+  background-repeat: repeat;
+}
+
+/* ── Photo grade — opt-in (a global img filter stalls animated sliders) ─ */
+.photo-grade { filter: saturate(1.06) contrast(1.03); }
+
+/* ── Adventure-type tints (use on chips / card top borders) ─ */
+.cat-trek    { --cat: #7b93b0; }
+.cat-water   { --cat: var(--tide); }
+.cat-air     { --cat: #9b8cff; }
+.cat-desert  { --cat: #d99a3c; }
+.cat-forest  { --cat: var(--accent-green); }
+.cat-chip    { color: var(--cat); background: color-mix(in srgb, var(--cat) 14%, transparent); border: 1px solid color-mix(in srgb, var(--cat) 30%, transparent); }
+.cat-top     { border-top: 2px solid var(--cat); }
+
+/* ── Soft orange hover glow (opt-in) ─────────────────────── */
+.glow-hover { transition: box-shadow .3s ease, border-color .3s ease; }
+.glow-hover:hover { box-shadow: 0 10px 40px -10px rgba(255,81,0,0.35); border-color: rgba(255,81,0,0.4); }
 
 /* Smooth scrolling */
 html {
@@ -387,4 +447,11 @@ button:not([class*="transition"]) {
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 81, 0, 0.4);
   }
+}
+
+/* ── PHOTO GRADE ───────────────────────────────────────────
+   One warm, slightly muted treatment for every photo on the site,
+   so mixed sources read as a single curated set. */
+.photo-grade {
+  filter: saturate(0.9) contrast(1.05) brightness(0.97) sepia(0.08);
 }

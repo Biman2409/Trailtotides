@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, Great_Vibes, Caveat } from "next/font/google";
+import { DM_Sans, Fraunces, Great_Vibes, Caveat, Permanent_Marker } from "next/font/google";
 import "./globals.css";
 import { VisualEditsMessenger } from "orchids-visual-edits";
 import Script from "next/script";
@@ -24,10 +24,24 @@ const caveat = Caveat({
   weight: ["500", "600", "700"],
 });
 
+// Hand-painted marker for accent words in display headlines (hero "Trail" / "Tides").
+const permanentMarker = Permanent_Marker({
+  variable: "--font-marker",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
+// Editorial display serif for h1/h2 only; DM Sans stays for body and UI.
+const fraunces = Fraunces({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+});
+
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 const BASE_URL = "https://trailtotides.com";
@@ -147,7 +161,7 @@ export default function RootLayout({
         <link rel="icon" type="image/svg+xml" href="/logo.svg" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon" />
       </head>
-        <body className={`${dmSans.variable} ${greatVibes.variable} ${caveat.variable} antialiased`} style={{ background: "var(--bg-page)", color: "var(--text-primary)" }}>
+        <body className={`${dmSans.variable} ${fraunces.variable} ${greatVibes.variable} ${caveat.variable} ${permanentMarker.variable} antialiased`} style={{ background: "var(--bg-page)", color: "var(--text-primary)" }}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true} disableTransitionOnChange>
         <Script
           id="org-structured-data"
