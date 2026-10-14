@@ -217,7 +217,7 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
 
       {/* Map */}
       <div className="relative">
-        <div ref={mapRef} className="ttt-nearby-map w-full h-44" style={{ background: isDark ? "#0d1117" : "#e5e3dc" }} />
+        <div ref={mapRef} className="ttt-nearby-map w-full h-44" style={{ background: isDark ? "#0e0c0b" : "#e5e3dc" }} />
         <div
           className="absolute inset-0 pointer-events-none"
           style={{ boxShadow: `inset 0 0 20px 0px rgba(0,0,0,${isDark ? 0.35 : 0.1})` }}

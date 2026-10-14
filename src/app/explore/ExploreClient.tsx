@@ -1,725 +1,291 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { Search, SlidersHorizontal, X, ChevronDown, Map as MapIcon, ArrowRight, ChevronRight, ChevronLeft, Heart, RotateCcw, Crown, Compass } from "lucide-react";
-import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import Link from "next/link";
+import {
+  Search, SlidersHorizontal, X, LayoutGrid, List, ChevronRight, Heart, RotateCcw, Crown, Map as MapIcon, ArrowRight,
+} from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
+import DifficultyMeter from "@/components/ui/custom/DifficultyMeter";
+import SeasonStrip from "@/components/ui/custom/SeasonStrip";
 import EmptyState from "@/components/ui/custom/EmptyState";
-import { adventures, getLowestPrice } from "@/lib/data";
-import type { AdventureType, Region, Difficulty, Duration, Month } from "@/lib/data";
-import { getACE, computeDifficulty } from "@/lib/ace";
-import type { AceAxis } from "@/lib/ace";
-import { loadProfile } from "@/lib/matchmaker";
-import type { StoredProfile } from "@/lib/matchmaker";
-import { motion } from "framer-motion";
 import ChatBubble from "@/components/ChatBubble";
-import { toggleSelection, REGION_GROUPS, GENRE_GROUPS, SEASONS } from "@/lib/filterOptions";
+import { adventures, getLowestPrice } from "@/lib/data";
+import type { Adventure, AdventureType, Difficulty, Duration, Month } from "@/lib/data";
+import { getACE, computeDifficulty, computeMatchScore } from "@/lib/ace";
+import { bucketFor } from "@/lib/fitness";
+import { useFitnessProfile } from "@/lib/useFitnessProfile";
+import { toggleSelection as toggle } from "@/lib/filterOptions";
+import { currentMonthIndexIST } from "@/lib/homeCuration";
+import {
+  MONTHS, SORT_LABELS, formatAltitude, latestPriceCheck, matchesSearch, searchSuggestions, sortAdventures,
+  type SortKey,
+} from "@/lib/exploreHelpers";
 
-type AceCategory = "ready" | "stretch" | "out-of-range";
+type FitFilter = "ready" | "stretch";
+type View = "grid" | "list";
 
-function classifyAdventure(userAce: StoredProfile["ace"], adventureAce: ReturnType<typeof getACE>): AceCategory {
-  const axes = Object.keys(adventureAce) as AceAxis[];
-  let maxShortfall = 0;
-  for (const axis of axes) {
-    const req = adventureAce[axis];
-    if (req === 0) continue;
-    const has = userAce[axis];
-    const shortfall = req - has;
-    if (shortfall > maxShortfall) maxShortfall = shortfall;
-  }
-  if (maxShortfall <= 0) return "ready";
-  if (maxShortfall <= 1) return "stretch";
-  return "out-of-range";
-}
+const PAGE = 24;
+const DIFFICULTIES: Difficulty[] = ["Easy", "Moderate", "Hard", "Advanced", "Extreme"];
+const DURATIONS: Duration[] = ["Weekend", "3–5 days", "7+ days"];
+const PRICE_STEPS = [0, 10000, 20000, 40000, 75000];
 
-// filter constants
-const seasons = SEASONS;
+// Only offer options that actually have adventures behind them — no dead ends.
+const TYPE_OPTIONS = [...new Set(adventures.map((a) => a.type))] as AdventureType[];
+const STATE_COUNTS = Object.entries(
+  adventures.reduce<Record<string, number>>((acc, a) => {
+    a.state.split("/").map((s) => s.trim()).forEach((s) => { acc[s] = (acc[s] ?? 0) + 1; });
+    return acc;
+  }, {})
+).sort((x, y) => y[1] - x[1]);
+
+const list = (v: string | null) => (v ? v.split(",").filter(Boolean) : []);
 
 export default function ExploreClient() {
+  const router = useRouter();
   const searchParams = useSearchParams();
+  const monthIdx = currentMonthIndexIST();
+  const thisMonth = MONTHS[monthIdx];
+  const { ace: fitAce, ready: profileReady } = useFitnessProfile();
 
+  // ── State, initialised from the link (old single-value params still work) ──
   const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
-  const [selectedTypes, setSelectedTypes] = useState<AdventureType[]>(
-    searchParams.get("type") ? [searchParams.get("type") as AdventureType] : []
-  );
-  const [selectedRegions, setSelectedRegions] = useState<Region[]>(
-    searchParams.get("region") ? [searchParams.get("region") as Region] : []
-  );
-  const [selectedSubRegions, setSelectedSubRegions] = useState<string[]>(
-    searchParams.get("subRegion") ? [searchParams.get("subRegion") as string] : []
-  );
-    const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>(
-      searchParams.get("difficulty") ? [searchParams.get("difficulty") as Difficulty] : []
-    );
-  const [selectedDurations, setSelectedDurations] = useState<Duration[]>([]);
-  const [selectedMonths, setSelectedMonths] = useState<Month[]>([]);
-  const PRICE_MIN = 0;
-  const PRICE_MAX = 200000;
-  const [priceRange, setPriceRange] = useState<[number, number]>([PRICE_MIN, PRICE_MAX]);
-  // ACE filters — initialise from ?ace= URL param if present
-  const [aceCategory, setAceCategory] = useState<AceCategory | null>(() => {
+  const [types, setTypes] = useState<AdventureType[]>(() => list(searchParams.get("type")) as AdventureType[]);
+  const [states, setStates] = useState<string[]>(() => list(searchParams.get("state") ?? searchParams.get("subRegion")));
+  const [diffs, setDiffs] = useState<Difficulty[]>(() => list(searchParams.get("difficulty")) as Difficulty[]);
+  const [durs, setDurs] = useState<Duration[]>(() => list(searchParams.get("dur")) as Duration[]);
+  const [months, setMonths] = useState<Month[]>(() => list(searchParams.get("month")).filter((m) => (MONTHS as string[]).includes(m)) as Month[]);
+  const [maxPrice, setMaxPrice] = useState<number>(() => Number(searchParams.get("max")) || 0);
+  const [fit, setFit] = useState<FitFilter | null>(() => {
     const p = searchParams.get("ace");
-    if (p === "ready" || p === "stretch" || p === "out-of-range") return p;
-    return null;
+    return p === "ready" || p === "stretch" ? p : null;
   });
-  const [userProfile, setUserProfile] = useState<StoredProfile | null>(null);
-  const [editorOnly, setEditorOnly] = useState(false);
+  const [editorOnly, setEditorOnly] = useState(() => searchParams.get("editor") === "1");
+  const [sort, setSort] = useState<SortKey | null>(() => (searchParams.get("sort") as SortKey) || null);
+  const [view, setView] = useState<View>(() => (searchParams.get("view") === "list" ? "list" : "grid"));
+  const [shown, setShown] = useState(PAGE);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [acePopupOpen, setAcePopupOpen] = useState(false);
-  const [expandedRegion, setExpandedRegion] = useState<string | null>(null);
-  const [expandedGenre, setExpandedGenre] = useState<string | null>(null);
-  const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(() => {
-    const p = parseInt(searchParams.get("page") ?? "1", 10);
-    return isNaN(p) || p < 1 ? 1 : p;
-  });
-  const PAGE_SIZE = 24;
+  const region = searchParams.get("region"); // from the home page's region cards
 
-  // Shared wishlist banner — ?saved=slug1,slug2,...
-  const sharedSlugs = useMemo(() => {
-    const raw = searchParams.get("saved");
-    if (!raw) return null;
-    return raw.split(",").filter(Boolean);
-  }, [searchParams]);
-  const sharedAdventures = useMemo(() =>
-    sharedSlugs ? adventures.filter(a => sharedSlugs.includes(a.slug)) : null,
-  [sharedSlugs]);
-  const scrollToSlug = searchParams.get("scroll");
+  // Default sort: best match when there's a profile, otherwise recommended
+  const sortKey: SortKey = sort ?? (fitAce ? "match" : "recommended");
 
-  useEffect(() => { setUserProfile(loadProfile()); }, []);
-
+  // ── Keep the link in sync so filtered views can be shared, bookmarked and "back"-ed ──
+  const firstSync = useRef(true);
   useEffect(() => {
-    if (scrollToSlug) {
-      const el = document.getElementById(`card-${scrollToSlug}`);
-      if (el) {
-        el.scrollIntoView({ behavior: "instant", block: "center" });
-      }
-    } else {
-      window.scrollTo({ top: 0, behavior: "instant" });
-    }
+    if (firstSync.current) { firstSync.current = false; return; }
+    const t = setTimeout(() => {
+      const p = new URLSearchParams();
+      if (search.trim()) p.set("q", search.trim());
+      if (types.length) p.set("type", types.join(","));
+      if (states.length) p.set("state", states.join(","));
+      if (region) p.set("region", region);
+      if (diffs.length) p.set("difficulty", diffs.join(","));
+      if (durs.length) p.set("dur", durs.join(","));
+      if (months.length) p.set("month", months.join(","));
+      if (maxPrice) p.set("max", String(maxPrice));
+      if (fit) p.set("ace", fit);
+      if (editorOnly) p.set("editor", "1");
+      if (sort) p.set("sort", sort);
+      if (view === "list") p.set("view", "list");
+      const qs = p.toString();
+      router.replace(qs ? `/explore?${qs}` : "/explore", { scroll: false });
+    }, 300);
+    return () => clearTimeout(t);
+  }, [search, types, states, region, diffs, durs, months, maxPrice, fit, editorOnly, sort, view, router]);
+
+  // Arriving from an adventure page's "back to results" — scroll that card into view
+  const scrollToSlug = searchParams.get("scroll");
+  useEffect(() => {
+    if (scrollToSlug) document.getElementById(`card-${scrollToSlug}`)?.scrollIntoView({ behavior: "instant", block: "center" });
   }, [scrollToSlug]);
 
-  const toggle = toggleSelection;
+  const score = (a: Adventure) => (fitAce ? computeMatchScore(fitAce, getACE(a)) : 0);
 
-  const filtered = useMemo(() => {
-    return adventures.filter((a) => {
-        if (editorOnly && !a.editorChoice) return false;
-        if (
-          search &&
-          !a.name.toLowerCase().includes(search.toLowerCase()) &&
-          !a.state.toLowerCase().includes(search.toLowerCase()) &&
-          !a.tagline.toLowerCase().includes(search.toLowerCase())
-        )
-          return false;
-        if (selectedTypes.length && !selectedTypes.includes(a.type)) return false;
-        if (selectedRegions.length && !selectedRegions.includes(a.region)) return false;
-        if (selectedSubRegions.length && !selectedSubRegions.some(sr => a.state.includes(sr))) return false;
-      if (selectedDifficulties.length && !selectedDifficulties.includes(computeDifficulty(getACE(a)) as Difficulty))
-        return false;
-      if (selectedDurations.length && !selectedDurations.includes(a.duration)) return false;
-      if (selectedMonths.length && !selectedMonths.some((m) => a.bestMonths.includes(m)))
-        return false;
-      // Price filter — use cheapest operator price for the adventure
-      if (priceRange[0] > PRICE_MIN || priceRange[1] < PRICE_MAX) {
-        const lowestPrice = getLowestPrice(a);
-        if (lowestPrice === null || lowestPrice < priceRange[0] || lowestPrice > priceRange[1]) return false;
+  const results = useMemo(() => {
+    const filtered = adventures.filter((a) => {
+      if (editorOnly && !a.editorChoice) return false;
+      if (search && !matchesSearch(a, search)) return false;
+      if (region && a.region !== region) return false;
+      if (types.length && !types.includes(a.type)) return false;
+      if (states.length && !states.some((s) => a.state.includes(s))) return false;
+      if (diffs.length && !diffs.includes(computeDifficulty(getACE(a)) as Difficulty)) return false;
+      if (durs.length && !durs.includes(a.duration)) return false;
+      if (months.length && !months.some((m) => a.bestMonths.includes(m))) return false;
+      if (maxPrice) {
+        const p = getLowestPrice(a);
+        if (p === null || p > maxPrice) return false;
       }
-      // ACE category filter
-      if (aceCategory && userProfile) {
-        const req = getACE(a);
-        const cat = classifyAdventure(userProfile.ace, req);
-        if (cat !== aceCategory) return false;
-      }
+      if (fit && fitAce && bucketFor(score(a)).key !== fit) return false;
       return true;
     });
-    }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, priceRange, aceCategory, userProfile, editorOnly]);
+    return sortAdventures(filtered, sortKey, { monthIdx, score: fitAce ? score : undefined });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, region, types, states, diffs, durs, months, maxPrice, fit, fitAce, editorOnly, sortKey, monthIdx]);
 
-  // Reset to page 1 whenever filters change
-  useEffect(() => { setCurrentPage(1); }, [search, selectedTypes, selectedRegions, selectedSubRegions, selectedDifficulties, selectedDurations, selectedMonths, priceRange, aceCategory]);
+  // New filters start from the top of the list again
+  useEffect(() => { setShown(PAGE); }, [search, region, types, states, diffs, durs, months, maxPrice, fit, editorOnly, sortKey]);
 
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const pagedResults = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-
-  const priceActive = priceRange[0] > PRICE_MIN || priceRange[1] < PRICE_MAX;
-  const activeFilterCount =
-    selectedTypes.length +
-    selectedRegions.length +
-    selectedSubRegions.length +
-    selectedDifficulties.length +
-    selectedDurations.length +
-    selectedMonths.length +
-    (priceActive ? 1 : 0) +
-    (aceCategory !== null ? 1 : 0);
+  const panelCount = types.length + states.length + diffs.length + durs.length + months.length + (maxPrice ? 1 : 0);
+  const anyActive = panelCount > 0 || !!search || !!fit || editorOnly || !!region;
+  const suggestions = results.length === 0 && search ? searchSuggestions(adventures, search) : [];
 
   function clearAll() {
-    setSelectedTypes([]);
-    setSelectedRegions([]);
-    setSelectedSubRegions([]);
-    setSelectedDifficulties([]);
-    setSelectedDurations([]);
-    setSelectedMonths([]);
-    setPriceRange([PRICE_MIN, PRICE_MAX]);
-    setAceCategory(null);
-    setSearch("");
+    setSearch(""); setTypes([]); setStates([]); setDiffs([]); setDurs([]); setMonths([]);
+    setMaxPrice(0); setFit(null); setEditorOnly(false);
+    if (region) router.replace("/explore", { scroll: false });
   }
+
+  // Shared wishlist banner — ?saved=slug1,slug2,...
+  const sharedAdventures = useMemo(() => {
+    const raw = searchParams.get("saved");
+    return raw ? adventures.filter((a) => raw.split(",").includes(a.slug)) : null;
+  }, [searchParams]);
+
+  const inSeason = months.length === 1 && months[0] === thisMonth;
 
   return (
     <div className="min-h-screen">
       <Navbar />
 
-      {/* Page header */}
-      <div className="t-bg-surface pt-24 lg:pt-28 pb-10 lg:pb-12 px-5 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">
-            Explore
-          </p>
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-tight mb-3" style={{ color: "var(--text-primary)" }}>
-            All Adventures
-          </h1>
-          <p className="text-base lg:text-lg max-w-2xl leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-            Every adventure across the Indian subcontinent — search, filter, and find what fits you.
+      {/* ── Compact header ── */}
+      <header className="pt-24 lg:pt-28 pb-5 px-5 lg:px-8">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-end justify-between gap-x-6 gap-y-1">
+          <div>
+            <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-1.5">Explore</p>
+            <h1 className="t-text text-2xl sm:text-3xl font-bold tracking-tight">
+              {region ? `Adventures in the ${region}` : "Find your next adventure"}
+            </h1>
+          </div>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            <span className="font-semibold" style={{ color: "var(--text-primary)" }}>{results.length}</span>
+            {results.length === adventures.length ? " adventures" : ` of ${adventures.length} adventures`}
           </p>
         </div>
-      </div>
+      </header>
 
-      {/* Search + filter bar */}
-      <div className="sticky top-16 lg:top-20 z-40 backdrop-blur-lg shadow-sm relative" style={{ background: "var(--bg-page)", borderBottom: "1px solid var(--border-subtle)" }}>
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 py-2 flex items-center gap-2">
-          {/* Search */}
-          <div className="relative flex-1 min-w-0 max-w-xs sm:max-w-md">
+      {/* ── Toolbar ── */}
+      <div className="sticky top-16 lg:top-20 z-40 backdrop-blur-lg" style={{ background: "color-mix(in srgb, var(--bg-page) 92%, transparent)", borderBottom: "1px solid var(--border-subtle)" }}>
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 py-2.5 flex items-center gap-2">
+          <div className="relative flex-1 min-w-0 sm:max-w-sm">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--text-tertiary)" }} />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search adventures..."
-              className="w-full pl-9 pr-3.5 py-2 rounded-xl text-sm border border-transparent focus:outline-none focus:border-[#ff5100]/50 transition-colors"
-              style={{ background: "var(--bg-surface-2)", color: "var(--text-primary)" }}
+              placeholder="Search a trek, place or activity"
+              aria-label="Search adventures"
+              className="w-full pl-10 pr-8 py-2.5 rounded-xl text-sm border border-transparent focus:border-[#ff5100]/50 transition-colors"
+              style={{ background: "var(--bg-surface-2)", color: "var(--text-primary)", outline: "none" }}
             />
+            {search && (
+              <button onClick={() => setSearch("")} aria-label="Clear search" className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1" style={{ color: "var(--text-tertiary)" }}>
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
 
-          {/* Filter toggle */}
           <button
-            onClick={() => setFiltersOpen(!filtersOpen)}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap"
-            style={{
-              background: filtersOpen || activeFilterCount > 0 ? "#ff5100" : "var(--bg-surface-2)",
-              color: filtersOpen || activeFilterCount > 0 ? "#fff" : "var(--text-secondary)",
-            }}
+            onClick={() => setFiltersOpen(true)}
+            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-colors"
+            style={panelCount > 0 ? { background: "#ff5100", color: "#fff" } : { background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
           >
             <SlidersHorizontal className="w-4 h-4" />
-            Filters
-            {activeFilterCount > 0 && (
-              <span className="bg-white text-[#ff5100] text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center leading-none">
-                {activeFilterCount}
-              </span>
-            )}
-            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
+            <span className="hidden sm:inline">Filters</span>
+            {panelCount > 0 && <span className="text-xs font-bold">{panelCount}</span>}
           </button>
 
-          {/* ACE Readiness */}
-          {userProfile ? (
-            <button
-              onClick={() => setAceCategory(aceCategory === "ready" ? null : "ready")}
-              className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap"
-              style={aceCategory ? { background: "#ff5100", color: "#fff" } : { background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
+          <label className="hidden md:flex items-center gap-2 text-sm ml-auto" style={{ color: "var(--text-tertiary)" }}>
+            Sort
+            <select
+              value={sortKey}
+              onChange={(e) => setSort(e.target.value as SortKey)}
+              className="px-3 py-2.5 rounded-xl text-sm font-medium cursor-pointer"
+              style={{ background: "var(--bg-surface-2)", color: "var(--text-primary)", border: "none", outline: "none" }}
             >
-              <Compass className="w-4 h-4" />
-              <span className="hidden sm:inline">ACE<sup>™</sup> Readiness</span>
-            </button>
-          ) : (
-            <div className="relative hidden sm:block">
+              {(Object.keys(SORT_LABELS) as SortKey[]).filter((k) => k !== "match" || fitAce).map((k) => (
+                <option key={k} value={k}>{SORT_LABELS[k]}</option>
+              ))}
+            </select>
+          </label>
+
+          <div className="flex items-center rounded-xl p-1 shrink-0" style={{ background: "var(--bg-surface-2)" }} role="group" aria-label="View">
+            {([["grid", LayoutGrid], ["list", List]] as const).map(([v, Icon]) => (
               <button
-                onClick={() => setAcePopupOpen(!acePopupOpen)}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap"
-                style={{ background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
+                key={v}
+                onClick={() => setView(v)}
+                aria-pressed={view === v}
+                aria-label={v === "grid" ? "Card view" : "List view"}
+                className="p-1.5 rounded-lg transition-colors"
+                style={view === v ? { background: "var(--bg-surface)", color: "var(--text-primary)" } : { color: "var(--text-tertiary)" }}
               >
-                <Compass className="w-4 h-4" />
-                <span className="hidden sm:inline">ACE<sup>™</sup> Readiness</span>
+                <Icon className="w-4 h-4" />
               </button>
-              {acePopupOpen && (
-                <>
-                  <div className="fixed inset-0 z-[1998]" onClick={() => setAcePopupOpen(false)} />
-                  <div className="absolute top-full left-0 mt-1.5 z-[2001] w-72 rounded-xl overflow-hidden" style={{ background: "var(--bg-overlay)", backdropFilter: "blur(12px)", border: "1px solid var(--border-default)", boxShadow: "0 20px 60px rgba(0,0,0,0.4)" }}>
-                    <div className="p-4">
-                      <div className="flex items-center gap-2.5 mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center">
-                          <Compass className="w-4 h-4 text-white" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>ACE<sup>™</sup> Assessment</p>
-                          <p className="text-[var(--text-muted)] text-[10px] font-medium">Adventure Compatibility Engine</p>
-                        </div>
-                      </div>
-                      <p className="text-[var(--text-tertiary)] text-xs leading-relaxed mb-4">
-                        Find adventures tailored to your fitness, experience and comfort level.
-                      </p>
-                      <Link
-                        href="/matchmaker"
-                        onClick={() => setAcePopupOpen(false)}
-                        className="flex items-center justify-center gap-2 w-full px-3 py-2 rounded-xl text-xs font-bold transition-all hover:-translate-y-0.5"
-                        style={{ background: "#ff5100", color: "#fff", boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}
-                      >
-                        Take Assessment
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </Link>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          )}
-
-          {/* Editor's Choice */}
-          <button
-            onClick={() => setEditorOnly(!editorOnly)}
-            className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap"
-            style={editorOnly ? {
-              background: "linear-gradient(105deg, #1a0a00 0%, #2d1200 40%, #1a0a00 100%)",
-              color: "#ffb38a",
-              border: "1px solid rgba(255,81,0,0.35)",
-              boxShadow: "0 0 12px rgba(255,81,0,0.2), inset 0 1px 0 rgba(255,140,80,0.15)",
-            } : { background: "var(--bg-surface-2)", color: "var(--text-secondary)" }}
-          >
-            <Crown className="w-4 h-4" style={editorOnly ? { color: "#ff7d47", fill: "#ff7d47", filter: "drop-shadow(0 0 3px rgba(255,81,0,0.7))" } : {}} />
-            <span className="hidden md:inline">Editor&apos;s Choice</span>
-            <span className="md:hidden">Top Picks</span>
-          </button>
-
-          {/* Result count */}
-          <span className="hidden lg:block text-xs ml-auto font-medium whitespace-nowrap" style={{ color: "var(--text-muted)" }}>
-            {filtered.length} / {adventures.length}
-          </span>
-
-          {/* Clear */}
-          {(activeFilterCount > 0 || search) && (
-            <button
-              onClick={clearAll}
-              className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-xs font-medium transition-colors whitespace-nowrap"
-              style={{ color: "var(--text-tertiary)", background: "var(--bg-surface-2)" }}
-            >
-              <X className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Clear</span>
-            </button>
-          )}
+            ))}
+          </div>
         </div>
 
-        {/* Filter panel (dropdown) */}
-          {filtersOpen && (
+        {/* ── Quick chips: the filters most people want, one tap away ── */}
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 pb-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar">
+          <Chip on={inSeason} onClick={() => setMonths(inSeason ? [] : [thisMonth])} dot="#10b981">In season now</Chip>
+          {fitAce && (
             <>
-              {/* Backdrop — closes on outside click */}
-              <div className="fixed inset-0 z-[1999]" onClick={() => setFiltersOpen(false)} />
-              <div className="absolute top-full left-0 right-0 z-[2000] border-t border-[var(--border-subtle)]" style={{ background: "var(--bg-page)", backdropFilter: "blur(12px)" }}>
-              <div className="max-w-7xl mx-auto px-3 lg:px-5 py-1.5 space-y-1.5">
-
-                {/* ── Region ── */}
-                {(() => {
-                  const regionGroups = REGION_GROUPS;
-                  return (
-                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                      <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                        <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Region</span>
-                        {(selectedRegions.length > 0 || selectedSubRegions.length > 0) && (
-                          <span className="text-[8px] font-bold px-1 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>
-                            {selectedRegions.length + selectedSubRegions.length}
-                          </span>
-                        )}
-                      </div>
-                      <div className="p-1.5">
-                        <div className="flex flex-wrap gap-1">
-                          {regionGroups.map((rg) => {
-                            const isExpanded = expandedRegion === rg.name;
-                            const hasSelected = selectedRegions.includes(rg.name) || rg.subRegions.some(sr => selectedSubRegions.includes(sr));
-                            const subCount = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
-                            return (
-                              <button
-                                key={rg.name}
-                                onClick={() => setExpandedRegion(isExpanded ? null : rg.name)}
-                                className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
-                                style={{
-                                  background: isExpanded || hasSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
-                                  color: isExpanded || hasSelected ? "#ff7d47" : "var(--text-tertiary)",
-                                  border: `1px solid ${isExpanded || hasSelected ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}`,
-                                }}
-                              >
-                                {rg.name}
-                                {subCount > 0 && (
-                                  <span className="text-[8px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "var(--text-muted)" }}>{subCount}</span>
-                                )}
-                                <ChevronDown className={`w-2.5 h-2.5 opacity-60 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                              </button>
-                            );
-                          })}
-                        </div>
-                        {expandedRegion && (() => {
-                          const rg = regionGroups.find(r => r.name === expandedRegion)!;
-                          return (
-                            <div className="mt-1.5 pt-1.5 flex flex-wrap gap-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                              {rg.subRegions.map((sr) => {
-                                const isSelected = selectedSubRegions.includes(sr);
-                                return (
-                                  <button
-                                    key={sr}
-                                    onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
-                                    className="px-2 py-0.5 rounded-md text-[10px] font-medium transition-all"
-                                    style={{
-                                      background: isSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
-                                      color: isSelected ? "#ff7d47" : "var(--text-tertiary)",
-                                      border: `1px solid ${isSelected ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}`,
-                                    }}
-                                  >
-                                    {sr}
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          );
-                        })()}
-                      </div>
-                    </div>
-                  );
-                })()}
-
-                {/* ── Genre + Season (combined row) ── */}
-                {(() => {
-                  const genreGroups = GENRE_GROUPS;
-                  return (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
-
-                      {/* Genre */}
-                      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                        <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                          <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Genre</span>
-                          {selectedTypes.length > 0 && <span className="text-[8px] font-bold px-1 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedTypes.length}</span>}
-                        </div>
-                        <div className="p-1.5">
-                          <div className="flex flex-wrap gap-1">
-                            {genreGroups.map((grp) => {
-                              const isExpanded = expandedGenre === grp.label;
-                              const groupSelected = grp.types.filter(t => selectedTypes.includes(t)).length;
-                              const hasSelected = groupSelected > 0;
-                              return (
-                                <button
-                                  key={grp.label}
-                                  onClick={() => setExpandedGenre(isExpanded ? null : grp.label)}
-                                  className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
-                                  style={{
-                                    background: isExpanded ? `${grp.color}22` : hasSelected ? `${grp.color}18` : "var(--bg-card)",
-                                    color: isExpanded || hasSelected ? grp.color : "var(--text-tertiary)",
-                                    border: `1px solid ${isExpanded || hasSelected ? `${grp.color}50` : "var(--border-subtle)"}`,
-                                  }}
-                                >
-                                  {grp.label}
-                                  {groupSelected > 0 && <span className="text-[7px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: `${grp.color}30`, color: grp.color }}>{groupSelected}</span>}
-                                  <ChevronDown className={`w-2 h-2 opacity-50 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                                </button>
-                              );
-                            })}
-                          </div>
-                          {expandedGenre && (() => {
-                            const grp = genreGroups.find(g => g.label === expandedGenre)!;
-                            return (
-                              <div className="mt-1.5 pt-1.5 flex flex-wrap gap-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                                {grp.types.map((type) => {
-                                  const isSelected = selectedTypes.includes(type);
-                                  return (
-                                    <button
-                                      key={type}
-                                      onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
-                                      className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium transition-all"
-                                      style={{
-                                        background: isSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
-                                        color: isSelected ? "#ff7d47" : "var(--text-tertiary)",
-                                        border: `1px solid ${isSelected ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}`,
-                                      }}
-                                    >
-                                      <span className="opacity-60">{ADVENTURE_TYPE_ICONS[type]?.(10)}</span>
-                                      {type}
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            );
-                          })()}
-                        </div>
-                      </div>
-
-                      {/* Season */}
-                      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                        <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                          <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Season</span>
-                          {selectedMonths.length > 0 && <span className="text-[8px] font-bold px-1 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedMonths.length}</span>}
-                        </div>
-                        <div className="p-1.5">
-                          <div className="flex flex-wrap gap-1">
-                            {seasons.map(({ label, months: sMonths }) => {
-                              const isExpanded = expandedSeason === label;
-                              const hasSelected = sMonths.some(m => selectedMonths.includes(m));
-                              const selectedCount = sMonths.filter(m => selectedMonths.includes(m)).length;
-                              return (
-                                <button
-                                  key={label}
-                                  onClick={() => setExpandedSeason(isExpanded ? null : label)}
-                                  className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
-                                  style={{
-                                    background: isExpanded || hasSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
-                                    color: isExpanded || hasSelected ? "#ff7d47" : "var(--text-tertiary)",
-                                    border: `1px solid ${isExpanded || hasSelected ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}`,
-                                  }}
-                                >
-                                  {label}
-                                  {selectedCount > 0 && <span className="text-[7px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,81,0,0.25)", color: "#ff7d47" }}>{selectedCount}</span>}
-                                  <ChevronDown className={`w-2 h-2 opacity-50 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-                                </button>
-                              );
-                            })}
-                          </div>
-                          {expandedSeason && (
-                            <div className="mt-1.5 pt-1.5 flex flex-wrap gap-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                              {seasons.find(s => s.label === expandedSeason)!.months.map(m => (
-                                <button
-                                  key={m}
-                                  onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                                  className="px-2 py-0.5 rounded-md text-[10px] font-medium transition-all"
-                                  style={{
-                                    background: selectedMonths.includes(m) ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
-                                    color: selectedMonths.includes(m) ? "#ff7d47" : "var(--text-tertiary)",
-                                    border: `1px solid ${selectedMonths.includes(m) ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}`,
-                                  }}
-                                >
-                                  {m}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                    </div>
-                  );
-                })()}
-
-                {/* ── Difficulty + Duration row ── */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
-
-                  {/* Difficulty */}
-                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                    <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                      <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Difficulty</span>
-                    </div>
-                    <div className="p-1.5 flex flex-wrap gap-1">
-                      {(["Easy", "Moderate", "Hard", "Advanced", "Extreme"] as Difficulty[]).map((val) => {
-                        const isSelected = selectedDifficulties.includes(val);
-                        const colorMap: Record<string, string> = { Easy: "#22c55e", Moderate: "#eab308", Hard: "#f97316", Advanced: "#ef4444", Extreme: "#a855f7" };
-                        const c = colorMap[val] ?? "#ff5100";
-                        return (
-                          <button
-                            key={val}
-                            onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
-                            className="px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
-                            style={{
-                              background: isSelected ? `${c}18` : "var(--bg-card)",
-                              color: isSelected ? c : "var(--text-tertiary)",
-                              border: `1px solid ${isSelected ? `${c}40` : "var(--border-subtle)"}`,
-                            }}
-                          >
-                            {val}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Duration */}
-                  <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                    <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                      <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Duration</span>
-                    </div>
-                    <div className="p-1.5 flex flex-wrap gap-1">
-                      {(["Weekend", "3–5 days", "7+ days"] as Duration[]).map((val) => {
-                        const isSelected = selectedDurations.includes(val);
-                        return (
-                          <button
-                            key={val}
-                            onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
-                            className="px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
-                            style={{
-                              background: isSelected ? "rgba(255,81,0,0.15)" : "var(--bg-card)",
-                              color: isSelected ? "#ff7d47" : "var(--text-tertiary)",
-                              border: `1px solid ${isSelected ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}`,
-                            }}
-                          >
-                            {val}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                </div>
-
-                {/* ── Price Range ── */}
-                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                  <div className="flex items-center justify-between px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                    <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Price Range</span>
-                    <span className="text-[8px] font-bold" style={{ color: priceActive ? "#ff5100" : "var(--text-muted)" }}>
-                      {priceRange[0] === PRICE_MIN && priceRange[1] === PRICE_MAX ? "Any price" : `₹${(priceRange[0]/1000).toFixed(0)}k – ₹${(priceRange[1]/1000).toFixed(0)}k`}
-                    </span>
-                  </div>
-                  <div className="px-3 pt-2 pb-2">
-                    <div className="relative h-3 flex items-center">
-                      <div className="absolute inset-x-0 h-0.5 rounded-full" style={{ background: "var(--border-subtle)" }} />
-                      <div className="absolute h-0.5 rounded-full bg-[#ff5100]" style={{ left: `${(priceRange[0] / PRICE_MAX) * 100}%`, right: `${100 - (priceRange[1] / PRICE_MAX) * 100}%` }} />
-                      <input type="range" min={PRICE_MIN} max={PRICE_MAX} step={5000} value={priceRange[0]}
-                        onChange={e => setPriceRange([Math.min(Number(e.target.value), priceRange[1] - 5000), priceRange[1]])}
-                        className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
-                        style={{ zIndex: priceRange[0] > PRICE_MAX * 0.9 ? 5 : 3 }} />
-                      <input type="range" min={PRICE_MIN} max={PRICE_MAX} step={5000} value={priceRange[1]}
-                        onChange={e => setPriceRange([priceRange[0], Math.max(Number(e.target.value), priceRange[0] + 5000)])}
-                        className="absolute inset-x-0 w-full appearance-none bg-transparent cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#ff5100] [&::-webkit-slider-runnable-track]:bg-transparent [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-[#ff5100] [&::-moz-range-track]:bg-transparent"
-                        style={{ zIndex: 4 }} />
-                    </div>
-                    <div className="flex justify-between mt-1.5 text-[8px] text-[var(--text-muted)] font-medium">
-                      <span>₹0</span><span>₹50k</span><span>₹1L</span><span>₹1.5L</span><span>₹2L+</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* ── Clear / Apply ── */}
-                <div className="flex items-center gap-2 pt-1.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                  <button
-                    onClick={clearAll}
-                    className="flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all"
-                    style={{
-                      color: "var(--text-tertiary)",
-                      border: "1px solid var(--border-default)",
-                    }}
-                  >
-                    <RotateCcw className="w-3 h-3" />
-                    Clear All
-                  </button>
-                  <button
-                    onClick={() => setFiltersOpen(false)}
-                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all hover:-translate-y-0.5"
-                    style={{
-                      background: "linear-gradient(135deg, #ff5100, #ff7d47)",
-                      color: "#fff",
-                      boxShadow: "0 4px 14px rgba(255,81,0,0.3)",
-                    }}
-                  >
-                    Close
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-              </div>
-            </div>
+              <Chip on={fit === "ready"} onClick={() => setFit(fit === "ready" ? null : "ready")} dot="#10b981">Ready for me</Chip>
+              <Chip on={fit === "stretch"} onClick={() => setFit(fit === "stretch" ? null : "stretch")} dot="#f59e0b">A stretch</Chip>
             </>
           )}
+          <Chip on={editorOnly} onClick={() => setEditorOnly(!editorOnly)} icon={<Crown className="w-3.5 h-3.5" />}>Editor&apos;s Choice</Chip>
+          <span className="w-px h-5 shrink-0" style={{ background: "var(--border-default)" }} />
+          {STATE_COUNTS.slice(0, 6).map(([s, n]) => (
+            <Chip key={s} on={states.includes(s)} onClick={() => toggle(states, s, setStates)}>
+              {s} <span className="opacity-60">{n}</span>
+            </Chip>
+          ))}
+          <span className="w-px h-5 shrink-0" style={{ background: "var(--border-default)" }} />
+          {DURATIONS.map((d) => (
+            <Chip key={d} on={durs.includes(d)} onClick={() => toggle(durs, d, setDurs)}>{d}</Chip>
+          ))}
+        </div>
       </div>
 
-      {/* Sentinel to trigger ChatBubble on scroll */}
+      {/* ── Filter panel: bottom sheet on phones, side drawer on larger screens ── */}
+      {filtersOpen && (
+        <FilterPanel
+          onClose={() => setFiltersOpen(false)}
+          resultCount={results.length}
+          types={types} setTypes={setTypes}
+          states={states} setStates={setStates}
+          diffs={diffs} setDiffs={setDiffs}
+          durs={durs} setDurs={setDurs}
+          months={months} setMonths={setMonths}
+          maxPrice={maxPrice} setMaxPrice={setMaxPrice}
+          sortKey={sortKey} setSort={setSort}
+          hasProfile={!!fitAce}
+          onClear={clearAll}
+        />
+      )}
+
+      {/* Sentinel that reveals the floating Compass button on scroll */}
       <div id="featured-adventures" className="h-px w-full opacity-0 pointer-events-none" />
-
-      {/* Active filter chips */}
-        {activeFilterCount > 0 && (
-          <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-4 flex flex-wrap gap-2">
-            {selectedTypes.map((t) => (
-              <button
-                type="button"
-                key={t}
-                onClick={() => toggle(selectedTypes, t, setSelectedTypes)}
-                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
-              >
-                <span className="flex-shrink-0">{ADVENTURE_TYPE_ICONS[t]?.(11)}</span>
-                {t} <X className="w-3 h-3" />
-              </button>
-            ))}
-             {selectedRegions.map((r) => (
-                <button
-                  type="button"
-                  key={r}
-                  onClick={() => toggle(selectedRegions, r, setSelectedRegions)}
-                  className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
-                >
-                  {r} <X className="w-3 h-3" />
-                </button>
-              ))}
-              {selectedSubRegions.map((sr) => (
-                <button
-                  type="button"
-                  key={sr}
-                  onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
-                  className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
-                >
-                  {sr} <X className="w-3 h-3" />
-                </button>
-              ))}
-            {selectedDifficulties.map((d) => (
-              <button
-                type="button"
-                key={d}
-                onClick={() => toggle(selectedDifficulties, d, setSelectedDifficulties)}
-                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
-              >
-                {d} <X className="w-3 h-3" />
-              </button>
-            ))}
-            {selectedDurations.map((d) => (
-              <button
-                type="button"
-                key={d}
-                onClick={() => toggle(selectedDurations, d, setSelectedDurations)}
-                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
-              >
-                {d} <X className="w-3 h-3" />
-              </button>
-            ))}
-            {selectedMonths.map((m) => (
-                <button
-                  type="button"
-                  key={m}
-                  onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                  className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
-                >
-                  {m} <X className="w-3 h-3" />
-                </button>
-              ))}
-            {priceActive && (
-              <button
-                type="button"
-                onClick={() => setPriceRange([PRICE_MIN, PRICE_MAX])}
-                className="flex items-center gap-1.5 bg-[#ff5100]/15 text-[#ff5100] px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer hover:bg-[#ff5100]/25 transition-colors uppercase"
-              >
-                ₹{(priceRange[0]/1000).toFixed(0)}k – ₹{(priceRange[1]/1000).toFixed(0)}k <X className="w-3 h-3" />
-              </button>
-            )}
-                      </div>
-        )}
-
 
       {/* Shared wishlist banner */}
       {sharedAdventures && sharedAdventures.length > 0 && (
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-8">
-          <div className="rounded-2xl p-5 mb-2" style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.25)" }}>
-            <div className="flex items-center gap-3 mb-4">
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 pt-6">
+          <div className="rounded-2xl p-5" style={{ background: "rgba(255,81,0,0.07)", border: "1px solid rgba(255,81,0,0.25)" }}>
+            <p className="flex items-center gap-2 text-sm font-semibold text-[#ff7d47] mb-4">
               <Heart className="w-4 h-4 fill-[#ff5100] text-[#ff5100]" />
-              <span className="text-[#ff5100] text-sm font-semibold">Shared Wishlist — {sharedAdventures.length} adventure{sharedAdventures.length !== 1 ? "s" : ""}</span>
-            </div>
+              Shared wishlist — {sharedAdventures.length} adventure{sharedAdventures.length !== 1 ? "s" : ""}
+            </p>
             <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar">
-              {sharedAdventures.map(a => (
-                <Link key={a.id} href={`/experiences/${a.slug}`} className="group flex-none w-48 rounded-xl overflow-hidden transition-transform hover:-translate-y-0.5" style={{ border: "1px solid rgba(255,81,0,0.2)" }}>
-                  <div className="relative h-28">
-                    <Image src={a.heroImage} alt={a.name} fill className="object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                  </div>
-                  <div className="p-2.5" style={{ background: "rgba(255,81,0,0.06)" }}>
-                    <p className="text-white text-xs font-semibold leading-snug line-clamp-1 group-hover:text-[#ff5100] transition-colors">{a.name}</p>
-                    <p className="text-white/40 text-[10px] mt-0.5">{a.type} · {a.state}</p>
+              {sharedAdventures.map((a) => (
+                <Link key={a.id} href={`/experiences/${a.slug}`} className="group flex-none w-48 rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)", background: "var(--bg-surface)" }}>
+                  <div className="relative h-28"><Image src={a.heroImage} alt={a.name} fill sizes="192px" className="photo-grade object-cover" /></div>
+                  <div className="p-2.5">
+                    <p className="text-xs font-semibold line-clamp-1 group-hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-primary)" }}>{a.name}</p>
+                    <p className="text-[11px] mt-0.5" style={{ color: "var(--text-tertiary)" }}>{a.type} · {a.state}</p>
                   </div>
                 </Link>
               ))}
@@ -728,138 +294,273 @@ export default function ExploreClient() {
         </div>
       )}
 
-      {/* Grid */}
-      <div className="max-w-7xl mx-auto px-5 lg:px-8 py-8 lg:py-10">
-        {filtered.length === 0 ? (
-          <EmptyState
-            icon="🗺️"
-            heading="No adventures found"
-            subtext="Try adjusting your filters or search term"
-            actionLabel="Clear all filters"
-            onAction={clearAll}
-            size="lg"
-          />
-        ) : (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
-              {pagedResults.map((adventure, i) => (
-                <motion.div
-                  key={adventure.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: i * 0.04, ease: [0.25, 0.1, 0.25, 1] }}
-                >
-                  <div id={`card-${adventure.slug}`}>
-                    <AdventureCard adventure={adventure} fromPage={currentPage} />
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="mt-10 flex items-center justify-center gap-2">
-                <button
-                  onClick={() => { setCurrentPage((p) => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-                  disabled={currentPage === 1}
-                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-default)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                  Prev
-                </button>
-
-                <div className="flex items-center gap-1">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                    const isActive = page === currentPage;
-                    const isNearby = Math.abs(page - currentPage) <= 1 || page === 1 || page === totalPages;
-                    if (!isNearby) {
-                      if (page === currentPage - 2 || page === currentPage + 2) {
-                        return <span key={page} className="text-[var(--text-muted)] px-1">…</span>;
-                      }
-                      return null;
-                    }
-                    return (
-                      <button
-                        key={page}
-                        onClick={() => { setCurrentPage(page); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-                        className={`w-10 h-10 rounded-xl text-sm font-semibold transition-all ${
-                          isActive
-                            ? "bg-[#ff5100] text-white"
-                            : "bg-[var(--bg-surface)] border border-[var(--border-default)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)]"
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <button
-                  onClick={() => { setCurrentPage((p) => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-                  disabled={currentPage === totalPages}
-                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-default)] text-[var(--text-secondary)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-primary)] disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium"
-                >
-                  Next
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            )}
-
-            <p className="text-center text-[var(--text-muted)] text-xs mt-4 tracking-wide">
-              Showing {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filtered.length)} of {filtered.length} adventures
+      {/* ── Results ── */}
+      <main className="max-w-7xl mx-auto px-5 lg:px-8 py-6 lg:py-8">
+        {anyActive && (
+          <div className="flex items-center justify-between gap-3 mb-5">
+            <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+              {results.length} {results.length === 1 ? "match" : "matches"}
+              {search && <> for &ldquo;<span style={{ color: "var(--text-primary)" }}>{search}</span>&rdquo;</>}
             </p>
-          </>
-        )}
-      </div>
-
-        {/* Adventure Map — strip */}
-        <div className="relative mx-5 lg:mx-8 mb-8 overflow-hidden rounded-xl" style={{ background: "linear-gradient(90deg, #070e09 0%, #0a1810 60%, #070e09 100%)", border: "1px solid rgba(126,200,138,0.09)" }}>
-          <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle, rgba(126,200,138,1) 1px, transparent 1px)", backgroundSize: "18px 18px" }} />
-          <div className="absolute right-0 inset-y-0 w-64 pointer-events-none" style={{ background: "radial-gradient(ellipse at 100% 50%, rgba(126,200,138,0.07) 0%, transparent 70%)" }} />
-
-          <div className="relative flex items-center gap-0 [&>:not(:first-child)]:border-l" style={{ borderColor: "rgba(126,200,138,0.07)" }}>
-
-            {/* Label + description */}
-            <div className="flex items-center gap-3 px-5 py-3.5 flex-1 min-w-0">
-              <MapIcon className="w-4 h-4 shrink-0" style={{ color: "rgba(126,200,138,0.6)" }} />
-              <div className="min-w-0">
-                <span className="text-white/70 text-[12px] font-semibold">Adventure Map</span>
-                <span className="hidden sm:inline text-white/25 text-[11px] ml-2">— every adventure in India, pinned</span>
-              </div>
-            </div>
-
-            {/* Stats */}
-            <div className="hidden md:flex items-center divide-x px-0" style={{ borderColor: "rgba(126,200,138,0.07)" }}>
-              {([
-                { val: adventures.length, lbl: "pins" },
-                { val: new Set(adventures.map(a => a.state)).size, lbl: "regions" },
-                { val: new Set(adventures.map(a => a.type)).size, lbl: "genres" },
-              ]).map(({ val, lbl }) => (
-                <div key={lbl} className="flex items-baseline gap-1.5 px-4 py-3.5">
-                  <span className="text-[13px] font-black" style={{ color: "#7ec88a" }}>{val}</span>
-                  <span className="text-[10px] text-white/25">{lbl}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* CTA */}
-            <div className="px-4 py-3 shrink-0">
-              <Link
-                href="/map"
-                className="group inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-[11px] font-bold transition-all hover:brightness-110"
-                style={{ background: "rgba(126,200,138,0.1)", color: "#7ec88a", border: "1px solid rgba(126,200,138,0.18)" }}
-              >
-                Open Map
-                <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-            </div>
-
+            <button onClick={clearAll} className="inline-flex items-center gap-1.5 text-sm font-medium hover:text-[var(--text-primary)] transition-colors" style={{ color: "var(--text-tertiary)" }}>
+              <RotateCcw className="w-3.5 h-3.5" /> Clear all
+            </button>
           </div>
-        </div>
+        )}
 
-        <ChatBubble opaque />
-        <Footer />
+        {results.length === 0 ? (
+          <div>
+            <EmptyState icon="🗺️" heading="No adventures found" subtext="Try fewer filters or a different search." actionLabel="Clear all filters" onAction={clearAll} size="lg" />
+            {suggestions.length > 0 && (
+              <p className="text-center text-sm mt-2" style={{ color: "var(--text-secondary)" }}>
+                Did you mean{" "}
+                {suggestions.map((s, i) => (
+                  <span key={s}>
+                    <button onClick={() => setSearch(s)} className="font-semibold text-[#ff5100] hover:underline">{s}</button>
+                    {i < suggestions.length - 1 ? ", " : "?"}
+                  </span>
+                ))}
+              </p>
+            )}
+          </div>
+        ) : view === "grid" ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+            {results.slice(0, shown).map((a) => (
+              <div key={a.id} id={`card-${a.slug}`}>
+                <AdventureCard adventure={a} badge={false} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <ListView items={results.slice(0, shown)} monthIdx={monthIdx} score={fitAce ? score : undefined} />
+        )}
+
+        {/* ── Show more ── */}
+        {results.length > shown && (
+          <div className="mt-10 flex flex-col items-center gap-2">
+            <button
+              onClick={() => setShown((n) => n + PAGE)}
+              className="px-6 py-3 rounded-xl text-sm font-semibold transition-colors hover:bg-[var(--bg-card-hover)]"
+              style={{ border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+            >
+              Show {Math.min(PAGE, results.length - shown)} more
+            </button>
+            <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>Showing {shown} of {results.length}</p>
+          </div>
+        )}
+
+        {!profileReady || fitAce ? null : (
+          <p className="text-center text-sm mt-10" style={{ color: "var(--text-tertiary)" }}>
+            Want these sorted by what your body&apos;s ready for?{" "}
+            <Link href="/matchmaker" className="font-semibold text-[#ff5100] hover:underline">Take the 1-minute quick match</Link>
+          </p>
+        )}
+      </main>
+
+      {/* ── Map strip ── */}
+      <div className="max-w-7xl mx-auto px-5 lg:px-8 pb-10">
+        <Link href="/map" className="group flex items-center justify-between gap-4 rounded-2xl px-5 py-4 transition-colors hover:bg-[var(--bg-card-hover)]" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
+          <span className="flex items-center gap-3">
+            <MapIcon className="w-5 h-5 text-[#5fb873]" />
+            <span>
+              <span className="block text-sm font-semibold" style={{ color: "var(--text-primary)" }}>See them on the map</span>
+              <span className="block text-xs" style={{ color: "var(--text-tertiary)" }}>Every adventure pinned, clustered by region</span>
+            </span>
+          </span>
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" style={{ color: "var(--text-secondary)" }} />
+        </Link>
       </div>
+
+      <ChatBubble />
+      <Footer />
+    </div>
   );
 }
 
+/* ── Small pieces ─────────────────────────────────────────────────────────── */
+
+function Chip({ on, onClick, children, dot, icon }: { on: boolean; onClick: () => void; children: React.ReactNode; dot?: string; icon?: React.ReactNode }) {
+  return (
+    <button
+      onClick={onClick}
+      aria-pressed={on}
+      className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-colors"
+      style={on
+        ? { background: "rgba(255,81,0,0.14)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)" }
+        : { background: "transparent", color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}
+    >
+      {dot && <span className="w-1.5 h-1.5 rounded-full" style={{ background: dot }} />}
+      {icon}
+      {children}
+    </button>
+  );
+}
+
+/** Dense comparison rows — the facts trekkers scan for, in the same order every time. */
+function ListView({ items, monthIdx, score }: { items: Adventure[]; monthIdx: number; score?: (a: Adventure) => number }) {
+  return (
+    <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)", background: "var(--bg-surface)" }}>
+      <div className="hidden md:grid grid-cols-[minmax(0,2.4fr)_70px_90px_110px_100px_90px_110px_20px] gap-4 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-tertiary)", borderBottom: "1px solid var(--border-subtle)" }}>
+        <span>Adventure</span><span>Days</span><span>Max alt</span><span>Difficulty</span><span>Season</span><span>Operators</span><span className="text-right">From</span><span />
+      </div>
+      {items.map((a, i) => {
+        const price = getLowestPrice(a);
+        const checked = latestPriceCheck(a);
+        const s = score?.(a);
+        const b = s !== undefined ? bucketFor(s) : null;
+        return (
+          <Link
+            key={a.id}
+            id={`card-${a.slug}`}
+            href={`/experiences/${a.slug}`}
+            className="group grid grid-cols-[56px_minmax(0,1fr)_auto] md:grid-cols-[minmax(0,2.4fr)_70px_90px_110px_100px_90px_110px_20px] items-center gap-3 md:gap-4 px-4 py-3 transition-colors hover:bg-[var(--bg-card-hover)]"
+            style={{ borderTop: i === 0 ? "none" : "1px solid var(--border-subtle)" }}
+          >
+            {/* Name + place (with thumbnail) */}
+            <span className="contents md:flex md:items-center md:gap-3 md:min-w-0">
+              <span className="relative w-14 h-14 md:w-12 md:h-12 rounded-lg overflow-hidden shrink-0">
+                <Image src={a.heroImage} alt="" fill sizes="56px" className="photo-grade object-cover" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold truncate group-hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-primary)" }}>{a.name}</span>
+                <span className="block text-xs truncate" style={{ color: "var(--text-tertiary)" }}>
+                  {a.state} · {a.type}
+                  {b && <span className="ml-1.5 font-semibold" style={{ color: b.color }}>· {s}% {b.label.toLowerCase()}</span>}
+                </span>
+                {/* Phone: the key facts on one line */}
+                <span className="md:hidden block text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
+                  {a.durationDays}{formatAltitude(a) ? ` · ${formatAltitude(a)}` : ""} · {computeDifficulty(getACE(a))}
+                </span>
+              </span>
+            </span>
+            <span className="hidden md:block text-sm tabular-nums" style={{ color: "var(--text-secondary)" }}>{a.durationDays.replace(/\s*days?/i, "")}</span>
+            <span className="hidden md:block text-sm tabular-nums" style={{ color: "var(--text-secondary)" }}>{formatAltitude(a) ?? "—"}</span>
+            <span className="hidden md:block"><DifficultyMeter difficulty={computeDifficulty(getACE(a))} /></span>
+            <span className="hidden md:block"><SeasonStrip months={a.bestMonths} currentMonthIdx={monthIdx} /></span>
+            <span className="hidden md:block text-sm" style={{ color: "var(--text-secondary)" }}>
+              {a.operators?.length ?? 0}
+              {checked && <span className="block text-[10px]" style={{ color: "var(--text-tertiary)" }}>checked {checked.toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span>}
+            </span>
+            <span className="text-right">
+              {price ? (
+                <>
+                  <span className="block text-[10px]" style={{ color: "var(--text-tertiary)" }}>from</span>
+                  <span className="block text-sm font-semibold text-[#ff5100] tabular-nums">₹{price.toLocaleString("en-IN")}</span>
+                </>
+              ) : <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>—</span>}
+            </span>
+            <ChevronRight className="hidden md:block w-4 h-4 opacity-40 group-hover:opacity-80 group-hover:translate-x-0.5 transition-all" style={{ color: "var(--text-secondary)" }} />
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
+function FilterPanel(props: {
+  onClose: () => void;
+  resultCount: number;
+  types: AdventureType[]; setTypes: (v: AdventureType[]) => void;
+  states: string[]; setStates: (v: string[]) => void;
+  diffs: Difficulty[]; setDiffs: (v: Difficulty[]) => void;
+  durs: Duration[]; setDurs: (v: Duration[]) => void;
+  months: Month[]; setMonths: (v: Month[]) => void;
+  maxPrice: number; setMaxPrice: (v: number) => void;
+  sortKey: SortKey; setSort: (v: SortKey) => void;
+  hasProfile: boolean;
+  onClear: () => void;
+}) {
+  const p = props;
+  const closeRef = useRef(p.onClose);
+  closeRef.current = p.onClose;
+  // Escape closes; the page behind doesn't scroll while the panel is open
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") closeRef.current(); };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
+  }, []);
+
+  return (
+    <div className="fixed inset-0 z-[2000]" role="dialog" aria-label="Filters">
+      <div className="absolute inset-0 bg-black/50 animate-in fade-in duration-200" onClick={p.onClose} />
+      <div
+        className="absolute inset-x-0 bottom-0 max-h-[85dvh] rounded-t-3xl sm:inset-y-0 sm:left-auto sm:right-0 sm:w-[400px] sm:max-h-none sm:rounded-none flex flex-col animate-in slide-in-from-bottom-6 sm:slide-in-from-right-6 duration-300"
+        style={{ background: "var(--bg-surface)", borderLeft: "1px solid var(--border-subtle)" }}
+      >
+        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+          <p className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>Filters</p>
+          <button onClick={p.onClose} aria-label="Close filters" className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[var(--bg-card-hover)]" style={{ color: "var(--text-secondary)" }}>
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-5 py-5 space-y-6">
+          {/* Sort lives here on phones (the toolbar select is hidden there) */}
+          <Section title="Sort by" className="md:hidden">
+            {(Object.keys(SORT_LABELS) as SortKey[]).filter((k) => k !== "match" || p.hasProfile).map((k) => (
+              <Opt key={k} on={p.sortKey === k} onClick={() => p.setSort(k)}>{SORT_LABELS[k]}</Opt>
+            ))}
+          </Section>
+          <Section title="Activity">
+            {TYPE_OPTIONS.map((t) => <Opt key={t} on={p.types.includes(t)} onClick={() => toggle(p.types, t, p.setTypes)}>{t}</Opt>)}
+          </Section>
+          <Section title="Where">
+            {STATE_COUNTS.map(([s, n]) => (
+              <Opt key={s} on={p.states.includes(s)} onClick={() => toggle(p.states, s, p.setStates)}>{s} <span className="opacity-50">{n}</span></Opt>
+            ))}
+          </Section>
+          <Section title="When do you want to go?">
+            {MONTHS.map((m) => <Opt key={m} on={p.months.includes(m)} onClick={() => toggle(p.months, m, p.setMonths)}>{m}</Opt>)}
+          </Section>
+          <Section title="Difficulty">
+            {DIFFICULTIES.map((d) => <Opt key={d} on={p.diffs.includes(d)} onClick={() => toggle(p.diffs, d, p.setDiffs)}>{d}</Opt>)}
+          </Section>
+          <Section title="Length">
+            {DURATIONS.map((d) => <Opt key={d} on={p.durs.includes(d)} onClick={() => toggle(p.durs, d, p.setDurs)}>{d}</Opt>)}
+          </Section>
+          <Section title="Budget (starting price)">
+            {PRICE_STEPS.map((v) => (
+              <Opt key={v} on={p.maxPrice === v} onClick={() => p.setMaxPrice(v)}>
+                {v === 0 ? "Any" : `Under ₹${v / 1000}k`}
+              </Opt>
+            ))}
+          </Section>
+        </div>
+
+        <div className="flex items-center gap-3 px-5 py-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+          <button onClick={p.onClear} className="px-4 py-3 rounded-xl text-sm font-medium" style={{ color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}>
+            Clear
+          </button>
+          <button onClick={p.onClose} className="flex-1 px-4 py-3 rounded-xl text-sm font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors">
+            Show {p.resultCount} {p.resultCount === 1 ? "adventure" : "adventures"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Section({ title, children, className = "" }: { title: string; children: React.ReactNode; className?: string }) {
+  return (
+    <div className={className}>
+      <p className="text-xs font-semibold uppercase tracking-wider mb-2.5" style={{ color: "var(--text-tertiary)" }}>{title}</p>
+      <div className="flex flex-wrap gap-2">{children}</div>
+    </div>
+  );
+}
+
+function Opt({ on, onClick, children }: { on: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      onClick={onClick}
+      aria-pressed={on}
+      className="px-3 py-1.5 rounded-lg text-[13px] font-medium transition-colors"
+      style={on
+        ? { background: "rgba(255,81,0,0.14)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)" }
+        : { background: "var(--bg-card)", color: "var(--text-secondary)", border: "1px solid var(--border-subtle)" }}
+    >
+      {children}
+    </button>
+  );
+}

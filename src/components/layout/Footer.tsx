@@ -30,7 +30,7 @@ export default function Footer() {
                   <div className="flex flex-col">
                     <span className="font-semibold text-[1.5rem] leading-none antialiased tracking-tight" style={{ color: "var(--text-primary)" }}>
                       <span className="font-black uppercase">TRAIL</span>
-                      <span style={{fontFamily: "var(--font-cursive)", color: "var(--text-secondary)"}} className="mx-1 text-[1.2rem] normal-case tracking-normal font-normal">to</span>
+                      <span style={{fontFamily: "var(--font-script), cursive", fontWeight: 600, color: "var(--text-secondary)"}} className="mx-1 text-[1.2rem] normal-case tracking-normal">to</span>
                       <span className="font-black uppercase">TIDES</span>
                     </span>
                   </div>
@@ -147,7 +147,7 @@ export default function Footer() {
 
         {/* Brand Bottom Bar */}
         <div className="mt-10 lg:mt-12 pt-6 flex flex-col items-center justify-center gap-3 relative z-10 text-[10px] font-bold tracking-[0.12em] lg:tracking-[0.18em] uppercase text-center" style={{ borderTop: "1px solid var(--border-subtle)", color: "var(--text-muted)" }}>
-                <p>© 2026 <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ff5100] to-[#ff8c47]">TRAIL</span> <span style={{fontFamily: "var(--font-cursive)"}} className="text-[var(--text-secondary)] text-[13px] normal-case tracking-normal font-normal">to</span> <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#3b82f6] to-[#60a5fa]">TIDES</span>. DESIGNED FOR EXPLORERS BY EXPLORERS</p>
+                <p>© 2026 <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#ff5100] to-[#ff8c47]">TRAIL</span> <span style={{fontFamily: "var(--font-script), cursive", fontWeight: 600}} className="text-[var(--text-secondary)] text-[13px] normal-case tracking-normal">to</span> <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#3b82f6] to-[#60a5fa]">TIDES</span>. DESIGNED FOR EXPLORERS BY EXPLORERS</p>
         </div>
       </div>
 

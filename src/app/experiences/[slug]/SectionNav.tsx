@@ -36,7 +36,7 @@ export default function SectionNav() {
 
   return (
     <div
-      className="hidden lg:block sticky top-20 z-30 backdrop-blur-xl bg-white/85 dark:bg-[rgba(8,12,20,0.82)] shadow-[0_1px_0_rgba(0,0,0,0.06),0_12px_24px_-16px_rgba(0,0,0,0.15)] dark:shadow-[0_1px_0_rgba(255,255,255,0.06),0_12px_24px_-16px_rgba(0,0,0,0.5)]"
+      className="hidden lg:block sticky top-20 z-30 backdrop-blur-xl bg-white/85 dark:bg-[rgba(14,12,11,0.82)] shadow-[0_1px_0_rgba(0,0,0,0.06),0_12px_24px_-16px_rgba(0,0,0,0.15)] dark:shadow-[0_1px_0_rgba(255,255,255,0.06),0_12px_24px_-16px_rgba(0,0,0,0.5)]"
     >
       <div className="max-w-7xl mx-auto px-5 lg:px-8">
         <nav className="flex items-center gap-1.5 py-3 overflow-x-auto no-scrollbar">

@@ -720,7 +720,7 @@ export default function AdminDashboardClient({
             </div>
             <span className="text-base leading-none tracking-tight hidden sm:block" style={{ color: "var(--text-primary)" }}>
               <span className="font-black uppercase">TRAIL</span>
-              <span style={{ fontFamily: "var(--font-cursive)", color: "var(--text-tertiary)" }} className="text-[15px] normal-case tracking-normal font-normal mx-1">to</span>
+              <span style={{ fontFamily: "var(--font-script), cursive", fontWeight: 600, color: "var(--text-secondary)" }} className="text-[15px] normal-case tracking-normal mx-1">to</span>
               <span className="font-black uppercase">TIDES</span>
             </span>
           </Link>

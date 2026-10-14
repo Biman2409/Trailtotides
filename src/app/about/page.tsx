@@ -87,7 +87,7 @@ export default function AboutPage() {
             fill
             className="object-cover opacity-15"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#111820]/95 via-[#111820]/80 to-[#111820]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#171310]/95 via-[#171310]/80 to-[#171310]" />
         </div>
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="flex items-center gap-2 mb-6">

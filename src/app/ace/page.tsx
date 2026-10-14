@@ -323,12 +323,12 @@ export default function ACEPage() {
             {PROGRESSION_TREKS.map((t, i) => {
               const adv = adventures.find(a => a.slug === t.slug);
               return (
-                <div key={t.slug} className="rounded-2xl overflow-hidden border flex flex-col group" style={{ borderColor: `${t.diffColor}25`, background: "rgba(8,12,20,0.85)" }}>
+                <div key={t.slug} className="rounded-2xl overflow-hidden border flex flex-col group" style={{ borderColor: `${t.diffColor}25`, background: "rgba(14,12,11,0.85)" }}>
                   {/* Image */}
                   {adv && (
                     <div className="relative h-20 overflow-hidden shrink-0">
                       <Image src={adv.heroImage} alt={adv.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-                      <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom, transparent 20%, rgba(8,12,20,0.98) 100%)` }} />
+                      <div className="absolute inset-0" style={{ background: `linear-gradient(to bottom, transparent 20%, rgba(14,12,11,0.98) 100%)` }} />
                       {/* Top accent line */}
                       <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: `linear-gradient(90deg, transparent, ${t.diffColor}, transparent)` }} />
                       {/* Step badge */}

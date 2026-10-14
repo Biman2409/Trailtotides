@@ -26,9 +26,8 @@ export default function StoryCard({ story }: { story: Story }) {
           src={story.heroImage}
           alt={story.title}
           fill
-          quality={100}
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-          style={{ filter: "brightness(1.03) contrast(1.08) saturate(1.08)" }}
+          quality={75}
+          className="photo-grade object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
           sizes="(max-width: 768px) 100vw, 50vw"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent" />

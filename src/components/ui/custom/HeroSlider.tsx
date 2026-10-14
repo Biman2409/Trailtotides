@@ -6,53 +6,48 @@ import Image from "next/image";
 type Slide = {
   src: string;
   alt: string;
-  filter?: string;
 };
 
 const slides: Slide[] = [
   {
-    src: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1280&q=100",
+    src: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1280&q=80",
     alt: "Trekker on a high-altitude Himalayan ridge",
   },
   {
-    src: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1280&q=100",
+    src: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1280&q=80",
     alt: "Kayaker paddling through vivid turquoise coastal waters",
   },
   {
-    src: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=1280&q=100",
+    src: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=1280&q=80",
     alt: "Mountaineer silhouetted against a vast snowy summit",
   },
   {
-    src: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1280&q=100",
+    src: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1280&q=80",
     alt: "Surfer carving a wave at golden hour",
   },
   {
-    src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1280&q=100",
+    src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1280&q=80",
     alt: "Motorbike rider on a sweeping Himalayan mountain road",
   },
   {
-    src: "https://images.unsplash.com/photo-1669255664788-61c668bd6fe8?w=1280&q=100",
+    src: "https://images.unsplash.com/photo-1669255664788-61c668bd6fe8?w=1280&q=80",
     alt: "Man on a motorcycle riding through mountain terrain",
   },
   {
-    src: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1280&q=100",
+    src: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1280&q=80",
     alt: "Skier carving down a steep snowy mountain slope",
-    filter: "brightness(1.12) contrast(1.08) saturate(1.2) hue-rotate(-10deg)",
   },
   {
-    src: "https://images.unsplash.com/photo-1592208128295-5aaa34f1d72b?w=1280&q=100",
+    src: "https://images.unsplash.com/photo-1592208128295-5aaa34f1d72b?w=1280&q=80",
     alt: "Scuba diver exploring vibrant coral reefs in the Andamans",
-    filter: "brightness(1.08) contrast(1.1) saturate(1.35) hue-rotate(5deg)",
   },
   {
-    src: "https://images.unsplash.com/photo-1668936132313-2c3105eef631?w=1280&q=100",
+    src: "https://images.unsplash.com/photo-1668936132313-2c3105eef631?w=1280&q=80",
     alt: "Mountain biker descending a rugged trail through dense forest",
-    filter: "brightness(1.05) contrast(1.12) saturate(1.25) sepia(0.08)",
   },
   {
-    src: "https://images.unsplash.com/photo-1590898428406-7b9f44b33c22?w=1280&q=100",
+    src: "https://images.unsplash.com/photo-1590898428406-7b9f44b33c22?w=1280&q=80",
     alt: "Rock climber scaling a dramatic cliff face",
-    filter: "brightness(1.06) contrast(1.14) saturate(1.2) sepia(0.06) hue-rotate(5deg)",
   },
 ];
 
@@ -128,7 +123,7 @@ export default function HeroSlider() {
   `).join("");
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-[#0d1117]" style={{ contain: "strict" }}>
+    <div className="absolute inset-0 overflow-hidden bg-[#0e0c0b]" style={{ contain: "strict" }}>
 
       <style>{`
         ${kenBurnsCSS}
@@ -163,13 +158,13 @@ export default function HeroSlider() {
                 alt={slide.alt}
                 fill
                 priority={i === 0}
-                quality={100}
+                quality={90}
                 sizes="100vw"
-                className="object-cover"
+                className="photo-grade object-cover"
                 onLoad={() => setLoaded(p => ({ ...p, [i]: true }))}
                   style={{
                     objectFit:  "cover",
-                    filter:     slide.filter || "brightness(1.05) contrast(1.1) saturate(1.1)",
+                    // One shared grade (.photo-grade) for every slide instead of per-slide filters
                     willChange: "transform",
                     // Always keep the animation attached — pause it (freezing the
                     // current pan/zoom in place) instead of removing it, so the
@@ -222,7 +217,7 @@ export default function HeroSlider() {
             {i === current && (
               <span
                 key={progressKey}
-                className="absolute inset-y-0 left-0 w-full rounded-full bg-[#ff5100]"
+                className="absolute inset-y-0 left-0 w-full rounded-full bg-white/80"
                 style={{
                   transform:       "scaleX(0)",
                   transformOrigin: "left",
@@ -232,15 +227,6 @@ export default function HeroSlider() {
             )}
           </button>
         ))}
-      </div>
-
-      {/* Slide counter */}
-      <div
-        className="absolute bottom-8 left-8 text-white/30 text-[10px] tracking-[0.25em] font-medium tabular-nums select-none"
-        style={{ zIndex: 5 }}
-      >
-        {String(current + 1).padStart(2, "0")} / {String(shuffled.length).padStart(2, "0")}
-      </div>
-    </div>
+      </div>    </div>
   );
 }

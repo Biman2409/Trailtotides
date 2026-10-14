@@ -371,7 +371,7 @@ function MapView({
       : "";
 
     const popupHtml = `
-      <div data-nav="/experiences/${adv.slug}" style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:var(--bg-surface,#0f1420);cursor:pointer;border:1px solid var(--border-subtle,rgba(255,255,255,0.06));">
+      <div data-nav="/experiences/${adv.slug}" style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:var(--bg-surface,#161311);cursor:pointer;border:1px solid var(--border-subtle,rgba(255,255,255,0.06));">
         <div style="position:relative;height:180px;">
           <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />
           <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.1) 50%,rgba(0,0,0,0.2) 100%);" />
@@ -735,7 +735,7 @@ function MapView({
         const dateStr = new Date(date + "T00:00:00").toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
 
         const popupHtml = `
-          <div data-nav="/experiences/${adv.slug}" style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:var(--bg-surface,#0f1420);cursor:pointer;border:1px solid var(--border-subtle,rgba(255,255,255,0.06));">
+          <div data-nav="/experiences/${adv.slug}" style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:var(--bg-surface,#161311);cursor:pointer;border:1px solid var(--border-subtle,rgba(255,255,255,0.06));">
             <div style="position:relative;height:180px;">
               <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />
               <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.1) 50%,rgba(0,0,0,0.2) 100%);" />

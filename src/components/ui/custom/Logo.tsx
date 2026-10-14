@@ -18,7 +18,7 @@ export default function Logo({ size = "md", href = "/" }: LogoProps) {
       </div>
       <span className={`text-white ${textSizes[size]} leading-none tracking-tight`}>
         <span className="font-black uppercase">TRAIL</span>
-        <span style={{ fontFamily: "var(--font-cursive)" }} className={`text-white/60 ${cursiveSizes[size]} normal-case tracking-normal font-normal mx-1`}>to</span>
+        <span style={{ fontFamily: "var(--font-script), cursive", fontWeight: 600 }} className={`text-white/70 ${cursiveSizes[size]} normal-case tracking-normal mx-1`}>to</span>
         <span className="font-black uppercase">TIDES</span>
       </span>
     </Link>

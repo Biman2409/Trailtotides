@@ -317,7 +317,7 @@ export default function WeatherWidget({ lat, lng, locationName, altitude, isBase
             <div className="flex items-center overflow-x-auto no-scrollbar">
               <div className="flex items-center gap-2 px-5 lg:px-6 py-3.5 shrink-0" style={{ borderRight: "1px solid var(--border-subtle)" }}>
                 <div>
-                  <div className="text-black/40 dark:text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">{isBaseCamp ? "Base Camp" : "Live Weather"}</div>
+                  <div className="text-black/40 dark:text-white/30 text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1">{isBaseCamp ? "Weather at" : "Live Weather"}</div>
                   <div className="text-black/60 dark:text-white/55 text-[13px] font-medium leading-none truncate max-w-[110px]">{locationName}</div>
                 </div>
               </div>

@@ -57,6 +57,7 @@ import type { MedicalFlags } from "@/lib/matchmakerQuestions";
 import NearbyAdventuresMap from "./NearbyAdventuresMap";
 import BookingSidebarCard from "./BookingSidebarCard";
 import { haversineKm } from "@/lib/geo";
+import TrainForThis from "./TrainForThis";
 import { getSeasonUrgency } from "@/lib/seasonUrgency";
 import { parsePrice } from "@/lib/price";
 import { getNextDeparture } from "@/lib/nextDeparture";
@@ -64,6 +65,10 @@ import FAQSection from "./FAQSection";
 import SectionNav from "./SectionNav";
 
 const DIFFICULTY_LEVEL: Record<string, number> = { Easy: 1, Moderate: 2, Hard: 3, Advanced: 4, Extreme: 5 };
+// Easier-alternative suggestions: furthest we'll look, and how many km of extra
+// travel one additional difficulty tier dropped is "worth" when ranking.
+const EASIER_MAX_KM = 1000;
+const EASIER_TIER_KM = 400;
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -226,9 +231,28 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
   const nextDeparture = getNextDeparture(allOperators.flatMap((o) => o.departureDates ?? []));
 
   const currentDifficultyLevel = DIFFICULTY_LEVEL[difficulty] ?? 1;
-  const easierAlternatives = currentDifficultyLevel >= 4
-    ? nearbyAdventures
-        .filter((a) => (DIFFICULTY_LEVEL[computeDifficulty(getACE(a))] ?? 1) < currentDifficultyLevel)
+  // "A bit easier" = the same activity, a lower difficulty tier, reachable from
+  // roughly the same base. A different activity (trek → bike ride) isn't a real
+  // alternative, so it's excluded. Ranking weighs each extra tier dropped like
+  // ~400 km of extra travel, so a one-step-easier trek next door beats both a
+  // much easier one and a one-step-easier one across the country.
+  const easierAlternatives = currentDifficultyLevel >= 3
+    ? adventures
+        .filter((a) => a.id !== adventure.id && a.type === adventure.type)
+        .map((a) => {
+          const aDifficulty = computeDifficulty(getACE(a));
+          return {
+            adventure: a,
+            difficulty: aDifficulty,
+            level: DIFFICULTY_LEVEL[aDifficulty] ?? 1,
+            km: haversineKm(adventure.lat, adventure.lng, a.lat, a.lng),
+          };
+        })
+        .filter((c) => c.level < currentDifficultyLevel && c.km <= EASIER_MAX_KM)
+        .sort((x, y) =>
+          ((currentDifficultyLevel - x.level - 1) * EASIER_TIER_KM + x.km) -
+          ((currentDifficultyLevel - y.level - 1) * EASIER_TIER_KM + y.km)
+        )
         .slice(0, 2)
     : [];
 
@@ -329,8 +353,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         {/* Color grade overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#ff5100]/8 via-transparent to-sky-900/12 mix-blend-multiply pointer-events-none" />
         {/* Gradient fade to page bg */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#080c14] via-[#080c14]/45 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#080c14]/55 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0e0c0b] via-[#0e0c0b]/45 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0e0c0b]/55 to-transparent" />
 
         {/* Back button */}
         <Link
@@ -372,7 +396,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           <div className="flex items-stretch overflow-x-auto no-scrollbar" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
             {[
               ...(priceFrom ? [{ icon: <IndianRupee className="w-3.5 h-3.5 text-[#ff5100]" />, label: "From", value: priceFrom }] : []),
-              ...(avgRating !== null ? [{ icon: <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />, label: "Operator Rating", value: `${avgRating.toFixed(1)} / 5` }] : []),
+              ...(avgRating !== null ? [{ icon: <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />, label: "Google Rating", value: `${avgRating.toFixed(1)} / 5` }] : []),
               { icon: <Clock className="w-3.5 h-3.5 text-[#ff5100]" />, label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
               { icon: <Compass className="w-3.5 h-3.5 text-fuchsia-400" />, label: "Type", value: adventure.type },
               ...(adventure.distance ? [{ icon: <Route className="w-3.5 h-3.5 text-emerald-400" />, label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
@@ -482,8 +506,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 <div className="mt-3 rounded-xl p-3.5" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
                   <p className="text-[10px] font-bold tracking-[0.16em] uppercase mb-2.5" style={{ color: "var(--text-tertiary)" }}>Want something a bit easier?</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {easierAlternatives.map((a) => {
-                      const aDiff = computeDifficulty(getACE(a));
+                    {easierAlternatives.map(({ adventure: a, difficulty: aDiff, km }) => {
                       return (
                         <Link
                           key={a.id}
@@ -496,7 +519,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                           </div>
                           <div className="min-w-0">
                             <p className="text-xs font-semibold truncate" style={{ color: "var(--text-primary)" }}>{a.name}</p>
-                            <p className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>{aDiff} · {a.type}</p>
+                            <p className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>{aDiff} · {Math.round(km)} km away</p>
                           </div>
                         </Link>
                       );
@@ -520,6 +543,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                   showPhysicalExhaustionWarning={showPhysicalExhaustionWarning}
                   showWaterWarning={showWaterWarning}
                 />
+                {/* Personal readiness + training gaps (only shows with a Matchmaker profile) */}
+                <TrainForThis slug={adventure.slug} />
               </div>
             </AccordionSection>
 

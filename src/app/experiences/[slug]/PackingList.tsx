@@ -455,7 +455,7 @@ function ShareModal({
     >
       <div
         className="w-full max-w-md rounded-2xl overflow-hidden"
-        style={{ background: "#111820", border: "1px solid rgba(var(--fg-rgb),0.1)" }}
+        style={{ background: "#171310", border: "1px solid rgba(var(--fg-rgb),0.1)" }}
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: "1px solid rgba(var(--fg-rgb),0.07)" }}>

@@ -162,13 +162,23 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group lg:justify-self-start">
-            <div className="w-8 h-8 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-md shadow-[#ff5100]/30">
-              <MountainSnow className="w-4 h-4 text-white" strokeWidth={2.5} />
+            <div className="w-9 h-9 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-md shadow-[#ff5100]/30">
+              <MountainSnow className="w-[18px] h-[18px] text-white" strokeWidth={2.5} />
             </div>
-            <span className="text-base leading-none tracking-tight" style={{ color: isTransparent ? "#fff" : "var(--text-primary)" }}>
-              <span className="font-black uppercase">TRAIL</span>
-              <span style={{ fontFamily: "var(--font-cursive)", color: isTransparent ? "rgba(255,255,255,0.7)" : "var(--text-tertiary)" }} className="text-[15px] normal-case tracking-normal font-normal mx-1">to</span>
-              <span className="font-black uppercase">TIDES</span>
+            {/* Wordmark and tagline are sized so both lines run the same width */}
+            <span className="flex flex-col">
+              <span className="text-[19px] leading-none tracking-tight" style={{ color: isTransparent ? "#fff" : "var(--text-primary)" }}>
+                <span className="font-black uppercase">TRAIL</span>
+                <span style={{ fontFamily: "var(--font-script), cursive", fontWeight: 600, color: isTransparent ? "rgba(255,255,255,0.72)" : "var(--text-secondary)" }} className="text-[17px] normal-case tracking-normal mx-[3px]">to</span>
+                <span className="font-black uppercase">TIDES</span>
+              </span>
+              {/* Tagline tucked under the wordmark — small handwritten aside */}
+              <span
+                className="text-[11px] leading-none mt-1 whitespace-nowrap"
+                style={{ fontFamily: "var(--font-script), cursive", fontWeight: 600, color: isTransparent ? "rgba(255,255,255,0.72)" : "var(--text-secondary)" }}
+              >
+                India&apos;s first adventure platform
+              </span>
             </span>
           </Link>
 
@@ -226,7 +236,8 @@ export default function Navbar() {
             {/* ── Search bar — appears when navbar is solid (on scroll) ── */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full group cursor-pointer whitespace-nowrap transition-all duration-500"
+              // Only from xl up — between lg and xl it collided with the centred nav links (Ctrl/⌘+K still opens search)
+              className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full group cursor-pointer whitespace-nowrap transition-all duration-500"
               style={{
                 background: "var(--bg-surface-2)",
                 border: "1px solid var(--border-subtle)",

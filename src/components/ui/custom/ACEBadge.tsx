@@ -77,7 +77,7 @@ export default function ACEBadge({ ace, size = "md", dark = false, showAll = fal
                 <div
                   className="rounded-lg p-2.5 text-left shadow-xl"
                   style={{
-                    background: "rgba(12,16,28,0.97)",
+                    background: "rgba(18,14,12,0.97)",
                     border: `1px solid ${axisColor}40`,
                     backdropFilter: "blur(8px)",
                   }}

@@ -118,7 +118,7 @@ export default function FindByRegion() {
                       src={region.image}
                       alt={region.name}
                       fill
-                      quality={100}
+                      quality={75}
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                         style={{ 
                           objectFit: "cover",

@@ -40,8 +40,11 @@ function LoginForm() {
         return;
       }
 
-      // Hard reload to homepage — server and client will now see the cookie
-      window.location.replace("/");
+      // Hard reload so server and client both see the cookie. Return to ?next= if it's a
+      // same-site path (e.g. Matchmaker results), otherwise the homepage.
+      const next = searchParams.get("next");
+      const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
+      window.location.replace(safeNext);
     } catch (err) {
       setError("Something went wrong. Please try again.");
       setPending(false);
@@ -153,7 +156,7 @@ export default function LoginPage() {
     <div className="h-screen bg-[#0a0a0a] flex overflow-hidden">
       <div
         className="hidden lg:flex lg:w-1/2 relative bg-cover bg-center"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2560&q=100')" }}
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2560&q=80')" }}
       >
         <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/20 to-transparent" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">

@@ -100,7 +100,7 @@ export default function OperatorSignupPage() {
       {/* Left panel */}
       <div
         className="hidden lg:flex lg:w-1/2 relative bg-cover bg-center"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2560&q=100')" }}
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2560&q=80')" }}
       >
         <div className="absolute inset-0 bg-gradient-to-tr from-black/85 via-black/30 to-transparent" />
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">

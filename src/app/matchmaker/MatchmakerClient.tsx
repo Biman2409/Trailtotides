@@ -21,7 +21,7 @@ import {
   type StoredProfile,
 } from "@/lib/matchmaker";
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
-import { getACE, type ACE, type AceAxis } from "@/lib/ace";
+import { getACE, computeMatchScore, type ACE, type AceAxis } from "@/lib/ace";
 import { getAchievements } from "@/lib/achievements";
 import { awardXP } from "@/lib/awardXP";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
@@ -29,7 +29,9 @@ import {
   CAPABILITY_QUESTIONS, DECAY_QUESTIONS, MEDICAL_QUESTIONS, buildMedicalFlags,
   type CapabilityQuestion, type DecayQuestion, type MedicalQuestion,
 } from "@/lib/matchmakerQuestions";
-import { computeAceFromAnswers } from "@/lib/matchmakerScoring";
+import { computeAceFromAnswers, estimateQuickAnswers, NOT_SURE, QUICK_KEYS } from "@/lib/matchmakerScoring";
+import { profileAgeDays, bucketFor } from "@/lib/fitness";
+import ResultsNextSteps from "./ResultsNextSteps";
 
 // ─── Sample radar animation ───────────────────────────────────────────────────
 
@@ -70,7 +72,7 @@ function AxisTicker() {
       <div style={{ opacity: fade ? 1 : 0, transition: "opacity 0.22s ease" }}>
         <div className="flex items-center gap-1.5 mb-0.5">
           <span className="shrink-0" style={{ color: current.color }}>{current.icon}</span>
-          <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: current.color }}>{current.key}</span>
+          <span className="text-[9px] font-bold uppercase tracking-widest" style={{ color: current.color }}>{current.key}</span>
         </div>
         <p className="text-[9px] leading-none pl-[18px] truncate" style={{ color: "var(--text-tertiary)" }}>{current.desc}</p>
       </div>
@@ -260,84 +262,96 @@ function OptionBtn({
 
 // ─── Intro screen ─────────────────────────────────────────────────────────────
 
-function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => void; onViewResults: () => void; hasProfile: boolean }) {
+function IntroScreen({
+  onStart, onQuickStart, onResume, resumeLabel, onViewResults, hasProfile, profileAgeDays: ageDays,
+}: {
+  onStart: () => void;
+  onQuickStart: () => void;
+  onResume?: () => void;
+  resumeLabel?: string;
+  onViewResults: () => void;
+  hasProfile: boolean;
+  profileAgeDays: number | null;
+}) {
+  const stale = ageDays !== null && ageDays >= 180;
   return (
     <div className="relative min-h-[calc(100vh-64px)] flex items-center justify-center overflow-hidden px-5 py-12 sm:py-0">
-      {/* Ambient glows */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[500px] h-[400px] rounded-full blur-3xl pointer-events-none opacity-8"
-        style={{ background: "radial-gradient(ellipse, #ff5100 0%, #a78bfa 60%, transparent 100%)" }} />
-
       <div className="relative w-full max-w-2xl mx-auto">
         <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
 
           {/* ── Left: copy + CTAs ── */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-4">
-              <p className="text-[#ff5100] text-[10px] font-black tracking-[0.25em] uppercase">Adventure Matchmaker</p>
-            </div>
+            <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-3">Adventure Matchmaker</p>
 
-            <h1 className="t-text text-3xl sm:text-4xl font-black tracking-tight leading-[1.05] mb-3">
-              Adventures built for<br /><span style={{ color: "#ff5100" }}>your body</span>
+            <h1 className="t-text text-3xl sm:text-4xl font-bold tracking-tight leading-[1.08] mb-3">
+              Adventures built for <span style={{ color: "#ff5100" }}>your body</span>
             </h1>
 
-            <p className="text-[13px] leading-relaxed mb-5" style={{ color: "var(--text-tertiary)" }}>
-              12 questions across stamina, strength, altitude, nerve and more, 2 quick questions on recency and current fitness, and some optional health questions to help us flag anything relevant. We map your capability and surface the adventures that actually fit.
+            <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-secondary)" }}>
+              Tell us about your fitness and experience, and we&apos;ll rate every adventure for you: ready, a stretch, or not yet.
             </p>
 
-            <p className="text-[11px] tracking-wide mb-2 text-center" style={{ color: "var(--text-muted)" }}>Takes about 3 minutes</p>
+            {/* Reminder when a saved profile is getting old */}
+            {hasProfile && stale && (
+              <div className="rounded-xl px-4 py-3 mb-4 text-sm" style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.25)", color: "var(--text-secondary)" }}>
+                Your profile is {Math.floor((ageDays ?? 0) / 30)} months old. Fitness changes — a quick refresh keeps your matches honest.
+              </div>
+            )}
 
             <div className="flex flex-col gap-2">
-              {hasProfile && (
+              {/* Unfinished assessment comes first — it's the most likely thing they want */}
+              {onResume && (
+                <button onClick={onResume}
+                  className="w-full flex items-center justify-between gap-2 px-5 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110"
+                  style={{ background: "#ff5100", boxShadow: "0 4px 20px rgba(255,81,0,0.35)" }}>
+                  <span>Pick up where you left off</span>
+                  <span className="text-xs font-semibold opacity-80">{resumeLabel}</span>
+                </button>
+              )}
+              {hasProfile && !onResume && (
                 <button onClick={onViewResults}
                   className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110"
                   style={{ background: "#ff5100", boxShadow: "0 4px 20px rgba(255,81,0,0.35)" }}>
-                  View My Results <ChevronRight className="w-4 h-4" />
+                  View my results <ChevronRight className="w-4 h-4" />
                 </button>
               )}
-              <button onClick={onStart}
-                className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm transition-all hover:brightness-110"
-                style={hasProfile
-                  ? { background: "var(--bg-surface-2)", border: "1px solid var(--border-default)", color: "var(--text-secondary)" }
-                  : { background: "#ff5100", color: "#fff", boxShadow: "0 4px 20px rgba(255,81,0,0.35)" }
-                }>
-                {hasProfile
-                  ? <><RotateCcw className="w-3.5 h-3.5" />Retake Assessment</>
-                  : <>Begin Assessment <Zap className="w-4 h-4" /></>}
-              </button>
-              <Link href="/ace"
-                className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-[13px] font-semibold transition-all"
-                style={{ border: "1px solid var(--border-subtle)", color: "var(--text-muted)" }}>
-                Learn more about ACE<sup>™</sup> <ArrowRight className="w-3.5 h-3.5" />
+
+              {/* Two ways in: a 1-minute estimate or the full assessment */}
+              <div className="grid grid-cols-2 gap-2">
+                <button onClick={onQuickStart}
+                  className="flex flex-col items-start gap-0.5 px-4 py-3 rounded-xl text-left transition-all hover:brightness-110"
+                  style={!hasProfile && !onResume
+                    ? { background: "#ff5100", color: "#fff", boxShadow: "0 4px 20px rgba(255,81,0,0.3)" }
+                    : { background: "var(--bg-surface-2)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
+                  <span className="text-sm font-bold">Quick match</span>
+                  <span className="text-[11px] opacity-75">5 questions · 1 min</span>
+                </button>
+                <button onClick={onStart}
+                  className="flex flex-col items-start gap-0.5 px-4 py-3 rounded-xl text-left transition-all hover:brightness-110"
+                  style={{ background: "var(--bg-surface-2)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
+                  <span className="text-sm font-bold">{hasProfile ? "Retake full" : "Full assessment"}</span>
+                  <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}>Most accurate · 3 min</span>
+                </button>
+              </div>
+
+              <Link href="/ace" className="group inline-flex items-center gap-1.5 text-sm font-medium mt-2 transition-colors hover:text-[var(--text-primary)]" style={{ color: "var(--text-secondary)" }}>
+                How it works <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
               </Link>
+              <p className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
+                Health questions are optional and private. Your progress saves as you go.
+              </p>
             </div>
           </div>
 
-          {/* ── Right: radar card ── */}
+          {/* ── Right: sample profile ── */}
           {!hasProfile && (
             <div className="shrink-0 w-full sm:w-[270px]">
-              <div className="relative rounded-2xl overflow-hidden flex flex-col p-4"
-                style={{ background: "linear-gradient(160deg, var(--bg-surface-2) 0%, var(--bg-surface) 100%)", border: "1px solid var(--border-subtle)", boxShadow: "0 20px 40px rgba(0,0,0,0.15)" }}>
-                {/* Corner brackets */}
-                <div className="absolute top-0 left-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
-                <div className="absolute top-0 right-0 w-5 h-5 pointer-events-none" style={{ borderTop: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
-                <div className="absolute bottom-0 left-0 w-5 h-5 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderLeft: "1px solid rgba(255,81,0,0.4)" }} />
-                <div className="absolute bottom-0 right-0 w-5 h-5 pointer-events-none" style={{ borderBottom: "1px solid rgba(255,81,0,0.4)", borderRight: "1px solid rgba(255,81,0,0.4)" }} />
-                {/* Header */}
-                <div className="flex items-center gap-1.5 mb-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
-                  <span className="text-[9px] font-black uppercase tracking-[0.25em]" style={{ color: "var(--text-muted)" }}>Sample Capability Profile</span>
-                </div>
-                {/* Radar */}
+              <div className="rounded-2xl flex flex-col p-4" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", boxShadow: "0 20px 40px rgba(0,0,0,0.15)" }}>
+                <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-2" style={{ color: "var(--text-tertiary)" }}>Sample profile</p>
                 <div className="flex items-center justify-center">
-                  <div className="rounded-xl p-1.5" style={{ background: "radial-gradient(ellipse at center, rgba(255,81,0,0.07) 0%, transparent 70%)", border: "1px solid var(--border-subtle)" }}>
-                    <ACERadar ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }} size={220} showLabels />
-                  </div>
+                  <ACERadar ace={{ stamina: 4, power: 3, strength: 4, agility: 3, water: 1, altitude: 5, focus: 4, nerve: 3 }} size={220} showLabels />
                 </div>
-                {/* Axis ticker */}
                 <AxisTicker />
-                {/* Scan line */}
-                <div className="absolute inset-x-0 h-px pointer-events-none" style={{ background: "linear-gradient(90deg, transparent, rgba(255,81,0,0.45), transparent)", animation: `scanline ${SCAN_MS}ms linear infinite`, top: 0 }} />
-                <style>{`@keyframes scanline { 0% { top:0%; opacity:0; } 8% { opacity:1; } 88% { opacity:1; } 100% { top:100%; opacity:0; } }`}</style>
               </div>
             </div>
           )}
@@ -347,6 +361,7 @@ function IntroScreen({ onStart, onViewResults, hasProfile }: { onStart: () => vo
     </div>
   );
 }
+
 
 // ─── Consent screen ───────────────────────────────────────────────────────────
 
@@ -360,7 +375,7 @@ function ConsentScreen({ onAccept, onBack }: { onAccept: () => void; onBack: () 
           <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100" }}>
             <Shield className="w-4 h-4" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>Before you begin</h1>
+          <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>Before you start</h1>
         </div>
         <p className="text-sm leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
           This assessment matches you to adventures based on your physical capability and health background. A few things to know:
@@ -417,7 +432,7 @@ function ConsentScreen({ onAccept, onBack }: { onAccept: () => void; onBack: () 
           className="ml-auto flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:brightness-100"
           style={{ background: "#ff5100", boxShadow: checked ? "0 4px 20px rgba(255,81,0,0.35)" : "none" }}
         >
-          Begin Assessment <ChevronRight className="w-4 h-4" />
+          Agree and start <ChevronRight className="w-4 h-4" />
         </button>
       </div>
     </div>
@@ -428,10 +443,9 @@ function ConsentScreen({ onAccept, onBack }: { onAccept: () => void; onBack: () 
 
 function LoadingScreen() {
   const steps = [
-    "Mapping your ACE profile…",
-    "Analysing adventure requirements across 8 axes…",
-    "Running matchmaker engine…",
-    "Building your training plan…",
+    "Reading your answers…",
+    "Rating every adventure for you…",
+    "Building your training tips…",
   ];
   const [step, setStep] = useState(0);
 
@@ -447,8 +461,8 @@ function LoadingScreen() {
       <div className="w-16 h-16 rounded-2xl bg-[#ff5100]/15 flex items-center justify-center mx-auto mb-8">
         <Loader2 className="w-8 h-8 text-[#ff5100] animate-spin" />
       </div>
-      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-4">Analysing</p>
-      <h2 className="t-text text-2xl font-bold mb-8">Running your assessment</h2>
+      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-4">Adventure Matchmaker</p>
+      <h2 className="t-text text-2xl font-bold mb-8">Building your fitness profile</h2>
       <div className="space-y-3">
         {steps.map((s, i) => (
           <div
@@ -498,7 +512,7 @@ function CapabilityReadout({ axisLabels, axisDesc, axisColors, userAxes, rawAxes
       <div className="flex flex-col lg:flex-row lg:items-stretch gap-6 lg:gap-0">
         {/* Radar column */}
         <div className="shrink-0 flex flex-col items-center lg:items-start gap-3 mx-auto lg:mx-0 lg:pr-6">
-          <p className="text-[10px] uppercase tracking-[0.28em] font-bold font-mono" style={{ color: "#ff5100" }}>
+          <p className="text-xs uppercase tracking-[0.22em] font-semibold" style={{ color: "#ff5100" }}>
             Capability Radar
           </p>
           <ACERadar
@@ -511,7 +525,7 @@ function CapabilityReadout({ axisLabels, axisDesc, axisColors, userAxes, rawAxes
           />
           {hasCalibration && (
             <div className="w-full max-w-[260px] rounded-lg px-3 py-2.5 space-y-1.5" style={{ background: "var(--accent-green-soft)", border: "1px solid var(--accent-green-border)" }}>
-              <p className="text-[8px] font-mono font-bold uppercase tracking-wide" style={{ color: "var(--accent-green)" }}>Calibrated — see adjustments</p>
+              <p className="text-[8px] font-bold tabular-nums uppercase tracking-wide" style={{ color: "var(--accent-green)" }}>Calibrated — see adjustments</p>
               <p className="text-[9px] leading-snug" style={{ color: "var(--text-tertiary)" }}>Solid = calibrated, dashed = raw self-report.</p>
               {decayNotes!.map((note, i) => (
                 <p key={i} className="text-[9px] leading-snug" style={{ color: "var(--text-tertiary)" }}>{note}</p>
@@ -525,7 +539,7 @@ function CapabilityReadout({ axisLabels, axisDesc, axisColors, userAxes, rawAxes
 
         {/* Breakdown column — heading sits on the same line as Capability Radar */}
         <div className="flex-1 min-w-0 pt-6 lg:pt-0 lg:pl-6">
-          <p className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] mb-2.5" style={{ color: "#ff5100" }}>
+          <p className="text-[10px] font-bold tabular-nums uppercase tracking-[0.2em] mb-2.5" style={{ color: "#ff5100" }}>
             Capability Breakdown
           </p>
 
@@ -549,14 +563,14 @@ function CapabilityReadout({ axisLabels, axisDesc, axisColors, userAxes, rawAxes
                     onClick={() => setExpandedAxis((prev) => (prev === axis ? null : (axis as AceAxis)))}
                     aria-expanded={isExpanded}
                   >
-                    <span className="text-[9px] font-black uppercase tracking-[0.08em] w-[46px] shrink-0" style={{ color }}>
+                    <span className="text-[9px] font-bold uppercase tracking-[0.08em] w-[46px] shrink-0" style={{ color }}>
                       {axisLabels[axis]}
                     </span>
                     <div className="flex-1 h-[3px] rounded-full" style={{ background: "var(--border-subtle)" }}>
                       <div className="h-full rounded-full transition-all duration-700" style={{ width: `${(val / 5) * 100}%`, background: color }} />
                     </div>
                     <span
-                      className="text-[10px] font-mono font-bold tabular-nums w-5 text-right shrink-0 transition-transform duration-150"
+                      className="text-[10px] font-bold tabular-nums tabular-nums w-5 text-right shrink-0 transition-transform duration-150"
                       style={{ color, transform: isHovered ? "scale(1.25)" : "scale(1)" }}
                     >
                       {val}
@@ -595,7 +609,7 @@ function TrainingSection({ trainingPlan, axisColors }: {
 
   return (
     <div className="px-5 sm:px-8 py-6 sm:py-7">
-      <p className="text-[10px] uppercase tracking-[0.28em] font-bold font-mono mb-1" style={{ color: "#ff5100" }}>
+      <p className="text-xs uppercase tracking-[0.22em] font-semibold mb-1" style={{ color: "#ff5100" }}>
         Training Focus
       </p>
       <p className="text-[13px] mb-5" style={{ color: "var(--text-secondary)" }}>Build these up to unlock more adventures.</p>
@@ -606,13 +620,13 @@ function TrainingSection({ trainingPlan, axisColors }: {
           const gap   = item.required_level - item.current_level;
           return (
             <div key={i} className="flex items-start gap-4 py-3.5" style={{ borderTop: i === 0 ? "none" : "1px solid var(--border-subtle)" }}>
-              <span className="text-[11px] font-mono font-bold tabular-nums shrink-0 pt-0.5" style={{ color }}>
+              <span className="text-[11px] font-bold tabular-nums tabular-nums shrink-0 pt-0.5" style={{ color }}>
                 {String(item.current_level).padStart(2, "0")}→{String(item.required_level).padStart(2, "0")}
               </span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
                   <span className="t-text font-bold text-sm uppercase tracking-wide" style={{ color }}>{item.axis}</span>
-                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded" style={{ border: `1px solid ${color}40`, color }}>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ border: `1px solid ${color}40`, color }}>
                     +{gap} level{gap > 1 ? "s" : ""}
                   </span>
                 </div>
@@ -640,9 +654,15 @@ function TrainingSection({ trainingPlan, axisColors }: {
 function ResultsScreen({
   result,
   onReset,
+  isQuick = false,
+  onRefine,
+  profileAgeDays: ageDays = null,
 }: {
   result: AnalysisResult;
   onReset: () => void;
+  isQuick?: boolean;
+  onRefine?: () => void;
+  profileAgeDays?: number | null;
 }) {
   const { userAxes, adventures: enriched, trainingPlan, rawAxes, decayNotes } = result;
 
@@ -715,32 +735,34 @@ function ResultsScreen({
       {/* ── PAGE TITLE ────────────────────────────────────────────────────────── */}
       <FadeInSection>
       <div className="mb-5 sm:mb-6">
-        <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-2">Adventure Matchmaker</p>
-        <h2 className="t-text text-2xl sm:text-3xl font-black tracking-tight">Your Capability Profile</h2>
+        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-2">Adventure Matchmaker</p>
+        <h2 className="t-text text-2xl sm:text-3xl font-bold tracking-tight">Your fitness profile</h2>
       </div>
       </FadeInSection>
 
+      <ResultsNextSteps placement="top" isQuick={isQuick} onRefine={onRefine} onRetake={onReset} ageDays={ageDays} />
+
       {/* ── THE DOCUMENT ──────────────────────────────────────────────────────── */}
-      <div className="rounded-[24px] sm:rounded-[28px] border overflow-hidden" style={{ background: "var(--bg-surface)", borderColor: "var(--border-default)", boxShadow: "0 24px 60px -20px rgba(0,0,0,0.25)" }}>
+      <div className="rounded-2xl border overflow-hidden" style={{ background: "var(--bg-surface)", borderColor: "var(--border-default)", boxShadow: "0 24px 60px -20px rgba(0,0,0,0.25)" }}>
 
         {/* ── MASTHEAD: score + tier + ruler ── */}
         <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-7 sm:pb-8">
           <div className="flex items-center justify-between mb-6">
-            <p className="text-[10px] font-mono font-bold uppercase tracking-[0.28em]" style={{ color: "#ff5100" }}>ACE<sup>™</sup></p>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: "#ff5100" }}>Your score</p>
             <div className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--accent-green)" }} />
-              <p className="text-[10px] font-mono uppercase tracking-[0.2em]" style={{ color: "var(--accent-green)" }}>Assessment Complete</p>
+              <p className="text-xs" style={{ color: "var(--accent-green)" }}>Assessment complete</p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-end gap-x-5 gap-y-2 mb-8">
             <div className="flex items-baseline">
-              <span className="text-[56px] sm:text-[72px] font-mono font-bold leading-none tabular-nums" style={{ color: tier.color }}>{totalScore}</span>
-              <span className="text-lg sm:text-xl font-mono font-bold" style={{ color: "var(--text-muted)" }}>/40</span>
+              <span className="text-[56px] sm:text-[72px] font-bold tabular-nums leading-none tabular-nums" style={{ color: tier.color }}>{totalScore}</span>
+              <span className="text-lg sm:text-xl font-bold tabular-nums" style={{ color: "var(--text-muted)" }}>/40</span>
             </div>
             <div className="pb-1 sm:pb-2">
-              <p className="text-[9px] uppercase tracking-[0.22em] font-bold mb-0.5" style={{ color: "var(--text-tertiary)" }}>Capability Tier</p>
-              <h1 className="text-3xl sm:text-[40px] font-black tracking-tight leading-none" style={{ color: tier.color }}>{tier.label}</h1>
+              <p className="text-[9px] uppercase tracking-[0.22em] font-bold mb-0.5" style={{ color: "var(--text-tertiary)" }}>Your rank</p>
+              <h1 className="text-3xl sm:text-[40px] font-bold tracking-tight leading-none" style={{ color: tier.color }}>{tier.label}</h1>
             </div>
           </div>
 
@@ -764,7 +786,7 @@ function ResultsScreen({
               {RANKS.map((rank, i) => (
                 <span
                   key={rank.label}
-                  className="absolute text-[8px] sm:text-[9px] font-mono font-bold uppercase tracking-wide whitespace-nowrap top-0"
+                  className="absolute text-[8px] sm:text-[9px] font-bold tabular-nums uppercase tracking-wide whitespace-nowrap top-0"
                   style={{
                     left: `${(i / (totalRanks - 1)) * 100}%`,
                     transform: i === 0 ? "none" : i === totalRanks - 1 ? "translateX(-100%)" : "translateX(-50%)",
@@ -786,7 +808,7 @@ function ResultsScreen({
               )}
               <p className="text-[12px] leading-snug" style={{ color: "var(--text-secondary)" }}>
                 {nextRank
-                  ? <><span className="font-mono font-bold" style={{ color: tier.color }}>{ptsNeeded}</span> points to <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span></>
+                  ? <><span className="font-bold tabular-nums" style={{ color: tier.color }}>{ptsNeeded}</span> points to <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span></>
                   : <>Pinnacle rank — <span className="italic">maximum capability tier reached</span>.</>}
               </p>
             </div>
@@ -820,10 +842,10 @@ function ResultsScreen({
               style={{ borderColor: "var(--border-subtle)" }}
             >
               <div className="flex items-center justify-between gap-2 mb-5">
-                <p className="text-[10px] uppercase tracking-[0.28em] font-bold font-mono" style={{ color: "#ff5100" }}>
+                <p className="text-xs uppercase tracking-[0.22em] font-semibold" style={{ color: "#ff5100" }}>
                   Achievements Unlocked
                 </p>
-                <AchievementShareButton title={`My ACE™ Capability Profile — ${tier.label}`} />
+                <AchievementShareButton title={`My Trail to Tides fitness profile — ${tier.label}`} />
               </div>
               <AchievementBadges ace={resultAce} heading={false} variant="list" maxListHeight={52} />
             </div>
@@ -832,11 +854,11 @@ function ResultsScreen({
 
         {/* ── MATCHED ADVENTURES — the point of the whole assessment ── */}
         <div className="px-5 sm:px-8 py-6 sm:py-7" style={sectionBorder}>
-          <p className="text-[10px] uppercase tracking-[0.28em] font-bold font-mono mb-1" style={{ color: "#ff5100" }}>
+          <p className="text-xs uppercase tracking-[0.22em] font-semibold mb-1" style={{ color: "#ff5100" }}>
             Matched Adventures
           </p>
           <p className="text-[11px] mb-4" style={{ color: "var(--text-secondary)" }}>
-            Every adventure checked against your 8-axis ACE profile above.
+            Every adventure rated against your profile — the same Ready, Stretch and Not yet you&apos;ll see on cards across the site.
           </p>
           {inZone.length === 0 && (
             <div className="flex items-start gap-2.5 mb-4 rounded-lg px-3.5 py-3" style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.2)" }}>
@@ -847,19 +869,19 @@ function ResultsScreen({
             </div>
           )}
           <AdventureSection
-            label="Ready Now"
+            label="Ready now"
             sublabel="Adventures within your current capability"
             icon={<CheckCircle2 className="w-4 h-4" />}
             adventures={[...inZone].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
             totalCount={inZone.length}
             exploreUrl="/explore?ace=ready"
-            accentColor="#4ade80"
+            accentColor="#10b981"
             defaultOpen={inZone.length > 0}
             isFirst
           />
           {stretch.length > 0 && (
             <AdventureSection
-              label="Stretch Challenge"
+              label="A stretch"
               sublabel="Slightly above your current range — achievable with focused training"
               icon={<TrendingUp className="w-4 h-4" />}
               adventures={[...stretch].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
@@ -872,7 +894,7 @@ function ResultsScreen({
           )}
           {restricted.length > 0 && (
             <AdventureSection
-              label="Currently Out of Range"
+              label="Not yet"
               sublabel="Require capabilities significantly beyond your current profile"
               icon={<Lock className="w-4 h-4" />}
               adventures={[...restricted].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
@@ -897,13 +919,16 @@ function ResultsScreen({
         )}
       </div>
 
+      {/* ── WHAT NEXT: save to an account, plan with friends, trip credit ─────── */}
+      <ResultsNextSteps placement="bottom" isQuick={isQuick} onRefine={onRefine} onRetake={onReset} ageDays={ageDays} />
+
       {/* ── CTA BUTTONS ───────────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row gap-3 mt-5 sm:mt-6">
         {fromAdventure ? (
           <Link
             href={`/experiences/${fromAdventure.slug}`}
             className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 active:translate-y-0"
-            style={{ background: "linear-gradient(135deg, #ff5100, #ff7340)" }}
+            style={{ background: "#ff5100" }}
           >
             <ChevronLeft className="w-4 h-4" />
             Back to {fromAdventure.name}
@@ -912,7 +937,7 @@ function ResultsScreen({
           <Link
             href="/explore?ace=ready"
             className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 active:translate-y-0"
-            style={{ background: "linear-gradient(135deg, #ff5100, #ff7340)" }}
+            style={{ background: "#ff5100" }}
           >
             All adventures
             <ArrowRight className="w-4 h-4" />
@@ -978,7 +1003,7 @@ function AdventureSection({
           </div>
         </div>
         <div className="flex items-center gap-2.5 shrink-0 ml-3">
-          <span className="text-[13px] font-mono font-bold tabular-nums" style={{ color: accentColor }}>
+          <span className="text-[13px] font-bold tabular-nums tabular-nums" style={{ color: accentColor }}>
             {String(totalCount ?? list.length).padStart(2, "0")}
           </span>
           <ChevronRight
@@ -1059,8 +1084,12 @@ function buildResult(userAxes: Record<string, number>, extra?: { rawAxes?: Recor
     const req = getACE(adv);
     const axes = Object.keys(userAxes) as (keyof typeof userAxes)[];
     const weakAxes = axes.filter(ax => req[ax as keyof typeof req] > 0 && userAxes[ax] < req[ax as keyof typeof req]);
-    const maxGap = weakAxes.reduce((max, ax) => Math.max(max, req[ax as keyof typeof req] - userAxes[ax]), 0);
-    const status: "IN_ZONE" | "STRETCH" | "RESTRICTED" = maxGap === 0 ? "IN_ZONE" : maxGap <= 1 ? "STRETCH" : "RESTRICTED";
+    // Same score buckets as the match bar on cards, Explore filters and the home page counts,
+    // so "Ready" means the same thing everywhere.
+    const score = computeMatchScore(userAxes as unknown as ACE, req);
+    const bucket = bucketFor(score).key;
+    const status: "IN_ZONE" | "STRETCH" | "RESTRICTED" = bucket === "ready" ? "IN_ZONE" : bucket === "stretch" ? "STRETCH" : "RESTRICTED";
+    const maxGap = 100 - score; // lower = better fit, used for sorting within each group
 
     return {
       id: adv.slug, slug: adv.slug, name: adv.name, heroImage: adv.heroImage,
@@ -1097,11 +1126,41 @@ function buildResult(userAxes: Record<string, number>, extra?: { rawAxes?: Recor
 }
 
 
+// ─── Saved progress ───────────────────────────────────────────────────────────
+// Answers are saved after every step so closing the tab (or losing signal) mid-quiz doesn't
+// lose them. Cleared as soon as the assessment is submitted or reset.
+
+type Mode = "full" | "quick" | "refine";
+interface Progress {
+  mode: Mode;
+  stepIndex: number;
+  answers: Answers;
+  skipKeys: string[];
+  altitudeFlag: boolean;
+  jointNote: string;
+  savedAt: string;
+}
+const PROGRESS_KEY = "ttt_matchmaker_progress";
+function loadProgress(): Progress | null {
+  try { const raw = localStorage.getItem(PROGRESS_KEY); return raw ? (JSON.parse(raw) as Progress) : null; } catch { return null; }
+}
+function saveProgress(p: Progress) { try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); } catch {} }
+function clearProgress() { try { localStorage.removeItem(PROGRESS_KEY); } catch {} }
+
+function stepsFor(mode: Mode, skipKeys: string[]): Step[] {
+  if (mode === "quick") return ALL_STEPS.filter((s) => s.type === "capability" && QUICK_KEYS.includes(s.q.key));
+  if (mode === "refine") return ALL_STEPS.filter((s) => !(s.type === "capability" && skipKeys.includes(s.q.key)));
+  return ALL_STEPS;
+}
+
 export default function MatchmakerClient() {
   const searchParams = useSearchParams();
   const [started, setStarted] = useState(() => searchParams.get("retake") === "1");
   const [showConsent, setShowConsent] = useState(false);
   const [consentChecked, setConsentChecked] = useState(false);
+  const [mode, setMode] = useState<Mode>("full");
+  const [pendingMode, setPendingMode] = useState<Mode>("full");
+  const [skipKeys, setSkipKeys] = useState<string[]>([]);
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [altitudeEvacuationFlagged, setAltitudeEvacuationFlagged] = useState(false);
@@ -1109,6 +1168,8 @@ export default function MatchmakerClient() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [savedResult, setSavedResult] = useState<AnalysisResult | null>(null);
+  const [savedProfile, setSavedProfile] = useState<StoredProfile | null>(null);
+  const [resumable, setResumable] = useState<Progress | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
 
   // Scroll to top when arriving via retake link
@@ -1117,6 +1178,12 @@ export default function MatchmakerClient() {
       window.scrollTo({ top: 0, behavior: "instant" });
     }
   }, [searchParams]);
+
+  // Unfinished assessment from an earlier visit?
+  useEffect(() => {
+    const p = loadProgress();
+    if (p && (p.stepIndex > 0 || Object.keys(p.answers).length > 0)) setResumable(p);
+  }, []);
 
   // Load previous result + consent status on mount — always show results if profile exists
   const autoShown = useRef(false);
@@ -1130,9 +1197,13 @@ export default function MatchmakerClient() {
     loadProfileFromServer()
       .then((saved) => {
         if (saved?.ace) {
+          setSavedProfile(saved);
           const r = buildResult(saved.ace as unknown as Record<string, number>);
           setSavedResult(r);
-          if (!autoShown.current && !isRetake) {
+          // An unfinished assessment takes priority — land on the intro so they can resume it
+          const p = loadProgress();
+          const hasProgress = !!p && (p.stepIndex > 0 || Object.keys(p.answers).length > 0);
+          if (!autoShown.current && !isRetake && !hasProgress) {
             autoShown.current = true;
             setResult(r);
           }
@@ -1145,17 +1216,60 @@ export default function MatchmakerClient() {
       );
   }, []);
 
-  const currentStep = ALL_STEPS[stepIndex] ?? ALL_STEPS[0];
+  const steps = stepsFor(mode, skipKeys);
+  const currentStep = steps[stepIndex] ?? steps[0];
+
+  // Persist progress after every change while the quiz is open
+  useEffect(() => {
+    if (!started || result || loading) return;
+    saveProgress({ mode, stepIndex, answers, skipKeys, altitudeFlag: altitudeEvacuationFlagged, jointNote, savedAt: new Date().toISOString() });
+  }, [started, result, loading, mode, stepIndex, answers, skipKeys, altitudeEvacuationFlagged, jointNote]);
+
+  function begin(nextMode: Mode, prefill: Answers = {}, skip: string[] = []) {
+    setMode(nextMode);
+    setSkipKeys(skip);
+    setAnswers(prefill);
+    setStepIndex(0);
+    setResult(null);
+    setResumable(null);
+    clearProgress();
+    if (consentChecked) setStarted(true);
+    else { setPendingMode(nextMode); setShowConsent(true); }
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+
+  function resume(p: Progress) {
+    setMode(p.mode);
+    setSkipKeys(p.skipKeys ?? []);
+    setAnswers(p.answers);
+    setStepIndex(Math.min(p.stepIndex, stepsFor(p.mode, p.skipKeys ?? []).length - 1));
+    setAltitudeEvacuationFlagged(!!p.altitudeFlag);
+    setJointNote(p.jointNote ?? "");
+    setResult(null);
+    setResumable(null);
+    setStarted(true);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
+
+  // Refine a quick result: keep the 5 real answers, ask everything else.
+  function refine() {
+    const real = (savedProfile?.answers ?? {}) as Answers;
+    const answered = Object.keys(real).filter((k) => QUICK_KEYS.includes(k) || CAPABILITY_QUESTIONS.some((q) => q.key === k));
+    begin("refine", real, answered);
+  }
 
   function submitAssessment(finalAnswers: Answers) {
     setLoading(true);
     setApiError(null);
 
+    // Quick mode estimates the questions it skipped; full and refine use only real answers.
+    const scoringAnswers = mode === "quick" ? estimateQuickAnswers(finalAnswers) : finalAnswers;
+
     // Capability + decay + the altitude safety flag are the only inputs to
     // scoring — medical answers are handled entirely separately below and
     // never reach this function.
     const { ace: userAxes, rawAxes, decayMultiplier, altitudeCapped } =
-      computeAceFromAnswers(finalAnswers, finalAnswers, altitudeEvacuationFlagged);
+      computeAceFromAnswers(scoringAnswers, scoringAnswers, altitudeEvacuationFlagged);
 
     const decayNotes: string[] = [];
     if (decayMultiplier < 1) {
@@ -1164,22 +1278,38 @@ export default function MatchmakerClient() {
     if (altitudeCapped) {
       decayNotes.push("Your Altitude score was capped because you reported needing to descend early or being evacuated for altitude illness — regardless of the height you reached.");
     }
+    const unsure = CAPABILITY_QUESTIONS.filter((q) => finalAnswers[q.key] === NOT_SURE).map((q) => q.axis);
+    if (unsure.length > 0) {
+      decayNotes.push(`You weren't sure about ${[...new Set(unsure)].join(", ")}, so ${unsure.length === 1 ? "it was" : "those were"} scored cautiously from your other answers.`);
+    }
+
+    // Only real capability + calibration answers are kept (medical answers never go in the profile).
+    const realAnswers = Object.fromEntries(
+      Object.entries(finalAnswers).filter(([k]) => !k.startsWith("med-"))
+    );
 
     const updatedAt = new Date().toISOString();
-    const profile: StoredProfile = { ace: userAxes, rawAxes: rawAxes as Record<string, number>, altitudeCapped, updatedAt };
+    const profile: StoredProfile = {
+      ace: userAxes, rawAxes: rawAxes as Record<string, number>, altitudeCapped, updatedAt,
+      answers: realAnswers, mode: mode === "quick" ? "quick" : "full",
+    };
     saveProfile(profile);
+    setSavedProfile(profile);
+    clearProgress();
     awardXP("ace_complete");
 
-    // Medical answers → flags only, saved to a completely separate store.
-    const medicalFlags = buildMedicalFlags(finalAnswers, jointNote);
-    saveMedicalFlags(medicalFlags);
-
-    // Sequential, not concurrent: user_metadata is a single JSON blob with
-    // no per-field atomicity, so two overlapping POSTs can each read a
-    // stale snapshot and the later write silently clobbers the earlier
-    // one's change. Chaining (still fire-and-forget from the UI's
-    // perspective — results render immediately below) avoids that race.
-    saveProfileToServer(profile).then(() => saveMedicalFlagsToServer(medicalFlags));
+    if (mode !== "quick") {
+      // Medical answers → flags only, saved to a completely separate store.
+      const medicalFlags = buildMedicalFlags(finalAnswers, jointNote);
+      saveMedicalFlags(medicalFlags);
+      // Sequential, not concurrent: user_metadata is a single JSON blob with
+      // no per-field atomicity, so two overlapping POSTs can each read a
+      // stale snapshot and the later write silently clobbers the earlier
+      // one's change. Chaining avoids that race.
+      saveProfileToServer(profile).then(() => saveMedicalFlagsToServer(medicalFlags));
+    } else {
+      saveProfileToServer(profile);
+    }
 
     setResult(buildResult(userAxes as unknown as Record<string, number>, decayNotes.length > 0 ? { rawAxes: rawAxes as Record<string, number>, decayNotes } : undefined));
     setLoading(false);
@@ -1187,14 +1317,18 @@ export default function MatchmakerClient() {
 
   function reset() {
     clearProfile();
+    clearProgress();
     setStarted(false);
     setShowConsent(false);
+    setMode("full");
+    setSkipKeys([]);
     setStepIndex(0);
     setAnswers({});
     setAltitudeEvacuationFlagged(false);
     setJointNote("");
     setResult(null);
     setSavedResult(null);
+    setSavedProfile(null);
     setApiError(null);
     setLoading(false);
   }
@@ -1207,6 +1341,7 @@ export default function MatchmakerClient() {
         saveConsentToServer(consent); // fire-and-forget
         setConsentChecked(true);
         setShowConsent(false);
+        setMode(pendingMode);
         setStarted(true);
         window.scrollTo({ top: 0, behavior: "instant" });
       }}
@@ -1216,17 +1351,25 @@ export default function MatchmakerClient() {
 
   if (!started && !result) return (
     <IntroScreen
-      onStart={() => {
-        if (consentChecked) setStarted(true);
-        else setShowConsent(true);
-        window.scrollTo({ top: 0, behavior: "instant" });
-      }}
+      onStart={() => begin("full")}
+      onQuickStart={() => begin("quick")}
+      onResume={resumable ? () => resume(resumable) : undefined}
+      resumeLabel={resumable ? `Question ${resumable.stepIndex + 1} of ${stepsFor(resumable.mode, resumable.skipKeys ?? []).length}` : undefined}
       onViewResults={() => { setResult(savedResult); window.scrollTo({ top: 0, behavior: "instant" }); }}
       hasProfile={!!savedResult}
+      profileAgeDays={profileAgeDays(savedProfile?.updatedAt)}
     />
   );
   if (loading && !result) return <LoadingScreen />;
-  if (result) return <ResultsScreen result={result} onReset={reset} />;
+  if (result) return (
+    <ResultsScreen
+      result={result}
+      onReset={reset}
+      isQuick={savedProfile?.mode === "quick"}
+      onRefine={refine}
+      profileAgeDays={profileAgeDays(savedProfile?.updatedAt)}
+    />
+  );
 
   const capQ = currentStep.type === "capability" ? currentStep.q : null;
   const decayQ = currentStep.type === "decay" ? currentStep.q : null;
@@ -1235,12 +1378,12 @@ export default function MatchmakerClient() {
   const isMedical = !!medQ;
   const accentColor = isMedical ? "#38bdf8" : isDecay ? "var(--accent-green)" : "#ff5100";
   const headerTitle = capQ ? capQ.axis : decayQ ? decayQ.title : medQ!.title;
-  const firstMedicalIndex = ALL_STEPS.findIndex((s) => s.type === "medical");
+  const firstMedicalIndex = steps.findIndex((s) => s.type === "medical");
 
   function goNext(updated: Answers) {
     setAnswers(updated);
     setTimeout(() => {
-      if (stepIndex < ALL_STEPS.length - 1) {
+      if (stepIndex < steps.length - 1) {
         setStepIndex(stepIndex + 1);
       } else {
         submitAssessment(updated);
@@ -1250,7 +1393,7 @@ export default function MatchmakerClient() {
 
   function skipCurrentQuestion() {
     setTimeout(() => {
-      if (stepIndex < ALL_STEPS.length - 1) {
+      if (stepIndex < steps.length - 1) {
         setStepIndex(stepIndex + 1);
       } else {
         submitAssessment(answers);
@@ -1264,9 +1407,9 @@ export default function MatchmakerClient() {
       <div className="mb-7">
         <div className="flex items-center justify-between mb-5">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase" style={{ color: accentColor }}>
-            {isMedical ? "Health Background (Optional)" : isDecay ? "Calibration" : "Adventure Matchmaker"}
+            {isMedical ? "Health Background (Optional)" : isDecay ? "Calibration" : mode === "quick" ? "Quick match" : mode === "refine" ? "Refining your profile" : "Adventure Matchmaker"}
           </p>
-          <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>{stepIndex + 1} / {ALL_STEPS.length}</span>
+          <span className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>{stepIndex + 1} / {steps.length}</span>
         </div>
         <div className="flex items-center gap-2.5 mb-1.5">
           {isDecay || isMedical ? (
@@ -1298,7 +1441,7 @@ export default function MatchmakerClient() {
 
       {/* Progress */}
       <div className="flex items-center gap-1.5 mb-9">
-        {ALL_STEPS.map((step, i) => {
+        {steps.map((step, i) => {
           const color = step.type === "medical" ? "#38bdf8" : step.type === "decay" ? "#4ade80" : "#ff5100";
           return (
             <div
@@ -1330,6 +1473,21 @@ export default function MatchmakerClient() {
             }}
           />
         ))}
+
+        {/* Honest escape hatch for things someone has never tried — scored cautiously */}
+        {capQ && (
+          <button
+            onClick={() => goNext({ ...answers, [capQ.key]: NOT_SURE })}
+            className="w-full text-left px-4 py-3 rounded-xl text-sm transition-colors"
+            style={{
+              border: `1px dashed ${answers[capQ.key] === NOT_SURE ? "#ff5100" : "var(--border-default)"}`,
+              color: answers[capQ.key] === NOT_SURE ? "#ff7d47" : "var(--text-tertiary)",
+              background: answers[capQ.key] === NOT_SURE ? "rgba(255,81,0,0.06)" : "transparent",
+            }}
+          >
+            Not sure / haven&apos;t tried this
+          </button>
+        )}
 
         {/* Altitude safety flag — evacuation checkbox, altitude question only */}
         {capQ?.hasSafetyFlag && (
@@ -1392,7 +1550,7 @@ export default function MatchmakerClient() {
       )}
 
       {/* Nav */}
-      <div className="flex items-center mt-8">
+      <div className="flex items-center justify-between mt-8">
         <button
           onClick={() => {
             if (stepIndex === 0) setStarted(false);
@@ -1403,11 +1561,8 @@ export default function MatchmakerClient() {
           <ChevronLeft className="w-4 h-4" />
           Back
         </button>
+        <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>Progress saved automatically</span>
       </div>
-
-      <p className="text-center text-xs mt-6" style={{ color: "var(--text-muted)", opacity: 0.5 }}>
-        {stepIndex + 1} of {ALL_STEPS.length}
-      </p>
     </div>
   );
 }

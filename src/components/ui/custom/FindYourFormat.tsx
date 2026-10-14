@@ -101,7 +101,7 @@ export default function FindYourFormat() {
   const [openId, setOpenId] = useState<string | null>(null);
 
     return (
-      <section id="styles" className="relative py-10 lg:py-14 px-5 lg:px-8 t-bg-page overflow-hidden">
+      <section id="styles" className="relative py-14 lg:py-20 px-5 lg:px-8 t-bg-page overflow-hidden">
       {/* Background accent glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-24 right-[8%] w-96 h-96 rounded-full opacity-[0.05] dark:opacity-[0.08] blur-[100px]" style={{ background: "#ff5100" }} />
@@ -112,14 +112,14 @@ export default function FindYourFormat() {
       </div>
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="mb-6 lg:mb-8">
+        <div className="mb-8 lg:mb-10">
           <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-3 uppercase">
             DISCOVER BY GENRE
           </p>
-          <h2 className="t-text text-3xl lg:text-5xl font-bold tracking-tight leading-tight">
+          <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight">
             Adventure Lives in Every Element
           </h2>
-          <div className="mt-4 w-12 h-0.5 bg-[#ff5100] rounded-full" />
+          
         </div>
 
         {/* Cards grid */}
@@ -155,12 +155,8 @@ export default function FindYourFormat() {
                       src={cat.image}
                       alt={cat.label}
                       fill
-                      quality={100}
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      style={{ 
-                        objectFit: "cover",
-                        filter: "brightness(1.05) contrast(1.1) saturate(1.1)" 
-                      }}
+                      quality={75}
+                      className="photo-grade object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   {/* Gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />

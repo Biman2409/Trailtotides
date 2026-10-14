@@ -8,6 +8,27 @@ import { CAPABILITY_QUESTIONS, DECAY_QUESTIONS, type CapabilityOption } from "./
 
 const LETTER_SCORE: Record<CapabilityOption["v"], number> = { A: 1, B: 2, C: 3, D: 4, E: 5 };
 
+/** Answer value for "Not sure / haven't tried this" on a capability question. */
+export const NOT_SURE = "U";
+
+// Quick mode: 5 questions that best separate beginners from veterans. The other answers are
+// estimated from these (see estimateQuickAnswers) until the person refines their profile.
+export const QUICK_KEYS = ["stamina-1", "strength-1", "agility-1", "altitude-1", "nerve-1"];
+
+/** Fills unanswered capability questions from related quick answers. Water defaults low. */
+export function estimateQuickAnswers(answers: Partial<Record<string, string>>): Partial<Record<string, string>> {
+  const est: Partial<Record<string, string>> = { ...answers };
+  const from = (key: string, source: string) => { if (!est[key]) est[key] = answers[source]; };
+  from("stamina-2", "stamina-1");
+  from("power-1", "strength-1");
+  from("power-2", "strength-1");
+  from("strength-2", "strength-1");
+  from("agility-2", "agility-1");
+  from("focus-1", "agility-1");
+  if (!est["water-1"]) est["water-1"] = "A";
+  return est;
+}
+
 function clamp(n: number, min = 1, max = 5): number {
   return Math.min(max, Math.max(min, n));
 }
@@ -67,17 +88,20 @@ export function computeAceFromAnswers(
 ): AceComputationResult {
   // 1. Combine each axis's 1-2 capability answers into a raw 1-5 score.
   const byAxis: Partial<Record<AceAxis, number[]>> = {};
+  // "U" = "Not sure / haven't tried this". It's left out rather than guessed: on a two-question
+  // axis the other answer stands alone; if nothing on the axis is known it scores the cautious 1.
   CAPABILITY_QUESTIONS.forEach((q) => {
-    const letter = capabilityAnswers[q.key] as CapabilityOption["v"] | undefined;
-    const val = LETTER_SCORE[letter ?? "A"] ?? 1;
     const axisKey = q.axis.toLowerCase() as AceAxis;
-    (byAxis[axisKey] ??= []).push(val);
+    byAxis[axisKey] ??= [];
+    const letter = capabilityAnswers[q.key];
+    if (letter === NOT_SURE) return;
+    byAxis[axisKey]!.push(LETTER_SCORE[(letter ?? "A") as CapabilityOption["v"]] ?? 1);
   });
 
   const rawAxes = {} as Record<AceAxis, number>;
   (Object.keys(byAxis) as AceAxis[]).forEach((axis) => {
     const vals = byAxis[axis]!;
-    rawAxes[axis] = vals.length === 2 ? combineDualAxis(vals[0], vals[1]) : clamp(vals[0]);
+    rawAxes[axis] = vals.length === 2 ? combineDualAxis(vals[0], vals[1]) : vals.length === 1 ? clamp(vals[0]) : 1;
   });
 
   // 2. Decay multiplier — worse of the two decay answers, physical axes only.

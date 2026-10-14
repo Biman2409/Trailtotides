@@ -103,7 +103,7 @@ export default function StatsBar() {
     <section
       ref={ref}
       style={{
-        background: "linear-gradient(180deg, #0f1319 0%, #111820 100%)",
+        background: "linear-gradient(180deg, #0f1319 0%, #171310 100%)",
         borderTop: "1px solid rgba(255,255,255,0.04)",
         borderBottom: "1px solid rgba(255,255,255,0.04)",
       }}

@@ -3,6 +3,7 @@ import OpenAI from "openai";
 import { adventures } from "@/lib/data";
 import type { AdventureType } from "@/lib/data";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
+import { getACE, computeDifficulty, computeMatchScore, type ACE } from "@/lib/ace";
 
 // Gemini's free tier via its OpenAI-compatible endpoint — no billing required.
 // https://ai.google.dev/gemini-api/docs/openai
@@ -33,7 +34,7 @@ const CATALOG = adventures.map((a) => ({
   name: a.name,
   state: a.state,
   type: a.type,
-  difficulty: a.difficulty,
+  difficulty: computeDifficulty(getACE(a)), // same rating the site shows, not the raw data field
   days: a.durationDays,
   region: a.region,
   altitude: a.altitude ?? undefined,
@@ -79,7 +80,7 @@ ${CATALOG_STR}
 → Answer warmly with general knowledge, then offer to find an adventure there.
 
 **User confused / indecisive** (fitness doubts, "I don't know", "can't decide", "which one", "too many options"):
-→ Include <suggest_ace/> + 1 sentence pointing them to the Adventure Matchmaker — an 8-question quiz that matches them straight to adventures their body is ready for, faster than browsing back and forth with you.
+→ Include <suggest_ace/> + 1 sentence pointing them to the Adventure Matchmaker — a short fitness check (a 1-minute quick match, or about 3 minutes for the full version) that rates every adventure for their body, faster than browsing back and forth with you.
 → Still give recommendations if you can make a reasonable guess.
 
 **Third+ round of recommendations without the user committing:**
@@ -247,11 +248,67 @@ function keywordSearch(query: string, limit = 3) {
     .map((s) => s.a);
 }
 
-function fallbackReason(adventure: typeof adventures[0], query: string): string {
+// ─── Fitness-aware matching ───────────────────────────────────────────────────
+// The client sends the visitor's Matchmaker profile (8 levels, 1–5) with each message, so
+// recommendations respect what their body can actually handle.
+
+const ACE_KEYS = ["stamina", "power", "strength", "agility", "water", "altitude", "focus", "nerve"] as const;
+
+function parseAce(raw: unknown): ACE | null {
+  if (!raw || typeof raw !== "object") return null;
+  const out: Record<string, number> = {};
+  for (const k of ACE_KEYS) {
+    const v = Number((raw as Record<string, unknown>)[k]);
+    if (!Number.isFinite(v) || v < 0 || v > 5) return null;
+    out[k] = v;
+  }
+  return out as unknown as ACE;
+}
+
+const LEVEL: Record<string, number> = { Easy: 1, Moderate: 2, Hard: 3, Advanced: 4, Extreme: 5 };
+const BEGINNER_WORDS = /\b(beginner|beginners|easy|first[- ]?time|first trek|gentle|newbie|novice|not too hard|family)\b/i;
+
+/** Tells the model which adventures this person is ready for, so it stops suggesting ones they aren't. */
+function fitnessHint(ace: ACE | null): string {
+  if (!ace) return "";
+  const groups = { ready: [] as string[], stretch: [] as string[], notYet: [] as string[] };
+  for (const a of adventures) {
+    const s = computeMatchScore(ace, getACE(a));
+    (s >= 80 ? groups.ready : s >= 55 ? groups.stretch : groups.notYet).push(a.slug);
+  }
+  return `\n\n## This user's fitness (from the Adventure Matchmaker)
+Levels 1–5: ${ACE_KEYS.map((k) => `${k} ${ace[k]}`).join(", ")}.
+READY for: ${groups.ready.join(", ") || "none"}
+STRETCH (possible with preparation): ${groups.stretch.join(", ") || "none"}
+NOT YET (beyond them today): ${groups.notYet.join(", ") || "none"}
+Rules: recommend READY adventures first. Only suggest a STRETCH one if it fits the request especially well, and say it will need preparation. Never recommend a NOT YET adventure unless they explicitly ask for it by name — then say plainly it's beyond their current fitness. You don't need to mention the Matchmaker; they've already taken it.`;
+}
+
+/** Keyword fallback, made safe: respects "beginner" wording and the user's fitness when known. */
+function pickFallback(query: string, ace: ACE | null, limit = 3) {
+  let list = keywordSearch(query, 15);
+  if (BEGINNER_WORDS.test(query)) {
+    const gentle = list.filter((a) => LEVEL[computeDifficulty(getACE(a))] <= 2);
+    list = gentle.length > 0 ? gentle : list.filter((a) => LEVEL[computeDifficulty(getACE(a))] <= 3);
+  }
+  if (ace) {
+    const scored = list.map((a) => ({ a, s: computeMatchScore(ace, getACE(a)) }));
+    const fitting = scored.filter((x) => x.s >= 55);
+    list = (fitting.length > 0 ? fitting : scored).sort((x, y) => y.s - x.s).map((x) => x.a);
+  }
+  return list.slice(0, limit);
+}
+
+function fallbackReason(adventure: typeof adventures[0], query: string, ace: ACE | null = null): string {
+  if (ace) {
+    const s = computeMatchScore(ace, getACE(adventure));
+    if (s >= 80) return `A strong fit for your fitness — ${s}% match.`;
+    if (s >= 55) return `A stretch for you (${s}% match) — doable with some preparation.`;
+  }
   const q = query.toLowerCase();
   if (q.includes(adventure.state.toLowerCase())) return `Located in ${adventure.state}, matching your region preference.`;
   if (q.includes(adventure.type.toLowerCase())) return `A well-rated ${adventure.type} adventure in India.`;
-  if (adventure.difficulty === "Easy" || adventure.difficulty === "Moderate") return `Accessible for most fitness levels — a great starting point.`;
+  if (LEVEL[computeDifficulty(getACE(adventure))] <= 2) return `Accessible for most fitness levels — a great starting point.`;
   return `One of the top ${adventure.type} experiences on Trail to Tides.`;
 }
 
@@ -300,7 +357,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { messages, recommendationRounds } = await req.json();
+    const { messages, recommendationRounds, ace: rawAce } = await req.json();
+    const userAce = parseAce(rawAce);
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return NextResponse.json({ error: "No messages provided" }, { status: 400 });
     }
@@ -313,10 +371,10 @@ export async function POST(req: NextRequest) {
     const hint = serverDetectedIndecision
       ? "\n\n[HINT: User seems indecisive. Include <suggest_ace/> in your response alongside any recommendations, and call it the Adventure Matchmaker in your own words.]"
       : shownRecommendationsRepeatedly
-      ? "\n\n[HINT: You've already shown this user recommendations 2+ times this conversation without them settling on one. Include <suggest_ace/> and briefly note that the Adventure Matchmaker (8 quick questions) would narrow things down in one pass instead of more browsing.]"
+      ? "\n\n[HINT: You've already shown this user recommendations 2+ times this conversation without them settling on one. Include <suggest_ace/> and briefly note that the Adventure Matchmaker (a 1-minute quick match) would narrow things down in one pass instead of more browsing.]"
       : "";
 
-    const systemContent = SYSTEM_PROMPT + hint;
+    const systemContent = SYSTEM_PROMPT + hint + fitnessHint(userAce);
 
     const chatMessages: { role: "user" | "assistant" | "system"; content: string }[] = [
       { role: "system", content: systemContent },
@@ -340,11 +398,11 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      const fallback = keywordSearch(lastQuery, 3);
+      const fallback = pickFallback(lastQuery, userAce);
       if (fallback.length > 0) {
         return NextResponse.json({
           text: "Here are some adventures that match what you're looking for.",
-          recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery) })),
+          recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery, userAce) })),
           cards: fallback,
           suggestAce: shouldSuggestAce,
         });
@@ -385,11 +443,11 @@ export async function POST(req: NextRequest) {
           console.error("Compass.AI lite model also failed:", liteErr instanceof Error ? liteErr.message : liteErr);
           // Both models failed — use keyword search only
           const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
-          const fallback = keywordSearch(lastQuery, 3);
+          const fallback = pickFallback(lastQuery, userAce);
           if (fallback.length > 0) {
             return NextResponse.json({
               text: "Here are some adventures that match what you're looking for.",
-              recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery) })),
+              recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery, userAce) })),
               cards: fallback,
               suggestAce: shouldSuggestAce,
             });
@@ -430,11 +488,11 @@ export async function POST(req: NextRequest) {
     const lastQuery = messages.filter((m: { role: string }) => m.role === "user").slice(-1)[0]?.content ?? "";
 
     if (!isComingSoonQuery(lastQuery)) {
-      const fallback = keywordSearch(lastQuery, 3);
+      const fallback = pickFallback(lastQuery, userAce);
       if (fallback.length > 0) {
         return NextResponse.json({
           text: text || "Here are some adventures that might match.",
-          recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery) })),
+          recommendations: fallback.map((a) => ({ slug: a.slug, name: a.name, reason: fallbackReason(a, lastQuery, userAce) })),
           cards: fallback,
           suggestAce,
         });

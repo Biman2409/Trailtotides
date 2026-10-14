@@ -103,6 +103,8 @@ export interface Operator {
   priceFrom: string;
   googleRating: number;
   website?: string;
+  /** ISO date the price was last checked on the operator's site — shown as a trust signal on Explore. */
+  priceCheckedAt?: string;
 }
 
 export interface SeedReview {

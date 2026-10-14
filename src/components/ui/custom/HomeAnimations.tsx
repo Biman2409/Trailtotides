@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, ReactNode } from "react";
+import { useEffect, useRef, ReactNode, type CSSProperties } from "react";
 
 /* ── Scroll-triggered fade/slide-up ── */
 export function FadeUp({
@@ -17,6 +17,7 @@ export function FadeUp({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     el.style.opacity = "0";
     el.style.transform = "translateY(28px)";
     el.style.transition = `opacity 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}ms`;
@@ -78,7 +79,7 @@ export function HeroOrbs() {
           width: 520,
           height: 520,
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(255,81,0,0.13) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(255,140,80,0.06) 0%, transparent 70%)",
           filter: "blur(40px)",
           animation: "orbFloat 9s ease-in-out infinite",
         }}
@@ -127,14 +128,25 @@ export function ShimmerLine({ className = "" }: { className?: string }) {
   );
 }
 
+/* Accent words in the hero headline: hand-painted marker in brand orange against the
+   DM Sans sans, sized down slightly because Permanent Marker's caps run large. */
+const HERO_ACCENT_STYLE: CSSProperties = {
+  fontFamily: "var(--font-marker), cursive",
+  fontStyle: "normal",
+  fontWeight: 400,
+  fontSize: "calc(0.92em + 5px)",
+  letterSpacing: "-0.01em",
+  color: "#ff7d47",
+};
+
 /* ── Hero headline reveal ── */
 export function HeroHeadline() {
   return (
     <h1
-      className="font-black tracking-tight"
+      className="font-extrabold tracking-tight"
       style={{
         fontSize: "clamp(2.3rem, 6vw, 4.8rem)",
-        lineHeight: 1.02,
+        lineHeight: 1.08,
         color: "white",
         textShadow: "0 4px 40px rgba(0,0,0,0.6)",
         letterSpacing: "-0.02em",
@@ -143,41 +155,24 @@ export function HeroHeadline() {
       <span
         style={{
           display: "block",
-          animation: "heroLineIn 0.8s cubic-bezier(0.22,1,0.36,1) 0.15s both",
+          animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.05s both",
         }}
       >
-        From Mountain{" "}
-        <em style={{ fontStyle: "italic", fontWeight: 800, color: "rgba(255,255,255,0.9)" }}>Trail</em>
+        {/* Keep "Mountain Trail" together so narrow screens break after "From", not before "Trail" */}
+        From <span className="whitespace-nowrap">Mountain <em style={HERO_ACCENT_STYLE}>Trail</em></span>
       </span>
       <span
         style={{
           display: "block",
-          height: "2px",
-          background:
-            "linear-gradient(90deg, transparent, rgba(255,81,0,0.5) 30%, rgba(255,81,0,0.5) 70%, transparent)",
-          margin: "0.4em auto",
-          maxWidth: "400px",
-          animation: "dividerExpand 1s cubic-bezier(0.22,1,0.36,1) 0.45s both",
-          transformOrigin: "center",
-        }}
-      />
-      <span
-        style={{
-          display: "block",
-          animation: "heroLineIn 0.8s cubic-bezier(0.22,1,0.36,1) 0.3s both",
+          animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.12s both",
         }}
       >
-        To Ocean{" "}
-        <em style={{ fontStyle: "italic", fontWeight: 800, color: "rgba(255,255,255,0.9)" }}>Tides</em>
+        To <span className="whitespace-nowrap">Ocean <em style={HERO_ACCENT_STYLE}>Tides</em></span>
       </span>
       <style>{`
         @keyframes heroLineIn {
-          from { opacity: 0; transform: translateY(22px); }
+          from { opacity: 0; transform: translateY(12px); }
           to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes dividerExpand {
-          from { opacity: 0; transform: scaleX(0); }
-          to   { opacity: 1; transform: scaleX(1); }
         }
       `}</style>
     </h1>
@@ -188,54 +183,42 @@ export function HeroHeadline() {
 export function HeroSubheading() {
   return (
     <div
-      className="flex flex-col items-center gap-4 w-full mx-auto"
+      className="flex flex-col items-center gap-3 w-full mx-auto"
       style={{
         maxWidth: "100%",
-        animation: "heroLineIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.55s both",
+        animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.2s both",
       }}
     >
-      {/* Pill trio — top */}
-      <div className="flex items-center justify-center gap-px w-full overflow-hidden rounded-xl"
-        style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.08)" }}>
-        {["Discover", "Compare", "Book"].map((label, i) => (
-          <div
-            key={label}
-            className="flex-1 flex items-center justify-center py-2.5 text-[10px] font-black tracking-[0.18em] uppercase"
-            style={{
-              color: i === 0 ? "#ff5100" : i === 1 ? "#ff7d47" : "#ffab85",
-              borderRight: i < 2 ? "1px solid rgba(255,255,255,0.07)" : "none",
-            }}
-          >
-            {label}
-          </div>
-        ))}
-      </div>
-
-      {/* Supporting copy */}
-      <div
-        className="w-full px-5 py-3.5 rounded-xl"
+      {/* Three-step promise + supporting line — unboxed, so headline → promise → copy → search
+          reads as one continuous column. Legibility over busy photos comes from the hero scrim
+          and text shadow, not from containers. */}
+      <p
+        className="font-bold uppercase text-center text-white"
         style={{
-          background: "rgba(0,0,0,0.45)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          fontSize: "clamp(0.85rem, 1.7vw, 1.05rem)",
+          letterSpacing: "0.24em",
+          textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)",
         }}
       >
-        <p
-          className="text-center font-medium leading-relaxed"
-          style={{
-            fontSize: "clamp(0.95rem, 2.1vw, 1.15rem)",
-            color: "rgba(255,255,255,0.82)",
-            letterSpacing: "0.01em",
-          }}
-        >
-          Matched to your body, recommended by AI, run by real operators.
-        </p>
-      </div>
+        Discover <span style={{ color: "rgba(255,255,255,0.4)" }}>·</span> Compare <span style={{ color: "rgba(255,255,255,0.4)" }}>·</span> Book
+      </p>
+
+      <p
+        className="text-center font-medium leading-relaxed"
+        style={{
+          fontSize: "clamp(1rem, 2.1vw, 1.2rem)",
+          color: "rgba(255,255,255,0.88)",
+          letterSpacing: "0.01em",
+          textWrap: "balance",
+          textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)",
+        }}
+      >
+        Adventures matched to your body, recommended by AI, run by real operators.
+      </p>
 
       <style>{`
         @keyframes heroLineIn {
-          from { opacity: 0; transform: translateY(20px); }
+          from { opacity: 0; transform: translateY(12px); }
           to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
@@ -281,7 +264,7 @@ export function HeroFeatureBoxes() {
         <div
           key={num}
           className="flex flex-col gap-3 p-5 lg:p-6 text-left"
-          style={{ background: "rgba(10,14,22,0.72)", backdropFilter: "blur(16px)" }}
+          style={{ background: "rgba(20,16,14,0.72)", backdropFilter: "blur(16px)" }}
         >
           <span
             className="text-[10px] font-black tracking-[0.25em]"
@@ -299,7 +282,7 @@ export function HeroFeatureBoxes() {
       ))}
       <style>{`
         @keyframes heroLineIn {
-          from { opacity: 0; transform: translateY(20px); }
+          from { opacity: 0; transform: translateY(12px); }
           to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
@@ -313,13 +296,13 @@ export function HeroCTAWrapper({ children }: { children: ReactNode }) {
     <div
       className="w-full"
       style={{
-        animation: "heroLineIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.75s both",
+        animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.28s both",
       }}
     >
       {children}
       <style>{`
         @keyframes heroLineIn {
-          from { opacity: 0; transform: translateY(20px); }
+          from { opacity: 0; transform: translateY(12px); }
           to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>

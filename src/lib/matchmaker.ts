@@ -170,13 +170,21 @@ export interface StoredProfile {
   altitudeCapped?: boolean;
   rawAxes?: Record<string, number>;
   decayNotes?: string[];
-  answers?: Record<string, unknown>; // kept for backward compatibility
+  answers?: Record<string, unknown>; // the real answers given (never imputed ones) — used to refine a quick result
+  /** "quick" = 5-question first pass with the rest estimated; "full" or absent = complete assessment. */
+  mode?: "quick" | "full";
   // Legacy ERT field — kept so old profiles don't break
   ert?: { e: number; r: number; t: number };
 }
 
+function announceProfileChange() {
+  // Let open components (cards, home rows, Compass) pick up the change without a reload
+  try { window.dispatchEvent(new Event("ttt:profile-updated")); } catch {}
+}
+
 export function saveProfile(profile: StoredProfile): void {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(profile)); } catch {}
+  announceProfileChange();
 }
 
 export function loadProfile(): StoredProfile | null {
@@ -195,6 +203,7 @@ export function loadProfile(): StoredProfile | null {
 
 export function clearProfile(): void {
   try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  announceProfileChange();
 }
 
 // ─── Server sync helpers ───────────────────────────────────────────────────────
