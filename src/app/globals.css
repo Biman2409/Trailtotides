@@ -237,6 +237,51 @@
 }
 
 
+/* ── DUSK THEME — a navy-slate variant of dark (html.dark.dusk) ─ */
+.dark.dusk {
+  --bg-page:        #121a24;
+  --bg-surface:     #182330;
+  --bg-surface-2:   #1f2d3d;
+  --bg-card:        rgba(230,215,190,0.05);
+  --bg-card-hover:  rgba(230,215,190,0.09);
+  --bg-overlay:     rgba(18,26,36,0.88);
+
+  --text-primary:   #f2ead9;
+  --text-secondary: rgba(242,234,217,0.66);
+  --text-tertiary:  rgba(242,234,217,0.42);
+  --text-muted:     rgba(242,234,217,0.24);
+
+  --border-subtle:  rgba(230,215,190,0.09);
+  --border-default: rgba(230,215,190,0.16);
+  --border-strong:  rgba(230,215,190,0.26);
+
+  --nav-bg:         rgba(24,35,48,0.97);
+  --nav-border:     rgba(230,215,190,0.09);
+
+  --scrollbar-track: #121a24;
+  --scrollbar-thumb: #2c3e52;
+
+  --background: #121a24;
+  --foreground: #f2ead9;
+  --card: #182330;
+  --popover: #1f2d3d;
+  --popover-foreground: #f2ead9;
+  --card-foreground: #f2ead9;
+  --secondary: rgba(230,215,190,0.07);
+  --muted: rgba(230,215,190,0.05);
+  --muted-foreground: rgba(242,234,217,0.5);
+  --border: rgba(230,215,190,0.1);
+  --input: rgba(230,215,190,0.1);
+  --sidebar: #182330;
+  --sidebar-foreground: #f2ead9;
+  --sidebar-accent: rgba(230,215,190,0.07);
+  --sidebar-accent-foreground: #f2ead9;
+
+  --tide: #5eead4;
+  --gold: #f0c070;
+  --topo-stroke: rgba(230,215,190,0.07);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

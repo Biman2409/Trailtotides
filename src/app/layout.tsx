@@ -157,6 +157,8 @@ export default function RootLayout({
   return (
     <html lang="en-IN" suppressHydrationWarning>
       <head>
+        {/* Restore the Dusk palette before first paint (it only applies on top of dark) */}
+        <script dangerouslySetInnerHTML={{ __html: `try{if(localStorage.getItem("ttt-palette")==="dusk")document.documentElement.classList.add("dusk")}catch(e){}` }} />
         <link rel="icon" type="image/png" sizes="512x512" href="/icon" />
         <link rel="icon" type="image/svg+xml" href="/logo.svg" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon" />
