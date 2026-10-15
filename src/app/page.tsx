@@ -128,7 +128,7 @@ export default function HomePage() {
           @keyframes heroScrollBob { 0%, 100% { transform: translateY(0); opacity: 0.6; } 50% { transform: translateY(4px); opacity: 1; } }
           /* Reduced motion: hero copy appears instantly, Ken Burns pan and floating orbs stop */
           @media (prefers-reduced-motion: reduce) {
-            .hero-motion * { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; }
+            .hero-motion *:not(.hh-word) { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; }
           }
         `}</style>
       </section>

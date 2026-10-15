@@ -62,7 +62,7 @@ const FEATURES: Feature[] = [
 ];
 
 const START_DELAY = 1800;
-const CYCLE_MS = 4800;
+const CYCLE_MS = 7500;
 
 // The Compass card points at the hero's own prompt bar rather than opening a new surface
 function focusHeroPrompt() {
@@ -90,7 +90,8 @@ export default function HeroPromise() {
   }, []);
 
   useEffect(() => {
-    if (active === null || pinned || reducedRef.current) return;
+    // Cycles even under reduced motion: it's a slow swap of one card, not movement
+    if (active === null || pinned) return;
     const t = setTimeout(() => {
       setActive((i) => ((i ?? 0) + 1) % FEATURES.length);
       setCycleKey((k) => k + 1);
@@ -161,7 +162,7 @@ export default function HeroPromise() {
         <span className="hp-blurb">{f.blurb}</span>
       </span>
       <span className="hp-go" style={{ color: f.color, borderColor: `${f.color}55` }}><ArrowUpRight className="w-4 h-4" strokeWidth={2.4} /></span>
-      {!pinned && !reducedRef.current && (
+      {!pinned && (
         <span key={cycleKey} className="hp-progress" style={{ background: f.color, animationDuration: `${CYCLE_MS}ms` }} aria-hidden />
       )}
     </>
@@ -192,7 +193,7 @@ export default function HeroPromise() {
       {/* Reads as one line: "Find · Compare · Book adventures — matched to your body, …" */}
       {/* Shrink-wrapped to the eyebrow's width so "adventures" centres beneath it */}
       <div className="inline-flex flex-col items-center" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
-        <p ref={eyebrowRef} className="font-bold uppercase" style={{ fontSize: "clamp(11px, 0.95vw, 13px)", letterSpacing: "0.26em", color: "rgba(255,255,255,0.72)", marginRight: "-0.26em" }}>
+        <p ref={eyebrowRef} className="font-bold uppercase" style={{ fontSize: "clamp(9.7px, 0.84vw, 11.4px)", letterSpacing: "0.26em", color: "rgba(255,255,255,0.72)", marginRight: "-0.26em" }}>
           Find <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span> Compare <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span> Book
         </p>
         <p ref={scriptRef} className="hp-script">adventures</p>
@@ -263,7 +264,7 @@ export default function HeroPromise() {
         /* "adventures" in the hand-lettered script of the logo tagline, tucked under the eyebrow and
            sized in JS to its width. Filled trail orange into tides teal, the headline's two colours;
            a drop-shadow, not text-shadow, since text-shadow would show through the clipped fill */
-        .hp-script { font-family: var(--font-script), cursive; font-weight: 700; font-size: clamp(2.2rem, 3.4vw, 2.8rem);
+        .hp-script { font-family: var(--font-script), cursive; font-weight: 700; font-size: clamp(1.94rem, 3vw, 2.46rem);
                      line-height: 1; padding: 0 0.08em; margin: 0 -0.08em 6px; white-space: nowrap; transform: rotate(-2deg);
                      background: linear-gradient(90deg, #ffc27a 0%, #ff8a33 30%, #ffe2c4 52%, #7fe6dc 68%, #4fd6cf 100%);
                      -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;

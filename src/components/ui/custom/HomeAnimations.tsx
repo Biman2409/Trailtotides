@@ -226,7 +226,6 @@ export function HeroHeadline() {
         }
         @keyframes hhTrail { to { background-position: 100% 0, 0 0; } }
         @keyframes hhTides { to { background-position: 240px 0, -240px 0, 0 0; } }
-        @media (prefers-reduced-motion: reduce) { .hh-trail, .hh-tides { animation: none; } }
       `}</style>
     </h1>
   );
