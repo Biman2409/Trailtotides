@@ -192,13 +192,13 @@ export default function HeroPromise() {
       {/* Reads as one line: "Find · Compare · Book adventures — matched to your body, …" */}
       {/* Shrink-wrapped to the eyebrow's width so "adventures" centres beneath it */}
       <div className="inline-flex flex-col items-center" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
-        <p ref={eyebrowRef} className="font-bold uppercase" style={{ fontSize: "clamp(13px, 1.1vw, 15px)", letterSpacing: "0.26em", color: "rgba(255,255,255,0.72)", marginRight: "-0.26em" }}>
+        <p ref={eyebrowRef} className="font-bold uppercase" style={{ fontSize: "clamp(11px, 0.95vw, 13px)", letterSpacing: "0.26em", color: "rgba(255,255,255,0.72)", marginRight: "-0.26em" }}>
           Find <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span> Compare <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span> Book
         </p>
         <p ref={scriptRef} className="hp-script">adventures</p>
       </div>
 
-      <p className="text-center lg:text-left font-medium leading-snug" style={{ fontSize: "clamp(1.05rem, 1.7vw, 1.3rem)", color: "rgba(255,255,255,0.94)", letterSpacing: "0.01em", textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
+      <p className="text-center lg:text-left font-medium leading-snug" style={{ fontSize: "clamp(0.92rem, 1.35vw, 1.08rem)", color: "rgba(255,255,255,0.94)", letterSpacing: "0.01em", textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
         {FEATURES.map((feat, i) => {
           const on = active === i;
           const props = {
@@ -217,7 +217,7 @@ export default function HeroPromise() {
             </>
           );
           return (
-            <span key={feat.key}>
+            <span key={feat.key} className="block">
               {feat.href
                 ? <Link href={feat.href} {...props}>{inner}</Link>
                 : <button type="button" onClick={focusHeroPrompt} {...props}>{inner}</button>}
@@ -230,31 +230,33 @@ export default function HeroPromise() {
       {/* Bracket line from the active phrase up to the card */}
       {line && f && (
         <svg className="absolute inset-0 pointer-events-none overflow-visible" width={line.w} height={line.h} viewBox={`0 0 ${line.w} ${line.h}`} aria-hidden>
-          <path key={`${f.key}-${cycleKey}`} className="hp-line" d={line.d} fill="none" stroke={f.color} strokeOpacity={0.85} strokeWidth={1.5} strokeLinecap="round" pathLength={1} />
-          <circle cx={line.dot[0]} cy={line.dot[1]} r={3} fill={f.color} />
+          <path key={`${f.key}-${cycleKey}`} className="hp-line" d={line.d} fill="none" stroke={f.color} strokeOpacity={0.4} strokeWidth={1} strokeLinecap="round" pathLength={1} />
+          <circle cx={line.dot[0]} cy={line.dot[1]} r={2} fill={f.color} fillOpacity={0.7} />
         </svg>
       )}
 
       <style>{`
-        .hp-slot { min-height: 46px; display: flex; align-items: flex-end; margin-bottom: 12px; }
-        /* Quiet glass chip — a hint beside the copy, not a second CTA */
-        .hp-card { position: relative; overflow: hidden; display: flex; align-items: center; gap: 8px; width: min(232px, 100%);
-                   padding: 6px 8px 7px 6px; border-radius: 12px; text-align: left; color: #fff;
-                   background: rgba(12,10,9,0.38); border: 1px solid rgba(255,255,255,0.08);
-                   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-                   animation: hpIn 0.5s cubic-bezier(0.22,1,0.36,1) both; transition: border-color 0.25s, background 0.25s; }
-        .hp-card:hover { border-color: rgba(255,255,255,0.18); background: rgba(12,10,9,0.55); }
+        .hp-slot { min-height: 34px; display: flex; align-items: flex-end; margin-bottom: 8px; }
+        /* Quiet glass chip — a hint beside the copy, not a second CTA. Dimmed at rest so it
+           doesn't compete with the headline; it comes up to full strength on hover */
+        .hp-card { position: relative; overflow: hidden; display: flex; align-items: center; gap: 7px; width: min(196px, 100%);
+                   padding: 4px 6px 5px 4px; border-radius: 10px; text-align: left; color: #fff; opacity: 0.78;
+                   background: rgba(12,10,9,0.22); border: 1px solid rgba(255,255,255,0.05);
+                   backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+                   animation: hpIn 0.5s cubic-bezier(0.22,1,0.36,1) both; transition: border-color 0.25s, background 0.25s, opacity 0.25s; }
+        .hp-card:hover { opacity: 1; border-color: rgba(255,255,255,0.14); background: rgba(12,10,9,0.45); }
         .hp-card:hover .hp-go { transform: translate(2px,-2px); opacity: 1; }
-        .hp-tex { position: absolute; inset: 0; opacity: 0.12; pointer-events: none;
+        .hp-tex { position: absolute; inset: 0; opacity: 0.07; pointer-events: none;
                   -webkit-mask-image: linear-gradient(90deg, transparent 40%, #000 100%); mask-image: linear-gradient(90deg, transparent 40%, #000 100%); }
-        .hp-edge { position: absolute; left: 0; right: 0; top: 0; height: 1px; opacity: 0.55; }
-        .hp-icon { position: relative; width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; flex: none; }
-        .hp-icon svg { width: 13px; height: 13px; }
-        .hp-picon svg { width: 16px; height: 16px; }
+        .hp-edge { position: absolute; left: 0; right: 0; top: 0; height: 1px; opacity: 0.3; }
+        .hp-icon { position: relative; width: 20px; height: 20px; border-radius: 6px; display: grid; place-items: center; flex: none; }
+        .hp-icon svg { width: 11px; height: 11px; }
+        .hp-picon svg { width: 14px; height: 14px; }
         .hp-title { position: relative; display: block; font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif; font-weight: 800;
-                    font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.1; }
-        .hp-blurb { position: relative; display: block; font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 2px; }
-        .hp-go { position: relative; width: 20px; height: 20px; display: grid; place-items: center; flex: none;
+                    font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.1; color: rgba(255,255,255,0.85); }
+        .hp-blurb { position: relative; display: block; font-size: 9.5px; color: rgba(255,255,255,0.45); margin-top: 1px; }
+        .hp-go svg { width: 12px; height: 12px; }
+        .hp-go { position: relative; width: 16px; height: 16px; display: grid; place-items: center; flex: none;
                  border: 0 !important; opacity: 0.75; transition: transform 0.2s, opacity 0.2s; }
         .hp-progress { position: absolute; left: 0; bottom: 0; height: 1px; width: 100%; transform-origin: left; opacity: 0.5;
                        animation-name: hpBar; animation-timing-function: linear; animation-fill-mode: both; }
