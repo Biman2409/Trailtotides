@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, ReactNode } from "react";
 import { TRAIL_FILL, TRAIL_SIZE, TIDES_FILL, TIDES_SIZE } from "./heroTextures";
+import { guardClippedText } from "@/lib/clipTextGuard";
 
 /* ── Scroll-triggered fade/slide-up ── */
 export function FadeUp({
@@ -145,7 +146,8 @@ export function HeroHeadline() {
       el.toggleAttribute("data-paused", !entry.isIntersecting);
     });
     observer.observe(el);
-    return () => observer.disconnect();
+    const unguard = guardClippedText(el, ".hh-word");
+    return () => { observer.disconnect(); unguard(); };
   }, []);
 
   // The headline is the one part of the hero that gives way on short screens: it scales down
@@ -214,6 +216,9 @@ export function HeroHeadline() {
         .hh-trail { animation: hhTrail 16s ease-in-out infinite alternate; }
         .hh-tides { animation: hhTides 9s linear infinite; }
         .hh[data-paused] .hh-word { animation-play-state: paused; }
+        /* Texture stripped (e.g. by a dark-mode extension): solid words instead of invisible ones */
+        .hh[data-plain] .hh-trail { color: #ff8a33 !important; -webkit-text-fill-color: #ff8a33 !important; }
+        .hh[data-plain] .hh-tides { color: #4fd6cf !important; -webkit-text-fill-color: #4fd6cf !important; }
         @media (min-width: 768px) {
           .hh-row { gap: clamp(0.45rem, 0.8vw, 0.75rem); }
           .hh-row2 { margin: clamp(0.75rem, min(2.2vw, 2.5svh), 2rem) 0 0 clamp(6rem, 14vw, 11rem); }

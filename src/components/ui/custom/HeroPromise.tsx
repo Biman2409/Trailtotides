@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Activity, Sparkles, BadgeCheck, ArrowUpRight } from "lucide-react";
 import { TIDES_FILL } from "./heroTextures";
+import { guardClippedText } from "@/lib/clipTextGuard";
 
 // The hero promise sentence. Each of its three phrases is a way into the product; a preview
 // card for one of them sits above the copy, cycling through all three, tied to its phrase
@@ -140,7 +141,8 @@ export default function HeroPromise() {
     document.fonts?.ready.then(fit);
     const ro = new ResizeObserver(fit);
     ro.observe(eyebrow);
-    return () => ro.disconnect();
+    const unguard = wrapRef.current ? guardClippedText(wrapRef.current, ".hp-script", "255, 194, 122") : () => {};
+    return () => { ro.disconnect(); unguard(); };
   }, []);
 
   const take = (i: number) => { setPinned(true); setActive(i); setCycleKey((k) => k + 1); };
@@ -269,6 +271,7 @@ export default function HeroPromise() {
                      background: linear-gradient(90deg, #ffc27a 0%, #ff8a33 30%, #ffe2c4 52%, #7fe6dc 68%, #4fd6cf 100%);
                      -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
                      text-shadow: none; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.55)); }
+        [data-plain] .hp-script { color: #ffb27a !important; -webkit-text-fill-color: #ffb27a !important; }
         .hp-phrase { white-space: nowrap; text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: 5px;
                      transition: color 0.3s, text-decoration-style 0.3s; cursor: pointer; font: inherit; color: inherit; background: none; padding: 0; }
         .hp-phrase[data-on] { text-decoration-style: solid; }
