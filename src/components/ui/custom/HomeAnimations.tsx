@@ -197,12 +197,12 @@ export function HeroHeadline() {
         .hh-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.35rem; }
         .hh-row2 { margin: clamp(0.75rem, 2svh, 1.25rem) 0 0 12vw; }
         /* Leads in the logo tagline's hand-lettered script, so the headline reads like the wordmark */
-        .hh-lead { font-family: var(--font-script), cursive; font-weight: 600; text-transform: none; font-size: 1.15rem;
+        .hh-lead { font-family: var(--font-script), cursive; font-weight: 600; text-transform: none; font-size: 1.25rem;
                    line-height: 1; letter-spacing: 0.01em; color: rgba(255,255,255,0.72); white-space: nowrap;
                    text-shadow: 0 1px 12px rgba(0,0,0,0.5); }
         .hh-lead strong { font-weight: 700; color: #fff; }
         /* Sized by the shorter of width and height, so short screens don't push the search off */
-        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(20vw, 11svh); line-height: 0.86;
+        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(22vw, 12svh); line-height: 0.86;
                    letter-spacing: -0.025em; }
         /* Shadow lives on a static copy behind the word, so it's painted once
            rather than re-filtered on every animation frame */
@@ -216,8 +216,8 @@ export function HeroHeadline() {
         @media (min-width: 768px) {
           .hh-row { gap: clamp(0.45rem, 0.8vw, 0.75rem); }
           .hh-row2 { margin: clamp(0.75rem, min(2.2vw, 2.5svh), 2rem) 0 0 clamp(6rem, 14vw, 11rem); }
-          .hh-lead { font-size: clamp(1.15rem, 1.8vw, 1.5rem); }
-          .hh-wrap { font-size: clamp(3.5rem, min(10vw, 14svh), 8.75rem); }
+          .hh-lead { font-size: clamp(1.25rem, 1.95vw, 1.65rem); }
+          .hh-wrap { font-size: clamp(3.75rem, min(11vw, 15.5svh), 9.75rem); }
         }
         /* Desktop: a little lower, toward the bottom band; JS centres it over the search box */
         @media (min-width: 1024px) {

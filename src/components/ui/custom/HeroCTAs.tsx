@@ -63,12 +63,12 @@ export default function HeroCTAs() {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 w-full">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 w-full">
         <form
           onSubmit={(e) => { e.preventDefault(); ask(query); }}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
-          className="flex-1 min-w-0 rounded-[22px] p-px transition-shadow duration-300"
+          className="flex-1 sm:flex-none sm:w-[420px] min-w-0 rounded-[18px] p-px transition-shadow duration-300"
           style={{
             background: ring,
             boxShadow: focused
@@ -79,10 +79,10 @@ export default function HeroCTAs() {
           }}
         >
           <div
-            className="flex items-center gap-3 rounded-[21px] pl-4 pr-2 py-2.5"
+            className="flex items-center gap-2.5 rounded-[17px] pl-3.5 pr-1.5 py-1.5"
             style={{ background: "rgba(14,12,12,0.72)", backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)" }}
           >
-            <Sparkles className="w-5 h-5 shrink-0" style={{ color: "#ff8a5c" }} strokeWidth={2} />
+            <Sparkles className="w-4 h-4 shrink-0" style={{ color: "#ff8a5c" }} strokeWidth={2} />
             <input
               ref={inputRef}
               id="hero-compass-input"
@@ -94,17 +94,17 @@ export default function HeroCTAs() {
               placeholder={prompts[placeholderIdx % prompts.length]}
               aria-label="Describe the adventure you want — Compass.AI will suggest some"
               enterKeyHint="send"
-              className="flex-1 min-w-0 bg-transparent text-[15px] sm:text-base py-2 truncate placeholder:text-white/55"
+              className="flex-1 min-w-0 bg-transparent text-[14px] sm:text-[15px] py-1.5 truncate placeholder:text-white/55"
               // Focus is shown by the bar's gradient ring, not the global input outline
               style={{ color: "#fff", caretColor: "#ff5100", outline: "none" }}
             />
             <button
               type="submit"
-              className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 hover:scale-105 active:scale-95"
+              className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 hover:scale-105 active:scale-95"
               style={{ background: COMPASS_GRADIENT, boxShadow: "0 4px 16px rgba(255,81,0,0.4)" }}
               aria-label="Ask Compass.AI"
             >
-              <ArrowUp className="w-[18px] h-[18px] text-white" strokeWidth={2.5} />
+              <ArrowUp className="w-4 h-4 text-white" strokeWidth={2.5} />
             </button>
           </div>
         </form>
