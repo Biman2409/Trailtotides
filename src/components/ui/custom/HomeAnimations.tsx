@@ -198,12 +198,12 @@ export function HeroHeadline() {
         .hh-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.35rem; }
         .hh-row2 { margin: clamp(0.75rem, 2svh, 1.25rem) 0 0 12vw; }
         /* Leads in the logo tagline's hand-lettered script, so the headline reads like the wordmark */
-        .hh-lead { font-family: var(--font-script), cursive; font-weight: 600; text-transform: none; font-size: 1.8rem;
+        .hh-lead { font-family: var(--font-script), cursive; font-weight: 600; text-transform: none; font-size: 1.3rem;
                    line-height: 1; letter-spacing: 0.01em; color: rgba(255,255,255,0.72); white-space: nowrap;
                    text-shadow: 0 1px 12px rgba(0,0,0,0.5); }
         .hh-lead strong { font-weight: 700; color: #fff; }
         /* Sized by the shorter of width and height, so short screens don't push the search off */
-        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(31.7vw, 17.3svh); line-height: 0.86;
+        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(21vw, 11.5svh); line-height: 0.86;
                    letter-spacing: -0.025em; }
         /* Shadow lives on a static copy behind the word, so it's painted once
            rather than re-filtered on every animation frame */

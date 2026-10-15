@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Home, Compass, Map as MapIcon, Sparkles, Building2, BookOpen, ArrowRight } from "lucide-react";
+import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Home, Compass, Map as MapIcon, Activity, BadgeCheck, BookOpen, ArrowRight } from "lucide-react";
 import { MountainSnow } from "@/lib/localIcons";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
@@ -18,8 +18,9 @@ const navLinks = [
   { href: "/", label: "Home", icon: Home, iconOnly: true },
   { href: "/explore", label: "Explore", icon: Compass },
   { href: "/map", label: "Map", icon: MapIcon },
-  { href: "/matchmaker", label: "Matchmaker", icon: Sparkles },
-  { href: "/operators", label: "Operators", icon: Building2 },
+  // Same icons as the hero's Fitness match / Verified operators pop-outs
+  { href: "/matchmaker", label: "Matchmaker", icon: Activity },
+  { href: "/operators", label: "Operators", icon: BadgeCheck },
   { href: "/stories", label: "Stories", icon: BookOpen },
 ];
 

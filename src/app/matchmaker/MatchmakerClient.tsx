@@ -7,7 +7,7 @@ import Link from "next/link";
 import {
   ChevronRight, ChevronLeft, MapPin, ArrowRight, RotateCcw,
   Shield, CheckCircle2, AlertTriangle, Loader2, Wind, HeartPulse,
-  Stethoscope, Target,
+  Stethoscope, Target, BookOpen,
 } from "lucide-react";
 import { Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost, TrendingUp, Lock } from "@/lib/localIcons";
 import ACERadar from "@/components/ui/custom/ACERadar";
@@ -276,7 +276,20 @@ function IntroScreen({
 }) {
   const stale = ageDays !== null && ageDays >= 180;
   return (
-    <div className="relative min-h-[calc(100vh-64px)] flex items-center justify-center overflow-hidden px-5 py-12 sm:py-0">
+    <div className="relative min-h-[calc(100vh-64px)] flex items-center justify-center overflow-hidden px-5 pt-20 pb-12 sm:py-0">
+      {/* Backdrop in the site's trail-to-tides theme: a warm glow behind the copy, a teal one
+          opposite, and the hero's contour lines faintly over both */}
+      <div aria-hidden className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0" style={{ background: "radial-gradient(55% 60% at 12% 18%, rgba(255,81,0,0.16), transparent 70%), radial-gradient(50% 55% at 90% 72%, rgba(79,214,207,0.13), transparent 70%)" }} />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "url(/hero/trail-contours.png)", backgroundSize: "900px auto", opacity: 0.11,
+            WebkitMaskImage: "radial-gradient(75% 75% at 50% 45%, #000 30%, transparent 85%)",
+            maskImage: "radial-gradient(75% 75% at 50% 45%, #000 30%, transparent 85%)",
+          }}
+        />
+      </div>
       <div className="relative w-full max-w-2xl mx-auto">
         <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
 
@@ -335,12 +348,21 @@ function IntroScreen({
                 </button>
               </div>
 
-              <Link href="/ace" className="group inline-flex items-center gap-1.5 text-sm font-medium mt-2 transition-colors hover:text-[var(--text-primary)]" style={{ color: "var(--text-secondary)" }}>
-                How it works <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              {/* Secondary action — a real button, quieter than the two ways in above */}
+              <Link
+                href="/ace"
+                className="group w-full flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all hover:border-[rgba(255,81,0,0.45)]"
+                style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}
+              >
+                <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100" }}>
+                  <BookOpen className="w-3.5 h-3.5" />
+                </span>
+                <span className="flex-1 min-w-0 text-left">
+                  <span className="block text-sm font-bold">How it works</span>
+                  <span className="block text-[11px]" style={{ color: "var(--text-tertiary)" }}>How we score your readiness</span>
+                </span>
+                <ArrowRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5" style={{ color: "#ff5100" }} />
               </Link>
-              <p className="text-xs mt-1" style={{ color: "var(--text-tertiary)" }}>
-                Health questions are optional and private. Your progress saves as you go.
-              </p>
             </div>
           </div>
 
