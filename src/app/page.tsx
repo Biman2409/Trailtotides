@@ -75,7 +75,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section data-hide-compass className={`${jakarta.variable} hero-motion relative h-screen min-h-[700px] flex overflow-hidden`}>
+      <section data-hide-compass className={`${jakarta.variable} hero-motion relative min-h-[100svh] flex overflow-hidden`}>
         <HeroSlider />
         <HeroOrbs />
         {/* Scrim: darker on the left where the copy sits, and along the bottom behind the search row */}
@@ -84,8 +84,13 @@ export default function HomePage() {
           style={{ background: "linear-gradient(90deg, rgba(5,8,12,0.62) 0%, rgba(5,8,12,0.28) 55%, rgba(5,8,12,0.08) 100%), linear-gradient(0deg, rgba(5,8,12,0.55) 0%, transparent 40%)" }}
         />
 
-        {/* Headline centred, promise + search along the bottom */}
-        <div className="relative z-10 w-full h-full max-w-6xl mx-auto px-5 lg:px-10 pt-28 lg:pt-36 pb-16 flex flex-col justify-between gap-10">
+        {/* Headline centred, promise + search along the bottom. The hero fills the visible
+            screen (svh, so mobile toolbars don't hide its bottom) and grows rather than clips
+            when the content needs more room; spacing tightens on short screens. */}
+        <div
+          className="relative z-10 w-full max-w-6xl mx-auto px-5 lg:px-10 flex flex-col justify-between"
+          style={{ paddingTop: "clamp(6rem, 14svh, 9rem)", paddingBottom: "clamp(3.5rem, 8svh, 4.5rem)", gap: "clamp(1.25rem, 4svh, 2.5rem)" }}
+        >
           {/* Headline centred in the space above the bottom band */}
           <div className="flex-1 flex items-center justify-center">
             <HeroHeadline />
