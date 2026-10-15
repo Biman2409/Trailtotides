@@ -68,8 +68,8 @@ export default function HeroCTAs() {
   }, []);
 
   useEffect(() => {
+    // Runs under reduced motion too: swapping the placeholder text isn't movement
     if (focused || query || !onScreen || !tabVisible) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = setInterval(() => setPlaceholderIdx((i) => i + 1), PLACEHOLDER_MS);
     return () => clearInterval(id);
   }, [focused, query, onScreen, tabVisible]);
@@ -189,7 +189,8 @@ export default function HeroCTAs() {
           0%, 100% { box-shadow: 0 12px 40px rgba(0,0,0,0.3), 0 0 0 0 rgba(255,81,0,0); }
           50% { box-shadow: 0 12px 40px rgba(0,0,0,0.3), 0 0 0 5px rgba(255,81,0,0.14), 0 0 26px rgba(255,81,0,0.22); }
         }
-        @media (prefers-reduced-motion: reduce) { .hc-breathe { animation: none; } }
+        /* Reduced motion keeps the glow but slows it right down — it fades, it doesn't move */
+        @media (prefers-reduced-motion: reduce) { .hc-breathe { animation-duration: 6s; } }
       `}</style>
     </div>
   );
