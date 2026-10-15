@@ -163,10 +163,11 @@ export function HeroHeadline() {
         dx = s.left + s.width / 2 - (slotBox.left + slotBox.width / 2);
       }
       el.style.left = dx ? `${dx}px` : "";
-      // Leave room for the desktop nudges (relative top/left) so the moved headline still fits
-      const dy = Math.abs(parseFloat(getComputedStyle(el).top) || 0);
-      const scale = Math.min(1, (slot.clientHeight - 2 * dy) / el.offsetHeight, (slot.clientWidth - 2 * Math.abs(dx)) / el.offsetWidth);
+      // Leave room for the horizontal nudge so the moved headline still fits
+      const scale = Math.min(1, slot.clientHeight / el.offsetHeight, (slot.clientWidth - 2 * Math.abs(dx)) / el.offsetWidth);
       el.style.transform = scale < 1 ? `scale(${Math.max(scale, 0.4)})` : "";
+      // Shrink toward the bottom on desktop, where the headline sits low in its slot
+      el.style.transformOrigin = dx ? "center bottom" : "";
     };
     fit();
     document.fonts?.ready.then(fit);
@@ -197,12 +198,12 @@ export function HeroHeadline() {
         .hh-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.35rem; }
         .hh-row2 { margin: clamp(0.75rem, 2svh, 1.25rem) 0 0 12vw; }
         /* Leads in the logo tagline's hand-lettered script, so the headline reads like the wordmark */
-        .hh-lead { font-family: var(--font-script), cursive; font-weight: 600; text-transform: none; font-size: 1.5rem;
+        .hh-lead { font-family: var(--font-script), cursive; font-weight: 600; text-transform: none; font-size: 1.8rem;
                    line-height: 1; letter-spacing: 0.01em; color: rgba(255,255,255,0.72); white-space: nowrap;
                    text-shadow: 0 1px 12px rgba(0,0,0,0.5); }
         .hh-lead strong { font-weight: 700; color: #fff; }
         /* Sized by the shorter of width and height, so short screens don't push the search off */
-        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(26.4vw, 14.4svh); line-height: 0.86;
+        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(31.7vw, 17.3svh); line-height: 0.86;
                    letter-spacing: -0.025em; }
         /* Shadow lives on a static copy behind the word, so it's painted once
            rather than re-filtered on every animation frame */
@@ -216,12 +217,12 @@ export function HeroHeadline() {
         @media (min-width: 768px) {
           .hh-row { gap: clamp(0.45rem, 0.8vw, 0.75rem); }
           .hh-row2 { margin: clamp(0.75rem, min(2.2vw, 2.5svh), 2rem) 0 0 clamp(6rem, 14vw, 11rem); }
-          .hh-lead { font-size: clamp(1.5rem, 2.35vw, 2rem); }
-          .hh-wrap { font-size: clamp(4.5rem, min(13.2vw, 18.6svh), 11.7rem); }
+          .hh-lead { font-size: clamp(1.8rem, 2.8vw, 2.4rem); }
+          .hh-wrap { font-size: clamp(5.4rem, min(15.8vw, 22.3svh), 14rem); }
         }
-        /* Desktop: a little lower, toward the bottom band; JS centres it over the search box */
+        /* Desktop: JS centres it horizontally over the search box */
         @media (min-width: 1024px) {
-          .hh { position: relative; top: 3svh; }
+          .hh { position: relative; }
         }
         @keyframes hhTrail { to { background-position: 100% 0, 0 0; } }
         @keyframes hhTides { to { background-position: 240px 0, -240px 0, 0 0; } }

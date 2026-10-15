@@ -91,11 +91,11 @@ export default function HomePage() {
             can fit, so the hero grows and scrolls instead. */}
         <div
           className="relative z-10 w-full max-w-6xl mx-auto px-5 lg:px-10 flex flex-col justify-between"
-          style={{ paddingTop: "clamp(6rem, 14svh, 9rem)", paddingBottom: "clamp(3.5rem, 8svh, 4.5rem)", gap: "clamp(1.25rem, 4svh, 2.5rem)" }}
+          style={{ paddingTop: "clamp(5.75rem, 12svh, 8.5rem)", paddingBottom: "clamp(3.5rem, 8svh, 4.5rem)", gap: "clamp(1.25rem, 4svh, 2.5rem)" }}
         >
           {/* Headline centred in the space above the bottom band */}
           {/* min-h-0 lets this slot shrink below the headline's size; HeroHeadline then scales itself to fit */}
-          <div className="flex-1 min-h-0 flex items-center justify-center">
+          <div className="flex-1 min-h-0 flex items-center lg:items-end justify-center">
             <HeroHeadline />
           </div>
 
