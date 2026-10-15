@@ -154,11 +154,18 @@ export function HeroHeadline() {
   useLayoutEffect(() => {
     const el = ref.current, slot = el?.parentElement;
     if (!el || !slot) return;
+    const search = document.getElementById("hero-compass-input")?.closest("form") ?? null;
     const fit = () => {
-      // Leave room for the desktop nudge (relative top/left) so the moved headline still fits
-      const cs = getComputedStyle(el);
-      const dy = Math.abs(parseFloat(cs.top) || 0), dx = Math.abs(parseFloat(cs.left) || 0);
-      const scale = Math.min(1, (slot.clientHeight - 2 * dy) / el.offsetHeight, (slot.clientWidth - 2 * dx) / el.offsetWidth);
+      // Desktop: centre the headline over the search box rather than the page
+      let dx = 0;
+      if (search && window.matchMedia("(min-width: 1024px)").matches) {
+        const s = search.getBoundingClientRect(), slotBox = slot.getBoundingClientRect();
+        dx = s.left + s.width / 2 - (slotBox.left + slotBox.width / 2);
+      }
+      el.style.left = dx ? `${dx}px` : "";
+      // Leave room for the desktop nudges (relative top/left) so the moved headline still fits
+      const dy = Math.abs(parseFloat(getComputedStyle(el).top) || 0);
+      const scale = Math.min(1, (slot.clientHeight - 2 * dy) / el.offsetHeight, (slot.clientWidth - 2 * Math.abs(dx)) / el.offsetWidth);
       el.style.transform = scale < 1 ? `scale(${Math.max(scale, 0.4)})` : "";
     };
     fit();
@@ -166,6 +173,7 @@ export function HeroHeadline() {
     const ro = new ResizeObserver(fit);
     ro.observe(slot);
     ro.observe(el);
+    if (search) ro.observe(search);
     return () => ro.disconnect();
   }, []);
 
@@ -211,9 +219,9 @@ export function HeroHeadline() {
           .hh-lead { font-size: clamp(1.15rem, 1.8vw, 1.5rem); }
           .hh-wrap { font-size: clamp(3.5rem, min(10vw, 14svh), 8.75rem); }
         }
-        /* Desktop: nudge the headline right of centre and a little lower, toward the bottom band */
+        /* Desktop: a little lower, toward the bottom band; JS centres it over the search box */
         @media (min-width: 1024px) {
-          .hh { position: relative; left: 4vw; top: 3svh; }
+          .hh { position: relative; top: 3svh; }
         }
         @keyframes hhTrail { to { background-position: 100% 0, 0 0; } }
         @keyframes hhTides { to { background-position: 240px 0, -240px 0, 0 0; } }

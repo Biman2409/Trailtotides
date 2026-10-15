@@ -101,10 +101,10 @@ export default function HomePage() {
           {/* Bottom band: promise (5 parts) and search (7 parts) on one shared grid,
               bottom edges aligned, and the search spans to the right margin */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 lg:items-end">
-            <div className="lg:col-span-5">
+            <div className="lg:col-span-4">
               <HeroPromise />
             </div>
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-8">
               <HeroCTAWrapper>
                 <HeroCTAs />
               </HeroCTAWrapper>
