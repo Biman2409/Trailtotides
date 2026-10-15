@@ -112,7 +112,7 @@ export default function HeroCTAs() {
         {/* Browse instead — a quiet text link so the bar stays the one obvious action */}
         <Link
           href="/explore"
-          className="group shrink-0 self-start sm:self-auto inline-flex items-center gap-1.5 text-sm font-semibold text-white/80 hover:text-white transition-colors"
+          className="group shrink-0 self-center sm:self-auto inline-flex items-center gap-1.5 text-sm font-semibold text-white/80 hover:text-white transition-colors"
           style={{ textShadow: "0 1px 10px rgba(0,0,0,0.5)" }}
         >
           <span className="whitespace-nowrap underline-offset-4 decoration-white/40 group-hover:underline">Explore all</span>
