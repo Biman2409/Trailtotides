@@ -8,6 +8,7 @@ import { Wind, Mountain, Waves, Snowflake } from "@/lib/localIcons";
 import { adventures } from "@/lib/data";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import CardFooterLink from "./CardFooterLink";
+import SectionTexture from "./SectionTexture";
 
 const categories = [
     {
@@ -105,10 +106,7 @@ export default function FindYourFormat() {
       {/* Background accent glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-24 right-[8%] w-96 h-96 rounded-full opacity-[0.05] dark:opacity-[0.08] blur-[100px]" style={{ background: "#ff5100" }} />
-        <div
-          className="absolute inset-0 opacity-[0.045] dark:opacity-[0.07]"
-          style={{ backgroundImage: "radial-gradient(circle, #ff5100 1px, transparent 1px)", backgroundSize: "30px 30px" }}
-        />
+        <SectionTexture kind="tides" color="#3fc6bd" at="88% 18%" opacity={0.16} />
       </div>
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
@@ -123,7 +121,8 @@ export default function FindYourFormat() {
         </div>
 
         {/* Cards grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+        {/* Phones swipe sideways through the cards, like the rows above */}
+        <div className="flex items-start sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar -mx-5 px-5 scroll-px-5 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
           {categories.map((cat) => {
             const isOpen = openId === cat.id;
             const countByType = Object.fromEntries(
@@ -134,7 +133,7 @@ export default function FindYourFormat() {
             return (
               <div
                 key={cat.id}
-                className="rounded-2xl overflow-hidden flex flex-col"
+                className="snap-start shrink-0 w-[78vw] sm:w-auto rounded-2xl overflow-hidden flex flex-col"
                 style={{
                   background: "var(--bg-surface)",
                   border: `1px solid ${isOpen ? cat.accentBorder : "var(--border-subtle)"}`,
@@ -219,7 +218,7 @@ export default function FindYourFormat() {
                             className="text-xs font-semibold px-2.5 py-1 rounded-full"
                             style={{ background: cat.tagBg, color: cat.tagText }}
                           >
-                            {totalCount} Adventures
+                            {totalCount > 0 ? `${totalCount} Adventures` : "Coming Soon"}
                           </span>
                         )}
                         {cat.comingSoon && (
@@ -269,7 +268,23 @@ export default function FindYourFormat() {
                       ) : (
                           <>
                             <div className="flex flex-col gap-0.5">
-                                {cat.items.map(({ type }) => (
+                                {cat.items.map(({ type }) => countByType[type] === 0 ? (
+                                  // Nothing listed yet: say so rather than linking to an empty page
+                                  <div key={type} className="flex items-center justify-between px-3 py-2.5 rounded-xl">
+                                    <div className="flex items-center gap-2.5 opacity-60">
+                                      <span className="flex-shrink-0" style={{ color: "var(--text-tertiary)" }}>
+                                        {ADVENTURE_TYPE_ICONS[type]?.(13)}
+                                      </span>
+                                      <span className="text-sm font-medium" style={{ color: "var(--text-secondary)" }}>{type}</span>
+                                    </div>
+                                    <span
+                                      className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                                      style={{ border: `1px dashed ${cat.accentBorder}`, color: "var(--text-tertiary)" }}
+                                    >
+                                      Coming soon
+                                    </span>
+                                  </div>
+                                ) : (
                                   <Link
                                     key={type}
                                     href={`/explore?type=${encodeURIComponent(type)}`}

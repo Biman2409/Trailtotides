@@ -40,6 +40,8 @@ import StoryCard from "@/components/ui/custom/StoryCard";
 import FindByRegion from "@/components/ui/custom/FindByRegion";
 import AdventureRail from "@/components/ui/custom/AdventureRail";
 import PickedForYou from "@/components/ui/custom/PickedForYou";
+import MapDemo, { type MapDemoPin } from "@/components/ui/custom/MapDemo";
+import SectionTexture from "@/components/ui/custom/SectionTexture";
 import { adventures, stories } from "@/lib/data";
 import { pickEditorsMix, inSeasonNow, currentMonthIndexIST, MONTHS, MONTH_NAMES } from "@/lib/homeCuration";
 
@@ -48,6 +50,8 @@ export const revalidate = 21600;
 
 const featuredAdventures = pickEditorsMix(adventures, 6);
 const featuredStories = stories.slice(0, 3);
+// Only what the map preview draws, so the full adventure records stay off the client
+const mapPins: MapDemoPin[] = adventures.map(({ slug, name, type, lat, lng, difficulty, durationDays, state, heroImage }) => ({ slug, name, type, lat, lng, difficulty, durationDays, state, image: heroImage }));
 
 function SeasonNote({ monthsLeft, endsIn }: { monthsLeft: number; endsIn: string }) {
   const last = monthsLeft === 1;
@@ -144,6 +148,7 @@ export default function HomePage() {
         <AdventureRail
           id="in-season"
           className="t-bg-page"
+          backdrop={<SectionTexture kind="tides" color="#3fc6bd" at="90% 15%" opacity={0.12} />}
           eyebrow={<><span className="relative flex w-2 h-2"><span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-60 animate-ping" /><span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-400" /></span> In season now</>}
           title={`Best in ${MONTH_NAMES[monthIdx]}`}
           subtitle={`${season.total} adventures are in their prime window right now. Closing soonest first.`}
@@ -178,9 +183,10 @@ export default function HomePage() {
               </div>
             </FadeUp>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+            {/* Phones swipe through the picks sideways; wider screens get the feature grid */}
+            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar -mx-5 px-5 scroll-px-5 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
               {featuredAdventures.map((adventure, i) => (
-                <div key={adventure.id} className={i === 0 ? "sm:col-span-2 lg:row-span-2" : ""}>
+                <div key={adventure.id} className={`snap-start shrink-0 w-[78vw] sm:w-auto ${i === 0 ? "sm:col-span-2 lg:row-span-2" : ""}`}>
                   {/* The section is already titled Editor's Choice — no per-card badge */}
                   <AdventureCard adventure={adventure} badge={false} fill={i === 0} size={i === 0 ? "large" : "default"} />
                 </div>
@@ -226,7 +232,7 @@ export default function HomePage() {
             <div className="absolute inset-x-0 bottom-0 h-24" style={{ background: "linear-gradient(to top, var(--bg-page), transparent)" }} />
           </div>
 
-          <div className="max-w-7xl mx-auto relative z-10">
+          <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_380px] gap-10 lg:gap-16 items-center">
             <FadeUp>
               <div className="max-w-2xl">
                 <p className="text-[#5fb873] text-xs font-semibold tracking-[0.22em] mb-2 uppercase">
@@ -249,6 +255,7 @@ export default function HomePage() {
                 </Link>
               </div>
             </FadeUp>
+            <MapDemo pins={mapPins} />
           </div>
         </section>
 

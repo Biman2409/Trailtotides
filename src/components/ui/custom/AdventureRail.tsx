@@ -20,10 +20,12 @@ interface AdventureRailProps {
   action?: { href: string; label: string };
   items: RailItem[];
   className?: string;
+  /** Decorative layer behind the row (e.g. a SectionTexture) */
+  backdrop?: ReactNode;
 }
 
 /** A horizontally scrolling row of adventure cards — used for the curated home-page rows. */
-export default function AdventureRail({ id, eyebrow, title, subtitle, action, items, className = "" }: AdventureRailProps) {
+export default function AdventureRail({ id, eyebrow, title, subtitle, action, items, className = "", backdrop }: AdventureRailProps) {
   const scroller = useRef<HTMLDivElement>(null);
   const hasNotes = items.some((i) => i.note);
 
@@ -35,8 +37,9 @@ export default function AdventureRail({ id, eyebrow, title, subtitle, action, it
   if (items.length === 0) return null;
 
   return (
-    <section id={id} className={`py-14 lg:py-20 ${className}`}>
-      <div className="max-w-7xl mx-auto px-5 lg:px-8">
+    <section id={id} className={`relative overflow-hidden py-14 lg:py-20 ${className}`}>
+      {backdrop}
+      <div className="relative max-w-7xl mx-auto px-5 lg:px-8">
         <div className="flex items-end justify-between gap-4 mb-6 lg:mb-8">
           <div className="min-w-0">
             <div className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] mb-2 uppercase flex items-center gap-1.5">{eyebrow}</div>
@@ -80,7 +83,7 @@ export default function AdventureRail({ id, eyebrow, title, subtitle, action, it
       {/* Scroller: full-bleed on mobile, aligned to the content column on desktop */}
       <div
         ref={scroller}
-        className="flex gap-4 lg:gap-5 overflow-x-auto snap-x snap-mandatory no-scrollbar px-5 lg:px-[max(2rem,calc((100vw-80rem)/2+2rem))] pb-2 scroll-px-5 lg:scroll-px-[max(2rem,calc((100vw-80rem)/2+2rem))]"
+        className="relative flex gap-4 lg:gap-5 overflow-x-auto snap-x snap-mandatory no-scrollbar px-5 lg:px-[max(2rem,calc((100vw-80rem)/2+2rem))] pb-2 scroll-px-5 lg:scroll-px-[max(2rem,calc((100vw-80rem)/2+2rem))]"
       >
         {items.map(({ adventure, note }) => (
           <div key={adventure.id} className="snap-start shrink-0 w-[78vw] sm:w-[320px] lg:w-[340px]">

@@ -193,13 +193,13 @@ export default function HeroPromise() {
       {/* Reads as one line: "Find · Compare · Book adventures — matched to your body, …" */}
       {/* Shrink-wrapped to the eyebrow's width so "adventures" centres beneath it */}
       <div className="inline-flex flex-col items-center" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
-        <p ref={eyebrowRef} className="font-bold uppercase" style={{ fontSize: "clamp(9.7px, 0.84vw, 11.4px)", letterSpacing: "0.26em", color: "rgba(255,255,255,0.72)", marginRight: "-0.26em" }}>
+        <p ref={eyebrowRef} className="font-bold uppercase" style={{ fontSize: "clamp(8.5px, 0.84vw, 11.4px)", letterSpacing: "0.26em", color: "rgba(255,255,255,0.72)", marginRight: "-0.26em" }}>
           Find <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span> Compare <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span> Book
         </p>
         <p ref={scriptRef} className="hp-script">adventures</p>
       </div>
 
-      <p className="text-center lg:text-left font-medium leading-snug" style={{ fontSize: "clamp(0.85rem, 1.2vw, 0.98rem)", color: "rgba(255,255,255,0.94)", letterSpacing: "0.01em", textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
+      <p className="text-center lg:text-left font-medium leading-snug" style={{ fontSize: "clamp(0.78rem, 1.2vw, 0.98rem)", color: "rgba(255,255,255,0.94)", letterSpacing: "0.01em", textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
         {FEATURES.map((feat, i) => {
           const on = active === i;
           const props = {
@@ -279,6 +279,15 @@ export default function HeroPromise() {
         @keyframes hpBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
         @keyframes hpIcon { to { width: 20px; margin-right: 6px; opacity: 1; } }
         @keyframes hpDraw { to { stroke-dashoffset: 0; } }
+        /* Phones: a smaller chip and phrase icons so the bottom band doesn't crowd the headline */
+        @media (max-width: 639px) {
+          .hp-slot { min-height: 30px; margin-bottom: 4px; }
+          .hp-card { width: min(172px, 100%); gap: 6px; padding: 3px 5px 4px 3px; }
+          .hp-icon { width: 18px; height: 18px; }
+          .hp-title { font-size: 8px; }
+          .hp-blurb { font-size: 8.5px; }
+          .hp-picon svg { width: 12px; height: 12px; }
+        }
         @media (prefers-reduced-motion: reduce) {
           .hp-card, .hp-picon, .hp-line { animation-duration: 0.01ms !important; }
         }

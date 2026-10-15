@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import type { ACE, AceAxis } from "@/lib/ace";
 import { ACE_AXIS_COLORS } from "@/lib/ace";
 import { useTheme } from "next-themes";
@@ -62,6 +62,8 @@ function hexToRgb(hex: string) {
 
 export default function ACERadar({ ace, size = 220, showLabels = true, userAce, userColor = "#38bdf8", highlightAxis = null }: Props) {
   const { resolvedTheme } = useTheme();
+  // Unique per instance, so two radars on one page don't share gradients
+  const uid = useId().replace(/:/g, "");
   // resolvedTheme is unknown to the server — stay in a fixed default until
   // mounted so the first client render matches the server's HTML, then
   // switch to the real theme (see ThemeToggleButton for the same pattern).
@@ -105,13 +107,13 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
     >
       <defs>
         {/* Ambient glow under the chart */}
-        <radialGradient id="radarGlow" cx="50%" cy="50%" r="50%">
+        <radialGradient id={`${uid}-glow`} cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor={dominantColor} stopOpacity="0.22" />
           <stop offset="100%" stopColor={dominantColor} stopOpacity="0" />
         </radialGradient>
 
         {/* Fill gradient for user shape */}
-        <radialGradient id="userFill" cx="50%" cy="50%" r="60%">
+        <radialGradient id={`${uid}-fill`} cx="50%" cy="50%" r="60%">
           <stop offset="0%" stopColor={`rgb(${dominantRgb})`} stopOpacity="0.28" />
           <stop offset="100%" stopColor={`rgb(${dominantRgb})`} stopOpacity="0.08" />
         </radialGradient>
@@ -120,7 +122,7 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
         {AXIS_ORDER.map((key) => {
           const color = ACE_AXIS_COLORS[key];
           return (
-            <filter key={`glow-${key}`} id={`glow-${key}`} x="-100%" y="-100%" width="300%" height="300%">
+            <filter key={`glow-${key}`} id={`${uid}-glow-${key}`} x="-100%" y="-100%" width="300%" height="300%">
               <feGaussianBlur stdDeviation="2.5" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
@@ -135,7 +137,7 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
       <ellipse
         cx={cx} cy={cy}
         rx={radius * 1.5} ry={radius * 1.5}
-        fill="url(#radarGlow)"
+        fill={`url(#${uid}-glow)`}
       />
 
       {/* Grid rings — subtle polygons */}
@@ -193,7 +195,7 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
       {/* Main fill shape */}
       <path
         d={adventurePath}
-        fill="url(#userFill)"
+        fill={`url(#${uid}-fill)`}
         stroke={dominantColor}
         strokeWidth="1.5"
         strokeLinejoin="round"
@@ -224,7 +226,7 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
               cx={x.toFixed(2)} cy={y.toFixed(2)}
               r={isHighlighted ? "4.2" : "2.8"}
               fill={color}
-              filter={`url(#glow-${key})`}
+              filter={`url(#${uid}-glow-${key})`}
               style={{ transition: "r 150ms ease" }}
             />
           </g>

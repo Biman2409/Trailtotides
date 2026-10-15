@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight, Lock, RotateCcw } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { type StoredProfile } from "@/lib/matchmaker";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
-import { getACE, computeMatchScore, type ACE, type AceAxis } from "@/lib/ace";
+import { getACE, computeMatchScore, type ACE } from "@/lib/ace";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import RankBar from "@/components/ui/custom/RankBar";
+import SectionTexture from "@/components/ui/custom/SectionTexture";
+import MatchmakerStory from "@/components/ui/custom/MatchmakerStory";
 const RANKS = [
   {
     label: "Uncharted", color: "#6b7280", stars: 0, minScore: 0,
@@ -37,14 +37,6 @@ const RANKS = [
   },
 ];
 
-type Bucket = { label: string; color: string; bg: string };
-// Same thresholds and colours as the match bar on adventure cards.
-function bucketFor(score: number): Bucket {
-  if (score >= 80) return { label: "Ready", color: "#10b981", bg: "rgba(16,185,129,0.12)" };
-  if (score >= 55) return { label: "Stretch", color: "#f59e0b", bg: "rgba(245,158,11,0.12)" };
-  return { label: "Not yet", color: "#f43f5e", bg: "rgba(244,63,94,0.12)" };
-}
-
 function timeAgo(iso?: string): string | null {
   if (!iso) return null;
   const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86_400_000);
@@ -60,6 +52,7 @@ function timeAgo(iso?: string): string | null {
 function Band({ children }: { children: React.ReactNode }) {
   return (
     <section id="matchmaker" className="relative py-14 lg:py-20 px-5 lg:px-8 overflow-hidden bg-[#faf3e8] dark:bg-[#1a1410]">
+      <SectionTexture kind="trail" color="#ff5100" at="78% 50%" opacity={0.22} />
       <div className="absolute inset-x-0 top-0 h-24 pointer-events-none" style={{ background: "linear-gradient(to bottom, var(--bg-page), transparent)" }} />
       <div className="absolute inset-x-0 bottom-0 h-24 pointer-events-none" style={{ background: "linear-gradient(to top, var(--bg-page), transparent)" }} />
       <div className="max-w-7xl mx-auto relative z-10">{children}</div>
@@ -82,161 +75,33 @@ export default function MatchmakerHomepageSection() {
 // A moderately fit first-timer — lands adventures in all three buckets.
 const SAMPLE_ACE = { stamina: 3, power: 2, strength: 2, agility: 3, water: 1, altitude: 2, focus: 3, nerve: 2 };
 
+// A sample group on the trek the example profile is ready for: one friend fitter, one less so,
+// so the preview shows the group being held to its least-ready member.
+const FRIENDS: { name: string; shift: Partial<Record<keyof ACE, number>> }[] = [
+  { name: "Aarav", shift: { stamina: 1, power: 1, strength: 1, altitude: 1, nerve: 1 } },
+  { name: "Meera", shift: { stamina: -2, power: -1, strength: -1, altitude: -2, nerve: -1 } },
+];
+function sampleGroup(samples: ReturnType<typeof sampleResults>) {
+  const pick = samples.find((s) => s.score >= 80) ?? samples[0];
+  const trekAce = getACE(pick.a);
+  const members = [{ name: "You", ace: SAMPLE_ACE as ACE }, ...FRIENDS.map((f) => ({
+    name: f.name,
+    ace: Object.fromEntries(Object.entries(SAMPLE_ACE).map(([k, v]) => [k, Math.max(0, Math.min(5, v + (f.shift[k as keyof ACE] ?? 0)))])) as unknown as ACE,
+  }))];
+  return { trek: { name: pick.a.name, ace: trekAce }, members: members.map((m) => ({ ...m, score: computeMatchScore(m.ace, trekAce) })) };
+}
+
 // One real trek per bucket for the sample profile, so the preview shows the full range:
 // the best "ready", the best "stretch", and the clearest "not yet".
 function sampleResults() {
-  const pool = adventures.filter((a) => !/nepal|bhutan/i.test(a.state) && a.type === "Trekking");
+  // Skip treks without real capability data — an empty shape can't show a comparison
+  const pool = adventures.filter((a) => !/nepal|bhutan/i.test(a.state) && a.type === "Trekking"
+    && Object.values(getACE(a)).reduce((s: number, v) => s + (v as number), 0) >= 10);
   const scored = pool.map((a) => ({ a, score: computeMatchScore(SAMPLE_ACE, getACE(a)) }));
   const inRange = (min: number, max: number) => scored.filter((s) => s.score >= min && s.score < max);
   const best = (list: typeof scored) => [...list].sort((x, y) => y.score - x.score)[0];
   const worst = (list: typeof scored) => [...list].sort((x, y) => x.score - y.score)[0];
   return [best(inRange(80, 101)), best(inRange(55, 80)), worst(inRange(0, 55))].filter(Boolean);
-}
-
-const SLIDE_MS = 5500;
-
-// Axes where the trek asks for more than the profile has, biggest gap first
-function gapsFor(trek: ACE): string[] {
-  return (Object.keys(SAMPLE_ACE) as AceAxis[])
-    .map((k) => ({ k, gap: trek[k] - SAMPLE_ACE[k] }))
-    .filter((g) => g.gap > 0)
-    .sort((x, y) => y.gap - x.gap)
-    .slice(0, 2)
-    .map((g) => g.k[0].toUpperCase() + g.k.slice(1));
-}
-
-/* The sample card shuffles through the example profile, then each trek laid over it,
-   so visitors see both the radar they'll get and how it's compared to every adventure. */
-function SampleShuffle({ samples }: { samples: ReturnType<typeof sampleResults> }) {
-  const [slide, setSlide] = useState(0); // 0 = profile, 1..n = trek comparisons
-  const [paused, setPaused] = useState(false);
-  const [onScreen, setOnScreen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const count = samples.length + 1;
-
-  useEffect(() => {
-    const el = rootRef.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(([e]) => setOnScreen(e.isIntersecting), { threshold: 0.3 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (paused || !onScreen) return;
-    const t = setTimeout(() => setSlide((s) => (s + 1) % count), SLIDE_MS);
-    return () => clearTimeout(t);
-  }, [slide, paused, onScreen, count]);
-
-  const active = slide > 0 ? samples[slide - 1] : null;
-  const trekAce = active ? getACE(active.a) : null;
-  const b = active ? bucketFor(active.score) : null;
-  const gaps = trekAce ? gapsFor(trekAce) : [];
-
-  return (
-    <div
-      ref={rootRef}
-      className="rounded-2xl p-4 sm:p-5"
-      style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", boxShadow: "0 20px 50px rgba(var(--shadow-color), 0.18)" }}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
-    >
-      <div className="flex items-center justify-between mb-2">
-        <p className="text-[10px] font-bold tracking-[0.2em] uppercase" style={{ color: "var(--text-tertiary)" }}>Sample results</p>
-        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: "var(--bg-card-hover)", color: "var(--text-secondary)" }}>Example profile</span>
-      </div>
-
-      {/* Radar panel: the profile alone, then each trek drawn over it */}
-      <div className="rounded-xl mb-3 px-3 pt-3 pb-3 flex flex-col items-center" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
-        <div key={slide} className="mm-slide flex flex-col items-center w-full">
-          <p className="text-[12px] font-semibold text-center truncate max-w-full" style={{ color: "var(--text-primary)" }}>
-            {active ? active.a.name : "Your fitness profile"}
-          </p>
-          <p className="text-[11px] text-center mt-0.5 h-4" style={{ color: "var(--text-tertiary)" }}>
-            {active
-              ? gaps.length ? <>Asks for more <span style={{ color: b!.color }}>{gaps.join(" & ")}</span></> : "You cover everything it asks for"
-              : "8 capabilities, scored 0–5"}
-          </p>
-          <ACERadar ace={trekAce ?? SAMPLE_ACE} userAce={trekAce ? SAMPLE_ACE : undefined} userColor="#38bdf8" size={240} showLabels />
-          <div className="flex items-center gap-4 h-5">
-            {active ? (
-              <>
-                <span className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
-                  <span className="w-4 h-[2px] rounded-full bg-[#ff5100]" />Trek
-                </span>
-                <span className="flex items-center gap-1.5 text-[9px] font-semibold uppercase tracking-widest" style={{ color: "var(--text-tertiary)" }}>
-                  <svg width="16" height="2" viewBox="0 0 16 2"><line x1="0" y1="1" x2="16" y2="1" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3 2" /></svg>You
-                </span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: b!.bg, color: b!.color }}>{active.score}% · {b!.label}</span>
-              </>
-            ) : (
-              <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>Next: how it compares to each trek</span>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <ul className="space-y-2">
-        {samples.map(({ a, score }, i) => {
-          const rb = bucketFor(score);
-          const on = slide === i + 1;
-          return (
-            <li key={a.id}>
-              <button
-                type="button"
-                onClick={() => setSlide(i + 1)}
-                aria-pressed={on}
-                className="w-full text-left flex items-center gap-3 rounded-xl p-2 transition-colors"
-                style={{ background: "var(--bg-card)", border: `1px solid ${on ? rb.color : "var(--border-subtle)"}` }}
-              >
-                <span className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0">
-                  <Image src={a.heroImage} alt="" fill sizes="40px" className="photo-grade object-cover" />
-                </span>
-                <span className="flex-1 min-w-0">
-                  <span className="block text-[13px] font-semibold truncate" style={{ color: "var(--text-primary)" }}>{a.name}</span>
-                  <span className="mt-1.5 flex items-center gap-2">
-                    <span className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: "var(--border-subtle)" }}>
-                      <span className="block h-full rounded-full" style={{ width: `${score}%`, background: rb.color }} />
-                    </span>
-                    <span className="text-[11px] font-bold tabular-nums" style={{ color: rb.color }}>{score}%</span>
-                  </span>
-                </span>
-                <span className="text-[10px] font-bold px-2 py-1 rounded-full shrink-0" style={{ background: rb.bg, color: rb.color }}>{rb.label}</span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-
-      <div className="flex items-center justify-between mt-4 gap-3">
-        <p className="text-[11px] leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
-          Your own results rate all {adventures.length} adventures the same way.
-        </p>
-        <div className="flex items-center gap-1.5 shrink-0" role="tablist" aria-label="Sample views">
-          {Array.from({ length: count }, (_, i) => (
-            <button
-              key={i}
-              type="button"
-              role="tab"
-              aria-selected={slide === i}
-              aria-label={i === 0 ? "Profile" : samples[i - 1].a.name}
-              onClick={() => setSlide(i)}
-              className="h-1.5 rounded-full transition-all"
-              style={{ width: slide === i ? 16 : 6, background: slide === i ? "#ff5100" : "var(--border-default)" }}
-            />
-          ))}
-        </div>
-      </div>
-
-      <style>{`
-        .mm-slide { animation: mmSlide 0.5s cubic-bezier(0.22,1,0.36,1) both; }
-        @keyframes mmSlide { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-        @media (prefers-reduced-motion: reduce) { .mm-slide { animation: none; } }
-      `}</style>
-    </div>
-  );
 }
 
 const STEPS = [
@@ -296,7 +161,11 @@ function DefaultCTA() {
         </div>
 
         {/* Right: what the result looks like */}
-        <SampleShuffle samples={samples} />
+        <MatchmakerStory
+          you={SAMPLE_ACE}
+          samples={samples.map(({ a, score }) => ({ id: a.id, name: a.name, image: a.heroImage, ace: getACE(a), score }))}
+          group={sampleGroup(samples)}
+        />
       </div>
     </Band>
   );

@@ -163,19 +163,19 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group lg:justify-self-start">
-            <div className="w-9 h-9 rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-md shadow-[#ff5100]/30">
-              <MountainSnow className="w-[18px] h-[18px] text-white" strokeWidth={2.5} />
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-md sm:rounded-lg bg-[#ff5100] flex items-center justify-center group-hover:bg-[#ff7d47] transition-all duration-300 shadow-md shadow-[#ff5100]/30">
+              <MountainSnow className="w-[14px] h-[14px] sm:w-[18px] sm:h-[18px] text-white" strokeWidth={2.5} />
             </div>
             {/* Wordmark and tagline are sized so both lines run the same width */}
             <span className="flex flex-col">
-              <span className="text-[19px] leading-none tracking-tight" style={{ color: isTransparent ? "#fff" : "var(--text-primary)" }}>
+              <span className="text-[15px] sm:text-[19px] leading-none tracking-tight" style={{ color: isTransparent ? "#fff" : "var(--text-primary)" }}>
                 <span className="font-black uppercase">TRAIL</span>
-                <span style={{ fontFamily: "var(--font-script), cursive", fontWeight: 600, color: isTransparent ? "rgba(255,255,255,0.72)" : "var(--text-secondary)" }} className="text-[17px] normal-case tracking-normal mx-[3px]">to</span>
+                <span style={{ fontFamily: "var(--font-script), cursive", fontWeight: 600, color: isTransparent ? "rgba(255,255,255,0.72)" : "var(--text-secondary)" }} className="text-[13px] sm:text-[17px] normal-case tracking-normal mx-[2px] sm:mx-[3px]">to</span>
                 <span className="font-black uppercase">TIDES</span>
               </span>
               {/* Tagline tucked under the wordmark — small handwritten aside */}
               <span
-                className="text-[11px] leading-none mt-1 whitespace-nowrap"
+                className="text-[9px] sm:text-[11px] leading-none mt-[3px] sm:mt-1 whitespace-nowrap"
                 style={{ fontFamily: "var(--font-script), cursive", fontWeight: 600, color: isTransparent ? "rgba(255,255,255,0.72)" : "var(--text-secondary)" }}
               >
                 India&apos;s first adventure platform

@@ -127,7 +127,7 @@ export default function HeroCTAs() {
           <div
             className="flex items-center gap-2.5 rounded-[17px] pl-3.5 pr-1.5 py-1.5 bg-[rgba(14,12,12,0.86)] sm:bg-[rgba(14,12,12,0.72)] sm:backdrop-blur-[18px] [@media(prefers-reduced-transparency:reduce)]:!bg-[rgb(14,12,12)] [@media(prefers-reduced-transparency:reduce)]:!backdrop-blur-none"
           >
-            <Sparkles className="w-4 h-4 shrink-0" style={{ color: "#ff8a5c" }} strokeWidth={2} />
+            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" style={{ color: "#ff8a5c" }} strokeWidth={2} />
             <input
               ref={inputRef}
               id="hero-compass-input"
@@ -146,7 +146,7 @@ export default function HeroCTAs() {
               aria-label="Describe the adventure you want — Compass.AI will suggest some"
               aria-describedby="hero-compass-hint"
               enterKeyHint="send"
-              className="flex-1 min-w-0 bg-transparent text-[14px] sm:text-[15px] py-1.5 truncate placeholder:text-white/75 focus:placeholder:text-transparent"
+              className="flex-1 min-w-0 bg-transparent text-[13px] sm:text-[15px] py-1 sm:py-1.5 truncate placeholder:text-white/75 focus:placeholder:text-transparent"
               // Focus is shown by the bar's gradient ring, not the global input outline
               style={{ color: "#fff", caretColor: "#ff5100", outline: "none" }}
             />
@@ -157,7 +157,7 @@ export default function HeroCTAs() {
               type="submit"
               disabled={sending}
               aria-disabled={empty || sending}
-              className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition duration-200 ${empty && !sending ? "opacity-50" : "hover:scale-105 active:scale-95"}`}
+              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shrink-0 transition duration-200 ${empty && !sending ? "opacity-50" : "hover:scale-105 active:scale-95"}`}
               style={{ background: COMPASS_GRADIENT, boxShadow: empty && !sending ? "none" : "0 4px 16px rgba(255,81,0,0.4)" }}
               aria-label={sending ? "Opening Compass.AI" : "Ask Compass.AI"}
             >
@@ -175,7 +175,7 @@ export default function HeroCTAs() {
         <Link
           href="/explore"
           onClick={() => track("hero_explore_click")}
-          className="group shrink-0 self-center sm:self-auto inline-flex items-center gap-1.5 text-sm font-semibold text-white/80 hover:text-white transition-colors"
+          className="group shrink-0 self-center sm:self-auto inline-flex items-center gap-1.5 text-[13px] sm:text-sm font-semibold text-white/80 hover:text-white transition-colors"
           style={{ textShadow: "0 1px 10px rgba(0,0,0,0.5)" }}
         >
           <span className="whitespace-nowrap underline-offset-4 decoration-white/40 group-hover:underline">Explore all</span>

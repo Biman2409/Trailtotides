@@ -7,6 +7,7 @@ import Image from "next/image";
 import { regions, adventures } from "@/lib/data";
 import type { AdventureType } from "@/lib/data";
 import CardFooterLink from "./CardFooterLink";
+import SectionTexture from "./SectionTexture";
 
 const LAND_TYPES: AdventureType[] = ["Trekking", "Mountaineering", "Rock Climbing", "Scrambling", "Motorcycling", "Cycling", "Jeep Safari", "Caving", "Urban Adventure"];
 
@@ -72,10 +73,7 @@ export default function FindByRegion() {
       {/* Background accent glow — pine green, complementing the orange genre section above */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -bottom-24 left-[6%] w-96 h-96 rounded-full opacity-[0.06] dark:opacity-[0.09] blur-[100px]" style={{ background: "var(--accent-green)" }} />
-        <div
-          className="absolute inset-0 opacity-[0.045] dark:opacity-[0.07]"
-          style={{ backgroundImage: "radial-gradient(circle, var(--accent-green) 1px, transparent 1px)", backgroundSize: "30px 30px" }}
-        />
+        <SectionTexture kind="trail" color="var(--accent-green)" at="12% 85%" opacity={0.3} />
       </div>
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
@@ -90,14 +88,15 @@ export default function FindByRegion() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+        {/* Phones swipe sideways through the cards, like the rows above */}
+        <div className="flex items-start sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar -mx-5 px-5 scroll-px-5 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
           {regionData.map((region) => {
             const isOpen = openId === region.id;
             
             return (
                 <div
                   key={region.id}
-                  className="rounded-2xl overflow-hidden flex flex-col"
+                  className="snap-start shrink-0 w-[78vw] sm:w-auto rounded-2xl overflow-hidden flex flex-col"
                     style={{
                       background: "var(--bg-surface)",
                         border: `1px solid ${isOpen ? "rgba(255,81,0,0.35)" : "var(--border-subtle)"}`,
