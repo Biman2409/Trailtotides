@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { Sparkles, ArrowUp, ArrowRight } from "lucide-react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { Sparkles, ArrowUp, ArrowRight, Loader2 } from "lucide-react";
 import { askCompass, COMPASS_GRADIENT } from "@/lib/compass";
+import { track } from "@/lib/analytics";
 
 // The hero bar talks to Compass.AI, so prompts read like how people describe a trip.
+// Both sets open with the same line so the phone swap after hydration is invisible.
 const PLACEHOLDERS = [
+  "Describe your trip…",
   "A 5-day trek with big views, not too hard…",
   "Somewhere quiet and remote this autumn…",
   "First Himalayan trek for me and two friends…",
@@ -21,37 +24,69 @@ const PLACEHOLDERS_SHORT = [
   "Something wild, one weekend…",
 ];
 const PLACEHOLDER_MS = 3400;
+const SENDING_MS = 900;
+
+const NARROW_QUERY = "(max-width: 639px)";
+function subscribeNarrow(cb: () => void) {
+  const mq = window.matchMedia(NARROW_QUERY);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+}
+const getNarrow = () => window.matchMedia(NARROW_QUERY).matches;
+const getNarrowServer = () => false;
 
 export default function HeroCTAs() {
   const [query, setQuery] = useState("");
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [focused, setFocused] = useState(false);
   const [hovered, setHovered] = useState(false);
-  const [narrow, setNarrow] = useState(false);
+  const [onScreen, setOnScreen] = useState(true);
+  const [tabVisible, setTabVisible] = useState(true);
+  const [sending, setSending] = useState(false);
+  const narrow = useSyncExternalStore(subscribeNarrow, getNarrow, getNarrowServer);
+  const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const focusTracked = useRef(false);
+  const sendingTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const prompts = narrow ? PLACEHOLDERS_SHORT : PLACEHOLDERS;
+  const empty = !query.trim();
 
+  // Only rotate prompts while the bar can actually be seen
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 639px)");
-    const update = () => setNarrow(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
+    const el = rootRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([entry]) => setOnScreen(entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   useEffect(() => {
-    if (focused || query) return;
+    const update = () => setTabVisible(document.visibilityState === "visible");
+    update();
+    document.addEventListener("visibilitychange", update);
+    return () => document.removeEventListener("visibilitychange", update);
+  }, []);
+
+  useEffect(() => {
+    if (focused || query || !onScreen || !tabVisible) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = setInterval(() => setPlaceholderIdx((i) => i + 1), PLACEHOLDER_MS);
     return () => clearInterval(id);
-  }, [focused, query]);
+  }, [focused, query, onScreen, tabVisible]);
+
+  useEffect(() => () => clearTimeout(sendingTimer.current), []);
 
   function ask(text: string) {
     const t = text.trim();
     if (!t) { inputRef.current?.focus(); return; }
+    track("hero_compass_submit", { length: t.length, narrow });
     askCompass(t);
     setQuery("");
     inputRef.current?.blur();
+    // The chat takes a moment to open, so show the send landing
+    setSending(true);
+    clearTimeout(sendingTimer.current);
+    sendingTimer.current = setTimeout(() => setSending(false), SENDING_MS);
   }
 
   // Quiet white hairline at rest; the Compass gradient lights up on hover and focus
@@ -65,7 +100,7 @@ export default function HeroCTAs() {
   const idle = !focused && !hovered && !query;
 
   return (
-    <div className="w-full">
+    <div ref={rootRef} className="w-full">
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 w-full">
         <div className="relative isolate flex-1 sm:flex-none sm:w-[420px] min-w-0">
         {/* Soft orange glow pooled behind the bar */}
@@ -88,9 +123,9 @@ export default function HeroCTAs() {
                 : "0 12px 40px rgba(0,0,0,0.3)",
           }}
         >
+          {/* Blur over the moving hero is costly on phones: they get a denser solid fill instead */}
           <div
-            className="flex items-center gap-2.5 rounded-[17px] pl-3.5 pr-1.5 py-1.5"
-            style={{ background: "rgba(14,12,12,0.72)", backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)" }}
+            className="flex items-center gap-2.5 rounded-[17px] pl-3.5 pr-1.5 py-1.5 bg-[rgba(14,12,12,0.86)] sm:bg-[rgba(14,12,12,0.72)] sm:backdrop-blur-[18px] [@media(prefers-reduced-transparency:reduce)]:!bg-[rgb(14,12,12)] [@media(prefers-reduced-transparency:reduce)]:!backdrop-blur-none"
           >
             <Sparkles className="w-4 h-4 shrink-0" style={{ color: "#ff8a5c" }} strokeWidth={2} />
             <input
@@ -99,22 +134,38 @@ export default function HeroCTAs() {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              onFocus={() => setFocused(true)}
+              onFocus={() => {
+                setFocused(true);
+                if (!focusTracked.current) {
+                  focusTracked.current = true;
+                  track("hero_compass_focus");
+                }
+              }}
               onBlur={() => setFocused(false)}
               placeholder={prompts[placeholderIdx % prompts.length]}
               aria-label="Describe the adventure you want — Compass.AI will suggest some"
+              aria-describedby="hero-compass-hint"
               enterKeyHint="send"
-              className="flex-1 min-w-0 bg-transparent text-[14px] sm:text-[15px] py-1.5 truncate placeholder:text-white/55"
+              className="flex-1 min-w-0 bg-transparent text-[14px] sm:text-[15px] py-1.5 truncate placeholder:text-white/75 focus:placeholder:text-transparent"
               // Focus is shown by the bar's gradient ring, not the global input outline
               style={{ color: "#fff", caretColor: "#ff5100", outline: "none" }}
             />
+            <span id="hero-compass-hint" className="sr-only">
+              For example: a 5-day trek with big views, not too hard. Press Enter to ask.
+            </span>
             <button
               type="submit"
-              className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 hover:scale-105 active:scale-95"
-              style={{ background: COMPASS_GRADIENT, boxShadow: "0 4px 16px rgba(255,81,0,0.4)" }}
-              aria-label="Ask Compass.AI"
+              disabled={sending}
+              aria-disabled={empty || sending}
+              className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition duration-200 ${empty && !sending ? "opacity-50" : "hover:scale-105 active:scale-95"}`}
+              style={{ background: COMPASS_GRADIENT, boxShadow: empty && !sending ? "none" : "0 4px 16px rgba(255,81,0,0.4)" }}
+              aria-label={sending ? "Opening Compass.AI" : "Ask Compass.AI"}
             >
-              <ArrowUp className="w-4 h-4 text-white" strokeWidth={2.5} />
+              {sending ? (
+                <Loader2 className="w-4 h-4 text-white animate-spin" strokeWidth={2.5} />
+              ) : (
+                <ArrowUp className="w-4 h-4 text-white" strokeWidth={2.5} />
+              )}
             </button>
           </div>
         </form>
@@ -123,6 +174,7 @@ export default function HeroCTAs() {
         {/* Browse instead — a quiet text link so the bar stays the one obvious action */}
         <Link
           href="/explore"
+          onClick={() => track("hero_explore_click")}
           className="group shrink-0 self-center sm:self-auto inline-flex items-center gap-1.5 text-sm font-semibold text-white/80 hover:text-white transition-colors"
           style={{ textShadow: "0 1px 10px rgba(0,0,0,0.5)" }}
         >
