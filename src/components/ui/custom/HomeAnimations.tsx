@@ -155,7 +155,10 @@ export function HeroHeadline() {
     const el = ref.current, slot = el?.parentElement;
     if (!el || !slot) return;
     const fit = () => {
-      const scale = Math.min(1, slot.clientHeight / el.offsetHeight, slot.clientWidth / el.offsetWidth);
+      // Leave room for the desktop nudge (relative top/left) so the moved headline still fits
+      const cs = getComputedStyle(el);
+      const dy = Math.abs(parseFloat(cs.top) || 0), dx = Math.abs(parseFloat(cs.left) || 0);
+      const scale = Math.min(1, (slot.clientHeight - 2 * dy) / el.offsetHeight, (slot.clientWidth - 2 * dx) / el.offsetWidth);
       el.style.transform = scale < 1 ? `scale(${Math.max(scale, 0.4)})` : "";
     };
     fit();
@@ -191,7 +194,7 @@ export function HeroHeadline() {
                    text-shadow: 0 1px 12px rgba(0,0,0,0.5); }
         .hh-lead strong { font-weight: 700; color: #fff; }
         /* Sized by the shorter of width and height, so short screens don't push the search off */
-        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(18vw, 10svh); line-height: 0.86;
+        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(20vw, 11svh); line-height: 0.86;
                    letter-spacing: -0.025em; }
         /* Shadow lives on a static copy behind the word, so it's painted once
            rather than re-filtered on every animation frame */
@@ -206,7 +209,11 @@ export function HeroHeadline() {
           .hh-row { gap: clamp(0.45rem, 0.8vw, 0.75rem); }
           .hh-row2 { margin: clamp(0.75rem, min(2.2vw, 2.5svh), 2rem) 0 0 clamp(6rem, 14vw, 11rem); }
           .hh-lead { font-size: clamp(1.15rem, 1.8vw, 1.5rem); }
-          .hh-wrap { font-size: clamp(3.25rem, min(9vw, 12.5svh), 7.75rem); }
+          .hh-wrap { font-size: clamp(3.5rem, min(10vw, 14svh), 8.75rem); }
+        }
+        /* Desktop: nudge the headline right of centre and a little lower, toward the bottom band */
+        @media (min-width: 1024px) {
+          .hh { position: relative; left: 4vw; top: 3svh; }
         }
         @keyframes hhTrail { to { background-position: 100% 0, 0 0; } }
         @keyframes hhTides { to { background-position: 240px 0, -240px 0, 0 0; } }

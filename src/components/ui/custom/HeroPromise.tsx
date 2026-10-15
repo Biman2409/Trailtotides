@@ -198,7 +198,7 @@ export default function HeroPromise() {
         <p ref={scriptRef} className="hp-script">adventures</p>
       </div>
 
-      <p className="text-center lg:text-left font-medium leading-snug" style={{ fontSize: "clamp(0.92rem, 1.35vw, 1.08rem)", color: "rgba(255,255,255,0.94)", letterSpacing: "0.01em", textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
+      <p className="text-center lg:text-left font-medium leading-snug" style={{ fontSize: "clamp(0.85rem, 1.2vw, 0.98rem)", color: "rgba(255,255,255,0.94)", letterSpacing: "0.01em", textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
         {FEATURES.map((feat, i) => {
           const on = active === i;
           const props = {
