@@ -165,13 +165,14 @@ export function HeroHeadline() {
       <style>{`
         .hh { margin: 0; display: flex; flex-direction: column; text-transform: uppercase;
               font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif; letter-spacing: 0; }
-        .hh-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+        .hh-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.35rem; }
         .hh-row2 { margin: clamp(0.75rem, 2svh, 1.25rem) 0 0 12vw; }
-        .hh-lead { font-weight: 500; font-size: 0.78rem; line-height: 1; letter-spacing: 0.3em;
+        .hh-lead { font-weight: 500; font-size: 0.85rem; line-height: 1; letter-spacing: 0.32em;
                    color: rgba(255,255,255,0.7); white-space: nowrap; text-shadow: 0 1px 12px rgba(0,0,0,0.5); }
         .hh-lead strong { font-weight: 800; color: #fff; }
         /* Sized by the shorter of width and height, so short screens don't push the search off */
-        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(19vw, 11svh); line-height: 0.9; }
+        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(23vw, 12.5svh); line-height: 0.86;
+                   letter-spacing: -0.025em; }
         /* Shadow lives on a static copy behind the word, so it's painted once
            rather than re-filtered on every animation frame */
         .hh-wrap::before { content: attr(data-text); position: absolute; left: 0; top: 0; padding-right: 0.04em;
@@ -182,10 +183,10 @@ export function HeroHeadline() {
         .hh-tides { animation: hhTides 9s linear infinite; }
         .hh[data-paused] .hh-word { animation-play-state: paused; }
         @media (min-width: 768px) {
-          .hh-row { gap: clamp(0.6rem, 1vw, 0.9rem); }
+          .hh-row { gap: clamp(0.45rem, 0.8vw, 0.75rem); }
           .hh-row2 { margin: clamp(0.75rem, min(2.2vw, 2.5svh), 2rem) 0 0 clamp(6rem, 14vw, 11rem); }
-          .hh-lead { font-size: clamp(0.8rem, 1.5vw, 1.15rem); }
-          .hh-wrap { font-size: clamp(3.5rem, min(10vw, 13svh), 8.4rem); }
+          .hh-lead { font-size: clamp(0.85rem, 1.5vw, 1.25rem); }
+          .hh-wrap { font-size: clamp(4rem, min(12vw, 17svh), 10.5rem); }
         }
         @keyframes hhTrail { to { background-position: 100% 0, 0 0; } }
         @keyframes hhTides { to { background-position: 240px 0, -240px 0, 0 0; } }
