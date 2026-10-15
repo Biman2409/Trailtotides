@@ -8,62 +8,62 @@ import { adventures } from "@/lib/data";
 import ACERadar from "@/components/ui/custom/ACERadar";
 
 export const metadata = {
-  title: "ACE™ Rating System",
-  description: "The Adventure Capability Engine rates every adventure on 8 biological axes — so you know exactly what your body needs.",
+  title: "How ACE rates adventures",
+  description: "ACE scores every adventure on 8 things it asks of you, from stamina to nerve, so you can see what you're ready for before you book.",
   openGraph: {
-    title: "ACE™ Rating System — Trail to Tides",
-    description: "8-axis biological difficulty rating for every adventure.",
+    title: "How ACE rates adventures — Trail to Tides",
+    description: "Every adventure scored on 8 things it asks of you, so you can see what fits.",
     url: "https://trailtotides.com/ace",
-    images: [{ url: "https://images.unsplash.com/photo-1526139334526-f591a54b477c?w=1200&q=90", width: 1200, height: 630, alt: "ACE™ Rating System" }],
+    images: [{ url: "https://images.unsplash.com/photo-1526139334526-f591a54b477c?w=1200&q=90", width: 1200, height: 630, alt: "How ACE rates adventures" }],
   },
   alternates: { canonical: "https://trailtotides.com/ace" },
 };
 
 const AXES = [
-  { key: "stamina",  icon: <Flame    className="w-3.5 h-3.5" />, color: "#f97316", label: "Stamina",  desc: "Not one hard moment — a week of them. Moving 8+ hours daily under load with no recovery day." },
-  { key: "power",    icon: <Zap      className="w-3.5 h-3.5" />, color: "#eab308", label: "Power",    desc: "Maximum output for minutes, not hours. A steep crux, a rapid, a technical summit push. Pace won't save you." },
-  { key: "strength", icon: <Dumbbell className="w-3.5 h-3.5" />, color: "#84cc16", label: "Strength", desc: "15kg pack, broken terrain, six hours. Legs, back, and joints — not a gym test, a distance test." },
-  { key: "agility",  icon: <Compass  className="w-3.5 h-3.5" />, color: "#22d3ee", label: "Agility",  desc: "Scree, iced rock, narrow ridges. Precise movement on ground that shifts — where hesitation costs." },
-  { key: "water",    icon: <Waves    className="w-3.5 h-3.5" />, color: "#3b82f6", label: "Water",    desc: "Comfort when the current has force. Rapids, open crossings, river fords. Zero means no water element." },
-  { key: "altitude", icon: <Mountain className="w-3.5 h-3.5" />, color: "#a78bfa", label: "Altitude", desc: "Above 3,500m, fitness stops mattering as much as acclimatisation. Above 5,000m, it becomes medical." },
-  { key: "focus",    icon: <ScanEye  className="w-3.5 h-3.5" />, color: "#f43f5e", label: "Focus",    desc: "Exposed drops, fixed ropes, vertical terrain. Your brain wants to freeze. Focus is choosing not to let it." },
-  { key: "nerve",    icon: <Ghost    className="w-3.5 h-3.5" />, color: "#10b981", label: "Nerve",    desc: "No road, no signal, no rescue. How clearly do you think and act when the stakes are yours alone?" },
+  { key: "stamina",  icon: <Flame    className="w-3.5 h-3.5" />, color: "#f97316", label: "Stamina",  desc: "Keeping going day after day: 6–8 hours on your feet, often with no rest day." },
+  { key: "power",    icon: <Zap      className="w-3.5 h-3.5" />, color: "#eab308", label: "Power",    desc: "Short, all-out efforts: a steep climb, a rapid, a summit push." },
+  { key: "strength", icon: <Dumbbell className="w-3.5 h-3.5" />, color: "#84cc16", label: "Strength", desc: "Carrying a loaded pack over rough ground for hours. Legs, back and joints." },
+  { key: "agility",  icon: <Compass  className="w-3.5 h-3.5" />, color: "#22d3ee", label: "Agility",  desc: "Moving surely on loose rock, ice and narrow ridges." },
+  { key: "water",    icon: <Waves    className="w-3.5 h-3.5" />, color: "#3b82f6", label: "Water",    desc: "Being at ease in moving water: rapids, river crossings, open water." },
+  { key: "altitude", icon: <Mountain className="w-3.5 h-3.5" />, color: "#a78bfa", label: "Altitude", desc: "Coping with thin air. Above 3,500m, acclimatising matters more than fitness." },
+  { key: "focus",    icon: <ScanEye  className="w-3.5 h-3.5" />, color: "#f43f5e", label: "Focus",    desc: "Staying calm and careful near big drops, on fixed ropes or steep ground." },
+  { key: "nerve",    icon: <Ghost    className="w-3.5 h-3.5" />, color: "#10b981", label: "Nerve",    desc: "Staying clear-headed far from help: no road, no signal, rescue hours away." },
 ];
 
 const DOMAINS = [
-  { name: "Engine",   icon: <Activity className="w-3.5 h-3.5" />, color: "#f97316", axes: ["Stamina", "Power"],    desc: "How hard and how long your body can work" },
-  { name: "Chassis",  icon: <Layers   className="w-3.5 h-3.5" />, color: "#22d3ee", axes: ["Strength", "Agility"], desc: "Structural capacity under load and on terrain" },
-  { name: "Elements", icon: <Globe    className="w-3.5 h-3.5" />, color: "#a78bfa", axes: ["Water", "Altitude"],   desc: "Environmental demands beyond standard fitness" },
-  { name: "Mind",     icon: <Brain    className="w-3.5 h-3.5" />, color: "#10b981", axes: ["Focus", "Nerve"],      desc: "Composure under exposure and in true isolation" },
+  { name: "Engine",   icon: <Activity className="w-3.5 h-3.5" />, color: "#f97316", axes: ["Stamina", "Power"],    desc: "How hard and how long you can go" },
+  { name: "Chassis",  icon: <Layers   className="w-3.5 h-3.5" />, color: "#22d3ee", axes: ["Strength", "Agility"], desc: "Carrying weight and moving over rough ground" },
+  { name: "Elements", icon: <Globe    className="w-3.5 h-3.5" />, color: "#a78bfa", axes: ["Water", "Altitude"],   desc: "Water and thin air" },
+  { name: "Mind",     icon: <Brain    className="w-3.5 h-3.5" />, color: "#10b981", axes: ["Focus", "Nerve"],      desc: "Staying calm when it counts" },
 ];
 
 const SCALE = [
-  { level: 1, label: "Very Low",  sub: "Minimal demand",       color: "#22c55e" },
-  { level: 2, label: "Low",       sub: "Light conditioning",   color: "#84cc16" },
+  { level: 1, label: "Very Low",  sub: "Anyone active",          color: "#22c55e" },
+  { level: 2, label: "Low",       sub: "Some regular exercise",  color: "#84cc16" },
   { level: 3, label: "Moderate",  sub: "Regular training",     color: "#eab308" },
-  { level: 4, label: "High",      sub: "Strong preparation",   color: "#f97316" },
-  { level: 5, label: "Extreme",   sub: "Elite level required", color: "#ef4444" },
+  { level: 4, label: "High",      sub: "Serious preparation",    color: "#f97316" },
+  { level: 5, label: "Extreme",   sub: "Elite fitness",          color: "#ef4444" },
 ];
 
 const RANKS = [
   {
-    label: "Pathfinder", color: "#22d3ee", stars: 1, range: "8–15", desc: "Day hikes, accessible multi-day routes, introductory terrain.",
+    label: "Pathfinder", color: "#22d3ee", stars: 1, range: "8–15", desc: "Day hikes and easy multi-day trails.",
     icon: <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6"><circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1"/><path d="M12 16.5V8.5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/><path d="M8.5 12L12 8.5L15.5 12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   },
   {
-    label: "Navigator", color: "#4ade80", stars: 2, range: "16–23", desc: "Multi-day expeditions, moderate demands across all axes.",
+    label: "Navigator", color: "#4ade80", stars: 2, range: "16–23", desc: "Multi-day treks with moderate demands.",
     icon: <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6"><circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.1"/><circle cx="12" cy="12" r="2" fill="currentColor"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/><path d="M12 4l2.5 7.5L12 10l-2.5 1.5L12 4z" fill="currentColor"/></svg>,
   },
   {
-    label: "Trailblazer", color: "#f59e0b", stars: 3, range: "24–31", desc: "Technical routes, high altitude, and serious multi-week trips.",
+    label: "Trailblazer", color: "#f59e0b", stars: 3, range: "24–31", desc: "Technical routes, high altitude and longer trips.",
     icon: <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6"><path d="M12 2.5L20 6.5V13C20 17.8 16.5 21.3 12 22.8C7.5 21.3 4 17.8 4 13V6.5L12 2.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" fill="currentColor" fillOpacity="0.1"/><path d="M8 15.5l2-3.5 2 2.5 2-4.5 2 5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   },
   {
-    label: "Vanguard", color: "#f97316", stars: 4, range: "32–39", desc: "Expedition-level objectives, remote terrain, extreme conditions.",
+    label: "Vanguard", color: "#f97316", stars: 4, range: "32–39", desc: "Expeditions in remote, extreme conditions.",
     icon: <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6"><path d="M12 2L20 7V13.5C20 18.2 16.5 21.8 12 23.5C7.5 21.8 4 18.2 4 13.5V7L12 2Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" fill="currentColor" fillOpacity="0.1"/><path d="M12 2L14 7H20L15.5 10.5L17 16L12 12.5L7 16L8.5 10.5L4 7H10L12 2Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" fill="currentColor" fillOpacity="0.2"/></svg>,
   },
   {
-    label: "Apex", color: "#a78bfa", stars: 5, range: "40", desc: "Elite across every axis. No adventure is out of reach.",
+    label: "Apex", color: "#a78bfa", stars: 5, range: "40", desc: "Strong across the board. Nothing is out of reach.",
     icon: <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6"><polygon points="12,1.5 15.5,9.5 24,10 17.8,16 19.8,24 12,19.8 4.2,24 6.2,16 0,10 8.5,9.5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" fill="currentColor" fillOpacity="0.12"/><polygon points="12,6.5 14,11.5 19.5,12 15.3,15.8 16.7,21 12,18.2 7.3,21 8.7,15.8 4.5,12 10,11.5" fill="currentColor" fillOpacity="0.85"/></svg>,
   },
 ];
@@ -71,26 +71,26 @@ const RANKS = [
 const PROGRESSION_TREKS = [
   {
     slug: "goechala",
-    label: "Starting Point",
+    label: "Starting point",
     sublabel: "Moderate",
     diffColor: "#f59e0b",
-    desc: "Stamina and altitude do the work. Terrain is forgiving.",
+    desc: "Mostly stamina and altitude. Kind underfoot.",
     ace: { stamina: 3, power: 2, strength: 2, agility: 2, water: 0, altitude: 3, focus: 2, nerve: 1 },
   },
   {
     slug: "rupin-pass",
-    label: "Step Up",
+    label: "Step up",
     sublabel: "Hard",
     diffColor: "#f97316",
-    desc: "Agility and focus spike. Loose snow, steep descents, real exposure.",
+    desc: "Harder footing and more exposure: loose snow, steep descents.",
     ace: { stamina: 4, power: 3, strength: 3, agility: 4, water: 0, altitude: 4, focus: 3, nerve: 3 },
   },
   {
     slug: "pin-parvati-pass",
-    label: "Full Commitment",
+    label: "The big one",
     sublabel: "Advanced",
     diffColor: "#ef4444",
-    desc: "17,457ft. Glaciers, remote crossings, no rescue. The radar fills.",
+    desc: "17,457ft, glaciers and remote crossings. Demanding on almost everything.",
     ace: { stamina: 5, power: 4, strength: 4, agility: 4, water: 2, altitude: 5, focus: 4, nerve: 5 },
   },
 ];
@@ -112,13 +112,13 @@ export default function ACEPage() {
             <div className="flex-1 min-w-0">
               <div className="inline-flex items-center gap-2 mb-4 px-2.5 py-1 rounded border" style={{ background: "rgba(255,81,0,0.06)", borderColor: "rgba(255,81,0,0.22)" }}>
                 <span className="w-1.5 h-1.5 rounded-full bg-[#ff5100] animate-pulse" />
-                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">ACE<sup>™</sup> FRAMEWORK · v2.0</span>
+                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">ACE<sup>™</sup> · How we rate adventures</span>
               </div>
               <h1 className="text-3xl lg:text-[2.6rem] font-black tracking-tight leading-[1.06] mb-3" style={{ color: "var(--text-primary)" }}>
-                Adventure Capability Engine<sup className="text-[#ff5100] text-base font-black ml-0.5 align-super" style={{ fontSize: "0.45em" }}>™</sup>
+                Know what an adventure asks of you
               </h1>
               <p className="text-sm leading-relaxed mb-5 max-w-lg" style={{ color: "var(--text-tertiary)" }}>
-                Easy, Moderate, Hard tells you nothing. ACE<sup>™</sup> is Trail to Tides&apos; proprietary system that rates every adventure across <span className="font-semibold" style={{ color: "var(--text-secondary)" }}>8 physical and psychological axes</span>. Answer 8 questions once — every adventure is matched to your real capability.
+                &ldquo;Easy&rdquo; and &ldquo;Hard&rdquo; don&apos;t tell you much. ACE<sup>™</sup>, our Adventure Capability Engine, scores every adventure on <span className="font-semibold" style={{ color: "var(--text-secondary)" }}>8 things it asks of your body and mind</span>, so you can see what fits you before you book. Answer a few questions once and every adventure is matched to you.
               </p>
               <div className="space-y-1.5">
                 <div className="flex flex-wrap gap-1.5">
@@ -151,11 +151,11 @@ export default function ACEPage() {
       <section className="py-8 px-5 lg:px-8" style={{ borderTop: "1px solid var(--border-subtle)", background: "var(--bg-surface)" }}>
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-1.5">
-            <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">The 8 Axes</span>
+            <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">What we measure</span>
             <div className="flex-1 h-px" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
-            <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>4 domains · 2 axes each</span>
+            <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>8 scores in 4 groups</span>
           </div>
-          <p className="text-xs mb-5 leading-relaxed max-w-2xl" style={{ color: "var(--text-tertiary)" }}>Grouped into 4 domains — Engine, Chassis, Elements, Mind. An adventure can be physically light but psychologically brutal, or demand elite altitude tolerance with barely any strength required. Every axis is scored separately so nothing is hidden behind a single number.</p>
+          <p className="text-xs mb-5 leading-relaxed max-w-2xl" style={{ color: "var(--text-tertiary)" }}>Every adventure gets its own score for each of these. A trek can be easy on your legs but hard on your nerves, and a single difficulty label would hide that.</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {DOMAINS.map(({ name, icon, color, axes, desc }) => {
@@ -195,11 +195,11 @@ export default function ACEPage() {
             {/* Scale */}
             <div className="flex flex-col">
               <div className="flex items-center gap-3 mb-1.5">
-                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">The Scale</span>
+                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">How scores work</span>
                 <div className="flex-1 h-px" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
-                <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>1–5 per axis</span>
+                <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>1 to 5</span>
               </div>
-              <p className="text-xs mb-4 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>Each axis scored independently, 1–5. A desert trek scores 0 on Water — that axis simply doesn&apos;t apply.</p>
+              <p className="text-xs mb-4 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>Each one is scored from 1 (very light) to 5 (extreme). If a trip doesn&apos;t involve something, like water on a desert trek, it scores 0.</p>
 
               {/* Gradient bar */}
               <div className="flex rounded-lg overflow-hidden mb-3" style={{ border: "1px solid rgba(var(--fg-rgb),0.08)" }}>
@@ -227,11 +227,11 @@ export default function ACEPage() {
             {/* Ranks */}
             <div className="flex flex-col">
               <div className="flex items-center gap-3 mb-1.5">
-                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">Adventure Rank</span>
+                <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">Your rank</span>
                 <div className="flex-1 h-px" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
-                <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>Σ axes = tier</span>
+                <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>Your 8 scores added up</span>
               </div>
-              <p className="text-xs mb-4 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>Sum all 8 axes and you get your rank. Max is 40. Higher rank — harder terrain, more remote, more technical.</p>
+              <p className="text-xs mb-4 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>Add up your 8 scores (40 at most) and you get your rank: a quick way to see the kind of adventures you&apos;re ready for.</p>
 
               <div className="flex-1 flex flex-col justify-between gap-2">
                 {RANKS.map(({ label, color, stars, range, desc, icon }) => (
@@ -271,27 +271,27 @@ export default function ACEPage() {
             <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">How It Works</span>
             <div className="flex-1 h-px" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
           </div>
-          <p className="text-xs mb-5 leading-relaxed max-w-xl" style={{ color: "var(--text-tertiary)" }}>Both adventures and adventurers get a profile. The system compares them axis-by-axis — not with a blunt difficulty number — so every match is honest.</p>
+          <p className="text-xs mb-5 leading-relaxed max-w-xl" style={{ color: "var(--text-tertiary)" }}>We score the adventure, we score you, then compare the two one score at a time.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
             {[
               {
                 step: "01",
                 color: "#ff5100",
-                title: "Adventures are rated",
-                body: "Every adventure on Trail to Tides has an ACE™ profile — 8 axes scored honestly by our team based on actual route data, altitude profiles, and expedition reports. No vague 'Difficult' labels.",
+                title: "We rate every adventure",
+                body: "Our team scores each adventure on all 8, using real route data: altitude, terrain and trip reports.",
               },
               {
                 step: "02",
                 color: "#f59e0b",
-                title: "You take the assessment",
-                body: "8 structured questions build your capability profile. Answers translate directly to axis scores using physical benchmarks — your real fitness, not how fit you think you are.",
+                title: "You answer a few questions",
+                body: "The quick match takes a minute, the full assessment about three. Your answers become your own 8 scores, based on what you can actually do.",
               },
               {
                 step: "03",
                 color: "#4ade80",
-                title: "Matches surfaced",
-                body: "Adventures sort into Ready Now, Stretch, and Out of Range — axis by axis. You see exactly which axes you're short on and how to close the gap.",
+                title: "You see what fits",
+                body: "Every adventure is marked ready, a stretch, or not yet. Where you fall short, we show you which score to work on.",
               },
             ].map(({ step, color, title, body }) => (
               <div key={step} className="rounded-xl border p-4 flex flex-col gap-3 relative overflow-hidden"
@@ -313,11 +313,11 @@ export default function ACEPage() {
       <section className="py-8 px-5 lg:px-8" style={{ borderTop: "1px solid var(--border-subtle)" }}>
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-1.5">
-            <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">In Practice</span>
+            <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">See it in action</span>
             <div className="flex-1 h-px" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
-            <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>Same type · different radar</span>
+            <span className="text-[10px] font-mono" style={{ color: "var(--text-muted)" }}>3 treks, 3 shapes</span>
           </div>
-          <p className="text-xs mb-5 leading-relaxed max-w-xl" style={{ color: "var(--text-tertiary)" }}>Same category, wildly different bodies required. Watch the radar change shape — that&apos;s what a single difficulty label will never show you.</p>
+          <p className="text-xs mb-5 leading-relaxed max-w-xl" style={{ color: "var(--text-tertiary)" }}>All three are treks, but each asks something different of you. The shape of each chart shows how.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {PROGRESSION_TREKS.map((t, i) => {
@@ -387,17 +387,17 @@ export default function ACEPage() {
                   <span className="text-[#ff5100] text-[9px] font-black tracking-[0.28em] uppercase font-mono">Your Turn</span>
                 </div>
                 <h2 className="text-2xl lg:text-3xl font-black tracking-tight leading-tight mb-3" style={{ color: "var(--text-primary)" }}>
-                  Know your axes.<br />Pick the right adventure.
+                  Find out what you&apos;re ready for.
                 </h2>
                 <p className="text-sm leading-relaxed max-w-md" style={{ color: "var(--text-tertiary)" }}>
-                  8 questions. 2 minutes. Every axis scored — then matched against every adventure on the platform so you see exactly what you&apos;re ready for, and what to build toward.
+                  Answer a few questions and we&apos;ll rate every adventure for you: ready, a stretch, or not yet. You&apos;ll also see what to work on next.
                 </p>
 
                 {/* Mini stat chips */}
                 <div className="mt-5 flex flex-wrap gap-2">
                   {[
-                    { val: "8", lbl: "Axes assessed", color: "#f97316" },
-                    { val: "2 min", lbl: "Assessment", color: "#22d3ee" },
+                    { val: "8", lbl: "Scores", color: "#f97316" },
+                    { val: "1–3 min", lbl: "To finish", color: "#22d3ee" },
                     { val: "Instant", lbl: "Results", color: "#4ade80" },
                   ].map(({ val, lbl, color }) => (
                     <div key={lbl} className="flex items-center gap-2 px-3 py-1.5 rounded-lg border" style={{ background: `${color}08`, borderColor: `${color}20` }}>
@@ -416,7 +416,7 @@ export default function ACEPage() {
                   className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/30"
                   style={{ background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)" }}
                 >
-                  Take the Assessment
+                  Find my matches
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </div>
