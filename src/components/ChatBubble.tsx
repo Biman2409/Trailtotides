@@ -40,8 +40,19 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
   aceRef.current = ace;
 
   // Reveal the button on first scroll, or after a few seconds regardless.
+  // Pages whose hero already has a Compass bar mark it [data-hide-compass]; there the button
+  // stays hidden until the hero is mostly scrolled away, so two Compass entry points never sit together.
   useEffect(() => {
     if (alwaysVisible) { setVisible(true); return; }
+    const hero = document.querySelector("[data-hide-compass]");
+    if (hero) {
+      const observer = new IntersectionObserver(
+        ([entry]) => setVisible(entry.intersectionRatio < 0.35),
+        { threshold: [0, 0.35, 1] },
+      );
+      observer.observe(hero);
+      return () => observer.disconnect();
+    }
     const timer = setTimeout(() => setVisible(true), 3000);
     const onScroll = () => setVisible(true);
     window.addEventListener("scroll", onScroll, { once: true, passive: true });
@@ -150,7 +161,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
       <button
         onClick={() => setOpen((v) => !v)}
         className={`group fixed right-5 lg:right-8 bottom-[88px] lg:bottom-8 z-50 w-14 h-14 rounded-full transition-all duration-500 hover:scale-105 active:scale-95 ${
-          visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 pointer-events-none"
+          visible || open ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 pointer-events-none"
         }`}
         style={{ boxShadow: "0 10px 32px -6px rgba(255,81,0,0.35), 0 4px 14px rgba(0,0,0,0.25)" }}
         aria-label={open ? "Close Compass.AI" : "Ask Compass.AI"}

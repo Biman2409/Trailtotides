@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, ReactNode, type CSSProperties } from "react";
+import { useEffect, useRef, ReactNode } from "react";
+import { TRAIL_FILL, TRAIL_SIZE, TIDES_FILL, TIDES_SIZE } from "./heroTextures";
 
 /* ── Scroll-triggered fade/slide-up ── */
 export function FadeUp({
@@ -128,101 +129,68 @@ export function ShimmerLine({ className = "" }: { className?: string }) {
   );
 }
 
-/* Accent words in the hero headline: hand-painted marker in brand orange against the
-   DM Sans sans, sized down slightly because Permanent Marker's caps run large. */
-const HERO_ACCENT_STYLE: CSSProperties = {
-  fontFamily: "var(--font-marker), cursive",
-  fontStyle: "normal",
-  fontWeight: 400,
-  fontSize: "calc(0.92em + 5px)",
-  letterSpacing: "-0.01em",
-  color: "#ff7d47",
-};
-
-/* ── Hero headline reveal ── */
+/* ── Hero headline ──
+   FROM MOUNTAIN TRAIL / TO OCEAN TIDES on one left axis, TIDES stepped in under TRAIL.
+   TRAIL carries a drifting contour map, TIDES moving wave lines — mountain and ocean
+   drawn into the words themselves. Each lead-in sits directly above its word. */
 export function HeroHeadline() {
+  const ref = useRef<HTMLHeadingElement>(null);
+
+  // Repainting text-clipped backgrounds every frame isn't free — pause the drift and the
+  // waves whenever the hero is scrolled out of view.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      el.toggleAttribute("data-paused", !entry.isIntersecting);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <h1
-      className="font-extrabold tracking-tight"
-      style={{
-        fontSize: "clamp(2.3rem, 6vw, 4.8rem)",
-        lineHeight: 1.08,
-        color: "white",
-        textShadow: "0 4px 40px rgba(0,0,0,0.6)",
-        letterSpacing: "-0.02em",
-      }}
-    >
-      <span
-        style={{
-          display: "block",
-          animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.05s both",
-        }}
-      >
-        {/* Keep "Mountain Trail" together so narrow screens break after "From", not before "Trail" */}
-        From <span className="whitespace-nowrap">Mountain <em style={HERO_ACCENT_STYLE}>Trail</em></span>
+    <h1 ref={ref} className="hh">
+      <span className="hh-row" style={{ animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.05s both" }}>
+        <span className="hh-lead">From <strong>Mountain</strong></span>
+        <span className="hh-wrap" data-text="Trail">
+          <span className="hh-word hh-trail" style={{ backgroundImage: TRAIL_FILL, backgroundSize: TRAIL_SIZE }}>Trail</span>
+        </span>
       </span>
-      <span
-        style={{
-          display: "block",
-          animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.12s both",
-        }}
-      >
-        To <span className="whitespace-nowrap">Ocean <em style={HERO_ACCENT_STYLE}>Tides</em></span>
+      <span className="hh-row hh-row2" style={{ animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.12s both" }}>
+        <span className="hh-lead">To <strong>Ocean</strong></span>
+        <span className="hh-wrap" data-text="Tides">
+          <span className="hh-word hh-tides" style={{ backgroundImage: TIDES_FILL, backgroundSize: TIDES_SIZE }}>Tides</span>
+        </span>
       </span>
       <style>{`
-        @keyframes heroLineIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to   { opacity: 1; transform: translateY(0); }
+        .hh { margin: 0; display: flex; flex-direction: column; text-transform: uppercase;
+              font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif; letter-spacing: 0; }
+        .hh-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+        .hh-row2 { margin: 1.25rem 0 0 12vw; }
+        .hh-lead { font-weight: 500; font-size: 0.78rem; line-height: 1; letter-spacing: 0.3em;
+                   color: rgba(255,255,255,0.7); white-space: nowrap; text-shadow: 0 1px 12px rgba(0,0,0,0.5); }
+        .hh-lead strong { font-weight: 800; color: #fff; }
+        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: 19vw; line-height: 0.9; }
+        /* Shadow lives on a static copy behind the word, so it's painted once
+           rather than re-filtered on every animation frame */
+        .hh-wrap::before { content: attr(data-text); position: absolute; left: 0; top: 0; padding-right: 0.04em;
+                           color: transparent; text-shadow: 0 0.6rem 1.6rem rgba(0,0,0,0.32); pointer-events: none; }
+        .hh-word { position: relative; display: block; padding-right: 0.04em;
+                   color: transparent; -webkit-background-clip: text; background-clip: text; }
+        .hh-trail { animation: hhTrail 16s ease-in-out infinite alternate; }
+        .hh-tides { animation: hhTides 9s linear infinite; }
+        .hh[data-paused] .hh-word { animation-play-state: paused; }
+        @media (min-width: 768px) {
+          .hh-row { gap: clamp(0.6rem, 1vw, 0.9rem); }
+          .hh-row2 { margin: clamp(1.25rem, 2.2vw, 2rem) 0 0 clamp(6rem, 14vw, 11rem); }
+          .hh-lead { font-size: clamp(0.8rem, 1.5vw, 1.15rem); }
+          .hh-wrap { font-size: clamp(5rem, 10vw, 8.4rem); }
         }
+        @keyframes hhTrail { to { background-position: 100% 0, 0 0; } }
+        @keyframes hhTides { to { background-position: 240px 0, -240px 0, 0 0; } }
+        @media (prefers-reduced-motion: reduce) { .hh-trail, .hh-tides { animation: none; } }
       `}</style>
     </h1>
-  );
-}
-
-/* ── Subheading fade-in ── */
-export function HeroSubheading() {
-  return (
-    <div
-      className="flex flex-col items-center gap-3 w-full mx-auto"
-      style={{
-        maxWidth: "100%",
-        animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.2s both",
-      }}
-    >
-      {/* Three-step promise + supporting line — unboxed, so headline → promise → copy → search
-          reads as one continuous column. Legibility over busy photos comes from the hero scrim
-          and text shadow, not from containers. */}
-      <p
-        className="font-bold uppercase text-center text-white"
-        style={{
-          fontSize: "clamp(0.85rem, 1.7vw, 1.05rem)",
-          letterSpacing: "0.24em",
-          textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)",
-        }}
-      >
-        Discover <span style={{ color: "rgba(255,255,255,0.4)" }}>·</span> Compare <span style={{ color: "rgba(255,255,255,0.4)" }}>·</span> Book
-      </p>
-
-      <p
-        className="text-center font-medium leading-relaxed"
-        style={{
-          fontSize: "clamp(1rem, 2.1vw, 1.2rem)",
-          color: "rgba(255,255,255,0.88)",
-          letterSpacing: "0.01em",
-          textWrap: "balance",
-          textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)",
-        }}
-      >
-        Adventures matched to your body, recommended by AI, run by real operators.
-      </p>
-
-      <style>{`
-        @keyframes heroLineIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-    </div>
   );
 }
 
@@ -280,12 +248,6 @@ export function HeroFeatureBoxes() {
           </p>
         </div>
       ))}
-      <style>{`
-        @keyframes heroLineIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }
@@ -300,12 +262,6 @@ export function HeroCTAWrapper({ children }: { children: ReactNode }) {
       }}
     >
       {children}
-      <style>{`
-        @keyframes heroLineIn {
-          from { opacity: 0; transform: translateY(12px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }

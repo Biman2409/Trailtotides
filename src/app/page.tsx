@@ -3,8 +3,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, ChevronRight, Crown, Map } from "lucide-react";
 import HeroCTAs from "@/components/ui/custom/HeroCTAs";
+import HeroPromise from "@/components/ui/custom/HeroPromise";
 import MatchmakerHomepageSection from "@/components/ui/custom/MatchmakerHomepageSection";
-import { FadeUp, HeroOrbs, HeroHeadline, HeroSubheading, HeroCTAWrapper } from "@/components/ui/custom/HomeAnimations";
+import { FadeUp, HeroOrbs, HeroHeadline, HeroCTAWrapper } from "@/components/ui/custom/HomeAnimations";
+import { Plus_Jakarta_Sans } from "next/font/google";
+
+// Hero headline face — loaded here rather than in the root layout so other pages don't download it
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
+  subsets: ["latin"],
+  weight: ["500", "800"],
+});
 
 export const metadata: Metadata = {
   title: "Trail to Tides — India's Adventure Discovery Platform",
@@ -66,33 +75,37 @@ export default function HomePage() {
       <Navbar />
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="hero-motion relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
+      <section data-hide-compass className={`${jakarta.variable} hero-motion relative h-screen min-h-[700px] flex overflow-hidden`}>
         <HeroSlider />
         <HeroOrbs />
-        {/* Soft scrim behind the hero copy so the unboxed text stays readable on any slide */}
+        {/* Scrim: darker on the left where the copy sits, and along the bottom behind the search row */}
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 55% 45% at 50% 50%, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.2) 55%, transparent 80%)" }}
+          style={{ background: "linear-gradient(90deg, rgba(5,8,12,0.62) 0%, rgba(5,8,12,0.28) 55%, rgba(5,8,12,0.08) 100%), linear-gradient(0deg, rgba(5,8,12,0.55) 0%, transparent 40%)" }}
         />
 
-        <div className="relative z-10 text-center px-5 max-w-4xl mx-auto flex flex-col items-center" style={{ gap: "28px", marginTop: "-32px" }}>
-
-          {/* Headline */}
-          <div>
+        {/* Headline centred, promise + search along the bottom */}
+        <div className="relative z-10 w-full h-full max-w-6xl mx-auto px-5 lg:px-10 pt-28 lg:pt-36 pb-16 flex flex-col justify-between gap-10">
+          {/* Headline centred in the space above the bottom band */}
+          <div className="flex-1 flex items-center justify-center">
             <HeroHeadline />
           </div>
 
-          {/* Subheading + CTAs */}
-          <div className="w-full flex flex-col items-center gap-4 max-w-xs sm:max-w-sm md:max-w-xl" style={{ marginTop: "4px" }}>
-            <HeroSubheading />
-            <HeroCTAWrapper>
-              <HeroCTAs />
-            </HeroCTAWrapper>
+          {/* Bottom band: promise (5 parts) and search (7 parts) on one shared grid,
+              bottom edges aligned, and the search spans to the right margin */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 lg:items-end">
+            <div className="lg:col-span-5">
+              <HeroPromise />
+            </div>
+            <div className="lg:col-span-7">
+              <HeroCTAWrapper>
+                <HeroCTAs />
+              </HeroCTAWrapper>
+            </div>
           </div>
         </div>
 
         <style>{`
-          @keyframes heroLineIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
           /* Reduced motion: hero copy appears instantly, Ken Burns pan and floating orbs stop */
           @media (prefers-reduced-motion: reduce) {
             .hero-motion * { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; }

@@ -1,0 +1,253 @@
+"use client";
+
+import Link from "next/link";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { Activity, Sparkles, BadgeCheck, ArrowUpRight } from "lucide-react";
+import { TIDES_FILL } from "./heroTextures";
+
+// The hero promise sentence. Each of its three phrases is a way into the product; a preview
+// card for one of them sits above the copy, cycling through all three, tied to its phrase
+// by a bracket line in the left gutter. Hovering a phrase (or focusing it) takes over the cycle.
+
+type Feature = {
+  key: string;
+  phrase: string;
+  title: string;
+  blurb: string;
+  color: string;
+  tint: string;
+  icon: ReactNode;
+  href?: string;
+  // Card backdrop — the same mountain/ocean textures as the headline words
+  texture: string;
+  textureSize: string;
+};
+
+const FEATURES: Feature[] = [
+  {
+    key: "fitness",
+    phrase: "Matched to your body",
+    title: "Fitness match",
+    blurb: "Take the 2-min fitness test",
+    color: "#ff8a4c",
+    tint: "rgba(255,106,34,0.16)",
+    icon: <Activity className="w-[18px] h-[18px]" strokeWidth={2.2} />,
+    href: "/matchmaker",
+    texture: "url(/hero/trail-contours.png)",
+    textureSize: "320% 100%",
+  },
+  {
+    key: "ai",
+    phrase: "recommended by AI",
+    title: "Compass AI",
+    blurb: "Describe a trip, get picks",
+    color: "#ffc46b",
+    tint: "rgba(255,196,107,0.14)",
+    icon: <Sparkles className="w-[18px] h-[18px]" strokeWidth={2} />,
+    texture: "radial-gradient(120% 140% at 100% 0%, rgba(255,196,107,0.22), transparent 55%), radial-gradient(90% 120% at 0% 100%, rgba(95,224,212,0.14), transparent 60%)",
+    textureSize: "100% 100%",
+  },
+  {
+    key: "operators",
+    phrase: "run by real operators",
+    title: "Verified operators",
+    blurb: "See who runs every trip",
+    color: "#5fe0d4",
+    tint: "rgba(95,224,212,0.14)",
+    icon: <BadgeCheck className="w-[18px] h-[18px]" strokeWidth={2.2} />,
+    href: "/operators",
+    texture: TIDES_FILL.split(",url")[0],
+    textureSize: "240px 180px",
+  },
+];
+
+const START_DELAY = 1800;
+const CYCLE_MS = 4800;
+
+// The Compass card points at the hero's own prompt bar rather than opening a new surface
+function focusHeroPrompt() {
+  const input = document.getElementById("hero-compass-input") as HTMLInputElement | null;
+  input?.focus();
+}
+
+export default function HeroPromise() {
+  const [active, setActive] = useState<number | null>(null);
+  const [pinned, setPinned] = useState(false); // a hover/focus has taken over the cycle
+  const [cycleKey, setCycleKey] = useState(0); // restarts the progress bar
+  const [line, setLine] = useState<{ d: string; dot: [number, number]; w: number; h: number } | null>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const phraseRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const reducedRef = useRef(false);
+
+  // First card appears on a delay; then the cycle runs unless someone is hovering
+  useEffect(() => {
+    reducedRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const t = setTimeout(() => setActive(0), reducedRef.current ? 0 : START_DELAY);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (active === null || pinned || reducedRef.current) return;
+    const t = setTimeout(() => {
+      setActive((i) => ((i ?? 0) + 1) % FEATURES.length);
+      setCycleKey((k) => k + 1);
+    }, CYCLE_MS);
+    return () => clearTimeout(t);
+  }, [active, pinned, cycleKey]);
+
+  // Bracket from the active phrase, out into the left gutter, up to the card's left edge
+  const measure = useCallback(() => {
+    const wrap = wrapRef.current, card = cardRef.current, ph = active !== null ? phraseRefs.current[active] : null;
+    if (!wrap || !card || !ph) { setLine(null); return; }
+    const w = wrap.getBoundingClientRect(), c = card.getBoundingClientRect(), p = ph.getBoundingClientRect();
+    const gx = -12, r = 8;
+    const x1 = p.left - w.left - 6, y1 = p.top - w.top + p.height * 0.55;
+    const y2 = c.top - w.top + c.height / 2, x2 = c.left - w.left;
+    const d = `M${x1} ${y1}H${gx + r}Q${gx} ${y1} ${gx} ${y1 - r}V${y2 + r}Q${gx} ${y2} ${gx + r} ${y2}H${x2}`;
+    setLine({ d, dot: [x1, y1], w: w.width, h: w.height });
+  }, [active]);
+
+  useLayoutEffect(() => {
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (wrapRef.current) ro.observe(wrapRef.current);
+    return () => ro.disconnect();
+  }, [measure]);
+
+  const take = (i: number) => { setPinned(true); setActive(i); setCycleKey((k) => k + 1); };
+  const release = () => { setPinned(false); setCycleKey((k) => k + 1); };
+
+  const f = active !== null ? FEATURES[active] : null;
+
+  const cardBody = f && (
+    <>
+      <span
+        className="hp-tex"
+        style={{ backgroundImage: f.texture, backgroundSize: f.textureSize }}
+        aria-hidden
+      />
+      <span className="hp-edge" style={{ background: `linear-gradient(90deg, ${f.color}, transparent 75%)` }} aria-hidden />
+      <span className="hp-icon" style={{ background: f.tint, color: f.color }}>{f.icon}</span>
+      <span className="flex-1 min-w-0">
+        <span className="hp-title">{f.title}</span>
+        <span className="hp-blurb">{f.blurb}</span>
+      </span>
+      <span className="hp-go" style={{ color: f.color, borderColor: `${f.color}55` }}><ArrowUpRight className="w-4 h-4" strokeWidth={2.4} /></span>
+      {!pinned && !reducedRef.current && (
+        <span key={cycleKey} className="hp-progress" style={{ background: f.color, animationDuration: `${CYCLE_MS}ms` }} aria-hidden />
+      )}
+    </>
+  );
+
+  return (
+    <div
+      ref={wrapRef}
+      className="relative flex flex-col items-start gap-2 w-full"
+      style={{ animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.2s both" }}
+      onMouseLeave={release}
+    >
+      {/* Preview card — sits above the copy, never over it */}
+      <div className="hp-slot">
+        {f && (
+          f.href ? (
+            <Link key={f.key} ref={cardRef as React.Ref<HTMLAnchorElement>} href={f.href} className="hp-card" onMouseEnter={() => take(active!)}>
+              {cardBody}
+            </Link>
+          ) : (
+            <button key={f.key} ref={cardRef as React.Ref<HTMLButtonElement>} type="button" onClick={focusHeroPrompt} className="hp-card" onMouseEnter={() => take(active!)}>
+              {cardBody}
+            </button>
+          )
+        )}
+      </div>
+
+      {/* Reads as one line: "Find · Compare · Book adventures — matched to your body, …" */}
+      {/* Shrink-wrapped to the eyebrow's width so "adventures" centres beneath it */}
+      <div className="inline-flex flex-col items-center" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
+        <p className="font-bold uppercase" style={{ fontSize: "clamp(13px, 1.1vw, 15px)", letterSpacing: "0.26em", color: "rgba(255,255,255,0.72)", marginRight: "-0.26em" }}>
+          Find <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span> Compare <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span> Book
+        </p>
+        <p className="hp-script">adventures</p>
+      </div>
+
+      <p className="text-left font-medium leading-snug" style={{ fontSize: "clamp(1.05rem, 1.7vw, 1.3rem)", color: "rgba(255,255,255,0.94)", letterSpacing: "0.01em", textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
+        {FEATURES.map((feat, i) => {
+          const on = active === i;
+          const props = {
+            ref: (el: HTMLElement | null) => { phraseRefs.current[i] = el as HTMLSpanElement | null; },
+            className: "hp-phrase",
+            "data-on": on || undefined,
+            style: { textDecorationColor: feat.color, ...(on ? { color: "#fff" } : {}) },
+            onMouseEnter: () => take(i),
+            onFocus: () => take(i),
+            onBlur: release,
+          };
+          const inner = (
+            <>
+              <span className="hp-picon" style={{ color: feat.color, animationDelay: `${0.9 + i * 0.25}s` }} aria-hidden>{feat.icon}</span>
+              {feat.phrase}
+            </>
+          );
+          return (
+            <span key={feat.key}>
+              {feat.href
+                ? <Link href={feat.href} {...props}>{inner}</Link>
+                : <button type="button" onClick={focusHeroPrompt} {...props}>{inner}</button>}
+              {i < 2 ? ", " : "."}
+            </span>
+          );
+        })}
+      </p>
+
+      {/* Bracket line from the active phrase up to the card */}
+      {line && f && (
+        <svg className="absolute inset-0 pointer-events-none overflow-visible" width={line.w} height={line.h} viewBox={`0 0 ${line.w} ${line.h}`} aria-hidden>
+          <path key={`${f.key}-${cycleKey}`} className="hp-line" d={line.d} fill="none" stroke={f.color} strokeOpacity={0.85} strokeWidth={1.5} strokeLinecap="round" pathLength={1} />
+          <circle cx={line.dot[0]} cy={line.dot[1]} r={3} fill={f.color} />
+        </svg>
+      )}
+
+      <style>{`
+        .hp-slot { min-height: 46px; display: flex; align-items: flex-end; margin-bottom: 12px; }
+        /* Quiet glass chip — a hint beside the copy, not a second CTA */
+        .hp-card { position: relative; overflow: hidden; display: flex; align-items: center; gap: 8px; width: min(232px, 100%);
+                   padding: 6px 8px 7px 6px; border-radius: 12px; text-align: left; color: #fff;
+                   background: rgba(12,10,9,0.38); border: 1px solid rgba(255,255,255,0.08);
+                   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+                   animation: hpIn 0.5s cubic-bezier(0.22,1,0.36,1) both; transition: border-color 0.25s, background 0.25s; }
+        .hp-card:hover { border-color: rgba(255,255,255,0.18); background: rgba(12,10,9,0.55); }
+        .hp-card:hover .hp-go { transform: translate(2px,-2px); opacity: 1; }
+        .hp-tex { position: absolute; inset: 0; opacity: 0.12; pointer-events: none;
+                  -webkit-mask-image: linear-gradient(90deg, transparent 40%, #000 100%); mask-image: linear-gradient(90deg, transparent 40%, #000 100%); }
+        .hp-edge { position: absolute; left: 0; right: 0; top: 0; height: 1px; opacity: 0.55; }
+        .hp-icon { position: relative; width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; flex: none; }
+        .hp-icon svg { width: 13px; height: 13px; }
+        .hp-picon svg { width: 16px; height: 16px; }
+        .hp-title { position: relative; display: block; font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif; font-weight: 800;
+                    font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.1; }
+        .hp-blurb { position: relative; display: block; font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 2px; }
+        .hp-go { position: relative; width: 20px; height: 20px; display: grid; place-items: center; flex: none;
+                 border: 0 !important; opacity: 0.75; transition: transform 0.2s, opacity 0.2s; }
+        .hp-progress { position: absolute; left: 0; bottom: 0; height: 1px; width: 100%; transform-origin: left; opacity: 0.5;
+                       animation-name: hpBar; animation-timing-function: linear; animation-fill-mode: both; }
+        /* "adventures" in the hand-lettered script of the logo tagline, tucked under the eyebrow */
+        .hp-script { font-family: var(--font-script), cursive; font-weight: 700; font-size: clamp(2.2rem, 3.4vw, 2.8rem);
+                     line-height: 0.9; color: #ffb37a; margin: 2px 0 8px; transform: rotate(-2deg); }
+        .hp-phrase { white-space: nowrap; text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: 5px;
+                     transition: color 0.3s, text-decoration-style 0.3s; cursor: pointer; font: inherit; color: inherit; background: none; padding: 0; }
+        .hp-phrase[data-on] { text-decoration-style: solid; }
+        .hp-picon { display: inline-grid; place-items: center; vertical-align: -2px; width: 0; margin-right: 0; opacity: 0; overflow: hidden;
+                    animation: hpIcon 0.45s cubic-bezier(0.22,1,0.36,1) both; }
+        .hp-line { stroke-dasharray: 1; stroke-dashoffset: 1; animation: hpDraw 0.5s cubic-bezier(0.65,0,0.35,1) forwards; }
+        @keyframes hpIn { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: none; } }
+        @keyframes hpBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+        @keyframes hpIcon { to { width: 20px; margin-right: 6px; opacity: 1; } }
+        @keyframes hpDraw { to { stroke-dashoffset: 0; } }
+        @media (prefers-reduced-motion: reduce) {
+          .hp-card, .hp-picon, .hp-line { animation-duration: 0.01ms !important; }
+        }
+      `}</style>
+    </div>
+  );
+}

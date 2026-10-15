@@ -198,7 +198,7 @@ export default function HeroSlider() {
 
       {/* Progress dots */}
       <div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2.5"
+        className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2.5"
         style={{ zIndex: 5 }}
       >
         {shuffled.map((_, i) => (
