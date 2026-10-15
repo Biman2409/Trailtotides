@@ -22,7 +22,7 @@ const PLACEHOLDERS_SHORT = [
 ];
 const PLACEHOLDER_MS = 3400;
 
-export default function HeroCTAs({ stats }: { stats: { adventures: number; operators: number; regions: number } }) {
+export default function HeroCTAs() {
   const [query, setQuery] = useState("");
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [focused, setFocused] = useState(false);
@@ -130,11 +130,6 @@ export default function HeroCTAs({ stats }: { stats: { adventures: number; opera
           <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </Link>
       </div>
-
-      {/* Trust line — real counts from the adventure data */}
-      <p className="mt-3 text-center sm:text-left text-[11.5px] font-medium tracking-wide text-white/55" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.6)" }}>
-        {stats.adventures} adventures <span className="text-white/30">·</span> {stats.operators} verified operators <span className="text-white/30">·</span> {stats.regions} regions
-      </p>
 
       <style>{`
         .hc-breathe { animation: hcBreathe 3.2s ease-in-out infinite; }
