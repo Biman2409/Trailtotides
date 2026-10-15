@@ -220,15 +220,15 @@ export function HeroHeadline() {
       <style>{`
         .hh { margin: 0; display: flex; flex-direction: column; text-transform: uppercase; transform-origin: center;
               font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif; letter-spacing: 0; }
-        .hh-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.35rem; }
-        .hh-row2 { margin: clamp(0.75rem, 2svh, 1.25rem) 0 0 12vw; }
+        .hh-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.1rem; }
+        .hh-row2 { margin: clamp(0.15rem, 0.6svh, 0.4rem) 0 0 12vw; }
         /* Leads in the logo tagline's hand-lettered script, so the headline reads like the wordmark */
         .hh-lead { font-family: var(--font-script), cursive; font-weight: 600; text-transform: none; font-size: 1.05rem;
                    line-height: 1; letter-spacing: 0.01em; color: rgba(255,255,255,0.72); white-space: nowrap;
                    text-shadow: 0 1px 12px rgba(0,0,0,0.5); }
         .hh-lead strong { font-weight: 700; color: #fff; }
         /* Sized by the shorter of width and height, so short screens don't push the search off */
-        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(17vw, 9.5svh); line-height: 0.86;
+        .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(17vw, 9.5svh); line-height: 0.8;
                    letter-spacing: -0.025em; }
         /* Shadow lives on a static copy behind the word, so it's painted once
            rather than re-filtered on every animation frame */
@@ -238,8 +238,8 @@ export function HeroHeadline() {
         .hh-word { position: relative; display: block; padding-right: 0.04em; color: transparent !important;
                    -webkit-text-fill-color: transparent !important; }
         @media (min-width: 768px) {
-          .hh-row { gap: clamp(0.45rem, 0.8vw, 0.75rem); }
-          .hh-row2 { margin: clamp(0.75rem, min(2.2vw, 2.5svh), 2rem) 0 0 clamp(6rem, 14vw, 11rem); }
+          .hh-row { gap: clamp(0.1rem, 0.25vw, 0.3rem); }
+          .hh-row2 { margin: clamp(0.2rem, min(0.6vw, 0.8svh), 0.7rem) 0 0 clamp(6rem, 14vw, 11rem); }
           .hh-lead { font-size: clamp(1.8rem, 2.8vw, 2.4rem); }
           .hh-wrap { font-size: clamp(5.4rem, min(15.8vw, 22.3svh), 14rem); }
         }
