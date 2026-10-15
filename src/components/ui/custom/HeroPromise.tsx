@@ -4,7 +4,17 @@ import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Activity, Sparkles, BadgeCheck, ArrowUpRight } from "lucide-react";
 import { TIDES_FILL } from "./heroTextures";
-import { guardClippedText } from "@/lib/clipTextGuard";
+import CanvasText, { type Painter } from "./CanvasText";
+
+// "adventures": trail orange into tides teal, the headline's two colours. Painted on a
+// canvas so dark-mode extensions can't strip or darken it.
+const paintScript: Painter = (ctx, w, h) => {
+  const g = ctx.createLinearGradient(0, 0, w, 0);
+  [["0", "#ffc27a"], ["0.3", "#ff8a33"], ["0.52", "#ffe2c4"], ["0.68", "#7fe6dc"], ["1", "#4fd6cf"]]
+    .forEach(([o, c]) => g.addColorStop(Number(o), c));
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+};
 
 // The hero promise sentence. Each of its three phrases is a way into the product; a preview
 // card for one of them sits above the copy, cycling through all three, tied to its phrase
@@ -123,7 +133,7 @@ export default function HeroPromise() {
   useLayoutEffect(() => {
     const eyebrow = eyebrowRef.current, script = scriptRef.current;
     if (!eyebrow || !script) return;
-    const inkWidth = (el: HTMLElement) => {
+    const inkWidth = (el: Node) => {
       const r = document.createRange();
       r.selectNodeContents(el);
       return r.getBoundingClientRect().width;
@@ -132,7 +142,8 @@ export default function HeroPromise() {
       script.style.fontSize = "";
       // The eyebrow's letter-spacing trails its last letter; leave it out of the target width
       const target = inkWidth(eyebrow) - (parseFloat(getComputedStyle(eyebrow).letterSpacing) || 0);
-      const natural = inkWidth(script);
+      // Measure the word itself, not the canvas painted over it
+      const natural = inkWidth(script.firstChild ?? script);
       if (target > 0 && natural > 0) {
         script.style.fontSize = `${parseFloat(getComputedStyle(script).fontSize) * (target / natural)}px`;
       }
@@ -141,8 +152,7 @@ export default function HeroPromise() {
     document.fonts?.ready.then(fit);
     const ro = new ResizeObserver(fit);
     ro.observe(eyebrow);
-    const unguard = wrapRef.current ? guardClippedText(wrapRef.current, ".hp-script", "255, 194, 122") : () => {};
-    return () => { ro.disconnect(); unguard(); };
+    return () => ro.disconnect();
   }, []);
 
   const take = (i: number) => { setPinned(true); setActive(i); setCycleKey((k) => k + 1); };
@@ -198,7 +208,7 @@ export default function HeroPromise() {
         <p ref={eyebrowRef} className="font-bold uppercase" style={{ fontSize: "clamp(8.5px, 0.84vw, 11.4px)", letterSpacing: "0.26em", color: "rgba(255,255,255,0.72)", marginRight: "-0.26em" }}>
           Find <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span> Compare <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span> Book
         </p>
-        <p ref={scriptRef} className="hp-script">adventures</p>
+        <p ref={scriptRef} className="hp-script">adventures<CanvasText targetRef={scriptRef} paint={paintScript} /></p>
       </div>
 
       <p className="text-center lg:text-left font-medium leading-snug" style={{ fontSize: "clamp(0.78rem, 1.2vw, 0.98rem)", color: "rgba(255,255,255,0.94)", letterSpacing: "0.01em", textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
@@ -268,10 +278,8 @@ export default function HeroPromise() {
            a drop-shadow, not text-shadow, since text-shadow would show through the clipped fill */
         .hp-script { font-family: var(--font-script), cursive; font-weight: 700; font-size: clamp(1.94rem, 3vw, 2.46rem);
                      line-height: 1; padding: 0 0.08em; margin: 0 -0.08em 6px; white-space: nowrap; transform: rotate(-2deg);
-                     background: linear-gradient(90deg, #ffc27a 0%, #ff8a33 30%, #ffe2c4 52%, #7fe6dc 68%, #4fd6cf 100%);
-                     -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+                     position: relative; color: transparent !important; -webkit-text-fill-color: transparent !important;
                      text-shadow: none; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.55)); }
-        [data-plain] .hp-script { color: #ffb27a !important; -webkit-text-fill-color: #ffb27a !important; }
         .hp-phrase { white-space: nowrap; text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: 5px;
                      transition: color 0.3s, text-decoration-style 0.3s; cursor: pointer; font: inherit; color: inherit; background: none; padding: 0; }
         .hp-phrase[data-on] { text-decoration-style: solid; }

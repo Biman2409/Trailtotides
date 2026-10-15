@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, ReactNode } from "react";
-import { TRAIL_FILL, TRAIL_SIZE, TIDES_FILL, TIDES_SIZE } from "./heroTextures";
-import { guardClippedText } from "@/lib/clipTextGuard";
+import { TIDES_WAVE_SRCS } from "./heroTextures";
+import CanvasText, { type Painter } from "./CanvasText";
 
 /* ── Scroll-triggered fade/slide-up ── */
 export function FadeUp({
@@ -134,21 +134,44 @@ export function ShimmerLine({ className = "" }: { className?: string }) {
    FROM MOUNTAIN TRAIL / TO OCEAN TIDES on one left axis, TIDES stepped in under TRAIL.
    TRAIL carries a drifting contour map, TIDES moving wave lines — mountain and ocean
    drawn into the words themselves. Each lead-in sits directly above its word. */
+// Painters for the canvas-drawn words (see CanvasText). They paint inside the letters only.
+const TRAIL_IMAGES = ["/hero/trail-contours.png"];
+const easeInOutSine = (p: number) => -(Math.cos(Math.PI * p) - 1) / 2;
+
+// TRAIL: warm gradient with the contour map drifting across, there and back over 32s
+const paintTrail: Painter = (ctx, w, h, t, [contours]) => {
+  const g = ctx.createLinearGradient(0, 0, 0, h);
+  g.addColorStop(0, "#ffc27a"); g.addColorStop(0.45, "#ff8a33"); g.addColorStop(1, "#f2560f");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+  if (contours?.complete && contours.naturalWidth) {
+    const cycle = (t % 32) / 16; // 0→2
+    const p = easeInOutSine(cycle <= 1 ? cycle : 2 - cycle);
+    ctx.drawImage(contours, -w * p, 0, w * 2, h);
+  }
+};
+
+// TIDES: cool gradient with two layers of wave lines sliding past each other
+const paintTides: Painter = (ctx, w, h, t, waves) => {
+  const g = ctx.createLinearGradient(0, 0, 0, h);
+  g.addColorStop(0, "#b8f6ec"); g.addColorStop(0.45, "#4fd6cf"); g.addColorStop(1, "#1797a8");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+  const shift = ((t % 9) / 9) * 240;
+  waves.forEach((img, i) => {
+    if (!img.complete || !img.naturalWidth) return;
+    const pattern = ctx.createPattern(img, "repeat");
+    if (!pattern) return;
+    pattern.setTransform(new DOMMatrix([1, 0, 0, 1, i === 0 ? shift : -shift, 0]));
+    ctx.fillStyle = pattern;
+    ctx.fillRect(0, 0, w, h);
+  });
+};
+
 export function HeroHeadline() {
   const ref = useRef<HTMLHeadingElement>(null);
-
-  // Repainting text-clipped backgrounds every frame isn't free — pause the drift and the
-  // waves whenever the hero is scrolled out of view.
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      el.toggleAttribute("data-paused", !entry.isIntersecting);
-    });
-    observer.observe(el);
-    const unguard = guardClippedText(el, ".hh-word");
-    return () => { observer.disconnect(); unguard(); };
-  }, []);
+  const trailRef = useRef<HTMLSpanElement>(null);
+  const tidesRef = useRef<HTMLSpanElement>(null);
 
   // The headline is the one part of the hero that gives way on short screens: it scales down
   // to whatever height its slot gets, so the promise, search bar and links below always fit
@@ -185,13 +208,13 @@ export function HeroHeadline() {
       <span className="hh-row" style={{ animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.05s both" }}>
         <span className="hh-lead">From <strong>Mountain</strong></span>
         <span className="hh-wrap" data-text="Trail">
-          <span className="hh-word hh-trail" style={{ backgroundImage: TRAIL_FILL, backgroundSize: TRAIL_SIZE }}>Trail</span>
+          <span ref={trailRef} className="hh-word">Trail<CanvasText targetRef={trailRef} paint={paintTrail} images={TRAIL_IMAGES} animate /></span>
         </span>
       </span>
       <span className="hh-row hh-row2" style={{ animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.12s both" }}>
         <span className="hh-lead">To <strong>Ocean</strong></span>
         <span className="hh-wrap" data-text="Tides">
-          <span className="hh-word hh-tides" style={{ backgroundImage: TIDES_FILL, backgroundSize: TIDES_SIZE }}>Tides</span>
+          <span ref={tidesRef} className="hh-word">Tides<CanvasText targetRef={tidesRef} paint={paintTides} images={TIDES_WAVE_SRCS} animate /></span>
         </span>
       </span>
       <style>{`
@@ -211,14 +234,9 @@ export function HeroHeadline() {
            rather than re-filtered on every animation frame */
         .hh-wrap::before { content: attr(data-text); position: absolute; left: 0; top: 0; padding-right: 0.04em;
                            color: transparent; text-shadow: 0 0.6rem 1.6rem rgba(0,0,0,0.32); pointer-events: none; }
-        .hh-word { position: relative; display: block; padding-right: 0.04em;
-                   color: transparent; -webkit-background-clip: text; background-clip: text; }
-        .hh-trail { animation: hhTrail 16s ease-in-out infinite alternate; }
-        .hh-tides { animation: hhTides 9s linear infinite; }
-        .hh[data-paused] .hh-word { animation-play-state: paused; }
-        /* Texture stripped (e.g. by a dark-mode extension): solid words instead of invisible ones */
-        .hh[data-plain] .hh-trail { color: #ff8a33 !important; -webkit-text-fill-color: #ff8a33 !important; }
-        .hh[data-plain] .hh-tides { color: #4fd6cf !important; -webkit-text-fill-color: #4fd6cf !important; }
+        /* The real text is invisible; CanvasText paints the textured letters over it */
+        .hh-word { position: relative; display: block; padding-right: 0.04em; color: transparent !important;
+                   -webkit-text-fill-color: transparent !important; }
         @media (min-width: 768px) {
           .hh-row { gap: clamp(0.45rem, 0.8vw, 0.75rem); }
           .hh-row2 { margin: clamp(0.75rem, min(2.2vw, 2.5svh), 2rem) 0 0 clamp(6rem, 14vw, 11rem); }
@@ -229,8 +247,6 @@ export function HeroHeadline() {
         @media (min-width: 1024px) {
           .hh { position: relative; }
         }
-        @keyframes hhTrail { to { background-position: 100% 0, 0 0; } }
-        @keyframes hhTides { to { background-position: 240px 0, -240px 0, 0 0; } }
       `}</style>
     </h1>
   );

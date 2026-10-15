@@ -17,11 +17,15 @@ function waveTile(amp: number, gap: number, opacity: number, phase: number, stro
   return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
 }
 
+const WAVE_A = waveTile(5, 20, 0.5, 0.7, 1.6);
+const WAVE_B = waveTile(3, 13, 0.18, 1.3, 1);
 export const TIDES_FILL = [
-  waveTile(5, 20, 0.5, 0.7, 1.6),
-  waveTile(3, 13, 0.18, 1.3, 1),
+  WAVE_A,
+  WAVE_B,
   "linear-gradient(180deg,#b8f6ec 0%,#4fd6cf 45%,#1797a8 100%)",
 ].join(",");
+/** The two wave tiles as bare image URLs, for painting on a canvas */
+export const TIDES_WAVE_SRCS = [WAVE_A, WAVE_B].map((u) => u.slice(5, -2));
 export const TIDES_SIZE = "240px 180px,240px 180px,100% 100%";
 
 // Contour map is pre-rendered by scripts/gen-hero-contours.mjs; it's twice the word's width
