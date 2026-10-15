@@ -185,9 +185,11 @@ export function HeroHeadline() {
               font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif; letter-spacing: 0; }
         .hh-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.35rem; }
         .hh-row2 { margin: clamp(0.75rem, 2svh, 1.25rem) 0 0 12vw; }
-        .hh-lead { font-weight: 500; font-size: 0.72rem; line-height: 1; letter-spacing: 0.32em;
-                   color: rgba(255,255,255,0.7); white-space: nowrap; text-shadow: 0 1px 12px rgba(0,0,0,0.5); }
-        .hh-lead strong { font-weight: 800; color: #fff; }
+        /* Leads in the logo tagline's hand-lettered script, so the headline reads like the wordmark */
+        .hh-lead { font-family: var(--font-script), cursive; font-weight: 600; text-transform: none; font-size: 1.15rem;
+                   line-height: 1; letter-spacing: 0.01em; color: rgba(255,255,255,0.72); white-space: nowrap;
+                   text-shadow: 0 1px 12px rgba(0,0,0,0.5); }
+        .hh-lead strong { font-weight: 700; color: #fff; }
         /* Sized by the shorter of width and height, so short screens don't push the search off */
         .hh-wrap { position: relative; display: block; font-weight: 800; font-size: min(18vw, 10svh); line-height: 0.86;
                    letter-spacing: -0.025em; }
@@ -203,7 +205,7 @@ export function HeroHeadline() {
         @media (min-width: 768px) {
           .hh-row { gap: clamp(0.45rem, 0.8vw, 0.75rem); }
           .hh-row2 { margin: clamp(0.75rem, min(2.2vw, 2.5svh), 2rem) 0 0 clamp(6rem, 14vw, 11rem); }
-          .hh-lead { font-size: clamp(0.72rem, 1.15vw, 0.95rem); }
+          .hh-lead { font-size: clamp(1.15rem, 1.8vw, 1.5rem); }
           .hh-wrap { font-size: clamp(3.25rem, min(9vw, 12.5svh), 7.75rem); }
         }
         @keyframes hhTrail { to { background-position: 100% 0, 0 0; } }
