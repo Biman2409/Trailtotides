@@ -143,7 +143,7 @@ export default function HeroPromise() {
   return (
     <div
       ref={wrapRef}
-      className="relative flex flex-col items-start gap-2 w-full"
+      className="relative flex flex-col items-center lg:items-start gap-2 w-full"
       style={{ animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.2s both" }}
       onMouseLeave={release}
     >
@@ -171,7 +171,7 @@ export default function HeroPromise() {
         <p className="hp-script">adventures</p>
       </div>
 
-      <p className="text-left font-medium leading-snug" style={{ fontSize: "clamp(1.05rem, 1.7vw, 1.3rem)", color: "rgba(255,255,255,0.94)", letterSpacing: "0.01em", textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
+      <p className="text-center lg:text-left font-medium leading-snug" style={{ fontSize: "clamp(1.05rem, 1.7vw, 1.3rem)", color: "rgba(255,255,255,0.94)", letterSpacing: "0.01em", textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
         {FEATURES.map((feat, i) => {
           const on = active === i;
           const props = {
