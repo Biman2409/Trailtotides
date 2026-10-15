@@ -75,7 +75,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section data-hide-compass className={`${jakarta.variable} hero-motion relative min-h-[100svh] flex overflow-hidden`}>
+      <section data-hide-compass className={`${jakarta.variable} hero-motion relative h-[100svh] [@media(max-height:560px)]:h-auto flex overflow-hidden`}>
         <HeroSlider />
         <HeroOrbs />
         {/* Scrim: darker on the left where the copy sits, and along the bottom behind the search row */}
@@ -85,14 +85,16 @@ export default function HomePage() {
         />
 
         {/* Headline centred, promise + search along the bottom. The hero fills the visible
-            screen (svh, so mobile toolbars don't hide its bottom) and grows rather than clips
-            when the content needs more room; spacing tightens on short screens. */}
+            screen exactly (svh, so mobile toolbars don't hide its bottom); the headline scales
+            down to make room on short screens. Below 560px tall (phones in landscape) nothing
+            can fit, so the hero grows and scrolls instead. */}
         <div
           className="relative z-10 w-full max-w-6xl mx-auto px-5 lg:px-10 flex flex-col justify-between"
           style={{ paddingTop: "clamp(6rem, 14svh, 9rem)", paddingBottom: "clamp(3.5rem, 8svh, 4.5rem)", gap: "clamp(1.25rem, 4svh, 2.5rem)" }}
         >
           {/* Headline centred in the space above the bottom band */}
-          <div className="flex-1 flex items-center justify-center">
+          {/* min-h-0 lets this slot shrink below the headline's size; HeroHeadline then scales itself to fit */}
+          <div className="flex-1 min-h-0 flex items-center justify-center">
             <HeroHeadline />
           </div>
 
