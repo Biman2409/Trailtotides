@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, ReactNode } from "react";
 import { TRAIL_FILL, TRAIL_SIZE, TIDES_FILL, TIDES_SIZE } from "./heroTextures";
 
 /* ── Scroll-triggered fade/slide-up ── */
@@ -148,6 +148,24 @@ export function HeroHeadline() {
     return () => observer.disconnect();
   }, []);
 
+  // The headline is the one part of the hero that gives way on short screens: it scales down
+  // to whatever height its slot gets, so the promise, search bar and links below always fit
+  // on the first screen. Never scales up, so normal screens keep the full-size words.
+  useLayoutEffect(() => {
+    const el = ref.current, slot = el?.parentElement;
+    if (!el || !slot) return;
+    const fit = () => {
+      const scale = Math.min(1, slot.clientHeight / el.offsetHeight, slot.clientWidth / el.offsetWidth);
+      el.style.transform = scale < 1 ? `scale(${Math.max(scale, 0.4)})` : "";
+    };
+    fit();
+    document.fonts?.ready.then(fit);
+    const ro = new ResizeObserver(fit);
+    ro.observe(slot);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <h1 ref={ref} className="hh">
       <span className="hh-row" style={{ animation: "heroLineIn 0.55s cubic-bezier(0.22,1,0.36,1) 0.05s both" }}>
@@ -163,7 +181,7 @@ export function HeroHeadline() {
         </span>
       </span>
       <style>{`
-        .hh { margin: 0; display: flex; flex-direction: column; text-transform: uppercase;
+        .hh { margin: 0; display: flex; flex-direction: column; text-transform: uppercase; transform-origin: center;
               font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif; letter-spacing: 0; }
         .hh-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.35rem; }
         .hh-row2 { margin: clamp(0.75rem, 2svh, 1.25rem) 0 0 12vw; }
