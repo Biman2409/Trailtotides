@@ -20,6 +20,17 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Deployment
+
+The site is hosted on Vercel at https://www.trailtotides.com. Vercel's GitHub
+integration builds and deploys every push to `master`; other branches and pull
+requests get preview deployments.
+
+Set these environment variables in the Vercel project (Settings → Environment
+Variables): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
+`SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`,
+`RESEND_API_KEY` and `NEXT_PUBLIC_SITE_URL`.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
