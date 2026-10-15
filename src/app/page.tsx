@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ChevronRight, Crown, Map } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronRight, Crown, Map } from "lucide-react";
 import HeroCTAs from "@/components/ui/custom/HeroCTAs";
 import HeroPromise from "@/components/ui/custom/HeroPromise";
 import MatchmakerHomepageSection from "@/components/ui/custom/MatchmakerHomepageSection";
@@ -69,6 +69,12 @@ function SeasonNote({ monthsLeft, endsIn }: { monthsLeft: number; endsIn: string
 export default function HomePage() {
   const monthIdx = currentMonthIndexIST();
   const season = inSeasonNow(adventures, monthIdx);
+  // Same counting rules as the StatsBar strip below the hero, so the two always agree
+  const heroStats = {
+    adventures: adventures.length,
+    operators: new Set(adventures.flatMap((a) => a.operators.map((o) => o.name.trim().toLowerCase()))).size,
+    regions: new Set(adventures.map((a) => a.state)).size,
+  };
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
@@ -78,10 +84,11 @@ export default function HomePage() {
       <section data-hide-compass className={`${jakarta.variable} hero-motion relative h-[100svh] [@media(max-height:560px)]:h-auto flex overflow-hidden`}>
         <HeroSlider />
         <HeroOrbs />
-        {/* Scrim: darker on the left where the copy sits, and along the bottom behind the search row */}
+        {/* Scrim: darker on the left where the copy sits, and a deeper band along the bottom
+            (pooled behind the promise copy) so the promise and search stay legible over bright photos */}
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(90deg, rgba(5,8,12,0.62) 0%, rgba(5,8,12,0.28) 55%, rgba(5,8,12,0.08) 100%), linear-gradient(0deg, rgba(5,8,12,0.55) 0%, transparent 40%)" }}
+          style={{ background: "radial-gradient(60% 45% at 18% 88%, rgba(5,8,12,0.55), transparent 70%), linear-gradient(90deg, rgba(5,8,12,0.62) 0%, rgba(5,8,12,0.28) 55%, rgba(5,8,12,0.08) 100%), linear-gradient(0deg, rgba(5,8,12,0.8) 0%, rgba(5,8,12,0.45) 24%, transparent 52%)" }}
         />
 
         {/* Headline centred, promise + search along the bottom. The hero fills the visible
@@ -106,13 +113,25 @@ export default function HomePage() {
             </div>
             <div className="lg:col-span-8">
               <HeroCTAWrapper>
-                <HeroCTAs />
+                <HeroCTAs stats={heroStats} />
               </HeroCTAWrapper>
             </div>
           </div>
         </div>
 
+        {/* Scroll cue — tells first-time visitors there's more below the fold */}
+        <a
+          href="#after-hero"
+          aria-label="Scroll to see more"
+          className="hero-scroll absolute z-10 bottom-3 right-5 lg:right-10 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/55 hover:text-white transition-colors"
+        >
+          <span className="hidden sm:inline">Scroll</span>
+          <ChevronDown className="hero-scroll-icon w-4 h-4" strokeWidth={2.2} />
+        </a>
+
         <style>{`
+          .hero-scroll-icon { animation: heroScrollBob 1.8s ease-in-out infinite; }
+          @keyframes heroScrollBob { 0%, 100% { transform: translateY(0); opacity: 0.6; } 50% { transform: translateY(4px); opacity: 1; } }
           /* Reduced motion: hero copy appears instantly, Ken Burns pan and floating orbs stop */
           @media (prefers-reduced-motion: reduce) {
             .hero-motion * { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; }
@@ -121,6 +140,7 @@ export default function HomePage() {
       </section>
 
         {/* ── STATS BAR ────────────────────────────────────── */}
+        <div id="after-hero" className="scroll-mt-16" />
         <StatsBar />
 
         {/* ── PICKED FOR YOU (returning visitors only) ─────── */}

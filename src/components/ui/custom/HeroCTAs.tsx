@@ -22,7 +22,7 @@ const PLACEHOLDERS_SHORT = [
 ];
 const PLACEHOLDER_MS = 3400;
 
-export default function HeroCTAs() {
+export default function HeroCTAs({ stats }: { stats: { adventures: number; operators: number; regions: number } }) {
   const [query, setQuery] = useState("");
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [focused, setFocused] = useState(false);
@@ -61,14 +61,24 @@ export default function HeroCTAs() {
       ? "linear-gradient(135deg, rgba(255,81,0,0.75), rgba(255,125,71,0.5), rgba(255,179,122,0.65))"
       : "rgba(255,255,255,0.2)";
 
+  // At rest the bar breathes a faint orange ring to draw the eye; hover/focus take over
+  const idle = !focused && !hovered && !query;
+
   return (
     <div className="w-full">
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 w-full">
+        <div className="relative isolate flex-1 sm:flex-none sm:w-[420px] min-w-0">
+        {/* Soft orange glow pooled behind the bar */}
+        <span
+          aria-hidden
+          className="absolute -inset-x-6 -inset-y-5 -z-10 rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(closest-side, rgba(255,81,0,0.24), rgba(255,81,0,0.08) 60%, transparent)", filter: "blur(14px)", opacity: focused || hovered ? 1 : 0.75, transition: "opacity 0.3s" }}
+        />
         <form
           onSubmit={(e) => { e.preventDefault(); ask(query); }}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
-          className="flex-1 sm:flex-none sm:w-[420px] min-w-0 rounded-[18px] p-px transition-shadow duration-300"
+          className={`w-full rounded-[18px] p-px transition-shadow duration-300${idle ? " hc-breathe" : ""}`}
           style={{
             background: ring,
             boxShadow: focused
@@ -108,6 +118,7 @@ export default function HeroCTAs() {
             </button>
           </div>
         </form>
+        </div>
 
         {/* Browse instead — a quiet text link so the bar stays the one obvious action */}
         <Link
@@ -119,6 +130,20 @@ export default function HeroCTAs() {
           <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </Link>
       </div>
+
+      {/* Trust line — real counts from the adventure data */}
+      <p className="mt-3 text-center sm:text-left text-[11.5px] font-medium tracking-wide text-white/55" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.6)" }}>
+        {stats.adventures} adventures <span className="text-white/30">·</span> {stats.operators} verified operators <span className="text-white/30">·</span> {stats.regions} regions
+      </p>
+
+      <style>{`
+        .hc-breathe { animation: hcBreathe 3.2s ease-in-out infinite; }
+        @keyframes hcBreathe {
+          0%, 100% { box-shadow: 0 12px 40px rgba(0,0,0,0.3), 0 0 0 0 rgba(255,81,0,0); }
+          50% { box-shadow: 0 12px 40px rgba(0,0,0,0.3), 0 0 0 5px rgba(255,81,0,0.14), 0 0 26px rgba(255,81,0,0.22); }
+        }
+        @media (prefers-reduced-motion: reduce) { .hc-breathe { animation: none; } }
+      `}</style>
     </div>
   );
 }
