@@ -69,12 +69,6 @@ function SeasonNote({ monthsLeft, endsIn }: { monthsLeft: number; endsIn: string
 export default function HomePage() {
   const monthIdx = currentMonthIndexIST();
   const season = inSeasonNow(adventures, monthIdx);
-  // Same counting rules as the StatsBar strip below the hero, so the two always agree
-  const heroStats = {
-    adventures: adventures.length,
-    operators: new Set(adventures.flatMap((a) => a.operators.map((o) => o.name.trim().toLowerCase()))).size,
-    regions: new Set(adventures.map((a) => a.state)).size,
-  };
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-page)" }}>
@@ -113,7 +107,7 @@ export default function HomePage() {
             </div>
             <div className="lg:col-span-8">
               <HeroCTAWrapper>
-                <HeroCTAs stats={heroStats} />
+                <HeroCTAs />
               </HeroCTAWrapper>
             </div>
           </div>
