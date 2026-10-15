@@ -78,6 +78,8 @@ export default function HeroPromise() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const phraseRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const eyebrowRef = useRef<HTMLParagraphElement>(null);
+  const scriptRef = useRef<HTMLParagraphElement>(null);
   const reducedRef = useRef(false);
 
   // First card appears on a delay; then the cycle runs unless someone is hovering
@@ -114,6 +116,31 @@ export default function HeroPromise() {
     if (wrapRef.current) ro.observe(wrapRef.current);
     return () => ro.disconnect();
   }, [measure]);
+
+  // "adventures" is sized so its ink spans exactly from the F of "Find" to the K of "Book"
+  useLayoutEffect(() => {
+    const eyebrow = eyebrowRef.current, script = scriptRef.current;
+    if (!eyebrow || !script) return;
+    const inkWidth = (el: HTMLElement) => {
+      const r = document.createRange();
+      r.selectNodeContents(el);
+      return r.getBoundingClientRect().width;
+    };
+    const fit = () => {
+      script.style.fontSize = "";
+      // The eyebrow's letter-spacing trails its last letter; leave it out of the target width
+      const target = inkWidth(eyebrow) - (parseFloat(getComputedStyle(eyebrow).letterSpacing) || 0);
+      const natural = inkWidth(script);
+      if (target > 0 && natural > 0) {
+        script.style.fontSize = `${parseFloat(getComputedStyle(script).fontSize) * (target / natural)}px`;
+      }
+    };
+    fit();
+    document.fonts?.ready.then(fit);
+    const ro = new ResizeObserver(fit);
+    ro.observe(eyebrow);
+    return () => ro.disconnect();
+  }, []);
 
   const take = (i: number) => { setPinned(true); setActive(i); setCycleKey((k) => k + 1); };
   const release = () => { setPinned(false); setCycleKey((k) => k + 1); };
@@ -165,10 +192,10 @@ export default function HeroPromise() {
       {/* Reads as one line: "Find · Compare · Book adventures — matched to your body, …" */}
       {/* Shrink-wrapped to the eyebrow's width so "adventures" centres beneath it */}
       <div className="inline-flex flex-col items-center" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
-        <p className="font-bold uppercase" style={{ fontSize: "clamp(13px, 1.1vw, 15px)", letterSpacing: "0.26em", color: "rgba(255,255,255,0.72)", marginRight: "-0.26em" }}>
+        <p ref={eyebrowRef} className="font-bold uppercase" style={{ fontSize: "clamp(13px, 1.1vw, 15px)", letterSpacing: "0.26em", color: "rgba(255,255,255,0.72)", marginRight: "-0.26em" }}>
           Find <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span> Compare <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span> Book
         </p>
-        <p className="hp-script">adventures</p>
+        <p ref={scriptRef} className="hp-script">adventures</p>
       </div>
 
       <p className="text-center lg:text-left font-medium leading-snug" style={{ fontSize: "clamp(1.05rem, 1.7vw, 1.3rem)", color: "rgba(255,255,255,0.94)", letterSpacing: "0.01em", textShadow: "0 1px 2px rgba(0,0,0,0.5), 0 2px 16px rgba(0,0,0,0.55)" }}>
@@ -231,9 +258,14 @@ export default function HeroPromise() {
                  border: 0 !important; opacity: 0.75; transition: transform 0.2s, opacity 0.2s; }
         .hp-progress { position: absolute; left: 0; bottom: 0; height: 1px; width: 100%; transform-origin: left; opacity: 0.5;
                        animation-name: hpBar; animation-timing-function: linear; animation-fill-mode: both; }
-        /* "adventures" in the hand-lettered script of the logo tagline, tucked under the eyebrow */
+        /* "adventures" in the hand-lettered script of the logo tagline, tucked under the eyebrow and
+           sized in JS to its width. Filled trail orange into tides teal, the headline's two colours;
+           a drop-shadow, not text-shadow, since text-shadow would show through the clipped fill */
         .hp-script { font-family: var(--font-script), cursive; font-weight: 700; font-size: clamp(2.2rem, 3.4vw, 2.8rem);
-                     line-height: 0.9; color: #ffb37a; margin: 2px 0 8px; transform: rotate(-2deg); }
+                     line-height: 1; padding: 0 0.08em; margin: 0 -0.08em 6px; white-space: nowrap; transform: rotate(-2deg);
+                     background: linear-gradient(90deg, #ffc27a 0%, #ff8a33 30%, #ffe2c4 52%, #7fe6dc 68%, #4fd6cf 100%);
+                     -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+                     text-shadow: none; filter: drop-shadow(0 2px 10px rgba(0,0,0,0.55)); }
         .hp-phrase { white-space: nowrap; text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: 5px;
                      transition: color 0.3s, text-decoration-style 0.3s; cursor: pointer; font: inherit; color: inherit; background: none; padding: 0; }
         .hp-phrase[data-on] { text-decoration-style: solid; }
