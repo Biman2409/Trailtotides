@@ -11,11 +11,12 @@ const LETTER_SCORE: Record<CapabilityOption["v"], number> = { A: 1, B: 2, C: 3, 
 /** Answer value for "Not sure / haven't tried this" on a capability question. */
 export const NOT_SURE = "U";
 
-// Quick mode: 5 questions that best separate beginners from veterans. The other answers are
-// estimated from these (see estimateQuickAnswers) until the person refines their profile.
-export const QUICK_KEYS = ["stamina-1", "strength-1", "agility-1", "altitude-1", "nerve-1"];
+// Quick mode: the questions that best separate beginners from veterans, plus Water — it can't be
+// inferred from anything else and gates whole adventure types, so it's always asked. The other
+// answers are estimated from these (see estimateQuickAnswers) until the person refines their profile.
+export const QUICK_KEYS = ["stamina-1", "strength-1", "agility-1", "water-1", "altitude-1", "nerve-1"];
 
-/** Fills unanswered capability questions from related quick answers. Water defaults low. */
+/** Fills unanswered capability questions from related quick answers. */
 export function estimateQuickAnswers(answers: Partial<Record<string, string>>): Partial<Record<string, string>> {
   const est: Partial<Record<string, string>> = { ...answers };
   const from = (key: string, source: string) => { if (!est[key]) est[key] = answers[source]; };
@@ -25,7 +26,6 @@ export function estimateQuickAnswers(answers: Partial<Record<string, string>>): 
   from("strength-2", "strength-1");
   from("agility-2", "agility-1");
   from("focus-1", "agility-1");
-  if (!est["water-1"]) est["water-1"] = "A";
   return est;
 }
 
@@ -65,26 +65,19 @@ export function computeDecayMultiplier(recencyTier: 1 | 2 | 3 | 4 | 5, activityT
   return DECAY_TIER_MULTIPLIER[worst];
 }
 
-/** If the user reported an altitude-illness evacuation, cap the axis regardless of height reached. */
-export function applyAltitudeCap(rawAltitudeScore: number, evacuationFlagged: boolean, cap = 2): number {
-  return evacuationFlagged ? Math.min(rawAltitudeScore, cap) : rawAltitudeScore;
-}
-
 export interface AceComputationResult {
   ace: ACE;
   rawAxes: Record<AceAxis, number>;
   decayMultiplier: number;
-  altitudeCapped: boolean;
 }
 
 /**
- * Computes the final ACE profile from capability + decay + altitude-flag
- * answers. Deliberately takes no medical-answer parameter.
+ * Computes the final ACE profile from capability + decay answers.
+ * Deliberately takes no medical-answer parameter.
  */
 export function computeAceFromAnswers(
   capabilityAnswers: Partial<Record<string, string>>,
-  decayAnswers: Partial<Record<string, string>>,
-  altitudeEvacuationFlagged: boolean
+  decayAnswers: Partial<Record<string, string>>
 ): AceComputationResult {
   // 1. Combine each axis's 1-2 capability answers into a raw 1-5 score.
   const byAxis: Partial<Record<AceAxis, number[]>> = {};
@@ -116,9 +109,5 @@ export function computeAceFromAnswers(
     ace[axis] = clamp(Math.round(rawAxes[axis] * decayMultiplier));
   });
 
-  // 3. Altitude safety cap — independent of decay (decay never touches altitude).
-  const altitudeCapped = altitudeEvacuationFlagged && rawAxes.altitude > 2;
-  ace.altitude = applyAltitudeCap(rawAxes.altitude, altitudeEvacuationFlagged);
-
-  return { ace, rawAxes, decayMultiplier, altitudeCapped };
+  return { ace, rawAxes, decayMultiplier };
 }

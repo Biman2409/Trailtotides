@@ -18,8 +18,6 @@ export interface CapabilityQuestion {
   question: string;
   hint?: string;
   options: CapabilityOption[];
-  /** Only the altitude question — renders the evacuation safety checkbox beneath its options. */
-  hasSafetyFlag?: boolean;
 }
 
 // 12 questions — 2 each for stamina/power/strength/agility, 1 each for
@@ -149,7 +147,6 @@ export const CAPABILITY_QUESTIONS: CapabilityQuestion[] = [
     axis: "Altitude",
     question: "What's the highest altitude you've spent a night at, and how did your body handle it?",
     hint: "e.g., relevant for Himalayan treks, high mountain passes on a motorcycle expedition, or high-altitude paragliding launch sites.",
-    hasSafetyFlag: true,
     options: [
       { v: "A", l: "Never been above 2,000m" },
       { v: "B", l: "2,000–3,500m — no issues" },

@@ -7,10 +7,11 @@ import Link from "next/link";
 import {
   ChevronRight, ChevronLeft, MapPin, ArrowRight, RotateCcw,
   Shield, CheckCircle2, AlertTriangle, Loader2, Wind, HeartPulse,
-  Stethoscope,
+  Stethoscope, Target,
 } from "lucide-react";
 import { Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost, TrendingUp, Lock } from "@/lib/localIcons";
 import ACERadar from "@/components/ui/custom/ACERadar";
+import { ADVENTURE_FACTS } from "@/lib/adventureFacts";
 import Pill from "@/components/ui/custom/Pill";
 import AchievementBadges from "@/components/ui/custom/AchievementBadges";
 import AchievementShareButton from "@/components/ui/custom/AchievementShareButton";
@@ -324,7 +325,7 @@ function IntroScreen({
                     ? { background: "#ff5100", color: "#fff", boxShadow: "0 4px 20px rgba(255,81,0,0.3)" }
                     : { background: "var(--bg-surface-2)", border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
                   <span className="text-sm font-bold">Quick match</span>
-                  <span className="text-[11px] opacity-75">5 questions · 1 min</span>
+                  <span className="text-[11px] opacity-75">6 questions · 1 min</span>
                 </button>
                 <button onClick={onStart}
                   className="flex flex-col items-start gap-0.5 px-4 py-3 rounded-xl text-left transition-all hover:brightness-110"
@@ -370,41 +371,33 @@ function ConsentScreen({ onAccept, onBack }: { onAccept: () => void; onBack: () 
 
   return (
     <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-24">
-      <div className="mb-7">
-        <div className="flex items-center gap-2.5 mb-3">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.12)", color: "#ff5100" }}>
-            <Shield className="w-4 h-4" />
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--text-primary)" }}>Before you start</h1>
-        </div>
+      <div className="mb-8">
+        <p className="text-[11px] font-bold uppercase tracking-[0.24em] mb-3" style={{ color: "#ff5100" }}>Before you start</p>
+        <h1 className="text-3xl font-bold tracking-tight mb-2" style={{ color: "var(--text-primary)" }}>Three ground rules</h1>
         <p className="text-sm leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
-          This assessment matches you to adventures based on your physical capability and health background. A few things to know:
+          A few minutes of honest answers, and every adventure gets rated for your body.
         </p>
       </div>
 
-      <div className="space-y-3 mb-7">
+      <ol className="space-y-5 mb-8">
         {[
-          { title: "Not medical advice.", body: "Your results guide matching — they don't diagnose or clear you for any activity. Some adventures may still require a doctor's certificate regardless of your score." },
-          { title: "Answer honestly.", body: "Inaccurate answers can lead to unsafe matches. You can retake this anytime." },
-          { title: "Health questions are optional.", body: "Skipping them may mean we can't flag risks specific to you. This data is used only for matching within the app and is never sold. You can delete it anytime in account settings." },
-          { title: "This is guidance, not a guarantee.", body: "Adventure sports carry real risk. A separate waiver applies when you book." },
-        ].map((item) => (
-          <div key={item.title} className="flex gap-3 rounded-xl px-4 py-3.5" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
-            <CheckCircle2 className="w-4 h-4 mt-0.5 shrink-0" style={{ color: "#ff5100" }} />
-            <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              <span className="font-semibold" style={{ color: "var(--text-primary)" }}>{item.title}</span> {item.body}
-            </p>
-          </div>
+          { icon: <Stethoscope className="w-4 h-4" />, title: "It's a guide, not a medical check", body: "Your score matches you to trips. It doesn't clear you to go — some still need a doctor's note." },
+          { icon: <Target className="w-4 h-4" />, title: "Be honest", body: "Overrate yourself and you'll be matched to trips you're not ready for. You can retake it anytime." },
+          { icon: <Lock className="w-4 h-4" />, title: "Health questions are optional and private", body: "They only flag risks for you. Never sold, and you can delete them in settings." },
+        ].map((item, i) => (
+          <li key={item.title} className="flex gap-4">
+            <span className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: "rgba(255,81,0,0.1)", color: "#ff5100" }}>{item.icon}</span>
+            <div>
+              <p className="text-[15px] font-semibold leading-snug" style={{ color: "var(--text-primary)" }}>
+                <span className="mr-1.5 tabular-nums" style={{ color: "var(--text-muted)" }}>0{i + 1}</span>{item.title}
+              </p>
+              <p className="text-sm leading-relaxed mt-0.5" style={{ color: "var(--text-secondary)" }}>{item.body}</p>
+            </div>
+          </li>
         ))}
-      </div>
+      </ol>
 
-      <div className="flex items-center gap-3 mb-6 text-xs" style={{ color: "var(--text-muted)" }}>
-        <Link href="/privacy" className="underline hover:text-[#ff5100] transition-colors">Privacy Policy</Link>
-        <span>·</span>
-        <Link href="/terms" className="underline hover:text-[#ff5100] transition-colors">Terms of Service</Link>
-      </div>
-
-      <label className="flex items-start gap-3 mb-6 cursor-pointer">
+      <label className="flex items-start gap-3 mb-3 px-4 py-3.5 rounded-xl cursor-pointer" style={{ background: "var(--bg-surface)", border: `1px solid ${checked ? "rgba(255,81,0,0.45)" : "var(--border-subtle)"}` }}>
         <input
           type="checkbox"
           checked={checked}
@@ -413,9 +406,14 @@ function ConsentScreen({ onAccept, onBack }: { onAccept: () => void; onBack: () 
           style={{ accentColor: "#ff5100" }}
         />
         <span className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-          I&apos;ve read this, understand it&apos;s a guidance tool and not medical advice, and consent to my answers — including any health information I share — being used to generate my match, per the Privacy Policy and Terms.
+          I understand this is guidance, not medical advice, and agree to my answers — including any health details — being used for my match, per the{" "}
+          <Link href="/privacy" className="underline hover:text-[#ff5100] transition-colors">Privacy Policy</Link> and{" "}
+          <Link href="/terms" className="underline hover:text-[#ff5100] transition-colors">Terms</Link>.
         </span>
       </label>
+      <p className="text-xs mb-7" style={{ color: "var(--text-muted)" }}>
+        Adventure sports carry real risk. A separate waiver applies when you book.
+      </p>
 
       <div className="flex items-center gap-3">
         <button
@@ -1136,7 +1134,6 @@ interface Progress {
   stepIndex: number;
   answers: Answers;
   skipKeys: string[];
-  altitudeFlag: boolean;
   jointNote: string;
   savedAt: string;
 }
@@ -1163,7 +1160,6 @@ export default function MatchmakerClient() {
   const [skipKeys, setSkipKeys] = useState<string[]>([]);
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
-  const [altitudeEvacuationFlagged, setAltitudeEvacuationFlagged] = useState(false);
   const [jointNote, setJointNote] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
@@ -1222,8 +1218,8 @@ export default function MatchmakerClient() {
   // Persist progress after every change while the quiz is open
   useEffect(() => {
     if (!started || result || loading) return;
-    saveProgress({ mode, stepIndex, answers, skipKeys, altitudeFlag: altitudeEvacuationFlagged, jointNote, savedAt: new Date().toISOString() });
-  }, [started, result, loading, mode, stepIndex, answers, skipKeys, altitudeEvacuationFlagged, jointNote]);
+    saveProgress({ mode, stepIndex, answers, skipKeys, jointNote, savedAt: new Date().toISOString() });
+  }, [started, result, loading, mode, stepIndex, answers, skipKeys, jointNote]);
 
   function begin(nextMode: Mode, prefill: Answers = {}, skip: string[] = []) {
     setMode(nextMode);
@@ -1243,7 +1239,6 @@ export default function MatchmakerClient() {
     setSkipKeys(p.skipKeys ?? []);
     setAnswers(p.answers);
     setStepIndex(Math.min(p.stepIndex, stepsFor(p.mode, p.skipKeys ?? []).length - 1));
-    setAltitudeEvacuationFlagged(!!p.altitudeFlag);
     setJointNote(p.jointNote ?? "");
     setResult(null);
     setResumable(null);
@@ -1265,18 +1260,13 @@ export default function MatchmakerClient() {
     // Quick mode estimates the questions it skipped; full and refine use only real answers.
     const scoringAnswers = mode === "quick" ? estimateQuickAnswers(finalAnswers) : finalAnswers;
 
-    // Capability + decay + the altitude safety flag are the only inputs to
-    // scoring — medical answers are handled entirely separately below and
-    // never reach this function.
-    const { ace: userAxes, rawAxes, decayMultiplier, altitudeCapped } =
-      computeAceFromAnswers(scoringAnswers, scoringAnswers, altitudeEvacuationFlagged);
+    // Capability + decay answers are the only inputs to scoring — medical answers
+    // are handled entirely separately below and never reach this function.
+    const { ace: userAxes, rawAxes, decayMultiplier } = computeAceFromAnswers(scoringAnswers, scoringAnswers);
 
     const decayNotes: string[] = [];
     if (decayMultiplier < 1) {
       decayNotes.push(`Recency of activity and current activity level applied a ${Math.round((1 - decayMultiplier) * 100)}% adjustment to Stamina, Power, Strength, and Agility.`);
-    }
-    if (altitudeCapped) {
-      decayNotes.push("Your Altitude score was capped because you reported needing to descend early or being evacuated for altitude illness — regardless of the height you reached.");
     }
     const unsure = CAPABILITY_QUESTIONS.filter((q) => finalAnswers[q.key] === NOT_SURE).map((q) => q.axis);
     if (unsure.length > 0) {
@@ -1290,7 +1280,7 @@ export default function MatchmakerClient() {
 
     const updatedAt = new Date().toISOString();
     const profile: StoredProfile = {
-      ace: userAxes, rawAxes: rawAxes as Record<string, number>, altitudeCapped, updatedAt,
+      ace: userAxes, rawAxes: rawAxes as Record<string, number>, updatedAt,
       answers: realAnswers, mode: mode === "quick" ? "quick" : "full",
     };
     saveProfile(profile);
@@ -1324,7 +1314,6 @@ export default function MatchmakerClient() {
     setSkipKeys([]);
     setStepIndex(0);
     setAnswers({});
-    setAltitudeEvacuationFlagged(false);
     setJointNote("");
     setResult(null);
     setSavedResult(null);
@@ -1402,7 +1391,7 @@ export default function MatchmakerClient() {
   }
 
   return (
-    <div className="max-w-xl mx-auto px-5 sm:px-6 py-20 sm:py-24">
+    <div className="max-w-xl mx-auto px-5 sm:px-6 pt-20 sm:pt-24 pb-10 min-h-[100svh] flex flex-col">
       {/* Header */}
       <div className="mb-7">
         <div className="flex items-center justify-between mb-5">
@@ -1489,21 +1478,6 @@ export default function MatchmakerClient() {
           </button>
         )}
 
-        {/* Altitude safety flag — evacuation checkbox, altitude question only */}
-        {capQ?.hasSafetyFlag && (
-          <label className="flex items-start gap-3 mt-4 px-4 py-3.5 rounded-xl cursor-pointer" style={{ background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)" }}>
-            <input
-              type="checkbox"
-              checked={altitudeEvacuationFlagged}
-              onChange={(e) => setAltitudeEvacuationFlagged(e.target.checked)}
-              className="mt-0.5 w-4 h-4 rounded shrink-0"
-              style={{ accentColor: "#ef4444" }}
-            />
-            <span className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              I had to descend early or was evacuated due to altitude illness
-            </span>
-          </label>
-        )}
 
         {/* Optional free text — joint/injury medical question, shown once answered "yes" */}
         {medQ?.hasFreeText && answers[medQ.key] === "yes" && (
@@ -1563,6 +1537,30 @@ export default function MatchmakerClient() {
         </button>
         <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>Progress saved automatically</span>
       </div>
+
+      {/* A different adventure fact under every question, in the same hand-lettered script as the logo tagline */}
+      <AdventureFact step={stepIndex} />
+    </div>
+  );
+}
+
+function AdventureFact({ step }: { step: number }) {
+  const [index, setIndex] = useState<number | null>(null);
+  // Picked on the client (random on the server would mismatch hydration); never repeats back to back
+  useEffect(() => {
+    setIndex((prev) => {
+      let next = Math.floor(Math.random() * ADVENTURE_FACTS.length);
+      if (next === prev) next = (next + 1) % ADVENTURE_FACTS.length;
+      return next;
+    });
+  }, [step]);
+  if (index === null) return null;
+  return (
+    <div key={index} className="mt-auto pt-12 text-center animate-in fade-in duration-500">
+      <p className="text-[10px] font-bold uppercase tracking-[0.24em] mb-1.5" style={{ color: "var(--text-muted)" }}>Did you know?</p>
+      <p className="text-[19px] leading-snug max-w-md mx-auto" style={{ fontFamily: "var(--font-script), cursive", fontWeight: 600, color: "var(--text-secondary)" }}>
+        {ADVENTURE_FACTS[index]}
+      </p>
     </div>
   );
 }
