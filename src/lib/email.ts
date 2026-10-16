@@ -4,6 +4,10 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY) 
   : null;
 
+// Resend's test sender only delivers to the Resend account's own address. Once
+// trailtotides.com is verified in Resend, set EMAIL_FROM (e.g. "Trail to Tides <hello@trailtotides.com>").
+const FROM = process.env.EMAIL_FROM || 'TRAIL TO TIDES <onboarding@resend.dev>';
+
 export async function sendVerificationEmail(email: string, link: string, name: string) {
   if (!resend) {
     console.error('RESEND_API_KEY is not set');
@@ -12,7 +16,7 @@ export async function sendVerificationEmail(email: string, link: string, name: s
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'TRAIL TO TIDES <onboarding@resend.dev>', // User should change this to their domain
+      from: FROM,
       to: email,
       subject: 'Verify your TRAIL TO TIDES account',
       html: `
@@ -63,7 +67,7 @@ export async function sendContactEmail(msg: { name: string; email: string; topic
   const topic = msg.topic?.trim();
   try {
     const { data, error } = await resend.emails.send({
-      from: 'TRAIL TO TIDES <onboarding@resend.dev>',
+      from: FROM,
       to: CONTACT_INBOX,
       replyTo: msg.email,
       subject: `New message from ${msg.name}${topic ? ` · ${topic}` : ''}`,
@@ -95,7 +99,7 @@ export async function sendPasswordResetEmail(email: string, link: string) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'TRAIL TO TIDES <onboarding@resend.dev>',
+      from: FROM,
       to: email,
       subject: 'Reset your TRAIL TO TIDES password',
       html: `

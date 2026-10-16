@@ -22,10 +22,16 @@ function tooMany(ip: string) {
 }
 
 async function deliver(msg: { name: string; email: string; topic?: string; message: string; page?: string }): Promise<ContactResult> {
-  const admin = await createAdminClient();
-  const stored = await admin
-    .from("contact_messages")
-    .insert({ name: msg.name, email: msg.email, message: msg.topic ? `[${msg.topic}] ${msg.message}` : msg.message });
+  // A missing service key makes the client throw; still try the email if so
+  let stored: { error: { message: string } | null };
+  try {
+    const admin = await createAdminClient();
+    stored = await admin
+      .from("contact_messages")
+      .insert({ name: msg.name, email: msg.email, message: msg.topic ? `[${msg.topic}] ${msg.message}` : msg.message });
+  } catch (e) {
+    stored = { error: { message: e instanceof Error ? e.message : "could not reach the database" } };
+  }
   if (stored.error) console.error("contact: could not save message", stored.error.message);
 
   const mailed = await sendContactEmail(msg);
