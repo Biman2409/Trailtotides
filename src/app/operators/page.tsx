@@ -6,7 +6,8 @@ import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import { getAllOperatorProfiles, getAllOperatorSubmissions } from "@/app/auth/operator-actions";
 import { createClient } from "@/lib/supabase/server";
 import { adventures } from "@/lib/data";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
+import SectionTexture from "@/components/ui/custom/SectionTexture";
 import OperatorsClient, { OperatorCardData } from "./OperatorsClient";
 
 export const metadata: Metadata = {
@@ -59,6 +60,7 @@ export default async function OperatorsPage() {
       adventureSlugs: slugs,
       prices,
       verified: false,
+      rating: null,
       adventureDetails: adventures
         .filter((a) => slugs.includes(a.slug))
         .map((a) => ({ slug: a.slug, name: a.name, type: a.type, state: a.state, heroImage: a.heroImage })),
@@ -86,6 +88,7 @@ export default async function OperatorsPage() {
           adventureSlugs: matchedAdventures.map((a) => a.slug),
           prices,
           verified: true,
+          rating: null,
           adventureDetails: matchedAdventures.map((a) => ({
             slug: a.slug,
             name: a.name,
@@ -98,7 +101,23 @@ export default async function OperatorsPage() {
     });
   });
 
+  // Google rating per verified operator (the same on every adventure they run)
+  const ratings = new Map<string, number>();
+  adventures.forEach((a) => a.operators.forEach((o) => {
+    if (o.verified && o.googleRating) ratings.set(o.name, Math.max(ratings.get(o.name) ?? 0, o.googleRating));
+  }));
+  staticCards.forEach((c) => { c.rating = ratings.get(c.company_name) ?? null; });
+
   const allCards = [...staticCards, ...dynamicCards];
+
+  // Headline numbers, all counted from the listings themselves
+  const verifiedCards = staticCards;
+  const stats = {
+    verified: verifiedCards.length,
+    adventures: new Set(verifiedCards.flatMap((c) => c.adventureSlugs)).size,
+    states: new Set(verifiedCards.flatMap((c) => c.adventureDetails.flatMap((a) => a.state.split(/\s*[/,]\s*/).map((s) => s.trim()).filter((s) => s && s !== "Nepal")))).size,
+    rating: verifiedCards.length ? Math.round((verifiedCards.reduce((s, c) => s + (c.rating ?? 0), 0) / verifiedCards.length) * 10) / 10 : 0,
+  };
 
   // Derive unique types & states from the listed adventures
   const allTypes = [...new Set(
@@ -118,17 +137,20 @@ export default async function OperatorsPage() {
       <Navbar />
 
       {/* ── Header ─────────────────────────────────────────────── */}
-      <section className="pt-24 sm:pt-28 lg:pt-36 pb-8 sm:pb-10 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-5 sm:gap-6">
-          <div className="min-w-0">
-            <p className="text-[#ff5100] text-[10px] sm:text-xs font-bold tracking-[0.28em] uppercase mb-3 sm:mb-4">
-              Operators Directory
+      <section className="relative overflow-hidden pt-28 lg:pt-36 pb-10 px-5 lg:px-8">
+        <SectionTexture kind="trail" color="#ff5100" at="85% 20%" opacity={0.08} />
+        <div className="relative max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div className="min-w-0 max-w-2xl">
+            <p className="font-mono text-[11px] font-bold tracking-[0.24em] uppercase mb-4" style={{ color: "#e04800" }}>
+              Operators
             </p>
-            <h1 className="text-[2rem] sm:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight leading-[1.04]" style={{ color: "var(--text-primary)" }}>
-              Guided by the Best
+            <h1 className="text-[2.6rem] sm:text-5xl lg:text-6xl leading-[1.02]" style={{ color: "var(--text-primary)", textWrap: "balance" }}>
+              The people who <span style={{ color: "#ff5100" }}>take you there</span>
             </h1>
-            <p className="text-sm sm:text-base mt-3 sm:mt-4 max-w-lg leading-relaxed font-light" style={{ color: "var(--text-secondary)" }}>
-              Vetted companies running adventures across India&apos;s wildest terrain — from Ladakh passes to Andaman reefs.
+            <p className="text-base sm:text-[17px] mt-5 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              Companies running treks, rides and expeditions across India. The ones marked{" "}
+              <span className="inline-flex items-center gap-1 font-semibold" style={{ color: "var(--accent-green)" }}><ShieldCheck className="w-4 h-4" />Verified</span>{" "}
+              have been reviewed and approved by our team for safety, quality and expertise.
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -174,7 +196,7 @@ export default async function OperatorsPage() {
       </section>
 
       {/* ── Filtered operator grid (client component) ──────────── */}
-      <OperatorsClient cards={allCards} allTypes={allTypes} allStates={allStates} />
+      <OperatorsClient cards={allCards} allTypes={allTypes} allStates={allStates} stats={stats} isOperator={isOperator} />
 
       <Footer />
     </div>

@@ -1,26 +1,80 @@
-"use client";
+"use server";
 
-import { createClient } from "@/lib/supabase/client";
+import { headers } from "next/headers";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { sendContactEmail, CONTACT_INBOX } from "@/lib/email";
+import { CONTACT_TOPICS, type ContactResult } from "./topics";
 
-export async function submitMessage(message: string) {
-  const supabase = createClient();
+// Every message is saved (the admin page lists them) and emailed to the team inbox.
+// Either one landing counts as delivered, so a mail outage never loses a message.
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+// Best-effort flood guard. Per server instance, so it slows a script down rather than
+// stopping a determined one; the honeypot and timing check catch most bots first.
+const recent = new Map<string, number[]>();
+function tooMany(ip: string) {
+  const now = Date.now();
+  const hits = (recent.get(ip) ?? []).filter((t) => now - t < 10 * 60_000);
+  hits.push(now);
+  recent.set(ip, hits);
+  return hits.length > 5;
+}
+
+async function deliver(msg: { name: string; email: string; topic?: string; message: string; page?: string }): Promise<ContactResult> {
+  const admin = await createAdminClient();
+  const stored = await admin
+    .from("contact_messages")
+    .insert({ name: msg.name, email: msg.email, message: msg.topic ? `[${msg.topic}] ${msg.message}` : msg.message });
+  if (stored.error) console.error("contact: could not save message", stored.error.message);
+
+  const mailed = await sendContactEmail(msg);
+  if (mailed.error) console.error("contact: could not email message", mailed.error);
+
+  if (stored.error && mailed.error) {
+    return { ok: false, error: `We couldn't send that just now. Please try again, or email ${CONTACT_INBOX}.` };
+  }
+  return { ok: true };
+}
+
+export async function sendContactMessage(input: {
+  name: string;
+  email: string;
+  topic?: string;
+  message: string;
+  /** Hidden field real people never fill in */
+  company?: string;
+  /** When the form was first shown, in ms */
+  startedAt?: number;
+}): Promise<ContactResult> {
+  const name = (input.name ?? "").trim().slice(0, 100);
+  const email = (input.email ?? "").trim().toLowerCase().slice(0, 200);
+  const message = (input.message ?? "").trim().slice(0, 5000);
+  const topic = CONTACT_TOPICS.find((t) => t === input.topic);
+
+  if (!name) return { ok: false, error: "Please add your name.", field: "name" };
+  if (!EMAIL_RE.test(email)) return { ok: false, error: "That email doesn't look right.", field: "email" };
+  if (message.length < 10) return { ok: false, error: "Please write a little more so we can help.", field: "message" };
+
+  // Bots fill the hidden field or submit instantly: pretend it worked and drop it
+  if (input.company || (input.startedAt && Date.now() - input.startedAt < 2500)) return { ok: true };
+
+  const h = await headers();
+  const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  if (tooMany(ip)) return { ok: false, error: `That's a lot of messages in a row. Please wait a few minutes, or email ${CONTACT_INBOX}.` };
+
+  return deliver({ name, email, topic, message, page: "Contact page" });
+}
+
+/** For signed-in visitors: name and email come from their account */
+export async function submitMessage(message: string): Promise<ContactResult> {
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
+  if (!user?.email) return { ok: false, error: "Please sign in to send a message." };
 
-  if (!user) throw new Error("Unauthorized");
+  const text = (message ?? "").trim().slice(0, 5000);
+  if (text.length < 10) return { ok: false, error: "Please write a little more so we can help.", field: "message" };
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name")
-    .eq("id", user.id)
-    .single();
-
-  const { error } = await supabase.from("contact_messages").insert({
-    user_id: user.id,
-    email: user.email,
-    name: profile?.full_name || user.email?.split("@")[0],
-    message,
-  });
-
-  if (error) throw error;
-  return { success: true };
+  const { data: profile } = await supabase.from("profiles").select("full_name").eq("id", user.id).single();
+  return deliver({ name: profile?.full_name || user.email.split("@")[0], email: user.email, message: text, page: "Direct message" });
 }

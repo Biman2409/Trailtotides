@@ -51,6 +51,45 @@ export async function sendVerificationEmail(email: string, link: string, name: s
   }
 }
 
+/** Every contact message lands here; replying goes straight back to the sender */
+export const CONTACT_INBOX = 'hello@trailtotides.com';
+
+const escapeHtml = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+export async function sendContactEmail(msg: { name: string; email: string; topic?: string; message: string; page?: string }) {
+  if (!resend) return { error: 'Email service not configured' };
+
+  const topic = msg.topic?.trim();
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'TRAIL TO TIDES <onboarding@resend.dev>',
+      to: CONTACT_INBOX,
+      replyTo: msg.email,
+      subject: `New message from ${msg.name}${topic ? ` · ${topic}` : ''}`,
+      text: `${msg.message}\n\n— ${msg.name} <${msg.email}>${topic ? `\nTopic: ${topic}` : ''}${msg.page ? `\nSent from: ${msg.page}` : ''}`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
+          <p style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #ff5100; margin: 0 0 8px;">New message${topic ? ` · ${escapeHtml(topic)}` : ''}</p>
+          <h1 style="font-size: 20px; margin: 0 0 4px;">${escapeHtml(msg.name)}</h1>
+          <p style="margin: 0 0 20px;"><a href="mailto:${escapeHtml(msg.email)}" style="color: #ff5100;">${escapeHtml(msg.email)}</a></p>
+          <div style="font-size: 15px; line-height: 1.6; white-space: pre-wrap; padding: 16px; background: #f7f4ee; border-radius: 10px;">${escapeHtml(msg.message)}</div>
+          <p style="font-size: 12px; color: #999; margin-top: 20px;">Reply to this email to answer ${escapeHtml(msg.name)} directly.${msg.page ? ` Sent from ${escapeHtml(msg.page)}.` : ''}</p>
+        </div>
+      `,
+    });
+
+    if (error) {
+      return { error: error.message };
+    }
+
+    return { success: true, data };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'An unknown error occurred';
+    return { error: message };
+  }
+}
+
 export async function sendPasswordResetEmail(email: string, link: string) {
   if (!resend) return { error: 'Email service not configured' };
 

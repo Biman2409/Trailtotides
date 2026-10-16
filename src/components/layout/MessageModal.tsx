@@ -22,7 +22,8 @@ export default function MessageModal({ isOpen, onClose, userEmail }: MessageModa
 
     setStatus("loading");
     try {
-      await submitMessage(message);
+      const res = await submitMessage(message);
+      if (!res.ok) throw new Error(res.error);
       setStatus("success");
       setTimeout(() => {
         onClose();
