@@ -134,7 +134,8 @@ function LoginForm() {
 
       <p className="mt-8 text-center text-white/30 text-sm font-medium">
         New here?{" "}
-        <Link href="/auth/signup" className="text-[#ff5100] hover:text-[#ff7d47] font-bold transition-colors">
+        {/* Carry ?next through signup so a new account still lands where they were going */}
+        <Link href={searchParams.get("next") ? `/auth/signup?next=${encodeURIComponent(searchParams.get("next")!)}` : "/auth/signup"} className="text-[#ff5100] hover:text-[#ff7d47] font-bold transition-colors">
           Create account
         </Link>
       </p>

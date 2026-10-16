@@ -114,7 +114,7 @@ export default function RealityCheck({ adventure }: Props) {
           </div>
           <p className="mt-3 text-xs" style={{ color: "var(--text-muted)" }}>
             <span style={{ color: "var(--text-secondary)" }}>{rankLabel}</span> ·{" "}
-            <Link href="/matchmaker" className="hover:text-[#ff5100] transition-colors">Retake</Link>
+            <Link href={`/matchmaker?retake=1&from=${adventure.slug}`} className="hover:text-[#ff5100] transition-colors">Retake</Link>
           </p>
         </div>
       </div>

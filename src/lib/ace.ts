@@ -410,9 +410,46 @@ export function computeDifficulty(ace: ACE): string {
   return "Extreme";
 }
 
-/** Returns the ACE profile from manually entered data, or blank if not yet set. */
+/** True when the adventure has a hand-set ACE profile (not an estimate). */
+export function hasRealACE(a: Adventure): boolean {
+  return !!a.ace && Object.values(a.ace).some((v) => (v as number) > 0);
+}
+
+const DIFFICULTY_LEVEL: Record<string, number> = { Easy: 1, Moderate: 2, Hard: 3, Advanced: 4, Extreme: 5 };
+
+/** Altitude band (1–5) from a string like "5,359m"; 0 when unknown */
+function altitudeLevel(alt?: string): number {
+  const m = alt ? Number(alt.replace(/[^\d.]/g, "")) : NaN;
+  if (!m || Number.isNaN(m)) return 0;
+  return m < 1500 ? 1 : m < 2500 ? 2 : m < 3500 ? 3 : m < 4500 ? 4 : 5;
+}
+
+/**
+ * A cautious ACE estimate for adventures whose profile hasn't been set yet, from their type,
+ * difficulty and top altitude. Without it, a blank profile has no demands and rates every
+ * visitor "Ready" — even for an Extreme ride over 5,000m passes.
+ */
+export function estimateACE(a: Adventure): ACE {
+  const d = DIFFICULTY_LEVEL[a.difficulty] ?? 3;
+  const alt = altitudeLevel(a.altitude);
+  const c = (n: number) => Math.min(5, Math.max(0, Math.round(n)));
+  switch (a.type) {
+    case "Mountaineering":
+      return { stamina: c(d + 1), power: c(d), strength: c(d), agility: c(d), water: 0, altitude: c(Math.max(alt, d)), focus: c(d), nerve: c(d) };
+    case "Motorcycling":
+      return { stamina: c(d - 1), power: 1, strength: c(d - 2), agility: c(d - 2), water: 0, altitude: alt, focus: c(d - 1), nerve: c(d - 1) };
+    case "Cycling":
+      return { stamina: c(d), power: c(d - 1), strength: c(d - 2), agility: c(d - 2), water: 0, altitude: alt, focus: c(d - 2), nerve: c(d - 1) };
+    case "Diving": case "Kayaking":
+      return { stamina: c(d - 1), power: c(d - 2), strength: c(d - 2), agility: c(d - 2), water: c(d + 1), altitude: 0, focus: c(d - 1), nerve: c(d - 1) };
+    default: // Trekking and everything on foot
+      return { stamina: c(d), power: c(d - 1), strength: c(d - 1), agility: c(d - 1), water: 0, altitude: alt, focus: c(d - 2), nerve: c(d - 1) };
+  }
+}
+
+/** The adventure's ACE profile: hand-set when available, otherwise a cautious estimate. */
 export function getACE(a: Adventure): ACE {
-  return a.ace ? { ...(a.ace as ACE) } : { ...BLANK_ACE };
+  return hasRealACE(a) ? { ...BLANK_ACE, ...(a.ace as ACE) } : estimateACE(a);
 }
 
 /** Generate a plain-English summary for an adventure's ACE profile */

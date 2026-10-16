@@ -94,36 +94,66 @@ export function isStale(updatedAt?: string): boolean {
 }
 
 // ─── Group links ─────────────────────────────────────────────────────────────
-// A member is "Name~34232323": a display name plus one digit (1–5) per axis. Only the eight
-// capability levels travel in the link — never health answers.
+// A member is "Name~34232323~k3x9ab": a display name, one digit (1–5) per axis, and a short
+// one-way tag derived from the account id, so the same person is recognised (and replaced,
+// not duplicated) when they rejoin with a new name or refreshed levels. Only the eight
+// capability levels travel in the link — never health answers. Older links without a tag
+// still decode.
 
-export interface GroupMember { name: string; ace: ACE }
+export interface GroupMember { name: string; ace: ACE; id?: string }
+
+/** A link holds at most this many people; the page stops new joins at the cap. */
+export const MAX_GROUP = 8;
 
 /** Where a visitor came from when they left a group link to take the quick match. */
 export const PENDING_GROUP_KEY = "ttt_pending_group";
 
+/** Short, non-reversible tag for an account id (FNV-1a, base36). */
+export function memberTag(accountId: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < accountId.length; i++) {
+    h ^= accountId.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return h.toString(36).padStart(6, "0").slice(-6);
+}
+
 export function encodeMember(m: GroupMember): string {
   const name = m.name.replace(/[~,]/g, " ").trim().slice(0, 24) || "Friend";
-  return `${encodeURIComponent(name)}~${AXES.map((ax) => Math.min(5, Math.max(1, Math.round(m.ace[ax])))).join("")}`;
+  const digits = AXES.map((ax) => Math.min(5, Math.max(1, Math.round(m.ace[ax])))).join("");
+  return `${encodeURIComponent(name)}~${digits}${m.id ? `~${m.id}` : ""}`;
 }
 
 export function decodeMembers(param: string | null): GroupMember[] {
   if (!param) return [];
-  return param.split(",").slice(0, 8).flatMap((chunk) => {
-    const [rawName, digits] = chunk.split("~");
+  return param.split(",").slice(0, MAX_GROUP).flatMap((chunk) => {
+    const [rawName, digits, tag] = chunk.split("~");
     if (!digits || !/^[1-5]{8}$/.test(digits)) return [];
     const ace = Object.fromEntries(AXES.map((ax, i) => [ax, Number(digits[i])])) as unknown as ACE;
     let name = "Friend";
     try { name = decodeURIComponent(rawName || "Friend").slice(0, 24); } catch {}
-    return [{ name, ace }];
+    const id = tag && /^[0-9a-z]{6}$/.test(tag) ? tag : undefined;
+    return [{ name, ace, ...(id ? { id } : {}) }];
   });
+}
+
+export interface GroupRow {
+  adventure: Adventure;
+  scores: number[];
+  min: number;
+  /** Index of the member with the lowest match — the one the group waits on */
+  weakest: number;
+  /** What that member is short on for this adventure */
+  weakestGaps: Gap[];
 }
 
 /** Adventures everyone in the group is ready for, plus ones that are a stretch for someone. */
 export function groupMatches(members: GroupMember[], all: Adventure[]) {
-  const rows = all.map((a) => {
+  const rows: GroupRow[] = all.map((a) => {
     const scores = members.map((m) => matchScore(m.ace, a));
-    return { adventure: a, scores, min: Math.min(...scores) };
+    const min = Math.min(...scores);
+    const weakest = scores.indexOf(min);
+    return { adventure: a, scores, min, weakest, weakestGaps: gapsFor(members[weakest].ace, a) };
   });
   const everyone = rows.filter((r) => r.min >= 80).sort((x, y) => y.min - x.min);
   const someStretch = rows.filter((r) => r.min >= 55 && r.min < 80).sort((x, y) => y.min - x.min);

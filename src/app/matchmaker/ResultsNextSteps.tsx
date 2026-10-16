@@ -85,10 +85,15 @@ export default function ResultsNextSteps({
             .map((c) => `${AXIS_LABEL[c.axis]} ${c.from}→${c.to} (${c.adventure})`).join(", ")}.`} />
       )}
 
-      {!top && <Card tone="neutral" icon={<Users className="w-4 h-4" />}
+      {/* Group Match is signed-in only — signed-out visitors are sent through login first */}
+      {!top && loggedIn !== null && <Card tone="neutral" icon={<Users className="w-4 h-4" />}
         title="Planning with friends?"
-        body="Share a link — each friend adds their profile, and you'll see the adventures you're all ready for."
-        action={<Link href="/matchmaker/group" className={secondaryBtn}>Start a group <ArrowRight className="w-3.5 h-3.5" /></Link>} />}
+        body={loggedIn
+          ? "Share a link — each friend adds their profile, and you'll see the adventures you're all ready for."
+          : "Group Match needs a free account for everyone in the group. Sign in to start one and share the link."}
+        action={loggedIn
+          ? <Link href="/matchmaker/group" className={secondaryBtn}>Start a group <ArrowRight className="w-3.5 h-3.5" /></Link>
+          : <Link href={`/auth/login?next=${encodeURIComponent("/matchmaker/group")}&message=${encodeURIComponent("Sign in to start a Group Match")}`} className={secondaryBtn}>Sign in to start <ArrowRight className="w-3.5 h-3.5" /></Link>} />}
     </div>
   );
 }

@@ -22,6 +22,13 @@ export default function SignUpPage() {
   const [avatarDropdownOpen, setAvatarDropdownOpen] = useState(false);
   const avatarDropdownRef = useRef<HTMLDivElement>(null);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Where they were headed before signing up (e.g. a group link); read on the client so the
+  // page stays static. Only same-site paths are honoured.
+  const [next, setNext] = useState<string | null>(null);
+  useEffect(() => {
+    const n = new URLSearchParams(window.location.search).get("next");
+    if (n && n.startsWith("/") && !n.startsWith("//")) setNext(n);
+  }, []);
 
   // Close avatar dropdown on outside click
   useEffect(() => {
@@ -63,6 +70,11 @@ export default function SignUpPage() {
     } else if (result?.success) {
       if (selectedAvatarId !== null) {
         localStorage.setItem("ttt_avatar_id", String(selectedAvatarId));
+      }
+      if (next) {
+        // Straight to login, which returns them to where they were going
+        window.location.replace(`/auth/login?next=${encodeURIComponent(next)}&message=${encodeURIComponent("Account created — log in to continue.")}`);
+        return;
       }
       setMessage({ type: "success", text: result.success });
       (e.target as HTMLFormElement).reset();
@@ -389,7 +401,7 @@ export default function SignUpPage() {
 
           <p className="mt-4 text-center text-white/30 text-xs font-medium">
             Already have an account?{" "}
-            <Link href="/auth/login" className="text-[#ff5100] hover:text-[#ff7d47] font-bold transition-colors">
+            <Link href={next ? `/auth/login?next=${encodeURIComponent(next)}` : "/auth/login"} className="text-[#ff5100] hover:text-[#ff7d47] font-bold transition-colors">
               Log in
             </Link>
           </p>

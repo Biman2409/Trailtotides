@@ -2,21 +2,21 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 import {
-  ChevronRight, ChevronLeft, MapPin, ArrowRight, RotateCcw,
+  ChevronRight, ChevronLeft, ArrowRight, RotateCcw,
   Shield, CheckCircle2, AlertTriangle, Loader2, Wind, HeartPulse,
   Stethoscope, Target, BookOpen,
 } from "lucide-react";
 import { Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost, TrendingUp, Lock } from "@/lib/localIcons";
 import ACERadar from "@/components/ui/custom/ACERadar";
+import AdventureCard from "@/components/ui/custom/AdventureCard";
+import SectionTexture from "@/components/ui/custom/SectionTexture";
 import { ADVENTURE_FACTS } from "@/lib/adventureFacts";
-import Pill from "@/components/ui/custom/Pill";
 import AchievementBadges from "@/components/ui/custom/AchievementBadges";
 import AchievementShareButton from "@/components/ui/custom/AchievementShareButton";
 import {
-  saveProfile, clearProfile, saveProfileToServer, loadProfileFromServer,
+  saveProfile, saveProfileToServer, loadProfileFromServer,
   saveMedicalFlags, saveMedicalFlagsToServer,
   saveConsent, saveConsentToServer, loadConsentFromServer, MATCHMAKER_CONSENT_VERSION,
   type StoredProfile,
@@ -511,98 +511,185 @@ function LoadingScreen() {
   );
 }
 
-// ─── Capability readout ───────────────────────────────────────────────────────
+// ─── Results: shared bits ─────────────────────────────────────────────────────
 
 const AXIS_ORDER = ["stamina", "power", "strength", "agility", "water", "altitude", "focus", "nerve"];
 
-function CapabilityReadout({ axisLabels, axisDesc, axisColors, userAxes, rawAxes, decayNotes }: {
+const BUCKETS = {
+  ready:   { key: "ready",   label: "Ready now", short: "Ready",   color: "#10b981", blurb: "Within your current capability", icon: <CheckCircle2 className="w-4 h-4" />, explore: "/explore?ace=ready" },
+  stretch: { key: "stretch", label: "A stretch", short: "Stretch", color: "#f59e0b", blurb: "Just above your range — reachable with focused training", icon: <TrendingUp className="w-4 h-4" />, explore: "/explore?ace=stretch" },
+  notyet:  { key: "notyet",  label: "Not yet",   short: "Not yet", color: "#f43f5e", blurb: "Needs capability well beyond your current profile", icon: <Lock className="w-4 h-4" />, explore: "/explore?ace=out-of-range" },
+} as const;
+type BucketKey = keyof typeof BUCKETS;
+
+/** Counts up from 0 the first time it renders, so the score lands with a little weight */
+function useCountUp(target: number, ms = 1100) {
+  const [v, setV] = useState(0);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { setV(target); return; }
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / ms);
+      setV(Math.round(target * (1 - Math.pow(1 - t, 3))));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, ms]);
+  return v;
+}
+
+/** Circular gauge for the 0–40 score */
+function ScoreGauge({ score, color }: { score: number; color: string }) {
+  const shown = useCountUp(score);
+  const R = 52, C = 2 * Math.PI * R;
+  // A 270° arc, open at the bottom like a dial
+  const arc = C * 0.75;
+  const filled = arc * (shown / 40);
+  return (
+    <div className="relative w-[148px] h-[148px] sm:w-[168px] sm:h-[168px] shrink-0">
+      <svg viewBox="0 0 128 128" className="w-full h-full -rotate-[225deg]">
+        <circle cx="64" cy="64" r={R} fill="none" stroke="var(--border-default)" strokeWidth="9" strokeLinecap="round" strokeDasharray={`${arc} ${C}`} />
+        <circle cx="64" cy="64" r={R} fill="none" stroke={color} strokeWidth="9" strokeLinecap="round" strokeDasharray={`${filled} ${C}`}
+          style={{ filter: `drop-shadow(0 0 6px ${color}88)` }} />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-[44px] sm:text-[52px] font-black tabular-nums leading-none" style={{ color }}>{shown}</span>
+        <span className="text-[11px] font-bold uppercase tracking-[0.2em] mt-1" style={{ color: "var(--text-tertiary)" }}>of 40</span>
+      </div>
+    </div>
+  );
+}
+
+/** Five-segment level meter; `target` outlines the levels still to earn */
+function LevelMeter({ value, target, color, size = "md" }: { value: number; target?: number; color: string; size?: "sm" | "md" }) {
+  const h = size === "sm" ? "h-1.5" : "h-2";
+  return (
+    <div className="flex gap-1" aria-label={`Level ${value} of 5`}>
+      {[1, 2, 3, 4, 5].map((l) => {
+        const have = l <= value;
+        const need = !have && target !== undefined && l <= target;
+        return (
+          <span
+            key={l}
+            className={`flex-1 ${h} rounded-full transition-colors duration-500`}
+            style={{
+              background: have ? color : "var(--border-subtle)",
+              boxShadow: need ? `inset 0 0 0 1.5px ${color}` : have ? `0 0 8px ${color}55` : "none",
+              opacity: need ? 0.9 : 1,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+function SectionHead({ eyebrow, title, sub, right }: { eyebrow: string; title: string; sub?: string; right?: React.ReactNode }) {
+  return (
+    <div className="flex flex-wrap items-end justify-between gap-3 mb-5 sm:mb-6">
+      <div className="min-w-0">
+        <p className="text-[#ff5100] text-[11px] font-semibold tracking-[0.22em] uppercase mb-1.5">{eyebrow}</p>
+        <h2 className="t-text text-xl sm:text-2xl font-bold tracking-tight">{title}</h2>
+        {sub && <p className="text-[13px] mt-1 max-w-xl" style={{ color: "var(--text-secondary)" }}>{sub}</p>}
+      </div>
+      {right}
+    </div>
+  );
+}
+
+const panel = "relative overflow-hidden rounded-[24px] border";
+const panelStyle: React.CSSProperties = {
+  background: "linear-gradient(165deg, var(--bg-surface) 0%, var(--bg-card) 100%)",
+  borderColor: "var(--border-subtle)",
+  boxShadow: "0 24px 60px -24px rgba(var(--shadow-color), 0.35)",
+};
+
+// ─── Capabilities: radar + eight tiles ───────────────────────────────────────
+
+function CapabilityPanel({ axisLabels, axisDesc, axisColors, axisIcons, userAxes, rawAxes, decayNotes }: {
   axisLabels: Record<string, string>;
   axisDesc: Record<string, string>;
   axisColors: Record<string, string>;
-  userAxes: { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; focus: number; nerve: number };
+  axisIcons: Record<string, React.ReactNode>;
+  userAxes: ACE;
   rawAxes?: Record<string, number>;
   decayNotes?: string[];
 }) {
-  const [hoveredAxis, setHoveredAxis] = useState<AceAxis | null>(null);
-  const [expandedAxis, setExpandedAxis] = useState<AceAxis | null>(null);
+  const [hovered, setHovered] = useState<AceAxis | null>(null);
   const hasCalibration = !!rawAxes && !!decayNotes?.length;
+  const sorted = [...AXIS_ORDER].sort((a, b) => userAxes[b as AceAxis] - userAxes[a as AceAxis]);
+  const strongest = sorted.slice(0, 2);
+  const weakest = sorted.slice(-2).reverse();
 
   return (
-    <div className="px-5 sm:px-8 py-6 sm:py-7">
-      <div className="flex flex-col lg:flex-row lg:items-stretch gap-6 lg:gap-0">
-        {/* Radar column */}
-        <div className="shrink-0 flex flex-col items-center lg:items-start gap-3 mx-auto lg:mx-0 lg:pr-6">
-          <p className="text-xs uppercase tracking-[0.22em] font-semibold" style={{ color: "#ff5100" }}>
-            Capability Radar
-          </p>
-          <ACERadar
-            ace={userAxes}
-            userAce={hasCalibration ? (rawAxes as typeof userAxes) : undefined}
-            userColor="var(--accent-green)"
-            size={230}
-            showLabels
-            highlightAxis={hoveredAxis}
-          />
-          {hasCalibration && (
-            <div className="w-full max-w-[260px] rounded-lg px-3 py-2.5 space-y-1.5" style={{ background: "var(--accent-green-soft)", border: "1px solid var(--accent-green-border)" }}>
-              <p className="text-[8px] font-bold tabular-nums uppercase tracking-wide" style={{ color: "var(--accent-green)" }}>Calibrated — see adjustments</p>
-              <p className="text-[9px] leading-snug" style={{ color: "var(--text-tertiary)" }}>Solid = calibrated, dashed = raw self-report.</p>
-              {decayNotes!.map((note, i) => (
-                <p key={i} className="text-[9px] leading-snug" style={{ color: "var(--text-tertiary)" }}>{note}</p>
-              ))}
+    <div className={`${panel} p-5 sm:p-7`} style={panelStyle}>
+      <SectionTexture kind="tides" color="#3fc6bd" at="0% 100%" opacity={0.12} />
+      <div className="relative">
+        <SectionHead eyebrow="Capability radar" title="What your body is ready for" sub="Eight capabilities, each scored 1–5. Hover or tap a tile to see it on the radar." />
+        <div className="grid lg:grid-cols-[minmax(0,320px)_1fr] gap-6 lg:gap-8 items-start">
+          {/* Radar */}
+          <div className="flex flex-col items-center">
+            <div className="rounded-[20px] w-full flex justify-center py-3" style={{ background: "rgba(var(--fg-rgb, 255,255,255), 0.025)", border: "1px solid var(--border-subtle)" }}>
+              <ACERadar
+                ace={userAxes}
+                userAce={hasCalibration ? (rawAxes as unknown as ACE) : undefined}
+                userColor="var(--accent-green)"
+                size={300}
+                showLabels
+                highlightAxis={hovered}
+              />
             </div>
-          )}
-        </div>
+            <div className="w-full grid grid-cols-2 gap-2 mt-3">
+              <div className="rounded-xl px-3 py-2.5" style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.22)" }}>
+                <p className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "#10b981" }}>Strongest</p>
+                <p className="text-[12px] font-semibold mt-0.5 truncate t-text">{strongest.map((a) => axisLabels[a]).join(" · ")}</p>
+              </div>
+              <div className="rounded-xl px-3 py-2.5" style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.22)" }}>
+                <p className="text-[9px] font-bold uppercase tracking-[0.18em]" style={{ color: "#f59e0b" }}>Room to grow</p>
+                <p className="text-[12px] font-semibold mt-0.5 truncate t-text">{weakest.map((a) => axisLabels[a]).join(" · ")}</p>
+              </div>
+            </div>
+            {hasCalibration && (
+              <div className="w-full rounded-xl px-3 py-2.5 mt-2 space-y-1" style={{ background: "var(--accent-green-soft)", border: "1px solid var(--accent-green-border)" }}>
+                <p className="text-[9px] font-bold uppercase tracking-[0.16em]" style={{ color: "var(--accent-green)" }}>Calibrated</p>
+                <p className="text-[11px] leading-snug" style={{ color: "var(--text-tertiary)" }}>Solid = calibrated, dashed = what you reported.</p>
+                {decayNotes!.map((note, i) => <p key={i} className="text-[11px] leading-snug" style={{ color: "var(--text-tertiary)" }}>{note}</p>)}
+              </div>
+            )}
+          </div>
 
-        {/* Section divider — same treatment as the Achievements Unlocked split */}
-        <div className="border-t lg:border-t-0 lg:border-l" style={{ borderColor: "var(--border-subtle)" }} />
-
-        {/* Breakdown column — heading sits on the same line as Capability Radar */}
-        <div className="flex-1 min-w-0 pt-6 lg:pt-0 lg:pl-6">
-          <p className="text-[10px] font-bold tabular-nums uppercase tracking-[0.2em] mb-2.5" style={{ color: "#ff5100" }}>
-            Capability Breakdown
-          </p>
-
-          <div className="flex flex-col">
-            {AXIS_ORDER.map((axis) => {
+          {/* Tiles */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {AXIS_ORDER.map((axis, i) => {
               const color = axisColors[axis] ?? "#ff5100";
-              const val = (userAxes as Record<string, number>)[axis] ?? 0;
-              const isHovered = hoveredAxis === axis;
-              const isExpanded = expandedAxis === axis;
+              const val = userAxes[axis as AceAxis] ?? 0;
+              const on = hovered === axis;
               return (
-                <div key={axis}>
-                  {/* Tap or click to reveal the description below — works
-                      identically on touch and mouse, unlike a hover-only
-                      tooltip (which is unreachable on touch devices). */}
-                  <button
-                    type="button"
-                    className="w-full flex items-center gap-2 py-1 px-1.5 -mx-1.5 rounded-lg transition-colors duration-150 text-left"
-                    style={{ background: isHovered || isExpanded ? `${color}14` : "transparent" }}
-                    onMouseEnter={() => setHoveredAxis(axis as AceAxis)}
-                    onMouseLeave={() => setHoveredAxis(null)}
-                    onClick={() => setExpandedAxis((prev) => (prev === axis ? null : (axis as AceAxis)))}
-                    aria-expanded={isExpanded}
-                  >
-                    <span className="text-[9px] font-bold uppercase tracking-[0.08em] w-[46px] shrink-0" style={{ color }}>
-                      {axisLabels[axis]}
-                    </span>
-                    <div className="flex-1 h-[3px] rounded-full" style={{ background: "var(--border-subtle)" }}>
-                      <div className="h-full rounded-full transition-all duration-700" style={{ width: `${(val / 5) * 100}%`, background: color }} />
-                    </div>
-                    <span
-                      className="text-[10px] font-bold tabular-nums tabular-nums w-5 text-right shrink-0 transition-transform duration-150"
-                      style={{ color, transform: isHovered ? "scale(1.25)" : "scale(1)" }}
-                    >
-                      {val}
-                    </span>
-                  </button>
-
-                  {isExpanded && (
-                    <div className="px-1.5 pt-1 pb-2">
-                      <p className="text-[10px] leading-relaxed" style={{ color: "var(--text-tertiary)" }}>{axisDesc[axis]}</p>
-                    </div>
-                  )}
-                </div>
+                <button
+                  key={axis}
+                  type="button"
+                  onMouseEnter={() => setHovered(axis as AceAxis)}
+                  onMouseLeave={() => setHovered(null)}
+                  onFocus={() => setHovered(axis as AceAxis)}
+                  onBlur={() => setHovered(null)}
+                  onClick={() => setHovered((h) => (h === axis ? null : (axis as AceAxis)))}
+                  className="mx-tile text-left rounded-2xl p-3.5 transition-all duration-200"
+                  style={{
+                    background: on ? `${color}12` : "var(--bg-card)",
+                    border: `1px solid ${on ? `${color}66` : "var(--border-subtle)"}`,
+                    animationDelay: `${i * 60}ms`,
+                  }}
+                >
+                  <div className="flex items-center gap-2.5 mb-2.5">
+                    <span className="w-7 h-7 rounded-lg grid place-items-center shrink-0" style={{ background: `${color}1c`, color }}>{axisIcons[axis]}</span>
+                    <span className="flex-1 min-w-0 text-[13px] font-bold t-text">{axisLabels[axis]}</span>
+                    <span className="text-[13px] font-black tabular-nums" style={{ color }}>{val}<span className="text-[10px] font-bold" style={{ color: "var(--text-muted)" }}>/5</span></span>
+                  </div>
+                  <LevelMeter value={val} color={color} size="sm" />
+                  <p className="text-[11px] leading-snug mt-2.5 line-clamp-2" style={{ color: "var(--text-tertiary)" }}>{axisDesc[axis]}</p>
+                </button>
               );
             })}
           </div>
@@ -612,59 +699,158 @@ function CapabilityReadout({ axisLabels, axisDesc, axisColors, userAxes, rawAxes
   );
 }
 
-// ─── Training focus ───────────────────────────────────────────────────────────
+// ─── Matched adventures: tabs + the site's own cards ─────────────────────────
 
-interface TrainingItem { axis: string; current_level: number; required_level: number; recommendation: string; }
+function MatchedAdventures({ groups, initial }: { groups: Record<BucketKey, EnrichedAdventure[]>; initial: BucketKey }) {
+  const [tab, setTab] = useState<BucketKey>(initial);
+  // Let the hero's count tiles open a tab
+  useEffect(() => {
+    const open = (e: Event) => setTab((e as CustomEvent<BucketKey>).detail);
+    window.addEventListener("ttt:results-tab", open);
+    return () => window.removeEventListener("ttt:results-tab", open);
+  }, []);
 
-function TrainingSection({ trainingPlan, axisColors }: {
+  const b = BUCKETS[tab];
+  const list = groups[tab];
+  const full = list.map((e) => ALL_ADVENTURES.find((a) => a.slug === e.slug)).filter(Boolean) as typeof ALL_ADVENTURES;
+  const shown = full.slice(0, 6);
+
+  return (
+    <div id="matched-adventures" className={`${panel} p-5 sm:p-7`} style={{ ...panelStyle, scrollMarginTop: 88 }}>
+      <SectionTexture kind="trail" color="#ff5100" at="100% 0%" opacity={0.14} />
+      <div className="relative">
+        <SectionHead
+          eyebrow="Matched adventures"
+          title="Every adventure, rated for you"
+          sub="The same Ready, Stretch and Not yet you'll see on adventure cards across the site."
+        />
+
+        {/* Tabs */}
+        <div className="grid grid-cols-3 gap-2 mb-5" role="tablist" aria-label="Match groups">
+          {(Object.keys(BUCKETS) as BucketKey[]).map((k) => {
+            const g = BUCKETS[k];
+            const on = tab === k;
+            return (
+              <button
+                key={k}
+                type="button"
+                role="tab"
+                aria-selected={on}
+                onClick={() => setTab(k)}
+                className="rounded-2xl px-3 py-3 text-left transition-all duration-200"
+                style={{
+                  background: on ? `${g.color}14` : "var(--bg-card)",
+                  border: `1px solid ${on ? `${g.color}70` : "var(--border-subtle)"}`,
+                  boxShadow: on ? `0 0 0 3px ${g.color}14` : "none",
+                }}
+              >
+                <span className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.06em] sm:tracking-[0.12em]" style={{ color: g.color }}><span className="hidden sm:inline-flex">{g.icon}</span><span className="truncate">{g.short}</span></span>
+                <span className="block text-2xl sm:text-3xl font-black tabular-nums mt-1 t-text">{groups[k].length}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <p className="text-[12px] mb-4" style={{ color: "var(--text-tertiary)" }}>
+          <span className="font-semibold" style={{ color: b.color }}>{b.label}</span> — {b.blurb}.
+        </p>
+
+        {shown.length === 0 ? (
+          <div className="rounded-2xl px-4 py-8 text-center text-[13px]" style={{ background: "var(--bg-card)", border: "1px dashed var(--border-default)", color: "var(--text-tertiary)" }}>
+            Nothing here right now.
+          </div>
+        ) : (
+          <div key={tab} className="mx-fade flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory no-scrollbar -mx-5 px-5 scroll-px-5 sm:mx-0 sm:px-0 pb-2 sm:pb-0">
+            {shown.map((a) => (
+              <div key={a.id} className="snap-start shrink-0 w-[78vw] sm:w-auto">
+                <AdventureCard adventure={a} badge={false} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {list.length > shown.length && (
+          <Link
+            href={b.explore}
+            className="flex items-center justify-center gap-2 w-full py-3 mt-5 rounded-xl text-[13px] font-semibold transition-all hover:brightness-110"
+            style={{ color: b.color, background: `${b.color}0f`, border: `1px solid ${b.color}35` }}
+          >
+            See all {list.length} {b.short.toLowerCase()} adventures
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Training: what to build, and what it unlocks ────────────────────────────
+
+
+function TrainingPanel({ trainingPlan, axisColors, axisIcons, axisLabels, unlocks, neededBy }: {
   trainingPlan: TrainingItem[];
   axisColors: Record<string, string>;
   axisIcons: Record<string, React.ReactNode>;
+  axisLabels: Record<string, string>;
+  /** Adventures where this capability is the only thing holding you back */
+  unlocks: Record<string, number>;
+  /** Not-yet-ready adventures that need more of this capability */
+  neededBy: Record<string, number>;
 }) {
   const [showAll, setShowAll] = useState(false);
+  // Biggest unlock first: that's the training that opens up the most adventures
   const sorted = [...trainingPlan].sort((a, b) =>
+    (unlocks[b.axis] ?? 0) - (unlocks[a.axis] ?? 0) ||
+    (neededBy[b.axis] ?? 0) - (neededBy[a.axis] ?? 0) ||
     (b.required_level - b.current_level) - (a.required_level - a.current_level));
-  const visible  = showAll ? sorted : sorted.slice(0, 3);
-  const hasMore  = sorted.length > 3;
+  const visible = showAll ? sorted : sorted.slice(0, 4);
 
   return (
-    <div className="px-5 sm:px-8 py-6 sm:py-7">
-      <p className="text-xs uppercase tracking-[0.22em] font-semibold mb-1" style={{ color: "#ff5100" }}>
-        Training Focus
-      </p>
-      <p className="text-[13px] mb-5" style={{ color: "var(--text-secondary)" }}>Build these up to unlock more adventures.</p>
-
-      <div>
-        {visible.map((item, i) => {
-          const color = axisColors[item.axis] ?? "#ff5100";
-          const gap   = item.required_level - item.current_level;
-          return (
-            <div key={i} className="flex items-start gap-4 py-3.5" style={{ borderTop: i === 0 ? "none" : "1px solid var(--border-subtle)" }}>
-              <span className="text-[11px] font-bold tabular-nums tabular-nums shrink-0 pt-0.5" style={{ color }}>
-                {String(item.current_level).padStart(2, "0")}→{String(item.required_level).padStart(2, "0")}
-              </span>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <span className="t-text font-bold text-sm uppercase tracking-wide" style={{ color }}>{item.axis}</span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ border: `1px solid ${color}40`, color }}>
-                    +{gap} level{gap > 1 ? "s" : ""}
-                  </span>
+    <div id="training-focus" className={`${panel} p-5 sm:p-7`} style={{ ...panelStyle, scrollMarginTop: 88 }}>
+      <SectionTexture kind="trail" color="#a78bfa" at="0% 100%" opacity={0.12} />
+      <div className="relative">
+        <SectionHead eyebrow="Training focus" title="Build these to unlock more" sub="Ordered by how many adventures each one opens up." />
+        <div className="grid sm:grid-cols-2 gap-3">
+          {visible.map((item, i) => {
+            const color = axisColors[item.axis] ?? "#ff5100";
+            const gap = item.required_level - item.current_level;
+            const n = unlocks[item.axis] ?? 0;
+            const needed = neededBy[item.axis] ?? 0;
+            return (
+              <div key={item.axis} className="mx-tile rounded-2xl p-4" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", animationDelay: `${i * 70}ms` }}>
+                <div className="flex items-center gap-2.5 mb-3">
+                  <span className="w-8 h-8 rounded-xl grid place-items-center shrink-0" style={{ background: `${color}1c`, color }}>{axisIcons[item.axis]}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[14px] font-bold t-text">{axisLabels[item.axis] ?? item.axis}</p>
+                    <p className="text-[11px] tabular-nums" style={{ color: "var(--text-tertiary)" }}>Level {item.current_level} → {item.required_level}</p>
+                  </div>
+                  {n > 0 ? (
+                    <span className="text-[10px] font-bold px-2 py-1 rounded-full shrink-0" style={{ background: "rgba(16,185,129,0.12)", color: "#10b981" }}>
+                      Unlocks {n}
+                    </span>
+                  ) : needed > 0 ? (
+                    <span className="text-[10px] font-bold px-2 py-1 rounded-full shrink-0" style={{ background: "var(--bg-card-hover)", color: "var(--text-secondary)" }}>
+                      Needed for {needed}
+                    </span>
+                  ) : null}
                 </div>
-                <p className="text-[11px] leading-[1.55]" style={{ color: "var(--text-tertiary)" }}>{item.recommendation}</p>
+                <LevelMeter value={item.current_level} target={item.required_level} color={color} />
+                <p className="text-[10px] font-semibold mt-1.5" style={{ color }}>+{gap} level{gap > 1 ? "s" : ""}</p>
+                <p className="text-[12px] leading-relaxed mt-2" style={{ color: "var(--text-secondary)" }}>{item.recommendation}</p>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
+        {sorted.length > 4 && (
+          <button
+            onClick={() => setShowAll((v) => !v)}
+            className="w-full mt-3 py-2.5 rounded-xl text-[12px] font-semibold transition-colors hover:text-[var(--text-primary)]"
+            style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", color: "var(--text-tertiary)" }}
+          >
+            {showAll ? "Show less" : `Show ${sorted.length - 4} more`}
+          </button>
+        )}
       </div>
-
-      {/* Expand toggle */}
-      {hasMore && (
-        <button onClick={() => setShowAll(v => !v)}
-          className="w-full mt-2 py-2.5 rounded-lg text-[11px] font-semibold transition-all"
-          style={{ background: "var(--bg-page)", border: "1px solid var(--border-subtle)", color: "var(--text-tertiary)" }}>
-          {showAll ? "Show less" : `Show ${sorted.length - 3} more areas`}
-        </button>
-      )}
     </div>
   );
 }
@@ -686,43 +872,41 @@ function ResultsScreen({
 }) {
   const { userAxes, adventures: enriched, trainingPlan, rawAxes, decayNotes } = result;
 
-  // If the assessment was reached from a specific trek page (via ?from=slug),
-  // give the user a direct way back instead of stranding them here — the
-  // "All adventures" / "Retake assessment" pair otherwise has no path back
-  // to the trek that sent them here.
+  // Reached from a trek page (?from=slug): offer the way back
   const searchParams = useSearchParams();
   const fromSlug = searchParams.get("from");
   const fromAdventure = fromSlug ? ALL_ADVENTURES.find((a) => a.slug === fromSlug) : null;
 
-  const inZone    = enriched.filter(a => a.status === "IN_ZONE");
-  const stretch   = enriched.filter(a => a.status === "STRETCH");
-  const restricted = enriched.filter(a => a.status === "RESTRICTED");
+  const byFit = (a: EnrichedAdventure, b: EnrichedAdventure) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0);
+  const groups: Record<BucketKey, EnrichedAdventure[]> = {
+    ready: enriched.filter((a) => a.status === "IN_ZONE").sort(byFit),
+    stretch: enriched.filter((a) => a.status === "STRETCH").sort(byFit),
+    notyet: enriched.filter((a) => a.status === "RESTRICTED").sort(byFit),
+  };
+  const initialTab: BucketKey = groups.ready.length ? "ready" : groups.stretch.length ? "stretch" : "notyet";
 
-  // Overall score — sum all axes without filtering so 0s count correctly
+  // How many not-yet-ready adventures each capability is holding back
+  // For each training item: re-score every not-yet-ready adventure as if that capability had
+  // reached its target, and count how many would become Ready. That's what the training buys.
+  const unlocks: Record<string, number> = {};
+  const neededBy: Record<string, number> = {};
+  const notReady = enriched.filter((a) => a.status !== "IN_ZONE");
+  trainingPlan.forEach((item) => {
+    const lifted = { ...userAxes, [item.axis]: item.required_level } as unknown as ACE;
+    unlocks[item.axis] = notReady.filter((a) => computeMatchScore(lifted, a.requirements as unknown as ACE) >= 80).length;
+    neededBy[item.axis] = notReady.filter((a) => a.weakAxes.includes(item.axis)).length;
+  });
+
   const totalScore = Object.values(userAxes).reduce((a, b) => a + b, 0);
-  const resultAce = { stamina: userAxes.stamina ?? 0, power: userAxes.power ?? 0, strength: userAxes.strength ?? 0, agility: userAxes.agility ?? 0, water: userAxes.water ?? 0, altitude: userAxes.altitude ?? 0, focus: userAxes.focus ?? 0, nerve: userAxes.nerve ?? 0 };
+  const resultAce: ACE = { stamina: userAxes.stamina ?? 0, power: userAxes.power ?? 0, strength: userAxes.strength ?? 0, agility: userAxes.agility ?? 0, water: userAxes.water ?? 0, altitude: userAxes.altitude ?? 0, focus: userAxes.focus ?? 0, nerve: userAxes.nerve ?? 0 };
   const achievements = getAchievements(resultAce);
-  const tier =
-    totalScore >= 40 ? { label: "Apex",        color: "#a78bfa" } :
-    totalScore >= 32 ? { label: "Vanguard",    color: "#f97316" } :
-    totalScore >= 24 ? { label: "Trailblazer", color: "#f59e0b" } :
-    totalScore >= 16 ? { label: "Navigator",   color: "#4ade80" } :
-    totalScore >= 8  ? { label: "Pathfinder",  color: "#22d3ee" } :
-                       { label: "Uncharted",   color: "#6b7280" };
-  const tierRank = RANKS.find(r => r.label === tier.label);
 
-  // Ruler position math — shared by the ruler and the status line below it
-  const currentRankIndex = tierRank ? RANKS.indexOf(tierRank) : 0;
-  const totalRanks = RANKS.length;
-  const nextRank = RANKS[currentRankIndex + 1] ?? null;
-  const rawPct = nextRank
-    ? Math.min(100, Math.round(((totalScore - RANKS[currentRankIndex].minScore) / (nextRank.minScore - RANKS[currentRankIndex].minScore)) * 100))
-    : 100;
-  const progressPct = Math.max(0, rawPct);
+  const rankIndex = Math.max(0, RANKS.reduce((idx, r, i) => (totalScore >= r.minScore ? i : idx), 0));
+  const tier = RANKS[rankIndex];
+  const nextRank = RANKS[rankIndex + 1] ?? null;
+  const progressPct = nextRank ? Math.min(100, Math.max(0, ((totalScore - tier.minScore) / (nextRank.minScore - tier.minScore)) * 100)) : 100;
   const ptsNeeded = nextRank ? nextRank.minScore - totalScore : 0;
-  const rulerPct = nextRank
-    ? ((currentRankIndex + progressPct / 100) / (totalRanks - 1)) * 100
-    : 100;
+  const ladderPct = ((rankIndex + progressPct / 100) / (RANKS.length - 1)) * 100;
 
   const AXIS_LABELS: Record<string, string> = {
     stamina: "Stamina", power: "Power", strength: "Strength",
@@ -730,7 +914,6 @@ function ResultsScreen({
     focus: "Focus", nerve: "Nerve",
   };
   const AXIS_DESC_BY_LEVEL: Record<string, string[]> = {
-    //                  Lv1                                                                    Lv2                                                                Lv3                                                                    Lv4                                                        Lv5
     stamina:  ["Comfortable moving for under an hour before you need a real break.", "You hold a relaxed pace for 1–2 hours before tiring.", "You keep a steady pace for 2–4 hours with normal rest stops.", "You push through 4–6 hours of hard effort without burning out.", "You sustain 6+ hours of hard effort with barely any drop-off."],
     power:    ["You manage light loads — comfortably under 5kg — without strain.", "You carry a 5–8kg pack for short stretches without much trouble.", "You handle an 8–12kg load comfortably over longer stretches.", "You haul 12–18kg of gear all day and still perform.", "You move 18kg+ loads with no real ceiling in sight."],
     strength: ["You manage everyday lifting, but heavier loads wear you down fast.", "You can lift roughly a quarter of your bodyweight without much strain.", "You handle a third to half your bodyweight with solid control.", "You sustain loads close to your own bodyweight without losing form.", "You lift beyond your own bodyweight — genuinely elite raw strength."],
@@ -747,208 +930,185 @@ function ResultsScreen({
     })
   );
 
-  const sectionBorder = { borderTop: "1px solid var(--border-subtle)" };
+  const jumpTo = (k: BucketKey) => {
+    window.dispatchEvent(new CustomEvent("ttt:results-tab", { detail: k }));
+    document.getElementById("matched-adventures")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
-
-      {/* ── PAGE TITLE ────────────────────────────────────────────────────────── */}
-      <FadeInSection>
-      <div className="mb-5 sm:mb-6">
-        <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-2">Adventure Matchmaker</p>
-        <h2 className="t-text text-2xl sm:text-3xl font-bold tracking-tight">Your fitness profile</h2>
-      </div>
-      </FadeInSection>
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-12 sm:pt-12 sm:pb-16 space-y-5 sm:space-y-6">
 
       <ResultsNextSteps placement="top" isQuick={isQuick} onRefine={onRefine} onRetake={onReset} ageDays={ageDays} />
 
-      {/* ── THE DOCUMENT ──────────────────────────────────────────────────────── */}
-      <div className="rounded-2xl border overflow-hidden" style={{ background: "var(--bg-surface)", borderColor: "var(--border-default)", boxShadow: "0 24px 60px -20px rgba(0,0,0,0.25)" }}>
+      {/* ── HERO: rank, score, ladder, counts ───────────────────────────────── */}
+      <FadeInSection>
+        <div className={`${panel} px-5 sm:px-8 pt-6 sm:pt-8 pb-6 sm:pb-7`} style={{ ...panelStyle, borderColor: `${tier.color}40` }}>
+          <SectionTexture kind="trail" color={tier.color} at="85% 15%" opacity={0.28} />
+          <div className="absolute -top-24 -right-16 w-80 h-80 rounded-full pointer-events-none blur-[90px]" style={{ background: tier.color, opacity: 0.16 }} />
 
-        {/* ── MASTHEAD: score + tier + ruler ── */}
-        <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-7 sm:pb-8">
-          <div className="flex items-center justify-between mb-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: "#ff5100" }}>Your score</p>
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--accent-green)" }} />
-              <p className="text-xs" style={{ color: "var(--accent-green)" }}>Assessment complete</p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-end gap-x-5 gap-y-2 mb-8">
-            <div className="flex items-baseline">
-              <span className="text-[56px] sm:text-[72px] font-bold tabular-nums leading-none tabular-nums" style={{ color: tier.color }}>{totalScore}</span>
-              <span className="text-lg sm:text-xl font-bold tabular-nums" style={{ color: "var(--text-muted)" }}>/40</span>
-            </div>
-            <div className="pb-1 sm:pb-2">
-              <p className="text-[9px] uppercase tracking-[0.22em] font-bold mb-0.5" style={{ color: "var(--text-tertiary)" }}>Your rank</p>
-              <h1 className="text-3xl sm:text-[40px] font-bold tracking-tight leading-none" style={{ color: tier.color }}>{tier.label}</h1>
-            </div>
-          </div>
-
-          {/* Tier ruler — signature element */}
           <div className="relative">
-            <div className="relative h-[2px] rounded-full" style={{ background: "var(--border-default)" }}>
-              <div className="absolute inset-y-0 left-0 rounded-full transition-all duration-700" style={{ width: `${rulerPct}%`, background: tier.color }} />
-              {RANKS.map((rank, i) => (
-                <div key={rank.label} className="absolute top-1/2" style={{ left: `${(i / (totalRanks - 1)) * 100}%`, transform: "translate(-50%, -50%)" }}>
-                  <div className="w-px h-3" style={{ background: i <= currentRankIndex ? tier.color : "var(--border-default)" }} />
+            <div className="flex items-center justify-between gap-3 mb-5 sm:mb-6">
+              <p className="text-[#ff5100] text-[11px] font-semibold tracking-[0.22em] uppercase"><span className="hidden sm:inline">Adventure Matchmaker · </span>Your profile</p>
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0" style={{ background: "var(--accent-green-soft)", color: "var(--accent-green)", border: "1px solid var(--accent-green-border)" }}>
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--accent-green)" }} />
+                {isQuick ? "Quick match" : <><span className="sm:hidden">Done</span><span className="hidden sm:inline">Assessment complete</span></>}
+              </span>
+            </div>
+
+            <div className="flex flex-col-reverse sm:flex-row sm:items-center gap-5 sm:gap-8">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <span className="mx-rank-icon w-14 h-14 sm:w-16 sm:h-16 rounded-2xl grid place-items-center shrink-0" style={{ background: `${tier.color}1a`, color: tier.color, boxShadow: `0 0 0 1px ${tier.color}40, 0 0 30px ${tier.color}30` }}>
+                    <span className="scale-[1.6]">{tier.icon}</span>
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.22em]" style={{ color: "var(--text-tertiary)" }}>Your rank</p>
+                    <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-[1.05]" style={{ color: tier.color }}>{tier.label}</h1>
+                  </div>
                 </div>
-              ))}
-              <div className="absolute top-1/2 transition-all duration-700" style={{ left: `${rulerPct}%`, transform: "translate(-50%, -50%)" }}>
-                <div className="w-3 h-3 rounded-full border-2" style={{ background: tier.color, borderColor: "var(--bg-surface)", boxShadow: `0 0 10px ${tier.color}` }} />
+                <p className="text-[14px] mt-3" style={{ color: "var(--text-secondary)" }}>
+                  {tier.desc}.{" "}
+                  {nextRank
+                    ? <><span className="font-bold tabular-nums" style={{ color: tier.color }}>{ptsNeeded} point{ptsNeeded === 1 ? "" : "s"}</span> to <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span>.</>
+                    : <>You&apos;ve reached the top rank.</>}
+                </p>
+                {trainingPlan.length > 0 && (
+                  <a
+                    href="#training-focus"
+                    onClick={(e) => { e.preventDefault(); document.getElementById("training-focus")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+                    className="inline-flex items-center gap-1.5 mt-4 px-4 py-2.5 rounded-xl text-[13px] font-bold text-white transition-all hover:brightness-110 hover:-translate-y-0.5"
+                    style={{ background: "#ff5100", boxShadow: "0 8px 24px rgba(255,81,0,0.3)" }}
+                  >
+                    How to level up <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                )}
+              </div>
+              <div className="self-center sm:self-auto">
+                <ScoreGauge score={totalScore} color={tier.color} />
               </div>
             </div>
 
-            {/* Tier name labels — hidden on mobile where 6 labels collide;
-                the current tier is already shown prominently above. */}
-            <div className="relative mt-3 h-4 hidden sm:block">
-              {RANKS.map((rank, i) => (
-                <span
-                  key={rank.label}
-                  className="absolute text-[8px] sm:text-[9px] font-bold tabular-nums uppercase tracking-wide whitespace-nowrap top-0"
-                  style={{
-                    left: `${(i / (totalRanks - 1)) * 100}%`,
-                    transform: i === 0 ? "none" : i === totalRanks - 1 ? "translateX(-100%)" : "translateX(-50%)",
-                    color: i === currentRankIndex ? tier.color : i < currentRankIndex ? "var(--text-tertiary)" : "var(--text-secondary)",
-                  }}
-                >
-                  {rank.label}
-                </span>
-              ))}
+            {/* Rank ladder */}
+            <div className="mt-7 sm:mt-8">
+              <div className="relative h-11 mx-3">
+                <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[3px] rounded-full" style={{ background: "var(--border-default)" }} />
+                <div className="mx-ladder absolute left-0 top-1/2 -translate-y-1/2 h-[3px] rounded-full" style={{ width: `${ladderPct}%`, background: `linear-gradient(90deg, ${RANKS[0].color}, ${tier.color})`, boxShadow: `0 0 10px ${tier.color}80` }} />
+                {RANKS.map((r, i) => {
+                  const reached = i <= rankIndex;
+                  const current = i === rankIndex;
+                  return (
+                    <span
+                      key={r.label}
+                      className="absolute top-1/2 grid place-items-center rounded-full transition-all"
+                      title={r.label}
+                      style={{
+                        left: `${(i / (RANKS.length - 1)) * 100}%`,
+                        transform: "translate(-50%, -50%)",
+                        width: current ? 40 : 26, height: current ? 40 : 26,
+                        background: reached ? `${r.color}22` : "var(--bg-card)",
+                        border: `1.5px solid ${reached ? r.color : "var(--border-default)"}`,
+                        color: reached ? r.color : "var(--text-muted)",
+                        boxShadow: current ? `0 0 0 4px ${r.color}20, 0 0 20px ${r.color}60` : "none",
+                      }}
+                    >
+                      <span style={{ transform: current ? "scale(0.95)" : "scale(0.6)" }}>{r.icon}</span>
+                    </span>
+                  );
+                })}
+              </div>
+              <div className="relative h-4 mt-1.5 mx-3 hidden sm:block">
+                {RANKS.map((r, i) => (
+                  <span
+                    key={r.label}
+                    className="absolute text-[9px] font-bold uppercase tracking-[0.12em] whitespace-nowrap"
+                    style={{
+                      left: `${(i / (RANKS.length - 1)) * 100}%`,
+                      transform: "translateX(-50%)",
+                      color: i === rankIndex ? r.color : i < rankIndex ? "var(--text-tertiary)" : "var(--text-muted)",
+                    }}
+                  >
+                    {r.label}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-5 rounded-xl px-3.5 py-3" style={{ background: `${tier.color}0c`, border: `1px solid ${tier.color}25` }}>
-            <div className="flex items-center gap-3 min-w-0">
-              {tierRank && (
-                <div className="shrink-0" style={{ color: tier.color }}>
-                  {tierRank.icon}
-                </div>
-              )}
-              <p className="text-[12px] leading-snug" style={{ color: "var(--text-secondary)" }}>
-                {nextRank
-                  ? <><span className="font-bold tabular-nums" style={{ color: tier.color }}>{ptsNeeded}</span> points to <span className="font-bold" style={{ color: nextRank.color }}>{nextRank.label}</span></>
-                  : <>Pinnacle rank — <span className="italic">maximum capability tier reached</span>.</>}
-              </p>
+            {/* Counts */}
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 mt-6">
+              {(Object.keys(BUCKETS) as BucketKey[]).map((k) => {
+                const g = BUCKETS[k];
+                return (
+                  <button
+                    key={k}
+                    type="button"
+                    onClick={() => jumpTo(k)}
+                    className="group rounded-2xl px-3 sm:px-4 py-3 text-left transition-all hover:-translate-y-0.5"
+                    style={{ background: `${g.color}0d`, border: `1px solid ${g.color}30` }}
+                  >
+                    <span className="block text-2xl sm:text-[32px] font-black tabular-nums leading-none" style={{ color: g.color }}>{groups[k].length}</span>
+                    <span className="flex items-center justify-between gap-1 mt-1.5 text-[11px] font-semibold" style={{ color: "var(--text-secondary)" }}>
+                      <span className="truncate">{g.short}</span>
+                      <ChevronRight className="w-3.5 h-3.5 shrink-0 transition-transform group-hover:translate-x-0.5" style={{ color: g.color }} />
+                    </span>
+                  </button>
+                );
+              })}
             </div>
-            {trainingPlan.length > 0 && (
-              <a
-                href="#training-focus"
-                onClick={(e) => { e.preventDefault(); document.getElementById("training-focus")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
-                className="shrink-0 inline-flex items-center justify-center gap-1.5 pl-3 pr-2.5 py-2 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all hover:brightness-110"
-                style={{ background: tier.color, color: "#fff" }}
-              >
-                How to improve
-                <ArrowRight className="w-3 h-3" />
-              </a>
-            )}
           </div>
         </div>
+      </FadeInSection>
 
-        {/* ── CAPABILITY READOUT + ACHIEVEMENTS ── */}
-        <div style={sectionBorder}>
-          <CapabilityReadout
-            axisLabels={AXIS_LABELS}
-            axisDesc={AXIS_DESC}
-            axisColors={AXIS_COLORS}
-            userAxes={userAxes as { stamina: number; power: number; strength: number; agility: number; water: number; altitude: number; focus: number; nerve: number }}
-            rawAxes={rawAxes}
-            decayNotes={decayNotes}
-          />
-          {achievements.length > 0 && (
-            <div
-              className="px-5 sm:px-8 py-6 sm:py-7 border-t"
-              style={{ borderColor: "var(--border-subtle)" }}
-            >
-              <div className="flex items-center justify-between gap-2 mb-5">
-                <p className="text-xs uppercase tracking-[0.22em] font-semibold" style={{ color: "#ff5100" }}>
-                  Achievements Unlocked
-                </p>
-                <AchievementShareButton title={`My Trail to Tides fitness profile — ${tier.label}`} />
-              </div>
+      {/* ── CAPABILITIES ────────────────────────────────────────────────────── */}
+      <FadeInSection>
+        <CapabilityPanel
+          axisLabels={AXIS_LABELS}
+          axisDesc={AXIS_DESC}
+          axisColors={AXIS_COLORS}
+          axisIcons={AXIS_ICONS}
+          userAxes={resultAce}
+          rawAxes={rawAxes}
+          decayNotes={decayNotes}
+        />
+      </FadeInSection>
+
+      {/* ── MATCHED ADVENTURES ─────────────────────────────────────────────── */}
+      <FadeInSection>
+        <MatchedAdventures groups={groups} initial={initialTab} />
+      </FadeInSection>
+
+      {/* ── TRAINING ────────────────────────────────────────────────────────── */}
+      {trainingPlan.length > 0 && (
+        <FadeInSection>
+          <TrainingPanel trainingPlan={trainingPlan} axisColors={AXIS_COLORS} axisIcons={AXIS_ICONS} axisLabels={AXIS_LABELS} unlocks={unlocks} neededBy={neededBy} />
+        </FadeInSection>
+      )}
+
+      {/* ── ACHIEVEMENTS ────────────────────────────────────────────────────── */}
+      {achievements.length > 0 && (
+        <FadeInSection>
+          <div className={`${panel} p-5 sm:p-7`} style={panelStyle}>
+            <SectionTexture kind="tides" color="#ffc46b" at="100% 100%" opacity={0.1} />
+            <div className="relative">
+              <SectionHead
+                eyebrow="Achievements unlocked"
+                title={`${achievements.length} badge${achievements.length === 1 ? "" : "s"} earned`}
+                right={<AchievementShareButton title={`My Trail to Tides fitness profile — ${tier.label}`} />}
+              />
               <AchievementBadges ace={resultAce} heading={false} variant="list" maxListHeight={52} />
             </div>
-          )}
-        </div>
-
-        {/* ── MATCHED ADVENTURES — the point of the whole assessment ── */}
-        <div className="px-5 sm:px-8 py-6 sm:py-7" style={sectionBorder}>
-          <p className="text-xs uppercase tracking-[0.22em] font-semibold mb-1" style={{ color: "#ff5100" }}>
-            Matched Adventures
-          </p>
-          <p className="text-[11px] mb-4" style={{ color: "var(--text-secondary)" }}>
-            Every adventure rated against your profile — the same Ready, Stretch and Not yet you&apos;ll see on cards across the site.
-          </p>
-          {inZone.length === 0 && (
-            <div className="flex items-start gap-2.5 mb-4 rounded-lg px-3.5 py-3" style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.2)" }}>
-              <TrendingUp className="w-3.5 h-3.5 mt-0.5 shrink-0" style={{ color: "#f59e0b" }} />
-              <p className="text-[11px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                Nothing fully matches your current profile yet — here&apos;s what&apos;s within reach.
-              </p>
-            </div>
-          )}
-          <AdventureSection
-            label="Ready now"
-            sublabel="Adventures within your current capability"
-            icon={<CheckCircle2 className="w-4 h-4" />}
-            adventures={[...inZone].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
-            totalCount={inZone.length}
-            exploreUrl="/explore?ace=ready"
-            accentColor="#10b981"
-            defaultOpen={inZone.length > 0}
-            isFirst
-          />
-          {stretch.length > 0 && (
-            <AdventureSection
-              label="A stretch"
-              sublabel="Slightly above your current range — achievable with focused training"
-              icon={<TrendingUp className="w-4 h-4" />}
-              adventures={[...stretch].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
-              totalCount={stretch.length}
-              exploreUrl="/explore?ace=stretch"
-              accentColor="#f59e0b"
-              defaultOpen={inZone.length === 0}
-              isFirst={inZone.length === 0}
-            />
-          )}
-          {restricted.length > 0 && (
-            <AdventureSection
-              label="Not yet"
-              sublabel="Require capabilities significantly beyond your current profile"
-              icon={<Lock className="w-4 h-4" />}
-              adventures={[...restricted].sort((a, b) => (a.riskLevel ?? 0) - (b.riskLevel ?? 0)).slice(0, 6)}
-              totalCount={restricted.length}
-              exploreUrl="/explore?ace=out-of-range"
-              accentColor="#f43f5e"
-              defaultOpen={inZone.length === 0 && stretch.length === 0}
-              isFirst={inZone.length === 0 && stretch.length === 0}
-            />
-          )}
-        </div>
-
-        {/* ── TRAINING FOCUS ── */}
-        {trainingPlan.length > 0 && (
-          <div id="training-focus" style={{ ...sectionBorder, scrollMarginTop: 88 }}>
-            <TrainingSection
-              trainingPlan={trainingPlan}
-              axisColors={AXIS_COLORS}
-              axisIcons={AXIS_ICONS}
-            />
           </div>
-        )}
-      </div>
+        </FadeInSection>
+      )}
 
-      {/* ── WHAT NEXT: save to an account, plan with friends, trip credit ─────── */}
+      {/* ── WHAT NEXT ───────────────────────────────────────────────────────── */}
       <ResultsNextSteps placement="bottom" isQuick={isQuick} onRefine={onRefine} onRetake={onReset} ageDays={ageDays} />
 
-      {/* ── CTA BUTTONS ───────────────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row gap-3 mt-5 sm:mt-6">
+      <div className="flex flex-col sm:flex-row gap-3">
         {fromAdventure ? (
           <Link
             href={`/experiences/${fromAdventure.slug}`}
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 active:translate-y-0"
-            style={{ background: "#ff5100" }}
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5"
+            style={{ background: "#ff5100", boxShadow: "0 10px 30px rgba(255,81,0,0.28)" }}
           >
             <ChevronLeft className="w-4 h-4" />
             Back to {fromAdventure.name}
@@ -956,132 +1116,42 @@ function ResultsScreen({
         ) : (
           <Link
             href="/explore?ace=ready"
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-[#ff5100]/20 active:translate-y-0"
-            style={{ background: "#ff5100" }}
+            className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5"
+            style={{ background: "#ff5100", boxShadow: "0 10px 30px rgba(255,81,0,0.28)" }}
           >
-            All adventures
+            Explore your ready adventures
             <ArrowRight className="w-4 h-4" />
           </Link>
         )}
         {fromAdventure && (
           <Link
             href="/explore?ace=ready"
-            className="sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border text-sm font-medium transition-all active:scale-[0.98]"
+            className="sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border text-sm font-medium transition-colors hover:text-[var(--text-primary)]"
             style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
-            onMouseEnter={e => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
-            onMouseLeave={e => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}
           >
             All adventures
           </Link>
         )}
         <button
           onClick={onReset}
-          className="sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border text-sm font-medium transition-all active:scale-[0.98]"
+          className="sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border text-sm font-medium transition-colors hover:text-[var(--text-primary)]"
           style={{ borderColor: "var(--border-default)", color: "var(--text-secondary)" }}
-          onMouseEnter={e => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; }}
-          onMouseLeave={e => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.borderColor = "var(--border-default)"; }}
         >
           <RotateCcw className="w-3.5 h-3.5" />
           Retake assessment
         </button>
       </div>
-    </div>
-  );
-}
 
-// ─── Adventure section ────────────────────────────────────────────────────────
-
-function AdventureSection({
-  label, sublabel, icon, adventures: list, accentColor, defaultOpen = false, totalCount, exploreUrl, isFirst = false,
-}: {
-  label: string;
-  sublabel: string;
-  icon: React.ReactNode;
-  adventures: EnrichedAdventure[];
-  accentColor: string;
-  defaultOpen?: boolean;
-  totalCount?: number;
-  exploreUrl?: string;
-  isFirst?: boolean;
-}) {
-  const [open, setOpen] = useState(defaultOpen);
-  if (list.length === 0) return null;
-  const hiddenCount = totalCount ? totalCount - list.length : 0;
-
-  return (
-    <div style={{ borderTop: isFirst ? "none" : "1px solid var(--border-subtle)" }}>
-      {/* ── Accordion header ── */}
-      <button
-        onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between py-4 transition-opacity hover:opacity-70 text-left"
-      >
-        <div className="flex items-center gap-3">
-          <span className="shrink-0" style={{ color: accentColor }}>{icon}</span>
-          <div>
-            <p className="font-bold text-[13px] sm:text-sm leading-snug uppercase tracking-wide" style={{ color: "var(--text-primary)" }}>{label}</p>
-            <p className="text-[10px] sm:text-[11px] mt-0.5 leading-snug" style={{ color: "var(--text-tertiary)" }}>{sublabel}</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2.5 shrink-0 ml-3">
-          <span className="text-[13px] font-bold tabular-nums tabular-nums" style={{ color: accentColor }}>
-            {String(totalCount ?? list.length).padStart(2, "0")}
-          </span>
-          <ChevronRight
-            className="w-[15px] h-[15px] transition-transform duration-200 shrink-0"
-            style={{ color: "var(--text-tertiary)", transform: open ? "rotate(90deg)" : "none" }}
-          />
-        </div>
-      </button>
-
-      {/* ── Expanded content ── */}
-      {open && (
-        <div className="pb-5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {list.map(a => (
-              <Link
-                key={a.slug}
-                href={`/experiences/${a.slug}`}
-                className="group rounded-xl overflow-hidden border transition-all duration-200 hover:-translate-y-[2px] hover:shadow-lg"
-                style={{ borderColor: "var(--border-subtle)", background: "var(--bg-card)" }}
-              >
-                {/* Image */}
-                <div className="relative h-[140px] sm:h-[150px] overflow-hidden">
-                  <Image
-                    src={a.heroImage}
-                    alt={a.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-                </div>
-                {/* Content */}
-                <div className="px-3.5 pt-3 pb-3">
-                  <h3 className="font-bold text-[13px] sm:text-sm leading-snug mb-1 group-hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-primary)" }}>{a.name}</h3>
-                  <p className="text-[10.5px] leading-snug line-clamp-2 mb-2.5" style={{ color: "var(--text-tertiary)" }}>{a.tagline}</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    <Pill type="type" value={a.type} clickable={false} />
-                    <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[9px] font-medium border" style={{ background: "var(--bg-card)", color: "var(--text-tertiary)", borderColor: "var(--border-subtle)" }}>
-                      <MapPin className="w-2 h-2" />{a.state}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          {/* View all */}
-          {hiddenCount > 0 && exploreUrl && (
-            <Link
-              href={exploreUrl}
-              className="flex items-center justify-center gap-2 w-full py-3 mt-3 rounded-xl text-[13px] font-semibold transition-all hover:opacity-80"
-              style={{ color: accentColor, border: `1px solid ${accentColor}30` }}
-            >
-              View all {totalCount} adventures
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          )}
-        </div>
-      )}
+      <style>{`
+        .mx-tile { animation: mxIn 0.55s cubic-bezier(0.22,1,0.36,1) both; }
+        .mx-fade { animation: mxIn 0.45s cubic-bezier(0.22,1,0.36,1) both; }
+        @keyframes mxIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+        .mx-ladder { animation: mxGrow 1.2s cubic-bezier(0.22,1,0.36,1) 0.2s both; transform-origin: left; }
+        @keyframes mxGrow { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+        .mx-rank-icon { animation: mxPop 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
+        @keyframes mxPop { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
+        @media (prefers-reduced-motion: reduce) { .mx-tile, .mx-fade, .mx-ladder, .mx-rank-icon { animation: none; } }
+      `}</style>
     </div>
   );
 }
@@ -1174,7 +1244,7 @@ function stepsFor(mode: Mode, skipKeys: string[]): Step[] {
 
 export default function MatchmakerClient() {
   const searchParams = useSearchParams();
-  const [started, setStarted] = useState(() => searchParams.get("retake") === "1");
+  const [started, setStarted] = useState(false);
   const [showConsent, setShowConsent] = useState(false);
   const [consentChecked, setConsentChecked] = useState(false);
   const [mode, setMode] = useState<Mode>("full");
@@ -1206,7 +1276,10 @@ export default function MatchmakerClient() {
   // Load previous result + consent status on mount — always show results if profile exists
   const autoShown = useRef(false);
   const isRetake = searchParams.get("retake") === "1";
+  // ?mode=quick deep-links straight into the quick match (Explore, group links)
+  const wantsQuick = searchParams.get("mode") === "quick";
   useEffect(() => {
+    let hasSaved = false;
     // Sequential: both loaders can fall back to *pushing* local data up to
     // a different user_metadata key when the server has none yet (e.g. a
     // guest who completed the assessment before logging in) — user_metadata
@@ -1215,6 +1288,7 @@ export default function MatchmakerClient() {
     loadProfileFromServer()
       .then((saved) => {
         if (saved?.ace) {
+          hasSaved = true;
           setSavedProfile(saved);
           const r = buildResult(saved.ace as unknown as Record<string, number>);
           setSavedResult(r);
@@ -1229,9 +1303,15 @@ export default function MatchmakerClient() {
       })
       .then(() =>
         loadConsentFromServer().then((consent) => {
-          if (consent?.consentVersion === MATCHMAKER_CONSENT_VERSION) setConsentChecked(true);
+          const consented = consent?.consentVersion === MATCHMAKER_CONSENT_VERSION;
+          if (consented) setConsentChecked(true);
+          // Deep links start the quiz only now, once consent is known — so a retake link
+          // on a new device still goes through the consent screen first.
+          if (isRetake) begin("full", {}, [], consented);
+          else if (wantsQuick && !hasSaved) begin("quick", {}, [], consented);
         })
       );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const steps = stepsFor(mode, skipKeys);
@@ -1243,7 +1323,7 @@ export default function MatchmakerClient() {
     saveProgress({ mode, stepIndex, answers, skipKeys, jointNote, savedAt: new Date().toISOString() });
   }, [started, result, loading, mode, stepIndex, answers, skipKeys, jointNote]);
 
-  function begin(nextMode: Mode, prefill: Answers = {}, skip: string[] = []) {
+  function begin(nextMode: Mode, prefill: Answers = {}, skip: string[] = [], consented = consentChecked) {
     setMode(nextMode);
     setSkipKeys(skip);
     setAnswers(prefill);
@@ -1251,7 +1331,7 @@ export default function MatchmakerClient() {
     setResult(null);
     setResumable(null);
     clearProgress();
-    if (consentChecked) setStarted(true);
+    if (consented) setStarted(true);
     else { setPendingMode(nextMode); setShowConsent(true); }
     window.scrollTo({ top: 0, behavior: "instant" });
   }
@@ -1327,21 +1407,13 @@ export default function MatchmakerClient() {
     setLoading(false);
   }
 
+  // Retake: start a fresh assessment but keep the current profile until the new one is
+  // submitted — backing out of the quiz must not leave someone with no profile at all.
   function reset() {
-    clearProfile();
-    clearProgress();
-    setStarted(false);
-    setShowConsent(false);
-    setMode("full");
-    setSkipKeys([]);
-    setStepIndex(0);
-    setAnswers({});
     setJointNote("");
-    setResult(null);
-    setSavedResult(null);
-    setSavedProfile(null);
     setApiError(null);
     setLoading(false);
+    begin("full");
   }
 
   if (showConsent && !started && !result) return (

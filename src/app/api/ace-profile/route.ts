@@ -14,8 +14,17 @@ const aceAxesSchema = z.object({
   nerve: z.number().min(0).max(5),
 });
 
-// Client sends/expects a StoredProfile shape: { ace: {...} }
-const aceProfileSchema = z.object({ ace: aceAxesSchema });
+// Client sends/expects a StoredProfile shape: { ace: {...}, mode?, rawAxes?, answers? }.
+// mode and answers let a quick result be refined on another device; answers are capability
+// and calibration answers only — health answers never reach this route (see /api/ace-medical).
+const aceProfileSchema = z.object({
+  ace: aceAxesSchema,
+  mode: z.enum(["quick", "full"]).optional().catch(undefined),
+  rawAxes: z.record(z.string(), z.number().min(0).max(5)).optional().catch(undefined),
+  answers: z.record(z.string().max(40).refine((k) => !k.startsWith("med-")), z.union([z.string().max(40), z.number()]))
+    .refine((a) => Object.keys(a).length <= 40)
+    .optional().catch(undefined), // a malformed extra never blocks saving the profile itself
+});
 
 function adminClient() {
   return createAdminSupabase(
@@ -31,9 +40,14 @@ export async function GET() {
   if (!user) return NextResponse.json({ profile: null });
 
   // Stored flat in user_metadata; wrap to match the client's { ace: {...} } contract
-  const aceAxes = user.user_metadata?.ace_profile ?? null;
-  const updatedAt = user.user_metadata?.ace_profile_updated_at ?? null;
-  return NextResponse.json({ profile: aceAxes ? { ace: aceAxes, updatedAt } : null });
+  const meta = user.user_metadata ?? {};
+  const aceAxes = meta.ace_profile ?? null;
+  const updatedAt = meta.ace_profile_updated_at ?? null;
+  return NextResponse.json({
+    profile: aceAxes
+      ? { ace: aceAxes, updatedAt, mode: meta.ace_profile_mode ?? undefined, rawAxes: meta.ace_profile_raw ?? undefined, answers: meta.ace_profile_answers ?? undefined }
+      : null,
+  });
 }
 
 // POST — save ACE profile for the logged-in user
@@ -57,6 +71,9 @@ export async function POST(req: NextRequest) {
       ...user.user_metadata,
       ace_profile: parsed.data.ace,
       ace_profile_updated_at: updatedAt,
+      ace_profile_mode: parsed.data.mode ?? null,
+      ace_profile_raw: parsed.data.rawAxes ?? null,
+      ace_profile_answers: parsed.data.answers ?? null,
     },
   });
 
@@ -74,7 +91,11 @@ export async function DELETE() {
   // clearing a field requires setting it to null explicitly, not omitting it.
   const admin = adminClient();
   await admin.auth.admin.updateUserById(user.id, {
-    user_metadata: { ...user.user_metadata, ace_profile: null, ace_profile_updated_at: null },
+    user_metadata: {
+      ...user.user_metadata,
+      ace_profile: null, ace_profile_updated_at: null,
+      ace_profile_mode: null, ace_profile_raw: null, ace_profile_answers: null,
+    },
   });
 
   return NextResponse.json({ ok: true });

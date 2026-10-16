@@ -227,9 +227,21 @@ export async function loadProfileFromServer(): Promise<StoredProfile | null> {
     if (!res.ok) return loadProfile();
     const { profile } = await res.json();
     if (profile?.ace) {
-      // Server has data — sync down to localStorage
-      saveProfile(profile as StoredProfile);
-      return profile as StoredProfile;
+      // A result taken on this device while the save didn't reach the server (offline, or
+      // signed out at the time) is newer than the account copy — keep it and push it up
+      // instead of overwriting it. The server stamps saves a moment after the local clock,
+      // so only a clearly newer local copy wins.
+      const local = loadProfile();
+      const localAt = local?.updatedAt ? Date.parse(local.updatedAt) : NaN;
+      const serverAt = profile.updatedAt ? Date.parse(profile.updatedAt) : NaN;
+      if (local?.ace && localAt - serverAt > 60_000) {
+        saveProfileToServer(local); // fire-and-forget
+        return local;
+      }
+      // Otherwise the account copy wins — sync it down, keeping local-only extras it lacks
+      const merged: StoredProfile = { ...(local ?? {}), ...(profile as StoredProfile) };
+      saveProfile(merged);
+      return merged;
     }
     // Server has no data — if localStorage has data, push it up
     const local = loadProfile();
