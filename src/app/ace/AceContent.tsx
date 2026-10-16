@@ -74,12 +74,13 @@ export type AceTrek = {
   heroImage?: string;
 };
 
-// A water-heavy example so the hero shows the shape swinging to the other side of the chart
-const RAFTING_EXAMPLE = {
-  name: "Grade IV rafting",
-  tag: "Example",
+// A water-heavy adventure so the hero shows the shape swinging to the other side of the chart.
+// Ganga rapids up to Class IV; low altitude and close to town, so altitude 0 and nerve stays low.
+const RISHIKESH_RAFTING = {
+  name: "Rishikesh River Rafting",
+  tag: "Class III–IV",
   color: "#3b82f6",
-  ace: { stamina: 2, power: 4, strength: 2, agility: 3, water: 5, altitude: 0, focus: 3, nerve: 3 } as ACE,
+  ace: { stamina: 2, power: 3, strength: 2, agility: 2, water: 4, altitude: 0, focus: 3, nerve: 2 } as ACE,
 };
 
 const CYCLE_MS = 3600;
@@ -165,7 +166,7 @@ function SectionHead({ eyebrow, aside, children }: { eyebrow: string; aside?: st
 function Hero({ treks }: { treks: AceTrek[] }) {
   const profiles = [
     ...treks.map(t => ({ name: t.name ?? t.label, tag: t.sublabel, color: t.diffColor, ace: t.ace })),
-    RAFTING_EXAMPLE,
+    RISHIKESH_RAFTING,
   ];
   const [idx, setIdx] = useState(0);
   const [hoverAxis, setHoverAxis] = useState<AceAxis | null>(null);
