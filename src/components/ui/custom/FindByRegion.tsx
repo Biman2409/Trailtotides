@@ -173,19 +173,35 @@ export default function FindByRegion() {
                     {!isOpen && (
                         <div className="py-3.5 flex items-center justify-between">
                           <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>
-                            {region.items.length} {region.items.length === 1 ? "Area" : "Areas"}
+                            {region.totalCount > 0 && `${region.items.length} ${region.items.length === 1 ? "Area" : "Areas"}`}
                           </span>
-                          <span
-                            className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#ff5100]/15 text-[#ff5100]"
-                          >
-                            {region.totalCount} Adventures
-                          </span>
+                          {/* No adventures listed yet: say so rather than showing "0 Adventures" */}
+                          {region.totalCount === 0 ? (
+                            <span className="text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap" style={{ border: "1px dashed rgba(255,81,0,0.45)", color: "#ff7d47" }}>
+                              Coming Soon
+                            </span>
+                          ) : (
+                            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#ff5100]/15 text-[#ff5100]">
+                              {region.totalCount} Adventures
+                            </span>
+                          )}
                         </div>
                     )}
 
+                    {/* Expanded, nothing listed yet */}
+                    {isOpen && region.totalCount === 0 && (
+                      <div className="py-4">
+                        <div className="rounded-xl px-4 py-4 text-center" style={{ background: "rgba(255,81,0,0.06)", border: "1px dashed rgba(255,81,0,0.35)" }}>
+                          <p className="font-semibold text-sm" style={{ color: "#ff7d47" }}>Coming Soon</p>
+                          <p className="text-xs mt-1 leading-snug" style={{ color: "var(--text-tertiary)" }}>
+                            Adventures in {region.name} are on their way.
+                          </p>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Expanded items */}
-                    {isOpen && (
+                    {isOpen && region.totalCount > 0 && (
                       <div className="py-4">
                         <div className="flex flex-col gap-0.5">
                             {region.items.map(({ label, count }) => (

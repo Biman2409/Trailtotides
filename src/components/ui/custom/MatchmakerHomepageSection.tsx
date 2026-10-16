@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Lock, RotateCcw } from "lucide-react";
+import { ArrowRight, RotateCcw } from "lucide-react";
 import { adventures } from "@/lib/data";
 import { type StoredProfile } from "@/lib/matchmaker";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
@@ -154,10 +154,6 @@ function DefaultCTA() {
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
-          <p className="flex items-center gap-1.5 text-xs mt-4" style={{ color: "var(--text-tertiary)" }}>
-            <Lock className="w-3 h-3 shrink-0" />
-            Health questions are optional and private.
-          </p>
         </div>
 
         {/* Right: what the result looks like */}
