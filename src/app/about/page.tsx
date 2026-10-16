@@ -100,7 +100,7 @@ export default function AboutPage() {
               Designed by Explorers for Explorers
             </h1>
             <p className="text-white/60 text-xl leading-relaxed max-w-2xl">
-              Find, compare, and book finest adventures across Indian subcontinent — matched to your body, guided by AI, mapped with precision and run by verified operators.
+              Find, compare, and book finest adventures across Indian subcontinent — matched to fitness, guided by AI, mapped with precision and run by verified operators.
             </p>
         </div>
       </section>

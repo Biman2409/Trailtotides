@@ -18,12 +18,12 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Trail to Tides — India's Adventure Discovery Platform",
   description:
-    "Discover, compare, and book elite adventures — matched to your body, mapped with precision, guided by AI, and led by India's most trusted operators.",
+    "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by AI, and led by India's most trusted operators.",
   alternates: { canonical: "https://trailtotides.com" },
   openGraph: {
     title: "Trail to Tides — India's Adventure Discovery Platform",
     description:
-      "Discover, compare, and book elite adventures — matched to your body, mapped with precision, guided by AI, and led by India's most trusted operators.",
+      "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by AI, and led by India's most trusted operators.",
     url: "https://trailtotides.com",
     type: "website",
   },

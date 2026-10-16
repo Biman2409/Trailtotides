@@ -37,7 +37,7 @@ type Feature = {
 const FEATURES: Feature[] = [
   {
     key: "fitness",
-    phrase: "Matched to your body",
+    phrase: "Matched to fitness",
     title: "Fitness match",
     blurb: "Take the 2-min fitness test",
     color: "#ff8a4c",
