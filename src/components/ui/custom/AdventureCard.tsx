@@ -9,6 +9,7 @@ import { getLowestPrice, type Adventure, type Month } from "@/lib/data";
 import { getACE, computeDifficulty, computeMatchScore } from "@/lib/ace";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
 import { formatAltitude } from "@/lib/exploreHelpers";
+import { bucketFor } from "@/lib/fitness";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import DifficultyMeter from "./DifficultyMeter";
 import SaveButton from "./SaveButton";
@@ -147,11 +148,13 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
           <SaveButton slug={adventure.slug} variant="card" />
         </div>
 
-        {/* Bottom content over image */}
+        {/* Bottom content over image. Text hierarchy on the photo, one step of white each:
+            title 100% → tagline 75% → eyebrow 60% → separators 35%. Colour lives only in the
+            category icon, never in the text. */}
         <div className={`absolute bottom-0 left-0 right-0 z-20 pointer-events-none ${fill ? "p-5 lg:p-6" : "p-4"}`}>
-          <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] mb-1.5 text-white/70">
-            <span className="inline-flex items-center gap-1 shrink-0" style={{ color: "color-mix(in srgb, var(--cat) 65%, white)" }}>
-              {ADVENTURE_TYPE_ICONS[adventure.type]?.(11)}
+          <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] mb-1.5 text-white/60">
+            <span className="inline-flex items-center gap-1 shrink-0">
+              <span className="shrink-0" style={{ color: "color-mix(in srgb, var(--cat) 70%, white)" }}>{ADVENTURE_TYPE_ICONS[adventure.type]?.(11)}</span>
               {adventure.type}
             </span>
             <span className="text-white/35">·</span>
@@ -160,29 +163,41 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
           <h3 className={`text-white font-bold leading-tight tracking-tight group-hover:text-[#ff8a5c] transition-colors pointer-events-none ${fill ? "text-2xl lg:text-3xl" : "text-base sm:text-lg"}`}>
             {adventure.name}
           </h3>
-          <p className={`text-white/65 leading-snug mt-1 pointer-events-none ${fill ? "text-sm line-clamp-2 max-w-lg" : "text-[11px] line-clamp-1"}`}>
+          <p className={`text-white/75 leading-snug mt-1 pointer-events-none ${fill ? "text-sm line-clamp-2 max-w-lg" : "text-[11px] line-clamp-1"}`}>
             {adventure.tagline}
           </p>
         </div>
       </div>
 
-        {/* Dashboard — price on its own line so it never truncates, duration + operators beneath, then compare button */}
+        {/* Dashboard. Text hierarchy below the photo, the same on every card:
+              primary   — the price (the one number people compare)
+              secondary — duration, altitude, operator count, season
+              tertiary  — labels ("From", "operators")
+              muted     — separators
+            Status colour (in season, next month, verified) appears only as a small dot or
+            icon beside neutral text, so cards read alike whatever their state. */}
         <div className="px-3 pt-2.5 pb-2 flex items-center justify-between gap-2">
           <div className="min-w-0 flex flex-col gap-1">
             {/* Price + season on the first line, so the facts line below stays short enough to never truncate */}
             <span className="flex items-center gap-2 text-[13px] leading-none whitespace-nowrap">
               {operatorCount > 0 && lowestPrice && (
-                <span className="font-semibold text-[#ff5100]">
+                <span className="font-bold tabular-nums" style={{ color: "var(--text-primary)" }}>
                   <span className="text-[10px] font-medium mr-1" style={{ color: "var(--text-tertiary)" }}>From</span>
                   ₹{lowestPrice.toLocaleString("en-IN")}
                 </span>
               )}
               {isSeasonActive ? (
-                <span className="inline-flex items-center gap-1 text-[10px] font-medium text-emerald-400/90"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />In season</span>
+                <span className="inline-flex items-center gap-1 text-[10px] font-medium" style={{ color: "var(--text-secondary)" }}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />In season
+                </span>
               ) : isSeasonUpcoming ? (
-                <span className="text-[10px] font-medium text-amber-400/90">Next month</span>
+                <span className="inline-flex items-center gap-1 text-[10px] font-medium" style={{ color: "var(--text-secondary)" }}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />Next month
+                </span>
               ) : seasonLabel ? (
-                <span className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>{seasonLabel}</span>
+                <span className="inline-flex items-center gap-1 text-[10px] font-medium" style={{ color: "var(--text-secondary)" }}>
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--text-muted)" }} />{seasonLabel}
+                </span>
               ) : null}
             </span>
             <div className="flex items-center gap-1 text-[10px] leading-none min-w-0 truncate" style={{ color: "var(--text-tertiary)" }}>
@@ -190,14 +205,14 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
               {formatAltitude(adventure) && (
                 <>
                   <span className="mx-0.5" style={{ color: "var(--text-muted)" }}>·</span>
-                  <span className="shrink-0">{formatAltitude(adventure)}</span>
+                  <span className="font-medium shrink-0" style={{ color: "var(--text-secondary)" }}>{formatAltitude(adventure)}</span>
                 </>
               )}
               {operatorCount > 0 && (
                 <>
                   <span className="mx-0.5" style={{ color: "var(--text-muted)" }}>·</span>
                   <BadgeCheck className="w-3 h-3 text-emerald-400/80 shrink-0" />
-                  <span><span className="font-semibold" style={{ color: "var(--text-secondary)" }}>{displayCount}</span> {displayCount === 1 ? "operator" : "operators"}</span>
+                  <span><span className="font-medium" style={{ color: "var(--text-secondary)" }}>{displayCount}</span> {displayCount === 1 ? "operator" : "operators"}</span>
                 </>
               )}
             </div>
@@ -220,30 +235,28 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
         </div>
 
         {/* Capability match bar */}
+        {/* Capability match: the bucket colour carries the status (percentage + bar), the
+            label stays neutral — and names the actual bucket, not "Ready" for every score */}
         {matchScore !== null && (() => {
           const pct = matchScore;
-          const isGreat  = pct >= 80;
-          const isGood   = pct >= 55;
-          const color    = isGreat ? "#10b981" : isGood ? "#f59e0b" : "#f43f5e";
-          const bgColor  = isGreat ? "rgba(16,185,129,0.08)"  : isGood ? "rgba(245,158,11,0.08)"  : "rgba(244,63,94,0.08)";
-          const bdColor  = isGreat ? "rgba(16,185,129,0.18)"  : isGood ? "rgba(245,158,11,0.18)"  : "rgba(244,63,94,0.18)";
+          const b = bucketFor(pct);
           return (
             <div className="px-3 pb-3 pt-0">
               <div
                 className="rounded-lg px-2.5 py-1.5 flex items-center gap-2"
-                style={{ background: bgColor, border: `1px solid ${bdColor}` }}
+                style={{ background: b.bg.replace("0.12", "0.07"), border: `1px solid ${b.bg.replace("0.12", "0.2")}` }}
               >
-                <span className="text-[10px] font-black tabular-nums shrink-0" style={{ color }}>{pct}%</span>
+                <span className="text-[10px] font-black tabular-nums shrink-0" style={{ color: b.color }}>{pct}%</span>
                 <div className="flex-1 min-w-0">
-                  <div className="h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.07)" }}>
+                  <div className="h-1 rounded-full overflow-hidden" style={{ background: "var(--border-subtle)" }}>
                     <div
                       className="h-full rounded-full transition-all duration-700"
-                      style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${color}99, ${color})` }}
+                      style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${b.color}99, ${b.color})` }}
                     />
                   </div>
                 </div>
-                <span className="text-[9px] font-bold tracking-wide shrink-0" style={{ color: `${color}cc` }}>
-                  ACE<sup className="text-[0.7em]">™</sup> Ready
+                <span className="text-[9px] font-bold tracking-wide shrink-0" style={{ color: "var(--text-secondary)" }}>
+                  {b.label}
                 </span>
               </div>
             </div>
