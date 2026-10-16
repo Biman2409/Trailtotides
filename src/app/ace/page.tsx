@@ -15,38 +15,19 @@ export const metadata = {
   alternates: { canonical: "https://trailtotides.com/ace" },
 };
 
-const PROGRESSION_TREKS: AceTrek[] = [
-  {
-    slug: "goechala",
-    label: "Starting point",
-    sublabel: "Moderate",
-    diffColor: "#f59e0b",
-    desc: "Mostly stamina and altitude. Kind underfoot.",
-    ace: { stamina: 3, power: 2, strength: 2, agility: 2, water: 0, altitude: 3, focus: 2, nerve: 1 },
-  },
-  {
-    slug: "rupin-pass",
-    label: "Step up",
-    sublabel: "Hard",
-    diffColor: "#f97316",
-    desc: "Harder footing and more exposure: loose snow, steep descents.",
-    ace: { stamina: 4, power: 3, strength: 3, agility: 4, water: 0, altitude: 4, focus: 3, nerve: 3 },
-  },
-  {
-    slug: "pin-parvati-pass",
-    label: "The big one",
-    sublabel: "Advanced",
-    diffColor: "#ef4444",
-    desc: "17,457ft, glaciers and remote crossings. Demanding on almost everything.",
-    ace: { stamina: 5, power: 4, strength: 4, agility: 4, water: 2, altitude: 5, focus: 4, nerve: 5 },
-  },
+// Scores run stamina, power, strength, agility, water, altitude, focus, nerve.
+// `tone` is the difficulty level whose colour the trek wears (3 moderate … 5 advanced).
+const EXAMPLE_TREKS: Omit<AceTrek, "name" | "image">[] = [
+  { slug: "goechala",         grade: "Moderate", tone: 3, blurb: "Mostly stamina and altitude, on kind ground.",               values: [3, 2, 2, 2, 0, 3, 2, 1] },
+  { slug: "rupin-pass",       grade: "Hard",     tone: 4, blurb: "Harder footing and more exposure: loose snow, steep descents.", values: [4, 3, 3, 4, 0, 4, 3, 3] },
+  { slug: "pin-parvati-pass", grade: "Advanced", tone: 5, blurb: "17,457ft, glaciers and remote crossings.",                   values: [5, 4, 4, 4, 2, 5, 4, 5] },
 ];
 
 export default function ACEPage() {
   // Look the treks up here so the full adventure list stays out of the client bundle
-  const treks = PROGRESSION_TREKS.map(t => {
+  const treks: AceTrek[] = EXAMPLE_TREKS.map(t => {
     const adv = adventures.find(a => a.slug === t.slug);
-    return { ...t, name: adv?.name, heroImage: adv?.heroImage };
+    return { ...t, name: adv?.name ?? t.slug, image: adv?.heroImage };
   });
 
   return (

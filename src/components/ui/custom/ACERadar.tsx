@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { useEffect, useId, useState } from "react";
 import type { ACE, AceAxis } from "@/lib/ace";
 import { ACE_AXIS_COLORS } from "@/lib/ace";
 import { useTheme } from "next-themes";
@@ -13,8 +12,6 @@ interface Props {
   userAce?: ACE;
   userColor?: string;
   highlightAxis?: AceAxis | null;
-  /** Grow the shape out from the centre when it scrolls into view, and morph when `ace` changes */
-  animated?: boolean;
 }
 
 const AXIS_ORDER: AceAxis[] = [
@@ -63,7 +60,7 @@ function hexToRgb(hex: string) {
   return `${r},${g},${b}`;
 }
 
-export default function ACERadar({ ace, size = 220, showLabels = true, userAce, userColor = "#38bdf8", highlightAxis = null, animated = false }: Props) {
+export default function ACERadar({ ace, size = 220, showLabels = true, userAce, userColor = "#38bdf8", highlightAxis = null }: Props) {
   const { resolvedTheme } = useTheme();
   // Unique per instance, so two radars on one page don't share gradients
   const uid = useId().replace(/:/g, "");
@@ -89,15 +86,7 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
   const gridLevels = [1, 2, 3, 4, 5];
   const adventureValues = AXIS_ORDER.map((k) => ace[k]);
   const userValues = userAce ? AXIS_ORDER.map((k) => userAce[k]) : null;
-  // Animated radars start collapsed at the centre and grow once on screen
-  const svgRef = useRef<SVGSVGElement>(null);
-  const inView = useInView(svgRef, { once: true, margin: "-60px" });
-  const drawn = !animated || inView;
-  const drawnValues = drawn ? adventureValues : adventureValues.map(() => 0);
-  const adventurePath = buildPath(drawnValues, max, cx, cy, radius);
-  const shapeTransition = animated
-    ? { duration: 0.9, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
-    : { duration: 0 };
+  const adventurePath = buildPath(adventureValues, max, cx, cy, radius);
   const userPath = userValues ? buildPath(userValues, max, cx, cy, radius) : null;
 
   // dominant color = axis with highest value
@@ -111,7 +100,6 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
 
   return (
     <svg
-      ref={svgRef}
       width={size}
       height={size}
       viewBox={`${-pad} ${-pad} ${size + pad * 2} ${size + pad * 2}`}
@@ -126,8 +114,8 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
 
         {/* Fill gradient for user shape */}
         <radialGradient id={`${uid}-fill`} cx="50%" cy="50%" r="60%">
-          <stop offset="0%" stopColor={`rgb(${dominantRgb})`} stopOpacity="0.28" style={{ transition: "stop-color 600ms ease" }} />
-          <stop offset="100%" stopColor={`rgb(${dominantRgb})`} stopOpacity="0.08" style={{ transition: "stop-color 600ms ease" }} />
+          <stop offset="0%" stopColor={`rgb(${dominantRgb})`} stopOpacity="0.28" />
+          <stop offset="100%" stopColor={`rgb(${dominantRgb})`} stopOpacity="0.08" />
         </radialGradient>
 
         {/* Per-axis dot glow filters */}
@@ -205,56 +193,43 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
       )}
 
       {/* Main fill shape */}
-      <motion.path
-        initial={false}
-        animate={{ d: adventurePath, stroke: dominantColor }}
-        transition={shapeTransition}
+      <path
+        d={adventurePath}
         fill={`url(#${uid}-fill)`}
+        stroke={dominantColor}
         strokeWidth="1.5"
         strokeLinejoin="round"
         opacity="0.95"
       />
 
       {/* Data point dots with per-axis color glow */}
-      {drawnValues.map((v, i) => {
+      {adventureValues.map((v, i) => {
         const angle = (360 / n) * i;
         const r = (v / max) * radius;
         const { x, y } = polarToXY(angle, r, cx, cy);
         const key = AXIS_ORDER[i];
         const color = ACE_AXIS_COLORS[key];
-        // Animated radars keep zero-score dots (hidden) so they can morph back in
-        if (adventureValues[i] === 0 && !animated) return null;
+        if (v === 0) return null;
         const isHighlighted = highlightAxis === key;
-        const pos = { cx: +x.toFixed(2), cy: +y.toFixed(2) };
-        const dotTransition = { ...shapeTransition, delay: animated ? i * 0.03 : 0 };
         return (
-          <motion.g
-            key={i}
-            initial={false}
-            animate={{ opacity: adventureValues[i] === 0 ? 0 : dimmed(key) ? 0.25 : 1 }}
-            transition={{ duration: animated ? 0.35 : 0.15 }}
-          >
+          <g key={i} opacity={dimmed(key) ? 0.25 : 1} style={{ transition: "opacity 150ms ease" }}>
             {/* halo */}
-            <motion.circle
-              initial={false}
-              animate={pos}
-              transition={dotTransition}
+            <circle
+              cx={x.toFixed(2)} cy={y.toFixed(2)}
               r={isHighlighted ? "8" : "5"}
               fill={color}
               opacity={isHighlighted ? "0.22" : "0.12"}
               style={{ transition: "r 150ms ease, opacity 150ms ease" }}
             />
             {/* dot */}
-            <motion.circle
-              initial={false}
-              animate={pos}
-              transition={dotTransition}
+            <circle
+              cx={x.toFixed(2)} cy={y.toFixed(2)}
               r={isHighlighted ? "4.2" : "2.8"}
               fill={color}
               filter={`url(#${uid}-glow-${key})`}
               style={{ transition: "r 150ms ease" }}
             />
-          </motion.g>
+          </g>
         );
       })}
 
