@@ -3,13 +3,15 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Compass, Map, BookOpen, User, Home } from "lucide-react";
+import { Compass, Map, User, Home } from "lucide-react";
+import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 
+// The Matchmaker is the product's main differentiator, so it gets a tab; Stories stays in the menu
 const links = [
   { href: "/explore", label: "Explore", icon: Compass },
   { href: "/map", label: "Map", icon: Map },
   { href: "/", label: "Home", icon: Home, isHome: true },
-  { href: "/stories", label: "Stories", icon: BookOpen },
+  { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark },
   { href: "/profile", label: "Profile", icon: User },
 ];
 
@@ -70,7 +72,7 @@ export default function MobileBottomNav() {
                   />
                 </div>
                 <span
-                  className="text-[9px] font-medium leading-tight whitespace-nowrap transition-colors duration-200"
+                  className="text-[10px] font-medium leading-tight whitespace-nowrap transition-colors duration-200"
                   style={{
                     color: isActive ? "#ff5100" : "var(--nav-text)",
                   }}
