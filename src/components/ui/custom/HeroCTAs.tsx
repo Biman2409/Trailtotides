@@ -102,7 +102,7 @@ export default function HeroCTAs() {
 
   return (
     <div ref={rootRef} className="w-full">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 w-full">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center lg:justify-start gap-3 sm:gap-5 w-full">
         <div className="relative isolate flex-1 sm:flex-none sm:w-[420px] min-w-0">
         {/* Soft orange glow pooled behind the bar */}
         <span
