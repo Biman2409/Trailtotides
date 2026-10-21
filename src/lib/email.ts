@@ -8,24 +8,43 @@ const resend = process.env.RESEND_API_KEY
 // EMAIL_FROM can override it, e.g. for a staging sender.
 const FROM = process.env.EMAIL_FROM || 'Trail to Tides <hello@trailtotides.com>';
 
-/** Sent on sign-up: the account can't log in until this link is opened */
-export async function sendVerificationEmail(email: string, link: string, name: string) {
-  return send({
-    to: email,
-    subject: 'Verify your email for Trail to Tides',
-    html: layout('Welcome to Trail to Tides', `Hi ${name}, confirm it's you`,
-      `<p style="font-size: 15px; line-height: 1.6; margin: 0;">One tap to verify your email and you're in. Your fitness profile, wishlist and Group Match are saved to your account.</p>
-       ${actionButton(link, 'Verify my email')}`,
-      "The link works once and expires in 24 hours. If you didn't sign up, you can ignore this email."),
-    text: `Hi ${name},\n\nVerify your email for Trail to Tides:\n${link}\n\nThe link works once and expires in 24 hours. If you didn't sign up, ignore this email.`,
-  });
+/** Sign-up: the account can't log in until this link is opened */
+export function verificationEmail(link: string, name: string) {
+  const perks = [
+    ['Adventure Matchmaker', 'Answer a few questions and see every adventure rated for your body.'],
+    ['Your wishlist', 'Save adventures and hear when their season opens or the price drops.'],
+    ['Compass.AI', 'Ask for a trip in your own words and get picks that fit.'],
+  ];
+  return {
+    subject: 'Confirm your email to start exploring',
+    html: layout('Welcome aboard', `You're one tap from the trail, ${name}.`,
+      `<p style="${P}">Confirm your email to finish creating your Trail to Tides account. It takes a second, and it keeps your account yours.</p>
+       ${actionButton(link, 'Verify my email')}
+       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f7f3ec; border-radius: 16px;">
+         <tr><td style="padding: 18px 20px 6px; font: 700 11px/1 ${SANS}; letter-spacing: 0.16em; text-transform: uppercase; color: #8a8177;">What's waiting for you</td></tr>
+         ${perks.map(([t, d]) => `<tr><td style="padding: 8px 20px;">
+           <span style="font: 700 14px/1.4 ${SANS}; color: #1c1814;"><span style="color: #ff5100;">&#9679;</span>&nbsp; ${t}</span><br>
+           <span style="font: 400 13px/1.5 ${SANS}; color: #6b655e; padding-left: 18px; display: inline-block;">${d}</span>
+         </td></tr>`).join('')}
+         <tr><td style="height: 12px;"></td></tr>
+       </table>`,
+      `The link works once and expires in 1 hour. If it runs out, just log in and we'll send a fresh one. Didn't sign up? Ignore this email and nothing happens.`,
+      { hero: HERO, preheader: 'One tap to confirm your email and your Trail to Tides account is ready.', link }),
+    text: `Hi ${name},\n\nYou're one tap from the trail. Confirm your email to finish creating your Trail to Tides account:\n${link}\n\nThe link works once and expires in 1 hour. If it runs out, log in and we'll send a fresh one. Didn't sign up? Ignore this email.\n\nTrail to Tides · ${SITE}`,
+  };
 }
 
-/** A big tap target, plus the raw link for mail apps that strip buttons */
+export async function sendVerificationEmail(email: string, link: string, name: string) {
+  return send({ to: email, ...verificationEmail(link, name) });
+}
+
+/** A big pill button that survives every mail app, plus the raw link for ones that strip it */
 function actionButton(link: string, label: string) {
-  return `<p style="margin: 22px 0;"><a href="${link}" style="background-color: #ff5100; color: white; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: bold; display: inline-block;">${label}</a></p>
-    <p style="font-size: 13px; color: #666; margin: 0 0 4px;">If the button doesn't work, paste this link into your browser:</p>
-    <p style="font-size: 13px; color: #ff5100; word-break: break-all; margin: 0;">${link}</p>`;
+  return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin: 26px 0 10px;"><tr>
+      <td style="border-radius: 999px; background: #ff5100;">
+        <a href="${link}" style="display: inline-block; padding: 15px 32px; border-radius: 999px; font: 700 16px/1 ${SANS}; color: #ffffff; text-decoration: none;">${label} &rarr;</a>
+      </td></tr></table>
+    <p style="font: 400 12px/1.5 ${SANS}; color: #8a8177; margin: 0 0 24px;">Button not working? <a href="${link}" style="color: #e04800; word-break: break-all;">Open this link</a></p>`;
 }
 
 /** Every contact message lands here; replying goes straight back to the sender */
@@ -68,34 +87,69 @@ export async function sendContactEmail(msg: { name: string; email: string; topic
 }
 
 /** Forgot password: the link signs them in on the reset page, where they choose a new one */
-export async function sendPasswordResetEmail(email: string, link: string) {
-  return send({
-    to: email,
+export function passwordResetEmail(link: string) {
+  return {
     subject: 'Reset your Trail to Tides password',
-    html: layout('Password reset', 'Choose a new password',
-      `<p style="font-size: 15px; line-height: 1.6; margin: 0;">Someone asked to reset the password for this account. If it was you, use the button below.</p>
-       ${actionButton(link, 'Reset my password')}`,
-      "The link works once and expires in 1 hour. If you didn't ask for this, ignore this email: your password stays the same."),
-    text: `Reset your Trail to Tides password:\n${link}\n\nThe link works once and expires in 1 hour. If you didn't ask for this, ignore this email.`,
-  });
+    html: layout('Password reset', 'Lost the trail? Pick a new password.',
+      `<p style="${P}">We got a request to reset the password for this account. Use the button below to choose a new one. You'll be signed in when you're done.</p>
+       ${actionButton(link, 'Reset my password')}
+       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f7f3ec; border-radius: 16px;"><tr>
+         <td style="padding: 16px 20px; font: 400 13px/1.55 ${SANS}; color: #4a443e;">
+           <b style="color: #1c1814;">Didn't ask for this?</b> You can ignore this email. Your password stays the same, and nobody can use this link once it expires.
+         </td></tr></table>`,
+      `The link works once and expires in 1 hour. Need a new one? Ask again from the login page.`,
+      { preheader: 'Use this link within the hour to choose a new password.', link }),
+    text: `Reset your Trail to Tides password:\n${link}\n\nThe link works once and expires in 1 hour. Didn't ask for this? Ignore this email: your password stays the same.\n\nTrail to Tides · ${SITE}`,
+  };
+}
+
+export async function sendPasswordResetEmail(email: string, link: string) {
+  return send({ to: email, ...passwordResetEmail(link) });
 }
 
 // ── Account emails: alerts and quote requests ────────────────────────────────
 
 const SITE = 'https://trailtotides.com';
+const SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const SERIF = "Georgia, 'Times New Roman', serif";
+const P = `font: 400 15px/1.65 ${SANS}; color: #4a443e; margin: 0;`;
+// The mountain from the sign-up page, sized for email (about 150 KB)
+const HERO = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&h=500&fit=crop&q=70&fm=jpg';
 
-/** One look for every account email: a short eyebrow, a heading, a body, and a way to change settings */
-function layout(eyebrow: string, heading: string, body: string, footer: string) {
-  return `
-    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
-      <p style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #ff5100; margin: 0 0 8px;">${escapeHtml(eyebrow)}</p>
-      <h1 style="font-size: 22px; margin: 0 0 16px;">${escapeHtml(heading)}</h1>
+/**
+ * One look for every account email: the dark Trail to Tides header, an optional photo, a white
+ * card with an eyebrow, a serif heading and the body, then a small print line and the footer.
+ * Tables and inline styles only, so it holds up in Gmail, Outlook and Apple Mail.
+ */
+function layout(eyebrow: string, heading: string, body: string, footer: string, opts: { hero?: string; preheader?: string; link?: string } = {}) {
+  return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light"><title>${escapeHtml(heading)}</title></head>
+<body style="margin: 0; padding: 0; background: #efe9df; -webkit-text-size-adjust: 100%;">
+${opts.preheader ? `<div style="display: none; max-height: 0; overflow: hidden; opacity: 0;">${escapeHtml(opts.preheader)}&#8199;&#65279;&#847;&#8199;&#65279;&#847;</div>` : ''}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #efe9df;"><tr><td align="center" style="padding: 28px 12px 36px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 560px;">
+    <tr><td style="background: #0f0d0b; border-radius: 20px 20px 0 0; padding: 20px 28px;">
+      <a href="${SITE}" style="text-decoration: none;">
+        <span style="display: inline-block; width: 30px; height: 30px; border-radius: 9px; background: #ff5100; color: #fff; text-align: center; font: 800 15px/30px ${SANS}; vertical-align: middle;">&#9650;</span>
+        <span style="font: 800 15px/1 ${SANS}; letter-spacing: 0.14em; color: #ffffff; vertical-align: middle; padding-left: 10px;">TRAIL <i style="font: italic 400 15px/1 ${SERIF}; letter-spacing: 0; color: #ff8a4c;">to</i> TIDES</span>
+      </a>
+    </td></tr>
+    ${opts.hero ? `<tr><td style="background: #0f0d0b; line-height: 0; font-size: 0;">${opts.link ? `<a href="${opts.link}">` : ''}<img src="${opts.hero}" width="560" alt="Snow-capped peaks above a forested valley" style="display: block; width: 100%; max-width: 560px; height: auto; border: 0;">${opts.link ? '</a>' : ''}</td></tr>` : ''}
+    <tr><td style="background: #ffffff; padding: 34px 30px 26px; border-radius: 0 0 20px 20px;">
+      <p style="font: 700 11px/1 ${SANS}; letter-spacing: 0.2em; text-transform: uppercase; color: #ff5100; margin: 0 0 12px;">${escapeHtml(eyebrow)}</p>
+      <h1 style="font: 700 27px/1.2 ${SERIF}; color: #1c1814; margin: 0 0 14px;">${escapeHtml(heading)}</h1>
       ${body}
-      <hr style="margin: 28px 0 14px; border: 0; border-top: 1px solid #eee;" />
-      <p style="font-size: 12px; color: #999; margin: 0;">${footer}</p>
-    </div>`;
+      <p style="font: 400 12px/1.55 ${SANS}; color: #8a8177; margin: 24px 0 0; padding-top: 18px; border-top: 1px solid #efe9df;">${footer}</p>
+    </td></tr>
+    <tr><td align="center" style="padding: 22px 20px 0; font: 400 12px/1.7 ${SANS}; color: #8a8177;">
+      Find, compare and book adventures matched to your fitness.<br>
+      <a href="${SITE}" style="color: #6b655e; text-decoration: none; font-weight: 600;">trailtotides.com</a> &nbsp;·&nbsp; <a href="mailto:hello@trailtotides.com" style="color: #6b655e; text-decoration: none;">hello@trailtotides.com</a>
+    </td></tr>
+  </table>
+</td></tr></table>
+</body></html>`;
 }
-
 async function send(msg: { to: string | string[]; subject: string; html: string; text: string; replyTo?: string }) {
   if (!resend) return { error: 'Email service not configured' };
   try {
