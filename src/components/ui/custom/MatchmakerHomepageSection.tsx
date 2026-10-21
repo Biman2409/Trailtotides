@@ -51,7 +51,7 @@ function timeAgo(iso?: string): string | null {
 /** Warm band that fades into the page at top and bottom — no textures or glows. */
 function Band({ children }: { children: React.ReactNode }) {
   return (
-    <section id="matchmaker" className="relative py-14 lg:py-20 px-5 lg:px-8 overflow-hidden bg-[#faf3e8] dark:bg-[#1a1410]">
+    <section id="matchmaker" className="relative py-10 sm:py-14 lg:py-20 px-5 lg:px-8 overflow-hidden bg-[#faf3e8] dark:bg-[#1a1410]">
       <SectionTexture kind="trail" color="#ff5100" at="78% 50%" opacity={0.22} />
       <div className="absolute inset-x-0 top-0 h-24 pointer-events-none" style={{ background: "linear-gradient(to bottom, var(--bg-page), transparent)" }} />
       <div className="absolute inset-x-0 bottom-0 h-24 pointer-events-none" style={{ background: "linear-gradient(to top, var(--bg-page), transparent)" }} />
@@ -115,7 +115,7 @@ function DefaultCTA() {
 
   return (
     <Band>
-      <div className="grid lg:grid-cols-[1fr_380px] gap-10 lg:gap-16 items-center">
+      <div className="grid lg:grid-cols-[1fr_380px] gap-8 sm:gap-10 lg:gap-16 items-center">
         {/* Left: promise, steps, action */}
         <div className="min-w-0">
           <Eyebrow />
@@ -126,24 +126,25 @@ function DefaultCTA() {
             Tell us about your fitness and experience. We&apos;ll rate every adventure for you, so you know what you&apos;re ready for before you book.
           </p>
 
-          <ol className="grid sm:grid-cols-3 gap-3 mt-7 max-w-2xl">
+          {/* Phones: a tight numbered list on one card. Wider: three cards side by side. */}
+          <ol className="grid sm:grid-cols-3 sm:gap-3 mt-5 sm:mt-7 max-w-2xl rounded-xl sm:rounded-none px-3.5 py-1 sm:p-0 bg-[var(--bg-card)] sm:bg-transparent border border-[var(--border-subtle)] sm:border-0">
             {STEPS.map((s, i) => (
-              <li key={s.title} className="flex sm:flex-col gap-3 sm:gap-2 rounded-xl p-3.5" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
+              <li key={s.title} className={`flex items-center sm:items-start sm:flex-col gap-3 sm:gap-2 py-2.5 sm:rounded-xl sm:p-3.5 sm:bg-[var(--bg-card)] sm:border sm:border-[var(--border-subtle)] ${i ? "border-t border-[var(--border-subtle)] sm:border-t" : ""}`}>
                 <span className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0" style={{ background: "rgba(255,81,0,0.12)", color: "#ff7d47" }}>
                   {i + 1}
                 </span>
-                <span>
-                  <span className="block text-sm font-semibold" style={{ color: "var(--text-primary)" }}>{s.title}</span>
-                  <span className="block text-xs mt-0.5" style={{ color: "var(--text-tertiary)" }}>{s.body}</span>
+                <span className="min-w-0 flex-1 flex items-baseline justify-between gap-2 sm:block">
+                  <span className="block text-[13px] sm:text-sm font-semibold" style={{ color: "var(--text-primary)" }}>{s.title}</span>
+                  <span className="block text-[11px] sm:text-xs sm:mt-0.5 text-right sm:text-left shrink-0" style={{ color: "var(--text-tertiary)" }}>{s.body}</span>
                 </span>
               </li>
             ))}
           </ol>
 
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-7">
+          <div className="flex flex-wrap items-center gap-x-5 sm:gap-x-6 gap-y-3 mt-5 sm:mt-7">
             <Link
               href="/matchmaker"
-              className="group inline-flex items-center gap-2 bg-[#ff5100] text-white font-semibold px-6 py-3.5 rounded-xl text-[15px] hover:bg-[#ff6a24] hover:-translate-y-0.5 transition-all duration-200"
+              className="group inline-flex items-center gap-2 bg-[#ff5100] text-white font-semibold px-5 py-3 sm:px-6 sm:py-3.5 rounded-xl text-sm sm:text-[15px] hover:bg-[#ff6a24] hover:-translate-y-0.5 transition-all duration-200"
               style={{ boxShadow: "0 6px 20px rgba(255,81,0,0.28)" }}
             >
               Take the assessment

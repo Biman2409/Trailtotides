@@ -372,7 +372,7 @@ export default function MapDemo({ pins: real }: { pins: MapDemoPin[] }) {
   const statusColor = mode.kind === "near" ? "#60a5fa" : genre ? COLOR[genre] : "#7edc96";
 
   return (
-    <div ref={rootRef} className="relative w-full min-w-0 max-w-[340px] sm:max-w-[360px] xl:max-w-[380px] mx-auto lg:mr-0 select-none">
+    <div ref={rootRef} className="relative w-full min-w-0 max-w-[320px] sm:max-w-[360px] xl:max-w-[380px] mx-auto lg:mr-0 select-none">
       <div className="md-shell rounded-[22px] p-3">
         {/* Genre chips */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar mb-2.5 -mx-0.5 px-0.5">

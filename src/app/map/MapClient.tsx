@@ -1,1432 +1,646 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
 import {
-  Search, SlidersHorizontal, X, ChevronDown, MapPin, Loader2,
-  LocateFixed, Map as MapIcon, Layers, Camera, Trophy,
-  Navigation as NavigationIcon, Compass, RotateCcw,
+  SlidersHorizontal, LocateFixed, Loader2, Camera, Trophy, Compass, Layers, Activity, BadgeCheck, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import ChatBubble from "@/components/ChatBubble";
-import EmptyState from "@/components/ui/custom/EmptyState";
-import { DIFFICULTY_CONFIG } from "@/components/ui/custom/DifficultyMeter";
-import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import { useTripLog } from "@/contexts/TripLogContext";
-import { adventures } from "@/lib/data";
-import type { AdventureType, Region, Difficulty, Duration, Month, Adventure } from "@/lib/data";
-import { toggleSelection, REGION_GROUPS, GENRE_GROUPS, SEASONS } from "@/lib/filterOptions";
+import { useWishlist } from "@/contexts/WishlistContext";
+import { useFitnessProfile } from "@/lib/useFitnessProfile";
+import { adventures, type Adventure, type Difficulty, type Month } from "@/lib/data";
+import type { GroupMember } from "@/lib/fitness";
+import type { GroupSummary, StoredGroup } from "@/lib/matchGroups";
+import { track } from "@/lib/analytics";
+import { typeIconSvg } from "@/lib/mapMarkerIcons";
+import MapCanvas, { type MapApi, type UserPhoto, type CompletedAdventure } from "./MapCanvas";
+import SearchBox from "./SearchBox";
+import CompassBar, { type CompassPick } from "./CompassBar";
+import ResultsList from "./ResultsList";
+import PinCard from "./PinCard";
+import SeasonScrubber from "./SeasonScrubber";
+import CompareTray from "./CompareTray";
+import FiltersPanel, { NO_FILTERS, countFilters, type FineFilters } from "./FiltersPanel";
+import {
+  BASE_LAYERS, GENRES, difficultyOf, hasVerified, inSeason, fitFor, haversineKm,
+  type GenreKey, type LayerKey, type Fit,
+} from "./mapShared";
 
-import type L from "leaflet";
-import type { GeoJsonObject } from "geojson";
+// The Adventure Map, built on the home page promise:
+//   FIND     — genre lenses (mountain → ocean), a list of what's in view, seasons over the year
+//   COMPARE  — add from any pin or row, compare side by side
+//   BOOK     — verified operators, prices and a booking link on every pin
+//   …matched to your fitness (or your group's), picked for you by AI, run by verified operators.
 
-// Single source of truth for difficulty color-coding — see DifficultyMeter.tsx.
-const DIFFICULTY_COLORS: Record<string, string> = Object.fromEntries(
-  Object.entries(DIFFICULTY_CONFIG).map(([key, cfg]) => [key, cfg.color])
-);
+const GENRE_COUNTS = Object.fromEntries(GENRES.map((g) => [g.key, adventures.filter((a) => g.types.includes(a.type)).length])) as Record<GenreKey, number>;
+const TYPE_COUNTS = adventures.reduce<Record<string, number>>((n, a) => ({ ...n, [a.type]: (n[a.type] ?? 0) + 1 }), {});
 
-const seasons = SEASONS;
+const PANEL_W = 380;
+const GAP = 12;
+const SHEET = { peek: 168, half: 0.55, full: 0.88 } as const;
+type SheetState = "peek" | "half" | "full";
 
-// Distinct activity types actually present in the data — drives the Legend's
-// icon key so it always matches what's really on the map.
-const PRESENT_TYPES = Array.from(new Set(adventures.map(a => a.type))).sort();
-
-type NominatimResult = {
-  place_id: number;
-  display_name: string;
-  lat: string;
-  lon: string;
-  type: string;
-  class: string;
-};
-
-declare global { interface Window { L: typeof L } }
-
-function loadScript(src: string): Promise<void> {
-  return new Promise((resolve) => {
-    const existing = document.querySelector(`script[src="${src}"]`);
-    if (existing) {
-      if ((existing as HTMLScriptElement).dataset.loaded) { resolve(); return; }
-      existing.addEventListener("load", () => resolve(), { once: true });
-      return;
-    }
-    const s = document.createElement("script");
-    s.src = src;
-    s.onload = () => { s.dataset.loaded = "1"; resolve(); };
-    document.head.appendChild(s);
-  });
-}
-
-let leafletPromise: Promise<typeof L> | null = null;
-
-function loadLeaflet(): Promise<typeof L> {
-  if (leafletPromise) return leafletPromise;
-  leafletPromise = new Promise((resolve) => {
-    if (typeof window === "undefined") return;
-    if (!document.querySelector('link[href*="leaflet.css"]')) {
-      const link = document.createElement("link"); link.rel = "stylesheet";
-      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-      document.head.appendChild(link);
-    }
-    if (!document.querySelector('link[href*="MarkerCluster"]')) {
-      const lc = document.createElement("link"); lc.rel = "stylesheet";
-      lc.href = "https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css";
-      document.head.appendChild(lc);
-      const ld = document.createElement("link"); ld.rel = "stylesheet";
-      ld.href = "https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css";
-      document.head.appendChild(ld);
-    }
-    loadScript("https://unpkg.com/leaflet@1.9.4/dist/leaflet.js")
-      .then(() => loadScript("https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"))
-      .then(() => resolve(window.L));
-  });
-  return leafletPromise;
-}
-
-// ── Unified Search ────────────────────────────────────────────────────────────
-
-function UnifiedSearch({
-  onAdventureSearch,
-  onPlaceSelect,
-  onAdventurePin,
-}: {
-  onAdventureSearch: (q: string) => void;
-  onPlaceSelect: (lat: number, lng: number, name: string) => void;
-  onAdventurePin: (adv: Adventure) => void;
-}) {
-  const [query, setQuery] = useState("");
-  const [placeResults, setPlaceResults] = useState<NominatimResult[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  const adventureMatches = query.trim().length >= 2
-    ? adventures.filter(a =>
-        a.name.toLowerCase().includes(query.toLowerCase()) ||
-        a.state.toLowerCase().includes(query.toLowerCase()) ||
-        a.type.toLowerCase().includes(query.toLowerCase())
-      ).slice(0, 5)
-    : [];
-
-  const fetchPlaces = useCallback((q: string) => {
-    if (!q.trim() || q.length < 2) { setPlaceResults([]); return; }
-    setLoading(true);
-    fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=4&countrycodes=in&addressdetails=0`,
-      { headers: { "Accept-Language": "en" } }
-    )
-      .then(r => r.json())
-      .then((data: NominatimResult[]) => setPlaceResults(data))
-      .catch(() => setPlaceResults([]))
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    onAdventureSearch(query);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => fetchPlaces(query), 400);
-    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
-  }, [query, fetchPlaces, onAdventureSearch]);
-
-  const hasResults = adventureMatches.length > 0 || placeResults.length > 0;
-  useEffect(() => { setOpen(query.trim().length >= 2 && hasResults); }, [query, hasResults]);
-
-  useEffect(() => {
-    function handle(e: MouseEvent) {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener("mousedown", handle);
-    return () => document.removeEventListener("mousedown", handle);
-  }, []);
-
-  function handleClear() { setQuery(""); setPlaceResults([]); setOpen(false); onAdventureSearch(""); }
-
-  function handlePlaceSelect(r: NominatimResult) {
-    const name = r.display_name.split(",")[0];
-    onPlaceSelect(parseFloat(r.lat), parseFloat(r.lon), name);
-    setQuery(name); setOpen(false);
-  }
-
-  function handleAdvSelect(a: Adventure) {
-    onAdventurePin(a);
-    setQuery(a.name); setOpen(false);
-  }
-
-  return (
-    <div ref={wrapperRef} className="relative flex-1 min-w-0">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30" />
-        {loading && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 animate-spin text-white/30" />}
-        {!loading && query && (
-          <button onClick={handleClear} className="absolute right-3 top-1/2 -translate-y-1/2 hover:opacity-70 transition-opacity">
-            <X className="w-3.5 h-3.5 text-white/30" />
-          </button>
-        )}
-        <input
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          placeholder="Search adventures or places…"
-          className="w-full pl-9 pr-8 py-2.5 rounded-xl text-sm focus:outline-none transition-all"
-          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.85)", caretColor: "#ff5100" }}
-          onFocus={e => { e.currentTarget.style.border = "1px solid rgba(255,81,0,0.4)"; e.currentTarget.style.background = "rgba(255,255,255,0.08)"; hasResults && setOpen(true); }}
-          onBlur={e => { e.currentTarget.style.border = "1px solid rgba(255,255,255,0.1)"; e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
-        />
-      </div>
-
-      {open && (
-        <div
-          className="absolute z-[2000] top-full mt-2 w-full rounded-xl overflow-hidden text-sm min-w-[300px]"
-          style={{ background: "rgba(6,9,18,0.97)", border: "1px solid rgba(255,255,255,0.1)", boxShadow: "0 16px 48px rgba(0,0,0,0.6)", backdropFilter: "blur(14px)" }}
-        >
-          {adventureMatches.length > 0 && (
-            <>
-              <p className="px-4 pt-3 pb-1.5 text-[9px] font-black uppercase tracking-[0.25em] text-white/25">Adventures</p>
-              {adventureMatches.map(a => (
-                <button
-                  key={a.id}
-                  onMouseDown={() => handleAdvSelect(a)}
-                  className="w-full text-left px-4 py-2.5 flex items-center gap-3 transition-colors"
-                  style={{ color: "rgba(255,255,255,0.8)" }}
-                  onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}
-                  onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
-                >
-                  <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 relative">
-                    <Image src={a.heroImage} alt={a.name} fill className="object-cover" sizes="32px" unoptimized />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-[13px] truncate text-white/85">{a.name}</p>
-                    <p className="text-[10px] mt-0.5 truncate text-white/35">{a.type} · {a.state}</p>
-                  </div>
-                  <div className="w-2 h-2 rounded-full shrink-0" style={{ background: DIFFICULTY_COLORS[a.difficulty] }} />
-                </button>
-              ))}
-            </>
-          )}
-          {placeResults.length > 0 && (
-            <>
-              <p className={`px-4 pb-1.5 text-[9px] font-black uppercase tracking-[0.25em] text-white/25 ${adventureMatches.length > 0 ? "pt-2.5 border-t border-white/6" : "pt-3"}`}>
-                Places
-              </p>
-              {placeResults.map(r => (
-                <button
-                  key={r.place_id}
-                  onMouseDown={() => handlePlaceSelect(r)}
-                  className="w-full text-left px-4 py-2.5 flex items-center gap-3 transition-colors"
-                  onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}
-                  onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
-                >
-                  <MapPin className="w-3.5 h-3.5 shrink-0 text-[#ff5100]" />
-                  <span className="line-clamp-1 text-[13px] text-white/70">{r.display_name}</span>
-                </button>
-              ))}
-            </>
-          )}
-          <div className="px-4 py-2 border-t border-white/6">
-            <p className="text-[9px] text-white/20">Adventure → fly to pin · Place → navigate to location</p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ── Map View ──────────────────────────────────────────────────────────────────
-
-const BASE_LAYERS = {
-  default: {
-    url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    maxZoom: 19,
-    labelsUrl: null,
-  },
-  satellite: {
-    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics",
-    maxZoom: 19,
-    labelsUrl: "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
-  },
-  terrain: {
-    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
-    maxZoom: 17,
-    labelsUrl: null,
-  },
-} as const;
-
-type OverlayKey = keyof typeof BASE_LAYERS;
-
-// Module-level cache for India GeoJSON (survives re-mounts)
-let indiaGeoCache: GeoJsonObject | null = null;
-
-interface UserPhoto {
-  id: string;
-  slug: string;
-  url: string;
-  caption: string;
-  created_at: string;
-  lat: number;
-  lng: number;
-  adventureName: string;
-}
-
-interface CompletedAdventure {
-  adv: Adventure;
-  date: string;
-}
-
-const TROPHY_SVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>`;
-
-function MapView({
-  adventures: advs,
-  flyToRef,
-  openPinRef,
-  placePinRef,
-  resetViewRef,
-  viewKey,
-  userPhotos,
-  wishlist,
-  nearMe,
-  completed,
-  }: {
-  adventures: Adventure[];
-  flyToRef: React.MutableRefObject<((lat: number, lng: number) => void) | null>;
-  openPinRef: React.MutableRefObject<((slug: string) => void) | null>;
-  placePinRef: React.MutableRefObject<((lat: number, lng: number, name: string) => void) | null>;
-  resetViewRef: React.MutableRefObject<(() => void) | null>;
-  viewKey: OverlayKey;
-  userPhotos: UserPhoto[];
-  wishlist: Set<string>;
-  nearMe: { lat: number; lng: number } | null;
-  completed: CompletedAdventure[];
-}) {
-  const router = useRouter();
-  const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<L.Map | null>(null);
-  const markersLayerRef = useRef<L.LayerGroup | null>(null);
-  const markerMapRef = useRef<Map<string, L.Marker>>(new Map());
-  const baseTileRef = useRef<L.TileLayer | null>(null);
-  const labelsTileRef = useRef<L.TileLayer | null>(null);
-  const photoLayerRef = useRef<L.LayerGroup | null>(null);
-  const placeLayerRef = useRef<L.LayerGroup | null>(null);
-  const meLayerRef = useRef<L.LayerGroup | null>(null);
-  const trophyLayerRef = useRef<L.LayerGroup | null>(null);
-
-  useEffect(() => {
-    flyToRef.current = (lat, lng) => {
-      mapInstanceRef.current?.flyTo([lat, lng], 11, { duration: 1.2 });
-    };
-    openPinRef.current = (slug) => {
-      const marker = markerMapRef.current.get(slug);
-      if (marker && mapInstanceRef.current) {
-        const adv = advs.find(a => a.slug === slug);
-        if (adv) mapInstanceRef.current.flyTo([adv.lat, adv.lng], 11, { duration: 1.0 });
-        setTimeout(() => marker.openPopup(), 1100);
-      }
-    };
-    // Drop a distinct pin at a searched place — otherwise flying there gives no
-    // visual confirmation of exactly where the map landed.
-    placePinRef.current = (lat, lng, name) => {
-      loadLeaflet().then(leaflet => {
-        if (!placeLayerRef.current) return;
-        placeLayerRef.current.clearLayers();
-        const icon = leaflet.divIcon({
-          className: "",
-          html: `<div style="width:26px;height:26px;border-radius:50% 50% 50% 0;background:#38bdf8;transform:rotate(-45deg);border:2.5px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.35);"></div>`,
-          iconSize: [26, 26],
-          iconAnchor: [13, 26],
-          popupAnchor: [0, -30],
-        });
-        const marker = leaflet.marker([lat, lng], { icon }).bindTooltip(name, {
-          direction: "top", offset: [0, -28], className: "ttt-tooltip", opacity: 0.9, permanent: true,
-        });
-        placeLayerRef.current.addLayer(marker);
-      });
-    };
-  });
-
-  function buildMarker(leaflet: typeof L, adv: Adventure) {
-    const diffColor = DIFFICULTY_COLORS[adv.difficulty] ?? "#6366f1";
-    const isWishlisted = wishlist.has(adv.slug);
-    const markerColor = isWishlisted ? "#ff5100" : diffColor;
-    const svgIcon = typeIconSvg(adv.type, 11, "white");
-
-    const icon = leaflet.divIcon({
-      className: "",
-      html: `<div style="position:relative;width:32px;height:40px;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.45));">
-        <div style="width:32px;height:32px;border-radius:50% 50% 50% 0;background:${markerColor};transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2.5px solid #fff;${isWishlisted ? "box-shadow:0 0 12px rgba(255,81,0,0.6),inset 0 1px 0 rgba(255,255,255,0.3)" : "box-shadow:inset 0 1px 0 rgba(255,255,255,0.3)"};">
-          <div style="transform:rotate(45deg);display:flex;align-items:center;justify-content:center;">${svgIcon}</div>
-        </div>
-        ${isWishlisted ? '<div style="position:absolute;top:-4px;right:-4px;width:12px;height:12px;background:#ff5100;border-radius:50%;border:1.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:6px;">❤</div>' : ""}
-      </div>`,
-      iconSize: [32, 40],
-      iconAnchor: [16, 40],
-      popupAnchor: [0, -44],
-    });
-
-    const distStr = nearMe
-      ? ` · ${Math.round(haversineKm(nearMe.lat, nearMe.lng, adv.lat, adv.lng))} km`
-      : "";
-
-    const popupHtml = `
-      <div data-nav="/experiences/${adv.slug}" style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:var(--bg-surface,#161311);cursor:pointer;border:1px solid var(--border-subtle,rgba(255,255,255,0.06));">
-        <div style="position:relative;height:180px;">
-          <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />
-          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.1) 50%,rgba(0,0,0,0.2) 100%);" />
-          <div style="position:absolute;top:10px;left:10px;display:flex;gap:4px;align-items:center;">
-            <span style="background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);color:#fff;font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);">${adv.type}</span>
-            ${isWishlisted ? '<span style="background:rgba(255,81,0,0.55);backdrop-filter:blur(8px);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;">❤ Saved</span>' : ""}
-          </div>
-          <div style="position:absolute;bottom:10px;left:14px;right:14px;">
-            <div style="font-size:16px;font-weight:700;color:#fff;line-height:1.2;letter-spacing:-0.02em;text-shadow:0 2px 8px rgba(0,0,0,0.7);">${adv.name}</div>
-          </div>
-        </div>
-        <div style="padding:12px 14px 14px;">
-          <p style="font-size:12.5px;color:var(--text-secondary,rgba(255,255,255,0.5));line-height:1.5;margin:0 0 12px;">${adv.tagline}</p>
-          <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div style="display:flex;align-items:center;gap:8px;">
-              <span style="display:flex;align-items:center;gap:3px;font-size:11px;color:var(--text-tertiary,rgba(255,255,255,0.3));">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                ${adv.durationDays}
-              </span>
-              <span style="display:flex;align-items:center;gap:3px;font-size:11px;color:${diffColor};">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.5 6.5L4 10l5.5 4-2 7L12 17l4.5 4-2-7L20 10l-6.5-.5Z"/></svg>
-                ${adv.difficulty}
-              </span>
-              ${distStr ? `<span style="display:flex;align-items:center;gap:3px;font-size:11px;color:#22c55e;">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-                <span style="font-weight:600;">${distStr.replace(" · ", "")}</span>
-              </span>` : ""}
-            </div>
-            <span style="display:flex;align-items:center;gap:3px;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600;background:rgba(255,81,0,0.12);color:#ff5100;">
-              Explore
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </span>
-          </div>
-        </div>
-      </div>
-    `;
-
-    const marker = leaflet.marker([adv.lat, adv.lng], { icon })
-      .bindPopup(popupHtml, { maxWidth: 280, minWidth: 280, className: "ttt-popup" })
-      .bindTooltip(adv.name, {
-        direction: "top",
-        offset: [0, -48],
-        className: "ttt-tooltip",
-        opacity: 0.9,
-      });
-
-    // Popups render as raw HTML outside React, so a plain href would force a
-    // full page reload — route through Next's client-side router instead.
-    marker.on("popupopen", () => {
-      const el = marker.getPopup()?.getElement()?.querySelector<HTMLElement>("[data-nav]");
-      if (el) el.onclick = () => router.push(el.dataset.nav!);
-    });
-
-    return marker;
-  }
-
-  function addMarkers(leaflet: typeof L, list: Adventure[]) {
-    markerMapRef.current.clear();
-    list.forEach(adv => {
-      const marker = buildMarker(leaflet, adv);
-      markersLayerRef.current?.addLayer(marker);
-      markerMapRef.current.set(adv.slug, marker);
-    });
-  }
-
-  function addIndiaBorder(leaflet: typeof L, map: L.Map) {
-    if (indiaGeoCache) {
-      leaflet.geoJSON(indiaGeoCache, {
-        style: { color: "#ff5100", weight: 1.8, opacity: 0.3, fillColor: "#ff5100", fillOpacity: 0.03 },
-        interactive: false,
-      }).addTo(map);
-      return;
-    }
-    fetch("/india-boundary.geojson")
-      .then(r => r.json())
-      .then(data => {
-        indiaGeoCache = data;
-        leaflet.geoJSON(data, {
-          style: { color: "#ff5100", weight: 1.8, opacity: 0.3, fillColor: "#ff5100", fillOpacity: 0.03 },
-          interactive: false,
-        }).addTo(map);
-      })
-      .catch(() => {});
-  }
-
-  // Inject popup + zoom control styles once
-  useEffect(() => {
-    if (document.getElementById("ttt-popup-style")) return;
-    const s = document.createElement("style");
-    s.id = "ttt-popup-style";
-    s.textContent = `
-      .ttt-popup .leaflet-popup-content-wrapper {
-        padding: 0;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.55), 0 4px 16px rgba(0,0,0,0.3);
-        border: 1px solid rgba(255,255,255,0.08);
-        background: #09101f;
-      }
-      .ttt-popup .leaflet-popup-content { margin: 0; line-height: 1; }
-      .ttt-popup .leaflet-popup-tip-container { display: none; }
-      .ttt-popup .leaflet-popup-close-button {
-        top: 8px !important; right: 8px !important;
-        width: 22px !important; height: 22px !important;
-        font-size: 15px !important; line-height: 22px !important;
-        background: rgba(0,0,0,0.55) !important;
-        backdrop-filter: blur(4px) !important;
-        border-radius: 50% !important;
-        color: rgba(255,255,255,0.75) !important;
-        display: flex !important; align-items: center !important; justify-content: center !important;
-        border: 1px solid rgba(255,255,255,0.12) !important;
-      }
-      .ttt-popup .leaflet-popup-close-button:hover { background: rgba(255,81,0,0.6) !important; color: #fff !important; }
-      .ttt-tooltip {
-        background: rgba(4,7,14,0.92) !important;
-        border: 1px solid rgba(255,255,255,0.12) !important;
-        color: #fff !important;
-        font-size: 11px !important;
-        font-weight: 600 !important;
-        padding: 4px 10px !important;
-        border-radius: 8px !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
-        backdrop-filter: blur(8px) !important;
-      }
-      .ttt-tooltip::before { border-top-color: rgba(4,7,14,0.92) !important; }
-      .leaflet-control-zoom {
-        border: none !important;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
-        border-radius: 12px !important;
-        overflow: hidden;
-      }
-      .leaflet-control-zoom a {
-        background: rgba(4,7,14,0.88) !important;
-        backdrop-filter: blur(12px) !important;
-        color: rgba(255,255,255,0.7) !important;
-        border: none !important;
-        font-size: 16px !important;
-        line-height: 30px !important;
-        width: 30px !important;
-        height: 30px !important;
-        transition: background 0.15s, color 0.15s;
-      }
-      .leaflet-control-zoom a:hover { background: rgba(255,81,0,0.25) !important; color: #ff7d47 !important; }
-      .leaflet-control-zoom-in { border-bottom: 1px solid rgba(255,255,255,0.07) !important; }
-      .leaflet-control-attribution { display: none !important; }
-      .ttt-popup .leaflet-popup-content-wrapper > div {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-      .ttt-popup .leaflet-popup-content-wrapper > div:hover {
-        transform: scale(1.02);
-      }
-      .ttt-me-pulse {
-        animation: ttt-me-pulse 2s ease-out infinite;
-      }
-      @keyframes ttt-me-pulse {
-        0% { transform: scale(0.6); opacity: 0.8; }
-        100% { transform: scale(2.2); opacity: 0; }
-      }
-    `;
-    document.head.appendChild(s);
-  }, []);
-
-  useEffect(() => {
-    if (!mapRef.current) return;
-    const container = mapRef.current;
-    loadLeaflet().then(leaflet => {
-      if (!container) return;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if ((container as any)._leaflet_id) (container as any)._leaflet_id = undefined;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      delete (leaflet.Icon.Default.prototype as any)._getIconUrl;
-      leaflet.Icon.Default.mergeOptions({
-        iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-        iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-        shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-      });
-
-      const map = leaflet.map(container, {
-        center: [22.5, 80.0], zoom: 5,
-        zoomControl: false,
-        attributionControl: false,
-        scrollWheelZoom: true,
-      });
-
-      const bl = BASE_LAYERS.default;
-      baseTileRef.current = leaflet.tileLayer(bl.url, { maxZoom: bl.maxZoom, attribution: bl.attribution }).addTo(map);
-      // topright — bottomright is where Legend/Reset View/branding chip live,
-      // and on mobile the branding chip visually covers the zoom-out button there.
-      leaflet.control.zoom({ position: "topright" }).addTo(map);
-
-      mapInstanceRef.current = map;
-
-      // Reset view handler
-      resetViewRef.current = () => {
-        map.flyTo([22.5, 80.0], 5, { duration: 1.2 });
-      };
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const MCG = (leaflet as any).markerClusterGroup({
-        maxClusterRadius: 52,
-        spiderfyOnMaxZoom: true,
-        showCoverageOnHover: false,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        iconCreateFunction: (cluster: any) => {
-          const count = cluster.getChildCount();
-          const size = count >= 100 ? 44 : count >= 20 ? 40 : 36;
-          return leaflet.divIcon({
-            html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:linear-gradient(135deg,#ff5100,#ff7d47);color:#fff;font-size:${count >= 100 ? 11 : 12}px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2.5px solid rgba(255,255,255,0.9);box-shadow:0 4px 16px rgba(255,81,0,0.5),0 1px 4px rgba(0,0,0,0.3);">${count}</div>`,
-            className: "",
-            iconSize: [size, size],
-            iconAnchor: [size / 2, size / 2],
-          });
-        },
-      });
-      map.addLayer(MCG);
-      markersLayerRef.current = MCG;
-      photoLayerRef.current = leaflet.layerGroup().addTo(map);
-      placeLayerRef.current = leaflet.layerGroup().addTo(map);
-      meLayerRef.current = leaflet.layerGroup().addTo(map);
-      trophyLayerRef.current = leaflet.layerGroup().addTo(map);
-      addMarkers(leaflet, advs);
-      addIndiaBorder(leaflet, map);
-    });
-    return () => {
-      if (mapInstanceRef.current) {
-        markersLayerRef.current = null;
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if (container) (container as any)._leaflet_id = undefined;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (!mapInstanceRef.current || !markersLayerRef.current) return;
-    loadLeaflet().then(leaflet => {
-      if (!markersLayerRef.current || !mapInstanceRef.current) return;
-      markersLayerRef.current.clearLayers();
-      addMarkers(leaflet, advs);
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [advs]);
-
-  useEffect(() => {
-    if (!mapInstanceRef.current) return;
-    loadLeaflet().then(leaflet => {
-      const map = mapInstanceRef.current;
-      if (!map || !baseTileRef.current) return;
-      const cfg = BASE_LAYERS[viewKey];
-      // swap base tile
-      map.removeLayer(baseTileRef.current);
-      baseTileRef.current = leaflet.tileLayer(cfg.url, { maxZoom: cfg.maxZoom, attribution: cfg.attribution });
-      baseTileRef.current.addTo(map);
-      // remove old labels layer
-      if (labelsTileRef.current) { map.removeLayer(labelsTileRef.current); labelsTileRef.current = null; }
-      // add labels overlay for satellite
-      if (cfg.labelsUrl) {
-        labelsTileRef.current = leaflet.tileLayer(cfg.labelsUrl, { maxZoom: cfg.maxZoom, attribution: "", opacity: 1 });
-        labelsTileRef.current.addTo(map);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (markersLayerRef.current as any)?.bringToFront?.();
-    });
-  }, [viewKey]);
-
-  useEffect(() => {
-    if (!photoLayerRef.current) return;
-    loadLeaflet().then(leaflet => {
-      if (!photoLayerRef.current) return;
-      photoLayerRef.current.clearLayers();
-      userPhotos.forEach(photo => {
-        const icon = leaflet.divIcon({
-          className: "",
-          html: `<div style="position:relative;width:46px;height:46px;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5));">
-            <div style="width:46px;height:46px;border-radius:50%;overflow:hidden;border:3px solid #ff5100;background:#09101f;box-shadow:0 0 0 1.5px rgba(255,81,0,0.3);">
-              <img src="${photo.url}" alt="${photo.caption || photo.adventureName}" style="width:100%;height:100%;object-fit:cover;" />
-            </div>
-            <div style="position:absolute;bottom:-1px;right:-1px;width:16px;height:16px;background:linear-gradient(135deg,#ff5100,#ff7d47);border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;">
-              <svg width="7" height="7" viewBox="0 0 24 24" fill="white"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.92c.04-.26.07-.54.07-.83s-.03-.57-.07-.83l1.8-1.4c.16-.13.2-.35.1-.53l-1.72-2.97a.397.397 0 0 0-.49-.15l-2.12.85c-.44-.34-.9-.63-1.41-.84l-.32-2.26a.4.4 0 0 0-.4-.34H8.12a.4.4 0 0 0-.4.34l-.32 2.26c-.51.21-.97.5-1.41.84L3.87 7.12a.39.39 0 0 0-.49.15L1.66 10.24c-.1.18-.06.4.1.53l1.8 1.4c-.04.26-.07.53-.07.83s.03.57.07.83l-1.8 1.4c-.16.13-.2.35-.1.53l1.71 2.97c.1.18.3.24.49.15l2.12-.85c.44.34.9.63 1.41.84l.32 2.26c.06.2.24.34.4.34h3.44c.17 0 .34-.14.4-.34l.32-2.26c.51-.21.97-.5 1.41-.84l2.12.85c.19.07.39.01.49-.15l1.71-2.97c.1-.18.06-.4-.1-.53l-1.8-1.4z"/></svg>
-            </div>
-          </div>`,
-          iconSize: [46, 46],
-          iconAnchor: [23, 23],
-          popupAnchor: [0, -28],
-        });
-
-        const popupHtml = `
-          <div style="width:220px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:14px;overflow:hidden;background:#09101f;">
-            <div style="position:relative;height:144px;">
-              <img src="${photo.url}" alt="${photo.caption || photo.adventureName}" style="width:100%;height:100%;object-fit:cover;display:block;" />
-              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(9,16,31,0.92) 0%,transparent 55%);" />
-              <div style="position:absolute;bottom:9px;left:11px;right:11px;">
-                <div style="font-size:12.5px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-0.01em;">${photo.adventureName}</div>
-                ${photo.caption ? `<div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:2px;">${photo.caption}</div>` : ""}
-              </div>
-            </div>
-            <div style="padding:10px 11px 11px;background:#09101f;">
-              <button data-nav="/experiences/${photo.slug}" style="display:flex;align-items:center;justify-content:center;gap:5px;width:100%;background:linear-gradient(135deg,#ff5100,#ff7d47);color:white;padding:8px;border-radius:8px;font-size:11px;font-weight:700;border:none;cursor:pointer;box-shadow:0 2px 10px rgba(255,81,0,0.3);">
-                See Full Details →
-              </button>
-            </div>
-          </div>
-        `;
-
-        const marker = leaflet.marker([photo.lat, photo.lng], { icon })
-          .bindPopup(popupHtml, { maxWidth: 220, minWidth: 220, className: "ttt-popup" });
-        marker.on("popupopen", () => {
-          const el = marker.getPopup()?.getElement()?.querySelector<HTMLElement>("[data-nav]");
-          if (el) el.onclick = () => router.push(el.dataset.nav!);
-        });
-        photoLayerRef.current!.addLayer(marker);
-      });
-    });
-  }, [userPhotos]);
-
-  // "You are here" marker — otherwise the map recenters on Near Me with no
-  // fixed reference point to judge the distances shown in adventure popups.
-  useEffect(() => {
-    if (!meLayerRef.current) return;
-    loadLeaflet().then(leaflet => {
-      if (!meLayerRef.current) return;
-      meLayerRef.current.clearLayers();
-      if (!nearMe) return;
-      const icon = leaflet.divIcon({
-        className: "",
-        html: `<div style="position:relative;width:22px;height:22px;">
-          <div class="ttt-me-pulse" style="position:absolute;inset:0;border-radius:50%;background:rgba(56,189,248,0.35);"></div>
-          <div style="position:absolute;top:5px;left:5px;width:12px;height:12px;border-radius:50%;background:#38bdf8;border:2px solid #fff;box-shadow:0 0 0 1px rgba(56,189,248,0.5),0 2px 6px rgba(0,0,0,0.4);"></div>
-        </div>`,
-        iconSize: [22, 22],
-        iconAnchor: [11, 11],
-      });
-      const marker = leaflet.marker([nearMe.lat, nearMe.lng], { icon, zIndexOffset: 1000 })
-        .bindTooltip("You are here", { direction: "top", offset: [0, -10], className: "ttt-tooltip", opacity: 0.9 });
-      meLayerRef.current.addLayer(marker);
-    });
-  }, [nearMe]);
-
-  // Adventure Passport pins — completed adventures, celebrated with a gold trophy
-  // marker distinct from the difficulty/wishlist pin language.
-  useEffect(() => {
-    if (!trophyLayerRef.current) return;
-    loadLeaflet().then(leaflet => {
-      if (!trophyLayerRef.current) return;
-      trophyLayerRef.current.clearLayers();
-      completed.forEach(({ adv, date }) => {
-        const icon = leaflet.divIcon({
-          className: "",
-          html: `<div style="position:relative;width:34px;height:42px;filter:drop-shadow(0 3px 10px rgba(234,179,8,0.55));">
-            <div style="width:34px;height:34px;border-radius:50% 50% 50% 0;background:linear-gradient(135deg,#f7cd3a,#eab308);transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2.5px solid #fff;box-shadow:0 0 14px rgba(234,179,8,0.55),inset 0 1px 0 rgba(255,255,255,0.4);">
-              <div style="transform:rotate(45deg);display:flex;align-items:center;justify-content:center;">${TROPHY_SVG}</div>
-            </div>
-          </div>`,
-          iconSize: [34, 42],
-          iconAnchor: [17, 42],
-          popupAnchor: [0, -46],
-        });
-
-        const dateStr = new Date(date + "T00:00:00").toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-
-        const popupHtml = `
-          <div data-nav="/experiences/${adv.slug}" style="width:280px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;border-radius:16px;overflow:hidden;background:var(--bg-surface,#161311);cursor:pointer;border:1px solid var(--border-subtle,rgba(255,255,255,0.06));">
-            <div style="position:relative;height:180px;">
-              <img src="${adv.heroImage}" alt="${adv.name}" style="width:100%;height:100%;object-fit:cover;display:block;" />
-              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.1) 50%,rgba(0,0,0,0.2) 100%);" />
-              <div style="position:absolute;top:10px;left:10px;">
-                <span style="background:linear-gradient(135deg,#f7cd3a,#eab308);color:#1a1200;font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:4px;">🏆 Completed ${dateStr}</span>
-              </div>
-              <div style="position:absolute;bottom:10px;left:14px;right:14px;">
-                <div style="font-size:16px;font-weight:700;color:#fff;line-height:1.2;letter-spacing:-0.02em;text-shadow:0 2px 8px rgba(0,0,0,0.7);">${adv.name}</div>
-              </div>
-            </div>
-            <div style="padding:12px 14px 14px;">
-              <p style="font-size:12.5px;color:var(--text-secondary,rgba(255,255,255,0.5));line-height:1.5;margin:0 0 12px;">${adv.tagline}</p>
-              <div style="display:flex;align-items:center;justify-content:flex-end;">
-                <span style="display:flex;align-items:center;gap:3px;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:600;background:rgba(255,81,0,0.12);color:#ff5100;">
-                  Relive it
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                </span>
-              </div>
-            </div>
-          </div>
-        `;
-
-        const marker = leaflet.marker([adv.lat, adv.lng], { icon, zIndexOffset: 500 })
-          .bindPopup(popupHtml, { maxWidth: 280, minWidth: 280, className: "ttt-popup" })
-          .bindTooltip(`${adv.name} · ${dateStr}`, { direction: "top", offset: [0, -48], className: "ttt-tooltip", opacity: 0.9 });
-
-        marker.on("popupopen", () => {
-          const el = marker.getPopup()?.getElement()?.querySelector<HTMLElement>("[data-nav]");
-          if (el) el.onclick = () => router.push(el.dataset.nav!);
-        });
-
-        trophyLayerRef.current!.addLayer(marker);
-      });
-    });
-  }, [completed, router]);
-
-  return <div ref={mapRef} className="w-full h-full" />;
-}
-
-// ── Haversine ─────────────────────────────────────────────────────────────────
-
-function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLng = (lng2 - lng1) * Math.PI / 180;
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-// ── Page ──────────────────────────────────────────────────────────────────────
-
-export default function MapPage() {
+export default function MapClient() {
   const [mounted, setMounted] = useState(false);
+  const [desktop, setDesktop] = useState(false);
+  const [areaH, setAreaH] = useState(700);
+  const areaRef = useRef<HTMLDivElement>(null);
+  const apiRef = useRef<MapApi | null>(null);
+
+  // ── What's shown ────────────────────────────────────────────────────────────
+  const [search, setSearch] = useState("");
+  const [genres, setGenres] = useState<GenreKey[]>([]);
+  const [fine, setFine] = useState<FineFilters>(NO_FILTERS);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [activeOverlay, setActiveOverlay] = useState<OverlayKey | null>(null);
-  const [myShotsOn, setMyShotsOn] = useState(false);
-  const [myShotsLoading, setMyShotsLoading] = useState(false);
-  const [userPhotos, setUserPhotos] = useState<UserPhoto[]>([]);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [myTrailOn, setMyTrailOn] = useState(false);
+  const [readyOnly, setReadyOnly] = useState(false);
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [month, setMonth] = useState<Month | null>(null);
+  const [picks, setPicks] = useState<CompassPick[]>([]);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
+  const [panelOpen, setPanelOpen] = useState(true);
+  const [inView, setInView] = useState<Set<string>>(new Set());
+  const [layer, setLayer] = useState<LayerKey>("map");
+  const [sheet, setSheet] = useState<SheetState>("peek");
+
+  // ── You ─────────────────────────────────────────────────────────────────────
+  const { ace } = useFitnessProfile();
+  const { saved } = useWishlist();
   const { log: tripLog } = useTripLog();
-
-  const completedAdventures: CompletedAdventure[] = tripLog
-    .map(e => { const adv = adventures.find(a => a.slug === e.slug); return adv ? { adv, date: e.date } : null; })
-    .filter((x): x is CompletedAdventure => !!x);
-
-  function toggleMyTrail() {
-    if (myTrailOn) { setMyTrailOn(false); return; }
-    setMyTrailOn(true);
-    if (completedAdventures.length === 0) {
-      toast("No completed adventures yet — mark one done from its page to build your trail map.");
-    }
-  }
-
-  function toggleMyShots() {
-    if (myShotsOn) {
-      setMyShotsOn(false);
-      setUserPhotos([]);
-      return;
-    }
-    setMyShotsOn(true);
-    setMyShotsLoading(true);
-    fetch("/api/photos/mine")
-      .then(r => r.json())
-      .then(d => {
-        const photos = d.photos ?? [];
-        setUserPhotos(photos);
-        if (photos.length === 0) toast("No trip photos yet — add some from a completed adventure's page.");
-      })
-      .catch(() => setUserPhotos([]))
-      .finally(() => setMyShotsLoading(false));
-  }
-  const flyToRef = useRef<((lat: number, lng: number) => void) | null>(null);
-  const openPinRef = useRef<((slug: string) => void) | null>(null);
-  const placePinRef = useRef<((lat: number, lng: number, name: string) => void) | null>(null);
-  const resetViewRef = useRef<(() => void) | null>(null);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [nearMe, setNearMe] = useState<{ lat: number; lng: number } | null>(null);
   const [nearMeLoading, setNearMeLoading] = useState(false);
-  const [nearMeError, setNearMeError] = useState(false);
-  const [legendOpen, setLegendOpen] = useState(false);
+  const [shotsOn, setShotsOn] = useState(false);
+  const [shotsLoading, setShotsLoading] = useState(false);
+  const [photos, setPhotos] = useState<UserPhoto[]>([]);
+  const [trailOn, setTrailOn] = useState(false);
+  const [groups, setGroups] = useState<GroupSummary[]>([]);
+  const [group, setGroup] = useState<{ code: string; name: string; members: GroupMember[] } | null>(null);
+  const [groupLoading, setGroupLoading] = useState(false);
 
-  // Load wishlist from localStorage
-  const [wishlist, setWishlist] = useState<Set<string>>(new Set());
-  useEffect(() => {
-    const saved = localStorage.getItem("ttt-bookmarks");
-    if (saved) {
-      const bookmarks = JSON.parse(saved);
-      setWishlist(new Set(Object.keys(bookmarks)));
-    }
-    function handleWishlistChange() {
-      const s = localStorage.getItem("ttt-bookmarks");
-      if (s) {
-        const b = JSON.parse(s);
-        setWishlist(new Set(Object.keys(b)));
-      }
-    }
-    window.addEventListener("storage", handleWishlistChange);
-    return () => window.removeEventListener("storage", handleWishlistChange);
-  }, []);
-
-  const [search, setSearch] = useState("");
-  const [selectedTypes, setSelectedTypes] = useState<AdventureType[]>([]);
-  const [selectedRegions, setSelectedRegions] = useState<Region[]>([]);
-  const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
-  const [selectedDurations, setSelectedDurations] = useState<Duration[]>([]);
-  const [selectedMonths, setSelectedMonths] = useState<Month[]>([]);
-  const [selectedSubRegions, setSelectedSubRegions] = useState<string[]>([]);
-  const [expandedRegion, setExpandedRegion] = useState<Region | null>(null);
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
-  const [expandedSeason, setExpandedSeason] = useState<string | null>(null);
   useEffect(() => {
     setMounted(true);
-    // Check auth state
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const update = () => setDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
     import("@/lib/supabase/client").then(({ createClient }) => {
-      const sb = createClient();
-      sb.auth.getSession().then(({ data: { session } }) => setLoggedIn(!!session?.user));
+      createClient().auth.getSession().then(({ data: { session } }) => setLoggedIn(!!session?.user));
     });
+    return () => mq.removeEventListener("change", update);
   }, []);
 
-  const toggle = toggleSelection;
+  useEffect(() => {
+    const el = areaRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setAreaH(el.clientHeight));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [mounted]);
 
-  function clearAll() {
-    setSearch(""); setSelectedTypes([]); setSelectedRegions([]);
-    setSelectedDifficulties([]); setSelectedDurations([]);
-    setSelectedMonths([]); setSelectedSubRegions([]);
-    setExpandedRegion(null); setExpandedCategory(null); setExpandedSeason(null);
+  // Your groups from Group Match, so the map can rate adventures for everyone at once
+  useEffect(() => {
+    if (!loggedIn) return;
+    fetch("/api/match-groups").then((r) => (r.ok ? r.json() : null)).then((d) => setGroups(d?.groups ?? [])).catch(() => {});
+  }, [loggedIn]);
+
+  function chooseGroup(code: string) {
+    if (!code) { setGroup(null); return; }
+    setGroupLoading(true);
+    fetch(`/api/match-groups/${code}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((d: { group: StoredGroup }) => {
+        setGroup({ code, name: d.group.name, members: d.group.members.map((m) => ({ name: m.name, ace: m.ace })) });
+        track("map_group_fit", { members: d.group.members.length });
+      })
+      .catch(() => toast.error("Couldn't load that group."))
+      .finally(() => setGroupLoading(false));
   }
 
-  const activeFilterCount =
-    selectedTypes.length + selectedRegions.length + selectedSubRegions.length +
-    selectedDifficulties.length + selectedDurations.length +
-    selectedMonths.length;
+  // ── Derived ─────────────────────────────────────────────────────────────────
 
-  const visibleAdventures = adventures.filter(a => {
-    if (search &&
-      !a.name.toLowerCase().includes(search.toLowerCase()) &&
-      !a.state.toLowerCase().includes(search.toLowerCase()) &&
-      !a.tagline.toLowerCase().includes(search.toLowerCase())
-    ) return false;
-    if (selectedTypes.length && !selectedTypes.includes(a.type)) return false;
-    if (selectedRegions.length && !selectedRegions.includes(a.region)) return false;
-    if (selectedSubRegions.length && !selectedSubRegions.some(sr => a.state.includes(sr))) return false;
-    if (selectedDifficulties.length && !selectedDifficulties.includes(a.difficulty)) return false;
-    if (selectedDurations.length && !selectedDurations.includes(a.duration)) return false;
-    if (selectedMonths.length && !selectedMonths.some(m => a.bestMonths.includes(m))) return false;
-    return true;
-  });
+  const fits = useMemo(() => {
+    const m = new Map<string, Fit | null>();
+    for (const a of adventures) m.set(a.slug, fitFor(a, ace, group?.members ?? null));
+    return m;
+  }, [ace, group]);
+  const canFit = !!ace || !!group;
 
-  const sortedAdventures = nearMe
-    ? [...visibleAdventures].sort((a, b) =>
-        haversineKm(nearMe.lat, nearMe.lng, a.lat, a.lng) - haversineKm(nearMe.lat, nearMe.lng, b.lat, b.lng)
-      )
-    : visibleAdventures;
+  const pickReasons = useMemo(() => new Map(picks.map((p) => [p.slug, p.reason])), [picks]);
+  const pickSet = useMemo(() => new Set(picks.map((p) => p.slug)), [picks]);
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const genreTypes = new Set(GENRES.filter((g) => genres.includes(g.key)).flatMap((g) => g.types));
+    return adventures.filter((a) => {
+      if (q && !a.name.toLowerCase().includes(q) && !a.state.toLowerCase().includes(q) && !a.type.toLowerCase().includes(q) && !a.tagline.toLowerCase().includes(q)) return false;
+      if (genres.length && !genreTypes.has(a.type)) return false;
+      if (fine.types.length && !fine.types.includes(a.type)) return false;
+      if (fine.regions.length && !fine.regions.includes(a.region)) return false;
+      if (fine.subRegions.length && !fine.subRegions.some((sr) => a.state.includes(sr))) return false;
+      if (fine.difficulties.length && !fine.difficulties.includes(difficultyOf(a) as Difficulty)) return false;
+      if (fine.durations.length && !fine.durations.includes(a.duration)) return false;
+      if (verifiedOnly && !hasVerified(a)) return false;
+      if (readyOnly && canFit && fits.get(a.slug)?.bucket.key !== "ready") return false;
+      return true;
+    });
+  }, [search, genres, fine, verifiedOnly, readyOnly, canFit, fits]);
+
+  // Compass picks stay on the map even when a filter would hide them
+  const shown = useMemo(() => {
+    const extra = adventures.filter((a) => pickReasons.has(a.slug) && !filtered.includes(a));
+    return extra.length ? [...filtered, ...extra] : filtered;
+  }, [filtered, pickReasons]);
+
+  const listed = useMemo(() => {
+    const rows = shown.filter((a) => inView.has(a.slug));
+    const dist = (a: Adventure) => (nearMe ? haversineKm(nearMe.lat, nearMe.lng, a.lat, a.lng) : 0);
+    return rows.sort((x, y) =>
+      Number(inSeason(y, month)) - Number(inSeason(x, month)) ||
+      (canFit ? (fits.get(y.slug)?.score ?? 0) - (fits.get(x.slug)?.score ?? 0) : 0) ||
+      dist(x) - dist(y) ||
+      Number(!!y.featured) - Number(!!x.featured) ||
+      x.name.localeCompare(y.name));
+  }, [shown, inView, month, canFit, fits, nearMe]);
+
+  const pickAdventures = useMemo(() => picks.map((p) => adventures.find((a) => a.slug === p.slug)).filter((a): a is Adventure => !!a), [picks]);
+  const selectedAdv = selected ? adventures.find((a) => a.slug === selected) ?? null : null;
+
+  const completed: CompletedAdventure[] = useMemo(() => trailOn
+    ? tripLog.map((e) => { const adv = adventures.find((a) => a.slug === e.slug); return adv ? { adv, date: e.date } : null; }).filter((x): x is CompletedAdventure => !!x)
+    : [], [trailOn, tripLog]);
+
+  const sheetH = sheet === "peek" ? SHEET.peek : Math.round(areaH * SHEET[sheet]);
+  const insets = desktop ? { left: panelOpen ? GAP + PANEL_W + GAP : 0, bottom: 84 } : { left: 0, bottom: sheetH };
+
+  const activeCount = countFilters(fine) + genres.length + (readyOnly ? 1 : 0) + (verifiedOnly ? 1 : 0) + (search ? 1 : 0);
+
+  // ── Actions ─────────────────────────────────────────────────────────────────
+
+  const select = useCallback((slug: string) => {
+    setSelected(slug);
+    setFiltersOpen(false);
+    setPanelOpen(true);
+    apiRef.current?.focus(slug);
+    if (!desktop) setSheet((s) => (s === "full" ? s : "half"));
+    track("map_pin_open", { slug });
+  }, [desktop]);
+
+  // The open adventure lives in the URL (?a=slug), so a link opens the map on that pin.
+  // Syncing waits until the incoming link has been read, or it would wipe it on load.
+  const deepLinked = useRef(false);
+  useEffect(() => {
+    if (!deepLinked.current) return;
+    const url = new URL(window.location.href);
+    if (selected) url.searchParams.set("a", selected); else url.searchParams.delete("a");
+    window.history.replaceState(window.history.state, "", url);
+  }, [selected]);
+  useEffect(() => {
+    if (!mounted || deepLinked.current) return;
+    deepLinked.current = true;
+    const slug = new URLSearchParams(window.location.search).get("a");
+    // Wait a beat for Leaflet to load before flying there
+    if (slug && adventures.some((a) => a.slug === slug)) setTimeout(() => select(slug), 400);
+  }, [mounted, select]);
+
+  const showAll = useCallback(() => apiRef.current?.fitTo(shown.map((a) => a.slug)), [shown]);
+
+  const onPicks = useCallback((p: CompassPick[]) => {
+    setPicks(p);
+    setSelected(null);
+    if (!desktop && p.length) setSheet("half");
+  }, [desktop]);
+
+  // Fly to Compass picks once they're on the map
+  useEffect(() => {
+    if (!picks.length) return;
+    const t = setTimeout(() => apiRef.current?.fitTo(picks.map((p) => p.slug)), 60);
+    return () => clearTimeout(t);
+  }, [picks]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { setSelected(null); setFiltersOpen(false); } };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  function clearAll() {
+    setSearch(""); setGenres([]); setFine(NO_FILTERS); setReadyOnly(false); setVerifiedOnly(false);
+  }
 
   function handleNearMe() {
-    if (nearMe) { setNearMe(null); setNearMeError(false); return; }
-    if (!navigator.geolocation) { setNearMeError(true); toast.error("Location isn't supported on this device."); return; }
+    if (nearMe) { setNearMe(null); return; }
+    if (!navigator.geolocation) { toast.error("Location isn't supported on this device."); return; }
     setNearMeLoading(true);
-    setNearMeError(false);
     navigator.geolocation.getCurrentPosition(
-      pos => {
+      (pos) => {
         setNearMe({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-        flyToRef.current?.(pos.coords.latitude, pos.coords.longitude);
+        apiRef.current?.flyTo(pos.coords.latitude, pos.coords.longitude, 7);
         setNearMeLoading(false);
       },
-      () => { setNearMeLoading(false); setNearMeError(true); toast.error("Location access denied — enable it in your browser settings to see nearby adventures."); },
-      { timeout: 8000, enableHighAccuracy: false }
+      () => { setNearMeLoading(false); toast.error("Location access denied — enable it in your browser settings to see nearby adventures."); },
+      { timeout: 8000, enableHighAccuracy: false },
     );
   }
 
-  // Toolbar button helpers
-  const tbBtn = (active: boolean, danger = false) =>
-    `flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 ${
-      active
-        ? danger ? "bg-[#ff5100] text-white" : "text-white"
-        : "text-white/50 hover:text-white/80 hover:bg-white/8"
-    }`;
+  function toggleShots() {
+    if (shotsOn) { setShotsOn(false); setPhotos([]); return; }
+    setShotsOn(true);
+    setShotsLoading(true);
+    fetch("/api/photos/mine")
+      .then((r) => r.json())
+      .then((d) => { const p = d.photos ?? []; setPhotos(p); if (!p.length) toast("No trip photos yet — add some from a completed adventure's page."); })
+      .catch(() => setPhotos([]))
+      .finally(() => setShotsLoading(false));
+  }
+
+  function toggleTrail() {
+    if (trailOn) { setTrailOn(false); return; }
+    setTrailOn(true);
+    if (!tripLog.length) toast("No completed adventures yet — mark one done from its page to build your trail map.");
+  }
+
+  // ── Pieces shared by the desktop panel and the phone sheet ──────────────────
+
+  // Mountain → ocean. A genre with nothing listed yet says so instead of emptying the map.
+  const genreChip = (g: (typeof GENRES)[number], floating = false) => {
+    const on = genres.includes(g.key);
+    const n = GENRE_COUNTS[g.key];
+    return (
+      <button key={g.key} type="button" aria-pressed={on} disabled={!n}
+        title={n ? `${n} ${g.label} adventure${n > 1 ? "s" : ""}` : `${g.label} adventures are coming soon`}
+        onClick={() => {
+          setGenres((cur) => (on ? cur.filter((x) => x !== g.key) : [...cur, g.key]));
+          // Closing a genre drops its type picks too, so nothing filters out of sight
+          if (on) setFine((f) => ({ ...f, types: f.types.filter((t) => !g.types.includes(t)) }));
+        }}
+        className={`tm-genre shrink-0 ${floating ? "tm-genre-float" : ""}`} style={{ "--g": g.color, "--glow": g.glow } as React.CSSProperties} data-on={on || undefined}>
+        <span className="tm-genre-dot" />{g.label}
+        <span className="tm-genre-n">{n || "Soon"}</span>
+      </button>
+    );
+  };
+
+  // An open genre unfolds into its activity types (only ones that have adventures), each a
+  // filter of its own. Same selection as Activity under Filters.
+  const typeChips = genres.length > 0 && (
+    <div className="flex gap-1.5 overflow-x-auto no-scrollbar tm-types">
+      {GENRES.filter((g) => genres.includes(g.key)).flatMap((g) =>
+        g.types.filter((t) => TYPE_COUNTS[t]).map((t) => {
+          const on = fine.types.includes(t);
+          return (
+            <button key={t} type="button" aria-pressed={on}
+              onClick={() => setFine((f) => ({ ...f, types: on ? f.types.filter((x) => x !== t) : [...f.types, t] }))}
+              className="tm-type shrink-0" style={{ "--g": g.color } as React.CSSProperties} data-on={on || undefined}>
+              <span className="tm-type-icon" dangerouslySetInnerHTML={{ __html: typeIconSvg(t, 11, "currentColor") }} />
+              {t}<span className="tm-type-n">{TYPE_COUNTS[t]}</span>
+            </button>
+          );
+        }),
+      )}
+    </div>
+  );
+
+  const genreChips = (
+    <>
+      <div className="grid grid-cols-4 gap-1.5 tm-genre-grid">{GENRES.map((g) => genreChip(g))}</div>
+      {typeChips}
+    </>
+  );
+
+  const fitToggles = (
+    <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+      {canFit ? (
+        <button type="button" aria-pressed={readyOnly} onClick={() => setReadyOnly((v) => !v)} className="tm-toggle shrink-0" data-on={readyOnly || undefined}>
+          <Activity className="w-3.5 h-3.5" />{group ? "Ready for all" : "Ready for me"}
+        </button>
+      ) : (
+        <Link href="/matchmaker" onClick={() => track("map_fitness_cta", { from: "toolbar" })} className="tm-toggle tm-toggle-cta shrink-0">
+          <Activity className="w-3.5 h-3.5" />Light up my matches
+        </Link>
+      )}
+      <button type="button" aria-pressed={verifiedOnly} onClick={() => setVerifiedOnly((v) => !v)} className="tm-toggle shrink-0" data-on={verifiedOnly || undefined}>
+        <BadgeCheck className="w-3.5 h-3.5" />Verified only
+      </button>
+      {loggedIn && groups.length > 0 && (
+        <label className="tm-toggle shrink-0 relative" data-on={group ? true : undefined}>
+          {groupLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Users className="w-3.5 h-3.5" />}
+          <span className="max-w-[110px] truncate">{group ? group.name : "Fit for a group"}</span>
+          <select aria-label="Rate adventures for a group" value={group?.code ?? ""} onChange={(e) => chooseGroup(e.target.value)} className="absolute inset-0 opacity-0 cursor-pointer">
+            <option value="">Just me</option>
+            {groups.map((g) => <option key={g.code} value={g.code}>{g.name} ({g.memberCount})</option>)}
+          </select>
+        </label>
+      )}
+    </div>
+  );
+
+  const statusLine = (
+    <div className="flex items-center gap-2 text-[11px] text-white/45">
+      <span><b className="text-white/85">{listed.length}</b> in view{shown.length !== adventures.length && <> · {shown.length} of {adventures.length} match</>}</span>
+      {listed.length < shown.length && listed.length > 0 && (
+        <button type="button" onClick={showAll} className="font-semibold text-white/60 hover:text-white underline-offset-2 hover:underline">Show all</button>
+      )}
+      {canFit && (
+        <span className="hidden sm:inline-flex items-center gap-1.5 ml-auto">
+          <i className="w-2 h-2 rounded-full border-2 border-[#10b981]" />Ready
+          <i className="w-2 h-2 rounded-full border-2 border-[#f59e0b]" />Stretch
+          <i className="w-2 h-2 rounded-full border-2 border-[#f43f5e]" />Not yet
+        </span>
+      )}
+      {activeCount > 0 && <button type="button" onClick={clearAll} className={`font-semibold text-[#ff9a66] hover:underline ${canFit ? "" : "ml-auto"}`}>Clear</button>}
+    </div>
+  );
+
+  const body = filtersOpen ? (
+    <div>
+      <button type="button" onClick={() => setFiltersOpen(false)} className="mb-3 inline-flex items-center gap-1 text-[12px] font-semibold text-white/60 hover:text-white"><ChevronLeft className="w-4 h-4" /> Back to results</button>
+      <FiltersPanel value={fine} onChange={setFine} />
+    </div>
+  ) : selectedAdv ? (
+    <div>
+      <button type="button" onClick={() => setSelected(null)} className="mb-2 inline-flex items-center gap-1 text-[12px] font-semibold text-white/60 hover:text-white"><ChevronLeft className="w-4 h-4" /> All in view</button>
+      <PinCard
+        adventure={selectedAdv}
+        fit={fits.get(selectedAdv.slug) ?? null}
+        group={group?.name ?? null}
+        hasProfile={!!ace}
+        month={month}
+        pickReason={pickReasons.get(selectedAdv.slug)}
+        onClose={() => setSelected(null)}
+      />
+    </div>
+  ) : (
+    <ResultsList list={listed} picks={pickAdventures.filter((a) => shown.includes(a))} fits={fits} month={month} selected={selected}
+      matches={shown.length} onPick={select} onHover={setHovered} onShowAll={showAll} onClear={clearAll} />
+  );
+
+  const filtersButton = (
+    <button type="button" onClick={() => { setFiltersOpen((o) => !o); setSelected(null); if (!desktop) setSheet("full"); }} aria-expanded={filtersOpen}
+      className="tm-iconbtn-lg relative" data-on={filtersOpen || countFilters(fine) > 0 || undefined} aria-label="More filters">
+      <SlidersHorizontal className="w-4 h-4" />
+      {countFilters(fine) > 0 && <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-[#ff5100] text-white text-[9px] font-bold grid place-items-center">{countFilters(fine)}</span>}
+    </button>
+  );
+
+  const you = (
+    <>
+      <button type="button" onClick={handleNearMe} className="tm-ctl" data-on={nearMe ? true : undefined} title={nearMe ? "Clear Near Me" : "Adventures near me"}>
+        {nearMeLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LocateFixed className="w-3.5 h-3.5" />}<span>Near me</span>
+      </button>
+      {loggedIn && (
+        <>
+          <button type="button" onClick={toggleShots} className="tm-ctl" data-on={shotsOn || undefined} title="My trip photos">
+            {shotsLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}<span>My shots</span>
+          </button>
+          <button type="button" onClick={toggleTrail} className="tm-ctl" data-on={trailOn || undefined} data-gold title="My completed adventures">
+            <Trophy className="w-3.5 h-3.5" /><span>My trail</span>
+          </button>
+        </>
+      )}
+    </>
+  );
+
+  // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <div className="flex flex-col" style={{ height: "100dvh" }}>
+    <div className="tm-page flex flex-col" style={{ height: "100dvh" }}>
       <Navbar />
       <div className="h-16 lg:h-20 shrink-0" />
 
-      {/* ── Toolbar ────────────────────────────────────────────── */}
-      <div
-        className="z-[1001] shrink-0"
-        style={{ position: "relative", background: "rgba(4,7,14,0.97)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(255,255,255,0.07)", boxShadow: "0 1px 0 rgba(255,255,255,0.04)" }}
-      >
-        <div className="max-w-7xl mx-auto px-3 lg:px-5 py-2 flex flex-col sm:flex-row sm:items-center gap-2">
-
-          <UnifiedSearch
-            onAdventureSearch={setSearch}
-            onPlaceSelect={(lat, lng, name) => { flyToRef.current?.(lat, lng); placePinRef.current?.(lat, lng, name); }}
-            onAdventurePin={adv => openPinRef.current?.(adv.slug)}
-          />
-
-          {/* Toolbar items — its own horizontally-scrollable row on mobile so it never
-             squeezes the search box (flex-1 min-w-0) down to zero width */}
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0">
-
-          {/* Default / Satellite / Terrain — directly visible toggle buttons */}
-          <div className="flex items-center rounded-lg overflow-hidden shrink-0" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
-            {([
-              { key: null as OverlayKey | null, label: "Default", icon: <MapIcon className="w-3 h-3" /> },
-              { key: "satellite" as OverlayKey, label: "Satellite", icon: <Layers className="w-3 h-3" /> },
-              { key: "terrain" as OverlayKey, label: "Terrain", icon: <NavigationIcon className="w-3 h-3" /> },
-            ]).map(({ key, label, icon }, i, arr) => {
-              const active = (activeOverlay ?? null) === key;
-              return (
-                <button key={label}
-                  onClick={() => setActiveOverlay(key)}
-                  className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold transition-all"
-                  style={{
-                    background: active ? "rgba(255,81,0,0.2)" : "rgba(255,255,255,0.04)",
-                    color: active ? "#ff7d47" : "rgba(255,255,255,0.5)",
-                    borderRight: i < arr.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
-                  }}
-                >
-                  {icon}{label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* My Shots */}
-          {loggedIn && (
-            <button
-              onClick={toggleMyShots}
-              title="My trip photos"
-              className={tbBtn(myShotsOn, myShotsOn)}
-              style={myShotsOn ? { background: "#ff5100" } : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
-            >
-              {myShotsLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
-              <span className="hidden sm:inline">My Shots</span>
-              {myShotsOn && userPhotos.length > 0 && (
-                <span className="bg-white/25 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{userPhotos.length}</span>
-              )}
-            </button>
-          )}
-
-          {/* My Trail — completed adventures, celebrated as gold pins */}
-          {loggedIn && (
-            <button
-              onClick={toggleMyTrail}
-              title="My completed adventures"
-              className={tbBtn(myTrailOn, myTrailOn)}
-              style={myTrailOn ? { background: "linear-gradient(135deg,#f7cd3a,#eab308)", color: "#1a1200" } : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
-            >
-              <Trophy className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">My Trail</span>
-              {myTrailOn && completedAdventures.length > 0 && (
-                <span className="bg-black/20 text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">{completedAdventures.length}</span>
-              )}
-            </button>
-          )}
-
-          {/* Near Me */}
-          <div className="relative shrink-0">
-            <button
-              onClick={handleNearMe}
-              title={nearMe ? "Clear Near Me" : "Adventures Near Me"}
-              className={tbBtn(nearMe !== null, nearMe !== null)}
-              style={nearMe ? { background: "#ff5100" } : nearMeError ? { background: "rgba(239,68,68,0.12)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.3)" } : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
-            >
-              {nearMeLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LocateFixed className="w-3.5 h-3.5" />}
-              <span className="hidden sm:inline">{nearMe ? "Near Me ✓" : "Near Me"}</span>
-            </button>
-          </div>
-
-          {/* Filters */}
-          <button
-            onClick={() => setFiltersOpen(!filtersOpen)}
-            className={tbBtn(filtersOpen || activeFilterCount > 0)}
-            style={filtersOpen || activeFilterCount > 0 ? { background: "rgba(255,81,0,0.2)", border: "1px solid rgba(255,81,0,0.35)", color: "#ff7d47" } : { background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
-          >
-            <SlidersHorizontal className="w-3.5 h-3.5" />
-            <span>Filters</span>
-            {activeFilterCount > 0 && (
-              <span className="bg-[#ff5100] text-white text-[10px] font-bold w-4.5 h-4.5 rounded-full flex items-center justify-center leading-none px-1 py-0.5">
-                {activeFilterCount}
-              </span>
-            )}
-            <ChevronDown className={`w-3 h-3 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
-          </button>
-
-          {/* Count */}
-          <span className="hidden lg:block text-[11px] font-medium shrink-0 text-white/30">
-            {visibleAdventures.length}<span className="opacity-50"> / {adventures.length}</span>
-          </span>
-
-          {/* Clear */}
-          {(activeFilterCount > 0 || search) && (
-            <button
-              onClick={clearAll}
-              className="flex items-center gap-1 text-xs font-semibold shrink-0 transition-colors"
-              style={{ color: "#ff5100" }}
-            >
-              <X className="w-3.5 h-3.5" />
-              Clear
-            </button>
-          )}
-          </div>
-        </div>
-
-        {/* Filter panel (dropdown) */}
-        {filtersOpen && (
-          <>
-            {/* Invisible backdrop — closes dropdown on outside click */}
-            <div className="fixed inset-0 z-[1999]" onClick={() => setFiltersOpen(false)} />
-            <div className="absolute top-full left-0 right-0 z-[2000] border-t border-[var(--border-subtle)] max-h-[58vh] overflow-y-auto" style={{ background: "var(--bg-page)", backdropFilter: "blur(12px)" }}>
-            <div className="max-w-7xl mx-auto px-3 lg:px-5 py-1.5 space-y-1.5">
-
-
-                {/* Region */}
-                {(() => {
-                  const regionGroups = REGION_GROUPS;
-                  const totalSelected = selectedRegions.length + selectedSubRegions.length;
-                  return (
-                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                      <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                        <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Region</span>
-                        {totalSelected > 0 && <span className="text-[8px] font-bold px-1 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{totalSelected}</span>}
-                      </div>
-                      <div className="p-1.5">
-                        <div className="flex flex-wrap gap-1">
-                          {regionGroups.map(rg => {
-                            const isExp = expandedRegion === rg.name;
-                            const subCnt = rg.subRegions.filter(sr => selectedSubRegions.includes(sr)).length;
-                            const hasSel = selectedRegions.includes(rg.name) || subCnt > 0;
-                            return (
-                              <button key={rg.name} onClick={() => setExpandedRegion(isExp ? null : rg.name)}
-                                className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
-                                style={{ background: isExp || hasSel ? "rgba(255,81,0,0.15)" : "var(--bg-card)", color: isExp || hasSel ? "#ff7d47" : "var(--text-tertiary)", border: `1px solid ${isExp || hasSel ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}` }}>
-                                {rg.name}
-                                {subCnt > 0 && <span className="text-[7px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "rgba(255,81,0,0.25)", color: "#ff7d47" }}>{subCnt}</span>}
-                                <ChevronDown className={`w-2 h-2 opacity-50 transition-transform ${isExp ? "rotate-180" : ""}`} />
-                              </button>
-                            );
-                          })}
-                        </div>
-                        {expandedRegion && (() => {
-                          const rg = regionGroups.find(r => r.name === expandedRegion)!;
-                          return (
-                            <div className="mt-1.5 pt-1.5 flex flex-wrap gap-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                              {rg.subRegions.map(sr => {
-                                const isSel = selectedSubRegions.includes(sr);
-                                return (
-                                  <button key={sr} onClick={() => toggle(selectedSubRegions, sr, setSelectedSubRegions)}
-                                    className="px-2 py-0.5 rounded-md text-[10px] font-medium transition-all"
-                                    style={{ background: isSel ? "rgba(255,81,0,0.15)" : "var(--bg-card)", color: isSel ? "#ff7d47" : "var(--text-tertiary)", border: `1px solid ${isSel ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}` }}>
-                                    {sr}
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          );
-                        })()}
-                      </div>
-                    </div>
-                  );
-                })()}
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
-              {/* Genre */}
-              {(() => {
-                  const genreGroups = GENRE_GROUPS;
-                  return (
-                    <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                      <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                        <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Genre</span>
-                        {selectedTypes.length > 0 && <span className="text-[8px] font-bold px-1 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedTypes.length}</span>}
-                      </div>
-                      <div className="p-1.5">
-                        <div className="flex flex-wrap gap-1">
-                          {genreGroups.map(grp => {
-                            const isExp = expandedCategory === grp.label;
-                            const cnt = grp.types.filter(t => selectedTypes.includes(t)).length;
-                            return (
-                              <button key={grp.label} onClick={() => setExpandedCategory(isExp ? null : grp.label)}
-                                className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
-                                style={{ background: isExp ? `${grp.color}22` : cnt > 0 ? `${grp.color}18` : "var(--bg-card)", color: isExp || cnt > 0 ? grp.color : "var(--text-tertiary)", border: `1px solid ${isExp || cnt > 0 ? `${grp.color}50` : "var(--border-subtle)"}` }}>
-                                {grp.label}
-                                {cnt > 0 && <span className="text-[7px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: `${grp.color}30`, color: grp.color }}>{cnt}</span>}
-                                <ChevronDown className={`w-2 h-2 opacity-50 transition-transform ${isExp ? "rotate-180" : ""}`} />
-                              </button>
-                            );
-                          })}
-                        </div>
-                        {expandedCategory && (() => {
-                          const grp = genreGroups.find(g => g.label === expandedCategory)!;
-                          return (
-                            <div className="mt-1.5 pt-1.5 flex flex-wrap gap-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                              {grp.types.map(type => {
-                                const isSel = selectedTypes.includes(type);
-                                return (
-                                  <button key={type} onClick={() => toggle(selectedTypes, type, setSelectedTypes)}
-                                    className="px-2 py-0.5 rounded-md text-[10px] font-medium transition-all"
-                                    style={{ background: isSel ? "rgba(255,81,0,0.15)" : "var(--bg-card)", color: isSel ? "#ff7d47" : "var(--text-tertiary)", border: `1px solid ${isSel ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}` }}>
-                                    {type}
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          );
-                        })()}
-                      </div>
-                    </div>
-                  );
-                })()}
-                {/* Season */}
-                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                  <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                    <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Season</span>
-                    {selectedMonths.length > 0 && <span className="text-[8px] font-bold px-1 py-0.5 rounded-full" style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}>{selectedMonths.length}</span>}
-                  </div>
-                  <div className="p-1.5">
-                    <div className="flex flex-wrap gap-1">
-                      {seasons.map(({ label, months: sMonths }) => {
-                        const isExp = expandedSeason === label;
-                        const cnt = sMonths.filter(m => selectedMonths.includes(m)).length;
-                        return (
-                          <button key={label} onClick={() => setExpandedSeason(isExp ? null : label)}
-                            className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
-                            style={{ background: isExp || cnt > 0 ? "#ff5100" : "var(--bg-card)", color: isExp || cnt > 0 ? "#fff" : "var(--text-tertiary)", border: `1px solid ${isExp || cnt > 0 ? "#ff5100" : "var(--border-subtle)"}` }}>
-                            {label}
-                            {cnt > 0 && <span className="text-[7px] font-black px-1 py-0.5 rounded-full leading-none" style={{ background: "var(--text-muted)" }}>{cnt}</span>}
-                            <ChevronDown className={`w-2 h-2 opacity-50 transition-transform ${isExp ? "rotate-180" : ""}`} />
-                          </button>
-                        );
-                      })}
-                    </div>
-                    {expandedSeason && (
-                      <div className="mt-1.5 pt-1.5 flex flex-wrap gap-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                        {seasons.find(s => s.label === expandedSeason)!.months.map(m => {
-                          const isSel = selectedMonths.includes(m);
-                          return (
-                            <button key={m} onClick={() => toggle(selectedMonths, m, setSelectedMonths)}
-                              className="px-2 py-0.5 rounded-md text-[10px] font-medium transition-all"
-                              style={{ background: isSel ? "rgba(255,81,0,0.15)" : "var(--bg-card)", color: isSel ? "#ff7d47" : "var(--text-tertiary)", border: `1px solid ${isSel ? "rgba(255,81,0,0.3)" : "var(--border-subtle)"}` }}>
-                              {m}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
-                {/* Difficulty */}
-                <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                  <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                    <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Difficulty</span>
-                  </div>
-                  <div className="p-1.5 flex flex-wrap gap-1">
-                    {(["Easy","Moderate","Hard","Advanced","Extreme"] as Difficulty[]).map(val => {
-                      const isSel = selectedDifficulties.includes(val);
-                      const c = DIFFICULTY_COLORS[val] ?? "#ff5100";
-                      return (
-                        <button key={val} onClick={() => toggle(selectedDifficulties, val, setSelectedDifficulties)}
-                          className="px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
-                          style={{ background: isSel ? `${c}18` : "var(--bg-card)", color: isSel ? c : "var(--text-tertiary)", border: `1px solid ${isSel ? `${c}40` : "var(--border-subtle)"}` }}>
-                          {val}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              {/* Duration */}
-              <div className="rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
-                <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: "var(--bg-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-                  <span className="text-[8px] font-black tracking-[0.2em] uppercase text-[var(--text-muted)]">Duration</span>
-                </div>
-                <div className="p-1.5 flex flex-wrap gap-1">
-                  {(["Weekend","3–5 days","7+ days"] as Duration[]).map(val => {
-                    const isSel = selectedDurations.includes(val);
-                    return (
-                      <button key={val} onClick={() => toggle(selectedDurations, val, setSelectedDurations)}
-                        className="px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all"
-                        style={{ background: isSel ? "#ff5100" : "var(--bg-card)", color: isSel ? "#fff" : "var(--text-tertiary)", border: `1px solid ${isSel ? "#ff5100" : "var(--border-subtle)"}` }}>
-                        {val}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              </div>
-
-              <div className="flex items-center gap-2 pt-1.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-                <button onClick={clearAll} className="flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold transition-all" style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-default)" }}>
-                  <RotateCcw className="w-3 h-3" /> Clear All
-                </button>
-                <button onClick={() => setFiltersOpen(false)} className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all hover:-translate-y-0.5" style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)", color: "#fff", boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}>
-                  Close <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-
-
-            </div>
-          </div>
-        </>
-        )}
-
-        {/* Active filter chips */}
-        {activeFilterCount > 0 && (
-          <div className="px-3 lg:px-5 py-2 flex flex-wrap gap-1.5 border-t border-[var(--border-subtle)]" style={{ background: "var(--bg-page)" }}>
-            {[
-              ...selectedTypes.map(t => ({ label: t, remove: () => toggle(selectedTypes, t, setSelectedTypes) })),
-              ...selectedRegions.map(r => ({ label: r, remove: () => toggle(selectedRegions, r, setSelectedRegions) })),
-              ...selectedSubRegions.map(sr => ({ label: sr, remove: () => toggle(selectedSubRegions, sr, setSelectedSubRegions) })),
-              ...selectedDifficulties.map(d => ({ label: d, remove: () => toggle(selectedDifficulties, d, setSelectedDifficulties) })),
-              ...selectedDurations.map(d => ({ label: d, remove: () => toggle(selectedDurations, d, setSelectedDurations) })),
-              ...selectedMonths.map(m => ({ label: m, remove: () => toggle(selectedMonths, m, setSelectedMonths) })),
-            ].map(({ label, remove }) => (
-              <button
-                type="button"
-                key={label}
-                onClick={remove}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold cursor-pointer transition-colors"
-                style={{ background: "rgba(255,81,0,0.08)", color: "#ff5100" }}
-                onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,81,0,0.15)")}
-                onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,81,0,0.08)")}
-              >
-                {label} <X className="w-2.5 h-2.5" />
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* ── Map ─────────────────────────────────────────────────── */}
-      <div className="flex-1 relative overflow-hidden">
+      <div ref={areaRef} className="relative flex-1 overflow-hidden isolate" data-hide-compass>
         {mounted ? (
-          <MapView
-            adventures={sortedAdventures}
-            flyToRef={flyToRef}
-            openPinRef={openPinRef}
-            placePinRef={placePinRef}
-            resetViewRef={resetViewRef}
-            viewKey={activeOverlay ?? "default"}
-            userPhotos={userPhotos}
-            wishlist={wishlist}
+          <MapCanvas
+            adventures={shown}
+            fits={fits}
+            month={month}
+            picks={pickSet}
+            selected={selected}
+            hovered={hovered}
+            wishlist={saved}
+            layer={layer}
+            insets={insets}
             nearMe={nearMe}
-            completed={myTrailOn ? completedAdventures : []}
+            userPhotos={photos}
+            completed={completed}
+            apiRef={apiRef}
+            onSelect={select}
+            onViewChange={setInView}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center" style={{ background: "#f0ebe0" }}>
-            <Loader2 className="w-5 h-5 animate-spin" style={{ color: "#b0a898" }} />
-          </div>
+          <div className="w-full h-full grid place-items-center bg-[#0b0d10]"><Loader2 className="w-5 h-5 animate-spin text-white/30" /></div>
         )}
 
-        {/* Empty state when nothing matches filters */}
-        {visibleAdventures.length === 0 && (activeFilterCount > 0 || search) && (
-          <EmptyState
-            icon={<Compass className="w-8 h-8" style={{ color: "rgba(255,255,255,0.2)" }} />}
-            heading="No adventures match"
-            subtext="Try different filters or search terms"
-            actionLabel="Clear All Filters"
-            onAction={clearAll}
-            size="sm"
-            variant="floating"
-          />
-        )}
-
-        {/* Legend toggle */}
-        <div className="absolute bottom-5 left-4 z-[1000]">
-          <button
-            onClick={() => setLegendOpen(!legendOpen)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-semibold transition-all hover:brightness-110"
-            style={{
-              background: legendOpen ? "rgba(255,81,0,0.2)" : "rgba(4,7,14,0.85)",
-              backdropFilter: "blur(12px)",
-              border: `1px solid ${legendOpen ? "rgba(255,81,0,0.35)" : "rgba(255,255,255,0.1)"}`,
-              color: legendOpen ? "#ff7d47" : "rgba(255,255,255,0.7)",
-              boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
-            }}
-          >
-            <MapIcon className="w-3.5 h-3.5" />
-            Legend
-          </button>
-
-          {legendOpen && (
-            <>
-              {/* Invisible backdrop */}
-              <div className="fixed inset-0 z-[999]" onClick={() => setLegendOpen(false)} />
-              {/* Popup */}
-              <div
-                className="absolute bottom-full left-0 mb-2 rounded-xl px-3.5 py-3 min-w-[160px] max-h-[60vh] overflow-y-auto"
-                style={{
-                  background: "rgba(4,7,14,0.96)",
-                  backdropFilter: "blur(14px)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
-                }}
-              >
-                {/* Activity type — decodes the marker shapes, not just their color */}
-                <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2 text-white/25">Activity</p>
-                <div className="flex flex-col gap-1.5 mb-3">
-                  {PRESENT_TYPES.map(type => (
-                    <div key={type} className="flex items-center gap-2">
-                      <div
-                        className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
-                        style={{ background: "rgba(255,255,255,0.08)" }}
-                        dangerouslySetInnerHTML={{ __html: typeIconSvg(type, 10, "rgba(255,255,255,0.75)") }}
-                      />
-                      <span className="text-[11px] font-medium text-white/60">{type}</span>
-                    </div>
-                  ))}
+        {mounted && desktop && (
+          <>
+            {panelOpen && (
+              <button type="button" onClick={() => setPanelOpen(false)} aria-label="Hide the panel and show the whole map" title="Hide panel"
+                className="absolute z-[1000] tm-glass w-8 h-10 rounded-r-xl rounded-l-none border-l-0 grid place-items-center text-white/45 hover:text-white"
+                style={{ top: GAP + 18, left: GAP + PANEL_W }}>
+                <PanelLeftClose className="w-4 h-4" />
+              </button>
+            )}
+            {!panelOpen && (
+              <button type="button" onClick={() => setPanelOpen(true)} className="absolute z-[1000] tm-glass rounded-2xl h-11 pl-3 pr-4 inline-flex items-center gap-2 text-[12.5px] font-semibold text-white/85 hover:text-white"
+                style={{ top: GAP, left: GAP }}>
+                <PanelLeftOpen className="w-4 h-4 text-[#ff9a66]" /> {listed.length} in view · Compass & filters
+              </button>
+            )}
+            <aside className={`absolute z-[1000] flex flex-col tm-glass rounded-3xl overflow-hidden transition-[transform,opacity] duration-300 ${panelOpen ? "" : "-translate-x-[110%] opacity-0 pointer-events-none"}`}
+              style={{ top: GAP, left: GAP, bottom: GAP, width: PANEL_W }} aria-hidden={!panelOpen || undefined}>
+              <div className="p-3.5 space-y-2.5 border-b border-white/[0.06]">
+                <CompassBar ace={ace} onPicks={onPicks} active={picks.length > 0} />
+                <div className="flex items-center gap-2">
+                  <SearchBox value={search} onChange={setSearch} onPlace={(lat, lng, name) => { apiRef.current?.flyTo(lat, lng, 9); apiRef.current?.placePin(lat, lng, name); }} onAdventure={(a) => { setSearch(""); select(a.slug); }} />
+                  {filtersButton}
                 </div>
-
-                {/* Difficulty */}
-                <p className="text-[8px] font-black uppercase tracking-[0.22em] mb-2 text-white/25">Difficulty</p>
-                <div className="flex flex-col gap-1">
-                  {Object.entries(DIFFICULTY_COLORS).map(([label, color]) => (
-                    <div key={label} className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
-                      <span className="text-[11px] font-medium text-white/60">{label}</span>
-                    </div>
-                  ))}
-                </div>
+                {genreChips}
+                {fitToggles}
+                {statusLine}
               </div>
-            </>
-          )}
-        </div>
+              <div className="flex-1 overflow-y-auto p-3.5 tm-scroll">{body}</div>
+            </aside>
 
-        {/* Reset view button */}
-        <button
-          onClick={() => resetViewRef.current?.()}
-          className="absolute bottom-5 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-semibold transition-all hover:brightness-110"
-          style={{
-            background: "rgba(4,7,14,0.85)",
-            backdropFilter: "blur(12px)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            color: "rgba(255,255,255,0.7)",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
-          }}
-          title="Reset map view"
-        >
-          <Compass className="w-3.5 h-3.5" />
-          Reset View
-        </button>
+            <div className="absolute z-[1000] top-3 flex items-center gap-1.5" style={{ right: 56 }}>
+              <div className="tm-glass rounded-xl p-1 flex items-center gap-0.5">
+                {(Object.keys(BASE_LAYERS) as LayerKey[]).map((k) => (
+                  <button key={k} type="button" onClick={() => setLayer(k)} aria-pressed={layer === k} className="tm-seg" data-on={layer === k || undefined}>{BASE_LAYERS[k].label}</button>
+                ))}
+              </div>
+              <div className="tm-glass rounded-xl p-1 flex items-center gap-0.5">{you}</div>
+              <button type="button" onClick={() => apiRef.current?.reset()} className="tm-glass rounded-xl h-[38px] px-3 text-[11.5px] font-semibold text-white/70 hover:text-white inline-flex items-center gap-1.5" title="Show all of India">
+                <Compass className="w-3.5 h-3.5" /> India
+              </button>
+            </div>
 
-        {/* Visible count pill */}
-        {(activeFilterCount > 0 || search) && (
-          <div
-            className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] text-white text-[11px] font-bold px-4 py-1.5 rounded-full"
-            style={{ background: "rgba(255,81,0,0.9)", boxShadow: "0 2px 16px rgba(255,81,0,0.4)", backdropFilter: "blur(8px)" }}
-          >
-            {visibleAdventures.length} adventure{visibleAdventures.length !== 1 ? "s" : ""} shown
-          </div>
+            <div className="absolute z-[1000] bottom-4 flex justify-center pointer-events-none" style={{ left: insets.left, right: 0 }}>
+              <div className="pointer-events-auto"><SeasonScrubber month={month} onChange={setMonth} adventures={shown} /></div>
+            </div>
+
+            {/* Above the season row, so the two never collide on narrower desktops */}
+            <div className="absolute z-[1000] right-4" style={{ bottom: 84 }}><CompareTray onFocus={select} /></div>
+          </>
         )}
 
-        {/* Branding chip */}
-        <div
-          className="absolute bottom-5 right-4 z-[1000] rounded-lg px-2.5 py-1.5"
-          style={{
-            background: "rgba(4,7,14,0.75)",
-            backdropFilter: "blur(8px)",
-            border: "1px solid rgba(255,255,255,0.07)",
-          }}
-        >
-          <div className="flex items-center gap-1.5 text-[9px] font-bold tracking-widest uppercase text-white/25">
-            <MapIcon className="w-2.5 h-2.5" />
-            Trail to Tides
-          </div>
-        </div>
+        {mounted && !desktop && (
+          <>
+            <div className="absolute z-[1000] top-2 inset-x-2 space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="flex-1 min-w-0 tm-glass rounded-xl">
+                  <SearchBox value={search} onChange={setSearch} onPlace={(lat, lng, name) => { apiRef.current?.flyTo(lat, lng, 9); apiRef.current?.placePin(lat, lng, name); }} onAdventure={(a) => { setSearch(""); select(a.slug); }} />
+                </div>
+                {filtersButton}
+                <button type="button" aria-label={`Map style: ${BASE_LAYERS[layer].label}`} className="tm-iconbtn-lg"
+                  onClick={() => setLayer((l) => (l === "map" ? "satellite" : l === "satellite" ? "terrain" : "map"))}>
+                  <Layers className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="flex gap-1.5 overflow-x-auto no-scrollbar -mx-2 px-2">
+                {GENRES.map((g) => genreChip(g, true))}
+                <span className="tm-glass rounded-xl p-0.5 flex items-center gap-0.5 shrink-0">{you}</span>
+              </div>
+              {typeChips && <div className="-mx-2 px-2 tm-types-float">{typeChips}</div>}
+            </div>
 
+            <div className="absolute z-[1000] inset-x-0 flex justify-center px-2 pointer-events-none transition-[bottom] duration-300" style={{ bottom: sheetH + 8 }}>
+              <div className="pointer-events-auto max-w-full"><SeasonScrubber month={month} onChange={setMonth} adventures={shown} /></div>
+            </div>
+
+            <MobileSheet height={sheetH} state={sheet} onState={setSheet} areaH={areaH}>
+              <div className="px-3.5 pb-3 space-y-2.5">
+                <CompassBar ace={ace} onPicks={onPicks} active={picks.length > 0} />
+                {fitToggles}
+                {statusLine}
+                <CompareTray onFocus={select} />
+              </div>
+              <div className="px-3.5 pb-6">{body}</div>
+            </MobileSheet>
+          </>
+        )}
       </div>
 
       <ChatBubble />
+      <style>{PAGE_CSS}</style>
     </div>
   );
 }
+
+// ── Phone bottom sheet: tap the handle to step, or drag it ─────────────────────
+
+function MobileSheet({ height, state, onState, areaH, children }: {
+  height: number; state: SheetState; onState: (s: SheetState) => void; areaH: number; children: React.ReactNode;
+}) {
+  const drag = useRef<{ y: number; h: number } | null>(null);
+  const [dragH, setDragH] = useState<number | null>(null);
+
+  function snap(h: number) {
+    const opts: [SheetState, number][] = [["peek", SHEET.peek], ["half", areaH * SHEET.half], ["full", areaH * SHEET.full]];
+    onState(opts.reduce((best, o) => (Math.abs(o[1] - h) < Math.abs(best[1] - h) ? o : best))[0]);
+  }
+
+  return (
+    <section
+      className="absolute z-[1001] inset-x-0 bottom-0 tm-glass rounded-t-[26px] flex flex-col"
+      style={{ height: dragH ?? height, transition: dragH === null ? "height .3s cubic-bezier(.2,1,.3,1)" : "none" }}
+      aria-label="Adventures on the map"
+    >
+      <button
+        type="button"
+        aria-label={state === "peek" ? "Show the list" : "Collapse the list"}
+        className="w-full pt-2.5 pb-2 grid place-items-center touch-none shrink-0"
+        onClick={() => onState(state === "peek" ? "half" : state === "half" ? "full" : "peek")}
+        onPointerDown={(e) => { drag.current = { y: e.clientY, h: height }; (e.target as HTMLElement).setPointerCapture(e.pointerId); }}
+        onPointerMove={(e) => { if (!drag.current) return; const h = drag.current.h + (drag.current.y - e.clientY); if (Math.abs(drag.current.y - e.clientY) > 6) setDragH(Math.max(SHEET.peek, Math.min(areaH * SHEET.full, h))); }}
+        onPointerUp={() => { if (dragH !== null) snap(dragH); drag.current = null; setDragH(null); }}
+      >
+        <span className="w-10 h-1.5 rounded-full bg-white/25" />
+      </button>
+      <div className={`flex-1 min-h-0 tm-scroll ${state === "peek" ? "overflow-hidden" : "overflow-y-auto"}`}>{children}</div>
+    </section>
+  );
+}
+
+const PAGE_CSS = `
+  .tm-page { background: #0b0d10; color: #fff; }
+  .tm-glass { background: rgba(17,20,24,0.86); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2);
+              border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 16px 48px rgba(0,0,0,0.45); }
+  @media (prefers-reduced-transparency: reduce) { .tm-glass { background: #121519; backdrop-filter: none; } }
+  .tm-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
+
+  .tm-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); color: #fff; outline: none; caret-color: #ff5100; transition: border-color .2s, background .2s; }
+  .tm-input::placeholder { color: rgba(255,255,255,0.4); }
+  .tm-input:focus { border-color: rgba(255,125,71,0.5); background: rgba(255,255,255,0.07); }
+  .tm-glass .tm-input { background: transparent; border-color: transparent; }
+
+  .tm-label { font-size: 9.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 6px; }
+
+  .tm-genre { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 6px 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600;
+              color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); transition: all .2s; }
+  .tm-genre:hover { color: #fff; border-color: color-mix(in srgb, var(--g) 50%, transparent); }
+  .tm-genre[data-on] { color: var(--g); background: color-mix(in srgb, var(--g) 14%, transparent); border-color: color-mix(in srgb, var(--g) 55%, transparent); box-shadow: 0 0 16px -4px var(--glow); }
+  .tm-genre-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--g); box-shadow: 0 0 8px var(--glow); }
+  .tm-genre-float { background: rgba(17,20,24,0.86); backdrop-filter: blur(14px); }
+  .tm-types { animation: tmUnfold .25s ease-out both; }
+  @keyframes tmUnfold { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  .tm-type { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 5px 0 8px; border-radius: 8px; font-size: 11px; font-weight: 600;
+             color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.03); border: 1px solid color-mix(in srgb, var(--g) 22%, transparent); transition: all .2s; }
+  .tm-type:hover { color: #fff; }
+  .tm-type[data-on] { color: #15110e; background: var(--g); border-color: var(--g); }
+  .tm-type-icon { display: grid; place-items: center; }
+  .tm-type-n { font-size: 9px; font-weight: 700; padding: 0 4px; border-radius: 999px; background: rgba(255,255,255,0.07); }
+  .tm-type[data-on] .tm-type-n { background: rgba(0,0,0,0.15); }
+  .tm-types-float .tm-type { background: rgba(17,20,24,0.86); backdrop-filter: blur(14px); }
+  .tm-types-float .tm-type[data-on] { background: var(--g); }
+  .tm-genre-grid .tm-genre { justify-content: center; padding: 0 4px; gap: 4px; font-size: 11px; min-width: 0; }
+  .tm-genre-grid .tm-genre-n { padding: 1px 4px; font-size: 8.5px; }
+  .tm-genre-n { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 999px; background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.45); }
+  .tm-genre:disabled { cursor: default; opacity: 0.55; }
+  .tm-genre:disabled:hover { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.08); }
+
+  .tm-toggle { display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 10px; border-radius: 9px; font-size: 11.5px; font-weight: 600;
+               color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); transition: all .2s; cursor: pointer; }
+  .tm-toggle:hover { color: #fff; }
+  .tm-toggle[data-on] { color: #6ff0e0; background: rgba(111,240,224,0.1); border-color: rgba(111,240,224,0.35); }
+  .tm-toggle-cta { color: #ffa576; border-color: rgba(255,165,118,0.35); background: rgba(255,81,0,0.08); }
+
+  .tm-iconbtn-lg { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; flex-shrink: 0; color: rgba(255,255,255,0.7);
+                   background: rgba(17,20,24,0.86); border: 1px solid rgba(255,255,255,0.09); backdrop-filter: blur(14px); transition: all .2s; }
+  .tm-iconbtn-lg:hover, .tm-iconbtn-lg[data-on] { color: #ff9a66; border-color: rgba(255,125,71,0.4); }
+  .tm-iconbtn { width: 28px; height: 28px; border-radius: 999px; display: grid; place-items: center; color: rgba(255,255,255,0.85); background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.12); }
+  .tm-iconbtn:hover { background: rgba(255,81,0,0.55); }
+
+  .tm-seg, .tm-ctl { height: 30px; padding: 0 10px; border-radius: 9px; font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,0.6); display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; transition: all .2s; }
+  .tm-seg:hover, .tm-ctl:hover { color: #fff; background: rgba(255,255,255,0.06); }
+  .tm-seg[data-on] { color: #fff; background: rgba(255,81,0,0.3); }
+  .tm-ctl[data-on] { color: #fff; background: #ff5100; }
+  .tm-ctl[data-on][data-gold] { color: #1a1200; background: linear-gradient(135deg,#f7cd3a,#eab308); }
+
+  .tm-row { display: flex; align-items: center; gap: 10px; padding: 6px; border-radius: 14px; cursor: pointer; border: 1px solid transparent; transition: background .2s, border-color .2s, opacity .2s; }
+  .tm-row:hover { background: rgba(255,255,255,0.04); }
+  .tm-row.is-active { background: color-mix(in srgb, var(--g) 9%, transparent); border-color: color-mix(in srgb, var(--g) 35%, transparent); }
+  .tm-row.is-off { opacity: 0.5; }
+  .tm-row:focus-visible { outline: 2px solid #ff7d47; outline-offset: 1px; }
+  .tm-cmp { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; color: rgba(255,255,255,0.35); border: 1px solid rgba(255,255,255,0.08); transition: all .2s; }
+  .tm-row:hover .tm-cmp { color: rgba(255,255,255,0.7); }
+  .tm-cmp:hover:not(:disabled) { color: #fff; border-color: rgba(255,255,255,0.3); }
+  .tm-cmp.is-on { color: #6ff0e0; border-color: rgba(111,240,224,0.4); background: rgba(111,240,224,0.1); }
+  .tm-cmp:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .tm-card { border-radius: 20px; overflow: hidden; background: #111418; border: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; }
+  .tm-chip { font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: rgba(0,0,0,0.55); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.12); }
+  .tm-panel { padding: 10px 12px; border-radius: 14px; background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.06); }
+  .tm-score { --p: 0%; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0;
+              background: radial-gradient(closest-side, #15181c 78%, transparent 80%), conic-gradient(var(--c) var(--p), rgba(255,255,255,0.08) 0); }
+  .tm-btn { height: 40px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 12.5px; font-weight: 700;
+            color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); transition: all .2s; }
+  .tm-btn:hover:not(:disabled) { background: rgba(255,255,255,0.09); }
+  .tm-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .tm-btn-primary { color: #fff; border: 0; background: linear-gradient(135deg,#ff5100,#ff7d47); box-shadow: 0 6px 20px -6px rgba(255,81,0,0.6); }
+  .tm-btn-primary:hover { filter: brightness(1.08); }
+
+  /* Phones pinch to zoom, and the search row sits where the zoom buttons would */
+  @media (max-width: 1023px) { .tm-map .leaflet-control-zoom { display: none; } }
+`;

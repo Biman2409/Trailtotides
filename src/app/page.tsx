@@ -209,7 +209,7 @@ export default function HomePage() {
         <FindByRegion />
 
         {/* ── MAP CTA — warm surface, green only as the accent; edges fade into the page ── */}
-        <section id="map-cta" className="relative py-14 lg:py-20 px-5 lg:px-8 overflow-hidden t-bg-surface">
+        <section id="map-cta" className="relative py-10 sm:py-14 lg:py-20 px-5 lg:px-8 overflow-hidden t-bg-surface">
           <div className="absolute inset-0 pointer-events-none">
             <Image
               src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=1200&q=80"
@@ -232,7 +232,7 @@ export default function HomePage() {
             <div className="absolute inset-x-0 bottom-0 h-24" style={{ background: "linear-gradient(to top, var(--bg-page), transparent)" }} />
           </div>
 
-          <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_380px] gap-10 lg:gap-16 items-center">
+          <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_380px] gap-6 sm:gap-10 lg:gap-16 items-center">
             <FadeUp>
               <div className="max-w-2xl">
                 <p className="text-[#5fb873] text-xs font-semibold tracking-[0.22em] mb-2 uppercase">
@@ -241,12 +241,12 @@ export default function HomePage() {
                 <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
                   India&apos;s Adventures, <span className="text-[#5fb873]">Mapped</span>
                 </h2>
-                <p className="text-sm sm:text-base leading-relaxed mb-7 w-full max-w-lg" style={{ color: "var(--text-secondary)" }}>
+                <p className="text-sm sm:text-base leading-relaxed mb-5 sm:mb-7 w-full max-w-lg" style={{ color: "var(--text-secondary)" }}>
                   Every trail, summit and coast — one map. Filter by type, cluster by region, tap to explore.
                 </p>
                 <Link
                   href="/map"
-                  className="inline-flex items-center gap-2.5 font-semibold px-7 py-3.5 rounded-xl text-base hover:-translate-y-0.5 group transition-all duration-200 shadow-lg shadow-black/15"
+                  className="inline-flex items-center gap-2 sm:gap-2.5 font-semibold px-5 py-3 sm:px-7 sm:py-3.5 rounded-xl text-sm sm:text-base hover:-translate-y-0.5 group transition-all duration-200 shadow-lg shadow-black/15"
                   style={{ background: "var(--text-primary)", color: "var(--bg-page)" }}
                 >
                   <Map className="w-5 h-5" />
