@@ -212,7 +212,3 @@ export function typeIconSvg(type: string, size = 14, color = "white"): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24">${pathEls}${circleEls}</svg>`;
 }
 
-// Keep old export name for backward compat
-export const TYPE_SVG_PATHS: Record<string, string[]> = Object.fromEntries(
-  Object.entries(TYPE_ICON_DEFS).map(([k, v]) => [k, v.paths ?? []])
-);

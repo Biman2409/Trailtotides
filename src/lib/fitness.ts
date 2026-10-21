@@ -118,12 +118,6 @@ export function memberTag(accountId: string): string {
   return h.toString(36).padStart(6, "0").slice(-6);
 }
 
-export function encodeMember(m: GroupMember): string {
-  const name = m.name.replace(/[~,]/g, " ").trim().slice(0, 24) || "Friend";
-  const digits = AXES.map((ax) => Math.min(5, Math.max(1, Math.round(m.ace[ax])))).join("");
-  return `${encodeURIComponent(name)}~${digits}${m.id ? `~${m.id}` : ""}`;
-}
-
 export function decodeMembers(param: string | null): GroupMember[] {
   if (!param) return [];
   return param.split(",").slice(0, MAX_GROUP).flatMap((chunk) => {

@@ -91,10 +91,6 @@ export default function ACEProfileSection() {
     ? Math.min(100, Math.max(0, Math.round(((totalScore - currentRank.minScore) / (nextRank.minScore - currentRank.minScore)) * 100)))
     : 100;
   const ptsNeeded = nextRank ? nextRank.minScore - totalScore : 0;
-  // barPct = position along the full bar (0–100%). Each rank = 1/(N-1) of total width.
-  const N = RANKS.length; // 6
-  const segmentWidth = 100 / (N - 1); // 20% per rank
-  const barPct = nextRank === null ? 100 : Math.min(100, currentRankIndex * segmentWidth + (progressPct / 100) * segmentWidth);
 
   return (
     <div

@@ -164,6 +164,7 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
             <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid rgba(var(--fg-rgb),0.1)", background: "rgba(var(--fg-rgb),0.03)" }}>
               {/* Preview */}
               <div className="relative aspect-video">
+                {/* eslint-disable-next-line @next/next/no-img-element -- local preview of a file not uploaded yet */}
                 <img src={preview} alt="Preview" className="w-full h-full object-cover" />
                 <button
                   onClick={() => { setPreview(null); setFile(null); setCaption(""); }}
@@ -230,6 +231,7 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
               className="break-inside-avoid relative rounded-xl overflow-hidden group cursor-pointer"
               onClick={() => setLightbox(photo)}
             >
+              {/* eslint-disable-next-line @next/next/no-img-element -- traveller photos from storage, shown at their own size */}
               <img
                 src={photo.url}
                 alt={photo.caption || "Trail photo"}
@@ -291,6 +293,7 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
             <X className="w-5 h-5" />
           </button>
           <div className="max-w-4xl w-full max-h-[90vh] flex flex-col rounded-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            {/* eslint-disable-next-line @next/next/no-img-element -- traveller photos from storage, shown at their own size */}
             <img
               src={lightbox.url}
               alt={lightbox.caption || "Trail photo"}

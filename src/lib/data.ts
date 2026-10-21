@@ -33,7 +33,6 @@ export type Month =
   | "Jan" | "Feb" | "Mar" | "Apr" | "May" | "Jun"
   | "Jul" | "Aug" | "Sep" | "Oct" | "Nov" | "Dec";
 
-
 export interface ERT {
   /** Exertion 1–5: physical effort based on distance, altitude, days */
   e: number;
@@ -1905,16 +1904,3 @@ export const regions = [
   },
 ];
 
-export const adventureTypes = [
-  { type: "Trekking" as AdventureType, count: 38 },
-  { type: "Motorcycling" as AdventureType, count: 4 },
-  { type: "Cycling" as AdventureType, count: 1 },
-  { type: "Mountaineering" as AdventureType, count: 1 },
-  { type: "Rock Climbing" as AdventureType, count: 0 },
-  { type: "Jeep Safari" as AdventureType, count: 0 },
-  { type: "Caving" as AdventureType, count: 0 },
-  { type: "Urban Adventure" as AdventureType, count: 0 },
-  { type: "Diving" as AdventureType, count: 1 },
-  { type: "Kayaking" as AdventureType, count: 0 },
-  { type: "Skiing" as AdventureType, count: 0 },
-];

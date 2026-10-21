@@ -84,7 +84,6 @@ function timeAgo(dateStr: string): string {
 
 export default function ReviewSection({ slug, currentUserId, adventureType, adventureName, operators = [] }: Props) {
   const { markDone, isDone } = useTripLog();
-  const isCompleted = isDone(slug);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -104,16 +103,12 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [opRating, setOpRating] = useState(0);
 
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   function updateScrollState() {
     const el = scrollRef.current;
     if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 4);
-    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
     setActiveIndex(Math.round(el.scrollLeft / el.clientWidth));
   }
 

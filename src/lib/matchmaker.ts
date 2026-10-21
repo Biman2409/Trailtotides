@@ -2,26 +2,6 @@ import type { Adventure } from "./data";
 import { getACE, type ACE, type AceAxis, ACE_AXIS_LABELS } from "./ace";
 import type { MedicalFlags } from "./matchmakerQuestions";
 
-// ─── Answer types ─────────────────────────────────────────────────────────────
-
-/** Legacy answer type (kept for backward compat with stored profiles) */
-export interface MatchmakerAnswers {
-  cardio: "A" | "B" | "C" | "D";
-  load:   "A" | "B" | "C" | "D";
-  altitude: "A" | "B" | "C" | "D";
-  terrain:  "A" | "B" | "C" | "D" | "E";
-  age: number;
-  weight: number;
-  height: number;
-  injuries?: string;
-}
-
-// ─── Profile types ────────────────────────────────────────────────────────────
-
-export interface UserAceProfile {
-  ace: ACE;
-}
-
 export interface AceGap {
   axis: AceAxis;
   label: string;
@@ -291,27 +271,6 @@ export async function saveMedicalFlagsToServer(flags: MedicalFlags): Promise<voi
       body: JSON.stringify(flags),
     });
   } catch {}
-}
-
-export async function loadMedicalFlagsFromServer(): Promise<MedicalFlags | null> {
-  try {
-    const res = await fetch("/api/ace-medical");
-    if (!res.ok) return loadMedicalFlags();
-    const { flags } = await res.json();
-    if (flags) {
-      saveMedicalFlags(flags as MedicalFlags);
-      return flags as MedicalFlags;
-    }
-    const local = loadMedicalFlags();
-    if (local) saveMedicalFlagsToServer(local); // fire-and-forget
-    return local;
-  } catch {}
-  return loadMedicalFlags();
-}
-
-export async function deleteMedicalFlags(): Promise<void> {
-  clearMedicalFlags();
-  try { await fetch("/api/ace-medical", { method: "DELETE" }); } catch {}
 }
 
 // ─── Consent — localStorage + server ───────────────────────────────────────────

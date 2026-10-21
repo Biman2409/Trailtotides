@@ -81,7 +81,6 @@ export default function HeroSlider() {
   const [prev,        setPrev]        = useState<number | null>(null);
   const [animating,   setAnimating]   = useState(false);
   const [progressKey, setProgressKey] = useState(0);
-  const [loaded,      setLoaded]      = useState<Record<number, boolean>>({ 0: false });
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Bumped each time a slide is (re)activated, so its <Image> remounts and the
@@ -161,7 +160,6 @@ export default function HeroSlider() {
                 quality={90}
                 sizes="100vw"
                 className="photo-grade object-cover"
-                onLoad={() => setLoaded(p => ({ ...p, [i]: true }))}
                   style={{
                     objectFit:  "cover",
                     // One shared grade (.photo-grade) for every slide instead of per-slide filters

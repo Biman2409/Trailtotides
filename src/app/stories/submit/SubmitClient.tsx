@@ -264,6 +264,7 @@ export default function SubmitStoryPage() {
                     <div className="space-y-3">
                       {upload.status === "done" && form.heroImageUrl && (
                         <div className="relative rounded-xl overflow-hidden h-40" style={{ background: "var(--bg-page)", border: "1px solid var(--border-subtle)" }}>
+                          {/* eslint-disable-next-line @next/next/no-img-element -- user-supplied image URL on any host */}
                           <img src={form.heroImageUrl} alt="Preview" className="w-full h-full object-cover" />
                           <button type="button" onClick={() => { setUpload({ status: "idle", url: "" }); setForm(p => ({ ...p, heroImageUrl: "" })); }}
                             className="absolute top-2 right-2 w-7 h-7 rounded-lg flex items-center justify-center"

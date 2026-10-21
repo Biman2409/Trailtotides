@@ -120,7 +120,6 @@ export default function ACERadar({ ace, size = 220, showLabels = true, userAce, 
 
         {/* Per-axis dot glow filters */}
         {AXIS_ORDER.map((key) => {
-          const color = ACE_AXIS_COLORS[key];
           return (
             <filter key={`glow-${key}`} id={`${uid}-glow-${key}`} x="-100%" y="-100%" width="300%" height="300%">
               <feGaussianBlur stdDeviation="2.5" result="blur" />

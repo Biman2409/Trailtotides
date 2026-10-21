@@ -111,10 +111,6 @@ export function difficultyColor(d: string): string {
 
 export const verifiedOperators = (a: Adventure) => (a.operators ?? []).filter((o) => o.verified);
 
-export function hasVerified(a: Adventure) {
-  return verifiedOperators(a).length > 0;
-}
-
 /** Lowest price among verified operators, falling back to any operator */
 export function priceFrom(a: Adventure): number | null {
   const v = verifiedOperators(a);
