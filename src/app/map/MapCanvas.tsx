@@ -7,7 +7,8 @@ import type { GeoJsonObject } from "geojson";
 import type { Adventure, Month } from "@/lib/data";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import {
-  BASE_LAYERS, INDIA_CENTER, INDIA_ZOOM, INDIA_BOUNDS, loadLeaflet, genreOf, inSeason, esc,
+  BASE_LAYERS, INDIA_CENTER, INDIA_ZOOM, INDIA_BOUNDS, loadLeaflet, inSeason, esc,
+  difficultyOf, difficultyColor, priceFrom, formatINR, verifiedOperators,
   type LayerKey, type Fit,
 } from "./mapShared";
 
@@ -65,12 +66,31 @@ const TROPHY_SVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" 
 // Module-level cache for the India outline (survives re-mounts)
 let indiaGeoCache: GeoJsonObject | null = null;
 
+// Pins are coloured by difficulty (the same colours as the cards), so the map reads as a
+// heatmap of how hard each region is; the icon inside still says what kind of adventure it is.
 function pinHtml(a: Adventure, s: { fit: Fit | null | undefined; off: boolean; pick: boolean; selected: boolean; hovered: boolean; saved: boolean }) {
-  const g = genreOf(a.type);
+  const c = difficultyColor(difficultyOf(a));
   const cls = ["tm-pin", s.fit ? "has-fit" : "", s.off ? "off" : "", s.pick ? "pick" : "", s.selected ? "sel" : "", s.hovered ? "hov" : ""].filter(Boolean).join(" ");
-  return `<div class="${cls}" style="--g:${g.color};--glow:${g.glow};--ring:${s.fit?.bucket.color ?? "transparent"}">
-    <span class="tm-pin-core">${typeIconSvg(a.type, 13, "#15110e")}</span>
+  return `<div class="${cls}" style="--g:${c};--glow:${c}73;--ring:${s.fit?.bucket.color ?? "transparent"}">
+    <span class="tm-pin-core">${typeIconSvg(a.type, 13, "#ffffff")}</span>
     ${s.saved ? '<span class="tm-pin-saved"></span>' : ""}
+  </div>`;
+}
+
+const DIFFICULTY_BY_LEVEL = ["Easy", "Moderate", "Hard", "Advanced", "Extreme"];
+
+// Hovering a pin shows a small card, so the map can be scanned without opening each one
+function peekHtml(a: Adventure) {
+  const diff = difficultyOf(a);
+  const price = priceFrom(a);
+  const v = verifiedOperators(a).length;
+  return `<div class="tm-peek">
+    <img src="${esc(a.heroImage)}" alt="" loading="lazy" />
+    <div class="tm-peek-body">
+      <b>${esc(a.name)}</b>
+      <span>${esc(a.type)} · ${esc(a.durationDays)} · <em style="color:${difficultyColor(diff)}">${esc(diff)}</em></span>
+      <span class="tm-peek-foot">${price !== null ? `from <strong>${formatINR(price)}</strong>` : ""}${v ? `<i>✓ ${v} verified</i>` : ""}</span>
+    </div>
   </div>`;
 }
 
@@ -208,7 +228,12 @@ export default function MapCanvas(props: Props) {
         iconCreateFunction: (c: any) => {
           const n = c.getChildCount();
           const size = n >= 20 ? 44 : 38;
-          return leaflet.divIcon({ className: "", html: `<div class="tm-cluster" style="width:${size}px;height:${size}px">${n}</div>`, iconSize: [size, size], iconAnchor: [size / 2, size / 2] });
+          // The ring takes the average difficulty inside, so the zoomed-out map still reads as a difficulty map
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const levels: number[] = c.getAllChildMarkers().map((m: any) => m.options.level ?? 3);
+          const avg = Math.round(levels.reduce((s, l) => s + l, 0) / Math.max(1, levels.length));
+          const ring = difficultyColor(DIFFICULTY_BY_LEVEL[avg - 1] ?? "Hard");
+          return leaflet.divIcon({ className: "", html: `<div class="tm-cluster" style="width:${size}px;height:${size}px;--ring:${ring}">${n}</div>`, iconSize: [size, size], iconAnchor: [size / 2, size / 2] });
         },
       });
       map.addLayer(cluster);
@@ -271,8 +296,10 @@ export default function MapCanvas(props: Props) {
     markersRef.current.clear();
     loose.current = null;
     for (const a of live.current.adventures) {
-      const m = leaflet.marker([a.lat, a.lng], { icon: iconFor(a), riseOnHover: true })
-        .bindTooltip(`<b>${esc(a.name)}</b><span>${esc(a.type)} · ${esc(a.state)}</span>`, { direction: "top", offset: [0, -16], className: "tm-tip" });
+      // level: 1 (Easy) to 5 (Extreme), read by the cluster icon
+      const opts = { icon: iconFor(a), riseOnHover: true, level: DIFFICULTY_BY_LEVEL.indexOf(difficultyOf(a)) + 1 || 3 } as L.MarkerOptions;
+      const m = leaflet.marker([a.lat, a.lng], opts)
+        .bindTooltip(peekHtml(a), { direction: "top", offset: [0, -18], className: "tm-tip tm-tip-peek", opacity: 1 });
       m.on("click", () => live.current.onSelect(a.slug));
       cluster.addLayer(m);
       markersRef.current.set(a.slug, m);
@@ -410,7 +437,8 @@ const MAP_CSS = `
 
   .tm-pin { position: relative; width: 34px; height: 34px; display: grid; place-items: center; transition: transform .25s cubic-bezier(.2,1.4,.4,1), opacity .35s, filter .35s; }
   .tm-pin-core { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
-                 background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--g) 70%, #fff), var(--g) 70%);
+                 /* a light sheen only, so the white icon keeps its contrast */
+                 background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--g) 82%, #fff), var(--g) 70%);
                  box-shadow: 0 0 0 2px rgba(11,13,16,0.92), 0 0 16px var(--glow), 0 4px 10px rgba(0,0,0,0.55); }
   .tm-pin.has-fit::before { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2.5px solid var(--ring); box-shadow: 0 0 10px color-mix(in srgb, var(--ring) 60%, transparent); }
   .tm-pin:hover, .tm-pin.sel, .tm-pin.hov { transform: scale(1.22); }
@@ -427,8 +455,8 @@ const MAP_CSS = `
   /* Clusters: dark glass with a warm ring, so they group pins without shouting over the map */
   .tm-cluster { border-radius: 50%; display: grid; place-items: center; color: #fff; font: 800 12.5px var(--font-dm-sans, 'DM Sans'), sans-serif;
                 background: radial-gradient(circle at 35% 30%, rgba(40,44,50,0.96), rgba(17,20,24,0.96));
-                border: 2px solid rgba(255,154,102,0.9);
-                box-shadow: 0 0 0 5px rgba(255,154,102,0.14), 0 0 18px rgba(255,125,71,0.35), 0 6px 18px rgba(0,0,0,0.55);
+                border: 2px solid var(--ring, #ff9a66);
+                box-shadow: 0 0 0 5px color-mix(in srgb, var(--ring, #ff9a66) 16%, transparent), 0 0 18px color-mix(in srgb, var(--ring, #ff9a66) 40%, transparent), 0 6px 18px rgba(0,0,0,0.55);
                 transition: transform .2s; }
   .tm-cluster:hover { transform: scale(1.08); }
   .tm-cluster.hov { transform: scale(1.18); border-color: #fff; box-shadow: 0 0 0 6px rgba(255,255,255,0.15), 0 0 26px rgba(255,154,102,0.6), 0 6px 18px rgba(0,0,0,0.55); }
@@ -448,6 +476,16 @@ const MAP_CSS = `
   .tm-tip b { display: block; font-size: 12px; }
   .tm-tip span { display: block; color: rgba(255,255,255,0.5); font-weight: 500; margin-top: 1px; }
   .tm-tip::before { border-top-color: rgba(11,13,16,0.94) !important; }
+  .tm-tip-peek { padding: 0 !important; overflow: hidden; border-radius: 14px !important; }
+  .tm-peek { display: flex; width: 250px; }
+  .tm-peek img { width: 74px; height: 78px; object-fit: cover; flex-shrink: 0; }
+  .tm-peek-body { min-width: 0; padding: 8px 10px; display: flex; flex-direction: column; justify-content: center; gap: 2px; white-space: normal; }
+  .tm-peek-body b { font-size: 12.5px; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .tm-peek-body span { font-size: 10.5px; color: rgba(255,255,255,0.5); margin: 0; }
+  .tm-peek-body em { font-style: normal; font-weight: 700; }
+  .tm-peek-foot { display: flex; gap: 8px; align-items: baseline; margin-top: 2px !important; }
+  .tm-peek-foot strong { color: #fff; font-size: 12px; }
+  .tm-peek-foot i { font-style: normal; color: #6ff0e0; font-weight: 600; margin-left: 2px; }
 
   .tm-popup .leaflet-popup-content-wrapper { padding: 0; border-radius: 16px; overflow: hidden; background: #111418; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.55); }
   .tm-popup .leaflet-popup-content { margin: 0; width: 240px !important; }

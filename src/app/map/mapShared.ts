@@ -11,26 +11,20 @@ import { DIFFICULTY_CONFIG } from "@/components/ui/custom/DifficultyMeter";
 declare global { interface Window { L: typeof L } }
 
 // ── Tiles ─────────────────────────────────────────────────────────────────────
-// All keyless. "Map" is a dark canvas with dark hillshade blended over it, so the
+// Two styles, both keyless. "Default" is a dark canvas with dark hillshade blended over it, so the
 // Himalaya and the Ghats read as relief — mountain to ocean, in the hero's palette.
 
 const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services";
 
-export type LayerKey = "map" | "satellite" | "terrain";
+export type LayerKey = "map" | "terrain";
 
 export const BASE_LAYERS: Record<LayerKey, { label: string; url: string; maxZoom: number; relief?: string; labels?: string }> = {
   map: {
-    label: "Map",
+    label: "Default",
     url: `${ESRI}/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}`,
     relief: `${ESRI}/Elevation/World_Hillshade_Dark/MapServer/tile/{z}/{y}/{x}`,
     labels: `${ESRI}/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}`,
     maxZoom: 16,
-  },
-  satellite: {
-    label: "Satellite",
-    url: `${ESRI}/World_Imagery/MapServer/tile/{z}/{y}/{x}`,
-    labels: `${ESRI}/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}`,
-    maxZoom: 18,
   },
   terrain: {
     label: "Terrain",

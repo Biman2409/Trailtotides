@@ -8,7 +8,6 @@ import { BASE_LAYERS, type LayerKey } from "./mapShared";
 
 const SWATCH: Record<LayerKey, string> = {
   map: "linear-gradient(135deg, #2a2d31 0%, #3a3d42 45%, #23262a 100%)",
-  satellite: "linear-gradient(135deg, #2f4a2c 0%, #6b6a43 50%, #2b4a5c 100%)",
   terrain: "linear-gradient(135deg, #d9d2b8 0%, #b8c79c 50%, #e6dcc2 100%)",
 };
 
@@ -49,7 +48,7 @@ export default function LayersMenu({
       {open && (
         <div className={`tm-menu absolute top-full mt-2 w-[260px] z-[1100] p-3 ${align === "right" ? "right-0" : "left-0"}`} role="dialog" aria-label="Map style and layers">
           <p className="tm-label">Map style</p>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {(Object.keys(BASE_LAYERS) as LayerKey[]).map((k) => (
               <button key={k} type="button" onClick={() => onLayer(k)} aria-pressed={layer === k} className="group text-center">
                 <span className={`block h-14 rounded-xl border-2 transition-colors ${layer === k ? "border-[#ff7d47]" : "border-transparent group-hover:border-white/20"}`} style={{ background: SWATCH[k] }} />

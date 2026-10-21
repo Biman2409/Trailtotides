@@ -28,7 +28,11 @@ import CompassBar, { type CompassPick } from "./CompassBar";
 import ResultsList from "./ResultsList";
 import PinCard from "./PinCard";
 import CompareTray from "./CompareTray";
-import { fitFor, haversineKm, type LayerKey, type Fit } from "./mapShared";
+import { fitFor, haversineKm, difficultyColor, type LayerKey, type Fit } from "./mapShared";
+import PeekCarousel from "./PeekCarousel";
+import MapEmptyState from "./MapEmptyState";
+
+const DIFFICULTY_SCALE = ["Easy", "Moderate", "Hard", "Advanced", "Extreme"];
 
 // The Adventure Map, built on the home page promise:
 //   FIND     — Type, Where and Near me on screen; every other filter (Explore's, shared) under Filters
@@ -38,7 +42,8 @@ import { fitFor, haversineKm, type LayerKey, type Fit } from "./mapShared";
 
 const PANEL_W = 380;
 const GAP = 12;
-const SHEET = { peek: 168, half: 0.55, full: 0.88 } as const;
+// Peek fits the handle, Compass's one line and a row of cards
+const SHEET = { peek: 206, half: 0.55, full: 0.88 } as const;
 type SheetState = "peek" | "half" | "full";
 
 export default function MapClient() {
@@ -243,6 +248,32 @@ export default function MapClient() {
     setF(NO_FILTERS);
   }
 
+  // Each filter change is remembered, so an empty map can step back one instead of starting over
+  const history = useRef<AdventureFilterState[]>([]);
+  const prevF = useRef(f);
+  const undoing = useRef(false);
+  useEffect(() => {
+    if (prevF.current === f) return;
+    if (!undoing.current && linkRead.current) history.current = [...history.current.slice(-19), prevF.current];
+    undoing.current = false;
+    prevF.current = f;
+  }, [f]);
+  function undoFilter() {
+    const prev = history.current.pop();
+    if (!prev) return;
+    undoing.current = true;
+    setF(prev);
+  }
+
+  // The map only knows what's in view once it has drawn; until then don't call the view empty
+  const [viewReady, setViewReady] = useState(false);
+  const onViewChange = useCallback((s: Set<string>) => { setInView(s); setViewReady(true); }, []);
+  const emptyKind: "none" | "elsewhere" | null = !mounted || selectedAdv ? null
+    : shown.length === 0 ? "none"
+    : viewReady && listed.length === 0 ? "elsewhere" : null;
+  // Near me is the only thing emptying the map: offer to drop the distance
+  const nearIsTheCause = !!nearMe && !!radius && shown.length === 0 && filterAdventures(adventures, f, { score }).length > 0;
+
   function handleNearMe() {
     if (nearMe) { setNearMe(null); return; }
     if (!navigator.geolocation) { toast.error("Location isn't supported on this device."); return; }
@@ -293,17 +324,27 @@ export default function MapClient() {
   );
 
   // Not filters: the way into fitness matching, and whose fitness the rings show
-  const fitExtras = (!canFit || (loggedIn && groups.length > 0)) && (
-    <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-      {!canFit && (
-        <Link href="/matchmaker" onClick={() => track("map_fitness_cta", { from: "toolbar" })} className="tm-toggle tm-toggle-cta shrink-0">
-          <Activity className="w-3.5 h-3.5" />Light up my matches
+  // One quiet line: what the pin colours and rings mean, and the way into fitness matching
+  const legendLine = (
+    <div className="flex items-center gap-2.5 text-[10.5px] text-white/45 overflow-x-auto no-scrollbar whitespace-nowrap">
+      <span className="inline-flex items-center gap-1 shrink-0" title="Pin colour: difficulty">
+        {DIFFICULTY_SCALE.map((d) => <i key={d} title={d} className="w-2 h-2 rounded-full" style={{ background: difficultyColor(d) }} />)}
+        <span className="ml-0.5">Easy → Extreme</span>
+      </span>
+      {canFit ? (
+        <span className="inline-flex items-center gap-1 shrink-0" title="Ring: how ready you are">
+          <i className="w-2 h-2 rounded-full border-2 border-[#10b981]" /><i className="w-2 h-2 rounded-full border-2 border-[#f59e0b]" /><i className="w-2 h-2 rounded-full border-2 border-[#f43f5e]" />
+          <span className="ml-0.5">Ready → Not yet</span>
+        </span>
+      ) : (
+        <Link href="/matchmaker" onClick={() => track("map_fitness_cta", { from: "toolbar" })} className="inline-flex items-center gap-1 font-semibold text-[#ffa576] hover:underline shrink-0">
+          <Activity className="w-3 h-3" />Light up my matches
         </Link>
       )}
       {loggedIn && groups.length > 0 && (
-        <label className="tm-toggle shrink-0 relative" data-on={group ? true : undefined}>
-          {groupLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Users className="w-3.5 h-3.5" />}
-          <span className="max-w-[110px] truncate">{group ? group.name : "Fit for a group"}</span>
+        <label className="relative inline-flex items-center gap-1 font-semibold text-white/60 hover:text-white shrink-0 cursor-pointer">
+          {groupLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Users className="w-3 h-3" />}
+          <span className="max-w-[100px] truncate">{group ? group.name : "Fit for a group"}</span>
           <select aria-label="Rate adventures for a group" value={group?.code ?? ""} onChange={(e) => chooseGroup(e.target.value)} className="absolute inset-0 opacity-0 cursor-pointer">
             <option value="">Just me</option>
             {groups.map((g) => <option key={g.code} value={g.code}>{g.name} ({g.memberCount})</option>)}
@@ -329,15 +370,6 @@ export default function MapClient() {
           ))}
         </select>
       </label>
-    </div>
-  );
-
-  const fitLegend = canFit && (
-    <div className="flex items-center gap-1.5 text-[10.5px] text-white/40">
-      <i className="w-2 h-2 rounded-full border-2 border-[#10b981]" />Ready
-      <i className="w-2 h-2 rounded-full border-2 border-[#f59e0b] ml-1" />Stretch
-      <i className="w-2 h-2 rounded-full border-2 border-[#f43f5e] ml-1" />Not yet
-      {group && <span className="ml-1 truncate">· for {group.name}</span>}
     </div>
   );
 
@@ -401,10 +433,22 @@ export default function MapClient() {
             completed={completed}
             apiRef={apiRef}
             onSelect={select}
-            onViewChange={setInView}
+            onViewChange={onViewChange}
           />
         ) : (
           <div className="w-full h-full grid place-items-center bg-[#0b0d10]"><Loader2 className="w-5 h-5 animate-spin text-white/30" /></div>
+        )}
+
+        {emptyKind && (
+          <MapEmptyState
+            kind={emptyKind}
+            matches={shown.length}
+            insets={insets}
+            onUndo={history.current.length ? undoFilter : undefined}
+            onWiden={nearIsTheCause ? () => setRadius(null) : undefined}
+            onClear={() => { clearAll(); if (nearIsTheCause) setRadius(null); }}
+            onShowAll={showAll}
+          />
         )}
 
         {mounted && desktop && (
@@ -424,12 +468,11 @@ export default function MapClient() {
             )}
             <aside className={`absolute z-[1000] flex flex-col tm-glass rounded-3xl overflow-hidden transition-[transform,opacity] duration-300 ${panelOpen ? "" : "-translate-x-[110%] opacity-0 pointer-events-none"}`}
               style={{ top: GAP, left: GAP, bottom: GAP, width: PANEL_W }} aria-hidden={!panelOpen || undefined}>
-              <div className="p-3.5 space-y-2.5 border-b border-white/[0.06]">
+              <div className="p-3 space-y-2 border-b border-white/[0.06]">
                 <CompassBar ace={ace} onPicks={onPicks} active={picks.length > 0} />
                 {dock(false)}
-                {fitExtras}
                 {statusLine}
-                {fitLegend}
+                {legendLine}
               </div>
               <div className="flex-1 overflow-y-auto p-3.5 tm-scroll">{body}</div>
             </aside>
@@ -453,12 +496,19 @@ export default function MapClient() {
             <MobileSheet height={sheetH} state={sheet} onState={setSheet} areaH={areaH}>
               <div className="px-3.5 pb-3 space-y-2.5">
                 <CompassBar ace={ace} onPicks={onPicks} active={picks.length > 0} />
-                {fitExtras}
-                {statusLine}
-                {fitLegend}
-                <CompareTray onFocus={select} />
+                {sheet === "peek" && !selectedAdv ? (
+                  // Collapsed: a swipeable row of what's in view, tied to the pins
+                  <PeekCarousel list={listed.length ? listed : shown} fits={fits} onHover={setHovered} onOpen={select} />
+                ) : (
+                  <>
+                    {statusLine}
+                    {legendLine}
+                    <CompareTray onFocus={select} />
+                  </>
+                )}
               </div>
-              <div className="px-3.5 pb-6">{body}</div>
+              {/* Collapsed, the card row stands in for the list */}
+              {(sheet !== "peek" || selectedAdv) && <div className="px-3.5 pb-6">{body}</div>}
             </MobileSheet>
           </>
         )}
@@ -533,6 +583,13 @@ const PAGE_CSS = `
   .tm-sort { height: 26px; padding: 0 6px; border-radius: 8px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.75);
              background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); outline: none; cursor: pointer; }
   .tm-sort option { background: #17120f; }
+
+  .tm-peekcard { display: flex; width: 252px; height: 88px; border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.045);
+                 border: 1px solid rgba(255,255,255,0.08); box-shadow: inset 3px 0 0 -1px var(--c); transition: border-color .2s; }
+  .tm-peekcard:active { border-color: color-mix(in srgb, var(--c) 60%, transparent); }
+
+  .tm-empty { padding: 20px 18px 18px; border-radius: 22px; background: rgba(17,20,24,0.92); border: 1px solid rgba(255,255,255,0.1);
+              box-shadow: 0 30px 70px rgba(0,0,0,0.55); backdrop-filter: blur(18px); animation: tmMenu .25s ease-out both; }
 
   /* ── Filter dock: Type · Where · Near me ── */
   .tm-pill { display: inline-flex; align-items: center; gap: 5px; height: 40px; padding: 0 8px; border-radius: 12px; font-size: 12.5px; font-weight: 600;

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { BadgeCheck, Sparkles, GitCompareArrows, Check, MapPinned } from "lucide-react";
 import type { Adventure, Month } from "@/lib/data";
 import { useCompare } from "@/contexts/CompareContext";
-import { genreOf, difficultyOf, difficultyColor, verifiedOperators, priceFrom, formatINR, inSeason, type Fit } from "./mapShared";
+import { difficultyOf, difficultyColor, verifiedOperators, priceFrom, formatINR, inSeason, type Fit } from "./mapShared";
 
 // What's in view, as a list you can scan: fit, season, verified operators and price on every row.
 
@@ -12,8 +12,9 @@ function Row({ a, fit, month, active, onPick, onHover }: {
   a: Adventure; fit: Fit | null | undefined; month: Month | null; active: boolean; onPick: (slug: string) => void; onHover: (slug: string | null) => void;
 }) {
   const { isSelected, add, remove, isFull } = useCompare();
-  const g = genreOf(a.type);
   const diff = difficultyOf(a);
+  // Same colour as the row's pin on the map
+  const c = difficultyColor(diff);
   const v = verifiedOperators(a).length;
   const price = priceFrom(a);
   const off = !inSeason(a, month);
@@ -31,7 +32,7 @@ function Row({ a, fit, month, active, onPick, onHover }: {
         onBlur={() => onHover(null)}
         onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onPick(a.slug); } }}
         className={`tm-row group ${active ? "is-active" : ""} ${off ? "is-off" : ""}`}
-        style={{ "--g": g.color } as React.CSSProperties}
+        style={{ "--g": c } as React.CSSProperties}
       >
         <span className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0">
           <Image src={a.heroImage} alt="" fill className="object-cover" sizes="56px" unoptimized />
@@ -39,7 +40,7 @@ function Row({ a, fit, month, active, onPick, onHover }: {
         </span>
         <span className="min-w-0 flex-1">
           <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: g.color, boxShadow: `0 0 6px ${g.glow}` }} />
+            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: c, boxShadow: `0 0 6px ${c}88` }} />
             <span className="text-[13px] font-semibold text-white/90 truncate">{a.name}</span>
           </span>
           <span className="block text-[10.5px] text-white/40 truncate mt-0.5">

@@ -27,6 +27,8 @@ export default function CompassBar({
   const [reply, setReply] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  // One line at rest; the starter prompts only appear while you're about to type
+  const [focused, setFocused] = useState(false);
 
   async function ask(q: string) {
     const question = q.trim();
@@ -75,6 +77,8 @@ export default function CompassBar({
           <input
             value={text}
             onChange={(e) => setText(e.target.value)}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
             placeholder="Describe your trip — Compass picks"
             aria-label="Describe your trip and Compass.AI will pick adventures on the map"
             enterKeyHint="send"
@@ -93,10 +97,11 @@ export default function CompassBar({
         </div>
       </form>
 
-      {!asked && !loading && !error && (
+      {focused && !text && !asked && !loading && !error && (
         <div className="mt-2 flex gap-1.5 overflow-x-auto no-scrollbar">
           {PROMPTS.map((p) => (
-            <button key={p} type="button" onClick={() => ask(p)} className="shrink-0 text-[10.5px] px-2.5 py-1 rounded-full bg-white/[0.05] text-white/55 hover:text-white hover:bg-white/10 transition-colors">
+            // mousedown, not click: the input's blur would hide the prompts before a click lands
+            <button key={p} type="button" onMouseDown={(e) => { e.preventDefault(); ask(p); }} className="shrink-0 text-[10.5px] px-2.5 py-1 rounded-full bg-white/[0.05] text-white/55 hover:text-white hover:bg-white/10 transition-colors">
               {p}
             </button>
           ))}
