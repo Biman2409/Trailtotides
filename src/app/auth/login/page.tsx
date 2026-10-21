@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import Logo from "@/components/ui/custom/Logo";
+import { ResendButton } from "@/app/auth/ResendVerification";
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -13,11 +14,14 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(errorParam);
+  // Set when the account exists but its email isn't verified yet
+  const [unverified, setUnverified] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setPending(true);
     setError(null);
+    setUnverified(null);
 
     const fd = new FormData(e.currentTarget);
     const identifier = (fd.get("identifier") as string).trim();
@@ -36,6 +40,7 @@ function LoginForm() {
 
       if (!res.ok || data.error) {
         setError(data.error || "Invalid credentials");
+        if (data.unverified && data.email) setUnverified(data.email);
         setPending(false);
         return;
       }
@@ -45,7 +50,7 @@ function LoginForm() {
       const next = searchParams.get("next");
       const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
       window.location.replace(safeNext);
-    } catch (err) {
+    } catch {
       setError("Something went wrong. Please try again.");
       setPending(false);
     }
@@ -81,6 +86,11 @@ function LoginForm() {
       {error && (
         <div className="mb-5 px-4 py-3 rounded-2xl text-sm font-semibold bg-red-500/10 border border-red-500/20 text-red-400">
           {error}
+          {unverified && (
+            <span className="block mt-1.5 font-medium text-white/60">
+              Didn&apos;t get it? <ResendButton email={unverified} next={searchParams.get("next")} />
+            </span>
+          )}
         </div>
       )}
 

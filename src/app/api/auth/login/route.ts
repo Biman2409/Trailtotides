@@ -42,6 +42,17 @@ export async function POST(request: NextRequest) {
   });
   const tokenData = await tokenRes.json();
 
+  // Accounts must verify their email before they can sign in. Supabase says so itself when
+  // "Confirm email" is on; the email_confirmed_at check covers it either way.
+  const unverified = tokenData.error_code === "email_not_confirmed"
+    || (tokenRes.ok && !tokenData.user?.email_confirmed_at);
+  if (unverified) {
+    return NextResponse.json(
+      { error: "Verify your email to sign in. Check your inbox for the link.", unverified: true, email },
+      { status: 403 }
+    );
+  }
+
   if (!tokenRes.ok || tokenData.error) {
     return NextResponse.json(
       { error: tokenData.error_description || tokenData.error || "Invalid credentials" },

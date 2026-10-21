@@ -7,6 +7,7 @@ import CompareWrapper from "@/components/ui/custom/CompareWrapper";
 import NavigationScrollReset from "@/components/ui/custom/NavigationScrollReset";
 import MobileBottomNav from "@/components/ui/custom/MobileBottomNav";
 import { Toaster } from "@/components/ui/sonner";
+import VerifiedToast from "@/components/VerifiedToast";
 import { ThemeProvider } from "next-themes";
 import { Suspense } from "react";
 
@@ -250,6 +251,7 @@ export default function RootLayout({
           </CompareWrapper>
           <MobileBottomNav />
           <Toaster position="bottom-center" richColors />
+          <VerifiedToast />
         </ThemeProvider>
       </body>
     </html>

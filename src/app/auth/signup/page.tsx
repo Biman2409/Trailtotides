@@ -9,6 +9,7 @@ import Logo from "@/components/ui/custom/Logo";
 import countries from "@/lib/countries.json";
 import TermsModal from "@/components/ui/custom/TermsModal";
 import { AVATARS } from "@/lib/avatars";
+import { CheckInbox } from "@/app/auth/ResendVerification";
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +26,8 @@ export default function SignUpPage() {
   // Where they were headed before signing up (e.g. a group link); read on the client so the
   // page stays static. Only same-site paths are honoured.
   const [next, setNext] = useState<string | null>(null);
+  // Set once the account is created: the page becomes "Check your inbox"
+  const [sentTo, setSentTo] = useState<string | null>(null);
   useEffect(() => {
     const n = new URLSearchParams(window.location.search).get("next");
     if (n && n.startsWith("/") && !n.startsWith("//")) setNext(n);
@@ -62,6 +65,8 @@ export default function SignUpPage() {
     if (selectedAvatarId !== null) {
       formData.set("avatar_id", String(selectedAvatarId));
     }
+    // The verification link brings them back to where they were going
+    if (next) formData.set("next", next);
     const result = await signUp(formData);
 
     if (result?.error) {
@@ -71,13 +76,7 @@ export default function SignUpPage() {
       if (selectedAvatarId !== null) {
         localStorage.setItem("ttt_avatar_id", String(selectedAvatarId));
       }
-      if (next) {
-        // Straight to login, which returns them to where they were going
-        window.location.replace(`/auth/login?next=${encodeURIComponent(next)}&message=${encodeURIComponent("Account created — log in to continue.")}`);
-        return;
-      }
-      setMessage({ type: "success", text: result.success });
-      (e.target as HTMLFormElement).reset();
+      setSentTo(result.email ?? String(formData.get("email")));
       setLoading(false);
     }
   }
@@ -135,6 +134,7 @@ export default function SignUpPage() {
             Back to home
           </Link>
 
+          {sentTo ? <CheckInbox email={sentTo} next={next} onRestart={() => setSentTo(null)} /> : <>
           <div className="mb-4">
             <h1 className="text-3xl font-black text-white mb-1 tracking-tight leading-tight">
               Wild is calling, <span className="text-[#ff5100]">answer it.</span>
@@ -405,6 +405,7 @@ export default function SignUpPage() {
               Log in
             </Link>
           </p>
+          </>}
 
           <div className="mt-3 pt-3 border-t border-white/[0.06]">
             <p className="text-center text-white/20 text-xs font-medium">

@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { X, ArrowRight, GitCompare, Heart, Plus, ChevronDown, Search, LogIn } from "lucide-react";
+import { X, ArrowRight, GitCompare, Heart, Plus, ChevronDown, Search, LogIn, Share2 } from "lucide-react";
+import { toast } from "sonner";
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -185,8 +186,11 @@ function SearchPicker({ onSelect }: { onSelect: (a: Adventure) => void }) {
 
 // The guts of the comparison UI — slot picker row + side-by-side table.
 // Shared between the in-page CompareAdventures section and the global CompareDrawer.
-export default function CompareContent() {
-  const { selected, remove, add } = useCompare();
+// With `fixed`, it shows those adventures read-only (a shared comparison at /compare/<code>).
+export default function CompareContent({ fixed }: { fixed?: Adventure[] } = {}) {
+  const compare = useCompare();
+  const { remove, add } = compare;
+  const selected = fixed ?? compare.selected;
   const [userAce, setUserAce] = useState<ACE | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const router = useRouter();
@@ -202,7 +206,7 @@ export default function CompareContent() {
 
   return (
     <div>
-      {!selected.length && loggedIn === false && (
+      {!fixed && !selected.length && loggedIn === false && (
         <button
           onClick={() => router.push("/auth/login")}
           className="mb-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:opacity-80"
@@ -214,7 +218,7 @@ export default function CompareContent() {
       )}
 
       {/* Slot row */}
-      <div className="grid gap-2 mb-4" style={{ gridTemplateColumns: `repeat(${MAX}, 1fr)` }}>
+      {!fixed && <div className="grid gap-2 mb-4" style={{ gridTemplateColumns: `repeat(${MAX}, 1fr)` }}>
         {selected.map((adventure) => (
           <div key={adventure.id} className="relative rounded-lg overflow-hidden h-14 border" style={{ borderColor: "rgba(255,81,0,0.25)", background: "rgba(255,81,0,0.04)" }}>
             <Image src={adventure.heroImage} alt={adventure.name} fill className="object-cover opacity-40" />
@@ -239,7 +243,7 @@ export default function CompareContent() {
             }
           </div>
         ))}
-      </div>
+      </div>}
 
       {/* Hint when nothing selected */}
       {selected.length === 0 && (
@@ -334,6 +338,64 @@ export default function CompareContent() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {!fixed && selected.length >= 2 && <SaveComparison selected={selected} loggedIn={loggedIn} />}
+    </div>
+  );
+}
+
+// Comparing is open to everyone; keeping a comparison and sharing its link needs an account
+function SaveComparison({ selected, loggedIn }: { selected: Adventure[]; loggedIn: boolean | null }) {
+  const router = useRouter();
+  const [naming, setNaming] = useState(false);
+  const [name, setName] = useState("");
+  const [busy, setBusy] = useState(false);
+  const defaultName = selected.map((a) => a.name.replace(/ (Trek|Ride|Circuit)$/, "")).join(" vs ").slice(0, 60);
+
+  function start() {
+    if (!loggedIn) {
+      toast.error("Log in to save and share comparisons.", {
+        action: { label: "Log in", onClick: () => router.push(`/auth/login?next=${encodeURIComponent(location.pathname)}`) },
+      });
+      return;
+    }
+    setName(defaultName);
+    setNaming(true);
+  }
+
+  async function save() {
+    setBusy(true);
+    const res = await fetch("/api/comparisons", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name.trim() || defaultName, slugs: selected.map((a) => a.slug) }),
+    });
+    setBusy(false);
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.code) { toast.error(data.error ?? "Couldn't save the comparison."); return; }
+    const link = `${location.origin}/compare/${data.code}`;
+    try { await navigator.clipboard.writeText(link); } catch {}
+    setNaming(false);
+    toast.success("Saved. Share link copied.", { description: "Find it any time on your profile.", action: { label: "Open", onClick: () => window.open(link, "_blank") } });
+  }
+
+  return (
+    <div className="mt-3 flex flex-wrap items-center gap-2">
+      {naming ? (
+        <form onSubmit={(e) => { e.preventDefault(); save(); }} className="flex flex-1 min-w-0 items-center gap-2">
+          <input autoFocus value={name} onChange={(e) => setName(e.target.value)} maxLength={60} aria-label="Comparison name"
+            className="flex-1 min-w-0 h-9 px-3 rounded-lg text-xs outline-none focus:ring-1 focus:ring-[#ff5100]/50"
+            style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)" }} />
+          <button type="submit" disabled={busy} className="h-9 px-3.5 rounded-lg text-xs font-bold text-white disabled:opacity-60" style={{ background: "#ff5100" }}>
+            {busy ? "Saving…" : "Save & copy link"}
+          </button>
+          <button type="button" onClick={() => setNaming(false)} className="h-9 px-2 text-xs" style={{ color: "var(--text-tertiary)" }}>Cancel</button>
+        </form>
+      ) : (
+        <button onClick={start} className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg text-xs font-semibold transition-colors hover:text-[#ff5100]"
+          style={{ border: "1px solid var(--border-subtle)", color: "var(--text-secondary)" }}>
+          <Share2 className="w-3.5 h-3.5" /> Save &amp; share this comparison
+        </button>
       )}
     </div>
   );

@@ -4,8 +4,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
-  SlidersHorizontal, Loader2, Compass, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen,
+  SlidersHorizontal, Loader2, Compass, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen, BookmarkPlus,
 } from "lucide-react";
+import { nearFrom } from "@/lib/alerts";
 import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import Navbar from "@/components/layout/Navbar";
 import ChatBubble from "@/components/ChatBubble";
@@ -206,6 +207,9 @@ export default function MapClient() {
     const params = new URLSearchParams(window.location.search);
     setF(filtersFromParams(params));
     if (params.get("sort") && params.get("sort")! in SORT_LABELS) setSort(params.get("sort") as SortKey);
+    // A saved search can carry Near me (near=lat,lng&r=km)
+    const near = nearFrom(params);
+    if (near) { setNearMe({ lat: near.lat, lng: near.lng }); setRadius(near.radius); }
     const slug = params.get("a");
     // Wait a beat for Leaflet to load before flying there
     if (slug && adventures.some((a) => a.slug === slug)) setTimeout(() => select(slug), 400);
@@ -292,6 +296,28 @@ export default function MapClient() {
     );
   }
 
+  // Saving a search needs an account: it's kept for you and can email you new matches
+  async function saveSearch() {
+    if (!loggedIn) {
+      toast.error("Log in to save searches and get alerts.", {
+        action: { label: "Log in", onClick: () => window.location.assign(`/auth/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}`) },
+      });
+      return;
+    }
+    const p = new URLSearchParams();
+    writeFilterParams(p, f);
+    if (nearMe && radius) { p.set("near", `${nearMe.lat.toFixed(2)},${nearMe.lng.toFixed(2)}`); p.set("r", String(radius)); }
+    const parts = [f.types.join(", "), f.states.join(", "), f.months.join(", "), f.diffs.join(", "), f.search && `“${f.search}”`, nearMe && radius ? `within ${radius} km` : ""].filter(Boolean);
+    const res = await fetch("/api/saved-searches", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: (parts.join(" · ") || "My map search").slice(0, 60), query: p.toString() }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) { toast.error(data.error ?? "Couldn't save the search."); return; }
+    track("map_save_search", { filters: panelCount(f) });
+    toast.success("Search saved", { description: "We'll email you when new adventures match it.", action: { label: "View", onClick: () => window.location.assign("/profile") } });
+  }
+
   function toggleShots() {
     if (shotsOn) { setShotsOn(false); setPhotos([]); return; }
     setShotsOn(true);
@@ -362,6 +388,11 @@ export default function MapClient() {
         <button type="button" onClick={showAll} className="font-semibold text-white/60 hover:text-white underline-offset-2 hover:underline">Show all</button>
       )}
       {filtersActive && <button type="button" onClick={clearAll} className="font-semibold text-[#ff9a66] hover:underline">Clear</button>}
+      {(filtersActive || nearMe) && (
+        <button type="button" onClick={saveSearch} className="inline-flex items-center gap-1 font-semibold text-white/60 hover:text-white">
+          <BookmarkPlus className="w-3 h-3" />Save search
+        </button>
+      )}
       {/* Same sort options as Explore (phones get them in the Filters panel) */}
       <label className="hidden md:inline-flex items-center gap-1 ml-auto">
         <span className="sr-only">Sort</span>

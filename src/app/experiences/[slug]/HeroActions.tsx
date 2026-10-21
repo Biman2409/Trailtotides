@@ -27,13 +27,8 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
     return () => listener.subscription.unsubscribe();
   }, []);
 
+  // Compare is open to everyone; only the wishlist needs an account
   function handleCompare() {
-    if (loggedIn === false) {
-      toast.error("Log in to compare adventures.", {
-        action: { label: "Log in", onClick: () => router.push("/auth/login") },
-      });
-      return;
-    }
     if (inCompare) {
       remove(adventure.id);
       toast("Removed from compare");
@@ -57,7 +52,7 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
     if (wasSaved) {
       toast("Removed from wishlist");
     } else {
-      toast.success("Adventure saved to wishlist ♥");
+      toast.success("Adventure saved to wishlist ♥", { description: "We'll email you when its season opens or the price drops." });
     }
   }
 

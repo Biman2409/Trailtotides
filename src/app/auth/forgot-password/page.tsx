@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { resetPassword } from "@/app/auth/actions";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -9,6 +9,11 @@ import Logo from "@/components/ui/custom/Logo";
 export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
+  // An expired or used reset link lands here with ?error= explaining it
+  useEffect(() => {
+    const err = new URLSearchParams(window.location.search).get("error");
+    if (err) setMessage({ type: "error", text: err });
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

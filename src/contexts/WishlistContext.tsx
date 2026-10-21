@@ -4,12 +4,15 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { createClient } from "@/lib/supabase/client";
 import { loadWishlist, saveWishlist } from "@/app/wishlist/actions";
 
+// The wishlist needs an account: signed out, nothing is saved and toggle does nothing,
+// so callers check signedIn and ask the visitor to log in.
 interface WishlistCtx {
   saved: Set<string>;
   isSaved: (slug: string) => boolean;
   toggle: (slug: string) => Promise<void>;
   clearAll: () => Promise<void>;
   loading: boolean;
+  signedIn: boolean;
 }
 
 const WishlistContext = createContext<WishlistCtx>({
@@ -18,6 +21,7 @@ const WishlistContext = createContext<WishlistCtx>({
   toggle: async () => {},
   clearAll: async () => {},
   loading: true,
+  signedIn: false,
 });
 
 export function useWishlist() {
@@ -34,10 +38,6 @@ function lsGet(): Set<string> {
   } catch { return new Set(); }
 }
 
-function lsSet(s: Set<string>) {
-  try { localStorage.setItem(LS_KEY, JSON.stringify([...s])); } catch {}
-}
-
 export function WishlistProvider({ children }: { children: React.ReactNode }) {
   const [saved, setSaved] = useState<Set<string>>(new Set());
   const [userId, setUserId] = useState<string | null>(null);
@@ -52,7 +52,7 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
         // Load from server storage via server action
         const remote = await loadWishlist();
         const remoteSet = new Set(remote);
-        // Merge any guest saves
+        // Merge any guest saves left from when signed-out saving was allowed
         const local = lsGet();
         const merged = local.size > 0 ? new Set([...remoteSet, ...local]) : remoteSet;
         setSaved(merged);
@@ -61,7 +61,7 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
           localStorage.removeItem(LS_KEY);
         }
       } else {
-        setSaved(lsGet());
+        setSaved(new Set());
       }
       setLoading(false);
     }
@@ -79,21 +79,21 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const toggle = useCallback(async (slug: string) => {
-    const isNowSaved = !saved.has(slug);
+    if (!userId) return;
     const next = new Set(saved);
-    if (isNowSaved) next.add(slug); else next.delete(slug);
+    if (next.has(slug)) next.delete(slug); else next.add(slug);
     setSaved(next);
-    if (userId) { await saveWishlist([...next]); } else { lsSet(next); }
+    await saveWishlist([...next]);
   }, [saved, userId]);
 
   const clearAll = useCallback(async () => {
-    const empty = new Set<string>();
-    setSaved(empty);
-    if (userId) { await saveWishlist([]); } else { lsSet(empty); }
+    if (!userId) return;
+    setSaved(new Set());
+    await saveWishlist([]);
   }, [userId]);
 
   return (
-    <WishlistContext.Provider value={{ saved, isSaved: (s) => saved.has(s), toggle, clearAll, loading }}>
+    <WishlistContext.Provider value={{ saved, isSaved: (s) => saved.has(s), toggle, clearAll, loading, signedIn: !!userId }}>
       {children}
     </WishlistContext.Provider>
   );

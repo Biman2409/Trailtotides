@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { X, Heart, BadgeCheck, Star, ArrowRight, ArrowUpRight, GitCompareArrows, Check, Clock, Users } from "lucide-react";
 import { CompassAIMark, MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import type { Adventure, Month } from "@/lib/data";
@@ -35,7 +37,8 @@ export default function PinCard({
   onClose: () => void;
 }) {
   const { isSelected, add, remove, isFull, openDrawer, selected } = useCompare();
-  const { isSaved, toggle } = useWishlist();
+  const { isSaved, toggle, signedIn } = useWishlist();
+  const router = useRouter();
   const g = genreOf(a.type);
   const diff = difficultyOf(a);
   const verified = verifiedOperators(a).sort((x, y) => y.googleRating - x.googleRating);
@@ -44,6 +47,17 @@ export default function PinCard({
   const top = verified[0];
   const comparing = isSelected(a.id);
   const saved = isSaved(a.slug);
+
+  // The wishlist needs an account, same as everywhere else on the site
+  function save() {
+    if (!signedIn) {
+      toast.error("Log in to wishlist this adventure.", {
+        action: { label: "Log in", onClick: () => router.push("/auth/login") },
+      });
+      return;
+    }
+    toggle(a.slug);
+  }
 
   function book() {
     track("map_book_click", { slug: a.slug, operator: top?.name ?? "" });
@@ -60,7 +74,7 @@ export default function PinCard({
           {!inSeason(a, month) && month && <span className="tm-chip text-white/60">Out of season in {month}</span>}
         </div>
         <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
-          <button type="button" onClick={() => toggle(a.slug)} aria-pressed={saved} aria-label={saved ? "Remove from saved" : "Save"} className="tm-iconbtn">
+          <button type="button" onClick={save} aria-pressed={saved} aria-label={saved ? "Remove from saved" : "Save"} className="tm-iconbtn">
             <Heart className="w-3.5 h-3.5" fill={saved ? "#ff5100" : "none"} color={saved ? "#ff5100" : "currentColor"} />
           </button>
           <button type="button" onClick={onClose} aria-label="Close" className="tm-iconbtn"><X className="w-3.5 h-3.5" /></button>

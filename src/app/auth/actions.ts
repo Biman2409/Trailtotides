@@ -2,9 +2,21 @@
 
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { sendPasswordResetEmail } from "@/lib/email";
+import { headers } from "next/headers";
+import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/email";
+import { callbackLink, safeNext } from "@/lib/authLinks";
+import { rateLimit } from "@/lib/rateLimit";
 
-export async function signUp(formData: FormData) {
+const firstName = (full: string) => full.trim().split(/\s+/)[0] || "explorer";
+
+/** Per-IP limit for actions that send email, so a form can't be used to spam inboxes */
+async function emailLimit(kind: string) {
+  const h = await headers();
+  const ip = (h.get("x-forwarded-for") ?? "").split(",")[0].trim() || h.get("x-real-ip") || "unknown";
+  return rateLimit(`${kind}:${ip}`, 5, 15 * 60 * 1000).allowed;
+}
+
+export async function signUp(formData: FormData): Promise<ActionResult> {
   const adminClient = await createAdminClient();
 
   const full_name = formData.get("full_name") as string;
@@ -31,104 +43,92 @@ export async function signUp(formData: FormData) {
     return { error: `The username @${username} is already taken. Please choose another.` };
   }
 
-  // Create user directly via admin — bypasses email confirmation entirely
-  const { data, error: signUpError } = await adminClient.auth.admin.createUser({
+  if (!(await emailLimit("signup"))) return { error: "Too many sign-ups from here. Try again in a few minutes." };
+  const next = safeNext(formData.get("next") as string | null, "/");
+
+  // Creates the account unconfirmed and gives us its one-time verification token. Login is
+  // refused until the emailed link is opened (see /api/auth/login).
+  const { data, error: signUpError } = await adminClient.auth.admin.generateLink({
+    type: "signup",
     email,
     password,
-    email_confirm: true,
-    user_metadata: { full_name, username, phone, ...(avatar_id !== null ? { avatar_id } : {}) },
+    options: { data: { full_name, username, phone, ...(avatar_id !== null ? { avatar_id } : {}) } },
   });
 
-  if (signUpError) {
-    return { error: signUpError.message };
-  }
-
-  return { success: "Account created! You can now log in." };
-}
-
-
-export async function login(formData: FormData) {
-  const supabase = await createClient();
-  const adminClient = await createAdminClient();
-
-  const identifier = (formData.get("email") as string).trim();
-  const password = formData.get("password") as string;
-
-  // Resolve username → email
-  let email = identifier;
-  if (!identifier.includes("@")) {
-    const { data: allUsers } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
-    const match = allUsers?.users.find(
-      (u) => (u.user_metadata?.username ?? "").toLowerCase() === identifier.toLowerCase()
-    );
-    if (!match?.email) return { error: "No account found with that username." };
-    email = match.email;
-  }
-
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return { error: error.message };
-
-  redirect("/");
-}
-
-export async function resetPassword(formData: FormData) {
-  const supabase = await createClient();
-  const adminClient = await createAdminClient();
-  const email = formData.get("email") as string;
-
-  // Get origin for verification link
-  const headersList = await (await import("next/headers")).headers();
-  const host = headersList.get("host");
-  const protocol = headersList.get("x-forwarded-proto") || (host?.includes("localhost") ? "http" : "https");
-  const origin = `${protocol}://${host}`;
-
-  // If we have Resend, use it for more reliable delivery
-  if (process.env.RESEND_API_KEY) {
-    const { data: linkData, error: linkError } = await adminClient.auth.admin.generateLink({
-      type: 'recovery',
-      email: email,
-      options: {
-        redirectTo: `${origin}/auth/callback?next=/auth/reset-password`,
-      }
-    });
-
-    if (!linkError && linkData?.properties?.action_link) {
-      const sendResult = await sendPasswordResetEmail(email, linkData.properties.action_link);
-      if (!sendResult.error) {
-        return { success: "Password reset link sent! Please check your email." };
-      }
-      // Resend's sandbox sender (onboarding@resend.dev) can only deliver to
-      // the Resend account owner's own email until a custom domain is
-      // verified — every other recipient gets a 403 here. Don't report
-      // success when the send actually failed; fall through to Supabase's
-      // built-in email instead of leaving the user stranded.
-      console.error("Resend password reset email failed, falling back to Supabase auth email:", sendResult.error);
+  if (signUpError || !data?.properties?.hashed_token) {
+    if (signUpError && /already|registered|exists/i.test(signUpError.message)) {
+      return { error: "There's already an account with this email. Log in, or reset your password." };
     }
+    return { error: signUpError?.message ?? "Couldn't create the account. Please try again." };
   }
 
-  // Fallback to Supabase built-in
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/auth/callback?next=/auth/reset-password`,
-  });
-
-  if (error) {
-    return { error: error.message };
+  const link = await callbackLink(data.properties.hashed_token, "signup", next);
+  const sent = await sendVerificationEmail(email, link, firstName(full_name));
+  if ("error" in sent) {
+    // Don't leave an account nobody can verify: remove it so they can simply try again
+    console.error("verification email failed:", sent.error);
+    await adminClient.auth.admin.deleteUser(data.user.id);
+    return { error: "We couldn't send the verification email. Please try again in a moment." };
   }
 
-  return { success: "Password reset link sent! Please check your email." };
+  return { success: "Check your inbox", email };
 }
 
-export async function updatePassword(formData: FormData) {
+/** Login says an account isn't verified yet: send a fresh link (works once, like the first) */
+export async function resendVerification(email: string, next?: string) {
+  const generic = { success: "If that account still needs verifying, a new link is on its way." };
+  if (!email || !(await emailLimit("verify"))) return generic;
+
+  const adminClient = await createAdminClient();
+  // A magic link for an unverified account verifies it when opened
+  const { data, error } = await adminClient.auth.admin.generateLink({ type: "magiclink", email });
+  if (error || !data?.properties?.hashed_token || data.user.email_confirmed_at) return generic;
+
+  const link = await callbackLink(data.properties.hashed_token, "magiclink", safeNext(next, "/"));
+  const sent = await sendVerificationEmail(email, link, firstName(String(data.user.user_metadata?.full_name ?? "")));
+  if ("error" in sent) console.error("verification resend failed:", sent.error);
+  return generic;
+}
+
+
+type ActionResult = { success?: string; error?: string; expired?: boolean; email?: string };
+
+export async function resetPassword(formData: FormData): Promise<ActionResult> {
+  const email = String(formData.get("email") ?? "").trim();
+  // Same answer whether or not there's an account, so the form can't be used to check emails
+  const success = { success: "If there's an account for that email, a reset link is on its way. It works for 1 hour." };
+  if (!email) return { error: "Enter your email." };
+  if (!(await emailLimit("reset"))) return { error: "Too many requests. Try again in a few minutes." };
+
+  const adminClient = await createAdminClient();
+  const { data, error } = await adminClient.auth.admin.generateLink({ type: "recovery", email });
+  if (error || !data?.properties?.hashed_token) return success;
+
+  const link = await callbackLink(data.properties.hashed_token, "recovery", "/auth/reset-password");
+  const sent = await sendPasswordResetEmail(email, link);
+  if ("error" in sent) {
+    console.error("password reset email failed:", sent.error);
+    return { error: "We couldn't send the email right now. Please try again in a moment." };
+  }
+  return success;
+}
+
+export async function updatePassword(formData: FormData): Promise<ActionResult> {
   const supabase = await createClient();
   const password = formData.get("password") as string;
+
+  if (!password || password.length < 8) return { error: "Use at least 8 characters." };
+
+  // The reset link signed them in; without that session the link was old or already used
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "This reset link has expired or was already used. Ask for a new one.", expired: true };
 
   const { error } = await supabase.auth.updateUser({ password });
-
   if (error) {
-    return { error: error.message };
+    return { error: /different from the old/i.test(error.message) ? "Pick a password you haven't used here before." : error.message };
   }
 
-  return { success: "Password updated successfully!" };
+  return { success: "Password updated. You're signed in." };
 }
 
 export async function logout() {

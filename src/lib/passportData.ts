@@ -1,5 +1,6 @@
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { findUserByUsername } from "@/lib/resolveUsername";
 import { adventures, type Adventure } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import { getAchievements } from "@/lib/achievements";
@@ -85,11 +86,17 @@ const MAP_W = PASSPORT_MAP_W, MAP_H = PASSPORT_MAP_H;
  * two never drift out of sync. `demoMode` is only honored outside production
  * ("few" | "many" | "empty") for local preview without needing real trip-log
  * data. */
-export async function computePassportData(origin: string, demoMode?: string | null): Promise<PassportData | null> {
-  const DEBUG_DEMO = process.env.NODE_ENV !== "production" ? demoMode : null;
+/** The signed-in user's passport, or with `publicUserId` someone else's (callers check they made it public) */
+export async function computePassportData(origin: string, demoMode?: string | null, publicUserId?: string): Promise<PassportData | null> {
+  const DEBUG_DEMO = process.env.NODE_ENV !== "production" && !publicUserId ? demoMode : null;
 
-  const supabase = await createClient();
-  const { data: { user: realUser } } = await supabase.auth.getUser();
+  let realUser;
+  if (publicUserId) {
+    realUser = (await (await createAdminClient()).auth.admin.getUserById(publicUserId)).data.user;
+  } else {
+    const supabase = await createClient();
+    realUser = (await supabase.auth.getUser()).data.user;
+  }
   if (!realUser && !DEBUG_DEMO) return null;
   const user = realUser ?? {
     id: "demo-user-id",
@@ -194,7 +201,8 @@ export async function computePassportData(origin: string, demoMode?: string | nu
 
   let reviewBySlug = new Map<string, string>();
   if (!DEBUG_DEMO && stampsRaw.length > 0) {
-    const { data: myReviews } = await supabase
+    // Reviews are public; the service client also reads them for a shared passport
+    const { data: myReviews } = await admin
       .from("reviews")
       .select("adventure_slug, body")
       .eq("user_id", user.id)
@@ -238,4 +246,14 @@ export async function computePassportData(origin: string, demoMode?: string | nu
     logPages,
     stamps, stampOverflow,
   };
+}
+
+/** The account behind /passport/<username>, if it exists and its owner made the passport public */
+export async function publicPassportUserId(username: string): Promise<string | undefined> {
+  if (!/^[a-z0-9_.-]{3,20}$/i.test(username)) return undefined;
+  const admin = await createAdminClient();
+  const match = await findUserByUsername(admin, username).catch(() => null);
+  if (!match) return undefined;
+  const { data } = await admin.auth.admin.getUserById(match.id);
+  return data.user && data.user.user_metadata?.passport_public === true ? match.id : undefined;
 }

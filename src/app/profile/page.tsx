@@ -14,6 +14,7 @@ import AvatarPicker from "./AvatarPicker";
 import TrophyCabinet from "./TrophyCabinet";
 import ExpeditionProfile from "./ExpeditionProfile";
 import PassportBook from "./PassportBook";
+import AccountExtras from "./AccountExtras";
 import { getOperatorProfile, getSubmissionsForOperator } from "@/app/auth/operator-actions";
 import { adventures } from "@/lib/data";
 import DashboardClient from "@/app/auth/operator-dashboard/DashboardClient";
@@ -289,6 +290,15 @@ export default async function ProfilePage() {
                     <WishlistSection />
                   </div>
                 </div>
+              </div>
+
+              {/* Saved: comparisons, map searches, quote requests */}
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-1.5 h-5 rounded-full" style={{ background: "#ff5100" }} />
+                  <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>Saved</h2>
+                </div>
+                <AccountExtras />
               </div>
             </>
           )}

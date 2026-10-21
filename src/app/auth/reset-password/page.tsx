@@ -9,7 +9,7 @@ import Logo from "@/components/ui/custom/Logo";
 export default function ResetPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
+  const [message, setMessage] = useState<{ type: "error" | "success"; text: string; expired?: boolean } | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -19,7 +19,7 @@ export default function ResetPasswordPage() {
     const result = await updatePassword(formData);
     
     if (result?.error) {
-      setMessage({ type: "error", text: result.error });
+      setMessage({ type: "error", text: result.error, expired: result.expired });
     } else if (result?.success) {
       setMessage({ type: "success", text: result.success });
       (e.target as HTMLFormElement).reset();
@@ -87,7 +87,11 @@ export default function ResetPasswordPage() {
                     : "bg-green-500/10 border border-green-500/20 text-green-400"
                 }`}
               >
-                {message.text}
+                <span>
+                  {message.text}{" "}
+                  {message.expired && <Link href="/auth/forgot-password" className="underline font-bold">Get a new link</Link>}
+                  {message.type === "success" && <Link href="/profile" className="underline font-bold">Go to your profile</Link>}
+                </span>
               </div>
             )}
 

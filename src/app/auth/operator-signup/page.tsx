@@ -83,7 +83,7 @@ export default function OperatorSignupPage() {
       return;
     }
 
-    setMessage({ type: "success", text: result?.success ?? "Account created! You can now log in." });
+    setMessage({ type: "success", text: result?.success ?? "Check your inbox for the verification link." });
     (e.target as HTMLFormElement).reset();
     setTermsAccepted(false);
     removeLogo();
@@ -296,6 +296,7 @@ export default function OperatorSignupPage() {
                     className="w-20 h-20 rounded-2xl overflow-hidden shrink-0 flex items-center justify-center"
                     style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}
                   >
+                    {/* eslint-disable-next-line @next/next/no-img-element -- local preview of a file not uploaded yet */}
                     <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain p-1" />
                   </div>
                   <div className="flex-1 min-w-0">

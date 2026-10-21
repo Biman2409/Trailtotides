@@ -12,7 +12,7 @@ const MAX_PAGES = 20; // up to 20,000 users scanned
 export async function findUserByUsername(
   adminClient: SupabaseClient,
   username: string
-): Promise<{ email: string | undefined } | null> {
+): Promise<{ id: string; email: string | undefined } | null> {
   const lower = username.toLowerCase();
 
   for (let page = 1; page <= MAX_PAGES; page++) {
@@ -22,7 +22,7 @@ export async function findUserByUsername(
     const match = data.users.find(
       (u) => (u.user_metadata?.username ?? "").toLowerCase() === lower
     );
-    if (match) return { email: match.email };
+    if (match) return { id: match.id, email: match.email };
 
     if (data.users.length < 1000) break;
   }
