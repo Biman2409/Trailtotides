@@ -114,7 +114,7 @@ export default function MapClient() {
     fetch("/api/match-groups").then((r) => (r.ok ? r.json() : null)).then((d) => setGroups(d?.groups ?? [])).catch(() => {});
   }, [loggedIn]);
 
-  function chooseGroup(code: string) {
+  const chooseGroup = useCallback((code: string) => {
     if (!code) { setGroup(null); return; }
     setGroupLoading(true);
     fetch(`/api/match-groups/${code}`)
@@ -125,7 +125,16 @@ export default function MapClient() {
       })
       .catch(() => toast.error("Couldn't load that group."))
       .finally(() => setGroupLoading(false));
-  }
+  }, []);
+
+  // /map?group=<code> (from a Group Match page) opens rated for that group
+  const groupFromLink = useRef(false);
+  useEffect(() => {
+    if (!loggedIn || groupFromLink.current) return;
+    groupFromLink.current = true;
+    const code = new URLSearchParams(window.location.search).get("group");
+    if (code && /^[0-9a-f]{12}$/.test(code)) chooseGroup(code);
+  }, [loggedIn, chooseGroup]);
 
   // ── Derived ─────────────────────────────────────────────────────────────────
 

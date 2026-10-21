@@ -49,3 +49,11 @@ export function aceToLevels(ace: ACE): number[] {
 export function levelsToAce(levels: number[]): ACE {
   return Object.fromEntries(AXES.map((ax, i) => [ax, levels[i] ?? 1])) as unknown as ACE;
 }
+
+/** An adventure on the group wishlist, with each current member's vote (1 = I'm in, -1 = not for me) */
+export interface GroupPick {
+  slug: string;
+  addedBy: string;
+  createdAt: string;
+  votes: Record<string, 1 | -1>;
+}

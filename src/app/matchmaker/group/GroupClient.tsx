@@ -1,18 +1,21 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Users, Link2, Check, X, ArrowRight, UserPlus, Share2, RefreshCw, LogOut, Lock, Crown, ChevronRight, Save } from "lucide-react";
+import { Users, Link2, Check, X, ArrowRight, UserPlus, Share2, RefreshCw, LogOut, Lock, Crown, ChevronRight, Save, Map as MapIcon, ThumbsUp, ThumbsDown, Plus, Heart } from "lucide-react";
+import Image from "next/image";
 import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import { adventures } from "@/lib/data";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
 import type { ACE } from "@/lib/ace";
 import {
-  AXIS_LABEL, MAX_GROUP, PENDING_GROUP_KEY, bucketFor, groupMatches, memberTag,
+  AXES, AXIS_LABEL, MAX_GROUP, PENDING_GROUP_KEY, bucketFor, groupFloor, groupMatches, matchScore, memberTag,
   type GroupMember, type GroupRow,
 } from "@/lib/fitness";
-import { aceToLevels, type GroupPreview, type GroupSummary, type StoredGroup } from "@/lib/matchGroups";
+import { TIER_LIST } from "@/lib/tiers";
+import ACERadar from "@/components/ui/custom/ACERadar";
+import { aceToLevels, type GroupPick, type GroupPreview, type GroupSummary, type StoredGroup } from "@/lib/matchGroups";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
 
@@ -73,8 +76,10 @@ export default function GroupClient({ viewer, view }: { viewer: { id: string; na
   }
 
   function quizThenReturn() {
-    // Results show a "Your group is waiting" card that brings them back here
-    try { localStorage.setItem(PENDING_GROUP_KEY, window.location.pathname + window.location.search); } catch {}
+    // Results show a "Your group is waiting" card; from an invite it comes back with ?join=1,
+    // which joins straight away so a friend never has to find the button again
+    const back = window.location.pathname.startsWith("/matchmaker/group/") ? `${window.location.pathname}?join=1` : window.location.pathname + window.location.search;
+    try { localStorage.setItem(PENDING_GROUP_KEY, back); } catch {}
     router.push("/matchmaker?mode=quick");
   }
 
@@ -209,14 +214,29 @@ function LegacyView({ ctx, members }: { ctx: Ctx; members: GroupMember[] }) {
 }
 
 function InviteView({ ctx, code, preview }: { ctx: Ctx; code: string; preview: GroupPreview | null }) {
+  const joining = useRef(false);
   function join() {
-    if (!ctx.ace) return;
+    if (!ctx.ace || joining.current) return;
+    joining.current = true;
     const ace = ctx.ace;
     return ctx.run(async () => {
-      await api(`/api/match-groups/${code}/join`, "POST", { displayName: ctx.displayName(), ace });
-      ctx.router.refresh();
+      try {
+        await api(`/api/match-groups/${code}/join`, "POST", { displayName: ctx.displayName(), ace });
+        ctx.router.replace(`/matchmaker/group/${code}`);
+        ctx.router.refresh();
+      } finally { joining.current = false; }
     });
   }
+
+  // Back from the assessment (?join=1) with a profile: join without another click
+  const full = !!preview && preview.memberCount >= MAX_GROUP;
+  const autoJoin = useRef(false);
+  useEffect(() => {
+    if (autoJoin.current || !ctx.ready || !ctx.ace || !preview || full) return;
+    if (new URLSearchParams(window.location.search).get("join") !== "1") return;
+    autoJoin.current = true;
+    join();
+  });
 
   if (!preview) {
     return (
@@ -232,7 +252,11 @@ function InviteView({ ctx, code, preview }: { ctx: Ctx; code: string; preview: G
     );
   }
 
-  const full = preview.memberCount >= MAX_GROUP;
+  const steps = [
+    { label: `Signed in as ${ctx.viewer.name || "you"}`, done: true },
+    { label: ctx.ace ? "Your fitness profile is ready" : "Take the 1-minute fitness check", done: !!ctx.ace },
+    { label: "Join and see what you can all do", done: false },
+  ];
   return (
     <Shell step={1} subtitle="You've been invited to a private group. Join to see everyone's match — members only see the eight capability levels, never health answers.">
       <Panel className="mt-5">
@@ -241,6 +265,18 @@ function InviteView({ ctx, code, preview }: { ctx: Ctx; code: string; preview: G
         <p className="text-sm mt-1 tabular-nums" style={{ color: "var(--text-secondary)" }}>
           {preview.ownerName ? `Started by ${preview.ownerName} · ` : ""}{preview.memberCount} / {MAX_GROUP} people
         </p>
+        <ol className="mt-5 grid sm:grid-cols-3 gap-2">
+          {steps.map((st, i) => (
+            <li key={st.label} className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[13px] font-semibold"
+              style={{ background: "var(--bg-card)", border: `1px solid ${st.done ? "rgba(16,185,129,0.35)" : "var(--border-subtle)"}`, color: st.done ? "var(--text-primary)" : "var(--text-secondary)" }}>
+              <span className="w-6 h-6 rounded-full grid place-items-center text-[11px] font-bold shrink-0"
+                style={{ background: st.done ? "rgba(16,185,129,0.15)" : "rgba(255,81,0,0.12)", color: st.done ? "#10b981" : "#ff7d47" }}>
+                {st.done ? <Check className="w-3.5 h-3.5" /> : i + 1}
+              </span>
+              {st.label}
+            </li>
+          ))}
+        </ol>
         <div className="mt-5 pt-5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
           {full ? (
             <p className="text-sm" style={{ color: "var(--text-secondary)" }}>This group is full ({MAX_GROUP} people). Ask the owner to make room, or start a new group.</p>
@@ -289,6 +325,8 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
     return () => { clearInterval(t); document.removeEventListener("visibilitychange", refresh); };
   }, [router]);
 
+  const picks = useGroupPicks(group.code);
+
   const isNew = (joinedAt: string, userId: string) => !!lastSeen && userId !== viewer.id && joinedAt > lastSeen;
   const newcomers = group.members.filter((m) => isNew(m.joinedAt, m.userId)).map((m) => m.name);
 
@@ -327,7 +365,7 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
   };
 
   async function share() {
-    const text = `Join "${group.name}" on Trail to Tides — add your fitness profile and we'll see which adventures we're all ready for.`;
+    const text = `Join "${group.name}" on Trail to Tides: sign in, take the 1-minute fitness check, and we'll see which adventures we can all do together.`;
     if (navigator.share) {
       try { await navigator.share({ title: "Group Match", text, url: inviteUrl }); return; } catch { /* dismissed — fall through to copy */ }
     }
@@ -397,7 +435,7 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
           <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>
             {group.members.length >= MAX_GROUP
               ? `The group is full (${MAX_GROUP} people).`
-              : "Send this link. Each friend signs in, joins with their profile, and appears here."}
+              : "Send this link. Each friend signs in, takes the 1-minute fitness check, and joins. They appear here as soon as they do."}
           </p>
           <button
             onClick={share}
@@ -426,7 +464,9 @@ function StoredView({ ctx, group }: { ctx: Ctx; group: StoredGroup }) {
         </aside>
       </div>
 
-      <GroupResults members={members} />
+      <GroupCapability members={members} meIndex={group.members.findIndex((m) => m.userId === viewer.id)} />
+      <GroupWishlist group={group} viewerId={viewer.id} members={members} picks={picks} />
+      <GroupResults members={members} code={group.code} pick={{ picked: picks.slugs, onPick: picks.add }} />
     </Shell>
   );
 }
@@ -572,9 +612,228 @@ function listNames(names: string[]) {
   return names.length <= 1 ? names.join("") : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
 }
 
+// ─── Group capability ────────────────────────────────────────────────────────
+
+/**
+ * The group as one profile: on each capability it can go as far as its least-ready member,
+ * so the radar is the group's floor, with your own shape over it. Each row says who sets it.
+ */
+function GroupCapability({ members, meIndex }: { members: GroupMember[]; meIndex: number }) {
+  const { floor, average, setBy } = useMemo(() => groupFloor(members), [members]);
+  if (members.length < 2) return null;
+  const total = AXES.reduce((n, ax) => n + floor[ax], 0);
+  const tier = [...TIER_LIST].reverse().find((t) => total >= t.minScore) ?? TIER_LIST[0];
+  const me = meIndex >= 0 ? members[meIndex] : null;
+  // The capability holding the group back most: lowest floor, then furthest below the average
+  const limiting = [...AXES].sort((a, b) => floor[a] - floor[b] || (floor[a] - average[a]) - (floor[b] - average[b]))[0];
+  const names = (idx: number[]) => listNames(idx.map((i) => members[i].name));
+
+  return (
+    <section className="mt-12">
+      <h2 className="t-text text-2xl font-bold tracking-tight">Your group&apos;s capability</h2>
+      <p className="text-sm mt-1 mb-6 max-w-2xl" style={{ color: "var(--text-secondary)" }}>
+        A group moves at its least-ready member, so on each capability this is as far as all {members.length} of you can go together.
+      </p>
+      <div className="grid lg:grid-cols-[300px_1fr] gap-5">
+        <Panel className="flex flex-col items-center text-center">
+          <ACERadar ace={floor} size={230} showLabels userAce={me?.ace} userColor={SEAT_COLORS[meIndex % SEAT_COLORS.length]} />
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] mt-3" style={{ color: "var(--text-tertiary)" }}>Group rank</p>
+          <p className="text-xl font-bold mt-0.5" style={{ color: tier.color }}>{tier.label}</p>
+          <p className="text-xs tabular-nums" style={{ color: "var(--text-tertiary)" }}>{total}/40 together{me ? " · your shape is the outline" : ""}</p>
+        </Panel>
+        <Panel>
+          <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
+            Holding the group back most: <b className="t-text">{AXIS_LABEL[limiting]}</b> ({floor[limiting]}/5, set by {names(setBy[limiting])}).
+          </p>
+          <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-3">
+            {AXES.map((ax) => (
+              <li key={ax} className="min-w-0">
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className="text-[13px] font-semibold t-text">{AXIS_LABEL[ax]}</span>
+                  <span className="text-xs tabular-nums" style={{ color: "var(--text-tertiary)" }}>
+                    <b className="t-text">{floor[ax]}</b>/5 · avg {average[ax].toFixed(1)}
+                  </span>
+                </div>
+                <div className="flex gap-1 mt-1.5" aria-hidden>
+                  {[1, 2, 3, 4, 5].map((lvl) => (
+                    <span key={lvl} className="flex-1 h-1.5 rounded-full" style={{ background: lvl <= floor[ax] ? "#ff7d47" : lvl <= Math.round(average[ax]) ? "rgba(255,125,71,0.28)" : "var(--border-subtle)" }} />
+                  ))}
+                </div>
+                <p className="text-[11px] mt-1 truncate" style={{ color: "var(--text-tertiary)" }}>
+                  {setBy[ax].length === members.length ? "Everyone level" : <>Set by {setBy[ax].map((i, k) => (
+                    <span key={i}>{k > 0 && ", "}<span style={{ color: SEAT_COLORS[i % SEAT_COLORS.length] }}>{members[i].name}</span></span>
+                  ))}</>}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Panel>
+      </div>
+    </section>
+  );
+}
+
+// ─── Group wishlist ──────────────────────────────────────────────────────────
+
+type Picks = ReturnType<typeof useGroupPicks>;
+
+/** The group's shared wishlist: load it, keep it fresh while the page is open, and change it */
+function useGroupPicks(code: string) {
+  const [list, setList] = useState<GroupPick[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const url = `/api/match-groups/${code}/picks`;
+
+  useEffect(() => {
+    let alive = true;
+    const load = () => {
+      if (document.visibilityState !== "visible") return;
+      fetch(url).then((r) => (r.ok ? r.json() : null)).then((d) => { if (alive && d) setList(d.picks); }).catch(() => {});
+    };
+    load();
+    const t = setInterval(load, 30_000);
+    document.addEventListener("visibilitychange", load);
+    return () => { alive = false; clearInterval(t); document.removeEventListener("visibilitychange", load); };
+  }, [url]);
+
+  const slugs = useMemo(() => new Set((list ?? []).map((p) => p.slug)), [list]);
+  const change = (method: string, body?: unknown, query = "") => {
+    setError(null);
+    return api(url + query, method, body)
+      .then((d: { picks: GroupPick[] }) => setList(d.picks))
+      .catch((e) => setError(e instanceof Error ? e.message : String(e)));
+  };
+  return {
+    list,
+    error,
+    slugs,
+    add: (slug: string) => { change("POST", { slug }); },
+    vote: (slug: string, vote: 1 | -1 | 0) => { change("PATCH", { slug, vote }); },
+    remove: (slug: string) => { change("DELETE", undefined, `?slug=${encodeURIComponent(slug)}`); },
+  };
+}
+
+/**
+ * Adventures the group is considering, each with everyone's vote. Sorted by how many are in,
+ * then by fewest "not for me", then by how ready the whole group is for it.
+ */
+function GroupWishlist({ group, viewerId, members, picks }: { group: StoredGroup; viewerId: string; members: GroupMember[]; picks: Picks }) {
+  const [adding, setAdding] = useState("");
+  const seat = (userId: string) => group.members.findIndex((m) => m.userId === userId);
+
+  const rows = (picks.list ?? []).flatMap((p) => {
+    const adventure = adventures.find((a) => a.slug === p.slug);
+    if (!adventure) return [];
+    const votes = Object.entries(p.votes);
+    return [{
+      p,
+      adventure,
+      yes: votes.filter(([, v]) => v === 1).map(([u]) => u),
+      no: votes.filter(([, v]) => v === -1).map(([u]) => u),
+      mine: p.votes[viewerId] ?? 0,
+      // How ready the whole group is: its least-ready member's match
+      fit: members.length ? Math.min(...members.map((m) => matchScore(m.ace, adventure))) : 0,
+    }];
+  }).sort((a, b) => b.yes.length - a.yes.length || a.no.length - b.no.length || b.fit - a.fit);
+
+  const options = adventures.filter((a) => !picks.slugs.has(a.slug)).sort((a, b) => a.name.localeCompare(b.name));
+  const submit = () => {
+    const a = adventures.find((x) => x.name.toLowerCase() === adding.trim().toLowerCase());
+    if (!a) return;
+    picks.add(a.slug);
+    setAdding("");
+  };
+
+  return (
+    <section className="mt-12">
+      <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
+        <div>
+          <h2 className="t-text text-2xl font-bold tracking-tight flex items-center gap-2"><Heart className="w-5 h-5 text-[#ff5100]" /> Group wishlist</h2>
+          <p className="text-sm mt-1 max-w-2xl" style={{ color: "var(--text-secondary)" }}>
+            Suggest adventures and vote. The one most of you are in for rises to the top.
+          </p>
+        </div>
+        <form onSubmit={(e) => { e.preventDefault(); submit(); }} className="flex items-center gap-2 w-full sm:w-auto">
+          <input list="group-pick-options" value={adding} onChange={(e) => setAdding(e.target.value)} placeholder="Suggest an adventure…" aria-label="Suggest an adventure"
+            className="flex-1 min-w-0 sm:w-64 px-3.5 py-2.5 rounded-xl text-sm" style={{ background: "var(--bg-card-hover)", border: "1px solid var(--border-default)", color: "var(--text-primary)", outline: "none" }} />
+          <datalist id="group-pick-options">{options.map((a) => <option key={a.slug} value={a.name} />)}</datalist>
+          <PrimaryButton onClick={submit}><Plus className="w-4 h-4" /> Add</PrimaryButton>
+        </form>
+      </div>
+      <ErrorLine error={picks.error} />
+
+      {picks.list === null ? <Skeleton /> : rows.length === 0 ? (
+        <Panel>
+          <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
+            Nothing here yet. Suggest an adventure above, or tap <b className="t-text">+ Wishlist</b> on any match below.
+          </p>
+        </Panel>
+      ) : (
+        <ul className="flex flex-col gap-3">
+          {rows.map((r, i) => {
+            const b = bucketFor(r.fit);
+            const waiting = group.members.length - r.yes.length - r.no.length;
+            const canRemove = r.p.addedBy === viewerId || group.ownerId === viewerId;
+            const top = i === 0 && r.yes.length > 0;
+            return (
+              <li key={r.p.slug} className="flex flex-col sm:flex-row sm:items-center gap-3 rounded-2xl p-3"
+                style={{ background: "var(--bg-surface)", border: `1px solid ${top ? "rgba(255,81,0,0.45)" : "var(--border-subtle)"}` }}>
+                <Link href={`/experiences/${r.adventure.slug}`} className="flex items-center gap-3 flex-1 min-w-0">
+                  <span className="relative w-20 h-14 rounded-xl overflow-hidden shrink-0">
+                    <Image src={r.adventure.heroImage} alt="" fill sizes="80px" className="object-cover" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="flex items-center gap-1.5 min-w-0">
+                      {top && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0" style={{ background: "rgba(255,81,0,0.14)", color: "#ff7d47" }}>Group favourite</span>}
+                      <span className="text-sm font-semibold t-text truncate">{r.adventure.name}</span>
+                    </span>
+                    <span className="block text-[11px] mt-0.5" style={{ color: b.color }}>
+                      {r.fit >= 80 ? "Everyone ready" : r.fit >= 55 ? "A stretch for someone" : "Not yet for everyone"} · lowest {r.fit}%
+                    </span>
+                    <span className="flex items-center gap-1 mt-1.5 flex-wrap">
+                      {r.yes.map((u) => <Avatar key={u} name={group.members[seat(u)]?.name ?? "?"} color={SEAT_COLORS[Math.max(0, seat(u)) % SEAT_COLORS.length]} />)}
+                      <span className="text-[11px] tabular-nums ml-0.5" style={{ color: "var(--text-tertiary)" }}>
+                        {r.yes.length} in{r.no.length ? ` · ${r.no.length} not for me` : ""}{waiting > 0 ? ` · ${waiting} to vote` : ""}
+                      </span>
+                    </span>
+                  </span>
+                </Link>
+                <span className="flex items-center gap-1.5 shrink-0">
+                  <VoteButton on={r.mine === 1} onClick={() => picks.vote(r.p.slug, r.mine === 1 ? 0 : 1)} tone="#10b981"><ThumbsUp className="w-3.5 h-3.5" /> I&apos;m in</VoteButton>
+                  <VoteButton on={r.mine === -1} onClick={() => picks.vote(r.p.slug, r.mine === -1 ? 0 : -1)} tone="#f87171"><ThumbsDown className="w-3.5 h-3.5" /> Not for me</VoteButton>
+                  {canRemove && <IconButton onClick={() => picks.remove(r.p.slug)} label={`Remove ${r.adventure.name}`}><X className="w-3.5 h-3.5" /></IconButton>}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+function Avatar({ name, color }: { name: string; color: string }) {
+  return (
+    <span title={name} className="w-5 h-5 rounded-full grid place-items-center text-[10px] font-bold" style={{ background: `${color}26`, color }}>
+      {name.charAt(0).toUpperCase()}
+    </span>
+  );
+}
+
+function VoteButton({ on, onClick, tone, children }: { on: boolean; onClick: () => void; tone: string; children: ReactNode }) {
+  return (
+    <button type="button" onClick={onClick} aria-pressed={on}
+      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-xs font-semibold transition-colors"
+      style={{ background: on ? `${tone}22` : "var(--bg-card)", border: `1px solid ${on ? `${tone}88` : "var(--border-subtle)"}`, color: on ? tone : "var(--text-secondary)" }}>
+      {children}
+    </button>
+  );
+}
+
 // ─── Results ─────────────────────────────────────────────────────────────────
 
-function GroupResults({ members }: { members: GroupMember[] }) {
+type PickProps = { picked: Set<string>; onPick: (slug: string) => void };
+
+function GroupResults({ members, code, pick }: { members: GroupMember[]; code?: string; pick?: PickProps }) {
   const { everyone, someStretch } = useMemo(
     () => (members.length >= 2 ? groupMatches(members, adventures) : { everyone: [], someStretch: [] }),
     [members]
@@ -591,14 +850,25 @@ function GroupResults({ members }: { members: GroupMember[] }) {
   return (
     <>
       <section className="mt-12">
-        <h2 className="t-text text-2xl font-bold tracking-tight">Everyone&apos;s ready <span className="text-emerald-400 tabular-nums">({everyone.length})</span></h2>
-        <p className="text-sm mt-1 mb-6" style={{ color: "var(--text-secondary)" }}>All {members.length} of you are at 80% match or higher.</p>
+        <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
+          <div>
+            <h2 className="t-text text-2xl font-bold tracking-tight">Everyone&apos;s ready <span className="text-emerald-400 tabular-nums">({everyone.length})</span></h2>
+            <p className="text-sm mt-1" style={{ color: "var(--text-secondary)" }}>All {members.length} of you are at 80% match or higher.</p>
+          </div>
+          {/* The map rates every adventure for this group, so you can see what's near and when */}
+          {code && (
+            <Link href={`/map?group=${code}`} className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[13px] font-semibold transition-colors hover:bg-[var(--bg-card-hover)]"
+              style={{ border: "1px solid var(--border-default)", color: "var(--text-primary)" }}>
+              <MapIcon className="w-4 h-4 text-[#5fb873]" /> See them on the map
+            </Link>
+          )}
+        </div>
         {everyone.length === 0 ? (
           <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>No adventure fits everyone comfortably yet — check the stretch list below.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {everyone.slice(0, 9).map((r) => (
-              <AdventureCard key={r.adventure.id} adventure={r.adventure} badge={<GroupNote row={r} members={members} />} />
+              <AdventureCard key={r.adventure.id} adventure={r.adventure} badge={<GroupNote row={r} members={members} pick={pick} />} />
             ))}
           </div>
         )}
@@ -610,7 +880,7 @@ function GroupResults({ members }: { members: GroupMember[] }) {
           <p className="text-sm mt-1 mb-6" style={{ color: "var(--text-secondary)" }}>Possible if the person it&apos;s a stretch for trains for it first — each card says who and what.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {someStretch.slice(0, 6).map((r) => (
-              <AdventureCard key={r.adventure.id} adventure={r.adventure} badge={<GroupNote row={r} members={members} />} />
+              <AdventureCard key={r.adventure.id} adventure={r.adventure} badge={<GroupNote row={r} members={members} pick={pick} />} />
             ))}
           </div>
         </section>
@@ -620,7 +890,8 @@ function GroupResults({ members }: { members: GroupMember[] }) {
 }
 
 /** Each member's match as a small coloured bar, and — when it's a stretch — who and what */
-function GroupNote({ row, members }: { row: GroupRow; members: GroupMember[] }) {
+function GroupNote({ row, members, pick }: { row: GroupRow; members: GroupMember[]; pick?: PickProps }) {
+  const onList = !!pick?.picked.has(row.adventure.slug);
   const b = bucketFor(row.min);
   const weakest = members[row.weakest];
   const gaps = row.weakestGaps.slice(0, 2).map((g) => `${AXIS_LABEL[g.axis]} +${g.need - g.have}`).join(", ");
@@ -633,10 +904,19 @@ function GroupNote({ row, members }: { row: GroupRow; members: GroupMember[] }) 
           </span>
         ))}
       </span>
-      <span className="text-[10px] font-semibold leading-snug" style={{ color: b.color }}>
-        {row.min >= 80
-          ? <>Everyone ready · lowest {row.min}%</>
-          : <>Waiting on {weakest.name} ({row.min}%){gaps ? ` — ${gaps}` : ""}</>}
+      <span className="flex items-center justify-between gap-2">
+        <span className="text-[10px] font-semibold leading-snug min-w-0 truncate" style={{ color: b.color }}>
+          {row.min >= 80
+            ? <>Everyone ready · lowest {row.min}%</>
+            : <>Waiting on {weakest.name} ({row.min}%){gaps ? ` — ${gaps}` : ""}</>}
+        </span>
+        {pick && (
+          <button type="button" onClick={() => { if (!onList) pick.onPick(row.adventure.slug); }} disabled={onList}
+            className="shrink-0 inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full transition-colors disabled:cursor-default"
+            style={{ background: onList ? "rgba(16,185,129,0.15)" : "rgba(255,81,0,0.12)", color: onList ? "#10b981" : "#ff7d47" }}>
+            {onList ? <><Check className="w-2.5 h-2.5" /> On wishlist</> : <><Plus className="w-2.5 h-2.5" /> Wishlist</>}
+          </button>
+        )}
       </span>
     </span>
   );

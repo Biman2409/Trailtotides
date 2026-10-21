@@ -153,3 +153,20 @@ export function groupMatches(members: GroupMember[], all: Adventure[]) {
   const someStretch = rows.filter((r) => r.min >= 55 && r.min < 80).sort((x, y) => y.min - x.min);
   return { everyone, someStretch };
 }
+
+/**
+ * What the group can do together on each capability: the lowest level in the group (a group
+ * moves at its slowest), who sets it, and the group average. Shown as the group's own profile.
+ */
+export function groupFloor(members: GroupMember[]) {
+  const floor = {} as ACE, average = {} as ACE;
+  const setBy = {} as Record<AceAxis, number[]>;
+  for (const ax of AXES) {
+    const vals = members.map((m) => m.ace[ax]);
+    const min = Math.min(...vals);
+    floor[ax] = min;
+    average[ax] = vals.reduce((a, b) => a + b, 0) / vals.length;
+    setBy[ax] = vals.flatMap((v, i) => (v === min ? [i] : []));
+  }
+  return { floor, average, setBy };
+}

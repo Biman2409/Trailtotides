@@ -44,10 +44,10 @@ export default function ResultsNextSteps({
       {top && pendingGroup && (
         <Card tone="orange" icon={<Users className="w-4 h-4" />}
           title="Your group is waiting"
-          body="Your profile is ready. Head back to the group link and add yourself to see what you can all do together."
+          body="Your profile is ready. Join now to see your group's capability and the adventures you can all do."
           action={
             <Link href={pendingGroup} onClick={() => { try { localStorage.removeItem(PENDING_GROUP_KEY); } catch {} }} className={primaryBtn}>
-              Back to the group <ArrowRight className="w-3.5 h-3.5" />
+              Join the group <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           } />
       )}
