@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { Sparkles, ArrowUp, ArrowRight, Loader2 } from "lucide-react";
+import { ArrowUp, ArrowRight, Loader2 } from "lucide-react";
+import { CompassAIMark } from "@/components/ui/custom/BrandMarks";
 import { askCompass, COMPASS_GRADIENT } from "@/lib/compass";
 import { track } from "@/lib/analytics";
 
@@ -127,7 +128,7 @@ export default function HeroCTAs() {
           <div
             className="flex items-center gap-2.5 rounded-[17px] pl-3.5 pr-1.5 py-1.5 bg-[rgba(14,12,12,0.86)] sm:bg-[rgba(14,12,12,0.72)] sm:backdrop-blur-[18px] [@media(prefers-reduced-transparency:reduce)]:!bg-[rgb(14,12,12)] [@media(prefers-reduced-transparency:reduce)]:!backdrop-blur-none"
           >
-            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" style={{ color: "#ff8a5c" }} strokeWidth={2} />
+            <CompassAIMark className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" style={{ color: "#ff8a5c" }} strokeWidth={2} />
             <input
               ref={inputRef}
               id="hero-compass-input"

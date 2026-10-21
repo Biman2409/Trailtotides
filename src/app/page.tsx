@@ -18,12 +18,12 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Trail to Tides — India's Adventure Discovery Platform",
   description:
-    "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by AI, and led by India's most trusted operators.",
+    "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by Compass.AI, and led by India's most trusted operators.",
   alternates: { canonical: "https://trailtotides.com" },
   openGraph: {
     title: "Trail to Tides — India's Adventure Discovery Platform",
     description:
-      "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by AI, and led by India's most trusted operators.",
+      "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by Compass.AI, and led by India's most trusted operators.",
     url: "https://trailtotides.com",
     type: "website",
   },
@@ -235,24 +235,32 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_380px] gap-6 sm:gap-10 lg:gap-16 items-center">
             <FadeUp>
               <div className="max-w-2xl">
-                <p className="text-[#5fb873] text-xs font-semibold tracking-[0.22em] mb-2 uppercase">
-                  Adventure Map
-                </p>
+                {/* The way in sits up top with the label, so it's there the moment the section is */}
+                <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mb-2">
+                  <p className="flex-1 text-[#5fb873] text-xs font-semibold tracking-[0.22em] uppercase">
+                    Adventure Map
+                  </p>
+                  <Link
+                    href="/map"
+                    className="group shrink-0 inline-flex items-center gap-2 h-10 pl-1 pr-3.5 sm:pr-4 rounded-full text-[13px] font-semibold tracking-tight text-[#07160b] hover:-translate-y-0.5 hover:brightness-110 transition-all duration-200"
+                    style={{
+                      background: "linear-gradient(135deg, #7fd692 0%, #5fb873 55%, #4c9f60 100%)",
+                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35), 0 8px 22px -6px rgba(95,184,115,0.55)",
+                    }}
+                  >
+                    <span className="w-8 h-8 rounded-full flex items-center justify-center bg-black/15 ring-1 ring-black/10 group-hover:bg-black/20 transition-colors">
+                      <Map className="w-4 h-4" />
+                    </span>
+                    Open map
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                  </Link>
+                </div>
                 <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
                   India&apos;s Adventures, <span className="text-[#5fb873]">Mapped</span>
                 </h2>
-                <p className="text-sm sm:text-base leading-relaxed mb-5 sm:mb-7 w-full max-w-lg" style={{ color: "var(--text-secondary)" }}>
+                <p className="text-sm sm:text-base leading-relaxed w-full max-w-lg" style={{ color: "var(--text-secondary)" }}>
                   Every trail, summit and coast — one map. Filter by type, cluster by region, tap to explore.
                 </p>
-                <Link
-                  href="/map"
-                  className="inline-flex items-center gap-2 sm:gap-2.5 font-semibold px-5 py-3 sm:px-7 sm:py-3.5 rounded-xl text-sm sm:text-base hover:-translate-y-0.5 group transition-all duration-200 shadow-lg shadow-black/15"
-                  style={{ background: "var(--text-primary)", color: "var(--bg-page)" }}
-                >
-                  <Map className="w-5 h-5" />
-                  View Map
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
               </div>
             </FadeUp>
             <MapDemo pins={mapPins} />

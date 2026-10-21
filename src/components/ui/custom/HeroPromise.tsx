@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
-import { Activity, Sparkles, BadgeCheck, ArrowRight } from "lucide-react";
+import { BadgeCheck, ArrowRight } from "lucide-react";
+import { CompassAIMark, MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 
 // The hero's promise: FIND · COMPARE · BOOK, a hand-written "Adventures", then the three
 // things that set us apart as linked sentences that take turns. Each sentence is a way in:
@@ -11,8 +12,8 @@ import { Activity, Sparkles, BadgeCheck, ArrowRight } from "lucide-react";
 type PromiseItem = { key: string; text: string; color: string; icon: ReactNode; href?: string };
 
 const PROMISES: PromiseItem[] = [
-  { key: "fitness", text: "Matched to your fitness", color: "#ffa576", icon: <Activity className="w-4 h-4" strokeWidth={2.2} />, href: "/matchmaker" },
-  { key: "ai", text: "Picked for you by AI", color: "#ffd48a", icon: <Sparkles className="w-4 h-4" strokeWidth={2} /> },
+  { key: "fitness", text: "Matched to your fitness", color: "#ffa576", icon: <MatchmakerMark className="w-4 h-4" strokeWidth={2.1} />, href: "/matchmaker" },
+  { key: "ai", text: "Picked by Compass.AI", color: "#ffd48a", icon: <CompassAIMark className="w-4 h-4" strokeWidth={2} /> },
   { key: "operators", text: "Verified operators only", color: "#7cefe3", icon: <BadgeCheck className="w-4 h-4" strokeWidth={2.2} />, href: "/operators" },
 ];
 

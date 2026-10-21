@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { AlertTriangle, CheckCircle, ChevronDown, ChevronUp, ArrowRight, Compass, Zap } from "lucide-react";
+import { AlertTriangle, CheckCircle, ChevronDown, ChevronUp, ArrowRight, Zap } from "lucide-react";
+import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import type { Adventure } from "@/lib/data";
 import { getACE, ACE_AXIS_COLORS, ACE_AXIS_LABELS, type AceAxis } from "@/lib/ace";
 import {
@@ -45,7 +46,7 @@ export default function RealityCheck({ adventure }: Props) {
               className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
               style={{ background: "rgba(255,81,0,0.15)", color: "#ff5100" }}
             >
-              <Compass className="w-5 h-5" />
+              <MatchmakerMark className="w-5 h-5" />
             </div>
             <div>
               <p className="font-semibold text-sm" style={{ color: "var(--text-primary)" }}>Is this right for you?</p>

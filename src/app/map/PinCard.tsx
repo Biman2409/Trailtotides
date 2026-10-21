@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { X, Heart, BadgeCheck, Star, ArrowRight, ArrowUpRight, Activity, Sparkles, GitCompareArrows, Check, Clock, Users } from "lucide-react";
+import { X, Heart, BadgeCheck, Star, ArrowRight, ArrowUpRight, GitCompareArrows, Check, Clock, Users } from "lucide-react";
+import { CompassAIMark, MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import type { Adventure, Month } from "@/lib/data";
 import { useCompare } from "@/contexts/CompareContext";
 import { useWishlist } from "@/contexts/WishlistContext";
@@ -51,7 +52,7 @@ export default function PinCard({
 
   return (
     <article className="tm-card" style={{ "--g": g.color } as React.CSSProperties}>
-      <div className="relative h-40 shrink-0">
+      <div className="relative h-36 lg:h-40 shrink-0">
         <Image src={a.heroImage} alt="" fill className="object-cover" sizes="380px" unoptimized />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #111418 2%, rgba(17,20,24,0.35) 55%, rgba(0,0,0,0.25))" }} />
         <div className="absolute top-3 left-3 flex items-center gap-1.5">
@@ -65,7 +66,7 @@ export default function PinCard({
           <button type="button" onClick={onClose} aria-label="Close" className="tm-iconbtn"><X className="w-3.5 h-3.5" /></button>
         </div>
         <div className="absolute bottom-2.5 left-4 right-4">
-          <h2 className="text-[19px] font-bold leading-tight text-white tracking-tight">{a.name}</h2>
+          <h2 className="text-[17px] sm:text-[19px] font-bold leading-tight text-white tracking-tight">{a.name}</h2>
           <p className="mt-1 text-[11.5px] text-white/55 flex items-center gap-1.5 flex-wrap">
             <span>{a.state}</span><span className="opacity-40">·</span>
             <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />{a.durationDays}</span><span className="opacity-40">·</span>
@@ -77,11 +78,11 @@ export default function PinCard({
       <div className="px-4 pb-4 pt-3 space-y-3 overflow-y-auto">
         <p className="text-[12.5px] leading-relaxed text-white/60">{a.tagline}</p>
 
-        {/* Picked for you by AI */}
+        {/* Picked for you by Compass.AI */}
         {pickReason && (
           <div className="tm-panel flex gap-2.5" style={{ borderColor: "rgba(255,125,71,0.35)", background: "rgba(255,81,0,0.07)" }}>
-            <Sparkles className="w-4 h-4 shrink-0 mt-0.5 text-[#ffb37a]" />
-            <p className="text-[12px] leading-snug text-white/80"><span className="font-semibold text-[#ffb37a]">Compass: </span>{pickReason}</p>
+            <CompassAIMark className="w-4 h-4 shrink-0 mt-0.5 text-[#ffb37a]" />
+            <p className="text-[12px] leading-snug text-white/80"><span className="font-semibold text-[#ffb37a]">Compass.AI: </span>{pickReason}</p>
           </div>
         )}
 
@@ -114,7 +115,7 @@ export default function PinCard({
           </div>
         ) : !hasProfile && (
           <Link href="/matchmaker" className="tm-panel flex items-center gap-2.5 group" onClick={() => track("map_fitness_cta", { from: "card" })}>
-            <Activity className="w-4 h-4 shrink-0 text-[#ffa576]" />
+            <MatchmakerMark className="w-4 h-4 shrink-0 text-[#ffa576]" />
             <span className="text-[12px] text-white/75 flex-1">Are you ready for this? <span className="text-[#ffa576] font-semibold">Take the 2-min fitness test</span></span>
             <ArrowRight className="w-3.5 h-3.5 text-white/40 group-hover:translate-x-0.5 transition-transform" />
           </Link>

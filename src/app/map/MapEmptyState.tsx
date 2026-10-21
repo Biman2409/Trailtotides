@@ -20,7 +20,7 @@ export default function MapEmptyState({
 }) {
   return (
     <div className="absolute z-[900] inset-0 grid place-items-center pointer-events-none px-4"
-      style={{ paddingLeft: insets.left + 16, paddingBottom: insets.bottom + 16 }}>
+      style={{ paddingLeft: insets.left + 16, paddingBottom: insets.bottom + 16, paddingTop: (insets.top ?? 0) + 16 }}>
       <div className="pointer-events-auto tm-empty w-full max-w-[320px] text-center" role="status">
         <EmptyArt kind={kind} />
         <p className="mt-3 text-[15px] font-bold text-white">

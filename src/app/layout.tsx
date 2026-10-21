@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     template: "%s | Trail to Tides",
   },
   description:
-    "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by AI, and led by India's most trusted operators.",
+    "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by Compass.AI, and led by India's most trusted operators.",
   metadataBase: new URL(BASE_URL),
   keywords: [
     "adventure travel India",
@@ -88,7 +88,7 @@ export const metadata: Metadata = {
     "adventure booking India",
     "verified adventure operators",
     "ACE™ adventure rating",
-    "Compass AI",
+    "Compass.AI",
     "Trail to Tides",
   ],
   authors: [{ name: "Trail to Tides", url: BASE_URL }],
@@ -105,7 +105,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Trail to Tides — India's Adventure Discovery Platform",
     description:
-      "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by AI, and led by India's most trusted operators.",
+      "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by Compass.AI, and led by India's most trusted operators.",
     type: "website",
     url: BASE_URL,
     siteName: "Trail to Tides",
@@ -125,7 +125,7 @@ export const metadata: Metadata = {
     creator: "@trailtotides",
     title: "Trail to Tides — India's Adventure Discovery Platform",
     description:
-      "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by AI, and led by India's most trusted operators.",
+      "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by Compass.AI, and led by India's most trusted operators.",
     images: [OG_IMAGE],
   },
   robots: {
@@ -182,7 +182,7 @@ export default function RootLayout({
                 },
                 image: OG_IMAGE,
                 description:
-                  "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by AI, and led by India's most trusted operators.",
+                  "Discover, compare, and book elite adventures — matched to fitness, mapped with precision, guided by Compass.AI, and led by India's most trusted operators.",
                 email: "hello@trailtotides.com",
                 foundingDate: "2024",
                 areaServed: {

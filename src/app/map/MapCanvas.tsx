@@ -38,7 +38,7 @@ export interface MapApi {
 }
 
 /** Screen space the overlays cover, so focusing and "in view" use the map you can actually see */
-export interface Insets { left: number; bottom: number }
+export interface Insets { left: number; bottom: number; top?: number }
 
 interface Props {
   adventures: Adventure[];
@@ -119,8 +119,8 @@ export default function MapCanvas(props: Props) {
 
   function visibleBounds(map: L.Map, leaflet: typeof L): L.LatLngBounds {
     const size = map.getSize();
-    const { left, bottom } = live.current.insets;
-    const nw = map.containerPointToLatLng(leaflet.point(Math.min(left, size.x - 40), 0));
+    const { left, bottom, top = 0 } = live.current.insets;
+    const nw = map.containerPointToLatLng(leaflet.point(Math.min(left, size.x - 40), Math.min(top, size.y - 80)));
     const se = map.containerPointToLatLng(leaflet.point(size.x, Math.max(40, size.y - bottom)));
     return leaflet.latLngBounds(nw, se);
   }
@@ -136,8 +136,8 @@ export default function MapCanvas(props: Props) {
   function centreOn(lat: number, lng: number, zoom: number) {
     const map = mapRef.current, leaflet = leafletRef.current;
     if (!map || !leaflet) return;
-    const { left, bottom } = live.current.insets;
-    const p = map.project([lat, lng], zoom).subtract(leaflet.point(left / 2, -bottom / 2));
+    const { left, bottom, top = 0 } = live.current.insets;
+    const p = map.project([lat, lng], zoom).subtract(leaflet.point(left / 2, (top - bottom) / 2));
     map.flyTo(map.unproject(p, zoom), zoom, { duration: 1 });
   }
 
@@ -145,8 +145,8 @@ export default function MapCanvas(props: Props) {
   function fitIndia(animate: boolean) {
     const map = mapRef.current;
     if (!map) return;
-    const { left, bottom } = live.current.insets;
-    const opts = { paddingTopLeft: [left + 16, 16] as [number, number], paddingBottomRight: [16, bottom + 16] as [number, number] };
+    const { left, bottom, top = 0 } = live.current.insets;
+    const opts = { paddingTopLeft: [left + 16, top + 16] as [number, number], paddingBottomRight: [16, bottom + 16] as [number, number] };
     if (animate) map.flyToBounds(INDIA_BOUNDS, { ...opts, duration: 1.1 });
     else map.fitBounds(INDIA_BOUNDS, opts);
   }
@@ -184,9 +184,9 @@ export default function MapCanvas(props: Props) {
         const map = mapRef.current, leaflet = leafletRef.current;
         const pts = live.current.adventures.filter((a) => slugs.includes(a.slug)).map((a) => [a.lat, a.lng] as [number, number]);
         if (!map || !leaflet || !pts.length) return;
-        const { left, bottom } = live.current.insets;
+        const { left, bottom, top = 0 } = live.current.insets;
         map.flyToBounds(leaflet.latLngBounds(pts), {
-          paddingTopLeft: [left + 60, 80], paddingBottomRight: [60, bottom + 60], maxZoom: 8, duration: 1.1,
+          paddingTopLeft: [left + 60, top + 60], paddingBottomRight: [60, bottom + 60], maxZoom: 8, duration: 1.1,
         });
       },
       reset: () => fitIndia(true),

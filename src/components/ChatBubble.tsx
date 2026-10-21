@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { X, ArrowUp, Compass, ChevronRight, Zap, RotateCcw } from "lucide-react";
+import { X, ArrowUp, ChevronRight, RotateCcw } from "lucide-react";
+import { CompassAIMark, MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import Link from "next/link";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
 import { COMPASS_ASK_EVENT, COMPASS_GRADIENT, COMPASS_RING, STARTER_PROMPTS, deriveChips, type CompassMessage } from "@/lib/compass";
@@ -17,7 +18,7 @@ function Orb({ size = 28, pulse = false }: { size?: number; pulse?: boolean }) {
       style={{ width: size, height: size, background: AI_GRADIENT }}
       aria-hidden
     >
-      <Compass className="text-white" style={{ width: size * 0.56, height: size * 0.56 }} strokeWidth={2.2} />
+      <CompassAIMark className="text-white" style={{ width: size * 0.6, height: size * 0.6 }} strokeWidth={2.1} />
     </span>
   );
 }
@@ -174,7 +175,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
           {open ? (
             <X className="w-5 h-5 text-white/90" />
           ) : (
-            <Compass className="w-6 h-6 text-white transition-transform duration-700 group-hover:rotate-90" strokeWidth={2} />
+            <CompassAIMark className="w-6 h-6 text-white transition-transform duration-700 group-hover:rotate-90" strokeWidth={2} />
           )}
         </span>
         {!open && (
@@ -319,7 +320,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                             style={{ border: "1px solid var(--border-subtle)" }}
                           >
                             <span className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: AI_GRADIENT }}>
-                              <Zap className="w-4 h-4 text-white" />
+                              <MatchmakerMark className="w-4 h-4 text-white" />
                             </span>
                             <span className="flex-1 min-w-0">
                               <span className="block text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>Try the Adventure Matchmaker</span>
@@ -336,7 +337,7 @@ export default function ChatBubble({ alwaysVisible = false }: { alwaysVisible?: 
                 {loading && (
                   <div className="flex gap-2.5 items-center">
                     <Orb size={24} pulse />
-                    <span className="flex items-center gap-1" aria-label="Compass is thinking">
+                    <span className="flex items-center gap-1" aria-label="Compass.AI is thinking">
                       {[0, 1, 2].map((d) => (
                         <span
                           key={d}

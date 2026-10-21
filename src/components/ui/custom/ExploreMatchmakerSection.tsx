@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, BarChart2, MapPin, ChevronDown } from "lucide-react";
+import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import { adventures } from "@/lib/data";
 import { loadProfile, getMatchedAdventures, type StoredProfile } from "@/lib/matchmaker";
 import ACERadar from "@/components/ui/custom/ACERadar";
@@ -77,7 +78,7 @@ export default function ExploreMatchmakerSection() {
             {/* Decorative bg text */}
             <span className="pointer-events-none select-none absolute right-6 top-4 text-[80px] font-black leading-none hidden lg:block" style={{ color: "var(--text-muted)", opacity: 0.08 }}>ACE<sup>™</sup></span>
             <div className="flex-1">
-              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3">Adventure Matchmaker</p>
+              <p className="text-[#ff5100] text-xs font-semibold tracking-[0.2em] uppercase mb-3 inline-flex items-center gap-1.5"><MatchmakerMark className="w-3.5 h-3.5" />Adventure Matchmaker</p>
               <h2 className="text-2xl lg:text-3xl font-bold tracking-tight mb-3" style={{ color: "var(--text-primary)" }}>
                 Adventures built<br />for your body
               </h2>
@@ -115,7 +116,7 @@ export default function ExploreMatchmakerSection() {
     <div className="mt-12 lg:mt-16 border-t" style={{ background: "var(--bg-surface)", borderColor: "var(--border-subtle)" }}>
       <div className="max-w-7xl mx-auto px-5 lg:px-8 py-12 lg:py-16">
 
-        <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-6">Adventure Matchmaker</p>
+        <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.25em] uppercase mb-6 inline-flex items-center gap-1.5"><MatchmakerMark className="w-3.5 h-3.5" />Adventure Matchmaker</p>
 
         {/* ── Two-column layout: left (tier + adventures) | right (radar) ── */}
         <div className="flex flex-col gap-4">

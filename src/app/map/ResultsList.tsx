@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { BadgeCheck, Sparkles, GitCompareArrows, Check, MapPinned } from "lucide-react";
+import { BadgeCheck, GitCompareArrows, Check, MapPinned } from "lucide-react";
+import { CompassAIMark } from "@/components/ui/custom/BrandMarks";
 import type { Adventure, Month } from "@/lib/data";
 import { useCompare } from "@/contexts/CompareContext";
 import { difficultyOf, difficultyColor, verifiedOperators, priceFrom, formatINR, inSeason, type Fit } from "./mapShared";
@@ -100,7 +101,7 @@ export default function ResultsList({
     <div className="space-y-4">
       {picks.length > 0 && (
         <section>
-          <p className="tm-label flex items-center gap-1.5 !text-[#ffb37a]"><Sparkles className="w-3 h-3" /> Picked for you by Compass</p>
+          <p className="tm-label flex items-center gap-1.5 !text-[#ffb37a]"><CompassAIMark className="w-3 h-3" /> Picked for you by Compass.AI</p>
           <ul className="space-y-1.5">{picks.map(row)}</ul>
         </section>
       )}

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, ArrowUp, Loader2, X, MessageCircle } from "lucide-react";
+import { ArrowUp, Loader2, X, MessageCircle } from "lucide-react";
+import { CompassAIMark } from "@/components/ui/custom/BrandMarks";
 import { askCompass, COMPASS_GRADIENT } from "@/lib/compass";
 import { track } from "@/lib/analytics";
 import type { ACE } from "@/lib/ace";
@@ -45,7 +46,7 @@ export default function CompassBar({
       const data = await res.json();
       const picks: CompassPick[] = (data.recommendations ?? []).map((r: { slug: string; reason: string }) => ({ slug: r.slug, reason: r.reason }));
       if (!res.ok || data.rateLimited || (!data.text && !picks.length)) {
-        setError(data.error ?? "Compass couldn't answer just now. Try again in a moment.");
+        setError(data.error ?? "Compass.AI couldn't answer just now. Try again in a moment.");
       } else {
         setAsked(question);
         setReply(data.text ?? "");
@@ -54,7 +55,7 @@ export default function CompassBar({
         if (!picks.length) setError("No specific picks for that one. Try naming a place, a month or how hard.");
       }
     } catch {
-      setError("Compass couldn't answer just now. Try again in a moment.");
+      setError("Compass.AI couldn't answer just now. Try again in a moment.");
     } finally {
       setLoading(false);
     }
@@ -73,13 +74,13 @@ export default function CompassBar({
         style={{ background: active || text ? COMPASS_GRADIENT : "linear-gradient(135deg, rgba(255,81,0,0.55), rgba(255,179,122,0.35))" }}
       >
         <div className="flex items-center gap-2 rounded-[15px] pl-3 pr-1.5 h-11 bg-[#121417]">
-          <Sparkles className="w-4 h-4 shrink-0 text-[#ff9a66]" />
+          <CompassAIMark className="w-4 h-4 shrink-0 text-[#ff9a66]" />
           <input
             value={text}
             onChange={(e) => setText(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
-            placeholder="Describe your trip — Compass picks"
+            placeholder="Describe your trip — Compass.AI picks"
             aria-label="Describe your trip and Compass.AI will pick adventures on the map"
             enterKeyHint="send"
             className="flex-1 min-w-0 bg-transparent text-[13px] text-white placeholder:text-white/45 outline-none"

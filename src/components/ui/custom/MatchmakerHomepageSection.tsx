@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, RotateCcw } from "lucide-react";
+import { ArrowRight, HelpCircle, RotateCcw } from "lucide-react";
+import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import { adventures } from "@/lib/data";
 import { type StoredProfile } from "@/lib/matchmaker";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
@@ -60,8 +61,8 @@ function Band({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Eyebrow() {
-  return <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-2">Adventure Matchmaker</p>;
+function Eyebrow({ className = "mb-2" }: { className?: string }) {
+  return <p className={`text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase inline-flex items-center gap-1.5 ${className}`}><MatchmakerMark className="w-3.5 h-3.5" />Adventure Matchmaker</p>;
 }
 
 export default function MatchmakerHomepageSection() {
@@ -118,7 +119,25 @@ function DefaultCTA() {
       <div className="grid lg:grid-cols-[1fr_380px] gap-8 sm:gap-10 lg:gap-16 items-center">
         {/* Left: promise, steps, action */}
         <div className="min-w-0">
-          <Eyebrow />
+          {/* The way in sits up top with the label, so it's there the moment the section is */}
+          {/* The label wraps to two lines before the button drops below it (only on the narrowest phones) */}
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mb-2">
+            <Eyebrow className="flex-1" />
+            <Link
+              href="/matchmaker"
+              className="group shrink-0 inline-flex items-center gap-2 h-10 pl-1 pr-3.5 sm:pr-4 rounded-full text-white text-[13px] font-semibold tracking-tight hover:-translate-y-0.5 hover:brightness-110 transition-all duration-200"
+              style={{
+                background: "linear-gradient(135deg, #ff7a3d 0%, #ff5100 55%, #e94600 100%)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), 0 8px 22px -6px rgba(255,81,0,0.6)",
+              }}
+            >
+              <span className="w-8 h-8 rounded-full flex items-center justify-center bg-white/20 ring-1 ring-white/30 group-hover:bg-white/30 transition-colors">
+                <MatchmakerMark className="w-4 h-4" />
+              </span>
+              Take assessment
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          </div>
           <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
             Adventures built for <span className="text-[#ff5100]">your body</span>
           </h2>
@@ -126,8 +145,19 @@ function DefaultCTA() {
             Tell us about your fitness and experience. We&apos;ll rate every adventure for you, so you know what you&apos;re ready for before you book.
           </p>
 
+          {/* Captions the steps, which are the short version; quiet so it doesn't compete with the button */}
+          <Link
+            href="/ace"
+            className="group inline-flex items-center gap-1.5 mt-5 sm:mt-7 mb-2.5 text-xs font-medium hover:text-[var(--text-primary)] transition-colors"
+            style={{ color: "var(--text-tertiary)" }}
+          >
+            <HelpCircle className="w-3.5 h-3.5 group-hover:text-[#ff7d47] transition-colors" />
+            How it works
+            <ArrowRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+          </Link>
+
           {/* Phones: a tight numbered list on one card. Wider: three cards side by side. */}
-          <ol className="grid sm:grid-cols-3 sm:gap-3 mt-5 sm:mt-7 max-w-2xl rounded-xl sm:rounded-none px-3.5 py-1 sm:p-0 bg-[var(--bg-card)] sm:bg-transparent border border-[var(--border-subtle)] sm:border-0">
+          <ol className="grid sm:grid-cols-3 sm:gap-3 max-w-2xl rounded-xl sm:rounded-none px-3.5 py-1 sm:p-0 bg-[var(--bg-card)] sm:bg-transparent border border-[var(--border-subtle)] sm:border-0">
             {STEPS.map((s, i) => (
               <li key={s.title} className={`flex items-center sm:items-start sm:flex-col gap-3 sm:gap-2 py-2.5 sm:rounded-xl sm:p-3.5 sm:bg-[var(--bg-card)] sm:border sm:border-[var(--border-subtle)] ${i ? "border-t border-[var(--border-subtle)] sm:border-t" : ""}`}>
                 <span className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0" style={{ background: "rgba(255,81,0,0.12)", color: "#ff7d47" }}>
@@ -140,21 +170,6 @@ function DefaultCTA() {
               </li>
             ))}
           </ol>
-
-          <div className="flex flex-wrap items-center gap-x-5 sm:gap-x-6 gap-y-3 mt-5 sm:mt-7">
-            <Link
-              href="/matchmaker"
-              className="group inline-flex items-center gap-2 bg-[#ff5100] text-white font-semibold px-5 py-3 sm:px-6 sm:py-3.5 rounded-xl text-sm sm:text-[15px] hover:bg-[#ff6a24] hover:-translate-y-0.5 transition-all duration-200"
-              style={{ boxShadow: "0 6px 20px rgba(255,81,0,0.28)" }}
-            >
-              Take the assessment
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-            <Link href="/ace" className="group inline-flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-[var(--text-primary)]" style={{ color: "var(--text-secondary)" }}>
-              How it works
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-          </div>
         </div>
 
         {/* Right: what the result looks like */}

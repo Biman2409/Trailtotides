@@ -4,8 +4,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
-  SlidersHorizontal, Loader2, Compass, Activity, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen,
+  SlidersHorizontal, Loader2, Compass, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen,
 } from "lucide-react";
+import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import Navbar from "@/components/layout/Navbar";
 import ChatBubble from "@/components/ChatBubble";
 import { useTripLog } from "@/contexts/TripLogContext";
@@ -169,7 +170,7 @@ export default function MapClient() {
     : [], [trailOn, tripLog]);
 
   const sheetH = sheet === "peek" ? SHEET.peek : Math.round(areaH * SHEET[sheet]);
-  const insets = desktop ? { left: panelOpen ? GAP + PANEL_W + GAP : 0, bottom: 16 } : { left: 0, bottom: sheetH };
+  const insets = desktop ? { left: panelOpen ? GAP + PANEL_W + GAP : 0, bottom: 16 } : { left: 0, bottom: sheetH, top: 60 };
 
   const filtersActive = anyFilter(f);
 
@@ -338,7 +339,7 @@ export default function MapClient() {
         </span>
       ) : (
         <Link href="/matchmaker" onClick={() => track("map_fitness_cta", { from: "toolbar" })} className="inline-flex items-center gap-1 font-semibold text-[#ffa576] hover:underline shrink-0">
-          <Activity className="w-3 h-3" />Light up my matches
+          <MatchmakerMark className="w-3 h-3" />Light up my matches
         </Link>
       )}
       {loggedIn && groups.length > 0 && (
@@ -463,7 +464,7 @@ export default function MapClient() {
             {!panelOpen && (
               <button type="button" onClick={() => setPanelOpen(true)} className="absolute z-[1000] tm-glass rounded-2xl h-11 pl-3 pr-4 inline-flex items-center gap-2 text-[12.5px] font-semibold text-white/85 hover:text-white"
                 style={{ top: GAP, left: GAP }}>
-                <PanelLeftOpen className="w-4 h-4 text-[#ff9a66]" /> {listed.length} in view · Compass & filters
+                <PanelLeftOpen className="w-4 h-4 text-[#ff9a66]" /> {listed.length} in view · Compass.AI & filters
               </button>
             )}
             <aside className={`absolute z-[1000] flex flex-col tm-glass rounded-3xl overflow-hidden transition-[transform,opacity] duration-300 ${panelOpen ? "" : "-translate-x-[110%] opacity-0 pointer-events-none"}`}
@@ -494,21 +495,25 @@ export default function MapClient() {
             <div className="absolute z-[999] right-2" style={{ top: 56 }}>{layersMenu}</div>
 
             <MobileSheet height={sheetH} state={sheet} onState={setSheet} areaH={areaH}>
-              <div className="px-3.5 pb-3 space-y-2.5">
-                <CompassBar ace={ace} onPicks={onPicks} active={picks.length > 0} />
-                {sheet === "peek" && !selectedAdv ? (
-                  // Collapsed: a swipeable row of what's in view, tied to the pins
-                  <PeekCarousel list={listed.length ? listed : shown} fits={fits} onHover={setHovered} onOpen={select} />
-                ) : (
-                  <>
-                    {statusLine}
-                    {legendLine}
-                    <CompareTray onFocus={select} />
-                  </>
-                )}
-              </div>
+              {/* An open adventure gets the whole sheet: on a phone the card is the point, so
+                  Compass, the count and the legend step aside until you go back */}
+              {!selectedAdv && (
+                <div className="px-3.5 pb-3 space-y-2.5">
+                  <CompassBar ace={ace} onPicks={onPicks} active={picks.length > 0} />
+                  {sheet === "peek" ? (
+                    // Collapsed: a swipeable row of what's in view, tied to the pins
+                    <PeekCarousel list={listed.length ? listed : shown} fits={fits} onHover={setHovered} onOpen={select} />
+                  ) : (
+                    <>
+                      {statusLine}
+                      {legendLine}
+                      <CompareTray onFocus={select} />
+                    </>
+                  )}
+                </div>
+              )}
               {/* Collapsed, the card row stands in for the list */}
-              {(sheet !== "peek" || selectedAdv) && <div className="px-3.5 pb-6">{body}</div>}
+              {(sheet !== "peek" || selectedAdv) && <div className={`px-3.5 pb-6 ${selectedAdv ? "pt-0.5" : ""}`}>{body}</div>}
             </MobileSheet>
           </>
         )}
@@ -584,7 +589,8 @@ const PAGE_CSS = `
              background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); outline: none; cursor: pointer; }
   .tm-sort option { background: #17120f; }
 
-  .tm-peekcard { display: flex; width: 252px; height: 88px; border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.045);
+  /* Sized to the phone, leaving the next card peeking in from the right */
+  .tm-peekcard { display: flex; width: min(268px, calc(100vw - 64px)); height: 88px; border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.045);
                  border: 1px solid rgba(255,255,255,0.08); box-shadow: inset 3px 0 0 -1px var(--c); transition: border-color .2s; }
   .tm-peekcard:active { border-color: color-mix(in srgb, var(--c) 60%, transparent); }
 
@@ -600,6 +606,8 @@ const PAGE_CSS = `
   .tm-dock-float .tm-pill { background: rgba(17,20,24,0.88); backdrop-filter: blur(14px); box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
   .tm-dock-float .tm-pill[data-on] { background: rgba(60,26,12,0.92); }
   .tm-dock-float .tm-pill[data-on][data-tone="sky"] { background: rgba(12,40,56,0.92); }
+  /* Narrow phones: the words matter more than the icons */
+  @media (max-width: 359px) { .tm-pill > span:first-child { display: none; } .tm-pill { padding: 0 6px; font-size: 12px; } }
 
   .tm-menu { border-radius: 18px; overflow: hidden; background: rgba(17,20,24,0.97); border: 1px solid rgba(255,255,255,0.1);
              box-shadow: 0 24px 60px rgba(0,0,0,0.6); backdrop-filter: blur(20px); animation: tmMenu .18s ease-out both; }
