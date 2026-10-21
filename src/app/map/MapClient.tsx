@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
-  SlidersHorizontal, LocateFixed, Loader2, Camera, Trophy, Compass, Layers, Activity, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen,
+  SlidersHorizontal, Loader2, Compass, Activity, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import ChatBubble from "@/components/ChatBubble";
@@ -16,22 +16,22 @@ import type { GroupMember } from "@/lib/fitness";
 import type { GroupSummary, StoredGroup } from "@/lib/matchGroups";
 import { track } from "@/lib/analytics";
 import { currentMonthIndexIST } from "@/lib/homeCuration";
-import { MONTHS, SORT_LABELS, sortAdventures, type SortKey } from "@/lib/exploreHelpers";
+import { SORT_LABELS, sortAdventures, type SortKey } from "@/lib/exploreHelpers";
 import {
   NO_FILTERS, filtersFromParams, writeFilterParams, filterAdventures, panelCount, anyFilter,
-  QuickFilterChips, FilterPanel, type AdventureFilterState,
+  FilterPanel, type AdventureFilterState,
 } from "@/components/ui/custom/AdventureFilters";
 import MapCanvas, { type MapApi, type UserPhoto, type CompletedAdventure } from "./MapCanvas";
-import SearchBox from "./SearchBox";
+import FilterDock from "./FilterDock";
+import LayersMenu from "./LayersMenu";
 import CompassBar, { type CompassPick } from "./CompassBar";
 import ResultsList from "./ResultsList";
 import PinCard from "./PinCard";
-import SeasonScrubber from "./SeasonScrubber";
 import CompareTray from "./CompareTray";
-import { BASE_LAYERS, inSeason, fitFor, haversineKm, type LayerKey, type Fit } from "./mapShared";
+import { fitFor, haversineKm, type LayerKey, type Fit } from "./mapShared";
 
 // The Adventure Map, built on the home page promise:
-//   FIND     — Explore's filters (shared), a list of what's in view, seasons over the year
+//   FIND     — Type, Where and Near me on screen; every other filter (Explore's, shared) under Filters
 //   COMPARE  — add from any pin or row, compare side by side
 //   BOOK     — verified operators, prices and a booking link on every pin
 //   …matched to your fitness (or your group's), picked for you by AI, run by verified operators.
@@ -55,7 +55,9 @@ export default function MapClient() {
   const [sort, setSort] = useState<SortKey | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const monthIdx = currentMonthIndexIST();
-  const [month, setMonth] = useState<Month | null>(null);
+  // A single month picked under Filters is outlined on cards and rows
+  const month: Month | null = f.months.length === 1 ? f.months[0] : null;
+  const [radius, setRadius] = useState<number | null>(250);
   const [picks, setPicks] = useState<CompassPick[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
@@ -134,7 +136,11 @@ export default function MapClient() {
   const score = useMemo(() => (canFit ? (a: Adventure) => fits.get(a.slug)?.score ?? 0 : undefined), [canFit, fits]);
   const sortKey: SortKey = sort ?? (canFit ? "match" : "recommended");
 
-  const filtered = useMemo(() => filterAdventures(adventures, f, { score }), [f, score]);
+  // Explore's filters, then the Near me radius (a map-only filter)
+  const filtered = useMemo(() => {
+    const rows = filterAdventures(adventures, f, { score });
+    return nearMe && radius ? rows.filter((a) => haversineKm(nearMe.lat, nearMe.lng, a.lat, a.lng) <= radius) : rows;
+  }, [f, score, nearMe, radius]);
 
   // Compass picks stay on the map even when a filter would hide them
   const shown = useMemo(() => {
@@ -142,16 +148,13 @@ export default function MapClient() {
     return extra.length ? [...filtered, ...extra] : filtered;
   }, [filtered, pickReasons]);
 
-  // Explore's sort, then Near Me by distance, then the season slider's month first
+  // Explore's sort; with Near me on, nearest first
   const listed = useMemo(() => {
-    let rows = sortAdventures(shown.filter((a) => inView.has(a.slug)), sortKey, { monthIdx, score });
-    if (nearMe) {
-      const dist = (a: Adventure) => haversineKm(nearMe.lat, nearMe.lng, a.lat, a.lng);
-      rows = [...rows].sort((x, y) => dist(x) - dist(y));
-    }
-    if (month) rows = [...rows.filter((a) => inSeason(a, month)), ...rows.filter((a) => !inSeason(a, month))];
-    return rows;
-  }, [shown, inView, sortKey, monthIdx, score, nearMe, month]);
+    const rows = sortAdventures(shown.filter((a) => inView.has(a.slug)), sortKey, { monthIdx, score });
+    if (!nearMe) return rows;
+    const dist = (a: Adventure) => haversineKm(nearMe.lat, nearMe.lng, a.lat, a.lng);
+    return [...rows].sort((x, y) => dist(x) - dist(y));
+  }, [shown, inView, sortKey, monthIdx, score, nearMe]);
 
   const pickAdventures = useMemo(() => picks.map((p) => adventures.find((a) => a.slug === p.slug)).filter((a): a is Adventure => !!a), [picks]);
   const selectedAdv = selected ? adventures.find((a) => a.slug === selected) ?? null : null;
@@ -161,7 +164,7 @@ export default function MapClient() {
     : [], [trailOn, tripLog]);
 
   const sheetH = sheet === "peek" ? SHEET.peek : Math.round(areaH * SHEET[sheet]);
-  const insets = desktop ? { left: panelOpen ? GAP + PANEL_W + GAP : 0, bottom: 84 } : { left: 0, bottom: sheetH };
+  const insets = desktop ? { left: panelOpen ? GAP + PANEL_W + GAP : 0, bottom: 16 } : { left: 0, bottom: sheetH };
 
   const filtersActive = anyFilter(f);
 
@@ -204,6 +207,19 @@ export default function MapClient() {
 
   const showAll = useCallback(() => apiRef.current?.fitTo(shown.map((a) => a.slug)), [shown]);
 
+  // Picking a type or a place takes the map to what's left, so the choice shows at once
+  const typeWhere = `${f.types.join()}|${f.states.join()}`;
+  const lastTypeWhere = useRef<string | null>(null);
+  useEffect(() => {
+    if (!linkRead.current) return;
+    if (lastTypeWhere.current === null) { lastTypeWhere.current = typeWhere; return; }
+    if (lastTypeWhere.current === typeWhere) return;
+    lastTypeWhere.current = typeWhere;
+    if (!shown.length) return;
+    const t = setTimeout(() => (typeWhere === "|" ? apiRef.current?.reset() : showAll()), 80);
+    return () => clearTimeout(t);
+  }, [typeWhere, shown.length, showAll]);
+
   const onPicks = useCallback((p: CompassPick[]) => {
     setPicks(p);
     setSelected(null);
@@ -234,8 +250,10 @@ export default function MapClient() {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setNearMe({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-        apiRef.current?.flyTo(pos.coords.latitude, pos.coords.longitude, 7);
+        // With a radius the map frames the ring itself
+        if (!radius) apiRef.current?.flyTo(pos.coords.latitude, pos.coords.longitude, 7);
         setNearMeLoading(false);
+        track("map_near_me", { radius: radius ?? 0 });
       },
       () => { setNearMeLoading(false); toast.error("Location access denied — enable it in your browser settings to see nearby adventures."); },
       { timeout: 8000, enableHighAccuracy: false },
@@ -261,11 +279,17 @@ export default function MapClient() {
 
   // ── Pieces shared by the desktop panel and the phone sheet ──────────────────
 
-  // Explore's quick chips, exactly — the full set sits under Filters
-  const quickChips = (floating: boolean) => (
-    <div className={`flex items-center gap-2 overflow-x-auto no-scrollbar ${floating ? "tm-quick-float -mx-2 px-2" : "-mx-3.5 px-3.5"}`}>
-      <QuickFilterChips f={f} set={set} thisMonth={MONTHS[monthIdx]} hasFit={canFit} fitLabel={group ? "Ready for all" : "Ready for me"} />
-    </div>
+  // On screen: Type, Where, Near me. Everything else is under Filters.
+  const dock = (floating: boolean) => (
+    <FilterDock
+      f={f} set={set}
+      nearMe={!!nearMe} nearLoading={nearMeLoading} radius={radius}
+      onNearMe={handleNearMe} onRadius={setRadius}
+      onPlace={(lat, lng, name) => { apiRef.current?.flyTo(lat, lng, 9); apiRef.current?.placePin(lat, lng, name); }}
+      onAdventure={(a) => select(a.slug)}
+      floating={floating}
+      trailing={filtersButton}
+    />
   );
 
   // Not filters: the way into fitness matching, and whose fitness the rings show
@@ -343,22 +367,12 @@ export default function MapClient() {
     </button>
   );
 
-  const you = (
-    <>
-      <button type="button" onClick={handleNearMe} className="tm-ctl" data-on={nearMe ? true : undefined} title={nearMe ? "Clear Near Me" : "Adventures near me"}>
-        {nearMeLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LocateFixed className="w-3.5 h-3.5" />}<span>Near me</span>
-      </button>
-      {loggedIn && (
-        <>
-          <button type="button" onClick={toggleShots} className="tm-ctl" data-on={shotsOn || undefined} title="My trip photos">
-            {shotsLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}<span>My shots</span>
-          </button>
-          <button type="button" onClick={toggleTrail} className="tm-ctl" data-on={trailOn || undefined} data-gold title="My completed adventures">
-            <Trophy className="w-3.5 h-3.5" /><span>My trail</span>
-          </button>
-        </>
-      )}
-    </>
+  const layersMenu = (
+    <LayersMenu
+      layer={layer} onLayer={setLayer} loggedIn={loggedIn}
+      shotsOn={shotsOn} shotsLoading={shotsLoading} onShots={toggleShots}
+      trailOn={trailOn} onTrail={toggleTrail}
+    />
   );
 
   // ── Render ──────────────────────────────────────────────────────────────────
@@ -382,6 +396,7 @@ export default function MapClient() {
             layer={layer}
             insets={insets}
             nearMe={nearMe}
+            radiusKm={radius}
             userPhotos={photos}
             completed={completed}
             apiRef={apiRef}
@@ -411,11 +426,7 @@ export default function MapClient() {
               style={{ top: GAP, left: GAP, bottom: GAP, width: PANEL_W }} aria-hidden={!panelOpen || undefined}>
               <div className="p-3.5 space-y-2.5 border-b border-white/[0.06]">
                 <CompassBar ace={ace} onPicks={onPicks} active={picks.length > 0} />
-                <div className="flex items-center gap-2">
-                  <SearchBox value={f.search} onChange={(q) => set({ search: q })} onPlace={(lat, lng, name) => { apiRef.current?.flyTo(lat, lng, 9); apiRef.current?.placePin(lat, lng, name); }} onAdventure={(a) => { set({ search: "" }); select(a.slug); }} />
-                  {filtersButton}
-                </div>
-                {quickChips(false)}
+                {dock(false)}
                 {fitExtras}
                 {statusLine}
                 {fitLegend}
@@ -424,46 +435,20 @@ export default function MapClient() {
             </aside>
 
             <div className="absolute z-[1000] top-3 flex items-center gap-1.5" style={{ right: 56 }}>
-              <div className="tm-glass rounded-xl p-1 flex items-center gap-0.5">
-                {(Object.keys(BASE_LAYERS) as LayerKey[]).map((k) => (
-                  <button key={k} type="button" onClick={() => setLayer(k)} aria-pressed={layer === k} className="tm-seg" data-on={layer === k || undefined}>{BASE_LAYERS[k].label}</button>
-                ))}
-              </div>
-              <div className="tm-glass rounded-xl p-1 flex items-center gap-0.5">{you}</div>
-              <button type="button" onClick={() => apiRef.current?.reset()} className="tm-glass rounded-xl h-[38px] px-3 text-[11.5px] font-semibold text-white/70 hover:text-white inline-flex items-center gap-1.5" title="Show all of India">
-                <Compass className="w-3.5 h-3.5" /> India
+              <button type="button" onClick={() => apiRef.current?.reset()} className="tm-glass rounded-xl h-10 px-3 text-[11.5px] font-semibold text-white/70 hover:text-white inline-flex items-center gap-1.5" title="Show all of India">
+                <Compass className="w-3.5 h-3.5" /> All of India
               </button>
+              {layersMenu}
             </div>
 
-            <div className="absolute z-[1000] bottom-4 flex justify-center pointer-events-none" style={{ left: insets.left, right: 0 }}>
-              <div className="pointer-events-auto"><SeasonScrubber month={month} onChange={setMonth} adventures={shown} /></div>
-            </div>
-
-            {/* Above the season row, so the two never collide on narrower desktops */}
-            <div className="absolute z-[1000] right-4" style={{ bottom: 84 }}><CompareTray onFocus={select} /></div>
+            <div className="absolute z-[1000] bottom-4 right-4"><CompareTray onFocus={select} /></div>
           </>
         )}
 
         {mounted && !desktop && (
           <>
-            <div className="absolute z-[1000] top-2 inset-x-2 space-y-2">
-              <div className="flex items-center gap-2">
-                <div className="flex-1 min-w-0 tm-glass rounded-xl">
-                  <SearchBox value={f.search} onChange={(q) => set({ search: q })} onPlace={(lat, lng, name) => { apiRef.current?.flyTo(lat, lng, 9); apiRef.current?.placePin(lat, lng, name); }} onAdventure={(a) => { set({ search: "" }); select(a.slug); }} />
-                </div>
-                {filtersButton}
-                <button type="button" aria-label={`Map style: ${BASE_LAYERS[layer].label}`} className="tm-iconbtn-lg"
-                  onClick={() => setLayer((l) => (l === "map" ? "satellite" : l === "satellite" ? "terrain" : "map"))}>
-                  <Layers className="w-4 h-4" />
-                </button>
-              </div>
-              {quickChips(true)}
-              <div className="flex"><span className="tm-glass rounded-xl p-0.5 flex items-center gap-0.5">{you}</span></div>
-            </div>
-
-            <div className="absolute z-[1000] inset-x-0 flex justify-center px-2 pointer-events-none transition-[bottom] duration-300" style={{ bottom: sheetH + 8 }}>
-              <div className="pointer-events-auto max-w-full"><SeasonScrubber month={month} onChange={setMonth} adventures={shown} /></div>
-            </div>
+            <div className="absolute z-[1000] top-2 inset-x-2">{dock(true)}</div>
+            <div className="absolute z-[999] right-2" style={{ top: 56 }}>{layersMenu}</div>
 
             <MobileSheet height={sheetH} state={sheet} onState={setSheet} areaH={areaH}>
               <div className="px-3.5 pb-3 space-y-2.5">
@@ -545,12 +530,44 @@ const PAGE_CSS = `
 
   .tm-label { font-size: 9.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 6px; }
 
-  /* Explore's chips floating over the map get a glass backing so they read on any tiles */
-  .tm-quick-float { --chip-bg: rgba(17,20,24,0.86); }
-  .tm-quick-float button { backdrop-filter: blur(14px); }
   .tm-sort { height: 26px; padding: 0 6px; border-radius: 8px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.75);
              background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); outline: none; cursor: pointer; }
   .tm-sort option { background: #17120f; }
+
+  /* ── Filter dock: Type · Where · Near me ── */
+  .tm-pill { display: inline-flex; align-items: center; gap: 5px; height: 40px; padding: 0 8px; border-radius: 12px; font-size: 12.5px; font-weight: 600;
+             color: rgba(255,255,255,0.78); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); transition: all .2s; }
+  .tm-pill:hover, .tm-pill[data-open] { color: #fff; border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); }
+  .tm-pill[data-on] { color: #ffb08a; background: rgba(255,81,0,0.14); border-color: rgba(255,125,71,0.45); box-shadow: 0 0 18px -6px rgba(255,81,0,0.6); }
+  .tm-pill[data-on][data-tone="sky"] { color: #8fd8fb; background: rgba(56,189,248,0.12); border-color: rgba(56,189,248,0.45); box-shadow: 0 0 18px -6px rgba(56,189,248,0.6); }
+  .tm-dock-float .tm-pill { background: rgba(17,20,24,0.88); backdrop-filter: blur(14px); box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+  .tm-dock-float .tm-pill[data-on] { background: rgba(60,26,12,0.92); }
+  .tm-dock-float .tm-pill[data-on][data-tone="sky"] { background: rgba(12,40,56,0.92); }
+
+  .tm-menu { border-radius: 18px; overflow: hidden; background: rgba(17,20,24,0.97); border: 1px solid rgba(255,255,255,0.1);
+             box-shadow: 0 24px 60px rgba(0,0,0,0.6); backdrop-filter: blur(20px); animation: tmMenu .18s ease-out both; }
+  @keyframes tmMenu { from { opacity: 0; transform: translateY(-6px) scale(0.98); } to { opacity: 1; transform: none; } }
+
+  /* Type tiles: the map's own pin, a count, and a bar for their share of all adventures */
+  .tm-tile { position: relative; overflow: hidden; display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 14px; color: rgba(255,255,255,0.85);
+             background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); transition: all .2s; }
+  .tm-tile:hover { background: rgba(255,255,255,0.07); }
+  .tm-tile[data-on] { color: #fff; background: color-mix(in srgb, var(--g) 14%, transparent); border-color: color-mix(in srgb, var(--g) 60%, transparent); }
+  .tm-tile-icon { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0;
+                  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--g) 70%, #fff), var(--g) 70%); box-shadow: 0 0 14px var(--glow); }
+  .tm-tile-bar { position: absolute; left: 0; bottom: 0; height: 2px; background: var(--g); opacity: 0.7; }
+
+  .tm-mrow { width: 100%; display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 10px; transition: background .15s; }
+  .tm-mrow:hover { background: rgba(255,255,255,0.05); }
+  .tm-mrow[data-on] { background: rgba(255,81,0,0.08); }
+
+  .tm-radius { display: flex; flex-direction: column; align-items: center; padding: 8px 0; border-radius: 12px; line-height: 1.1;
+               background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.75); transition: all .2s; }
+  .tm-radius b { font-size: 15px; }
+  .tm-radius span { font-size: 9.5px; opacity: 0.55; text-transform: uppercase; letter-spacing: 0.1em; }
+  .tm-radius:hover:not(:disabled) { border-color: rgba(56,189,248,0.4); }
+  .tm-radius[data-on] { color: #fff; background: rgba(56,189,248,0.16); border-color: rgba(56,189,248,0.6); }
+  .tm-radius:disabled { opacity: 0.4; cursor: default; }
 
   .tm-toggle { display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 10px; border-radius: 9px; font-size: 11.5px; font-weight: 600;
                color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); transition: all .2s; cursor: pointer; }
@@ -564,11 +581,6 @@ const PAGE_CSS = `
   .tm-iconbtn { width: 28px; height: 28px; border-radius: 999px; display: grid; place-items: center; color: rgba(255,255,255,0.85); background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.12); }
   .tm-iconbtn:hover { background: rgba(255,81,0,0.55); }
 
-  .tm-seg, .tm-ctl { height: 30px; padding: 0 10px; border-radius: 9px; font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,0.6); display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; transition: all .2s; }
-  .tm-seg:hover, .tm-ctl:hover { color: #fff; background: rgba(255,255,255,0.06); }
-  .tm-seg[data-on] { color: #fff; background: rgba(255,81,0,0.3); }
-  .tm-ctl[data-on] { color: #fff; background: #ff5100; }
-  .tm-ctl[data-on][data-gold] { color: #1a1200; background: linear-gradient(135deg,#f7cd3a,#eab308); }
 
   .tm-row { display: flex; align-items: center; gap: 10px; padding: 6px; border-radius: 14px; cursor: pointer; border: 1px solid transparent; transition: background .2s, border-color .2s, opacity .2s; }
   .tm-row:hover { background: rgba(255,255,255,0.04); }

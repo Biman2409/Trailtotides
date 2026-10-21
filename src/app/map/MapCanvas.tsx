@@ -51,6 +51,8 @@ interface Props {
   layer: LayerKey;
   insets: Insets;
   nearMe: { lat: number; lng: number } | null;
+  /** Near me radius in km, drawn as a ring around you */
+  radiusKm: number | null;
   userPhotos: UserPhoto[];
   completed: CompletedAdventure[];
   apiRef: React.MutableRefObject<MapApi | null>;
@@ -74,7 +76,7 @@ function pinHtml(a: Adventure, s: { fit: Fit | null | undefined; off: boolean; p
 
 export default function MapCanvas(props: Props) {
   // onSelect and onViewChange are read through `live` by Leaflet handlers bound once
-  const { adventures: advs, fits, month, picks, selected, hovered, wishlist, layer, insets, nearMe, userPhotos, completed, apiRef } = props;
+  const { adventures: advs, fits, month, picks, selected, hovered, wishlist, layer, insets, nearMe, radiusKm, userPhotos, completed, apiRef } = props;
   const router = useRouter();
   const elRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -329,11 +331,21 @@ export default function MapCanvas(props: Props) {
     if (!leaflet || !layer) return;
     layer.clearLayers();
     if (!nearMe) return;
+    if (radiusKm) {
+      const ring = leaflet.circle([nearMe.lat, nearMe.lng], {
+        radius: radiusKm * 1000, color: "#38bdf8", weight: 1.5, opacity: 0.7, dashArray: "4 6",
+        fillColor: "#38bdf8", fillOpacity: 0.06, interactive: false,
+      }).addTo(layer);
+      // Frame the whole ring in the uncovered part of the map
+      const map = mapRef.current;
+      const { left, bottom } = live.current.insets;
+      map?.flyToBounds(ring.getBounds(), { paddingTopLeft: [left + 24, 24], paddingBottomRight: [24, bottom + 24], duration: 0.9 });
+    }
     const icon = leaflet.divIcon({ className: "", html: '<div class="tm-me"><i></i></div>', iconSize: [22, 22], iconAnchor: [11, 11] });
     leaflet.marker([nearMe.lat, nearMe.lng], { icon, zIndexOffset: 2000 })
       .bindTooltip("You are here", { direction: "top", offset: [0, -10], className: "tm-tip" })
       .addTo(layer);
-  }, [nearMe]);
+  }, [nearMe, radiusKm]);
 
   // ── Trip photos ─────────────────────────────────────────────────────────────
 
