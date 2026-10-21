@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  Search, SlidersHorizontal, X, LayoutGrid, List, ChevronRight, Heart, RotateCcw, Crown, Map as MapIcon, ArrowRight,
+  Search, SlidersHorizontal, X, LayoutGrid, List, ChevronRight, Heart, RotateCcw, Map as MapIcon, ArrowRight,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -15,35 +15,23 @@ import SeasonStrip from "@/components/ui/custom/SeasonStrip";
 import EmptyState from "@/components/ui/custom/EmptyState";
 import ChatBubble from "@/components/ChatBubble";
 import { adventures, getLowestPrice } from "@/lib/data";
-import type { Adventure, AdventureType, Difficulty, Duration, Month } from "@/lib/data";
+import type { Adventure } from "@/lib/data";
 import { getACE, computeDifficulty, computeMatchScore } from "@/lib/ace";
 import { bucketFor } from "@/lib/fitness";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
-import { toggleSelection as toggle } from "@/lib/filterOptions";
 import { currentMonthIndexIST } from "@/lib/homeCuration";
 import {
-  MONTHS, SORT_LABELS, formatAltitude, latestPriceCheck, matchesSearch, searchSuggestions, sortAdventures,
+  MONTHS, SORT_LABELS, formatAltitude, latestPriceCheck, searchSuggestions, sortAdventures,
   type SortKey,
 } from "@/lib/exploreHelpers";
+import {
+  NO_FILTERS, filtersFromParams, writeFilterParams, filterAdventures, panelCount as countPanel, anyFilter,
+  QuickFilterChips, FilterPanel, type AdventureFilterState,
+} from "@/components/ui/custom/AdventureFilters";
 
-type FitFilter = "ready" | "stretch";
 type View = "grid" | "list";
 
 const PAGE = 24;
-const DIFFICULTIES: Difficulty[] = ["Easy", "Moderate", "Hard", "Advanced", "Extreme"];
-const DURATIONS: Duration[] = ["Weekend", "3–5 days", "7+ days"];
-const PRICE_STEPS = [0, 10000, 20000, 40000, 75000];
-
-// Only offer options that actually have adventures behind them — no dead ends.
-const TYPE_OPTIONS = [...new Set(adventures.map((a) => a.type))] as AdventureType[];
-const STATE_COUNTS = Object.entries(
-  adventures.reduce<Record<string, number>>((acc, a) => {
-    a.state.split("/").map((s) => s.trim()).forEach((s) => { acc[s] = (acc[s] ?? 0) + 1; });
-    return acc;
-  }, {})
-).sort((x, y) => y[1] - x[1]);
-
-const list = (v: string | null) => (v ? v.split(",").filter(Boolean) : []);
 
 export default function ExploreClient() {
   const router = useRouter();
@@ -53,18 +41,9 @@ export default function ExploreClient() {
   const { ace: fitAce, ready: profileReady } = useFitnessProfile();
 
   // ── State, initialised from the link (old single-value params still work) ──
-  const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
-  const [types, setTypes] = useState<AdventureType[]>(() => list(searchParams.get("type")) as AdventureType[]);
-  const [states, setStates] = useState<string[]>(() => list(searchParams.get("state") ?? searchParams.get("subRegion")));
-  const [diffs, setDiffs] = useState<Difficulty[]>(() => list(searchParams.get("difficulty")) as Difficulty[]);
-  const [durs, setDurs] = useState<Duration[]>(() => list(searchParams.get("dur")) as Duration[]);
-  const [months, setMonths] = useState<Month[]>(() => list(searchParams.get("month")).filter((m) => (MONTHS as string[]).includes(m)) as Month[]);
-  const [maxPrice, setMaxPrice] = useState<number>(() => Number(searchParams.get("max")) || 0);
-  const [fit, setFit] = useState<FitFilter | null>(() => {
-    const p = searchParams.get("ace");
-    return p === "ready" || p === "stretch" ? p : null;
-  });
-  const [editorOnly, setEditorOnly] = useState(() => searchParams.get("editor") === "1");
+  // Filters are shared with the Map (components/ui/custom/AdventureFilters)
+  const [f, setF] = useState<AdventureFilterState>(() => filtersFromParams(new URLSearchParams(searchParams.toString())));
+  const set = (patch: Partial<AdventureFilterState>) => setF((cur) => ({ ...cur, ...patch }));
   const [sort, setSort] = useState<SortKey | null>(() => (searchParams.get("sort") as SortKey) || null);
   const [view, setView] = useState<View>(() => (searchParams.get("view") === "list" ? "list" : "grid"));
   const [shown, setShown] = useState(PAGE);
@@ -80,23 +59,15 @@ export default function ExploreClient() {
     if (firstSync.current) { firstSync.current = false; return; }
     const t = setTimeout(() => {
       const p = new URLSearchParams();
-      if (search.trim()) p.set("q", search.trim());
-      if (types.length) p.set("type", types.join(","));
-      if (states.length) p.set("state", states.join(","));
+      writeFilterParams(p, f);
       if (region) p.set("region", region);
-      if (diffs.length) p.set("difficulty", diffs.join(","));
-      if (durs.length) p.set("dur", durs.join(","));
-      if (months.length) p.set("month", months.join(","));
-      if (maxPrice) p.set("max", String(maxPrice));
-      if (fit) p.set("ace", fit);
-      if (editorOnly) p.set("editor", "1");
       if (sort) p.set("sort", sort);
       if (view === "list") p.set("view", "list");
       const qs = p.toString();
       router.replace(qs ? `/explore?${qs}` : "/explore", { scroll: false });
     }, 300);
     return () => clearTimeout(t);
-  }, [search, types, states, region, diffs, durs, months, maxPrice, fit, editorOnly, sort, view, router]);
+  }, [f, region, sort, view, router]);
 
   // Arriving from an adventure page's "back to results" — scroll that card into view
   const scrollToSlug = searchParams.get("scroll");
@@ -107,36 +78,21 @@ export default function ExploreClient() {
   const score = (a: Adventure) => (fitAce ? computeMatchScore(fitAce, getACE(a)) : 0);
 
   const results = useMemo(() => {
-    const filtered = adventures.filter((a) => {
-      if (editorOnly && !a.editorChoice) return false;
-      if (search && !matchesSearch(a, search)) return false;
-      if (region && a.region !== region) return false;
-      if (types.length && !types.includes(a.type)) return false;
-      if (states.length && !states.some((s) => a.state.includes(s))) return false;
-      if (diffs.length && !diffs.includes(computeDifficulty(getACE(a)) as Difficulty)) return false;
-      if (durs.length && !durs.includes(a.duration)) return false;
-      if (months.length && !months.some((m) => a.bestMonths.includes(m))) return false;
-      if (maxPrice) {
-        const p = getLowestPrice(a);
-        if (p === null || p > maxPrice) return false;
-      }
-      if (fit && fitAce && bucketFor(score(a)).key !== fit) return false;
-      return true;
-    });
+    const filtered = filterAdventures(adventures, f, { region, score: fitAce ? score : undefined });
     return sortAdventures(filtered, sortKey, { monthIdx, score: fitAce ? score : undefined });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, region, types, states, diffs, durs, months, maxPrice, fit, fitAce, editorOnly, sortKey, monthIdx]);
+  }, [f, region, fitAce, sortKey, monthIdx]);
 
   // New filters start from the top of the list again
-  useEffect(() => { setShown(PAGE); }, [search, region, types, states, diffs, durs, months, maxPrice, fit, editorOnly, sortKey]);
+  useEffect(() => { setShown(PAGE); }, [f, region, sortKey]);
 
-  const panelCount = types.length + states.length + diffs.length + durs.length + months.length + (maxPrice ? 1 : 0);
-  const anyActive = panelCount > 0 || !!search || !!fit || editorOnly || !!region;
+  const panelCount = countPanel(f);
+  const anyActive = anyFilter(f) || !!region;
+  const search = f.search;
   const suggestions = results.length === 0 && search ? searchSuggestions(adventures, search) : [];
 
   function clearAll() {
-    setSearch(""); setTypes([]); setStates([]); setDiffs([]); setDurs([]); setMonths([]);
-    setMaxPrice(0); setFit(null); setEditorOnly(false);
+    setF(NO_FILTERS);
     if (region) router.replace("/explore", { scroll: false });
   }
 
@@ -145,8 +101,6 @@ export default function ExploreClient() {
     const raw = searchParams.get("saved");
     return raw ? adventures.filter((a) => raw.split(",").includes(a.slug)) : null;
   }, [searchParams]);
-
-  const inSeason = months.length === 1 && months[0] === thisMonth;
 
   return (
     <div className="min-h-screen">
@@ -175,14 +129,14 @@ export default function ExploreClient() {
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "var(--text-tertiary)" }} />
             <input
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => set({ search: e.target.value })}
               placeholder="Search a trek, place or activity"
               aria-label="Search adventures"
               className="w-full pl-10 pr-8 py-2.5 rounded-xl text-sm border border-transparent focus:border-[#ff5100]/50 transition-colors"
               style={{ background: "var(--bg-surface-2)", color: "var(--text-primary)", outline: "none" }}
             />
             {search && (
-              <button onClick={() => setSearch("")} aria-label="Clear search" className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1" style={{ color: "var(--text-tertiary)" }}>
+              <button onClick={() => set({ search: "" })} aria-label="Clear search" className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1" style={{ color: "var(--text-tertiary)" }}>
                 <X className="w-3.5 h-3.5" />
               </button>
             )}
@@ -230,41 +184,19 @@ export default function ExploreClient() {
 
         {/* ── Quick chips: the filters most people want, one tap away ── */}
         <div className="max-w-7xl mx-auto px-5 lg:px-8 pb-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar">
-          <Chip on={inSeason} onClick={() => setMonths(inSeason ? [] : [thisMonth])} dot="#10b981">In season now</Chip>
-          {fitAce && (
-            <>
-              <Chip on={fit === "ready"} onClick={() => setFit(fit === "ready" ? null : "ready")} dot="#10b981">Ready for me</Chip>
-              <Chip on={fit === "stretch"} onClick={() => setFit(fit === "stretch" ? null : "stretch")} dot="#f59e0b">A stretch</Chip>
-            </>
-          )}
-          <Chip on={editorOnly} onClick={() => setEditorOnly(!editorOnly)} icon={<Crown className="w-3.5 h-3.5" />}>Editor&apos;s Choice</Chip>
-          <span className="w-px h-5 shrink-0" style={{ background: "var(--border-default)" }} />
-          {STATE_COUNTS.slice(0, 6).map(([s, n]) => (
-            <Chip key={s} on={states.includes(s)} onClick={() => toggle(states, s, setStates)}>
-              {s} <span className="opacity-60">{n}</span>
-            </Chip>
-          ))}
-          <span className="w-px h-5 shrink-0" style={{ background: "var(--border-default)" }} />
-          {DURATIONS.map((d) => (
-            <Chip key={d} on={durs.includes(d)} onClick={() => toggle(durs, d, setDurs)}>{d}</Chip>
-          ))}
+          <QuickFilterChips f={f} set={set} thisMonth={thisMonth} hasFit={!!fitAce} />
         </div>
       </div>
 
       {/* ── Filter panel: bottom sheet on phones, side drawer on larger screens ── */}
       {filtersOpen && (
         <FilterPanel
+          f={f} set={set}
           onClose={() => setFiltersOpen(false)}
+          onClear={clearAll}
           resultCount={results.length}
-          types={types} setTypes={setTypes}
-          states={states} setStates={setStates}
-          diffs={diffs} setDiffs={setDiffs}
-          durs={durs} setDurs={setDurs}
-          months={months} setMonths={setMonths}
-          maxPrice={maxPrice} setMaxPrice={setMaxPrice}
           sortKey={sortKey} setSort={setSort}
           hasProfile={!!fitAce}
-          onClear={clearAll}
         />
       )}
 
@@ -316,7 +248,7 @@ export default function ExploreClient() {
                 Did you mean{" "}
                 {suggestions.map((s, i) => (
                   <span key={s}>
-                    <button onClick={() => setSearch(s)} className="font-semibold text-[#ff5100] hover:underline">{s}</button>
+                    <button onClick={() => set({ search: s })} className="font-semibold text-[#ff5100] hover:underline">{s}</button>
                     {i < suggestions.length - 1 ? ", " : "?"}
                   </span>
                 ))}
@@ -359,7 +291,8 @@ export default function ExploreClient() {
 
       {/* ── Map strip ── */}
       <div className="max-w-7xl mx-auto px-5 lg:px-8 pb-10">
-        <Link href="/map" className="group flex items-center justify-between gap-4 rounded-2xl px-5 py-4 transition-colors hover:bg-[var(--bg-card-hover)]" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
+        {/* Same filters on both pages, so the map opens on exactly these results */}
+        <Link href={(() => { const p = new URLSearchParams(); writeFilterParams(p, f); const qs = p.toString(); return qs ? `/map?${qs}` : "/map"; })()} className="group flex items-center justify-between gap-4 rounded-2xl px-5 py-4 transition-colors hover:bg-[var(--bg-card-hover)]" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
           <span className="flex items-center gap-3">
             <MapIcon className="w-5 h-5 text-[#5fb873]" />
             <span>
@@ -378,23 +311,6 @@ export default function ExploreClient() {
 }
 
 /* ── Small pieces ─────────────────────────────────────────────────────────── */
-
-function Chip({ on, onClick, children, dot, icon }: { on: boolean; onClick: () => void; children: React.ReactNode; dot?: string; icon?: React.ReactNode }) {
-  return (
-    <button
-      onClick={onClick}
-      aria-pressed={on}
-      className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-colors"
-      style={on
-        ? { background: "rgba(255,81,0,0.14)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)" }
-        : { background: "transparent", color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}
-    >
-      {dot && <span className="w-1.5 h-1.5 rounded-full" style={{ background: dot }} />}
-      {icon}
-      {children}
-    </button>
-  );
-}
 
 /** Dense comparison rows — the facts trekkers scan for, in the same order every time. */
 function ListView({ items, monthIdx, score }: { items: Adventure[]; monthIdx: number; score?: (a: Adventure) => number }) {
@@ -454,113 +370,5 @@ function ListView({ items, monthIdx, score }: { items: Adventure[]; monthIdx: nu
         );
       })}
     </div>
-  );
-}
-
-function FilterPanel(props: {
-  onClose: () => void;
-  resultCount: number;
-  types: AdventureType[]; setTypes: (v: AdventureType[]) => void;
-  states: string[]; setStates: (v: string[]) => void;
-  diffs: Difficulty[]; setDiffs: (v: Difficulty[]) => void;
-  durs: Duration[]; setDurs: (v: Duration[]) => void;
-  months: Month[]; setMonths: (v: Month[]) => void;
-  maxPrice: number; setMaxPrice: (v: number) => void;
-  sortKey: SortKey; setSort: (v: SortKey) => void;
-  hasProfile: boolean;
-  onClear: () => void;
-}) {
-  const p = props;
-  const closeRef = useRef(p.onClose);
-  closeRef.current = p.onClose;
-  // Escape closes; the page behind doesn't scroll while the panel is open
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") closeRef.current(); };
-    window.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
-  }, []);
-
-  return (
-    <div className="fixed inset-0 z-[2000]" role="dialog" aria-label="Filters">
-      <div className="absolute inset-0 bg-black/50 animate-in fade-in duration-200" onClick={p.onClose} />
-      <div
-        className="absolute inset-x-0 bottom-0 max-h-[85dvh] rounded-t-3xl sm:inset-y-0 sm:left-auto sm:right-0 sm:w-[400px] sm:max-h-none sm:rounded-none flex flex-col animate-in slide-in-from-bottom-6 sm:slide-in-from-right-6 duration-300"
-        style={{ background: "var(--bg-surface)", borderLeft: "1px solid var(--border-subtle)" }}
-      >
-        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-          <p className="text-base font-semibold" style={{ color: "var(--text-primary)" }}>Filters</p>
-          <button onClick={p.onClose} aria-label="Close filters" className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[var(--bg-card-hover)]" style={{ color: "var(--text-secondary)" }}>
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto px-5 py-5 space-y-6">
-          {/* Sort lives here on phones (the toolbar select is hidden there) */}
-          <Section title="Sort by" className="md:hidden">
-            {(Object.keys(SORT_LABELS) as SortKey[]).filter((k) => k !== "match" || p.hasProfile).map((k) => (
-              <Opt key={k} on={p.sortKey === k} onClick={() => p.setSort(k)}>{SORT_LABELS[k]}</Opt>
-            ))}
-          </Section>
-          <Section title="Activity">
-            {TYPE_OPTIONS.map((t) => <Opt key={t} on={p.types.includes(t)} onClick={() => toggle(p.types, t, p.setTypes)}>{t}</Opt>)}
-          </Section>
-          <Section title="Where">
-            {STATE_COUNTS.map(([s, n]) => (
-              <Opt key={s} on={p.states.includes(s)} onClick={() => toggle(p.states, s, p.setStates)}>{s} <span className="opacity-50">{n}</span></Opt>
-            ))}
-          </Section>
-          <Section title="When do you want to go?">
-            {MONTHS.map((m) => <Opt key={m} on={p.months.includes(m)} onClick={() => toggle(p.months, m, p.setMonths)}>{m}</Opt>)}
-          </Section>
-          <Section title="Difficulty">
-            {DIFFICULTIES.map((d) => <Opt key={d} on={p.diffs.includes(d)} onClick={() => toggle(p.diffs, d, p.setDiffs)}>{d}</Opt>)}
-          </Section>
-          <Section title="Length">
-            {DURATIONS.map((d) => <Opt key={d} on={p.durs.includes(d)} onClick={() => toggle(p.durs, d, p.setDurs)}>{d}</Opt>)}
-          </Section>
-          <Section title="Budget (starting price)">
-            {PRICE_STEPS.map((v) => (
-              <Opt key={v} on={p.maxPrice === v} onClick={() => p.setMaxPrice(v)}>
-                {v === 0 ? "Any" : `Under ₹${v / 1000}k`}
-              </Opt>
-            ))}
-          </Section>
-        </div>
-
-        <div className="flex items-center gap-3 px-5 py-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-          <button onClick={p.onClear} className="px-4 py-3 rounded-xl text-sm font-medium" style={{ color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}>
-            Clear
-          </button>
-          <button onClick={p.onClose} className="flex-1 px-4 py-3 rounded-xl text-sm font-semibold text-white bg-[#ff5100] hover:bg-[#ff6a24] transition-colors">
-            Show {p.resultCount} {p.resultCount === 1 ? "adventure" : "adventures"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Section({ title, children, className = "" }: { title: string; children: React.ReactNode; className?: string }) {
-  return (
-    <div className={className}>
-      <p className="text-xs font-semibold uppercase tracking-wider mb-2.5" style={{ color: "var(--text-tertiary)" }}>{title}</p>
-      <div className="flex flex-wrap gap-2">{children}</div>
-    </div>
-  );
-}
-
-function Opt({ on, onClick, children }: { on: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      onClick={onClick}
-      aria-pressed={on}
-      className="px-3 py-1.5 rounded-lg text-[13px] font-medium transition-colors"
-      style={on
-        ? { background: "rgba(255,81,0,0.14)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)" }
-        : { background: "var(--bg-card)", color: "var(--text-secondary)", border: "1px solid var(--border-subtle)" }}
-    >
-      {children}
-    </button>
   );
 }
