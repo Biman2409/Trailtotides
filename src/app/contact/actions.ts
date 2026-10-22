@@ -1,7 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
-import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import { sendContactEmail, CONTACT_INBOX } from "@/lib/email";
 import { CONTACT_TOPICS, type ContactResult } from "./topics";
 
@@ -70,17 +70,4 @@ export async function sendContactMessage(input: {
   if (tooMany(ip)) return { ok: false, error: `That's a lot of messages in a row. Please wait a few minutes, or email ${CONTACT_INBOX}.` };
 
   return deliver({ name, email, topic, message, page: "Contact page" });
-}
-
-/** For signed-in visitors: name and email come from their account */
-export async function submitMessage(message: string): Promise<ContactResult> {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user?.email) return { ok: false, error: "Please sign in to send a message." };
-
-  const text = (message ?? "").trim().slice(0, 5000);
-  if (text.length < 10) return { ok: false, error: "Please write a little more so we can help.", field: "message" };
-
-  const { data: profile } = await supabase.from("profiles").select("full_name").eq("id", user.id).single();
-  return deliver({ name: profile?.full_name || user.email.split("@")[0], email: user.email, message: text, page: "Direct message" });
 }

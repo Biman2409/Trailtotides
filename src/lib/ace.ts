@@ -1,27 +1,5 @@
 import type { Adventure, ACEAxes } from "./data";
 
-// ─── Supplement system ────────────────────────────────────────────────────────
-
-/** Hard gate: blocks the adventure entirely if the user fails */
-export interface HardGate {
-  key: string;           // e.g. "ear_equalise"
-  question: string;
-  failAnswer: string;    // the answer that triggers the gate
-  failReason: string;    // shown to user
-}
-
-/** Soft modifier: adjusts match score if user answers */
-export interface SoftModifier {
-  key: string;
-  question: string;
-  options: { value: string; score: number; label: string }[]; // score 0–1 multiplier
-}
-
-export interface AdventureTypeSupplements {
-  hardGates: HardGate[];
-  softModifiers: SoftModifier[];
-}
-
 // ─── Re-export ACEAxes as ACE for convenience ──────────────────────────────────
 
 export type ACE = ACEAxes;
@@ -55,15 +33,6 @@ export const ACE_AXIS_COLORS: Record<AceAxis, string> = {
   altitude: "#a78bfa",
   focus:    "#f43f5e",
   nerve: "#10b981",
-};
-
-export const ACE_SCALE_LABELS: Record<number, string> = {
-  0: "Not Relevant",
-  1: "Very Low",
-  2: "Low",
-  3: "Moderate",
-  4: "High",
-  5: "Extreme",
 };
 
 // ─── Domain groupings ─────────────────────────────────────────────────────────
