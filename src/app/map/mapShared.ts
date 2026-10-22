@@ -14,7 +14,7 @@ declare global { interface Window { L: typeof L } }
 // Two styles, both keyless. "Default" is a dark canvas with dark hillshade blended over it, so the
 // Himalaya and the Ghats read as relief — mountain to ocean, in the hero's palette.
 
-const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services";
+export const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services";
 
 export type LayerKey = "map" | "terrain";
 

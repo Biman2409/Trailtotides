@@ -9,6 +9,7 @@ import type { Adventure } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import { haversineKm } from "@/lib/geo";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
+import { BASE_LAYERS, ESRI } from "@/app/map/mapShared";
 
 interface Props {
   current: Adventure;
@@ -115,6 +116,8 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         .ttt-nearby-tooltip::before {
           border-top-color: ${isDark ? "rgba(4,7,14,0.92)" : "rgba(255,255,255,0.97)"} !important;
         }
+        .ttt-nearby-relief { mix-blend-mode: soft-light; opacity: 0.9; }
+        .ttt-nearby-labels { opacity: 0.75; }
       `;
 
       const map = L.map(mapRef.current, {
@@ -124,10 +127,21 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
       });
       mapInstanceRef.current = map;
 
-      const tileUrl = isDark
-        ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-        : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
-      L.tileLayer(tileUrl, { maxZoom: isDark ? 18 : 19 }).addTo(map);
+      // Keyless Esri tiles, as on the Adventure Map (CARTO now needs an API key).
+      // Dark: the map's own Default style — canvas, blended hillshade, labels.
+      // Light: Esri's matching light-gray canvas and labels.
+      const tiles = isDark
+        ? BASE_LAYERS.map
+        : {
+            url: `${ESRI}/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}`,
+            labels: `${ESRI}/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}`,
+            relief: undefined,
+            maxZoom: 16,
+          };
+      const tileOpts = { maxZoom: tiles.maxZoom };
+      L.tileLayer(tiles.url, tileOpts).addTo(map);
+      if (tiles.relief) L.tileLayer(tiles.relief, { ...tileOpts, className: "ttt-nearby-relief" }).addTo(map);
+      if (tiles.labels) L.tileLayer(tiles.labels, { ...tileOpts, className: "ttt-nearby-labels" }).addTo(map);
 
       function makeIcon(color: string, size: number, type: string, isActive = false) {
         const iconSize = Math.round(size * 0.42);
