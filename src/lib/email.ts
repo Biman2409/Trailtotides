@@ -19,15 +19,15 @@ export function verificationEmail(link: string, name: string) {
   return {
     subject: 'Confirm your email to start exploring',
     html: layout('Welcome aboard', `You're one tap from the trail, ${name}.`,
-      `<p style="${P}">Confirm your email to finish creating your Trail to Tides account. It takes a second, and it keeps your account yours.</p>
+      `<p class="c-body" style="${P}">Confirm your email to finish creating your Trail to Tides account. It takes a second, and it keeps your account yours.</p>
        ${actionButton(link, 'Verify my email')}
-       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: ${C.panel}; border: 1px solid ${C.line}; border-radius: 18px;">
-         <tr><td style="padding: 20px 20px 4px; font: 700 11px/1 ${SANS}; letter-spacing: 0.18em; text-transform: uppercase; color: ${C.muted};">What's waiting for you</td></tr>
+       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="c-panel" style="background: ${C.panel}; border: 1px solid ${C.line}; border-radius: 18px;">
+         <tr><td class="c-muted" style="padding: 20px 20px 4px; font: 700 11px/1 ${SANS}; letter-spacing: 0.18em; text-transform: uppercase; color: ${C.muted};">What's waiting for you</td></tr>
          ${perks.map(([t, d], i) => `<tr><td style="padding: 12px 20px 4px;">
            <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-             <td valign="top" style="width: 34px; padding-right: 14px;"><div style="width: 34px; height: 34px; border-radius: 10px; background: ${C.orangeTint}; border: 1px solid ${C.orangeLine}; text-align: center; font: 800 12px/34px ${SANS}; color: ${C.orange};">0${i + 1}</div></td>
-             <td valign="top"><span style="font: 700 14px/1.4 ${SANS}; color: ${C.text};">${t}</span><br>
-               <span style="font: 400 13px/1.5 ${SANS}; color: ${C.body};">${d}</span></td>
+             <td valign="top" style="width: 34px; padding-right: 14px;"><div class="c-chip" style="width: 34px; height: 34px; border-radius: 10px; background: ${C.orangeTint}; border: 1px solid ${C.orangeLine}; text-align: center; font: 800 12px/34px ${SANS}; color: ${C.orange};">0${i + 1}</div></td>
+             <td valign="top"><span class="c-text" style="font: 700 14px/1.4 ${SANS}; color: ${C.text};">${t}</span><br>
+               <span class="c-body" style="font: 400 13px/1.5 ${SANS}; color: ${C.body};">${d}</span></td>
            </tr></table>
          </td></tr>`).join('')}
          <tr><td style="height: 16px;"></td></tr>
@@ -53,7 +53,7 @@ function actionButton(link: string, label: string) {
       <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${link}" style="height:52px;v-text-anchor:middle;width:${width}px;" arcsize="50%" stroke="f" fillcolor="${C.orange}"><w:anchorlock/><center style="color:#ffffff;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;">${label} &rarr;</center></v:roundrect><![endif]-->
       <!--[if !mso]><!--><a href="${link}" style="display: inline-block; padding: 18px 34px; border-radius: 999px; background: ${C.orange}; box-shadow: 0 10px 30px rgba(255, 81, 0, 0.35); font: 700 16px/16px ${SANS}; color: #ffffff; text-decoration: none; mso-hide: all;">${label} &rarr;</a><!--<![endif]-->
     </td></tr></table>
-    <p style="font: 400 12px/1.7 ${SANS}; color: ${C.muted}; margin: 0 0 26px;">Still stuck? <a href="${SITE}/contact" style="color: ${C.link};">Contact us &rarr;</a></p>`;
+    <p class="c-muted" style="font: 400 12px/1.7 ${SANS}; color: ${C.muted}; margin: 0 0 26px;">Still stuck? <a href="${SITE}/contact" class="c-link" style="color: ${C.link};">Contact us &rarr;</a></p>`;
 }
 
 /** Every contact message lands here; replying goes straight back to the sender */
@@ -71,8 +71,8 @@ export function contactEmail(msg: ContactMessage) {
     subject: `New message from ${msg.name}${topic ? ` · ${topic}` : ''}`,
     text: `${msg.message}\n\n— ${msg.name} <${msg.email}>${topic ? `\nTopic: ${topic}` : ''}${msg.page ? `\nSent from: ${msg.page}` : ''}`,
     html: layout(`New message${topic ? ` · ${topic}` : ''}`, msg.name,
-      `<p style="${P} margin-bottom: 18px;"><a href="mailto:${escapeHtml(msg.email)}" style="color: ${C.link}; font-weight: 700; text-decoration: none;">${escapeHtml(msg.email)}</a></p>
-       <div style="font: 400 15px/1.65 ${SANS}; color: ${C.text}; white-space: pre-wrap; padding: 18px 20px; background: ${C.panel}; border: 1px solid ${C.line}; border-radius: 16px;">${escapeHtml(msg.message)}</div>`,
+      `<p class="c-body" style="${P} margin-bottom: 18px;"><a href="mailto:${escapeHtml(msg.email)}" class="c-link" style="color: ${C.link}; font-weight: 700; text-decoration: none;">${escapeHtml(msg.email)}</a></p>
+       <div class="c-panel c-text" style="font: 400 15px/1.65 ${SANS}; color: ${C.text}; white-space: pre-wrap; padding: 18px 20px; background: ${C.panel}; border: 1px solid ${C.line}; border-radius: 16px;">${escapeHtml(msg.message)}</div>`,
       `Reply to this email to answer ${escapeHtml(msg.name)} directly.${msg.page ? ` Sent from ${escapeHtml(msg.page)}.` : ''}`,
       { preheader: msg.message.slice(0, 120) }),
   };
@@ -87,14 +87,14 @@ export function passwordResetEmail(link: string) {
   return {
     subject: 'Reset your Trail to Tides password',
     html: layout('Password reset', 'Lost the trail? Pick a new password.',
-      `<p style="${P}">We got a request to reset the password for this account. Use the button below to choose a new one. You'll be signed in when you're done.</p>
+      `<p class="c-body" style="${P}">We got a request to reset the password for this account. Use the button below to choose a new one. You'll be signed in when you're done.</p>
        ${actionButton(link, 'Reset my password')}
-       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: ${C.panel}; border: 1px solid ${C.line}; border-left: 3px solid ${C.orange}; border-radius: 14px;"><tr>
-         <td style="padding: 16px 20px; font: 400 13px/1.6 ${SANS}; color: ${C.body};">
-           <b style="color: ${C.text};">Didn't ask for this?</b> You can ignore this email. Your password stays the same, and nobody can use this link once it expires.
+       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="c-note" style="background: ${C.panel}; border: 1px solid ${C.line}; border-left: 3px solid ${C.orange}; border-radius: 14px;"><tr>
+         <td class="c-body" style="padding: 16px 20px; font: 400 13px/1.6 ${SANS}; color: ${C.body};">
+           <b class="c-text" style="color: ${C.text};">Didn't ask for this?</b> You can ignore this email. Your password stays the same, and nobody can use this link once it expires.
          </td></tr></table>`,
       `The link works once and expires in 1 hour. Need a new one? Ask again from the login page.`,
-      { banner: { src: RESET, height: 100, alt: '' }, preheader: 'Use this link within the hour to choose a new password.', link, signoff: true }),
+      { preheader: 'Use this link within the hour to choose a new password.', link, signoff: true }),
     text: `Reset your Trail to Tides password:\n${link}\n\nThe link works once and expires in 1 hour. Didn't ask for this? Ignore this email: your password stays the same.\n\nTrail to Tides · ${SITE}`,
   };
 }
@@ -111,17 +111,46 @@ const ASSETS = 'https://www.trailtotides.com/email';
 // The site's own fonts where the mail app loads them (Apple Mail, iOS), close fallbacks elsewhere
 const SANS = "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 const SERIF = "Fraunces, Georgia, 'Times New Roman', serif";
-// The site's dark theme, as solid colours so mail apps without rgba still get them right
+// White by default (inline, so every mail app gets it); the site's dark theme when the reader's
+// mail app is in dark mode (DARK_CSS below). Solid colours, so apps without rgba get them right.
 const C = {
+  page: '#ffffff', card: '#ffffff', panel: '#f7f4f0', line: '#ebe5de',
+  text: '#141210', body: '#4a443e', muted: '#8a8177',
+  orange: '#ff5100', link: '#e04800', orangeTint: '#fff1e9', orangeLine: '#ffd6c2',
+};
+const D = {
   page: '#0a0a0a', card: '#131110', panel: '#1b1815', line: '#2a2622',
   text: '#ffffff', body: '#b3aca5', muted: '#7d766f',
-  orange: '#ff5100', link: '#ff7d47', orangeTint: '#2a1408', orangeLine: '#4a2210',
+  link: '#ff7d47', orangeTint: '#2a1408', orangeLine: '#4a2210',
 };
+// Each element names its role with a class; dark mode swaps the colours by role. Apple Mail,
+// iOS Mail and Outlook follow prefers-color-scheme; Outlook.com marks its dark mode with
+// data-ogsc / data-ogsb. Gmail ignores both and always shows the white version.
+const DARK_RULES = `
+  .c-page { background: ${D.page} !important; }
+  .c-card { background: ${D.card} !important; border-color: ${D.line} !important; }
+  .c-panel { background: ${D.panel} !important; border-color: ${D.line} !important; }
+  .c-note { background: ${D.panel} !important; border-top-color: ${D.line} !important; border-right-color: ${D.line} !important; border-bottom-color: ${D.line} !important; }
+  .c-chip { background: ${D.orangeTint} !important; border-color: ${D.orangeLine} !important; }
+  .c-rule { border-color: ${D.line} !important; }
+  .c-text { color: ${D.text} !important; }
+  .c-body { color: ${D.body} !important; }
+  .c-muted { color: ${D.muted} !important; }
+  .c-link { color: ${D.link} !important; }
+  .only-light { display: none !important; }
+  .only-dark { display: block !important; max-height: none !important; overflow: visible !important; }`;
+const DARK_CSS = `@media (prefers-color-scheme: dark) {${DARK_RULES}
+}
+${DARK_RULES.replace(/\n  \./g, '\n[data-ogsc] .').replace(/\[data-ogsc\] \.(c-page|c-card|c-panel|c-note|c-chip)/g, '[data-ogsb] .$1')}`;
 const P = `font: 400 15px/1.65 ${SANS}; color: ${C.body}; margin: 0;`;
 // The home page headline over mountain trail meeting ocean tide (about 85 KB)
 const WELCOME = `${ASSETS}/welcome.jpg`;
-// The TRAIL contour texture as a slim glow (about 12 KB)
-const RESET = `${ASSETS}/reset.jpg`;
+
+/** A pair of images: one for the white email, one for dark mode (e.g. the logo's lettering) */
+function themedImage(light: string, dark: string, attrs: string, style: string) {
+  return `<img class="only-light" src="${light}" ${attrs} style="display: block; ${style}">`
+    + `<!--[if !mso]><!--><img class="only-dark" src="${dark}" ${attrs} style="display: none; max-height: 0; overflow: hidden; mso-hide: all; ${style}"><!--<![endif]-->`;
+}
 const SOCIAL = [
   ['Instagram', 'https://instagram.com/trailtotides'],
   ['YouTube', 'https://youtube.com/@trailtotides'],
@@ -129,40 +158,44 @@ const SOCIAL = [
 ];
 
 /**
- * One look for every email, in the website's dark theme: the logo on the page, then a card with
- * an optional banner image (the home page headline, or the contour glow), an eyebrow, a serif
- * heading, the body and a handwritten sign-off, then the small print and the footer.
- * Tables, inline styles and solid colours only, so it holds up in Gmail, Outlook and Apple Mail;
- * with images off the alt text still names us.
+ * One look for every email: white, or the website's dark theme when the reader's mail app is in
+ * dark mode. The logo on the page, then a card with an optional photo (the home page headline),
+ * an eyebrow, a serif heading, the body and a handwritten sign-off, then the small print and the
+ * footer. Tables and inline styles, so it holds up in Gmail, Outlook and Apple Mail; with images
+ * off the alt text still names us.
  */
 function layout(eyebrow: string, heading: string, body: string, footer: string, opts: { banner?: { src: string; height: number; alt: string }; preheader?: string; link?: string; signoff?: boolean } = {}) {
   const b = opts.banner;
   return `<!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark"><meta name="supported-color-schemes" content="dark"><title>${escapeHtml(heading)}</title>
+<meta name="color-scheme" content="light dark"><meta name="supported-color-schemes" content="light dark"><title>${escapeHtml(heading)}</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700;800&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet">
-<style>@media (max-width: 480px) { .card { padding: 28px 22px 24px !important; } .h1 { font-size: 25px !important; } }</style></head>
-<body style="margin: 0; padding: 0; background: ${C.page}; color: ${C.body}; -webkit-text-size-adjust: 100%;">
+<style>
+:root { color-scheme: light dark; supported-color-schemes: light dark; }
+@media (max-width: 480px) { .card { padding: 28px 22px 24px !important; } .h1 { font-size: 25px !important; } }
+${DARK_CSS}
+</style></head>
+<body class="c-page" style="margin: 0; padding: 0; background: ${C.page}; color: ${C.body}; -webkit-text-size-adjust: 100%;">
 ${opts.preheader ? `<div style="display: none; max-height: 0; overflow: hidden; opacity: 0;">${escapeHtml(opts.preheader)}&#8199;&#65279;&#847;&#8199;&#65279;&#847;</div>` : ''}
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${C.page}" style="background: ${C.page};"><tr><td align="center" style="padding: 28px 12px 40px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${C.page}" class="c-page" style="background: ${C.page};"><tr><td align="center" style="padding: 28px 12px 40px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 560px;">
     <tr><td style="padding: 0 6px 20px;">
-      <a href="${SITE}" style="text-decoration: none;"><img src="${ASSETS}/logo.png" width="171" height="30" alt="TRAIL to TIDES" style="display: block; border: 0; font: 800 16px/30px ${SANS}; letter-spacing: 0.08em; color: #ffffff;"></a>
+      <a href="${SITE}" style="text-decoration: none;">${themedImage(`${ASSETS}/logo-light.png`, `${ASSETS}/logo.png`, 'width="171" height="30" alt="TRAIL to TIDES"', `border: 0; font: 800 16px/30px ${SANS}; letter-spacing: 0.08em; color: ${C.text};`)}</a>
     </td></tr>
-    <tr><td bgcolor="${C.card}" style="background: ${C.card}; border: 1px solid ${C.line}; border-radius: 24px; overflow: hidden;">
-      ${b ? `<div style="line-height: 0; font-size: 0;">${opts.link ? `<a href="${opts.link}">` : ''}<img src="${b.src}" width="560" height="${b.height}" alt="${escapeHtml(b.alt)}" style="display: block; width: 100%; max-width: 560px; height: auto; border: 0; border-radius: 23px 23px 0 0; color: #ffffff; font: 800 22px/1.3 ${SANS};">${opts.link ? '</a>' : ''}</div>` : ''}
+    <tr><td bgcolor="${C.card}" class="c-card" style="background: ${C.card}; border: 1px solid ${C.line}; border-radius: 24px; overflow: hidden;">
+      ${b ? `<div style="line-height: 0; font-size: 0;">${opts.link ? `<a href="${opts.link}">` : ''}<img src="${b.src}" width="560" height="${b.height}" alt="${escapeHtml(b.alt)}" style="display: block; width: 100%; max-width: 560px; height: auto; border: 0; border-radius: 23px 23px 0 0; color: ${C.text}; font: 800 22px/1.3 ${SANS};">${opts.link ? '</a>' : ''}</div>` : ''}
       <div class="card" style="padding: ${b ? '26px' : '36px'} 32px 28px;">
         <p style="font: 700 11px/1 ${SANS}; letter-spacing: 0.22em; text-transform: uppercase; color: ${C.orange}; margin: 0 0 12px;">${escapeHtml(eyebrow)}</p>
-        <h1 class="h1" style="font: 700 29px/1.18 ${SERIF}; color: ${C.text}; margin: 0 0 14px;">${escapeHtml(heading)}</h1>
+        <h1 class="h1 c-text" style="font: 700 29px/1.18 ${SERIF}; color: ${C.text}; margin: 0 0 14px;">${escapeHtml(heading)}</h1>
         ${body}
-        ${opts.signoff ? `<img src="${ASSETS}/signoff.png" width="198" height="51" alt="See you out there, Team Trail to Tides" style="display: block; border: 0; margin-top: 28px; color: ${C.link}; font: 700 15px/1.4 ${SANS};">` : ''}
-        <p style="font: 400 12px/1.6 ${SANS}; color: ${C.muted}; margin: 24px 0 0; padding-top: 18px; border-top: 1px solid ${C.line};">${footer}</p>
+        ${opts.signoff ? `<div style="margin-top: 28px;">${themedImage(`${ASSETS}/signoff-light.png`, `${ASSETS}/signoff.png`, 'width="120" height="31" alt="See you out there, Team Trail to Tides"', `border: 0; color: ${C.link}; font: 700 13px/1.4 ${SANS};`)}</div>` : ''}
+        <p class="c-muted c-rule" style="font: 400 12px/1.6 ${SANS}; color: ${C.muted}; margin: 24px 0 0; padding-top: 18px; border-top: 1px solid ${C.line};">${footer}</p>
       </div>
     </td></tr>
-    <tr><td align="center" style="padding: 26px 20px 0; font: 400 12px/1.9 ${SANS}; color: ${C.muted};">
-      ${SOCIAL.map(([name, url]) => `<a href="${url}" style="color: ${C.text}; text-decoration: none; font-weight: 700;">${name}</a>`).join(` &nbsp;<span style="color: ${C.orange};">&#9679;</span>&nbsp; `)}<br>
+    <tr><td align="center" class="c-muted" style="padding: 26px 20px 0; font: 400 12px/1.9 ${SANS}; color: ${C.muted};">
+      ${SOCIAL.map(([name, url]) => `<a href="${url}" class="c-text" style="color: ${C.text}; text-decoration: none; font-weight: 700;">${name}</a>`).join(` &nbsp;<span style="color: ${C.orange};">&#9679;</span>&nbsp; `)}<br>
       Find, compare and book adventures matched to your fitness.<br>
-      <a href="${SITE}" style="color: ${C.body}; text-decoration: none; font-weight: 600;">trailtotides.com</a> &nbsp;&middot;&nbsp; <a href="${SITE}/contact" style="color: ${C.body}; text-decoration: none;">hello@trailtotides.com</a> &nbsp;&middot;&nbsp; Mumbai, India
+      <a href="${SITE}" class="c-body" style="color: ${C.body}; text-decoration: none; font-weight: 600;">trailtotides.com</a> &nbsp;&middot;&nbsp; <a href="${SITE}/contact" class="c-body" style="color: ${C.body}; text-decoration: none;">hello@trailtotides.com</a> &nbsp;&middot;&nbsp; Mumbai, India
     </td></tr>
   </table>
 </td></tr></table>

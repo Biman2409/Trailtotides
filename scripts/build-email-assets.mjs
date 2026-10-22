@@ -1,9 +1,10 @@
 // Builds the images the account emails use, into public/email/:
 //   logo.png     the header lockup (icon + TRAIL to TIDES wordmark), white on transparent, 3x
+//   logo-light.png  the same with dark lettering, for the white email
 //   welcome.jpg  the home page headline (From Mountain TRAIL / To Ocean TIDES, textured like the
 //                site's hero) over mountain trail meeting ocean tide, from our own photos, 2x
 //   reset.jpg    a slim banner of the TRAIL contour texture, for the password email, 2x
-//   signoff.png  "See you out there" in the wordmark's script, 2x
+//   signoff.png  "See you out there" in the wordmark's script, 2x (signoff-light.png: dark lettering)
 //   hero.jpg     the first welcome photo; kept so emails already sent still show it
 // Mail apps don't show SVG, canvas or web fonts reliably, so the brand has to arrive as pictures.
 // Run: node scripts/build-email-assets.mjs
@@ -26,7 +27,8 @@ async function googleFont(family, weight) {
 
 const fetchBuffer = async (url) => Buffer.from(await (await fetch(url)).arrayBuffer());
 
-async function logo() {
+/** The header lockup; white lettering for dark mode, dark lettering for the light email */
+async function logo(file, text, toColor) {
   const [black, script] = await Promise.all([googleFont("DM+Sans", 900), googleFont("Caveat", 600)]);
   const S = 3; // drawn at 3x, shown at 228 x 40
   const png = new ImageResponse(
@@ -54,10 +56,10 @@ async function logo() {
           {
             type: "div",
             props: {
-              style: { display: "flex", alignItems: "center", marginLeft: 12 * S, color: "white", fontFamily: "DM Sans", fontSize: 21 * S, letterSpacing: -0.4 * S },
+              style: { display: "flex", alignItems: "center", marginLeft: 12 * S, color: text, fontFamily: "DM Sans", fontSize: 21 * S, letterSpacing: -0.4 * S },
               children: [
                 { type: "span", props: { children: "TRAIL" } },
-                { type: "span", props: { style: { fontFamily: "Caveat", fontSize: 21 * S, color: "rgba(255,255,255,0.72)", margin: `${2 * S}px ${5 * S}px 0`, letterSpacing: 0 }, children: "to" } },
+                { type: "span", props: { style: { fontFamily: "Caveat", fontSize: 21 * S, color: toColor, margin: `${2 * S}px ${5 * S}px 0`, letterSpacing: 0 }, children: "to" } },
                 { type: "span", props: { children: "TIDES" } },
               ],
             },
@@ -67,7 +69,7 @@ async function logo() {
     },
     { width: 228 * S, height: 40 * S, fonts: [{ name: "DM Sans", data: black, weight: 900 }, { name: "Caveat", data: script, weight: 600 }] },
   );
-  await writeFile(new URL("logo.png", OUT), await sharp(Buffer.from(await png.arrayBuffer())).png({ compressionLevel: 9, palette: true }).toBuffer());
+  await writeFile(new URL(file, OUT), await sharp(Buffer.from(await png.arrayBuffer())).png({ compressionLevel: 9, palette: true }).toBuffer());
 }
 
 const DARK = "#0a0a0a"; // the site's page background
@@ -152,7 +154,7 @@ async function welcome(fonts) {
   const W = 1120, H = 640; // shown at 560 x 320
   // Dimmed like the home hero so the lettering carries, fading into the page at the bottom
   const shade = Buffer.from(`<svg width="${W}" height="${H}"><defs>
-    <linearGradient id="v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${DARK}" stop-opacity="0.35"/><stop offset="0.6" stop-color="${DARK}" stop-opacity="0.3"/><stop offset="1" stop-color="${DARK}" stop-opacity="1"/></linearGradient>
+    <linearGradient id="v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${DARK}" stop-opacity="0.35"/><stop offset="0.6" stop-color="${DARK}" stop-opacity="0.3"/><stop offset="1" stop-color="${DARK}" stop-opacity="0.45"/></linearGradient>
     <linearGradient id="h" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${DARK}" stop-opacity="0.45"/><stop offset="0.7" stop-color="${DARK}" stop-opacity="0"/></linearGradient>
   </defs><rect width="${W}" height="${H}" fill="url(#v)"/><rect width="${W}" height="${H}" fill="url(#h)"/></svg>`);
 
@@ -189,14 +191,15 @@ async function resetBanner() {
   await writeFile(new URL("reset.jpg", OUT), await sharp(fill).composite([{ input: fade }]).jpeg({ quality: 80, mozjpeg: true }).toBuffer());
 }
 
-async function signoff(fonts) {
+/** "See you out there, Team Trail to Tides"; light lettering for dark mode, dark for the light email */
+async function signoff(fonts, file, first, second) {
   const png = await render(
     { type: "div", props: { style: { display: "flex", flexDirection: "column", fontFamily: "Caveat", lineHeight: 1.05, padding: 8 }, children: [
-      { type: "span", props: { style: { color: "rgba(255,255,255,0.7)", fontWeight: 600, fontSize: 52 }, children: "See you out there," } },
-      { type: "span", props: { style: { color: "#ff7d47", fontWeight: 700, fontSize: 60 }, children: "Team Trail to Tides" } },
+      { type: "span", props: { style: { color: first, fontWeight: 600, fontSize: 52 }, children: "See you out there," } },
+      { type: "span", props: { style: { color: second, fontWeight: 700, fontSize: 60 }, children: "Team Trail to Tides" } },
     ] } },
     700, 180, [{ name: "Caveat", data: fonts.caveat, weight: 600 }, { name: "Caveat", data: fonts.caveatBold, weight: 700 }]);
-  await writeFile(new URL("signoff.png", OUT), await sharp(png).trim().png({ compressionLevel: 9 }).toBuffer());
+  await writeFile(new URL(file, OUT), await sharp(png).trim().png({ compressionLevel: 9 }).toBuffer());
 }
 
 async function hero() {
@@ -223,5 +226,9 @@ async function hero() {
 await mkdir(OUT, { recursive: true });
 const [jakarta, caveat, caveatBold] = await Promise.all([googleFont("Plus+Jakarta+Sans", 800), googleFont("Caveat", 600), googleFont("Caveat", 700)]);
 const fonts = { jakarta, caveat, caveatBold };
-await Promise.all([logo(), hero(), welcome(fonts), resetBanner(), signoff(fonts)]);
-console.log("Wrote public/email/: logo.png, hero.jpg, welcome.jpg, reset.jpg, signoff.png");
+await Promise.all([
+  logo("logo.png", "#ffffff", "rgba(255,255,255,0.72)"), logo("logo-light.png", "#141210", "#6b655e"),
+  hero(), welcome(fonts), resetBanner(),
+  signoff(fonts, "signoff.png", "rgba(255,255,255,0.7)", "#ff7d47"), signoff(fonts, "signoff-light.png", "#6b655e", "#e04800"),
+]);
+console.log("Wrote public/email/: logo.png, logo-light.png, hero.jpg, welcome.jpg, reset.jpg, signoff.png, signoff-light.png");
