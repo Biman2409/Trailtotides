@@ -1239,6 +1239,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-bajre-1", username: "tenzin_s", rating: 5, body: "Bajre Dara in December — crisp air, no crowds, and Kangchenjunga perfectly framed above the frost-white meadow. Sikkim's best kept trekking secret.", created_at: "2025-12-20T08:00:00Z", user_id: "" },
       { id: "sr-bajre-2", username: "prerna_k", rating: 4, body: "The forest trail through old-growth rhododendrons is stunning even in winter. The meadow views are worth every cold night in the tent.", created_at: "2026-01-15T07:30:00Z", user_id: "" },
+      { id: "sr-bajre-3", username: "nima_lepcha", rating: 4, body: "The drive in from Bagdogra takes most of a day, so budget for it. Once you're on the trail it's quiet forest and then that huge open view of Kangchenjunga. February nights were properly cold, so bring a good liner.", created_at: "2026-02-08T08:30:00Z", user_id: "" },
     ],
   },
   {
@@ -1267,6 +1268,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-chandrak-1", username: "vikram_m", rating: 5, body: "The descent into Malana is worth the entire trek. The village feels completely apart from modern India. Chandrakhani Pass views are also superb.", created_at: "2025-06-18T09:00:00Z", user_id: "" },
       { id: "sr-chandrak-2", username: "isha_p", rating: 4, body: "Short but scenic and culturally rich. The steep climb to the pass is tough but manageable. The Kullu panorama from the top made it completely worthwhile.", created_at: "2025-09-05T08:00:00Z", user_id: "" },
+      { id: "sr-chandrak-3", username: "aakash_v", rating: 3, body: "Pretty trek but we got the monsoon end of the season: two days of cloud and no views from the pass. Malana has strict rules for outsiders (don't touch walls or people), which is fine, just read up first. Go in May or September.", created_at: "2025-07-22T10:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1295,6 +1297,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-dodital-1", username: "subhash_r", rating: 5, body: "Dodital lake at sunset with the forest reflected in perfect stillness. The Darwa Pass views next morning made this two-day sequence the highlight of my trekking year.", created_at: "2025-05-28T18:00:00Z", user_id: "" },
       { id: "sr-dodital-2", username: "ananya_s", rating: 4, body: "Underrated Uttarakhand trek. The forest sections are exceptional — massive oaks and rhododendrons. Darwa Pass is tough but panoramic.", created_at: "2025-10-10T09:00:00Z", user_id: "" },
+      { id: "sr-dodital-3", username: "pooja_negi", rating: 4, body: "Lovely forest walk up to Dodital and the lake is calm and green. The Darwa Pass day is long and the last climb is steep, so start early. November meant frost on the tents but clear Bandarpunch views.", created_at: "2025-11-02T08:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1321,6 +1324,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-doodh-1", username: "amir_k", rating: 5, body: "Doodhpathri in July is Kashmir at its most untouched. Miles of green meadow, milky glacial streams, and almost no other trekkers. Pure peace.", created_at: "2025-07-20T08:00:00Z", user_id: "" },
       { id: "sr-doodh-2", username: "ritu_s", rating: 4, body: "The pastoral scenery is outstanding. Very different from the high-pass Kashmir treks — more gentle but deeply beautiful. Shepherd camps add wonderful character.", created_at: "2025-08-10T09:00:00Z", user_id: "" },
+      { id: "sr-doodh-3", username: "faisal_m", rating: 4, body: "Green as far as you can see, and the shepherds offered us tea at every camp. It rained most afternoons in late August and the trail got muddy, so pack gaiters. Still the most relaxing week I've had in the hills.", created_at: "2025-08-24T09:30:00Z", user_id: "" },
     ],
   },
   {
@@ -1349,6 +1353,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-gokyo-1", username: "meera_n", rating: 5, body: "Gokyo Ri at dawn with all four 8,000ers lit up — I had tears in my eyes. The lakes themselves are otherworldly. A better experience than EBC in my opinion.", created_at: "2025-10-20T06:00:00Z", user_id: "" },
       { id: "sr-gokyo-2", username: "siddharth_p", rating: 5, body: "Less crowded than the standard EBC trail and visually superior. The Gokyo valley has a peaceful, remote quality despite being in the popular Khumbu region.", created_at: "2025-04-18T07:30:00Z", user_id: "" },
+      { id: "sr-gokyo-3", username: "raghav_iyer", rating: 3, body: "The trek itself is a 5. Our Lukla flight was cancelled two days running, which ate our buffer days and we had to skip the Gokyo Ri rest day. Keep at least two spare days, and the third lake is worth the extra walk.", created_at: "2025-10-12T07:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1376,6 +1381,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-gulabi-1", username: "nandita_g", rating: 5, body: "May rhododendron bloom on Gulabi Kantha is one of the most beautiful things I've seen in the Himalaya. Pink slopes, white peaks, blue sky. Perfection.", created_at: "2025-05-15T09:00:00Z", user_id: "" },
       { id: "sr-gulabi-2", username: "deepak_t", rating: 4, body: "Underrated Uttarkashi trek. The Gangotri peak views from the ridge are superb and the trail is in great shape. Short and rewarding.", created_at: "2025-10-12T08:00:00Z", user_id: "" },
+      { id: "sr-gulabi-3", username: "manish_rawat", rating: 5, body: "Did it in April with my teenage son as his first snow trek. Bandarpunch felt close enough to touch from the top. Short days, good campsites, and a guide who was brilliant with first-timers.", created_at: "2025-04-20T08:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1406,6 +1412,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-kareri-1", username: "priya_d", rating: 5, body: "My first proper mountain trek and it was perfect. The Dhauladhar wall towering above Kareri Lake — I didn't expect anything so dramatic this close to Dharamshala.", created_at: "2025-10-05T09:00:00Z", user_id: "" },
       { id: "sr-kareri-2", username: "rahul_mc", rating: 4, body: "Classic Dharamshala trek. The final approach to the lake through boulders is exciting. Great starting point if you've never been above 3,000m.", created_at: "2025-06-10T08:00:00Z", user_id: "" },
+      { id: "sr-kareri-3", username: "nikhil_b", rating: 3, body: "Beautiful lake, but go on a weekday. We went on a long weekend and the lake shore was packed with groups and there was litter near the camps. The Dhauladhar views are still great. Carry your trash back down.", created_at: "2025-05-18T09:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1433,6 +1440,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-khopra-1", username: "lalit_n", rating: 5, body: "Khopra Ridge at sunrise with Dhaulagiri and Annapurna South both perfectly clear — I was the only person there. This is what Nepal trekking should be.", created_at: "2025-10-25T06:00:00Z", user_id: "" },
       { id: "sr-khopra-2", username: "smita_r", rating: 4, body: "Excellent alternative to crowded ABC. The ridge camp views are arguably better than ABC for photographic composition. Quiet, beautiful, and well worth it.", created_at: "2025-04-22T07:00:00Z", user_id: "" },
+      { id: "sr-khopra-3", username: "jyoti_m", rating: 4, body: "Community lodges along the way were simple but warm, and the dal bhat refills never stopped. The climb to the ridge is steady rather than hard. Clouds rolled in by 10am, so be up there for sunrise.", created_at: "2025-11-08T07:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1457,6 +1465,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-lobuche-1", username: "arun_climb", rating: 5, body: "The summit of Lobuche East with Everest directly in front of you — nothing prepares you for that. The technical sections with fixed ropes are manageable with the guide's coaching.", created_at: "2025-05-12T06:30:00Z", user_id: "" },
       { id: "sr-lobuche-2", username: "rekha_s", rating: 4, body: "Hardest thing I've ever done. The pre-dawn summit push in the cold with crampons and ice axe is intense. But the summit moment made every step worth it.", created_at: "2025-10-15T07:00:00Z", user_id: "" },
+      { id: "sr-lobuche-3", username: "karan_alpine", rating: 4, body: "Did this after EBC and the acclimatisation from the trek made the summit day doable. The final ridge on fixed rope is exposed and slow when other teams are on it. Expensive, but the guide team was excellent.", created_at: "2025-04-30T06:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1484,6 +1493,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-manaslu-1", username: "sunil_t", rating: 5, body: "Manaslu Circuit is Nepal's finest long trek. The Larke Pass morning crossing with Manaslu and Himlung towering above — absolute magic. Far better than Annapurna Circuit these days.", created_at: "2025-10-22T07:00:00Z", user_id: "" },
       { id: "sr-manaslu-2", username: "kavya_n", rating: 5, body: "Remote villages, spectacular passes, the 8,000m face right there. We saw almost no other trekkers for 5 days. This is what Annapurna Circuit used to be.", created_at: "2025-04-28T08:00:00Z", user_id: "" },
+      { id: "sr-manaslu-3", username: "vinod_p", rating: 3, body: "Trail and passes are world class, no complaints there. The jeep ride in was rough, with landslide sections that added a day, and you need a licensed guide and a restricted area permit. Teahouse food got repetitive after Samagaon.", created_at: "2025-10-06T08:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1508,6 +1518,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-mera-1", username: "arjun_climb", rating: 5, body: "Five 8,000m peaks from Mera's summit. I've trekked all over the Himalaya and nothing comes close to this panorama. The glacier approach is exhausting but not technical.", created_at: "2025-05-08T07:00:00Z", user_id: "" },
       { id: "sr-mera-2", username: "sunita_e", rating: 5, body: "The best day of my life. Mera Peak summit at dawn, Everest right there. Our Sherpa guide was exceptional. Altitude management was the key challenge — listen to your guide.", created_at: "2025-10-18T06:30:00Z", user_id: "" },
+      { id: "sr-mera-3", username: "neha_summits", rating: 4, body: "Good first trekking peak if you're fit and patient with altitude. The glacier walk to high camp is long rather than technical. I had a rough night at high camp with a headache, so take the acclimatisation days seriously.", created_at: "2025-10-28T06:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1536,6 +1547,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-panchk-1", username: "govind_r", rating: 5, body: "Tungnath at dawn with Kedarnath peak behind the temple — the most moving place I've ever stood. The whole circuit is spiritually charged and scenically extraordinary.", created_at: "2025-06-08T06:00:00Z", user_id: "" },
       { id: "sr-panchk-2", username: "aditi_g", rating: 5, body: "12 days well spent. Rudranath is the most remote and dramatic of the five — worth every steep approach kilometre. This trek changed how I relate to the mountains.", created_at: "2025-09-25T08:00:00Z", user_id: "" },
+      { id: "sr-panchk-3", username: "shalini_v", rating: 4, body: "Madhyamaheshwar was my favourite: quiet, green, and the Chaukhamba view from Budha Madhyamaheshwar is unreal. Kedarnath itself was very crowded. Plan rest days, the climbs between temples add up.", created_at: "2025-10-04T07:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1564,6 +1576,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-panga-1", username: "harsh_a", rating: 5, body: "Summit of Pangarchulla in late March with 2 feet of snow — crampons on at 3am, sunrise hit us at the top with Nanda Devi glowing pink. Unforgettable.", created_at: "2026-03-28T06:30:00Z", user_id: "" },
       { id: "sr-panga-2", username: "simran_a", rating: 4, body: "The April window is perfect — enough snow for dramatic conditions, not too technical. The 360° view from the top is extraordinary. Well worth the early start.", created_at: "2025-04-10T07:00:00Z", user_id: "" },
+      { id: "sr-panga-3", username: "abhinav_s", rating: 4, body: "Summit day is long: we left at 2:30am and got back to camp after 4pm. The boulder section near the top is slow in snow. Our leader turned two people around for being too slow, which was the right call.", created_at: "2026-03-15T07:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1592,6 +1605,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-panwali-1", username: "madhuri_g", rating: 5, body: "The Panwali Kantha ridge in June — wildflowers in every direction, Kedarnath Dome perfectly clear, and literally no other trekkers. This is Uttarakhand at its best.", created_at: "2025-06-22T08:00:00Z", user_id: "" },
       { id: "sr-panwali-2", username: "rohit_gh", rating: 4, body: "Wide open ridge, great camping, excellent views of the Gangotri peaks. Less dramatic than Kedartal or Rupin but more peaceful. October colours on the meadow are stunning.", created_at: "2025-10-08T09:00:00Z", user_id: "" },
+      { id: "sr-panwali-3", username: "sneha_bisht", rating: 5, body: "September after the rains was perfect: green meadows, clear mornings and almost nobody else on the ridge. We camped with shepherds' flocks below us. It feels like a secret compared to the famous Uttarakhand treks.", created_at: "2025-09-20T08:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1621,6 +1635,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-phulara-1", username: "kiran_t", rating: 5, body: "Two days walking on a high open ridge with Swargarohini in front of you the whole time. I've done 20+ treks and Phulara is one of the most satisfying ridge experiences in India.", created_at: "2025-05-20T08:00:00Z", user_id: "" },
       { id: "sr-phulara-2", username: "ankit_s", rating: 4, body: "Underrated Uttarakhand trek. The continuous mountain views from the ridge are excellent value for the short commitment. November colours on the forest below the ridge are beautiful.", created_at: "2025-11-05T09:00:00Z", user_id: "" },
+      { id: "sr-phulara-3", username: "varun_d", rating: 4, body: "The ridge walk is the highlight: two hours with drops on both sides and Swargarohini ahead. Pushtara meadows were full of grazing horses. It's short, so if you have a few spare days add Har Ki Dun nearby.", created_at: "2025-06-02T08:30:00Z", user_id: "" },
     ],
   },
   {
@@ -1650,6 +1665,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-pinbhaba-1", username: "rahul_sp", rating: 5, body: "The Bhaba Valley is lush and green for 4 days, then the pass, then Spiti's lunar brown. The geographical shift is completely shocking. One of India's best pass crossings.", created_at: "2025-08-18T09:00:00Z", user_id: "" },
       { id: "sr-pinbhaba-2", username: "nisha_k", rating: 4, body: "Excellent and underrated. The Pin Bhaba Pass descent into Spiti on scree is dramatic. The contrast between the two valley sides is genuinely unlike anything else I've seen.", created_at: "2025-07-25T08:00:00Z", user_id: "" },
+      { id: "sr-pinbhaba-3", username: "tanya_r", rating: 4, body: "Kinnaur side green and full of streams, Spiti side bare and gold. The scree descent is hard on the knees, so poles help. The drive out from Mudh to Kaza and beyond is long, so don't book a flight the same day.", created_at: "2025-09-06T09:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1679,6 +1695,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-pindari-1", username: "anupam_k", rating: 5, body: "Zero Point at Pindari with Nanda Devi and Nanda Kot directly above — the scale is humbling. The forest approach through giant oaks and rhododendrons is equally beautiful.", created_at: "2025-06-05T09:00:00Z", user_id: "" },
       { id: "sr-pindari-2", username: "leela_c", rating: 4, body: "Classic Kumaon trek. The glacier snout is smaller than expected (it's retreating) but the surrounding peak circus is magnificent. Great trail, well worth it.", created_at: "2025-09-30T08:00:00Z", user_id: "" },
+      { id: "sr-pindari-3", username: "harish_joshi", rating: 4, body: "The KMVN rest houses along the way made it easy for my parents to join for the first stages. Khati village is lovely. The road from Kathgodam is long and winding, so carry motion sickness tablets.", created_at: "2025-05-26T08:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1704,6 +1721,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-ranthan-1", username: "deepti_k", rating: 5, body: "Ranthan Kharak is Kumaon's best kept secret. The meadow view of Nanda Devi and Trishul with zero other trekkers is something special. Come before it gets popular.", created_at: "2025-05-30T09:00:00Z", user_id: "" },
       { id: "sr-ranthan-2", username: "sanjay_m", rating: 4, body: "Outstanding remote meadow trek. The forest approach is long but the meadow payoff is enormous. Panchachuli from Ranthan Kharak at dawn is magnificent.", created_at: "2025-10-05T07:30:00Z", user_id: "" },
+      { id: "sr-ranthan-3", username: "mukesh_dh", rating: 5, body: "We met only one other group in six days. Villages on the approach still feel untouched, and our cook was from the valley and knew every story. The meadow at sunrise with the whole range lit up is the best camp I've had.", created_at: "2025-09-24T07:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1732,6 +1750,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-roopkund-1", username: "arvind_r", rating: 5, body: "Standing at Roopkund in October with skeletons visible in the clear water and Trishul above — it's genuinely unsettling and utterly spectacular simultaneously. Nothing else like it.", created_at: "2025-09-28T09:00:00Z", user_id: "" },
       { id: "sr-roopkund-2", username: "meghna_t", rating: 4, body: "Even if you ignore the lake, the route via Ali Bedni Bugyal is exceptional. The meadow views alone justify the trek. The lake is the legend but the journey is the reward.", created_at: "2025-06-12T08:00:00Z", user_id: "" },
+      { id: "sr-roopkund-3", username: "shreya_n", rating: 3, body: "The meadows at Ali and Bedni Bugyal were the best part. Early June meant crowded campsites, with several big groups sharing the same spots, and toilets were a problem. Go in late September if you can.", created_at: "2025-06-01T08:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1761,6 +1780,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-sarpass-1", username: "priyanka_k", rating: 5, body: "The Sar Pass snow descent was the most fun I've had on a trek. Glissading down in June with the whole Parvati Valley below — instant classic moment. Great first pass trek.", created_at: "2025-06-08T10:00:00Z", user_id: "" },
       { id: "sr-sarpass-2", username: "gaurav_p", rating: 4, body: "Good introduction to Himalayan pass trekking from Kasol. The pass views are solid. Trail is well-managed. The descent on snow is the highlight — don't miss early June for it.", created_at: "2025-05-25T09:00:00Z", user_id: "" },
+      { id: "sr-sarpass-3", username: "sahil_th", rating: 3, body: "Fun trek with a great snow slide, but our batch was huge, close to 40 people, so it felt more like a school trip than a mountain trek. Kasol is a nice base. Pick a smaller operator if you want quiet.", created_at: "2025-05-30T09:30:00Z", user_id: "" },
     ],
   },
   {
@@ -1788,6 +1808,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-satopanth-1", username: "vivek_b", rating: 5, body: "Satopanth is the most sacred-feeling place I've ever been in the mountains. The triangular lake with Chaukhamba reflected in it — absolutely otherworldly. Hard approach but worth every step.", created_at: "2025-06-15T09:00:00Z", user_id: "" },
       { id: "sr-satopanth-2", username: "indira_g", rating: 4, body: "Demanding but deeply rewarding. The gorge approach above Badrinath is spectacular. The lake's geometric perfection at 4,600m is something you have to see to believe.", created_at: "2025-10-08T08:00:00Z", user_id: "" },
+      { id: "sr-satopanth-3", username: "yogesh_n", rating: 4, body: "The moraine walk after Chakratirtha is slow and tiring, so pace yourself. Permits take time to arrange, so let your operator handle it early. The lake with Chaukhamba behind it is worth all of it.", created_at: "2025-06-08T08:00:00Z", user_id: "" },
     ],
   },
   {
@@ -1813,6 +1834,7 @@ export const adventures: Adventure[] = [
     seedReviews: [
       { id: "sr-surya-1", username: "tanvi_ch", rating: 5, body: "Surya Top sunrise with Nanda Devi, Trishul, Kamet, and Kedarnath all clear — the full Garhwal panorama in one sweep. I couldn't believe this trek isn't more famous.", created_at: "2025-05-22T06:00:00Z", user_id: "" },
       { id: "sr-surya-2", username: "rajiv_n", rating: 4, body: "Quiet, beautiful, and rewarding. The summit plateau view is one of the best in Uttarakhand. Worth the 7-day commitment for the October clarity alone.", created_at: "2025-11-02T07:30:00Z", user_id: "" },
+      { id: "sr-surya-3", username: "rashmi_k", rating: 5, body: "October skies were spotless. Small group of six, no one else on the summit, and our guide named every peak from Nanda Devi round to Chaukhamba. Easily the best value week in the hills I've had.", created_at: "2025-10-18T06:30:00Z", user_id: "" },
     ],
   },
 ];
