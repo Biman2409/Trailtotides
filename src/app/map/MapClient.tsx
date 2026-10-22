@@ -7,6 +7,7 @@ import {
   SlidersHorizontal, Loader2, Compass, Users, ChevronLeft, PanelLeftClose, PanelLeftOpen, BookmarkPlus,
 } from "lucide-react";
 import { nearFrom } from "@/lib/alerts";
+import { EMAIL_ALERTS } from "@/lib/features";
 import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import Navbar from "@/components/layout/Navbar";
 import ChatBubble from "@/components/ChatBubble";
@@ -308,7 +309,7 @@ export default function MapClient() {
   // Saving a search needs an account: it's kept for you and can email you new matches
   async function saveSearch() {
     if (!loggedIn) {
-      toast.error("Log in to save searches and get alerts.", {
+      toast.error(EMAIL_ALERTS ? "Log in to save searches and get alerts." : "Log in to save searches.", {
         action: { label: "Log in", onClick: () => window.location.assign(`/auth/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}`) },
       });
       return;
@@ -324,7 +325,7 @@ export default function MapClient() {
     const data = await res.json().catch(() => ({}));
     if (!res.ok) { toast.error(data.error ?? "Couldn't save the search."); return; }
     track("map_save_search", { filters: panelCount(f) });
-    toast.success("Search saved", { description: "We'll email you when new adventures match it.", action: { label: "View", onClick: () => window.location.assign("/profile") } });
+    toast.success("Search saved", { description: EMAIL_ALERTS ? "We'll email you when new adventures match it." : "Find it on your profile any time.", action: { label: "View", onClick: () => window.location.assign("/profile") } });
   }
 
   function toggleShots() {

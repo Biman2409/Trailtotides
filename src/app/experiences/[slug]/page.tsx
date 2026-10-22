@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { type OperatorCardData } from "./OperatorCard";
 import OperatorsSection from "./OperatorsSection";
+import { QUOTE_REQUESTS } from "@/lib/features";
 import {
   Clock,
   TrendingUp,
@@ -675,7 +676,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               hasVerifiedOperator={!!featuredOp?.verified}
               seasonUrgency={seasonUrgency}
               nextDeparture={nextDeparture}
-              quote={{ slug: adventure.slug, name: adventure.name, operators: adventure.operators.filter((o) => o.verified).map((o) => o.name) }}
+              quote={QUOTE_REQUESTS ? { slug: adventure.slug, name: adventure.name, operators: adventure.operators.filter((o) => o.verified).map((o) => o.name) } : undefined}
             />
 
             {/* FAQ — desktop-only home for this section, right under the at-a-glance booking card */}

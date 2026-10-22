@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { EMAIL_ALERTS } from './features';
 
 const resend = process.env.RESEND_API_KEY 
   ? new Resend(process.env.RESEND_API_KEY) 
@@ -12,7 +13,7 @@ const FROM = process.env.EMAIL_FROM || 'Trail to Tides <hello@trailtotides.com>'
 export function verificationEmail(link: string, name: string) {
   const perks = [
     ['Adventure Matchmaker', 'Answer a few questions and see every adventure rated for your body.'],
-    ['Your wishlist', 'Save adventures and hear when their season opens or the price drops.'],
+    ['Your wishlist', EMAIL_ALERTS ? 'Save adventures and hear when their season opens or the price drops.' : 'Keep the adventures you want to do in one place, ready when you are.'],
     ['Compass.AI', 'Ask for a trip in your own words and get picks that fit.'],
   ];
   return {
@@ -53,33 +54,24 @@ export const CONTACT_INBOX = 'hello@trailtotides.com';
 const escapeHtml = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-export async function sendContactEmail(msg: { name: string; email: string; topic?: string; message: string; page?: string }) {
-  if (!resend) return { error: 'Email service not configured' };
+export interface ContactMessage { name: string; email: string; topic?: string; message: string; page?: string }
 
+/** A contact-form message, to our inbox */
+export function contactEmail(msg: ContactMessage) {
   const topic = msg.topic?.trim();
-  try {
-    const { data, error } = await resend.emails.send({
-      from: FROM,
-      to: CONTACT_INBOX,
-      replyTo: msg.email,
-      subject: `New message from ${msg.name}${topic ? ` · ${topic}` : ''}`,
-      text: `${msg.message}\n\n— ${msg.name} <${msg.email}>${topic ? `\nTopic: ${topic}` : ''}${msg.page ? `\nSent from: ${msg.page}` : ''}`,
-      html: layout(`New message${topic ? ` · ${topic}` : ''}`, msg.name,
-        `<p style="${P} margin-bottom: 18px;"><a href="mailto:${escapeHtml(msg.email)}" style="color: #e04800; font-weight: 700; text-decoration: none;">${escapeHtml(msg.email)}</a></p>
-         <div style="font: 400 15px/1.65 ${SANS}; color: #1c1814; white-space: pre-wrap; padding: 18px 20px; background: #f7f3ec; border-radius: 16px;">${escapeHtml(msg.message)}</div>`,
-        `Reply to this email to answer ${escapeHtml(msg.name)} directly.${msg.page ? ` Sent from ${escapeHtml(msg.page)}.` : ''}`,
-        { preheader: msg.message.slice(0, 120) }),
-    });
+  return {
+    subject: `New message from ${msg.name}${topic ? ` · ${topic}` : ''}`,
+    text: `${msg.message}\n\n— ${msg.name} <${msg.email}>${topic ? `\nTopic: ${topic}` : ''}${msg.page ? `\nSent from: ${msg.page}` : ''}`,
+    html: layout(`New message${topic ? ` · ${topic}` : ''}`, msg.name,
+      `<p style="${P} margin-bottom: 18px;"><a href="mailto:${escapeHtml(msg.email)}" style="color: #e04800; font-weight: 700; text-decoration: none;">${escapeHtml(msg.email)}</a></p>
+       <div style="font: 400 15px/1.65 ${SANS}; color: #1c1814; white-space: pre-wrap; padding: 18px 20px; background: #f7f3ec; border-radius: 16px;">${escapeHtml(msg.message)}</div>`,
+      `Reply to this email to answer ${escapeHtml(msg.name)} directly.${msg.page ? ` Sent from ${escapeHtml(msg.page)}.` : ''}`,
+      { preheader: msg.message.slice(0, 120) }),
+  };
+}
 
-    if (error) {
-      return { error: error.message };
-    }
-
-    return { success: true, data };
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'An unknown error occurred';
-    return { error: message };
-  }
+export async function sendContactEmail(msg: ContactMessage) {
+  return send({ to: CONTACT_INBOX, replyTo: msg.email, ...contactEmail(msg) });
 }
 
 /** Forgot password: the link signs them in on the reset page, where they choose a new one */
@@ -170,7 +162,13 @@ async function send(msg: { to: string | string[]; subject: string; html: string;
 export interface AlertItem { name: string; slug: string; line: string }
 
 /** The daily digest: wishlist news and new matches for saved searches, in one email */
-export async function sendAlertDigest(to: string, name: string, wishlist: AlertItem[], searches: { name: string; link: string; items: AlertItem[] }[]) {
+export type AlertSearch = { name: string; link: string; items: AlertItem[] };
+
+export async function sendAlertDigest(to: string, name: string, wishlist: AlertItem[], searches: AlertSearch[]) {
+  return send({ to, ...alertDigestEmail(name, wishlist, searches) });
+}
+
+export function alertDigestEmail(name: string, wishlist: AlertItem[], searches: AlertSearch[]) {
   const row = (i: AlertItem) => `
     <li style="margin: 0 0 10px;">
       <a href="${SITE}/experiences/${encodeURIComponent(i.slug)}" style="color: #ff5100; font-weight: bold; text-decoration: none;">${escapeHtml(i.name)}</a>
@@ -188,15 +186,14 @@ export async function sendAlertDigest(to: string, name: string, wishlist: AlertI
     text.push('', `New for "${s.name}":`, ...s.items.map((i) => `- ${i.name}: ${i.line}`), s.link);
   }
   const count = wishlist.length + searches.reduce((n, s) => n + s.items.length, 0);
-  return send({
-    to,
+  return {
     subject: wishlist.length && !searches.length
       ? `${wishlist[0].name}${wishlist.length > 1 ? ` and ${wishlist.length - 1} more` : ''}: news from your wishlist`
       : `${count} new ${count === 1 ? 'adventure' : 'adventures'} for your saved searches`,
     html: layout('Your adventure alerts', `Hi ${name}, here's what changed`, parts.join(''),
       `You get this because alerts are on for your wishlist or saved searches. <a href="${SITE}/settings" style="color: #999;">Change alerts</a>`),
     text: `${text.join('\n')}\n\nChange alerts: ${SITE}/settings`,
-  });
+  };
 }
 
 export interface QuoteEmail {
@@ -218,29 +215,34 @@ const quoteFacts = (q: QuoteEmail) => [
 
 /** To the operators asked (and our inbox, which forwards to operators who aren't on the platform yet) */
 export async function sendQuoteRequest(to: string[], q: QuoteEmail) {
+  return send({ to, replyTo: q.traveller.email, ...quoteRequestEmail(q) });
+}
+
+export function quoteRequestEmail(q: QuoteEmail) {
   const facts = quoteFacts(q).map(([k, v]) => `<tr><td style="padding: 4px 12px 4px 0; color: #888;">${k}</td><td style="padding: 4px 0;">${escapeHtml(v)}</td></tr>`).join('');
-  return send({
-    to,
-    replyTo: q.traveller.email,
+  return {
     subject: `Quote request: ${q.adventure.name} for ${q.groupSize}, from ${q.startDate}`,
     html: layout('Quote request', `${q.traveller.name} would like a price`,
       `<table style="font-size: 14px; border-collapse: collapse;">${facts}</table>
        ${q.message ? `<div style="font-size: 15px; line-height: 1.6; white-space: pre-wrap; padding: 16px; background: #f7f4ee; border-radius: 10px; margin-top: 16px;">${escapeHtml(q.message)}</div>` : ''}`,
       `Reply to this email to answer ${escapeHtml(q.traveller.name)} directly. Sent through Trail to Tides from ${SITE}/experiences/${encodeURIComponent(q.adventure.slug)}`),
     text: `${quoteFacts(q).map(([k, v]) => `${k}: ${v}`).join('\n')}\n\n${q.message}\n\nReply to this email to answer ${q.traveller.name} directly.`,
-  });
+  };
 }
 
 /** The traveller's copy, so they know what was sent and to whom */
 export async function sendQuoteCopy(q: QuoteEmail) {
+  return send({ to: q.traveller.email, ...quoteCopyEmail(q) });
+}
+
+export function quoteCopyEmail(q: QuoteEmail) {
   const facts = quoteFacts(q).map(([k, v]) => `<tr><td style="padding: 4px 12px 4px 0; color: #888;">${k}</td><td style="padding: 4px 0;">${escapeHtml(v)}</td></tr>`).join('');
-  return send({
-    to: q.traveller.email,
+  return {
     subject: `Your quote request for ${q.adventure.name} is on its way`,
     html: layout('Quote request sent', 'Operators will reply to you by email',
       `<p style="font-size: 15px; line-height: 1.6; margin: 0 0 14px;">We've sent your request to ${q.operators.length === 1 ? 'the operator' : `${q.operators.length} verified operators`}. Their replies come straight to this inbox.</p>
        <table style="font-size: 14px; border-collapse: collapse;">${facts}</table>`,
       `See your requests any time on <a href="${SITE}/profile" style="color: #999;">your profile</a>.`),
     text: `We've sent your request. Operators will reply to you by email.\n\n${quoteFacts(q).map(([k, v]) => `${k}: ${v}`).join('\n')}`,
-  });
+  };
 }

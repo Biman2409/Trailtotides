@@ -5,6 +5,7 @@ import { adventures } from "@/lib/data";
 import { prefsOf } from "@/lib/apiUser";
 import { searchMatches, wishlistNews, type AlertState } from "@/lib/alerts";
 import { sendAlertDigest, type AlertItem } from "@/lib/email";
+import { EMAIL_ALERTS } from "@/lib/features";
 
 // The daily alerts job (vercel.json runs it each morning). For every account it collects
 // wishlist news (season about to open, price drop) and new matches for saved map searches,
@@ -24,6 +25,7 @@ export async function GET(req: NextRequest) {
   const secret = process.env.CRON_SECRET;
   if (!secret) return NextResponse.json({ error: "CRON_SECRET is not set" }, { status: 500 });
   if (req.headers.get("authorization") !== `Bearer ${secret}`) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!EMAIL_ALERTS) return NextResponse.json({ skipped: "Email alerts are switched off" });
 
   const admin = await createAdminClient();
   const digests = new Map<string, Digest>();

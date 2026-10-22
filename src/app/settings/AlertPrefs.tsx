@@ -5,11 +5,12 @@ import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
 import { Section } from "@/app/profile/ProfileForm";
 import type { AccountPrefs } from "@/lib/apiUser";
+import { EMAIL_ALERTS } from "@/lib/features";
 
 const ROWS: { key: keyof AccountPrefs; title: string; body: string }[] = [
   { key: "wishlistAlerts", title: "Wishlist alerts", body: "Email me when an adventure on my wishlist is about to come into season, or its price drops." },
   { key: "passportPublic", title: "Public Adventure Passport", body: "Anyone with the link can see my passport: rank, stamps, badges and capability radar. Never my health answers." },
-];
+].filter((r) => EMAIL_ALERTS || r.key !== "wishlistAlerts") as { key: keyof AccountPrefs; title: string; body: string }[];
 
 export default function AlertPrefs({ initial, username }: { initial: AccountPrefs; username: string | null }) {
   const [prefs, setPrefs] = useState(initial);
@@ -22,7 +23,7 @@ export default function AlertPrefs({ initial, username }: { initial: AccountPref
   }
 
   return (
-    <Section title="Alerts and sharing" subtitle="Saved map searches have their own alert switch on your profile.">
+    <Section title={EMAIL_ALERTS ? "Alerts and sharing" : "Sharing"} subtitle={EMAIL_ALERTS ? "Saved map searches have their own alert switch on your profile." : undefined}>
       <div className="space-y-4">
         {ROWS.map((r) => (
           <label key={r.key} className="flex items-start justify-between gap-4 cursor-pointer">

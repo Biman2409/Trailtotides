@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { awardXP, revokeXP } from "@/lib/awardXP";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { EMAIL_ALERTS } from "@/lib/features";
 
 interface SaveButtonProps {
   slug: string;
@@ -43,7 +44,7 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
       toast("Removed from wishlist");
       revokeXP("wishlist", slug);
     } else {
-      toast.success("Added to wishlist \u2665", { description: "We'll email you when its season opens or the price drops." });
+      toast.success("Added to wishlist \u2665", EMAIL_ALERTS ? { description: "We'll email you when its season opens or the price drops." } : undefined);
       awardXP("wishlist", slug);
     }
   }

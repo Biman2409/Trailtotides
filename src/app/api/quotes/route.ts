@@ -5,6 +5,7 @@ import { readJson, requireUser } from "@/lib/apiUser";
 import { getAllOperatorProfiles } from "@/app/auth/operator-actions";
 import { rateLimit } from "@/lib/rateLimit";
 import { CONTACT_INBOX, sendQuoteCopy, sendQuoteRequest } from "@/lib/email";
+import { QUOTE_REQUESTS } from "@/lib/features";
 
 // Quote requests need an account: operators get real people, and we can stop spam at the source.
 
@@ -29,6 +30,7 @@ export async function GET() {
 
 // POST — send a quote request to some of the adventure's verified operators
 export async function POST(req: Request) {
+  if (!QUOTE_REQUESTS) return NextResponse.json({ error: "Quote requests aren't available yet" }, { status: 404 });
   const auth = await requireUser();
   if ("error" in auth) return auth.error;
   if (!rateLimit(`quote:${auth.user.id}`, 5, 60 * 60 * 1000).allowed) {

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { GitCompareArrows, BookmarkPlus, MessageSquareQuote, Link2, Trash2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { adventures } from "@/lib/data";
+import { EMAIL_ALERTS, QUOTE_REQUESTS } from "@/lib/features";
 
 // Everything an account keeps besides the wishlist and trip log: saved comparisons (with
 // share links), saved map searches (with email alerts) and quote requests sent to operators.
@@ -42,7 +43,7 @@ export default function AccountExtras() {
   useEffect(() => {
     get<Comparison>("/api/comparisons", "comparisons").then(setComparisons);
     get<Search>("/api/saved-searches", "searches").then(setSearches);
-    get<Quote>("/api/quotes", "requests").then(setQuotes);
+    if (QUOTE_REQUESTS) get<Quote>("/api/quotes", "requests").then(setQuotes);
   }, []);
 
   async function removeComparison(id: string) {
@@ -63,7 +64,7 @@ export default function AccountExtras() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <div className={`grid grid-cols-1 ${QUOTE_REQUESTS ? "lg:grid-cols-3" : "lg:grid-cols-2"} gap-4`}>
       <Block icon={<GitCompareArrows className="w-3.5 h-3.5 text-[#ff5100]" />} title="Saved comparisons" count={comparisons?.length ?? null}
         empty={<>Compare 2 or 3 adventures, then <b>Save &amp; share</b> to keep them here with a link for friends.</>}>
         {comparisons?.map((c) => (
@@ -79,20 +80,20 @@ export default function AccountExtras() {
       </Block>
 
       <Block icon={<BookmarkPlus className="w-3.5 h-3.5 text-[#ff5100]" />} title="Saved map searches" count={searches?.length ?? null}
-        empty={<>Set filters on the <Link href="/map" className="text-[#ff5100] font-semibold">map</Link> and tap <b>Save search</b>. We&apos;ll email you when new adventures match.</>}>
+        empty={<>Set filters on the <Link href="/map" className="text-[#ff5100] font-semibold">map</Link> and tap <b>Save search</b>.{EMAIL_ALERTS && <> We&apos;ll email you when new adventures match.</>}</>}>
         {searches?.map((s) => (
           <li key={s.id} className="flex items-center gap-2">
             <Link href={`/map?${s.query}`} className="flex-1 min-w-0">
               <span className="block text-[13px] font-semibold truncate hover:text-[#ff5100]" style={{ color: "var(--text-primary)" }}>{s.name}</span>
               <span className="block text-[11px]" style={{ color: "var(--text-tertiary)" }}>{s.matches} {s.matches === 1 ? "match" : "matches"} today</span>
             </Link>
-            <Switch checked={s.alerts} onCheckedChange={(on) => setAlerts(s.id, on)} aria-label="Email me new matches" />
+            {EMAIL_ALERTS && <Switch checked={s.alerts} onCheckedChange={(on) => setAlerts(s.id, on)} aria-label="Email me new matches" />}
             <button onClick={() => removeSearch(s.id)} aria-label="Delete search" className={rowBtn} style={{ color: "var(--text-tertiary)" }}><Trash2 className="w-3.5 h-3.5" /></button>
           </li>
         ))}
       </Block>
 
-      <Block icon={<MessageSquareQuote className="w-3.5 h-3.5 text-[#ff5100]" />} title="Quote requests" count={quotes?.length ?? null}
+      {QUOTE_REQUESTS && <Block icon={<MessageSquareQuote className="w-3.5 h-3.5 text-[#ff5100]" />} title="Quote requests" count={quotes?.length ?? null}
         empty={<>On any adventure, <b>Get quotes</b> asks its verified operators for a price. Replies come to your email.</>}>
         {quotes?.map((q) => (
           <li key={q.id}>
@@ -102,7 +103,7 @@ export default function AccountExtras() {
             </span>
           </li>
         ))}
-      </Block>
+      </Block>}
     </div>
   );
 }

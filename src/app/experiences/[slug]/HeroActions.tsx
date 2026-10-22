@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { Adventure } from "@/lib/data";
+import { EMAIL_ALERTS } from "@/lib/features";
 
 export default function HeroActions({ adventure }: { adventure: Adventure }) {
   const { isSaved, toggle } = useWishlist();
@@ -52,7 +53,7 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
     if (wasSaved) {
       toast("Removed from wishlist");
     } else {
-      toast.success("Adventure saved to wishlist ♥", { description: "We'll email you when its season opens or the price drops." });
+      toast.success("Adventure saved to wishlist ♥", EMAIL_ALERTS ? { description: "We'll email you when its season opens or the price drops." } : undefined);
     }
   }
 
