@@ -62,7 +62,7 @@ function Band({ children }: { children: React.ReactNode }) {
 }
 
 function Eyebrow({ className = "mb-2" }: { className?: string }) {
-  return <p className={`text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase inline-flex items-center gap-1.5 ${className}`}><MatchmakerMark className="w-3.5 h-3.5" />Adventure Matchmaker</p>;
+  return <p className={`text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase ${className}`}>Adventure Matchmaker</p>;
 }
 
 export default function MatchmakerHomepageSection() {
@@ -105,19 +105,13 @@ function sampleResults() {
   return [best(inRange(80, 101)), best(inRange(55, 80)), worst(inRange(0, 55))].filter(Boolean);
 }
 
-const STEPS = [
-  { title: "Answer a few questions", body: "About 3 minutes" },
-  { title: "Get your fitness profile", body: "8 capabilities, one rank" },
-  { title: "See every adventure rated", body: "Ready, stretch or not yet" },
-];
-
 function DefaultCTA() {
   const samples = sampleResults();
 
   return (
     <Band>
       <div className="grid lg:grid-cols-[1fr_380px] gap-8 sm:gap-10 lg:gap-16 items-center">
-        {/* Left: promise, steps, action */}
+        {/* Left: promise and action */}
         <div className="min-w-0">
           {/* The way in sits up top with the label, so it's there the moment the section is */}
           {/* The label wraps to two lines before the button drops below it (only on the narrowest phones) */}
@@ -145,31 +139,16 @@ function DefaultCTA() {
             Tell us about your fitness and experience. We&apos;ll rate every adventure for you, so you know what you&apos;re ready for before you book.
           </p>
 
-          {/* Captions the steps, which are the short version; quiet so it doesn't compete with the button */}
+          {/* The full explanation lives on /ace; quiet so it doesn't compete with the button */}
           <Link
             href="/ace"
-            className="group inline-flex items-center gap-1.5 mt-5 sm:mt-7 mb-2.5 text-xs font-medium hover:text-[var(--text-primary)] transition-colors"
+            className="group inline-flex items-center gap-1.5 mt-5 sm:mt-6 text-xs font-medium hover:text-[var(--text-primary)] transition-colors"
             style={{ color: "var(--text-tertiary)" }}
           >
             <HelpCircle className="w-3.5 h-3.5 group-hover:text-[#ff7d47] transition-colors" />
             How it works
             <ArrowRight className="w-3 h-3 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
           </Link>
-
-          {/* Phones: a tight numbered list on one card. Wider: three cards side by side. */}
-          <ol className="grid sm:grid-cols-3 sm:gap-3 max-w-2xl rounded-xl sm:rounded-none px-3.5 py-1 sm:p-0 bg-[var(--bg-card)] sm:bg-transparent border border-[var(--border-subtle)] sm:border-0">
-            {STEPS.map((s, i) => (
-              <li key={s.title} className={`flex items-center sm:items-start sm:flex-col gap-3 sm:gap-2 py-2.5 sm:rounded-xl sm:p-3.5 sm:bg-[var(--bg-card)] sm:border sm:border-[var(--border-subtle)] ${i ? "border-t border-[var(--border-subtle)] sm:border-t" : ""}`}>
-                <span className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0" style={{ background: "rgba(255,81,0,0.12)", color: "#ff7d47" }}>
-                  {i + 1}
-                </span>
-                <span className="min-w-0 flex-1 flex items-baseline justify-between gap-2 sm:block">
-                  <span className="block text-[13px] sm:text-sm font-semibold" style={{ color: "var(--text-primary)" }}>{s.title}</span>
-                  <span className="block text-[11px] sm:text-xs sm:mt-0.5 text-right sm:text-left shrink-0" style={{ color: "var(--text-tertiary)" }}>{s.body}</span>
-                </span>
-              </li>
-            ))}
-          </ol>
         </div>
 
         {/* Right: what the result looks like */}
