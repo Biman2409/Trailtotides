@@ -8,12 +8,12 @@ import { awardXP, revokeXP } from "@/lib/awardXP";
 import { getLowestPrice, type Adventure, type Month } from "@/lib/data";
 import { getACE, computeDifficulty, computeMatchScore } from "@/lib/ace";
 import { useFitnessProfile } from "@/lib/useFitnessProfile";
-import { formatAltitude } from "@/lib/exploreHelpers";
 import { bucketFor } from "@/lib/fitness";
 import { ADVENTURE_TYPE_ICONS } from "@/lib/adventureIcons";
 import DifficultyMeter from "./DifficultyMeter";
 import SaveButton from "./SaveButton";
 import { useCompare } from "@/contexts/CompareContext";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
@@ -113,14 +113,13 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
       )}
 
       <motion.div
-        className={`${CATEGORY_CLASS[adventure.type] ?? "cat-trek"} rounded-2xl overflow-hidden flex flex-col ${fill ? "flex-1" : ""}`}
+        className={`${CATEGORY_CLASS[adventure.type] ?? "cat-trek"} rounded-[20px] overflow-hidden flex flex-col ${fill ? "flex-1" : ""}`}
         style={{
           background: "var(--bg-surface)",
           border: "1px solid var(--border-subtle)",
-          borderTop: "2px solid var(--cat)",
-          boxShadow: "0 4px 20px rgba(var(--shadow-color), 0.2)",
+          boxShadow: "0 1px 2px rgba(var(--shadow-color), 0.12), 0 8px 24px -12px rgba(var(--shadow-color), 0.35)",
         }}
-        whileHover={{ y: -4, boxShadow: "0 12px 40px rgba(255,81,0,0.15)" }}
+        whileHover={{ y: -4, boxShadow: "0 1px 2px rgba(var(--shadow-color), 0.12), 0 22px 44px -18px rgba(var(--shadow-color), 0.55)" }}
         transition={{ type: "spring", stiffness: 300, damping: 24 }}
       >
       {/* Image area — kept calm: difficulty and save on the photo, everything else below it */}
@@ -135,103 +134,99 @@ export default function AdventureCard({ adventure, size = "default", fromPage, b
           sizes={fill ? "(max-width: 1024px) 100vw, 66vw" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}
         />
 
-        {/* Gradient overlay — only as dark as the text at the bottom needs */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent z-10 pointer-events-none" />
+        {/* Shading: a long soft fade under the title, and a faint one at the top for the pills */}
+        <div className="absolute inset-0 z-10 pointer-events-none" style={{ background: "linear-gradient(to top, rgba(8,6,4,0.88) 0%, rgba(8,6,4,0.45) 32%, rgba(8,6,4,0) 62%), linear-gradient(to bottom, rgba(8,6,4,0.35) 0%, rgba(8,6,4,0) 28%)" }} />
 
-        {/* Top-left: difficulty */}
-        <div className="absolute z-20 top-3 left-3">
-          <DifficultyMeter difficulty={difficulty} />
+        {/* Top-left: difficulty, then how long and when, as matching pills in one row. The row
+            stops short of save and compare (right-[84px]); on the narrowest cards the season
+            text shortens with an ellipsis rather than running under the buttons. */}
+        <div className="absolute z-20 top-3 left-3 right-[84px] flex items-center gap-1.5 min-w-0">
+          <DifficultyMeter difficulty={difficulty} className="shrink-0" />
+          <span
+            className="inline-flex items-center gap-1 px-2 h-5 min-w-0 rounded-full text-[10px] font-bold tracking-tight leading-none text-white/85 backdrop-blur-md whitespace-nowrap"
+            style={{ background: "rgba(10,8,6,0.6)", border: "1px solid rgba(255,255,255,0.08)" }}
+          >
+            <span className="shrink-0">{adventure.durationDays}</span>
+            {(isSeasonActive || isSeasonUpcoming || seasonLabel) && (
+              <>
+                <span className={`w-1.5 h-1.5 ml-0.5 rounded-full shrink-0 ${isSeasonActive ? "bg-emerald-400" : isSeasonUpcoming ? "bg-amber-400" : "bg-white/40"}`} />
+                <span className="truncate">{isSeasonActive ? "In season" : isSeasonUpcoming ? "Next month" : seasonLabel}</span>
+              </>
+            )}
+          </span>
         </div>
 
-        {/* Top-right: save */}
-        <div className="absolute top-3 right-3 z-20">
+        {/* Top-right: save and compare, as twin round buttons */}
+        <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5">
           <SaveButton slug={adventure.slug} variant="card" />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={handleCompare}
+                disabled={!inCompare && isFull}
+                aria-label={inCompare ? "Remove from compare" : "Add to compare"}
+                className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 active:scale-90 backdrop-blur-sm disabled:opacity-40 disabled:cursor-not-allowed"
+                style={inCompare
+                  ? { background: "rgba(255,81,0,0.9)", color: "#fff", boxShadow: "0 0 0 1px rgba(255,81,0,0.5), 0 0 10px rgba(255,81,0,0.3)" }
+                  : { background: "rgba(0,0,0,0.5)", color: "rgba(255,255,255,0.7)", boxShadow: "0 0 0 1px rgba(255,255,255,0.1)" }
+                }
+              >
+                <GitCompare className="w-3.5 h-3.5" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{inCompare ? "In compare" : isFull ? "Compare is full (3)" : "Add to compare"}</TooltipContent>
+          </Tooltip>
         </div>
 
-        {/* Bottom content over image. Text hierarchy on the photo, one step of white each:
-            title 100% → tagline 75% → eyebrow 60% → separators 35%. Colour lives only in the
-            category icon, never in the text. */}
+        {/* Bottom of the photo: title 100% → tagline 75% */}
         <div className={`absolute bottom-0 left-0 right-0 z-20 pointer-events-none ${fill ? "p-5 lg:p-6" : "p-4"}`}>
-          <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] mb-1.5 text-white/60">
-            <span className="inline-flex items-center gap-1 shrink-0">
-              <span className="shrink-0" style={{ color: "color-mix(in srgb, var(--cat) 70%, white)" }}>{ADVENTURE_TYPE_ICONS[adventure.type]?.(11)}</span>
-              {adventure.type}
-            </span>
-            <span className="text-white/35">·</span>
-            <span className="truncate">{adventure.state}</span>
-          </div>
-          <h3 className={`text-white font-bold leading-tight tracking-tight group-hover:text-[#ff8a5c] transition-colors pointer-events-none ${fill ? "text-2xl lg:text-3xl" : "text-base sm:text-lg"}`}>
+          {/* The title in the site's display serif, like its headlines */}
+          <h3
+            className={`text-white leading-[1.12] tracking-[-0.01em] group-hover:text-[#ffb08a] transition-colors pointer-events-none ${fill ? "text-[28px] lg:text-[34px]" : "text-[19px] sm:text-xl"}`}
+            style={{ fontFamily: "var(--font-display), Georgia, serif", fontWeight: 600 }}
+          >
             {adventure.name}
           </h3>
-          <p className={`text-white/75 leading-snug mt-1 pointer-events-none ${fill ? "text-sm line-clamp-2 max-w-lg" : "text-[11px] line-clamp-1"}`}>
+          <p className={`text-white/70 leading-snug mt-1.5 pointer-events-none ${fill ? "text-sm line-clamp-2 max-w-lg" : "text-[11px] line-clamp-1"}`}>
             {adventure.tagline}
           </p>
         </div>
       </div>
 
-        {/* Dashboard. Text hierarchy below the photo, the same on every card:
-              primary   — the price (the one number people compare)
-              secondary — duration, altitude, operator count, season
-              tertiary  — labels ("From", "operators")
-              muted     — separators
-            Status colour (in season, next month, verified) appears only as a small dot or
-            icon beside neutral text, so cards read alike whatever their state. */}
-        <div className="px-3 pt-2.5 pb-2 flex items-center justify-between gap-2">
-          <div className="min-w-0 flex flex-col gap-1">
-            {/* Price + season on the first line, so the facts line below stays short enough to never truncate */}
-            <span className="flex items-center gap-2 text-[13px] leading-none whitespace-nowrap">
-              {operatorCount > 0 && lowestPrice && (
-                <span className="font-bold tabular-nums" style={{ color: "var(--text-primary)" }}>
-                  <span className="text-[10px] font-medium mr-1" style={{ color: "var(--text-tertiary)" }}>From</span>
+        {/* Below the photo, the same on every card (difficulty, duration and season sit on the
+            photo; save and compare at its top-right):
+              1. type and location in small spaced capitals, the category icon carrying the colour
+              2. a hairline, then the starting price large in the display serif, with how many
+                 operators offer it as a quiet outlined tag */}
+        <div className="px-4 pt-3 pb-4">
+          <p className="flex items-center gap-1.5 min-w-0 text-[10px] font-semibold uppercase tracking-[0.14em] leading-none" style={{ color: "var(--text-tertiary)" }}>
+            <span className="shrink-0" style={{ color: "var(--cat)" }}>{ADVENTURE_TYPE_ICONS[adventure.type]?.(12)}</span>
+            <span className="shrink-0">{adventure.type}</span>
+            <span style={{ color: "var(--text-muted)" }}>·</span>
+            <span className="truncate">{adventure.state}</span>
+          </p>
+          <div className="mt-3 pt-3 flex items-end justify-between gap-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+            <div className="min-w-0">
+              <span className="block text-[10px] font-medium leading-none mb-1.5" style={{ color: "var(--text-tertiary)" }}>
+                {lowestPrice ? "Starting from" : "Price"}
+              </span>
+              {lowestPrice ? (
+                <span className="block text-[22px] tabular-nums leading-none tracking-[-0.01em]" style={{ color: "var(--text-primary)", fontFamily: "var(--font-display), Georgia, serif", fontWeight: 600 }}>
                   ₹{lowestPrice.toLocaleString("en-IN")}
                 </span>
-              )}
-              {isSeasonActive ? (
-                <span className="inline-flex items-center gap-1 text-[10px] font-medium" style={{ color: "var(--text-secondary)" }}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />In season
-                </span>
-              ) : isSeasonUpcoming ? (
-                <span className="inline-flex items-center gap-1 text-[10px] font-medium" style={{ color: "var(--text-secondary)" }}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />Next month
-                </span>
-              ) : seasonLabel ? (
-                <span className="inline-flex items-center gap-1 text-[10px] font-medium" style={{ color: "var(--text-secondary)" }}>
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--text-muted)" }} />{seasonLabel}
-                </span>
-              ) : null}
-            </span>
-            <div className="flex items-center gap-1 text-[10px] leading-none min-w-0 truncate" style={{ color: "var(--text-tertiary)" }}>
-              <span className="font-medium shrink-0" style={{ color: "var(--text-secondary)" }}>{adventure.durationDays}</span>
-              {formatAltitude(adventure) && (
-                <>
-                  <span className="mx-0.5" style={{ color: "var(--text-muted)" }}>·</span>
-                  <span className="font-medium shrink-0" style={{ color: "var(--text-secondary)" }}>{formatAltitude(adventure)}</span>
-                </>
-              )}
-              {operatorCount > 0 && (
-                <>
-                  <span className="mx-0.5" style={{ color: "var(--text-muted)" }}>·</span>
-                  <BadgeCheck className="w-3 h-3 text-emerald-400/80 shrink-0" />
-                  <span><span className="font-medium" style={{ color: "var(--text-secondary)" }}>{displayCount}</span> {displayCount === 1 ? "operator" : "operators"}</span>
-                </>
+              ) : (
+                <span className="block text-sm font-semibold leading-none" style={{ color: "var(--text-secondary)" }}>On request</span>
               )}
             </div>
+            {operatorCount > 0 && (
+              <span
+                className="inline-flex items-center gap-1 h-6 px-2.5 rounded-full text-[11px] font-medium leading-none whitespace-nowrap shrink-0"
+                style={{ color: "var(--text-secondary)", boxShadow: "inset 0 0 0 1px var(--border-default)" }}
+              >
+                <BadgeCheck className="w-3.5 h-3.5 shrink-0 text-emerald-500" />{displayCount} {displayCount === 1 ? "operator" : "operators"}
+              </span>
+            )}
           </div>
-
-          {/* Compare pill */}
-          <button
-            onClick={handleCompare}
-            disabled={!inCompare && isFull}
-            aria-label={inCompare ? "Remove from compare" : "Add to Compare"}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[11px] font-semibold transition-all duration-200 active:scale-95 shrink-0 disabled:opacity-35 disabled:cursor-not-allowed select-none"
-            style={inCompare
-              ? { background: "rgba(255,81,0,0.18)", color: "#ff7d47", boxShadow: "0 0 0 1.5px rgba(255,81,0,0.45)" }
-              : { background: "var(--bg-card-hover)", color: "var(--text-secondary)", boxShadow: "0 0 0 1px var(--border-default)" }
-            }
-          >
-            <GitCompare className="w-3 h-3 shrink-0" />
-            {inCompare ? "Added" : "Compare"}
-          </button>
         </div>
 
         {/* Capability match bar */}
