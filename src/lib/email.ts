@@ -1,5 +1,4 @@
 import { Resend } from 'resend';
-import { EMAIL_ALERTS } from './features';
 
 const resend = process.env.RESEND_API_KEY 
   ? new Resend(process.env.RESEND_API_KEY) 
@@ -13,7 +12,7 @@ const FROM = process.env.EMAIL_FROM || 'Trail to Tides <hello@trailtotides.com>'
 export function verificationEmail(link: string, name: string) {
   const perks = [
     ['Adventure Matchmaker', 'Answer a few questions and see every adventure rated for your body.'],
-    ['Your wishlist', EMAIL_ALERTS ? 'Save adventures and hear when their season opens or the price drops.' : 'Keep the adventures you want to do in one place, ready when you are.'],
+    ['Adventure Map', 'See every adventure on one map, coloured by difficulty, and find what\'s near you.'],
     ['Compass.AI', 'Ask for a trip in your own words and get picks that fit.'],
   ];
   return {
