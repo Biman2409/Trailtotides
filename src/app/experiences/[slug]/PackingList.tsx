@@ -5,7 +5,7 @@ import {
   Backpack, Check, ChevronDown, IdCard, HeartPulse,
   Shirt, Pickaxe, Bike, Waves, Mountain,
   Snowflake, Zap, Satellite, Smartphone, Thermometer, CloudRain,
-  Anchor, Wind, LogIn, Plus, Share2, X, Copy, CheckCheck,
+  Anchor, Wind, LogIn, Lock, Plus, Share2, X, Copy, CheckCheck,
 } from "lucide-react";
 import type { AdventureType } from "@/lib/data";
 import { loadProfile } from "@/lib/matchmaker";
@@ -606,33 +606,41 @@ export default function PackingList({
         className="rounded-xl overflow-hidden"
         style={{ background: "rgba(var(--fg-rgb),0.02)", border: "1px solid rgba(var(--fg-rgb),0.07)" }}
       >
-        {/* ── Header ── */}
-        <button
-          onClick={() => loggedIn && setOpen((v) => !v)}
-          className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-black/[0.015] dark:hover:bg-white/[0.02] transition-colors"
-        >
-          <div className="flex items-center gap-2.5">
-            <Backpack className="w-4 h-4 text-amber-400" />
-            <div className="text-left">
+        {/* ── Header ── a row, not one big button: Share is its own button and
+            buttons can't nest (that was a hydration error) */}
+        <div className="flex items-center gap-3 px-4 py-3.5 hover:bg-black/[0.015] dark:hover:bg-white/[0.02] transition-colors">
+          <button
+            onClick={() => loggedIn && setOpen((v) => !v)}
+            disabled={!loggedIn}
+            aria-expanded={loggedIn ? open : undefined}
+            className="flex-1 min-w-0 flex items-center gap-2.5 text-left disabled:cursor-default"
+          >
+            <Backpack className="w-4 h-4 text-amber-400 shrink-0" />
+            <div className="min-w-0">
               <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-black/55 dark:text-white/50">Smart Packing List</p>
-              <p className="text-black/35 dark:text-white/30 text-[10px] mt-0.5">
-                {checkedCount}/{allItems.length} packed · {essentialCount} essentials
+              <p className="text-black/35 dark:text-white/30 text-[10px] mt-0.5 flex items-center gap-1">
+                {loggedIn ? (
+                  <>{checkedCount}/{allItems.length} packed · {essentialCount} essentials</>
+                ) : (
+                  <><Lock className="w-2.5 h-2.5 shrink-0" />{allItems.length} items · {essentialCount} essentials · Log in to use</>
+                )}
               </p>
             </div>
-          </div>
-          <div className="flex items-center gap-3">
+          </button>
+          <div className="flex items-center gap-3 shrink-0">
             {loggedIn ? (
               <>
                 {/* Share button */}
                 <button
-                  onClick={e => { e.stopPropagation(); setShareOpen(true); }}
+                  onClick={() => setShareOpen(true)}
                   className="w-7 h-7 rounded-full flex items-center justify-center transition-colors hover:text-black/65 dark:hover:text-white/60"
                   style={{ background: "rgba(var(--fg-rgb),0.05)", color: "rgba(var(--fg-rgb),0.25)" }}
                   title="Share packing list"
                 >
                   <Share2 className="w-3.5 h-3.5" />
                 </button>
-                {/* Progress ring */}
+                {/* Progress ring + chevron — also toggles the list */}
+                <button onClick={() => setOpen((v) => !v)} className="flex items-center gap-3" aria-label={open ? "Collapse packing list" : "Expand packing list"}>
                 <div className="relative w-8 h-8">
                   <svg viewBox="0 0 32 32" className="w-full h-full -rotate-90">
                     <circle cx="16" cy="16" r="12" fill="none" stroke="rgba(var(--fg-rgb),0.07)" strokeWidth="3" />
@@ -652,11 +660,11 @@ export default function PackingList({
                   </span>
                 </div>
                 <ChevronDown className={`w-4 h-4 text-black/30 dark:text-white/25 transition-transform ${open ? "rotate-180" : ""}`} />
+                </button>
               </>
             ) : (
               <a
-                href="/auth/login"
-                onClick={e => e.stopPropagation()}
+                href={`/auth/login?next=${encodeURIComponent(`/experiences/${slug}`)}`}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-white transition-all hover:-translate-y-0.5"
                 style={{ background: "#ff5100" }}
               >
@@ -665,7 +673,7 @@ export default function PackingList({
               </a>
             )}
           </div>
-        </button>
+        </div>
 
         {/* Progress bar */}
         {loggedIn && (

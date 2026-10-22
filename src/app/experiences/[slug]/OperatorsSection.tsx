@@ -12,6 +12,43 @@ interface ComputedRating {
   computed: boolean;
 }
 
+// Google and traveller ratings side by side, so one never hides the other.
+// Traveller ratings show from the first one, with their count for weight.
+function travellerRating(op: OperatorCardData, ratings: Record<string, ComputedRating>) {
+  return ratings[op.name.trim().toLowerCase()] ?? null;
+}
+
+function Stars({ value }: { value: number }) {
+  return (
+    <div className="flex gap-0.5">
+      {[1,2,3,4,5].map(s => (
+        <Star key={s} className={`w-2.5 h-2.5 ${s <= Math.round(value) ? "text-amber-400 fill-amber-400" : "text-black/10 dark:text-white/10 fill-black/10 dark:fill-white/10"}`} />
+      ))}
+    </div>
+  );
+}
+
+function GoogleCell({ op }: { op: OperatorCardData }) {
+  if (!op.googleRating) return <span className="text-[10px] text-black/25 dark:text-white/20">—</span>;
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <Stars value={op.googleRating} />
+      <span className="text-[11px] text-black/65 dark:text-white/60 font-semibold">{op.googleRating}</span>
+    </div>
+  );
+}
+
+function TravellerCell({ rating }: { rating: ComputedRating | null }) {
+  if (!rating) return <span className="text-[10px] text-black/25 dark:text-white/20">Not rated yet</span>;
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <Stars value={rating.avg} />
+      <span className="text-[11px] text-black/65 dark:text-white/60 font-semibold">{rating.avg}</span>
+      <span className="text-[8px] text-emerald-400/80">{rating.count} rating{rating.count !== 1 ? "s" : ""}</span>
+    </div>
+  );
+}
+
 function formatDate(d: string) {
   try {
     return new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
@@ -83,7 +120,8 @@ function CompareDrawer({
                 </th>
                 {[
                   { label: "Price", icon: null },
-                  { label: "Rating", icon: <Star className="w-3 h-3" /> },
+                  { label: "Google", icon: <Star className="w-3 h-3" /> },
+                  { label: "Travellers", icon: <Star className="w-3 h-3" /> },
                   { label: "Departures", icon: <CalendarDays className="w-3 h-3" /> },
                   { label: "Cloakroom", icon: <Briefcase className="w-3 h-3" /> },
                   { label: "Porter", icon: <Package className="w-3 h-3" /> },
@@ -102,10 +140,7 @@ function CompareDrawer({
                 const isBestPrice = prices[i] === minPrice;
                 const count = op.departureDates?.length ?? 0;
                 const isMostDates = count > 0 && count === maxBatches;
-                const norm = op.name.trim().toLowerCase();
-                const cr = computedRatings[norm];
-                const displayRating = cr?.computed ? cr.avg : op.googleRating;
-                const isComputed = !!cr?.computed;
+                const traveller = travellerRating(op, computedRatings);
 
                 return (
                   <tr
@@ -155,20 +190,9 @@ function CompareDrawer({
                       </div>
                     </td>
 
-                    {/* Rating */}
-                    <td className="px-4 py-4 text-center">
-                      <div className="flex flex-col items-center gap-1">
-                        <div className="flex gap-0.5">
-                          {[1,2,3,4,5].map(s => (
-                            <Star key={s} className={`w-2.5 h-2.5 ${s <= Math.round(displayRating) ? "text-amber-400 fill-amber-400" : "text-black/10 dark:text-white/10 fill-black/10 dark:fill-white/10"}`} />
-                          ))}
-                        </div>
-                        <span className="text-[11px] text-black/65 dark:text-white/60 font-semibold">{displayRating}</span>
-                        <span className="text-[8px]" style={{ color: isComputed ? "#4ade80" : "rgba(var(--fg-rgb),0.2)" }}>
-                          {isComputed ? `${cr.count} reviews` : "Google"}
-                        </span>
-                      </div>
-                    </td>
+                    {/* Ratings */}
+                    <td className="px-4 py-4 text-center"><GoogleCell op={op} /></td>
+                    <td className="px-4 py-4 text-center"><TravellerCell rating={traveller} /></td>
 
                     {/* Departures */}
                     <td className="px-4 py-4 text-center">
@@ -231,7 +255,7 @@ function CompareDrawer({
           </div>
           <div className="flex items-center gap-1.5">
             <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400 opacity-60" />
-            <span className="text-[10px] text-black/35 dark:text-white/30">Community rating</span>
+            <span className="text-[10px] text-black/35 dark:text-white/30">Travellers = rated by Trail to Tides users</span>
           </div>
           <button onClick={onClose} className="ml-auto text-xs text-black/35 dark:text-white/30 hover:text-black/60 dark:hover:text-white/60 transition-colors">
             Close
@@ -260,20 +284,19 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
   // Single operator — simple card
   if (operators.length === 1) {
     const op = operators[0];
-    const norm = op.name.trim().toLowerCase();
-    const cr = computedRatings[norm];
-    const displayRating = cr?.computed ? cr.avg : op.googleRating;
-    const isComputed = !!cr?.computed;
+    const traveller = travellerRating(op, computedRatings);
     return (
       <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(var(--fg-rgb),0.09)", background: "rgba(var(--fg-rgb),0.03)" }}>
         <div className="p-4 flex items-center justify-between gap-4">
           <div>
             <p className="text-black/90 dark:text-white/90 font-bold text-sm">{op.name}</p>
-            <div className="flex items-center gap-1 mt-1">
-              {[1,2,3,4,5].map(s => <Star key={s} className={`w-2.5 h-2.5 ${s <= Math.round(displayRating) ? "text-amber-400 fill-amber-400" : "text-black/10 dark:text-white/10 fill-black/10 dark:fill-white/10"}`} />)}
-              <span className="text-black/45 dark:text-white/40 text-[10px] ml-1">{displayRating}</span>
-              <span className="text-[8px] ml-1" style={{ color: isComputed ? "#4ade80" : "rgba(var(--fg-rgb),0.18)" }}>
-                {isComputed ? `${cr.count} reviews` : "Google"}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-[10px] text-black/45 dark:text-white/40">
+              {op.googleRating ? (
+                <span className="flex items-center gap-1"><Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />{op.googleRating} Google</span>
+              ) : null}
+              <span className="flex items-center gap-1">
+                <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />
+                {traveller ? <>{traveller.avg} Travellers ({traveller.count})</> : "Travellers: not rated yet"}
               </span>
             </div>
           </div>
@@ -300,11 +323,12 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
   const prices = operators.map(o => parsePrice(o.priceFrom));
   const minPrice = Math.min(...prices);
   const minPriceOp = operators[prices.indexOf(minPrice)];
-  const allRatings = operators.map(op => {
-    const cr = computedRatings[op.name.trim().toLowerCase()];
-    return cr?.computed ? cr.avg : op.googleRating;
-  }).filter(Boolean);
-  const avgRating = allRatings.length > 0 ? (allRatings.reduce((a, b) => a + b, 0) / allRatings.length) : null;
+  const googleRatings = operators.map(op => op.googleRating).filter(Boolean);
+  const avgGoogle = googleRatings.length > 0 ? googleRatings.reduce((a, b) => a + b, 0) / googleRatings.length : null;
+  // Travellers: weighted by number of ratings, across all operators
+  const travellerRatings = operators.map(op => travellerRating(op, computedRatings)).filter((r): r is ComputedRating => !!r);
+  const travellerCount = travellerRatings.reduce((n, r) => n + r.count, 0);
+  const avgTraveller = travellerCount > 0 ? travellerRatings.reduce((s, r) => s + r.avg * r.count, 0) / travellerCount : null;
 
   return (
     <>
@@ -333,15 +357,26 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
             <span className="text-[8px] font-bold uppercase tracking-widest text-emerald-400/50">From</span>
             <span className="font-black text-base text-emerald-300/90">{minPriceOp.priceFrom}</span>
           </div>
-          {avgRating !== null && (
+          {(avgGoogle !== null || avgTraveller !== null) && (
             <div
               className="rounded-xl p-3 flex flex-col gap-1"
               style={{ background: "rgba(251,191,36,0.04)", border: "1px solid rgba(251,191,36,0.1)" }}
             >
-              <span className="text-[8px] font-bold uppercase tracking-widest text-amber-400/50">Avg. Rating</span>
-              <div className="flex items-center gap-1">
-                <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-                <span className="font-black text-base text-amber-300/90">{avgRating.toFixed(1)}</span>
+              {/* "Operator", so it isn't read as the trek's own rating (that's the traveller reviews) */}
+              <span className="text-[8px] font-bold uppercase tracking-widest text-amber-400/50">Operator Ratings</span>
+              <div className="flex flex-col gap-0.5 text-[11px] text-black/50 dark:text-white/45">
+                {avgGoogle !== null && (
+                  <span className="flex items-center gap-1">
+                    <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                    <span className="font-black text-sm text-amber-300/90">{avgGoogle.toFixed(1)}</span> Google
+                  </span>
+                )}
+                <span className="flex items-center gap-1">
+                  <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                  {avgTraveller !== null
+                    ? <><span className="font-black text-sm text-amber-300/90">{avgTraveller.toFixed(1)}</span> Travellers ({travellerCount})</>
+                    : <>Travellers: none yet</>}
+                </span>
               </div>
             </div>
           )}

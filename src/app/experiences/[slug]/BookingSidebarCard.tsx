@@ -1,13 +1,12 @@
 "use client";
 
-import { ChevronRight, Star, Clock3, Sparkles } from "lucide-react";
+import { ChevronRight, Clock3, Sparkles } from "lucide-react";
 import type { SeasonUrgency } from "@/lib/seasonUrgency";
 import QuoteRequestButton from "./QuoteRequestButton";
 
 interface Props {
   priceFrom?: string;
   operatorCount: number;
-  avgRating: number | null;
   operatorWebsite?: string;
   operatorName?: string;
   hasVerifiedOperator?: boolean;
@@ -43,17 +42,18 @@ function UrgencyBadge({ urgency }: { urgency: SeasonUrgency }) {
   return null;
 }
 
-export default function BookingSidebarCard({ priceFrom, operatorCount, avgRating, operatorWebsite, operatorName, hasVerifiedOperator, seasonUrgency, nextDeparture, quote }: Props) {
+export default function BookingSidebarCard({ priceFrom, operatorCount, operatorWebsite, operatorName, hasVerifiedOperator, seasonUrgency, nextDeparture, quote }: Props) {
+  // The primary CTA stays neutral when there's a choice: it leads to the
+  // comparison, not to whichever operator happens to be cheapest. Only a
+  // sole operator gets booked directly.
+  const bookDirect = operatorCount === 1 && !!operatorWebsite;
+
   const handleBook = () => {
-    if (operatorWebsite) {
+    if (bookDirect) {
       window.open(operatorWebsite, "_blank", "noopener noreferrer");
     } else {
       document.getElementById("book-this-adventure")?.scrollIntoView({ behavior: "smooth" });
     }
-  };
-
-  const handleBrowse = () => {
-    document.getElementById("book-this-adventure")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -68,20 +68,14 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, avgRating
               <p className="leading-none">
                 <span className="text-black/40 dark:text-white/40 text-[10px] font-medium uppercase tracking-wide block mb-1">From</span>
                 <span className="text-black dark:text-white font-bold text-2xl">{priceFrom}</span>
+                {operatorName && operatorCount > 1 && (
+                  <span className="text-black/40 dark:text-white/40 text-[11px] font-medium block mt-1.5">Cheapest: {operatorName}</span>
+                )}
               </p>
             ) : (
               <p className="text-black/50 dark:text-white/50 text-sm font-semibold">Contact for pricing</p>
             )}
           </div>
-          {avgRating !== null && (
-            <div className="flex flex-col items-end shrink-0 mt-0.5">
-              <div className="flex items-center gap-1">
-                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                <span className="text-black/80 dark:text-white/80 text-sm font-semibold">{avgRating.toFixed(1)}</span>
-              </div>
-              <span className="text-black/35 dark:text-white/30 text-[9px] uppercase tracking-wide">Operators</span>
-            </div>
-          )}
         </div>
 
         {(operatorCount > 0 || hasVerifiedOperator || nextDeparture) && (
@@ -103,14 +97,10 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, avgRating
               boxShadow: "0 4px 20px rgba(255,81,0,0.35), 0 0 0 1px rgba(255,81,0,0.2)",
             }}
           >
-            {operatorWebsite && operatorName ? `Book with ${operatorName}` : "Book Now"}
+            {bookDirect && operatorName
+              ? `Book with ${operatorName}`
+              : operatorCount > 1 ? `Compare ${operatorCount} operators` : "See operators"}
             <ChevronRight className="w-4 h-4" />
-          </button>
-          <button
-            onClick={handleBrowse}
-            className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 bg-black/[0.03] hover:bg-black/[0.06] dark:bg-white/[0.04] dark:hover:bg-white/[0.06] text-black/65 dark:text-white/65 border border-black/10 dark:border-white/10"
-          >
-            Compare Operators
           </button>
           {quote && <QuoteRequestButton {...quote} />}
         </div>

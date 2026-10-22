@@ -193,6 +193,18 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
       </div>
 
       <div className="p-4">
+        {/* Logged out: one quiet prompt that comes back to this page after login */}
+        {!currentUserId && (
+          <a
+            href={`/auth/login?next=${encodeURIComponent(`/experiences/${slug}`)}`}
+            className="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl mb-4 text-xs transition-all hover:brightness-110"
+            style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", color: "var(--text-tertiary)" }}
+          >
+            <span>Done this {adventureType === "Trekking" ? "trek" : "adventure"}?</span>
+            <span className="text-amber-400/70 font-semibold shrink-0">Log in to write a review →</span>
+          </a>
+        )}
+
         {/* Write form */}
         {currentUserId ? (
           !hasReviewed ? (

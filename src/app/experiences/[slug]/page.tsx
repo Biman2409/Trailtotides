@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,8 +17,6 @@ import {
   Flag,
   Navigation,
   Gauge,
-  Camera,
-  Compass,
   BookOpen,
   Sparkles,
   ShieldCheck,
@@ -25,7 +24,6 @@ import {
   Ticket,
   IndianRupee,
   Star,
-  HelpCircle,
 } from "lucide-react";
 import GradingPill from "@/components/ui/custom/GradingPill";
 import Navbar from "@/components/layout/Navbar";
@@ -46,11 +44,11 @@ import MobileBookBar from "./MobileBookBar";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
 import AccordionSection from "./AccordionSection";
 import WeatherWidget from "./WeatherWidget";
-import PhotoGallery from "./PhotoGallery";
+import CommunityCards from "./CommunityCards";
 import PackingList from "./PackingList";
 import HazardBadges from "./HazardBadges";
 import TagsList from "@/components/ui/custom/TagsList";
-import SidebarLink from "@/components/ui/custom/SidebarLink";
+import SimilarTabs from "./SimilarTabs";
 import RecalibrationNudge from "./RecalibrationNudge";
 import MedicalCautionNote from "./MedicalCautionNote";
 import { deriveMedicalCautions } from "@/lib/medicalCautions";
@@ -62,7 +60,6 @@ import TrainForThis from "./TrainForThis";
 import { getSeasonUrgency } from "@/lib/seasonUrgency";
 import { parsePrice } from "@/lib/price";
 import { getNextDeparture } from "@/lib/nextDeparture";
-import FAQSection from "./FAQSection";
 import SectionNav from "./SectionNav";
 
 const DIFFICULTY_LEVEL: Record<string, number> = { Easy: 1, Moderate: 2, Hard: 3, Advanced: 4, Extreme: 5 };
@@ -76,18 +73,11 @@ interface Props {
   searchParams: Promise<{ from?: string }>;
 }
 
-function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { title: string; items: Adventure[]; exploreHref: string; pillMode?: "type" | "region" }) {
-  if (items.length === 0) return null;
+// One tab's worth of cards in the Similar Adventures row
+function RelatedRow({ items, exploreHref, exploreLabel, pillMode = "type", meta }: { items: Adventure[]; exploreHref?: string; exploreLabel?: string; pillMode?: "type" | "region"; meta?: (a: Adventure) => string }) {
   return (
     <div>
-      <div className="flex items-end justify-between mb-3">
-        <h3 className="text-base font-semibold tracking-tight" style={{ color: "var(--text-primary)" }}>{title}</h3>
-        <Link href={exploreHref} className="hidden md:flex items-center gap-1.5 text-xs font-medium hover:text-[#ff5100] transition-colors group" style={{ color: "var(--text-tertiary)" }}>
-          Explore all
-          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-        </Link>
-      </div>
-      <div className="flex gap-4 overflow-x-auto pb-4 -mx-2 px-2 snap-x snap-mandatory no-scrollbar">
+      <div className="flex gap-4 overflow-x-auto pb-3 -mx-2 px-2 snap-x snap-mandatory no-scrollbar">
         {items.map((a) => {
           const diff = computeDifficulty(getACE(a));
           return (
@@ -107,13 +97,19 @@ function RelatedSection({ title, items, exploreHref, pillMode = "type" }: { titl
                 <div className="flex items-center gap-1.5 text-[10px]" style={{ color: "var(--text-tertiary)" }}>
                   <span className="font-semibold" style={{ color: "var(--text-secondary)" }}>{diff}</span>
                   <span style={{ color: "var(--text-muted)" }}>·</span>
-                  <span>{a.durationDays}</span>
+                  <span>{meta ? meta(a) : a.durationDays}</span>
                 </div>
               </div>
             </Link>
           );
         })}
       </div>
+      {exploreHref && (
+        <Link href={exploreHref} className="inline-flex items-center gap-1.5 text-xs font-medium hover:text-[#ff5100] transition-colors group" style={{ color: "var(--text-tertiary)" }}>
+          {exploreLabel ?? "Explore all"}
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+        </Link>
+      )}
     </div>
   );
 }
@@ -198,6 +194,19 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
   const medicalFlags = (user?.user_metadata?.ace_medical as MedicalFlags | undefined) ?? null;
   const medicalCautions = deriveMedicalCautions(medicalFlags, adventure);
 
+  // The trek's own rating: traveller reviews, the same set the Reviews card
+  // shows (real ones plus seed reviews, de-duped by id)
+  const seedReviews = adventure.seedReviews ?? [];
+  const { data: dbReviews } = await supabase.from("reviews").select("id, rating").eq("adventure_slug", slug);
+  const dbReviewIds = new Set((dbReviews ?? []).map((r) => r.id));
+  const reviewRatings = [
+    ...(dbReviews ?? []).map((r) => r.rating as number),
+    ...seedReviews.filter((r) => !dbReviewIds.has(r.id)).map((r) => r.rating),
+  ];
+  const travellerRating = reviewRatings.length > 0
+    ? { avg: reviewRatings.reduce((a, b) => a + b, 0) / reviewRatings.length, count: reviewRatings.length }
+    : null;
+
   const tripLog = currentUserId ? await loadTripLog() : [];
   const isCompleted = tripLog.some(e => e.slug === adventure.slug);
 
@@ -224,10 +233,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
     ? allOperators.reduce((best, o) => (parsePrice(o.priceFrom) < parsePrice(best.priceFrom) ? o : best))
     : undefined;
   const priceFrom = featuredOp?.priceFrom;
-  const ratedOps = allOperators.filter((o) => o.googleRating);
-  const avgRating = ratedOps.length > 0
-    ? ratedOps.reduce((sum, o) => sum + (o.googleRating ?? 0), 0) / ratedOps.length
-    : null;
   const seasonUrgency = getSeasonUrgency(adventure.bestMonths);
   const nextDeparture = getNextDeparture(allOperators.flatMap((o) => o.departureDates ?? []));
 
@@ -254,8 +259,26 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           ((currentDifficultyLevel - x.level - 1) * EASIER_TIER_KM + x.km) -
           ((currentDifficultyLevel - y.level - 1) * EASIER_TIER_KM + y.km)
         )
-        .slice(0, 2)
+        .slice(0, 6)
     : [];
+  const easierKm = new Map(easierAlternatives.map((e) => [e.adventure.id, e.km]));
+
+  // Easier goes last: it's often a single card, and the "see easier" hint in
+  // Is This For You? opens it directly anyway
+  const similarTabs = [
+    ...(relatedByState.length > 0 ? [{
+      key: "state", label: `In ${adventure.state}`,
+      content: <RelatedRow items={relatedByState} pillMode="type" exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} exploreLabel={`All of ${adventure.state}`} />,
+    }] : []),
+    ...(relatedByType.length > 0 ? [{
+      key: "type", label: `More ${adventure.type}`,
+      content: <RelatedRow items={relatedByType} pillMode="region" exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`} exploreLabel={`All ${adventure.type}`} />,
+    }] : []),
+    ...(easierAlternatives.length > 0 ? [{
+      key: "easier", label: "Easier",
+      content: <RelatedRow items={easierAlternatives.map((e) => e.adventure)} pillMode="region" meta={(a) => `${Math.round(easierKm.get(a.id) ?? 0)} km away`} />,
+    }] : []),
+  ];
 
   const structuredData = [
     {
@@ -310,15 +333,10 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           },
         },
       } : {}),
-      ...(allOperators.some((o) => o.googleRating) ? {
-        aggregateRating: {
-          "@type": "AggregateRating",
-          ratingValue: (allOperators.reduce((sum, o) => sum + (o.googleRating ?? 0), 0) / allOperators.filter((o) => o.googleRating).length).toFixed(1),
-          reviewCount: allOperators.filter((o) => o.googleRating).length,
-          bestRating: 5,
-          worstRating: 1,
-        },
-      } : {}),
+      // No aggregateRating: the only ratings we have are operators' Google
+      // ratings (not this trek's) and seed reviews (not real), and Google's
+      // review-snippet rules allow neither. Add it back from real traveller
+      // reviews once there are enough of them.
     },
   ];
 
@@ -335,6 +353,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         duration={adventure.durationDays ?? adventure.duration}
         operatorWebsite={featuredOp?.website}
         operatorName={featuredOp?.name}
+        operatorCount={allOperators.length}
         seasonUrgency={seasonUrgency}
         nextDeparture={nextDeparture}
       />
@@ -380,6 +399,17 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <p className="text-white/55 text-sm md:text-lg leading-relaxed max-w-xl font-light">
               {adventure.tagline}
             </p>
+            {travellerRating && (
+              <a
+                href="#community"
+                className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white/80 hover:text-white backdrop-blur-md transition-colors"
+                style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.14)" }}
+              >
+                <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                <span className="font-semibold">{travellerRating.avg.toFixed(1)}</span>
+                <span className="text-white/55">· {travellerRating.count} traveller review{travellerRating.count !== 1 ? "s" : ""}</span>
+              </a>
+            )}
           </div>
         </div>
 
@@ -395,21 +425,22 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         {/* Stats strip */}
         <div className="max-w-7xl mx-auto px-5 lg:px-8 relative">
           <div className="flex items-stretch overflow-x-auto no-scrollbar" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-            {[
-              ...(priceFrom ? [{ icon: <IndianRupee className="w-3.5 h-3.5 text-[#ff5100]" />, label: "From", value: priceFrom }] : []),
-              ...(avgRating !== null ? [{ icon: <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />, label: "Google Rating", value: `${avgRating.toFixed(1)} / 5` }] : []),
+            {/* Trek facts only. Price shows here on mobile alone (desktop has the
+                booking card beside it); type is in the hero; operator ratings
+                live in the operator section, not next to the trek's facts. */}
+            {([
+              ...(priceFrom ? [{ icon: <IndianRupee className="w-3.5 h-3.5 text-[#ff5100]" />, label: "From", value: priceFrom, mobileOnly: true }] : []),
               { icon: <Clock className="w-3.5 h-3.5 text-[#ff5100]" />, label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
-              { icon: <Compass className="w-3.5 h-3.5 text-fuchsia-400" />, label: "Type", value: adventure.type },
               ...(adventure.distance ? [{ icon: <Route className="w-3.5 h-3.5 text-emerald-400" />, label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
               ...((adventure.altitude || adventure.depth) ? [{ icon: <TrendingUp className="w-3.5 h-3.5 text-sky-400" />, label: adventure.type === "Diving" ? "Max Depth" : "Max Altitude", value: adventure.depth ?? adventure.altitude }] : []),
               { icon: <Sun className="w-3.5 h-3.5 text-amber-400" />, label: "Best Season", value: adventure.bestSeason },
               ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ icon: <Flag className="w-3.5 h-3.5 text-violet-400" />, label: "Base Camp", value: adventure.baseCamp }] : []),
               ...(adventure.type === "Motorcycling" && adventure.startingPoint ? [{ icon: <Navigation className="w-3.5 h-3.5 text-emerald-400" />, label: "Starting Point", value: adventure.startingPoint }] : []),
               { icon: <Gauge className="w-3.5 h-3.5 text-rose-400" />, label: "Difficulty", value: difficulty },
-            ].map(({ icon, label, value }, i, arr) => (
+            ] as { icon: ReactNode; label: string; value: ReactNode; mobileOnly?: boolean }[]).map(({ icon, label, value, mobileOnly }, i, arr) => (
               <div
                 key={i}
-                className="flex items-center gap-2.5 px-4 lg:px-5 py-3 shrink-0"
+                className={`flex items-center gap-2.5 px-4 lg:px-5 py-3 shrink-0 ${mobileOnly ? "lg:hidden" : ""}`}
                 style={i < arr.length - 1 ? { borderRight: "1px solid var(--border-subtle)" } : {}}
               >
                 <div className="shrink-0 opacity-80">{icon}</div>
@@ -442,23 +473,65 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           {/* ── LEFT COLUMN ── */}
           <div className="lg:col-span-2">
 
-            {/* The Adventure + What Makes It Special — a matched pair, side by side on desktop */}
-            <div id="overview" className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 pt-6 first:pt-0 scroll-mt-24">
+            {/* Overview — the description, with "what makes it special" as its
+                punchline rather than a second side-by-side card that repeats it */}
+            <div id="overview" className="pt-6 first:pt-0 scroll-mt-24">
               <AccordionSection
-                label="The Adventure" title="About This Adventure" defaultOpen
-                icon={<BookOpen className="w-4 h-4" />} tintRgb="56,189,248" noDivider noTopPad stretch
+                label="The Adventure" title="Overview" defaultOpen
+                icon={<BookOpen className="w-4 h-4" />} tintRgb="56,189,248" noDivider noTopPad
               >
                 <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.description}</p>
-              </AccordionSection>
-
-              <AccordionSection
-                label="Highlights" title="What Makes It Special" defaultOpen
-                icon={<Sparkles className="w-4 h-4" />} tintRgb="244,63,94" noDivider noTopPad stretch
-              >
-                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.whatMakesSpecial}</p>
+                {adventure.whatMakesSpecial && (
+                  <div className="mt-4 pl-3.5 py-0.5" style={{ borderLeft: "2px solid rgba(244,63,94,0.55)" }}>
+                    <p className="flex items-center gap-1.5 text-[10px] font-bold tracking-[0.18em] uppercase mb-1.5 text-rose-400">
+                      <Sparkles className="w-3 h-3" /> Why it&apos;s special
+                    </p>
+                    <p className="text-sm leading-relaxed" style={{ color: "var(--text-primary)" }}>{adventure.whatMakesSpecial}</p>
+                  </div>
+                )}
               </AccordionSection>
             </div>
             <div className="h-px mt-6" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
+
+            {/* Safety & Prep — before suitability and booking, and open, so people
+                see the risks before choosing who to go with */}
+            <AccordionSection
+              id="safety"
+              label="Safety &amp; Prep" title="What to Know Before You Go" defaultOpen
+              icon={<ShieldAlert className="w-4 h-4" />} tintRgb="245,158,11"
+            >
+              <div className="space-y-3">
+                {/* Safety notes + hazard badges */}
+                <div className="rounded-xl p-3.5" style={{ background: "rgba(245,158,11,0.03)", border: "1px solid rgba(245,158,11,0.1)" }}>
+                  <div className="flex gap-3">
+                    <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.safetyNotes}</p>
+                  </div>
+                  {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
+                    <HazardBadges
+                      showAltitude={showAltitudeWarning}
+                      showExhaustion={showPhysicalExhaustionWarning}
+                      showFatalFall={showFatalFallWarning}
+                      showIsolation={showExtremeIsolationWarning}
+                      showTechnical={showTechnicalWarning}
+                      showWater={showWaterWarning}
+                    />
+                  )}
+                  <MedicalCautionNote notes={medicalCautions} />
+                </div>
+
+                {/* Packing list — nested within Safety & Prep */}
+                <PackingList
+                  adventureType={adventure.type}
+                  difficulty={difficulty}
+                  altitudeM={altM}
+                  bestSeason={adventure.bestSeason}
+                  adventureAce={ace}
+                  slug={adventure.slug}
+                  loggedIn={!!currentUserId}
+                />
+              </div>
+            </AccordionSection>
 
             {/* Is This For You? — fit/skip lists plus the Capability Profile radar,
                 merged since they both answer the same underlying question from
@@ -502,31 +575,12 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 </div>
               </div>
 
-              {/* Too intense? Surface easier nearby alternatives instead of only at the very bottom of the page */}
+              {/* Too intense? A hint that opens the Easier tab of Similar Adventures */}
               {easierAlternatives.length > 0 && (
-                <div className="mt-3 rounded-xl p-3.5" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
-                  <p className="text-[10px] font-bold tracking-[0.16em] uppercase mb-2.5" style={{ color: "var(--text-tertiary)" }}>Want something a bit easier?</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {easierAlternatives.map(({ adventure: a, difficulty: aDiff, km }) => {
-                      return (
-                        <Link
-                          key={a.id}
-                          href={`/experiences/${a.slug}`}
-                          className="flex items-center gap-2.5 p-2 rounded-lg transition-colors hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
-                          style={{ border: "1px solid var(--border-subtle)" }}
-                        >
-                          <div className="relative w-11 h-11 rounded-lg overflow-hidden shrink-0">
-                            <Image src={a.heroImage} alt={a.name} fill className="object-cover" style={{ objectFit: "cover" }} />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-xs font-semibold truncate" style={{ color: "var(--text-primary)" }}>{a.name}</p>
-                            <p className="text-[10px]" style={{ color: "var(--text-tertiary)" }}>{aDiff} · {Math.round(km)} km away</p>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
+                <a href="#easier" className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
+                  Too much? See easier {adventure.type.toLowerCase()} nearby
+                  <ArrowRight className="w-3.5 h-3.5 rotate-90" />
+                </a>
               )}
 
               {/* Capability Profile — supporting detail below the quick-skim lists above */}
@@ -558,101 +612,27 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             >
               <div id="operators-section" className="space-y-2.5">
                 <OperatorsSection operators={allOperators} slug={adventure.slug} />
+                {/* Stands in for the old generic FAQ: inclusions, cancellation and
+                    booking were all "ask the operator" anyway */}
+                {allOperators.length > 0 && (
+                  <p className="px-1 text-[11px] leading-relaxed" style={{ color: "var(--text-tertiary)" }}>
+                    Trail to Tides doesn&apos;t take payments. Inclusions, cancellation terms and payment are set by each operator, so confirm them before you book.
+                  </p>
+                )}
                 <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
               </div>
             </AccordionSection>
-
-            {/* Safety & Prep */}
-            <AccordionSection
-              id="safety"
-              label="Safety &amp; Prep" title="What to Know Before You Go" defaultOpen={false}
-              icon={<ShieldAlert className="w-4 h-4" />} tintRgb="245,158,11"
-            >
-              <div className="space-y-3">
-                {/* Safety notes + hazard badges */}
-                <div className="rounded-xl p-3.5" style={{ background: "rgba(245,158,11,0.03)", border: "1px solid rgba(245,158,11,0.1)" }}>
-                  <div className="flex gap-3">
-                    <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                    <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.safetyNotes}</p>
-                  </div>
-                  {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
-                    <HazardBadges
-                      showAltitude={showAltitudeWarning}
-                      showExhaustion={showPhysicalExhaustionWarning}
-                      showFatalFall={showFatalFallWarning}
-                      showIsolation={showExtremeIsolationWarning}
-                      showTechnical={showTechnicalWarning}
-                      showWater={showWaterWarning}
-                    />
-                  )}
-                  <MedicalCautionNote notes={medicalCautions} />
-                </div>
-
-                {/* Packing list — nested within Safety & Prep */}
-                <PackingList
-                  adventureType={adventure.type}
-                  difficulty={difficulty}
-                  altitudeM={altM}
-                  bestSeason={adventure.bestSeason}
-                  adventureAce={ace}
-                  slug={adventure.slug}
-                  loggedIn={!!currentUserId}
-                />
-              </div>
-            </AccordionSection>
-
-            {/* FAQ — mobile only; desktop shows it in the sidebar under the booking card */}
-            <div className="lg:hidden">
-              <AccordionSection
-                label="FAQ" title="Common Questions" defaultOpen={false}
-                icon={<HelpCircle className="w-4 h-4" />} tintRgb="232,121,249"
-              >
-                <FAQSection adventure={adventure} difficulty={difficulty} operatorCount={allOperators.length} />
-              </AccordionSection>
-            </div>
 
             {/* Community */}
             <div id="community" className="pt-6 scroll-mt-24">
               <h2 className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">Community</h2>
 
-              {/* Single login CTA — only when logged out */}
-              {!currentUserId && (
-                <div
-                  className="mb-4 rounded-2xl p-3.5 flex flex-col sm:flex-row items-center gap-3"
-                  style={{ background: "linear-gradient(135deg, rgba(255,81,0,0.07) 0%, rgba(255,81,0,0.03) 100%)", border: "1px solid rgba(255,81,0,0.18)" }}
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold leading-snug" style={{ color: "var(--text-primary)" }}>Join the community</p>
-                    <p className="text-xs mt-0.5 leading-relaxed" style={{ color: "var(--text-tertiary)" }}>Log in to write reviews, share trail photos, and earn XP.</p>
-                  </div>
-                  <Link
-                    href="/auth/login"
-                    className="shrink-0 flex items-center gap-2 text-white font-bold py-2.5 px-6 rounded-xl text-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ff5100]/25"
-                    style={{ background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)" }}
-                  >
-                    Log in
-                  </Link>
-                </div>
-              )}
-
-              {/* Two sub-sections side by side */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch">
-                {/* Reviews card */}
-                <div className="rounded-xl overflow-hidden" style={{ background: "rgba(var(--tint-neutral-rgb),0.025)", border: "1px solid rgba(var(--tint-neutral-rgb),0.18)" }}>
-                  <ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} isCompleted={isCompleted} operators={allOperators} />
-                </div>
-
-                {/* Photos card */}
-                <div className="rounded-xl overflow-hidden" style={{ background: "rgba(var(--tint-neutral-rgb),0.025)", border: "1px solid rgba(var(--tint-neutral-rgb),0.18)" }}>
-                  <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: "1px solid var(--border-subtle)", background: "rgba(var(--tint-neutral-rgb),0.05)" }}>
-                    <Camera className="w-3.5 h-3.5" style={{ color: "var(--text-tertiary)" }} />
-                    <h3 className="text-[10px] font-bold tracking-[0.18em] uppercase" style={{ color: "var(--text-tertiary)" }}>Photos</h3>
-                  </div>
-                  <div className="p-3">
-                    <PhotoGallery slug={adventure.slug} currentUserId={currentUserId} isCompleted={isCompleted} />
-                  </div>
-                </div>
-              </div>
+              <CommunityCards
+                slug={adventure.slug}
+                currentUserId={currentUserId}
+                isCompleted={isCompleted}
+                reviews={<ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} isCompleted={isCompleted} operators={allOperators} />}
+              />
             </div>
 
 
@@ -670,7 +650,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             <BookingSidebarCard
               priceFrom={priceFrom}
               operatorCount={allOperators.length}
-              avgRating={avgRating}
               operatorWebsite={featuredOp?.website}
               operatorName={featuredOp?.name}
               hasVerifiedOperator={!!featuredOp?.verified}
@@ -679,62 +658,25 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               quote={QUOTE_REQUESTS ? { slug: adventure.slug, name: adventure.name, operators: adventure.operators.filter((o) => o.verified).map((o) => o.name) } : undefined}
             />
 
-            {/* FAQ — desktop-only home for this section, right under the at-a-glance booking card */}
-            <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(232,121,249,0.18)", background: "rgba(232,121,249,0.025)" }}>
-              <div className="flex items-center gap-2.5 px-4 py-3" style={{ borderBottom: "1px solid rgba(232,121,249,0.14)", background: "rgba(232,121,249,0.05)" }}>
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(232,121,249,0.15)", color: "rgb(232,121,249)" }}>
-                  <HelpCircle className="w-3.5 h-3.5" />
-                </div>
-                <h3 className="font-semibold text-[13px]" style={{ color: "#ff5100" }}>Common Questions</h3>
-              </div>
-              <div className="p-3">
-                <FAQSection adventure={adventure} difficulty={difficulty} operatorCount={allOperators.length} />
-              </div>
-            </div>
-
             {/* Nearby adventures map */}
             {nearbyAdventures.length > 0 && (
               <NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} />
             )}
 
-            {/* Explore links */}
-            <div className="grid grid-cols-2 gap-2">
-              <SidebarLink href={`/explore?subRegion=${encodeURIComponent(adventure.state)}`}>
-                More in {adventure.state}
-              </SidebarLink>
-              <SidebarLink href={`/explore?type=${encodeURIComponent(adventure.type)}`}>
-                More in {adventure.type}
-              </SidebarLink>
-            </div>
-
           </div>
         </div>
       </FadeInSection>
 
-      {/* ── YOU MIGHT ALSO LIKE ───────────────────────────────── */}
-      {(relatedByState.length > 0 || relatedByType.length > 0) && (
-        <section
+      {/* ── SIMILAR ADVENTURES ────────────────────────────────── */}
+      {similarTabs.length > 0 && (
+        <div
           className="py-6 px-5 lg:px-8"
           style={{ background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)" }}
         >
-          <FadeInSection>
           <div className="max-w-7xl mx-auto">
-            <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-4">Discover More</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {relatedByState.length > 0 && (
-                <div className="p-4 rounded-2xl" style={{ background: "rgba(var(--tint-neutral-rgb),0.025)", border: "1px solid rgba(var(--tint-neutral-rgb),0.18)" }}>
-                  <RelatedSection title={`More in ${adventure.state}`} items={relatedByState} exploreHref={`/explore?subRegion=${encodeURIComponent(adventure.state)}`} pillMode="type" />
-                </div>
-              )}
-              {relatedByType.length > 0 && (
-                <div className="p-4 rounded-2xl" style={{ background: "rgba(var(--tint-neutral-rgb),0.025)", border: "1px solid rgba(var(--tint-neutral-rgb),0.18)" }}>
-                  <RelatedSection title={`More in ${adventure.type}`} items={relatedByType} exploreHref={`/explore?type=${encodeURIComponent(adventure.type)}`} pillMode="region" />
-                </div>
-              )}
-            </div>
+            <SimilarTabs tabs={similarTabs} />
           </div>
-          </FadeInSection>
-        </section>
+        </div>
       )}
 
       <Footer />
