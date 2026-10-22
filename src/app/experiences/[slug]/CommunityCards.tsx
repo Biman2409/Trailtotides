@@ -11,11 +11,10 @@ const CARD_STYLE = { background: "rgba(var(--tint-neutral-rgb),0.025)", border: 
  * reviews); photos often don't, so an empty Photos card is hidden and Reviews
  * takes the full width. Logged-in users still get a slim "share a photo" row.
  */
-export default function CommunityCards({ reviews, slug, currentUserId, isCompleted }: {
+export default function CommunityCards({ reviews, slug, currentUserId }: {
   reviews: ReactNode;
   slug: string;
   currentUserId?: string;
-  isCompleted?: boolean;
 }) {
   // null until the gallery has loaded; treated as empty so nothing flashes in
   const [photoCount, setPhotoCount] = useState<number | null>(null);
@@ -39,7 +38,7 @@ export default function CommunityCards({ reviews, slug, currentUserId, isComplet
           </div>
         )}
         <div className={hasPhotos ? "p-3" : ""}>
-          <PhotoGallery slug={slug} currentUserId={currentUserId} isCompleted={isCompleted} onCount={setPhotoCount} />
+          <PhotoGallery slug={slug} currentUserId={currentUserId} onCount={setPhotoCount} />
         </div>
       </div>
     </div>

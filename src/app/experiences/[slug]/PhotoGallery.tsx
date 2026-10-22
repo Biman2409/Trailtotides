@@ -21,7 +21,6 @@ interface Photo {
 interface Props {
   slug: string;
   currentUserId?: string;
-  isCompleted?: boolean;
   /** Reports the photo count once loaded (and after uploads/deletes) so the
    *  page can hide an empty Photos card */
   onCount?: (count: number) => void;

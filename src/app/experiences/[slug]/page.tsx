@@ -35,7 +35,6 @@ import ACEProfileSection from "./ACEProfileSection";
 import HeroActions from "./HeroActions";
 import ReviewSection from "@/components/ui/custom/ReviewSection";
 import { createClient } from "@/lib/supabase/server";
-import { loadTripLog } from "@/app/triplog/actions";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import type { Adventure } from "@/lib/data";
 import { getApprovedOperatorsForAdventure } from "@/app/auth/operator-actions";
@@ -207,8 +206,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
     ? { avg: reviewRatings.reduce((a, b) => a + b, 0) / reviewRatings.length, count: reviewRatings.length }
     : null;
 
-  const tripLog = currentUserId ? await loadTripLog() : [];
-  const isCompleted = tripLog.some(e => e.slug === adventure.slug);
 
   const relatedByState = adventures
     .filter((a) => a.id !== adventure.id && a.state === adventure.state)
@@ -630,8 +627,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               <CommunityCards
                 slug={adventure.slug}
                 currentUserId={currentUserId}
-                isCompleted={isCompleted}
-                reviews={<ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} isCompleted={isCompleted} operators={allOperators} />}
+                reviews={<ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} operators={allOperators} />}
               />
             </div>
 

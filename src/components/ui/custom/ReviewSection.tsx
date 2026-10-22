@@ -21,7 +21,6 @@ interface Props {
   currentUserId?: string;
   adventureType?: string;
   adventureName?: string;
-  isCompleted?: boolean;
   operators?: { name: string }[];
 }
 

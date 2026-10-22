@@ -8,8 +8,6 @@ import { parsePrice } from "@/lib/price";
 interface ComputedRating {
   avg: number;
   count: number;
-  display: string;
-  computed: boolean;
 }
 
 // Google and traveller ratings side by side, so one never hides the other.

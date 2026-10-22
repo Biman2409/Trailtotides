@@ -18,7 +18,7 @@ import AchievementBadges from "@/components/ui/custom/AchievementBadges";
 import AchievementShareButton from "@/components/ui/custom/AchievementShareButton";
 import {
   saveProfile, saveProfileToServer, loadProfileFromServer,
-  saveMedicalFlags, saveMedicalFlagsToServer,
+  saveMedicalFlagsToServer,
   saveConsent, saveConsentToServer, loadConsentFromServer, MATCHMAKER_CONSENT_VERSION,
   type StoredProfile,
 } from "@/lib/matchmaker";
@@ -1394,7 +1394,6 @@ export default function MatchmakerClient() {
     if (mode !== "quick") {
       // Medical answers → flags only, saved to a completely separate store.
       const medicalFlags = buildMedicalFlags(finalAnswers, jointNote);
-      saveMedicalFlags(medicalFlags);
       // Sequential, not concurrent: user_metadata is a single JSON blob with
       // no per-field atomicity, so two overlapping POSTs can each read a
       // stale snapshot and the later write silently clobbers the earlier

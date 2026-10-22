@@ -15,18 +15,17 @@ const operatorRatingSchema = z.object({
   rating: z.number().int().min(1).max(5),
 });
 
-const MIN_RATINGS_FOR_COMPUTED = 5;
-
 // GET /api/operator-ratings?slug=<slug>
-// Returns aggregated ratings per operator for the adventure.
-// { ratings: { [operatorNameNorm]: { avg: number; count: number; display: string } } }
+// Returns aggregated traveller ratings per operator for the adventure, shown
+// beside each operator's Google rating from the first one.
+// { ratings: { [operatorNameNorm]: { avg: number; count: number } } }
 export async function GET(req: NextRequest) {
   const slug = req.nextUrl.searchParams.get("slug");
   if (!slug) return NextResponse.json({ error: "Missing slug" }, { status: 400 });
 
   const { data, error } = await admin
     .from("operator_ratings")
-    .select("operator_name, operator_name_display, rating")
+    .select("operator_name, rating")
     .eq("adventure_slug", slug);
 
   if (error) {
@@ -38,22 +37,17 @@ export async function GET(req: NextRequest) {
   }
 
   // Aggregate by normalized operator name
-  const agg: Record<string, { sum: number; count: number; display: string }> = {};
+  const agg: Record<string, { sum: number; count: number }> = {};
   for (const row of data ?? []) {
     const key = row.operator_name;
-    if (!agg[key]) agg[key] = { sum: 0, count: 0, display: row.operator_name_display };
+    if (!agg[key]) agg[key] = { sum: 0, count: 0 };
     agg[key].sum += row.rating;
     agg[key].count += 1;
   }
 
-  const ratings: Record<string, { avg: number; count: number; display: string; computed: boolean }> = {};
+  const ratings: Record<string, { avg: number; count: number }> = {};
   for (const [key, val] of Object.entries(agg)) {
-    ratings[key] = {
-      avg: Math.round((val.sum / val.count) * 10) / 10,
-      count: val.count,
-      display: val.display,
-      computed: val.count >= MIN_RATINGS_FOR_COMPUTED,
-    };
+    ratings[key] = { avg: Math.round((val.sum / val.count) * 10) / 10, count: val.count };
   }
 
   return NextResponse.json({ ratings });
