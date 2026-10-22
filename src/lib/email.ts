@@ -48,7 +48,8 @@ function actionButton(link: string, label: string) {
       <td style="border-radius: 999px; background: ${C.orange}; box-shadow: 0 10px 30px rgba(255, 81, 0, 0.35);">
         <a href="${link}" style="display: inline-block; padding: 16px 34px; border-radius: 999px; font: 700 16px/1 ${SANS}; color: #ffffff; text-decoration: none;">${label} &rarr;</a>
       </td></tr></table>
-    <p style="font: 400 12px/1.5 ${SANS}; color: ${C.muted}; margin: 0 0 26px;">Button not working? <a href="${link}" style="color: ${C.link}; word-break: break-all;">Open this link</a></p>`;
+    <p style="font: 400 12px/1.7 ${SANS}; color: ${C.muted}; margin: 0 0 26px;">Button not working? <a href="${link}" style="color: ${C.link}; word-break: break-all;">Open this link</a><br>
+      Still stuck? <a href="${SITE}/contact" style="color: ${C.link};">Contact us &rarr;</a></p>`;
 }
 
 /** Every contact message lands here; replying goes straight back to the sender */
@@ -157,7 +158,7 @@ ${opts.preheader ? `<div style="display: none; max-height: 0; overflow: hidden; 
     <tr><td align="center" style="padding: 26px 20px 0; font: 400 12px/1.9 ${SANS}; color: ${C.muted};">
       ${SOCIAL.map(([name, url]) => `<a href="${url}" style="color: ${C.text}; text-decoration: none; font-weight: 700;">${name}</a>`).join(` &nbsp;<span style="color: ${C.orange};">&#9679;</span>&nbsp; `)}<br>
       Find, compare and book adventures matched to your fitness.<br>
-      <a href="${SITE}" style="color: ${C.body}; text-decoration: none; font-weight: 600;">trailtotides.com</a> &nbsp;&middot;&nbsp; <a href="mailto:hello@trailtotides.com" style="color: ${C.body}; text-decoration: none;">hello@trailtotides.com</a> &nbsp;&middot;&nbsp; Mumbai, India
+      <a href="${SITE}" style="color: ${C.body}; text-decoration: none; font-weight: 600;">trailtotides.com</a> &nbsp;&middot;&nbsp; <a href="${SITE}/contact" style="color: ${C.body}; text-decoration: none;">hello@trailtotides.com</a> &nbsp;&middot;&nbsp; Mumbai, India
     </td></tr>
   </table>
 </td></tr></table>
