@@ -21,16 +21,19 @@ export function verificationEmail(link: string, name: string) {
     html: layout('Welcome aboard', `You're one tap from the trail, ${name}.`,
       `<p style="${P}">Confirm your email to finish creating your Trail to Tides account. It takes a second, and it keeps your account yours.</p>
        ${actionButton(link, 'Verify my email')}
-       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f7f3ec; border-radius: 16px;">
-         <tr><td style="padding: 18px 20px 6px; font: 700 11px/1 ${SANS}; letter-spacing: 0.16em; text-transform: uppercase; color: #8a8177;">What's waiting for you</td></tr>
-         ${perks.map(([t, d]) => `<tr><td style="padding: 8px 20px;">
-           <span style="font: 700 14px/1.4 ${SANS}; color: #1c1814;"><span style="color: #ff5100;">&#9679;</span>&nbsp; ${t}</span><br>
-           <span style="font: 400 13px/1.5 ${SANS}; color: #6b655e; padding-left: 18px; display: inline-block;">${d}</span>
+       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: ${C.panel}; border: 1px solid ${C.line}; border-radius: 18px;">
+         <tr><td style="padding: 20px 20px 4px; font: 700 11px/1 ${SANS}; letter-spacing: 0.18em; text-transform: uppercase; color: ${C.muted};">What's waiting for you</td></tr>
+         ${perks.map(([t, d], i) => `<tr><td style="padding: 12px 20px 4px;">
+           <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+             <td valign="top" style="width: 34px; padding-right: 14px;"><div style="width: 34px; height: 34px; border-radius: 10px; background: ${C.orangeTint}; border: 1px solid ${C.orangeLine}; text-align: center; font: 800 12px/34px ${SANS}; color: ${C.orange};">0${i + 1}</div></td>
+             <td valign="top"><span style="font: 700 14px/1.4 ${SANS}; color: ${C.text};">${t}</span><br>
+               <span style="font: 400 13px/1.5 ${SANS}; color: ${C.body};">${d}</span></td>
+           </tr></table>
          </td></tr>`).join('')}
-         <tr><td style="height: 12px;"></td></tr>
+         <tr><td style="height: 16px;"></td></tr>
        </table>`,
       `The link works once and expires in 1 hour. If it runs out, just log in and we'll send a fresh one. Didn't sign up? Ignore this email and nothing happens.`,
-      { hero: HERO, preheader: 'One tap to confirm your email and your Trail to Tides account is ready.', link, signoff: true }),
+      { banner: { src: WELCOME, height: 320, alt: 'From Mountain TRAIL, to Ocean TIDES' }, preheader: 'One tap to confirm your email and your Trail to Tides account is ready.', link, signoff: true }),
     text: `Hi ${name},\n\nYou're one tap from the trail. Confirm your email to finish creating your Trail to Tides account:\n${link}\n\nThe link works once and expires in 1 hour. If it runs out, log in and we'll send a fresh one. Didn't sign up? Ignore this email.\n\nTrail to Tides · ${SITE}`,
   };
 }
@@ -41,11 +44,11 @@ export async function sendVerificationEmail(email: string, link: string, name: s
 
 /** A big pill button that survives every mail app, plus the raw link for ones that strip it */
 function actionButton(link: string, label: string) {
-  return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin: 26px 0 10px;"><tr>
-      <td style="border-radius: 999px; background: #ff5100;">
-        <a href="${link}" style="display: inline-block; padding: 15px 32px; border-radius: 999px; font: 700 16px/1 ${SANS}; color: #ffffff; text-decoration: none;">${label} &rarr;</a>
+  return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin: 28px 0 12px;"><tr>
+      <td style="border-radius: 999px; background: ${C.orange}; box-shadow: 0 10px 30px rgba(255, 81, 0, 0.35);">
+        <a href="${link}" style="display: inline-block; padding: 16px 34px; border-radius: 999px; font: 700 16px/1 ${SANS}; color: #ffffff; text-decoration: none;">${label} &rarr;</a>
       </td></tr></table>
-    <p style="font: 400 12px/1.5 ${SANS}; color: #8a8177; margin: 0 0 24px;">Button not working? <a href="${link}" style="color: #e04800; word-break: break-all;">Open this link</a></p>`;
+    <p style="font: 400 12px/1.5 ${SANS}; color: ${C.muted}; margin: 0 0 26px;">Button not working? <a href="${link}" style="color: ${C.link}; word-break: break-all;">Open this link</a></p>`;
 }
 
 /** Every contact message lands here; replying goes straight back to the sender */
@@ -63,8 +66,8 @@ export function contactEmail(msg: ContactMessage) {
     subject: `New message from ${msg.name}${topic ? ` · ${topic}` : ''}`,
     text: `${msg.message}\n\n— ${msg.name} <${msg.email}>${topic ? `\nTopic: ${topic}` : ''}${msg.page ? `\nSent from: ${msg.page}` : ''}`,
     html: layout(`New message${topic ? ` · ${topic}` : ''}`, msg.name,
-      `<p style="${P} margin-bottom: 18px;"><a href="mailto:${escapeHtml(msg.email)}" style="color: #e04800; font-weight: 700; text-decoration: none;">${escapeHtml(msg.email)}</a></p>
-       <div style="font: 400 15px/1.65 ${SANS}; color: #1c1814; white-space: pre-wrap; padding: 18px 20px; background: #f7f3ec; border-radius: 16px;">${escapeHtml(msg.message)}</div>`,
+      `<p style="${P} margin-bottom: 18px;"><a href="mailto:${escapeHtml(msg.email)}" style="color: ${C.link}; font-weight: 700; text-decoration: none;">${escapeHtml(msg.email)}</a></p>
+       <div style="font: 400 15px/1.65 ${SANS}; color: ${C.text}; white-space: pre-wrap; padding: 18px 20px; background: ${C.panel}; border: 1px solid ${C.line}; border-radius: 16px;">${escapeHtml(msg.message)}</div>`,
       `Reply to this email to answer ${escapeHtml(msg.name)} directly.${msg.page ? ` Sent from ${escapeHtml(msg.page)}.` : ''}`,
       { preheader: msg.message.slice(0, 120) }),
   };
@@ -81,12 +84,12 @@ export function passwordResetEmail(link: string) {
     html: layout('Password reset', 'Lost the trail? Pick a new password.',
       `<p style="${P}">We got a request to reset the password for this account. Use the button below to choose a new one. You'll be signed in when you're done.</p>
        ${actionButton(link, 'Reset my password')}
-       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f7f3ec; border-radius: 16px;"><tr>
-         <td style="padding: 16px 20px; font: 400 13px/1.55 ${SANS}; color: #4a443e;">
-           <b style="color: #1c1814;">Didn't ask for this?</b> You can ignore this email. Your password stays the same, and nobody can use this link once it expires.
+       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: ${C.panel}; border: 1px solid ${C.line}; border-left: 3px solid ${C.orange}; border-radius: 14px;"><tr>
+         <td style="padding: 16px 20px; font: 400 13px/1.6 ${SANS}; color: ${C.body};">
+           <b style="color: ${C.text};">Didn't ask for this?</b> You can ignore this email. Your password stays the same, and nobody can use this link once it expires.
          </td></tr></table>`,
       `The link works once and expires in 1 hour. Need a new one? Ask again from the login page.`,
-      { preheader: 'Use this link within the hour to choose a new password.', link, signoff: true }),
+      { banner: { src: RESET, height: 100, alt: '' }, preheader: 'Use this link within the hour to choose a new password.', link, signoff: true }),
     text: `Reset your Trail to Tides password:\n${link}\n\nThe link works once and expires in 1 hour. Didn't ask for this? Ignore this email: your password stays the same.\n\nTrail to Tides · ${SITE}`,
   };
 }
@@ -103,9 +106,17 @@ const ASSETS = 'https://www.trailtotides.com/email';
 // The site's own fonts where the mail app loads them (Apple Mail, iOS), close fallbacks elsewhere
 const SANS = "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 const SERIF = "Fraunces, Georgia, 'Times New Roman', serif";
-const P = `font: 400 15px/1.65 ${SANS}; color: #4a443e; margin: 0;`;
-// Mountain trail meets ocean tide, from our own region photos (about 60 KB)
-const HERO = `${ASSETS}/hero.jpg`;
+// The site's dark theme, as solid colours so mail apps without rgba still get them right
+const C = {
+  page: '#0a0a0a', card: '#131110', panel: '#1b1815', line: '#2a2622',
+  text: '#ffffff', body: '#b3aca5', muted: '#7d766f',
+  orange: '#ff5100', link: '#ff7d47', orangeTint: '#2a1408', orangeLine: '#4a2210',
+};
+const P = `font: 400 15px/1.65 ${SANS}; color: ${C.body}; margin: 0;`;
+// The home page headline over mountain trail meeting ocean tide (about 85 KB)
+const WELCOME = `${ASSETS}/welcome.jpg`;
+// The TRAIL contour texture as a slim glow (about 12 KB)
+const RESET = `${ASSETS}/reset.jpg`;
 const SOCIAL = [
   ['Instagram', 'https://instagram.com/trailtotides'],
   ['YouTube', 'https://youtube.com/@trailtotides'],
@@ -113,37 +124,40 @@ const SOCIAL = [
 ];
 
 /**
- * One look for every account email: the dark header with the real logo, an optional photo with
- * the brand line under it, a white card with an eyebrow, a serif heading, the body and a
- * sign-off, then a small print line and the footer. Tables and inline styles only, so it holds
- * up in Gmail, Outlook and Apple Mail; with images off the logo's alt text still names us.
+ * One look for every email, in the website's dark theme: the logo on the page, then a card with
+ * an optional banner image (the home page headline, or the contour glow), an eyebrow, a serif
+ * heading, the body and a handwritten sign-off, then the small print and the footer.
+ * Tables, inline styles and solid colours only, so it holds up in Gmail, Outlook and Apple Mail;
+ * with images off the alt text still names us.
  */
-function layout(eyebrow: string, heading: string, body: string, footer: string, opts: { hero?: string; preheader?: string; link?: string; signoff?: boolean } = {}) {
+function layout(eyebrow: string, heading: string, body: string, footer: string, opts: { banner?: { src: string; height: number; alt: string }; preheader?: string; link?: string; signoff?: boolean } = {}) {
+  const b = opts.banner;
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light"><title>${escapeHtml(heading)}</title>
+<meta name="color-scheme" content="dark"><meta name="supported-color-schemes" content="dark"><title>${escapeHtml(heading)}</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700;800&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet">
-<style>@media (max-width: 480px) { .card { padding: 28px 22px 22px !important; } .h1 { font-size: 24px !important; } }</style></head>
-<body style="margin: 0; padding: 0; background: #efe9df; -webkit-text-size-adjust: 100%;">
+<style>@media (max-width: 480px) { .card { padding: 28px 22px 24px !important; } .h1 { font-size: 25px !important; } }</style></head>
+<body style="margin: 0; padding: 0; background: ${C.page}; color: ${C.body}; -webkit-text-size-adjust: 100%;">
 ${opts.preheader ? `<div style="display: none; max-height: 0; overflow: hidden; opacity: 0;">${escapeHtml(opts.preheader)}&#8199;&#65279;&#847;&#8199;&#65279;&#847;</div>` : ''}
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #efe9df;"><tr><td align="center" style="padding: 28px 12px 36px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${C.page}" style="background: ${C.page};"><tr><td align="center" style="padding: 28px 12px 40px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 560px;">
-    <tr><td style="background: #0f0d0b; border-radius: 20px 20px 0 0; padding: 22px 28px;">
+    <tr><td style="padding: 0 6px 20px;">
       <a href="${SITE}" style="text-decoration: none;"><img src="${ASSETS}/logo.png" width="171" height="30" alt="TRAIL to TIDES" style="display: block; border: 0; font: 800 16px/30px ${SANS}; letter-spacing: 0.08em; color: #ffffff;"></a>
     </td></tr>
-    ${opts.hero ? `<tr><td style="background: #0f0d0b; line-height: 0; font-size: 0;">${opts.link ? `<a href="${opts.link}">` : ''}<img src="${opts.hero}" width="560" alt="A Himalayan peak on one side, a sunset beach on the other" style="display: block; width: 100%; max-width: 560px; height: auto; border: 0;">${opts.link ? '</a>' : ''}</td></tr>
-    <tr><td align="center" style="background: #0f0d0b; padding: 13px 20px 15px; font: 700 10px/1 ${SANS}; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.62);">Mountain trails <span style="color: #ff5100;">&nbsp;&#9679;&nbsp;</span> Ocean tides</td></tr>` : ''}
-    <tr><td class="card" style="background: #ffffff; padding: 34px 30px 26px; border-radius: 0 0 20px 20px;">
-      <p style="font: 700 11px/1 ${SANS}; letter-spacing: 0.2em; text-transform: uppercase; color: #ff5100; margin: 0 0 12px;">${escapeHtml(eyebrow)}</p>
-      <h1 class="h1" style="font: 700 27px/1.2 ${SERIF}; color: #1c1814; margin: 0 0 14px;">${escapeHtml(heading)}</h1>
-      ${body}
-      ${opts.signoff ? `<p style="${P} margin-top: 24px;">See you out there,<br><b style="color: #1c1814;">The Trail to Tides team</b></p>` : ''}
-      <p style="font: 400 12px/1.55 ${SANS}; color: #8a8177; margin: 24px 0 0; padding-top: 18px; border-top: 1px solid #efe9df;">${footer}</p>
+    <tr><td bgcolor="${C.card}" style="background: ${C.card}; border: 1px solid ${C.line}; border-radius: 24px; overflow: hidden;">
+      ${b ? `<div style="line-height: 0; font-size: 0;">${opts.link ? `<a href="${opts.link}">` : ''}<img src="${b.src}" width="560" height="${b.height}" alt="${escapeHtml(b.alt)}" style="display: block; width: 100%; max-width: 560px; height: auto; border: 0; border-radius: 23px 23px 0 0; color: #ffffff; font: 800 22px/1.3 ${SANS};">${opts.link ? '</a>' : ''}</div>` : ''}
+      <div class="card" style="padding: ${b ? '26px' : '36px'} 32px 28px;">
+        <p style="font: 700 11px/1 ${SANS}; letter-spacing: 0.22em; text-transform: uppercase; color: ${C.orange}; margin: 0 0 12px;">${escapeHtml(eyebrow)}</p>
+        <h1 class="h1" style="font: 700 29px/1.18 ${SERIF}; color: ${C.text}; margin: 0 0 14px;">${escapeHtml(heading)}</h1>
+        ${body}
+        ${opts.signoff ? `<img src="${ASSETS}/signoff.png" width="198" height="51" alt="See you out there, Team Trail to Tides" style="display: block; border: 0; margin-top: 28px; color: ${C.link}; font: 700 15px/1.4 ${SANS};">` : ''}
+        <p style="font: 400 12px/1.6 ${SANS}; color: ${C.muted}; margin: 24px 0 0; padding-top: 18px; border-top: 1px solid ${C.line};">${footer}</p>
+      </div>
     </td></tr>
-    <tr><td align="center" style="padding: 24px 20px 0; font: 400 12px/1.8 ${SANS}; color: #8a8177;">
-      ${SOCIAL.map(([name, url]) => `<a href="${url}" style="color: #4a443e; text-decoration: none; font-weight: 700;">${name}</a>`).join(' &nbsp;&middot;&nbsp; ')}<br>
+    <tr><td align="center" style="padding: 26px 20px 0; font: 400 12px/1.9 ${SANS}; color: ${C.muted};">
+      ${SOCIAL.map(([name, url]) => `<a href="${url}" style="color: ${C.text}; text-decoration: none; font-weight: 700;">${name}</a>`).join(` &nbsp;<span style="color: ${C.orange};">&#9679;</span>&nbsp; `)}<br>
       Find, compare and book adventures matched to your fitness.<br>
-      <a href="${SITE}" style="color: #6b655e; text-decoration: none; font-weight: 600;">trailtotides.com</a> &nbsp;&middot;&nbsp; <a href="mailto:hello@trailtotides.com" style="color: #6b655e; text-decoration: none;">hello@trailtotides.com</a> &nbsp;&middot;&nbsp; Mumbai, India
+      <a href="${SITE}" style="color: ${C.body}; text-decoration: none; font-weight: 600;">trailtotides.com</a> &nbsp;&middot;&nbsp; <a href="mailto:hello@trailtotides.com" style="color: ${C.body}; text-decoration: none;">hello@trailtotides.com</a> &nbsp;&middot;&nbsp; Mumbai, India
     </td></tr>
   </table>
 </td></tr></table>
