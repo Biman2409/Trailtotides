@@ -33,7 +33,7 @@ export function verificationEmail(link: string, name: string) {
          <tr><td style="height: 16px;"></td></tr>
        </table>`,
       `The link works once and expires in 1 hour. If it runs out, just log in and we'll send a fresh one. Didn't sign up? Ignore this email and nothing happens.`,
-      { banner: { src: WELCOME, height: 320, alt: 'From Mountain TRAIL, to Ocean TIDES' }, preheader: 'One tap to confirm your email and your Trail to Tides account is ready.', link, signoff: true }),
+      { preheader: 'One tap to confirm your email and your Trail to Tides account is ready.', link, signoff: true }),
     text: `Hi ${name},\n\nYou're one tap from the trail. Confirm your email to finish creating your Trail to Tides account:\n${link}\n\nThe link works once and expires in 1 hour. If it runs out, log in and we'll send a fresh one. Didn't sign up? Ignore this email.\n\nTrail to Tides · ${SITE}`,
   };
 }
@@ -143,8 +143,6 @@ const DARK_CSS = `@media (prefers-color-scheme: dark) {${DARK_RULES}
 }
 ${DARK_RULES.replace(/\n  \./g, '\n[data-ogsc] .').replace(/\[data-ogsc\] \.(c-page|c-card|c-panel|c-note|c-chip)/g, '[data-ogsb] .$1')}`;
 const P = `font: 400 15px/1.65 ${SANS}; color: ${C.body}; margin: 0;`;
-// The home page headline over mountain trail meeting ocean tide (about 85 KB)
-const WELCOME = `${ASSETS}/welcome.jpg`;
 
 /** A pair of images: one for the white email, one for dark mode (e.g. the logo's lettering) */
 function themedImage(light: string, dark: string, attrs: string, style: string) {
