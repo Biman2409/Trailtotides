@@ -42,14 +42,18 @@ export async function sendVerificationEmail(email: string, link: string, name: s
   return send({ to: email, ...verificationEmail(link, name) });
 }
 
-/** A big pill button that survives every mail app, plus the raw link for ones that strip it */
+/**
+ * A big pill button that works in every mail app. Outlook on Windows ignores padding on links,
+ * so it gets a drawn (VML) button of its own; everyone else gets the styled link, whose whole
+ * pill is clickable. The plain-text part of each email carries the link too.
+ */
 function actionButton(link: string, label: string) {
-  return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin: 28px 0 12px;"><tr>
-      <td style="border-radius: 999px; background: ${C.orange}; box-shadow: 0 10px 30px rgba(255, 81, 0, 0.35);">
-        <a href="${link}" style="display: inline-block; padding: 16px 34px; border-radius: 999px; font: 700 16px/1 ${SANS}; color: #ffffff; text-decoration: none;">${label} &rarr;</a>
-      </td></tr></table>
-    <p style="font: 400 12px/1.7 ${SANS}; color: ${C.muted}; margin: 0 0 26px;">Button not working? <a href="${link}" style="color: ${C.link}; word-break: break-all;">Use this link instead</a><br>
-      Still stuck? <a href="${SITE}/contact" style="color: ${C.link};">Contact us &rarr;</a></p>`;
+  const width = 70 + label.length * 10;
+  return `<table role="presentation" cellpadding="0" cellspacing="0" style="margin: 28px 0 14px;"><tr><td>
+      <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${link}" style="height:52px;v-text-anchor:middle;width:${width}px;" arcsize="50%" stroke="f" fillcolor="${C.orange}"><w:anchorlock/><center style="color:#ffffff;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;">${label} &rarr;</center></v:roundrect><![endif]-->
+      <!--[if !mso]><!--><a href="${link}" style="display: inline-block; padding: 18px 34px; border-radius: 999px; background: ${C.orange}; box-shadow: 0 10px 30px rgba(255, 81, 0, 0.35); font: 700 16px/16px ${SANS}; color: #ffffff; text-decoration: none; mso-hide: all;">${label} &rarr;</a><!--<![endif]-->
+    </td></tr></table>
+    <p style="font: 400 12px/1.7 ${SANS}; color: ${C.muted}; margin: 0 0 26px;">Still stuck? <a href="${SITE}/contact" style="color: ${C.link};">Contact us &rarr;</a></p>`;
 }
 
 /** Every contact message lands here; replying goes straight back to the sender */
@@ -134,7 +138,7 @@ const SOCIAL = [
 function layout(eyebrow: string, heading: string, body: string, footer: string, opts: { banner?: { src: string; height: number; alt: string }; preheader?: string; link?: string; signoff?: boolean } = {}) {
   const b = opts.banner;
   return `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark"><meta name="supported-color-schemes" content="dark"><title>${escapeHtml(heading)}</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700;800&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet">
 <style>@media (max-width: 480px) { .card { padding: 28px 22px 24px !important; } .h1 { font-size: 25px !important; } }</style></head>
