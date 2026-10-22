@@ -12,11 +12,12 @@ interface Props {
   duration: string;
   operatorWebsite?: string;
   operatorName?: string;
+  operatorCount: number;
   seasonUrgency?: SeasonUrgency | null;
   nextDeparture?: string | null;
 }
 
-export default function MobileBookBar({ adventureName, priceFrom, difficulty, duration, operatorWebsite, operatorName, seasonUrgency, nextDeparture }: Props) {
+export default function MobileBookBar({ adventureName, priceFrom, difficulty, duration, operatorWebsite, operatorName, operatorCount, seasonUrgency, nextDeparture }: Props) {
   const [visible, setVisible] = useState(false);
   const [staleProfile, setStaleProfile] = useState(false);
 
@@ -37,8 +38,12 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
     });
   }, []);
 
+  // Same rule as BookingSidebarCard: lead to the comparison unless there's
+  // only one operator to book with.
+  const bookDirect = operatorCount === 1 && !!operatorWebsite;
+
   const handleBook = () => {
-    if (operatorWebsite) {
+    if (bookDirect) {
       window.open(operatorWebsite, "_blank", "noopener noreferrer");
     } else {
       const el = document.getElementById("operators-section");
@@ -91,13 +96,13 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
             )}
           </div>
           <div className="text-right shrink-0">
-            {operatorName && (
-              <p className="text-[#ff5100] text-xs font-bold leading-none mb-1">{operatorName}</p>
-            )}
             {priceFrom && (
               <p className="text-black dark:text-white font-bold text-sm leading-none whitespace-nowrap">
                 <span className="text-black/35 dark:text-white/30 font-normal text-[11px]">From </span>{priceFrom}
               </p>
+            )}
+            {operatorName && operatorCount > 1 && (
+              <p className="text-black/35 dark:text-white/30 text-[10px] mt-1 whitespace-nowrap">Cheapest: {operatorName}</p>
             )}
             {nextDeparture && (
               <p className="text-black/35 dark:text-white/30 text-[10px] mt-1 whitespace-nowrap">Next: {nextDeparture}</p>
@@ -108,15 +113,6 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
         {/* CTA buttons */}
         <div className="flex gap-2.5">
           <button
-            onClick={() => {
-              const el = document.getElementById("book-this-adventure");
-              if (el) el.scrollIntoView({ behavior: "smooth" });
-            }}
-            className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-2xl text-sm font-semibold transition-all duration-200 active:scale-[0.98] bg-black/[0.05] dark:bg-white/[0.07] text-black/70 dark:text-white/65 border border-black/10 dark:border-white/10"
-          >
-            Browse Operators
-          </button>
-          <button
             onClick={handleBook}
             className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-2xl text-white text-sm font-bold transition-all duration-200 active:scale-[0.98]"
             style={{
@@ -124,7 +120,9 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
               boxShadow: "0 4px 20px rgba(255,81,0,0.4), 0 0 0 1px rgba(255,81,0,0.2)",
             }}
           >
-            Book Now
+            {bookDirect && operatorName
+              ? `Book with ${operatorName}`
+              : operatorCount > 1 ? `Compare ${operatorCount} operators` : "See operators"}
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>

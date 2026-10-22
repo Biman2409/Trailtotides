@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Camera, Loader2, Trash2, X, ZoomIn, Upload, ImageOff } from "lucide-react";
+import { Camera, Loader2, Trash2, X, ZoomIn, Upload } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { awardXP } from "@/lib/awardXP";
@@ -22,6 +22,9 @@ interface Props {
   slug: string;
   currentUserId?: string;
   isCompleted?: boolean;
+  /** Reports the photo count once loaded (and after uploads/deletes) so the
+   *  page can hide an empty Photos card */
+  onCount?: (count: number) => void;
 }
 
 function timeAgo(dateStr: string): string {
@@ -38,7 +41,7 @@ function timeAgo(dateStr: string): string {
   return `${Math.floor(months / 12)}y ago`;
 }
 
-export default function PhotoGallery({ slug, currentUserId }: Props) {
+export default function PhotoGallery({ slug, currentUserId, onCount }: Props) {
   const { markDone, isDone } = useTripLog();
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,6 +63,10 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [slug]);
+
+  useEffect(() => {
+    if (!loading) onCount?.(photos.length);
+  }, [loading, photos.length, onCount]);
 
   function handleFileChange(f: File | null) {
     if (!f) return;
@@ -217,10 +224,9 @@ export default function PhotoGallery({ slug, currentUserId }: Props) {
           <Loader2 className="w-5 h-5 animate-spin text-black/25 dark:text-white/20" />
         </div>
       ) : photos.length === 0 ? (
-        <div className="flex flex-col items-center gap-2 py-10">
-          <ImageOff className="w-8 h-8 text-black/15 dark:text-white/10" />
-          <p className="text-black/30 dark:text-white/25 text-sm">No photos yet. Be the first to share.</p>
-        </div>
+        // No "no photos yet" block: the page hides the empty card, leaving
+        // just the upload prompt above for logged-in users
+        null
       ) : (
         <>
         <div className="overflow-y-auto no-scrollbar" style={{ maxHeight: "340px" }}>
