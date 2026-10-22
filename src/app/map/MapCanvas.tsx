@@ -7,7 +7,7 @@ import type { GeoJsonObject } from "geojson";
 import type { Adventure, Month } from "@/lib/data";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
 import {
-  BASE_LAYERS, INDIA_CENTER, INDIA_ZOOM, INDIA_BOUNDS, loadLeaflet, inSeason, esc,
+  BASE_LAYERS, createBaseLayer, INDIA_CENTER, INDIA_ZOOM, INDIA_BOUNDS, loadLeaflet, inSeason, esc,
   difficultyOf, difficultyColor, priceFrom, formatINR, verifiedOperators,
   type LayerKey, type Fit,
 } from "./mapShared";
@@ -103,7 +103,8 @@ export default function MapCanvas(props: Props) {
   const leafletRef = useRef<typeof L | null>(null);
   const clusterRef = useRef<L.LayerGroup | null>(null);
   const markersRef = useRef<Map<string, L.Marker>>(new Map());
-  const tileRefs = useRef<L.TileLayer[]>([]);
+  const tileRefs = useRef<L.Layer[]>([]);
+  const tileToken = useRef(0);
   const photoRef = useRef<L.LayerGroup | null>(null);
   const placeRef = useRef<L.LayerGroup | null>(null);
   const meRef = useRef<L.LayerGroup | null>(null);
@@ -218,6 +219,9 @@ export default function MapCanvas(props: Props) {
         zoomControl: false, attributionControl: false, zoomSnap: 0.5,
       });
       leaflet.control.zoom({ position: "topright" }).addTo(map);
+      // Map credits (required by OSM, OpenFreeMap and OpenTopoMap) under the zoom buttons: the
+      // bottom corners are taken by the compare tray and, on phones, the results sheet
+      leaflet.control.attribution({ position: "topright", prefix: false }).addTo(map);
       mapRef.current = map;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const cluster = (leaflet as any).markerClusterGroup({
@@ -271,16 +275,16 @@ export default function MapCanvas(props: Props) {
   function setTiles(key: LayerKey) {
     const map = mapRef.current, leaflet = leafletRef.current;
     if (!map || !leaflet) return;
-    tileRefs.current.forEach((t) => map.removeLayer(t));
     const cfg = BASE_LAYERS[key];
-    map.setMaxZoom(cfg.maxZoom);
-    const opts = { maxZoom: cfg.maxZoom, maxNativeZoom: cfg.maxZoom };
-    tileRefs.current = [
-      leaflet.tileLayer(cfg.url, { ...opts, className: "tm-base" }),
-      ...(cfg.relief ? [leaflet.tileLayer(cfg.relief, { ...opts, className: "tm-relief" })] : []),
-      ...(cfg.labels ? [leaflet.tileLayer(cfg.labels, { ...opts, className: "tm-labels" })] : []),
-    ];
-    tileRefs.current.forEach((t) => t.addTo(map));
+    // The vector style loads MapLibre first, so a quick switch can land out of order: only the latest wins
+    const token = ++tileToken.current;
+    createBaseLayer(leaflet, cfg).then((base) => {
+      if (token !== tileToken.current || mapRef.current !== map) return;
+      tileRefs.current.forEach((t) => map.removeLayer(t));
+      map.setMaxZoom(cfg.maxZoom);
+      tileRefs.current = [base];
+      base.addTo(map);
+    });
   }
 
   useEffect(() => { setTiles(layer); }, [layer]);
@@ -431,9 +435,11 @@ export default function MapCanvas(props: Props) {
 
 const MAP_CSS = `
   .tm-map { background: #0b0d10; }
-  /* Hillshade over the dark canvas: soft-light keeps flat ground as is and lifts the ranges */
-  .tm-map .tm-relief { mix-blend-mode: soft-light; opacity: 0.9; }
-  .tm-map .tm-labels { opacity: 0.75; }
+  /* Map credits: small and quiet, but readable */
+  .tm-map .leaflet-control-attribution { background: rgba(11,13,16,0.72) !important; color: rgba(255,255,255,0.5) !important; font-size: 9.5px !important; line-height: 1.4; padding: 2px 7px !important; border-radius: 8px; margin: 8px 12px 0 0 !important; max-width: min(70vw, 420px); text-align: right; }
+  .tm-map .leaflet-control-attribution a { color: rgba(255,255,255,0.7) !important; }
+  /* Phones and tablets: the filter dock and Layers button cover the top-right corner, so sit below them */
+  @media (max-width: 1023px) { .tm-map .leaflet-control-attribution { margin-top: 108px !important; } }
 
   .tm-pin { position: relative; width: 34px; height: 34px; display: grid; place-items: center; transition: transform .25s cubic-bezier(.2,1.4,.4,1), opacity .35s, filter .35s; }
   .tm-pin-core { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;

@@ -9,7 +9,7 @@ import type { Adventure } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
 import { haversineKm } from "@/lib/geo";
 import { typeIconSvg } from "@/lib/mapMarkerIcons";
-import { BASE_LAYERS, ESRI } from "@/app/map/mapShared";
+import { BASE_LAYERS, LIGHT_BASE, createBaseLayer, loadLeaflet } from "@/app/map/mapShared";
 
 interface Props {
   current: Adventure;
@@ -41,7 +41,8 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
     const el = mapRef.current;
     let cancelled = false;
 
-    import("leaflet").then((L) => {
+    // The same Leaflet as the Adventure Map, so the MapLibre bridge attaches to one copy
+    loadLeaflet().then((L) => {
       if (cancelled || !mapRef.current) return;
 
       const container = mapRef.current as HTMLElement & { _leaflet_id?: number };
@@ -52,12 +53,6 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
       }
       if (mapInstanceRef.current) return;
 
-      if (!document.querySelector('link[href*="leaflet.css"]')) {
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-        document.head.appendChild(link);
-      }
 
       delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
       L.Icon.Default.mergeOptions({
@@ -116,32 +111,34 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         .ttt-nearby-tooltip::before {
           border-top-color: ${isDark ? "rgba(4,7,14,0.92)" : "rgba(255,255,255,0.97)"} !important;
         }
-        .ttt-nearby-relief { mix-blend-mode: soft-light; opacity: 0.9; }
-        .ttt-nearby-labels { opacity: 0.75; }
+        .ttt-nearby-map .leaflet-control-attribution {
+          background: ${isDark ? "rgba(9,16,31,0.72)" : "rgba(255,255,255,0.8)"} !important;
+          color: ${isDark ? "rgba(255,255,255,0.5)" : "rgba(15,23,31,0.55)"} !important;
+          font-size: 8.5px !important;
+          line-height: 1.35;
+          padding: 1px 6px !important;
+          border-radius: 6px 0 0 0;
+        }
+        .ttt-nearby-map .leaflet-control-attribution a {
+          color: ${isDark ? "rgba(255,255,255,0.7)" : "rgba(15,23,31,0.75)"} !important;
+        }
       `;
 
       const map = L.map(mapRef.current, {
         zoomControl: false,
         scrollWheelZoom: false,
         attributionControl: false,
+        maxZoom: 16,
       });
       mapInstanceRef.current = map;
+      // OSM / OpenFreeMap credits, which the licences require to be visible
+      L.control.attribution({ position: "bottomright", prefix: false }).addTo(map);
 
-      // Keyless Esri tiles, as on the Adventure Map (CARTO now needs an API key).
-      // Dark: the map's own Default style — canvas, blended hillshade, labels.
-      // Light: Esri's matching light-gray canvas and labels.
-      const tiles = isDark
-        ? BASE_LAYERS.map
-        : {
-            url: `${ESRI}/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}`,
-            labels: `${ESRI}/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}`,
-            relief: undefined,
-            maxZoom: 16,
-          };
-      const tileOpts = { maxZoom: tiles.maxZoom };
-      L.tileLayer(tiles.url, tileOpts).addTo(map);
-      if (tiles.relief) L.tileLayer(tiles.relief, { ...tileOpts, className: "ttt-nearby-relief" }).addTo(map);
-      if (tiles.labels) L.tileLayer(tiles.labels, { ...tileOpts, className: "ttt-nearby-labels" }).addTo(map);
+      // OpenStreetMap via OpenFreeMap, as on the Adventure Map: its dark style with
+      // hillshade in dark mode, the light "positron" style in light mode
+      createBaseLayer(L, isDark ? BASE_LAYERS.map : LIGHT_BASE).then((base) => {
+        if (!cancelled && mapInstanceRef.current === map) base.addTo(map);
+      });
 
       function makeIcon(color: string, size: number, type: string, isActive = false) {
         const iconSize = Math.round(size * 0.42);
