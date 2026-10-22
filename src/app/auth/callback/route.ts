@@ -41,6 +41,12 @@ export async function GET(request: Request) {
     }
   }
 
+  // An old verification link opened by someone who's already verified and signed in: nothing to fix
+  if (type !== "recovery") {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user?.email_confirmed_at) return NextResponse.redirect(`${origin}${next}`);
+  }
+
   // Links work once and expire; say which, and how to get a fresh one
   const message = type === "recovery"
     ? "That reset link has expired or was already used. Ask for a new one below."

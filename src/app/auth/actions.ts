@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/email";
 import { callbackLink, safeNext } from "@/lib/authLinks";
 import { rateLimit } from "@/lib/rateLimit";
+import { findUserByUsername } from "@/lib/resolveUsername";
 
 const firstName = (full: string) => full.trim().split(/\s+/)[0] || "explorer";
 
@@ -34,11 +35,14 @@ export async function signUp(formData: FormData): Promise<ActionResult> {
     return { error: "Username must be between 3 and 20 characters." };
   }
 
-  // Check username uniqueness
-  const { data: allUsers } = await adminClient.auth.admin.listUsers({ perPage: 1000 });
-  const taken = allUsers?.users.some(
-    (u) => (u.user_metadata?.username ?? "").toLowerCase() === username
-  );
+  // Check username uniqueness across every page of users; if the lookup fails, don't guess
+  let taken: boolean;
+  try {
+    taken = (await findUserByUsername(adminClient, username)) !== null;
+  } catch (err) {
+    console.error("signup username lookup failed:", err);
+    return { error: "Couldn't check that username right now. Please try again." };
+  }
   if (taken) {
     return { error: `The username @${username} is already taken. Please choose another.` };
   }

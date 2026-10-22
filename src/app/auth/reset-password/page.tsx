@@ -96,6 +96,7 @@ export default function ResetPasswordPage() {
             )}
 
 
+          {message?.type !== "success" && (
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">New Password</label>
@@ -104,7 +105,7 @@ export default function ResetPasswordPage() {
                   name="password"
                   type={showPassword ? "text" : "password"}
                   required
-                  minLength={6}
+                  minLength={8}
                   placeholder="••••••••"
                   className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 pr-14 text-white placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
@@ -126,6 +127,7 @@ export default function ResetPasswordPage() {
               {loading ? "Updating..." : "Update Password"}
             </button>
           </form>
+          )}
 
           <p className="mt-8 text-center text-white/30 text-sm font-medium">
             Remembered your password?{" "}
