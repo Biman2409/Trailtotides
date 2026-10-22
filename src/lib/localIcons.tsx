@@ -124,15 +124,6 @@ export const Activity = icon(
   <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" />
 );
 
-export const PackageOpen = icon(
-  <>
-    <path d="M12 22v-9" />
-    <path d="M15.17 2.21a1.67 1.67 0 0 1 1.63 0L21 4.57a1.93 1.93 0 0 1 0 3.36L8.82 14.79a1.655 1.655 0 0 1-1.64 0L3 12.43a1.93 1.93 0 0 1 0-3.36z" />
-    <path d="M20 13v3.87a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13" />
-    <path d="M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z" />
-  </>
-);
-
 export const TrendingUp = icon(
   <>
     <path d="M16 7h6v6" />
@@ -146,18 +137,6 @@ export const Footprints = icon(
     <path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z" />
     <path d="M16 17h4" />
     <path d="M4 13h4" />
-  </>
-);
-
-export const WifiOff = icon(
-  <>
-    <path d="M12 20h.01" />
-    <path d="M8.5 16.429a5 5 0 0 1 7 0" />
-    <path d="M5 12.859a10 10 0 0 1 5.17-2.69" />
-    <path d="M19 12.859a10 10 0 0 0-2.007-1.523" />
-    <path d="M2 8.82a15 15 0 0 1 4.177-2.643" />
-    <path d="M22 8.82a15 15 0 0 0-11.288-3.764" />
-    <path d="m2 2 20 20" />
   </>
 );
 
@@ -565,19 +544,6 @@ export const CalendarDays = icon(
   </>
 );
 
-export const CalendarRange = icon(
-  <>
-    <rect width="18" height="18" x="3" y="4" rx="2" />
-    <path d="M16 2v4" />
-    <path d="M3 10h18" />
-    <path d="M8 2v4" />
-    <path d="M17 14h-6" />
-    <path d="M13 18H7" />
-    <path d="M7 14h.01" />
-    <path d="M17 18h.01" />
-  </>
-);
-
 export const History = icon(
   <>
     <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
@@ -642,17 +608,6 @@ export const Trash2 = icon(
   </>
 );
 
-export const GripVertical = icon(
-  <>
-    <circle cx="9" cy="12" r="1" />
-    <circle cx="9" cy="5" r="1" />
-    <circle cx="9" cy="19" r="1" />
-    <circle cx="15" cy="12" r="1" />
-    <circle cx="15" cy="5" r="1" />
-    <circle cx="15" cy="19" r="1" />
-  </>
-);
-
 // ─── Business / Professional ──────────────────────────────────────────────────
 
 export const Briefcase = icon(
@@ -678,13 +633,6 @@ export const Package = icon(
     <path d="M12 22V12" />
     <polyline points="3.29 7 12 12 20.71 7" />
     <path d="m7.5 4.27 9 5.15" />
-  </>
-);
-
-export const PenLine = icon(
-  <>
-    <path d="M13 21h8" />
-    <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
   </>
 );
 
@@ -723,13 +671,6 @@ export const Award = icon(
   <>
     <circle cx="12" cy="8" r="6" />
     <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
-  </>
-);
-
-export const PanelLeft = icon(
-  <>
-    <rect width="18" height="18" x="3" y="3" rx="2" />
-    <path d="M9 3v18" />
   </>
 );
 
@@ -825,15 +766,6 @@ export const Camera = icon(
   <>
     <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z" />
     <circle cx="12" cy="13" r="3" />
-  </>
-);
-
-export const Images = icon(
-  <>
-    <path d="M18 22H4a2 2 0 0 1-2-2V6" />
-    <path d="m22 13-1.296-1.296a2.41 2.41 0 0 0-3.408 0L11 18" />
-    <circle cx="12" cy="8" r="2" />
-    <rect width="16" height="16" x="6" y="2" rx="2" />
   </>
 );
 

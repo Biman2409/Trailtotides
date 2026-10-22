@@ -675,6 +675,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               hasVerifiedOperator={!!featuredOp?.verified}
               seasonUrgency={seasonUrgency}
               nextDeparture={nextDeparture}
+              quote={{ slug: adventure.slug, name: adventure.name, operators: adventure.operators.filter((o) => o.verified).map((o) => o.name) }}
             />
 
             {/* FAQ — desktop-only home for this section, right under the at-a-glance booking card */}

@@ -6,6 +6,8 @@ import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import ProfileForm from "@/app/profile/ProfileForm";
 import DeleteAceDataButton from "./DeleteAceDataButton";
+import AlertPrefs from "./AlertPrefs";
+import { prefsOf } from "@/lib/apiUser";
 import AccountTabs from "@/components/ui/custom/AccountTabs";
 
 export const metadata: Metadata = {
@@ -74,6 +76,10 @@ export default async function SettingsPage() {
             username: user.user_metadata?.username || profile.username || null,
             phone: profile.phone || user.user_metadata?.phone || null,
           }} />
+
+          <div className="mt-8">
+            <AlertPrefs initial={prefsOf(user)} username={user.user_metadata?.username || profile.username || null} />
+          </div>
 
           <div className="mt-8">
             <DeleteAceDataButton />

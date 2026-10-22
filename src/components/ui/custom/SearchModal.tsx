@@ -150,7 +150,7 @@ export default function SearchModal({ open, onClose }: Props) {
                       style={{ color: "var(--text-tertiary)" }}>
                       Adventures · {adventureResults.length}
                     </p>
-                    {adventureResults.map((r, i) => {
+                    {adventureResults.map((r) => {
                       const idx = results.indexOf(r);
                       return (
                         <button
@@ -187,7 +187,7 @@ export default function SearchModal({ open, onClose }: Props) {
                       style={{ color: "var(--text-tertiary)" }}>
                       Stories · {storyResults.length}
                     </p>
-                    {storyResults.map((r, i) => {
+                    {storyResults.map((r) => {
                       const idx = results.indexOf(r);
                       return (
                         <button

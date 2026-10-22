@@ -54,19 +54,3 @@ export function FeaturedStorySkeleton() {
   );
 }
 
-export function AdventureCardSkeleton() {
-  return (
-    <div className="flex flex-col rounded-2xl overflow-hidden" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
-      <Skeleton className="h-48 w-full !rounded-none" />
-      <div className="p-4 space-y-3">
-        <Skeleton className="h-4 w-16" />
-        <Skeleton className="h-5 w-3/4" />
-        <Skeleton className="h-4 w-full" />
-        <div className="flex items-center gap-3">
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-4 w-16" />
-        </div>
-      </div>
-    </div>
-  );
-}

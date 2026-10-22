@@ -691,6 +691,39 @@ export default function PassportBook() {
       <p className="text-xs text-center" style={{ color: "rgba(245,236,214,0.4)" }}>
         {open ? (spreadIndex === 0 ? "Tap the share icon on either page to post it." : "One page per adventure, photo and all.") : "Every completed adventure, stamped."}
       </p>
+      {data?.username && <PublicLink username={data.username} />}
+    </div>
+  );
+}
+
+// A link anyone can open (/passport/<username>), off until the owner turns it on
+function PublicLink({ username }: { username: string }) {
+  const [on, setOn] = useState<boolean | null>(null);
+  useEffect(() => {
+    fetch("/api/account-prefs").then((r) => (r.ok ? r.json() : null)).then((p) => setOn(!!p?.passportPublic)).catch(() => setOn(false));
+  }, []);
+  const link = `${typeof window === "undefined" ? "" : window.location.origin}/passport/${encodeURIComponent(username)}`;
+
+  async function toggle() {
+    const next = !on;
+    setOn(next);
+    const res = await fetch("/api/account-prefs", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ passportPublic: next }) });
+    if (!res.ok) { setOn(!next); toast.error("Couldn't change that. Try again."); return; }
+    if (next) { try { await navigator.clipboard.writeText(link); } catch {} toast.success("Your passport is public. Link copied."); }
+  }
+
+  if (on === null) return null;
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-2 text-xs" style={{ color: "rgba(245,236,214,0.55)" }}>
+      <button onClick={toggle} className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full font-semibold transition-colors"
+        style={{ background: on ? "rgba(255,81,0,0.16)" : "rgba(255,255,255,0.06)", color: on ? "#ff9a66" : "rgba(245,236,214,0.8)" }}>
+        <Share2 className="w-3 h-3" /> {on ? "Public link on" : "Get a public link"}
+      </button>
+      {on && (
+        <button onClick={() => navigator.clipboard.writeText(link).then(() => toast.success("Link copied."), () => {})} className="underline underline-offset-2 hover:text-white">
+          Copy link
+        </button>
+      )}
     </div>
   );
 }

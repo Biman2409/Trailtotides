@@ -43,7 +43,7 @@ export default function SaveButton({ slug, variant = "card", className = "" }: S
       toast("Removed from wishlist");
       revokeXP("wishlist", slug);
     } else {
-      toast.success("Added to wishlist \u2665");
+      toast.success("Added to wishlist \u2665", { description: "We'll email you when its season opens or the price drops." });
       awardXP("wishlist", slug);
     }
   }

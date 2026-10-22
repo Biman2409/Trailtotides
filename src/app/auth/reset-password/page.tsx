@@ -9,7 +9,7 @@ import Logo from "@/components/ui/custom/Logo";
 export default function ResetPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
+  const [message, setMessage] = useState<{ type: "error" | "success"; text: string; expired?: boolean } | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -19,7 +19,7 @@ export default function ResetPasswordPage() {
     const result = await updatePassword(formData);
     
     if (result?.error) {
-      setMessage({ type: "error", text: result.error });
+      setMessage({ type: "error", text: result.error, expired: result.expired });
     } else if (result?.success) {
       setMessage({ type: "success", text: result.success });
       (e.target as HTMLFormElement).reset();
@@ -87,11 +87,16 @@ export default function ResetPasswordPage() {
                     : "bg-green-500/10 border border-green-500/20 text-green-400"
                 }`}
               >
-                {message.text}
+                <span>
+                  {message.text}{" "}
+                  {message.expired && <Link href="/auth/forgot-password" className="underline font-bold">Get a new link</Link>}
+                  {message.type === "success" && <Link href="/profile" className="underline font-bold">Go to your profile</Link>}
+                </span>
               </div>
             )}
 
 
+          {message?.type !== "success" && (
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-2 ml-1">New Password</label>
@@ -100,7 +105,7 @@ export default function ResetPasswordPage() {
                   name="password"
                   type={showPassword ? "text" : "password"}
                   required
-                  minLength={6}
+                  minLength={8}
                   placeholder="••••••••"
                   className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-5 py-4 pr-14 text-white placeholder-white/20 focus:outline-none focus:border-[#ff5100]/50 focus:bg-white/[0.06] transition-all"
                 />
@@ -122,6 +127,7 @@ export default function ResetPasswordPage() {
               {loading ? "Updating..." : "Update Password"}
             </button>
           </form>
+          )}
 
           <p className="mt-8 text-center text-white/30 text-sm font-medium">
             Remembered your password?{" "}

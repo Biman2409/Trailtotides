@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { computePassportData } from "@/lib/passportData";
+import { computePassportData, publicPassportUserId } from "@/lib/passportData";
 import {
   INK, PAPER, GOLD, INDIA_PATH, RADAR_AXES, RADAR_AXIS_LABELS, RADAR_AXIS_SHORT,
   DIFFICULTY_COLOR, DIFFICULTY_STAMP_SIZE, DIFFICULTY_LEVEL,
@@ -17,7 +17,12 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   const page = url.searchParams.get("page"); // null = full spread, "stats" | "map" = single shareable page
 
-  const data = await computePassportData(url.origin, url.searchParams.get("demo"));
+  // ?u=<username> draws someone else's passport, only when they've made it public
+  const u = url.searchParams.get("u");
+  const publicId = u ? await publicPassportUserId(u) : undefined;
+  if (u && !publicId) return new Response("This passport isn't public.", { status: 404 });
+
+  const data = await computePassportData(url.origin, url.searchParams.get("demo"), publicId);
   if (!data) {
     return new Response("Log in to generate your Adventure Passport.", { status: 401 });
   }

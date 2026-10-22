@@ -9,6 +9,7 @@ import {
   Stethoscope, Target, BookOpen,
 } from "lucide-react";
 import { Flame, Zap, Dumbbell, Compass, Waves, Mountain, ScanEye, Ghost, TrendingUp, Lock } from "@/lib/localIcons";
+import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
@@ -295,7 +296,7 @@ function IntroScreen({
 
           {/* ── Left: copy + CTAs ── */}
           <div className="flex-1 min-w-0">
-            <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-3">Adventure Matchmaker</p>
+            <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-3 inline-flex items-center gap-1.5"><MatchmakerMark className="w-3.5 h-3.5" />Adventure Matchmaker</p>
 
             <h1 className="t-text text-3xl sm:text-4xl font-bold tracking-tight leading-[1.08] mb-3">
               Adventures built for <span style={{ color: "#ff5100" }}>your body</span>
@@ -481,7 +482,7 @@ function LoadingScreen() {
       <div className="w-16 h-16 rounded-2xl bg-[#ff5100]/15 flex items-center justify-center mx-auto mb-8">
         <Loader2 className="w-8 h-8 text-[#ff5100] animate-spin" />
       </div>
-      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-4">Adventure Matchmaker</p>
+      <p className="text-[#ff5100] text-xs font-semibold tracking-[0.22em] uppercase mb-4 inline-flex items-center gap-1.5"><MatchmakerMark className="w-3.5 h-3.5" />Adventure Matchmaker</p>
       <h2 className="t-text text-2xl font-bold mb-8">Building your fitness profile</h2>
       <div className="space-y-3">
         {steps.map((s, i) => (

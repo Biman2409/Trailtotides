@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Home, Compass, Map as MapIcon, Activity, BadgeCheck, BookOpen, ArrowRight } from "lucide-react";
+import { Menu, X, LogOut, Shield, User, ChevronDown, GitCompareArrows, Heart, Share2, Check, LayoutDashboard, Settings, Search, Home, Compass, Map as MapIcon, BadgeCheck, BookOpen, ArrowRight } from "lucide-react";
+import { MatchmakerMark } from "@/components/ui/custom/BrandMarks";
 import { MountainSnow } from "@/lib/localIcons";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
@@ -19,7 +20,7 @@ const navLinks = [
   { href: "/explore", label: "Explore", icon: Compass },
   { href: "/map", label: "Map", icon: MapIcon },
   // Same icons as the hero's Fitness match / Verified operators pop-outs
-  { href: "/matchmaker", label: "Matchmaker", icon: Activity },
+  { href: "/matchmaker", label: "Matchmaker", icon: MatchmakerMark },
   { href: "/operators", label: "Operators", icon: BadgeCheck },
   { href: "/stories", label: "Stories", icon: BookOpen },
 ];
@@ -159,7 +160,7 @@ export default function Navbar() {
       }
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-        <div className="flex lg:grid lg:grid-cols-3 items-center justify-between h-16 lg:h-20">
+        <div className="flex lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-3 items-center justify-between h-16 lg:h-20">
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group lg:justify-self-start">
@@ -358,11 +359,13 @@ export default function Navbar() {
               <div className="relative" ref={compareRef}>
                 <button
                   onClick={() => { setCompareOpen(o => !o); setWishlistOpen(false); setUserMenuOpen(false); }}
+                  aria-label={`Compare (${selected.length})`}
                   className="flex items-center gap-2 px-3 py-2 rounded-xl transition-colors"
                   style={{ background: "rgba(255,81,0,0.12)", border: "1px solid rgba(255,81,0,0.25)" }}
                 >
                   <GitCompareArrows className="w-4 h-4 text-[#ff5100]" />
-                  <span className="text-[#ff5100] text-sm font-semibold">Compare</span>
+                  {/* Just the icon and count below 1280px, where the bar has no room for the word */}
+                  <span className="hidden xl:inline text-[#ff5100] text-sm font-semibold">Compare</span>
                   <span className="w-5 h-5 rounded-full bg-[#ff5100] text-white text-[11px] font-bold flex items-center justify-center leading-none">
                     {selected.length}
                   </span>

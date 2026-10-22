@@ -15,7 +15,7 @@ export default function StoryLikeButton({ slug, baseLikes, className = "", pill 
       setLiked(true);
       setLikeCount((baseLikes ?? DEFAULT_LIKES) + 1);
     }
-  }, [slug]);
+  }, [slug, baseLikes]);
 
   function toggleLike(e: React.MouseEvent) {
     e.preventDefault();

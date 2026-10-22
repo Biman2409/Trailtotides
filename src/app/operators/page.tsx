@@ -1,12 +1,11 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ui/custom/ScrollToTop";
 import { getAllOperatorProfiles, getAllOperatorSubmissions } from "@/app/auth/operator-actions";
 import { createClient } from "@/lib/supabase/server";
 import { adventures } from "@/lib/data";
-import { ArrowRight, CheckCircle2, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
 import OperatorsClient, { OperatorCardData } from "./OperatorsClient";
 
@@ -33,7 +32,6 @@ export default async function OperatorsPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   const isOperator = user?.user_metadata?.role === "operator";
-  const isLoggedIn = !!user;
 
   const [profiles, submissions] = await Promise.all([
     getAllOperatorProfiles(),
@@ -153,45 +151,7 @@ export default async function OperatorsPage() {
               have been reviewed and approved by our team for safety, quality and expertise.
             </p>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
-            {isOperator ? (
-              <Link
-                href="/auth/operator-dashboard"
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90"
-                style={{ background: "#ff5100", color: "white" }}
-              >
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                My Profile
-              </Link>
-            ) : isLoggedIn ? (
-              <Link
-                href="/auth/operator-signup"
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90"
-                style={{ background: "#ff5100", color: "white" }}
-              >
-                List your company
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Link
-                  href="/auth/login?role=operator"
-                  className="px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-colors bg-transparent hover:bg-[var(--bg-card)]"
-                  style={{ color: "var(--text-tertiary)", border: "1px solid var(--border-subtle)" }}
-                >
-                  Log in
-                </Link>
-                <Link
-                  href="/auth/operator-signup"
-                  className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all hover:opacity-90"
-                  style={{ background: "#ff5100", color: "white" }}
-                >
-                  List your company
-                  <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                </Link>
-              </div>
-            )}
-          </div>
+          {/* Operator actions live in the "For operators" block below; this page leads with the operators */}
         </div>
       </section>
 

@@ -75,7 +75,7 @@ export async function GET(req: NextRequest) {
     await ensureBucket();
     const photos = await readIndex(slug);
     return NextResponse.json({ photos, tableReady: true });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ photos: [], tableReady: false });
   }
 }

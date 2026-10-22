@@ -2,6 +2,7 @@
 
 import { ChevronRight, Star, Clock3, Sparkles } from "lucide-react";
 import type { SeasonUrgency } from "@/lib/seasonUrgency";
+import QuoteRequestButton from "./QuoteRequestButton";
 
 interface Props {
   priceFrom?: string;
@@ -12,6 +13,8 @@ interface Props {
   hasVerifiedOperator?: boolean;
   seasonUrgency: SeasonUrgency | null;
   nextDeparture?: string | null;
+  /** The adventure and its verified operators, for "Get quotes" */
+  quote?: { slug: string; name: string; operators: string[] };
 }
 
 function UrgencyBadge({ urgency }: { urgency: SeasonUrgency }) {
@@ -40,7 +43,7 @@ function UrgencyBadge({ urgency }: { urgency: SeasonUrgency }) {
   return null;
 }
 
-export default function BookingSidebarCard({ priceFrom, operatorCount, avgRating, operatorWebsite, operatorName, hasVerifiedOperator, seasonUrgency, nextDeparture }: Props) {
+export default function BookingSidebarCard({ priceFrom, operatorCount, avgRating, operatorWebsite, operatorName, hasVerifiedOperator, seasonUrgency, nextDeparture, quote }: Props) {
   const handleBook = () => {
     if (operatorWebsite) {
       window.open(operatorWebsite, "_blank", "noopener noreferrer");
@@ -109,6 +112,7 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, avgRating
           >
             Compare Operators
           </button>
+          {quote && <QuoteRequestButton {...quote} />}
         </div>
       </div>
     </div>

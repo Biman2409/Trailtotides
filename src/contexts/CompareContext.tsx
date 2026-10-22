@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
-import type { Adventure } from "@/lib/data";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { adventures, type Adventure } from "@/lib/data";
 
 const MAX = 3;
 
@@ -22,14 +22,19 @@ const CompareContext = createContext<CompareContextValue | null>(null);
 const STORAGE_KEY = "compare_selected";
 
 export function CompareProvider({ children }: { children: ReactNode }) {
-  const [selected, setSelected] = useState<Adventure[]>(() => {
-    if (typeof window === "undefined") return [];
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : [];
-    } catch { return []; }
-  });
+  // Starts empty on server and client alike, then picks up the saved compare after mount:
+  // reading storage during the first render made the server and client HTML differ.
+  const [selected, setSelected] = useState<Adventure[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]") as Pick<Adventure, "id">[];
+      // Match saved entries to today's data, so prices and details are never a stale copy
+      const fresh = stored.map((s) => adventures.find((a) => a.id === s.id)).filter((a): a is Adventure => !!a).slice(0, MAX);
+      if (fresh.length) setSelected((prev) => (prev.length ? prev : fresh));
+    } catch { /* unreadable storage: start empty */ }
+  }, []);
 
   function add(a: Adventure) {
     setSelected((prev) => {

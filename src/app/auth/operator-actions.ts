@@ -2,6 +2,8 @@
 
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/authz";
+import { callbackLink } from "@/lib/authLinks";
+import { sendVerificationEmail } from "@/lib/email";
 
 // ─── Storage-based operator system ───────────────────────────────────────────
 // Uses Supabase Storage buckets (operator-profiles, operator-submissions)
@@ -128,17 +130,29 @@ export async function signUpOperator(formData: FormData) {
     return { error: "Password must be at least 8 characters." };
   }
 
-  const { data, error: signUpError } = await adminClient.auth.admin.createUser({
+  // Same as traveller sign-up: the account starts unverified and the emailed link opens it
+  const { data, error: signUpError } = await adminClient.auth.admin.generateLink({
+    type: "signup",
     email,
     password,
-    email_confirm: true,
-    user_metadata: { full_name: contact_name, role: "operator", company_name },
+    options: { data: { full_name: contact_name, role: "operator", company_name } },
   });
 
-  if (signUpError) return { error: signUpError.message };
+  if (signUpError || !data?.properties?.hashed_token) {
+    if (signUpError && /already|registered|exists/i.test(signUpError.message)) {
+      return { error: "There's already an account with this email. Log in, or reset your password." };
+    }
+    return { error: signUpError?.message ?? "Failed to create account." };
+  }
 
-  const userId = data.user?.id;
-  if (!userId) return { error: "Failed to create account." };
+  const userId = data.user.id;
+  const link = await callbackLink(data.properties.hashed_token, "signup", "/auth/operator-dashboard");
+  const sent = await sendVerificationEmail(email, link, contact_name.trim().split(/\s+/)[0] || "there");
+  if ("error" in sent) {
+    console.error("operator verification email failed:", sent.error);
+    await adminClient.auth.admin.deleteUser(userId);
+    return { error: "We couldn't send the verification email. Please try again in a moment." };
+  }
 
   const profile: OperatorProfile = {
     id: userId,
@@ -165,7 +179,7 @@ export async function signUpOperator(formData: FormData) {
     created_at: new Date().toISOString(),
   }, { onConflict: "id" });
 
-  return { success: "Account created! You can now log in and start listing adventures.", userId };
+  return { success: `Almost there: we've emailed a verification link to ${email}. Open it to sign in and start listing adventures.`, userId };
 }
 
 export async function submitOperatorUpdate(formData: FormData) {

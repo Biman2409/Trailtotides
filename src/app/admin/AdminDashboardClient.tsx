@@ -15,7 +15,7 @@ import {
   CheckCircle2, AlertCircle, XCircle, Loader2, Globe, FileText,
   Ban, ChevronRight, Eye, Copy, Activity, Star, TrendingDown,
   Zap, UserCheck, UserX, RefreshCw, ChevronUp, Package, DollarSign,
-  Image, StarOff, RotateCcw, Send,
+  Image as ImageIcon, StarOff, RotateCcw, Send,
 } from "lucide-react";
 import Link from "next/link";
 import NextImage from "next/image";
@@ -354,6 +354,9 @@ function SubmissionDetailPanel({ sub, allSubmissions }: { sub: OperatorSubmissio
 
 // ── Main component ─────────────────────────────────────────────────────────────
 
+// Keys 1–7 switch tabs in this order (same as TABS below)
+const TAB_ORDER = ["overview", "users", "operators", "messages", "stories", "content", "analytics"] as const;
+
 export default function AdminDashboardClient({
   profiles,
   currentUserId,
@@ -409,7 +412,7 @@ export default function AdminDashboardClient({
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
       const tabIdx = parseInt(e.key);
       if (tabIdx >= 1 && tabIdx <= 7) {
-        setActiveTab(TABS[tabIdx - 1].value);
+        setActiveTab(TAB_ORDER[tabIdx - 1]);
       }
       if (e.key === "Escape") {
         setExpandedUserId(null);
@@ -692,7 +695,7 @@ export default function AdminDashboardClient({
     { value: "operators", icon: Building2,      label: "Operators", key: "3", badge: pendingOperatorSubmissions },
     { value: "messages",  icon: MessageSquare,  label: "Messages",  key: "4", badge: localMessages.length },
     { value: "stories",   icon: BookOpen,       label: "Stories",   key: "5", badge: pendingStories },
-    { value: "content",   icon: Image,          label: "Content",   key: "6", badge: 0 },
+    { value: "content",   icon: ImageIcon,          label: "Content",   key: "6", badge: 0 },
     { value: "analytics", icon: BarChart3,      label: "Analytics", key: "7" },
   ];
 
@@ -1331,6 +1334,7 @@ export default function AdminDashboardClient({
                           {/* Hero image preview */}
                           {heroUrl && (
                             <div className="rounded-xl overflow-hidden border border-[var(--border-subtle)]">
+                              {/* eslint-disable-next-line @next/next/no-img-element -- story images are user uploads on any host */}
                               <img src={heroUrl} alt={sub.title} className="w-full max-h-72 object-cover" loading="lazy" />
                             </div>
                           )}
@@ -1687,7 +1691,7 @@ export default function AdminDashboardClient({
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
                   { label: "Total Reviews", value: localReviews.length, icon: StarOff, color: "#f59e0b" },
-                  { label: "Total Photos", value: localPhotos.length, icon: Image, color: "#06b6d4" },
+                  { label: "Total Photos", value: localPhotos.length, icon: ImageIcon, color: "#06b6d4" },
                   { label: "Avg Rating", value: avgRating, icon: Star, color: "#22c55e", suffix: "/5" },
                   { label: "Low Rated (≤2★)", value: lowRated, icon: AlertCircle, color: lowRated > 0 ? "#ef4444" : "#6b7280" },
                 ].map(({ label, value, icon: Icon, color, suffix }) => (
@@ -1715,7 +1719,7 @@ export default function AdminDashboardClient({
                 </button>
                 <button onClick={() => setContentView("photos")}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[12px] font-semibold transition-all ${contentView === "photos" ? "bg-[#ff5100] text-white shadow-md shadow-[#ff5100]/20" : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)]"}`}>
-                  <Image className="w-3.5 h-3.5" />
+                  <ImageIcon className="w-3.5 h-3.5" />
                   Photos
                   <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full ${contentView === "photos" ? "bg-[var(--text-muted)] text-white" : "bg-[var(--bg-surface-2)] text-[var(--text-tertiary)]"}`}>{localPhotos.length}</span>
                 </button>
@@ -1809,7 +1813,7 @@ export default function AdminDashboardClient({
               filteredPhotos.length === 0 ? (
                 <div className="border border-[var(--border-subtle)] rounded-2xl p-16 text-center">
                   <div className="flex flex-col items-center gap-3 text-[var(--text-muted)]">
-                    <div className="w-12 h-12 rounded-2xl bg-[var(--bg-surface)] flex items-center justify-center"><Image className="w-6 h-6" /></div>
+                    <div className="w-12 h-12 rounded-2xl bg-[var(--bg-surface)] flex items-center justify-center"><ImageIcon className="w-6 h-6" /></div>
                     <p className="text-sm font-semibold">{localPhotos.length === 0 ? "No photos yet" : "No photos match search"}</p>
                   </div>
                 </div>

@@ -26,9 +26,4 @@ export const TIDES_FILL = [
 ].join(",");
 /** The two wave tiles as bare image URLs, for painting on a canvas */
 export const TIDES_WAVE_SRCS = [WAVE_A, WAVE_B].map((u) => u.slice(5, -2));
-export const TIDES_SIZE = "240px 180px,240px 180px,100% 100%";
 
-// Contour map is pre-rendered by scripts/gen-hero-contours.mjs; it's twice the word's width
-// so it can drift across the letters.
-export const TRAIL_FILL = "url(/hero/trail-contours.png),linear-gradient(180deg,#ffc27a 0%,#ff8a33 45%,#f2560f 100%)";
-export const TRAIL_SIZE = "200% 100%,100% 100%";

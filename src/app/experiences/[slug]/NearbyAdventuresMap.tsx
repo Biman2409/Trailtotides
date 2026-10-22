@@ -37,6 +37,7 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
 
   useEffect(() => {
     if (!mapRef.current) return;
+    const el = mapRef.current;
     let cancelled = false;
 
     import("leaflet").then((L) => {
@@ -195,8 +196,8 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
-      if (mapRef.current) {
-        (mapRef.current as HTMLElement & { _leaflet_id?: number })._leaflet_id = undefined;
+      if (el) {
+        (el as HTMLElement & { _leaflet_id?: number })._leaflet_id = undefined;
       }
     };
   }, [current, nearby, isDark, router]);

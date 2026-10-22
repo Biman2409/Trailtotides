@@ -118,12 +118,6 @@ export function memberTag(accountId: string): string {
   return h.toString(36).padStart(6, "0").slice(-6);
 }
 
-export function encodeMember(m: GroupMember): string {
-  const name = m.name.replace(/[~,]/g, " ").trim().slice(0, 24) || "Friend";
-  const digits = AXES.map((ax) => Math.min(5, Math.max(1, Math.round(m.ace[ax])))).join("");
-  return `${encodeURIComponent(name)}~${digits}${m.id ? `~${m.id}` : ""}`;
-}
-
 export function decodeMembers(param: string | null): GroupMember[] {
   if (!param) return [];
   return param.split(",").slice(0, MAX_GROUP).flatMap((chunk) => {
@@ -158,4 +152,21 @@ export function groupMatches(members: GroupMember[], all: Adventure[]) {
   const everyone = rows.filter((r) => r.min >= 80).sort((x, y) => y.min - x.min);
   const someStretch = rows.filter((r) => r.min >= 55 && r.min < 80).sort((x, y) => y.min - x.min);
   return { everyone, someStretch };
+}
+
+/**
+ * What the group can do together on each capability: the lowest level in the group (a group
+ * moves at its slowest), who sets it, and the group average. Shown as the group's own profile.
+ */
+export function groupFloor(members: GroupMember[]) {
+  const floor = {} as ACE, average = {} as ACE;
+  const setBy = {} as Record<AceAxis, number[]>;
+  for (const ax of AXES) {
+    const vals = members.map((m) => m.ace[ax]);
+    const min = Math.min(...vals);
+    floor[ax] = min;
+    average[ax] = vals.reduce((a, b) => a + b, 0) / vals.length;
+    setBy[ax] = vals.flatMap((v, i) => (v === min ? [i] : []));
+  }
+  return { floor, average, setBy };
 }
