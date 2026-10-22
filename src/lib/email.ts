@@ -29,7 +29,7 @@ export function verificationEmail(link: string, name: string) {
          <tr><td style="height: 12px;"></td></tr>
        </table>`,
       `The link works once and expires in 1 hour. If it runs out, just log in and we'll send a fresh one. Didn't sign up? Ignore this email and nothing happens.`,
-      { hero: HERO, preheader: 'One tap to confirm your email and your Trail to Tides account is ready.', link }),
+      { hero: HERO, preheader: 'One tap to confirm your email and your Trail to Tides account is ready.', link, signoff: true }),
     text: `Hi ${name},\n\nYou're one tap from the trail. Confirm your email to finish creating your Trail to Tides account:\n${link}\n\nThe link works once and expires in 1 hour. If it runs out, log in and we'll send a fresh one. Didn't sign up? Ignore this email.\n\nTrail to Tides · ${SITE}`,
   };
 }
@@ -64,15 +64,11 @@ export async function sendContactEmail(msg: { name: string; email: string; topic
       replyTo: msg.email,
       subject: `New message from ${msg.name}${topic ? ` · ${topic}` : ''}`,
       text: `${msg.message}\n\n— ${msg.name} <${msg.email}>${topic ? `\nTopic: ${topic}` : ''}${msg.page ? `\nSent from: ${msg.page}` : ''}`,
-      html: `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
-          <p style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: #ff5100; margin: 0 0 8px;">New message${topic ? ` · ${escapeHtml(topic)}` : ''}</p>
-          <h1 style="font-size: 20px; margin: 0 0 4px;">${escapeHtml(msg.name)}</h1>
-          <p style="margin: 0 0 20px;"><a href="mailto:${escapeHtml(msg.email)}" style="color: #ff5100;">${escapeHtml(msg.email)}</a></p>
-          <div style="font-size: 15px; line-height: 1.6; white-space: pre-wrap; padding: 16px; background: #f7f4ee; border-radius: 10px;">${escapeHtml(msg.message)}</div>
-          <p style="font-size: 12px; color: #999; margin-top: 20px;">Reply to this email to answer ${escapeHtml(msg.name)} directly.${msg.page ? ` Sent from ${escapeHtml(msg.page)}.` : ''}</p>
-        </div>
-      `,
+      html: layout(`New message${topic ? ` · ${topic}` : ''}`, msg.name,
+        `<p style="${P} margin-bottom: 18px;"><a href="mailto:${escapeHtml(msg.email)}" style="color: #e04800; font-weight: 700; text-decoration: none;">${escapeHtml(msg.email)}</a></p>
+         <div style="font: 400 15px/1.65 ${SANS}; color: #1c1814; white-space: pre-wrap; padding: 18px 20px; background: #f7f3ec; border-radius: 16px;">${escapeHtml(msg.message)}</div>`,
+        `Reply to this email to answer ${escapeHtml(msg.name)} directly.${msg.page ? ` Sent from ${escapeHtml(msg.page)}.` : ''}`,
+        { preheader: msg.message.slice(0, 120) }),
     });
 
     if (error) {
@@ -98,7 +94,7 @@ export function passwordResetEmail(link: string) {
            <b style="color: #1c1814;">Didn't ask for this?</b> You can ignore this email. Your password stays the same, and nobody can use this link once it expires.
          </td></tr></table>`,
       `The link works once and expires in 1 hour. Need a new one? Ask again from the login page.`,
-      { preheader: 'Use this link within the hour to choose a new password.', link }),
+      { preheader: 'Use this link within the hour to choose a new password.', link, signoff: true }),
     text: `Reset your Trail to Tides password:\n${link}\n\nThe link works once and expires in 1 hour. Didn't ask for this? Ignore this email: your password stays the same.\n\nTrail to Tides · ${SITE}`,
   };
 }
@@ -110,41 +106,52 @@ export async function sendPasswordResetEmail(email: string, link: string) {
 // ── Account emails: alerts and quote requests ────────────────────────────────
 
 const SITE = 'https://trailtotides.com';
-const SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
-const SERIF = "Georgia, 'Times New Roman', serif";
+// Built by scripts/build-email-assets.mjs and served from the live site
+const ASSETS = 'https://www.trailtotides.com/email';
+// The site's own fonts where the mail app loads them (Apple Mail, iOS), close fallbacks elsewhere
+const SANS = "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+const SERIF = "Fraunces, Georgia, 'Times New Roman', serif";
 const P = `font: 400 15px/1.65 ${SANS}; color: #4a443e; margin: 0;`;
-// The mountain from the sign-up page, sized for email (about 150 KB)
-const HERO = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&h=500&fit=crop&q=70&fm=jpg';
+// Mountain trail meets ocean tide, from our own region photos (about 60 KB)
+const HERO = `${ASSETS}/hero.jpg`;
+const SOCIAL = [
+  ['Instagram', 'https://instagram.com/trailtotides'],
+  ['YouTube', 'https://youtube.com/@trailtotides'],
+  ['X', 'https://twitter.com/trailtotides'],
+];
 
 /**
- * One look for every account email: the dark Trail to Tides header, an optional photo, a white
- * card with an eyebrow, a serif heading and the body, then a small print line and the footer.
- * Tables and inline styles only, so it holds up in Gmail, Outlook and Apple Mail.
+ * One look for every account email: the dark header with the real logo, an optional photo with
+ * the brand line under it, a white card with an eyebrow, a serif heading, the body and a
+ * sign-off, then a small print line and the footer. Tables and inline styles only, so it holds
+ * up in Gmail, Outlook and Apple Mail; with images off the logo's alt text still names us.
  */
-function layout(eyebrow: string, heading: string, body: string, footer: string, opts: { hero?: string; preheader?: string; link?: string } = {}) {
+function layout(eyebrow: string, heading: string, body: string, footer: string, opts: { hero?: string; preheader?: string; link?: string; signoff?: boolean } = {}) {
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light"><title>${escapeHtml(heading)}</title></head>
+<meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light"><title>${escapeHtml(heading)}</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700;800&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet">
+<style>@media (max-width: 480px) { .card { padding: 28px 22px 22px !important; } .h1 { font-size: 24px !important; } }</style></head>
 <body style="margin: 0; padding: 0; background: #efe9df; -webkit-text-size-adjust: 100%;">
 ${opts.preheader ? `<div style="display: none; max-height: 0; overflow: hidden; opacity: 0;">${escapeHtml(opts.preheader)}&#8199;&#65279;&#847;&#8199;&#65279;&#847;</div>` : ''}
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #efe9df;"><tr><td align="center" style="padding: 28px 12px 36px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 560px;">
-    <tr><td style="background: #0f0d0b; border-radius: 20px 20px 0 0; padding: 20px 28px;">
-      <a href="${SITE}" style="text-decoration: none;">
-        <span style="display: inline-block; width: 30px; height: 30px; border-radius: 9px; background: #ff5100; color: #fff; text-align: center; font: 800 15px/30px ${SANS}; vertical-align: middle;">&#9650;</span>
-        <span style="font: 800 15px/1 ${SANS}; letter-spacing: 0.14em; color: #ffffff; vertical-align: middle; padding-left: 10px;">TRAIL <i style="font: italic 400 15px/1 ${SERIF}; letter-spacing: 0; color: #ff8a4c;">to</i> TIDES</span>
-      </a>
+    <tr><td style="background: #0f0d0b; border-radius: 20px 20px 0 0; padding: 22px 28px;">
+      <a href="${SITE}" style="text-decoration: none;"><img src="${ASSETS}/logo.png" width="171" height="30" alt="TRAIL to TIDES" style="display: block; border: 0; font: 800 16px/30px ${SANS}; letter-spacing: 0.08em; color: #ffffff;"></a>
     </td></tr>
-    ${opts.hero ? `<tr><td style="background: #0f0d0b; line-height: 0; font-size: 0;">${opts.link ? `<a href="${opts.link}">` : ''}<img src="${opts.hero}" width="560" alt="Snow-capped peaks above a forested valley" style="display: block; width: 100%; max-width: 560px; height: auto; border: 0;">${opts.link ? '</a>' : ''}</td></tr>` : ''}
-    <tr><td style="background: #ffffff; padding: 34px 30px 26px; border-radius: 0 0 20px 20px;">
+    ${opts.hero ? `<tr><td style="background: #0f0d0b; line-height: 0; font-size: 0;">${opts.link ? `<a href="${opts.link}">` : ''}<img src="${opts.hero}" width="560" alt="A Himalayan peak on one side, a sunset beach on the other" style="display: block; width: 100%; max-width: 560px; height: auto; border: 0;">${opts.link ? '</a>' : ''}</td></tr>
+    <tr><td align="center" style="background: #0f0d0b; padding: 13px 20px 15px; font: 700 10px/1 ${SANS}; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.62);">Mountain trails <span style="color: #ff5100;">&nbsp;&#9679;&nbsp;</span> Ocean tides</td></tr>` : ''}
+    <tr><td class="card" style="background: #ffffff; padding: 34px 30px 26px; border-radius: 0 0 20px 20px;">
       <p style="font: 700 11px/1 ${SANS}; letter-spacing: 0.2em; text-transform: uppercase; color: #ff5100; margin: 0 0 12px;">${escapeHtml(eyebrow)}</p>
-      <h1 style="font: 700 27px/1.2 ${SERIF}; color: #1c1814; margin: 0 0 14px;">${escapeHtml(heading)}</h1>
+      <h1 class="h1" style="font: 700 27px/1.2 ${SERIF}; color: #1c1814; margin: 0 0 14px;">${escapeHtml(heading)}</h1>
       ${body}
+      ${opts.signoff ? `<p style="${P} margin-top: 24px;">See you out there,<br><b style="color: #1c1814;">The Trail to Tides team</b></p>` : ''}
       <p style="font: 400 12px/1.55 ${SANS}; color: #8a8177; margin: 24px 0 0; padding-top: 18px; border-top: 1px solid #efe9df;">${footer}</p>
     </td></tr>
-    <tr><td align="center" style="padding: 22px 20px 0; font: 400 12px/1.7 ${SANS}; color: #8a8177;">
+    <tr><td align="center" style="padding: 24px 20px 0; font: 400 12px/1.8 ${SANS}; color: #8a8177;">
+      ${SOCIAL.map(([name, url]) => `<a href="${url}" style="color: #4a443e; text-decoration: none; font-weight: 700;">${name}</a>`).join(' &nbsp;&middot;&nbsp; ')}<br>
       Find, compare and book adventures matched to your fitness.<br>
-      <a href="${SITE}" style="color: #6b655e; text-decoration: none; font-weight: 600;">trailtotides.com</a> &nbsp;·&nbsp; <a href="mailto:hello@trailtotides.com" style="color: #6b655e; text-decoration: none;">hello@trailtotides.com</a>
+      <a href="${SITE}" style="color: #6b655e; text-decoration: none; font-weight: 600;">trailtotides.com</a> &nbsp;&middot;&nbsp; <a href="mailto:hello@trailtotides.com" style="color: #6b655e; text-decoration: none;">hello@trailtotides.com</a> &nbsp;&middot;&nbsp; Mumbai, India
     </td></tr>
   </table>
 </td></tr></table>
