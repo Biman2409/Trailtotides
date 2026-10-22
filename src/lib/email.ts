@@ -48,7 +48,7 @@ function actionButton(link: string, label: string) {
       <td style="border-radius: 999px; background: ${C.orange}; box-shadow: 0 10px 30px rgba(255, 81, 0, 0.35);">
         <a href="${link}" style="display: inline-block; padding: 16px 34px; border-radius: 999px; font: 700 16px/1 ${SANS}; color: #ffffff; text-decoration: none;">${label} &rarr;</a>
       </td></tr></table>
-    <p style="font: 400 12px/1.7 ${SANS}; color: ${C.muted}; margin: 0 0 26px;">Button not working? <a href="${link}" style="color: ${C.link}; word-break: break-all;">Open this link</a><br>
+    <p style="font: 400 12px/1.7 ${SANS}; color: ${C.muted}; margin: 0 0 26px;">Button not working? <a href="${link}" style="color: ${C.link}; word-break: break-all;">Use this link instead</a><br>
       Still stuck? <a href="${SITE}/contact" style="color: ${C.link};">Contact us &rarr;</a></p>`;
 }
 
