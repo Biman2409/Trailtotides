@@ -21,10 +21,13 @@ export default function StatsStrip({ stats, weather: place }: {
   const { weather, loading, error, retry } = useWeather(place.lat, place.lng);
   const [open, setOpen] = useState(false);
 
-  const cell = "min-w-0 px-4 py-3";
+  const cell = "min-w-0 px-4 py-2.5";
 
   return (
-    <div className="max-w-7xl mx-auto px-5 lg:px-8">
+    <section aria-labelledby="at-a-glance" className="max-w-7xl mx-auto px-5 lg:px-8">
+      <h2 id="at-a-glance" className="text-[12px] tracking-[0.12em] lowercase !font-normal mb-2" style={{ color: "var(--text-secondary)", fontVariant: "small-caps", fontFamily: "var(--font-dm-sans)" }}>
+        at a glance
+      </h2>
       <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}>
         {/* 1px gaps over the border colour draw the dividers, however the cells wrap */}
         <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-flow-col lg:auto-cols-fr gap-px" style={{ background: "var(--border-subtle)" }}>
@@ -49,6 +52,6 @@ export default function StatsStrip({ stats, weather: place }: {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

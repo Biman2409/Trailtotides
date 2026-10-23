@@ -344,7 +344,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
         />
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {/* Summary — the same bordered, hairline-split band as the stats strip */}
         <dl className="rounded-2xl overflow-hidden grid grid-cols-3 gap-px" style={{ border: "1px solid var(--border-default)", background: "var(--border-subtle)" }}>
           {[

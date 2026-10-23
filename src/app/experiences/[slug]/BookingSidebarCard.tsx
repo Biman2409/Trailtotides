@@ -53,7 +53,7 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, operatorW
 
   // Calm style: a thin-bordered card, the price, quiet details, one solid pill
   return (
-    <div className="rounded-2xl p-5" style={{ border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}>
+    <div className="rounded-2xl p-4" style={{ border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}>
       {priceFrom ? (
         <div>
           <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>from</p>
@@ -67,7 +67,7 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, operatorW
       )}
 
       {(operatorCount > 0 || nextDeparture || seasonUrgency) && (
-        <div className="mt-4 pt-4 space-y-1.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+        <div className="mt-3 pt-3 space-y-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
           {(operatorCount > 0 || hasVerifiedOperator) && (
             <p className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
               {operatorCount} operator{operatorCount !== 1 ? "s" : ""}
@@ -79,7 +79,7 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, operatorW
         </div>
       )}
 
-      <div className="mt-5 flex flex-col gap-2">
+      <div className="mt-4 flex flex-col gap-2">
         <button
           onClick={handleBook}
           className="w-full h-11 flex items-center justify-center gap-1.5 rounded-full text-white text-[14px] font-medium transition-colors bg-[#ff5100] hover:bg-[#e64900]"

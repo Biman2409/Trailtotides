@@ -348,7 +348,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       <Navbar />
 
       {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="relative h-[54vh] min-h-[380px] sm:h-[58vh] lg:h-[62vh] lg:min-h-[480px] max-h-[640px] flex items-end overflow-hidden">
+      <section className="relative h-[50vh] min-h-[360px] sm:h-[54vh] lg:h-[56vh] lg:min-h-[440px] max-h-[580px] flex items-end overflow-hidden">
         <Image
           src={adventure.heroImage}
           alt={adventure.name}
@@ -372,7 +372,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         </Link>
 
         {/* Hero text */}
-        <div className="relative z-10 max-w-7xl mx-auto px-5 lg:px-8 pb-9 md:pb-12 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-5 lg:px-8 pb-7 md:pb-10 w-full">
           <div className="max-w-3xl">
             <p className="text-[13px] tracking-[0.12em] lowercase mb-3 text-white/80" style={{ fontVariant: "small-caps" }}>
               {adventure.type} · {adventure.state}
@@ -417,7 +417,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       <SectionNav />
 
       {/* ── STATS + WEATHER ZONE ──────────────────────────────── */}
-      <FadeInSection as="div" className="pt-6" style={READABLE_TONES}>
+      <FadeInSection as="div" className="pt-4" style={READABLE_TONES}>
 
         {/* Stats strip — trek facts only, plus live weather. Price lives in the
             booking card / mobile bar and the operator section; type is in the
@@ -444,8 +444,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       </FadeInSection>
 
       {/* ── MAIN CONTENT ──────────────────────────────────────── */}
-      <FadeInSection as="div" className="max-w-7xl mx-auto px-5 lg:px-8 pt-9 sm:pt-11 pb-16" style={READABLE_TONES}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12">
+      <FadeInSection as="div" className="max-w-7xl mx-auto px-5 lg:px-8 pt-7 sm:pt-8 pb-12" style={READABLE_TONES}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
 
           {/* ── LEFT COLUMN — chapters on a trail line ── */}
           <div className="lg:col-span-2 relative pl-8 sm:pl-10">
@@ -470,7 +470,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* Safety & Prep — before suitability and booking, and open, so people
                 see the risks before choosing who to go with */}
             <AccordionSection id="safety" label="safety and prep" title="What to know before you go" defaultOpen>
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="max-w-[66ch]">
                   <p className="text-[14px] leading-[1.75]" style={{ color: "var(--text-secondary)" }}>{adventure.safetyNotes}</p>
                   {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
@@ -501,14 +501,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* Is This For You? — fit/skip lists plus the Capability Profile radar,
                 both answering the same question from two angles */}
             <AccordionSection id="suitability" label="suitability" title="Is this for you?" defaultOpen headerExtra={<GradingPill />}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-7">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
                 {([
                   { heading: "for you if", items: adventure.whoFor, mark: "✓", markColor: "#3fa877" },
                   { heading: "skip it if", items: adventure.whoNot, mark: "✕", markColor: "#d4675a" },
                 ]).map(({ heading, items, mark, markColor }) => (
                   <div key={heading}>
-                    <h3 className="text-[13px] tracking-[0.1em] !font-normal mb-3" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>{heading}</h3>
-                    <ul className="space-y-2.5">
+                    <h3 className="text-[13px] tracking-[0.1em] !font-normal mb-2" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>{heading}</h3>
+                    <ul className="space-y-1.5">
                       {items.split("·").map((item) => {
                         const t = item.trim();
                         if (!t) return null;
@@ -526,15 +526,15 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
               {/* Too intense? A hint that opens the Easier tab of Similar Adventures */}
               {easierAlternatives.length > 0 && (
-                <a href="#easier" className="mt-6 inline-flex items-center gap-1.5 text-sm hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
+                <a href="#easier" className="mt-4 inline-flex items-center gap-1.5 text-sm hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
                   Too much? See easier {adventure.type.toLowerCase()} nearby
                   <ArrowRight className="w-3.5 h-3.5 rotate-90" />
                 </a>
               )}
 
               {/* Capability Profile — supporting detail below the quick-skim lists */}
-              <div className="mt-10">
-                <h3 className="text-[13px] tracking-[0.1em] !font-normal mb-4" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>how do you measure up</h3>
+              <div className="mt-7">
+                <h3 className="text-[13px] tracking-[0.1em] !font-normal mb-3" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>how do you measure up</h3>
                 <ACEProfileSection
                   bare
                   ace={ace}
@@ -552,7 +552,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </AccordionSection>
 
             {/* Operators */}
-            <div className="pt-9"><RecalibrationNudge difficulty={difficulty} /></div>
+            <div className="pt-6"><RecalibrationNudge difficulty={difficulty} /></div>
             <div id="book-this-adventure" className="scroll-mt-32" />
             <AccordionSection label="book this adventure" title="Where to book" defaultOpen>
               <div id="operators-section" className="space-y-4">
@@ -578,13 +578,13 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </AccordionSection>
 
             {/* Tags */}
-            <div className="pt-9 pb-1">
+            <div className="pt-6 pb-1">
               <TagsList tags={adventure.tags} />
             </div>
           </div>
 
           {/* ── RIGHT SIDEBAR — desktop-only: booking and the nearby map ── */}
-          <div className="hidden lg:block space-y-5 lg:sticky lg:top-32 lg:self-start">
+          <div className="hidden lg:block space-y-4 lg:sticky lg:top-28 lg:self-start">
 
             {/* Book Now */}
             <BookingSidebarCard
@@ -609,7 +609,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
       {/* ── SIMILAR ADVENTURES ────────────────────────────────── */}
       {similarTabs.length > 0 && (
-        <div className="pt-2 pb-14 px-5 lg:px-8" style={READABLE_TONES}>
+        <div className="pt-0 pb-10 px-5 lg:px-8" style={READABLE_TONES}>
           <div className="max-w-7xl mx-auto">
             <SimilarTabs tabs={similarTabs} />
           </div>

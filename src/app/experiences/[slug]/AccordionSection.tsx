@@ -44,7 +44,7 @@ export default function AccordionSection({ title, label, defaultOpen = false, mo
   }
 
   return (
-    <section ref={sectionRef} id={id} className="pt-9 first:pt-0 scroll-mt-32">
+    <section ref={sectionRef} id={id} className="pt-7 first:pt-0 scroll-mt-32">
       <div className="relative flex items-start gap-4">
         {/* The section's stop on the trail line, level with the label */}
         <span
@@ -81,7 +81,7 @@ export default function AccordionSection({ title, label, defaultOpen = false, mo
 
       <div className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
         <div className="overflow-hidden">
-          <div className="pt-4">{children}</div>
+          <div className="pt-3">{children}</div>
         </div>
       </div>
     </section>
