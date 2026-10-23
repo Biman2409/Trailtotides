@@ -4,6 +4,7 @@ import { adventures } from "@/lib/data";
 import type { AdventureType } from "@/lib/data";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { getACE, computeDifficulty, computeMatchScore, type ACE } from "@/lib/ace";
+import { stripEmphasis } from "@/lib/emphasis";
 
 // Gemini's free tier via its OpenAI-compatible endpoint — no billing required.
 // https://ai.google.dev/gemini-api/docs/openai
@@ -228,7 +229,7 @@ function keywordSearch(query: string, limit = 3) {
     const primary = [a.type].join(" ").toLowerCase();
     const secondary = [a.state, a.region ?? ""].join(" ").toLowerCase();
     const rest = [
-      a.name, a.difficulty ?? "", ...(a.tags ?? []), a.tagline ?? "", a.description ?? "", a.bestSeason ?? "",
+      a.name, a.difficulty ?? "", ...(a.tags ?? []), a.tagline ?? "", stripEmphasis(a.description ?? ""), a.bestSeason ?? "",
     ].join(" ").toLowerCase();
 
     let score = 0;

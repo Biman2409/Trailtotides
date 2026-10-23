@@ -18,7 +18,6 @@ import {
   Navigation,
   Gauge,
   BookOpen,
-  Sparkles,
   ShieldCheck,
   ShieldAlert,
   Ticket,
@@ -48,6 +47,7 @@ import PackingList from "./PackingList";
 import HazardBadges from "./HazardBadges";
 import TagsList from "@/components/ui/custom/TagsList";
 import SimilarTabs from "./SimilarTabs";
+import { Emphasis, stripEmphasis } from "@/lib/emphasis";
 import RecalibrationNudge from "./RecalibrationNudge";
 import MedicalCautionNote from "./MedicalCautionNote";
 import { deriveMedicalCautions } from "@/lib/medicalCautions";
@@ -282,7 +282,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       "@context": "https://schema.org",
       "@type": "TouristAttraction",
       name: adventure.name,
-      description: adventure.description ?? adventure.tagline ?? `${adventure.type} in ${adventure.state}.`,
+      description: stripEmphasis(adventure.description ?? adventure.tagline ?? `${adventure.type} in ${adventure.state}.`),
       url: `https://trailtotides.com/experiences/${slug}`,
       image: adventure.heroImage,
       touristType: adventure.type,
@@ -309,7 +309,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       "@context": "https://schema.org",
       "@type": "Product",
       name: adventure.name,
-      description: adventure.tagline ?? adventure.description,
+      description: adventure.tagline ?? stripEmphasis(adventure.description),
       image: adventure.heroImage,
       url: `https://trailtotides.com/experiences/${slug}`,
       brand: {
@@ -470,22 +470,19 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
           {/* ── LEFT COLUMN ── */}
           <div className="lg:col-span-2">
 
-            {/* Overview — the description, with "what makes it special" as its
-                punchline rather than a second side-by-side card that repeats it */}
+            {/* Overview — one paragraph; what makes the adventure special is
+                highlighted in place rather than repeated in a section of its own */}
             <div id="overview" className="pt-6 first:pt-0 scroll-mt-24">
               <AccordionSection
                 label="The Adventure" title="Overview" defaultOpen
                 icon={<BookOpen className="w-4 h-4" />} tintRgb="56,189,248" noDivider noTopPad
               >
-                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{adventure.description}</p>
-                {adventure.whatMakesSpecial && (
-                  <div className="mt-4 pl-3.5 py-0.5" style={{ borderLeft: "2px solid rgba(244,63,94,0.55)" }}>
-                    <p className="flex items-center gap-1.5 text-[10px] font-bold tracking-[0.18em] uppercase mb-1.5 text-rose-400">
-                      <Sparkles className="w-3 h-3" /> Why it&apos;s special
-                    </p>
-                    <p className="text-sm leading-relaxed" style={{ color: "var(--text-primary)" }}>{adventure.whatMakesSpecial}</p>
-                  </div>
-                )}
+                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                  <Emphasis
+                    text={adventure.description}
+                    className="font-semibold [color:var(--text-primary)] box-decoration-clone bg-[linear-gradient(transparent_62%,rgba(255,81,0,0.2)_62%)]"
+                  />
+                </p>
               </AccordionSection>
             </div>
             <div className="h-px mt-6" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
