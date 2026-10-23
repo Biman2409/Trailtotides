@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -40,7 +39,7 @@ import OperatorListingPanel from "./OperatorListingPanel";
 import MobileBookBar from "./MobileBookBar";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
 import AccordionSection from "./AccordionSection";
-import WeatherWidget from "./WeatherWidget";
+import StatsStrip from "./StatsStrip";
 import CommunityCards from "./CommunityCards";
 import PackingList from "./PackingList";
 import HazardBadges from "./HazardBadges";
@@ -431,13 +430,18 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       {/* ── STATS + WEATHER ZONE ──────────────────────────────── */}
       <FadeInSection as="div" style={{ background: "var(--bg-surface)", borderBottom: "1px solid var(--border-subtle)" }}>
 
-        {/* Stats strip */}
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 relative">
-          <div className="flex items-stretch overflow-x-auto no-scrollbar" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-            {/* Trek facts only. Price lives in the booking card / mobile bar and the
-                operator section; type is in the hero; operator ratings live in the
-                operator section, not next to the trek's facts. */}
-            {([
+        {/* Stats strip — trek facts only, plus live weather. Price lives in the
+            booking card / mobile bar and the operator section; type is in the
+            hero; operator ratings live in the operator section. */}
+        <StatsStrip
+          weather={{
+            lat: adventure.lat,
+            lng: adventure.lng,
+            locationName: adventure.baseCamp ?? adventure.startingPoint ?? adventure.state,
+            altitude: adventure.altitude,
+            isBaseCamp: !!(adventure.baseCamp || adventure.startingPoint),
+          }}
+          stats={[
               { icon: <Clock className="w-3.5 h-3.5 text-[#ff5100]" />, label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
               ...(adventure.distance ? [{ icon: <Route className="w-3.5 h-3.5 text-emerald-400" />, label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
               ...((adventure.altitude || adventure.depth) ? [{ icon: <TrendingUp className="w-3.5 h-3.5 text-sky-400" />, label: adventure.type === "Diving" ? "Max Depth" : "Max Altitude", value: adventure.depth ?? adventure.altitude }] : []),
@@ -445,31 +449,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ icon: <Flag className="w-3.5 h-3.5 text-violet-400" />, label: "Base Camp", value: adventure.baseCamp }] : []),
               ...(adventure.type === "Motorcycling" && adventure.startingPoint ? [{ icon: <Navigation className="w-3.5 h-3.5 text-emerald-400" />, label: "Starting Point", value: adventure.startingPoint }] : []),
               { icon: <Gauge className="w-3.5 h-3.5 text-rose-400" />, label: "Difficulty", value: difficulty },
-            ] as { icon: ReactNode; label: string; value: ReactNode }[]).map(({ icon, label, value }, i, arr) => (
-              <div
-                key={i}
-                className="flex items-center gap-2.5 px-4 lg:px-5 py-3 shrink-0"
-                style={i < arr.length - 1 ? { borderRight: "1px solid var(--border-subtle)" } : {}}
-              >
-                <div className="shrink-0 opacity-80">{icon}</div>
-                <div>
-                  <div className="text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1" style={{ color: "var(--text-tertiary)" }}>{label}</div>
-                  <div className="font-medium text-[13px] whitespace-nowrap leading-none" style={{ color: "var(--text-primary)" }}>{value}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-          {/* Scroll hint — the strip overflows on mobile/tablet with no other affordance */}
-          <div className="lg:hidden pointer-events-none absolute top-0 right-5 bottom-0 w-10" style={{ background: "linear-gradient(to right, transparent, var(--bg-surface))" }} />
-        </div>
-
-        {/* Weather strip — sits flush inside same surface */}
-        <WeatherWidget
-          lat={adventure.lat}
-          lng={adventure.lng}
-          locationName={adventure.baseCamp ?? adventure.startingPoint ?? adventure.state}
-          altitude={adventure.altitude}
-          isBaseCamp={!!(adventure.baseCamp || adventure.startingPoint)}
+          ]}
         />
 
       </FadeInSection>
