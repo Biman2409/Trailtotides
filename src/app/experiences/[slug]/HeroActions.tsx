@@ -86,43 +86,7 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
   return (
     <div className="absolute top-20 right-5 lg:right-8 z-20 flex items-center gap-1.5 sm:gap-2">
 
-      {/* ── Compare (first) — evaluate against other adventures ── */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={handleCompare}
-            disabled={!inCompare && isFull}
-            aria-label={inCompare ? "Remove from compare" : "Compare"}
-            className={`${btnBase} disabled:opacity-40 disabled:cursor-not-allowed`}
-            style={inCompare
-              ? { background: "rgba(255,81,0,0.18)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)", boxShadow: "0 0 12px rgba(255,81,0,0.2)" }
-              : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }
-            }
-          >
-            {inCompare ? <CheckCheck className="w-4 h-4" /> : <GitCompareArrows className="w-4 h-4" />}
-          </button>
-        </TooltipTrigger>
-        <TooltipContent {...TIP_BELOW}>{inCompare ? "Added to compare" : isFull ? "Compare full" : "Compare"}</TooltipContent>
-      </Tooltip>
-
-      {/* ── Share (second) ── */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={handleShare}
-            aria-label="Share this adventure"
-            className={btnBase}
-            style={{ background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }}
-          >
-            {shared ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
-          </button>
-        </TooltipTrigger>
-        <TooltipContent {...TIP_BELOW}>{shared ? "Copied" : "Share"}</TooltipContent>
-      </Tooltip>
-
-      {/* ── Wishlist (third) — grouped next to "Mark as done" so the two
-           personal-tracking actions (save for later / log as completed) sit
-           together for quick access ── */}
+      {/* ── Wishlist (first) — the most-used action ── */}
       <Tooltip>
         <TooltipTrigger asChild>
           <button
@@ -142,8 +106,42 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
         <TooltipContent {...TIP_BELOW}>{saved ? "In your wishlist" : "Add to wishlist"}</TooltipContent>
       </Tooltip>
 
-      {/* ── Mark as done (fourth) ── */}
+      {/* ── Compare (second) — evaluate against other adventures ── */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={handleCompare}
+            disabled={!inCompare && isFull}
+            aria-label={inCompare ? "Remove from compare" : "Compare"}
+            className={`${btnBase} disabled:opacity-40 disabled:cursor-not-allowed`}
+            style={inCompare
+              ? { background: "rgba(255,81,0,0.18)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)", boxShadow: "0 0 12px rgba(255,81,0,0.2)" }
+              : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }
+            }
+          >
+            {inCompare ? <CheckCheck className="w-4 h-4" /> : <GitCompareArrows className="w-4 h-4" />}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent {...TIP_BELOW}>{inCompare ? "Added to compare" : isFull ? "Compare full" : "Compare"}</TooltipContent>
+      </Tooltip>
+
+      {/* ── Mark as done (third) — beside Wishlist and Compare, the personal actions ── */}
       <CheckInButton slug={adventure.slug} variant="page" className={btnBase} />
+
+      {/* ── Share (last) — the outward action, at the edge ── */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={handleShare}
+            aria-label="Share this adventure"
+            className={btnBase}
+            style={{ background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }}
+          >
+            {shared ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent {...TIP_BELOW}>{shared ? "Copied" : "Share"}</TooltipContent>
+      </Tooltip>
 
     </div>
   );
