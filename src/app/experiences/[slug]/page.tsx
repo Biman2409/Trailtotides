@@ -416,198 +416,202 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
       <SectionNav />
 
-      {/* ── STATS + WEATHER ZONE ──────────────────────────────── */}
-      <FadeInSection as="div" className="pt-3" style={READABLE_TONES}>
+      {/* Everything below the hero sits on the same topographic texture as the home page */}
+      <div className="topo">
 
-        {/* Stats strip — trek facts only, plus live weather. Price lives in the
-            booking card / mobile bar and the operator section; type is in the
-            hero; operator ratings live in the operator section. */}
-        <StatsStrip
-          weather={{
-            lat: adventure.lat,
-            lng: adventure.lng,
-            locationName: adventure.baseCamp ?? adventure.startingPoint ?? adventure.state,
-            altitude: adventure.altitude,
-            isBaseCamp: !!(adventure.baseCamp || adventure.startingPoint),
-          }}
-          stats={[
-              { label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
-              ...(adventure.distance ? [{ label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
-              ...((adventure.altitude || adventure.depth) ? [{ label: adventure.type === "Diving" ? "Max Depth" : "Max Altitude", value: adventure.depth ?? adventure.altitude }] : []),
-              { label: "Best Season", value: adventure.bestSeason },
-              ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
-              ...(adventure.type === "Motorcycling" && adventure.startingPoint ? [{ label: "Starting Point", value: adventure.startingPoint }] : []),
-              { label: "Difficulty", value: difficulty },
-          ]}
-        />
+        {/* ── STATS + WEATHER ZONE ──────────────────────────────── */}
+        <FadeInSection as="div" className="pt-3" style={READABLE_TONES}>
 
-      </FadeInSection>
+          {/* Stats strip — trek facts only, plus live weather. Price lives in the
+              booking card / mobile bar and the operator section; type is in the
+              hero; operator ratings live in the operator section. */}
+          <StatsStrip
+            weather={{
+              lat: adventure.lat,
+              lng: adventure.lng,
+              locationName: adventure.baseCamp ?? adventure.startingPoint ?? adventure.state,
+              altitude: adventure.altitude,
+              isBaseCamp: !!(adventure.baseCamp || adventure.startingPoint),
+            }}
+            stats={[
+                { label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
+                ...(adventure.distance ? [{ label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
+                ...((adventure.altitude || adventure.depth) ? [{ label: adventure.type === "Diving" ? "Max Depth" : "Max Altitude", value: adventure.depth ?? adventure.altitude }] : []),
+                { label: "Best Season", value: adventure.bestSeason },
+                ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ label: "Base Camp", value: adventure.baseCamp }] : []),
+                ...(adventure.type === "Motorcycling" && adventure.startingPoint ? [{ label: "Starting Point", value: adventure.startingPoint }] : []),
+                { label: "Difficulty", value: difficulty },
+            ]}
+          />
 
-      {/* ── MAIN CONTENT ──────────────────────────────────────── */}
-      <FadeInSection as="div" className="max-w-7xl mx-auto px-5 lg:px-8 pt-5 sm:pt-6 pb-10" style={READABLE_TONES}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+        </FadeInSection>
 
-          {/* ── LEFT COLUMN — chapters on a trail line ── */}
-          <div className="lg:col-span-2 relative pl-8 sm:pl-10">
-            {/* The trail: one thin orange line running through every section's dot */}
-            <span
-              aria-hidden
-              className="absolute left-[7px] sm:left-[11px] top-2 bottom-10 w-px"
-              style={{ background: "linear-gradient(to bottom, #ff5100 0%, rgba(255,81,0,0.45) 60%, rgba(255,81,0,0) 100%)" }}
-            />
+        {/* ── MAIN CONTENT ──────────────────────────────────────── */}
+        <FadeInSection as="div" className="max-w-7xl mx-auto px-5 lg:px-8 pt-5 sm:pt-6 pb-10" style={READABLE_TONES}>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 
-            {/* Overview — one paragraph; what makes the adventure special is
-                highlighted in place rather than repeated in a section of its own */}
-            <AccordionSection id="overview" label="the adventure" title="Overview" defaultOpen>
-              <p className="text-[14px] leading-[1.6] max-w-[70ch]" style={{ color: "var(--text-secondary)" }}>
-                <Emphasis
-                  text={adventure.description}
-                  className="font-medium [color:var(--text-primary)] box-decoration-clone bg-[linear-gradient(transparent_64%,rgba(255,81,0,0.18)_64%)]"
-                />
-              </p>
-            </AccordionSection>
+            {/* ── LEFT COLUMN — chapters on a trail line ── */}
+            <div className="lg:col-span-2 relative pl-8 sm:pl-10">
+              {/* The trail: one thin orange line running through every section's dot */}
+              <span
+                aria-hidden
+                className="absolute left-[7px] sm:left-[11px] top-2 bottom-10 w-px"
+                style={{ background: "linear-gradient(to bottom, #ff5100 0%, rgba(255,81,0,0.45) 60%, rgba(255,81,0,0) 100%)" }}
+              />
 
-            {/* Safety & Prep — before suitability and booking, and open, so people
-                see the risks before choosing who to go with */}
-            <AccordionSection id="safety" label="safety and prep" title="What to know before you go" defaultOpen>
-              <div className="space-y-3">
-                <div className="max-w-[66ch]">
-                  <p className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{adventure.safetyNotes}</p>
-                  {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
-                    <HazardBadges
-                      showAltitude={showAltitudeWarning}
-                      showExhaustion={showPhysicalExhaustionWarning}
-                      showFatalFall={showFatalFallWarning}
-                      showIsolation={showExtremeIsolationWarning}
-                      showTechnical={showTechnicalWarning}
-                      showWater={showWaterWarning}
-                    />
-                  )}
-                  <MedicalCautionNote notes={medicalCautions} />
+              {/* Overview — one paragraph; what makes the adventure special is
+                  highlighted in place rather than repeated in a section of its own */}
+              <AccordionSection id="overview" label="the adventure" title="Overview" defaultOpen>
+                <p className="text-[14px] leading-[1.6] max-w-[70ch]" style={{ color: "var(--text-secondary)" }}>
+                  <Emphasis
+                    text={adventure.description}
+                    className="font-medium [color:var(--text-primary)] box-decoration-clone bg-[linear-gradient(transparent_64%,rgba(255,81,0,0.18)_64%)]"
+                  />
+                </p>
+              </AccordionSection>
+
+              {/* Safety & Prep — before suitability and booking, and open, so people
+                  see the risks before choosing who to go with */}
+              <AccordionSection id="safety" label="safety and prep" title="What to know before you go" defaultOpen>
+                <div className="space-y-3">
+                  <div className="max-w-[66ch]">
+                    <p className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{adventure.safetyNotes}</p>
+                    {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
+                      <HazardBadges
+                        showAltitude={showAltitudeWarning}
+                        showExhaustion={showPhysicalExhaustionWarning}
+                        showFatalFall={showFatalFallWarning}
+                        showIsolation={showExtremeIsolationWarning}
+                        showTechnical={showTechnicalWarning}
+                        showWater={showWaterWarning}
+                      />
+                    )}
+                    <MedicalCautionNote notes={medicalCautions} />
+                  </div>
+
+                  <PackingList
+                    adventureType={adventure.type}
+                    difficulty={difficulty}
+                    altitudeM={altM}
+                    bestSeason={adventure.bestSeason}
+                    adventureAce={ace}
+                    slug={adventure.slug}
+                    loggedIn={!!currentUserId}
+                  />
+                </div>
+              </AccordionSection>
+
+              {/* Is This For You? — fit/skip lists plus the Capability Profile radar,
+                  both answering the same question from two angles */}
+              <AccordionSection id="suitability" label="suitability" title="Is this for you?" defaultOpen headerExtra={<GradingPill />}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                  {([
+                    { heading: "for you if", items: adventure.whoFor, mark: "✓", markColor: "#3fa877" },
+                    { heading: "skip it if", items: adventure.whoNot, mark: "✕", markColor: "#d4675a" },
+                  ]).map(({ heading, items, mark, markColor }) => (
+                    <div key={heading}>
+                      <h3 className="text-[13px] tracking-[0.1em] !font-normal mb-2" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>{heading}</h3>
+                      <ul className="space-y-1">
+                        {items.split("·").map((item) => {
+                          const t = item.trim();
+                          if (!t) return null;
+                          return (
+                            <li key={t} className="flex items-start gap-3">
+                              <span className="shrink-0 text-[12px] leading-[1.75]" style={{ color: markColor }} aria-hidden>{mark}</span>
+                              <span className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
 
-                <PackingList
-                  adventureType={adventure.type}
-                  difficulty={difficulty}
-                  altitudeM={altM}
-                  bestSeason={adventure.bestSeason}
-                  adventureAce={ace}
+                {/* Too intense? A hint that opens the Easier tab of Similar Adventures */}
+                {easierAlternatives.length > 0 && (
+                  <a href="#easier" className="mt-3 inline-flex items-center gap-1.5 text-sm hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
+                    Too much? See easier {adventure.type.toLowerCase()} nearby
+                    <ArrowRight className="w-3.5 h-3.5 rotate-90" />
+                  </a>
+                )}
+
+                {/* Capability Profile — supporting detail below the quick-skim lists */}
+                <div className="mt-5">
+                  <h3 className="text-[13px] tracking-[0.1em] !font-normal mb-3" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>how do you measure up</h3>
+                  <ACEProfileSection
+                    bare
+                    ace={ace}
+                    slug={adventure.slug}
+                    showAltitudeWarning={showAltitudeWarning}
+                    showFatalFallWarning={showFatalFallWarning}
+                    showExtremeIsolationWarning={showExtremeIsolationWarning}
+                    showTechnicalWarning={showTechnicalWarning}
+                    showPhysicalExhaustionWarning={showPhysicalExhaustionWarning}
+                    showWaterWarning={showWaterWarning}
+                  />
+                  {/* Personal readiness + training gaps (only shows with a Matchmaker profile) */}
+                  <TrainForThis slug={adventure.slug} />
+                </div>
+              </AccordionSection>
+
+              {/* Operators */}
+              <div className="pt-4"><RecalibrationNudge difficulty={difficulty} /></div>
+              <div id="book-this-adventure" className="scroll-mt-32" />
+              <AccordionSection label="book this adventure" title="Where to book" defaultOpen>
+                <div id="operators-section" className="space-y-4">
+                  <OperatorsSection operators={allOperators} slug={adventure.slug} />
+                  <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
+                </div>
+              </AccordionSection>
+
+              {/* Community */}
+              <AccordionSection id="community" label="community" title="Traveller reviews" defaultOpen>
+                <CommunityCards
                   slug={adventure.slug}
-                  loggedIn={!!currentUserId}
+                  currentUserId={currentUserId}
+                  reviews={<ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} operators={allOperators} />}
                 />
-              </div>
-            </AccordionSection>
+              </AccordionSection>
 
-            {/* Is This For You? — fit/skip lists plus the Capability Profile radar,
-                both answering the same question from two angles */}
-            <AccordionSection id="suitability" label="suitability" title="Is this for you?" defaultOpen headerExtra={<GradingPill />}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
-                {([
-                  { heading: "for you if", items: adventure.whoFor, mark: "✓", markColor: "#3fa877" },
-                  { heading: "skip it if", items: adventure.whoNot, mark: "✕", markColor: "#d4675a" },
-                ]).map(({ heading, items, mark, markColor }) => (
-                  <div key={heading}>
-                    <h3 className="text-[13px] tracking-[0.1em] !font-normal mb-2" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>{heading}</h3>
-                    <ul className="space-y-1">
-                      {items.split("·").map((item) => {
-                        const t = item.trim();
-                        if (!t) return null;
-                        return (
-                          <li key={t} className="flex items-start gap-3">
-                            <span className="shrink-0 text-[12px] leading-[1.75]" style={{ color: markColor }} aria-hidden>{mark}</span>
-                            <span className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{t.charAt(0).toUpperCase() + t.slice(1)}</span>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                ))}
+              {/* Tags */}
+              <div className="pt-4 pb-1">
+                <TagsList tags={adventure.tags} />
               </div>
+            </div>
 
-              {/* Too intense? A hint that opens the Easier tab of Similar Adventures */}
-              {easierAlternatives.length > 0 && (
-                <a href="#easier" className="mt-3 inline-flex items-center gap-1.5 text-sm hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
-                  Too much? See easier {adventure.type.toLowerCase()} nearby
-                  <ArrowRight className="w-3.5 h-3.5 rotate-90" />
-                </a>
+            {/* ── RIGHT SIDEBAR — desktop-only: booking and the nearby map ── */}
+            <div className="hidden lg:block space-y-3 lg:sticky lg:top-28 lg:self-start">
+
+              {/* Book Now */}
+              <BookingSidebarCard
+                priceFrom={priceFrom}
+                operatorCount={allOperators.length}
+                operatorWebsite={featuredOp?.website}
+                operatorName={featuredOp?.name}
+                hasVerifiedOperator={!!featuredOp?.verified}
+                seasonUrgency={seasonUrgency}
+                nextDeparture={nextDeparture}
+                quote={QUOTE_REQUESTS ? { slug: adventure.slug, name: adventure.name, operators: adventure.operators.filter((o) => o.verified).map((o) => o.name) } : undefined}
+              />
+
+              {/* Nearby adventures map */}
+              {nearbyAdventures.length > 0 && (
+                <NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} />
               )}
 
-              {/* Capability Profile — supporting detail below the quick-skim lists */}
-              <div className="mt-5">
-                <h3 className="text-[13px] tracking-[0.1em] !font-normal mb-3" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>how do you measure up</h3>
-                <ACEProfileSection
-                  bare
-                  ace={ace}
-                  slug={adventure.slug}
-                  showAltitudeWarning={showAltitudeWarning}
-                  showFatalFallWarning={showFatalFallWarning}
-                  showExtremeIsolationWarning={showExtremeIsolationWarning}
-                  showTechnicalWarning={showTechnicalWarning}
-                  showPhysicalExhaustionWarning={showPhysicalExhaustionWarning}
-                  showWaterWarning={showWaterWarning}
-                />
-                {/* Personal readiness + training gaps (only shows with a Matchmaker profile) */}
-                <TrainForThis slug={adventure.slug} />
-              </div>
-            </AccordionSection>
-
-            {/* Operators */}
-            <div className="pt-4"><RecalibrationNudge difficulty={difficulty} /></div>
-            <div id="book-this-adventure" className="scroll-mt-32" />
-            <AccordionSection label="book this adventure" title="Where to book" defaultOpen>
-              <div id="operators-section" className="space-y-4">
-                <OperatorsSection operators={allOperators} slug={adventure.slug} />
-                <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
-              </div>
-            </AccordionSection>
-
-            {/* Community */}
-            <AccordionSection id="community" label="community" title="Traveller reviews" defaultOpen>
-              <CommunityCards
-                slug={adventure.slug}
-                currentUserId={currentUserId}
-                reviews={<ReviewSection slug={adventure.slug} currentUserId={currentUserId} adventureType={adventure.type} adventureName={adventure.name} operators={allOperators} />}
-              />
-            </AccordionSection>
-
-            {/* Tags */}
-            <div className="pt-4 pb-1">
-              <TagsList tags={adventure.tags} />
             </div>
           </div>
+        </FadeInSection>
 
-          {/* ── RIGHT SIDEBAR — desktop-only: booking and the nearby map ── */}
-          <div className="hidden lg:block space-y-3 lg:sticky lg:top-28 lg:self-start">
-
-            {/* Book Now */}
-            <BookingSidebarCard
-              priceFrom={priceFrom}
-              operatorCount={allOperators.length}
-              operatorWebsite={featuredOp?.website}
-              operatorName={featuredOp?.name}
-              hasVerifiedOperator={!!featuredOp?.verified}
-              seasonUrgency={seasonUrgency}
-              nextDeparture={nextDeparture}
-              quote={QUOTE_REQUESTS ? { slug: adventure.slug, name: adventure.name, operators: adventure.operators.filter((o) => o.verified).map((o) => o.name) } : undefined}
-            />
-
-            {/* Nearby adventures map */}
-            {nearbyAdventures.length > 0 && (
-              <NearbyAdventuresMap current={adventure} nearby={nearbyAdventures} />
-            )}
-
+        {/* ── SIMILAR ADVENTURES ────────────────────────────────── */}
+        {similarTabs.length > 0 && (
+          <div className="pt-0 pb-8 px-5 lg:px-8" style={READABLE_TONES}>
+            <div className="max-w-7xl mx-auto">
+              <SimilarTabs tabs={similarTabs} />
+            </div>
           </div>
-        </div>
-      </FadeInSection>
-
-      {/* ── SIMILAR ADVENTURES ────────────────────────────────── */}
-      {similarTabs.length > 0 && (
-        <div className="pt-0 pb-8 px-5 lg:px-8" style={READABLE_TONES}>
-          <div className="max-w-7xl mx-auto">
-            <SimilarTabs tabs={similarTabs} />
-          </div>
-        </div>
-      )}
+        )}
+      </div>
 
       <Footer />
     </div>

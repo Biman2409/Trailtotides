@@ -293,7 +293,7 @@ export default function ACEProfileSection({ ace, slug, bare }: Props) {
                   <div>
                     <p className="font-medium text-[15px] leading-snug mb-1" style={{ color: "var(--text-primary)" }}>See how you measure up</p>
                     <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                      Take the 2-minute assessment and compare your fitness with this trek.
+                      A 2-minute check against this trek.
                     </p>
                   </div>
                   <Link

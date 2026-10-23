@@ -113,25 +113,7 @@ function DefaultCTA() {
       <div className="grid lg:grid-cols-[1fr_380px] gap-8 sm:gap-10 lg:gap-16 items-center">
         {/* Left: promise and action */}
         <div className="min-w-0">
-          {/* The way in sits up top with the label, so it's there the moment the section is */}
-          {/* The label wraps to two lines before the button drops below it (only on the narrowest phones) */}
-          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mb-2">
-            <Eyebrow className="flex-1" />
-            <Link
-              href="/matchmaker"
-              className="group shrink-0 inline-flex items-center gap-2 h-10 pl-1 pr-3.5 sm:pr-4 rounded-full text-white text-[13px] font-semibold tracking-tight hover:-translate-y-0.5 hover:brightness-110 transition-all duration-200"
-              style={{
-                background: "linear-gradient(135deg, #ff7a3d 0%, #ff5100 55%, #e94600 100%)",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), 0 8px 22px -6px rgba(255,81,0,0.6)",
-              }}
-            >
-              <span className="w-8 h-8 rounded-full flex items-center justify-center bg-white/20 ring-1 ring-white/30 group-hover:bg-white/30 transition-colors">
-                <MatchmakerMark className="w-4 h-4" />
-              </span>
-              Take assessment
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-          </div>
+          <Eyebrow />
           <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
             Adventures built for <span className="text-[#ff5100]">your body</span>
           </h2>
@@ -151,12 +133,28 @@ function DefaultCTA() {
           </Link>
         </div>
 
-        {/* Right: what the result looks like */}
-        <MatchmakerStory
-          you={SAMPLE_ACE}
-          samples={samples.map(({ a, score }) => ({ id: a.id, name: a.name, image: a.heroImage, ace: getACE(a), score }))}
-          group={sampleGroup(samples)}
-        />
+        {/* Right: what the result looks like, with the way in right under it */}
+        <div className="flex flex-col items-center gap-5 min-w-0">
+          <MatchmakerStory
+            you={SAMPLE_ACE}
+            samples={samples.map(({ a, score }) => ({ id: a.id, name: a.name, image: a.heroImage, ace: getACE(a), score }))}
+            group={sampleGroup(samples)}
+          />
+          <Link
+            href="/matchmaker"
+            className="group shrink-0 inline-flex items-center gap-2 h-10 pl-1 pr-3.5 sm:pr-4 rounded-full text-white text-[13px] font-semibold tracking-tight hover:-translate-y-0.5 hover:brightness-110 transition-all duration-200"
+            style={{
+              background: "linear-gradient(135deg, #ff7a3d 0%, #ff5100 55%, #e94600 100%)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), 0 8px 22px -6px rgba(255,81,0,0.6)",
+            }}
+          >
+            <span className="w-8 h-8 rounded-full flex items-center justify-center bg-white/20 ring-1 ring-white/30 group-hover:bg-white/30 transition-colors">
+              <MatchmakerMark className="w-4 h-4" />
+            </span>
+            Take assessment
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
+        </div>
       </div>
     </Band>
   );

@@ -31,11 +31,16 @@ export default function CommunityCards({ reviews, slug, currentUserId }: {
         </div>
         <div className="p-4 [&_button]:mb-0">
           <PhotoGallery slug={slug} currentUserId={currentUserId} onCount={setPhotoCount} />
-          {photoCount === 0 && !currentUserId && (
-            <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-              No photos yet.{" "}
-              <a href={`/auth/login?next=${encodeURIComponent(`/experiences/${slug}`)}`} className="text-[#ff5100] hover:underline">Log in to add yours</a>
-            </p>
+          {/* Logged out: the same prompt row as the reviews card's "Log in to write a review" */}
+          {photoCount !== null && !currentUserId && (
+            <a
+              href={`/auth/login?next=${encodeURIComponent(`/experiences/${slug}`)}`}
+              className="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all hover:brightness-110"
+              style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", color: "var(--text-tertiary)" }}
+            >
+              <span>{photoCount === 0 ? "No photos yet" : "Been here?"}</span>
+              <span className="text-amber-400/70 font-semibold shrink-0">Log in to add photos →</span>
+            </a>
           )}
         </div>
       </div>

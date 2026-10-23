@@ -235,25 +235,10 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_380px] gap-6 sm:gap-10 lg:gap-16 items-center">
             <FadeUp>
               <div className="max-w-2xl">
-                {/* The way in sits up top with the label, so it's there the moment the section is */}
-                <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mb-2">
-                  <p className="flex-1 text-[#5fb873] text-xs font-semibold tracking-[0.22em] uppercase">
+                <div className="mb-2">
+                  <p className="text-[#5fb873] text-xs font-semibold tracking-[0.22em] uppercase">
                     Adventure Map
                   </p>
-                  <Link
-                    href="/map"
-                    className="group shrink-0 inline-flex items-center gap-2 h-10 pl-1 pr-3.5 sm:pr-4 rounded-full text-[13px] font-semibold tracking-tight text-[#07160b] hover:-translate-y-0.5 hover:brightness-110 transition-all duration-200"
-                    style={{
-                      background: "linear-gradient(135deg, #7fd692 0%, #5fb873 55%, #4c9f60 100%)",
-                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35), 0 8px 22px -6px rgba(95,184,115,0.55)",
-                    }}
-                  >
-                    <span className="w-8 h-8 rounded-full flex items-center justify-center bg-black/15 ring-1 ring-black/10 group-hover:bg-black/20 transition-colors">
-                      <Map className="w-4 h-4" />
-                    </span>
-                    Open map
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </Link>
                 </div>
                 <h2 className="t-text text-2xl lg:text-4xl font-bold tracking-tight leading-tight mb-3">
                   India&apos;s Adventures, <span className="text-[#5fb873]">Mapped</span>
@@ -263,7 +248,24 @@ export default function HomePage() {
                 </p>
               </div>
             </FadeUp>
-            <MapDemo pins={mapPins} />
+            {/* The way in sits right under the demo it opens */}
+            <div className="flex flex-col items-center gap-5 min-w-0">
+              <MapDemo pins={mapPins} />
+              <Link
+                href="/map"
+                className="group shrink-0 inline-flex items-center gap-2 h-10 pl-1 pr-3.5 sm:pr-4 rounded-full text-[13px] font-semibold tracking-tight text-[#07160b] hover:-translate-y-0.5 hover:brightness-110 transition-all duration-200"
+                style={{
+                  background: "linear-gradient(135deg, #7fd692 0%, #5fb873 55%, #4c9f60 100%)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35), 0 8px 22px -6px rgba(95,184,115,0.55)",
+                }}
+              >
+                <span className="w-8 h-8 rounded-full flex items-center justify-center bg-black/15 ring-1 ring-black/10 group-hover:bg-black/20 transition-colors">
+                  <Map className="w-4 h-4" />
+                </span>
+                Open map
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+            </div>
           </div>
         </section>
 

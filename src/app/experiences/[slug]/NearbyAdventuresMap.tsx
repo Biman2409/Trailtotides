@@ -112,13 +112,26 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
           border-top-color: ${isDark ? "rgba(4,7,14,0.92)" : "rgba(255,255,255,0.97)"} !important;
         }
         .ttt-nearby-map .leaflet-control-attribution {
-          background: ${isDark ? "rgba(9,16,31,0.72)" : "rgba(255,255,255,0.8)"} !important;
-          color: ${isDark ? "rgba(255,255,255,0.5)" : "rgba(15,23,31,0.55)"} !important;
-          font-size: 8.5px !important;
-          line-height: 1.35;
-          padding: 1px 6px !important;
-          border-radius: 6px 0 0 0;
+          display: none;
+          background: ${isDark ? "rgba(9,16,31,0.88)" : "rgba(255,255,255,0.94)"} !important;
+          color: ${isDark ? "rgba(255,255,255,0.6)" : "rgba(15,23,31,0.6)"} !important;
+          font-size: 9.5px !important;
+          line-height: 1.4;
+          padding: 3px 8px !important;
+          margin: 0 6px 4px 0 !important;
+          border-radius: 8px;
+          max-width: 92%;
         }
+        .ttt-nearby-map.ttt-credits-open .leaflet-control-attribution { display: block; }
+        .ttt-credit-btn {
+          width: 20px; height: 20px; margin: 0 6px 6px 0 !important;
+          border-radius: 9999px; display: flex; align-items: center; justify-content: center;
+          font: italic 600 11px/1 Georgia, serif; cursor: pointer;
+          background: ${isDark ? "rgba(9,16,31,0.75)" : "rgba(255,255,255,0.88)"};
+          color: ${isDark ? "rgba(255,255,255,0.7)" : "rgba(15,23,31,0.65)"};
+          border: 1px solid ${isDark ? "rgba(255,255,255,0.14)" : "rgba(15,23,31,0.14)"};
+        }
+        .ttt-credit-btn:hover, .ttt-nearby-map.ttt-credits-open .ttt-credit-btn { color: #ff5100; border-color: rgba(255,81,0,0.5); }
         .ttt-nearby-map .leaflet-control-attribution a {
           color: ${isDark ? "rgba(255,255,255,0.7)" : "rgba(15,23,31,0.75)"} !important;
         }
@@ -131,7 +144,26 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
         maxZoom: 16,
       });
       mapInstanceRef.current = map;
-      // OSM / OpenFreeMap credits, which the licences require to be visible
+      // OSM / OpenFreeMap credits (the licences require them) sit behind a small ⓘ in
+      // the corner: tap to show, tap again to hide. Leaflet stacks bottom controls
+      // upward in the order added, so the button goes in first and the credit opens above it.
+      const mapEl = mapRef.current;
+      const CreditToggle = L.Control.extend({
+        onAdd() {
+          const btn = L.DomUtil.create("button", "ttt-credit-btn");
+          btn.type = "button";
+          btn.textContent = "i";
+          btn.setAttribute("aria-label", "Map credits");
+          btn.setAttribute("aria-expanded", "false");
+          L.DomEvent.disableClickPropagation(btn);
+          L.DomEvent.on(btn, "click", () => {
+            const open = mapEl.classList.toggle("ttt-credits-open");
+            btn.setAttribute("aria-expanded", String(open));
+          });
+          return btn;
+        },
+      });
+      new CreditToggle({ position: "bottomright" }).addTo(map);
       L.control.attribution({ position: "bottomright", prefix: false }).addTo(map);
 
       // OpenStreetMap via OpenFreeMap, as on the Adventure Map: its dark style with
