@@ -62,7 +62,8 @@ export default function CheckInButton({ slug, variant = "card", className = "" }
             <CheckCircle2 className={`w-4 h-4 ${done ? "fill-[#4ade80]/20" : ""}`} />
           </button>
         </TooltipTrigger>
-        <TooltipContent>{done ? "Completed" : "Mark as done"}</TooltipContent>
+        {/* Below, like the other hero buttons: above would sit behind the navbar */}
+        <TooltipContent side="bottom" sideOffset={6}>{done ? "Completed" : "Mark as done"}</TooltipContent>
       </Tooltip>
     );
   }

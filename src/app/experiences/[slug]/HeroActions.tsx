@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, LogIn, GitCompareArrows, CheckCheck, Share2, Check } from "lucide-react";
+import { Heart, GitCompareArrows, CheckCheck, Share2, Check } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCompare } from "@/contexts/CompareContext";
@@ -11,6 +11,10 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { Adventure } from "@/lib/data";
 import { EMAIL_ALERTS } from "@/lib/features";
+
+// These buttons sit just under the fixed navbar, so their labels open below
+// them; opening upward (the default) put them behind the navbar
+const TIP_BELOW = { side: "bottom", sideOffset: 6 } as const;
 
 export default function HeroActions({ adventure }: { adventure: Adventure }) {
   const { isSaved, toggle } = useWishlist();
@@ -44,7 +48,7 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
   async function handleSave() {
     if (loggedIn === false) {
       toast.error("Log in to wishlist this adventure.", {
-        action: { label: "Log in", onClick: () => router.push("/auth/login") },
+        action: { label: "Log in", onClick: () => router.push(`/auth/login?next=${encodeURIComponent(`/experiences/${adventure.slug}`)}`) },
       });
       return;
     }
@@ -53,7 +57,7 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
     if (wasSaved) {
       toast("Removed from wishlist");
     } else {
-      toast.success("Adventure saved to wishlist ♥", EMAIL_ALERTS ? { description: "We'll email you when its season opens or the price drops." } : undefined);
+      toast.success("Added to your wishlist", EMAIL_ALERTS ? { description: "We'll email you when its season opens or the price drops." } : undefined);
     }
   }
 
@@ -98,7 +102,7 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
             {inCompare ? <CheckCheck className="w-4 h-4" /> : <GitCompareArrows className="w-4 h-4" />}
           </button>
         </TooltipTrigger>
-        <TooltipContent>{inCompare ? "Added to compare" : isFull ? "Compare full" : "Compare"}</TooltipContent>
+        <TooltipContent {...TIP_BELOW}>{inCompare ? "Added to compare" : isFull ? "Compare full" : "Compare"}</TooltipContent>
       </Tooltip>
 
       {/* ── Share (second) ── */}
@@ -113,30 +117,29 @@ export default function HeroActions({ adventure }: { adventure: Adventure }) {
             {shared ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4" />}
           </button>
         </TooltipTrigger>
-        <TooltipContent>{shared ? "Copied" : "Share"}</TooltipContent>
+        <TooltipContent {...TIP_BELOW}>{shared ? "Copied" : "Share"}</TooltipContent>
       </Tooltip>
 
-      {/* ── Save / Wishlist (third) — grouped next to "Mark as done" so the two
+      {/* ── Wishlist (third) — grouped next to "Mark as done" so the two
            personal-tracking actions (save for later / log as completed) sit
            together for quick access ── */}
       <Tooltip>
         <TooltipTrigger asChild>
           <button
             onClick={handleSave}
-            aria-label={saved ? "Remove from saved" : "Save this adventure"}
+            aria-label={saved ? "Remove from wishlist" : "Add to wishlist"}
             className={btnBase}
             style={saved
               ? { background: "rgba(255,81,0,0.18)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.4)", boxShadow: "0 0 12px rgba(255,81,0,0.2)" }
               : { background: "rgba(0,0,0,0.45)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)" }
             }
           >
-            {loggedIn === false
-              ? <LogIn className="w-4 h-4" />
-              : <Heart className={`w-4 h-4 ${saved ? "fill-[#ff7d47]" : ""}`} />
-            }
+            {/* Always a heart, so it reads as the wishlist; logged-out visitors
+                get the log-in prompt when they tap it */}
+            <Heart className={`w-4 h-4 ${saved ? "fill-[#ff7d47]" : ""}`} />
           </button>
         </TooltipTrigger>
-        <TooltipContent>{saved ? "Saved" : "Save"}</TooltipContent>
+        <TooltipContent {...TIP_BELOW}>{saved ? "In your wishlist" : "Add to wishlist"}</TooltipContent>
       </Tooltip>
 
       {/* ── Mark as done (fourth) ── */}
