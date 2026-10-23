@@ -390,22 +390,35 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               <Pill type="subRegion" value={adventure.state} />
             </div>
             <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[1.02] mb-4" style={{ color: "#f0ede8" }}>
-              {adventure.name}
+              {(() => {
+                // The traveller rating sits as a superscript after the last word,
+                // kept on the same line as it so it never wraps on its own
+                const words = adventure.name.split(" ");
+                const last = words.pop();
+                return (
+                  <>
+                    {words.length > 0 && <>{words.join(" ")} </>}
+                    <span className="whitespace-nowrap">
+                      {last}
+                      {travellerRating && (
+                        <a
+                          href="#community"
+                          aria-label={`Rated ${travellerRating.avg.toFixed(1)} out of 5 from ${travellerRating.count} traveller review${travellerRating.count !== 1 ? "s" : ""}`}
+                          title={`${travellerRating.count} traveller review${travellerRating.count !== 1 ? "s" : ""}`}
+                          className="relative -top-[0.95em] ml-1.5 sm:ml-2 inline-flex items-center gap-1 align-baseline text-xs sm:text-sm md:text-base font-semibold tracking-normal text-white/85 hover:text-white transition-colors"
+                        >
+                          <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-amber-400 fill-amber-400" />
+                          {travellerRating.avg.toFixed(1)}
+                        </a>
+                      )}
+                    </span>
+                  </>
+                );
+              })()}
             </h1>
             <p className="text-white/55 text-sm md:text-lg leading-relaxed max-w-xl font-light">
               {adventure.tagline}
             </p>
-            {travellerRating && (
-              <a
-                href="#community"
-                className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-white/80 hover:text-white backdrop-blur-md transition-colors"
-                style={{ background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.14)" }}
-              >
-                <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                <span className="font-semibold">{travellerRating.avg.toFixed(1)}</span>
-                <span className="text-white/55">· {travellerRating.count} traveller review{travellerRating.count !== 1 ? "s" : ""}</span>
-              </a>
-            )}
           </div>
         </div>
 
