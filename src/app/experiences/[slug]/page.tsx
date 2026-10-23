@@ -583,7 +583,6 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 <ACEProfileSection
                   bare
                   ace={ace}
-                  adventureName={adventure.name}
                   slug={adventure.slug}
                   showAltitudeWarning={showAltitudeWarning}
                   showFatalFallWarning={showFatalFallWarning}

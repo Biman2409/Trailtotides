@@ -5,13 +5,12 @@ import Link from "next/link";
 import { ArrowRight, RotateCcw, Flame, Zap, Dumbbell, Compass, Waves, Mountain, Shield, Wind, ChevronUp, Layers } from "lucide-react";
 import ACERadar from "@/components/ui/custom/ACERadar";
 import GradingPill from "@/components/ui/custom/GradingPill";
-import { aceSummary, ACE_AXIS_COLORS, ACE_AXIS_LABELS, ACE_DOMAINS } from "@/lib/ace";
+import { ACE_AXIS_COLORS, ACE_AXIS_LABELS, ACE_DOMAINS } from "@/lib/ace";
 import { loadProfile } from "@/lib/matchmaker";
 import type { ACE, AceAxis } from "@/lib/ace";
 
 interface Props {
   ace: ACE;
-  adventureName: string;
   slug: string;
   showAltitudeWarning: boolean;
   showFatalFallWarning: boolean;
@@ -118,7 +117,7 @@ function AxisCell({ axis, trekVal, userVal }: { axis: AceAxis; trekVal: number; 
   );
 }
 
-export default function ACEProfileSection({ ace, adventureName, slug, bare }: Props) {
+export default function ACEProfileSection({ ace, slug, bare }: Props) {
   const [userAce, setUserAce] = useState<ACE | null>(null);
   // Overlap is the default — more compact than side-by-side (especially
   // when an adventure's requirements are low/near-zero, which leaves the
@@ -327,15 +326,12 @@ export default function ACEProfileSection({ ace, adventureName, slug, bare }: Pr
           )}
         </div>
 
-        {/* Bottom bar */}
+        {/* Bottom bar — only the retake link, for people with a profile */}
+        {userAce && (
         <div
-          className="px-4 py-2.5 flex items-center gap-3"
+          className="px-4 py-2.5 flex items-center justify-end gap-3"
           style={{ borderTop: "1px solid rgba(var(--fg-rgb),0.04)", background: "rgba(0,0,0,0.12)" }}
         >
-          <p className="text-[11px] leading-relaxed text-black/35 dark:text-white/30 flex-1 italic">
-            {aceSummary(ace, adventureName)}
-          </p>
-          {userAce && (
             <Link
               href={`/matchmaker?retake=1&from=${slug}`}
               className="inline-flex items-center gap-1.5 shrink-0 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg transition-all hover:brightness-110 whitespace-nowrap"
@@ -344,8 +340,8 @@ export default function ACEProfileSection({ ace, adventureName, slug, bare }: Pr
               <RotateCcw className="w-2.5 h-2.5" />
               Retake Assessment
             </Link>
-          )}
         </div>
+        )}
       </div>
 
       {/* Training priorities */}

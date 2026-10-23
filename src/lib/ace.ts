@@ -100,46 +100,6 @@ export function getACE(a: Adventure): ACE {
   return hasRealACE(a) ? { ...BLANK_ACE, ...(a.ace as ACE) } : estimateACE(a);
 }
 
-/** Generate a plain-English summary for an adventure's ACE profile */
-export function aceSummary(ace: ACE, adventureName: string): string {
-  const parts: string[] = [];
-
-  // Stamina + altitude → primary descriptor
-  if (ace.stamina >= 4 && ace.altitude >= 4)
-    parts.push(`${adventureName} is an endurance-heavy adventure at extreme altitude — sustained days of physical output in a hypoxic environment.`);
-  else if (ace.stamina >= 4)
-    parts.push(`${adventureName} demands strong endurance — expect long, physically demanding days.`);
-  else if (ace.stamina <= 2)
-    parts.push(`${adventureName} is physically accessible — short daily effort with no sustained endurance demands.`);
-  else
-    parts.push(`${adventureName} requires moderate stamina — a typical multi-day effort.`);
-
-  // Technicality: strength + agility
-  const tech = Math.max(ace.strength, ace.agility);
-  if (tech >= 5)
-    parts.push("Technical mountaineering terrain demands specialised gear and movement skills.");
-  else if (tech === 4)
-    parts.push("Demanding terrain and load-bearing requirements call for solid physical preparation.");
-  else if (tech <= 2)
-    parts.push("No technical demands — standard gear is sufficient.");
-
-  // Environmental axes: water or altitude
-  if (ace.water >= 3)
-    parts.push(`Aquatic competence is required — swimming or diving experience is essential.`);
-  if (ace.altitude >= 4 && ace.stamina < 4)
-    parts.push("The high altitude significantly amplifies the physiological challenge.");
-
-  // Nerve
-  if (ace.focus >= 4)
-    parts.push("Significant psychological exposure — comfort with heights, void, or dangerous environments is critical.");
-
-  // Tenacity
-  if (ace.nerve >= 4)
-    parts.push("Remote or isolated terrain demands strong self-reliance — you'll be far from support for extended periods.");
-
-  return parts.join(" ");
-}
-
 /**
  * Computes a 0–100 match score between a user's ACE profile and an adventure's ACE requirement.
  *

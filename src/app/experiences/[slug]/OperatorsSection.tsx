@@ -10,8 +10,8 @@ interface ComputedRating {
   count: number;
 }
 
-// Google and traveller ratings side by side, so one never hides the other.
-// Traveller ratings show from the first one, with their count for weight.
+// Google ratings always show; traveller ratings sit beside them once an operator
+// has any (from the first one, with their count for weight) and are left out until then.
 function travellerRating(op: OperatorCardData, ratings: Record<string, ComputedRating>) {
   return ratings[op.name.trim().toLowerCase()] ?? null;
 }
@@ -37,7 +37,7 @@ function GoogleCell({ op }: { op: OperatorCardData }) {
 }
 
 function TravellerCell({ rating }: { rating: ComputedRating | null }) {
-  if (!rating) return <span className="text-[10px] text-black/25 dark:text-white/20">Not rated yet</span>;
+  if (!rating) return <span className="text-[10px] text-black/25 dark:text-white/20">—</span>;
   return (
     <div className="flex flex-col items-center gap-1">
       <Stars value={rating.avg} />
@@ -65,6 +65,8 @@ function CompareDrawer({
   const prices = operators.map(o => parsePrice(o.priceFrom));
   const minPrice = Math.min(...prices);
   const maxBatches = Math.max(...operators.map(o => o.departureDates?.length ?? 0));
+  // The Travellers column only appears once any operator here has a traveller rating
+  const hasTraveller = operators.some(o => travellerRating(o, computedRatings));
 
   // Close on Escape
   useEffect(() => {
@@ -119,7 +121,7 @@ function CompareDrawer({
                 {[
                   { label: "Price", icon: null },
                   { label: "Google", icon: <Star className="w-3 h-3" /> },
-                  { label: "Travellers", icon: <Star className="w-3 h-3" /> },
+                  ...(hasTraveller ? [{ label: "Travellers", icon: <Star className="w-3 h-3" /> }] : []),
                   { label: "Departures", icon: <CalendarDays className="w-3 h-3" /> },
                   { label: "Cloakroom", icon: <Briefcase className="w-3 h-3" /> },
                   { label: "Porter", icon: <Package className="w-3 h-3" /> },
@@ -190,7 +192,7 @@ function CompareDrawer({
 
                     {/* Ratings */}
                     <td className="px-4 py-4 text-center"><GoogleCell op={op} /></td>
-                    <td className="px-4 py-4 text-center"><TravellerCell rating={traveller} /></td>
+                    {hasTraveller && <td className="px-4 py-4 text-center"><TravellerCell rating={traveller} /></td>}
 
                     {/* Departures */}
                     <td className="px-4 py-4 text-center">
@@ -251,10 +253,12 @@ function CompareDrawer({
             </svg>
             <span className="text-[10px] text-black/35 dark:text-white/30">Best price</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400 opacity-60" />
-            <span className="text-[10px] text-black/35 dark:text-white/30">Travellers = rated by Trail to Tides users</span>
-          </div>
+          {hasTraveller && (
+            <div className="flex items-center gap-1.5">
+              <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400 opacity-60" />
+              <span className="text-[10px] text-black/35 dark:text-white/30">Travellers = rated by Trail to Tides users</span>
+            </div>
+          )}
           <button onClick={onClose} className="ml-auto text-xs text-black/35 dark:text-white/30 hover:text-black/60 dark:hover:text-white/60 transition-colors">
             Close
           </button>
@@ -292,10 +296,12 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
               {op.googleRating ? (
                 <span className="flex items-center gap-1"><Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />{op.googleRating} Google</span>
               ) : null}
-              <span className="flex items-center gap-1">
-                <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />
-                {traveller ? <>{traveller.avg} Travellers ({traveller.count})</> : "Travellers: not rated yet"}
-              </span>
+              {traveller && (
+                <span className="flex items-center gap-1">
+                  <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />
+                  {traveller.avg} Travellers ({traveller.count})
+                </span>
+              )}
             </div>
           </div>
           <div className="text-right">
@@ -369,12 +375,12 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
                     <span className="font-black text-sm text-amber-300/90">{avgGoogle.toFixed(1)}</span> Google
                   </span>
                 )}
-                <span className="flex items-center gap-1">
-                  <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-                  {avgTraveller !== null
-                    ? <><span className="font-black text-sm text-amber-300/90">{avgTraveller.toFixed(1)}</span> Travellers ({travellerCount})</>
-                    : <>Travellers: none yet</>}
-                </span>
+                {avgTraveller !== null && (
+                  <span className="flex items-center gap-1">
+                    <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                    <span className="font-black text-sm text-amber-300/90">{avgTraveller.toFixed(1)}</span> Travellers ({travellerCount})
+                  </span>
+                )}
               </div>
             </div>
           )}
