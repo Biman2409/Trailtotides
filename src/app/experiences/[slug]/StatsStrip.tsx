@@ -21,11 +21,11 @@ export default function StatsStrip({ stats, weather: place }: {
   const { weather, loading, error, retry } = useWeather(place.lat, place.lng);
   const [open, setOpen] = useState(false);
 
-  const cell = "min-w-0 px-4 py-2.5";
+  const cell = "min-w-0 px-3.5 py-2";
 
   return (
     <section aria-labelledby="at-a-glance" className="max-w-7xl mx-auto px-5 lg:px-8">
-      <h2 id="at-a-glance" className="text-[12px] tracking-[0.12em] lowercase !font-normal mb-2" style={{ color: "var(--text-secondary)", fontVariant: "small-caps", fontFamily: "var(--font-dm-sans)" }}>
+      <h2 id="at-a-glance" className="text-[12px] tracking-[0.12em] lowercase !font-normal mb-1.5" style={{ color: "var(--text-secondary)", fontVariant: "small-caps", fontFamily: "var(--font-dm-sans)" }}>
         at a glance
       </h2>
       <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}>

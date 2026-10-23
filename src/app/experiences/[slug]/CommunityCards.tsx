@@ -4,41 +4,39 @@ import { useState, type ReactNode } from "react";
 import { Camera } from "lucide-react";
 import PhotoGallery from "./PhotoGallery";
 
-const CARD_STYLE = { background: "rgba(var(--tint-neutral-rgb),0.025)", border: "1px solid rgba(var(--tint-neutral-rgb),0.18)" };
+const CARD_STYLE = { border: "1px solid var(--border-default)", background: "var(--bg-surface)" };
 
 /**
- * Reviews + Photos. Reviews always have content (every adventure has seed
- * reviews); photos often don't, so an empty Photos card is hidden and Reviews
- * takes the full width. Logged-in users still get a slim "share a photo" row.
+ * Traveller reviews and photos, side by side (stacked on phones). With no photos
+ * yet the Photos card stays small: the upload prompt for people logged in, a
+ * log-in link for visitors.
  */
 export default function CommunityCards({ reviews, slug, currentUserId }: {
   reviews: ReactNode;
   slug: string;
   currentUserId?: string;
 }) {
-  // null until the gallery has loaded; treated as empty so nothing flashes in
+  // null until the gallery has loaded
   const [photoCount, setPhotoCount] = useState<number | null>(null);
-  const hasPhotos = (photoCount ?? 0) > 0;
-  const showUploadRow = !hasPhotos && !!currentUserId && photoCount !== null;
 
   return (
-    <div className={`grid grid-cols-1 gap-3 items-stretch ${hasPhotos ? "md:grid-cols-2" : ""}`}>
-      <div className="rounded-xl overflow-hidden" style={CARD_STYLE}>{reviews}</div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
+      <div className="rounded-2xl overflow-hidden" style={CARD_STYLE}>{reviews}</div>
 
-      {/* The gallery stays mounted in this one spot (it does the loading);
-          only its frame changes: full card, bare upload row, or hidden */}
-      <div
-        className={hasPhotos ? "rounded-xl overflow-hidden" : showUploadRow ? "[&_button]:mb-0" : "hidden"}
-        style={hasPhotos ? CARD_STYLE : undefined}
-      >
-        {hasPhotos && (
-          <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: "1px solid var(--border-subtle)", background: "rgba(var(--tint-neutral-rgb),0.05)" }}>
-            <Camera className="w-3.5 h-3.5" style={{ color: "var(--text-tertiary)" }} />
-            <h3 className="text-[10px] font-bold tracking-[0.18em] uppercase" style={{ color: "var(--text-tertiary)" }}>Photos</h3>
-          </div>
-        )}
-        <div className={hasPhotos ? "p-3" : ""}>
+      <div className="rounded-2xl overflow-hidden" style={CARD_STYLE}>
+        <div className="flex items-center gap-2 px-5 py-3.5" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+          <Camera className="w-4 h-4" style={{ color: "var(--text-secondary)" }} />
+          <span className="text-[14px] font-medium" style={{ color: "var(--text-primary)" }}>Photos</span>
+          {photoCount ? <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>{photoCount}</span> : null}
+        </div>
+        <div className="p-4 [&_button]:mb-0">
           <PhotoGallery slug={slug} currentUserId={currentUserId} onCount={setPhotoCount} />
+          {photoCount === 0 && !currentUserId && (
+            <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              No photos yet.{" "}
+              <a href={`/auth/login?next=${encodeURIComponent(`/experiences/${slug}`)}`} className="text-[#ff5100] hover:underline">Log in to add yours</a>
+            </p>
+          )}
         </div>
       </div>
     </div>

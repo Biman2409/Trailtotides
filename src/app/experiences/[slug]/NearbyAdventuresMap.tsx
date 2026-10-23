@@ -219,7 +219,7 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
       style={{ border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}
     >
       {/* Header — same small-caps label + plain line as the booking card */}
-      <div className="px-5 pt-4 pb-3">
+      <div className="px-4 pt-3 pb-2.5">
         <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>nearby</p>
         <p className="text-[14px] font-medium" style={{ color: "var(--text-primary)" }}>{nearby.length} adventures in the region</p>
       </div>
@@ -243,7 +243,7 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
             <Link
               key={a.id}
               href={`/experiences/${a.slug}`}
-              className="flex items-center gap-3 px-5 py-2.5 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] transition-colors group"
+              className="flex items-center gap-3 px-4 py-2 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] transition-colors group"
             >
               <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
               <div className="flex-1 min-w-0">

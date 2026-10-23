@@ -348,7 +348,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       <Navbar />
 
       {/* ── HERO ──────────────────────────────────────────────── */}
-      <section className="relative h-[50vh] min-h-[360px] sm:h-[54vh] lg:h-[56vh] lg:min-h-[440px] max-h-[580px] flex items-end overflow-hidden">
+      <section className="relative h-[44vh] min-h-[320px] sm:h-[48vh] lg:h-[50vh] lg:min-h-[400px] max-h-[520px] flex items-end overflow-hidden">
         <Image
           src={adventure.heroImage}
           alt={adventure.name}
@@ -372,12 +372,12 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         </Link>
 
         {/* Hero text */}
-        <div className="relative z-10 max-w-7xl mx-auto px-5 lg:px-8 pb-7 md:pb-10 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-5 lg:px-8 pb-6 md:pb-8 w-full">
           <div className="max-w-3xl">
-            <p className="text-[13px] tracking-[0.12em] lowercase mb-3 text-white/80" style={{ fontVariant: "small-caps" }}>
+            <p className="text-[12px] tracking-[0.12em] lowercase mb-2 text-white/80" style={{ fontVariant: "small-caps" }}>
               {adventure.type} · {adventure.state}
             </p>
-            <h1 className="text-[34px] sm:text-5xl lg:text-[58px] !font-normal tracking-[-0.025em] leading-[1.02] mb-3" style={{ color: "#f7f3ee" }}>
+            <h1 className="text-[32px] sm:text-[44px] lg:text-[52px] !font-normal tracking-[-0.025em] leading-[1.02] mb-2" style={{ color: "#f7f3ee" }}>
               {(() => {
                 // The traveller rating sits as a superscript after the last word,
                 // kept on the same line as it so it never wraps on its own
@@ -404,7 +404,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
                 );
               })()}
             </h1>
-            <p className="text-white/85 text-[15px] md:text-[17px] leading-relaxed max-w-xl">
+            <p className="text-white/85 text-[14px] md:text-[16px] leading-relaxed max-w-xl">
               {adventure.tagline}
             </p>
           </div>
@@ -417,7 +417,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       <SectionNav />
 
       {/* ── STATS + WEATHER ZONE ──────────────────────────────── */}
-      <FadeInSection as="div" className="pt-4" style={READABLE_TONES}>
+      <FadeInSection as="div" className="pt-3" style={READABLE_TONES}>
 
         {/* Stats strip — trek facts only, plus live weather. Price lives in the
             booking card / mobile bar and the operator section; type is in the
@@ -444,8 +444,8 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
       </FadeInSection>
 
       {/* ── MAIN CONTENT ──────────────────────────────────────── */}
-      <FadeInSection as="div" className="max-w-7xl mx-auto px-5 lg:px-8 pt-7 sm:pt-8 pb-12" style={READABLE_TONES}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
+      <FadeInSection as="div" className="max-w-7xl mx-auto px-5 lg:px-8 pt-5 sm:pt-6 pb-10" style={READABLE_TONES}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 
           {/* ── LEFT COLUMN — chapters on a trail line ── */}
           <div className="lg:col-span-2 relative pl-8 sm:pl-10">
@@ -459,7 +459,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* Overview — one paragraph; what makes the adventure special is
                 highlighted in place rather than repeated in a section of its own */}
             <AccordionSection id="overview" label="the adventure" title="Overview" defaultOpen>
-              <p className="text-[14px] leading-[1.75] max-w-[68ch]" style={{ color: "var(--text-secondary)" }}>
+              <p className="text-[14px] leading-[1.6] max-w-[70ch]" style={{ color: "var(--text-secondary)" }}>
                 <Emphasis
                   text={adventure.description}
                   className="font-medium [color:var(--text-primary)] box-decoration-clone bg-[linear-gradient(transparent_64%,rgba(255,81,0,0.18)_64%)]"
@@ -470,9 +470,9 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* Safety & Prep — before suitability and booking, and open, so people
                 see the risks before choosing who to go with */}
             <AccordionSection id="safety" label="safety and prep" title="What to know before you go" defaultOpen>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <div className="max-w-[66ch]">
-                  <p className="text-[14px] leading-[1.75]" style={{ color: "var(--text-secondary)" }}>{adventure.safetyNotes}</p>
+                  <p className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{adventure.safetyNotes}</p>
                   {(showAltitudeWarning || showFatalFallWarning || showExtremeIsolationWarning || showTechnicalWarning || showPhysicalExhaustionWarning || showWaterWarning) && (
                     <HazardBadges
                       showAltitude={showAltitudeWarning}
@@ -501,14 +501,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             {/* Is This For You? — fit/skip lists plus the Capability Profile radar,
                 both answering the same question from two angles */}
             <AccordionSection id="suitability" label="suitability" title="Is this for you?" defaultOpen headerExtra={<GradingPill />}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
                 {([
                   { heading: "for you if", items: adventure.whoFor, mark: "✓", markColor: "#3fa877" },
                   { heading: "skip it if", items: adventure.whoNot, mark: "✕", markColor: "#d4675a" },
                 ]).map(({ heading, items, mark, markColor }) => (
                   <div key={heading}>
                     <h3 className="text-[13px] tracking-[0.1em] !font-normal mb-2" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>{heading}</h3>
-                    <ul className="space-y-1.5">
+                    <ul className="space-y-1">
                       {items.split("·").map((item) => {
                         const t = item.trim();
                         if (!t) return null;
@@ -526,14 +526,14 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
               {/* Too intense? A hint that opens the Easier tab of Similar Adventures */}
               {easierAlternatives.length > 0 && (
-                <a href="#easier" className="mt-4 inline-flex items-center gap-1.5 text-sm hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
+                <a href="#easier" className="mt-3 inline-flex items-center gap-1.5 text-sm hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-tertiary)" }}>
                   Too much? See easier {adventure.type.toLowerCase()} nearby
                   <ArrowRight className="w-3.5 h-3.5 rotate-90" />
                 </a>
               )}
 
               {/* Capability Profile — supporting detail below the quick-skim lists */}
-              <div className="mt-7">
+              <div className="mt-5">
                 <h3 className="text-[13px] tracking-[0.1em] !font-normal mb-3" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>how do you measure up</h3>
                 <ACEProfileSection
                   bare
@@ -552,18 +552,11 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </AccordionSection>
 
             {/* Operators */}
-            <div className="pt-6"><RecalibrationNudge difficulty={difficulty} /></div>
+            <div className="pt-4"><RecalibrationNudge difficulty={difficulty} /></div>
             <div id="book-this-adventure" className="scroll-mt-32" />
             <AccordionSection label="book this adventure" title="Where to book" defaultOpen>
               <div id="operators-section" className="space-y-4">
                 <OperatorsSection operators={allOperators} slug={adventure.slug} />
-                {/* Stands in for the old generic FAQ: inclusions, cancellation and
-                    booking were all "ask the operator" anyway */}
-                {allOperators.length > 0 && (
-                  <p className="text-[13px] leading-relaxed max-w-[66ch]" style={{ color: "var(--text-tertiary)" }}>
-                    Trail to Tides doesn&apos;t take payments. Inclusions, cancellation terms and payment are set by each operator, so confirm them before you book.
-                  </p>
-                )}
                 <OperatorListingPanel adventureSlug={adventure.slug} adventureName={adventure.name} />
               </div>
             </AccordionSection>
@@ -578,13 +571,13 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
             </AccordionSection>
 
             {/* Tags */}
-            <div className="pt-6 pb-1">
+            <div className="pt-4 pb-1">
               <TagsList tags={adventure.tags} />
             </div>
           </div>
 
           {/* ── RIGHT SIDEBAR — desktop-only: booking and the nearby map ── */}
-          <div className="hidden lg:block space-y-4 lg:sticky lg:top-28 lg:self-start">
+          <div className="hidden lg:block space-y-3 lg:sticky lg:top-28 lg:self-start">
 
             {/* Book Now */}
             <BookingSidebarCard
@@ -609,7 +602,7 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
 
       {/* ── SIMILAR ADVENTURES ────────────────────────────────── */}
       {similarTabs.length > 0 && (
-        <div className="pt-0 pb-10 px-5 lg:px-8" style={READABLE_TONES}>
+        <div className="pt-0 pb-8 px-5 lg:px-8" style={READABLE_TONES}>
           <div className="max-w-7xl mx-auto">
             <SimilarTabs tabs={similarTabs} />
           </div>

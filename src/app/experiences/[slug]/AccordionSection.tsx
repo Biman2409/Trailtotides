@@ -44,7 +44,7 @@ export default function AccordionSection({ title, label, defaultOpen = false, mo
   }
 
   return (
-    <section ref={sectionRef} id={id} className="pt-7 first:pt-0 scroll-mt-32">
+    <section ref={sectionRef} id={id} className="pt-5 first:pt-0 scroll-mt-32">
       <div className="relative flex items-start gap-4">
         {/* The section's stop on the trail line, level with the label */}
         <span
@@ -58,11 +58,11 @@ export default function AccordionSection({ title, label, defaultOpen = false, mo
         />
         <button onClick={toggle} aria-expanded={open} className="flex-1 min-w-0 text-left group">
           {label && (
-            <p className="text-[12px] tracking-[0.12em] lowercase mb-1" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>
+            <p className="text-[12px] tracking-[0.12em] lowercase mb-0.5" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>
               {label}
             </p>
           )}
-          <h2 className="text-[21px] sm:text-[23px] leading-[1.15] !font-normal tracking-[-0.01em] group-hover:text-[#ff5100] transition-colors">
+          <h2 className="text-[19px] sm:text-[21px] leading-[1.15] !font-normal tracking-[-0.01em] !text-[#ff5100] group-hover:opacity-80 transition-opacity">
             {title}
           </h2>
         </button>
@@ -81,7 +81,7 @@ export default function AccordionSection({ title, label, defaultOpen = false, mo
 
       <div className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
         <div className="overflow-hidden">
-          <div className="pt-3">{children}</div>
+          <div className="pt-2.5">{children}</div>
         </div>
       </div>
     </section>

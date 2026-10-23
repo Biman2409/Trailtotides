@@ -191,10 +191,10 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
     <section>
       {/* Header */}
       {/* The section around it already says "Traveller reviews"; this is just the score */}
-      <div className="flex items-center gap-2.5 px-5 py-3.5" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+      <div className="flex items-center gap-2.5 px-5 py-3" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
         {avgRating !== null ? (
           <>
-            <span className="text-[22px] font-medium leading-none" style={{ color: "var(--text-primary)" }}>{avgRating.toFixed(1)}</span>
+            <span className="text-[20px] font-medium leading-none" style={{ color: "var(--text-primary)" }}>{avgRating.toFixed(1)}</span>
             <StarRating value={Math.round(avgRating)} />
             <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>{reviews.length} review{reviews.length !== 1 ? "s" : ""}</span>
           </>
@@ -203,7 +203,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
         )}
       </div>
 
-      <div className="p-5">
+      <div className="p-4">
         {/* Logged out: one quiet prompt that comes back to this page after login */}
         {!currentUserId && (
           <a
@@ -398,7 +398,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                     )}
                   </div>
                   <StarRating value={r.rating} />
-                  <p className="text-[14px] leading-[1.7]" style={{ color: "var(--text-secondary)" }}>{r.body}</p>
+                  <p className="text-[14px] leading-[1.6]" style={{ color: "var(--text-secondary)" }}>{r.body}</p>
                 </div>
               ))}
             </div>

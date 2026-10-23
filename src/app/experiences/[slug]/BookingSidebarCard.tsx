@@ -57,7 +57,7 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, operatorW
       {priceFrom ? (
         <div>
           <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>from</p>
-          <p className="text-[26px] leading-tight font-medium tracking-[-0.01em]" style={{ color: "var(--text-primary)" }}>{priceFrom}</p>
+          <p className="text-[24px] leading-tight font-medium tracking-[-0.01em]" style={{ color: "var(--text-primary)" }}>{priceFrom}</p>
           {operatorName && operatorCount > 1 && (
             <p className="text-[13px] mt-0.5" style={{ color: "var(--text-secondary)" }}>Cheapest: {operatorName}</p>
           )}
@@ -67,7 +67,7 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, operatorW
       )}
 
       {(operatorCount > 0 || nextDeparture || seasonUrgency) && (
-        <div className="mt-3 pt-3 space-y-1" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+        <div className="mt-3 pt-2.5 space-y-0.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
           {(operatorCount > 0 || hasVerifiedOperator) && (
             <p className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
               {operatorCount} operator{operatorCount !== 1 ? "s" : ""}
@@ -79,7 +79,7 @@ export default function BookingSidebarCard({ priceFrom, operatorCount, operatorW
         </div>
       )}
 
-      <div className="mt-4 flex flex-col gap-2">
+      <div className="mt-3 flex flex-col gap-2">
         <button
           onClick={handleBook}
           className="w-full h-11 flex items-center justify-center gap-1.5 rounded-full text-white text-[14px] font-medium transition-colors bg-[#ff5100] hover:bg-[#e64900]"

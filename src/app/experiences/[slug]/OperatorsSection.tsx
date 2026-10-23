@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X, Star, CalendarDays, Briefcase, Package, ExternalLink, Check, ArrowUpDown } from "lucide-react";
+import { X, Star, ExternalLink, ArrowUpDown } from "lucide-react";
 import { type OperatorCardData } from "./OperatorCard";
 import { parsePrice } from "@/lib/price";
 
@@ -16,42 +16,23 @@ function travellerRating(op: OperatorCardData, ratings: Record<string, ComputedR
   return ratings[op.name.trim().toLowerCase()] ?? null;
 }
 
-function Stars({ value }: { value: number }) {
-  return (
-    <div className="flex gap-0.5">
-      {[1,2,3,4,5].map(s => (
-        <Star key={s} className={`w-2.5 h-2.5 ${s <= Math.round(value) ? "text-amber-400 fill-amber-400" : "text-black/10 dark:text-white/10 fill-black/10 dark:fill-white/10"}`} />
-      ))}
-    </div>
-  );
-}
-
-function GoogleCell({ op }: { op: OperatorCardData }) {
-  if (!op.googleRating) return <span className="text-[10px] text-black/25 dark:text-white/20">—</span>;
-  return (
-    <div className="flex flex-col items-center gap-1">
-      <Stars value={op.googleRating} />
-      <span className="text-[11px] text-black/65 dark:text-white/60 font-semibold">{op.googleRating}</span>
-    </div>
-  );
-}
-
-function TravellerCell({ rating }: { rating: ComputedRating | null }) {
-  if (!rating) return <span className="text-[10px] text-black/25 dark:text-white/20">—</span>;
-  return (
-    <div className="flex flex-col items-center gap-1">
-      <Stars value={rating.avg} />
-      <span className="text-[11px] text-black/65 dark:text-white/60 font-semibold">{rating.avg}</span>
-      <span className="text-[8px] text-emerald-400/80">{rating.count} rating{rating.count !== 1 ? "s" : ""}</span>
-    </div>
-  );
-}
-
 function formatDate(d: string) {
   try {
     return new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
   } catch { return d; }
 }
+
+// One labelled fact in an operator row: small-caps label over the value
+function Fact({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="min-w-0">
+      <dt className="text-[11px] tracking-[0.1em] lowercase leading-none mb-1" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{label}</dt>
+      <dd className="text-[14px] leading-snug" style={{ color: "var(--text-primary)" }}>{children}</dd>
+    </div>
+  );
+}
+
+const muted = { color: "var(--text-tertiary)" };
 
 function CompareDrawer({
   operators,
@@ -64,8 +45,7 @@ function CompareDrawer({
 }) {
   const prices = operators.map(o => parsePrice(o.priceFrom));
   const minPrice = Math.min(...prices);
-  const maxBatches = Math.max(...operators.map(o => o.departureDates?.length ?? 0));
-  // The Travellers column only appears once any operator here has a traveller rating
+  // The Travellers fact only appears once any operator here has a traveller rating
   const hasTraveller = operators.some(o => travellerRating(o, computedRatings));
 
   // Close on Escape
@@ -81,188 +61,97 @@ function CompareDrawer({
     return () => { document.body.style.overflow = ""; };
   }, []);
 
+  // A bottom sheet on phones, a centred card from tablet up; the page's own
+  // surfaces, type and orange, one operator per row with its facts in a small grid
   return (
     <div
-      className="fixed inset-0 z-[9999] flex flex-col justify-end"
-      style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(4px)" }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="compare-title"
+      className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center sm:p-6"
+      style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(3px)" }}
       onClick={onClose}
     >
       <div
-        className="w-full max-h-[88vh] flex flex-col rounded-t-2xl overflow-hidden bg-white dark:bg-[#0e1420]"
-        style={{ border: "1px solid rgba(var(--fg-rgb),0.09)", borderBottom: "none" }}
+        className="w-full sm:max-w-3xl max-h-[88vh] flex flex-col rounded-t-2xl sm:rounded-2xl overflow-hidden"
+        style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
-        <div
-          className="flex items-center justify-between px-5 py-4 shrink-0"
-          style={{ borderBottom: "1px solid rgba(var(--fg-rgb),0.07)" }}
-        >
+        <div className="flex items-start justify-between gap-4 px-5 pt-4 pb-3 shrink-0" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
           <div>
-            <p className="text-black dark:text-white font-bold text-sm">Compare Operators</p>
-            <p className="text-black/40 dark:text-white/35 text-xs mt-0.5">{operators.length} operators · side-by-side</p>
+            <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>side by side</p>
+            <h2 id="compare-title" className="text-[20px] !font-normal tracking-[-0.01em] !text-[#ff5100]">Compare {operators.length} operators</h2>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-black/55 dark:text-white/50 hover:text-black dark:hover:text-white transition-colors"
-            style={{ background: "rgba(var(--fg-rgb),0.07)" }}
+            aria-label="Close"
+            className="w-9 h-9 rounded-full flex items-center justify-center transition-colors hover:bg-black/[0.05] dark:hover:bg-white/[0.07]"
+            style={{ color: "var(--text-secondary)" }}
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Table */}
-        <div className="overflow-auto flex-1">
-          <table className="w-full border-collapse min-w-[560px]">
-            <thead className="sticky top-0 z-10 bg-white dark:bg-[#0e1420]">
-              <tr style={{ borderBottom: "1px solid rgba(var(--fg-rgb),0.07)" }}>
-                <th className="px-5 py-3 text-left w-[180px]">
-                  <span className="text-[10px] font-bold text-black/30 dark:text-white/25 uppercase tracking-widest">Operator</span>
-                </th>
-                {[
-                  { label: "Price", icon: null },
-                  { label: "Google", icon: <Star className="w-3 h-3" /> },
-                  ...(hasTraveller ? [{ label: "Travellers", icon: <Star className="w-3 h-3" /> }] : []),
-                  { label: "Departures", icon: <CalendarDays className="w-3 h-3" /> },
-                  { label: "Cloakroom", icon: <Briefcase className="w-3 h-3" /> },
-                  { label: "Porter", icon: <Package className="w-3 h-3" /> },
-                ].map((col, i) => (
-                  <th key={i} className="px-4 py-3 text-center">
-                    <div className="flex items-center justify-center gap-1 text-black/30 dark:text-white/25">
-                      {col.icon}
-                      <span className="text-[10px] font-bold uppercase tracking-widest">{col.label}</span>
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {operators.map((op, i) => {
-                const isBestPrice = prices[i] === minPrice;
-                const count = op.departureDates?.length ?? 0;
-                const isMostDates = count > 0 && count === maxBatches;
-                const traveller = travellerRating(op, computedRatings);
-
-                return (
-                  <tr
-                    key={i}
-                    style={{
-                      borderTop: "1px solid rgba(var(--fg-rgb),0.05)",
-                      background: isBestPrice ? "rgba(74,222,128,0.03)" : "transparent",
-                    }}
+        {/* Operators */}
+        <ul className="overflow-y-auto flex-1">
+          {operators.map((op, i) => {
+            const isBestPrice = prices[i] === minPrice;
+            const count = op.departureDates?.length ?? 0;
+            const traveller = travellerRating(op, computedRatings);
+            return (
+              <li key={op.name} className="px-5 py-4" style={i > 0 ? { borderTop: "1px solid var(--border-subtle)" } : undefined}>
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <div className="min-w-0 flex items-center gap-2 flex-wrap">
+                    <p className="text-[15px] font-medium truncate" style={{ color: "var(--text-primary)" }}>{op.name}</p>
+                    {op.verified && <span className="text-[12px]" style={{ color: "#3fa877" }}>verified</span>}
+                    {isBestPrice && <span className="text-[12px] text-[#ff5100]">· lowest price</span>}
+                  </div>
+                  <button
+                    onClick={() => op.website && window.open(op.website, "_blank", "noopener,noreferrer")}
+                    disabled={!op.website}
+                    className="shrink-0 h-9 px-4 inline-flex items-center gap-1.5 rounded-full text-[13px] font-medium text-[#ff5100] transition-colors hover:bg-[rgba(255,81,0,0.06)] disabled:opacity-40"
+                    style={{ border: "1px solid rgba(255,81,0,0.55)" }}
                   >
-                    {/* Operator name + book */}
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-2">
-                        {isBestPrice && (
-                          <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "#4ade80" }} />
-                        )}
-                        <div className="min-w-0">
-                          <p className="text-black/90 dark:text-white/90 font-bold text-[13px] leading-tight truncate">{op.name}</p>
-                          {op.verified && (
-                            <span className="text-[8px] font-bold text-emerald-400/70 uppercase tracking-widest">Verified</span>
-                          )}
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => op.website && window.open(op.website, "_blank", "noopener,noreferrer")}
-                        disabled={!op.website}
-                        className="mt-2 flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-all disabled:opacity-30 hover:brightness-110"
-                        style={{ background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.2)" }}
-                      >
-                        Book <ExternalLink className="w-2.5 h-2.5" />
-                      </button>
-                    </td>
+                    Book <ExternalLink className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <dl className={`grid grid-cols-3 ${hasTraveller ? "sm:grid-cols-6" : "sm:grid-cols-5"} gap-x-4 gap-y-3`}>
+                  <Fact label="price from"><span className="font-medium" style={isBestPrice ? { color: "#ff5100" } : undefined}>{op.priceFrom}</span></Fact>
+                  <Fact label="google">
+                    {op.googleRating
+                      ? <span className="inline-flex items-center gap-1"><Star className="w-3.5 h-3.5 text-[#ff8a4c] fill-[#ff8a4c]" />{op.googleRating}</span>
+                      : <span style={muted}>—</span>}
+                  </Fact>
+                  {hasTraveller && (
+                    <Fact label="travellers">
+                      {traveller
+                        ? <span className="inline-flex items-center gap-1"><Star className="w-3.5 h-3.5 text-[#ff8a4c] fill-[#ff8a4c]" />{traveller.avg} <span className="text-[12px]" style={muted}>({traveller.count})</span></span>
+                        : <span style={muted}>—</span>}
+                    </Fact>
+                  )}
+                  <Fact label="departures">
+                    {count === 0
+                      ? <span style={muted}>On request</span>
+                      : <>{op.departureDates!.slice(0, 2).map(formatDate).join(", ")}{count > 2 && <span style={muted}> +{count - 2}</span>}</>}
+                  </Fact>
+                  <Fact label="cloakroom">
+                    {op.cloakroom ? <>{op.cloakroom_charge ? `₹${op.cloakroom_charge}` : "Free"}</> : <span style={muted}>No</span>}
+                  </Fact>
+                  <Fact label="porter">
+                    {op.offloading ? <>{op.offloading_charge ? `₹${op.offloading_charge}/kg` : "Included"}</> : <span style={muted}>No</span>}
+                  </Fact>
+                </dl>
+              </li>
+            );
+          })}
+        </ul>
 
-                    {/* Price */}
-                    <td className="px-4 py-4 text-center">
-                      <div className="flex flex-col items-center gap-1">
-                        <span className="font-black text-[15px]" style={{ color: isBestPrice ? "#4ade80" : "rgba(var(--fg-rgb),0.8)" }}>
-                          {op.priceFrom}
-                        </span>
-                        {isBestPrice && (
-                          <span className="inline-flex items-center gap-1 text-[8px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: "rgba(74,222,128,0.1)", color: "#4ade80", border: "1px solid rgba(74,222,128,0.2)" }}>
-                            <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              <circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 6v2m0 8v2"/>
-                            </svg>
-                            Best price
-                          </span>
-                        )}
-                      </div>
-                    </td>
-
-                    {/* Ratings */}
-                    <td className="px-4 py-4 text-center"><GoogleCell op={op} /></td>
-                    {hasTraveller && <td className="px-4 py-4 text-center"><TravellerCell rating={traveller} /></td>}
-
-                    {/* Departures */}
-                    <td className="px-4 py-4 text-center">
-                      {count === 0
-                        ? <span className="text-[10px] text-black/25 dark:text-white/20">On request</span>
-                        : <div className="flex flex-col items-center gap-1">
-                            <span className="font-bold text-[13px]" style={{ color: isMostDates ? "#ff7d47" : "rgba(var(--fg-rgb),0.65)" }}>{count}</span>
-                            <div className="flex flex-wrap justify-center gap-0.5">
-                              {op.departureDates!.slice(0, 2).map((d, j) => (
-                                <span key={j} className="text-[8px] px-1 py-0.5 rounded" style={{ background: "rgba(255,81,0,0.08)", color: "#ff9d70" }}>{formatDate(d)}</span>
-                              ))}
-                              {count > 2 && <span className="text-[8px] text-black/30 dark:text-white/25">+{count - 2}</span>}
-                            </div>
-                          </div>
-                      }
-                    </td>
-
-                    {/* Cloakroom */}
-                    <td className="px-4 py-4 text-center">
-                      {op.cloakroom
-                        ? <div className="flex flex-col items-center gap-0.5">
-                            <div className="w-6 h-6 rounded-full flex items-center justify-center mx-auto" style={{ background: "rgba(99,102,241,0.12)" }}>
-                              <Check className="w-3.5 h-3.5 text-indigo-300" />
-                            </div>
-                            <span className="text-[8px] text-indigo-300/60">{op.cloakroom_charge ? `₹${op.cloakroom_charge}` : "Free"}</span>
-                          </div>
-                        : <X className="w-4 h-4 text-black/15 dark:text-white/10 mx-auto" />
-                      }
-                    </td>
-
-                    {/* Porter */}
-                    <td className="px-4 py-4 text-center">
-                      {op.offloading
-                        ? <div className="flex flex-col items-center gap-0.5">
-                            <div className="w-6 h-6 rounded-full flex items-center justify-center mx-auto" style={{ background: "rgba(20,184,166,0.12)" }}>
-                              <Check className="w-3.5 h-3.5 text-teal-300" />
-                            </div>
-                            <span className="text-[8px] text-teal-300/60">{op.offloading_charge ? `₹${op.offloading_charge}/kg` : "Incl."}</span>
-                          </div>
-                        : <X className="w-4 h-4 text-black/15 dark:text-white/10 mx-auto" />
-                      }
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Footer */}
-        <div
-          className="px-5 py-3 flex items-center gap-3 shrink-0 bg-black/[0.03] dark:bg-[rgba(0,0,0,0.15)]"
-          style={{ borderTop: "1px solid rgba(var(--fg-rgb),0.05)" }}
-        >
-          <div className="flex items-center gap-1.5">
-            <svg className="w-3 h-3 text-emerald-400/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 6v2m0 8v2"/>
-            </svg>
-            <span className="text-[10px] text-black/35 dark:text-white/30">Best price</span>
-          </div>
-          {hasTraveller && (
-            <div className="flex items-center gap-1.5">
-              <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400 opacity-60" />
-              <span className="text-[10px] text-black/35 dark:text-white/30">Travellers = rated by Trail to Tides users</span>
-            </div>
-          )}
-          <button onClick={onClose} className="ml-auto text-xs text-black/35 dark:text-white/30 hover:text-black/60 dark:hover:text-white/60 transition-colors">
-            Close
-          </button>
-        </div>
+        {hasTraveller && (
+          <p className="px-5 py-2.5 text-[12px] shrink-0" style={{ color: "var(--text-secondary)", borderTop: "1px solid var(--border-subtle)" }}>
+            Travellers: ratings from Trail to Tides users who went with that operator.
+          </p>
+        )}
       </div>
     </div>
   );
@@ -288,37 +177,32 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
     const op = operators[0];
     const traveller = travellerRating(op, computedRatings);
     return (
-      <div className="rounded-xl overflow-hidden" style={{ border: "1px solid rgba(var(--fg-rgb),0.09)", background: "rgba(var(--fg-rgb),0.03)" }}>
-        <div className="p-4 flex items-center justify-between gap-4">
-          <div>
-            <p className="text-black/90 dark:text-white/90 font-bold text-sm">{op.name}</p>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-[10px] text-black/45 dark:text-white/40">
+      <div className="rounded-2xl px-4 py-3.5" style={{ border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}>
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <p className="text-[15px] font-medium" style={{ color: "var(--text-primary)" }}>{op.name}</p>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-[13px]" style={{ color: "var(--text-secondary)" }}>
               {op.googleRating ? (
-                <span className="flex items-center gap-1"><Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />{op.googleRating} Google</span>
+                <span className="inline-flex items-center gap-1"><Star className="w-3.5 h-3.5 text-[#ff8a4c] fill-[#ff8a4c]" />{op.googleRating} Google</span>
               ) : null}
               {traveller && (
-                <span className="flex items-center gap-1">
-                  <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />
-                  {traveller.avg} Travellers ({traveller.count})
-                </span>
+                <span className="inline-flex items-center gap-1"><Star className="w-3.5 h-3.5 text-[#ff8a4c] fill-[#ff8a4c]" />{traveller.avg} Travellers ({traveller.count})</span>
               )}
             </div>
           </div>
-          <div className="text-right">
-            <div className="text-[9px] uppercase tracking-wider text-black/35 dark:text-white/30">from</div>
-            <div className="font-black text-sm text-black/90 dark:text-white/90">{op.priceFrom}</div>
+          <div className="text-right shrink-0">
+            <p className="text-[11px] tracking-[0.1em] lowercase leading-none mb-1" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>from</p>
+            <p className="text-[16px] font-medium" style={{ color: "var(--text-primary)" }}>{op.priceFrom}</p>
           </div>
         </div>
-        <div className="px-4 pb-4">
-          <button
-            onClick={() => op.website && window.open(op.website, "_blank", "noopener,noreferrer")}
-            disabled={!op.website}
-            className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg text-xs font-semibold disabled:opacity-30"
-            style={{ background: "rgba(255,81,0,0.1)", color: "#ff7d47", border: "1px solid rgba(255,81,0,0.18)" }}
-          >
-            Get Details <ExternalLink className="w-3 h-3" />
-          </button>
-        </div>
+        <button
+          onClick={() => op.website && window.open(op.website, "_blank", "noopener,noreferrer")}
+          disabled={!op.website}
+          className="mt-3 w-full h-11 flex items-center justify-center gap-1.5 rounded-full text-[14px] font-medium text-[#ff5100] transition-colors hover:bg-[rgba(255,81,0,0.06)] disabled:opacity-40"
+          style={{ border: "1px solid rgba(255,81,0,0.55)" }}
+        >
+          View on {op.name}&apos;s site <ExternalLink className="w-3.5 h-3.5" />
+        </button>
       </div>
     );
   }
@@ -361,7 +245,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
               ),
             }] : []),
           ].map(({ label, value }) => (
-            <div key={label} className="px-4 py-3 min-w-0" style={{ background: "var(--bg-surface)" }}>
+            <div key={label} className="px-3.5 py-2 min-w-0" style={{ background: "var(--bg-surface)" }}>
               <dt className="text-[11.5px] tracking-[0.1em] lowercase leading-none mb-1.5" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{label}</dt>
               <dd className="text-[15px] font-medium leading-snug" style={{ color: "var(--text-primary)" }}>{value}</dd>
             </div>
@@ -371,7 +255,7 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
         {/* Compare — the secondary (outline) pill; the solid pill is the sidebar's */}
         <button
           onClick={() => setDrawerOpen(true)}
-          className="h-11 px-5 inline-flex items-center gap-2 rounded-full text-[14px] font-medium transition-colors text-[#ff5100] hover:bg-[rgba(255,81,0,0.06)]"
+          className="w-full h-11 px-5 flex items-center justify-center gap-2 rounded-full text-[14px] font-medium transition-colors text-[#ff5100] hover:bg-[rgba(255,81,0,0.06)]"
           style={{ border: "1px solid rgba(255,81,0,0.55)" }}
         >
           <ArrowUpDown className="w-4 h-4" />
