@@ -26,6 +26,19 @@ interface Props {
 
 const SUMMIT_KEYWORDS = /summit|peak/i;
 
+// Letter avatars get a tint picked from the name, so reviewers without a
+// chosen avatar don't all share one colour
+const INITIAL_TINTS = [
+  "rgba(255,81,0,0.22)", "rgba(56,189,248,0.24)", "rgba(16,185,129,0.24)", "rgba(168,85,247,0.24)",
+  "rgba(244,63,94,0.22)", "rgba(234,179,8,0.26)", "rgba(20,184,166,0.24)", "rgba(99,102,241,0.24)",
+];
+
+function initialTint(name: string): string {
+  let h = 0;
+  for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return INITIAL_TINTS[h % INITIAL_TINTS.length];
+}
+
 function ctaText(type?: string, name?: string): string {
   if (type === "Trekking" && name && SUMMIT_KEYWORDS.test(name)) return "Done this summit? Tell others what to expect.";
   switch (type) {
@@ -370,7 +383,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
               {reviews.map((r) => (
                 <div key={r.id} className="flex-none w-full snap-start flex flex-col gap-3">
                   <div className="flex items-center gap-2.5">
-                    <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: "rgba(255,81,0,0.2)" }}>
+                    <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0" style={{ background: initialTint(r.username) }}>
                       {r.avatar_id
                         ? <Image src={`/avatars/avatar-${r.avatar_id}.png`} alt={r.username} fill sizes="28px" className="object-cover" />
                         : <span className="w-full h-full flex items-center justify-center text-xs font-bold" style={{ color: "var(--text-primary)" }}>{r.username.charAt(0).toUpperCase()}</span>}

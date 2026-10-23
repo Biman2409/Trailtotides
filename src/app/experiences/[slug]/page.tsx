@@ -21,7 +21,6 @@ import {
   ShieldCheck,
   ShieldAlert,
   Ticket,
-  IndianRupee,
   Star,
 } from "lucide-react";
 import GradingPill from "@/components/ui/custom/GradingPill";
@@ -422,11 +421,10 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
         {/* Stats strip */}
         <div className="max-w-7xl mx-auto px-5 lg:px-8 relative">
           <div className="flex items-stretch overflow-x-auto no-scrollbar" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-            {/* Trek facts only. Price shows here on mobile alone (desktop has the
-                booking card beside it); type is in the hero; operator ratings
-                live in the operator section, not next to the trek's facts. */}
+            {/* Trek facts only. Price lives in the booking card / mobile bar and the
+                operator section; type is in the hero; operator ratings live in the
+                operator section, not next to the trek's facts. */}
             {([
-              ...(priceFrom ? [{ icon: <IndianRupee className="w-3.5 h-3.5 text-[#ff5100]" />, label: "From", value: priceFrom, mobileOnly: true }] : []),
               { icon: <Clock className="w-3.5 h-3.5 text-[#ff5100]" />, label: "Duration", value: adventure.durationRange ?? adventure.durationDays },
               ...(adventure.distance ? [{ icon: <Route className="w-3.5 h-3.5 text-emerald-400" />, label: "Distance", value: adventure.distanceRange ?? adventure.distance }] : []),
               ...((adventure.altitude || adventure.depth) ? [{ icon: <TrendingUp className="w-3.5 h-3.5 text-sky-400" />, label: adventure.type === "Diving" ? "Max Depth" : "Max Altitude", value: adventure.depth ?? adventure.altitude }] : []),
@@ -434,10 +432,10 @@ export default async function ExperiencePage({ params, searchParams }: Props) {
               ...((adventure.type === "Trekking" || adventure.type === "Mountaineering") && adventure.baseCamp ? [{ icon: <Flag className="w-3.5 h-3.5 text-violet-400" />, label: "Base Camp", value: adventure.baseCamp }] : []),
               ...(adventure.type === "Motorcycling" && adventure.startingPoint ? [{ icon: <Navigation className="w-3.5 h-3.5 text-emerald-400" />, label: "Starting Point", value: adventure.startingPoint }] : []),
               { icon: <Gauge className="w-3.5 h-3.5 text-rose-400" />, label: "Difficulty", value: difficulty },
-            ] as { icon: ReactNode; label: string; value: ReactNode; mobileOnly?: boolean }[]).map(({ icon, label, value, mobileOnly }, i, arr) => (
+            ] as { icon: ReactNode; label: string; value: ReactNode }[]).map(({ icon, label, value }, i, arr) => (
               <div
                 key={i}
-                className={`flex items-center gap-2.5 px-4 lg:px-5 py-3 shrink-0 ${mobileOnly ? "lg:hidden" : ""}`}
+                className="flex items-center gap-2.5 px-4 lg:px-5 py-3 shrink-0"
                 style={i < arr.length - 1 ? { borderRight: "1px solid var(--border-subtle)" } : {}}
               >
                 <div className="shrink-0 opacity-80">{icon}</div>

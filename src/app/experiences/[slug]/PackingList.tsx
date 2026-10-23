@@ -622,7 +622,7 @@ export default function PackingList({
                 {loggedIn ? (
                   <>{checkedCount}/{allItems.length} packed · {essentialCount} essentials</>
                 ) : (
-                  <><Lock className="w-2.5 h-2.5 shrink-0" />{allItems.length} items · {essentialCount} essentials · Log in to use</>
+                  <><Lock className="w-2.5 h-2.5 shrink-0" />{allItems.length} items · {essentialCount} essentials</>
                 )}
               </p>
             </div>
