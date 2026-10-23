@@ -102,10 +102,10 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
         className="w-full flex items-center justify-between gap-3 px-4 py-3 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
       >
         <div className="text-left">
-          <p className={`text-[10px] font-bold tracking-[0.2em] uppercase leading-none mb-0.5 ${accent ? "text-[#ff5100]" : "text-emerald-400"}`}>
+          <p className={`text-[14px] font-medium leading-snug ${accent ? "" : "text-emerald-500"}`} style={accent ? { color: "var(--text-primary)" } : undefined}>
             {label}
           </p>
-          <p className="text-black/40 dark:text-white/35 text-[11px]">{sub}</p>
+          <p className="text-[13px]" style={{ color: "var(--text-secondary)" }}>{sub}</p>
         </div>
         <ChevronDown
           className={`w-3.5 h-3.5 text-black/30 dark:text-white/25 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
@@ -121,7 +121,7 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
         className="rounded-xl overflow-hidden"
         style={{ border: "1px solid rgba(255,81,0,0.15)", background: "rgba(255,81,0,0.03)" }}
       >
-        <Header label="Are You an Operator?" sub="List your services for this adventure" accent />
+        <Header label="Are you an operator?" sub="List your services for this adventure" accent />
         <div
           className="overflow-hidden transition-all duration-300 ease-in-out"
           style={{ maxHeight: open ? "200px" : "0px" }}
@@ -159,7 +159,7 @@ export default function OperatorListingPanel({ adventureSlug, adventureName }: P
         className="rounded-xl overflow-hidden"
         style={{ border: "1px solid rgba(255,81,0,0.15)", background: "rgba(255,81,0,0.03)" }}
       >
-        <Header label="Are You an Operator?" sub="Create an operator account to list here" accent />
+        <Header label="Are you an operator?" sub="Create an operator account to list here" accent />
         <div
           className="overflow-hidden transition-all duration-300 ease-in-out"
           style={{ maxHeight: open ? "160px" : "0px" }}

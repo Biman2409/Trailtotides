@@ -190,21 +190,20 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
   return (
     <section>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid var(--border-subtle)", background: "var(--bg-card)" }}>
-        <div className="flex items-center gap-2">
-          <Star className="w-3.5 h-3.5 text-amber-400" />
-          <h3 className="text-amber-400 text-[10px] font-bold tracking-[0.18em] uppercase">Traveller Reviews</h3>
-        </div>
-        {avgRating !== null && (
-          <div className="flex items-center gap-2">
+      {/* The section around it already says "Traveller reviews"; this is just the score */}
+      <div className="flex items-center gap-2.5 px-5 py-3.5" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+        {avgRating !== null ? (
+          <>
+            <span className="text-[22px] font-medium leading-none" style={{ color: "var(--text-primary)" }}>{avgRating.toFixed(1)}</span>
             <StarRating value={Math.round(avgRating)} />
-            <span className="text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>{avgRating.toFixed(1)}</span>
-            <span className="text-xs" style={{ color: "var(--text-tertiary)" }}>({reviews.length})</span>
-          </div>
+            <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>{reviews.length} review{reviews.length !== 1 ? "s" : ""}</span>
+          </>
+        ) : (
+          <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>No reviews yet</span>
         )}
       </div>
 
-      <div className="p-4">
+      <div className="p-5">
         {/* Logged out: one quiet prompt that comes back to this page after login */}
         {!currentUserId && (
           <a
@@ -389,8 +388,8 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                         : <span className="w-full h-full flex items-center justify-center text-xs font-bold" style={{ color: "var(--text-primary)" }}>{r.username.charAt(0).toUpperCase()}</span>}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="font-semibold text-xs leading-none truncate" style={{ color: "var(--text-primary)" }}>{r.username}</p>
-                      <p className="text-[10px] mt-0.5" style={{ color: "var(--text-tertiary)" }}>{timeAgo(r.created_at)}</p>
+                      <p className="font-medium text-[13px] leading-none truncate" style={{ color: "var(--text-primary)" }}>{r.username}</p>
+                      <p className="text-[12px] mt-1" style={{ color: "var(--text-tertiary)" }}>{timeAgo(r.created_at)}</p>
                     </div>
                     {currentUserId === r.user_id && (
                       <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id} className="transition-colors shrink-0" style={{ color: "var(--text-muted)" }}>
@@ -399,7 +398,7 @@ export default function ReviewSection({ slug, currentUserId, adventureType, adve
                     )}
                   </div>
                   <StarRating value={r.rating} />
-                  <p className="text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>{r.body}</p>
+                  <p className="text-[14px] leading-[1.7]" style={{ color: "var(--text-secondary)" }}>{r.body}</p>
                 </div>
               ))}
             </div>

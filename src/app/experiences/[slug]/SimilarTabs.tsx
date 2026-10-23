@@ -36,9 +36,10 @@ export default function SimilarTabs({ tabs }: { tabs: SimilarTab[] }) {
 
   return (
     <section ref={ref} id="similar" className="scroll-mt-40">
-      <div className="flex items-center gap-3 mb-4 flex-wrap">
-        <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mr-1">Similar Adventures</p>
-        <div className="flex gap-1.5 overflow-x-auto no-scrollbar" role="tablist">
+      {/* Calm style: a light serif heading, tabs as text with an orange rule under the active one */}
+      <div className="flex items-end justify-between gap-x-6 gap-y-3 mb-5 flex-wrap" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
+        <h2 className="text-[21px] sm:text-[23px] !font-normal tracking-[-0.01em] pb-3">Similar adventures</h2>
+        <div className="flex gap-6 overflow-x-auto no-scrollbar" role="tablist">
           {tabs.map((t) => {
             const on = t.key === active;
             return (
@@ -47,12 +48,11 @@ export default function SimilarTabs({ tabs }: { tabs: SimilarTab[] }) {
                 role="tab"
                 aria-selected={on}
                 onClick={() => setActive(t.key)}
-                className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors"
-                style={on
-                  ? { background: "rgba(255,81,0,0.14)", color: "#ff5100", border: "1px solid rgba(255,81,0,0.3)" }
-                  : { background: "transparent", color: "var(--text-tertiary)", border: "1px solid var(--border-subtle)" }}
+                className="relative shrink-0 pb-3 text-[14px] transition-colors"
+                style={{ color: on ? "var(--text-primary)" : "var(--text-tertiary)" }}
               >
                 {t.label}
+                {on && <span className="absolute left-0 right-0 -bottom-px h-[2px] rounded-full bg-[#ff5100]" />}
               </button>
             );
           })}

@@ -215,16 +215,13 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
 
   return (
     <div
-      className="rounded-xl overflow-hidden"
-      style={{ border: "1px solid var(--border-subtle)", background: "var(--bg-surface)" }}
+      className="rounded-2xl overflow-hidden"
+      style={{ border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}
     >
-      {/* Header */}
-      <div className="px-4 pt-4 pb-3 flex items-center justify-between">
-        <div>
-          <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase leading-none mb-1">Nearby</p>
-          <p className="text-black/55 dark:text-white/60 text-xs font-semibold">{nearby.length} adventures in region</p>
-        </div>
-        <span className="text-black/25 dark:text-white/15 text-[9px] font-medium uppercase tracking-widest">Map</span>
+      {/* Header — same small-caps label + plain line as the booking card */}
+      <div className="px-5 pt-4 pb-3">
+        <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>nearby</p>
+        <p className="text-[14px] font-medium" style={{ color: "var(--text-primary)" }}>{nearby.length} adventures in the region</p>
       </div>
 
       {/* Map */}
@@ -246,15 +243,15 @@ export default function NearbyAdventuresMap({ current, nearby }: Props) {
             <Link
               key={a.id}
               href={`/experiences/${a.slug}`}
-              className="flex items-center gap-2.5 px-4 py-2 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] transition-colors group"
+              className="flex items-center gap-3 px-5 py-2.5 hover:bg-black/[0.03] dark:hover:bg-white/[0.03] transition-colors group"
             >
               <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
               <div className="flex-1 min-w-0">
-                <p className="text-black/70 dark:text-white/65 text-[11px] font-semibold group-hover:text-black/90 dark:group-hover:text-white/90 transition-colors truncate leading-none mb-0.5">{a.name}</p>
-                <p className="text-black/30 dark:text-white/20 text-[9px] uppercase tracking-wide">{diff} · {a.type}</p>
+                <p className="text-[13px] font-medium truncate leading-tight group-hover:text-[#ff5100] transition-colors" style={{ color: "var(--text-primary)" }}>{a.name}</p>
+                <p className="text-[12px] leading-tight mt-0.5" style={{ color: "var(--text-secondary)" }}>{diff} · {a.type}</p>
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                <span className="text-black/40 dark:text-white/30 text-[10px] tabular-nums">{km} km</span>
+                <span className="text-[12px] tabular-nums" style={{ color: "var(--text-secondary)" }}>{km} km</span>
                 <ArrowRight className="w-3 h-3 text-black/20 dark:text-white/15 group-hover:text-black/50 dark:group-hover:text-white/40 transition-colors" />
               </div>
             </Link>

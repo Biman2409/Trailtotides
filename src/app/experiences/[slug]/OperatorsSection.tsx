@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X, Star, CalendarDays, Briefcase, Package, ExternalLink, Check, ArrowUpDown, ChevronDown } from "lucide-react";
+import { X, Star, CalendarDays, Briefcase, Package, ExternalLink, Check, ArrowUpDown } from "lucide-react";
 import { type OperatorCardData } from "./OperatorCard";
 import { parsePrice } from "@/lib/price";
 
@@ -344,65 +344,39 @@ export default function OperatorsSection({ operators, slug }: { operators: Opera
         />
       )}
 
-      <div className="space-y-3">
-        {/* Summary row */}
-        <div className="grid grid-cols-3 gap-2">
-          <div
-            className="rounded-xl p-3 flex flex-col gap-1"
-            style={{ background: "rgba(var(--fg-rgb),0.03)", border: "1px solid rgba(var(--fg-rgb),0.07)" }}
-          >
-            <span className="text-[8px] font-bold uppercase tracking-widest text-black/30 dark:text-white/25">Operators</span>
-            <span className="font-black text-xl text-black/80 dark:text-white/80">{operators.length}</span>
-          </div>
-          <div
-            className="rounded-xl p-3 flex flex-col gap-1"
-            style={{ background: "rgba(74,222,128,0.04)", border: "1px solid rgba(74,222,128,0.12)" }}
-          >
-            <span className="text-[8px] font-bold uppercase tracking-widest text-emerald-400/50">From</span>
-            <span className="font-black text-base text-emerald-300/90">{minPriceOp.priceFrom}</span>
-          </div>
-          {(avgGoogle !== null || avgTraveller !== null) && (
-            <div
-              className="rounded-xl p-3 flex flex-col gap-1"
-              style={{ background: "rgba(251,191,36,0.04)", border: "1px solid rgba(251,191,36,0.1)" }}
-            >
-              {/* "Operator", so it isn't read as the trek's own rating (that's the traveller reviews) */}
-              <span className="text-[8px] font-bold uppercase tracking-widest text-amber-400/50">Operator Ratings</span>
-              <div className="flex flex-col gap-0.5 text-[11px] text-black/50 dark:text-white/45">
-                {avgGoogle !== null && (
-                  <span className="flex items-center gap-1">
-                    <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-                    <span className="font-black text-sm text-amber-300/90">{avgGoogle.toFixed(1)}</span> Google
-                  </span>
-                )}
-                {avgTraveller !== null && (
-                  <span className="flex items-center gap-1">
-                    <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-                    <span className="font-black text-sm text-amber-300/90">{avgTraveller.toFixed(1)}</span> Travellers ({travellerCount})
-                  </span>
-                )}
-              </div>
+      <div className="space-y-4">
+        {/* Summary — the same bordered, hairline-split band as the stats strip */}
+        <dl className="rounded-2xl overflow-hidden grid grid-cols-3 gap-px" style={{ border: "1px solid var(--border-default)", background: "var(--border-subtle)" }}>
+          {[
+            { label: "operators", value: <>{operators.length}</> },
+            { label: "from", value: <>{minPriceOp.priceFrom}</> },
+            ...(avgGoogle !== null || avgTraveller !== null ? [{
+              // "Operator", so it isn't read as the trek's own rating (that's the traveller reviews)
+              label: "operator ratings",
+              value: (
+                <span className="flex flex-col gap-0.5">
+                  {avgGoogle !== null && <span className="inline-flex items-center gap-1"><Star className="w-3.5 h-3.5 text-[#ff8a4c] fill-[#ff8a4c]" />{avgGoogle.toFixed(1)} <span className="font-normal text-[13px]" style={{ color: "var(--text-secondary)" }}>Google</span></span>}
+                  {avgTraveller !== null && <span className="inline-flex items-center gap-1"><Star className="w-3.5 h-3.5 text-[#ff8a4c] fill-[#ff8a4c]" />{avgTraveller.toFixed(1)} <span className="font-normal text-[13px]" style={{ color: "var(--text-secondary)" }}>Travellers ({travellerCount})</span></span>}
+                </span>
+              ),
+            }] : []),
+          ].map(({ label, value }) => (
+            <div key={label} className="px-4 py-3 min-w-0" style={{ background: "var(--bg-surface)" }}>
+              <dt className="text-[11.5px] tracking-[0.1em] lowercase leading-none mb-1.5" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{label}</dt>
+              <dd className="text-[15px] font-medium leading-snug" style={{ color: "var(--text-primary)" }}>{value}</dd>
             </div>
-          )}
-        </div>
+          ))}
+        </dl>
 
-        {/* Compare button */}
+        {/* Compare — the secondary (outline) pill; the solid pill is the sidebar's */}
         <button
           onClick={() => setDrawerOpen(true)}
-          className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl transition-all hover:brightness-110 active:scale-[0.99]"
-          style={{
-            background: "linear-gradient(135deg, rgba(255,81,0,0.08) 0%, rgba(255,125,71,0.05) 100%)",
-            border: "1px solid rgba(255,81,0,0.2)",
-          }}
+          className="h-11 px-5 inline-flex items-center gap-2 rounded-full text-[14px] font-medium transition-colors text-[#ff5100] hover:bg-[rgba(255,81,0,0.06)]"
+          style={{ border: "1px solid rgba(255,81,0,0.55)" }}
         >
-          <div className="flex items-center gap-2.5">
-            <ArrowUpDown className="w-4 h-4 text-[#ff5100]/70" />
-            <div className="text-left">
-              <p className="text-black/80 dark:text-white/80 text-[13px] font-bold leading-none">Compare All Operators</p>
-              <p className="text-black/35 dark:text-white/30 text-[10px] mt-0.5">Price · Rating · Dates · Services</p>
-            </div>
-          </div>
-          <ChevronDown className="w-4 h-4 text-[#ff5100]/50 -rotate-90 shrink-0" />
+          <ArrowUpDown className="w-4 h-4" />
+          Compare all operators
+          <span className="text-[13px] font-normal" style={{ color: "var(--text-secondary)" }}>· price, ratings, dates, services</span>
         </button>
       </div>
     </>

@@ -114,11 +114,7 @@ export default function MobileBookBar({ adventureName, priceFrom, difficulty, du
         <div className="flex gap-2.5">
           <button
             onClick={handleBook}
-            className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-2xl text-white text-sm font-bold transition-all duration-200 active:scale-[0.98]"
-            style={{
-              background: "linear-gradient(135deg, #ff5100 0%, #ff7d47 100%)",
-              boxShadow: "0 4px 20px rgba(255,81,0,0.4), 0 0 0 1px rgba(255,81,0,0.2)",
-            }}
+            className="flex-1 h-11 flex items-center justify-center gap-1.5 rounded-full text-white text-[14px] font-medium transition-colors bg-[#ff5100] active:bg-[#e64900]"
           >
             {bookDirect && operatorName
               ? `Book with ${operatorName}`

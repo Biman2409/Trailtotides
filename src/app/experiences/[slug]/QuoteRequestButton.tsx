@@ -62,8 +62,8 @@ export default function QuoteRequestButton({ slug, name, operators }: { slug: st
   return (
     <>
       <button onClick={start}
-        className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 hover:text-[#ff5100]"
-        style={{ border: "1px solid var(--border-subtle)", color: "var(--text-secondary)" }}>
+        className="w-full h-11 flex items-center justify-center gap-1.5 rounded-full text-[14px] font-medium transition-colors text-[#ff5100] hover:bg-[rgba(255,81,0,0.06)]"
+        style={{ border: "1px solid rgba(255,81,0,0.55)" }}>
         <MessageSquareQuote className="w-4 h-4" /> Get quotes from {operators.length === 1 ? "the operator" : `${Math.min(operators.length, MAX_OPERATORS)} operators`}
       </button>
 

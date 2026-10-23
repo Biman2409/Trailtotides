@@ -665,8 +665,8 @@ export default function PackingList({
             ) : (
               <a
                 href={`/auth/login?next=${encodeURIComponent(`/experiences/${slug}`)}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-white transition-all hover:-translate-y-0.5"
-                style={{ background: "#ff5100" }}
+                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-medium text-[#ff5100] transition-colors hover:bg-[rgba(255,81,0,0.06)]"
+                style={{ border: "1px solid rgba(255,81,0,0.55)" }}
               >
                 <LogIn className="w-3 h-3" />
                 Log in

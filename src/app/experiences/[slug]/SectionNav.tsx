@@ -2,14 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Ticket, ShieldCheck, ShieldAlert, MessagesSquare } from "lucide-react";
-
 const NAV_ITEMS = [
-  { id: "overview", label: "Overview", icon: BookOpen },
-  { id: "safety", label: "Safety", icon: ShieldAlert },
-  { id: "suitability", label: "Suitability", icon: ShieldCheck },
-  { id: "book-this-adventure", label: "Book", icon: Ticket },
-  { id: "community", label: "Reviews", icon: MessagesSquare },
+  { id: "overview", label: "Overview" },
+  { id: "safety", label: "Safety" },
+  { id: "suitability", label: "Suitability" },
+  { id: "book-this-adventure", label: "Book" },
+  { id: "community", label: "Reviews" },
 ];
 
 export default function SectionNav() {
@@ -34,32 +32,32 @@ export default function SectionNav() {
     return () => observer.disconnect();
   }, []);
 
+  // Calm style: plain text links, the active one marked by a thin orange rule
   return (
     <div
-      className="hidden lg:block sticky top-20 z-30 backdrop-blur-xl bg-white/85 dark:bg-[rgba(14,12,11,0.82)] shadow-[0_1px_0_rgba(0,0,0,0.06),0_12px_24px_-16px_rgba(0,0,0,0.15)] dark:shadow-[0_1px_0_rgba(255,255,255,0.06),0_12px_24px_-16px_rgba(0,0,0,0.5)]"
+      className="hidden lg:block sticky top-20 z-30 backdrop-blur-xl"
+      style={{ background: "color-mix(in srgb, var(--bg-page) 88%, transparent)", borderBottom: "1px solid var(--border-subtle)" }}
     >
       <div className="max-w-7xl mx-auto px-5 lg:px-8">
-        <nav className="flex items-center gap-1.5 py-3 overflow-x-auto no-scrollbar">
-          {NAV_ITEMS.map(({ id, label, icon: Icon }) => {
+        <nav className="flex items-center gap-8">
+          {NAV_ITEMS.map(({ id, label }) => {
             const isActive = active === id;
             return (
               <a
                 key={id}
                 href={`#${id}`}
-                className={`relative flex items-center gap-1.5 px-4 py-2.5 rounded-full text-[13px] font-semibold whitespace-nowrap transition-colors duration-200 ${
-                  isActive ? "text-white" : "text-black/45 hover:text-black/75 dark:text-white/45 dark:hover:text-white/75"
-                }`}
+                aria-current={isActive ? "true" : undefined}
+                className="relative py-4 text-[14px] whitespace-nowrap transition-colors duration-200"
+                style={{ color: isActive ? "var(--text-primary)" : "var(--text-tertiary)" }}
               >
+                {label}
                 {isActive && (
-                  <motion.div
-                    layoutId="sectionNavPill"
-                    className="absolute inset-0 rounded-full"
-                    style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)", boxShadow: "0 4px 18px rgba(255,81,0,0.4)" }}
-                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  <motion.span
+                    layoutId="sectionNavRule"
+                    className="absolute left-0 right-0 -bottom-px h-[2px] rounded-full bg-[#ff5100]"
+                    transition={{ type: "spring", stiffness: 420, damping: 38 }}
                   />
                 )}
-                <Icon className="w-3.5 h-3.5 shrink-0 relative z-10" />
-                <span className="relative z-10">{label}</span>
               </a>
             );
           })}

@@ -144,50 +144,48 @@ export function WeatherCell({ weather, loading, error, open, onToggle, onRetry }
   onToggle: () => void;
   onRetry: () => void;
 }) {
-  const label = <div className="text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1" style={{ color: "var(--text-tertiary)" }}>Weather now</div>;
+  // Same shape as the other stats: a small-caps label over the value
+  const label = <dt className="text-[11.5px] tracking-[0.1em] lowercase leading-none mb-1.5" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>weather now</dt>;
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2.5 px-4 py-3 h-full">
-        <div className="w-3.5 h-3.5 rounded-full bg-black/8 dark:bg-white/8 animate-pulse" />
-        <div>{label}<div className="w-20 h-2.5 rounded bg-black/8 dark:bg-white/8 animate-pulse" /></div>
-      </div>
+      <div>{label}<dd className="w-24 h-3.5 rounded bg-black/8 dark:bg-white/8 animate-pulse" /></div>
     );
   }
 
   if (error || !weather) {
     return (
-      <button onClick={onRetry} className="w-full h-full flex items-center gap-2.5 px-4 py-3 text-left hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors">
-        <Cloud className="w-3.5 h-3.5 shrink-0 opacity-60" style={{ color: "var(--text-tertiary)" }} />
-        <div className="min-w-0">
-          {label}
-          <div className="flex items-center gap-1 text-[12px] font-medium" style={{ color: "#ff5100" }}>
-            <RotateCw className="w-3 h-3" /> Retry
-          </div>
-        </div>
-      </button>
+      <div>
+        {label}
+        <dd>
+          <button onClick={onRetry} className="inline-flex items-center gap-1.5 text-[14px] font-medium hover:underline" style={{ color: "#ff5100" }}>
+            <RotateCw className="w-3.5 h-3.5" /> Retry
+          </button>
+        </dd>
+      </div>
     );
   }
 
   const w = weather.current;
   return (
-    <button
-      onClick={onToggle}
-      aria-expanded={open}
-      aria-controls="weather-details"
-      className={`w-full h-full flex items-center gap-2.5 px-4 py-3 text-left transition-colors ${open ? "bg-[rgba(255,81,0,0.06)]" : "hover:bg-black/[0.02] dark:hover:bg-white/[0.03]"}`}
-    >
-      <div className={`${iconColor(w.weatherCode)} shrink-0`}>
-        <WeatherIcon code={w.weatherCode} isDay={w.isDay} className="w-3.5 h-3.5" />
-      </div>
-      <div className="min-w-0 flex-1">
-        {label}
-        <div className="font-medium text-[13px] leading-tight" style={{ color: "var(--text-primary)" }}>
-          {w.temp}°C <span className="font-normal" style={{ color: "var(--text-tertiary)" }}>· {desc(w.weatherCode)}</span>
-        </div>
-      </div>
-      <ChevronDown className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${open ? "rotate-180 text-[#ff5100]" : ""}`} style={open ? undefined : { color: "var(--text-tertiary)" }} />
-    </button>
+    <div>
+      {label}
+      <dd>
+        <button
+          onClick={onToggle}
+          aria-expanded={open}
+          aria-controls="weather-details"
+          className="group inline-flex items-center gap-1.5 text-[14px] font-medium leading-snug text-left"
+          style={{ color: "var(--text-primary)" }}
+        >
+          <span className={iconColor(w.weatherCode)}><WeatherIcon code={w.weatherCode} isDay={w.isDay} className="w-4 h-4" /></span>
+          <span className="underline decoration-dotted decoration-[rgba(255,81,0,0.6)] underline-offset-4 group-hover:text-[#ff5100] transition-colors">
+            {w.temp}°C, {desc(w.weatherCode).toLowerCase()}
+          </span>
+          <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180 text-[#ff5100]" : ""}`} style={open ? undefined : { color: "var(--text-tertiary)" }} />
+        </button>
+      </dd>
+    </div>
   );
 }
 
@@ -279,7 +277,7 @@ export function WeatherDetails({ weather, lat, lng, locationName, altitude, isBa
   );
 
   return (
-    <div id="weather-details" className="max-w-7xl mx-auto px-5 lg:px-8 py-5">
+    <div id="weather-details" className="px-4 py-4">
 
       {/* Current conditions */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-2.5 mb-5">

@@ -36,7 +36,8 @@ const permanentMarker = Permanent_Marker({
 const fraunces = Fraunces({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  // 400 is the light display weight the adventure page's calm headings use
+  weight: ["400", "600", "700", "800"],
 });
 
 const dmSans = DM_Sans({

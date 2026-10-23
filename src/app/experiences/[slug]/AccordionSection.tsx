@@ -5,135 +5,85 @@ import { ChevronDown } from "lucide-react";
 
 interface Props {
   title: string;
+  /** Small-caps line above the title */
   label?: string;
   defaultOpen?: boolean;
-  /** Overrides defaultOpen specifically below the lg breakpoint — use when a section's content is heavy enough that it shouldn't dump onto the mobile page on load even though it should stay open on desktop. */
+  /** Overrides defaultOpen below the lg breakpoint, for sections too heavy to open on load on a phone. */
   mobileDefaultOpen?: boolean;
   children: React.ReactNode;
   id?: string;
-  /** Paired with `tintRgb` to render this section as a badged card instead of the plain header — used for the small set of sections meant to stand out as a matched pair (e.g. About / Highlights). */
-  icon?: React.ReactNode;
-  /** "r,g,b" triple, e.g. "255,81,0" — drives the card's border, wash, icon chip and label color. */
-  tintRgb?: string;
-  /** Suppress the trailing divider — use when a shared divider follows a row of sections instead. */
-  noDivider?: boolean;
-  /** Skip the top spacing — use when this section sits inside a row that already carries its own top offset. */
-  noTopPad?: boolean;
-  /** Extra control rendered in the card header, before the chevron (e.g. a small info link). Card variant only. */
+  /** A small control beside the title (e.g. an info link) */
   headerExtra?: React.ReactNode;
-  /** Stretch this card to the height of its row siblings — only meaningful when it sits in a grid alongside another card meant to match it (e.g. the About / Highlights pair). Leave off for standalone, full-width cards. */
-  stretch?: boolean;
 }
 
-export default function AccordionSection({ title, label, defaultOpen = false, mobileDefaultOpen, children, id, icon, tintRgb, noDivider, noTopPad, headerExtra, stretch }: Props) {
+/**
+ * A chapter of the adventure page in the calm "trail" style: no box, a light
+ * serif title, and a dot that sits on the orange trail line running down the
+ * left of the main column (drawn by the page). The dot is filled while the
+ * section is open and hollow when it's collapsed.
+ */
+export default function AccordionSection({ title, label, defaultOpen = false, mobileDefaultOpen, children, id, headerExtra }: Props) {
   const [open, setOpen] = useState(mobileDefaultOpen ?? defaultOpen);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // mobileDefaultOpen renders collapsed (SSR-safe, matches initial client paint) so
-  // it never causes a hydration mismatch; once mounted, promote to defaultOpen on
-  // desktop viewports where the section is meant to start open.
+  // mobileDefaultOpen renders collapsed first (SSR-safe, no hydration mismatch),
+  // then desktop viewports promote to defaultOpen once mounted
   useEffect(() => {
     if (mobileDefaultOpen === undefined) return;
     if (window.innerWidth >= 1024) setOpen(defaultOpen);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function handleToggle() {
+  function toggle() {
     setOpen((o) => {
       const next = !o;
-      // Scroll the newly opened section into view below the sticky navbar —
-      // otherwise a section that opens near the bottom of the viewport can end
-      // up with its fresh content hidden behind the fixed mobile book bar.
-      if (next) {
-        requestAnimationFrame(() => {
-          sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-        });
-      }
+      // Bring a freshly opened section into view below the sticky bars
+      if (next) requestAnimationFrame(() => sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
       return next;
     });
   }
 
-  if (icon && tintRgb) {
-    return (
-      <section ref={sectionRef} id={id} className={`${noTopPad ? "" : "pt-6 first:pt-0"} ${stretch ? "h-full" : ""} scroll-mt-24`}>
-        <div className={`rounded-2xl overflow-hidden ${stretch ? "h-full flex flex-col" : ""}`} style={{ border: `1px solid rgba(${tintRgb},0.18)`, background: `rgba(${tintRgb},0.025)` }}>
-          <button
-            onClick={handleToggle}
-            className="w-full flex items-center gap-3 px-4 sm:px-5 py-3.5 text-left shrink-0"
-            style={{ borderBottom: `1px solid rgba(${tintRgb},0.14)`, background: `rgba(${tintRgb},0.05)` }}
-            aria-expanded={open}
-          >
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: `rgba(${tintRgb},0.15)`, color: `rgb(${tintRgb})` }}>
-              {icon}
-            </div>
-            <div className="flex-1 min-w-0">
-              {label && <p className="text-[10px] font-bold tracking-[0.2em] uppercase leading-none mb-1" style={{ color: `rgb(${tintRgb})` }}>{label}</p>}
-              {title && <h2 className="font-semibold text-[15px] leading-snug" style={{ color: "#ff5100" }}>{title}</h2>}
-            </div>
-            {headerExtra && (
-              <div className="shrink-0" onClick={(e) => e.stopPropagation()}>{headerExtra}</div>
-            )}
-            <ChevronDown
-              className={`w-4 h-4 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-              style={{ color: "var(--text-tertiary)" }}
-            />
-          </button>
-          <div
-            className={`overflow-hidden transition-all duration-300 ease-in-out ${open ? `max-h-[4000px] opacity-100 ${stretch ? "flex-1" : ""}` : "max-h-0 opacity-0"}`}
-          >
-            <div className={`px-4 sm:px-5 py-4 sm:py-5 ${stretch ? "h-full" : ""}`}>{children}</div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section id={id} className={noTopPad ? "" : "pt-6 first:pt-0"}>
-      {/* Mobile: collapsible header */}
-      {(label || title) && (
-        <button
-          onClick={() => setOpen((o) => !o)}
-          className="lg:hidden w-full flex items-center justify-between py-3 group"
-          aria-expanded={open}
-        >
-          <div className="text-left">
-            {label && (
-              <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-0.5">{label}</p>
-            )}
-            {title && <h2 className="font-semibold text-base" style={{ color: "#ff5100" }}>{title}</h2>}
-          </div>
-          <ChevronDown
-            className={`w-5 h-5 text-black/35 dark:text-white/30 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-          />
-        </button>
-      )}
-
-      {/* Desktop: always visible header */}
-      {(label || title) && (
-        <div className="hidden lg:block mb-3">
+    <section ref={sectionRef} id={id} className="pt-9 first:pt-0 scroll-mt-32">
+      <div className="relative flex items-start gap-4">
+        {/* The section's stop on the trail line, level with the label */}
+        <span
+          aria-hidden
+          className="absolute top-[0.2rem] -left-[29.5px] sm:-left-[33.5px] w-[11px] h-[11px] rounded-full transition-colors duration-300"
+          style={{
+            background: open ? "#ff5100" : "var(--bg-page)",
+            border: "1.5px solid #ff5100",
+            boxShadow: "0 0 0 4px var(--bg-page)",
+          }}
+        />
+        <button onClick={toggle} aria-expanded={open} className="flex-1 min-w-0 text-left group">
           {label && (
-            <p className="text-[#ff5100] text-[10px] font-bold tracking-[0.22em] uppercase mb-1.5">{label}</p>
+            <p className="text-[12px] tracking-[0.12em] lowercase mb-1" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>
+              {label}
+            </p>
           )}
-          {title && (
-            <h2 className="font-semibold text-base leading-snug" style={{ color: "#ff5100" }}>{title}</h2>
-          )}
+          <h2 className="text-[21px] sm:text-[23px] leading-[1.15] !font-normal tracking-[-0.01em] group-hover:text-[#ff5100] transition-colors">
+            {title}
+          </h2>
+        </button>
+        <div className="flex items-center gap-2 pt-1 shrink-0">
+          {headerExtra}
+          <button
+            onClick={toggle}
+            aria-label={open ? `Collapse ${title}` : `Expand ${title}`}
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
+            style={{ color: "var(--text-tertiary)" }}
+          >
+            <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
+          </button>
         </div>
-      )}
-
-      {/* Content */}
-      <div
-        className={`lg:block overflow-hidden transition-all duration-300 ease-in-out ${
-          (open || (!label && !title)) ? "max-h-[2000px] opacity-100" : "lg:max-h-none max-h-0 opacity-0 lg:opacity-100"
-        }`}
-      >
-        {children}
       </div>
 
-      {/* Divider */}
-      {!noDivider && (label || title) && (
-        <div className="h-px mt-6" style={{ background: "rgba(var(--fg-rgb),0.08)" }} />
-      )}
+      <div className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+        <div className="overflow-hidden">
+          <div className="pt-4">{children}</div>
+        </div>
+      </div>
     </section>
   );
 }

@@ -4,15 +4,15 @@ import { useState, type ReactNode } from "react";
 import { useWeather, WeatherCell, WeatherDetails } from "./WeatherWidget";
 
 export interface Stat {
-  icon: ReactNode;
   label: string;
   value: ReactNode;
 }
 
 /**
- * The trek's key facts plus a live-weather cell, sized to fit the screen (no
- * sideways scrolling): one row on desktop, two or three per row on smaller
- * screens. Clicking the weather cell opens the full forecast below the strip.
+ * The trek's key facts plus live weather, as one bordered band split by hairlines.
+ * It always fits the screen: a single row on desktop, three across on tablets,
+ * two on phones (weather takes its own full row there). Clicking the weather cell
+ * opens the full forecast underneath the band.
  */
 export default function StatsStrip({ stats, weather: place }: {
   stats: Stat[];
@@ -21,36 +21,34 @@ export default function StatsStrip({ stats, weather: place }: {
   const { weather, loading, error, retry } = useWeather(place.lat, place.lng);
   const [open, setOpen] = useState(false);
 
-  // Cells sit on a 1px-gap grid over the border colour, so dividers line up however they wrap
-  const cell = "min-w-0 basis-[calc(50%-1px)] sm:basis-[calc(33.333%-1px)] lg:basis-0 grow";
+  const cell = "min-w-0 px-4 py-3";
 
   return (
-    <>
-      <div className="max-w-7xl mx-auto px-5 lg:px-8">
-        <div className="flex flex-wrap gap-px" style={{ background: "var(--border-subtle)", borderBottom: "1px solid var(--border-subtle)" }}>
-          {stats.map(({ icon, label, value }) => (
-            <div key={label} className={`${cell} flex items-center gap-2.5 px-4 py-3`} style={{ background: "var(--bg-surface)" }}>
-              <div className="shrink-0 opacity-80">{icon}</div>
-              <div className="min-w-0">
-                <div className="text-[9px] font-semibold uppercase tracking-[0.18em] leading-none mb-1" style={{ color: "var(--text-tertiary)" }}>{label}</div>
-                <div className="font-medium text-[13px] leading-tight" style={{ color: "var(--text-primary)" }}>{value}</div>
-              </div>
+    <div className="max-w-7xl mx-auto px-5 lg:px-8">
+      <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}>
+        {/* 1px gaps over the border colour draw the dividers, however the cells wrap */}
+        <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-flow-col lg:auto-cols-fr gap-px" style={{ background: "var(--border-subtle)" }}>
+          {stats.map(({ label, value }) => (
+            <div key={label} className={cell} style={{ background: "var(--bg-surface)" }}>
+              <dt className="text-[11.5px] tracking-[0.1em] lowercase leading-none mb-1.5" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{label}</dt>
+              <dd className="text-[14px] font-medium leading-snug" style={{ color: "var(--text-primary)" }}>{value}</dd>
             </div>
           ))}
-          {/* Weather: full width on phones, its own cell from tablet up */}
-          <div className="min-w-0 basis-full sm:basis-[calc(33.333%-1px)] lg:basis-0 grow lg:grow-[1.4]" style={{ background: "var(--bg-surface)" }}>
+          <div className={`${cell} col-span-2 sm:col-span-3 lg:col-span-1 transition-colors ${open ? "bg-[rgba(255,81,0,0.06)]" : ""}`} style={open ? undefined : { background: "var(--bg-surface)" }}>
             <WeatherCell weather={weather} loading={loading} error={error} open={open} onToggle={() => setOpen((v) => !v)} onRetry={retry} />
+          </div>
+        </dl>
+
+        <div className="grid transition-[grid-template-rows] duration-300 ease-out" style={{ gridTemplateRows: open && weather ? "1fr" : "0fr" }}>
+          <div className="overflow-hidden">
+            {weather && (
+              <div style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                <WeatherDetails weather={weather} {...place} />
+              </div>
+            )}
           </div>
         </div>
       </div>
-
-      <div className="overflow-hidden transition-[max-height] duration-300 ease-in-out" style={{ maxHeight: open && weather ? "1400px" : "0px" }}>
-        {weather && (
-          <div className="bg-black/[0.01] dark:bg-white/[0.012]" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-            <WeatherDetails weather={weather} {...place} />
-          </div>
-        )}
-      </div>
-    </>
+    </div>
   );
 }

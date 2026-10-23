@@ -158,11 +158,8 @@ export default function ACEProfileSection({ ace, slug, bare }: Props) {
 
       {/* Main card */}
       <div
-        className="rounded-2xl overflow-hidden mb-3 bg-[linear-gradient(160deg,#ffffff_0%,#f5f2ec_100%)] dark:bg-[linear-gradient(160deg,#0c1220_0%,#080e18_100%)]"
-        style={{
-          border: "1px solid rgba(var(--fg-rgb),0.07)",
-          boxShadow: "0 20px 40px rgba(0,0,0,0.12), inset 0 1px 0 rgba(var(--fg-rgb),0.05)",
-        }}
+        className="rounded-2xl overflow-hidden mb-3"
+        style={{ border: "1px solid var(--border-default)", background: "var(--bg-surface)" }}
       >
         {/* Score pill — only when user has profile */}
         {userAce && (
@@ -261,29 +258,19 @@ export default function ACEProfileSection({ ace, slug, bare }: Props) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div
                 className="flex flex-col items-center gap-3 rounded-2xl py-4 px-3"
-                style={{
-                  background: "linear-gradient(160deg, rgba(255,81,0,0.06) 0%, rgba(255,81,0,0.02) 100%)",
-                  border: "1px solid rgba(255,81,0,0.14)",
-                  boxShadow: "inset 0 1px 0 rgba(255,81,0,0.08)",
-                }}
+                style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}
               >
                 <div className="flex items-center gap-1.5">
-                  <div className="w-1 h-3 rounded-full bg-[#ff5100]/50" />
-                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#ff5100]/70">Trek Requirements</span>
+                  <span className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>Trek Requirements</span>
                 </div>
                 <ACERadar ace={ace} size={168} showLabels />
               </div>
               <div
                 className="flex flex-col items-center gap-3 rounded-2xl py-4 px-3"
-                style={{
-                  background: "linear-gradient(160deg, rgba(var(--fg-rgb),0.04) 0%, rgba(var(--fg-rgb),0.01) 100%)",
-                  border: "1px solid rgba(var(--fg-rgb),0.09)",
-                  boxShadow: "inset 0 1px 0 rgba(var(--fg-rgb),0.05)",
-                }}
+                style={{ background: "var(--bg-surface)", border: "1px solid var(--border-default)" }}
               >
                 <div className="flex items-center gap-1.5">
-                  <div className="w-1 h-3 rounded-full bg-black/25 dark:bg-white/30" />
-                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-black/45 dark:text-white/40">Your Capability</span>
+                  <span className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>Your Capability</span>
                 </div>
                 <ACERadar ace={userAce} size={168} showLabels />
               </div>
@@ -293,7 +280,7 @@ export default function ACEProfileSection({ ace, slug, bare }: Props) {
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 items-center sm:items-stretch">
               {/* Trek radar — larger, dominant */}
               <div className="flex flex-col items-center gap-1.5 shrink-0 sm:pr-4">
-                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[#ff5100]/60">Trek Requirements</span>
+                <span className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>Trek Requirements</span>
                 <ACERadar ace={ace} size={200} showLabels />
               </div>
 
@@ -302,23 +289,20 @@ export default function ACEProfileSection({ ace, slug, bare }: Props) {
 
               {/* CTA sub-section */}
               <div className="flex flex-col justify-center w-full sm:pl-4 flex-1 min-w-0">
-                <div
-                  className="rounded-xl p-3 flex flex-col gap-3"
-                  style={{ background: "rgba(255,81,0,0.05)", border: "1px solid rgba(255,81,0,0.12)" }}
-                >
+                <div className="p-1 flex flex-col gap-3">
                   <div>
-                    <p className="text-black/90 dark:text-white/90 font-bold text-[13px] leading-snug mb-1">See how you measure up</p>
-                    <p className="text-black/40 dark:text-white/35 text-[11px] leading-relaxed">
-                      Take the 2-min assessment and compare your capability against this trek.
+                    <p className="font-medium text-[15px] leading-snug mb-1" style={{ color: "var(--text-primary)" }}>See how you measure up</p>
+                    <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                      Take the 2-minute assessment and compare your fitness with this trek.
                     </p>
                   </div>
                   <Link
                     href={`/matchmaker?from=${slug}`}
-                    className="inline-flex items-center justify-center gap-1.5 text-white text-[11px] font-bold px-3.5 py-2 rounded-xl transition-all hover:brightness-110 active:scale-95"
-                    style={{ background: "linear-gradient(135deg, #ff5100, #ff7d47)", boxShadow: "0 4px 14px rgba(255,81,0,0.3)" }}
+                    className="self-start inline-flex items-center gap-1.5 h-10 px-5 rounded-full text-[14px] font-medium text-[#ff5100] transition-colors hover:bg-[rgba(255,81,0,0.06)]"
+                    style={{ border: "1px solid rgba(255,81,0,0.55)" }}
                   >
-                    Take Assessment
-                    <ArrowRight className="w-3 h-3" />
+                    Take the assessment
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
               </div>
