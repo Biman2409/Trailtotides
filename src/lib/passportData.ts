@@ -3,7 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { findUserByUsername } from "@/lib/resolveUsername";
 import { adventures, type Adventure } from "@/lib/data";
 import { getACE, computeDifficulty } from "@/lib/ace";
-import { getAchievements, nextBadges } from "@/lib/achievements";
+import { ALL_BADGES, getAchievements, nextBadges, badgeProgress } from "@/lib/achievements";
 import { getTier } from "@/lib/xp";
 import { loadUserBadges } from "@/lib/userAchievements";
 import {
@@ -81,10 +81,12 @@ export interface PassportData {
   /** Sum of the 8 ACE skills, out of 40; null before the assessment */
   aceScore: number | null;
   nextBadge: { name: string; hint: string; have: number; need: number } | null;
+  /** How to unlock each badge not yet earned, by id — shown when a seal is tapped */
+  badgeProgress: Record<string, { hint: string; have: number; need: number }>;
   recentStamps: { name: string; state: string; date: string }[];
   totalBadges: number;
   /** Every earned badge, rarest first */
-  badges: { id: string; name: string; icon: string; color: string; description: string }[];
+  badges: { id: string; name: string; icon: string; description: string; tier: string; secret: boolean }[];
   logPages: AdventureLogEntry[];
   /** Every completed adventure, newest first */
   stamps: PassportStamp[];
@@ -167,12 +169,18 @@ export async function computePassportData(origin: string, demoMode?: string | nu
   // Achievement badges — same source as the Trophy Cabinet on /profile.
   const userBadges = await loadUserBadges(admin, user);
   // Demo trips aren't in a stored trip log, so count them here
-  const engagement = DEBUG_DEMO ? { ...userBadges.engagement, completed: entries.length } : userBadges.engagement;
-  const allEarnedBadges = DEBUG_DEMO ? getAchievements(userBadges.ace, userBadges.totalXP, engagement) : userBadges.earned;
+  const engagement = DEBUG_DEMO ? { ...userBadges.engagement, completed: entries.length, trips: entries } : userBadges.engagement;
+  const allEarnedBadges = DEBUG_DEMO ? getAchievements(userBadges.totalXP, engagement) : userBadges.earned;
   // Rarest first — getAchievements already lists them that way
-  const badges = allEarnedBadges.map((b) => ({ id: b.id, name: b.name, icon: b.icon, color: b.color, description: b.description }));
-  const [next] = nextBadges(new Set(allEarnedBadges.map((b) => b.id)), userBadges.ace, userBadges.totalXP, engagement, 1);
+  const badges = allEarnedBadges.map((b) => ({ id: b.id, name: b.name, icon: b.icon, description: b.description, tier: b.tier, secret: !!b.secret }));
+  const [next] = nextBadges(new Set(allEarnedBadges.map((b) => b.id)), userBadges.totalXP, engagement, 1);
   const nextBadge = next ? { name: next.badge.name, ...next.progress } : null;
+  const earnedIdSet = new Set(allEarnedBadges.map((b) => b.id));
+  // Secret badges stay secret until earned — no hint for them
+  const lockedProgress = Object.fromEntries(ALL_BADGES.filter((b) => !earnedIdSet.has(b.id) && !b.secret).flatMap((b) => {
+    const p = badgeProgress(b.id, userBadges.totalXP, engagement);
+    return p ? [[b.id, p]] : [];
+  }));
   const tier = getTier(userBadges.totalXP);
   const recentStamps = stampsRaw.slice(0, 3).map((s) => ({ name: s.adv.name, state: s.adv.state, date: s.date }));
 
@@ -243,7 +251,8 @@ export async function computePassportData(origin: string, demoMode?: string | nu
       photoUrl: s.photo?.url ?? s.adv.heroImage,
       photoCaption: s.photo?.caption?.trim() || null,
       isPersonalPhoto: !!s.photo,
-      memorableMoment: s.note?.trim() || reviewBySlug.get(s.adv.slug)?.trim() || s.photo?.caption?.trim() || s.adv.tagline,
+      // Trip-log notes are private — a shared passport skips straight to the public sources
+      memorableMoment: (publicUserId ? "" : s.note?.trim()) || reviewBySlug.get(s.adv.slug)?.trim() || s.photo?.caption?.trim() || s.adv.tagline,
       trophies: deriveTripTrophies({
         type: s.adv.type, difficulty: s.difficulty, domain: dominantDomain(getACE(s.adv)),
         altitude: s.adv.altitude, distance: s.adv.distance,
@@ -256,7 +265,7 @@ export async function computePassportData(origin: string, demoMode?: string | nu
     hardest: hardest ? { name: hardest.adv.name, type: hardest.adv.type, difficulty: hardest.difficulty } : null,
     hasAceData, userAce, topAxis, aceScore,
     level: { name: tier.name, color: tier.color }, totalXP: userBadges.totalXP,
-    nextBadge, recentStamps,
+    nextBadge, badgeProgress: lockedProgress, recentStamps,
     totalBadges: allEarnedBadges.length, badges,
     logPages,
     stamps, collection, totalCollectable: adventures.length,

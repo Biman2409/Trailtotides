@@ -1,50 +1,15 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
-import {
-  Trophy, Crown, Globe, Brain,
-  Footprints, Waves, ScanEye,
-  Timer, Dumbbell, MountainSnow, Wind, Shield,
-  Zap, Pickaxe, Wand,
-  CheckCircle2, Star, Heart, Map, Compass, TrendingUp, Award, Camera, GitCompare,
-} from "@/lib/localIcons";
-import { ALL_BADGES, badgeProgress, nextBadges, lockedSkillBadgeCount, type Achievement, type EngagementStats } from "@/lib/achievements";
-import type { ACE } from "@/lib/ace";
+import BadgeIcon from "@/components/ui/custom/BadgeIcon";
+import { ALL_BADGES, badgeProgress, nextBadges, badgeFace, type Achievement, type EngagementStats } from "@/lib/achievements";
+import { useBadgeRarity } from "@/lib/useBadgeRarity";
 
 // Badges on /profile: the few closest to unlocking (with how to get them), then the
-// ones already earned; the full set of 24 folds away behind a button. Same calm style
+// ones already earned; the full set folds away behind a button. Same calm style
 // as the adventure page — one orange accent, small-caps labels, no glow.
 
 const ORANGE = "#ff5100";
-
-const ICONS: Record<string, React.ComponentType<{ style?: React.CSSProperties }>> = {
-  Crown, Trophy, Globe, Brain, Footprints, Waves, ScanEye, Timer, Dumbbell, MountainSnow, Wind, Shield,
-  Zap, Pickaxe, Wand, CheckCircle2, Star, Heart, Map, Compass, TrendingUp, Award, Camera, GitCompare,
-  Flame9000: Zap,
-};
-
-function BadgeIcon({ badge, earned, size = 40 }: { badge: Achievement; earned: boolean; size?: number }) {
-  const Icon = ICONS[badge.icon] ?? Trophy;
-  const apex = badge.tier === "tier1";
-  const icon = Math.round(size * 0.46);
-  return (
-    <span
-      className="relative shrink-0 flex items-center justify-center rounded-xl"
-      style={{
-        width: size, height: size,
-        background: earned && apex ? ORANGE : "transparent",
-        border: earned ? `1.5px solid ${ORANGE}` : "1px dashed var(--border-default)",
-        color: earned ? (apex ? "#fff" : ORANGE) : "var(--text-muted)",
-      }}
-    >
-      <Icon style={{ width: icon, height: icon }} />
-      {badge.icon === "Flame9000" && (
-        <span className="absolute bottom-0.5 right-1 text-[9px] font-bold leading-none">9K</span>
-      )}
-    </span>
-  );
-}
 
 function Label({ children, right }: { children: React.ReactNode; right?: React.ReactNode }) {
   return (
@@ -63,12 +28,13 @@ function ProgressBar({ have, need }: { have: number; need: number }) {
   );
 }
 
-interface CabinetData { ace: ACE | null; totalXP: number; engagement: EngagementStats; earnedIds: string[] }
+interface CabinetData { totalXP: number; engagement: EngagementStats; earnedIds: string[] }
 
-const TIER_GROUPS: { tier: Achievement["tier"]; label: string }[] = [
+const TIER_GROUPS: { tier: Achievement["tier"] | "secret"; label: string }[] = [
   { tier: "tier1", label: "the pinnacle" },
   { tier: "tier2", label: "domain masters" },
   { tier: "tier3", label: "expedition badges" },
+  { tier: "secret", label: "secret badges" },
 ];
 
 export default function TrophyCabinet() {
@@ -76,6 +42,8 @@ export default function TrophyCabinet() {
   const [error, setError] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
+  const [openNext, setOpenNext] = useState<string | null>(null);
+  const rarityOf = useBadgeRarity();
 
   const fetchAll = useCallback(() => {
     setError(false);
@@ -107,37 +75,42 @@ export default function TrophyCabinet() {
   if (!data) return <div className={`${card} h-40 animate-pulse`} style={cardStyle} />;
 
   const earned = new Set(data.earnedIds);
-  const progress = (b: Achievement) => badgeProgress(b.id, data.ace, data.totalXP, data.engagement);
+  const progress = (b: Achievement) => badgeProgress(b.id, data.totalXP, data.engagement);
   const earnedBadges = ALL_BADGES.filter((b) => earned.has(b.id));
 
-  const nextUp = nextBadges(earned, data.ace, data.totalXP, data.engagement).map(({ badge, progress: p }) => ({ badge, p }));
-  const skillBadgesLocked = lockedSkillBadgeCount(earned);
+  const nextUp = nextBadges(earned, data.totalXP, data.engagement).map(({ badge, progress: p }) => ({ badge, p }));
 
   const selectedBadge = ALL_BADGES.find((b) => b.id === selected) ?? null;
   const toggleSelect = (id: string) => setSelected((cur) => (cur === id ? null : id));
 
-  const detail = selectedBadge && (() => {
-    const p = progress(selectedBadge);
+  // The selected badge's details open right under the list it was tapped in, not at the bottom
+  const detailIn = (list: Achievement[]) => {
+    if (!selectedBadge || !list.some((b) => b.id === selectedBadge.id)) return null;
     const has = earned.has(selectedBadge.id);
+    const face = badgeFace(selectedBadge, has);
+    const p = has || selectedBadge.secret ? null : progress(selectedBadge);
+    const rare = rarityOf(selectedBadge.id);
     return (
       <div className="mt-3 rounded-xl p-3 flex gap-3" style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}>
-        <BadgeIcon badge={selectedBadge} earned={has} size={36} />
+        <BadgeIcon badge={face} earned={has} size={36} />
         <div className="min-w-0 text-[13px] leading-snug">
-          <p className="font-semibold" style={{ color: "var(--text-primary)" }}>{selectedBadge.name}</p>
-          <p className="mt-0.5" style={{ color: "var(--text-secondary)" }}>{selectedBadge.description}</p>
-          {!has && p && (
+          <p className="font-semibold" style={{ color: "var(--text-primary)" }}>{face.name}</p>
+          <p className="mt-0.5" style={{ color: "var(--text-secondary)" }}>{face.description}</p>
+          {p && (
             <p className="mt-1.5" style={{ color: "var(--text-tertiary)" }}>
               {p.hint}{p.need > 1 && ` · ${p.have.toLocaleString("en-IN")} / ${p.need.toLocaleString("en-IN")}`}
             </p>
           )}
+          {rare && <p className="mt-1.5" style={{ color: ORANGE }}>{rare}</p>}
         </div>
       </div>
     );
-  })();
+  };
 
   const cell = (b: Achievement) => {
     const has = earned.has(b.id);
-    const p = has ? null : progress(b);
+    const face = badgeFace(b, has);
+    const p = has || b.secret ? null : progress(b);
     return (
       <button
         key={b.id}
@@ -147,8 +120,8 @@ export default function TrophyCabinet() {
         className="flex flex-col items-center gap-1.5 text-center rounded-xl py-1.5 transition-colors hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
         style={selected === b.id ? { background: "var(--bg-surface)" } : undefined}
       >
-        <BadgeIcon badge={b} earned={has} />
-        <span className="text-[12px] leading-tight px-0.5" style={{ color: has ? "var(--text-primary)" : "var(--text-tertiary)" }}>{b.name}</span>
+        <BadgeIcon badge={face} earned={has} size={b.tier === "tier1" ? 52 : 40} />
+        <span className={`text-[12px] leading-tight px-0.5 ${b.tier === "tier1" && has ? "font-semibold" : ""}`} style={{ color: has ? "var(--text-primary)" : "var(--text-tertiary)" }}>{face.name}</span>
         {p && p.need > 1 && p.have > 0 && <ProgressBar have={p.have} need={p.need} />}
       </button>
     );
@@ -163,11 +136,12 @@ export default function TrophyCabinet() {
           <Label>next up</Label>
           <ul>
             {nextUp.map(({ badge, p }) => (
-              <li key={badge.id}>
-                <div
-                  title={badge.description}
-                  className="flex items-center gap-3 py-2"
-                  style={{ borderTop: "1px solid var(--border-subtle)" }}
+              <li key={badge.id} style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                <button
+                  type="button"
+                  onClick={() => setOpenNext((cur) => (cur === badge.id ? null : badge.id))}
+                  aria-expanded={openNext === badge.id}
+                  className="w-full flex items-center gap-3 py-2 text-left rounded-lg transition-colors hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
                 >
                   <BadgeIcon badge={badge} earned={false} size={36} />
                   <span className="flex-1 min-w-0">
@@ -182,27 +156,25 @@ export default function TrophyCabinet() {
                       <ProgressBar have={p.have} need={p.need} />
                     </span>
                   )}
-                </div>
+                </button>
+                {openNext === badge.id && (
+                  <p className="pb-2 pl-12 text-[13px] leading-snug" style={{ color: "var(--text-secondary)" }}>{badge.description}</p>
+                )}
               </li>
             ))}
           </ul>
-          {!data.ace && skillBadgesLocked > 0 && (
-            <p className="text-[13px] pt-2" style={{ color: "var(--text-secondary)", borderTop: "1px solid var(--border-subtle)" }}>
-              {skillBadgesLocked} skill badges open up after the{" "}
-              <Link href="/ace" className="underline underline-offset-2" style={{ color: ORANGE }}>ACE™ assessment</Link>.
-            </p>
-          )}
         </div>
       )}
 
       {/* Earned, or every badge */}
       {showAll ? (
         TIER_GROUPS.map(({ tier, label }) => {
-          const group = ALL_BADGES.filter((b) => b.tier === tier);
+          const group = ALL_BADGES.filter((b) => (tier === "secret" ? b.secret : b.tier === tier && !b.secret));
           return (
             <div key={tier} className="mb-4">
               <Label right={`${group.filter((b) => earned.has(b.id)).length} of ${group.length}`}>{label}</Label>
               <div className={grid}>{group.map(cell)}</div>
+              {detailIn(group)}
             </div>
           );
         })
@@ -210,7 +182,10 @@ export default function TrophyCabinet() {
         <>
           <Label right={`${earnedBadges.length} of ${ALL_BADGES.length}`}>earned</Label>
           {earnedBadges.length > 0 ? (
-            <div className={grid}>{earnedBadges.map(cell)}</div>
+            <>
+              <div className={grid}>{earnedBadges.map(cell)}</div>
+              {detailIn(earnedBadges)}
+            </>
           ) : (
             <p className="text-[14px]" style={{ color: "var(--text-secondary)" }}>
               None yet. Log an adventure you&apos;ve done, save one to your wishlist or write a review to earn your first.
@@ -218,8 +193,6 @@ export default function TrophyCabinet() {
           )}
         </>
       )}
-
-      {detail}
 
       <button
         type="button"

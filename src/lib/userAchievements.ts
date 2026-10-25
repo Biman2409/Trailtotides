@@ -2,6 +2,7 @@ import "server-only";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 import type { ACE } from "@/lib/ace";
 import { getAchievements, type Achievement, type EngagementStats } from "@/lib/achievements";
+import { xpFromEvents } from "@/lib/xp";
 
 // The one place that works out which badges someone has earned. The Trophy Cabinet
 // (/api/achievements), the unlock pop-ups and the Adventure Passport all read it, so
@@ -38,26 +39,28 @@ export function accountAce(user: Pick<User, "user_metadata">): ACE | null {
 export async function loadUserBadges(admin: SupabaseClient, user: Pick<User, "id" | "user_metadata">): Promise<UserBadges> {
   const [xpEvents, tripLog, wishlist, reviews] = await Promise.all([
     readJson<XPEvent[]>(admin, "user-data", `xp/${user.id}.json`, []),
-    readJson<unknown[]>(admin, "wishlists", `triplog-${user.id}.json`, []),
-    readJson<unknown[]>(admin, "wishlists", `${user.id}.json`, []),
+    readJson<{ slug: string; date: string }[]>(admin, "wishlists", `triplog-${user.id}.json`, []),
+    readJson<string[]>(admin, "wishlists", `${user.id}.json`, []),
     admin.from("reviews").select("id", { count: "exact", head: true }).eq("user_id", user.id),
   ]);
 
   const events = (Array.isArray(xpEvents) ? xpEvents : [])
     .filter((e) => !e.revoked)
     .sort((a, b) => new Date(b.created_at ?? 0).getTime() - new Date(a.created_at ?? 0).getTime());
-  const totalXP = events.reduce((sum, e) => sum + (e.xp ?? 0), 0);
+  const totalXP = xpFromEvents(events);
+  const trips = Array.isArray(tripLog) ? tripLog.filter((t) => typeof t?.slug === "string") : [];
   const engagement: EngagementStats = {
-    completed: Array.isArray(tripLog) ? tripLog.length : 0,
+    completed: trips.length,
     wishlisted: Array.isArray(wishlist) ? wishlist.length : 0,
     reviews: reviews.count ?? 0,
-    // Each photo XP event is one photo (XP stops at 3 per adventure, so this does too)
+    // Each photo XP event is one photo (XP stops at 3 per adventure and 40 in all, so this does too)
     photos: events.filter((e) => e.action === "photo").length,
-    compares: new Set(events.filter((e) => e.action === "compare").map((e) => e.adventure_slug)).size,
+    trips,
+    wishlist: Array.isArray(wishlist) ? wishlist.filter((s) => typeof s === "string") : [],
+    loggedAt: events.filter((e) => e.action === "trip_log" && e.created_at).map((e) => e.created_at!),
   };
-  const ace = accountAce(user);
 
-  return { ace, totalXP, events, engagement, earned: getAchievements(ace, totalXP, engagement) };
+  return { ace: accountAce(user), totalXP, events, engagement, earned: getAchievements(totalXP, engagement) };
 }
 
 const announcedPath = (userId: string) => `achievements/${userId}.json`;

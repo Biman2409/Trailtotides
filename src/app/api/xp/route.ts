@@ -1,7 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
-import { createClient as createServerClient } from "@/lib/supabase/server";
+import { createClient as createServerClient, createAdminClient } from "@/lib/supabase/server";
+import { loadUserBadges } from "@/lib/userAchievements";
 import { NextRequest, NextResponse } from "next/server";
-import { XP_REWARDS, type XPAction } from "@/lib/xp";
+import { XP_REWARDS, XP_CAPS, xpFromEvents, type XPAction } from "@/lib/xp";
 import { rateLimit } from "@/lib/rateLimit";
 
 const admin = createClient(
@@ -61,15 +62,12 @@ async function writeEvents(userId: string, events: XPEvent[]): Promise<boolean> 
 export async function GET() {
   const supabase = await createServerClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ xp: 0, events: [] });
+  if (!user) return NextResponse.json({ xp: 0, events: [], engagement: {} });
 
-  const events = await readEvents(user.id);
-  const active = events.filter(e => !e.revoked);
-  const total = active.reduce((sum, e) => sum + (e.xp ?? 0), 0);
-  const sorted = [...active].sort(
-    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  );
-  return NextResponse.json({ xp: total, events: sorted });
+  // Counts come from the same place as the badges, so the stats strip and the
+  // Trophy Cabinet agree (XP for wishlist/compare is only given once)
+  const { totalXP, events, engagement } = await loadUserBadges(await createAdminClient(), user);
+  return NextResponse.json({ xp: totalXP, events, engagement });
 }
 
 // ─── POST /api/xp ────────────────────────────────────────────────────────────
@@ -111,6 +109,11 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // Each action earns XP only up to its cap (see XP_CAPS) — together they top out at 9,000
+  if (active.filter(matchAction).length >= XP_CAPS[action]) {
+    return NextResponse.json({ awarded: false, reason: "cap_reached" });
+  }
+
   // Photo cap: max 3 per adventure
   if (action === "photo" && slug) {
     const photoCount = active.filter(
@@ -132,7 +135,7 @@ export async function POST(req: NextRequest) {
   const ok = await writeEvents(user.id, updated);
   if (!ok) return NextResponse.json({ error: "Failed to save XP" }, { status: 500 });
 
-  const newTotal = updated.reduce((s, e) => s + (e.xp ?? 0), 0);
+  const newTotal = xpFromEvents(updated);
   return NextResponse.json({ awarded: true, xp, newTotal });
 }
 
@@ -169,6 +172,6 @@ export async function DELETE(req: NextRequest) {
   if (!revoked) return NextResponse.json({ revoked: false, reason: "not_found" });
 
   await writeEvents(user.id, updated);
-  const newTotal = updated.filter(e => !e.revoked).reduce((s, e) => s + (e.xp ?? 0), 0);
+  const newTotal = xpFromEvents(updated);
   return NextResponse.json({ revoked: true, newTotal });
 }

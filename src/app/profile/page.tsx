@@ -239,65 +239,47 @@ export default async function ProfilePage() {
             <>
               {/* Adventure Passport — the primary, shareable home for achievements */}
               <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-1.5 h-5 rounded-full" style={{ background: "#c9a24d" }} />
-                  <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>Adventure Passport</h2>
-                </div>
+                <SectionHead>Adventure Passport</SectionHead>
                 <Passport />
               </div>
 
-              {/* Adventure Profile */}
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-1.5 h-5 rounded-full" style={{ background: "#ff5100" }} />
-                  <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>Adventure Profile</h2>
-                </div>
-                <ExpeditionProfile />
-              </div>
-
-              {/* ACE Profile */}
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-1.5 h-5 rounded-full bg-[#ff5100]" />
-                  <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>Capability Profile</h2>
-                </div>
-                <ACEProfileSection />
-              </div>
-
-              {/* Trophy Cabinet */}
+              {/* Badges — what's earned and what's next */}
               <div id="trophies">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-1.5 h-5 rounded-full" style={{ background: "#fbbf24" }} />
-                  <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>Trophy Cabinet</h2>
-                </div>
+                <SectionHead>Trophy Cabinet</SectionHead>
                 <TrophyCabinet />
               </div>
 
               {/* My Adventures */}
               <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-1.5 h-5 rounded-full" style={{ background: "#10b981" }} />
-                  <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>My Adventures</h2>
-                </div>
+                <SectionHead>My Adventures</SectionHead>
                 <TrekStreakCounter />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold mb-2.5" style={{ color: "var(--text-muted)" }}>Completed</p>
+                    <SubLabel>completed</SubLabel>
                     <TripLogSection />
                   </div>
                   <div>
-                    <p className="text-[8.5px] uppercase tracking-[0.2em] font-bold mb-2.5" style={{ color: "var(--text-muted)" }}>Wishlisted</p>
+                    <SubLabel>wishlisted</SubLabel>
                     <WishlistSection />
                   </div>
                 </div>
               </div>
 
+              {/* Level, XP and the activity behind them */}
+              <div>
+                <SectionHead>Level &amp; XP</SectionHead>
+                <ExpeditionProfile />
+              </div>
+
+              {/* ACE Profile */}
+              <div>
+                <SectionHead>Capability Profile</SectionHead>
+                <ACEProfileSection />
+              </div>
+
               {/* Saved: comparisons, map searches, quote requests */}
               <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-1.5 h-5 rounded-full" style={{ background: "#ff5100" }} />
-                  <h2 className="font-bold text-base uppercase tracking-widest" style={{ letterSpacing: "0.12em", color: "var(--text-primary)" }}>Saved</h2>
-                </div>
+                <SectionHead>Saved</SectionHead>
                 <AccountExtras />
               </div>
             </>
@@ -309,4 +291,18 @@ export default async function ProfilePage() {
       <Footer />
     </div>
   );
+}
+
+// One header style for every section — the single orange accent the cards use
+function SectionHead({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-2 mb-4">
+      <div className="w-1.5 h-5 rounded-full" style={{ background: "#ff5100" }} />
+      <h2 className="font-bold text-[15px] uppercase tracking-[0.12em]" style={{ color: "var(--text-primary)" }}>{children}</h2>
+    </div>
+  );
+}
+
+function SubLabel({ children }: { children: React.ReactNode }) {
+  return <p className="text-[12px] tracking-[0.1em] lowercase mb-2" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{children}</p>;
 }

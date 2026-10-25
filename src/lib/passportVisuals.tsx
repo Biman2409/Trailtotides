@@ -132,8 +132,8 @@ export function ovalBurstVertices(cx: number, cy: number, rx: number, ry: number
 
 export interface TripTrophy { icon: string; label: string }
 
-const DOMAIN_WORD: Record<StampDomain, string> = { engine: "ENDURANCE", chassis: "POWER", elements: "WILD", mind: "FEARLESS" };
-const DIFFICULTY_EPITHET: Record<string, string> = { Easy: "WANDERER", Moderate: "EXPLORER", Hard: "WARRIOR", Advanced: "CHAMPION", Extreme: "MASTER" };
+// What a trip mostly tested — plain words, not a title, so it never reads like a badge
+const DOMAIN_TEST: Record<StampDomain, string> = { engine: "ENDURANCE TEST", chassis: "STRENGTH TEST", elements: "WILDERNESS TEST", mind: "NERVE TEST" };
 const DISTANCE_VERB: Record<string, string> = { Motorcycling: "RIDDEN", Cycling: "CYCLED", Trekking: "TREKKED", Scrambling: "TREKKED", "Rock Climbing": "CLIMBED" };
 
 export function deriveTripTrophies(opts: {
@@ -146,7 +146,7 @@ export function deriveTripTrophies(opts: {
     const value = opts.altitude.split("(")[0].trim();
     trophies.push({
       icon: "MountainSnow",
-      label: passMatch ? `${passMatch[1].toUpperCase()} CONQUERED` : `${value.toUpperCase()} SUMMIT`,
+      label: passMatch ? `${passMatch[1].toUpperCase()} CONQUERED` : `${value.toUpperCase()} HIGH POINT`,
     });
   }
 
@@ -157,7 +157,7 @@ export function deriveTripTrophies(opts: {
 
   trophies.push({
     icon: opts.difficulty === "Advanced" || opts.difficulty === "Extreme" ? "Crown" : "Award",
-    label: `${DOMAIN_WORD[opts.domain]} ${DIFFICULTY_EPITHET[opts.difficulty] ?? "EXPLORER"}`,
+    label: DOMAIN_TEST[opts.domain],
   });
 
   return trophies.slice(0, 3);
@@ -355,13 +355,43 @@ export const BADGE_ICON_DEFS: Record<string, BadgeIconDef> = {
     "M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z",
     "M5 21h14",
   ] },
-  Flame9000: { paths: ["M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"] },
+  Gauge: { paths: ["m12 14 4-4", "M3.34 19a10 10 0 1 1 17.32 0"] },
+  BicepsFlexed: { paths: [
+    "M12.409 13.017A5 5 0 0 1 22 15c0 3.866-4 7-9 7-4.077 0-8.153-.82-10.371-2.462-.426-.316-.631-.832-.62-1.362C2.118 12.723 2.627 2 10 2a3 3 0 0 1 3 3 2 2 0 0 1-2 2c-1.105 0-1.64-.444-2-1",
+    "M15 14a5 5 0 0 0-7.584 2", "M9.964 6.825C8.019 7.977 9.5 13 8 15",
+  ] },
+  Wind: { paths: ["M12.8 19.6A2 2 0 1 0 14 16H2", "M17.5 8a2.5 2.5 0 1 1 2 4H2", "M9.8 4.4A2 2 0 1 1 11 8H2"] },
+  ChefHat: { paths: [
+    "M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z",
+    "M6 17h12",
+  ] },
+  Clapperboard: { paths: [
+    "m12.296 3.464 3.02 3.956", "M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3z",
+    "M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z", "m6.18 5.276 3.1 3.899",
+  ] },
   Award: { paths: ["M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"], circles: [{ cx: 12, cy: 8, r: 6 }] },
   CheckCircle2: { paths: ["m9 12 2 2 4-4"], circles: [{ cx: 12, cy: 12, r: 10 }] },
   Compass: { paths: ["m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"], circles: [{ cx: 12, cy: 12, r: 10 }] },
   Heart: { paths: ["M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"] },
   Star: { paths: ["M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"] },
   Camera: { paths: ["M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"], circles: [{ cx: 12, cy: 13, r: 3 }] },
+  Backpack: { paths: ["M4 10a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z","M8 10h8","M8 18h8","M8 22v-6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6","M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"] },
+  Medal: { paths: ["M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15","M11 12 5.12 2.2","m13 12 5.88-9.8","M8 7h8","M12 18v-2h-.5"], circles: [{cx: 12,cy: 17,r: 5}] },
+  Globe: { paths: ["M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20","M2 12h20"], circles: [{cx: 12,cy: 12,r: 10}] },
+  Map: { paths: ["M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z","M15 5.764v15","M9 3.236v15"] },
+  Route: { paths: ["M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"], circles: [{cx: 6,cy: 19,r: 3},{cx: 18,cy: 5,r: 3}] },
+  Flag: { paths: ["M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"] },
+  Wrench: { paths: ["M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"] },
+  Flame: { paths: ["M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"] },
+  PenLine: { paths: ["M13 21h8","M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"] },
+  Aperture: { paths: ["m14.31 8 5.74 9.94","M9.69 8h11.48","m7.38 12 5.74-9.94","M9.69 16 3.95 6.06","M14.31 16H2.83","m16.62 12-5.74 9.94"], circles: [{cx: 12,cy: 12,r: 10}] },
+  CloudRain: { paths: ["M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242","M16 14v6","M8 14v6","M12 16v6"] },
+  Snowflake: { paths: ["m10 20-1.25-2.5L6 18","M10 4 8.75 6.5 6 6","m14 20 1.25-2.5L18 18","m14 4 1.25 2.5L18 6","m17 21-3-6h-4","m17 3-3 6 1.5 3","M2 12h6.5L10 9","m20 10-1.5 2 1.5 2","M22 12h-6.5L14 15","m4 10 1.5 2L4 14","m7 21 3-6-1.5-3","m7 3 3 6h4"] },
+  Secret: { paths: ["M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3","M12 17h.01"], circles: [{cx: 12,cy: 12,r: 10}] },
+  Moon: { paths: ["M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"] },
+  Repeat: { paths: ["m17 2 4 4-4 4","M3 11v-1a4 4 0 0 1 4-4h14","m7 22-4-4 4-4","M21 13v1a4 4 0 0 1-4 4H3"] },
+  History: { paths: ["M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8","M3 3v5h5","M12 7v5l4 2"] },
+  FastForward: { paths: ["M12 6a2 2 0 0 1 3.414-1.414l6 6a2 2 0 0 1 0 2.828l-6 6A2 2 0 0 1 12 18z","M2 6a2 2 0 0 1 3.414-1.414l6 6a2 2 0 0 1 0 2.828l-6 6A2 2 0 0 1 2 18z"] },
   Trophy: { paths: [
     "M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978", "M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978",
     "M18 9h1.5a1 1 0 0 0 0-5H18", "M4 22h16", "M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z", "M6 9H4.5a1 1 0 0 1 0-5H6",

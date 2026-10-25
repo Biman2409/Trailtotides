@@ -1,34 +1,36 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Zap, TrendingUp, ChevronDown, CheckCircle2, Star, Camera, Heart, GitCompare } from "lucide-react";
-import {
-  getTier, getNextTier, getProgressPct, XP_TIERS,
-  isOver9000, OVER_9000_COLOR,
-  type XPAction,
-} from "@/lib/xp";
+import { ChevronDown, CheckCircle2, Star, Camera, Heart } from "lucide-react";
+import { getTier, getNextTier, getProgressPct, XP_TIERS, MAX_XP } from "@/lib/xp";
+import type { EngagementStats } from "@/lib/achievements";
 
-interface XPEvent {
-  action: string;
-  adventure_slug: string;
-  xp: number;
-  created_at: string;
+// Level and XP on /profile, plus the counts behind them. Same calm style as the
+// Passport and Trophy Cabinet: one orange accent, small-caps labels, no glow.
+
+const ORANGE = "#ff5100";
+
+function Label({ children, right }: { children: React.ReactNode; right?: React.ReactNode }) {
+  return (
+    <div className="flex items-baseline justify-between gap-3 mb-2">
+      <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", fontVariant: "small-caps" }}>{children}</p>
+      {right}
+    </div>
+  );
 }
 
 export default function ExpeditionProfile() {
   const [xp, setXp]         = useState<number>(0);
-  const [events, setEvents]  = useState<XPEvent[]>([]);
+  const [engagement, setEngagement] = useState<EngagementStats>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [showLadder, setShowLadder] = useState(false);
-  const [rank, setRank]      = useState<number | null>(null);
-  const [rankTotal, setRankTotal] = useState<number | null>(null);
 
   const fetchXP = () => {
     setError(false);
     fetch("/api/xp")
       .then(r => { if (!r.ok) throw new Error("not ok"); return r.json(); })
-      .then(d => { setXp(d.xp ?? 0); setEvents(d.events ?? []); })
+      .then(d => { setXp(d.xp ?? 0); setEngagement(d.engagement ?? {}); })
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   };
@@ -39,207 +41,121 @@ export default function ExpeditionProfile() {
     return () => window.removeEventListener("xp:updated", fetchXP);
   }, []);
 
-  useEffect(() => {
-    if (xp >= 9000) {
-      fetch("/api/xp/rank").then(r => r.json())
-        .then(d => { setRank(d.rank); setRankTotal(d.total); }).catch(() => {});
-    }
-  }, [xp]);
+  const tier     = getTier(xp);
+  const next     = getNextTier(xp);
+  const pct      = getProgressPct(xp);
+  const xpToNext = next ? next.minXP - xp : 0;
+  const maxed    = xp >= MAX_XP;
 
-  const tier       = getTier(xp);
-  const next       = getNextTier(xp);
-  const pct        = getProgressPct(xp);
-  const xpToNext   = next ? next.minXP - xp : 0;
-  const over9k     = isOver9000(xp);
-  const accentColor = over9k ? OVER_9000_COLOR : tier.color;
-  const countOf    = (action: XPAction) => events.filter(e => e.action === action).length;
+  const card = "rounded-2xl p-4 sm:p-5";
+  const cardStyle = { background: "var(--bg-card)", border: "1px solid var(--border-subtle)" };
 
-  if (loading) {
-    return <div className="rounded-2xl animate-pulse" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)", height: 140 }} />;
-  }
+  if (loading) return <div className={`${card} h-40 animate-pulse`} style={cardStyle} />;
 
   if (error) {
     return (
-      <div className="rounded-2xl flex flex-col items-center justify-center gap-2 py-8 px-4 text-center" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
-        <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>Couldn&apos;t load your expedition progress.</p>
-        <button onClick={fetchXP} className="text-xs font-bold px-3 py-1.5 rounded-lg transition-colors hover:bg-[var(--bg-surface)]" style={{ color: "#ff7d47", border: "1px solid rgba(255,81,0,0.25)" }}>
-          Retry
+      <div className={`${card} flex flex-col items-center gap-3 text-center`} style={cardStyle}>
+        <p className="text-[14px]" style={{ color: "var(--text-secondary)" }}>Couldn&apos;t load your level.</p>
+        <button onClick={fetchXP} className="h-9 px-4 rounded-full text-[13px] font-semibold" style={{ color: ORANGE, border: `1px solid ${ORANGE}` }}>
+          Try again
         </button>
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl overflow-hidden relative" style={{ border: `1px solid ${accentColor}20`, background: "var(--bg-card)" }}>
-      <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 20% 0%, ${accentColor}0a 0%, transparent 60%)` }} />
-
-      {/* ── Header ── */}
-      <div className="relative px-5 pt-4 pb-3 flex items-center justify-between gap-4" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-xl flex items-center justify-center font-black text-xl shrink-0"
-            style={{ background: `${accentColor}12`, border: `1.5px solid ${accentColor}35`, color: accentColor, boxShadow: `0 0 18px ${accentColor}22` }}>
-            {tier.level}
-          </div>
-          <div>
-            <p className="text-[8.5px] uppercase tracking-[0.22em] font-bold mb-0.5" style={{ color: `${accentColor}60` }}>Expedition Tier</p>
-            <div className="flex items-center gap-2">
-              <h3 className="font-black text-lg leading-none" style={{ color: accentColor }}>{tier.name}</h3>
-              {over9k && (
-                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[8px] font-black leading-none"
-                  style={{ background: `${OVER_9000_COLOR}18`, color: OVER_9000_COLOR, border: `1px solid ${OVER_9000_COLOR}35` }}>
-                  <Zap className="w-2 h-2" /> 9000+
-                </span>
-              )}
-            </div>
-            <p className="text-[10px] mt-0.5" style={{ color: "var(--text-tertiary)" }}>{tier.description}</p>
-          </div>
+    <div className={card} style={cardStyle}>
+      {/* Level and XP */}
+      <div className="flex items-center gap-3">
+        <span className="w-11 h-11 rounded-xl shrink-0 flex items-center justify-center text-[18px] font-semibold tabular-nums"
+          style={{ border: `1.5px solid ${ORANGE}`, color: ORANGE }}>
+          {tier.level}
+        </span>
+        <div className="flex-1 min-w-0">
+          <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>level</p>
+          <p className="text-[18px] leading-tight font-semibold" style={{ color: "var(--text-primary)" }}>{tier.name}</p>
+          <p className="text-[13px] leading-snug" style={{ color: "var(--text-tertiary)" }}>{tier.description}</p>
         </div>
         <div className="text-right shrink-0">
-          <p className="text-[22px] font-black tabular-nums leading-none" style={{ color: accentColor }}>{xp.toLocaleString()}</p>
-          <p className="text-[8.5px] mt-0.5 font-semibold tracking-widest uppercase" style={{ color: "var(--text-muted)" }}>XP</p>
-          {over9k && rank !== null && (
-            <p className="text-[9px] font-bold mt-0.5" style={{ color: OVER_9000_COLOR }}>#{rank} of {rankTotal}</p>
-          )}
+          <p className="text-[22px] leading-none font-semibold tabular-nums" style={{ color: "var(--text-primary)" }}>{xp.toLocaleString("en-IN")}</p>
+          <p className="text-[12px] mt-1" style={{ color: "var(--text-tertiary)" }}>XP</p>
         </div>
       </div>
 
-      {/* ── Progress bar ── */}
-      <div className="relative px-5 pt-3 pb-4" style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-        {over9k ? (
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-1.5">
-                <TrendingUp className="w-3 h-3" style={{ color: OVER_9000_COLOR }} />
-                <span className="text-[9px] font-bold" style={{ color: OVER_9000_COLOR }}>Uncapped · +{(xp - 9000).toLocaleString()} beyond 9k</span>
-              </div>
-              <button onClick={() => setShowLadder(v => !v)}
-                aria-expanded={showLadder} aria-controls="expedition-tier-ladder"
-                className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md transition-all hover:bg-[var(--bg-surface)]"
-                style={{ color: showLadder ? OVER_9000_COLOR : "var(--text-muted)" }}>
-                <span className="text-[8px] font-bold tracking-wide">ALL TIERS</span>
-                <ChevronDown className="w-2.5 h-2.5 transition-transform duration-200"
-                  style={{ transform: showLadder ? "rotate(180deg)" : "none" }} />
-              </button>
-            </div>
-            <div className="relative h-2 rounded-full overflow-hidden" style={{ background: "var(--bg-surface-2)" }}>
-              <div className="absolute inset-y-0 left-0 w-full rounded-full"
-                style={{ background: `linear-gradient(90deg, #f97316, ${OVER_9000_COLOR})`, boxShadow: `0 0 8px ${OVER_9000_COLOR}60` }} />
-            </div>
-          </div>
-        ) : next ? (
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[9px] font-bold" style={{ color: `${tier.color}cc` }}>{tier.name}</span>
-              <div className="flex items-center gap-2">
-                <span className="text-[9px] tabular-nums" style={{ color: "var(--text-tertiary)" }}>
-                  {xpToNext.toLocaleString()} XP to{" "}
-                  <span className="font-bold" style={{ color: `${next.color}cc` }}>{next.name}</span>
+      {/* Progress to the next level */}
+      <div className="mt-4">
+        <div className="flex items-baseline justify-between gap-3 mb-1.5">
+          <span className="text-[13px] tabular-nums" style={{ color: "var(--text-secondary)" }}>
+            {next
+              ? <>{xpToNext.toLocaleString("en-IN")} XP to <span style={{ color: "var(--text-primary)" }}>{next.name}</span></>
+              : maxed ? <>Maxed out · every XP source done</> : <>{(MAX_XP - xp).toLocaleString("en-IN")} XP to the {MAX_XP.toLocaleString("en-IN")} max</>}
+          </span>
+          <button
+            type="button"
+            onClick={() => setShowLadder(v => !v)}
+            aria-expanded={showLadder}
+            aria-controls="level-ladder"
+            className="shrink-0 inline-flex items-center gap-1 text-[13px] font-semibold"
+            style={{ color: ORANGE }}
+          >
+            All levels
+            <ChevronDown className="w-3.5 h-3.5 transition-transform duration-200" style={{ transform: showLadder ? "rotate(180deg)" : "none" }} />
+          </button>
+        </div>
+        <span className="block h-[3px] rounded-full overflow-hidden" style={{ background: "var(--border-subtle)" }}>
+          <span className="block h-full rounded-full transition-[width] duration-700" style={{ width: `${pct}%`, background: ORANGE }} />
+        </span>
+      </div>
+
+      {/* Every level — a plain list reads better than nine squeezed nodes on a phone */}
+      {showLadder && (
+        <ol id="level-ladder" className="mt-4">
+          {XP_TIERS.map(t => {
+            const reached = xp >= t.minXP;
+            const current = t.level === tier.level;
+            return (
+              <li key={t.level} className="flex items-center gap-3 py-1.5" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+                <span className="w-6 h-6 rounded-lg shrink-0 flex items-center justify-center text-[12px] tabular-nums"
+                  style={current
+                    ? { background: ORANGE, color: "#fff" }
+                    : reached ? { border: `1px solid ${ORANGE}`, color: ORANGE } : { border: "1px dashed var(--border-default)", color: "var(--text-muted)" }}>
+                  {t.level}
                 </span>
-                <button onClick={() => setShowLadder(v => !v)}
-                  aria-expanded={showLadder} aria-controls="expedition-tier-ladder"
-                  className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-md transition-all hover:bg-[var(--bg-surface)]"
-                  style={{ color: showLadder ? accentColor : "var(--text-muted)" }}>
-                  <span className="text-[8px] font-bold tracking-wide">ALL TIERS</span>
-                  <ChevronDown className="w-2.5 h-2.5 transition-transform duration-200"
-                    style={{ transform: showLadder ? "rotate(180deg)" : "none" }} />
-                </button>
-              </div>
-            </div>
-            <div className="relative h-2 rounded-full overflow-hidden" style={{ background: "var(--bg-surface-2)" }}>
-              <div className="absolute inset-y-0 left-0 rounded-full transition-all duration-700"
-                style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${tier.color}, ${next.color})`, boxShadow: `0 0 8px ${tier.color}50` }} />
-            </div>
-            <div className="flex items-center justify-between mt-1.5">
-              <span className="text-[8px] tabular-nums" style={{ color: "var(--text-muted)" }}>{tier.minXP.toLocaleString()} XP</span>
-              <span className="text-[8px] tabular-nums" style={{ color: "var(--text-muted)" }}>{next.minXP.toLocaleString()} XP</span>
-            </div>
-          </div>
-        ) : null}
+                <span className="flex-1 min-w-0 text-[14px]" style={{ color: reached ? "var(--text-primary)" : "var(--text-tertiary)" }}>
+                  {t.name}
+                  <span className="hidden sm:inline text-[13px]" style={{ color: "var(--text-tertiary)" }}> · {t.description}</span>
+                </span>
+                <span className="text-[12px] tabular-nums" style={{ color: "var(--text-tertiary)" }}>{t.minXP.toLocaleString("en-IN")} XP</span>
+              </li>
+            );
+          })}
+        </ol>
+      )}
 
-        {/* Tier ladder */}
-        {showLadder && (
-          <div id="expedition-tier-ladder" className="mt-4 pt-4" style={{ borderTop: "1px solid var(--border-subtle)" }}>
-            {/* Track: circles are 28px tall, container has no extra offset — spine at top:14px = circle center */}
-            <div className="relative" style={{ paddingBottom: "4px" }}>
-              {/* Background spine — at exact vertical center of 28px circles */}
-              <div className="absolute left-0 right-0 h-px" style={{ top: "14px", background: "var(--border-subtle)", zIndex: 0 }} />
-              {/* Filled spine up to current tier */}
-              {(() => {
-                const idx = XP_TIERS.findIndex(t => t.level === tier.level);
-                const pctFill = over9k ? 100 : (idx / (XP_TIERS.length - 1)) * 100;
-                return (
-                  <div className="absolute left-0 h-px" style={{
-                    top: "14px",
-                    width: `${pctFill}%`,
-                    background: `linear-gradient(90deg, ${XP_TIERS[0].color}, ${tier.color})`,
-                    zIndex: 0,
-                    transition: "width 0.7s ease",
-                  }} />
-                );
-              })()}
-              {/* Nodes row — sits above spine via z-index */}
-              <div className="relative flex items-start justify-between" style={{ zIndex: 1 }}>
-                {XP_TIERS.map(t => {
-                  const reached   = xp >= t.minXP;
-                  const isCurrent = t.level === tier.level;
-                  return (
-                    <div key={t.level} className="flex flex-col items-center" style={{ gap: "6px" }}>
-                      {/* Circle — solid bg so spine line can't bleed through */}
-                      <div className="w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-black shrink-0 relative"
-                        style={isCurrent
-                          ? { background: t.color, color: "#000", boxShadow: `0 0 12px ${t.color}90, 0 0 0 3px ${t.color}30`, zIndex: 2 }
-                          : reached
-                            ? { background: "var(--bg-page)", color: t.color, border: `1.5px solid ${t.color}`, boxShadow: `0 0 8px ${t.color}40`, zIndex: 2 }
-                            : { background: "var(--bg-page)", color: "var(--text-muted)", border: "1.5px solid var(--border-subtle)", zIndex: 2 }
-                        }>
-                        {t.level}
-                      </div>
-                      {/* Name label */}
-                      <span className="text-[7px] font-semibold text-center leading-tight" style={{
-                        maxWidth: "44px",
-                        wordBreak: "break-word",
-                        color: isCurrent ? t.color : reached ? t.color : "var(--text-muted)",
-                      }}>
-                        {t.name}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
+      {/* The counts behind it — the same ones the badges use */}
+      <div className="mt-5">
+        <Label>activity</Label>
+        <div className="grid grid-cols-2 sm:grid-cols-4 rounded-xl overflow-hidden" style={{ border: "1px solid var(--border-subtle)" }}>
+          {[
+            { value: engagement.completed  ?? 0, label: "completed",  icon: CheckCircle2 },
+            { value: engagement.reviews    ?? 0, label: "reviews",    icon: Star         },
+            { value: engagement.photos     ?? 0, label: "photos",     icon: Camera       },
+            { value: engagement.wishlisted ?? 0, label: "wishlisted", icon: Heart        },
+          ].map(({ value, label, icon: Icon }, i) => (
+            <div
+              key={label}
+              className={`flex items-center gap-2.5 px-3 py-3 min-w-0 ${i % 2 ? "border-l" : ""} ${i >= 2 ? "border-t sm:border-t-0 sm:border-l" : ""}`}
+              style={{ borderColor: "var(--border-subtle)" }}
+            >
+              <Icon className="w-4 h-4 shrink-0" style={{ color: value > 0 ? ORANGE : "var(--text-muted)" }} />
+              <span className="min-w-0">
+                <span className="block text-[18px] leading-none font-semibold tabular-nums" style={{ color: value > 0 ? "var(--text-primary)" : "var(--text-muted)" }}>{value}</span>
+                <span className="block text-[12px] mt-1 tracking-[0.06em] lowercase truncate" style={{ color: "var(--text-tertiary)", fontVariant: "small-caps" }}>{label}</span>
+              </span>
             </div>
-          </div>
-        )}
+          ))}
+        </div>
       </div>
-
-      {/* ── Stats strip — 3 columns on mobile (2 rows) so labels have room to
-          breathe instead of truncating into "0 C..."; 5 across from sm: up ── */}
-      <div className="relative grid grid-cols-3 sm:grid-cols-5 divide-x divide-y sm:divide-y-0 divide-[color:var(--border-subtle)]">
-        {[
-          { value: countOf("trip_log"), label: "Completed",  color: "#10b981", icon: CheckCircle2 },
-          { value: countOf("review"),   label: "Reviews",    color: "#f97316", icon: Star         },
-          { value: countOf("photo"),    label: "Photos",     color: "#3b82f6", icon: Camera       },
-          { value: countOf("wishlist"), label: "Wishlisted", color: "#f43f5e", icon: Heart        },
-          { value: countOf("compare"),  label: "Compared",   color: "#a78bfa", icon: GitCompare   },
-        ].map(({ value, label, color, icon: Icon }) => {
-          const active = value > 0;
-          return (
-            <div key={label} className="flex items-center gap-2 px-2.5 py-3 min-w-0">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                style={{
-                  background: active ? `${color}18` : "var(--bg-surface-2)",
-                  border: `1px solid ${active ? `${color}30` : "var(--border-subtle)"}`,
-                }}>
-                <Icon className="w-3.5 h-3.5" style={{ color: active ? color : "var(--text-muted)" }} />
-              </div>
-              <div className="flex flex-col gap-0.5 min-w-0">
-                <span className="text-[15px] font-black tabular-nums leading-none" style={{ color: active ? color : "var(--text-muted)" }}>{value}</span>
-                <span className="text-[8px] uppercase tracking-wide font-bold leading-none truncate" style={{ color: "var(--text-muted)" }}>{label}</span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
     </div>
   );
 }

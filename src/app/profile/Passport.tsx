@@ -12,18 +12,25 @@ import {
   fmtDate, fmtNumber, parseISODate, ptsStr, polygonVertices, radarVertices,
   TypeIcon, ImmigrationStamp, BadgeIcon,
 } from "@/lib/passportVisuals";
-import { ALL_BADGES } from "@/lib/achievements";
+import { ALL_BADGES, badgeFace, type Achievement } from "@/lib/achievements";
+import { useBadgeRarity } from "@/lib/useBadgeRarity";
+import { BADGE_GOLD } from "@/components/ui/custom/BadgeIcon";
 
 // The Adventure Passport: a closed cover, then one page at a time (swipe, arrows or
-// keys). ID page → where you've been → badges → the stamp collection (every adventure
-// on the site, by state, stamped or waiting) → a page per trip → the full logbook.
+// keys). ID page → where you've been → badges → a page per trip → the full logbook →
+// the stamp collection (every adventure on the site, by region, stamped or waiting —
+// last, so its many empty slots don't push your own trips back).
 // Paper and ink in light mode, dark paper in dark mode; stamps are re-inked to match.
+// Pages are laid out at 420×600 and the whole book scales down to fit a short screen.
 
 const ORANGE = "#ff5100";
+const PAGE_W = 420;
 const PAGE_H = 600;
+/** Room the page controls and site chrome need below/above the book */
+const CHROME_H = 200;
 
-type Section = "id" | "map" | "badges" | "stamps" | "trips" | "log";
-const SECTION_LABEL: Record<Section, string> = { id: "ID", map: "Map", badges: "Badges", stamps: "Stamps", trips: "Trips", log: "Logbook" };
+type Section = "id" | "map" | "badges" | "trips" | "log" | "stamps";
+const SECTION_LABEL: Record<Section, string> = { id: "ID", map: "Map", badges: "Badges", trips: "Trips", log: "Logbook", stamps: "Stamps" };
 interface Page { key: string; section: Section; node: React.ReactNode }
 
 // ─── Page furniture ────────────────────────────────────────────────────────
@@ -58,7 +65,7 @@ function Mrz({ data }: { data: PassportData }) {
   const clean = (s: string) => s.toUpperCase().replace(/[^A-Z0-9]+/g, "<");
   const [first, ...rest] = data.name.split(" ");
   const line1 = `P<TTT${clean(rest.join(" ") || first)}<<${clean(rest.length ? first : "")}`.padEnd(44, "<").slice(0, 44);
-  const line2 = `${clean(data.passportNo)}<<${String(data.totalAdventures).padStart(3, "0")}ADV<<${String(data.statesCount).padStart(2, "0")}ST<<${clean(data.level.name)}`.padEnd(44, "<").slice(0, 44);
+  const line2 = `${clean(data.passportNo)}<<${String(data.totalAdventures).padStart(3, "0")}ADV<<${String(data.statesCount).padStart(2, "0")}RG<<${clean(data.level.name)}`.padEnd(44, "<").slice(0, 44);
   return (
     <div className="font-mono text-[11px] leading-[1.35] tracking-[0.06em] overflow-hidden whitespace-nowrap" style={{ color: "var(--pp-muted)" }} aria-hidden>
       <div>{line1}</div>
@@ -100,7 +107,7 @@ function IdPage({ data }: { data: PassportData }) {
       <div className="grid grid-cols-3 mt-4 py-3" style={{ borderTop: "1px solid var(--pp-line)", borderBottom: "1px solid var(--pp-line)" }}>
         {[
           { n: data.totalAdventures, l: "adventures" },
-          { n: data.statesCount, l: data.statesCount === 1 ? "state" : "states" },
+          { n: data.statesCount, l: data.statesCount === 1 ? "region" : "regions" },
           { n: data.totalBadges, l: data.totalBadges === 1 ? "badge" : "badges" },
         ].map((s) => (
           <div key={s.l} className="text-center">
@@ -143,7 +150,7 @@ function IdPage({ data }: { data: PassportData }) {
 function MapPage({ data }: { data: PassportData }) {
   const states = data.collection.filter((c) => c.done > 0);
   return (
-    <PageFrame kicker="Where you've been" title={data.totalAdventures ? `${data.totalAdventures} adventures, ${data.statesCount} ${data.statesCount === 1 ? "state" : "states"}` : "Your map is empty"}>
+    <PageFrame kicker="Where you've been" title={data.totalAdventures ? `${data.totalAdventures} adventures, ${data.statesCount} ${data.statesCount === 1 ? "region" : "regions"}` : "Your map is empty"}>
       <div className="relative flex-1 min-h-0">
         <svg viewBox="0 0 420 480" preserveAspectRatio="xMidYMid meet" className="absolute inset-0 w-full h-full" aria-label="Map of India with your adventures">
           <path d={INDIA_PATH} fill="var(--pp-wash)" stroke="var(--pp-line)" strokeWidth={1.2} />
@@ -172,45 +179,73 @@ function MapPage({ data }: { data: PassportData }) {
   );
 }
 
-function BadgesPage({ data }: { data: PassportData }) {
-  const nb = data.nextBadge;
+const BADGES_PER_PAGE = 20;
+
+function BadgesPage({ data, badges, part, parts }: { data: PassportData; badges: Achievement[]; part: number; parts: number }) {
+  const [selected, setSelected] = useState<string | null>(null);
+  const rarityOf = useBadgeRarity();
   const earnedIds = new Set(data.badges.map((b) => b.id));
+  const picked = ALL_BADGES.find((b) => b.id === selected);
+  const pickedEarned = !!picked && earnedIds.has(picked.id);
+  const pickedFace = picked && badgeFace(picked, pickedEarned);
+  // The footer shows the tapped seal, or else the badge closest to unlocking
+  // (earned: what it means; locked: how to get it — the page has room for one or the other)
+  const pickedProgress = picked && !pickedEarned ? data.badgeProgress[picked.id] ?? null : null;
+  const foot = pickedFace
+    ? { label: pickedEarned ? "earned" : "locked", name: pickedFace.name, line: pickedProgress?.hint || pickedFace.description, progress: pickedProgress, rare: rarityOf(pickedFace.id) }
+    : data.nextBadge && { label: "next badge", name: data.nextBadge.name, line: data.nextBadge.hint, progress: data.nextBadge, rare: null };
   return (
-    <PageFrame kicker="Endorsements" title={`${data.totalBadges} of ${ALL_BADGES.length} badges`}>
-      {/* Every badge has a seal: earned ones inked (the pinnacle ones in orange), the rest a faint outline to earn */}
-      <div className="grid grid-cols-5 gap-x-1.5 gap-y-2.5 content-start">
-        {ALL_BADGES.map((b, i) => {
+    <PageFrame kicker={parts > 1 ? `Endorsements · ${part} of ${parts}` : "Endorsements"} title={`${data.totalBadges} of ${ALL_BADGES.length} badges`}>
+      {/* Every badge has a seal: earned ones inked in orange (the pinnacle ones filled), the rest an outline to earn. Tap one for what it is. */}
+      <div className="grid grid-cols-5 gap-x-1.5 gap-y-2 content-start">
+        {badges.map((b, i) => {
           const earned = earnedIds.has(b.id);
+          const face = badgeFace(b, earned);
           const accent = earned && b.tier === "tier1";
+          const on = selected === b.id;
           return (
-            <div key={b.id} className="flex flex-col items-center gap-1 text-center" title={earned ? b.description : `Locked: ${b.description}`}>
+            <button
+              key={b.id}
+              type="button"
+              onClick={() => setSelected(on ? null : b.id)}
+              aria-pressed={on}
+              aria-label={`${face.name}, ${earned ? "earned" : "locked"}`}
+              className="flex flex-col items-center gap-1 text-center rounded-lg transition-colors hover:bg-[var(--pp-wash)]"
+              style={on ? { background: "var(--pp-wash)" } : undefined}
+            >
               <span
-                className="w-11 h-11 rounded-full flex items-center justify-center"
-                style={earned
-                  ? { border: `1.5px solid ${accent ? ORANGE : "var(--pp-ink)"}`, outline: "1px dashed var(--pp-line)", outlineOffset: 2, transform: `rotate(${((i * 37) % 13) - 6}deg)`, color: accent ? ORANGE : "var(--pp-ink)" }
-                  : { border: "1.5px dashed var(--pp-line)", color: "var(--pp-line)" }}
+                className="relative w-11 h-11 rounded-full flex items-center justify-center overflow-hidden"
+                style={!earned
+                  ? { border: "1.5px dashed var(--pp-line)", outline: b.tier === "tier1" ? "1px dashed var(--pp-line)" : undefined, outlineOffset: 2, color: "var(--pp-muted)", opacity: 0.75 }
+                  : accent
+                    // Pinnacle: the same gradient, double ring and shine as the Trophy Cabinet
+                    ? { background: "linear-gradient(140deg, #ffb070 0%, #ff6a1a 38%, #ff5100 55%, #b33a00 100%)", boxShadow: `0 0 0 2px var(--pp-paper), 0 0 0 3.5px ${ORANGE}, 0 4px 14px rgba(255,81,0,0.35)`, color: "#fff" }
+                    // Others inked orange — secret ones in gold — and stamped at a slight angle
+                    : { border: `1.5px solid ${b.secret ? BADGE_GOLD : ORANGE}`, background: b.secret ? `${BADGE_GOLD}1f` : "transparent", outline: "1px dashed var(--pp-line)", outlineOffset: 2, transform: `rotate(${((i * 37) % 13) - 6}deg)`, color: b.secret ? BADGE_GOLD : ORANGE }}
               >
-                <BadgeIcon name={b.icon} size={18} color="currentColor" />
+                {accent && <span className="badge-shine" aria-hidden />}
+                <span className="relative flex"><BadgeIcon name={face.icon} size={18} color="currentColor" /></span>
               </span>
-              <span className="text-[11px] leading-tight line-clamp-2" style={{ color: earned ? "var(--pp-ink)" : "var(--pp-muted)" }}>{b.name}</span>
-            </div>
+              <span className="text-[11px] leading-tight line-clamp-2" style={{ color: earned ? "var(--pp-ink)" : "var(--pp-muted)" }}>{face.name}</span>
+            </button>
           );
         })}
       </div>
       <div className="flex-1" />
-      {nb && (
+      {foot && (
         <div className="pt-3" style={{ borderTop: "1px dashed var(--pp-line)" }}>
-          <Label>next badge</Label>
+          <Label>{foot.label}</Label>
           <div className="flex items-center gap-3">
             <div className="flex-1 min-w-0">
-              <p className="text-[14px] truncate">{nb.name}</p>
-              <p className="text-[12px] leading-snug" style={{ color: "var(--pp-muted)" }}>{nb.hint}</p>
+              <p className="text-[14px] truncate">{foot.name}</p>
+              <p className="text-[12px] leading-snug line-clamp-2" style={{ color: "var(--pp-muted)" }}>{foot.line}</p>
+              {foot.rare && <p className="text-[12px] leading-snug" style={{ color: ORANGE }}>{foot.rare}</p>}
             </div>
-            {nb.need > 1 && (
+            {foot.progress && foot.progress.need > 1 && (
               <div className="shrink-0 flex flex-col items-end gap-1">
-                <span className="text-[12px] tabular-nums">{fmtNumber(nb.have)} / {fmtNumber(nb.need)}</span>
+                <span className="text-[12px] tabular-nums">{fmtNumber(foot.progress.have)} / {fmtNumber(foot.progress.need)}</span>
                 <span className="block w-16 h-[3px] rounded-full overflow-hidden" style={{ background: "var(--pp-line)" }}>
-                  <span className="block h-full" style={{ width: `${Math.round((nb.have / nb.need) * 100)}%`, background: ORANGE }} />
+                  <span className="block h-full" style={{ width: `${Math.round((foot.progress.have / foot.progress.need) * 100)}%`, background: ORANGE }} />
                 </span>
               </div>
             )}
@@ -380,7 +415,7 @@ function Cover({ name, onOpen }: { name: string; onOpen: () => void }) {
       <span className="text-[11px] tracking-[0.35em] uppercase" style={{ color: "rgba(201,162,77,0.8)" }}>Trail to Tides</span>
       <span className="text-[30px] leading-[1.1] mt-2 text-center" style={{ fontFamily: "var(--font-display), Georgia, serif", color: "#f3e3bd" }}>Adventure<br />Passport</span>
       <span className="text-[13px] mt-4" style={{ color: "rgba(243,227,189,0.6)" }}>{name}</span>
-      <span className="text-[12px] mt-8 px-4 py-1.5 rounded-full" style={{ color: "#f3e3bd", border: "1px solid rgba(201,162,77,0.5)" }}>Tap to open</span>
+      <span className="text-[12px] mt-8 px-4 py-1.5 rounded-full" style={{ color: "#f3e3bd", border: "1px solid rgba(201,162,77,0.5)" }}>Open passport</span>
     </motion.button>
   );
 }
@@ -395,15 +430,38 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
   const [index, setIndex] = useState(0);
   const [dir, setDir] = useState(1);
   const [sharing, setSharing] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [scale, setScale] = useState(1);
+  const shellRef = useRef<HTMLDivElement>(null);
+  const onScreen = useRef(false);
+  const dragged = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
+    setStatus("loading");
     fetch(publicUsername ? `/api/passport-data?u=${encodeURIComponent(publicUsername)}` : "/api/passport-data")
       .then((r) => { if (!r.ok) throw new Error("not ok"); return r.json(); })
       .then((d) => { if (!cancelled) { setData(d); setStatus("ready"); } })
       .catch(() => { if (!cancelled) setStatus("error"); });
     return () => { cancelled = true; };
-  }, [publicUsername]);
+  }, [publicUsername, attempt]);
+
+  // Shrink the whole book (never below 72%) when the screen is too short for it and its controls
+  useEffect(() => {
+    const fit = () => setScale(Math.min(1, Math.max(0.72, (window.innerHeight - CHROME_H) / PAGE_H)));
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, []);
+
+  // Arrow keys only turn pages while the book is actually on screen
+  useEffect(() => {
+    const el = shellRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => { onScreen.current = e.isIntersecting; }, { threshold: 0.5 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   // Trip pages are looked up by slug so stamps and logbook rows can jump to them
   const tripIndexRef = useRef(new Map<string, number>());
@@ -422,11 +480,11 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
     };
     list.push({ key: "id", section: "id", node: <IdPage data={data} /> });
     list.push({ key: "map", section: "map", node: <MapPage data={data} /> });
-    list.push({ key: "badges", section: "badges", node: <BadgesPage data={data} /> });
-    const totalDone = data.totalAdventures;
-    paginateCollection(data.collection).forEach((chunks, i) => {
-      list.push({ key: `stamps-${i}`, section: "stamps", node: <StampsPage chunks={chunks} totalDone={totalDone} totalAll={data.totalCollectable} onOpenTrip={openTrip} /> });
-    });
+    const badgeParts = Math.ceil(ALL_BADGES.length / BADGES_PER_PAGE);
+    for (let i = 0; i < badgeParts; i++) {
+      const slice = ALL_BADGES.slice(i * BADGES_PER_PAGE, (i + 1) * BADGES_PER_PAGE);
+      list.push({ key: `badges-${i}`, section: "badges", node: <BadgesPage data={data} badges={slice} part={i + 1} parts={badgeParts} /> });
+    }
     data.logPages.forEach((entry) => {
       tripIndexRef.current.set(entry.slug, list.length);
       list.push({ key: `trip-${entry.slug}`, section: "trips", node: <TripPage entry={entry} state={stateBySlug.get(entry.slug) ?? ""} /> });
@@ -436,6 +494,9 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
       const rows = data.stamps.slice(i * LOG_ROWS, (i + 1) * LOG_ROWS);
       list.push({ key: `log-${i}`, section: "log", node: <LogPage rows={rows} from={i * LOG_ROWS} total={data.stamps.length} onOpenTrip={openTrip} /> });
     }
+    paginateCollection(data.collection).forEach((chunks, i) => {
+      list.push({ key: `stamps-${i}`, section: "stamps", node: <StampsPage chunks={chunks} totalDone={data.totalAdventures} totalAll={data.totalCollectable} onOpenTrip={openTrip} /> });
+    });
     return list;
   }, [data]);
 
@@ -449,7 +510,7 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
-      if (t && /INPUT|TEXTAREA|SELECT/.test(t.tagName)) return;
+      if (!onScreen.current || (t && /INPUT|TEXTAREA|SELECT/.test(t.tagName))) return;
       if (e.key === "ArrowRight") go(index + 1);
       if (e.key === "ArrowLeft") go(index - 1);
     };
@@ -492,15 +553,19 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
         .dark .pp-stamp { filter: invert(1) hue-rotate(180deg); }
       `}</style>
 
-      <div className="relative w-full max-w-[420px]" style={{ height: PAGE_H }}>
+      <div ref={shellRef} className="relative w-full" style={{ maxWidth: PAGE_W * scale, height: PAGE_H * scale }}>
+       <div className="absolute top-0 left-0" style={{ width: `${100 / scale}%`, height: PAGE_H, transform: scale < 1 ? `scale(${scale})` : undefined, transformOrigin: "top left" }}>
         {status === "loading" && (
           <div className="absolute inset-0 rounded-2xl flex items-center justify-center" style={{ background: "var(--bg-surface)" }}>
             <Loader2 className="w-6 h-6 animate-spin" style={{ color: "var(--text-muted)" }} />
           </div>
         )}
         {status === "error" && (
-          <div className="absolute inset-0 rounded-2xl flex items-center justify-center px-8 text-center text-[14px]" style={{ background: "var(--bg-surface)", color: "var(--text-secondary)" }}>
-            Couldn&apos;t load the passport. Refresh to try again.
+          <div className="absolute inset-0 rounded-2xl flex flex-col items-center justify-center gap-3 px-8 text-center text-[14px]" style={{ background: "var(--bg-surface)", color: "var(--text-secondary)" }}>
+            Couldn&apos;t load the passport.
+            <button type="button" onClick={() => setAttempt((n) => n + 1)} className="h-9 px-4 rounded-full text-[13px] font-semibold" style={{ color: ORANGE, border: `1px solid ${ORANGE}` }}>
+              Try again
+            </button>
           </div>
         )}
 
@@ -520,6 +585,10 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.25}
+                // A swipe that ends over a stamp or logbook row mustn't also open it
+                onPointerDown={() => { dragged.current = false; }}
+                onDragStart={() => { dragged.current = true; }}
+                onClickCapture={(e) => { if (dragged.current) { e.stopPropagation(); e.preventDefault(); dragged.current = false; } }}
                 onDragEnd={(_, info) => {
                   if (info.offset.x < -70) go(index + 1);
                   else if (info.offset.x > 70) go(index - 1);
@@ -541,6 +610,7 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
             )}
           </div>
         )}
+       </div>
       </div>
 
       {status === "ready" && data && open && (
@@ -574,13 +644,14 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
         </>
       )}
 
-      {status === "ready" && data && !publicUsername && (
-        <div className="flex flex-wrap items-center justify-center gap-2">
+      {/* Sharing belongs to the open book — the button says which image it makes */}
+      {status === "ready" && data && open && !publicUsername && (
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
           <button type="button" onClick={share} disabled={sharing} className={`${pill} hover:bg-[#ff5100]/[0.06]`} style={{ color: ORANGE, border: `1px solid ${ORANGE}` }}>
             {sharing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Share2 className="w-3.5 h-3.5" />}
-            {current?.section === "map" && open ? "Share the map" : "Share as image"}
+            {current?.section === "map" ? "Share the map" : "Share stats card"}
           </button>
-          {data.username && <PublicLink username={data.username} className={pill} />}
+          {data.username && <PublicLink username={data.username} />}
         </div>
       )}
     </div>
@@ -588,7 +659,7 @@ export default function Passport({ publicUsername }: { publicUsername?: string }
 }
 
 // A link anyone can open (/passport/<username>), off until the owner turns it on
-function PublicLink({ username, className }: { username: string; className: string }) {
+function PublicLink({ username }: { username: string }) {
   const [on, setOn] = useState<boolean | null>(null);
   useEffect(() => {
     fetch("/api/account-prefs").then((r) => (r.ok ? r.json() : null)).then((p) => setOn(!!p?.passportPublic)).catch(() => setOn(false));
@@ -604,16 +675,20 @@ function PublicLink({ username, className }: { username: string; className: stri
   }
 
   if (on === null) return null;
+  // A real switch: its label names the setting, the knob shows whether it's on
   return (
-    <>
-      <button type="button" onClick={toggle} className={className} style={{ color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}>
-        {on ? "Public link on" : "Get a public link"}
+    <div className="flex items-center gap-3">
+      <button type="button" role="switch" aria-checked={on} onClick={toggle} className="inline-flex items-center gap-2 text-[13px]" style={{ color: "var(--text-secondary)" }}>
+        <span className="relative w-9 h-5 rounded-full transition-colors" style={{ background: on ? ORANGE : "var(--border-default)" }}>
+          <span className="absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-[left] duration-200" style={{ left: on ? 18 : 2 }} />
+        </span>
+        Public link
       </button>
       {on && (
         <button type="button" onClick={async () => { try { await navigator.clipboard.writeText(link); toast.success("Link copied."); } catch {} }} className="text-[13px] underline underline-offset-2" style={{ color: "var(--text-secondary)" }}>
           Copy link
         </button>
       )}
-    </>
+    </div>
   );
 }

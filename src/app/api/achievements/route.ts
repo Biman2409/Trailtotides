@@ -10,8 +10,8 @@ export async function GET() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { ace, totalXP, engagement, earned } = await loadUserBadges(await createAdminClient(), user);
-  return NextResponse.json({ ace, totalXP, engagement, earnedIds: earned.map((b) => b.id) });
+  const { totalXP, engagement, earned } = await loadUserBadges(await createAdminClient(), user);
+  return NextResponse.json({ totalXP, engagement, earnedIds: earned.map((b) => b.id) });
 }
 
 // POST — badges earned since the last check, for the "unlocked" pop-up.

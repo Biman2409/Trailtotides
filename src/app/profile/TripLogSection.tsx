@@ -20,7 +20,7 @@ export default function TripLogSection() {
     return (
       <div className="rounded-xl px-4 py-6 text-center" style={{ background: "var(--bg-card)", border: "1px solid var(--border-subtle)" }}>
         <Mountain className="w-5 h-5 mx-auto mb-2" style={{ color: "var(--text-muted)", opacity: 0.15 }} />
-        <p className="text-xs" style={{ color: "var(--text-muted)" }}>No completed adventures yet.</p>
+        <p className="text-[13px]" style={{ color: "var(--text-tertiary)" }}>No completed adventures yet.</p>
       </div>
     );
   }
@@ -38,10 +38,10 @@ export default function TripLogSection() {
             <Image src={a!.heroImage} alt={a!.name} fill className="object-cover" />
           </div>
           <div className="flex-1 min-w-0">
-            <Link href={`/experiences/${a!.slug}`} className="text-[12px] font-semibold hover:text-[#ff5100] transition-colors leading-snug line-clamp-1" style={{ color: "var(--text-secondary)" }}>
+            <Link href={`/experiences/${a!.slug}`} className="text-[14px] font-medium hover:text-[#ff5100] transition-colors leading-snug line-clamp-1" style={{ color: "var(--text-secondary)" }}>
               {a!.name}
             </Link>
-            <p className="text-[10px] mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>{a!.state} · {a!.type}</p>
+            <p className="text-[12px] mt-0.5 truncate" style={{ color: "var(--text-muted)" }}>{a!.state} · {a!.type}</p>
           </div>
           <button
             onClick={() => unmark(entry.slug)}

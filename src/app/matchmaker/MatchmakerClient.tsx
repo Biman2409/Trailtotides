@@ -14,8 +14,6 @@ import ACERadar from "@/components/ui/custom/ACERadar";
 import AdventureCard from "@/components/ui/custom/AdventureCard";
 import SectionTexture from "@/components/ui/custom/SectionTexture";
 import { ADVENTURE_FACTS } from "@/lib/adventureFacts";
-import AchievementBadges from "@/components/ui/custom/AchievementBadges";
-import AchievementShareButton from "@/components/ui/custom/AchievementShareButton";
 import {
   saveProfile, saveProfileToServer, loadProfileFromServer,
   saveMedicalFlagsToServer,
@@ -24,9 +22,7 @@ import {
 } from "@/lib/matchmaker";
 import { adventures as ALL_ADVENTURES } from "@/lib/data";
 import { getACE, computeMatchScore, type ACE, type AceAxis } from "@/lib/ace";
-import { getAchievements } from "@/lib/achievements";
 import { awardXP } from "@/lib/awardXP";
-import { createClient } from "@/lib/supabase/client";
 import FadeInSection from "@/components/ui/custom/FadeInSection";
 import {
   CAPABILITY_QUESTIONS, DECAY_QUESTIONS, MEDICAL_QUESTIONS, buildMedicalFlags,
@@ -874,15 +870,6 @@ function ResultsScreen({
 }) {
   const { userAxes, adventures: enriched, trainingPlan, rawAxes, decayNotes } = result;
 
-  // Badges are for signed-in explorers only
-  const [signedIn, setSignedIn] = useState(false);
-  useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data: { user } }) => setSignedIn(!!user));
-    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => setSignedIn(!!session?.user));
-    return () => listener.subscription.unsubscribe();
-  }, []);
-
   // Reached from a trek page (?from=slug): offer the way back
   const searchParams = useSearchParams();
   const fromSlug = searchParams.get("from");
@@ -910,7 +897,6 @@ function ResultsScreen({
 
   const totalScore = Object.values(userAxes).reduce((a, b) => a + b, 0);
   const resultAce: ACE = { stamina: userAxes.stamina ?? 0, power: userAxes.power ?? 0, strength: userAxes.strength ?? 0, agility: userAxes.agility ?? 0, water: userAxes.water ?? 0, altitude: userAxes.altitude ?? 0, focus: userAxes.focus ?? 0, nerve: userAxes.nerve ?? 0 };
-  const achievements = getAchievements(resultAce);
 
   const rankIndex = Math.max(0, RANKS.reduce((idx, r, i) => (totalScore >= r.minScore ? i : idx), 0));
   const tier = RANKS[rankIndex];
@@ -1091,23 +1077,6 @@ function ResultsScreen({
       {trainingPlan.length > 0 && (
         <FadeInSection>
           <TrainingPanel trainingPlan={trainingPlan} axisColors={AXIS_COLORS} axisIcons={AXIS_ICONS} axisLabels={AXIS_LABELS} unlocks={unlocks} neededBy={neededBy} />
-        </FadeInSection>
-      )}
-
-      {/* ── ACHIEVEMENTS ────────────────────────────────────────────────────── */}
-      {signedIn && achievements.length > 0 && (
-        <FadeInSection>
-          <div className={`${panel} p-5 sm:p-7`} style={panelStyle}>
-            <SectionTexture kind="tides" color="#ffc46b" at="100% 100%" opacity={0.1} />
-            <div className="relative">
-              <SectionHead
-                eyebrow="Achievements unlocked"
-                title={`${achievements.length} badge${achievements.length === 1 ? "" : "s"} earned`}
-                right={<AchievementShareButton title={`My Trail to Tides fitness profile — ${tier.label}`} />}
-              />
-              <AchievementBadges ace={resultAce} heading={false} variant="list" maxListHeight={52} />
-            </div>
-          </div>
         </FadeInSection>
       )}
 

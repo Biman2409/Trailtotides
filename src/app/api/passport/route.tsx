@@ -14,6 +14,8 @@ export const runtime = "edge";
 // element sets display:"flex".
 
 const ORANGE = "#ff5100";
+/** Same gold as secret badges everywhere else */
+const SECRET_GOLD = "#d4a843";
 const MUTED = "rgba(36,26,18,0.58)";
 const LINE = "rgba(36,26,18,0.18)";
 const LEATHER = "#4a1019";
@@ -100,7 +102,7 @@ function IdImage({ data }: { data: PassportData }) {
       <div style={{ display: "flex", marginTop: 26, padding: "22px 0", borderTop: `2px solid ${LINE}`, borderBottom: `2px solid ${LINE}` }}>
         {[
           { n: data.totalAdventures, l: "Adventures" },
-          { n: data.statesCount, l: data.statesCount === 1 ? "State" : "States" },
+          { n: data.statesCount, l: data.statesCount === 1 ? "Region" : "Regions" },
           { n: data.totalBadges, l: data.totalBadges === 1 ? "Badge" : "Badges" },
         ].map((s) => (
           <div key={s.l} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1 }}>
@@ -128,9 +130,9 @@ function IdImage({ data }: { data: PassportData }) {
 
       {data.badges.length > 0 && (
         <div style={{ display: "flex", gap: 16, marginTop: 22, alignItems: "center" }}>
-          {data.badges.slice(0, 7).map((b, i) => (
-            <div key={b.id} style={{ display: "flex", width: 76, height: 76, borderRadius: 999, border: `3px solid ${i === 0 ? ORANGE : INK}`, alignItems: "center", justifyContent: "center" }}>
-              <BadgeIcon name={b.icon} size={34} color={i === 0 ? ORANGE : INK} />
+          {data.badges.slice(0, 7).map((b) => (
+            <div key={b.id} style={{ display: "flex", width: 76, height: 76, borderRadius: 999, border: `3px solid ${b.secret ? SECRET_GOLD : ORANGE}`, background: b.tier === "tier1" ? ORANGE : "transparent", alignItems: "center", justifyContent: "center" }}>
+              <BadgeIcon name={b.icon} size={34} color={b.tier === "tier1" ? "#fff" : b.secret ? SECRET_GOLD : ORANGE} />
             </div>
           ))}
           {data.badges.length > 7 && <span style={{ display: "flex", fontSize: 26, color: MUTED }}>{`+${data.badges.length - 7}`}</span>}
@@ -150,7 +152,7 @@ function MapImage({ data }: { data: PassportData }) {
     <Frame>
       <Header
         kicker="Where I've been"
-        title={data.totalAdventures ? `${data.totalAdventures} adventures, ${data.statesCount} ${data.statesCount === 1 ? "state" : "states"}` : "A fresh passport"}
+        title={data.totalAdventures ? `${data.totalAdventures} adventures, ${data.statesCount} ${data.statesCount === 1 ? "region" : "regions"}` : "A fresh passport"}
       />
       <div style={{ display: "flex", justifyContent: "center", marginTop: 20 }}>
         <svg width={W * S} height={H * S} viewBox={`0 0 ${W} ${H}`}>

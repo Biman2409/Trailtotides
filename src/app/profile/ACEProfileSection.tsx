@@ -9,6 +9,8 @@ import RankBar from "@/components/ui/custom/RankBar";
 import { TIER_LIST } from "@/lib/tiers";
 import { RANK_ICONS } from "@/lib/rankIcons";
 
+const ORANGE = "#ff5100";
+
 const RANKS = TIER_LIST.map((t) => ({
   ...t,
   icon: <span className="w-6 h-6 [&>svg]:w-full [&>svg]:h-full">{RANK_ICONS[t.label]}</span>,
@@ -28,53 +30,29 @@ export default function ACEProfileSection() {
 
   if (!mounted) return null;
 
+  const card = "rounded-2xl";
+  const cardStyle = { background: "var(--bg-card)", border: "1px solid var(--border-subtle)" };
+  const small = { fontVariant: "small-caps" as const };
+
   // ── Empty state ────────────────────────────────────────────────────────────
   if (!stored) {
     const U = RANKS[0];
     return (
-      <div
-        className="rounded-2xl sm:rounded-3xl overflow-hidden border relative"
-        style={{ background: `linear-gradient(150deg, ${U.color}14 0%, transparent 60%)`, borderColor: `${U.color}25` }}
-      >
-        <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: U.color }} />
-
-        {/* Identity row */}
-        <div className="relative flex items-center gap-3 px-4 sm:px-5 pt-4 pb-3">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-            style={{ background: `${U.color}18`, color: U.color, boxShadow: `0 0 18px ${U.color}30`, border: `1px solid ${U.color}25` }}
-          >
-            <div className="scale-[1.3]">{U.icon}</div>
-          </div>
+      <div className={`${card} p-4 sm:p-5`} style={cardStyle}>
+        <div className="flex items-center gap-3">
+          <span className="w-11 h-11 rounded-xl shrink-0 flex items-center justify-center" style={{ border: "1px dashed var(--border-default)", color: "var(--text-muted)" }}>{U.icon}</span>
           <div className="flex-1 min-w-0">
-            <p className="text-[8px] uppercase tracking-[0.22em] font-semibold mb-0.5" style={{ color: "var(--text-muted)" }}>Capability Tier</p>
-            <h1 className="text-[20px] font-black tracking-tight leading-none" style={{ color: U.color }}>Uncharted</h1>
+            <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-tertiary)", ...small }}>capability rank</p>
+            <p className="text-[18px] leading-tight font-semibold" style={{ color: "var(--text-primary)" }}>Uncharted</p>
           </div>
-          <div className="flex flex-col items-end gap-0.5 shrink-0">
-            <div className="flex items-center gap-[2px]">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} className="text-[10px] leading-none" style={{ color: "var(--text-muted)" }}>★</span>
-              ))}
-            </div>
-            <span className="text-[8px]" style={{ color: "var(--text-muted)" }}>Rank 0 of 5</span>
-          </div>
+          <span className="text-[12px] shrink-0" style={{ color: "var(--text-tertiary)" }}>Rank 0 of 5</span>
         </div>
-
-        {/* Divider */}
-        <div className="mx-4 sm:mx-5 h-px" style={{ background: `${U.color}12` }} />
-
-        {/* CTA */}
-        <div className="px-4 sm:px-5 pt-3 pb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div>
-            <p className="text-sm font-medium mb-1" style={{ color: "var(--text-secondary)" }}>Your capability is unassessed</p>
-            <p className="text-xs leading-relaxed max-w-sm" style={{ color: "var(--text-tertiary)" }}>Take the 8-question ACE<sup>™</sup> assessment to map your physical profile and unlock your adventure rank.</p>
-          </div>
-          <Link
-            href="/matchmaker"
-            className="shrink-0 inline-flex items-center gap-2 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition-all hover:brightness-110 hover:-translate-y-0.5"
-            style={{ background: "#ff5100" }}
-          >
-            Take Assessment
+        <div className="mt-4 pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+          <p className="text-[14px] leading-relaxed max-w-sm" style={{ color: "var(--text-secondary)" }}>
+            Take the 8-question ACE<sup>™</sup> assessment to map your physical profile and unlock your adventure rank.
+          </p>
+          <Link href="/matchmaker" className="shrink-0 inline-flex items-center h-10 px-5 rounded-full text-[14px] font-semibold text-white transition-[filter] hover:brightness-110" style={{ background: ORANGE }}>
+            Take the assessment
           </Link>
         </div>
       </div>
@@ -92,88 +70,70 @@ export default function ACEProfileSection() {
     : 100;
   const ptsNeeded = nextRank ? nextRank.minScore - totalScore : 0;
 
+  const breakdown = (size: number) => (
+    <>
+      <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-secondary)", ...small }}>breakdown</p>
+      <ACERadar ace={stored.ace} size={size} showLabels />
+    </>
+  );
+
   return (
-    <div
-      className="rounded-2xl sm:rounded-3xl overflow-hidden border relative"
-      style={{ background: `linear-gradient(150deg, ${currentRank.color}14 0%, transparent 60%)`, borderColor: `${currentRank.color}25` }}
-    >
-      <div className="absolute -top-12 -right-12 w-72 h-72 rounded-full opacity-[0.07] blur-3xl pointer-events-none" style={{ background: currentRank.color }} />
+    <div className={`${card} overflow-hidden`} style={cardStyle}>
+      {/* ── Main body: left = rank + progression | right = radar ── */}
+      <div className="flex items-stretch">
+        <div className="flex-1 min-w-0 flex flex-col p-4 sm:p-5 gap-4">
 
-      {/* ── Main body: left = tier identity + rank progression | right = radar ── */}
-      <div className="relative flex items-stretch gap-0">
-
-        {/* Left column: identity + progression */}
-        <div className="flex-1 min-w-0 flex flex-col px-4 sm:px-5 pt-4 pb-4 gap-3">
-
-          {/* Identity row */}
+          {/* Rank */}
           <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-              style={{ background: `${currentRank.color}18`, color: currentRank.color, boxShadow: `0 0 18px ${currentRank.color}30`, border: `1px solid ${currentRank.color}25` }}
-            >
-              <div className="scale-[1.3]">{currentRank.icon}</div>
-            </div>
+            <span className="w-11 h-11 rounded-xl shrink-0 flex items-center justify-center" style={{ border: `1.5px solid ${ORANGE}`, color: ORANGE }}>{currentRank.icon}</span>
             <div className="flex-1 min-w-0">
-              <p className="text-[8px] uppercase tracking-[0.22em] font-semibold mb-0.5" style={{ color: "var(--text-muted)" }}>Capability Tier</p>
-              <h1 className="text-[20px] font-black tracking-tight leading-none" style={{ color: currentRank.color }}>{currentRank.label}</h1>
+              <p className="text-[12px] tracking-[0.1em] lowercase" style={{ color: "var(--text-tertiary)", ...small }}>capability rank</p>
+              <p className="text-[18px] leading-tight font-semibold" style={{ color: "var(--text-primary)" }}>{currentRank.label}</p>
             </div>
             <div className="flex flex-col items-end gap-0.5 shrink-0">
-              <div className="flex items-center gap-[2px]">
+              <span className="flex gap-[2px] text-[12px] leading-none" aria-hidden>
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <span key={i} className="text-[10px] leading-none" style={{ color: i < currentRank.stars ? currentRank.color : "var(--text-muted)" }}>★</span>
+                  <span key={i} style={{ color: i < currentRank.stars ? ORANGE : "var(--border-default)" }}>★</span>
                 ))}
-              </div>
-              <span className="text-[8px]" style={{ color: "var(--text-muted)" }}>Rank {currentRank.stars} of 5</span>
+              </span>
+              <span className="text-[12px]" style={{ color: "var(--text-tertiary)" }}>Rank {currentRank.stars} of 5</span>
             </div>
           </div>
 
-          {/* Divider */}
-          <div className="h-px" style={{ background: `${currentRank.color}15` }} />
-
-          {/* Progress numbers */}
+          {/* Progress to the next rank */}
           {nextRank ? (
-            <div className="flex items-center justify-between">
-              <div className="flex items-baseline gap-1">
-                <span className="text-[22px] font-black tabular-nums tracking-tight leading-none" style={{ color: currentRank.color }}>{progressPct}<span className="text-sm font-bold ml-0.5" style={{ color: `${currentRank.color}60` }}>%</span></span>
-                <span className="text-[11px] leading-none" style={{ color: "var(--text-tertiary)" }}>to <span className="font-semibold" style={{ color: nextRank.color }}>{nextRank.label}</span></span>
-              </div>
-              <span className="text-[11px]" style={{ color: "var(--text-tertiary)" }}><span className="font-bold" style={{ color: "var(--text-secondary)" }}>{ptsNeeded}</span> pts needed</span>
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="text-[13px]" style={{ color: "var(--text-secondary)" }}>
+                <span className="text-[22px] leading-none font-semibold tabular-nums" style={{ color: "var(--text-primary)" }}>{progressPct}%</span>
+                {" "}to <span style={{ color: "var(--text-primary)" }}>{nextRank.label}</span>
+              </span>
+              <span className="text-[13px] tabular-nums" style={{ color: "var(--text-tertiary)" }}>{ptsNeeded} pts needed</span>
             </div>
           ) : (
-            <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#a78bfa" }} />
-              <p className="text-[10px] font-bold tracking-widest uppercase text-[#a78bfa]">Pinnacle rank</p>
-            </div>
+            <p className="text-[13px]" style={{ color: ORANGE }}>Top rank reached</p>
           )}
 
-          {/* Progress bar */}
           <RankBar totalScore={totalScore} trackH={7} showLabels showYouTag={false} />
 
-          {/* Retake button */}
           <Link
             href="/matchmaker?retake=1"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:brightness-110 w-fit"
-            style={{ background: "rgba(255,81,0,0.08)", border: "1px solid rgba(255,81,0,0.18)", color: "#ff7d47" }}
+            className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-semibold w-fit transition-colors hover:bg-[#ff5100]/[0.06]"
+            style={{ color: ORANGE, border: `1px solid ${ORANGE}` }}
           >
-            <RotateCcw className="w-3 h-3" />
-            Retake Assessment
+            <RotateCcw className="w-3.5 h-3.5" />
+            Retake the assessment
           </Link>
         </div>
 
-        {/* Right column: radar — desktop only */}
-        <div
-          className="hidden sm:flex shrink-0 flex-col gap-3 px-6 pt-6 pb-6 border-l"
-          style={{ borderColor: `${currentRank.color}18`, background: "var(--bg-surface)" }}
-        >
-          <p className="text-[9px] uppercase tracking-[0.22em] font-bold" style={{ color: "var(--text-tertiary)" }}>Capability Breakdown</p>
-          <ACERadar ace={stored.ace} size={240} showLabels />
+        {/* Radar — beside on desktop */}
+        <div className="hidden sm:flex shrink-0 flex-col gap-3 p-6 border-l" style={{ borderColor: "var(--border-subtle)" }}>
+          {breakdown(240)}
         </div>
       </div>
 
-      {/* ACE Radar — mobile: below everything */}
-      <div className="sm:hidden px-5 pb-5 flex flex-col gap-2" style={{ borderTop: `1px solid ${currentRank.color}14` }}>
-        <p className="text-[9px] uppercase tracking-[0.22em] font-bold pt-4" style={{ color: "var(--text-tertiary)" }}>Capability Breakdown</p>
-        <ACERadar ace={stored.ace} size={260} showLabels />
+      {/* Radar — below on mobile */}
+      <div className="sm:hidden px-5 pb-5 pt-4 flex flex-col gap-2" style={{ borderTop: "1px solid var(--border-subtle)" }}>
+        {breakdown(260)}
       </div>
     </div>
   );
